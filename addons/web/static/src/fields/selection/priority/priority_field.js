@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { onWillRender, useState } from "@odoo/owl";
+import { useState } from "@odoo/owl";
 import { _t } from "@web/core/translation";
 import { registerField } from "@web/fields/_registry";
 import { FieldComponent } from "@web/fields/field_component";
@@ -31,11 +31,6 @@ export class PriorityField extends FieldComponent {
             index: -1,
         });
         this.options = Array.from(this.field.definition.selection);
-        onWillRender(() => {
-            this._selectedIndex = this.options.findIndex(
-                (o) => o[0] === this.field.value,
-            );
-        });
         if (this.props.withCommand) {
             for (const command of this.commands) {
                 useCommand(/** @type {any} */ (command[0]), command[1], command[2]);
@@ -75,7 +70,12 @@ export class PriorityField extends FieldComponent {
         return this.field.definition.string;
     }
     get index() {
-        return this.state.index > -1 ? this.state.index : this._selectedIndex;
+        return this.state.index > -1 ? this.state.index : this.selectedIndex;
+    }
+
+    /** @returns {number} */
+    get selectedIndex() {
+        return this.options.findIndex((o) => o[0] === this.field.value);
     }
 
     /** @param {any} value */

@@ -15,7 +15,7 @@
                         type="checkbox"
                         name="select-all"
                         class="form-check-input"
-                        t-attf-id="o_calendar_filter_{{this.nextFilterId}}"
+                        t-attf-id="o_calendar_filter_{{this.filterId('all')}}"
                         t-att-checked="this.isAllActive"
                         t-att-disabled="this.section.filters.length === 0"
                         t-on-change="(ev) => this.onAllFilterInputChange(ev)"
@@ -36,7 +36,7 @@
             <t t-if="!this.state.collapsed">
                 <div class="o_calendar_filter_items d-flex flex-column gap-1">
                     <t t-foreach="this.getSortedFilters()" t-as="filter" t-key="filter.value">
-                        <t t-set="filterId" t-value="this.nextFilterId"/>
+                        <t t-set="filterId" t-value="this.filterId(filter_index)"/>
                         <t t-call="{{ this.constructor.subTemplates.filter }}"/>
                     </t>
                 </div>

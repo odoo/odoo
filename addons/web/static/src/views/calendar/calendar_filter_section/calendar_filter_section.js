@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onWillRender, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { AutoComplete } from "@web/components/autocomplete/autocomplete";
 import { Transition } from "@web/core/transition";
 import { _t } from "@web/core/translation";
@@ -27,8 +27,6 @@ export class CalendarFilterSection extends Component {
 
     /** @type {ReturnType<typeof useOwnedDialogs>} */
     addDialog;
-    /** @type {number} */
-    filterIdSeq;
     /** @type {import("services").ServiceFactories["orm"]} */
     orm;
     /** @type {{ collapsed: boolean; fieldRev: number }} */
@@ -45,11 +43,7 @@ export class CalendarFilterSection extends Component {
         this.orm = useService("orm");
 
         this.filterIdBase = nextId++;
-        this.filterIdSeq = 0;
         this.unlinkingFilterIds = new Set();
-        onWillRender(() => {
-            this.filterIdSeq = 0;
-        });
     }
 
     get autoCompleteProps() {
@@ -76,9 +70,9 @@ export class CalendarFilterSection extends Component {
         );
     }
 
-    get nextFilterId() {
-        this.filterIdSeq += 1;
-        return `${this.filterIdBase}_${this.filterIdSeq}`;
+    /** @param {number | "all"} position */
+    filterId(position) {
+        return `${this.filterIdBase}_${position}`;
     }
 
     get section() {

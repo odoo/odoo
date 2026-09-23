@@ -12,7 +12,7 @@
                             aria-disabled="true"
                             t-att-class="value_index lte this.index ? 'fa-solid fa-star' : 'fa-regular fa-star'"
                             t-att-data-tooltip="this.getTooltip(value[1])"
-                            t-att-aria-checked="value_index === this._selectedIndex ? 'true' : 'false'"
+                            t-att-aria-checked="value_index === this.selectedIndex ? 'true' : 'false'"
                             t-att-aria-label="value[1]"
                         />
                     </t>
@@ -24,7 +24,7 @@
                             t-att-class="value_index lte this.index ? 'fa-solid fa-star' : 'fa-regular fa-star opacity-25 opacity-100-hover'"
                             tabindex="0"
                             t-att-data-tooltip="this.getTooltip(value[1])"
-                            t-att-aria-checked="value_index === this._selectedIndex ? 'true' : 'false'"
+                            t-att-aria-checked="value_index === this.selectedIndex ? 'true' : 'false'"
                             t-att-aria-label="value[1]"
                             t-on-click.prevent.stop="() => this.onStarClicked(value[0])"
                             t-on-mouseenter="() => this.state.index = value_index"

@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onWillRender, useRef } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/browser/hotkeys";
 import { useAutofocus } from "@web/core/utils/hooks";
 
@@ -34,23 +34,12 @@ export class ListAggregatesRow extends Component {
         /** @type {(value: string) => void} */
         onGroupInputConfirm: Function,
     };
-
-    /** @type {number} */
-    _renderId;
-    /** @type {{ renderId: number, value: any }} */
-    _aggregatesCache;
     /** @type {import("@odoo/owl").Ref} */
     groupInputRef;
 
     setup() {
         this.groupInputRef = useRef("groupInput");
         useAutofocus({ refName: "groupInput" });
-
-        this._renderId = 0;
-        this._aggregatesCache = { renderId: -1, value: null };
-        onWillRender(() => {
-            this._renderId++;
-        });
     }
 
     /** @returns {ReturnType<typeof import("./list_aggregates").useListAggregates>} */
@@ -63,37 +52,32 @@ export class ListAggregatesRow extends Component {
         return this.props.columns;
     }
 
-    /** @returns {Record<string, object>} */
-    get aggregates() {
-        if (this._aggregatesCache.renderId !== this._renderId) {
-            this._aggregatesCache = {
-                renderId: this._renderId,
-                value: this.agg.computeAggregates(),
-            };
-        }
-        return this._aggregatesCache.value;
-    }
-
     /** @returns {Record<string, any>} */
     get fields() {
         return this.props.list.fields;
     }
 
-    /** @returns {any[]} */
-    getAggregateColumns() {
+    /**
+     * @param {Record<string, object>} aggregates
+     * @returns {any[]}
+     */
+    getAggregateColumns(aggregates) {
         return getAggregateColumnsUtil(
             /** @type {any} */ (this.columns),
             this.fields,
-            this.aggregates,
+            aggregates,
         );
     }
 
-    /** @returns {number} */
-    getGroupNameCellColSpan() {
+    /**
+     * @param {Record<string, object>} aggregates
+     * @returns {number}
+     */
+    getGroupNameCellColSpan(aggregates) {
         return getGroupNameCellColSpanUtil(
             /** @type {any} */ (this.columns),
             this.fields,
-            this.aggregates,
+            aggregates,
             { hasSelectors: this.props.hasSelectors },
         );
     }

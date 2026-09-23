@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { onMounted, onRendered, useEffect, useRef, useState } from "@odoo/owl";
+import { onMounted, useEffect, useRef, useState } from "@odoo/owl";
 import { Dialog } from "@web/ui/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
@@ -68,9 +68,6 @@ export class ProductImageViewer extends Dialog {
                     once: true,
                 });
             }
-        });
-        onRendered(() => {
-            this.updateImage();
         });
     }
 

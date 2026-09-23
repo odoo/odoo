@@ -1,12 +1,5 @@
 /** @odoo-module native */
-import {
-    Component,
-    markup,
-    onRendered,
-    onWillStart,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { Component, markup, onWillStart, useRef, useState } from "@odoo/owl";
 import { useSetupAction } from "@web/core/action_hook";
 import { download } from "@web/core/network";
 import { registry } from "@web/core/registry";
@@ -72,9 +65,7 @@ export class ProductPricelistReport extends Component {
             await this.renderHtml();
         });
 
-        onRendered(() => {
-            this.env.config.setDisplayName(_t("Pricelist Report"));
-        });
+        this.env.config.setDisplayName(_t("Pricelist Report"));
 
         /*
         When following the link of a product and coming back we need to keep the

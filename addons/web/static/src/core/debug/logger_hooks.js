@@ -4,10 +4,8 @@
 import {
     onMounted,
     onPatched,
-    onRendered,
     onWillDestroy,
     onWillPatch,
-    onWillRender,
     onWillUnmount,
     useComponent,
 } from "@odoo/owl";
@@ -29,20 +27,10 @@ export function useLifecycleLog(log, name) {
     const component = /** @type {any} */ (useComponent());
     const tag = name || component.constructor.name;
     const createdAt = performance.now();
-    let renders = 0;
     let patches = 0;
-    /** @type {import("./debug_logger").PerfEnd} */
-    let endRender = () => 0;
     /** @type {import("./debug_logger").PerfEnd} */
     let endPatch = () => 0;
     log.lifecycle(`${tag} setup`, () => component.props);
-    onWillRender(() => {
-        renders++;
-        endRender = log.perf(`${tag} render`, { n: renders });
-    });
-    onRendered(() => {
-        endRender();
-    });
     onMounted(() => {
         log.lifecycle(`${tag} mounted`, () => ({
             sinceSetupMs: Number((performance.now() - createdAt).toFixed(2)),
@@ -58,7 +46,7 @@ export function useLifecycleLog(log, name) {
         log.lifecycle(`${tag} patched#${patches}`);
     });
     onWillUnmount(() =>
-        log.lifecycle(`${tag} willUnmount`, () => ({ renders, patches })),
+        log.lifecycle(`${tag} willUnmount`, () => ({ renders: patches + 1, patches })),
     );
     onWillDestroy(() => log.lifecycle(`${tag} willDestroy`));
 }

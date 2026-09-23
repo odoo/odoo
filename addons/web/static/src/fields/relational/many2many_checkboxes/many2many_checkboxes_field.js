@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { onWillRender, useState } from "@odoo/owl";
+import { useState } from "@odoo/owl";
 import { CheckBox } from "@web/components/checkbox/checkbox";
 import { _t } from "@web/core/translation";
 import { registerField } from "@web/fields/_registry";
@@ -48,9 +48,6 @@ export class Many2ManyCheckboxesField extends FieldComponent {
             () => this.commitChanges(),
             500,
         );
-        onWillRender(() => {
-            this.currentIds = new Set(this.field.value.currentIds);
-        });
     }
 
     /** @returns {Array<[number, string]>} */
@@ -67,7 +64,9 @@ export class Many2ManyCheckboxesField extends FieldComponent {
         if (this.pending.remove.includes(id)) {
             return false;
         }
-        return this.currentIds.has(id) || this.pending.add.includes(id);
+        return (
+            this.field.value.currentIds.includes(id) || this.pending.add.includes(id)
+        );
     }
 
     /** @returns {Promise|undefined} */

@@ -1,7 +1,6 @@
 // @ts-check
 /** @odoo-module native */
 
-import { onWillRender } from "@odoo/owl";
 import { formatFieldDate } from "@web/core/formatters";
 import { DateTime } from "@web/core/l10n/luxon";
 import { evaluateExpr } from "@web/core/py_js/py";
@@ -31,12 +30,6 @@ export class RemainingDaysField extends FieldComponent {
 
     static template = "web.RemainingDaysField";
 
-    setup() {
-        onWillRender(() => {
-            this._diffDays = this.computeDiffDays();
-        });
-    }
-
     /** @returns {number|null} */
     computeDiffDays() {
         const value = this.field.value;
@@ -50,7 +43,7 @@ export class RemainingDaysField extends FieldComponent {
 
     /** @returns {number|null} */
     get diffDays() {
-        return this._diffDays ?? null;
+        return this.computeDiffDays();
     }
 
     /** @returns {string} */

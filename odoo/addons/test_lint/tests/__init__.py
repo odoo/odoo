@@ -8,6 +8,7 @@ from . import test_color_scheme_reads
 from . import test_dark_sibling_scope
 from . import test_orphan_assets
 from . import test_orphan_test_registrations
+from . import test_owl3_api
 from . import test_setup_bundle_has_no_tests
 from . import test_grey_ramp_token
 from . import test_scheme_duplication

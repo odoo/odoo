@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onWillRender, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { highlightText } from "@web/core/utils/dom/html";
 export class HighlightText extends Component {
     static template = "web.HighlightText";
@@ -14,14 +14,14 @@ export class HighlightText extends Component {
     setup() {
         /** @type {{ value: string }} */
         this.searchState = useState(this.env.searchState);
+    }
 
-        onWillRender(() => {
-            /** @type {string | import("@odoo/owl").Markup} */
-            this.text = highlightText(
-                this.searchState.value,
-                this.props.originalText,
-                "highlighter",
-            );
-        });
+    /** @returns {string | import("@odoo/owl").Markup} */
+    get text() {
+        return highlightText(
+            this.searchState.value,
+            this.props.originalText,
+            "highlighter",
+        );
     }
 }

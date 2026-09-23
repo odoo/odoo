@@ -84,8 +84,8 @@ test("logs nothing and records nothing when the namespace is off", async () => {
     expect(getStats()).toHaveLength(0);
 });
 
-test("logs setup, mounted, a patch pair and a render span per render", async () => {
-    expect.assertions(4);
+test("logs setup, mounted and a patch pair per update", async () => {
+    expect.assertions(3);
     cleanLogging();
     enableLogging("test.hooks", { persist: false });
     const Probe = makeProbe();
@@ -96,12 +96,11 @@ test("logs setup, mounted, a patch pair and a render span per render", async () 
     });
     const seen = labels(captured);
     expect(seen[0]).toBe("[test.hooks] lifecycle Probe setup");
-    expect(seen[1]).toMatch(/^\[test\.hooks\] perf Probe render \d+\.\d\dms$/);
     expect(seen).toInclude("[test.hooks] lifecycle Probe mounted");
     expect(seen.filter((label) => /willPatch#1|patched#1/.test(label))).toHaveLength(2);
 });
 
-test("render and patch spans are measured, so the stats table can rank them", async () => {
+test("patch spans are measured, so the stats table can rank them", async () => {
     expect.assertions(3);
     cleanLogging();
     enableLogging("test.hooks:perf", { persist: false });
@@ -112,11 +111,11 @@ test("render and patch spans are measured, so the stats table can rank them", as
         await animationFrame();
     });
     const rows = Object.fromEntries(getStats().map((row) => [row.label, row]));
-    expect(rows["Probe render"].count).toBe(2);
     expect(rows["Probe patch"].count).toBe(1);
+    expect(rows["Probe render"]).toBe(undefined);
     expect(
         labels(captured).map((label) =>
             label.replace(/^\[test\.hooks\] perf Probe (\w+) \d+\.\d\dms$/, "$1"),
         ),
-    ).toEqual(["render", "render", "patch"]);
+    ).toEqual(["patch"]);
 });

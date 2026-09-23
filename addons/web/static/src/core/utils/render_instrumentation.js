@@ -1,11 +1,11 @@
 // @ts-check
 /** @odoo-module native */
 
-import { onRendered } from "@odoo/owl";
+import { onMounted, onPatched } from "@odoo/owl";
 
 /** @param {string} label */
 export function useRenderCounter(label) {
-    onRendered(() => {
+    const count = () => {
         if (/** @type {Record<string, any>} */ (globalThis).__renderTrace) {
             const globals = /** @type {Record<string, any>} */ (globalThis);
             const stats = /** @type {Record<string, any>} */ (
@@ -13,7 +13,9 @@ export function useRenderCounter(label) {
             );
             stats[label] = (stats[label] || 0) + 1;
         }
-    });
+    };
+    onMounted(count);
+    onPatched(count);
 }
 
 if (
