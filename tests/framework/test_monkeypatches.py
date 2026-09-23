@@ -291,6 +291,10 @@ class TestExcelSheetNames(unittest.TestCase):
                 workbook = PatchedXlsxWorkbook(io.BytesIO(), {"in_memory": True})
                 getattr(workbook, adder)(raw)
 
+    def test_the_name_excel_reserves_is_never_used(self):
+        self.assertEqual(self._sanitize("History"), "History~2")
+        self.assertEqual(self._sanitize("history"), "history~2")
+
     def test_duplicate_detection_ignores_case_as_excel_does(self):
         self.assertNotEqual(self._sanitize("Sales", ["SALES"]).lower(), "sales")
 

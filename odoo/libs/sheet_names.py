@@ -21,7 +21,8 @@ def normalize_excel_sheet_name(name: str, taken: Iterable[str] = ()) -> str:
     if not name:
         return name
 
-    lowered = {existing.lower() for existing in taken}
+    # Excel keeps "History" for change tracking and refuses a sheet by that name
+    lowered = {existing.lower() for existing in taken} | {"history"}
     if name.lower() not in lowered:
         return name
 
