@@ -480,7 +480,10 @@ def rename_column(
                 SQL.identifier(newname),
             )
         )
-        old_constraint = f"{tablename}_{columnname}_not_null"
+        # PostgreSQL truncates every identifier to 63 bytes when it creates
+        # it, so the name a constraint actually carries is the truncated one;
+        # a longer literal is rejected as an identifier, not merely unmatched.
+        old_constraint = f"{tablename}_{columnname}_not_null"[:63]
         cr.execute(
             SQL(
                 """
@@ -509,7 +512,7 @@ def rename_column(
                     "ALTER TABLE %s RENAME CONSTRAINT %s TO %s",
                     SQL.identifier(tablename),
                     SQL.identifier(old_constraint),
-                    SQL.identifier(f"{tablename}_{newname}_not_null"),
+                    SQL.identifier(f"{tablename}_{newname}_not_null"[:63]),
                 )
             )
     _schema.debug("Table %r: renamed column %r to %r", tablename, columnname, newname)
