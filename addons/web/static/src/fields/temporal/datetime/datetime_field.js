@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { onWillRender, useEffect, useRef, useState } from "@odoo/owl";
+import { useEffect, useRef, useState } from "@odoo/owl";
 import { useDateTimePicker } from "@web/components/datetime/datetime_picker_hook";
 import { formatFieldDate, formatFieldDateTime } from "@web/core/formatters";
 import {
@@ -143,7 +143,7 @@ export class DateTimeField extends FieldComponent {
         this.setupFocusRestore();
 
         this.setFieldDirty = useFieldDirtySignal();
-        onWillRender(() => this.triggerIsDirty());
+        useEffect(() => this.triggerIsDirty());
 
         this.futureWarningMsg = _t("This date is in the future");
     }

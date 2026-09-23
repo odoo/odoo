@@ -5,7 +5,6 @@ import {
     Component,
     onMounted,
     onWillDestroy,
-    onWillRender,
     onWillUpdateProps,
     status,
     useRef,
@@ -226,9 +225,22 @@ export class AutoComplete extends Component {
 
     setupPresentation() {
         if (this.props.dropdown) {
-            this._dropdownOptions = {};
-            this.syncDropdownOptions();
-            onWillRender(() => this.syncDropdownOptions());
+            this._dropdownOptions = new Proxy(
+                {},
+                {
+                    get: (_, key) => this.dropdownOptions[key],
+                    has: (_, key) => key in this.dropdownOptions,
+                    ownKeys: () => Reflect.ownKeys(this.dropdownOptions),
+                    getOwnPropertyDescriptor: (_, key) =>
+                        key in this.dropdownOptions
+                            ? {
+                                  value: this.dropdownOptions[key],
+                                  enumerable: true,
+                                  configurable: true,
+                              }
+                            : undefined,
+                },
+            );
             usePosition(
                 "sourcesList",
                 () => this.targetDropdown,
@@ -277,14 +289,6 @@ export class AutoComplete extends Component {
             position: "bottom-start",
             ...this.props.menuPositionOptions,
         };
-    }
-
-    syncDropdownOptions() {
-        const live = /** @type {Record<string, any>} */ (this._dropdownOptions);
-        for (const key of Object.keys(live)) {
-            delete live[key];
-        }
-        Object.assign(live, this.dropdownOptions);
     }
 
     get isOpened() {

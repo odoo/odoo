@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onWillRender, useRef } from "@odoo/owl";
+import { Component, onPatched, useRef } from "@odoo/owl";
 import { CheckBox } from "@web/components/checkbox/checkbox";
 import { Dropdown } from "@web/components/dropdown/dropdown";
 import { DropdownState } from "@web/components/dropdown/dropdown_hook";
@@ -64,17 +64,11 @@ export class PivotRenderer extends Component {
         this.model = useReactiveModel(this.props.model);
         this.columnCellsCache = new Map();
         this.hoveredCells = null;
-        this.groupByItemsCache = null;
-        let tableEpoch;
-        onWillRender(() => {
+        /** @type {{ epoch?: number, table?: any }} */
+        this.tableMemo = {};
+        onPatched(() => {
             this.columnCellsCache.clear();
             this.hoveredCells = null;
-            this.groupByItemsCache = null;
-            if (this.model.updateEpoch !== tableEpoch) {
-                tableEpoch = this.model.updateEpoch;
-                this.table = this.model.getTable();
-                this.computeMeasureFormatters();
-            }
         });
         this.l10n = localization;
         this.tableRef = useRef("table");
@@ -174,9 +168,6 @@ export class PivotRenderer extends Component {
 
     /** @returns {Object[]} */
     get groupByItems() {
-        if (this.groupByItemsCache) {
-            return this.groupByItemsCache;
-        }
         let items = this.env.searchModel.getSearchItems(
             (searchItem) =>
                 ["groupBy", "dateGroupBy"].includes(searchItem.type) &&
@@ -199,7 +190,7 @@ export class PivotRenderer extends Component {
             });
         }
 
-        this.groupByItemsCache = items.map((item) => ({
+        return items.map((item) => ({
             ...item,
             id: item.id || item.name,
             fieldName: item.fieldName || item.name,
@@ -210,7 +201,17 @@ export class PivotRenderer extends Component {
                     ? getIntervalOptions()
                     : undefined),
         }));
-        return this.groupByItemsCache;
+    }
+
+    /** @returns {any} the table of the model's current data */
+    get table() {
+        const memo = this.tableMemo;
+        if (memo.epoch !== this.model.updateEpoch || !memo.table) {
+            memo.epoch = this.model.updateEpoch;
+            memo.table = this.model.getTable();
+            this.computeMeasureFormatters();
+        }
+        return memo.table;
     }
 
     /** @returns {boolean} */
