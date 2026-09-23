@@ -986,9 +986,21 @@ One row per terminal transition a model gates in its own code -- the configured
 twin of `approval.binding`. A binding exists because a person decided to gate a
 method; a gate exists because a model declares `_approval_operations`, so
 **nobody creates these**. `_register_hook` calls `_sync_declared_gates`, which
-walks the registry, adds a row for each declared operation and deletes any row
-whose operation the model no longer declares. A new adopter therefore appears
-the next time the registry is built, without a data file.
+walks the registry, adds a row for each declared operation and archives any row
+whose operation the installed code no longer declares. A new adopter therefore
+appears the next time the registry is built, without a data file.
+
+A row is archived, never deleted, and keeps `enforced`: an operation declared
+again reactivates the same row, enforcing as it was, and the archive of an
+enforcing row is a WARNING on the module logger. The registry is not the only
+witness, because a server started on a shorter addons path builds one that lacks
+installed modules. So the sync archives nothing while any installed module is
+not loaded (`registry.loaded_modules`), and never a row whose model an installed
+module owns (`ir_model_data`) though this registry lacks it: it archives only
+what an installed, loaded model stopped declaring, and what belongs to no
+installed module. Before 19.0.2.10.4 the sync deleted the row and recreated it
+watching, so one boot on a shorter path cost every gate of the missing modules
+its enforcement. Covered by `test_approval/tests/test_gate_sync.py`.
 
 An operation earns a row only where the model also names it in
 `_operation_checkpoints`. `_check_approval_admits` is called from that checkpoint
@@ -1022,6 +1034,7 @@ several gated operations but cannot have two of them waiting at once.
 | `model_name` | Char | Yes | **Yes** | index, readonly. The gated model |
 | `operation` | Char | Yes | **Yes** | index, readonly. The method the model declares as terminal |
 | `model_id` | Many2one(`ir.model`) | No | No | compute, for display |
+| `active` | Boolean | Yes | No | default True, readonly. Off once no installed code declares the operation; `enforced` is kept for its return |
 | `enforced` | Boolean | Yes | No | the one writable field: whether this operation refuses a bypassing caller yet |
 | `would_block_count` | Integer | No | No | compute: the calls enforcement would refuse -- the cost of switching it on, and the only count a code gate can honestly offer, since it records a call it would have refused and no other |
 

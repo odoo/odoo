@@ -1,8 +1,8 @@
 import logging
 
 from odoo import api, fields, models
-from odoo.db.schema import table_exists
-from odoo.tools import ormcache
+from odoo.db.schema import column_exists
+from odoo.tools import SQL, ormcache
 
 from . import approval_trace as trace
 
@@ -42,6 +42,13 @@ class ApprovalGate(models.Model):
         comodel_name="ir.model",
         string="Model Record",
         compute="_compute_model_id",
+    )
+    active = fields.Boolean(
+        default=True,
+        readonly=True,
+        help="Archived when the operation is no longer declared by an installed "
+        "model. The row keeps its enforcement, so declaring the operation again "
+        "resumes it as it was.",
     )
     enforced = fields.Boolean(
         help="While off, a call that reaches this operation by a path the gate "
@@ -119,9 +126,10 @@ class ApprovalGate(models.Model):
     def _register_hook(self):
         super()._register_hook()
         # Every registry load reaches this, upgraded or not, and this module's own
-        # upgrade is what creates the table: without the guard a database whose
-        # approval predates the gate does not boot at all, not even to be upgraded.
-        if table_exists(self.env.cr, self._table):
+        # upgrade is what creates the table and its newest column: without the
+        # guard a database whose approval predates them does not boot at all, not
+        # even to be upgraded.
+        if column_exists(self.env.cr, self._table, "active"):
             self._sync_declared_gates()
 
     @api.model
@@ -129,21 +137,39 @@ class ApprovalGate(models.Model):
         """Make the rows agree with what the registry declares.
 
         A gate row is a place to put a decision, not a fact about the code, so a
-        row whose operation the model no longer declares is deleted rather than
-        kept as a switch that governs nothing. The decision is only lost when the
-        code that needed it is gone.
+        row whose operation the installed code no longer declares is archived
+        rather than kept as a switch that governs nothing. It is archived with its
+        decision, because the registry that finds a row stale may simply be one
+        that did not load the code declaring it: a server started once on a
+        shorter addons path must not turn an enforcing gate back into a watching
+        one.
         """
         declared = self._get_declared_operations()
-        existing = {}
-        for gate in self.sudo().search([]):
-            existing[(gate.model_name, gate.operation)] = gate
+        gates = self.sudo().with_context(active_test=False).search([])
+        existing = {(gate.model_name, gate.operation): gate for gate in gates}
 
-        if stale := [gate for key, gate in existing.items() if key not in declared]:
-            trace.REGISTRY.note(
-                "gate_rows_dropped",
-                gates=[f"{gate.model_name}.{gate.operation}" for gate in stale],
+        if stale := gates.filtered(
+            lambda gate: (
+                gate.active and (gate.model_name, gate.operation) not in declared
             )
-            self.sudo().browse([gate.id for gate in stale]).unlink()
+        ):
+            self._archive_undeclared_gates(stale)
+
+        if revived := gates.filtered(
+            lambda gate: (
+                not gate.active and (gate.model_name, gate.operation) in declared
+            )
+        ):
+            revived.active = True
+            trace.REGISTRY.note(
+                "gate_rows_restored",
+                gates=[f"{gate.model_name}.{gate.operation}" for gate in revived],
+            )
+            if enforcing := revived.filtered("enforced"):
+                _logger.info(
+                    "Code gates declared again resume enforcing: %s",
+                    ", ".join(f"{g.model_name}.{g.operation}" for g in enforcing),
+                )
 
         if missing := sorted(declared - existing.keys()):
             self.sudo().create(
@@ -159,6 +185,71 @@ class ApprovalGate(models.Model):
                 ],
             )
         self._adopt_legacy_enforcement()
+
+    @api.model
+    def _archive_undeclared_gates(self, stale) -> None:
+        if unloaded := self._get_modules_installed_not_loaded():
+            _logger.warning(
+                "Installed modules were not loaded (%s): the code gates %s are not "
+                "declared by this registry and are left as they are.",
+                ", ".join(sorted(unloaded)),
+                ", ".join(f"{g.model_name}.{g.operation}" for g in stale),
+            )
+            return
+        absent = {
+            gate.model_name
+            for gate in stale
+            if gate.model_name not in self.env.registry
+        }
+        installed = self._get_models_of_installed_modules(absent)
+        stale = stale.filtered(lambda gate: gate.model_name not in installed)
+        if not stale:
+            return
+        trace.REGISTRY.note(
+            "gate_rows_archived",
+            gates=[f"{gate.model_name}.{gate.operation}" for gate in stale],
+        )
+        for gate in stale.filtered("enforced"):
+            _logger.warning(
+                "Code gate %s.%s was enforcing and is archived: %s. It resumes "
+                "enforcing if the operation is declared again.",
+                gate.model_name,
+                gate.operation,
+                "its model is not installed"
+                if gate.model_name in absent
+                else "its model no longer declares it",
+            )
+        stale.active = False
+
+    @api.model
+    def _get_modules_installed_not_loaded(self) -> set[str]:
+        modules = (
+            self.env["ir.module.module"]
+            .sudo()
+            .search_fetch([("state", "in", ("installed", "to upgrade"))], ["name"])
+        )
+        return set(modules.mapped("name")) - self.env.registry.loaded_modules
+
+    @api.model
+    def _get_models_of_installed_modules(self, model_names: set[str]) -> set[str]:
+        if not model_names:
+            return set()
+        rows = self.env.execute_query(
+            SQL(
+                """
+                SELECT DISTINCT model.model
+                  FROM ir_model model
+                  JOIN ir_model_data data
+                    ON data.model = 'ir.model' AND data.res_id = model.id
+                  JOIN ir_module_module module
+                    ON module.name = data.module
+                 WHERE model.model = ANY(%s)
+                   AND module.state IN ('installed', 'to upgrade')
+                """,
+                sorted(model_names),
+            )
+        )
+        return {model_name for (model_name,) in rows}
 
     @api.model
     def _adopt_legacy_enforcement(self) -> None:

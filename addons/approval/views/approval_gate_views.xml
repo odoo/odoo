@@ -34,6 +34,11 @@
                     name="watching"
                     string="Only Watching"
                     domain="[('enforced', '=', False)]" />
+                <separator />
+                <filter
+                    name="inactive"
+                    string="Archived"
+                    domain="[('active', '=', False)]" />
                 <group>
                     <filter
                         name="groupby_model"
