@@ -1702,12 +1702,12 @@ class DocumentsDocument(models.Model):
                 # Any decoding failure is an ERROR THUMBNAIL, never an
                 # exception. This compute is stored, so it runs inside the
                 # `create`/`write` that carried the file: whatever escapes here
-                # aborts that write and loses the upload. The two exceptions
-                # named before were the two `odoo.tools.image` raises on its
-                # own; Pillow raises its own types straight through, and
-                # `DecompressionBombError` is the one that is reachable on
-                # purpose -- a uniform 16000x16000 PNG is 250 KB on the wire and
-                # 256 Mpx once decoded, so no upload size limit bounds it, and
+                # aborts that write and loses the upload. odoo.libs.image turns
+                # Pillow's decode failures and its DecompressionBombError into
+                # ImageError, but an encoder or a format plugin can still raise
+                # its own type, and the bomb stays reachable on purpose -- a
+                # uniform 16000x16000 PNG is 250 KB on the wire and 256 Mpx once
+                # decoded, so no upload size limit bounds it, and
                 # `/documents/upload/<token>` accepts it from an unauthenticated
                 # visitor holding an edit link.
                 try:
