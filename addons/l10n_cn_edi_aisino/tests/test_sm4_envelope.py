@@ -140,3 +140,29 @@ def test_success_returns_inner_dict():
                               IDENTITY, PLATFORM, timestamp=TS)
     inner = env.verify_and_decrypt(resp, IDENTITY, PLATFORM)
     assert inner == {'code': '1002', 'message': '开票中'}
+
+
+# --- SM4 primitive ----------------------------------------------------------
+
+def test_sm4_fallback_agrees_with_openssl():
+    """Skipped where cryptography has no SM4 — which is exactly why the fallback exists."""
+    from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+
+    from crypto import sm4_pure
+
+    if not env.HAS_NATIVE_SM4:
+        pytest.skip('cryptography built without SM4')
+    key = b'0123456789abcdef'
+    data = b'A' * 32
+    enc = Cipher(algorithms.SM4(key), modes.ECB()).encryptor()
+    assert sm4_pure.encrypt_ecb(data, key) == enc.update(data) + enc.finalize()
+
+
+def test_envelope_round_trips_without_native_sm4(monkeypatch):
+    """The whole envelope must work on a host whose OpenSSL lacks SM4."""
+    monkeypatch.setattr(env, 'HAS_NATIVE_SM4', False)
+    payload = {'probe': 'ok', '中文': '测试', 'n': 1234.56}
+    for zip_code in ('0', '1', '2'):
+        request = env.build_request('x', payload, IDENTITY, PLATFORM, TAX_NO,
+                                    timestamp=TS, zip_code=zip_code)
+        assert env.verify_and_decrypt(dict(request, code='1000'), IDENTITY, PLATFORM) == payload
