@@ -296,14 +296,14 @@ class TestSuppressedRequestPayload(ClientLoggingCommon):
         self.assertTrue(row["trace_id"])
 
     @patch("requests.Session.request")
-    def test_known_gap_the_name_based_redactor_does_not_catch_b64key(
+    def test_a_private_key_under_an_unremarkable_name_is_masked_by_its_shape(
         self, mock_request
     ):
         mock_request.return_value = _ok_response()
 
         self._client().post("/cancel", json={"b64Key": SECRET_KEY})
 
-        self.assertIn(SECRET_KEY, self._queued()[0]["request_payload"])
+        self.assertNotIn(SECRET_KEY, self._queued()[0]["request_payload"])
 
 
 @tagged("post_install", "-at_install")
