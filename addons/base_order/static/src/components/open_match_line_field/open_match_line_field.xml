@@ -8,9 +8,9 @@
     -->
     <t t-name="base_order.OpenMatchLineField">
         <button type="button" class="btn btn-link p-0 text-start text-truncate"
-                t-att-title="value"
-                t-on-click.prevent.stop="openMatchLine"
-                t-out="value"/>
+                t-att-title="this.value"
+                t-on-click.prevent.stop="this.openMatchLine"
+                t-out="this.value"/>
     </t>
 
 </templates>

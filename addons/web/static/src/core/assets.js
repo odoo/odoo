@@ -701,7 +701,7 @@ registry
     .addValidation((entry) => entry?.prototype instanceof Component);
 
 export class LazyComponent extends Component {
-    static template = xml`<t t-component="Component" t-props="componentProps"/>`;
+    static template = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
     static props = {
         Component: String,
         bundle: String,

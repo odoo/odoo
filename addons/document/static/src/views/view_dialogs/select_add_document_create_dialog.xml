@@ -3,23 +3,23 @@
     <t t-name="document.SelectAddDocumentCreateDialog"
         t-inherit="web.SelectCreateDialog" t-inherit-mode="primary">
 
-        <xpath expr="//t[@t-if='props.multiSelect']" position="replace"/>
+        <xpath expr="//t[@t-if='this.props.multiSelect']" position="replace"/>
         <xpath expr="//Dialog" position="attributes">
             <attribute name="size">"xl"</attribute>
         </xpath>
 
         <!-- Add custom buttons for document actions -->
         <xpath expr="//button[hasclass('o_form_button_cancel')]" position="before">
-            <t t-set="pluginArgs" t-value="isPlugin ? [props.close] : []"/>
-            <t t-if="state.resIds.length > 0">
-                <button t-if="!isNewRecord" class="btn btn-primary"
+            <t t-set="pluginArgs" t-value="this.isPlugin ? [this.props.close] : []"/>
+            <t t-if="this.state.resIds.length > 0">
+                <button t-if="!this.isNewRecord" class="btn btn-primary"
                     data-hotkey="a"
-                    t-on-click="() => this.addDocumentsAttachmentMethod(state.resIds, ...pluginArgs)">
+                    t-on-click="() => this.addDocumentsAttachmentMethod(this.state.resIds, ...pluginArgs)">
                     Add from Documents
                 </button>
                 <button class="btn btn-primary"
                     data-hotkey="l"
-                    t-on-click="() => this.pasteDocumentsLinkMethod(state.resIds, ...pluginArgs)">
+                    t-on-click="() => this.pasteDocumentsLinkMethod(this.state.resIds, ...pluginArgs)">
                     Paste Link(s)
                 </button>
             </t>

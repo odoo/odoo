@@ -2,57 +2,57 @@
 <templates id="template" xml:space="preserve">
     <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
         <xpath expr="//img[hasclass('pos-receipt-logo')]" position="after">
-            <t t-if="order.isSACompany() and !order.isSettlement()">
-                <t t-set="asQrCode" t-value="order.generateQrcode()"/>
+            <t t-if="this.order.isSACompany() and !this.order.isSettlement()">
+                <t t-set="asQrCode" t-value="this.order.generateQrcode()"/>
                 <img t-if="asQrCode" id="qrcode" t-att-src="asQrCode" class="pos-receipt-qrcode"/>
                 <br/>
             </t>
         </xpath>
         <t t-set="show_title" position="after">
-            <t t-set="show_title" t-if="order.isSACompany()" t-value="order.state !== 'draft'"/>
+            <t t-set="show_title" t-if="this.order.isSACompany()" t-value="this.order.state !== 'draft'"/>
         </t>
         <t t-set="show_simplified_title" position="after">
-            <t t-set="show_simplified_title" t-if="order.isSACompany()" t-value="!order.isSettlement() and order.isSimplified"/>
+            <t t-set="show_simplified_title" t-if="this.order.isSACompany()" t-value="!this.order.isSettlement() and this.order.isSimplified"/>
         </t>
     </t>
     <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
         <span name="subtotal_span_dual" position="before">
-            <span name="subtotal_span_dual_sa" t-elif="order.isSACompany() and order.config_id.l10n_gcc_dual_language_receipt" class="text-nowrap mw-100" t-translation="off">
+            <span name="subtotal_span_dual_sa" t-elif="this.order.isSACompany() and this.order.config_id.l10n_gcc_dual_language_receipt" class="text-nowrap mw-100" t-translation="off">
                 Subtotal / المبلغ الخاضع للضريبة
                 <br/>
                 (غير شامل ضريبة القيمة المضافة)
             </span>
         </span>
         <span name="total_span_dual" position="before">
-            <span name="total_span_dual_sa" t-elif="order.isSACompany() and order.config_id.l10n_gcc_dual_language_receipt" class="label-total" t-translation="off">
+            <span name="total_span_dual_sa" t-elif="this.order.isSACompany() and this.order.config_id.l10n_gcc_dual_language_receipt" class="label-total" t-translation="off">
                 Total / إجمالي قيمة الفاتورة 
                 <br/>
                 (شامل ضريبة القيمة المضافة)
             </span>
         </span>
-        <xpath expr="//div[@t-if='order.company.point_of_sale_use_ticket_qr_code and order.finalized']//div[hasclass('w-100')]" position="inside">
-            <div name="order_reference" t-if="order.isSACompany()">
-                <t t-if="!order.config_id.l10n_gcc_dual_language_receipt">
-                    <span>Reference:</span><t t-out="order.pos_reference"/>
+        <xpath expr="//div[@t-if='this.order.company.point_of_sale_use_ticket_qr_code and this.order.finalized']//div[hasclass('w-100')]" position="inside">
+            <div name="order_reference" t-if="this.order.isSACompany()">
+                <t t-if="!this.order.config_id.l10n_gcc_dual_language_receipt">
+                    <span>Reference:</span><t t-out="this.order.pos_reference"/>
                 </t>
                 <t t-else="">
-                    <t t-out="order.pos_reference"/><span t-translation="off"> :المرجع</span><br/>
-                    <span t-translation="off">Reference: </span><t t-out="order.pos_reference"/>
+                    <t t-out="this.order.pos_reference"/><span t-translation="off"> :المرجع</span><br/>
+                    <span t-translation="off">Reference: </span><t t-out="this.order.pos_reference"/>
                 </t>
             </div>
-            <div name="order_reason" t-if="order.isSACompany() and order.isRefund and order.l10n_sa_reason_value">
-                <t t-if="!order.config_id.l10n_gcc_dual_language_receipt">
+            <div name="order_reason" t-if="this.order.isSACompany() and this.order.isRefund and this.order.l10n_sa_reason_value">
+                <t t-if="!this.order.config_id.l10n_gcc_dual_language_receipt">
                     <span>Reason:</span><br/>
                 </t>
                 <t t-else="">
                     <span t-translation="off"> :سبب إصدار الإشعار من الأسباب التالية</span><br/>
                     <span t-translation="off">Reason: </span><br/>
                 </t>
-                <span t-out="order.l10n_sa_reason_value"/>
+                <span t-out="this.order.l10n_sa_reason_value"/>
             </div>
         </xpath>
         <xpath expr="//t[@t-if='company.street']/.." position="attributes">
-            <attribute name="t-if">!order.isSACompany()</attribute>
+            <attribute name="t-if">!this.order.isSACompany()</attribute>
         </xpath>
         <xpath expr="//t[@t-if='company.street']/.." position="after">
             <div name="custom_address_block" t-else="">

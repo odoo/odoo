@@ -11,8 +11,8 @@
                     t-on-click="() => this.bankReconciliation.toggleChatter()"
                     data-tooltip="Chatter"
                     class="btn btn-secondary o_switch_view o_kanban d-none d-md-inline bank-chatter-btn"
-                    t-att-class="{'active': bankReconciliation.chatterState.visible}">
-                    <i t-attf-class="fa-fw {{ bankReconciliation.chatterState.visible ? 'fa-solid fa-xmark' : 'fa-regular fa-comments' }} mt-1"/>
+                    t-att-class="{'active': this.bankReconciliation.chatterState.visible}">
+                    <i t-attf-class="fa-fw {{ this.bankReconciliation.chatterState.visible ? 'fa-solid fa-xmark' : 'fa-regular fa-comments' }} mt-1"/>
                 </button>
             </t>
         </xpath>

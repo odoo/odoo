@@ -10,16 +10,16 @@
                 <div class="flex-grow-1"/>
                 <DeviceSelect kind="'videoinput'"/>
             </label>
-            <div t-if="!isBrowserSafari()" class="btn border-transparent d-flex gap-2" t-on-click="() => store.settings.setUseBlur(!store.settings.useBlur)">
+            <div t-if="!this.isBrowserSafari()" class="btn border-transparent d-flex gap-2" t-on-click="() => this.store.settings.setUseBlur(!this.store.settings.useBlur)">
                 <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
                     <i class="fa-regular fa-image"/><span class="text-truncate text-wrap">Blur background</span>
                 </label>
                 <div class="flex-grow-1"/>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="store.settings?.useBlur ? 'checked' : ''"/>
+                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="this.store.settings?.useBlur ? 'checked' : ''"/>
                 </div>
             </div>
-            <button class="btn border-transparent d-flex align-items-center gap-2" t-on-click="onClickVideoSettings">
+            <button class="btn border-transparent d-flex align-items-center gap-2" t-on-click="this.onClickVideoSettings">
                 <i class="fa-solid fa-gear"/><span>Video Settings</span>
             </button>
         </div>

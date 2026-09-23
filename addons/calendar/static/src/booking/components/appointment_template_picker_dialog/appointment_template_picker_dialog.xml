@@ -3,9 +3,9 @@
     <t t-name="calendar.booking.AppointmentTemplatePickerDialog">
         <Dialog size="'lg'" title.translate="Choose an appointment preset">
             <div class="o_appointment_template_picker justify-content-center row">
-                <t t-set="templateNames" t-value="Object.keys(appointmentTypeTemplatesData)"/>
+                <t t-set="templateNames" t-value="Object.keys(this.appointmentTypeTemplatesData)"/>
                 <t t-foreach="templateNames" t-as="templateName" t-key="templateName">
-                    <t t-set="templateData" t-value="appointmentTypeTemplatesData[templateName]"/>
+                    <t t-set="templateData" t-value="this.appointmentTypeTemplatesData[templateName]"/>
                     <t t-set="templateElemClass" t-value="'col-12 col-md-6 py-2'"/>
                     <t t-set="templateDescriptionClass" t-value="'col-9 col-md-8 card-body d-flex flex-column pe-0 py-0'"/>
                     <t t-set="templateIconClass" t-value="'col-3 col-md-4 h-75 ps-2 p-0'"/>
@@ -13,7 +13,7 @@
                 </t>
             </div>
             <t t-set-slot="footer">
-                <button t-on-click="props.close" class="btn btn-primary" data-hotkey="x">Close</button>
+                <button t-on-click="this.props.close" class="btn btn-primary" data-hotkey="x">Close</button>
             </t>
         </Dialog>
     </t>

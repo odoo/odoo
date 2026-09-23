@@ -2,35 +2,35 @@
 <templates xml:space="preserve">
 
  <t t-name="web.CogMenuToggler">
- <button class="o_cog_menu_toggler d-print-none btn" t-att-class="env.isSmall ? 'btn-secondary' : 'lh-sm p-0 border-0'" data-hotkey="u" data-tooltip="Actions" aria-label="Actions menu">
+ <button class="o_cog_menu_toggler d-print-none btn" t-att-class="this.env.isSmall ? 'btn-secondary' : 'lh-sm p-0 border-0'" data-hotkey="u" data-tooltip="Actions" aria-label="Actions menu">
  <i class="fa-solid fa-fw fa-cog"/>
  </button>
  </t>
 
  <t t-name="web.CogMenu">
- <div t-if="hasItems" class="o_cp_action_menus d-flex align-items-center gap-1" t-att-class="{'pe-2': !env.isSmall}">
+ <div t-if="this.hasItems" class="o_cp_action_menus d-flex align-items-center gap-1" t-att-class="{'pe-2': !this.env.isSmall}">
  <div class="lh-1">
- <Dropdown menuClass="'lh-base'" beforeOpen.bind="loadPrintItems">
+ <Dropdown menuClass="'lh-base'" beforeOpen.bind="this.loadPrintItems">
  <t t-call="web.CogMenuToggler"/>
 
  <t t-set-slot="content">
- <t t-if="props.slots?.default">
+ <t t-if="this.props.slots?.default">
  <t t-slot="default"/>
- <div t-if="cogItems.length" role="separator" class="dropdown-divider"/>
+ <div t-if="this.cogItems.length" role="separator" class="dropdown-divider"/>
  </t>
 
  <t t-set="currentGroup" t-value="null"/>
- <t t-foreach="cogItems" t-as="item" t-key="item.key">
+ <t t-foreach="this.cogItems" t-as="item" t-key="item.key">
  <div t-if="currentGroup !== null and currentGroup !== item.groupNumber" role="separator" class="dropdown-divider"/>
 
  <t t-if="item.isPrint">
- <Dropdown t-if="state.printItems.length > 1">
+ <Dropdown t-if="this.state.printItems.length > 1">
  <button class="o_cog_menu_print">
- <i class="o_cog_menu_item_icon fa-solid fa-print me-1" aria-hidden="true"/><t t-out="props.printDropdownTitle"/>
+ <i class="o_cog_menu_item_icon fa-solid fa-print me-1" aria-hidden="true"/><t t-out="this.props.printDropdownTitle"/>
  </button>
  <t t-set-slot="content">
  <DropdownItem
- t-foreach="state.printItems"
+ t-foreach="this.state.printItems"
  t-as="printItem"
  t-key="printItem.key"
  class="'o_menu_item ' + (printItem.class or '')"
@@ -41,12 +41,12 @@
  </DropdownItem>
  </t>
  </Dropdown>
- <CogMenuItem t-elif="state.printItems.length"
- description="state.printItems[0].description"
+ <CogMenuItem t-elif="this.state.printItems.length"
+ description="this.state.printItems[0].description"
  icon="'fa-solid fa-print'"
- class="state.printItems[0].class"
- attrs="{ 'aria-label': this.getPrintItemAriaLabel(state.printItems[0]) }"
- onSelected="() => this.onItemSelected(state.printItems[0])"/>
+ class="this.state.printItems[0].class"
+ attrs="{ 'aria-label': this.getPrintItemAriaLabel(this.state.printItems[0]) }"
+ onSelected="() => this.onItemSelected(this.state.printItems[0])"/>
  </t>
 
  <t t-elif="item.Component" t-component="item.Component" t-props="item.props"/>

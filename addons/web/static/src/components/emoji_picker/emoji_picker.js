@@ -923,7 +923,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
 class PickerMobile extends Component {
     static props = [...PICKER_PROPS];
     static template = xml`
-        <t t-component="props.PickerComponent" t-props="pickerProps"/>
+        <t t-component="this.props.PickerComponent" t-props="this.pickerProps"/>
     `;
 
     get pickerProps() {
@@ -944,7 +944,7 @@ class PickerMobileInDialog extends PickerMobile {
     static template = xml`
         <Dialog size="'lg'" header="false" footer="false" contentClass="'o-discuss-mobileContextMenu d-flex position-absolute bottom-0 rounded-0 h-50 bg-100'" bodyClass="'p-1'">
             <div class="h-100" t-ref="root">
-                <t t-component="props.PickerComponent" t-props="pickerProps"/>
+                <t t-component="this.props.PickerComponent" t-props="this.pickerProps"/>
             </div>
         </Dialog>
     `;

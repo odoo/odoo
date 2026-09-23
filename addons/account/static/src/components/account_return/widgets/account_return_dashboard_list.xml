@@ -2,7 +2,7 @@
 <templates>
     <t t-name="account.account_return_dashboard_list">
         <table>
-            <t t-foreach="accountReturns" t-as="accountReturn" t-key="accountReturn.id">
+            <t t-foreach="this.accountReturns" t-as="accountReturn" t-key="accountReturn.id">
                 <tr>
                     <td class="px-1 text-start">
                         <a t-att-title="accountReturn.name"

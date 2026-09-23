@@ -5,9 +5,9 @@
             <div class="content">
                 <div
                     class="o-checkbox form-check o_boolean_toggle form-switch"
-                    t-on-click.stop.prevent="toggleNoFollowup"
+                    t-on-click.stop.prevent="this.toggleNoFollowup"
                 >
-                    <input type="checkbox" class="form-check-input" role="switch" t-att-checked="props.line.no_followup"/>
+                    <input type="checkbox" class="form-check-input" role="switch" t-att-checked="this.props.line.no_followup"/>
                 </div>
             </div>
         </xpath>

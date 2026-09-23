@@ -3,22 +3,22 @@
     <t t-name="account.BankRecStatementSummary">
         <div class="o_statement_summary d-flex justify-content-between align-items-center w-100 p-2">
             <div name="label_statement_summary" class="d-flex gap-2 align-items-center">
-                <h4 t-out="props.label"
-                    t-on-click="props.action"
+                <h4 t-out="this.props.label"
+                    t-on-click="this.props.action"
                     class="m-0 cursor-pointer"
-                    t-att-class="{'text-danger': !props.isValid}"/>
+                    t-att-class="{'text-danger': !this.props.isValid}"/>
             </div>
             <div>
                 <h4 class="m-0 cursor-pointer"
-                    t-if="props.journalIsInvalid"
-                    t-on-click="actionApplyInvalidStatement">
+                    t-if="this.props.journalIsInvalid"
+                    t-on-click="this.actionApplyInvalidStatement">
                     Invalid Statement(s)
                 </h4>
             </div>
-            <div t-if="props.amount"
+            <div t-if="this.props.amount"
                  class="btn btn-link p-0 fw-bold fs-4"
-                 t-on-click="props.action"
-                 t-out="props.amount"/>
+                 t-on-click="this.props.action"
+                 t-out="this.props.amount"/>
         </div>
     </t>
 </templates>

@@ -4,35 +4,35 @@
     <t t-name="partner_relationship.PartnerNetwork">
         <div class="o_partner_network">
             <div class="o_partner_network_toolbar d-flex align-items-center flex-wrap gap-2 mb-2">
-                <t t-if="state.reachedDegree > 1">
+                <t t-if="this.state.reachedDegree > 1">
                     <span class="text-muted small">Degrees</span>
                     <div class="btn-group btn-group-sm" role="group" aria-label="Degrees of separation">
-                        <button t-foreach="degrees" t-as="degree" t-key="degree"
+                        <button t-foreach="this.degrees" t-as="degree" t-key="degree"
                                 type="button" class="btn"
-                                t-att-class="degree === state.degree ? 'btn-primary' : 'btn-outline-primary'"
-                                t-att-aria-pressed="degree === state.degree"
+                                t-att-class="degree === this.state.degree ? 'btn-primary' : 'btn-outline-primary'"
+                                t-att-aria-pressed="degree === this.state.degree"
                                 t-on-click="() => this.setDegree(degree)"
                                 t-out="degree"/>
                     </div>
                 </t>
-                <span t-if="state.status === 'ready'" class="text-muted small">
-                    <t t-out="countRelated"/> related contacts
+                <span t-if="this.state.status === 'ready'" class="text-muted small">
+                    <t t-out="this.countRelated"/> related contacts
                 </span>
 
                 <div class="ms-auto d-flex align-items-center gap-2">
-                    <button t-if="isMoved" type="button"
+                    <button t-if="this.isMoved" type="button"
                             class="btn btn-sm btn-outline-secondary"
                             t-on-click="() => this.recentre()">
                         <i class="fa fa-undo me-1"/>Back to this contact
                     </button>
-                    <div t-if="state.status === 'ready'" class="btn-group btn-group-sm" role="group" aria-label="Zoom">
+                    <div t-if="this.state.status === 'ready'" class="btn-group btn-group-sm" role="group" aria-label="Zoom">
                         <button type="button" class="btn btn-outline-secondary"
                                 title="Zoom out" aria-label="Zoom out"
                                 t-on-click="() => this.zoomBy(1 / 1.25)">
                             <i class="fa fa-search-minus"/>
                         </button>
                         <span class="btn btn-outline-secondary disabled o_partner_network_zoom"
-                              t-out="zoomPercent"/>
+                              t-out="this.zoomPercent"/>
                         <button type="button" class="btn btn-outline-secondary"
                                 title="Zoom in" aria-label="Zoom in"
                                 t-on-click="() => this.zoomBy(1.25)">
@@ -51,17 +51,17 @@
                 </div>
             </div>
 
-            <div t-if="state.status === 'ready' and state.categories.length > 1"
+            <div t-if="this.state.status === 'ready' and this.state.categories.length > 1"
                  class="o_partner_network_legend d-flex flex-wrap align-items-center gap-1 mb-2"
                  role="group" aria-label="Relationship kinds">
                 <span class="text-muted small me-1">Show</span>
-                <t t-set="counts" t-value="countPerCategory"/>
-                <label t-foreach="state.categories" t-as="category" t-key="category.key"
+                <t t-set="counts" t-value="this.countPerCategory"/>
+                <label t-foreach="this.state.categories" t-as="category" t-key="category.key"
                        class="o_partner_network_legend_item"
-                       t-att-class="state.categoryOn[category.key] ? '' : 'o_partner_network_legend_off'"
+                       t-att-class="this.state.categoryOn[category.key] ? '' : 'o_partner_network_legend_off'"
                        t-att-title="category.label">
                     <input type="checkbox" class="form-check-input m-0"
-                           t-att-checked="state.categoryOn[category.key]"
+                           t-att-checked="this.state.categoryOn[category.key]"
                            t-on-change="() => this.toggleCategory(category.key)"/>
                     <span class="o_partner_network_swatch"
                           t-att-class="'o_partner_network_category_' + category.key"/>
@@ -75,33 +75,33 @@
                 </label>
                 <div class="btn-group btn-group-sm ms-1" role="group" aria-label="Select relationship kinds">
                     <button type="button" class="btn btn-outline-secondary"
-                            t-att-disabled="isEveryCategoryOn"
+                            t-att-disabled="this.isEveryCategoryOn"
                             t-on-click="() => this.setEveryCategory(true)">All</button>
                     <button type="button" class="btn btn-outline-secondary"
-                            t-att-disabled="isNoCategoryOn"
+                            t-att-disabled="this.isNoCategoryOn"
                             t-on-click="() => this.setEveryCategory(false)">None</button>
                 </div>
             </div>
 
-            <div t-if="state.status === 'loading'" class="text-muted p-4">
+            <div t-if="this.state.status === 'loading'" class="text-muted p-4">
                 <i class="fa fa-circle-o-notch fa-spin me-2"/>Loading the network…
             </div>
-            <div t-elif="state.status === 'unsaved'" class="text-muted p-4">
+            <div t-elif="this.state.status === 'unsaved'" class="text-muted p-4">
                 Save this contact to draw its network.
             </div>
-            <div t-elif="state.status === 'empty'" class="text-muted p-4" t-out="emptyMessage"/>
-            <div t-elif="state.status === 'error'" class="alert alert-warning" role="alert">
+            <div t-elif="this.state.status === 'empty'" class="text-muted p-4" t-out="this.emptyMessage"/>
+            <div t-elif="this.state.status === 'error'" class="alert alert-warning" role="alert">
                 <strong>The network could not be drawn.</strong>
-                <div class="small mt-1" t-out="state.error"/>
+                <div class="small mt-1" t-out="this.state.error"/>
             </div>
             <t t-else="">
                 <div class="o_partner_network_canvas" t-ref="box">
                     <div class="o_partner_network_paper" t-ref="canvas"/>
                 </div>
                 <div class="text-muted small mt-1">
-                    Viewing <strong t-out="state.focusName"/> — click a contact to
+                    Viewing <strong t-out="this.state.focusName"/> — click a contact to
                     centre the network on it, double-click to open it.
-                    <t t-if="countRelated === 0"> No tie of the selected kinds reaches anyone.</t>
+                    <t t-if="this.countRelated === 0"> No tie of the selected kinds reaches anyone.</t>
                 </div>
             </t>
         </div>

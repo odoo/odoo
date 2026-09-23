@@ -4,12 +4,12 @@
     <div t-name="stock.PopoverStockRescheduling">
         <h6>Planning Issue</h6>
         <p>
-            <t t-out="precedingLabel"/>
-            <t t-foreach="props.late_elements" t-as="late_element" t-key="late_element.id">
-                <a t-out="late_element.name" t-on-click.prevent="openElement" href="#" t-att-element-id="late_element.id" t-att-element-model="late_element.model"/><t t-if="!late_element_last">, </t>
+            <t t-out="this.precedingLabel"/>
+            <t t-foreach="this.props.late_elements" t-as="late_element" t-key="late_element.id">
+                <a t-out="late_element.name" t-on-click.prevent="this.openElement" href="#" t-att-element-id="late_element.id" t-att-element-model="late_element.model"/><t t-if="!late_element_last">, </t>
             </t>
             <br/>
-            <t t-out="plannedLabel"/>
+            <t t-out="this.plannedLabel"/>
         </p>
     </div>
 </templates>

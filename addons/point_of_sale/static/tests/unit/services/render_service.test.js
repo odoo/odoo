@@ -14,7 +14,7 @@ test("test the render service", async () => {
     class ComponentToBeRendered extends Component {
         static props = ["name"];
         static template = xml`
-            <div> It's me, <t t-out="props.name" />! </div>
+            <div> It's me, <t t-out="this.props.name" />! </div>
         `;
     }
 
@@ -127,7 +127,7 @@ test("queued renders of the same component produce distinct receipts", async () 
     const comp = await mountWithCleanup("none");
     class Receipt extends Component {
         static props = ["number"];
-        static template = xml`<div t-out="props.number"/>`;
+        static template = xml`<div t-out="this.props.number"/>`;
     }
     const receipts = await Promise.all([
         comp.env.services.renderer.toHtml(Receipt, { number: "first" }),

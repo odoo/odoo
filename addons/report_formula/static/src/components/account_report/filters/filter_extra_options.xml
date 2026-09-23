@@ -4,8 +4,8 @@
         <Dropdown>
             <button class="btn btn-secondary">
                 <i class="fa-solid fa-sliders me-1"/>
-                <t t-if="selectedExtraOptions">
-                    <t t-out="selectedExtraOptions"/>
+                <t t-if="this.selectedExtraOptions">
+                    <t t-out="this.selectedExtraOptions"/>
                 </t>
                 <t t-else="">
                     Options
@@ -29,7 +29,7 @@
                     </t>
                 </t>
 
-                <div class="dropdown-divider" t-if="hasUIFilter"/>
+                <div class="dropdown-divider" t-if="this.hasUIFilter"/>
 
                 <t
                     t-foreach="Object.entries(this.filterExtraOptionsData)"

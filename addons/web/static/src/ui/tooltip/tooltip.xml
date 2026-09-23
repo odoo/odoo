@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Tooltip">
-        <div class="o-tooltip tooltip-inner d-print-none text-start" role="tooltip" t-att-id="props.id">
-            <t t-if="props.template" t-call="{{props.template}}" t-call-context="{ env, ...props.info }"/>
-            <span t-else="" t-out="props.tooltip"/>
+        <div class="o-tooltip tooltip-inner d-print-none text-start" role="tooltip" t-att-id="this.props.id">
+            <t t-if="this.props.template" t-call="{{this.props.template}}" t-call-context="{ env: this.env, ...this.props.info }"/>
+            <span t-else="" t-out="this.props.tooltip"/>
         </div>
     </t>
 

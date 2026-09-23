@@ -2,7 +2,7 @@
 <template>
 
     <t t-name="web.PromoteStudioDialog">
-        <Dialog title="props.title" modalRef="modalRef">
+        <Dialog title="this.props.title" modalRef="this.modalRef">
             <div class="modal-studio">
                 <div id="studio_install_dialog"
                     class="d-flex flex-row align-items-center flex-wrap">
@@ -33,13 +33,13 @@
 
                 <t t-set-slot="footer">
                     <button class="btn btn-primary btn-block o_install_studio"
-                        t-on-click.stop="onClickInstallStudio"
+                        t-on-click.stop="this.onClickInstallStudio"
                         data-tooltip="Install Odoo Studio and its dependencies">
                         Start using Odoo Studio
                     </button>
 
                     <button class="btn btn-secondary btn-block"
-                        t-on-click="props.close">
+                        t-on-click="this.props.close">
                         Discard
                     </button>
                 </t>

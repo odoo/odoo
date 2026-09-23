@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
     <t t-name="web.DarkModeToggle">
         <div class="o_dark_mode_toggle d-flex align-items-center px-2"
-             t-on-click="toggle"
+             t-on-click="this.toggle"
              role="button"
-             t-att-title="label"
-             t-att-aria-label="label">
-            <i t-att-class="colorScheme.isDark ? 'fa-regular fa-sun' : 'fa-regular fa-moon'"/>
+             t-att-title="this.label"
+             t-att-aria-label="this.label">
+            <i t-att-class="this.colorScheme.isDark ? 'fa-regular fa-sun' : 'fa-regular fa-moon'"/>
         </div>
     </t>
 </templates>

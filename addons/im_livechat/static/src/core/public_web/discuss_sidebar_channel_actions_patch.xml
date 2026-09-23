@@ -2,7 +2,7 @@
 <templates>
     <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-itemName')]" position="replace">
-            <div t-if="!store.discuss.isSidebarCompact and thread.discussAppCategory.eq(store.discuss.livechatLookingForHelpCategory) and thread.matchesSelfExpertise" class="d-flex justify-content-between align-items-baseline o-min-width-0">
+            <div t-if="!this.store.discuss.isSidebarCompact and this.thread.discussAppCategory.eq(this.store.discuss.livechatLookingForHelpCategory) and this.thread.matchesSelfExpertise" class="d-flex justify-content-between align-items-baseline o-min-width-0">
                 <t>$0</t>
                 <i class="fa-solid fa-star o-mail-starred me-2" role="image" title="Relevant to your expertise"/>
             </div>

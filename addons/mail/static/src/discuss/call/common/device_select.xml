@@ -3,11 +3,11 @@
 
     <t t-name="discuss.CallDeviceSelect">
         <select
-            t-if="!isPermissionGranted(props.kind)"
+            t-if="!this.isPermissionGranted(this.props.kind)"
             name="inputDevice"
             class="form-select d-flex shadow-sm"
-            t-on-pointerdown.prevent="() => this.showPermissionDialog(props.kind)"
-            t-on-keydown.prevent="() => this.showPermissionDialog(props.kind)"
+            t-on-pointerdown.prevent="() => this.showPermissionDialog(this.props.kind)"
+            t-on-keydown.prevent="() => this.showPermissionDialog(this.props.kind)"
         >
             <option value="">Permission Needed</option>
         </select>
@@ -15,11 +15,11 @@
             t-else=""
             name="inputDevice"
             class="form-select d-flex shadow-sm"
-            t-on-change="onChangeSelectAudioInput"
+            t-on-change="this.onChangeSelectAudioInput"
         >
-            <option t-if="!isBrowserChrome" value="">Browser Default</option>
-            <t t-foreach="state.userDevices" t-as="device" t-key="device_index">
-                <option t-if="device.kind === props.kind" t-att-selected="isSelected(device.deviceId)" t-att-value="device.deviceId">
+            <option t-if="!this.isBrowserChrome" value="">Browser Default</option>
+            <t t-foreach="this.state.userDevices" t-as="device" t-key="device_index">
+                <option t-if="device.kind === this.props.kind" t-att-selected="this.isSelected(device.deviceId)" t-att-value="device.deviceId">
                     <t t-out="device.label || 'device ' + device_index"/>
                 </option>
             </t>

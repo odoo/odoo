@@ -2,20 +2,20 @@
 <templates>
     <t t-name="account.AccountReportFilterBudget">
         <Dropdown
-            navigationOptions="dropdownProps"
+            navigationOptions="this.dropdownProps"
         >
             <button class="btn btn-secondary">
                 <i class="fa-solid fa-chart-column me-1"/>Budget
             </button>
 
             <t t-set-slot="content">
-                <t t-foreach="controller.cachedFilterOptions.budgets" t-as="budget" t-key="budget_index">
+                <t t-foreach="this.controller.cachedFilterOptions.budgets" t-as="budget" t-key="budget_index">
                     <div class="o-dropdown-item dropdown-item o-navigable d-flex justify-content-between ps-4 pe-1"
                          t-att-class="{ 'selected': budget.selected }"
                          t-on-click="() => this.selectBudget(budget)"
                     >
                         <span t-out="budget.name"/>
-                        <button class="btn p-0 px-1" t-on-click.prevent.stop="() => controller.openBudget(budget)">
+                        <button class="btn p-0 px-1" t-on-click.prevent.stop="() => this.controller.openBudget(budget)">
                             <i class="fa-solid fa-pencil" />
                         </button>
                     </div>
@@ -23,9 +23,9 @@
 
                 <div class="dropdown-divider"/>
 
-                <t t-if="controller.cachedFilterOptions.budgets.filter(x => x.selected).length > 0">
+                <t t-if="this.controller.cachedFilterOptions.budgets.filter(x => x.selected).length > 0">
                     <DropdownItem
-                        class="{ 'filter_show_all_accounts_hook': true, 'selected': controller.cachedFilterOptions.show_all_accounts }"
+                        class="{ 'filter_show_all_accounts_hook': true, 'selected': this.controller.cachedFilterOptions.show_all_accounts }"
                         onSelected="() => this.filterClicked({ optionKey: 'show_all_accounts', reload: true})"
                         closingMode="'none'"
                     >
@@ -36,12 +36,12 @@
                 <div class="o-dropdown-item dropdown-item d-flex align-items-center ps-4 pe-1">
                     <input
                         class="o_input"
-                        t-att-class="{ 'o_field_invalid': budgetName.invalid }"
+                        t-att-class="{ 'o_field_invalid': this.budgetName.invalid }"
                         type="text"
                         placeholder="Budget Name"
-                        t-model="budgetName.value"
+                        t-model="this.budgetName.value"
                     />
-                    <button class="btn btn-link" data-hotkey="s" t-on-click="createBudget">
+                    <button class="btn btn-link" data-hotkey="s" t-on-click="this.createBudget">
                         Create
                     </button>
                 </div>

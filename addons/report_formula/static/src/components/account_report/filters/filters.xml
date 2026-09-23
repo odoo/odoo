@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="report_formula.AccountReportFilters">
-        <t t-call="{{ env.template('AccountReportFilters') }}"/>
+        <t t-call="{{ this.env.template('AccountReportFilters') }}"/>
     </t>
 
     <t t-name="report_formula.AccountReportFiltersCustomizable">
         <!-- Date filter -->
-        <t t-if="'date' in controller.cachedFilterOptions and controller.filters.show_date !== false">
+        <t t-if="'date' in this.controller.cachedFilterOptions and this.controller.filters.show_date !== false">
             <div id="filter_date" class="filter_date">
                 <t t-call="report_formula.AccountReportFilterDate"/>
             </div>
         </t>
 
         <!-- Comparison filter -->
-        <t t-if="controller.filters.show_period_comparison">
+        <t t-if="this.controller.filters.show_period_comparison">
             <div id="filter_comparison" class="filter_comparison">
                 <t t-call="report_formula.AccountReportFilterComparison"/>
             </div>
         </t>
 
         <!-- Partner filter -->
-        <t t-if="'partner' in controller.cachedFilterOptions">
+        <t t-if="'partner' in this.controller.cachedFilterOptions">
             <div id="filter_partner" class="filter_partner">
                 <t t-call="report_formula.AccountReportFilterPartner"/>
             </div>
         </t>
 
         <!-- Extra cachedFilterOptions filter -->
-        <t t-if="hasExtraOptionsFilter">
+        <t t-if="this.hasExtraOptionsFilter">
             <div id="filter_extra_options">
                 <t t-call="report_formula.AccountReportFilterExtraOptions"/>
             </div>
         </t>
 
         <!-- Optional columns filter -->
-        <t t-if="controller.cachedFilterOptions.optional_columns?.length">
+        <t t-if="this.controller.cachedFilterOptions.optional_columns?.length">
             <div id="filter_optional_columns">
                 <t t-call="report_formula.AccountReportFilterOptionalColumns"/>
             </div>
         </t>
 
         <!-- Variant filter -->
-        <t t-if="controller.cachedFilterOptions.available_variants.length > 1">
+        <t t-if="this.controller.cachedFilterOptions.available_variants.length > 1">
             <div id="filter_variant">
                 <t t-call="report_formula.AccountReportFilterVariant"/>
             </div>
@@ -51,7 +51,7 @@
             <t t-call="report_formula.AccountReportFilterRoundingUnit"/>
         </div>
 
-        <t t-if="env.debug">
+        <t t-if="this.env.debug">
             <div id="filter_configuration" class="o-dropdown dropdown o-dropdown--no-caret">
                 <button
                     class="btn btn-secondary"

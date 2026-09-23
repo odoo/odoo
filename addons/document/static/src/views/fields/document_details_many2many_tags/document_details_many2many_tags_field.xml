@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="document.DocumentsDetailsPanelMany2ManyTagsField" t-inherit="web.Many2ManyTagsField" t-inherit-mode="primary">
-        <div t-if="showM2OSelectionField" position="after">
+        <div t-if="this.showM2OSelectionField" position="after">
             <span
-                t-elif="!tags.length"
-                t-out="props.readonlyPlaceholder || props.placeholder"
+                t-elif="!this.tags.length"
+                t-out="this.props.readonlyPlaceholder || this.props.placeholder"
                 class="o_documents_details_panel_placeholder"
             />
         </div>

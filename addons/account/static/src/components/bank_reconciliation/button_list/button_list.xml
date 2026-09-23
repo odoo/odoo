@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="account.BankRecButtonListDropdown">
-        <Dropdown t-if="!statementLineData.is_reconciled">
+        <Dropdown t-if="!this.statementLineData.is_reconciled">
             <div class="activity-container position-relative">
-                <button class="btn btn-secondary" t-att-class="{'btn-sm': !ui.isSmall}">
+                <button class="btn btn-secondary" t-att-class="{'btn-sm': !this.ui.isSmall}">
                     <i class="oi oi-ellipsis-v"/>
                 </button>
-                <span t-if="displaySuggestionPill" class="suggestion-dot o_link_color rounded-pill"/>
+                <span t-if="this.displaySuggestionPill" class="suggestion-dot o_link_color rounded-pill"/>
             </div>
 
             <t t-set-slot="content">
-                <t t-foreach="buttonsInDropdown" t-as="button" t-key="button_index">
+                <t t-foreach="this.buttonsInDropdown" t-as="button" t-key="button_index">
                     <DropdownItem class="'btn btn-link'" onSelected.bind="button.action">
                         <div class="d-flex justify-content-between gap-2 align-items-center">
                             <t t-out="button.label"/>
@@ -21,7 +21,7 @@
                         </div>
                     </DropdownItem>
                 </t>
-                <BankRecFileUploader record="bankRecFileUploaderRecord">
+                <BankRecFileUploader record="this.bankRecFileUploaderRecord">
                     <t t-set-slot="toggler">
                         <span class="dropdown-item dropdown-item o-navigable btn btn-link">
                             Upload Bills
@@ -29,16 +29,16 @@
                     </t>
                 </BankRecFileUploader>
                 <div class="dropdown-divider"/>
-                <t t-foreach="reconcileModelsInDropdown" t-as="model" t-key="model.id">
+                <t t-foreach="this.reconcileModelsInDropdown" t-as="model" t-key="model.id">
                     <DropdownItem class="'btn btn-link'" onSelected.bind="() => this.triggerReconciliationModel(model.id)">
                         <t t-out="model.display_name"/>
                     </DropdownItem>
                 </t>
-                <div t-if="reconcileModelsInDropdown.length" class="dropdown-divider"/>
-                <DropdownItem class="'btn btn-link'" onSelected.bind="actionViewRecoModels">
+                <div t-if="this.reconcileModelsInDropdown.length" class="dropdown-divider"/>
+                <DropdownItem class="'btn btn-link'" onSelected.bind="this.actionViewRecoModels">
                     Manage Models
                 </DropdownItem>
-                <DropdownItem class="'btn btn-link'" onSelected.bind="deleteTransaction">
+                <DropdownItem class="'btn btn-link'" onSelected.bind="this.deleteTransaction">
                     Delete Transaction
                 </DropdownItem>
             </t>
@@ -46,24 +46,24 @@
     </t>
     <t t-name="account.BankRecButtonList">
         <div class="d-flex flex-wrap gap-1">
-            <t t-if="props.preSelectedReconciliationModel and !statementLineData.is_reconciled">
+            <t t-if="this.props.preSelectedReconciliationModel and !this.statementLineData.is_reconciled">
                 <div class="d-flex gap-1">
                     <BankRecButton
-                        label="props.preSelectedReconciliationModel.display_name"
+                        label="this.props.preSelectedReconciliationModel.display_name"
                         primary="true"
-                        action.bind="() => this.triggerReconciliationModel(props.preSelectedReconciliationModel.id)"
+                        action.bind="() => this.triggerReconciliationModel(this.props.preSelectedReconciliationModel.id)"
                     />
                     <t t-call="account.BankRecButtonListDropdown"/>
                 </div>
             </t>
-            <t t-elif="buttons?.toReview">
+            <t t-elif="this.buttons?.toReview">
                 <div class="d-flex gap-1">
-                    <BankRecButton t-props="buttons.toReview"/>
+                    <BankRecButton t-props="this.buttons.toReview"/>
                     <t t-call="account.BankRecButtonListDropdown"/>
                 </div>
             </t>
             <t t-else="">
-                <t t-foreach="buttonsToDisplay" t-as="button" t-key="button_index">
+                <t t-foreach="this.buttonsToDisplay" t-as="button" t-key="button_index">
                     <t t-if="!button_last">
                         <BankRecButton t-props="button"/>
                     </t>

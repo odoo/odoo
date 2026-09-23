@@ -3,30 +3,30 @@
     <t t-name="sale.ProductTemplateAttributeLine">
         <div
             name="ptal"
-            t-attf-class="#{this.props.attribute_values.length === 1 &amp;&amp; hasPTAVCustom() ? 'd-md-flex' : ''}"
+            t-attf-class="#{this.props.attribute_values.length === 1 &amp;&amp; this.hasPTAVCustom() ? 'd-md-flex' : ''}"
         >
             <div class="d-flex gap-2 flex-column align-items-start justify-content-start mb-2 small">
                 <label
-                    t-if="showValuesChoice || isSelectedPTAVCustom()"
+                    t-if="this.showValuesChoice || this.isSelectedPTAVCustom()"
                     t-out="this.props.attribute.name"
                     class="fw-bold me-3"
                 />
-                <t t-if="showValuesChoice" t-call="{{getPTAVTemplate()}}"/>
+                <t t-if="this.showValuesChoice" t-call="{{this.getPTAVTemplate()}}"/>
             </div>
             <input
                 class="o_input form-control w-100 w-md-75 mb-4"
                 type="text"
-                t-att-placeholder="customValuePlaceholder"
-                t-if="hasPTAVCustom() &amp;&amp; isSelectedPTAVCustom()"
+                t-att-placeholder="this.customValuePlaceholder"
+                t-if="this.hasPTAVCustom() &amp;&amp; this.isSelectedPTAVCustom()"
                 t-att-value="this.props.customValue"
-                t-on-change="updateCustomValue"
+                t-on-change="this.updateCustomValue"
             />
         </div>
     </t>
     <t t-name="sale.ptav_select">
         <select
             class="form-select form-select-sm w-auto"
-            t-on-change="updateSelectedPTAV"
+            t-on-change="this.updateSelectedPTAV"
             t-att-name="'ptal-' + this.props.id"
         >
             <option
@@ -35,7 +35,7 @@
                 t-key="ptav.id"
                 t-att-value="ptav.id"
                 t-att-selected="this.props.selected_attribute_value_ids.includes(ptav.id)"
-                t-out="getPTAVSelectName(ptav)"
+                t-out="this.getPTAVSelectName(ptav)"
                 t-att-class="{ 'css_not_available': ptav.excluded }"
             />
         </select>
@@ -62,7 +62,7 @@
                         t-att-value="ptav.id"
                         t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
                         t-att-name="'ptal-' + this.props.id"
-                        t-on-change="updateSelectedPTAV"
+                        t-on-change="this.updateSelectedPTAV"
                     />
                 </div>
             </li>
@@ -92,7 +92,7 @@
                     t-att-value="ptav.id"
                     t-att-name="'ptal-' + this.props.id"
                     t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
-                    t-on-change="updateSelectedPTAV"
+                    t-on-change="this.updateSelectedPTAV"
                 />
             </li>
         </ul>
@@ -118,7 +118,7 @@
                         t-att-value="ptav.id"
                         t-att-name="'ptal-' + this.props.id"
                         t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
-                        t-on-change="updateSelectedPTAV"
+                        t-on-change="this.updateSelectedPTAV"
                     />
                 </label>
             </li>
@@ -149,7 +149,7 @@
                         t-att-value="ptav.id"
                         t-att-name="'ptal-' + this.props.id"
                         t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
-                        t-on-change="updateSelectedPTAV"
+                        t-on-change="this.updateSelectedPTAV"
                         class="w-100 h-100 opacity-0 cursor-pointer"
                     />
                 </label>
@@ -167,7 +167,7 @@
                         t-att-value="ptav.id"
                         t-att-name="'ptal-' + this.props.id"
                         t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
-                        t-on-change="updateSelectedPTAV"
+                        t-on-change="this.updateSelectedPTAV"
                     />
                     <label
                         class="form-check-label"

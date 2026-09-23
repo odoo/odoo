@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="purchase_requisition.AltPOsListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="primary">
-        <xpath expr="//t[@t-if='displayOptionalFields or props.list.isGrouped or hasX2ManyAction']" position="attributes">
-            <attribute name="t-if">(displayOptionalFields or hasX2ManyAction) and !api.isCurrentRecord(record)</attribute>
+        <xpath expr="//t[@t-if='this.displayOptionalFields or this.props.list.isGrouped or hasX2ManyAction']" position="attributes">
+            <attribute name="t-if">(this.displayOptionalFields or hasX2ManyAction) and !this.api.isCurrentRecord(record)</attribute>
         </xpath>
     </t>
 

@@ -2,20 +2,20 @@
 <templates xml:space="preserve">
 
     <t t-name="web.BadgeSelectionField">
-        <div class="d-flex flex-wrap gap-1 mb-3" t-att-role="props.readonly ? '' : 'radiogroup'" t-att-aria-label="props.readonly ? '' : props.record.fields[props.name].string">
-            <t t-if="props.readonly">
-                <span t-out="string" t-att-raw-value="value" />
+        <div class="d-flex flex-wrap gap-1 mb-3" t-att-role="this.props.readonly ? '' : 'radiogroup'" t-att-aria-label="this.props.readonly ? '' : this.props.record.fields[this.props.name].string">
+            <t t-if="this.props.readonly">
+                <span t-out="this.string" t-att-raw-value="this.value" />
             </t>
             <t t-else="">
-                <t t-foreach="options" t-as="option" t-key="option[0]">
+                <t t-foreach="this.options" t-as="option" t-key="option[0]">
                     <span
                         class="o_selection_badge btn btn-secondary mb-1"
-                        t-att-class="{ 'disabled': !isReady, 'active': value === option[0], 'btn-sm': props.size === 'sm', 'btn-lg': props.size === 'lg' }"
-                        t-att-aria-disabled="!isReady ? 'true' : 'false'"
-                        t-att-value="stringify(option[0])"
+                        t-att-class="{ 'disabled': !this.isReady, 'active': this.value === option[0], 'btn-sm': this.props.size === 'sm', 'btn-lg': this.props.size === 'lg' }"
+                        t-att-aria-disabled="!this.isReady ? 'true' : 'false'"
+                        t-att-value="this.stringify(option[0])"
                         role="radio"
-                        t-att-tabindex="isReady ? 0 : -1"
-                        t-att-aria-checked="value === option[0] ? 'true' : 'false'"
+                        t-att-tabindex="this.isReady ? 0 : -1"
+                        t-att-aria-checked="this.value === option[0] ? 'true' : 'false'"
                         t-out="option[1]"
                         t-on-click="() => this.onChange(option[0])"
                         t-on-keydown="(ev) => this.onKeydown(ev, option[0])"

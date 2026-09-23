@@ -7,54 +7,53 @@
         class="o_main_navbar d-print-none"
         data-command-category="disabled"
       >
-        <a t-if="!isScopedApp" href="/odoo" class="o_menu_toggle border-0" t-att-class="menuToggleClass" t-att-title="menuToggleTitle" t-att-aria-label="menuToggleTitle" accesskey="h" t-ref="menuApps" t-on-click.prevent="_onMenuToggleClick" t-on-mouseenter="_onMenuToggleEnter" t-on-mouseleave="_onMenuToggleLeave">
-            <t t-if="env.isSmall and !hm.hasHomeMenu">
+        <a t-if="!this.isScopedApp" href="/odoo" class="o_menu_toggle border-0" t-att-class="this.menuToggleClass" t-att-title="this.menuToggleTitle" t-att-aria-label="this.menuToggleTitle" accesskey="h" t-ref="menuApps" t-on-click.prevent="this._onMenuToggleClick" t-on-mouseenter="this._onMenuToggleEnter" t-on-mouseleave="this._onMenuToggleLeave">
+            <t t-if="this.env.isSmall and !this.hm.hasHomeMenu">
                 <t t-call="web.NavBar.AppsMenu.Sidebar"/>
             </t>
             <t t-else="">
-                <svg class="o_menu_toggle_icon pe-none" width="14px" height="14px" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="o_menu_toggle_icon pe-none" width="14px" height="14px" viewBox="0 0 14 14">
                     <g t-foreach="[0, 5, 10]" t-as="Y" t-att-id="'o_menu_toggle_row_' + Y_index" fill="currentColor" t-key="'o_menu_toggle_row_' + Y_index">
                         <rect t-foreach="[0, 5, 10]" t-as="X" width="3" height="3" t-att-x="X" t-att-y="Y" t-key="'o_menu_toggle_cell_' + X_index"/>
                     </g>
                 </svg>
-                <t t-if="!env.isSmall and currentApp">
+                <t t-if="!this.env.isSmall and this.currentApp">
                     <img
-                        t-if="currentApp.webIconData"
-                        t-att-src="currentApp.webIconData"
+                        t-if="this.currentApp.webIconData"
+                        t-att-src="this.currentApp.webIconData"
                         class="o_menu_brand_icon d-inline position-absolute start-0 h-100 ps-1 ms-2"
-                        t-att-class="{'o_hidden': !isInApp}"
-                        t-att-alt="currentApp.name"
+                        t-att-class="{'o_hidden': !this.isInApp}"
+                        t-att-alt="this.currentApp.name"
                         t-ref="appIcon"/>
-                    <span t-out="currentApp.name" class="o_menu_brand d-flex ms-3 pe-0" t-att-class="{'o_hidden': !isInApp}"/>
+                    <span t-out="this.currentApp.name" class="o_menu_brand d-flex ms-3 pe-0" t-att-class="{'o_hidden': !this.isInApp}"/>
                 </t>
             </t>
         </a>
-        <a t-else="" t-att-href="pwa.startUrl" class="o_menu_toggle" t-att-class="menuToggleClass" t-ref="menuApps">
+        <a t-else="" t-att-href="this.pwa.startUrl" class="o_menu_toggle" t-att-class="this.menuToggleClass" t-ref="menuApps">
             <img
-                t-if="currentApp &amp;&amp; currentApp.webIconData"
-                t-att-src="currentApp.webIconData"
+                t-if="this.currentApp &amp;&amp; this.currentApp.webIconData"
+                t-att-src="this.currentApp.webIconData"
                 class="o_menu_brand_icon d-none d-lg-inline position-absolute start-0 h-100 ps-1 ms-2"
-                t-att-class="{'o_hidden': !isInApp}"
-                t-att-alt="currentApp.name"
+                t-att-class="{'o_hidden': !this.isInApp}"
+                t-att-alt="this.currentApp.name"
                 t-ref="appIcon"/>
 
             <span
-                t-if="currentApp"
-                t-out="currentApp.name"
+                t-if="this.currentApp"
+                t-out="this.currentApp.name"
                 class="o_menu_brand d-none d-md-flex ps-4 pe-0"
-                t-att-class="{'o_hidden': !isInApp}"/>
+                t-att-class="{'o_hidden': !this.isInApp}"/>
         </a>
 
-        <div class="o_navbar_breadcrumbs d-contents" t-att-class="{'o_hidden': !isInApp}"/>
+        <div class="o_navbar_breadcrumbs d-contents" t-att-class="{'o_hidden': !this.isInApp}"/>
 
-        <t t-if="!env.isSmall">
-          <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
-            <t t-set="sections" t-value="currentAppSections" />
-          </t>
+        <t t-if="!this.env.isSmall">
+          <t t-if="this.currentAppSections.length" t-call="web.NavBar.SectionsMenu"
+              sections="this.currentAppSections"/>
         </t>
 
         <div class="o_menu_systray d-flex flex-shrink-0 ms-auto bg-inherit" role="menu">
-          <t t-foreach="systrayItems" t-as="item" t-key="item.key">
+          <t t-foreach="this.systrayItems" t-as="item" t-key="item.key">
             <ErrorHandler onError="error => this.handleItemError(error, item)">
                 <t t-component="item.Component" t-props="item.props"/>
             </ErrorHandler>
@@ -75,10 +74,7 @@
             t-att-data-menu-xmlid="section.xmlid" t-out="section.name"/>
         <ul class="list-unstyled ps-0">
             <t t-foreach="section.childrenTree" t-as="subSection" t-key="subSection_index">
-                <t t-call="web.SectionMenu">
-                    <t t-set="section" t-value="subSection"/>
-                    <t t-set="isNested" t-value="true"/>
-                </t>
+                <t t-call="web.SectionMenu" section="subSection" isNested="true"/>
             </t>
         </ul>
     </li>
@@ -95,41 +91,39 @@
   <t t-name="web.NavBar.AppsMenu.Sidebar">
     <i class="fa-solid fa-bars" aria-hidden="true"/>
     <t t-portal="'body'">
-      <Transition name="'o-app-menu-sidebar'" visible="state.isAppMenuSidebarOpened" leaveDuration="200" t-slot-scope="transition">
-        <div class="o_app_menu_sidebar position-fixed top-0 bottom-0 end-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
+      <Transition name="'o-app-menu-sidebar'" visible="this.state.isAppMenuSidebarOpened" leaveDuration="200" t-slot-scope="transition">
+        <div class="o_app_menu_sidebar position-fixed top-0 bottom-0 end-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="this._onSwipeStart" t-on-touchend.stop="this._onSwipeEnd">
           <div class="o_sidebar_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4">
               <small class="d-flex align-items-center justify-content-between ms-2">
-                  <a href="/odoo" class="btn btn-primary" t-on-click.prevent="onAllAppsBtnClick"><i class="oi oi-apps"></i><span class="px-2">All Apps</span></a>
+                  <a href="/odoo" class="btn btn-primary" t-on-click.prevent="this.onAllAppsBtnClick"><i class="oi oi-apps"></i><span class="px-2">All Apps</span></a>
               </small>
-              <button class="o_sidebar_close oi oi-close btn d-flex align-items-center h-100 bg-transparent border-0 fs-2 text-reset" aria-label="Close menu" title="Close menu" t-on-click.stop="_closeAppMenuSidebar"/>
+              <button class="o_sidebar_close oi oi-close btn d-flex align-items-center h-100 bg-transparent border-0 fs-2 text-reset" aria-label="Close menu" title="Close menu" t-on-click.stop="this._closeAppMenuSidebar"/>
           </div>
           <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto o_burger_menu_app">
                 <QuickLauncher close="() => this._closeAppMenuSidebar()" showAllApps="false"/>
-                <div t-if="currentApp" class="o_burger_menu_app_name d-flex align-items-center m-3 mb-0">
-                  <img style="height: 2em;" t-if="currentApp.webIconData" class="o_app_icon me-2" t-attf-src="{{currentApp.webIconData}}" alt=""/>
-                  <span class="fs-4 fw-bolder"><t t-out="currentApp.name"/></span>
+                <div t-if="this.currentApp" class="o_burger_menu_app_name d-flex align-items-center m-3 mb-0">
+                  <img style="height: 2em;" t-if="this.currentApp.webIconData" class="o_app_icon me-2" t-attf-src="{{this.currentApp.webIconData}}" alt=""/>
+                  <span class="fs-4 fw-bolder"><t t-out="this.currentApp.name"/></span>
                 </div>
                 <ul class="o_burger_menu_sections list-unstyled py-2 ps-0 mb-0">
-                    <t t-foreach="currentAppSections" t-as="subMenu" t-key="subMenu_index">
-                      <t t-call="web.SectionMenu">
-                          <t t-set="section" t-value="subMenu" />
-                      </t>
+                    <t t-foreach="this.currentAppSections" t-as="subMenu" t-key="subMenu_index">
+                      <t t-call="web.SectionMenu" section="subMenu"/>
                     </t>
                 </ul>
           </nav>
         </div>
       </Transition>
-      <div t-if="state.isAppMenuSidebarOpened" class="modal-backdrop show d-block d-md-none" t-on-click.stop="_closeAppMenuSidebar" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd" />
+      <div t-if="this.state.isAppMenuSidebarOpened" class="modal-backdrop show d-block d-md-none" t-on-click.stop="this._closeAppMenuSidebar" t-on-touchstart.stop="this._onSwipeStart" t-on-touchend.stop="this._onSwipeEnd" />
     </t>
   </t>
 
   <t t-name="web.NavBar.SectionsMenu">
-    <div class="o_menu_sections d-flex flex-grow-1 flex-shrink-1 w-0" t-att-class="{'o_hidden': !isInApp}" t-ref="appSubMenus" role="menu">
-        <t t-if="!env.isSmall">
+    <div class="o_menu_sections d-flex flex-grow-1 flex-shrink-1 w-0" t-att-class="{'o_hidden': !this.isInApp}" t-ref="appSubMenus" role="menu">
+        <t t-if="!this.env.isSmall">
             <DropdownGroup>
                 <t
                     t-set="sectionsVisibleCount"
-                    t-value="sections.length - currentAppSectionsExtra.length"
+                    t-value="sections.length - this.currentAppSectionsExtra.length"
                 />
                 <t t-foreach="sections" t-as="section" t-key="section.id">
                     <t t-if="section_index lt Math.min(10, sectionsVisibleCount)">
@@ -145,7 +139,7 @@
                             onSelected="() => this.onNavBarDropdownItemSelection(section)"
                             t-out="section.name"
                             attrs="{
-                                href: getMenuItemHref(section),
+                                href: this.getMenuItemHref(section),
                                 'data-hotkey': hotkey,
                                 'data-menu-xmlid': section.xmlid,
                                 'data-section': section.id,
@@ -158,17 +152,16 @@
                                 <span t-out="section.name" t-att-data-section="section.id" />
                             </button>
                             <t t-set-slot="content">
-                                <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
-                                <t t-set="items" t-value="section.childrenTree" />
-                                <t t-set="decalage" t-value="20" />
-                                </t>
+                                <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot"
+                                    items="section.childrenTree"
+                                    decalage="20"/>
                             </t>
                         </Dropdown>
                     </t>
                 </t>
 
-                <t t-if="currentAppSectionsExtra.length" t-call="web.NavBar.SectionsMenu.MoreDropdown">
-                    <t t-set="sections" t-value="currentAppSectionsExtra" />
+                <t t-if="this.currentAppSectionsExtra.length" t-call="web.NavBar.SectionsMenu.MoreDropdown"
+                    sections="this.currentAppSectionsExtra">
                     <t t-if="sectionsVisibleCount lt 10">
                         <t t-set="hotkey" t-value="((sectionsVisibleCount + 1) % 10).toString()" />
                     </t>
@@ -180,7 +173,7 @@
 
   <t t-name="web.NavBar.DropdownItem" t-inherit="web.DropdownItem" t-inherit-mode="primary">
     <xpath expr="//t[@t-tag]" position="attributes">
-      <attribute name="t-att-style">props.style</attribute>
+      <attribute name="t-att-style">this.props.style</attribute>
     </xpath>
   </t>
 
@@ -195,15 +188,14 @@
         }"
         t-out="item.name"
         onSelected="() => this.onNavBarDropdownItemSelection(item)"
-        attrs="{ style: style, href: getMenuItemHref(item), 'data-menu-xmlid': item.xmlid, 'data-section': item.id }"
+        attrs="{ style: style, href: this.getMenuItemHref(item), 'data-menu-xmlid': item.xmlid, 'data-section': item.id }"
       />
 
       <t t-else="">
         <div class="dropdown-menu_group dropdown-header" t-att-style="style" t-out="item.name" />
-        <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
-          <t t-set="items" t-value="item.childrenTree" />
-          <t t-set="decalage" t-value="decalage + 12" />
-        </t>
+        <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot"
+            items="item.childrenTree"
+            decalage="decalage + 12"/>
       </t>
     </t>
   </t>
@@ -222,7 +214,7 @@
                 class="'o_more_dropdown_section'"
                 onSelected="() => this.onNavBarDropdownItemSelection(section)"
                 t-out="section.name"
-                attrs="{ href: getMenuItemHref(section), 'data-menu-xmlid': section.xmlid, 'data-section': section.id }"
+                attrs="{ href: this.getMenuItemHref(section), 'data-menu-xmlid': section.xmlid, 'data-section': section.id }"
               />
             </t>
             <t t-else="">
@@ -230,10 +222,9 @@
                 class="o_more_dropdown_section o_more_dropdown_section_group dropdown-header bg-100"
                 t-out="section.name"
               />
-              <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
-                <t t-set="items" t-value="section.childrenTree" />
-                <t t-set="decalage" t-value="20" />
-              </t>
+              <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot"
+                  items="section.childrenTree"
+                  decalage="20"/>
             </t>
           </t>
         </t>

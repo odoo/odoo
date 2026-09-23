@@ -2,29 +2,29 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageToolOption">
-    <t t-if="!state.isDynamicSVG">
+    <t t-if="!this.state.isDynamicSVG">
         <ImageShapeOption />
     </t>
-    <BuilderRow label.translate="Description" t-if="!state.isImageBinaryField"
+    <BuilderRow label.translate="Description" t-if="!this.state.isImageBinaryField"
         tooltip.translate="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
         <BuilderTextInput
             action="'alt'"
             placeholder.translate="Alt tag"
             />
     </BuilderRow>
-    <BuilderRow label.translate="Tooltip" t-if="!state.isImageBinaryField"
+    <BuilderRow label.translate="Tooltip" t-if="!this.state.isImageBinaryField"
         tooltip.translate="'Title tag' is shown as a tooltip when you hover the picture.">
         <BuilderTextInput
             attributeAction="'title'"
             placeholder.translate="Title tag" />
     </BuilderRow>
     <BuilderRow label.translate="Transform" preview="false">
-        <BuilderButton t-if="state.showCropTool" title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
+        <BuilderButton t-if="this.state.showCropTool" title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
         <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.state.showCropTool and this.isActiveItem('cropImage')">Reset</BuilderButton>
-        <ImageTransformOption t-if="!state.isImageAnimated and !state.isImageBinaryField" />
+        <ImageTransformOption t-if="!this.state.isImageAnimated and !this.state.isImageBinaryField" />
     </BuilderRow>
     <ImageFilterOption />
-    <BuilderRow label.translate="Size" t-if="!state.isImageBinaryField">
+    <BuilderRow label.translate="Size" t-if="!this.state.isImageBinaryField">
         <BuilderButtonGroup styleAction="'width'">
             <BuilderButton styleActionValue="''" title.translate="Resize Default">Default</BuilderButton>
             <BuilderButton styleActionValue="'25%'" title.translate="Resize Quarter">25%</BuilderButton>

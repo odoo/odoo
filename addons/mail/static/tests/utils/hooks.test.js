@@ -28,7 +28,7 @@ class LongPressTarget extends Component {
 class LongPressParent extends Component {
     static components = { LongPressTarget };
     static props = [];
-    static template = xml`<LongPressTarget t-if="state.mounted"/>`;
+    static template = xml`<LongPressTarget t-if="this.state.mounted"/>`;
 
     setup() {
         this.state = useState({ mounted: true });
@@ -50,7 +50,7 @@ test("useHover cancels its pending timers on unmount", async () => {
     class Parent extends Component {
         static components = { HoverTarget };
         static props = [];
-        static template = xml`<HoverTarget t-if="state.mounted"/>`;
+        static template = xml`<HoverTarget t-if="this.state.mounted"/>`;
 
         setup() {
             this.state = useState({ mounted: true });

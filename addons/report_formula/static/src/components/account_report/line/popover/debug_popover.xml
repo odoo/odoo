@@ -2,7 +2,7 @@
 <templates>
     <t t-name="report_formula.AccountReportDebugPopover">
         <div class="account_report_popover_debug">
-            <t t-foreach="props.expressionsDetail" t-as="expressionEngineAndTotals" t-key="expressionEngineAndTotals_index">
+            <t t-foreach="this.props.expressionsDetail" t-as="expressionEngineAndTotals" t-key="expressionEngineAndTotals_index">
                 <t t-set="expressionEngine" t-value="expressionEngineAndTotals[0]"/>
                 <t t-set="expressionTotals" t-value="expressionEngineAndTotals[1]"/>
 

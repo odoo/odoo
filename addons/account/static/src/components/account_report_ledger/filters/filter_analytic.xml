@@ -11,7 +11,7 @@
             <t t-set-slot="content">
                 <div class="dropdown-item gap-2 align-items-center">
                     <label>Accounts</label>
-                    <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.analytic.account', 'analytic_accounts')"/>
+                    <MultiRecordSelector t-props="this.getMultiRecordSelectorProps('account.analytic.account', 'analytic_accounts')"/>
                 </div>
             </t>
         </Dropdown>

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="report_formula.AccountReportLineName">
-        <t t-call="{{ env.template('AccountReportLineName') }}"/>
+        <t t-call="{{ this.env.template('AccountReportLineName') }}"/>
     </t>
 
     <t t-name="report_formula.AccountReportLineNameCustomizable">
         <td
             data-id="line_name"
             class="line_name"
-            t-att-class="lineNameClasses"
+            t-att-class="this.lineNameClasses"
             t-on-click="() => this.toggleFoldable()"
-            t-att-colspan="props.line.colspan || 1"
+            t-att-colspan="this.props.line.colspan || 1"
             tabindex="-1"
             t-ref="lineNameCell"
         >
             <div class="wrapper">
-                <t t-if="props.line.unfoldable">
+                <t t-if="this.props.line.unfoldable">
                     <!-- Foldable -->
                     <button data-id="btn_foldable" class="btn btn_foldable" tabindex="-1">
-                        <i t-att-class="props.line.unfolded ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-right'"/>
+                        <i t-att-class="this.props.line.unfolded ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-right'"/>
                     </button>
                 </t>
                 <t t-else="">
@@ -26,27 +26,27 @@
                     <button class="btn btn_foldable_empty" tabindex="-1"/>
                 </t>
 
-                <t t-if="props.line.action_id">
+                <t t-if="this.props.line.action_id">
                     <!-- Actions -->
                     <a class="clickable cursor-pointer" t-on-click="() => this.triggerAction()" tabindex="-1">
-                        <t t-out="props.line.name"/>
+                        <t t-out="this.props.line.name"/>
                     </a>
                 </t>
-                <t t-elif="controller.isLoadMoreLine(props.lineIndex)">
+                <t t-elif="this.controller.isLoadMoreLine(this.props.lineIndex)">
                     <!-- Load more -->
                     <a class="clickable cursor-pointer" t-on-click="() => this.loadMore()" tabindex="-1">
-                        <t t-out="props.line.name"/>
+                        <t t-out="this.props.line.name"/>
                     </a>
                 </t>
                 <t t-else="">
                     <div data-id="content" class="content">
-                        <t t-component="env.component('AccountReportEllipsis')" t-props="{
-                            name: props.line.name?.toString(),
+                        <t t-component="this.env.component('AccountReportEllipsis')" t-props="{
+                            name: this.props.line.name?.toString(),
                             type: 'string',
                             maxCharacters: 80,
                         }"/>
 
-                        <t t-if="hasCaretOptions">
+                        <t t-if="this.hasCaretOptions">
                             <!-- Caret options -->
                             <Dropdown position="'right-start'">
                                 <button class="btn btn_dropdown" tabindex="-1">
@@ -54,7 +54,7 @@
                                 </button>
                                 <t t-set-slot="content">
                                     <div data-id="caret_options">
-                                        <t t-foreach="caretOptions" t-as="caretOption" t-key="caretOption_index">
+                                        <t t-foreach="this.caretOptions" t-as="caretOption" t-key="caretOption_index">
                                             <DropdownItem onSelected="() => this.caretAction(caretOption)">
                                                 <t t-out="caretOption.name"/>
                                             </DropdownItem>
@@ -64,7 +64,7 @@
                             </Dropdown>
                         </t>
 
-                        <t data-id="line_buttons" t-if="!props.line['hide_line_buttons']"/>
+                        <t data-id="line_buttons" t-if="!this.props.line['hide_line_buttons']"/>
                     </div>
                 </t>
             </div>

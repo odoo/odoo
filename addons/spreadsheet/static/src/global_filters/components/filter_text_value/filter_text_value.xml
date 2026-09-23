@@ -2,11 +2,11 @@
 <templates>
     <t t-name="spreadsheet.TextFilterValue">
         <div class="o_input o-global-filter-text-value d-flex flex-wrap gap-1">
-            <TagsList tags="tags"/>
+            <TagsList tags="this.tags"/>
             <AutoComplete
-                sources="sources"
-                input="inputRef"
-                onChange.bind="onInputChange"
+                sources="this.sources"
+                input="this.inputRef"
+                onChange.bind="this.onInputChange"
                 inputDebounceDelay="0"
             />
         </div>

@@ -25,7 +25,7 @@ const viewRegistry = registry.category("views");
 
 class ToyController extends Component {
     static props = ["*"];
-    static template = xml`<div t-attf-class="{{class}} {{props.className}}"><t t-call="{{ template }}"/></div>`;
+    static template = xml`<div t-attf-class="{{this.class}} {{this.props.className}}"><t t-call="{{ this.template }}"/></div>`;
     setup() {
         this.class = "toy";
         this.template = xml`${this.props.arch.outerHTML}`;
@@ -170,7 +170,7 @@ test("a changed viewId reloads the view", async function () {
 
     class Parent extends Component {
         static components = { View };
-        static template = xml`<View resModel="'animal'" type="'toy'" viewId="state.viewId"/>`;
+        static template = xml`<View resModel="'animal'" type="'toy'" viewId="this.state.viewId"/>`;
         static props = {};
         setup() {
             this.state = useState({ viewId: 1 });
@@ -1249,7 +1249,7 @@ test("react to prop 'domain' changes", async function () {
     );
     class Parent extends Component {
         static props = ["*"];
-        static template = xml`<View t-props="state"/>`;
+        static template = xml`<View t-props="this.state"/>`;
         static components = { View };
         setup() {
             this.state = useState({
@@ -1307,13 +1307,13 @@ test("Cache: refresh with debug mode", async () => {
 test("action-restricting context is read from the NEW props when the arch changes", async () => {
     class SpyController extends Component {
         static props = ["*"];
-        static template = xml`<div class="spy" t-att-data-create="props.arch.getAttribute('create') or 'unset'"/>`;
+        static template = xml`<div class="spy" t-att-data-create="this.props.arch.getAttribute('create') or 'unset'"/>`;
     }
     viewRegistry.add("toy_spy", { type: "toy", Controller: SpyController });
 
     class Parent extends Component {
         static props = ["*"];
-        static template = xml`<View t-props="state"/>`;
+        static template = xml`<View t-props="this.state"/>`;
         static components = { View };
         setup() {
             this.state = useState({
@@ -1365,7 +1365,7 @@ test("a descriptor with an ArchParser and no props factory gets the parsed arch"
         }
     }
     class TinyController extends Component {
-        static template = xml`<div class="o_tiny" t-out="props.archInfo.tag"/>`;
+        static template = xml`<div class="o_tiny" t-out="this.props.archInfo.tag"/>`;
         static props = ["*"];
     }
     viewRegistry.add("toy_parsed", {
@@ -1388,7 +1388,7 @@ test("a descriptor declaring modelParams builds them from the arch, and from a s
         }
     }
     class TinyController extends Component {
-        static template = xml`<div class="o_tiny" t-out="props.modelParams.source"/>`;
+        static template = xml`<div class="o_tiny" t-out="this.props.modelParams.source"/>`;
         static props = ["*"];
     }
     viewRegistry.add("toy_model_params", {

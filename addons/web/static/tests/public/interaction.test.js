@@ -3034,7 +3034,7 @@ describe("components", () => {
     test("can insert a component with props with t-component", async () => {
         let isCDestroyed = false;
         class C extends Component {
-            static template = xml`<p>component<span t-out="props.prop"></span></p>`;
+            static template = xml`<p>component<span t-out="this.props.prop"></span></p>`;
             static props = {
                 prop: { optional: true, type: String },
             };
@@ -3065,7 +3065,7 @@ describe("components", () => {
     test("can receive the selected element with t-component", async () => {
         let isCDestroyed = false;
         class C extends Component {
-            static template = xml`<p>component<span t-out="props.prop"></span></p>`;
+            static template = xml`<p>component<span t-out="this.props.prop"></span></p>`;
             static props = {
                 prop: { optional: true, type: String },
             };
@@ -3139,7 +3139,7 @@ describe("components", () => {
 
     test("can insert a component with props with mountComponent", async () => {
         class C extends Component {
-            static template = xml`<p>component<span t-out="props.prop"></span></p>`;
+            static template = xml`<p>component<span t-out="this.props.prop"></span></p>`;
             static props = {
                 prop: { optional: true, type: String },
             };

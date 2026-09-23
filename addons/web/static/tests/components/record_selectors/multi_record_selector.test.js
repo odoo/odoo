@@ -36,7 +36,7 @@ defineModels([Partner, Users]);
 async function mountMultiRecordSelector(props) {
     class Parent extends Component {
         static components = { MultiRecordSelector };
-        static template = xml`<MultiRecordSelector t-props="recordProps" />`;
+        static template = xml`<MultiRecordSelector t-props="this.recordProps" />`;
         static props = ["*"];
 
         /** @type {Record<string, any>} */
@@ -156,7 +156,7 @@ test("switching resModel and resIds together re-reads the avatar model", async (
 
     class Parent extends Component {
         static components = { MultiRecordSelector };
-        static template = xml`<MultiRecordSelector resModel="state.resModel" resIds="state.resIds" update="() => {}"/>`;
+        static template = xml`<MultiRecordSelector resModel="this.state.resModel" resIds="this.state.resIds" update="() => {}"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ resModel: "res.partner", resIds: [2] });
@@ -206,7 +206,7 @@ test("A superseded display-name load does not overwrite the current selection", 
     let parent;
     class Parent extends Component {
         static components = { MultiRecordSelector };
-        static template = xml`<MultiRecordSelector resModel="'partner'" resIds="state.resIds" update="() => {}" />`;
+        static template = xml`<MultiRecordSelector resModel="'partner'" resIds="this.state.resIds" update="() => {}" />`;
         static props = ["*"];
         setup() {
             this.state = useState({ resIds: [1] });

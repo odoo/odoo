@@ -13,7 +13,7 @@ import { Pager } from "@web/components/pager/pager";
 import { config as transitionConfig } from "@web/core/transition";
 
 class PagerController extends Component {
-    static template = xml`<Pager t-props="state" />`;
+    static template = xml`<Pager t-props="this.state" />`;
     static components = { Pager };
     static props = ["*"];
     setup() {
@@ -563,7 +563,7 @@ test("a rejected pager entry is put back, not left in the input", async () => {
 test.tags("desktop");
 test("editing survives a pointerdown inside the input, and only that", async () => {
     class Host extends Component {
-        static template = xml`<div><span class="outside">elsewhere</span><Pager t-props="state"/></div>`;
+        static template = xml`<div><span class="outside">elsewhere</span><Pager t-props="this.state"/></div>`;
         static components = { Pager };
         static props = ["*"];
         setup() {

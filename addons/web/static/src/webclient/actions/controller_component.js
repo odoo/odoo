@@ -17,7 +17,7 @@ import { AppEvent } from "@web/core/events";
 import { useBus } from "@web/core/utils/hooks";
 import { View } from "@web/views/view";
 
-const ControllerComponentTemplate = xml`<t t-component="Component" t-props="componentProps"/>`;
+const ControllerComponentTemplate = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
 
 /** @import { ActionManager } from "./action_service.js" */
 

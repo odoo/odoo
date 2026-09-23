@@ -3,11 +3,11 @@
 
     <t t-name="discuss.CallPermissionDialog">
         <Dialog title="''" size="'md'">
-            <h5 class="fw-medium fs-2 mb-2" t-out="permissionPrompt"/>
-            <small class="text-muted" t-out="permissionNote"/>
+            <h5 class="fw-medium fs-2 mb-2" t-out="this.permissionPrompt"/>
+            <small class="text-muted" t-out="this.permissionNote"/>
             <t t-set-slot="footer">
-                <button class="btn btn-primary px-4" t-on-click="props.media === 'microphone' ? onClickUseMicrophone : onClickUseCamera" t-out="primaryActionText"/>
-                <button class="btn btn-outline-primary px-4" t-if="rtc.cameraPermission !== 'granted' and rtc.microphonePermission !== 'granted'" t-on-click="onClickUseMicAndCamera">Use microphone and camera</button>
+                <button class="btn btn-primary px-4" t-on-click="this.props.media === 'microphone' ? this.onClickUseMicrophone : this.onClickUseCamera" t-out="this.primaryActionText"/>
+                <button class="btn btn-outline-primary px-4" t-if="this.rtc.cameraPermission !== 'granted' and this.rtc.microphonePermission !== 'granted'" t-on-click="this.onClickUseMicAndCamera">Use microphone and camera</button>
             </t>
         </Dialog>
     </t>

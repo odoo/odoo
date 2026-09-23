@@ -2,15 +2,15 @@
 <templates>
     <t t-name="report_formula.AccountReportLineCellEditable" t-inherit="report_formula.AccountReportLineCellCustomizable" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('wrapper')]" position="replace">
-            <t t-if="hasEditPopupData">
+            <t t-if="this.hasEditPopupData">
                 <div class="content">
                     <input type="text"
                            class="o_input text-end"
                            t-ref="input"
-                           t-on-change="onChange"
-                           t-on-focus="onFocus"
-                           t-on-blur="onBlur"
-                           t-att-value="inputValue"
+                           t-on-change="this.onChange"
+                           t-on-focus="this.onFocus"
+                           t-on-blur="this.onBlur"
+                           t-att-value="this.inputValue"
                     />
                 </div>
             </t>

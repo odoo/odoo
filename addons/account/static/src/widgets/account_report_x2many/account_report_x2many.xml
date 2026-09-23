@@ -6,7 +6,7 @@
                 <!-- Header -->
                 <li class="d-flex justify-content-between">
                     <!-- Columns -->
-                    <t t-foreach="columns" t-as="column" t-key="column.id">
+                    <t t-foreach="this.columns" t-as="column" t-key="column.id">
                         <t t-set="isNameColumn" t-value="column.name === 'name'"/>
 
                         <span
@@ -24,12 +24,10 @@
                 </li>
 
                 <!-- Lines -->
-                <t t-call="account.AccountReportListTree">
-                    <t t-set="lines" t-value="this.formatData()"/>
-                </t>
+                <t t-call="account.AccountReportListTree" lines="this.formatData()"/>
 
                 <!-- Add new line -->
-                <t t-if="props.activeActions.create">
+                <t t-if="this.props.activeActions.create">
                     <li>
                         <a
                             class="column overlined"
@@ -63,7 +61,7 @@
                     <span class="oi oi-draggable o_row_handle"/>
 
                     <!-- Columns -->
-                    <t t-foreach="columns" t-as="column" t-key="column.id">
+                    <t t-foreach="this.columns" t-as="column" t-key="column.id">
                         <t t-set="isNameColumn" t-value="column.name === 'name'"/>
 
                         <span
@@ -74,7 +72,7 @@
                             }"
                             t-on-click="(ev) => this.onCellClicked(record, column, ev)"
                         >
-                            <t t-out="isNameColumn ? line[column.name] : getFormattedValue(column, record)"/>
+                            <t t-out="isNameColumn ? line[column.name] : this.getFormattedValue(column, record)"/>
 
                             <t t-if="line.out_of_sequence_error">
                                 <span
@@ -89,7 +87,7 @@
                     </t>
 
                     <!-- Trash -->
-                    <t t-if="props.activeActions.delete">
+                    <t t-if="this.props.activeActions.delete">
                         <button class="trash" t-on-click="() => this.onDeleteRecord(line.index)">
                             <i class="fa-regular fa-trash-can"/>
                         </button>
@@ -98,9 +96,7 @@
 
                 <t t-if="line.children?.length">
                     <ul>
-                        <t t-call="account.AccountReportListTree">
-                            <t t-set="lines" t-value="line.children"/>
-                        </t>
+                        <t t-call="account.AccountReportListTree" lines="line.children"/>
                     </ul>
                 </t>
             </li>
@@ -114,7 +110,7 @@
             </button>
 
             <t t-set-slot="content">
-                <t t-foreach="optionalFieldGroups" t-as="group" t-key="group_index">
+                <t t-foreach="this.optionalFieldGroups" t-as="group" t-key="group_index">
                     <t t-foreach="group.optionalFields" t-as="field" t-key="field_index">
                         <DropdownItem
                             closingMode="'none'"
@@ -128,7 +124,7 @@
                                 <span class="d-flex align-items-center">
                                     <span class="text-truncate" t-out="field.label"/>
 
-                                    <t t-if="env.debug">
+                                    <t t-if="this.env.debug">
                                         <span class="ps-1" t-out="' (' + field.name + ')'"/>
                                     </t>
                                 </span>

@@ -11,9 +11,9 @@
                 </p>
 
                 <div class="row mb-4 w-100 px-5 justify-content-center">
-                    <t t-set="templateNames" t-value="Object.keys(surveyTemplateData)"/>
+                    <t t-set="templateNames" t-value="Object.keys(this.surveyTemplateData)"/>
                     <t t-foreach="templateNames" t-as="templateName" t-key="templateName">
-                        <t t-set="templateInfo" t-value="surveyTemplateData[templateName]"/>
+                        <t t-set="templateInfo" t-value="this.surveyTemplateData[templateName]"/>
                         <div t-attf-class="flex-row o_survey_load_sample o_survey_sample_card card rounded flex-wrap cursor-pointer col-md-3 p-2 m-3"
                              t-on-click.stop.prevent="() => this.onTemplateClick(templateInfo)">
                             <div class="col-lg-4 p-3">

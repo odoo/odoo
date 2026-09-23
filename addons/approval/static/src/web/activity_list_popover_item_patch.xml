@@ -4,7 +4,7 @@
     <t t-inherit="mail.ActivityListPopoverItem" t-inherit-mode="extension">
         <xpath expr="//button[hasclass('o-mail-ActivityListPopoverItem-markAsDone')]" position="after">
             <Approval
-                t-if="props.activity.approver_id"
+                t-if="this.props.activity.approver_id"
                 activity="this.props.activity"
                 onChange="this.props.onActivityChanged"
             />

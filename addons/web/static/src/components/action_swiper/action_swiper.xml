@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.ActionSwiper">
-        <t t-if="props.onRightSwipe || props.onLeftSwipe">
-            <div class="o_actionswiper" t-on-touchcancel="onTouchCancel" t-on-touchend="onTouchEnd" t-on-touchmove="onTouchMove" t-on-touchstart="onTouchStart">
+        <t t-if="this.props.onRightSwipe || this.props.onLeftSwipe">
+            <div class="o_actionswiper" t-on-touchcancel="this.onTouchCancel" t-on-touchend="this.onTouchEnd" t-on-touchmove="this.onTouchMove" t-on-touchstart="this.onTouchStart">
                 <div class="o_actionswiper_overflow_container position-relative overflow-hidden">
-                    <div class="o_actionswiper_target_container" t-ref="targetContainer" t-att-class="{ o_actionswiper_swiping: state.isSwiping }">
+                    <div class="o_actionswiper_target_container" t-ref="targetContainer" t-att-class="{ o_actionswiper_swiping: this.state.isSwiping }">
                         <t t-slot="default"/>
-                        <t t-if="localizedProps.onRightSwipe and (localizedProps.onRightSwipe.icon or localizedProps.onRightSwipe.bgColor)">
-                            <div t-ref="rightArea" style="max-width: 0px;" class="o_actionswiper_right_swipe_area position-absolute overflow-hidden w-100 h-100 d-flex align-items-center justify-content-center rounded-end" t-att-class="localizedProps.onRightSwipe.bgColor">
-                                <span><i class="fa-solid fa-2x" t-att-class="localizedProps.onRightSwipe.icon"/></span>
+                        <t t-if="this.localizedProps.onRightSwipe and (this.localizedProps.onRightSwipe.icon or this.localizedProps.onRightSwipe.bgColor)">
+                            <div t-ref="rightArea" style="max-width: 0px;" class="o_actionswiper_right_swipe_area position-absolute overflow-hidden w-100 h-100 d-flex align-items-center justify-content-center rounded-end" t-att-class="this.localizedProps.onRightSwipe.bgColor">
+                                <span><i class="fa-solid fa-2x" t-att-class="this.localizedProps.onRightSwipe.icon"/></span>
                             </div>
                         </t>
-                        <t t-if="localizedProps.onLeftSwipe and (localizedProps.onLeftSwipe.icon or localizedProps.onLeftSwipe.bgColor)">
-                            <div t-ref="leftArea" style="max-width: 0px;" class="o_actionswiper_left_swipe_area position-absolute overflow-hidden w-100 h-100 d-flex align-items-center justify-content-center rounded-start" t-att-class="localizedProps.onLeftSwipe.bgColor">
-                                <span><i class="fa-solid fa-2x" t-att-class="localizedProps.onLeftSwipe.icon"/></span>
+                        <t t-if="this.localizedProps.onLeftSwipe and (this.localizedProps.onLeftSwipe.icon or this.localizedProps.onLeftSwipe.bgColor)">
+                            <div t-ref="leftArea" style="max-width: 0px;" class="o_actionswiper_left_swipe_area position-absolute overflow-hidden w-100 h-100 d-flex align-items-center justify-content-center rounded-start" t-att-class="this.localizedProps.onLeftSwipe.bgColor">
+                                <span><i class="fa-solid fa-2x" t-att-class="this.localizedProps.onLeftSwipe.icon"/></span>
                             </div>
                         </t>
                     </div>

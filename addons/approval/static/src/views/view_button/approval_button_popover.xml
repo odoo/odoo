@@ -3,21 +3,21 @@
 
     <t t-name="approval.ApprovalButtonPopover">
         <div class="o_approval_button_popover p-2">
-            <div t-if="isRefused" class="o_approval_button_refused alert alert-danger d-flex align-items-center gap-2 py-1 px-2 mb-2">
+            <div t-if="this.isRefused" class="o_approval_button_refused alert alert-danger d-flex align-items-center gap-2 py-1 px-2 mb-2">
                 <span class="flex-grow-1">Refused. The refusal stands until it is reopened.</span>
                 <button
-                    t-if="result.request.can_reopen"
+                    t-if="this.result.request.can_reopen"
                     class="btn btn-sm btn-secondary o_approval_button_reopen"
-                    t-att-disabled="!canAct"
+                    t-att-disabled="!this.canAct"
                     t-on-click="() => this.withdraw(false)">
                     Reopen
                 </button>
             </div>
-            <div t-foreach="result.steps" t-as="step" t-key="step.id or 'category'" class="o_approval_button_step mb-2">
+            <div t-foreach="this.result.steps" t-as="step" t-key="step.id or 'category'" class="o_approval_button_step mb-2">
                 <div class="d-flex align-items-center gap-2">
                     <strong class="flex-grow-1" t-out="step.name"/>
                     <i t-if="step.exclusive" class="fa-solid fa-shield" title="Whoever decides this step decides no other step on this record"/>
-                    <span class="small text-muted"><t t-out="approvedCount(step)"/> / <t t-out="step.minimum"/></span>
+                    <span class="small text-muted"><t t-out="this.approvedCount(step)"/> / <t t-out="step.minimum"/></span>
                 </div>
                 <div
                     t-foreach="step.decisions"
@@ -33,23 +33,23 @@
                         <span class="small text-muted ms-1">
                             <t t-if="decision.state === 'approved'">approved</t>
                             <t t-else="">refused</t>
-                            <t t-if="decision.date"> <t t-out="formatDate(decision.date)"/></t>
+                            <t t-if="decision.date"> <t t-out="this.formatDate(decision.date)"/></t>
                         </span>
                     </span>
                     <button
                         t-if="decision.can_withdraw"
                         class="btn btn-sm btn-link o_approval_button_withdraw"
                         title="Withdraw"
-                        t-att-disabled="!canAct"
+                        t-att-disabled="!this.canAct"
                         t-on-click="() => this.withdraw(decision.approver_id, step.id)">
                         <i class="fa-solid fa-undo"/>
                     </button>
                 </div>
-                <div t-if="step.can_decide and !isRefused" class="d-flex gap-2 mt-1">
-                    <button class="btn btn-sm btn-success o_approval_button_approve" t-att-disabled="!canAct" t-on-click="() => this.decide(true, step.id)">
+                <div t-if="step.can_decide and !this.isRefused" class="d-flex gap-2 mt-1">
+                    <button class="btn btn-sm btn-success o_approval_button_approve" t-att-disabled="!this.canAct" t-on-click="() => this.decide(true, step.id)">
                         <i class="fa-solid fa-check"/> Approve
                     </button>
-                    <button class="btn btn-sm btn-danger o_approval_button_refuse" t-att-disabled="!canAct" t-on-click="() => this.decide(false, step.id)">
+                    <button class="btn btn-sm btn-danger o_approval_button_refuse" t-att-disabled="!this.canAct" t-on-click="() => this.decide(false, step.id)">
                         <i class="fa-solid fa-times"/> Refuse
                     </button>
                 </div>

@@ -3,14 +3,14 @@
 
     <t t-name="account.inconsistent_statement_warning">
         Some
-        <a t-on-click="(ev) => controller.reportAction(ev, 'bank_reconciliation_report_open_inconsistent_statements', warningParams)">statements</a>
+        <a t-on-click="(ev) => this.controller.reportAction(ev, 'bank_reconciliation_report_open_inconsistent_statements', this.warningParams)">statements</a>
         have a starting balance different from the previous ending balance.
     </t>
 
     <t t-name="account.has_bank_miscellaneous_move_lines">
         <span>
-            "<t t-out="warningParams.args"/>" account balance is affected by
-            <a t-on-click="(ev) => controller.reportAction(ev, 'open_bank_miscellaneous_move_lines')">journal items</a>
+            "<t t-out="this.warningParams.args"/>" account balance is affected by
+            <a t-on-click="(ev) => this.controller.reportAction(ev, 'open_bank_miscellaneous_move_lines')">journal items</a>
             which don't originate from a bank statement nor payment.
         </span>
     </t>
@@ -18,18 +18,18 @@
     <t t-name="account.journal_balance">
         <span>
             The current balance in the
-            <a t-on-click="(ev) => controller.reportAction(ev, 'action_redirect_to_general_ledger')">
+            <a t-on-click="(ev) => this.controller.reportAction(ev, 'action_redirect_to_general_ledger')">
                 General Ledger
-                <t t-out="warningParams.general_ledger_amount"/>
+                <t t-out="this.warningParams.general_ledger_amount"/>
             </a>
 
             doesn't match the balance of your
-            <a t-on-click="(ev) => controller.reportAction(ev, 'action_redirect_to_bank_statement_widget')">
+            <a t-on-click="(ev) => this.controller.reportAction(ev, 'action_redirect_to_bank_statement_widget')">
                 last bank statement
-                <t t-out="warningParams.last_bank_statement_amount"/>
+                <t t-out="this.warningParams.last_bank_statement_amount"/>
             </a>
             , leading to an unexplained difference of
-            <t t-out="warningParams.unexplained_difference"/>
+            <t t-out="this.warningParams.unexplained_difference"/>
         </span>
     </t>
 </templates>

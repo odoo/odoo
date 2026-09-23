@@ -5,16 +5,16 @@
             <div class="card h-100 shadow-sm cursor-pointer transition-base journal-create-wizard-card">
                 <div class="card-body d-flex justify-content-between align-items-start gap-3">
                     <div>
-                        <h4 class="card-title" t-out="props.title"/>
-                        <p class="card-text" t-out="props.text"/>
+                        <h4 class="card-title" t-out="this.props.title"/>
+                        <p class="card-text" t-out="this.props.text"/>
                     </div>
-                    <img t-if="props.images.length === 1" t-att-src="props.images[0]" class="flex-shrink-0 w-25" t-att-alt="props.title"/>
-                    <div t-elif="props.images.length >= 2" class="position-relative flex-shrink-0 w-25 ratio ratio-1x1">
+                    <img t-if="this.props.images.length === 1" t-att-src="this.props.images[0]" class="flex-shrink-0 w-25" t-att-alt="this.props.title"/>
+                    <div t-elif="this.props.images.length >= 2" class="position-relative flex-shrink-0 w-25 ratio ratio-1x1">
                         <div class="o_tile w-75 h-auto mt-auto z-1">
-                            <img class="position-absolute w-50 m-auto object-fit-contain" t-att-src="props.images[0]"/>
+                            <img class="position-absolute w-50 m-auto object-fit-contain" t-att-src="this.props.images[0]"/>
                         </div>
                         <div class="o_tile o_tile_back end-0 w-75 h-auto ms-auto">
-                            <img class="position-absolute w-50 m-auto object-fit-contain" t-att-src="props.images[1]"/>
+                            <img class="position-absolute w-50 m-auto object-fit-contain" t-att-src="this.props.images[1]"/>
                         </div>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
     <t t-name="account.JournalCreateWizard">
         <div class="container py-4">
             <div class="row row-cols-1 row-cols-md-2 row-gap-2 row-gap-md-4">
-                <t t-foreach="cardsData" t-as="card" t-key="card['title']">
+                <t t-foreach="this.cardsData" t-as="card" t-key="card['title']">
                     <JournalCreateWizardCard
                         images="card['images']"
                         title="card['title']"

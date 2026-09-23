@@ -3,7 +3,7 @@
 
     <t t-name="web.NotificationContainer">
         <div class="o_notification_manager">
-            <t t-foreach="notifications" t-as="notification" t-key="notification">
+            <t t-foreach="this.notifications" t-as="notification" t-key="notification">
                 <ErrorHandler onError="(error) => this.handleError(notification, error)">
                     <Transition leaveDuration="0" immediate="true" name="'o_notification_fade'" t-slot-scope="transition">
                         <Notification t-props="notification_value.props" className="(notification_value.props.className || '') + ' ' + transition.className"/>
@@ -19,20 +19,20 @@
             t-on-mouseleave="(ev) => this.setHold('hover', false, ev)"
             t-on-focusin="(ev) => this.setHold('focus', true, ev)"
             t-on-focusout="(ev) => this.setHold('focus', false, ev)"
-            t-attf-class="o_notification {{props.className}} d-flex mb-2 position-relative rounded shadow-lg"
-            t-att-role="isAssertive ? 'alert' : 'status'"
-            t-att-aria-live="isAssertive ? 'assertive' : 'polite'"
+            t-attf-class="o_notification {{this.props.className}} d-flex mb-2 position-relative rounded shadow-lg"
+            t-att-role="this.isAssertive ? 'alert' : 'status'"
+            t-att-aria-live="this.isAssertive ? 'assertive' : 'polite'"
             aria-atomic="true">
-            <span t-attf-class="o_notification_bar bg-{{props.type}} rounded-start"/>
+            <span t-attf-class="o_notification_bar bg-{{this.props.type}} rounded-start"/>
             <div class="w-100 py-2 ps-3 pe-5 border border-start-0 rounded-end text-break">
-                <button type="button" class="o_notification_close btn-close position-absolute top-0 end-0 mt-2 me-2" aria-label="Close" t-on-click="props.close"/>
+                <button type="button" class="o_notification_close btn-close position-absolute top-0 end-0 mt-2 me-2" aria-label="Close" t-on-click="this.props.close"/>
                 <div class="o_notification_body d-flex align-items-center">
                     <span class="me-auto o_notification_content w-100">
-                        <t t-if="props.title"><t t-out="props.title"/>. </t>
-                        <t t-out="props.message"/>
+                        <t t-if="this.props.title"><t t-out="this.props.title"/>. </t>
+                        <t t-out="this.props.message"/>
                     </span>
-                    <div t-if="props.buttons.length" class="o_notification_buttons justify-content-end w-50">
-                        <button t-foreach="props.buttons" t-as="button" type="button" t-key="button_index" t-attf-class="btn btn-link" t-on-click="button.onClick">
+                    <div t-if="this.props.buttons.length" class="o_notification_buttons justify-content-end w-50">
+                        <button t-foreach="this.props.buttons" t-as="button" type="button" t-key="button_index" t-attf-class="btn btn-link" t-on-click="button.onClick">
                             <t t-if="button.icon">
                                 <i t-if="button.icon.indexOf('fa-') === 0" role="img" t-att-aria-label="button.name" t-att-title="button.name" t-attf-class="fa-solid {{button.icon}} me-1"/>
                                 <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
@@ -41,7 +41,7 @@
                         </button>
                     </div>
                 </div>
-                <div t-ref="autoclose_progress_bar" t-attf-class="o_notification_progress opacity-75 bg-{{props.type}}"></div>
+                <div t-ref="autoclose_progress_bar" t-attf-class="o_notification_progress opacity-75 bg-{{this.props.type}}"></div>
             </div>
         </div>
     </t>

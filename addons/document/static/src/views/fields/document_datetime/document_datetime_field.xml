@@ -1,12 +1,12 @@
 <templates>
     <t t-name="document.DocumentsDatetimeField">
         <div class="d-flex align-items-center">
-            <div t-att-title="props.label" class="text-primary">Exp: <span t-out="formattedLocalExpirationDate"/></div>
-            <button t-on-click="onRemove" class="btn btn-link ms-2 p-0" title="Clear" t-if="!props.readonly">
+            <div t-att-title="this.props.label" class="text-primary">Exp: <span t-out="this.formattedLocalExpirationDate"/></div>
+            <button t-on-click="this.onRemove" class="btn btn-link ms-2 p-0" title="Clear" t-if="!this.props.readonly">
                 <i class="fa-solid fa-times"/>
             </button>
             <DocumentsDatetimeBtnField name="this.props.name" record="this.props.record" label.translate="Edit"
-                btnClasses="'btn-link p-0'" icon="'edit'" t-if="!props.readonly"/>
+                btnClasses="'btn-link p-0'" icon="'edit'" t-if="!this.props.readonly"/>
         </div>
     </t>
 </templates>

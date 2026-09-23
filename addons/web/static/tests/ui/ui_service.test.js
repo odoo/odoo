@@ -111,9 +111,9 @@ test("isBlocked and activeElement are reactive properties", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-                <span class="blocked" t-out="ui.isBlocked"/>
-                <span class="active" t-out="isDocumentActive ? 'document' : 'other'"/>
-                <div t-if="hasRef" id="owner" t-ref="delegatedRef">
+                <span class="blocked" t-out="this.ui.isBlocked"/>
+                <span class="active" t-out="this.isDocumentActive ? 'document' : 'other'"/>
+                <div t-if="this.hasRef" id="owner" t-ref="delegatedRef">
                     <input type="text"/>
                 </div>
             </div>
@@ -158,7 +158,7 @@ test("a component can be the  UI active element: simple usage", async () => {
         static template = xml`
             <div>
                 <h1>My Component</h1>
-                <div t-if="hasRef" id="owner" t-ref="delegatedRef">
+                <div t-if="this.hasRef" id="owner" t-ref="delegatedRef">
                 <input type="text"/>
             </div>
             </div>
@@ -314,9 +314,9 @@ test("UI active element: trap focus - first or last tabable changes", async () =
                 <input type="text" name="outer"/>
                 <div id="idActiveElement" t-ref="delegatedRef">
                     <div>
-                        <input type="text" name="a" t-if="show.a"/>
+                        <input type="text" name="a" t-if="this.show.a"/>
                         <input type="text" name="b"/>
-                        <input type="text" name="c" t-if="show.c"/>
+                        <input type="text" name="c" t-if="this.show.c"/>
                     </div>
                 </div>
             </div>
@@ -603,7 +603,7 @@ test("an unmatched unblock leaves the ui unblocked and announces nothing", async
 
 test("isBlocked is its own reactive key, so a nested block does not invalidate it", async () => {
     class Reader extends Component {
-        static template = xml`<div class="reader" t-out="ui.isBlocked"/>`;
+        static template = xml`<div class="reader" t-out="this.ui.isBlocked"/>`;
         static props = {};
         setup() {
             this.ui = useState(useService("ui"));

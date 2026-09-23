@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ImageTransformation">
-        <div class="transfo-container" t-ref="transfoContainer" t-on-mousedown.prevent="mouseDown">
+        <div class="transfo-container" t-ref="transfoContainer" t-on-mousedown.prevent="this.mouseDown">
             <div class="transfo-controls" t-ref="transfoControls">
                 <div style="cursor: crosshair; position: absolute; margin: -30px; top: 0; right: 0; padding: 1px 0 0 1px;" class="transfo-rotator">
                     <span class="fa-stack fa-lg">

@@ -8,7 +8,7 @@
 >
     <BuilderRow id="'o_wsale_buttons_opt'" position="after">
         <BuilderRow
-            t-if="props.recordName === 'shop_opt_products_design_classes'"
+            t-if="this.props.recordName === 'shop_opt_products_design_classes'"
             label.translate="Wishlist"
             level="1"
         >
@@ -55,7 +55,7 @@
     <BuilderRow label.translate="Gap" position="replace">
         <BuilderRow label.translate="Gap">
             <BuilderRange
-                t-if="props.recordName === 'wishlist_opt_products_design_classes'"
+                t-if="this.props.recordName === 'wishlist_opt_products_design_classes'"
                 action="'wishlistSetGap'"
                 min="0"
                 max="28"

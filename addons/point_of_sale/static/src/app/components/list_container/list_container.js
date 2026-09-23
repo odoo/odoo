@@ -14,9 +14,9 @@ class ListContainerDialog extends Component {
         close: Function,
     };
     static template = xml`
-        <Dialog title="title" footer="false">
+        <Dialog title="this.title" footer="false">
             <div class="list-container-items d-flex p-2 flex-wrap" style="gap: 0.5rem;">
-                <t t-foreach="props.items" t-as="item" t-key="item_index">
+                <t t-foreach="this.props.items" t-as="item" t-key="item_index">
                     <t t-slot="default" item="item" />
                 </t>
             </div>
@@ -39,15 +39,15 @@ export class ListContainer extends Component {
         class: "",
     };
     static template = xml`
-        <div class="d-flex flex-grow-1" t-attf-class="{{props.class}}" t-att-class="{'overflow-hidden': !isUiSmall}">
-            <button t-if="props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg me-1 my-2" t-on-click="props.onClickPlus">
+        <div class="d-flex flex-grow-1" t-attf-class="{{this.props.class}}" t-att-class="{'overflow-hidden': !this.isUiSmall}">
+            <button t-if="this.props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg me-1 my-2" t-on-click="this.props.onClickPlus">
                 <i class="fa-solid fa-plus-circle" aria-hidden="true"/>
             </button>
-            <button t-if="this.sizing.isLarger or props.forceSmall" t-on-click="toggle"
+            <button t-if="this.sizing.isLarger or this.props.forceSmall" t-on-click="this.toggle"
                 class="btn btn-secondary mx-1 fa-solid fa-caret-down my-2" />
             <div class="overflow-hidden w-100 position-relative py-2">
                 <div t-ref="container" class="list-container-items d-flex w-100">
-                    <div t-if="!props.forceSmall" t-foreach="props.items" t-as="item" t-key="item_index" t-att-class="{'invisible': shouldBeInvisible(item_index)}">
+                    <div t-if="!this.props.forceSmall" t-foreach="this.props.items" t-as="item" t-key="item_index" t-att-class="{'invisible': this.shouldBeInvisible(item_index)}">
                         <t t-slot="default" item="item"/>
                     </div>
                 </div>

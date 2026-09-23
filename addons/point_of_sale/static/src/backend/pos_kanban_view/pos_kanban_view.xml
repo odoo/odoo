@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <t t-name="point_of_sale.PosKanbanController" t-inherit="web.KanbanView" t-inherit-mode="primary">
-        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
-            <attribute name="initialPosState">initialPosState</attribute>
+        <xpath expr="//t[@t-component='this.props.Renderer']" position="attributes">
+            <attribute name="initialPosState">this.initialPosState</attribute>
         </xpath>
     </t>
 
     <t t-name="point_of_sale.PosKanbanRenderer">
         <div class="d-flex flex-column">
             <t t-call="web.KanbanRenderer" />
-            <div class="position-relative container" t-att-class="{ 'border-top mt-2': showTopBorder() }" t-if="showPredefinedScenarios">
+            <div class="position-relative container" t-att-class="{ 'border-top mt-2': this.showTopBorder() }" t-if="this.showPredefinedScenarios">
                 <div class="flex-grow-1 text-center">
-                    <p class="h1 text-primary mt-4" t-if="!posState.has_pos_config">Choose your store</p>
-                    <p t-if="!posState.has_chart_template" class="h2 m-3">
-                        Please <a href="#" class="btn-link o_form_uri" role="button" t-on-click.prevent="() => action.doAction('account.action_account_config')">install a chart of accounts</a> to activate the buttons.
+                    <p class="h1 text-primary mt-4" t-if="!this.posState.has_pos_config">Choose your store</p>
+                    <p t-if="!this.posState.has_chart_template" class="h2 m-3">
+                        Please <a href="#" class="btn-link o_form_uri" role="button" t-on-click.prevent="() => this.action.doAction('account.action_account_config')">install a chart of accounts</a> to activate the buttons.
                     </p>
                     <br />
-                    <div t-attf-class="d-flex {{posState.is_restaurant_installed ? 'flex-column' : 'flex-column-reverse'}}">
+                    <div t-attf-class="d-flex {{this.posState.is_restaurant_installed ? 'flex-column' : 'flex-column-reverse'}}">
                         <div class="shop-scenarios row p-3">
-                            <t t-foreach="shopScenarios" t-as="item" t-key="item.functionName">
+                            <t t-foreach="this.shopScenarios" t-as="item" t-key="item.functionName">
                                 <t t-call="point_of_sale.ScenarioCard" />
                             </t>
                         </div>
                         <div class="restaurant-scenarios row p-3 justify-content-center">
-                            <t t-foreach="restaurantScenarios" t-as="item" t-key="item.functionName">
+                            <t t-foreach="this.restaurantScenarios" t-as="item" t-key="item.functionName">
                                 <t t-call="point_of_sale.ScenarioCard" />
                             </t>
-                            <t t-set="item" t-value="retailScenario" />
+                            <t t-set="item" t-value="this.retailScenario" />
                             <t t-call="point_of_sale.ScenarioCard" />
                         </div>
                     </div>
@@ -38,7 +38,7 @@
     <t t-name="point_of_sale.ScenarioCard">
         <div class="col-lg-4">
             <button type="button" class="card mb-3 rounded-3 pos-scenario-card w-100" style="max-width: 540px;"
-                t-att-disabled="isScenarioDisabled"
+                t-att-disabled="this.isScenarioDisabled"
                 t-on-click="() => this.clickLoadScenario(item)">
                 <div class="row g-0">
                     <div class="col-lg-4">

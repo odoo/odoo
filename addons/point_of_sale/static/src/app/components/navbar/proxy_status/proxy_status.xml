@@ -3,22 +3,22 @@
 
     <t t-name="point_of_sale.ProxyStatus">
         <button class="oe_status js_proxy btn btn-light" t-on-click="() => this.pos.connectToProxy()">
-            <span t-if="this.message and !ui.isSmall" class="js_msg">
+            <span t-if="this.message and !this.ui.isSmall" class="js_msg">
                 <t t-out="this.message" />
             </span>
-            <span t-if="connectionInfo.status === 'connected' and !this.message" class="js_connected text-success">
+            <span t-if="this.connectionInfo.status === 'connected' and !this.message" class="js_connected text-success">
                 <i class="fa-solid fa-sitemap" role="img" aria-label="Proxy Connected"
                    title="Proxy Connected"></i>
             </span>
-            <span t-if="connectionInfo.status === 'connecting'" class="js_connecting">
+            <span t-if="this.connectionInfo.status === 'connecting'" class="js_connecting">
                 <i class="fa-solid fa-circle-notch fa-spin" role="img" aria-label="Connecting to Proxy"
                    title="Connecting to Proxy"></i>
             </span>
-            <span t-elif="connectionInfo.status === 'disconnected'" class="js_disconnected text-danger">
+            <span t-elif="this.connectionInfo.status === 'disconnected'" class="js_disconnected text-danger">
                 <i class="fa-solid fa-sitemap" role="img" aria-label="Proxy Disconnected"
                    title="Proxy Disconnected"></i>
             </span>
-            <span t-elif="connectionInfo.status === 'warning' or this.message" class="js_warning text-warning">
+            <span t-elif="this.connectionInfo.status === 'warning' or this.message" class="js_warning text-warning">
                 <i class="fa-solid fa-sitemap" role="img" aria-label="Proxy Warning"
                    title="Proxy Warning"></i>
             </span>

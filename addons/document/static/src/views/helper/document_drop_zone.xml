@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="document.DocumentsDropZone">
-        <t t-if="state.dragOver">
+        <t t-if="this.state.dragOver">
             <div class="h-100 w-100 start-0 position-absolute"
-                t-att-class="{'o_documents_drop_over_zone': canDrop, 'o_documents_drop_over_unauthorized_zone': !canDrop}"
-                t-attf-style="top: {{state.topOffset}}px !important; z-index: 10;"
-                t-on-drop.prevent="onDrop">
+                t-att-class="{'o_documents_drop_over_zone': this.canDrop, 'o_documents_drop_over_unauthorized_zone': !this.canDrop}"
+                t-attf-style="top: {{this.state.topOffset}}px !important; z-index: 10;"
+                t-on-drop.prevent="this.onDrop">
                 <div class="h-100 w-100 position-sticky">
-                    <div t-if="canDrop" class="o_documents_upload_text text-center text-white">
+                    <div t-if="this.canDrop" class="o_documents_upload_text text-center text-white">
                         <i class="d-block fa-solid fa-upload fa-9x mb-4"/>
                         <span>Drop files here to upload</span>
                     </div>

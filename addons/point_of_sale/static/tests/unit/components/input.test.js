@@ -28,7 +28,7 @@ test("rebinding an input commits pending text to the original model", async () =
     class Parent extends Component {
         static props = {};
         static components = { Input };
-        static template = xml`<Input tModel="[state.model, 'value']" debounceMillis="500" getRef="capture"/>`;
+        static template = xml`<Input tModel="[this.state.model, 'value']" debounceMillis="500" getRef="this.capture"/>`;
         setup() {
             this.state = useState({ model: original });
         }
@@ -52,7 +52,7 @@ test("pending input uses its original callback when the parent replaces props", 
     class Parent extends Component {
         static props = {};
         static components = { Input };
-        static template = xml`<Input tModel="[state.model, 'value']" callback="state.callback" debounceMillis="500" getRef="capture"/>`;
+        static template = xml`<Input tModel="[this.state.model, 'value']" callback="this.state.callback" debounceMillis="500" getRef="this.capture"/>`;
         setup() {
             this.state = useState({
                 model: { value: "" },

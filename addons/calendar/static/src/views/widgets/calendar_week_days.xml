@@ -2,16 +2,16 @@
 <templates>
     <t t-name="calendar.WeekDays">
         <div class="o_recurrent_weekdays mb-2 d-flex">
-        <t t-foreach="weekdays" t-as="day" t-key="day">
-                <div t-attf-class="o_calendar_week_days_rounded {{data[day] ? 'text-bg-action' : 'btn-secondary'}} {{props.readonly ? 'o_readonly' : ''}}"
+        <t t-foreach="this.weekdays" t-as="day" t-key="day">
+                <div t-attf-class="o_calendar_week_days_rounded {{this.data[day] ? 'text-bg-action' : 'btn-secondary'}} {{this.props.readonly ? 'o_readonly' : ''}}"
                     role="checkbox"
-                    t-att-aria-checked="data[day] ? 'true' : 'false'"
-                    t-att-aria-label="props.record.fields[day].string"
-                    t-att-data-tooltip="props.record.fields[day].string"
-                    t-att-tabindex="props.readonly ? -1 : 0"
+                    t-att-aria-checked="this.data[day] ? 'true' : 'false'"
+                    t-att-aria-label="this.props.record.fields[day].string"
+                    t-att-data-tooltip="this.props.record.fields[day].string"
+                    t-att-tabindex="this.props.readonly ? -1 : 0"
                     t-on-click="this.props.readonly? () => {} : () => this.onChange(day)"
                     t-on-keydown="(ev) => this.onKeydown(ev, day)">
-                    <t t-out="props.record.fields[day].string[0]"/>
+                    <t t-out="this.props.record.fields[day].string[0]"/>
                 </div>
             </t>
         </div>

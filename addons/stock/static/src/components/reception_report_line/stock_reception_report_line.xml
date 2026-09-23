@@ -2,25 +2,25 @@
 <templates xml:space="preserve">
 
     <tr t-name="stock.ReceptionReportLine" class="align-middle">
-        <td t-out="data.product.display_name"/>
+        <td t-out="this.data.product.display_name"/>
         <td>
-            <t t-out="formatFloat(data.quantity)"/> <t t-if="props.showUom" t-out="data.uom"/>
+            <t t-out="this.formatFloat(this.data.quantity)"/> <t t-if="this.props.showUom" t-out="this.data.uom"/>
             <button type="button" class="btn btn-link fa-solid fa-chart-area"
                 title="Forecast Report" aria-label="Forecast Report"
-                t-on-click="onClickForecast" name="forecasted_report_link"/>
+                t-on-click="this.onClickForecast" name="forecasted_report_link"/>
         </td>
-        <td t-if="props.hasMovesIn">
-            <t t-if="data.is_qty_assignable">
-                <button t-if="!data.is_assigned"
-                    t-on-click="onClickAssign"
-                    t-att-disabled="opGuard.busy"
+        <td t-if="this.props.hasMovesIn">
+            <t t-if="this.data.is_qty_assignable">
+                <button t-if="!this.data.is_assigned"
+                    t-on-click="this.onClickAssign"
+                    t-att-disabled="this.opGuard.busy"
                     class="btn btn-sm btn-primary"
                     name="assign_link">
                     Assign
                 </button>
                 <button t-else=""
-                    t-on-click="onClickUnassign"
-                    t-att-disabled="opGuard.busy"
+                    t-on-click="this.onClickUnassign"
+                    t-att-disabled="this.opGuard.busy"
                     class="btn btn-sm btn-primary"
                     name="unassign_link">
                     Unassign
@@ -28,11 +28,11 @@
             </t>
         </td>
         <td>
-            <button t-if="data.is_qty_assignable &amp;&amp; data.source"
+            <button t-if="this.data.is_qty_assignable &amp;&amp; this.data.source"
                 class="btn btn-sm btn-primary"
-                t-att-disabled="!data.is_assigned or opGuard.busy"
+                t-att-disabled="!this.data.is_assigned or this.opGuard.busy"
                 name="print_label"
-                t-on-click="onClickPrint">
+                t-on-click="this.onClickPrint">
                 <span class="d-sm-block">Print Label</span>
             </button>
         </td>

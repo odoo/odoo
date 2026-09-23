@@ -118,7 +118,7 @@
       "license": "LGPL-3.0-only",
       "source": "https://github.com/Agro-Marin/owl/tree/2.8-marin",
       "probe": { "file": "owl.es.js", "pattern": "version = \"{version}\"" },
-      "notes": "dist/owl.es.js built (npm ci && npm run build) from Agro-Marin/owl 2.8-marin = odoo/owl v2.8.4 (never published to npm) + one fork commit: t-out renders a non-block object as its string, like t-esc and owl 3, so t-esc can be replaced by t-out ahead of the owl 3 switch. __info__.hash names the built commit. Bumping it is a framework-wide change: re-run the full @web suite."
+      "notes": "dist/owl.es.js built (npm ci && npm run build) from Agro-Marin/owl 2.8-marin = odoo/owl v2.8.4 (never published to npm) + four fork commits that let templates be written in owl 3 form ahead of the switch: t-out renders a non-block object as its string (like t-esc and owl 3), a t-call-context template reads its context as `this`, a non-directive attribute on <t t-call> is a value for the callee, and a `.translate` one is a translated literal. __info__.hash names the built commit. Bumping it is a framework-wide change: re-run the full @web suite."
     },
     "pdfjs": {
       "version": "6.1.200",

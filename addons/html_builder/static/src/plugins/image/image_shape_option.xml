@@ -6,11 +6,11 @@
         <div class="btn-group o-hb-button-group">
             <div
                 class="o-hb-btn btn btn-secondary o-dropdown dropdown-toggle dropdown"
-                t-att-class="{'border-end-0 rounded-end-0': state.hasShape}"
+                t-att-class="{'border-end-0 rounded-end-0': this.state.hasShape}"
                 role="button"
                 tabindex="0"
                 t-on-click="this.showImageShapes"
-                t-out="state.shapeLabel"
+                t-out="this.state.shapeLabel"
             />
             <BuilderButton
                 action="'setImageShape'"
@@ -18,7 +18,7 @@
                 preview="false"
                 icon="'oi-close'"
                 className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'"
-                t-if="state.hasShape"/>
+                t-if="this.state.hasShape"/>
         </div>
     </BuilderRow>
     <t t-if="this.state.hasShape">

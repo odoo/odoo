@@ -3,71 +3,71 @@
 
     <t t-name="web.FlowEditor">
         <div class="o_flow_editor position-relative overflow-hidden w-100 h-100"
-            t-att-class="{'o_flow_editor_interacting': isInteracting}"
-            t-att-style="canvasStyle"
-            t-att-aria-label="ariaLabel"
+            t-att-class="{'o_flow_editor_interacting': this.isInteracting}"
+            t-att-style="this.canvasStyle"
+            t-att-aria-label="this.ariaLabel"
             t-ref="canvas"
-            t-on-pointerdown="onCanvasPointerDown"
-            t-on-wheel="onWheel"
+            t-on-pointerdown="this.onCanvasPointerDown"
+            t-on-wheel="this.onWheel"
             role="region" tabindex="-1">
-            <div class="o_flow_editor_content position-absolute" t-att-style="contentStyle">
+            <div class="o_flow_editor_content position-absolute" t-att-style="this.contentStyle">
                 <svg class="o_flow_editor_connections position-absolute overflow-visible">
-                    <t t-foreach="connectionGeometries" t-as="geometry" t-key="geometry.id">
+                    <t t-foreach="this.connectionGeometries" t-as="geometry" t-key="geometry.id">
                         <FlowConnection geometry="geometry"
-                            className="getConnectionClass(geometry.id)"
-                            label="getConnectionLabel(geometry.id)"
-                            selected="isConnectionSelected(geometry.id)"
-                            onClick.bind="onConnectionClick"/>
+                            className="this.getConnectionClass(geometry.id)"
+                            label="this.getConnectionLabel(geometry.id)"
+                            selected="this.isConnectionSelected(geometry.id)"
+                            onClick.bind="this.onConnectionClick"/>
                     </t>
-                    <FlowConnection t-if="draftConnectionGeometry" geometry="draftConnectionGeometry"/>
+                    <FlowConnection t-if="this.draftConnectionGeometry" geometry="this.draftConnectionGeometry"/>
                 </svg>
                 <div class="o_flow_editor_nodes position-absolute">
-                    <t t-set="connectedNodes" t-value="connectedNodeIds"/>
-                    <t t-foreach="store.nodes" t-as="node" t-key="node.id">
+                    <t t-set="connectedNodes" t-value="this.connectedNodeIds"/>
+                    <t t-foreach="this.store.nodes" t-as="node" t-key="node.id">
                         <FlowNode node="node"
-                            connections="store.connections"
-                            defaultSize="props.defaultNodeSize"
-                            defaultHeaderHeight="props.defaultNodeHeaderHeight"
-                            NodeComponent="props.NodeComponent"
-                            getNodeComponent="props.getNodeComponent"
-                            hasConnectedPath="!props.flagUnreachableNodes or connectedNodes.has(node.id)"
-                            selected="isNodeSelected(node.id)"
-                            readonly="store.readonly"
-                            getPortValidation.bind="getPortValidation"
-                            onClick.bind="onNodeClick"
-                            onDelete.bind="onNodeDeleteClick"
-                            onNodePointerDown.bind="onNodePointerDown"
-                            onPortPointerDown.bind="onPortPointerDown"
-                            onResizePointerDown.bind="onResizePointerDown"/>
+                            connections="this.store.connections"
+                            defaultSize="this.props.defaultNodeSize"
+                            defaultHeaderHeight="this.props.defaultNodeHeaderHeight"
+                            NodeComponent="this.props.NodeComponent"
+                            getNodeComponent="this.props.getNodeComponent"
+                            hasConnectedPath="!this.props.flagUnreachableNodes or connectedNodes.has(node.id)"
+                            selected="this.isNodeSelected(node.id)"
+                            readonly="this.store.readonly"
+                            getPortValidation.bind="this.getPortValidation"
+                            onClick.bind="this.onNodeClick"
+                            onDelete.bind="this.onNodeDeleteClick"
+                            onNodePointerDown.bind="this.onNodePointerDown"
+                            onPortPointerDown.bind="this.onPortPointerDown"
+                            onResizePointerDown.bind="this.onResizePointerDown"/>
                     </t>
                 </div>
             </div>
-            <div t-if="props.showControls" class="o_flow_editor_controls btn-group position-absolute">
-                <button class="btn btn-light border" t-att-title="zoomOutLabel"
-                    t-att-aria-label="zoomOutLabel" t-on-click="zoomOut" type="button">
+            <div t-if="this.props.showControls" class="o_flow_editor_controls btn-group position-absolute">
+                <button class="btn btn-light border" t-att-title="this.zoomOutLabel"
+                    t-att-aria-label="this.zoomOutLabel" t-on-click="this.zoomOut" type="button">
                     <i class="fa-solid fa-minus" aria-hidden="true"/>
                 </button>
-                <button class="btn btn-light border" t-att-title="fitLabel"
-                    t-att-aria-label="fitLabel" t-on-click="fitToContent" type="button">
+                <button class="btn btn-light border" t-att-title="this.fitLabel"
+                    t-att-aria-label="this.fitLabel" t-on-click="this.fitToContent" type="button">
                     <i class="fa-solid fa-expand" aria-hidden="true"/>
                 </button>
-                <button class="btn btn-light border" t-att-title="zoomInLabel"
-                    t-att-aria-label="zoomInLabel" t-on-click="zoomIn" type="button">
+                <button class="btn btn-light border" t-att-title="this.zoomInLabel"
+                    t-att-aria-label="this.zoomInLabel" t-on-click="this.zoomIn" type="button">
                     <i class="fa-solid fa-plus" aria-hidden="true"/>
                 </button>
             </div>
-            <button t-if="flowLocationIndicator"
+            <button t-if="this.flowLocationIndicator"
                 class="o_flow_editor_location_indicator btn rounded-circle position-absolute"
-                t-att-style="flowLocationIndicatorStyle"
-                t-att-title="flowLocationLabel"
-                t-att-aria-label="flowLocationLabel"
-                t-on-click="onFlowLocationClick"
+                t-att-style="this.flowLocationIndicatorStyle"
+                t-att-title="this.flowLocationLabel"
+                t-att-aria-label="this.flowLocationLabel"
+                t-on-click="this.onFlowLocationClick"
                 type="button">
                 <i class="fa-solid fa-location-arrow" aria-hidden="true"/>
             </button>
-            <div t-if="!store.nodes.length"
+            <div t-if="!this.store.nodes.length"
                 class="o_flow_editor_empty position-absolute top-50 start-50 translate-middle text-muted">
-                <t t-out="emptyLabel"/>
+                <t t-out="this.emptyLabel"/>
             </div>
         </div>
     </t>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.login_user_switch">
-        <t t-if="state.users.length">
-            <t t-if="state.displayUserChoice">
+        <t t-if="this.state.users.length">
+            <t t-if="this.state.displayUserChoice">
                 <div class="oe_login_form o_user_switch user-select-none my-4" t-ref="root">
                     <p>Choose a user</p>
                     <div class="list-group my-3">
-                        <t t-foreach="state.users" t-as="user" t-key="user.login">
+                        <t t-foreach="this.state.users" t-as="user" t-key="user.login">
                             <div class="list-group-item d-flex justify-content-between align-items-center p-0">
                                 <button type="button" class="o_user_switch_login list-group-item-action d-flex justify-content-begin align-items-center border-0 bg-transparent text-start flex-fill px-3 py-2" t-on-click="() => this.updateForm(user.login)">
-                                    <img class="o_avatar o_user_avatar rounded me-2" t-attf-src="{{getAvatarUrl(user)}}" t-att-alt="user.login"/>
+                                    <img class="o_avatar o_user_avatar rounded me-2" t-attf-src="{{this.getAvatarUrl(user)}}" t-att-alt="user.login"/>
                                     <t t-out="user.name" />
                                 </button>
-                                <button type="button" class="o_user_switch_remove btn btn-link text-reset border-0 px-3 py-2" t-att-aria-label="removeLabel(user)" t-att-title="removeLabel(user)" t-on-click.stop="() => this.remove(user)">
+                                <button type="button" class="o_user_switch_remove btn btn-link text-reset border-0 px-3 py-2" t-att-aria-label="this.removeLabel(user)" t-att-title="this.removeLabel(user)" t-on-click.stop="() => this.remove(user)">
                                     <i class="fa-solid fa-times" role="img" aria-hidden="true"/>
                                 </button>
                             </div>

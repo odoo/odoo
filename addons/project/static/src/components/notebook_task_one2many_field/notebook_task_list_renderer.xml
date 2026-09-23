@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="project.NotebookTaskListRenderer.CreateControls" t-inherit="web.ListRenderer.CreateControls" t-inherit-mode="primary">
-        <xpath expr="//t[@t-foreach='controls']" position="after">
-            <a t-if="ShowX2MRecords" role="button" class="ml16 o_toggle_closed_task_button" href="#" t-on-click="() => this.toggleHideClosed()">
-                <t t-out="toggleListHideLabel"/>
+        <xpath expr="//t[@t-foreach='this.controls']" position="after">
+            <a t-if="this.ShowX2MRecords" role="button" class="ml16 o_toggle_closed_task_button" href="#" t-on-click="() => this.toggleHideClosed()">
+                <t t-out="this.toggleListHideLabel"/>
             </a>
         </xpath>
     </t>

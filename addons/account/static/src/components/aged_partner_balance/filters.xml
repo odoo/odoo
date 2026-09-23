@@ -2,7 +2,7 @@
 <templates>
     <t t-name="account.AgedPartnerBalanceFilters" t-inherit="report_formula.AccountReportFiltersCustomizable">
         <xpath expr="//div[@id='filter_extra_options']" position="before">
-            <t t-if="'aging_based_on' in controller.cachedFilterOptions">
+            <t t-if="'aging_based_on' in this.controller.cachedFilterOptions">
                 <div>
                     <t t-call="account.AccountReportAgingBasedOn"/>
                 </div>

@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
     <t t-name="project.ProjectTaskKanbanHeader" t-inherit="mail.RottingKanbanHeader" t-inherit-mode="primary">
-        <xpath expr="//span[@t-if='!progressBar and !props.list.model.useSampleModel']" position="replace">
-            <span t-if="!progressBar and !props.list.model.useSampleModel"
+        <xpath expr="//span[@t-if='!this.progressBar and !this.props.list.model.useSampleModel']" position="replace">
+            <span t-if="!this.progressBar and !this.props.list.model.useSampleModel"
                   class="o_column_task_count"
-                  t-att-class="{ 'text-danger fw-bolder': isOverWipLimit }"
-                  t-att-title="isOverWipLimit ? wipLimitTitle : undefined">
-                <t t-if="wipLimit" t-out="'(' + group.count + ' / ' + wipLimit + ')'"/>
-                <t t-else="" t-out="'(' + group.count + ')'"/>
+                  t-att-class="{ 'text-danger fw-bolder': this.isOverWipLimit }"
+                  t-att-title="this.isOverWipLimit ? this.wipLimitTitle : undefined">
+                <t t-if="this.wipLimit" t-out="'(' + this.group.count + ' / ' + this.wipLimit + ')'"/>
+                <t t-else="" t-out="'(' + this.group.count + ')'"/>
             </span>
         </xpath>
     </t>

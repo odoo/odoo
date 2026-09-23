@@ -10,13 +10,13 @@
             <button class="btn btn-secondary">
                 <i class="fa-solid fa-list me-1"/>
                 <t t-foreach="groupings" t-as="grouping" t-key="grouping[0]">
-                    <t t-if="controller.cachedFilterOptions.assets_grouping_field === grouping[0]" t-out="grouping[1]"/>
+                    <t t-if="this.controller.cachedFilterOptions.assets_grouping_field === grouping[0]" t-out="grouping[1]"/>
                 </t>
             </button>
 
             <t t-set-slot="content">
                 <DropdownItem t-foreach="groupings" t-as="grouping" t-key="grouping[0]"
-                    class="{ 'selected': controller.cachedFilterOptions.assets_grouping_field === grouping[0] }"
+                    class="{ 'selected': this.controller.cachedFilterOptions.assets_grouping_field === grouping[0] }"
                     onSelected="() => this.filterClicked({ optionKey: 'assets_grouping_field', optionValue: grouping[0], reload: true})"
                 >
                     <t t-out="grouping[1]"/>

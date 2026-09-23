@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="account.BankRecQuickCreate">
-        <BankRecQuickCreateController t-if="state.isLoaded" t-props="quickCreateProps"/>
+        <BankRecQuickCreateController t-if="this.state.isLoaded" t-props="this.quickCreateProps"/>
     </t>
 
     <t t-name="account.BankRecQuickCreateController">
         <div class="o_bank_reconciliation_quick_create o_kanban_record" t-ref="root">
-            <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="props.archInfo"/>
+            <t t-component="this.props.Renderer" record="this.model.root" Compiler="this.props.Compiler" archInfo="this.props.archInfo"/>
             <div class="d-flex gap-1 button_group p-2">
                 <button class="btn btn-primary o_kanban_add" t-on-click="() => this.validate('add')" data-hotkey="s">
                     Add &amp; New

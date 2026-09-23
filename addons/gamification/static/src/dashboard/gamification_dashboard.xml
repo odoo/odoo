@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="gamification.Dashboard">
-    <Layout display="display">
+    <Layout display="this.display">
         <div class="o_gamification_dashboard p-3">
-            <t t-if="state.loading">
+            <t t-if="this.state.loading">
                 <div class="text-center p-5">
                     <i class="fa fa-spinner fa-spin fa-3x"/>
                 </div>
@@ -15,8 +15,8 @@
                     <div class="col-12">
                         <div class="card shadow-sm">
                             <div class="card-body d-flex align-items-center gap-4">
-                                <t t-if="state.profile.rank_image">
-                                    <img t-att-src="'data:image/png;base64,' + state.profile.rank_image"
+                                <t t-if="this.state.profile.rank_image">
+                                    <img t-att-src="'data:image/png;base64,' + this.state.profile.rank_image"
                                          class="rounded-circle" style="width:64px;height:64px;"/>
                                 </t>
                                 <t t-else="">
@@ -26,25 +26,25 @@
                                     </div>
                                 </t>
                                 <div class="flex-grow-1">
-                                    <h3 class="mb-1" t-out="state.profile.user_name"/>
+                                    <h3 class="mb-1" t-out="this.state.profile.user_name"/>
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="badge bg-primary fs-6" t-out="state.profile.rank_name"/>
+                                        <span class="badge bg-primary fs-6" t-out="this.state.profile.rank_name"/>
                                         <span class="text-muted">
                                             <i class="fa fa-star text-warning"/>
-                                            <t t-out="state.profile.karma"/> XP
+                                            <t t-out="this.state.profile.karma"/> XP
                                         </span>
                                     </div>
-                                    <t t-if="state.profile.next_rank_name">
+                                    <t t-if="this.state.profile.next_rank_name">
                                         <div class="mt-2">
                                             <div class="d-flex justify-content-between small text-muted mb-1">
-                                                <span>Progress to <t t-out="state.profile.next_rank_name"/></span>
-                                                <span><t t-out="state.profile.xp_to_next_rank"/> XP to go</span>
+                                                <span>Progress to <t t-out="this.state.profile.next_rank_name"/></span>
+                                                <span><t t-out="this.state.profile.xp_to_next_rank"/> XP to go</span>
                                             </div>
                                             <div class="progress" style="height: 8px;">
                                                 <div class="progress-bar bg-success"
                                                      role="progressbar"
-                                                     t-att-style="'width: ' + state.profile.xp_progress_percent + '%'"
-                                                     t-att-aria-valuenow="state.profile.xp_progress_percent"
+                                                     t-att-style="'width: ' + this.state.profile.xp_progress_percent + '%'"
+                                                     t-att-aria-valuenow="this.state.profile.xp_progress_percent"
                                                      aria-valuemin="0" aria-valuemax="100"/>
                                             </div>
                                         </div>
@@ -52,30 +52,30 @@
                                 </div>
                                 <div class="d-flex gap-3 text-center">
                                     <div>
-                                        <div class="fs-4 text-warning" t-out="state.profile.gold_badge"/>
+                                        <div class="fs-4 text-warning" t-out="this.state.profile.gold_badge"/>
                                         <small class="text-muted">Gold</small>
                                     </div>
                                     <div>
-                                        <div class="fs-4 text-secondary" t-out="state.profile.silver_badge"/>
+                                        <div class="fs-4 text-secondary" t-out="this.state.profile.silver_badge"/>
                                         <small class="text-muted">Silver</small>
                                     </div>
                                     <div>
-                                        <div class="fs-4 text-danger" t-out="state.profile.bronze_badge"/>
+                                        <div class="fs-4 text-danger" t-out="this.state.profile.bronze_badge"/>
                                         <small class="text-muted">Bronze</small>
                                     </div>
                                 </div>
-                                <button class="btn btn-sm btn-outline-secondary" t-on-click="refresh"
+                                <button class="btn btn-sm btn-outline-secondary" t-on-click="this.refresh"
                                         title="Refresh dashboard" aria-label="Refresh dashboard">
                                     <i class="fa fa-refresh" aria-hidden="true"/>
                                 </button>
                             </div>
                             <!-- Featured Badges -->
-                            <t t-if="state.profile.featured_badges and state.profile.featured_badges.length">
+                            <t t-if="this.state.profile.featured_badges and this.state.profile.featured_badges.length">
                                 <div class="card-footer bg-transparent d-flex align-items-center gap-3">
                                     <small class="text-muted me-2">Featured:</small>
-                                    <t t-foreach="state.profile.featured_badges" t-as="fb" t-key="fb.id">
+                                    <t t-foreach="this.state.profile.featured_badges" t-as="fb" t-key="fb.id">
                                         <span class="badge bg-light text-dark border">
-                                            <i t-att-class="'fa fa-certificate me-1 ' + getBadgeLevelClass(fb.level)"/>
+                                            <i t-att-class="'fa fa-certificate me-1 ' + this.getBadgeLevelClass(fb.level)"/>
                                             <t t-out="fb.badge_name"/>
                                         </span>
                                     </t>
@@ -86,7 +86,7 @@
                 </div>
 
                 <!-- Analytics Summary (if available) -->
-                <t t-if="state.analytics and state.analytics.current and state.analytics.current.snapshot_date">
+                <t t-if="this.state.analytics and this.state.analytics.current and this.state.analytics.current.snapshot_date">
                     <div class="row mb-4">
                         <div class="col-12">
                             <div class="card shadow-sm">
@@ -98,39 +98,39 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row text-center">
-                                        <t t-set="a" t-value="state.analytics.current"/>
-                                        <t t-set="t" t-value="state.analytics.trends"/>
+                                        <t t-set="a" t-value="this.state.analytics.current"/>
+                                        <t t-set="t" t-value="this.state.analytics.trends"/>
                                         <div class="col">
                                             <div class="fs-4 fw-bold" t-out="a.active_users_7d"/>
                                             <small class="text-muted">Active Users (7d)</small>
-                                            <br/><i t-att-class="'fa small ' + getTrendIcon(t.active_users_7d)"/>
+                                            <br/><i t-att-class="'fa small ' + this.getTrendIcon(t.active_users_7d)"/>
                                         </div>
                                         <div class="col">
                                             <div class="fs-4 fw-bold" t-out="a.goals_reached_7d"/>
                                             <small class="text-muted">Goals Reached (7d)</small>
-                                            <br/><i t-att-class="'fa small ' + getTrendIcon(t.goals_reached_7d)"/>
+                                            <br/><i t-att-class="'fa small ' + this.getTrendIcon(t.goals_reached_7d)"/>
                                         </div>
                                         <div class="col">
                                             <div class="fs-4 fw-bold" t-out="a.kudos_7d"/>
                                             <small class="text-muted">Kudos Sent (7d)</small>
-                                            <br/><i t-att-class="'fa small ' + getTrendIcon(t.kudos_7d)"/>
+                                            <br/><i t-att-class="'fa small ' + this.getTrendIcon(t.kudos_7d)"/>
                                         </div>
                                         <div class="col">
                                             <div class="fs-4 fw-bold" t-out="a.active_streaks"/>
                                             <small class="text-muted">Active Streaks</small>
-                                            <br/><i t-att-class="'fa small ' + getTrendIcon(t.active_streaks)"/>
+                                            <br/><i t-att-class="'fa small ' + this.getTrendIcon(t.active_streaks)"/>
                                         </div>
                                         <div class="col">
                                             <div class="fs-4 fw-bold" t-out="a.karma_granted_7d"/>
                                             <small class="text-muted">Karma (7d)</small>
-                                            <br/><i t-att-class="'fa small ' + getTrendIcon(t.karma_granted_7d)"/>
+                                            <br/><i t-att-class="'fa small ' + this.getTrendIcon(t.karma_granted_7d)"/>
                                         </div>
                                         <div class="col">
                                             <div class="fs-4 fw-bold">
                                                 <t t-out="Math.round(a.goal_completion_rate)"/>%
                                             </div>
                                             <small class="text-muted">Completion Rate</small>
-                                            <br/><i t-att-class="'fa small ' + getTrendIcon(t.goal_completion_rate)"/>
+                                            <br/><i t-att-class="'fa small ' + this.getTrendIcon(t.goal_completion_rate)"/>
                                         </div>
                                     </div>
                                 </div>
@@ -151,7 +151,7 @@
                                 </button>
                             </div>
                             <div class="card-body p-0">
-                                <t t-if="state.streaks.length === 0">
+                                <t t-if="this.state.streaks.length === 0">
                                     <div class="p-3 text-center text-muted">No active streaks yet</div>
                                 </t>
                                 <t t-else="">
@@ -165,10 +165,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <t t-foreach="state.streaks" t-as="streak" t-key="streak.id">
+                                            <t t-foreach="this.state.streaks" t-as="streak" t-key="streak.id">
                                                 <tr>
                                                     <td class="align-middle">
-                                                        <i t-att-class="'fa me-2 ' + getStreakIcon(streak)"/>
+                                                        <i t-att-class="'fa me-2 ' + this.getStreakIcon(streak)"/>
                                                         <t t-out="streak.name"/>
                                                     </td>
                                                     <td class="align-middle text-center">
@@ -203,12 +203,12 @@
                                 </button>
                             </div>
                             <div class="card-body p-0">
-                                <t t-if="state.goals.length === 0">
+                                <t t-if="this.state.goals.length === 0">
                                     <div class="p-3 text-center text-muted">No active goals</div>
                                 </t>
                                 <t t-else="">
                                     <div class="list-group list-group-flush">
-                                        <t t-foreach="state.goals" t-as="goal" t-key="goal.id">
+                                        <t t-foreach="this.state.goals" t-as="goal" t-key="goal.id">
                                             <div class="list-group-item">
                                                 <div class="d-flex justify-content-between mb-1">
                                                     <div>
@@ -246,13 +246,13 @@
                                 <h5 class="mb-0"><i class="fa fa-trophy text-warning me-2"/>Karma Leaderboard</h5>
                             </div>
                             <div class="card-body p-0">
-                                <t t-if="state.leaderboard.length === 0">
+                                <t t-if="this.state.leaderboard.length === 0">
                                     <div class="p-3 text-center text-muted">No karma leaders yet</div>
                                 </t>
                                 <t t-else="">
                                     <table class="table table-sm mb-0">
                                         <tbody>
-                                            <t t-foreach="state.leaderboard" t-as="entry" t-key="entry.user_id">
+                                            <t t-foreach="this.state.leaderboard" t-as="entry" t-key="entry.user_id">
                                                 <tr t-att-class="entry.is_current_user ? 'table-primary' : ''">
                                                     <td class="align-middle text-center" style="width: 40px;">
                                                         <t t-if="entry_index === 0">
@@ -301,14 +301,14 @@
                                 </button>
                             </div>
                             <div class="card-body p-0">
-                                <t t-if="state.badges.length === 0">
+                                <t t-if="this.state.badges.length === 0">
                                     <div class="p-3 text-center text-muted">No badges earned yet</div>
                                 </t>
                                 <t t-else="">
                                     <div class="list-group list-group-flush">
-                                        <t t-foreach="state.badges" t-as="badge" t-key="badge.id">
+                                        <t t-foreach="this.state.badges" t-as="badge" t-key="badge.id">
                                             <div class="list-group-item d-flex align-items-center gap-2">
-                                                <i t-att-class="'fa fa-certificate ' + getBadgeLevelClass(badge.level)"/>
+                                                <i t-att-class="'fa fa-certificate ' + this.getBadgeLevelClass(badge.level)"/>
                                                 <div class="flex-grow-1">
                                                     <strong t-out="badge.badge_name"/>
                                                     <t t-if="badge.sender_name">
@@ -331,16 +331,16 @@
                                 <h5 class="mb-0"><i class="fa fa-trophy text-success me-2"/>Achievements</h5>
                             </div>
                             <div class="card-body p-0">
-                                <t t-if="state.achievements.length === 0">
+                                <t t-if="this.state.achievements.length === 0">
                                     <div class="p-3 text-center text-muted">No achievements unlocked yet</div>
                                 </t>
                                 <t t-else="">
                                     <div class="list-group list-group-flush">
-                                        <t t-foreach="state.achievements" t-as="ach" t-key="ach.id">
+                                        <t t-foreach="this.state.achievements" t-as="ach" t-key="ach.id">
                                             <div class="list-group-item">
                                                 <div class="d-flex justify-content-between">
                                                     <strong t-out="ach.name"/>
-                                                    <span t-att-class="'badge ' + getRarityBadgeClass(ach.rarity)"
+                                                    <span t-att-class="'badge ' + this.getRarityBadgeClass(ach.rarity)"
                                                           t-out="ach.rarity"/>
                                                 </div>
                                                 <small class="text-muted" t-out="ach.date"/>
@@ -355,29 +355,29 @@
                         <div class="card shadow-sm mb-3">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0"><i class="fa fa-rss text-info me-2"/>Activity Feed</h5>
-                                <button class="btn btn-sm btn-outline-primary" t-on-click="toggleKudosForm">
+                                <button class="btn btn-sm btn-outline-primary" t-on-click="this.toggleKudosForm">
                                     <i class="fa fa-plus me-1"/>Send Kudos
                                 </button>
                             </div>
                             <!-- Inline Send Kudos Form -->
-                            <t t-if="state.kudosFormOpen">
+                            <t t-if="this.state.kudosFormOpen">
                                 <div class="card-body border-bottom bg-light">
                                     <div class="mb-2">
                                         <select class="form-select form-select-sm"
-                                                t-model.number="state.kudosRecipientId"
+                                                t-model.number="this.state.kudosRecipientId"
                                                 aria-label="Select kudos recipient">
                                             <option value="">Select recipient...</option>
-                                            <t t-foreach="state.kudosUsers" t-as="u" t-key="u.id">
+                                            <t t-foreach="this.state.kudosUsers" t-as="u" t-key="u.id">
                                                 <option t-att-value="u.id" t-out="u.name"/>
                                             </t>
                                         </select>
                                     </div>
                                     <div class="mb-2">
                                         <select class="form-select form-select-sm"
-                                                t-model.number="state.kudosCategoryId"
+                                                t-model.number="this.state.kudosCategoryId"
                                                 aria-label="Select kudos category">
                                             <option value="">Select category...</option>
-                                            <t t-foreach="state.kudosCategories" t-as="cat" t-key="cat.id">
+                                            <t t-foreach="this.state.kudosCategories" t-as="cat" t-key="cat.id">
                                                 <option t-att-value="cat.id">
                                                     <t t-out="cat.name"/> (+<t t-out="cat.karma_granted"/> karma)
                                                 </option>
@@ -388,12 +388,12 @@
                                         <textarea class="form-control form-control-sm" rows="2"
                                                   placeholder="Write your recognition message..."
                                                   aria-label="Kudos message"
-                                                  t-model="state.kudosMessage"/>
+                                                  t-model="this.state.kudosMessage"/>
                                     </div>
                                     <button class="btn btn-sm btn-primary w-100"
-                                            t-on-click="sendKudos"
-                                            t-att-disabled="state.kudosSending">
-                                        <t t-if="state.kudosSending">
+                                            t-on-click="this.sendKudos"
+                                            t-att-disabled="this.state.kudosSending">
+                                        <t t-if="this.state.kudosSending">
                                             <i class="fa fa-spinner fa-spin me-1"/>Sending...
                                         </t>
                                         <t t-else="">
@@ -403,12 +403,12 @@
                                 </div>
                             </t>
                             <div class="card-body p-0">
-                                <t t-if="state.activity_feed.length === 0">
+                                <t t-if="this.state.activity_feed.length === 0">
                                     <div class="p-3 text-center text-muted">No activity yet</div>
                                 </t>
                                 <t t-else="">
                                     <div class="list-group list-group-flush">
-                                        <t t-foreach="state.activity_feed" t-as="act" t-key="act.id">
+                                        <t t-foreach="this.state.activity_feed" t-as="act" t-key="act.id">
                                             <div class="list-group-item py-2">
                                                 <div class="d-flex align-items-start gap-2">
                                                     <i t-att-class="(act.icon || 'fa fa-star') + ' mt-1 text-primary'" aria-hidden="true"/>

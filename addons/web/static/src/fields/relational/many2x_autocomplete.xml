@@ -3,18 +3,18 @@
 
 <t t-name="web.Many2XAutocomplete" >
     <div class="o_input_dropdown" t-ref="autocomplete_container">
-        <input t-if="env.isSmall and props.dropdown"
+        <input t-if="this.env.isSmall and this.props.dropdown"
             type="text"
-            t-att-id="props.id"
+            t-att-id="this.props.id"
             class="o_input"
             readonly=""
             autocomplete="off"
-            t-att-placeholder="props.placeholder"
-            t-att-value="props.value"
+            t-att-placeholder="this.props.placeholder"
+            t-att-value="this.props.value"
             t-on-click="() => this.onSearchMore('')"
-            t-on-barcode-search="onBarcodeSearch"
+            t-on-barcode-search="this.onBarcodeSearch"
         />
-        <AutoComplete t-else="" t-props="autoCompleteProps">
+        <AutoComplete t-else="" t-props="this.autoCompleteProps">
             <t t-set-slot="option" t-slot-scope="optionScope">
                 <t t-slot="{{ optionScope.data.slotName }}" t-props="optionScope.data" label="optionScope.label">
                     <t t-out="optionScope.label"/>

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="calendar.booking.AppointmentInviteCopyClose">
         <a role="button" class="o_appointment_invite_copy_save btn btn-primary flex-grow-1"
-            t-on-click="onSaveAndCopy"
+            t-on-click="this.onSaveAndCopy"
             t-att-class="{disabled:this.props.record.data.disable_save_button}">
             Copy Link &amp; Close</a>
     </t>

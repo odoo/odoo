@@ -3,13 +3,13 @@
 <templates xml:space="preserve">
 
      <t t-name="stock.ForcedPlaceholderField">
-        <ForcedPlaceholder t-props="m2oProps"/>
+        <ForcedPlaceholder t-props="this.m2oProps"/>
     </t>
 
     <t t-name="stock.ForcedPlaceholder" t-inherit="web.Many2One">
-        <xpath expr="//t[@t-if='props.value']" position="after">
+        <xpath expr="//t[@t-if='this.props.value']" position="after">
             <t t-else="">
-                <span t-out="props.placeholder"/>
+                <span t-out="this.props.placeholder"/>
             </t>
         </xpath>
     </t>

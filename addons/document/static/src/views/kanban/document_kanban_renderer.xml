@@ -3,22 +3,22 @@
     <t t-name="document.DocumentsKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_kanban_renderer')]" position="attributes">
             <attribute name="class" add="o_documents_view o_renderer_with_search_panel position-relative" separator=" "/>
-            <attribute name="t-on-click">onGlobalClick</attribute>
+            <attribute name="t-on-click">this.onGlobalClick</attribute>
         </xpath>
         <xpath expr="//div[hasclass('o_kanban_renderer')]" position="after">
-            <DocumentsRightPanel nbViewItems="getNbViewItems()"/>
+            <DocumentsRightPanel nbViewItems="this.getNbViewItems()"/>
         </xpath>
         <xpath expr="//div[hasclass('o_kanban_renderer')]" position="inside">
-            <DocumentsDropZone parentRoot="root"/>
-            <DocumentsFileViewerHost parentRoot="root" t-props="getDocumentsAttachmentViewerProps()"/>
+            <DocumentsDropZone parentRoot="this.root"/>
+            <DocumentsFileViewerHost parentRoot="this.root" t-props="this.getDocumentsAttachmentViewerProps()"/>
         </xpath>
-        <t t-foreach="getGroupsOrRecords()" position="attributes">
+        <t t-foreach="this.getGroupsOrRecords()" position="attributes">
             <attribute name="t-if" add="!this.isRecentFolder" separator="and"/>
         </t>
-        <t t-foreach="getGroupsOrRecords()" position="before">
+        <t t-foreach="this.getGroupsOrRecords()" position="before">
             <div t-if="this.isRecentFolder" class="w-100">
                 <!-- RECENT view -->
-                <div t-foreach="getGroupsOrRecords()" t-as="group" t-key="group.key"
+                <div t-foreach="this.getGroupsOrRecords()" t-as="group" t-key="group.key"
                     class="d-flex flex-row flex-wrap">
                     <h3 class="o_documents_title m-2 border-bottom w-100" t-out="group.group.displayName"/>
                     <t t-set="folders" t-value="group.group.list.records.filter((d) => d.data.type === 'folder')"/>
@@ -26,12 +26,12 @@
                     <div t-foreach="folders" t-as="record" t-key="record.id">
                         <t t-set="group" t-as="group.group"/>
                         <KanbanRecord
-                            Compiler="props.Compiler"
-                            archInfo="props.archInfo"
-                            groupByField="props.list.groupByField"
-                            getSelection.bind="getSelection"
-                            toggleSelection.bind="toggleSelection"
-                            selectionAvailable="state.selectionAvailable"
+                            Compiler="this.props.Compiler"
+                            archInfo="this.props.archInfo"
+                            groupByField="this.props.list.groupByField"
+                            getSelection.bind="this.getSelection"
+                            toggleSelection.bind="this.toggleSelection"
+                            selectionAvailable="this.state.selectionAvailable"
                             record="record"
                         />
                     </div>
@@ -39,40 +39,40 @@
                     <div t-foreach="files" t-as="record" t-key="record.id">
                         <t t-set="group" t-as="group.group"/>
                         <KanbanRecord
-                            Compiler="props.Compiler"
-                            archInfo="props.archInfo"
-                            groupByField="props.list.groupByField"
-                            getSelection.bind="getSelection"
-                            toggleSelection.bind="toggleSelection"
-                            selectionAvailable="state.selectionAvailable"
+                            Compiler="this.props.Compiler"
+                            archInfo="this.props.archInfo"
+                            groupByField="this.props.list.groupByField"
+                            getSelection.bind="this.getSelection"
+                            toggleSelection.bind="this.toggleSelection"
+                            selectionAvailable="this.state.selectionAvailable"
                             record="record"
                         />
                     </div>
                 </div>
             </div>
-            <t t-if="hasFolders() and !this.props.list.isGrouped">
+            <t t-if="this.hasFolders() and !this.props.list.isGrouped">
                 <h3 class="o_documents_title m-2 w-100 fs-4">Folders</h3>
-                <t t-foreach="getFolderRecords()" t-as="folderRecord" t-key="folderRecord.key">
+                <t t-foreach="this.getFolderRecords()" t-as="folderRecord" t-key="folderRecord.key">
                     <KanbanRecord
-                        Compiler="props.Compiler"
-                        archInfo="props.archInfo"
-                        groupByField="props.list.groupByField"
-                        getSelection.bind="getSelection"
-                        toggleSelection.bind="toggleSelection"
-                            selectionAvailable="state.selectionAvailable"
+                        Compiler="this.props.Compiler"
+                        archInfo="this.props.archInfo"
+                        groupByField="this.props.list.groupByField"
+                        getSelection.bind="this.getSelection"
+                        toggleSelection.bind="this.toggleSelection"
+                            selectionAvailable="this.state.selectionAvailable"
                         record="folderRecord.record"
                     />
                 </t>
                 <!-- kanban ghost cards are used to properly space last elements. -->
                 <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost flex-grow-1 flex-md-shrink-1 flex-shrink-0" />
-                <h3 t-if="hasFiles()" class="o_documents_title m-2 w-100 fs-4">Files</h3>
+                <h3 t-if="this.hasFiles()" class="o_documents_title m-2 w-100 fs-4">Files</h3>
             </t>
-            <FileUploadProgressContainer fileUploads="this.documentUploads" Component="constructor.components.FileUploadProgressKanbanRecord"
+            <FileUploadProgressContainer fileUploads="this.documentUploads" Component="this.constructor.components.FileUploadProgressKanbanRecord"
                                          shouldDisplay="(upload) => !upload.data.get('document_id') &amp;&amp; !upload.data.get('thread_id')"/>
         </t>
         <ActionHelper position="replace">
-            <t t-if="props.noContentHelp">
-                <DocumentsActionHelper noContentHelp="props.noContentHelp"/>
+            <t t-if="this.props.noContentHelp">
+                <DocumentsActionHelper noContentHelp="this.props.noContentHelp"/>
             </t>
         </ActionHelper>
     </t>

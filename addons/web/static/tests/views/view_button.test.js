@@ -118,7 +118,7 @@ test("MultiRecordViewButton (L1): does not mutate the shared clickParams object"
         static props = ["*"];
         static template = xml`
             <div t-ref="root">
-                <MultiRecordViewButton list="list" domain="[]" clickParams="clickParams" string="'Go'"/>
+                <MultiRecordViewButton list="this.list" domain="[]" clickParams="this.clickParams" string="'Go'"/>
             </div>`;
         setup() {
             useViewButtons(useRef("root"));
@@ -177,7 +177,7 @@ test("R2 probe: an OWL re-render of the button mid-action keeps it disabled", as
         static props = ["*"];
         static template = xml`
             <div t-ref="root">
-                <ViewButton string="state.label" clickParams="{ type: 'object', name: 'act' }" record="{ resId: 1 }"/>
+                <ViewButton string="this.state.label" clickParams="{ type: 'object', name: 'act' }" record="{ resId: 1 }"/>
             </div>`;
         setup() {
             parent = this;

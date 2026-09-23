@@ -152,7 +152,7 @@ defineModels([Partner, Pony, User]);
 class TestClientAction extends Component {
     static template = xml`
         <div class="test_client_action">
-            ClientAction_<t t-out="props.action.params?.description"/>
+            ClientAction_<t t-out="this.props.action.params?.description"/>
         </div>
     `;
     static props = ["*"];
@@ -218,8 +218,8 @@ test(`do action keeps menu in url`, async () => {
 test(`actions can push state`, async () => {
     class ClientActionPushes extends Component {
         static template = xml`
-            <div class="test_client_action" t-on-click="_actionPushState">
-                ClientAction_<t t-out="props.params and props.params.description"/>
+            <div class="test_client_action" t-on-click="this._actionPushState">
+                ClientAction_<t t-out="this.props.params and this.props.params.description"/>
             </div>
         `;
         static props = ["*"];
@@ -258,8 +258,8 @@ test(`actions can push state`, async () => {
 test(`actions override previous state`, async () => {
     class ClientActionPushes extends Component {
         static template = xml`
-            <div class="test_client_action" t-on-click="_actionPushState">
-                ClientAction_<t t-out="props.params and props.params.description"/>
+            <div class="test_client_action" t-on-click="this._actionPushState">
+                ClientAction_<t t-out="this.props.params and this.props.params.description"/>
             </div>
         `;
         static props = ["*"];
@@ -303,8 +303,8 @@ test(`actions override previous state`, async () => {
 test(`actions override previous state from menu click`, async () => {
     class ClientActionPushes extends Component {
         static template = xml`
-            <div class="test_client_action" t-on-click="_actionPushState">
-                ClientAction_<t t-out="props.params and props.params.description"/>
+            <div class="test_client_action" t-on-click="this._actionPushState">
+                ClientAction_<t t-out="this.props.params and this.props.params.description"/>
             </div>
         `;
         static props = ["*"];

@@ -6,8 +6,8 @@
             class="btn btn-link p-0 text-muted"
             tabindex="0"
             title="Price history"
-            t-att-disabled="!isAvailable"
-            t-on-click.stop="openPriceHistory">
+            t-att-disabled="!this.isAvailable"
+            t-on-click.stop="this.openPriceHistory">
             <i class="fa fa-history" role="img" aria-label="Price history" />
         </button>
     </t>

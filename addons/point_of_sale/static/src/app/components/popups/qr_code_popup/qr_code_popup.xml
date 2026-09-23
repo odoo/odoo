@@ -4,18 +4,18 @@
     <t t-name="point_of_sale.QRConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary">
         <xpath expr="//p" position="replace">
             <div class="d-flex flex-column align-items-center justify-content-center">
-                <p t-out="props.body" class="text-prewrap" style="font-weight: bold;"/>
-                <img t-att-src="props.qrCode" alt="QR Code" style="width: 200px; height: 200px;"/>
+                <p t-out="this.props.body" class="text-prewrap" style="font-weight: bold;"/>
+                <img t-att-src="this.props.qrCode" alt="QR Code" style="width: 200px; height: 200px;"/>
                 <div class="mt-1">
                     <strong>Amount: </strong>
-                    <t t-out="amount" />
+                    <t t-out="this.amount" />
                 </div>
             </div>
         </xpath>
-        <xpath expr="//button[@t-on-click='confirm']" position="attributes">
+        <xpath expr="//button[@t-on-click='this.confirm']" position="attributes">
             <attribute name="class" add="btn-secondary" remove="btn-primary" separator=" " />
         </xpath>
-        <xpath expr="//button[@t-on-click='cancel']" position="attributes">
+        <xpath expr="//button[@t-on-click='this.cancel']" position="attributes">
             <attribute name="class" add="btn-primary" remove="btn-secondary" separator=" " />
         </xpath>
     </t>

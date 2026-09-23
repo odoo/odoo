@@ -4,18 +4,18 @@
         <xpath expr="//div[hasclass('o-mail-Message-body')]" position="after">
             <div class="o-mail-Message-seenContainer position-absolute">
                 <MessageSeenIndicator
-                    t-if="showSeenIndicator"
-                    message="props.message"
-                    thread="props.thread"
+                    t-if="this.showSeenIndicator"
+                    message="this.props.message"
+                    thread="this.props.thread"
                 />
             </div>
         </xpath>
         <xpath expr="//AttachmentList" position="after">
-            <div t-if="props.message.isBodyEmpty and message.attachment_ids.length > 0" class="o-mail-Message-seenContainer position-absolute ratio-1x1 rounded-circle p-1">
+            <div t-if="this.props.message.isBodyEmpty and this.message.attachment_ids.length > 0" class="o-mail-Message-seenContainer position-absolute ratio-1x1 rounded-circle p-1">
                 <MessageSeenIndicator
-                    t-if="showSeenIndicator"
-                    message="props.message"
-                    thread="props.thread"
+                    t-if="this.showSeenIndicator"
+                    message="this.props.message"
+                    thread="this.props.thread"
                 />
             </div>
         </xpath>

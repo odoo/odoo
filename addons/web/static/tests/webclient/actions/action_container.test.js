@@ -17,7 +17,7 @@ describe.current.tags("desktop");
 let counter;
 
 class TestAction extends Component {
-    static template = xml`<div class="o_test_action" t-att-class="props.className" t-out="props.marker"/>`;
+    static template = xml`<div class="o_test_action" t-att-class="this.props.className" t-out="this.props.marker"/>`;
     static props = ["*"];
     setup() {
         onMounted(() => {

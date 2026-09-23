@@ -241,7 +241,7 @@ test("special data: real Owl scheduling with old response after newer props", as
     let parent;
     class Child extends Component {
         static props = ["record", "requestKey"];
-        static template = xml`<span class="special-result" t-out="result.data"/>`;
+        static template = xml`<span class="special-result" t-out="this.result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 const key = props.requestKey;
@@ -258,7 +258,7 @@ test("special data: real Owl scheduling with old response after newer props", as
     class Parent extends Component {
         static props = [];
         static components = { Child };
-        static template = xml`<Child record="record" requestKey="state.key"/>`;
+        static template = xml`<Child record="this.record" requestKey="this.state.key"/>`;
         setup() {
             this.record = reactive({
                 model: { specialDataCaches: new Map(), bus: new EventBus() },
@@ -388,7 +388,7 @@ test("special data: shared cache refresh reaches current subscribers only", asyn
     let parent;
     class Child extends Component {
         static props = ["record", "requestKey", "id"];
-        static template = xml`<span t-att-class="props.id" t-out="result.data"/>`;
+        static template = xml`<span t-att-class="this.props.id" t-out="this.result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 loads.push(`${props.id}:${props.requestKey}`);
@@ -399,7 +399,7 @@ test("special data: shared cache refresh reaches current subscribers only", asyn
     class Parent extends Component {
         static props = [];
         static components = { Child };
-        static template = xml`<t t-if="state.visible"><Child record="record" requestKey="state.key" id="'first'"/><Child record="record" requestKey="'A'" id="'second'"/></t>`;
+        static template = xml`<t t-if="this.state.visible"><Child record="this.record" requestKey="this.state.key" id="'first'"/><Child record="this.record" requestKey="'A'" id="'second'"/></t>`;
         setup() {
             this.record = reactive({ model: { specialDataCaches: new Map() } });
             this.state = useState({ key: "A", visible: true });
@@ -564,7 +564,7 @@ test("special data: replacement during initial loading never renders uninitializ
     let parent;
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span class="initial-result" t-out="result.data.join(',')"/>`;
+        static template = xml`<span class="initial-result" t-out="this.result.data.join(',')"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 const key = props.record.data.key;
@@ -578,7 +578,7 @@ test("special data: replacement during initial loading never renders uninitializ
     class Parent extends Component {
         static props = [];
         static components = { Child };
-        static template = xml`<Child record="record"/>`;
+        static template = xml`<Child record="this.record"/>`;
         setup() {
             parent = this;
             this.record = reactive({
@@ -611,7 +611,7 @@ test("special data: current initial data mounts without waiting for an obsolete 
     });
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span class="latest-initial" t-out="result.data"/>`;
+        static template = xml`<span class="latest-initial" t-out="this.result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 requests.push(props.record.data.key);
@@ -642,7 +642,7 @@ test("special data: an obsolete rejection does not report an error after newer d
     });
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span class="latest-success" t-out="result.data"/>`;
+        static template = xml`<span class="latest-success" t-out="this.result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) =>
                 props.record.data.key === 1
@@ -672,7 +672,7 @@ test("special data: switching records stops observing the previous record", asyn
     const loads = [];
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span class="current-record" t-out="result.data"/>`;
+        static template = xml`<span class="current-record" t-out="this.result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 loads.push(props.record.data.key);
@@ -683,7 +683,7 @@ test("special data: switching records stops observing the previous record", asyn
     class Parent extends Component {
         static props = [];
         static components = { Child };
-        static template = xml`<Child record="state.record"/>`;
+        static template = xml`<Child record="this.state.record"/>`;
         setup() {
             this.state = useState({ record: first });
         }
@@ -710,7 +710,7 @@ test("special data: a current request failure remains visible and a later input 
     });
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span class="recoverable-result" t-out="result.data"/>`;
+        static template = xml`<span class="recoverable-result" t-out="this.result.data"/>`;
         setup() {
             this.result = useSpecialData(async (orm, props) => {
                 if (props.record.data.key === 1) {
@@ -748,7 +748,7 @@ test("special data: a replacement initial failure reaches the Owl error boundary
     const requests = [];
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span t-out="result.data"/>`;
+        static template = xml`<span t-out="this.result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 requests.push(props.record.data.key);
@@ -759,7 +759,7 @@ test("special data: a replacement initial failure reaches the Owl error boundary
     class Parent extends Component {
         static props = [];
         static components = { Child };
-        static template = xml`<Child t-if="state.visible" record="record"/><span t-else="" class="load-error">Failed to load</span>`;
+        static template = xml`<Child t-if="this.state.visible" record="this.record"/><span t-else="" class="load-error">Failed to load</span>`;
         setup() {
             this.record = record;
             this.state = useState({ visible: true });

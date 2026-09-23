@@ -109,7 +109,7 @@
         <hr class="mx-2 mt-0 mb-2"/>
     </t>
 
-    <t t-if="domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
+    <t t-if="this.domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
 	    <BuilderRow label.translate="Main Image">
 	        <BuilderButton id="'o_wsale_replace_main_image'" type="'success'" className="'flex-grow-1'" preview="false"
 	            applyTo="'#product_detail_main'" action="'productReplaceMainImage'"
@@ -122,7 +122,7 @@
         <div class="pb-2"/>
     </t>
 
-    <t t-if="domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')">
+    <t t-if="this.domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')">
 	    <BuilderRow label.translate="Display" applyTo="'#product_detail_main'">
 	        <BuilderSelect action="'productPageImageLayout'" id="'o_wsale_image_layout'">
 	            <BuilderSelectItem actionValue="'carousel'">
@@ -139,7 +139,7 @@
 	    </BuilderRow>
     </t>
     <t
-        t-if="domState.hasCarousel and domState.hasImages and domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')"
+        t-if="this.domState.hasCarousel and this.domState.hasImages and this.domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')"
     >
 	    <BuilderRow label.translate="Thumbnails" level="1">
 	        <BuilderButtonGroup action="'websiteConfig'" id="'o_wsale_thumbnail_pos'">
@@ -149,12 +149,12 @@
 	    </BuilderRow>
     </t>
     <t
-        t-if="domState.isGrid"
+        t-if="this.domState.isGrid"
     >
         <t
             t-if="
-                domState.hasGrid and
-                domState.multipleImages and
+                this.domState.hasGrid and
+                this.domState.multipleImages and
                 !this.isActiveItem('opt_product_page_image_width_hide') and
                 !this.isActiveItem('opt_product_page_image_width_full')
             "
@@ -169,7 +169,7 @@
         </t>
 	    <BuilderRow
             t-if="
-                domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')
+                this.domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')
             "
             label.translate="Spacing"
             level="1"
@@ -205,10 +205,10 @@
     <BuilderRow
         label.translate="Roundness"
         t-if="
-                (domState.hasImages and !this.isActiveItem('o_wsale_product_page_grid_gap_0')) and
+                (this.domState.hasImages and !this.isActiveItem('o_wsale_product_page_grid_gap_0')) and
                 !this.isActiveItem('opt_product_page_image_width_hide')
             "
-        level="domState.multipleImages ? 1 : 0"
+        level="this.domState.multipleImages ? 1 : 0"
     >
         <BuilderSelect
             action="'productPageRoundness'"
@@ -310,7 +310,7 @@
         </t>
     </BuilderRow>
 
-    <t t-if="domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
+    <t t-if="this.domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
 	    <BuilderRow label.translate="Zoom on click" level="1">
             <BuilderCheckbox
                 action="'websiteConfig'"

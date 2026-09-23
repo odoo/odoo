@@ -4,23 +4,23 @@
     <t t-name="im_livechat.ConversationTagEdit">
         <div class="o-livechat-ConversationTagEdit rounded d-flex flex-column p-2 flex-grow-1 bg-inherit mx-auto">
             <div class="d-flex">
-                <input class="o-livechat-ConversationTagEdit-search form-control lh-1 px-2 bg-view shadow-sm" t-model="state.searchStr" t-ref="autofocus" placeholder="Search or create new tags" t-on-keydown="onKeydownSearchInput"/>
-                <button class="btn btn-primary ms-1" t-att-disabled="!state.searchStr.trim() || allSelectableTagNames.includes(state.searchStr)" t-on-click="onClickCreateToggle">
+                <input class="o-livechat-ConversationTagEdit-search form-control lh-1 px-2 bg-view shadow-sm" t-model="this.state.searchStr" t-ref="autofocus" placeholder="Search or create new tags" t-on-keydown="this.onKeydownSearchInput"/>
+                <button class="btn btn-primary ms-1" t-att-disabled="!this.state.searchStr.trim() || this.allSelectableTagNames.includes(this.state.searchStr)" t-on-click="this.onClickCreateToggle">
                     Create
                 </button>
             </div>
-            <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-start': state.selectableTags.length === 0 }">
-                <div t-if="allSelectedTagNames.includes(state.searchStr)" class="smaller fst-italic text-muted mx-1 opacity-50">
+            <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-start': this.state.selectableTags.length === 0 }">
+                <div t-if="this.allSelectedTagNames.includes(this.state.searchStr)" class="smaller fst-italic text-muted mx-1 opacity-50">
                     Tag has already been selected
                 </div>
-                <div t-elif="remainingSelectableTags.length === 0" class="smaller fst-italic text-muted mx-1 opacity-50">
+                <div t-elif="this.remainingSelectableTags.length === 0" class="smaller fst-italic text-muted mx-1 opacity-50">
                     No tags found
                 </div>
-                <NavigableList closeOnSelect="false" t-props="navigableListProps"/>
+                <NavigableList closeOnSelect="false" t-props="this.navigableListProps"/>
             </ul>
-            <div t-if="props.thread.livechat_conversation_tag_ids.length > 0" class="overflow-auto pt-2">
+            <div t-if="this.props.thread.livechat_conversation_tag_ids.length > 0" class="overflow-auto pt-2">
                 <div class="o-livechat-ConversationTagEdit-selectedList d-flex flex-wrap overflow-auto o-scrollbar-thin">
-                    <t t-foreach="props.thread.livechat_conversation_tag_ids" t-as="selectedTag" t-key="selectedTag.id">
+                    <t t-foreach="this.props.thread.livechat_conversation_tag_ids" t-as="selectedTag" t-key="selectedTag.id">
                         <button class="btn btn-light fw-bolder smaller pe-1 o_tag" t-att-class="'o_tag_color_' + selectedTag.color" title="Unselect tag" t-on-click="() => this.onClickFooterSelectedTag(selectedTag)">
                             <t t-out="selectedTag.name"/><i class="oi oi-close border border-dark-subtle ms-1"/>
                         </button>

@@ -5,13 +5,13 @@
         <xpath expr="//div" position="attributes">
             <attribute name="class" separator=" " remove="mb-3"/>
         </xpath>
-        <xpath expr="//t[@t-if='props.readonly']/span[@t-out='string']" position="attributes">
+        <xpath expr="//t[@t-if='this.props.readonly']/span[@t-out='this.string']" position="attributes">
             <attribute name="class">badge rounded-pill</attribute>
-            <attribute name="t-att-class">getBadgeClassNames()</attribute>
+            <attribute name="t-att-class">this.getBadgeClassNames()</attribute>
         </xpath>
-        <xpath expr="//t[@t-if='props.readonly']/following-sibling::t[@t-else='']//span[@t-out='option[1]']" position="attributes">
+        <xpath expr="//t[@t-if='this.props.readonly']/following-sibling::t[@t-else='']//span[@t-out='option[1]']" position="attributes">
             <attribute name="class" separator=" " add="badge rounded-pill"/>
-            <attribute name="t-att-class">getBadgeClassNames(option)</attribute>
+            <attribute name="t-att-class">this.getBadgeClassNames(option)</attribute>
         </xpath>
     </t>
 

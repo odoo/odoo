@@ -2,8 +2,8 @@
 <templates>
     <t t-name="spreadsheet.SelectionFilterValue">
         <div class="o_input o-global-filter-selection-value d-flex flex-wrap gap-1">
-            <TagsList tags="tags"/>
-            <AutoComplete input="inputRef" sources="sources"/>
+            <TagsList tags="this.tags"/>
+            <AutoComplete input="this.inputRef" sources="this.sources"/>
         </div>
     </t>
 </templates>

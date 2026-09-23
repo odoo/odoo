@@ -3,33 +3,33 @@
     <t t-name="account.AccountAuditProgressBar" t-inherit="web.ProgressBarField" t-inherit-mode="primary">
         <t t-else="" position="replace">
             <t t-else="">
-                <t t-if="!hasMaxValue">
+                <t t-if="!this.hasMaxValue">
                   <span class="mx-1">None</span>
                 </t>
                 <t t-else="">
                     <input
-                        t-if="isEditable and props.isCurrentValueEditable"
+                        t-if="this.isEditable and this.props.isCurrentValueEditable"
                         t-ref="currentValue"
                         class="o_input h-100 text-center"
                         type="text"
                         inputmode="decimal"
                         autocomplete="off"
-                        t-on-focus="onInputFocus"
-                        t-on-blur="onInputBlur"
+                        t-on-focus="this.onInputFocus"
+                        t-on-blur="this.onInputBlur"
                     />
-                    <span t-else="" class="mx-1" t-out="formatCurrentValue(true)"/>
+                    <span t-else="" class="mx-1" t-out="this.formatCurrentValue(true)"/>
                     /
                     <input
-                        t-if="isEditable and props.isMaxValueEditable"
+                        t-if="this.isEditable and this.props.isMaxValueEditable"
                         t-ref="maxValue"
                         class="o_input h-100 text-center"
                         type="text"
                         inputmode="decimal"
                         autocomplete="off"
-                        t-on-focus="onInputFocus"
-                        t-on-blur="onInputBlur"
+                        t-on-focus="this.onInputFocus"
+                        t-on-blur="this.onInputBlur"
                     />
-                    <span t-else="" class="mx-1" t-out="formatMaxValue(true)"/>
+                    <span t-else="" class="mx-1" t-out="this.formatMaxValue(true)"/>
                 </t>
             </t>
         </t>

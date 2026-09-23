@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="document.AccessRightsUpdateConfirmationDialog">
-        <Dialog size="'md'" title="title" modalRef="modalRef">
+        <Dialog size="'md'" title="this.title" modalRef="this.modalRef">
             <div class="o_documents_access_rights_update_dialog pb-2">
                 <div class="text-warning pb-2">
                     <i class="fa-solid fa-triangle-exclamation pe-1"/>
@@ -21,15 +21,15 @@
                         <div class="col-12 col-md-9 d-flex flex-column">
                             <label id="o_documents_access_update_confirmation_access_internal" class="mb-0">Internal Users</label>
                             <div class="fs-6 text-muted">
-                                <t t-if="props.destinationFolder.access_internal === 'view'" t-out="view_description"/>
-                                <t t-elif="props.destinationFolder.access_internal === 'edit'" t-out="edit_description"/>
+                                <t t-if="this.props.destinationFolder.access_internal === 'view'" t-out="view_description"/>
+                                <t t-elif="this.props.destinationFolder.access_internal === 'edit'" t-out="edit_description"/>
                                 <t t-else="" t-out="internal_user_none_description"/>
                             </div>
                         </div>
                         <div class="col-12 col-md-3 d-flex">
                             <div aria-labelledby="o_documents_access_update_confirmation_access_internal">
-                                <t t-if="props.destinationFolder.access_internal === 'view'" t-out="view_label"/>
-                                <t t-elif="props.destinationFolder.access_internal === 'edit'" t-out="edit_label"/>
+                                <t t-if="this.props.destinationFolder.access_internal === 'view'" t-out="view_label"/>
+                                <t t-elif="this.props.destinationFolder.access_internal === 'edit'" t-out="edit_label"/>
                                 <t t-else="" t-out="none_label"/>
                             </div>
                         </div>
@@ -38,18 +38,18 @@
                         <div class="col-12 col-md-9 d-flex flex-column">
                             <label id="o_documents_access_update_confirmation_access_via_link" class="mb-0">Anyone with the link</label>
                             <div class="fs-6 text-muted">
-                                <t t-if="props.destinationFolder.access_via_link === 'view'" t-out="view_description"/>
-                                <t t-elif="props.destinationFolder.access_via_link === 'edit'" t-out="edit_description"/>
+                                <t t-if="this.props.destinationFolder.access_via_link === 'view'" t-out="view_description"/>
+                                <t t-elif="this.props.destinationFolder.access_via_link === 'edit'" t-out="edit_description"/>
                                 <t t-else="" t-out="access_via_link_none_description"/>
                             </div>
                         </div>
                         <div class="col-12 col-md-3 d-flex flex-column">
                             <div aria-labelledby="o_documents_access_update_confirmation_access_via_link">
-                                <t t-if="props.destinationFolder.access_via_link === 'view'" t-out="view_label"/>
-                                <t t-elif="props.destinationFolder.access_via_link === 'edit'" t-out="edit_label"/>
+                                <t t-if="this.props.destinationFolder.access_via_link === 'view'" t-out="view_label"/>
+                                <t t-elif="this.props.destinationFolder.access_via_link === 'edit'" t-out="edit_label"/>
                                 <t t-else="" t-out="none_label"/>
                             </div>
-                            <t t-if="props.destinationFolder.access_via_link !== 'none'">
+                            <t t-if="this.props.destinationFolder.access_via_link !== 'none'">
                                 <div class="text-muted fst-italic">Discoverability is specific to each document and will not be changed</div>
                             </t>
                         </div>
@@ -57,8 +57,8 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="confirm">Move</button>
-                <button class="btn btn-secondary" t-on-click="cancel">Cancel</button>
+                <button class="btn btn-primary" t-on-click="this.confirm">Move</button>
+                <button class="btn btn-secondary" t-on-click="this.cancel">Cancel</button>
             </t>
         </Dialog>
     </t>

@@ -267,9 +267,7 @@
 
     <t t-name="website.form_field_one2many">
         <t t-if="field.relation === 'ir.attachment'">
-            <t t-call="website.form_field_binary">
-                <t t-set="multiple" t-value="1"/>
-            </t>
+            <t t-call="website.form_field_binary" multiple="1"/>
         </t>
         <t t-if="field.relation !== 'ir.attachment'">
             <t t-call="website.form_field">

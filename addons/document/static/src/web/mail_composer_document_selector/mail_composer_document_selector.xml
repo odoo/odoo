@@ -2,8 +2,8 @@
 <templates>
     <t t-name="document.MailComposerDocumentSelector">
         <button class="btn btn-light w-auto opacity-trigger-hover" data-hotkey="d"
-                title="Add from Documents" t-on-click="addDocumentsAttachment">
-            <span t-call="document.DocumentsIcon"/>
+                title="Add from Documents" t-on-click="this.addDocumentsAttachment">
+            <span><t t-call="document.DocumentsIcon"/></span>
         </button>
     </t>
 </templates>

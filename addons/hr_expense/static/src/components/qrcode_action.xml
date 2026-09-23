@@ -2,9 +2,9 @@
 <templates>
     <t t-name="hr_expense.QRModalComponent">
         <div style="text-align:center;" class="o_expense_modal">
-            <t t-if="url">
+            <t t-if="this.url">
                 <h3>Scan this QR code to get the Odoo app:</h3><br/><br/>
-                <img class="border border-dark rounded" t-att-src="url"/>
+                <img class="border border-dark rounded" t-att-src="this.url"/>
             </t>
         </div>
     </t>

@@ -3,16 +3,16 @@
 
     <t t-name="web.PriorityField">
         <div class="o_priority opacity-trigger-hover" role="radiogroup" name="priority" aria-label="Priority">
-            <t t-foreach="options" t-as="value" t-key="value[0]">
+            <t t-foreach="this.options" t-as="value" t-key="value[0]">
                 <t t-if="!value_first">
-                    <t t-if="props.readonly">
+                    <t t-if="this.props.readonly">
                         <span
                             class="o_priority_star o_disabled"
                             role="radio"
                             aria-disabled="true"
-                            t-att-class="value_index lte index ? 'fa-solid fa-star' : 'fa-regular fa-star'"
-                            t-att-data-tooltip="getTooltip(value[1])"
-                            t-att-aria-checked="value_index === _selectedIndex ? 'true' : 'false'"
+                            t-att-class="value_index lte this.index ? 'fa-solid fa-star' : 'fa-regular fa-star'"
+                            t-att-data-tooltip="this.getTooltip(value[1])"
+                            t-att-aria-checked="value_index === this._selectedIndex ? 'true' : 'false'"
                             t-att-aria-label="value[1]"
                         />
                     </t>
@@ -21,14 +21,14 @@
                             href="#"
                             class="o_priority_star"
                             role="radio"
-                            t-att-class="value_index lte index ? 'fa-solid fa-star' : 'fa-regular fa-star opacity-25 opacity-100-hover'"
+                            t-att-class="value_index lte this.index ? 'fa-solid fa-star' : 'fa-regular fa-star opacity-25 opacity-100-hover'"
                             tabindex="0"
-                            t-att-data-tooltip="getTooltip(value[1])"
-                            t-att-aria-checked="value_index === _selectedIndex ? 'true' : 'false'"
+                            t-att-data-tooltip="this.getTooltip(value[1])"
+                            t-att-aria-checked="value_index === this._selectedIndex ? 'true' : 'false'"
                             t-att-aria-label="value[1]"
                             t-on-click.prevent.stop="() => this.onStarClicked(value[0])"
-                            t-on-mouseenter="() => state.index = value_index"
-                            t-on-mouseleave="() => state.index = -1"
+                            t-on-mouseenter="() => this.state.index = value_index"
+                            t-on-mouseleave="() => this.state.index = -1"
                         />
                     </t>
                 </t>

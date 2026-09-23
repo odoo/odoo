@@ -3,21 +3,21 @@
     <t t-name="account.AccountReportFilterHorizontalGroups">
         <Dropdown>
             <button class="btn btn-secondary">
-                <i class="fa-solid fa-filter me-1"/>Horizontal Group: <t t-out="selectedHorizontalGroupName"/>
+                <i class="fa-solid fa-filter me-1"/>Horizontal Group: <t t-out="this.selectedHorizontalGroupName"/>
             </button>
 
             <t t-set-slot="content">
                 <DropdownItem
-                    class="{ 'selected': controller.cachedFilterOptions.selected_horizontal_group_id === null }"
+                    class="{ 'selected': this.controller.cachedFilterOptions.selected_horizontal_group_id === null }"
                     onSelected="() => this.selectHorizontalGroup(null)"
                     closingMode="'none'"
                 >
                     None
                 </DropdownItem>
 
-                <t t-foreach="controller.cachedFilterOptions.available_horizontal_groups" t-as="horizontalGroup" t-key="horizontalGroup_index">
+                <t t-foreach="this.controller.cachedFilterOptions.available_horizontal_groups" t-as="horizontalGroup" t-key="horizontalGroup_index">
                     <DropdownItem
-                        class="{ 'selected': controller.cachedFilterOptions.selected_horizontal_group_id === horizontalGroup.id }"
+                        class="{ 'selected': this.controller.cachedFilterOptions.selected_horizontal_group_id === horizontalGroup.id }"
                         onSelected="() => this.selectHorizontalGroup(horizontalGroup.id)"
                         closingMode="'none'"
                     >

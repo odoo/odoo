@@ -6,10 +6,10 @@
             <button type="button"
                title="Mark as done"
                aria-label="Mark as done"
-               t-att-aria-pressed="isReached ? 'true' : 'false'"
-               t-att-disabled="props.readonly"
-               t-on-click.stop="onToggle"
-               t-attf-class="btn p-0 border-0 o_todo_done_button fa-lg {{!isReached ? 'fa-regular fa-circle-check' : 'fa-solid fa-circle-check done_button_enabled'}}"/>
+               t-att-aria-pressed="this.isReached ? 'true' : 'false'"
+               t-att-disabled="this.props.readonly"
+               t-on-click.stop="this.onToggle"
+               t-attf-class="btn p-0 border-0 o_todo_done_button fa-lg {{!this.isReached ? 'fa-regular fa-circle-check' : 'fa-solid fa-circle-check done_button_enabled'}}"/>
         </xpath>
     </t>
 

@@ -3,58 +3,58 @@
 
     <t t-name="media.MediaTimelineField">
         <div class="o_media_timeline d-flex flex-column gap-2">
-            <t t-if="!segments.length">
-                <div class="text-muted fst-italic" t-out="emptyMessage" />
+            <t t-if="!this.segments.length">
+                <div class="text-muted fst-italic" t-out="this.emptyMessage" />
             </t>
             <t t-else="">
                 <div
-                    t-if="isReleased"
+                    t-if="this.isReleased"
                     class="text-muted fst-italic"
-                    t-out="releasedMessage" />
+                    t-out="this.releasedMessage" />
                 <video
-                    t-elif="isVideo"
+                    t-elif="this.isVideo"
                     t-ref="player"
                     class="o_media_timeline_player w-100"
                     controls="1"
-                    t-att-src="source"
-                    t-on-timeupdate="onTimeUpdate"
-                    t-on-ended="onEnded" />
+                    t-att-src="this.source"
+                    t-on-timeupdate="this.onTimeUpdate"
+                    t-on-ended="this.onEnded" />
                 <audio
                     t-else=""
                     t-ref="player"
                     class="o_media_timeline_player w-100"
                     controls="1"
-                    t-att-src="source"
-                    t-on-timeupdate="onTimeUpdate"
-                    t-on-ended="onEnded" />
+                    t-att-src="this.source"
+                    t-on-timeupdate="this.onTimeUpdate"
+                    t-on-ended="this.onEnded" />
 
                 <div class="o_media_timeline_controls d-flex align-items-center gap-2">
                     <button
                         class="btn btn-sm btn-secondary"
                         type="button"
-                        t-on-click="togglePlay">
-                        <i t-att-class="state.playing ? 'fa fa-pause' : 'fa fa-play'" />
+                        t-on-click="this.togglePlay">
+                        <i t-att-class="this.state.playing ? 'fa fa-pause' : 'fa fa-play'" />
                     </button>
-                    <span class="text-muted small" t-out="format(state.positionMs)" />
+                    <span class="text-muted small" t-out="this.format(this.state.positionMs)" />
                     <div
                         class="o_media_timeline_bar position-relative flex-grow-1"
-                        t-on-click="onBarClick">
+                        t-on-click="this.onBarClick">
                         <div
-                            t-foreach="segments"
+                            t-foreach="this.segments"
                             t-as="segment"
                             t-key="segment.id"
                             class="o_media_timeline_segment position-absolute"
-                            t-att-style="barStyle(segment)" />
+                            t-att-style="this.barStyle(segment)" />
                         <div
                             class="o_media_timeline_head position-absolute"
-                            t-att-style="headStyle" />
+                            t-att-style="this.headStyle" />
                     </div>
-                    <span class="text-muted small" t-out="format(durationMs)" />
+                    <span class="text-muted small" t-out="this.format(this.durationMs)" />
                     <button
                         class="btn btn-sm btn-link text-muted"
                         type="button"
-                        t-on-click="cycleRate">
-                        <t t-out="state.rate" />x
+                        t-on-click="this.cycleRate">
+                        <t t-out="this.state.rate" />x
                     </button>
                 </div>
             </t>

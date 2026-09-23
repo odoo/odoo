@@ -340,7 +340,7 @@ test("false, null and undefined are accepted values", async () => {
     class Parent extends Component {
         static components = { TimePicker };
         static props = {};
-        static template = xml`<TimePicker value="state.value"/>`;
+        static template = xml`<TimePicker value="this.state.value"/>`;
 
         setup() {
             this.state = useState({
@@ -372,7 +372,7 @@ test("click-out triggers onChange", async () => {
                 <Dropdown>
                     <button class="open">Open</button>
                     <t t-set-slot="content">
-                        <TimePicker onChange.bind="onChange"/>
+                        <TimePicker onChange.bind="this.onChange"/>
                     </t>
                 </Dropdown>
                 <button class="outside">Outside</button>
@@ -407,7 +407,7 @@ test("changing the props value updates the input", async () => {
     class Parent extends Component {
         static components = { TimePicker };
         static props = {};
-        static template = xml`<TimePicker value="state.value" onChange.bind="onChange"/>`;
+        static template = xml`<TimePicker value="this.state.value" onChange.bind="this.onChange"/>`;
 
         setup() {
             this.state = useState({
@@ -447,7 +447,7 @@ test("ensure placeholder is customizable", async () => {
     class Parent extends Component {
         static components = { TimePicker };
         static props = {};
-        static template = xml`<TimePicker placeholder="state.placeholder"/>`;
+        static template = xml`<TimePicker placeholder="this.state.placeholder"/>`;
 
         setup() {
             this.state = useState({ placeholder: undefined });
@@ -549,7 +549,7 @@ test("suggestions are rebuilt only when the rounding that shapes them changes", 
     class Parent extends Component {
         static components = { TimePicker: Probe };
         static props = ["*"];
-        static template = xml`<TimePicker value="'08:00'" showSeconds="state.showSeconds" minutesRounding="state.minutesRounding"/>`;
+        static template = xml`<TimePicker value="'08:00'" showSeconds="this.state.showSeconds" minutesRounding="this.state.minutesRounding"/>`;
         setup() {
             this.state = useState({ showSeconds: false, minutesRounding: 5 });
         }
@@ -576,7 +576,7 @@ test("toggling showSeconds reformats the value already in the box", async () => 
     class Parent extends Component {
         static components = { TimePicker };
         static props = ["*"];
-        static template = xml`<TimePicker value="'08:30:45'" showSeconds="state.showSeconds"/>`;
+        static template = xml`<TimePicker value="'08:30:45'" showSeconds="this.state.showSeconds"/>`;
         setup() {
             this.state = useState({ showSeconds: false });
         }
@@ -597,7 +597,7 @@ test("an unfocused box resyncs to the value, so a rejected edit is recoverable",
     class Parent extends Component {
         static components = { TimePicker };
         static props = ["*"];
-        static template = xml`<TimePicker value="state.value" onInvalid="() => this.onInvalid()"/>`;
+        static template = xml`<TimePicker value="this.state.value" onInvalid="() => this.onInvalid()"/>`;
         setup() {
             this.state = useState({ value: "08:30" });
         }
@@ -619,7 +619,7 @@ test("a focused box keeps the user's keystrokes across an unrelated re-render", 
     class Parent extends Component {
         static components = { TimePicker };
         static props = ["*"];
-        static template = xml`<TimePicker value="'08:30'"/><span t-out="state.tick"/>`;
+        static template = xml`<TimePicker value="'08:30'"/><span t-out="this.state.tick"/>`;
         setup() {
             this.state = useState({ tick: 0 });
         }
@@ -640,7 +640,7 @@ test("a browsed suggestion is committed when focus leaves the field", async () =
         static props = ["*"];
         static components = { TimePicker };
         static template = xml`
-            <TimePicker value="'09:00'" onChange.bind="onChange"/>
+            <TimePicker value="'09:00'" onChange.bind="this.onChange"/>
             <input class="elsewhere"/>
         `;
         onChange(value) {
@@ -664,7 +664,7 @@ test("a browsed suggestion is committed on tab", async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { TimePicker };
-        static template = xml`<TimePicker value="'09:00'" onChange.bind="onChange"/>`;
+        static template = xml`<TimePicker value="'09:00'" onChange.bind="this.onChange"/>`;
         onChange(value) {
             expect.step(`change ${value.toString()}`);
         }
@@ -685,7 +685,7 @@ test("typing supersedes a browsed suggestion", async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { TimePicker };
-        static template = xml`<TimePicker value="'09:00'" onChange.bind="onChange"/>`;
+        static template = xml`<TimePicker value="'09:00'" onChange.bind="this.onChange"/>`;
         onChange(value) {
             expect.step(`change ${value.toString()}`);
         }

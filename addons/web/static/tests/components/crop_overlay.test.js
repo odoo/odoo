@@ -19,11 +19,11 @@ function makeHost({ onResize = () => {} } = {}) {
         state;
         static template = xml`
             <div style="width: 300px; height: 200px;">
-                <CropOverlay isReady="state.isReady" onResize.bind="onResize">
+                <CropOverlay isReady="this.state.isReady" onResize.bind="this.onResize">
                     <div style="width: 300px; height: 200px;">video</div>
                 </CropOverlay>
             </div>
-            <span class="tick" t-out="state.tick"/>
+            <span class="tick" t-out="this.state.tick"/>
         `;
         setup() {
             this.state = useState({ isReady: true, tick: 0 });

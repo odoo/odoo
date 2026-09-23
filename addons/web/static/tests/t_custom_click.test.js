@@ -7,7 +7,7 @@ import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 test(`main button click`, async () => {
     class MyComponent extends Component {
-        static template = xml`<div t-custom-click="plop" class="clickMe"><t t-out="props.text"/></div>`;
+        static template = xml`<div t-custom-click="plop" class="clickMe"><t t-out="this.props.text"/></div>`;
         static props = ["*"];
         plop(ev, isMiddleClick) {
             expect.step("clicked on plop");
@@ -24,7 +24,7 @@ test(`main button click`, async () => {
 
 test(`handler is bound`, async () => {
     class MyComponent extends Component {
-        static template = xml`<div t-custom-click="plop" class="clickMe"><t t-out="props.text"/></div>`;
+        static template = xml`<div t-custom-click="plop" class="clickMe"><t t-out="this.props.text"/></div>`;
         static props = ["*"];
         setup() {
             this.test = "bind";
@@ -43,7 +43,7 @@ test(`handler is bound`, async () => {
 
 test(`detect if middle Click`, async () => {
     class MyComponent extends Component {
-        static template = xml`<div t-custom-click="plop" class="clickMe"><t t-out="props.text"/></div>`;
+        static template = xml`<div t-custom-click="plop" class="clickMe"><t t-out="this.props.text"/></div>`;
         static props = ["*"];
         plop(ev, isMiddleClick) {
             expect.step(`isMiddleClick: ${isMiddleClick}`);
@@ -58,7 +58,7 @@ test(`detect if middle Click`, async () => {
 
 test(`detect if middle Click (ctrl+click)`, async () => {
     class MyComponent extends Component {
-        static template = xml`<div t-custom-click="plop" class="clickMe"><t t-out="props.text"/></div>`;
+        static template = xml`<div t-custom-click="plop" class="clickMe"><t t-out="this.props.text"/></div>`;
         static props = ["*"];
         plop(ev, isMiddleClick) {
             expect.step(`isMiddleClick: ${isMiddleClick}`);
@@ -74,7 +74,7 @@ test(`detect if middle Click (ctrl+click)`, async () => {
 
 test(`main button (arrow function)`, async () => {
     class MyComponent extends Component {
-        static template = xml`<div t-custom-click="(ev, isMiddleClick) => this.plop(ev, isMiddleClick, 'test')" class="clickMe"><t t-out="props.text"/></div>`;
+        static template = xml`<div t-custom-click="(ev, isMiddleClick) => this.plop(ev, isMiddleClick, 'test')" class="clickMe"><t t-out="this.props.text"/></div>`;
         static props = ["*"];
         plop(ev, isMiddleClick, text) {
             expect.step(`clickend on plop`);
@@ -91,7 +91,7 @@ test(`main button (arrow function)`, async () => {
 
 test(`handler is bound (arrow function)`, async () => {
     class MyComponent extends Component {
-        static template = xml`<div t-custom-click="(ev, isMiddleClick) => this.plop(ev, isMiddleClick, 'test')" class="clickMe"><t t-out="props.text"/></div>`;
+        static template = xml`<div t-custom-click="(ev, isMiddleClick) => this.plop(ev, isMiddleClick, 'test')" class="clickMe"><t t-out="this.props.text"/></div>`;
         static props = ["*"];
         setup() {
             this.test = "bind";
@@ -111,7 +111,7 @@ test(`handler is bound (arrow function)`, async () => {
 
 test(`detect if middle Click (arrow function)`, async () => {
     class MyComponent extends Component {
-        static template = xml`<div t-custom-click="(ev, isMiddleClick) => this.plop(ev, isMiddleClick, 'test')" class="clickMe"><t t-out="props.text"/></div>`;
+        static template = xml`<div t-custom-click="(ev, isMiddleClick) => this.plop(ev, isMiddleClick, 'test')" class="clickMe"><t t-out="this.props.text"/></div>`;
         static props = ["*"];
         plop(ev, isMiddleClick, text) {
             expect.step(`isMiddleClick: ${isMiddleClick}`);
@@ -128,7 +128,7 @@ test(`detect if middle Click (arrow function)`, async () => {
 
 test(`"stop" and "prevent" modifiers`, async () => {
     class MyComponent extends Component {
-        static template = xml`<div t-on-click="noClick"><div t-custom-click.stop.prevent="plop" class="clickMe"><t t-out="props.text"/></div></div>`;
+        static template = xml`<div t-on-click="this.noClick"><div t-custom-click.stop.prevent="plop" class="clickMe"><t t-out="this.props.text"/></div></div>`;
         static props = ["*"];
         plop(ev, isMiddleClick) {
             expect.step(`isMiddleClick: ${isMiddleClick}`);
@@ -149,7 +149,7 @@ test(`"stop" and "prevent" modifiers`, async () => {
 test(`"synthetic" modifier`, async () => {
     expect.assertions(2);
     class MyComponent extends Component {
-        static template = xml`<div t-custom-click.synthetic="plop" class="clickMe"><t t-out="props.text"/></div>`;
+        static template = xml`<div t-custom-click.synthetic="plop" class="clickMe"><t t-out="this.props.text"/></div>`;
         static props = ["*"];
         plop(ev) {
             expect(ev.currentTarget).toBe(document);
@@ -164,7 +164,7 @@ test(`"synthetic" modifier`, async () => {
 
 test(`Secondary button clicked`, async () => {
     class MyComponent extends Component {
-        static template = xml`<div t-custom-click="plop" class="clickMe"><t t-out="props.text"/></div>`;
+        static template = xml`<div t-custom-click="plop" class="clickMe"><t t-out="this.props.text"/></div>`;
         static props = ["*"];
         plop() {
             expect.step("Shoudn't be called");

@@ -80,7 +80,7 @@ test("re-anchors on a new files list", async () => {
     class Parent extends Component {
         static components = { FileViewer };
         static props = {};
-        static template = xml`<FileViewer files="state.files" startIndex="0" modal="false"/>`;
+        static template = xml`<FileViewer files="this.state.files" startIndex="0" modal="false"/>`;
 
         /** @type {{ files: any[] }} */
         state;
@@ -113,7 +113,7 @@ test("re-anchors on a plain (non-reactive) files list", async () => {
     class Parent extends Component {
         static components = { FileViewer };
         static props = {};
-        static template = xml`<FileViewer files="files" startIndex="0" modal="false"/>`;
+        static template = xml`<FileViewer files="this.files" startIndex="0" modal="false"/>`;
         setup() {
             this.state = useState({ flipped: false });
             this.rawFiles = [IMAGE_FILE, other];
@@ -195,7 +195,7 @@ test("the viewer recovers when the file list empties and refills", async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { FileViewer };
-        static template = xml`<FileViewer files="state.files" startIndex="0"/>`;
+        static template = xml`<FileViewer files="this.state.files" startIndex="0"/>`;
         setup() {
             this.state = useState({ files: [IMAGE_FILE] });
         }

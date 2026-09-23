@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BackgroundShapeOption">
-    <BuilderRow label.translate="Shape" level="1" t-if="isActiveItem('toggle_bg_shape_id')">
-        <button class="o-hb-btn btn btn-secondary" t-on-click="this.showBackgroundShapes" t-out="state.shapeName"/>
+    <BuilderRow label.translate="Shape" level="1" t-if="this.isActiveItem('toggle_bg_shape_id')">
+        <button class="o-hb-btn btn btn-secondary" t-on-click="this.showBackgroundShapes" t-out="this.state.shapeName"/>
         <BuilderButton
                 title.translate="Show/Hide on Mobile"
                 preview="false"
@@ -14,19 +14,19 @@
         <BuilderButton action="'setBackgroundShape'" actionValue="''" preview="false" icon="'oi-close'"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Flip" level="2" t-if="isActiveItem('toggle_bg_shape_id')">
+    <BuilderRow label.translate="Flip" level="2" t-if="this.isActiveItem('toggle_bg_shape_id')">
         <BuilderButton icon="'oi-arrows-h'" preview="false" action="'flipShape'" actionParam="'x'"/>
         <BuilderButton icon="'oi-arrows-v'" preview="false" action="'flipShape'" actionParam="'y'"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Colors" level="2">
-        <t t-foreach="getDefaultColorNames()" t-as="colorName" t-key="colorName_index">
+        <t t-foreach="this.getDefaultColorNames()" t-as="colorName" t-key="colorName_index">
             <BuilderColorPicker action="'backgroundShapeColor'" actionParam="colorName" enabledTabs="['solid', 'custom']"/>
         </t>
         <!-- TODO handle all the attributes -->
         <BuilderColorPicker styleAction="'background-color'" applyTo="':scope > .o_we_shape'" enabledTabs="['solid', 'custom']"/>
     </BuilderRow>
-    <BuilderRow label.translate="Speed" level="2" t-if="state.isAnimated">
+    <BuilderRow label.translate="Speed" level="2" t-if="this.state.isAnimated">
         <BuilderRange
             preview="false"
             displayRangeValue="true"

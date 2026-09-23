@@ -64,7 +64,8 @@ export class DiscussSidebarCallParticipants extends Component {
         return this.store.discuss.isSidebarCompact;
     }
 
-    get attClass() {
+    /** @param {import("models").RtcSession} session */
+    participantClass(session) {
         return {
             "justify-content-center bg-inherit": this.compact,
         };

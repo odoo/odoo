@@ -29,7 +29,7 @@ defineModels([Product, ResUsers]);
 test("the tag list reads the avatar model from the incoming props, not the outgoing ones", async () => {
     class Parent extends Component {
         static components = { DomainSelectorAutocomplete };
-        static template = xml`<DomainSelectorAutocomplete resModel="state.resModel" resIds="state.resIds" update="() => {}"/>`;
+        static template = xml`<DomainSelectorAutocomplete resModel="this.state.resModel" resIds="this.state.resIds" update="() => {}"/>`;
         static props = ["*"];
         /** @type {{ resModel: string, resIds: number[] }} */
         state;

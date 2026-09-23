@@ -3,11 +3,11 @@
 
     <t t-name="hr_skills.SkillsTagsList" t-inherit="web.TagsList">
         <xpath expr='//span[hasclass("o_tag")]' position="attributes">
-            <attribute name="t-attf-class" add="{{ isDefaultLevel(tag) ? 'border border-2' : '' }}" separator=" "/>
-            <attribute name="t-attf-style" add="{{ isDefaultLevel(tag) ? 'border-color: rgb(140, 140, 140) !important ;' : ''}}" separator=" "/>
+            <attribute name="t-attf-class" add="{{ this.isDefaultLevel(tag) ? 'border border-2' : '' }}" separator=" "/>
+            <attribute name="t-attf-style" add="{{ this.isDefaultLevel(tag) ? 'border-color: rgb(140, 140, 140) !important ;' : ''}}" separator=" "/>
         </xpath>
         <xpath expr='//div[hasclass("o_tag_badge_text")]' position="attributes">
-            <attribute name="t-attf-class" add="{{ isDefaultLevel(tag) ? 'fw-bold' : '' }}" separator=" "/>
+            <attribute name="t-attf-class" add="{{ this.isDefaultLevel(tag) ? 'fw-bold' : '' }}" separator=" "/>
         </xpath>
     </t>
 

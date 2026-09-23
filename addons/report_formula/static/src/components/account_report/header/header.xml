@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="report_formula.AccountReportHeader">
-        <t t-call="{{ env.template('AccountReportHeader') }}"/>
+        <t t-call="{{ this.env.template('AccountReportHeader') }}"/>
     </t>
 
     <t t-name="report_formula.AccountReportHeaderCustomizable">
         <thead id="table_header" class="sticky">
             <!-- Headers -->
-            <t t-foreach="columnHeaders" t-as="columnHeader" t-key="columnHeader_index">
+            <t t-foreach="this.columnHeaders" t-as="columnHeader" t-key="columnHeader_index">
                 <tr data-id="column_headers_row">
                     <!-- First empty column -->
                     <th>
-                        <t t-if="columnHeader_first and controller.options.companies.length > 1">
-                            <span class="companies_header" t-out="controller.options.companies.map(company => company.name).join(', ')"/>
+                        <t t-if="columnHeader_first and this.controller.options.companies.length > 1">
+                            <span class="companies_header" t-out="this.controller.options.companies.map(company => company.name).join(', ')"/>
                         </t>
                     </th>
 
@@ -27,16 +27,16 @@
                         </th>
                     </t>
 
-                    <t t-if="controller.options.show_horizontal_group_total">
+                    <t t-if="this.controller.options.show_horizontal_group_total">
                         <t t-if="!columnHeader_first">
                             <th class="column_header">
-                                <t t-out="controller.options.available_horizontal_groups.find(group => group.id === controller.options.selected_horizontal_group_id)?.name"/>
+                                <t t-out="this.controller.options.available_horizontal_groups.find(group => group.id === this.controller.options.selected_horizontal_group_id)?.name"/>
                             </th>
                         </t>
                     </t>
 
                     <!-- Growth comparison column -->
-                    <t t-if="controller.needsColumnPercentComparison">
+                    <t t-if="this.controller.needsColumnPercentComparison">
                         <!-- We only want to display it once on the first row -->
                         <t t-if="columnHeader_first">
                             <th class="column_percent_comparison_header">
@@ -46,7 +46,7 @@
                     </t>
 
                     <!-- Analytic coverage column -->
-                    <t t-if="controller.needsAnalyticCoverageColumn">
+                    <t t-if="this.controller.needsAnalyticCoverageColumn">
                         <t t-if="columnHeader_index == 1">
                             <th>
                                 <t>Analytic coverage</t>
@@ -55,7 +55,7 @@
                     </t>
 
                     <!-- Debug column -->
-                    <t t-if="controller.hasDebugColumn">
+                    <t t-if="this.controller.hasDebugColumn">
                         <!-- We only want to display it once on the first row -->
                         <t t-if="columnHeader_first">
                             <th class="debug_header">
@@ -67,13 +67,13 @@
             </t>
 
             <!-- Custom subheaders -->
-            <t t-if="controller.hasCustomSubheaders">
+            <t t-if="this.controller.hasCustomSubheaders">
                 <tr data-id="column_custom_subheaders_row">
                     <!-- First empty column -->
                     <th/>
 
                     <!-- Other columns -->
-                    <t t-foreach="customSubheaders" t-as="customSubheader" t-key="customSubheader_index">
+                    <t t-foreach="this.customSubheaders" t-as="customSubheader" t-key="customSubheader_index">
                         <th
                             t-att-colspan="customSubheader.colspan || 1"
                             t-att-data-expression_label="customSubheader.expression_label"
@@ -83,7 +83,7 @@
                     </t>
 
                     <!-- Debug column -->
-                    <t t-if="controller.hasDebugColumn">
+                    <t t-if="this.controller.hasDebugColumn">
                         <!-- Empty to prevent a gap beneath the debug label -->
                         <th/>
                     </t>
@@ -96,7 +96,7 @@
                 <th/>
 
                 <!-- Other columns -->
-                <t t-foreach="subheaders" t-as="subheader" t-key="subheader_index">
+                <t t-foreach="this.subheaders" t-as="subheader" t-key="subheader_index">
                     <th
                         t-att-colspan="subheader.colspan || 1"
                         t-att-class="subheader.class"
@@ -108,7 +108,7 @@
                                 class="btn btn_sortable"
                                 t-on-click="() => this.sortLinesByColumn(subheader_index, subheader)"
                             >
-                                <i t-att-class="sortableClasses(subheader_index)"/>
+                                <i t-att-class="this.sortableClasses(subheader_index)"/>
                             </button>
                         </t>
 
@@ -122,15 +122,15 @@
                 </t>
 
                 <!-- Debug column -->
-                <t t-if="controller.hasDebugColumn">
+                <t t-if="this.controller.hasDebugColumn">
                     <!-- Empty to prevent a gap beneath the debug label -->
                     <th/>
                 </t>
 
-                <t t-if="controller.options.show_horizontal_group_total">
+                <t t-if="this.controller.options.show_horizontal_group_total">
                     <th>
                         <!-- Since we have only one column possible with horizontal group totals taking the first element is ok -->
-                        <t t-out="subheaders[0].name"/>
+                        <t t-out="this.subheaders[0].name"/>
                     </th>
                 </t>
             </tr>

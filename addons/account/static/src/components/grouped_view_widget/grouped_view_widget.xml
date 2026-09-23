@@ -19,23 +19,23 @@
 
     <tbody t-name="account.GroupedItemsTemplate">
         <tr style="background-color: #dee2e6;">
-            <td t-attf-colspan="{{props.options.columns.length}}">
-                <t t-out="props.group_vals.group_name"/>
+            <td t-attf-colspan="{{this.props.options.columns.length}}">
+                <t t-out="this.props.group_vals.group_name"/>
             </td>
         </tr>
-        <t t-foreach="props.group_vals.items_vals" t-as="item_vals" t-key="item_vals_index">
-            <ListItem item_vals="item_vals[2]" options="props.options"/>
+        <t t-foreach="this.props.group_vals.items_vals" t-as="item_vals" t-key="item_vals_index">
+            <ListItem item_vals="item_vals[2]" options="this.props.options"/>
         </t>
     </tbody>
 
     <tr t-name="account.GroupedItemTemplate">
-        <t t-foreach="props.options.columns" t-as="col" t-key="col_index">
-            <td t-out="props.item_vals[col['field']]" t-attf-class="{{col['class']}}"/>
+        <t t-foreach="this.props.options.columns" t-as="col" t-key="col_index">
+            <td t-out="this.props.item_vals[col['field']]" t-attf-class="{{col['class']}}"/>
         </t>
     </tr>
 
     <t t-name="account.OpenMoveTemplate">
-        <a href="#" t-out="widget.value"/>
+        <a href="#" t-out="this.widget.value"/>
     </t>
 
 </templates>

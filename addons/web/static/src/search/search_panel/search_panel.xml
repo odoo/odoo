@@ -2,19 +2,19 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web.SearchPanel">
-    <t t-if="env.isSmall">
+    <t t-if="this.env.isSmall">
         <t t-call="web.SearchPanel.Small" />
     </t>
     <t t-else="">
-        <t t-if="state.sidebarExpanded" t-call="web.SearchPanel.Regular" />
+        <t t-if="this.state.sidebarExpanded" t-call="web.SearchPanel.Regular" />
         <t t-else="" t-call="web.SearchPanel.Sidebar" />
     </t>
 </t>
 
 <t t-name="web.SearchPanel.Sidebar">
-    <div class="bg-view h-100 o_search_panel_sidebar cursor-pointer d-print-none" t-on-click="toggleSidebar">
-        <t t-set="categories" t-value="getCategorySelection()" />
-        <t t-set="filters" t-value="getFilterSelection()" />
+    <div class="bg-view h-100 o_search_panel_sidebar cursor-pointer d-print-none" t-on-click="this.toggleSidebar">
+        <t t-set="categories" t-value="this.getCategorySelection()" />
+        <t t-set="filters" t-value="this.getFilterSelection()" />
         <div class="d-flex">
             <button class="btn btn-light btn-sm m-1 mb-2 p-2" title="Expand the search panel" aria-label="Expand the search panel">
                 <i class="oi oi-fw oi-panel-right fa-flip-horizontal"/>
@@ -50,18 +50,18 @@
 
 <t t-name="web.SearchPanelContent">
     <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 bg-view overflow-auto position-relative"
-         t-att-class="env.searchModel.searchPanelInfo.className"
-         t-attf-class="#{env.isSmall ? 'px-3' : 'pe-1 ps-3'}"
+         t-att-class="this.env.searchModel.searchPanelInfo.className"
+         t-attf-class="#{this.env.isSmall ? 'px-3' : 'pe-1 ps-3'}"
          t-ref="root">
-        <button t-if="!env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" title="Collapse the search panel" aria-label="Collapse the search panel" t-on-click="toggleSidebar">
+        <button t-if="!this.env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" title="Collapse the search panel" aria-label="Collapse the search panel" t-on-click="this.toggleSidebar">
             <i class="oi oi-fw oi-panel-right fa-flip-horizontal"/>
         </button>
-        <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">
+        <div t-if="!this.sections or this.sections.length === 0" class="o_search_panel_empty_state me-3">
             <button class="btn mt-2 w-100 overflow-visible">
                 <div class="d-flex align-items-center me-2 ms-auto">All</div>
             </button>
         </div>
-        <section t-foreach="sections" t-as="section" t-key="section.id"
+        <section t-foreach="this.sections" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
             <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default">
@@ -74,7 +74,7 @@
         </section>
     </div>
     <div class="h-100">
-        <span class="o_search_panel_resize" t-on-click.stop.prevent="" t-on-pointerdown.stop.prevent="_onStartResize"/>
+        <span class="o_search_panel_resize" t-on-click.stop.prevent="" t-on-pointerdown.stop.prevent="this._onStartResize"/>
     </div>
 </t>
 
@@ -83,9 +83,8 @@
         <span><t t-out="section.errorMsg"/></span>
     </div>
     <ul t-else="" class="list-group d-block o_search_panel_field px-2 px-md-0">
-        <t t-if="section.type === 'category'" t-call="{{ constructor.subTemplates.category }}">
-            <t t-set="values" t-value="section.rootIds"/>
-        </t>
+        <t t-if="section.type === 'category'" t-call="{{ this.constructor.subTemplates.category }}"
+            values="section.rootIds"/>
         <t t-elif="section.groups">
             <li
                 t-foreach="section.sortedGroupIds" t-as="groupId" t-key="groupId"
@@ -94,18 +93,18 @@
                 >
                 <t t-set="_section" t-value="section"/>
                 <t t-set="group" t-value="section.groups.get(groupId)"/>
-                <t t-set="groupState" t-value="getGroupState(group)"/>
+                <t t-set="groupState" t-value="this.getGroupState(group)"/>
                 <header class="o_search_panel_group_header pb-1">
                     <div class="form-check w-100">
                         <input type="checkbox"
                             class="form-check-input"
-                            t-attf-id="{{ idPrefix }}_{{ section.id }}_group_{{ groupId }}"
+                            t-attf-id="{{ this.idPrefix }}_{{ section.id }}_group_{{ groupId }}"
                             t-att-checked="groupState.checked"
                             t-att-indeterminate="groupState.indeterminate"
                             t-on-click="() => this.toggleFilterGroup(section.id, group)"
                         />
                         <label
-                            t-attf-for="{{ idPrefix }}_{{ section.id }}_group_{{ groupId }}"
+                            t-attf-for="{{ this.idPrefix }}_{{ section.id }}_group_{{ groupId }}"
                             class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 cursor-pointer"
                             t-att-title="group.tooltip or false"
                             >
@@ -117,23 +116,20 @@
                     </div>
                 </header>
                 <ul class="list-group d-block">
-                    <t t-call="{{ constructor.subTemplates.filtersGroup }}">
-                        <t t-set="values" t-value="group.values"/>
-                        <t t-set="isChildList" t-value="true"/>
-                        <t t-set="section" t-value="_section"/>
-                    </t>
+                    <t t-call="{{ this.constructor.subTemplates.filtersGroup }}"
+                        values="group.values"
+                        isChildList="true"
+                        section="_section"/>
                 </ul>
             </li>
             <ul t-if="section.groups.get(false)" class="list-group d-block">
-                <t t-call="{{ constructor.subTemplates.filtersGroup }}">
-                    <t t-set="group" t-value="section.groups.get(false)"/>
-                    <t t-set="values" t-value="group.values"/>
-                </t>
+                <t t-set="group" t-value="section.groups.get(false)"/>
+                <t t-call="{{ this.constructor.subTemplates.filtersGroup }}"
+                    group="group"
+                    values="group.values"/>
             </ul>
         </t>
-        <t t-else="" t-call="{{ constructor.subTemplates.filtersGroup }}">
-            <t t-set="values" t-value="section.values"/>
-        </t>
+        <t t-else="" t-call="{{ this.constructor.subTemplates.filtersGroup }}" values="section.values"/>
     </ul>
 </t>
 
@@ -145,12 +141,12 @@
         t-ref="root"
         >
         <div class="d-flex overflow-auto align-items-center px-2 border-top">
-            <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">
+            <div t-if="!this.sections or this.sections.length === 0" class="o_search_panel_empty_state me-3">
                 <button class="btn w-100">
                     <div class="d-flex align-items-center me-2 ms-auto">All</div>
                 </button>
             </div>
-            <Dropdown t-foreach="sections" t-as="section" t-key="section.id" state="getDropdownState(section.id)" menuClass="'my-2 mx-1'">
+            <Dropdown t-foreach="this.sections" t-as="section" t-key="section.id" state="this.getDropdownState(section.id)" menuClass="'my-2 mx-1'">
                 <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
                     <i t-attf-class="{{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
                         t-att-style="section.color and ('color: ' + section.color)"
@@ -162,12 +158,12 @@
                     <div t-attf-class="o_search_panel_{{ section.type }}" class="o_search_panel_section">
                         <t t-call="web.SearchPanel.Section"/>
                     </div>
-                    <div t-if="section.type !== 'category' and hasSelection(section.id)" class="text-end">
+                    <div t-if="section.type !== 'category' and this.hasSelection(section.id)" class="text-end">
                         <a href="#" title="Clear All" class="btn btn-link text-nowrap text-uppercase" t-on-click="() => this.clearSelection(section.id)">CLEAR ALL</a>
                     </div>
                 </t>
             </Dropdown>
-            <a href="#" t-if="hasSelection()" title="Clear All" class="btn btn-link text-nowrap text-uppercase" t-on-click="() => this.clearSelection()">CLEAR ALL</a>
+            <a href="#" t-if="this.hasSelection()" title="Clear All" class="btn btn-link text-nowrap text-uppercase" t-on-click="() => this.clearSelection()">CLEAR ALL</a>
         </div>
     </div>
 </t>
@@ -176,14 +172,14 @@
     <t t-foreach="values" t-as="valueId" t-key="valueId">
         <t t-set="value" t-value="section.values.get(valueId)"/>
         <li class="o_search_panel_category_value list-group-item py-1 cursor-pointer border-0 pe-0"
-            t-att-class="isChildList ? env.isSmall ? '' : 'o_treeEntry' : 'ps-0'"
+            t-att-class="isChildList ? this.env.isSmall ? '' : 'o_treeEntry' : 'ps-0'"
             >
             <header
                 class="list-group-item list-group-item-action d-flex align-items-center px-0 py-lg-0 border-0"
                 t-att-class="{'active text-black fw-bold': section.activeValueId === valueId}"
                 role="button"
                 tabindex="0"
-                t-att-aria-expanded="categoryAriaExpanded(section, value)"
+                t-att-aria-expanded="this.categoryAriaExpanded(section, value)"
                 t-att-aria-current="section.activeValueId === valueId ? 'true' : false"
                 t-on-click="() => this.toggleCategory(section, value)"
                 t-on-keydown="(ev) => this.onCategoryKeydown(ev, section, value)"
@@ -197,8 +193,8 @@
                             t-if="value.childrenIds.length"
                             class="fa-solid"
                             t-att-class="{
-                                'fa-caret-down' : state.expanded[section.id][valueId],
-                                'fa-caret-right':  !state.expanded[section.id][valueId]
+                                'fa-caret-down' : this.state.expanded[section.id][valueId],
+                                'fa-caret-right':  !this.state.expanded[section.id][valueId]
                             }"
                             />
                     </button>
@@ -213,13 +209,12 @@
                     t-out="value.__count"
                 />
             </header>
-            <ul t-if="value.childrenIds.length and state.expanded[section.id][valueId]"
+            <ul t-if="value.childrenIds.length and this.state.expanded[section.id][valueId]"
                 class="list-group d-block"
                 >
-                <t t-call="{{ constructor.subTemplates.category }}">
-                    <t t-set="values" t-value="value.childrenIds"/>
-                    <t t-set="isChildList" t-value="true"/>
-                </t>
+                <t t-call="{{ this.constructor.subTemplates.category }}"
+                    values="value.childrenIds"
+                    isChildList="true"/>
             </ul>
         </li>
     </t>
@@ -233,13 +228,13 @@
         <t t-set="value" t-value="values.get(valueId)"/>
         <div class="form-check w-100">
             <input type="checkbox"
-                t-attf-id="{{ idPrefix }}_{{ section.id }}_input_{{ valueId }}"
+                t-attf-id="{{ this.idPrefix }}_{{ section.id }}_input_{{ valueId }}"
                 t-att-checked="value.checked"
                 class="form-check-input"
                 t-on-click="() => this.toggleFilterValue(section.id, valueId)"
             />
             <label class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 cursor-pointer"
-                t-attf-for="{{ idPrefix }}_{{ section.id }}_input_{{ valueId }}"
+                t-attf-for="{{ this.idPrefix }}_{{ section.id }}_input_{{ valueId }}"
                 t-att-title="(group and group.tooltip) or false">
                 <span class="o_search_panel_label_title text-truncate" t-out="value.display_name"/>
                 <span t-if="section.enableCounters and value.__count gt 0"

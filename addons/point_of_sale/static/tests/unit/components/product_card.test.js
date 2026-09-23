@@ -107,8 +107,8 @@ test("a reused card requests stock for its new product", async () => {
     class Catalog extends Component {
         static props = {};
         static components = { ProductCard };
-        static template = xml`<ProductCard product="state.product" productId="state.product.id"
-            name="state.product.display_name" imageUrl="false"/>`;
+        static template = xml`<ProductCard product="this.state.product" productId="this.state.product.id"
+            name="this.state.product.display_name" imageUrl="false"/>`;
         setup() {
             this.state = useState({ product: store.models["product.template"].get(5) });
         }
@@ -133,8 +133,8 @@ test("an old product's late stock response cannot replace the reused card's stoc
     class Catalog extends Component {
         static props = {};
         static components = { ProductCard };
-        static template = xml`<ProductCard product="state.product" productId="state.product.id"
-            name="state.product.display_name" imageUrl="false"/>`;
+        static template = xml`<ProductCard product="this.state.product" productId="this.state.product.id"
+            name="this.state.product.display_name" imageUrl="false"/>`;
         setup() {
             this.state = useState({ product: store.models["product.template"].get(5) });
         }
@@ -202,9 +202,9 @@ test("mounting a catalog batches requests and unrelated prop changes do not refe
     class Catalog extends Component {
         static props = {};
         static components = { ProductCard };
-        static template = xml`<div><ProductCard t-foreach="products" t-as="product" t-key="product.id"
+        static template = xml`<div><ProductCard t-foreach="this.products" t-as="product" t-key="product.id"
             product="product" productId="product.id" name="product.display_name"
-            productCartQty="state.quantity" imageUrl="false"/></div>`;
+            productCartQty="this.state.quantity" imageUrl="false"/></div>`;
         setup() {
             this.state = useState({ quantity: 1 });
             this.products = [5, 6].map((id) =>

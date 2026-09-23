@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.66
+:Version: 6.67
 :Date: 2026-09-22
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -6838,6 +6838,20 @@ Escape hatch for a run that must survive a known-broken bundle:
   differences remain: a ``markup()`` value renders as HTML, and a body default
   replaces ``null``/``undefined`` but not ``false``. View archs are compiled by
   the view compilers and still accept ``t-esc``.
+* **Name every component member ``this.x`` in a template**, and pass a
+  ``t-call``'s values as attributes (``<t t-call="x" value="1"/>``), not as
+  ``t-set`` children. OWL 3 resolves a bare name only among the template's own
+  locals (``t-set``, ``t-foreach``/``t-as``, ``t-slot-scope``, arrow
+  parameters); a template called with ``t-call-context`` reads that context as
+  ``this``. ``[codemod this_scope.py --check]`` -- ``Agro-Marin/owl``
+  ``tools/odoo_migration``, run over odoo, enterprise and agromarin together,
+  must change 0 files. A template rendered without a component
+  (``renderToString``, ``renderToElement``, ``renderAt``) keeps bare names.
+  A getter or method the template calls reads component state only; a value
+  the template holds -- a ``t-as`` item, a ``t-set``, a slot scope -- is an
+  argument (``this.isActive(workcenter)``), because ``this.x`` runs the member
+  on the component, not on the render context a bare ``x`` used to lend it
+  (§4.3.2).
 
 4.3.2 ``this`` in a template is not always the component
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8872,6 +8886,10 @@ which that test should go.
    * - Version
      - Date
      - Summary
+   * - 6.67
+     - 2026-09-22
+     - §4.3.1: OWL templates name component members ``this.x`` and call with
+       parametric ``t-call``; the codemod's ``--check`` is the gate.
    * - 6.66
      - 2026-09-22
      - §4.3.1: OWL templates write ``t-out``; ``t-esc`` is a hard zero

@@ -5,13 +5,13 @@
             expr="//div[hasclass('o_documents_details_panel_fields')]"
             position="inside"
         >
-            <t t-if="hasComplianceFields">
+            <t t-if="this.hasComplianceFields">
                 <i class="fa-solid fa-stamp mx-1 my-2" title="Document Type" />
                 <div class="o_field_widget o_field_many2one">
                     <DocumentsDetailsMany2OneField
                         name="'document_type_id'"
-                        readonly="userPermissionViewOnly"
-                        record="record"
+                        readonly="this.userPermissionViewOnly"
+                        record="this.record"
                         canOpen="false"
                         canCreate="false"
                         canQuickCreate="false"
@@ -20,13 +20,13 @@
                     />
                 </div>
 
-                <t t-if="complianceDocumentSelected">
+                <t t-if="this.complianceDocumentSelected">
                     <i class="fa-solid fa-landmark mx-1 my-2" title="Issuer" />
                     <div class="o_field_widget o_field_many2one">
                         <DocumentsDetailsMany2OneField
                             name="'issuer_id'"
-                            readonly="userPermissionViewOnly"
-                            record="record"
+                            readonly="this.userPermissionViewOnly"
+                            record="this.record"
                             canOpen="false"
                             canCreate="false"
                             canQuickCreate="false"
@@ -39,8 +39,8 @@
                     <div class="o_field_widget">
                         <Field
                             name="'legal_number'"
-                            record="record"
-                            readonly="userPermissionViewOnly"
+                            record="this.record"
+                            readonly="this.userPermissionViewOnly"
                         />
                     </div>
 
@@ -48,8 +48,8 @@
                     <div class="o_field_widget">
                         <Field
                             name="'date_issued'"
-                            record="record"
-                            readonly="userPermissionViewOnly"
+                            record="this.record"
+                            readonly="this.userPermissionViewOnly"
                         />
                     </div>
 
@@ -57,37 +57,37 @@
                     <div class="o_field_widget">
                         <Field
                             name="'date_expiration'"
-                            record="record"
-                            readonly="userPermissionViewOnly"
+                            record="this.record"
+                            readonly="this.userPermissionViewOnly"
                         />
                     </div>
 
-                    <t t-if="record.data.expiration_state">
+                    <t t-if="this.record.data.expiration_state">
                         <i class="fa-regular fa-hourglass-half mx-1 my-2" title="Expiration State" />
                         <div class="o_field_widget">
-                            <span t-att-class="expirationStateClass" t-out="expirationStateLabel" />
+                            <span t-att-class="this.expirationStateClass" t-out="this.expirationStateLabel" />
                         </div>
                     </t>
 
                     <i class="fa-solid fa-shield-halved mx-1 my-2" title="Compliance State" />
                     <div class="o_field_widget">
-                        <span t-att-class="complianceStateClass" t-out="complianceStateLabel" />
+                        <span t-att-class="this.complianceStateClass" t-out="this.complianceStateLabel" />
                     </div>
 
                     <div class="o_documents_compliance_actions d-flex w-100 gap-2 my-2">
                         <button
                             class="btn btn-secondary btn-sm"
-                            t-att-disabled="userPermissionViewOnly"
-                            t-on-click="onVerifyDocument"
+                            t-att-disabled="this.userPermissionViewOnly"
+                            t-on-click="this.onVerifyDocument"
                         >
                             <i class="fa-solid fa-check me-1" />
-                            <t t-if="record.data.date_verification">Verified <t t-out="record.data.date_verification.toLocaleString({ month: 'short', day: 'numeric', year: 'numeric' })" /></t>
+                            <t t-if="this.record.data.date_verification">Verified <t t-out="this.record.data.date_verification.toLocaleString({ month: 'short', day: 'numeric', year: 'numeric' })" /></t>
                             <t t-else="">Verify</t>
                         </button>
                         <button
-                            t-if="canRenew"
+                            t-if="this.canRenew"
                             class="btn btn-secondary btn-sm"
-                            t-on-click="onRenewDocument"
+                            t-on-click="this.onRenewDocument"
                         >
                             <i class="fa-solid fa-rotate me-1" />Renew
                         </button>

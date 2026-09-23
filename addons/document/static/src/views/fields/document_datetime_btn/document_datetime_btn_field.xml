@@ -3,8 +3,8 @@
         <button
             t-ref="datetime-btn"
             t-attf-class="btn #{this.props.btnClasses ? this.props.btnClasses : 'btn-primary'}"
-            t-att-title="props.label"
-            t-on-click.prevent="() => dateTimePicker.open()">
+            t-att-title="this.props.label"
+            t-on-click.prevent="() => this.dateTimePicker.open()">
             <i t-attf-class="fa-solid fa-fw fa-#{this.props.icon ? this.props.icon : 'calendar'}"/>
         </button>
     </t>

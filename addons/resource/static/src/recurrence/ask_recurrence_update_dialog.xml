@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="resource.AskRecurrenceUpdateDialog">
-        <Dialog size="'sm'" title="props.title">
-            <t t-foreach="Object.entries(props.choices)" t-as="choice" t-key="choice[0]">
+        <Dialog size="'sm'" title="this.props.title">
+            <t t-foreach="Object.entries(this.props.choices)" t-as="choice" t-key="choice[0]">
                 <div class="form-check o_radio_item">
-                    <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" t-att-checked="state.selected === choice[0]" t-att-value="choice[0]" t-att-id="choice[0]" t-on-click="(ev) => this.state.selected = ev.target.value"/>
+                    <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" t-att-checked="this.state.selected === choice[0]" t-att-value="choice[0]" t-att-id="choice[0]" t-on-click="(ev) => this.state.selected = ev.target.value"/>
                     <label class="form-check-label o_form_label" t-att-for="choice[0]" t-out="choice[1]"/>
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="confirm">
+                <button class="btn btn-primary" t-on-click="this.confirm">
                     Confirm
                 </button>
             </t>

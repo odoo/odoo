@@ -65,7 +65,7 @@ class ViewDialog extends Component {
 
     static template = xml`
         <Dialog>
-            <View t-props="props.viewProps" />
+            <View t-props="this.props.viewProps" />
         </Dialog>
     `;
 

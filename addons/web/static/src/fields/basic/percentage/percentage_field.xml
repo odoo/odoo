@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PercentageField">
-        <t t-if="props.readonly">
-            <span t-out="formattedValueWithSymbol"/>
+        <t t-if="this.props.readonly">
+            <span t-out="this.formattedValueWithSymbol"/>
         </t>
         <t t-else="">
             <div class="d-flex">
                 <input
                     t-ref="numpadDecimal"
-                    t-att-id="props.id"
+                    t-att-id="this.props.id"
                     class="o_input"
                     type="text"
                     inputmode="decimal"

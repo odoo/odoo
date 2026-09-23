@@ -2,15 +2,15 @@
 <templates id="template" xml:space="preserve">
     <t t-name="stock.ForecastWidget">
         <button type="button" title="Forecasted Report" aria-label="Forecasted Report"
-              t-on-click="_openReport"
+              t-on-click="this._openReport"
               class="badge rounded-pill align-middle border-0"
-              t-att-class="decoration"
+              t-att-class="this.decoration"
         >
-            <t t-if="status === 'available'">
+            <t t-if="this.status === 'available'">
                 Available
             </t>
-            <t t-elif="status === 'expected'">
-                Exp <t t-out="forecastExpectedDate"/>
+            <t t-elif="this.status === 'expected'">
+                Exp <t t-out="this.forecastExpectedDate"/>
             </t>
             <t t-else="">Not Available</t>
         </button>

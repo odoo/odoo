@@ -13,7 +13,7 @@ import { MainComponentsContainer } from "@web/ui/main_components_container";
 import { makePopover, usePopover } from "@web/ui/popover/popover_hook";
 
 class ChallengeContent extends Component {
-    static template = xml`<div t-att-data-name="props.name">content</div>`;
+    static template = xml`<div t-att-data-name="this.props.name">content</div>`;
     static props = ["*"];
 }
 
@@ -127,7 +127,7 @@ test("closing through the hook waits for the owner's async callback", async () =
 test("close popover when component is unmounted", async () => {
     const target = getFixture();
     class Comp extends Component {
-        static template = xml`<div t-att-id="props.id">in popover</div>`;
+        static template = xml`<div t-att-id="this.props.id">in popover</div>`;
         static props = ["*"];
     }
 

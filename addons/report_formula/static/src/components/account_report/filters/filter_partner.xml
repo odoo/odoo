@@ -11,12 +11,12 @@
             <t t-set-slot="content">
                 <div class="dropdown-item gap-2 align-items-center">
                     <label>Partners</label>
-                    <MultiRecordSelector t-props="getMultiRecordSelectorProps('res.partner', 'partner_ids')" domain="['|', ['parent_id', '=', false], ['is_company', '=', true]]"/>
+                    <MultiRecordSelector t-props="this.getMultiRecordSelectorProps('res.partner', 'partner_ids')" domain="['|', ['parent_id', '=', false], ['is_company', '=', true]]"/>
                 </div>
 
                 <div class="dropdown-item gap-2 align-items-center">
                     <label>Tags</label>
-                    <MultiRecordSelector t-props="getMultiRecordSelectorProps('res.partner.tag', 'partner_categories')"/>
+                    <MultiRecordSelector t-props="this.getMultiRecordSelectorProps('res.partner.tag', 'partner_categories')"/>
                 </div>
             </t>
         </Dropdown>

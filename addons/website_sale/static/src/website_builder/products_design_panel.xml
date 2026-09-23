@@ -118,9 +118,9 @@
         ]"/>
 
         <t t-foreach="catalogStyles" t-as="style" t-key="style_index">
-            <t t-if="style.type == 'catalog' || style.type == 'list' &amp;&amp; props.showLists">
+            <t t-if="style.type == 'catalog' || style.type == 'list' &amp;&amp; this.props.showLists">
                 <div
-                    t-if="presetAvailable &amp;&amp; style.img &amp;&amp; showImages"
+                    t-if="this.presetAvailable &amp;&amp; style.img &amp;&amp; showImages"
                     class="d-flex align-items-center lh-base pt-1 ps-2"
                     style="color: white; font-size: 0.8em"
                 >
@@ -131,7 +131,7 @@
                     <span t-out="style.label"/>
                 </div>
                 <BuilderSelectItem
-                        t-if="style.type == 'catalog' || style.type == 'list' &amp;&amp; props.showLists"
+                        t-if="style.type == 'catalog' || style.type == 'list' &amp;&amp; this.props.showLists"
                         id="style.id"
                         action="'composite'"
                         actionParam="[
@@ -166,20 +166,18 @@
 </t>
 
 <t t-name="website_sale.ProductsDesignPanel">
-    <BuilderRow label="props.label">
-        <t t-call="website_sale.ProductsDesignPanelPresets">
-            <t t-set="showImages" t-value="false"/>
-        </t>
+    <BuilderRow label="this.props.label">
+        <t t-call="website_sale.ProductsDesignPanelPresets" showImages="false"/>
 
-        <button class="btn o-hb-btn btn-primary o-wsale-btn-overlay flex-grow-0" t-on-click="openDesignOverlay">
+        <button class="btn o-hb-btn btn-primary o-wsale-btn-overlay flex-grow-0" t-on-click="this.openDesignOverlay">
             <i class="fa-solid fa-paint-brush" role="presentation"/>
         </button>
     </BuilderRow>
 
     <div
         class="o_wsale_editor_overlay position-absolute top-0 start-0 w-100 h-100"
-        t-att-class="state.overlayVisible ? 'd-block' : 'd-none'"
-        t-on-click="onBackdropClick"
+        t-att-class="this.state.overlayVisible ? 'd-block' : 'd-none'"
+        t-on-click="this.onBackdropClick"
         tabindex="-1"
         aria-label="Products Design"
     >
@@ -190,12 +188,12 @@
                 <div class="options-container-label d-flex flex-grow-1 align-items-center p-2">
                     <div
                         class="me-2 opacity-75 opacity-100-hover"
-                        t-on-click="closeDesignOverlay"
+                        t-on-click="this.closeDesignOverlay"
                         aria-label="Close"
                         role="button">
                         <i class="oi oi-chevron-left" role="presentation"/>
                     </div>
-                    <t t-out="props.label"/>
+                    <t t-out="this.props.label"/>
                 </div>
             </div>
 
@@ -203,10 +201,9 @@
                 label.translate="Preset"
                 tooltip.translate="Choose one pre-made preset and customise it as you wish"
             >
-                <t t-call="website_sale.ProductsDesignPanelPresets">
-                    <t t-set="label">Presets</t>
-                    <t t-set="showImages" t-value="true"/>
-                </t>
+                <t t-call="website_sale.ProductsDesignPanelPresets"
+                    label.translate="Presets"
+                    showImages="true"/>
             </BuilderRow>
 
             <div class="o_wsale_design_panel_section_title ps-2 pt-2 pb-1 fw-bold">General</div>
@@ -496,7 +493,7 @@
             </BuilderRow>
 
             <BuilderRow
-                t-if="props.showSecondaryImage &amp;&amp; !this.isActiveItem('wsale_design_showcase_list')"
+                t-if="this.props.showSecondaryImage &amp;&amp; !this.isActiveItem('wsale_design_showcase_list')"
                 label.translate="Secondary Image"
                 tooltip.translate="Needs at least two images to be defined in the Product Page"
             >

@@ -58,7 +58,7 @@ test(`Simple rendering`, async () => {
     class ToyComponent extends Component {
         static props = ["*"];
         static template = xml`
-            <Layout className="'o_view_sample_data'" display="props.display">
+            <Layout className="'o_view_sample_data'" display="this.props.display">
                 <div class="toy_content"/>
             </Layout>
         `;
@@ -79,7 +79,7 @@ test(`Simple rendering: with search`, async () => {
     class ToyComponent extends Component {
         static props = ["*"];
         static template = xml`
-            <Layout display="props.display">
+            <Layout display="this.props.display">
                 <t t-set-slot="layout-actions">
                     <div class="toy_search_bar"/>
                 </t>
@@ -142,7 +142,7 @@ test(`Nested layouts`, async () => {
     class ToyC extends Component {
         static props = ["*"];
         static template = xml`
-            <Layout className="'toy_c'" display="display">
+            <Layout className="'toy_c'" display="this.display">
                 <div class="toy_c_content"/>
             </Layout>
         `;
@@ -164,7 +164,7 @@ test(`Nested layouts`, async () => {
     class ToyB extends Component {
         static props = ["*"];
         static template = xml`
-            <Layout className="'toy_b'" display="props.display">
+            <Layout className="'toy_b'" display="this.props.display">
                 <t t-set-slot="layout-actions">
                     <div class="toy_b_breadcrumbs"/>
                 </t>
@@ -185,11 +185,11 @@ test(`Nested layouts`, async () => {
     class ToyA extends Component {
         static props = ["*"];
         static template = xml`
-            <Layout className="'toy_a'" display="props.display">
+            <Layout className="'toy_a'" display="this.props.display">
                 <t t-set-slot="layout-actions">
                     <div class="toy_a_search"/>
                 </t>
-                <ToyB display="props.display"/>
+                <ToyB display="this.props.display"/>
             </Layout>
         `;
         static components = { Layout, ToyB };
@@ -213,7 +213,7 @@ test(`Custom control panel`, async () => {
     class ToyComponent extends Component {
         static props = ["*"];
         static template = xml`
-            <Layout display="props.display">
+            <Layout display="this.props.display">
                 <div class="o_toy_content"/>
             </Layout>
         `;
@@ -242,7 +242,7 @@ test(`Custom search panel`, async () => {
     class ToyComponent extends Component {
         static props = ["*"];
         static template = xml`
-            <Layout display="props.display">
+            <Layout display="this.props.display">
                 <div class="o_toy_content"/>
             </Layout>
         `;
@@ -273,7 +273,7 @@ test(`Simple rendering: with dynamically displayed search`, async () => {
     class ToyComponent extends Component {
         static props = ["*"];
         static template = xml`
-            <Layout display="display">
+            <Layout display="this.display">
                 <t t-set-slot="layout-actions">
                     <div class="toy_search_bar"/>
                 </t>
@@ -318,7 +318,7 @@ test(`ViewLayout: layout-actions-start renders before the search bar, layout-act
     class ToyComponent extends Component {
         static props = ["*"];
         static template = xml`
-            <ViewLayout display="props.display">
+            <ViewLayout display="this.props.display">
                 <t t-set-slot="layout-actions-start">
                     <div class="toy_before"/>
                 </t>
@@ -344,7 +344,7 @@ test(`ViewLayout: a no-content slot replaces the ActionHelper`, async () => {
     class ToyComponent extends Component {
         static props = ["*"];
         static template = xml`
-            <ViewLayout display="props.display" displayNoContent="true" noContentHelp="'standard help'">
+            <ViewLayout display="this.props.display" displayNoContent="true" noContentHelp="'standard help'">
                 <t t-set-slot="no-content">
                     <div class="toy_no_content">nothing here</div>
                 </t>

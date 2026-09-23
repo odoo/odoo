@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="website_sale.cartNotification">
-        <div t-attf-class="toast show o_cc1 position-relative start-0 mt-2 {{props.className}}"
-             t-attf-style="top: {{positionOffset}};"
+        <div t-attf-class="toast show o_cc1 position-relative start-0 mt-2 {{this.props.className}}"
+             t-attf-style="top: {{this.positionOffset}};"
              role="alert"
              aria-live="assertive"
              aria-atomic="true">

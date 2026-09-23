@@ -11,22 +11,18 @@
                     />
                 </div>
                 <div class="kanban_checks_cards">
-                    <t t-if="groups">
-                        <t t-foreach="groups" t-as="group" t-key="group.key">
+                    <t t-if="this.groups">
+                        <t t-foreach="this.groups" t-as="group" t-key="group.key">
                             <t t-if="group.count > 0">
 
                                 <span class="ms-4 h5 return-group-header">
                                     <t t-out="group.displayName"/>
                                 </span>
-                                <t t-call="account.return_check_list">
-                                    <t t-set="list" t-value="group.list"/>
-                                </t>
+                                <t t-call="account.return_check_list" list="group.list"/>
                             </t>
                         </t>
                     </t>
-                    <t t-else="" t-call="account.return_check_list">
-                        <t t-set="list" t-value="props.list"/>
-                    </t>
+                    <t t-else="" t-call="account.return_check_list" list="this.props.list"/>
                 </div>
             </div>
 
@@ -45,11 +41,11 @@
         <t t-foreach="list.records" t-as="record" t-key="record.id">
             <AccountReturnCheckKanbanRecord
                 record="record"
-                archInfo="props.archInfo"
-                Compiler="props.Compiler"
+                archInfo="this.props.archInfo"
+                Compiler="this.props.Compiler"
                 readonly="false"
                 forceGlobalClick="false"
-                openRecord.bind="openRecord"
+                openRecord.bind="this.openRecord"
                 canResequence="false"
             />
         </t>

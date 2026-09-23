@@ -260,13 +260,13 @@ test("DropdownGroup: a changed group name moves its dropdowns to the new group",
         static components = { Dropdown, DropdownGroup, DropdownItem };
         static template = xml`
             <div class="away">away</div>
-            <DropdownGroup group="state.groupA">
+            <DropdownGroup group="this.state.groupA">
                 <Dropdown>
                     <button class="one">one</button>
                     <t t-set-slot="content"><DropdownItem>c1</DropdownItem></t>
                 </Dropdown>
             </DropdownGroup>
-            <DropdownGroup group="state.groupB">
+            <DropdownGroup group="this.state.groupB">
                 <Dropdown>
                     <button class="two">two</button>
                     <t t-set-slot="content"><DropdownItem>c2</DropdownItem></t>
@@ -310,8 +310,8 @@ test("DropdownGroup: a dropdown mounted after a group move joins the new group",
                     <t t-set-slot="content"><DropdownItem>c1</DropdownItem></t>
                 </Dropdown>
             </DropdownGroup>
-            <DropdownGroup group="state.g">
-                <Dropdown t-if="state.show">
+            <DropdownGroup group="this.state.g">
+                <Dropdown t-if="this.state.show">
                     <button class="two">two</button>
                     <t t-set-slot="content"><DropdownItem>c2</DropdownItem></t>
                 </Dropdown>
@@ -352,7 +352,7 @@ test("DropdownGroup: leaving a group while open stops the peers taking over", as
                     <t t-set-slot="content"><DropdownItem>c1</DropdownItem></t>
                 </Dropdown>
             </DropdownGroup>
-            <DropdownGroup group="state.g">
+            <DropdownGroup group="this.state.g">
                 <Dropdown>
                     <button class="two">two</button>
                     <t t-set-slot="content"><DropdownItem>c2</DropdownItem></t>
@@ -399,7 +399,7 @@ test("DropdownGroup: unmounting one group leaves the others sharing its id intac
                     <t t-set-slot="content"><DropdownItem>c2</DropdownItem></t>
                 </Dropdown>
             </DropdownGroup>
-            <DropdownGroup t-if="state.third" group="'gs'">
+            <DropdownGroup t-if="this.state.third" group="'gs'">
                 <Dropdown>
                     <button class="three">three</button>
                     <t t-set-slot="content"><DropdownItem>c3</DropdownItem></t>

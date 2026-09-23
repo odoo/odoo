@@ -1157,7 +1157,7 @@ test(`form-in-dialog destroyed before mount doesn't leak the dialog-stack counte
     }
 
     class Parent extends Component {
-        static template = xml`<t><BlockedDialogForm t-if="state.show"/></t>`;
+        static template = xml`<t><BlockedDialogForm t-if="this.state.show"/></t>`;
         static components = { BlockedDialogForm };
         static props = {};
         setup() {

@@ -11,10 +11,11 @@ patch(DiscussSidebarCallParticipants.prototype, {
             position: "right",
         });
     },
-    get attClass() {
+    /** @param {import("models").RtcSession} session */
+    participantClass(session) {
         return {
-            ...super.attClass,
-            "o-active cursor-pointer rounded-4": this.session.persona?.main_user_id,
+            ...super.participantClass(session),
+            "o-active cursor-pointer rounded-4": session.persona?.main_user_id,
         };
     },
     /**

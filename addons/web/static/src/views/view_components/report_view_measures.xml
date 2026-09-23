@@ -7,11 +7,11 @@
           Measures <i class="fa-solid fa-caret-down ms-1"/>
         </button>
         <t t-set-slot="content">
-          <t t-foreach="props.measures" t-as="measure" t-key="measure_value.name">
+          <t t-foreach="this.props.measures" t-as="measure" t-key="measure_value.name">
             <div t-if="!measure_first and measure == '__count'" role="separator" class="dropdown-divider"/>
             <DropdownItem class="{ o_menu_item: true, selected: this.props.activeMeasures.includes(measure) }"
               closingMode="'none'"
-              t-out="props.measures[measure].string"
+              t-out="this.props.measures[measure].string"
               onSelected="() => this.props.onMeasureSelected({ measure: measure_value.name })"
             />
           </t>

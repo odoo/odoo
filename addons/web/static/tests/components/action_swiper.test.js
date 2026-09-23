@@ -590,11 +590,9 @@ test("swipeInvalid prop prevents swiping", async () => {
         static components = { ActionSwiper };
         static template = xml`
                 <div class="d-flex">
-                    <ActionSwiper onRightSwipe = "{
-                        action: () => this.onRightSwipe(),
-                        icon: 'fa-circle',
-                        bgColor: 'bg-warning',
-                    }" swipeInvalid = "swipeInvalid">
+                    <ActionSwiper
+                        onRightSwipe="{                         action: () => this.onRightSwipe(),                         icon: 'fa-circle',                         bgColor: 'bg-warning',                     }"
+                        swipeInvalid="this.swipeInvalid" >
                         <div class="target-component" style="width: 200px; height: 80px">Test</div>
                     </ActionSwiper>
                 </div>
@@ -715,7 +713,7 @@ test("no timer is scheduled once the swiper is destroyed mid-action", async () =
         static components = { ActionSwiper };
         static template = xml`
             <div class="d-flex">
-                <ActionSwiper t-if="state.show" animationType="'forwards'"
+                <ActionSwiper t-if="this.state.show" animationType="'forwards'"
                     onRightSwipe="{ action: () => this.act(), icon: 'fa-circle', bgColor: 'bg-warning' }">
                     <span>test</span>
                 </ActionSwiper>
@@ -867,8 +865,8 @@ for (const direction of ["ltr", "rtl"]) {
                 static components = { TrackedSwiper };
                 static template = xml`
                     <div style="width: 200px">
-                        <TrackedSwiper onRightSwipe="action" onLeftSwipe="action">
-                            <div class="scroll-content" t-att-style="style">
+                        <TrackedSwiper onRightSwipe="this.action" onLeftSwipe="this.action">
+                            <div class="scroll-content" t-att-style="this.style">
                                 <div style="width: 450px; height: 40px">Content</div>
                             </div>
                         </TrackedSwiper>

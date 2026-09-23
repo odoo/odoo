@@ -2,17 +2,17 @@
 <templates xml:space="preserve">
  <t t-inherit="resource_mail.AvatarCardResourcePopover" t-inherit-mode="extension">
  <xpath expr="//span[@name='icon'][hasclass('o_user_im_status')]/i[hasclass('fa-question-circle')]" position="before">
- <i t-elif="record.im_status === 'leave_online'" class="fa-solid fa-plane text-success" title="Online" role="img" aria-label="User is online"/>
- <i t-elif="record.im_status === 'leave_away'" class="fa-solid fa-plane text-warning" title="Idle" role="img" aria-label="User is idle"/>
- <i t-elif="record.im_status === 'leave_busy'" class="fa-solid fa-plane text-danger" title="Busy" role="img" aria-label="User is busy"/>
- <i t-elif="record.im_status === 'leave_offline'" class="fa-solid fa-plane text-500" title="Out of office" role="img" aria-label="User is out of office"/>
+ <i t-elif="this.record.im_status === 'leave_online'" class="fa-solid fa-plane text-success" title="Online" role="img" aria-label="User is online"/>
+ <i t-elif="this.record.im_status === 'leave_away'" class="fa-solid fa-plane text-warning" title="Idle" role="img" aria-label="User is idle"/>
+ <i t-elif="this.record.im_status === 'leave_busy'" class="fa-solid fa-plane text-danger" title="Busy" role="img" aria-label="User is busy"/>
+ <i t-elif="this.record.im_status === 'leave_offline'" class="fa-solid fa-plane text-500" title="Out of office" role="img" aria-label="User is out of office"/>
  </xpath>
  <xpath expr="//span[@name='icon'][hasclass('o_employee_presence_status')]" position="inside">
- <i t-if="record.hr_icon_display === 'presence_holiday_present'" class="fa-solid fa-plane text-success me-1" title="Active but on leave" role="img" aria-label="Active but on leave"/>
- <i t-if="record.hr_icon_display === 'presence_holiday_absent'" class="fa-solid fa-plane text-warning me-1" title="On Time Off" role="img" aria-label="On Time Off"/>
+ <i t-if="this.record.hr_icon_display === 'presence_holiday_present'" class="fa-solid fa-plane text-success me-1" title="Active but on leave" role="img" aria-label="Active but on leave"/>
+ <i t-if="this.record.hr_icon_display === 'presence_holiday_absent'" class="fa-solid fa-plane text-warning me-1" title="On Time Off" role="img" aria-label="On Time Off"/>
  </xpath>
  <xpath expr="//span[hasclass('o-mail-avatar-card-name')]" position="after">
- <span t-if="outOfOfficeDateEndText" class="text-warning me-1 small fw-bold" t-out="outOfOfficeDateEndText"/>
+ <span t-if="this.outOfOfficeDateEndText" class="text-warning me-1 small fw-bold" t-out="this.outOfOfficeDateEndText"/>
  </xpath>
  </t>
 </templates>

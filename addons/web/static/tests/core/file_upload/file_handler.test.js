@@ -17,11 +17,11 @@ class Parent extends Component {
     static components = { FileUploader };
     static template = xml`
         <FileUploader
-            onUploaded="props.onUploaded"
-            onUploadComplete="props.onUploadComplete"
-            multiUpload="props.multiUpload"
-            checkSize="props.checkSize"
-            allowedMIMETypes="props.allowedMIMETypes">
+            onUploaded="this.props.onUploaded"
+            onUploadComplete="this.props.onUploadComplete"
+            multiUpload="this.props.multiUpload"
+            checkSize="this.props.checkSize"
+            allowedMIMETypes="this.props.allowedMIMETypes">
             <t t-set-slot="toggler">
                 <button class="o_test_toggler">Upload</button>
             </t>

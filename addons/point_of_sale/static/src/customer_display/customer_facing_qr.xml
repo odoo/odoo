@@ -8,14 +8,14 @@
             bodyClass="'w-100 h-100 d-flex flex-column justify-content-center align-items-center'"
         >
             <div class="text-center">
-                <p t-out="title"/>
-                <img class="pos-customer_payment_qr_code my-1" t-att-src="props.qrCode" alt="QR Code"
+                <p t-out="this.title"/>
+                <img class="pos-customer_payment_qr_code my-1" t-att-src="this.props.qrCode" alt="QR Code"
                     style="width: 200px; height: 200px;"/>
             </div>
             <div class="text-center">
                 <div>
                     <strong>Amount: </strong>
-                    <span t-out="props.amount"/>
+                    <span t-out="this.props.amount"/>
                 </div>
             </div>
         </Dialog>

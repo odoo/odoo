@@ -9,7 +9,7 @@
 
             <t t-set-slot="content">
                 <t
-                    t-foreach="controller.cachedFilterOptions.optional_columns"
+                    t-foreach="this.controller.cachedFilterOptions.optional_columns"
                     t-as="column"
                     t-key="column.id"
                 >

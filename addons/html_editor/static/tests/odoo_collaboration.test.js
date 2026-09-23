@@ -124,7 +124,7 @@ class Wysiwygs extends Component {
         <div>
             <t t-foreach="this.props.peerIds" t-as="peerId" t-key="peerId">
                 <Wysiwyg
-                    config="getConfig({peerId, content: this.props.content})"
+                    config="this.getConfig({peerId, content: this.props.content})"
                     t-key="peerId"
                     iframe="true"
                     onLoad="(editor) => this.onLoad(peerId, editor)"

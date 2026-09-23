@@ -360,7 +360,7 @@ test(`eventSources: a source other than the records refetches the events when it
     }
     class Parent extends Component {
         static components = { SlotRenderer };
-        static template = xml`<SlotRenderer t-props="state.props"/>`;
+        static template = xml`<SlotRenderer t-props="this.state.props"/>`;
         static props = {};
         setup() {
             this.state = useState({

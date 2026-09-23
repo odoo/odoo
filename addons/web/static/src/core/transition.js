@@ -106,7 +106,7 @@ export function useTransition(options) {
 }
 
 export class Transition extends Component {
-    static template = xml`<t t-slot="default" t-if="transition.shouldMount" className="transition.className"/>`;
+    static template = xml`<t t-slot="default" t-if="this.transition.shouldMount" className="this.transition.className"/>`;
     static props = {
         name: String,
         visible: { type: Boolean, optional: true },

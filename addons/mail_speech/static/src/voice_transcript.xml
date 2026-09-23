@@ -3,17 +3,17 @@
 
     <t t-name="mail_speech.VoiceTranscript">
         <div class="o-mail-VoiceTranscript small">
-            <t t-if="props.attachment.transcript_text">
+            <t t-if="this.props.attachment.transcript_text">
                 <div class="o-mail-VoiceTranscript-text text-muted fst-italic"
-                     t-out="props.attachment.transcript_text" />
+                     t-out="this.props.attachment.transcript_text" />
             </t>
-            <t t-elif="props.attachment.can_transcribe">
+            <t t-elif="this.props.attachment.can_transcribe">
                 <button class="btn btn-link btn-sm p-0 text-muted"
                         type="button"
-                        t-att-disabled="isPending"
-                        t-on-click="onClickTranscribe">
+                        t-att-disabled="this.isPending"
+                        t-on-click="this.onClickTranscribe">
                     <i class="fa fa-file-text-o me-1" />
-                    <t t-out="label" />
+                    <t t-out="this.label" />
                 </button>
             </t>
         </div>

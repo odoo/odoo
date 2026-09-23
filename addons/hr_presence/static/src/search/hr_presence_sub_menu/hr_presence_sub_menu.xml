@@ -8,9 +8,9 @@
             </button>
             <t t-set-slot="content">
                 <t t-set="currentGroup" t-value="null"/>
-                <t t-foreach="props.items" t-as="item" t-key="item.key">
+                <t t-foreach="this.props.items" t-as="item" t-key="item.key">
                     <div t-if="currentGroup !== null and currentGroup !== item.groupNumber" role="separator" class="dropdown-divider"/>
-                    <CogMenuItem description="item.description" icon="item.icon" onSelected="() => props.onItemSelected(item)"/>
+                    <CogMenuItem description="item.description" icon="item.icon" onSelected="() => this.props.onItemSelected(item)"/>
                     <t t-set="currentGroup" t-value="item.groupNumber"/>
                 </t>
             </t>

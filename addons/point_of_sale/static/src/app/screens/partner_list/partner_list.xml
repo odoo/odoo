@@ -2,17 +2,17 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PartnerList">
-        <Dialog bodyClass="'partner-list p-0'" modalRef="modalRef" contentClass="'h-100'">
+        <Dialog bodyClass="'partner-list p-0'" modalRef="this.modalRef" contentClass="'h-100'">
             <t t-set-slot="header">
-                <button t-if="!ui.isSmall and !this.pos.cashierIsMinimal" class="btn btn-primary btn-lg lh-lg me-2" role="img" aria-label="Add a customer"
+                <button t-if="!this.ui.isSmall and !this.pos.cashierIsMinimal" class="btn btn-primary btn-lg lh-lg me-2" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"
                         title="Add a customer">
                 Create 
                 </button>
                 <span class="modal-title fs-4">Choose customer</span>
-                <Input tModel="[state, 'query']"
+                <Input tModel="[this.state, 'query']"
                     class="'ms-auto'"
-                    isSmall="ui.isSmall"
+                    isSmall="this.ui.isSmall"
                     placeholder.translate="Search Customers..."
                     icon="{type: 'fa', value: 'fa-solid fa-magnifying-glass'}"
                     t-on-enter="() => this.searchPartner()"
@@ -21,32 +21,32 @@
                     getRef.bind="(ref) => this.searchInputRef = ref" />
             </t>
             <div class="h-100">
-                <t t-set="initialPartners" t-value="getPartners(this.state.initialPartners)"/>
-                <t t-set="loadedPartners" t-value="getPartners(this.state.loadedPartners)"/>
+                <t t-set="initialPartners" t-value="this.getPartners(this.state.initialPartners)"/>
+                <t t-set="loadedPartners" t-value="this.getPartners(this.state.loadedPartners)"/>
                 <t t-set="nbrPartners" t-value="initialPartners.length + loadedPartners.length"/>
                 <table class="table table-hover">
                     <tbody class="h-100" t-att-class="{'d-none': !nbrPartners}">
                         <t t-foreach="initialPartners" t-as="partner" t-key="partner.id">
                             <PartnerLine
-                                close="props.close"
+                                close="this.props.close"
                                 partner="partner"
-                                isSelected="props.partner?.id === partner.id"
-                                isBalanceDisplayed="isBalanceDisplayed"
+                                isSelected="this.props.partner?.id === partner.id"
+                                isBalanceDisplayed="this.isBalanceDisplayed"
                                 onClickEdit.bind="(p) => this.editPartner(p)"
                                 onClickUnselect.bind="() => this.clickPartner()"
                                 onClickOrders.bind="(p) => this.goToOrders(p)"
-                                onClickPartner.bind="clickPartner"/>
+                                onClickPartner.bind="this.clickPartner"/>
                         </t>
                         <t t-foreach="loadedPartners" t-as="partner" t-key="partner.id">
                             <PartnerLine
-                                close="props.close"
+                                close="this.props.close"
                                 partner="partner"
-                                isSelected="props.partner?.id === partner.id"
-                                isBalanceDisplayed="isBalanceDisplayed"
+                                isSelected="this.props.partner?.id === partner.id"
+                                isBalanceDisplayed="this.isBalanceDisplayed"
                                 onClickEdit.bind="(p) => this.editPartner(p)"
                                 onClickUnselect.bind="() => this.clickPartner()"
                                 onClickOrders.bind="(p) => this.goToOrders(p)"
-                                onClickPartner.bind="clickPartner"/>
+                                onClickPartner.bind="this.clickPartner"/>
                         </t>
                     </tbody>
                 </table>
@@ -59,7 +59,7 @@
             </div>
             <t t-set-slot="footer">
                 <div class="d-flex flex-row gap-2 w-100">
-                    <button t-if="ui.isSmall and !this.pos.cashierIsMinimal" class="btn btn-primary btn-lg lh-lg flex-fill" role="img" aria-label="Add a customer"
+                    <button t-if="this.ui.isSmall and !this.pos.cashierIsMinimal" class="btn btn-primary btn-lg lh-lg flex-fill" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"
                         title="Add a customer">
                     New 

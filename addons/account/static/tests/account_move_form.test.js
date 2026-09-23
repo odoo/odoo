@@ -150,7 +150,7 @@ test("account tab activation flushes inputs and discards a hidden page after sav
         static template = xml`
             <AccountMoveFormNotebook onWillActivatePage="() => this.flush()" onBeforeTabSwitch="() => this.save()">
                 <t t-set-slot="a" title="'A'" isVisible="true"><div class="page-a"/></t>
-                <t t-set-slot="b" title="'B'" isVisible="!state.hidden"><div class="page-b"/></t>
+                <t t-set-slot="b" title="'B'" isVisible="!this.state.hidden"><div class="page-b"/></t>
             </AccountMoveFormNotebook>`;
         setup() {
             this.state = useState({ hidden: false });

@@ -21,7 +21,7 @@ function makeDb(initial = {}) {
 
 class Greeting extends Component {
     static props = ["who"];
-    static template = xml`<p class="greeting">Hello <t t-out="props.who"/>!</p>`;
+    static template = xml`<p class="greeting">Hello <t t-out="this.props.who"/>!</p>`;
 }
 
 /**

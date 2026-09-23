@@ -4,14 +4,14 @@
     <t t-name="web.AceField">
         <div class="o_field_widget oe_form_field o_ace_view_editor oe_ace_open">
             <CodeEditor
-                t-key="state.revision"
-                value="state.initialValue"
-                mode="mode"
-                readonly="props.readonly"
-                onBlur.bind="commitChanges"
-                onChange.bind="handleChange"
+                t-key="this.state.revision"
+                value="this.state.initialValue"
+                mode="this.mode"
+                readonly="this.props.readonly"
+                onBlur.bind="this.commitChanges"
+                onChange.bind="this.handleChange"
                 class="'ace-view-editor'"
-                theme="theme"
+                theme="this.theme"
                 maxLines="200"
             />
         </div>

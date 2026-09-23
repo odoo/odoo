@@ -3,14 +3,14 @@
     <t t-name="document.DocumentsActivityRenderer">
         <div class="o_activity_view o_documents_view h-100 w-100 d-flex" t-ref="root">
             <div class="flex-grow-1 overflow-auto d-flex">
-                <t t-if="!props.activityTypes.length" t-call="web.NoContentHelper"/>
+                <t t-if="!this.props.activityTypes.length" t-call="web.NoContentHelper"/>
                 <table t-else="" class="table table-bordered mb-5 bg-view o_activity_view_table flex-grow-1">
                     <t t-call="mail.ActivityViewHeader"/>
                     <t t-call="mail.ActivityViewBody"/>
                     <t t-call="mail.ActivityViewFooter"/>
                 </table>
-                <DocumentsFileViewerHost parentRoot="root" t-props="getDocumentsAttachmentViewerProps()"/>
-                <DocumentsRightPanel nbViewItems="getNbViewItems()"/>
+                <DocumentsFileViewerHost parentRoot="this.root" t-props="this.getDocumentsAttachmentViewerProps()"/>
+                <DocumentsRightPanel nbViewItems="this.getNbViewItems()"/>
             </div>
         </div>
     </t>

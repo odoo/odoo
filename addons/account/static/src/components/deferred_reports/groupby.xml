@@ -4,10 +4,10 @@
         <Dropdown>
             <button class="btn btn-secondary">
                 <i class="fa-solid fa-list me-1"/>Group by
-                <t t-if="controller.cachedFilterOptions.deferred_grouping_field === 'account_id'">
+                <t t-if="this.controller.cachedFilterOptions.deferred_grouping_field === 'account_id'">
                     Account
                 </t>
-                <t t-elif="controller.cachedFilterOptions.deferred_grouping_field === 'product_category_id'">
+                <t t-elif="this.controller.cachedFilterOptions.deferred_grouping_field === 'product_category_id'">
                     Product Category
                 </t>
                 <t t-else="">
@@ -17,21 +17,21 @@
 
             <t t-set-slot="content">
                 <DropdownItem
-                    class="{ 'selected': controller.cachedFilterOptions.deferred_grouping_field === 'account_id' }"
+                    class="{ 'selected': this.controller.cachedFilterOptions.deferred_grouping_field === 'account_id' }"
                     onSelected="() => this.filterClicked({ optionKey: 'deferred_grouping_field', optionValue: 'account_id', reload: true})"
                 >
                     Account
                 </DropdownItem>
 
                 <DropdownItem
-                    class="{ 'selected': controller.cachedFilterOptions.deferred_grouping_field === 'product_category_id' }"
+                    class="{ 'selected': this.controller.cachedFilterOptions.deferred_grouping_field === 'product_category_id' }"
                     onSelected="() => this.filterClicked({ optionKey: 'deferred_grouping_field', optionValue: 'product_category_id', reload: true})"
                 >
                     Product Category
                 </DropdownItem>
 
                 <DropdownItem
-                    class="{ 'selected': controller.cachedFilterOptions.deferred_grouping_field === 'product_id' }"
+                    class="{ 'selected': this.controller.cachedFilterOptions.deferred_grouping_field === 'product_id' }"
                     onSelected="() => this.filterClicked({ optionKey: 'deferred_grouping_field', optionValue: 'product_id', reload: true})"
                 >
                     Product

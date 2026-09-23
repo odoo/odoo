@@ -2,13 +2,13 @@
 <templates>
     <t t-name="account.BankRecButton">
         <button
-            t-attf-class="d-flex gap-1 btn text-nowrap {{ props.classes }}"
-            t-att-class="{'btn-sm': !ui.isSmall and !props.isLarge, 'btn-primary': props.primary, 'btn-info': props.toReview, 'btn-secondary': !props.primary}"
-            t-on-click.stop="() => props?.action()"
+            t-attf-class="d-flex gap-1 btn text-nowrap {{ this.props.classes }}"
+            t-att-class="{'btn-sm': !this.ui.isSmall and !this.props.isLarge, 'btn-primary': this.props.primary, 'btn-info': this.props.toReview, 'btn-secondary': !this.props.primary}"
+            t-on-click.stop="() => this.props?.action()"
         >
-            <span t-out="props?.label" class="m-auto text-truncate"/>
-            <span class="rounded-pill px-2 o_bg-black-10" t-if="props?.count">
-                <t t-out="props.count"/>
+            <span t-out="this.props?.label" class="m-auto text-truncate"/>
+            <span class="rounded-pill px-2 o_bg-black-10" t-if="this.props?.count">
+                <t t-out="this.props.count"/>
             </span>
         </button>
     </t>

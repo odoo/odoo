@@ -3,9 +3,9 @@
     <t t-name="account.AccountReturnCheckFileUploader">
         <FileUploader
             multiUpload="true"
-            onUploaded.bind="onFileUploaded"
-            onUploadComplete.bind="onUploadCompleted"
-            onClick.bind="onClick"
+            onUploaded.bind="this.onFileUploaded"
+            onUploadComplete.bind="this.onUploadCompleted"
+            onClick.bind="this.onClick"
         >
             <t t-set-slot="toggler">
                 <button class="btn btn-secondary">

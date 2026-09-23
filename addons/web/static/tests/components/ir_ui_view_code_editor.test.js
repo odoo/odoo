@@ -34,7 +34,7 @@ async function mountEditor({
     class Parent extends Component {
         static components = { IrUiViewCodeEditor };
         static template = xml`
-            <IrUiViewCodeEditor value="arch" mode="'xml'" maxLines="10" record="record"/>
+            <IrUiViewCodeEditor value="this.arch" mode="'xml'" maxLines="10" record="this.record"/>
         `;
         static props = ["*"];
         setup() {

@@ -2,7 +2,7 @@
 <templates>
     <t t-name="account.tax_report_warning_inactive_tags" owl="1">
         Some journal items appear to point to obsolete report lines.
-        <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'action_view_amls_with_archived_tags')">Check them</a>
+        <a type="button" t-on-click="(ev) => this.controller.reportAction(ev, 'action_view_amls_with_archived_tags')">Check them</a>
         and correct their tax tags if necessary.
     </t>
 

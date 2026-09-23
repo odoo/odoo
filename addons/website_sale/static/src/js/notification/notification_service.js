@@ -14,7 +14,7 @@ export class CartNotificationContainer extends NotificationContainer {
     static template = xml`
     <div class="position-fixed w-100 h-100 top-0 pe-none">
         <div class="d-flex flex-column container align-items-end">
-            <t t-foreach="notifications" t-as="notification" t-key="notification">
+            <t t-foreach="this.notifications" t-as="notification" t-key="notification">
                 <ErrorHandler onError="(error) => this.handleError(notification, error)">
                     <Transition leaveDuration="0" name="'o_notification_fade'" t-slot-scope="transition">
                         <Notification t-props="notification_value.props" className="(notification_value.props.className || '') + ' ' + transition.className"/>

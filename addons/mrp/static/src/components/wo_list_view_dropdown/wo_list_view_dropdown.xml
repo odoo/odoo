@@ -5,7 +5,7 @@
         <Dropdown>
             <button t-attf-class="btn btn-link d-flex p-0 pb-1 {{!this.props.record.resId ? 'invisible': ''}}">
                 <div class="d-flex align-items-center">
-                    <span t-attf-class="o_status {{statusColor}}"/>
+                    <span t-attf-class="o_status {{this.statusColor}}"/>
                 </div>
             </button>
             <t t-set-slot="content">

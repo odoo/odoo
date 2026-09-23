@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="document.DocumentsDetailsPanel">
-        <div t-if="record?.data" class="o_documents_details_panel p-3 pb-2 border-bottom border-secondary w-100"
-            t-att-class="{'o_documents_details_panel_folder': record.data.type === 'folder'}">
+        <div t-if="this.record?.data" class="o_documents_details_panel p-3 pb-2 border-bottom border-secondary w-100"
+            t-att-class="{'o_documents_details_panel_folder': this.record.data.type === 'folder'}">
             <div class="d-flex flex-row w-100 my-2 align-items-center">
                 <div class="me-1">
-                    <DocumentsTypeIcon name="'type'" record="record"/>
+                    <DocumentsTypeIcon name="'type'" record="this.record"/>
                 </div>
                 <div class="o_field_widget o_documents_details_panel_name">
-                    <CharField name="'name'" record="record" readonly="userPermissionViewOnly"/>
+                    <CharField name="'name'" record="this.record" readonly="this.userPermissionViewOnly"/>
                 </div>
-                <div t-if="fileSize" t-attf-class="text-nowrap ms-2">
-                    (<span t-if="record.isContainer"><t t-out="props.nbViewItems"/> items, </span><t t-out="fileSize"/>)
+                <div t-if="this.fileSize" t-attf-class="text-nowrap ms-2">
+                    (<span t-if="this.record.isContainer"><t t-out="this.props.nbViewItems"/> items, </span><t t-out="this.fileSize"/>)
                 </div>
 
-                <i class="fa-solid fa-lock mx-1" title="Locked" t-if="record.data.lock_uid"/>
+                <i class="fa-solid fa-lock mx-1" title="Locked" t-if="this.record.data.lock_uid"/>
                 <button
                     class="btn mx-1 p-0 border-0"
-                    t-if="record.data.shortcut_document_id"
-                    t-on-click="() => record.jumpToTarget()"
+                    t-if="this.record.data.shortcut_document_id"
+                    t-on-click="() => this.record.jumpToTarget()"
                     data-tooltip="This is a shortcut - Click to access source document"
                 >
                     <i class="fa-solid fa-up-right-from-square"/>
                 </button>
                 <button
                     class="btn ms-auto p-0 border-0"
-                    t-if="canViewAccessLog"
-                    t-on-click.stop="openAccessLog"
+                    t-if="this.canViewAccessLog"
+                    t-on-click.stop="this.openAccessLog"
                     data-tooltip="Who opened and downloaded this document"
                 >
                     <i class="fa-solid fa-clock-rotate-left"/>
@@ -38,30 +38,30 @@
                 <div class="o_field_widget o_field_many2one">
                     <DocumentsDetailsMany2OneField
                         name="'folder_id'"
-                        readonly="userPermissionViewOnly"
-                        record="record"
+                        readonly="this.userPermissionViewOnly"
+                        record="this.record"
                         canOpen="false"
                         canCreate="false"
                         canQuickCreate="false"
                         canCreateEdit="false"
-                        placeholder="rootFolderPlaceholder"
+                        placeholder="this.rootFolderPlaceholder"
                         context="{'documents_show_parent_name': true}"
                     />
                 </div>
 
-                <i t-att-class="{invisible: !documentService.multiCompany}" class="fa-solid fa-building mx-1 my-2"/>
+                <i t-att-class="{invisible: !this.documentService.multiCompany}" class="fa-solid fa-building mx-1 my-2"/>
                 <div class="o_field_widget o_field_many2one">
                     <DocumentsDetailsMany2OneField
-                        t-if="documentService.multiCompany"
+                        t-if="this.documentService.multiCompany"
                         name="'company_id'"
-                        readonly="userPermissionViewOnly"
-                        record="record"
+                        readonly="this.userPermissionViewOnly"
+                        record="this.record"
                         canOpen="false"
                         canCreate="false"
                         canCreateEdit="false"
                         canQuickCreate="false"
                         placeholder.translate="All companies"
-                        domain="[['id', 'in', activeCompanies]]"
+                        domain="[['id', 'in', this.activeCompanies]]"
                     />
                 </div>
 
@@ -69,8 +69,8 @@
                 <div class="o_field_widget o_field_many2one">
                     <DocumentsDetailsMany2OneField
                         name="'owner_id'"
-                        readonly="userPermissionViewOnly"
-                        record="record"
+                        readonly="this.userPermissionViewOnly"
+                        record="this.record"
                         canOpen="false"
                         canCreate="true"
                         canQuickCreate="false"
@@ -83,8 +83,8 @@
                 <div class="o_field_widget o_field_many2one">
                     <DocumentsDetailsMany2OneField
                         name="'partner_id'"
-                        readonly="userPermissionViewOnly"
-                        record="record"
+                        readonly="this.userPermissionViewOnly"
+                        record="this.record"
                         canOpen="false"
                         canCreate="true"
                         canQuickCreate="false"
@@ -92,13 +92,13 @@
                         placeholder.translate="No contact"
                     />
                 </div>
-                <t t-if="record.data.type !== 'folder'">
+                <t t-if="this.record.data.type !== 'folder'">
                     <i class="fa-solid fa-tags mx-1 my-2"/>
                     <div class="o_field_widget o_field_many2one">
                         <DocumentsDetailsMany2ManyTagsField
                             name="'tag_ids'"
-                            readonly="userPermissionViewOnly"
-                            record="record"
+                            readonly="this.userPermissionViewOnly"
+                            record="this.record"
                             canCreate="true"
                             canQuickCreate="true"
                             canCreateEdit="true"
@@ -108,16 +108,16 @@
                         />
                     </div>
                     <i class="oi oi-odoo text-primary mx-1 my-2"/>
-                    <div t-if="this.record.data.res_id and state.resModel" class="o_documents_details_panel_record d-flex flex-row align-items-center">
-                        <a href="#" t-on-click.stop="openLinkedRecord" t-out="record.data.res_name" class="text-truncate"/>
+                    <div t-if="this.record.data.res_id and this.state.resModel" class="o_documents_details_panel_record d-flex flex-row align-items-center">
+                        <a href="#" t-on-click.stop="this.openLinkedRecord" t-out="this.record.data.res_name" class="text-truncate"/>
                         <button t-on-click="() => this.onRecordReset()" class="btn fa-solid fa-xmark"/>
                     </div>
-                    <div t-elif="userPermissionViewOnly" class="o_documents_details_panel_placeholder">No linked record</div>
+                    <div t-elif="this.userPermissionViewOnly" class="o_documents_details_panel_placeholder">No linked record</div>
                     <div t-else="" class="o_field_widget o_field_many2one">
                         <div class="o_input_dropdown">
                             <ModelSelector
-                                value="state.resModel ? state.resModelName : ''"
-                                onModelSelected.bind="onModelSelected"
+                                value="this.state.resModel ? this.state.resModelName : ''"
+                                onModelSelected.bind="this.onModelSelected"
                                 models="this.state.models"
                                 nbVisibleModels="this.state.models.length"
                                 placeholder.translate="No linked model"
@@ -128,59 +128,59 @@
             </div>
 
             <!-- Email Alias Section -->
-            <div t-if="record.data.type === 'folder' and !record.data.shortcut_document_id and record.data.mail_alias_domain_count">
+            <div t-if="this.record.data.type === 'folder' and !this.record.data.shortcut_document_id and this.record.data.mail_alias_domain_count">
                 <div class="d-flex flex-row w-100 align-items-baseline w-100">
                     <i class="fa-solid fa-envelope mx-1"/>
-                    <div t-if="!userPermissionViewOnly and !!documentService.userIsDocumentManager" class="mt-1 d-flex">
+                    <div t-if="!this.userPermissionViewOnly and !!this.documentService.userIsDocumentManager" class="mt-1 d-flex">
                         <div class="o_field_widget o_field_char">
                             <CharField
                                 name="'alias_name'"
-                                record="record"
+                                record="this.record"
                                 placeholder.translate="No email alias"
                             />
                         </div>
-                        <span t-if="record.data.alias_name" class="me-2">@</span>
-                        <div t-if="record.data.alias_name" class="o_field_widget o_field_many2one w-50">
+                        <span t-if="this.record.data.alias_name" class="me-2">@</span>
+                        <div t-if="this.record.data.alias_name" class="o_field_widget o_field_many2one w-50">
                             <Many2OneField
                                 name="'alias_domain_id'"
-                                record="record"
+                                record="this.record"
                                 canOpen="false"
-                                canCreate="documentService.userIsErpManager"
-                                canCreateEdit="documentService.userIsErpManager"
-                                canQuickCreate="documentService.userIsErpManager"
+                                canCreate="this.documentService.userIsErpManager"
+                                canCreateEdit="this.documentService.userIsErpManager"
+                                canQuickCreate="this.documentService.userIsErpManager"
                                 placeholder.translate="e.g. mycompany.com"
-                                readonly="record.data.mail_alias_domain_count == 1"
+                                readonly="this.record.data.mail_alias_domain_count == 1"
                             />
                         </div>
                     </div>
-                    <div t-elif="record.data.alias_email" class="mt-1 d-flex">
-                        <t t-out="record.data.alias_email"/>
+                    <div t-elif="this.record.data.alias_email" class="mt-1 d-flex">
+                        <t t-out="this.record.data.alias_email"/>
                     </div>
                     <div t-else="" class="fw-lighter mt-1 d-flex">
                         Not set
                     </div>
                 </div>
 
-                <div t-if="record.data.alias_name and record.data.alias_domain_id" class="d-flex flex-row flex-wrap w-100 my-2 justify-content-between">
+                <div t-if="this.record.data.alias_name and this.record.data.alias_domain_id" class="d-flex flex-row flex-wrap w-100 my-2 justify-content-between">
                     <div class="o_field_widget o_field_many2one d-flex flex-row align-items-baseline my-1 w-50">
                         <span class="fw-bold mx-1">Activity type</span>
                         <DocumentsDetailsMany2OneField
                             name="'create_activity_type_id'"
-                            readonly="userPermissionViewOnly"
-                            record="record"
+                            readonly="this.userPermissionViewOnly"
+                            record="this.record"
                             canOpen="false"
                             canCreate="false"
-                            canCreateEdit="documentService.userIsErpManager"
+                            canCreateEdit="this.documentService.userIsErpManager"
                             canQuickCreate="false"
                             placeholder.translate="No activity"
                         />
                     </div>
-                    <div t-if="record.data.create_activity_type_id" class="o_field_widget o_field_many2one d-flex flex-row align-items-baseline my-1 w-50">
+                    <div t-if="this.record.data.create_activity_type_id" class="o_field_widget o_field_many2one d-flex flex-row align-items-baseline my-1 w-50">
                         <span class="fw-bold mx-1">Responsible</span>
                         <DocumentsDetailsMany2OneField
                             name="'create_activity_user_id'"
-                            readonly="userPermissionViewOnly"
-                            record="record"
+                            readonly="this.userPermissionViewOnly"
+                            record="this.record"
                             canOpen="false"
                             canCreate="false"
                             canQuickCreate="false"
@@ -194,8 +194,8 @@
                         <span class="fw-bold mx-1">Tags</span>
                         <DocumentsDetailsMany2ManyTagsField
                             name="'alias_tag_ids'"
-                            readonly="userPermissionViewOnly"
-                            record="record"
+                            readonly="this.userPermissionViewOnly"
+                            record="this.record"
                             canCreate="true"
                             canQuickCreate="true"
                             canCreateEdit="true"

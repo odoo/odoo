@@ -11,9 +11,9 @@
                 </div>
 
                 <div class="o_appointment_helper_templates justify-content-center row mt-4">
-                    <t t-set="templateNames" t-value="Object.keys(appointmentTypeTemplatesData)"/>
+                    <t t-set="templateNames" t-value="Object.keys(this.appointmentTypeTemplatesData)"/>
                     <t t-foreach="templateNames" t-as="templateName" t-key="templateName">
-                        <t t-set="templateData" t-value="appointmentTypeTemplatesData[templateName]"/>
+                        <t t-set="templateData" t-value="this.appointmentTypeTemplatesData[templateName]"/>
                         <t t-set="templateElemClass" t-value="'col-12 col-md-6 col-lg-4 col-xl-3 py-2'"/>
                         <t t-set="templateDescriptionClass" t-value="'col-9 col-md-8 col-lg-9 card-body d-flex flex-column pe-0 py-0'"/>
                         <t t-set="templateIconClass" t-value="'col-3 col-md-4 col-lg-3 h-75 ps-2 p-0'"/>

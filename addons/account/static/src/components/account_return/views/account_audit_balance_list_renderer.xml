@@ -3,14 +3,14 @@
 <templates>
     <t t-name="account.account_audit_balance_list_renderer" t-inherit="web.ListRenderer">
         <xpath expr="//div[@t-ref='root']" position="after">
-            <div t-att-class="{'o_account_report_chatter_hidden': !chatterService.chatterState.res_id or ui.isSmall}"
+            <div t-att-class="{'o_account_report_chatter_hidden': !this.chatterService.chatterState.res_id or this.ui.isSmall}"
                  class="o_account_report_chatter o-mail-ChatterContainer h-100 o-aside d-flex flex-column border-start"
                  t-ref="AuditChatter">
                 <AccountReportChatter
-                    threadId="chatterService.chatterState.res_id"
+                    threadId="this.chatterService.chatterState.res_id"
                     threadModel="'account.account'"
-                    date_to="chatterService.chatterState.date_to"
-                    list="props.list"
+                    date_to="this.chatterService.chatterState.date_to"
+                    list="this.props.list"
                 />
             </div>
         </xpath>

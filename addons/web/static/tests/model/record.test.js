@@ -74,7 +74,7 @@ test(`can be updated with different resId`, async () => {
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <Record resModel="'foo'" resId="state.resId" fieldNames="['foo']" t-slot-scope="data">
+            <Record resModel="'foo'" resId="this.state.resId" fieldNames="['foo']" t-slot-scope="data">
                 <Field name="'foo'" record="data.record"/>
                 <button class="my-btn" t-on-click="() => this.state.resId++">Next</button>
             </Record>
@@ -132,7 +132,7 @@ test(`predefined fields and values`, async () => {
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -168,7 +168,7 @@ test(`Record with onRootLoaded props`, async () => {
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" t-slot-scope="data" hooks="hooks">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" t-slot-scope="data" hooks="this.hooks">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -205,7 +205,7 @@ test(`Record with onRecordChanged props`, async () => {
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" hooks="hooks">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data" hooks="this.hooks">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -253,7 +253,7 @@ test(`Record with onWillSaveRecord and onRecordSavedProps`, async () => {
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <Record resModel="'foo'" resId="1" fieldNames="['foo']" mode="'edit'" t-slot-scope="data" hooks="hooks">
+            <Record resModel="'foo'" resId="1" fieldNames="['foo']" mode="'edit'" t-slot-scope="data" hooks="this.hooks">
                 <button class="save" t-on-click="() => data.record.save()">Save</button>
                 <Field name="'foo'" record="data.record"/>
             </Record>
@@ -297,7 +297,7 @@ test(`can access record changes`, async () => {
         static components = { Record, Field };
         static template = xml`
             <Record resModel="'foo'" fieldNames="['foo']" t-slot-scope="data">
-                <button class="do_something" t-on-click="() => doSomething(data.record)">
+                <button class="do_something" t-on-click="() => this.doSomething(data.record)">
                     Do something
                 </button>
                 <Field name="'foo'" record="data.record"/>
@@ -337,7 +337,7 @@ test(`handles many2one fields: value is an object`, async () => {
         static props = ["*"];
         static components = { Record, Many2OneField };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" hooks="hooks">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data" hooks="this.hooks">
                 <Many2OneField name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -399,7 +399,7 @@ test(`handles many2one fields: value is a pair id, display_name`, async () => {
         static props = ["*"];
         static components = { Record, Many2OneField };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" hooks="hooks">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data" hooks="this.hooks">
                 <Many2OneField name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -460,7 +460,7 @@ test(`handles many2one fields: value is an id`, async () => {
         static props = ["*"];
         static components = { Record, Many2OneField };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data">
                 <Many2OneField name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -500,7 +500,7 @@ test(`handles many2one fields: value is an object with id only`, async () => {
         static props = ["*"];
         static components = { Record, Many2OneField };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data">
                 <Many2OneField name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -537,7 +537,7 @@ test(`handles many2one fields: target record is missing or inaccessible`, async 
         static props = ["*"];
         static components = { Record, Many2OneField };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data">
                 <Many2OneField name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -580,7 +580,7 @@ test(`handles x2many fields`, async () => {
         static props = ["*"];
         static components = { Record, Many2ManyTagsField };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['tags']" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data">
+            <Record resModel="'foo'" fieldNames="['tags']" activeFields="this.activeFields" fields="this.fields" values="this.values" t-slot-scope="data">
                 <Many2ManyTagsField name="'tags'" record="data.record"/>
             </Record>
         `;
@@ -622,7 +622,7 @@ test(`supports passing dynamic values -- full control to the user of Record`, as
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="{ foo: values.foo }" t-slot-scope="data" hooks="hooks">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="{ foo: this.values.foo }" t-slot-scope="data" hooks="this.hooks">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -674,9 +674,9 @@ test(`can switch records`, async () => {
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <a id="increment" t-on-click="() => state.num++" t-out="state.num"/>
-            <a id="next" t-on-click="next">NEXT</a>
-            <Record resId="state.currentId" resModel="'foo'" fieldNames="['foo']" fields="fields" t-slot-scope="data">
+            <a id="increment" t-on-click="() => this.state.num++" t-out="this.state.num"/>
+            <a id="next" t-on-click="this.next">NEXT</a>
+            <Record resId="this.state.currentId" resModel="'foo'" fieldNames="['foo']" fields="this.fields" t-slot-scope="data">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -717,8 +717,8 @@ test(`can switch records with values`, async () => {
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <a id="next" t-on-click="next">NEXT</a>
-            <Record resId="state.currentId" resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+            <a id="next" t-on-click="this.next">NEXT</a>
+            <Record resId="this.state.currentId" resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -781,13 +781,13 @@ test(`faulty useRecordObserver in widget`, async () => {
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <t t-if="!state.error">
-                <Record resId="1" resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+            <t t-if="!this.state.error">
+                <Record resId="1" resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data">
                     <Field name="'foo'" record="data.record"/>
                 </Record>
             </t>
             <t t-else="">
-                <div class="error" t-out="state.error.message"/>
+                <div class="error" t-out="this.state.error.message"/>
             </t>
         `;
 
@@ -847,9 +847,9 @@ test(`don't duplicate a useRecordObserver effect when switching back and forth b
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <a id="setRecord" t-on-click="setRecord">SET</a>
-            <a id="toggleRecord" t-on-click="toggleRecord">TOGGLE</a>
-            <Field name="'foo'" record="records[state.recordIndex]"/>
+            <a id="setRecord" t-on-click="this.setRecord">SET</a>
+            <a id="toggleRecord" t-on-click="this.toggleRecord">TOGGLE</a>
+            <Field name="'foo'" record="this.records[this.state.recordIndex]"/>
         `;
 
         setup() {
@@ -894,7 +894,7 @@ test(`re-setting a many2one to its current value records no change and does not 
         static props = ["*"];
         static components = { Record, Many2OneField };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" hooks="hooks">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data" hooks="this.hooks">
                 <Many2OneField name="'foo'" record="data.record"/>
             </Record>
         `;

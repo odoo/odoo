@@ -12,15 +12,15 @@
                 </tr>
             </thead>
             <tbody>
-                <t t-set="last_line_index" t-value="lines.length - 1"/>
-                <t t-foreach="lines" t-as="line" t-key="line_index">
-                    <t t-set="currentProduct" t-value="props.docs.product[line.product.id]"/>
-                    <t t-if="multipleProducts and (line_index === 0 or line.product.id !== lines[line_index - 1].product.id)">
+                <t t-set="last_line_index" t-value="this.lines.length - 1"/>
+                <t t-foreach="this.lines" t-as="line" t-key="line_index">
+                    <t t-set="currentProduct" t-value="this.props.docs.product[line.product.id]"/>
+                    <t t-if="this.multipleProducts and (line_index === 0 or line.product.id !== this.lines[line_index - 1].product.id)">
                         <tr class="o_forecasted_product_header">
                             <td class="border-0 p-0">
                                 <button class="btn btn-sm border-0"
                                     t-on-click="() => this.toggleProduct(line.product.id)"
-                                    t-att-aria-expanded="state.collapsedProducts[line.product.id] ? 'false' : 'true'"
+                                    t-att-aria-expanded="this.state.collapsedProducts[line.product.id] ? 'false' : 'true'"
                                     t-attf-aria-controls="collapseGroup_#{line.product.id}">
                                     <i class="icon fa"/>
                                 </button>
@@ -30,10 +30,10 @@
                             </td>
                         </tr>
                     </t>
-                    <tr t-attf-class="#{line.is_late and 'table-warning' or ''} #{groupClass(line.product.id)} collapseGroup_#{line.product.id}" >
+                    <tr t-attf-class="#{line.is_late and 'table-warning' or ''} #{this.groupClass(line.product.id)} collapseGroup_#{line.product.id}" >
                         <t t-if="skip_row > 0" t-set="skip_row" t-value="skip_row - 1"/>
                         <t t-if="!skip_row or skip_row == 0">
-                            <t t-if="mergedRows[line_index]" t-set="skip_row" t-value="mergedRows[line_index]['rowcount']"/>
+                            <t t-if="this.mergedRows[line_index]" t-set="skip_row" t-value="this.mergedRows[line_index]['rowcount']"/>
                             <td t-attf-rowspan="#{skip_row > 0 and skip_row}"/>
                             <td t-attf-rowspan="#{skip_row > 0 and skip_row}">
                                 <t t-if="line.document_in">
@@ -44,7 +44,7 @@
                                         class="fw-bold"/>
                                     <span t-else="" t-out="line.document_in.name" class="fw-bold"/>
                                     <span t-if="line.receipt_date">:
-                                        <t t-out="incomingSentence(line, skip_row > 0 ? mergedRows[line_index].tot_qty : line.quantity)"/>
+                                        <t t-out="this.incomingSentence(line, skip_row > 0 ? this.mergedRows[line_index].tot_qty : line.quantity)"/>
                                     </span>
                                 </t>
                                 <t t-elif="line.in_transit">
@@ -57,19 +57,19 @@
                                 </t>
                                 <t t-elif="line.replenishment_filled">
                                     <t name="onHand_cell" t-if="line.document_out">
-                                        <t t-out="stockToReserveSentence(line)"/>
+                                        <t t-out="this.stockToReserveSentence(line)"/>
                                     </t>
-                                    <t name="freeStock_cell" t-else="" t-out="freeStockLabel"/>
+                                    <t name="freeStock_cell" t-else="" t-out="this.freeStockLabel"/>
                                 </t>
                                 <span t-else="" class="text-muted">Not Available</span>
                             </td>
                         </t>
-                        <td name="quantity_cell" class="text-end" t-att-class="{ 'text-danger': !line.replenishment_filled }"><t t-out="_formatFloat(line.quantity)"/> <t t-out="line.uom_id.display_name"/></td>
+                        <td name="quantity_cell" class="text-end" t-att-class="{ 'text-danger': !line.replenishment_filled }"><t t-out="this._formatFloat(line.quantity)"/> <t t-out="line.uom_id.display_name"/></td>
                         <td class="border-end-0 o_forecasted_details_line_button" t-attf-class="#{(!line.replenishment_filled and 'table-danger') or (line.is_matched and 'table-info')}" name="usedby_cell">
                             <button t-if="line.move_out and line.move_out.picking_id"
                                 type="button" title="Toggle priority" aria-label="Toggle priority"
                                 t-attf-class="o_priority o_priority_star me-1 #{line.move_out.picking_id.priority=='1' ? 'fa-solid fa-star' : 'fa-regular fa-star'}"
-                                t-att-disabled="opGuard.busy"
+                                t-att-disabled="this.opGuard.busy"
                                 t-on-click="() => this._onClickChangePriority('stock.picking', line.move_out.picking_id)"
                                 name="change_priority_link"/>
                             <a t-if="line.document_out and line.document_out.can_open"
@@ -83,23 +83,23 @@
                                 t-out="line.document_out.name"/>
                         </td>
                         <td class="p-0 text-center border-start-0">
-                            <t t-if="displayReserve(line, line_index)">
+                            <t t-if="this.displayReserve(line, line_index)">
                                 <a t-if="line.reservation"
                                     href="#"
                                     name="unreserve_link"
-                                    t-att-aria-disabled="opGuard.busy"
-                                    t-att-class="{ disabled: opGuard.busy }"
+                                    t-att-aria-disabled="this.opGuard.busy"
+                                    t-att-class="{ disabled: this.opGuard.busy }"
                                     t-on-click.prevent="() => this._unreserve(line.move_out.id)">
                                     Unreserve
                                 </a>
-                                <button t-elif="line.replenishment_filled or availableOnHandTotalQty[line.product.id] &gt; 0"
+                                <button t-elif="line.replenishment_filled or this.availableOnHandTotalQty[line.product.id] &gt; 0"
                                     class="btn btn-sm btn-secondary"
                                     name="reserve_link"
-                                    t-att-disabled="opGuard.busy"
+                                    t-att-disabled="this.opGuard.busy"
                                     t-on-click="() => this._reserve(line.move_out.id)">
                                     Reserve
-                                    <t t-if="availableOnHandTotalQty[line.product.id] &gt; 0 and !isOnHand(line)">
-                                        (<t t-out="_formatFloat(Math.min(availableOnHandTotalQty[line.product.id], line.quantity))"/> <t t-out="line.uom_id.display_name"/>)
+                                    <t t-if="this.availableOnHandTotalQty[line.product.id] &gt; 0 and !this.isOnHand(line)">
+                                        (<t t-out="this._formatFloat(Math.min(this.availableOnHandTotalQty[line.product.id], line.quantity))"/> <t t-out="line.uom_id.display_name"/>)
                                     </t>
                                 </button>
                             </t>
@@ -107,34 +107,34 @@
                         <td t-out="line.delivery_date or ''"
                             t-attf-class="#{line.delivery_late and 'text-danger'}"/>
                     </tr>
-                    <t t-if="line_index === last_line_index or line.product.id !== lines[line_index + 1].product.id">
-                        <tr class="o_forecasted_row fw-bold table-secondary" t-attf-class="#{groupClass(line.product.id)} collapseGroup_#{line.product.id}">
+                    <t t-if="line_index === last_line_index or line.product.id !== this.lines[line_index + 1].product.id">
+                        <tr class="o_forecasted_row fw-bold table-secondary" t-attf-class="#{this.groupClass(line.product.id)} collapseGroup_#{line.product.id}">
                             <td/>
                             <td class="border-end-0">Forecasted Inventory</td>
                             <td class="text-end border-start-0 border-end-0" t-attf-class="#{currentProduct.qty_available_virtual &lt;= 0 and 'text-danger' or 'text-success'}">
-                                <t t-out="_formatFloat(currentProduct.qty_available_virtual)"/> <t t-out="line.uom_id.display_name"/>
+                                <t t-out="this._formatFloat(currentProduct.qty_available_virtual)"/> <t t-out="line.uom_id.display_name"/>
                             </td>
                             <td class="border-start-0" colspan="3"/>
                         </tr>
-                        <tr t-if="currentProduct.draft_picking_qty.in" name="draft_picking_in" t-attf-class="#{groupClass(line.product.id)} collapseGroup_#{line.product.id}">
+                        <tr t-if="currentProduct.draft_picking_qty.in" name="draft_picking_in" t-attf-class="#{this.groupClass(line.product.id)} collapseGroup_#{line.product.id}">
                             <td/>
                             <td>Incoming Draft Transfer</td>
                             <td class="text-end">
-                                <t t-out="_formatFloat(currentProduct.draft_picking_qty.in)"/> <t t-out="line.uom_id.display_name"/>
+                                <t t-out="this._formatFloat(currentProduct.draft_picking_qty.in)"/> <t t-out="line.uom_id.display_name"/>
                             </td>
                         </tr>
-                        <tr t-if="currentProduct.draft_picking_qty.out" name="draft_picking_out" t-attf-class="#{groupClass(line.product.id)} collapseGroup_#{line.product.id}">
+                        <tr t-if="currentProduct.draft_picking_qty.out" name="draft_picking_out" t-attf-class="#{this.groupClass(line.product.id)} collapseGroup_#{line.product.id}">
                             <td/>
                             <td>Outgoing Draft Transfer</td>
                             <td class="text-end">
-                                <t t-out="_formatFloat(-currentProduct.draft_picking_qty.out)"/> <t t-out="line.uom_id.display_name"/>
+                                <t t-out="this._formatFloat(-currentProduct.draft_picking_qty.out)"/> <t t-out="line.uom_id.display_name"/>
                             </td>
                         </tr>
-                        <tr class="o_forecasted_row fw-bold table-secondary" t-attf-class="#{groupClass(line.product.id)} collapseGroup_#{line.product.id}">
+                        <tr class="o_forecasted_row fw-bold table-secondary" t-attf-class="#{this.groupClass(line.product.id)} collapseGroup_#{line.product.id}">
                             <td/>
                             <td class="border-end-0">Forecasted with Pending</td>
-                            <td class="text-end border-start-0 border-end-0" t-attf-class="#{futureVirtualAvailable(line) &lt;= 0 and 'text-danger' or 'text-success'}">
-                                <t t-out="_formatFloat(futureVirtualAvailable(line))"/> <t t-out="line.uom_id.display_name"/>
+                            <td class="text-end border-start-0 border-end-0" t-attf-class="#{this.futureVirtualAvailable(line) &lt;= 0 and 'text-danger' or 'text-success'}">
+                                <t t-out="this._formatFloat(this.futureVirtualAvailable(line))"/> <t t-out="line.uom_id.display_name"/>
                             </td>
                             <td class="border-start-0" colspan="3"/>
                         </tr>

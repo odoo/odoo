@@ -1348,7 +1348,7 @@ test("document listeners are bound once, not re-bound on every render", async ()
     class Popper extends Component {
         static template = xml`
             <div>
-                <div t-ref="target" class="target">target <t t-out="state.n"/></div>
+                <div t-ref="target" class="target">target <t t-out="this.state.n"/></div>
                 <div t-ref="popper" class="popper">popper</div>
             </div>`;
         static props = {};

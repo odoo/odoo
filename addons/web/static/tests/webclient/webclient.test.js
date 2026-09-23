@@ -41,7 +41,7 @@ test.tags("desktop");
 test("control-click <a href/> in a standalone component", async () => {
     class MyComponent extends Component {
         static props = {};
-        static template = xml`<a href="#" class="MyComponent" t-on-click="onclick">Some link</a>`;
+        static template = xml`<a href="#" class="MyComponent" t-on-click="this.onclick">Some link</a>`;
 
         /** @param {MouseEvent} ev */
         onclick(ev) {
@@ -80,7 +80,7 @@ test("control-click propagation stopped on <a href/>", async () => {
 
     class MyComponent extends Component {
         static props = {};
-        static template = xml`<a href="#" class="MyComponent" t-on-click="onclick">Some link</a>`;
+        static template = xml`<a href="#" class="MyComponent" t-on-click="this.onclick">Some link</a>`;
 
         /** @param {MouseEvent} ev */
         onclick(ev) {

@@ -3,19 +3,19 @@
     <t t-name="account.BankRecLineInfoPopOver">
         <table class="table table-hover m-0">
             <tbody>
-                <tr t-if="props.exchangeMove">
-                    <td t-on-click="openExchangeMove" class="cursor-pointer">
-                        <span class="btn btn-link p-0" t-out="exchangeDiffMoveName"/>
+                <tr t-if="this.props.exchangeMove">
+                    <td t-on-click="this.openExchangeMove" class="cursor-pointer">
+                        <span class="btn btn-link p-0" t-out="this.exchangeDiffMoveName"/>
                     </td>
-                    <td class="align-middle text-end" t-out="formattedExchangeMoveBalance"/>
+                    <td class="align-middle text-end" t-out="this.formattedExchangeMoveBalance"/>
                 </tr>
-                <tr t-if="props.isPartiallyReconciled">
-                    <td t-on-click="openReconciledMove" class="cursor-pointer">
-                        <span class="btn btn-link p-0" t-out="reconciledMoveName"/>
+                <tr t-if="this.props.isPartiallyReconciled">
+                    <td t-on-click="this.openReconciledMove" class="cursor-pointer">
+                        <span class="btn btn-link p-0" t-out="this.reconciledMoveName"/>
                     </td>
                     <td class="align-middle">
-                        <span class="text-decoration-line-through me-2" t-out="formattedReconciledMoveAmountCurrency"/>
-                        <span t-out="formattedLineDataAmountCurrency"/>
+                        <span class="text-decoration-line-through me-2" t-out="this.formattedReconciledMoveAmountCurrency"/>
+                        <span t-out="this.formattedLineDataAmountCurrency"/>
                     </td>
                 </tr>
             </tbody>

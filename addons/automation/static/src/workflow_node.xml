@@ -3,21 +3,21 @@
 
     <t t-name="automation.WorkflowNode">
         <div class="o_workflow_canvas_step d-flex flex-column h-100"
-            t-att-class="classNames"
-            t-att-title="step.name">
+            t-att-class="this.classNames"
+            t-att-title="this.step.name">
             <header class="o_workflow_canvas_step_header text-truncate fw-semibold px-2 py-1">
-                <t t-out="step.label"/>
+                <t t-out="this.step.label"/>
             </header>
             <div class="o_workflow_canvas_step_body flex-grow-1 px-2 py-1 small">
-                <div t-if="typeLabel" class="text-muted text-capitalize">
-                    <t t-out="typeLabel"/>
+                <div t-if="this.typeLabel" class="text-muted text-capitalize">
+                    <t t-out="this.typeLabel"/>
                 </div>
-                <div t-if="detail" class="o_workflow_canvas_step_detail text-truncate"
-                    t-att-title="detail">
-                    <t t-out="detail"/>
+                <div t-if="this.detail" class="o_workflow_canvas_step_detail text-truncate"
+                    t-att-title="this.detail">
+                    <t t-out="this.detail"/>
                 </div>
-                <span t-if="stateLabel" class="o_workflow_canvas_step_state badge">
-                    <t t-out="stateLabel"/>
+                <span t-if="this.stateLabel" class="o_workflow_canvas_step_state badge">
+                    <t t-out="this.stateLabel"/>
                 </span>
             </div>
         </div>

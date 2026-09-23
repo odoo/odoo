@@ -3,11 +3,11 @@
 
     <t t-name="web.Offcanvas">
         <div t-ref="panel" popover="auto" tabindex="-1"
-            t-att-id="props.id"
-            t-att-role="props.role or undefined"
-            t-att-aria-label="props.ariaLabel"
-            t-att-aria-labelledby="props.ariaLabelledBy"
-            t-att-class="classObj">
+            t-att-id="this.props.id"
+            t-att-role="this.props.role or undefined"
+            t-att-aria-label="this.props.ariaLabel"
+            t-att-aria-labelledby="this.props.ariaLabelledBy"
+            t-att-class="this.classObj">
             <t t-slot="default"/>
         </div>
     </t>

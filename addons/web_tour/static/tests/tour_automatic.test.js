@@ -873,7 +873,7 @@ test("check not possible to click below modal", async () => {
         static template = xml`
             <t>
                 <div class="container">
-                    <div class="p-3"><button class="button0" t-on-click="openDialog">Button 0</button></div>
+                    <div class="p-3"><button class="button0" t-on-click="this.openDialog">Button 0</button></div>
                     <div class="p-3"><button class="button1">Button 1</button></div>
                     <div class="p-3"><button class="button2">Button 2</button></div>
                     <div class="p-3"><button class="button3">Button 3</button></div>

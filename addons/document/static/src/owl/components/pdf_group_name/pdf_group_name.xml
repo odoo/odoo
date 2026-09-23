@@ -3,13 +3,13 @@
     <t t-name="document.component.PdfGroupName">
         <div class="o_documents_pdf_block_title">
             <div class="o_pdf_group_name_block">
-                <t t-if="props.edit">
-                    <input class="o_pdf_name_input" type="text" name="group_name" t-att-value="props.name"
-                        autofocus="true" t-on-blur="onBlur" t-on-keydown="onKeyDown" t-ref="nameInput"/>
+                <t t-if="this.props.edit">
+                    <input class="o_pdf_name_input" type="text" name="group_name" t-att-value="this.props.name"
+                        autofocus="true" t-on-blur="this.onBlur" t-on-keydown="this.onKeyDown" t-ref="nameInput"/>
                 </t>
                 <t t-else="">
-                    <span class="o_pdf_name_display" t-out="props.name" t-att-title="props.name"
-                        t-on-click.stop="onClickGroupName"/>
+                    <span class="o_pdf_name_display" t-out="this.props.name" t-att-title="this.props.name"
+                        t-on-click.stop="this.onClickGroupName"/>
                 </t>
             </div>
         </div>

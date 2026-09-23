@@ -3,30 +3,30 @@
 
     <t t-name="extract.ExtractionField">
         <div class="o_document_extraction">
-            <div t-if="isEmpty" class="text-muted">
+            <div t-if="this.isEmpty" class="text-muted">
                 This document has not been read.
             </div>
             <t t-else="">
                 <div class="d-flex align-items-center gap-2 mb-2">
-                    <span class="badge" t-att-class="stateBadge" t-out="stateLabel"/>
-                    <span t-if="error" class="text-danger small" t-out="error"/>
+                    <span class="badge" t-att-class="this.stateBadge" t-out="this.stateLabel"/>
+                    <span t-if="this.error" class="text-danger small" t-out="this.error"/>
                 </div>
 
-                <div t-if="missingFields.length or brokenRules.length"
+                <div t-if="this.missingFields.length or this.brokenRules.length"
                      class="alert alert-warning py-2 mb-2" role="alert">
-                    <div t-if="missingFields.length">
+                    <div t-if="this.missingFields.length">
                         <span class="fw-bold">Nobody could read:</span>
-                        <span t-foreach="missingFields" t-as="name" t-key="name"
+                        <span t-foreach="this.missingFields" t-as="name" t-key="name"
                               class="badge text-bg-light ms-1" t-out="name"/>
                     </div>
-                    <div t-if="brokenRules.length" class="mt-1">
+                    <div t-if="this.brokenRules.length" class="mt-1">
                         <span class="fw-bold">What does not add up:</span>
-                        <span t-foreach="brokenRules" t-as="rule" t-key="rule"
+                        <span t-foreach="this.brokenRules" t-as="rule" t-key="rule"
                               class="badge text-bg-light ms-1" t-out="rule"/>
                     </div>
                 </div>
 
-                <table t-if="readings.length" class="table table-sm o_document_extraction_read">
+                <table t-if="this.readings.length" class="table table-sm o_document_extraction_read">
                     <thead>
                         <tr>
                             <th>Field</th>
@@ -36,7 +36,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-foreach="readings" t-as="reading" t-key="reading.name">
+                        <t t-foreach="this.readings" t-as="reading" t-key="reading.name">
                             <tr t-att-class="reading.disputed ? 'table-warning' : ''">
                                 <td t-out="reading.name"/>
                                 <td class="fw-bold" t-out="reading.value"/>
@@ -66,7 +66,7 @@
                     </tbody>
                 </table>
 
-                <table t-if="corrections.length"
+                <table t-if="this.corrections.length"
                        class="table table-sm o_document_extraction_corrections">
                     <thead>
                         <tr>
@@ -77,7 +77,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="corrections" t-as="correction" t-key="correction.name">
+                        <tr t-foreach="this.corrections" t-as="correction" t-key="correction.name">
                             <td t-out="correction.name"/>
                             <td class="text-decoration-line-through text-muted"
                                 t-out="correction.read"/>

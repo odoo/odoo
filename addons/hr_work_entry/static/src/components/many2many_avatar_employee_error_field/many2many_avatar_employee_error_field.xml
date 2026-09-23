@@ -4,7 +4,7 @@
         <xpath expr="//span[hasclass('o_tag')]" position="attributes">
             <attribute name="t-attf-class" separator=" " add="#{tag.inError ? 'text-danger' : ''}"/>
         </xpath>
-        <div t-if="props.displayText" position="after">
+        <div t-if="this.props.displayText" position="after">
             <i t-if="tag.inError" class="ms-1 fa-solid fa-lock z-1"/>
         </div>
     </t>

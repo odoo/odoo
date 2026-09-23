@@ -2,9 +2,9 @@
 <template>
 
     <t t-name="purchase.ButtonWithNotification">
-        <button t-on-click="onClick" t-att-name="props.method" type="button"
-                class="btn oe_inline btn-link" t-att-title="props.title"
-                t-att-disabled="isDisabled">
+        <button t-on-click="this.onClick" t-att-name="this.props.method" type="button"
+                class="btn oe_inline btn-link" t-att-title="this.props.title"
+                t-att-disabled="this.isDisabled">
             <i class="fa-solid fa-info-circle o_button_icon"></i>
         </button>
     </t>

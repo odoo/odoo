@@ -2,51 +2,51 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanView">
-        <t t-set="rendererReady" t-value="model.isReady"/>
-        <ViewLayout t-props="chassisProps">
+        <t t-set="rendererReady" t-value="this.model.isReady"/>
+        <ViewLayout t-props="this.chassisProps">
             <t t-set-slot="control-panel-create-button">
-                <button t-if="canCreate and props.showButtons" type="button" t-att-disabled="isNewButtonDisabled" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
+                <button t-if="this.canCreate and this.props.showButtons" type="button" t-att-disabled="this.isNewButtonDisabled" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
                     New
                 </button>
             </t>
             <t t-set-slot="layout-buttons">
-                <t t-if="props.showButtons" t-call="{{ props.buttonTemplate }}"/>
+                <t t-if="this.props.showButtons" t-call="{{ this.props.buttonTemplate }}"/>
             </t>
             <t t-set-slot="control-panel-always-buttons">
-                <MultiRecordViewButton t-foreach="alwaysHeaderButtons" t-as="button" t-key="button.id" t-props="headerButtonProps(button)"/>
+                <MultiRecordViewButton t-foreach="this.alwaysHeaderButtons" t-as="button" t-key="button.id" t-props="this.headerButtonProps(button)"/>
             </t>
             <t t-set-slot="control-panel-selection-actions">
-                <div t-if="hasSelectedRecords" class="o_selection_container d-flex gap-1 w-100 w-md-auto">
+                <div t-if="this.hasSelectedRecords" class="o_selection_container d-flex gap-1 w-100 w-md-auto">
                    <SelectionBox root="this.model.root"/>
-                    <t t-if="!env.isSmall">
-                        <MultiRecordViewButton t-foreach="selectionHeaderButtons" t-as="button" t-key="button.id" t-props="headerButtonProps(button)"/>
-                        <t t-if="props.info.actionMenus">
+                    <t t-if="!this.env.isSmall">
+                        <MultiRecordViewButton t-foreach="this.selectionHeaderButtons" t-as="button" t-key="button.id" t-props="this.headerButtonProps(button)"/>
+                        <t t-if="this.props.info.actionMenus">
                             <ActionMenus t-props="this.actionMenuProps"/>
                         </t>
                     </t>
                 </div>
             </t>
             <t t-set-slot="control-panel-additional-actions">
-                <CogMenu t-if="!hasSelectedRecords"/>
-                <CogMenu t-elif="env.isSmall and (props.info.actionMenus or selectionHeaderButtons.length)" t-props="this.actionMenuProps" hasSelectedRecords="hasSelectedRecords">
-                    <DropdownItem t-foreach="selectionHeaderButtons" t-as="button" t-key="button.id" class="'o-dropdown-item-unstyled-button'">
-                        <MultiRecordViewButton t-props="headerButtonProps(button)"/>
+                <CogMenu t-if="!this.hasSelectedRecords"/>
+                <CogMenu t-elif="this.env.isSmall and (this.props.info.actionMenus or this.selectionHeaderButtons.length)" t-props="this.actionMenuProps" hasSelectedRecords="this.hasSelectedRecords">
+                    <DropdownItem t-foreach="this.selectionHeaderButtons" t-as="button" t-key="button.id" class="'o-dropdown-item-unstyled-button'">
+                        <MultiRecordViewButton t-props="this.headerButtonProps(button)"/>
                     </DropdownItem>
                 </CogMenu>
             </t>
-            <t t-component="props.Renderer" t-if="rendererReady"
-                list="model.root"
-                archInfo="props.archInfo"
-                Compiler="props.Compiler"
-                readonly="props.readonly"
-                forceGlobalClick="props.forceGlobalClick"
-                deleteRecord.bind="deleteRecord"
-                openRecord.bind="openRecord"
-                noContentHelp="props.info.noContentHelp"
-                scrollTop.bind="scrollTop"
-                canQuickCreate="canQuickCreate"
-                quickCreateState="quickCreateState"
-                progressBarState="progressBarState"
+            <t t-component="this.props.Renderer" t-if="rendererReady"
+                list="this.model.root"
+                archInfo="this.props.archInfo"
+                Compiler="this.props.Compiler"
+                readonly="this.props.readonly"
+                forceGlobalClick="this.props.forceGlobalClick"
+                deleteRecord.bind="this.deleteRecord"
+                openRecord.bind="this.openRecord"
+                noContentHelp="this.props.info.noContentHelp"
+                scrollTop.bind="this.scrollTop"
+                canQuickCreate="this.canQuickCreate"
+                quickCreateState="this.quickCreateState"
+                progressBarState="this.progressBarState"
             />
         </ViewLayout>
     </t>

@@ -14,7 +14,7 @@ registry
     .addValidation((entry) => entry?.prototype instanceof Component);
 
 class DialogWrapper extends Component {
-    static template = xml`<t t-component="props.subComponent" t-props="props.subProps" />`;
+    static template = xml`<t t-component="this.props.subComponent" t-props="this.props.subProps" />`;
     static props = {
         subComponent: Function,
         subProps: Object,

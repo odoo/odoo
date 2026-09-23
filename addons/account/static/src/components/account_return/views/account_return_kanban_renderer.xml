@@ -4,21 +4,17 @@
     <t t-name="account.account_return_kanban_renderer">
 
         <div class="o_kanban_renderer o_renderer o_account-return-kanban">
-            <t t-if="groups">
-                <t t-foreach="groups" t-as="group" t-key="group.key">
+            <t t-if="this.groups">
+                <t t-foreach="this.groups" t-as="group" t-key="group.key">
                     <t t-if="group.count > 0">
                         <span class="return-group-header">
                             <t t-out="group.displayName"/>
                         </span>
-                        <t t-call="account.return_list">
-                            <t t-set="list" t-value="group.list"/>
-                        </t>
+                        <t t-call="account.return_list" list="group.list"/>
                     </t>
                 </t>
             </t>
-            <t t-else="" t-call="account.return_list">
-                <t t-set="list" t-value="props.list"/>
-            </t>
+            <t t-else="" t-call="account.return_list" list="this.props.list"/>
         </div>
     </t>
 
@@ -26,13 +22,13 @@
         <t t-foreach="list.records" t-as="record" t-key="record.id">
             <AccountReturnKanbanRecord
                 record="record"
-                archInfo="props.archInfo"
-                Compiler="props.Compiler"
+                archInfo="this.props.archInfo"
+                Compiler="this.props.Compiler"
                 readonly="false"
                 forceGlobalClick="false"
                 canResequence="false"
-                deleteRecord.bind="deleteRecord"
-                openRecord.bind="openRecord"
+                deleteRecord.bind="this.deleteRecord"
+                openRecord.bind="this.openRecord"
             />
         </t>
     </t>

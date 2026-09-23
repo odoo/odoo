@@ -49,7 +49,7 @@ async function preparePosition() {
     class Parent extends Component {
         static props = {};
         static components = { Chatter };
-        static template = xml`<Chatter threadModel="'res.partner'" twoColumns="state.twoColumns"/>`;
+        static template = xml`<Chatter threadModel="'res.partner'" twoColumns="this.state.twoColumns"/>`;
         setup() {
             this.state = useState({ twoColumns: false });
         }

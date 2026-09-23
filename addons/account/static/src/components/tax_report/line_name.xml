@@ -2,7 +2,7 @@
 <templates>
     <t t-name="account.TaxReportLineName" t-inherit="report_formula.AccountReportLineNameCustomizable">
         <xpath expr="//div[@data-id='content']" position="before">
-            <t t-if="props.line.alert">
+            <t t-if="this.props.line.alert">
                 <i class="fa-solid fa-exclamation-circle consistency_warning"/>
             </t>
         </xpath>

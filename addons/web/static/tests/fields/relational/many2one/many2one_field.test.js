@@ -1515,7 +1515,7 @@ test("standalone many2one field", async () => {
     class Comp extends Component {
         static components = { Record, Field };
         static template = xml`
-            <Record resModel="'coucou'" fields="fields" fieldNames="['partner_id']" values="values" mode="'edit'" t-slot-scope="scope">
+            <Record resModel="'coucou'" fields="this.fields" fieldNames="['partner_id']" values="this.values" mode="'edit'" t-slot-scope="scope">
                 <Field name="'partner_id'" record="scope.record" canOpen="false" />
             </Record>
         `;
@@ -4125,12 +4125,12 @@ test.tags("desktop");
 test("skip name search optimization", async () => {
     class Parent extends Component {
         static template = xml`<Many2XAutocomplete
-            value="test"
+            value="this.test"
             resModel="'partner'"
             activeActions="{}"
             fieldString.translate="Field"
-            getDomain.bind="getDomain"
-            update.bind="update"
+            getDomain.bind="this.getDomain"
+            update.bind="this.update"
             searchMemoization="'none'"
         />`;
         static components = { Many2XAutocomplete };

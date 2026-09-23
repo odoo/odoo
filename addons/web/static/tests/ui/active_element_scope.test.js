@@ -116,7 +116,7 @@ test("a component rendering a dialog is scoped to that dialog", async () => {
     /** @type {(() => Document | HTMLElement) | null} */
     let declared = null;
     class RendersADialog extends Component {
-        static template = xml`<Dialog modalRef="modalRef"><div class="body"/></Dialog>`;
+        static template = xml`<Dialog modalRef="this.modalRef"><div class="body"/></Dialog>`;
         static components = { Dialog };
         static props = ["*"];
         setup() {
@@ -197,7 +197,7 @@ test("isSmall is its own reactive key, so a same-band resize does not invalidate
     const ui = /** @type {any} */ (env.services.ui);
 
     class Reader extends Component {
-        static template = xml`<div class="reader" t-out="ui.isSmall"/>`;
+        static template = xml`<div class="reader" t-out="this.ui.isSmall"/>`;
         static props = {};
         setup() {
             /** @type {any} */

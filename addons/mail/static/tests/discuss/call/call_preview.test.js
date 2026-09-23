@@ -37,7 +37,7 @@ test("closing the preview tears down the blur manager and its stream", async () 
         static components = { CallPreview };
         static props = [];
         static template = xml`
-            <CallPreview t-if="state.show" activateCamera="1" onSettingsChanged="() => {}"/>
+            <CallPreview t-if="this.state.show" activateCamera="1" onSettingsChanged="() => {}"/>
         `;
         setup() {
             this.state = useState({ show: true });
@@ -68,7 +68,7 @@ test("a destroyed preview stops reacting to call settings", async () => {
         static components = { CallPreview };
         static props = [];
         static template = xml`
-            <CallPreview t-if="state.show" activateCamera="1" onSettingsChanged="() => {}"/>
+            <CallPreview t-if="this.state.show" activateCamera="1" onSettingsChanged="() => {}"/>
         `;
         setup() {
             this.state = useState({ show: true });

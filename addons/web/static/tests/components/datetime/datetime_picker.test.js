@@ -1182,7 +1182,7 @@ test("range value, select date for first value after second value", async () => 
 
 test("focus proper month when changing props out of current month", async () => {
     class Parent extends Component {
-        static template = xml`<DateTimePicker value="state.current"/>`;
+        static template = xml`<DateTimePicker value="this.state.current"/>`;
         static components = { DateTimePicker };
         static props = ["*"];
         setup() {
@@ -1292,10 +1292,10 @@ test("dynamic date<->datetime switch recomputes min/max with the NEW type", asyn
         static props = {};
         static template = xml`
             <DateTimePicker
-                type="state.type"
-                value="value"
-                maxDate="maxDate"
-                onSelect.bind="onSelect"
+                type="this.state.type"
+                value="this.value"
+                maxDate="this.maxDate"
+                onSelect.bind="this.onSelect"
             />
         `;
 
@@ -1444,8 +1444,8 @@ test("the day grid restates today after the clock crosses midnight", async () =>
 test("a render that does not move the value leaves the browsed month alone", async () => {
     class Parent extends Component {
         static template = xml`
-            <span class="tick" t-out="state.tick"/>
-            <DateTimePicker value="state.value" onSelect="() => {}" type="'date'"/>`;
+            <span class="tick" t-out="this.state.tick"/>
+            <DateTimePicker value="this.state.value" onSelect="() => {}" type="'date'"/>`;
         static components = { DateTimePicker };
         static props = [];
         state = useState({ value: DateTime.fromISO("2023-04-25"), tick: 0 });
@@ -1464,7 +1464,7 @@ test("a render that does not move the value leaves the browsed month alone", asy
 
 test("a value moving to another month takes the browsed month with it", async () => {
     class Parent extends Component {
-        static template = xml`<DateTimePicker value="state.value" onSelect="() => {}" type="'date'"/>`;
+        static template = xml`<DateTimePicker value="this.state.value" onSelect="() => {}" type="'date'"/>`;
         static components = { DateTimePicker };
         static props = [];
         state = useState({ value: DateTime.fromISO("2023-04-25") });

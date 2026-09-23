@@ -2,33 +2,33 @@
 <templates>
     <t t-name="account.MulticurrencyRevaluationReportLineName" t-inherit="report_formula.AccountReportLineNameCustomizable">
         <xpath expr="//t[@data-id='line_buttons']" position="inside">
-            <t t-if="props.line.cur_revaluation_line_model === 'res.currency'">
+            <t t-if="this.props.line.cur_revaluation_line_model === 'res.currency'">
                 <Dropdown position="'right-start'">
                     <button class="btn btn_more">
                         <i class="oi oi-ellipsis-v"/>
                     </button>
 
                     <t t-set-slot="content">
-                        <DropdownItem onSelected="(ev) => controller.reportAction(ev, 'action_multi_currency_revaluation_open_currency_rates', { line_id: props.line.id })">
+                        <DropdownItem onSelected="(ev) => this.controller.reportAction(ev, 'action_multi_currency_revaluation_open_currency_rates', { line_id: this.props.line.id })">
                             Rates
                         </DropdownItem>
                     </t>
                 </Dropdown>
             </t>
 
-            <t t-if="props.line.cur_revaluation_line_model === 'account.account'">
+            <t t-if="this.props.line.cur_revaluation_line_model === 'account.account'">
                 <Dropdown position="'right-start'">
                     <button class="btn btn_more">
                         <i class="oi oi-ellipsis-v"/>
                     </button>
 
                     <t t-set-slot="content">
-                        <DropdownItem onSelected="(ev) => controller.reportAction(ev, 'action_multi_currency_revaluation_open_general_ledger', { line_id: props.line.id })">
+                        <DropdownItem onSelected="(ev) => this.controller.reportAction(ev, 'action_multi_currency_revaluation_open_general_ledger', { line_id: this.props.line.id })">
                             General Ledger
                         </DropdownItem>
 
-                        <DropdownItem onSelected="(ev) => controller.reportAction(ev, 'action_multi_currency_revaluation_toggle_provision', { line_id: props.line.id })">
-                            <t t-out="props.line.is_included_line ? 'Exclude' : 'Include'"/>
+                        <DropdownItem onSelected="(ev) => this.controller.reportAction(ev, 'action_multi_currency_revaluation_toggle_provision', { line_id: this.props.line.id })">
+                            <t t-out="this.props.line.is_included_line ? 'Exclude' : 'Include'"/>
                         </DropdownItem>
                     </t>
                 </Dropdown>

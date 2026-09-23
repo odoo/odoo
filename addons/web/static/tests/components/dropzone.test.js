@@ -32,7 +32,7 @@ test("dropzone overlay appears while dragging files and handles the drop", async
 test("dropzone overlay is removed when its owner is destroyed mid-drag", async () => {
     class Parent extends Component {
         static components = { Host };
-        static template = xml`<Host t-if="state.show"/>`;
+        static template = xml`<Host t-if="this.state.show"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ show: true });

@@ -79,7 +79,7 @@ function item(
 test("can be rendered", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -111,7 +111,7 @@ test("can be rendered", async () => {
 test("select option", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="state.value" sources="sources"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources"/>`;
         static props = [];
 
         state = useState({ value: "Hello" });
@@ -145,8 +145,8 @@ test("autocomplete with resetOnSelect='true'", async () => {
         static components = { AutoComplete };
         static template = xml`
             <div>
-                <div class= "test_value" t-out="state.value"/>
-                <AutoComplete value="''" sources="sources" resetOnSelect="true"/>
+                <div class="test_value" t-out="this.state.value"/>
+                <AutoComplete value="''" sources="this.sources" resetOnSelect="true"/>
             </div>
         `;
         static props = [];
@@ -178,7 +178,7 @@ test("autocomplete with resetOnSelect='true'", async () => {
 test("open dropdown on input", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -195,7 +195,7 @@ test("open dropdown on input", async () => {
 test("cancel result on escape keydown", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources" autoSelect="true"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources" autoSelect="true"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -219,7 +219,7 @@ test("pending debounced input is cancelled on close (no reopen after escape)", a
     let loadCount = 0;
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
         static props = [];
         sources = buildSources(() => {
             loadCount++;
@@ -245,7 +245,7 @@ test("pending debounced input is cancelled on close (no reopen after escape)", a
 test("clicking the input while typing is pending still searches what was typed", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static props = [];
         sources = buildSources((/** @type {string} */ request) =>
             [item("World"), item("Hello")].filter((option) =>
@@ -268,7 +268,7 @@ test("clicking the input while typing is pending still searches what was typed",
 test("select input text on first focus", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Bar'" sources="sources"/>`;
+        static template = xml`<AutoComplete value="'Bar'" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => [item("Bar")]);
@@ -286,7 +286,7 @@ test("scroll outside should cancel result", async () => {
         static template = xml`
             <div class="autocomplete_container overflow-auto" style="max-height: 100px;">
                 <div style="height: 1000px;">
-                    <AutoComplete value="'Hello'" sources="sources" autoSelect="true"/>
+                    <AutoComplete value="'Hello'" sources="this.sources" autoSelect="true"/>
                 </div>
             </div>
         `;
@@ -315,7 +315,7 @@ test("a scroll that did not move the input does not cancel the result", async ()
         static template = xml`
             <div class="autocomplete_container overflow-auto" style="max-height: 100px;">
                 <div style="height: 1000px;">
-                    <AutoComplete value="'Hello'" sources="sources" autoSelect="true"/>
+                    <AutoComplete value="'Hello'" sources="this.sources" autoSelect="true"/>
                 </div>
             </div>
         `;
@@ -343,7 +343,7 @@ test("arrow navigation does not scroll an ancestor of the fixed menu", async () 
         static template = xml`
             <div class="autocomplete_container overflow-auto" style="height: 60px;">
                 <div style="height: 1000px;">
-                    <AutoComplete sources="sources"/>
+                    <AutoComplete sources="this.sources"/>
                 </div>
             </div>`;
         sources = buildSources(() => [
@@ -370,7 +370,7 @@ test("a page-level scroll does not cancel the result", async () => {
         static components = { AutoComplete };
         static template = xml`
             <div class="autocomplete_container">
-                <AutoComplete value="'Hello'" sources="sources" autoSelect="true"/>
+                <AutoComplete value="'Hello'" sources="this.sources" autoSelect="true"/>
             </div>
         `;
         static props = [];
@@ -396,7 +396,7 @@ test("scroll inside should keep dropdown open", async () => {
         static template = xml`
             <div class="autocomplete_container overflow-auto" style="max-height: 100px;">
                 <div style="height: 1000px;">
-                    <AutoComplete value="'Hello'" sources="sources"/>
+                    <AutoComplete value="'Hello'" sources="this.sources"/>
                 </div>
             </div>
         `;
@@ -419,7 +419,7 @@ test("scroll inside should keep dropdown open", async () => {
 test("losing focus should cancel result", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources" autoSelect="true"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources" autoSelect="true"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -442,7 +442,7 @@ test("losing focus should cancel result", async () => {
 test("click out after clearing input", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -468,7 +468,7 @@ test("open twice should not display previous results", async () => {
     let def = new Deferred();
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(async (/** @type {any} */ request) => {
@@ -515,7 +515,7 @@ test("open twice should not display previous results", async () => {
 test("press enter on autocomplete with empty source", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => []);
@@ -538,7 +538,7 @@ test("press enter on autocomplete with empty source", async () => {
 test("press enter on autocomplete with empty source (2)", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources((/** @type {any} */ request) =>
@@ -571,7 +571,7 @@ test.tags("desktop");
 test("autofocus=true option work as expected", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources" autofocus="true"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources" autofocus="true"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -586,8 +586,8 @@ test("autocomplete in edition keep edited value before select option", async () 
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
-            <button class="myButton" t-on-mouseover="onHover">My button</button>
-            <AutoComplete value="this.state.value" sources="sources"/>
+            <button class="myButton" t-on-mouseover="this.onHover">My button</button>
+            <AutoComplete value="this.state.value" sources="this.sources"/>
         `;
         static props = [];
 
@@ -625,7 +625,7 @@ test("autocomplete in edition keep edited value before blur", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
-            <button class="myButton" t-on-mouseover="onHover">My button</button>
+            <button class="myButton" t-on-mouseover="this.onHover">My button</button>
             <AutoComplete value="this.state.value" sources="[]"/>
         `;
         static props = [];
@@ -657,10 +657,10 @@ test("correct sequence of blur, focus and select", async () => {
         static components = { AutoComplete };
         static template = xml`
             <AutoComplete
-                value="state.value"
-                sources="sources"
-                onBlur.bind="onBlur"
-                onChange.bind="onChange"
+                value="this.state.value"
+                sources="this.sources"
+                onBlur.bind="this.onBlur"
+                onChange.bind="this.onChange"
                 autoSelect="true"
             />
         `;
@@ -733,7 +733,7 @@ test("correct sequence of blur, focus and select", async () => {
 
 test("autocomplete always closes on click away", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources" autoSelect="true"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources" autoSelect="true"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -762,7 +762,7 @@ test("autocomplete trim spaces for search", async () => {
     const ITEMS = [item("World"), item("Hello")];
 
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -778,7 +778,7 @@ test("autocomplete trim spaces for search", async () => {
 
 test("tab and shift+tab close the dropdown", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -803,7 +803,7 @@ test("tab and shift+tab close the dropdown", async () => {
 
 test("Clicking away selects the first option when selectOnBlur is true", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources" selectOnBlur="true"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources" selectOnBlur="true"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -831,7 +831,7 @@ test("Clicking away selects the first option when selectOnBlur is true", async (
 
 test("selectOnBlur doesn't interfere with selecting by mouse clicking", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources" selectOnBlur="true"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources" selectOnBlur="true"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -857,7 +857,7 @@ test("selectOnBlur doesn't interfere with selecting by mouse clicking", async ()
 
 test("pointerdown on an unselectable option doesn't latch ignoreBlur", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources" selectOnBlur="true"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources" selectOnBlur="true"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -895,7 +895,7 @@ test("autocomplete scrolls when moving with arrows", async () => {
                     max-height: 100px;
                 }
             </style>
-            <AutoComplete value="state.value" sources="sources" autoSelect="true"/>
+            <AutoComplete value="this.state.value" sources="this.sources" autoSelect="true"/>
         `;
         static components = { AutoComplete };
         static props = [];
@@ -962,7 +962,7 @@ test("autocomplete scrolls when moving with arrows", async () => {
 test("source with option slot", async () => {
     class Parent extends Component {
         static template = xml`
-            <AutoComplete value="''" sources="sources">
+            <AutoComplete value="''" sources="this.sources">
                 <t t-set-slot="use_this_slot" t-slot-scope="scope">
                     <div class="slot_item">
                         <t t-out="scope.data.id"/>: <t t-out="scope.label"/>
@@ -993,7 +993,7 @@ test("source with option slot", async () => {
 test("unselectable options are... not selectable", async () => {
     class Parent extends Component {
         static template = xml`
-            <AutoComplete value="''" sources="sources"/>
+            <AutoComplete value="''" sources="this.sources"/>
         `;
         static components = { AutoComplete };
         static props = [];
@@ -1058,7 +1058,7 @@ test("unselectable options are... not selectable", async () => {
 
 test("keyboard navigation skips a loaded-but-empty source", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -1114,7 +1114,7 @@ test("keyboard navigation skips a loaded-but-empty source", async () => {
 test.tags("desktop");
 test("items are selected only when the mouse moves, not just on enter", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -1155,7 +1155,7 @@ test("items are selected only when the mouse moves, not just on enter", async ()
 test.tags("desktop");
 test("keyboard-activated option survives a stray mouseleave", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -1192,7 +1192,7 @@ test("keyboard-activated option survives a stray mouseleave", async () => {
 test("do not attempt to scroll if element is null", async () => {
     const def = new Deferred();
     class Parent extends Component {
-        static template = xml`<AutoComplete value="''" sources="sources" />`;
+        static template = xml`<AutoComplete value="''" sources="this.sources" />`;
         static components = { AutoComplete };
         static props = [];
 
@@ -1228,7 +1228,7 @@ test("a failing source clears its spinner and leaves the other sources usable", 
     class Parent extends Component {
         static components = { AutoComplete };
         static props = {};
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         setup() {
             this.sources = [
                 {
@@ -1255,7 +1255,7 @@ test("a failing source does not reject the fire-and-forget open()", async () => 
     class Parent extends Component {
         static components = { AutoComplete };
         static props = {};
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         setup() {
             this.sources = [{ options: () => Promise.reject(new Error("nope")) }];
         }
@@ -1275,7 +1275,7 @@ test("a new value prop is applied after the edit was abandoned with Escape", asy
     class Parent extends Component {
         static components = { AutoComplete };
         static props = {};
-        static template = xml`<AutoComplete value="state.value" sources="sources"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources"/>`;
         setup() {
             this.state = useState({ value: "initial" });
             this.sources = [{ options: [{ label: "alpha", onSelect: () => {} }] }];
@@ -1303,7 +1303,7 @@ test("a pointerdown inside an iframe dismisses the dropdown", async () => {
         static template = xml`
             <div>
                 <iframe class="probeFrame" srcdoc="&lt;p&gt;hi&lt;/p&gt;"/>
-                <AutoComplete value="'Hello'" sources="sources"/>
+                <AutoComplete value="'Hello'" sources="this.sources"/>
             </div>`;
         static props = [];
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -1337,8 +1337,8 @@ test("two id-less autocompletes do not share generated option ids", async () => 
         static props = ["*"];
         static template = xml`
             <div>
-                <AutoComplete value="''" sources="props.srcs" dropdown="false"/>
-                <AutoComplete value="''" sources="props.srcs" dropdown="false"/>
+                <AutoComplete value="''" sources="this.props.srcs" dropdown="false"/>
+                <AutoComplete value="''" sources="this.props.srcs" dropdown="false"/>
             </div>`;
     }
     await mountWithCleanup(Parent, {
@@ -1354,7 +1354,7 @@ test("two id-less autocompletes do not share generated option ids", async () => 
 
 test("a source with no selectable option never leaves one active", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static components = { AutoComplete };
         static props = [];
         sources = buildSources(() => [
@@ -1381,7 +1381,7 @@ test("a source with no selectable option never leaves one active", async () => {
 
 test("tab does not autoselect after the dropdown was closed and reopened", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="''" sources="sources" autoSelect="true"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources" autoSelect="true"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -1408,7 +1408,7 @@ test("tab does not autoselect after the dropdown was closed and reopened", async
 
 test("blur selects the first selectable option, whichever source holds it", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="''" sources="sources" selectOnBlur="true"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources" selectOnBlur="true"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -1431,7 +1431,7 @@ test("blur selects the first selectable option, whichever source holds it", asyn
 test("selectOnBlur does not resurrect a suggestion dismissed with escape", async () => {
     class Parent extends Component {
         static template = xml`
-            <AutoComplete value="''" sources="sources" selectOnBlur="true"/>
+            <AutoComplete value="''" sources="this.sources" selectOnBlur="true"/>
             <button class="elsewhere">elsewhere</button>`;
         static components = { AutoComplete };
         static props = [];
@@ -1456,7 +1456,7 @@ test("selectOnBlur does not resurrect a suggestion dismissed with escape", async
 test("selectOnBlur does not resurrect a suggestion dismissed with tab", async () => {
     class Parent extends Component {
         static template = xml`
-            <AutoComplete value="''" sources="sources" selectOnBlur="true"/>
+            <AutoComplete value="''" sources="this.sources" selectOnBlur="true"/>
             <button class="elsewhere">elsewhere</button>`;
         static components = { AutoComplete };
         static props = [];
@@ -1480,7 +1480,7 @@ test("selectOnBlur does not resurrect a suggestion dismissed with tab", async ()
 test("reopening after a dismissal restores selectOnBlur", async () => {
     class Parent extends Component {
         static template = xml`
-            <AutoComplete value="''" sources="sources" selectOnBlur="true"/>
+            <AutoComplete value="''" sources="this.sources" selectOnBlur="true"/>
             <button class="elsewhere">elsewhere</button>`;
         static components = { AutoComplete };
         static props = [];
@@ -1504,7 +1504,7 @@ test.tags("desktop");
 test("arrowup on a closed dropdown enters the list from the bottom", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => [item("A"), item("B"), item("C")]);
@@ -1522,7 +1522,7 @@ test.tags("desktop");
 test("arrowup still enters from the bottom after the list has been closed", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => [item("A"), item("B"), item("C")]);
@@ -1550,7 +1550,7 @@ test("menuPositionOptions is followed after it changes", async () => {
         static components = { AutoComplete };
         static template = xml`
             <div style="height: 400px"/>
-            <AutoComplete value="''" sources="sources" menuPositionOptions="state.opts"/>`;
+            <AutoComplete value="''" sources="this.sources" menuPositionOptions="this.state.opts"/>`;
         static props = [];
 
         state = useState({ opts: { position: "bottom-start" } });
@@ -1585,7 +1585,7 @@ test("selectOnBlur does not commit an option the parent already superseded", asy
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
-            <AutoComplete value="state.value" sources="sources" selectOnBlur="true"/>
+            <AutoComplete value="this.state.value" sources="this.sources" selectOnBlur="true"/>
             <button class="elsewhere">elsewhere</button>`;
         static props = [];
 
@@ -1611,8 +1611,8 @@ test("selectOnBlur survives a parent that resets its value while typing", async 
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
-            <AutoComplete value="state.chosen?.label ?? ''" sources="sources"
-                          onInput.bind="onInput" selectOnBlur="true" autoSelect="true"/>
+            <AutoComplete value="this.state.chosen?.label ?? ''" sources="this.sources"
+                          onInput.bind="this.onInput" selectOnBlur="true" autoSelect="true"/>
             <button class="elsewhere">elsewhere</button>`;
         static props = [];
 
@@ -1637,8 +1637,8 @@ test("tab commits after a parent reset its value while typing", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
-            <AutoComplete value="state.chosen?.label ?? ''" sources="sources"
-                          onInput.bind="onInput" selectOnBlur="true" autoSelect="true"/>
+            <AutoComplete value="this.state.chosen?.label ?? ''" sources="this.sources"
+                          onInput.bind="this.onInput" selectOnBlur="true" autoSelect="true"/>
             <button class="elsewhere">elsewhere</button>`;
         static props = [];
 
@@ -1664,7 +1664,7 @@ test("an arrow-opened list counts as browsed for the tab commit", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
-            <AutoComplete value="''" sources="sources" autoSelect="true"/>
+            <AutoComplete value="''" sources="this.sources" autoSelect="true"/>
             <button class="elsewhere">x</button>`;
         static props = [];
 
@@ -1688,7 +1688,7 @@ test.tags("desktop");
 test("an arrowup-opened list commits its last option on tab", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="''" sources="sources" autoSelect="true"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources" autoSelect="true"/>`;
         static props = [];
 
         sources = buildSources(() => [
@@ -1711,7 +1711,7 @@ test("a loading source does not present itself as a selected option", async () =
     class Parent extends Component {
         static components = { AutoComplete };
         static props = {};
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
 
         sources = [
             {
@@ -1744,7 +1744,7 @@ test("a dropdown list is not in the tab order", async () => {
     class Parent extends Component {
         static template = xml`
             <div>
-                <AutoComplete value="''" sources="sources"/>
+                <AutoComplete value="''" sources="this.sources"/>
                 <button class="after">after</button>
             </div>`;
         static components = { AutoComplete };
@@ -1763,7 +1763,7 @@ test("an inline list is reachable by tab", async () => {
     class Parent extends Component {
         static template = xml`
             <div>
-                <AutoComplete value="''" sources="sources" dropdown="false"/>
+                <AutoComplete value="''" sources="this.sources" dropdown="false"/>
                 <button class="after">after</button>
             </div>`;
         static components = { AutoComplete };
@@ -1789,7 +1789,7 @@ test("typing does not render the component until the debounced search opens the 
     });
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
         static props = [];
         sources = buildSources(() => [item("World"), item("Hello")]);
     }

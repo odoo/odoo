@@ -3,21 +3,21 @@
     <t t-name="document.DocumentsListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_list_renderer')]" position="attributes">
             <attribute name="class">o_list_renderer o_documents_view o_renderer_with_searchpanel overflow-auto position-relative</attribute>
-            <attribute name="t-on-keydown">onGlobalKeydown</attribute>
-            <attribute name="t-on-click">onGlobalClick</attribute>
+            <attribute name="t-on-keydown">this.onGlobalKeydown</attribute>
+            <attribute name="t-on-click">this.onGlobalClick</attribute>
         </xpath>
         <xpath expr="//div[hasclass('o_list_renderer')]" position="after">
-            <DocumentsRightPanel nbViewItems="getNbViewItems()" t-if="!this.env.searchModel.context.documents_view_secondary"/>
+            <DocumentsRightPanel nbViewItems="this.getNbViewItems()" t-if="!this.env.searchModel.context.documents_view_secondary"/>
         </xpath>
         <table position="before">
-            <DocumentsDropZone parentRoot="root"/>
-            <DocumentsFileViewerHost parentRoot="root" t-props="getDocumentsAttachmentViewerProps()"/>
-            <FileUploadProgressContainer fileUploads="this.documentUploads" Component="constructor.components.FileUploadProgressDataRow"
+            <DocumentsDropZone parentRoot="this.root"/>
+            <DocumentsFileViewerHost parentRoot="this.root" t-props="this.getDocumentsAttachmentViewerProps()"/>
+            <FileUploadProgressContainer fileUploads="this.documentUploads" Component="this.constructor.components.FileUploadProgressDataRow"
                                          shouldDisplay="(upload) => !upload.data.get('document_id') &amp;&amp; !upload.data.get('thread_id')"/>
         </table>
         <ActionHelper position="replace">
-            <t t-if="showNoContentHelper">
-                <DocumentsActionHelper noContentHelp="props.noContentHelp"/>
+            <t t-if="this.showNoContentHelper">
+                <DocumentsActionHelper noContentHelp="this.props.noContentHelp"/>
             </t>
         </ActionHelper>
     </t>
@@ -25,7 +25,7 @@
     <t t-name="document.DocumentsListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="primary">
         <xpath expr="//tr[hasclass('o_data_row')]" position="attributes">
             <attribute name="t-att-data-value-id">record.data.id</attribute>
-            <attribute name="t-att-focused">record.id === props.rightPanelState.focusedRecord?.id</attribute>
+            <attribute name="t-att-focused">record.id === this.props.rightPanelState.focusedRecord?.id</attribute>
         </xpath>
     </t>
 </templates>

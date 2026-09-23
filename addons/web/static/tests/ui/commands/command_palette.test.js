@@ -357,7 +357,7 @@ test("command with a Custom Component", async () => {
     class CustomComponent extends Component {
         static template = xml`
             <div class="o_command_custom">
-                <span t-out="props.name"/>
+                <span t-out="this.props.name"/>
             </div>
         `;
         static props = ["*"];
@@ -1859,7 +1859,7 @@ test("two commands that cannot render in one pass both lose their row", async ()
     expect.errors(2);
     let poison = false;
     class Poisoned extends Component {
-        static template = xml`<span class="poisoned" t-att-data-check="check"/>`;
+        static template = xml`<span class="poisoned" t-att-data-check="this.check"/>`;
         static props = ["*"];
         get check() {
             if (poison) {
@@ -1949,7 +1949,7 @@ test("a failing initial search is reported and leaves the palette usable", async
 test("a row that survives a search keeps its component", async () => {
     let setups = 0;
     class Counted extends Component {
-        static template = xml`<span class="counted" t-out="props.name"/>`;
+        static template = xml`<span class="counted" t-out="this.props.name"/>`;
         static props = ["*"];
         setup() {
             setups++;
@@ -1976,7 +1976,7 @@ test("one command that cannot render loses its row, not the palette", async () =
     expect.errors(1);
     let poison = false;
     class Poisoned extends Component {
-        static template = xml`<span class="poisoned" t-att-data-check="check"/>`;
+        static template = xml`<span class="poisoned" t-att-data-check="this.check"/>`;
         static props = ["*"];
         get check() {
             if (poison) {
@@ -2104,7 +2104,7 @@ test("a command that cannot render is dropped, and its namesake is not", async (
         },
     });
     class RecordItem extends Component {
-        static template = xml`<span class="o_command_default" t-out="props.name"/>`;
+        static template = xml`<span class="o_command_default" t-out="this.props.name"/>`;
         static props = ["*"];
     }
     const openRecord = (/** @type {number} */ id) => ({

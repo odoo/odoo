@@ -134,7 +134,7 @@ export class HomeMenuAction extends Component {
     static components = { HomeMenu };
     static target = "current";
     static props = { ...standardActionServiceProps };
-    static template = xml`<HomeMenu t-props="homeMenuProps"/>`;
+    static template = xml`<HomeMenu t-props="this.homeMenuProps"/>`;
     static displayName = _t("Home");
 
     /** @type {import("services").ServiceFactories["menu"]} */

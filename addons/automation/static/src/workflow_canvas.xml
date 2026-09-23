@@ -6,76 +6,76 @@
             <div class="o_workflow_canvas_toolbar d-flex align-items-center gap-2 mb-2">
                 <button type="button" class="btn btn-sm btn-secondary"
                         t-on-click="() => this.relayout()"
-                        t-att-disabled="state.status !== 'ready'">
+                        t-att-disabled="this.state.status !== 'ready'">
                     <i class="fa fa-sitemap me-1"/>Tidy up
                 </button>
                 <button type="button" class="btn btn-sm btn-outline-danger"
-                        t-if="isEditable"
-                        t-att-disabled="!state.selectedEdgeId"
+                        t-if="this.isEditable"
+                        t-att-disabled="!this.state.selectedEdgeId"
                         t-on-click="() => this.removeSelectedEdge()">
                     <i class="fa fa-unlink me-1"/>Remove connection
                 </button>
-                <select t-if="state.runs.length"
+                <select t-if="this.state.runs.length"
                         class="form-select form-select-sm w-auto"
                         aria-label="Workflow run"
                         t-on-change="(ev) => this.selectRun(ev.target.value)">
                     <option value="definition"
-                            t-att-selected="!state.runtimeId">Definition</option>
-                    <t t-foreach="state.runs" t-as="run" t-key="run.id">
+                            t-att-selected="!this.state.runtimeId">Definition</option>
+                    <t t-foreach="this.state.runs" t-as="run" t-key="run.id">
                         <option t-att-value="run.id"
-                                t-att-selected="run.id === state.runtimeId">
+                                t-att-selected="run.id === this.state.runtimeId">
                             <t t-out="run.name"/> — <t t-out="run.state_label"/>
                             <t t-if="run.live"> (live)</t>
                         </option>
                     </t>
                 </select>
-                <span t-if="state.runtimeId" class="badge text-bg-info">
-                    <i class="fa fa-eye me-1"/>Showing <t t-out="runLabel"/>
+                <span t-if="this.state.runtimeId" class="badge text-bg-info">
+                    <i class="fa fa-eye me-1"/>Showing <t t-out="this.runLabel"/>
                 </span>
                 <span class="text-muted small ms-auto">
-                    <t t-out="state.countNode"/> steps,
-                    <t t-out="state.countEdge"/> connections
+                    <t t-out="this.state.countNode"/> steps,
+                    <t t-out="this.state.countEdge"/> connections
                 </span>
             </div>
 
-            <div t-if="state.status === 'loading'" class="text-muted p-4">
+            <div t-if="this.state.status === 'loading'" class="text-muted p-4">
                 <i class="fa fa-circle-o-notch fa-spin me-2"/>Loading the workflow…
             </div>
-            <div t-elif="state.status === 'unsaved'" class="text-muted p-4">
+            <div t-elif="this.state.status === 'unsaved'" class="text-muted p-4">
                 Save this automation to draw its workflow.
             </div>
-            <div t-elif="state.status === 'empty'" class="text-muted p-4">
+            <div t-elif="this.state.status === 'empty'" class="text-muted p-4">
                 This automation has no steps yet. Add server actions, then connect them here.
             </div>
-            <div t-elif="state.status === 'error'" class="alert alert-warning" role="alert">
+            <div t-elif="this.state.status === 'error'" class="alert alert-warning" role="alert">
                 <strong>The workflow could not be drawn.</strong>
-                <div class="small mt-1" t-out="state.error"/>
+                <div class="small mt-1" t-out="this.state.error"/>
             </div>
             <div t-else="" class="o_workflow_canvas_paper">
-                <FlowEditor nodes="state.nodes"
-                            connections="state.connections"
-                            NodeComponent="NodeComponent"
-                            readonly="!isEditable"
+                <FlowEditor nodes="this.state.nodes"
+                            connections="this.state.connections"
+                            NodeComponent="this.NodeComponent"
+                            readonly="!this.isEditable"
                             ariaLabel.translate="Workflow"
                             flagUnreachableNodes="false"
-                            viewport="viewport"
-                            minNodeSize="minNodeSize"
-                            maxNodeSize="maxNodeSize"
-                            canConnect.bind="canConnect"
-                            getConnectionClass.bind="getConnectionClass"
-                            getConnectionLabel.bind="getConnectionLabel"
-                            onConnect.bind="onConnect"
-                            onConnectionRejected.bind="onConnectionRejected"
-                            onDisconnect.bind="onDisconnect"
-                            onDrag.bind="onDrag"
-                            onNodeClick.bind="onNodeClick"
-                            onNodeDelete.bind="onNodeDelete"
-                            onResize.bind="onResize"
-                            onSelectionChange.bind="onSelectionChange"
-                            onViewportChange.bind="onViewportChange"/>
+                            viewport="this.viewport"
+                            minNodeSize="this.minNodeSize"
+                            maxNodeSize="this.maxNodeSize"
+                            canConnect.bind="this.canConnect"
+                            getConnectionClass.bind="this.getConnectionClass"
+                            getConnectionLabel.bind="this.getConnectionLabel"
+                            onConnect.bind="this.onConnect"
+                            onConnectionRejected.bind="this.onConnectionRejected"
+                            onDisconnect.bind="this.onDisconnect"
+                            onDrag.bind="this.onDrag"
+                            onNodeClick.bind="this.onNodeClick"
+                            onNodeDelete.bind="this.onNodeDelete"
+                            onResize.bind="this.onResize"
+                            onSelectionChange.bind="this.onSelectionChange"
+                            onViewportChange.bind="this.onViewportChange"/>
             </div>
 
-            <div t-if="state.status === 'ready' and isEditable" class="text-muted small mt-2">
+            <div t-if="this.state.status === 'ready' and this.isEditable" class="text-muted small mt-2">
                 <i class="fa-solid fa-info-circle me-1"/>
                 Drag from a step's right-edge port onto another step's left edge to connect
                 them; the port you leave from is the condition the connection carries. Drag a

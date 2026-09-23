@@ -2,8 +2,8 @@
 <templates>
     <t t-name="account.BankRecKanbanControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_control_panel_actions')]" position="inside">
-            <div t-if="selectedStatementLines.length and !ui.isSmall" class="d-flex w-100 gap-1">
-                <t t-foreach="buttonsToDisplay" t-as="button" t-key="button_index">
+            <div t-if="this.selectedStatementLines.length and !this.ui.isSmall" class="d-flex w-100 gap-1">
+                <t t-foreach="this.buttonsToDisplay" t-as="button" t-key="button_index">
                     <BankRecButton t-props="button"/>
                 </t>
                 <Dropdown>
@@ -11,12 +11,12 @@
                         <i class="oi oi-ellipsis-v"/>
                     </button>
                     <t t-set-slot="content">
-                        <t t-foreach="reconcileModelsToDisplay" t-as="model" t-key="model.id">
+                        <t t-foreach="this.reconcileModelsToDisplay" t-as="model" t-key="model.id">
                             <DropdownItem class="'btn btn-link'" onSelected.bind="() => this.triggerReconciliationModel(model.id)">
                                 <t t-out="model.display_name"/>
                             </DropdownItem>
                         </t>
-                        <t t-foreach="extraButtonToDisplay" t-as="button" t-key="button_index">
+                        <t t-foreach="this.extraButtonToDisplay" t-as="button" t-key="button_index">
                             <DropdownItem class="'btn btn-link'" onSelected.bind="button.action">
                                 <t t-out="button.label"/>
                             </DropdownItem>

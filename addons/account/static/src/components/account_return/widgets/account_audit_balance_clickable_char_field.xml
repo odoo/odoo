@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="account.AccountAuditClickableCharField" t-inherit="web.CharField" t-inherit-mode="primary">
-        <span t-out="formattedValue" position="replace">
+        <span t-out="this.formattedValue" position="replace">
             <a type="button" aria-label="Audit account" t-on-click="this.onClickField" class="btn-link">
-                <span t-out="formattedValue" />
+                <span t-out="this.formattedValue" />
             </a>
         </span>
     </t>    

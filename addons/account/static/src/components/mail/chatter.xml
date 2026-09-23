@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-name="account.Chatter" t-inherit="mail.Chatter" t-inherit-mode="primary">
         <xpath expr="//Composer" position="attributes" type="add">
-            <attribute name="reportController">props.reportController</attribute>
-            <attribute name="date_to">props.date_to</attribute>
-            <attribute name="list">props.list</attribute>
+            <attribute name="reportController">this.props.reportController</attribute>
+            <attribute name="date_to">this.props.date_to</attribute>
+            <attribute name="list">this.props.list</attribute>
         </xpath>
         <xpath expr="//Thread" position="attributes" type="add">
-            <attribute name="reportController">props.reportController</attribute>
+            <attribute name="reportController">this.props.reportController</attribute>
         </xpath>
     </t>
 </templates>

@@ -74,7 +74,7 @@ class TestComponent extends Component {
     static components = { SearchBarMenu, SearchPanel };
     static template = xml`
         <div class="o_test_component">
-            <SearchPanel t-if="env.searchModel.display.searchPanel" />
+            <SearchPanel t-if="this.env.searchModel.display.searchPanel" />
             <SearchBarMenu />
         </div>
     `;
@@ -3765,10 +3765,10 @@ test("two search panels on one page do not share checkbox ids", async () => {
     class TwoPanels extends Component {
         static template = xml`
             <div>
-                <WithSearch resModel="'partner'" searchViewId="false" searchViewArch="arch" t-slot-scope="s">
+                <WithSearch resModel="'partner'" searchViewId="false" searchViewArch="this.arch" t-slot-scope="s">
                     <SearchPanel/>
                 </WithSearch>
-                <WithSearch resModel="'partner'" searchViewId="false" searchViewArch="arch" t-slot-scope="s">
+                <WithSearch resModel="'partner'" searchViewId="false" searchViewArch="this.arch" t-slot-scope="s">
                     <SearchPanel/>
                 </WithSearch>
             </div>

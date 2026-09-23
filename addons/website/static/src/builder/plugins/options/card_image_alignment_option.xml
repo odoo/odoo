@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
 <t t-name="website.CardImageAlignmentOption">
-    <BuilderRow label="props.label" level="props.level" t-if="state.show">
+    <BuilderRow label="this.props.label" level="this.props.level" t-if="this.state.show">
         <BuilderRange
             styleAction="'--card-img-ratio-align'"
             action="'alignCoverImage'"
-            actionParam="state.imageToWrapperRatio gt 1 ? 'horizontal' : 'vertical'"
+            actionParam="this.state.imageToWrapperRatio gt 1 ? 'horizontal' : 'vertical'"
             min="0"
             max="100"
             unit="'%'"/>

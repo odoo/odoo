@@ -18,7 +18,7 @@
         <BuilderSelect applyTo="'.o_horizontal_controllers_row'">
             <BuilderSelectItem classAction="'justify-content-between'">Default</BuilderSelectItem>
             <BuilderSelectItem classAction="'justify-content-between flex-row-reverse'" >Reversed</BuilderSelectItem>
-            <BuilderSelectItem classAction="'justify-content-center'" t-if="isActiveItem('carousel_arrows_hidden_opt') || isActiveItem('carousel_indicators_hidden_opt')">Centered</BuilderSelectItem>
+            <BuilderSelectItem classAction="'justify-content-center'" t-if="this.isActiveItem('carousel_arrows_hidden_opt') || this.isActiveItem('carousel_indicators_hidden_opt')">Centered</BuilderSelectItem>
         </BuilderSelect>
     </xpath>
 </t>

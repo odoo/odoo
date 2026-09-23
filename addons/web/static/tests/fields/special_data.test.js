@@ -55,7 +55,7 @@ async function mountSpecialData() {
     }
 
     class Parent extends Component {
-        static template = xml`<span t-out="state.tick"/><Child record="state.record" domain="state.domain"/>`;
+        static template = xml`<span t-out="this.state.tick"/><Child record="this.state.record" domain="this.state.domain"/>`;
         static components = { Child };
         /** @type {any} */
         static props = [];
@@ -131,7 +131,7 @@ test("the shape Field actually mounts: t-props with a fresh context each render"
     }
 
     class Parent extends Component {
-        static template = xml`<span t-out="state.tick"/><Child t-props="childProps"/>`;
+        static template = xml`<span t-out="this.state.tick"/><Child t-props="this.childProps"/>`;
         static components = { Child };
         /** @type {any} */
         static props = [];

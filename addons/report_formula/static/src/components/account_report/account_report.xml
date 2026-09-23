@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="report_formula.AccountReport">
-        <t t-call="{{ env.template('AccountReport') }}"/>
+        <t t-call="{{ this.env.template('AccountReport') }}"/>
     </t>
 
     <t t-name="report_formula.AccountReportCustomizable">
-        <div class="o_action account_report" t-att-class="cssCustomClass" t-ref="root">
-            <ControlPanel display="{ adaptToScroll: False }">
+        <div class="o_action account_report" t-att-class="this.cssCustomClass" t-ref="root">
+            <ControlPanel display="{ adaptToScroll: this.False }">
                 <!-- Buttons bar -->
                 <t t-set-slot="control-panel-create-button">
                     <AccountReportButtonsBar/>
@@ -18,40 +18,40 @@
                 <!-- Search bar (if configured for report) and filters -->
                 <t t-set-slot="layout-actions">
                    <div class="d-flex gap-1 flex-wrap">
-                       <t t-if="controller.cachedFilterOptions.search_bar">
-                           <AccountReportSearchBar initialQuery="initialQuery"/>
+                       <t t-if="this.controller.cachedFilterOptions.search_bar">
+                           <AccountReportSearchBar initialQuery="this.initialQuery"/>
                            <br/>
                        </t>
-                       <t t-component="env.component('AccountReportFilters')"/>
+                       <t t-component="this.env.component('AccountReportFilters')"/>
                    </div>
                 </t>
 
             </ControlPanel>
 
-            <div class="d-flex h-100 o_content" t-att-class="{'flex-column': ui.isSmall, 'flex-row': !ui.isSmall }">
+            <div class="d-flex h-100 o_content" t-att-class="{'flex-column': this.ui.isSmall, 'flex-row': !this.ui.isSmall }">
                 <div class="d-flex flex-column w-100">
                     <!-- Sections -->
-                    <t t-if="controller.cachedFilterOptions.sections.length">
+                    <t t-if="this.controller.cachedFilterOptions.sections.length">
                         <div id="section_selector" class="section_selector">
-                            <t t-foreach="controller.cachedFilterOptions.sections" t-as="section" t-key="section_index">
+                            <t t-foreach="this.controller.cachedFilterOptions.sections" t-as="section" t-key="section_index">
                                 <button
-                                    t-att-class="(controller.cachedFilterOptions.selected_section_id === section.id) ? 'btn btn-secondary' : 'btn btn-primary'"
-                                    t-on-click="() => controller.switchToSection(section.id)"
+                                    t-att-class="(this.controller.cachedFilterOptions.selected_section_id === section.id) ? 'btn btn-secondary' : 'btn btn-primary'"
+                                    t-on-click="() => this.controller.switchToSection(section.id)"
                                     t-out="section.name"
                                 />
                             </t>
 
-                            <t t-if="controller.cachedFilterOptions['has_inactive_sections']">
-                                <button class="btn btn-secondary" t-on-click="(ev) => controller.reportAction(ev, 'action_display_inactive_sections')" >+</button>
+                            <t t-if="this.controller.cachedFilterOptions['has_inactive_sections']">
+                                <button class="btn btn-secondary" t-on-click="(ev) => this.controller.reportAction(ev, 'action_display_inactive_sections')" >+</button>
                             </t>
                         </div>
                     </t>
 
                     <!-- Warnings -->
-                    <t t-if="controller.data and controller.warnings">
+                    <t t-if="this.controller.data and this.controller.warnings">
                         <div id="warnings" class="warnings d-print-none">
-                            <t t-foreach="controller.warnings" t-as="warningTemplateRef" t-key="warningTemplateRef">
-                                <t t-set="warningParams" t-value="controller.warnings[warningTemplateRef]"/>
+                            <t t-foreach="this.controller.warnings" t-as="warningTemplateRef" t-key="warningTemplateRef">
+                                <t t-set="warningParams" t-value="this.controller.warnings[warningTemplateRef]"/>
 
                                 <div t-att-class="`alert alert-${warningParams['alert_type'] || 'info'} text-center`">
                                     <t t-call="{{ warningTemplateRef }}"/>
@@ -60,7 +60,7 @@
                         </div>
                     </t>
 
-                    <t t-if="controller.data === undefined">
+                    <t t-if="this.controller.data === undefined">
                         <div class="o_view_nocontent">
                             <div class="text-center mt-4">
                                 <div class="spinner-border text-primary" role="status">
@@ -69,31 +69,31 @@
                             </div>
                         </div>
                     </t>
-                    <t t-elif="controller.lines.length">
+                    <t t-elif="this.controller.lines.length">
                         <!-- Table -->
                         <div class="mx-auto o_account_report_scroll_container overflow-x-auto">
                             <div class="d-flex align-items-start">
-                                <t t-foreach="controller.options['horizontal_split'] ? ['left', 'right'] : [null]" t-as="splitSide" t-key="splitSide">
+                                <t t-foreach="this.controller.options['horizontal_split'] ? ['left', 'right'] : [null]" t-as="splitSide" t-key="splitSide">
                                     <table
                                         class="table table-borderless table-hover mx-auto"
-                                        t-att-class="tableClasses"
+                                        t-att-class="this.tableClasses"
                                     >
-                                        <t t-component="env.component('AccountReportHeader')"/>
+                                        <t t-component="this.env.component('AccountReportHeader')"/>
                                         <tbody>
-                                            <t t-foreach="controller.lines" t-as="line" t-key="line_index">
+                                            <t t-foreach="this.controller.lines" t-as="line" t-key="line_index">
                                                 <t t-if="!splitSide || splitSide === (line.horizontal_split_side || 'left')">
                                                     <!--
                                                         We filter lines directly in the template so that the indices passed to AccountReportLine component
                                                         correspond to indices in the global lines list ; for genericity of the code.
                                                     -->
-                                                    <t t-if="controller.areLinesOrdered()">
-                                                        <t t-set="orderedIndex" t-value="controller.linesOrder[line_index]"/>
-                                                        <t t-set="orderedLine" t-value="controller.lines[orderedIndex]"/>
+                                                    <t t-if="this.controller.areLinesOrdered()">
+                                                        <t t-set="orderedIndex" t-value="this.controller.linesOrder[line_index]"/>
+                                                        <t t-set="orderedLine" t-value="this.controller.lines[orderedIndex]"/>
 
-                                                        <t t-component="env.component('AccountReportLine')" t-props="{ lineIndex: orderedIndex, line: orderedLine }"/>
+                                                        <t t-component="this.env.component('AccountReportLine')" t-props="{ lineIndex: orderedIndex, line: orderedLine }"/>
                                                     </t>
                                                     <t t-else="">
-                                                        <t t-component="env.component('AccountReportLine')" t-props="{ lineIndex: line_index, line: line }"/>
+                                                        <t t-component="this.env.component('AccountReportLine')" t-props="{ lineIndex: line_index, line: line }"/>
                                                     </t>
                                                 </t>
                                             </t>

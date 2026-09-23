@@ -13,7 +13,7 @@
             <BuilderSelect dataAttributeAction="'productCategoryId'" preview="false" id="'product_category_opt'">
                 <BuilderSelectItem dataAttributeActionValue="'all'">All Products</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'current'">Current Category or All</BuilderSelectItem>
-                <t t-foreach="state.categories" t-as="category" t-key="`${category.id}`">
+                <t t-foreach="this.state.categories" t-as="category" t-key="`${category.id}`">
                     <BuilderSelectItem dataAttributeActionValue="`${category.id}`" t-out="category.name"/>
                 </t>
             </BuilderSelect>

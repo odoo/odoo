@@ -414,7 +414,7 @@ export class Composer extends Component {
     }
 
     get showComposerAvatar() {
-        return !this.compact && this.props.sidebar;
+        return this.props.mode !== "compact" && this.props.sidebar;
     }
 
     get thread() {

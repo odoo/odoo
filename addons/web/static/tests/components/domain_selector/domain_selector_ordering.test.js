@@ -27,7 +27,7 @@ test("two domain updates in flight land in the order they were asked for", async
     const pending = [];
     class Parent extends Component {
         static components = { DomainSelector };
-        static template = xml`<DomainSelector resModel="'partner'" domain="state.domain" readonly="true" update="() => {}"/>`;
+        static template = xml`<DomainSelector resModel="'partner'" domain="this.state.domain" readonly="true" update="() => {}"/>`;
         static props = ["*"];
         /** @type {{ domain: string }} */
         state;

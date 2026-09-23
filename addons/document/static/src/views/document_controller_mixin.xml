@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="document.DocumentsViews.ControlPanel">
-        <t t-set="isShareable" t-value="hasShareDocuments()"/>
+        <t t-set="isShareable" t-value="this.hasShareDocuments()"/>
         <t t-set="folder" t-value="this.env.searchModel.getSelectedFolder()"/>
-        <input type="file" multiple="true" t-ref="uploadFileInput" class="o_input_file o_hidden" t-on-change.stop="onFileInputChange"/>
+        <input type="file" multiple="true" t-ref="uploadFileInput" class="o_input_file o_hidden" t-on-change.stop="this.onFileInputChange"/>
         <Dropdown t-if="!this.env.searchModel.context.documents_view_secondary">
             <button type="button" class="btn btn-primary o-dropdown-caret" data-hotkey="c">
                 New
@@ -11,28 +11,28 @@
             <t t-set-slot="content">
                 <DropdownItem tag="'button'" class="'btn btn-link o_documents_kanban_upload'"
                     onSelected="() => this.uploadFileInputRef.el.click()"
-                    attrs="{'data-hotkey': 'a', disabled: !canUploadInFolder(folder)}">
+                    attrs="{'data-hotkey': 'a', disabled: !this.canUploadInFolder(folder)}">
                     <i class="fa-solid fa-upload me-1"/>
                     <span>Upload</span>
                 </DropdownItem>
                 <DropdownItem tag="'button'" class="'btn btn-link o_documents_kanban_request'"
-                    t-if="userIsInternal"
-                    onSelected="onClickDocumentsRequest"
-                    attrs="{'data-hotkey': 'r', disabled: !canUploadInFolder(folder) || folder.id === 'COMPANY'}">
+                    t-if="this.userIsInternal"
+                    onSelected="this.onClickDocumentsRequest"
+                    attrs="{'data-hotkey': 'r', disabled: !this.canUploadInFolder(folder) || folder.id === 'COMPANY'}">
                     <i class="fa-regular fa-paper-plane me-1"/>
                     <span>Request</span>
                 </DropdownItem>
                 <DropdownItem tag="'button'" class="'btn btn-link o_documents_kanban_url'"
-                    t-if="userIsInternal"
-                    onSelected="onClickDocumentsAddUrl"
-                    attrs="{'data-hotkey': 'l', disabled: !canUploadInFolder(folder)}">
+                    t-if="this.userIsInternal"
+                    onSelected="this.onClickDocumentsAddUrl"
+                    attrs="{'data-hotkey': 'l', disabled: !this.canUploadInFolder(folder)}">
                     <i class="fa-solid fa-link me-1"/>
                     <span>Link</span>
                 </DropdownItem>
-                <t t-if="userIsInternal and canUploadInFolder(folder)">
+                <t t-if="this.userIsInternal and this.canUploadInFolder(folder)">
                     <div role="separator" class="dropdown-divider"/>
                     <DropdownItem tag="'button'" class="'btn btn-link o_documents_kanban_folder'"
-                        onSelected="onClickAddFolder"
+                        onSelected="this.onClickAddFolder"
                         attrs="{'data-hotkey': 'w'}">
                         <i class="fa-solid fa-folder me-1"/>
                         <span>Folder</span>

@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="project_todo.TodoDoneCheckmark">
-        <a t-att-title="toggleTitle"
-           t-on-click.stop="onDoneToggled"
-           t-on-mouseleave="actualizeDoneState"
-           t-on-mouseover="freezeDoneState"
-           t-attf-class="{{ env.isSmall ? 'o_todo_done_button_mobile' : 'o_todo_done_button' }} fa-lg {{ isDone ? 'fa-solid fa-circle-check done_button_enabled' : 'fa-regular fa-circle-check' }}"/>
+        <a t-att-title="this.toggleTitle"
+           t-on-click.stop="this.onDoneToggled"
+           t-on-mouseleave="this.actualizeDoneState"
+           t-on-mouseover="this.freezeDoneState"
+           t-attf-class="{{ this.env.isSmall ? 'o_todo_done_button_mobile' : 'o_todo_done_button' }} fa-lg {{ this.isDone ? 'fa-solid fa-circle-check done_button_enabled' : 'fa-regular fa-circle-check' }}"/>
     </t>
 
 </templates>

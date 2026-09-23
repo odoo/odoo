@@ -23,7 +23,7 @@ const { DateTime } = luxon;
 
 class DateTimeInputComp extends Component {
     static components = { DateTimeInput };
-    static template = xml`<DateTimeInput t-props="props" />`;
+    static template = xml`<DateTimeInput t-props="this.props" />`;
     static props = ["*"];
 }
 
@@ -222,7 +222,7 @@ describe("DateTimeInput (date)", () => {
     test("popover should have enough space to be displayed", async () => {
         class Root extends Component {
             static components = { DateTimeInput };
-            static template = xml`<div class="d-flex"><DateTimeInput t-props="props" /></div>`;
+            static template = xml`<div class="d-flex"><DateTimeInput t-props="this.props" /></div>`;
             static props = ["*"];
         }
         await mountWithCleanup(Root, {
@@ -250,7 +250,7 @@ describe("DateTimeInput (date)", () => {
     test("on a large screen the picker is shown without resizing its anchor", async () => {
         class Root extends Component {
             static components = { DateTimeInput };
-            static template = xml`<div class="d-flex"><DateTimeInput t-props="props" /></div>`;
+            static template = xml`<div class="d-flex"><DateTimeInput t-props="this.props" /></div>`;
             static props = ["*"];
         }
         await mountWithCleanup(Root, {
@@ -467,7 +467,7 @@ describe("DateTimeInput (datetime)", () => {
         class Host extends Component {
             static components = { DateTimeInput };
             static template = xml`
-                <DateTimeInput value="value" type="'datetime'" format="state.format"/>`;
+                <DateTimeInput value="this.value" type="'datetime'" format="this.state.format"/>`;
             static props = ["*"];
             setup() {
                 this.value = DateTime.fromFormat(

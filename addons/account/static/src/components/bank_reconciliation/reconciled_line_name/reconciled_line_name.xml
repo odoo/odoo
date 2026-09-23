@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="account.BankRecReconciledLineName">
-        <t t-if="props.valueToDisplay?.tax">
-            <t t-foreach="props.valueToDisplay.tax" t-as="tax_id" t-key="tax_id_index">
+        <t t-if="this.props.valueToDisplay?.tax">
+            <t t-foreach="this.props.valueToDisplay.tax" t-as="tax_id" t-key="tax_id_index">
                 <div class="o_tag d-inline-flex align-items-center badge rounded-pill o_tag_color_0 flex-shrink-0" t-att-class="!tax_id_last ? 'me-1': ''">
                     <span class="o_tag_badge_text text-truncate" t-out="tax_id.data.display_name"/>
                 </div>
             </t>
         </t>
-        <t t-else="" t-out="props.valueToDisplay.move or props.valueToDisplay.account"/>
+        <t t-else="" t-out="this.props.valueToDisplay.move or this.props.valueToDisplay.account"/>
     </t>
 </templates>

@@ -3,16 +3,16 @@
     <t t-name="calendar.booking.CalendarController" t-inherit="calendar.AttendeeCalendarController" t-inherit-mode="extension">
         <xpath expr="//button[hasclass('o_calendar_button_today')]" position="before">
             <button
-            t-if="isAppointmentManager and isResourceView"
+            t-if="this.isAppointmentManager and this.isResourceView"
             class="btn btn-primary"
-            t-att-class="{'btn-sm btn-link p-1': env.isSmall}"
-            t-on-click="onClickAddLeave">Add Closing Day(s)</button>
+            t-att-class="{'btn-sm btn-link p-1': this.env.isSmall}"
+            t-on-click="this.onClickAddLeave">Add Closing Day(s)</button>
         </xpath>
         <xpath expr="//div[hasclass('o_calendar_header')]" position="inside">
             <div class="o_appointment_scheduling_box position-fixed position-md-static start-0 bottom-0 d-flex align-items-center justify-content-center gap-2 order-last order-lg-0"
                  t-att-class="{ 'flex-lg-row flex-column' : this.appointmentState.lastAppointment.id || this.hasSlotEvents() }">
-                <t t-if="env.calendarState.mode === 'slots-creation' || appointmentState.lastAppointment.url">
-                    <span t-if="appointmentState.lastAppointment.url and !appointmentState.lastAppointment.waitingCopyLinkCustomType" class="text-center">
+                <t t-if="this.env.calendarState.mode === 'slots-creation' || this.appointmentState.lastAppointment.url">
+                    <span t-if="this.appointmentState.lastAppointment.url and !this.appointmentState.lastAppointment.waitingCopyLinkCustomType" class="text-center">
                         <i class="fa-solid fa-check text-success" role="img" aria-label="Link copied to your clipboard!"/> Link copied to your clipboard!
                     </span>
                     <b t-else="">
@@ -23,38 +23,38 @@
                                 t-att-class="{ 'd-none': !this.appointmentState.lastAppointment.id and !this.hasSlotEvents() }"
                                 title="Get Share Link"
                                 aria-label="Get Share Link"
-                                t-on-click="onClickGetShareLink"
+                                t-on-click="this.onClickGetShareLink"
                                 t-ref="copyLinkRef">
                             <i class="fa-solid fa-paste me-1" role="img" aria-label="Copy Link"/>Copy Link
                         </button>
                         <button class="o_appointment_open_form btn btn-secondary flex-fill text-nowrap"
                                 t-att-class="{ 'd-none': !this.appointmentState.lastAppointment.id and !this.hasSlotEvents() }"
                                 aria-label="Configure"
-                                t-on-click="onClickOpenForm">
+                                t-on-click="this.onClickOpenForm">
                             <i class="fa-solid fa-cog me-1" role="img" aria-label="Configure"/>Configure
                         </button>
                         <button class="o_appointment_discard_slots btn btn-light flex-fill"
                                 aria-label="Discard"
-                                t-on-click="onClickDiscard">
+                                t-on-click="this.onClickDiscard">
                                 <i class="oi oi-close" role="img" aria-label="Discard"/>
                         </button>
                     </div>
                 </t>
                 <div t-else="" class="btn-group w-100 w-sm-auto mx-2 mx-sm-0 px-0">
-                    <t t-set="appointments" t-value="appointmentState.data.appointment_types_info"/>
+                    <t t-set="appointments" t-value="this.appointmentState.data.appointment_types_info"/>
                     <div class="btn-group">
-                        <Dropdown t-if="isAppointmentUser or (!isAppointmentUser and appointments.length)">
-                            <button t-if="isAppointmentUser" class="btn btn-secondary dropdownAppointmentLink o-dropdown-caret">Share</button>
+                        <Dropdown t-if="this.isAppointmentUser or (!this.isAppointmentUser and appointments.length)">
+                            <button t-if="this.isAppointmentUser" class="btn btn-secondary dropdownAppointmentLink o-dropdown-caret">Share</button>
                             <button t-else="" class="btn btn-secondary dropdownAppointmentLink">Share Appointment Link</button>
                             <t t-set-slot="content">
-                                <button t-if="isAppointmentUser" t-on-click="onClickSearchCreateAnytimeAppointment"
+                                <button t-if="this.isAppointmentUser" t-on-click="this.onClickSearchCreateAnytimeAppointment"
                                     class="o_appointment_button_link o_appointment_search_create_anytime_appointment dropdown-item">
                                     <span class="align-bottom">My Calendar</span>
                                 </button>
-                                <button t-if="isAppointmentUser" t-on-click="onClickSelectAvailabilities" class="o_appointment_select_slots dropdown-item">
+                                <button t-if="this.isAppointmentUser" t-on-click="this.onClickSelectAvailabilities" class="o_appointment_select_slots dropdown-item">
                                     <span class="align-bottom">Specific Slots</span>
                                 </button>
-                                <button t-on-click="onClickCustomLink" class="dropdown-item">
+                                <button t-on-click="this.onClickCustomLink" class="dropdown-item">
                                     <span class="align-bottom">Custom Link</span>
                                 </button>
                                 <div t-if="appointments.length > 0" role="separator" class="dropdown-divider"/>

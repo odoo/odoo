@@ -43,7 +43,7 @@ class SimpleDropdown extends Component {
     static props = [];
     static template = xml`
         <div class="outside">outside</div>
-        <Dropdown t-props="dropdownProps">
+        <Dropdown t-props="this.dropdownProps">
             <button>Dropdown</button>
             <t t-set-slot="content">
                 <DropdownItem class="'item-a'">Item A</DropdownItem>
@@ -59,15 +59,15 @@ class MultiLevelDropdown extends Component {
     static props = [];
     static template = xml`
         <div class="outside">outside</div>
-        <Dropdown t-props="dropdownProps">
+        <Dropdown t-props="this.dropdownProps">
             <button class="dropdown-a">A</button>
             <t t-set-slot="content">
                 <DropdownItem class="'item-a'">Item A</DropdownItem>
-                <Dropdown t-props="dropdownProps">
+                <Dropdown t-props="this.dropdownProps">
                     <button class="dropdown-b">B</button>
                     <t t-set-slot="content">
                         <DropdownItem class="'item-b'">Item B</DropdownItem>
-                        <Dropdown t-props="dropdownProps">
+                        <Dropdown t-props="this.dropdownProps">
                             <button class="dropdown-c">C</button>
                             <t t-set-slot="content">
                                 <DropdownItem class="'item-c'">Item C</DropdownItem>
@@ -84,7 +84,7 @@ class NoBottomSheetDropdown extends Component {
     static components = { Dropdown, DropdownItem };
     static props = [];
     static template = xml`
-        <Dropdown t-props="dropdownProps" bottomSheet="false">
+        <Dropdown t-props="this.dropdownProps" bottomSheet="false">
             <button>Dropdown</button>
             <t t-set-slot="content">
                 <DropdownItem class="'item-a'">Item A</DropdownItem>
@@ -265,7 +265,7 @@ test("hold position on hover", async () => {
             parentState = this.state;
         }
         static template = xml`
-            <div t-if="state.filler" class="filler" style="height: 100px;"/>
+            <div t-if="this.state.filler" class="filler" style="height: 100px;"/>
             <Dropdown holdOnHover="true">
                 <button>Hello</button>
                 <t t-set-slot="content">World</t>
@@ -340,9 +340,9 @@ test("dropdowns keynav", async () => {
                 <Dropdown>
                     <button data-hotkey="m">Toggle</button>
                     <t t-set-slot="content">
-                        <DropdownItem class="'item1'" onSelected="() => onItemSelected(1)">item1</DropdownItem>
-                        <DropdownItem class="'item2'" attrs="{'data-hotkey': '2'}" onSelected="() => onItemSelected(2)">item2</DropdownItem>
-                        <DropdownItem class="'item3'" onSelected="() => onItemSelected(3)">item3</DropdownItem>
+                        <DropdownItem class="'item1'" onSelected="() => this.onItemSelected(1)">item1</DropdownItem>
+                        <DropdownItem class="'item2'" attrs="{'data-hotkey': '2'}" onSelected="() => this.onItemSelected(2)">item2</DropdownItem>
+                        <DropdownItem class="'item3'" onSelected="() => this.onItemSelected(3)">item3</DropdownItem>
                     </t>
                 </Dropdown>
             `;
@@ -423,7 +423,7 @@ test("dropdowns keynav is not impacted by bootstrap", async () => {
         static components = { Dropdown };
         static props = [];
         static template = xml`
-                <Dropdown state="dropdown">
+                <Dropdown state="this.dropdown">
                     <button>Open</button>
                     <t t-set-slot="content">
                         <select><option>foo</option></select>
@@ -479,13 +479,13 @@ test("opening a dropdown over another restores focus to its own toggler", async 
         static components = { Dropdown, DropdownItem };
         static props = [];
         static template = xml`
-            <Dropdown state="stateA">
+            <Dropdown state="this.stateA">
                 <button class="toggler-a">A</button>
                 <t t-set-slot="content">
                     <DropdownItem class="'item-a'">Item A</DropdownItem>
                 </t>
             </Dropdown>
-            <Dropdown state="stateB">
+            <Dropdown state="this.stateB">
                 <button class="toggler-b">B</button>
                 <t t-set-slot="content">
                     <DropdownItem class="'item-b'">Item B</DropdownItem>
@@ -523,7 +523,7 @@ test("programmatic close does not steal focus from an editable outside the dropd
         static props = [];
         static template = xml`
             <input class="outside-input"/>
-            <Dropdown state="dropdownState">
+            <Dropdown state="this.dropdownState">
                 <button>Dropdown</button>
                 <t t-set-slot="content">
                     <DropdownItem class="'item-a'">Item A</DropdownItem>
@@ -556,7 +556,7 @@ test("closing with focus on an editable inside the dropdown refocuses the toggle
         static components = { Dropdown, DropdownItem };
         static props = [];
         static template = xml`
-            <Dropdown state="dropdownState">
+            <Dropdown state="this.dropdownState">
                 <button>Dropdown</button>
                 <t t-set-slot="content">
                     <input class="inside-input"/>
@@ -804,10 +804,10 @@ test("Dropdown with CheckboxItem: toggle value", async () => {
                     <button>Click to open</button>
                     <t t-set-slot="content">
                         <CheckboxItem
-                            class="{ selected: state.checked }"
-                            checked="state.checked"
+                            class="{ selected: this.state.checked }"
+                            checked="this.state.checked"
                             closingMode="'none'"
-                            onSelected.bind="onSelected">
+                            onSelected.bind="this.onSelected">
                             My checkbox item
                         </CheckboxItem>
                     </t>
@@ -861,7 +861,7 @@ test("don't close dropdown outside the active element", async () => {
                     <Dropdown>
                         <button class="parent-toggle">Dropdown</button>
                         <t t-set-slot="content">
-                            <button class="parent-item" t-on-click="clicked">Click me</button>
+                            <button class="parent-item" t-on-click="this.clicked">Click me</button>
                         </t>
                     </Dropdown>
                     <div class="outside-parent">Outside Parent</div>
@@ -918,7 +918,7 @@ test("t-if t-else as toggler", async () => {
         static props = [];
         static template = xml`
                 <Dropdown>
-                    <button t-if="state.foo === 'bar'">Coucou</button>
+                    <button t-if="this.state.foo === 'bar'">Coucou</button>
                     <a t-else="">ByeBye</a>
                     <t t-set-slot="content">
                         Hello
@@ -1235,22 +1235,22 @@ test("multi-level dropdown: keynav", async () => {
                 <Dropdown>
                     <button class="first" data-hotkey="1">First</button>
                     <t t-set-slot="content">
-                        <DropdownItem class="'first-first'" onSelected="() => onItemSelected('first-first')">O</DropdownItem>
+                        <DropdownItem class="'first-first'" onSelected="() => this.onItemSelected('first-first')">O</DropdownItem>
                         <Dropdown>
                             <button class="second">Second</button>
                             <t t-set-slot="content">
-                                <DropdownItem class="'second-first'" onSelected="() => onItemSelected('second-first')">O</DropdownItem>
+                                <DropdownItem class="'second-first'" onSelected="() => this.onItemSelected('second-first')">O</DropdownItem>
                                 <Dropdown>
                                     <button class="third">Third</button>
                                     <t t-set-slot="content">
-                                        <DropdownItem class="'third-first'" onSelected="() => onItemSelected('third-first')">O</DropdownItem>
-                                        <DropdownItem class="'third-last'" onSelected="() => onItemSelected('third-last')">O</DropdownItem>
+                                        <DropdownItem class="'third-first'" onSelected="() => this.onItemSelected('third-first')">O</DropdownItem>
+                                        <DropdownItem class="'third-last'" onSelected="() => this.onItemSelected('third-last')">O</DropdownItem>
                                     </t>
                                 </Dropdown>
-                                <DropdownItem class="'second-last'" onSelected="() => onItemSelected('second-last')">O</DropdownItem>
+                                <DropdownItem class="'second-last'" onSelected="() => this.onItemSelected('second-last')">O</DropdownItem>
                             </t>
                         </Dropdown>
-                        <DropdownItem class="'first-last'" onSelected="() => onItemSelected('first-last')">O</DropdownItem>
+                        <DropdownItem class="'first-last'" onSelected="() => this.onItemSelected('first-last')">O</DropdownItem>
                     </t>
                 </Dropdown>
             `;
@@ -1441,7 +1441,7 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
                         <Dropdown>
                             <button class="two">two</button>
                             <t t-set-slot="content">
-                                <DropdownItem t-if="state.foo" class="three">three</DropdownItem>
+                                <DropdownItem t-if="this.state.foo" class="this.three">three</DropdownItem>
                             </t>
                         </Dropdown>
                     </t>
@@ -1638,7 +1638,7 @@ test("a mouseenter on an open dropdown does not hijack focus on the next open", 
             <input class="decoy" type="text"/>
             <input class="realOwner" type="text"/>
             <DropdownGroup group="'g'">
-                <Dropdown state="state">
+                <Dropdown state="this.state">
                     <button class="toggler">Toggle</button>
                     <t t-set-slot="content"><button class="item">Item</button></t>
                 </Dropdown>
@@ -1675,7 +1675,7 @@ test("a toggler the slot stops rendering is left as it was found", async () => {
         static props = [];
         static template = xml`
             <Dropdown>
-                <button t-if="state.primary" class="first">First</button>
+                <button t-if="this.state.primary" class="first">First</button>
                 <button t-else="" class="second">Second</button>
                 <t t-set-slot="content">Menu</t>
             </Dropdown>`;
@@ -1701,12 +1701,12 @@ test("a dropdown that opens in the tick it mounts still closes its peers", async
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
         static template = xml`
-            <Dropdown state="a">
+            <Dropdown state="this.a">
                 <button class="a">a</button>
                 <t t-set-slot="content"><DropdownItem>ca</DropdownItem></t>
             </Dropdown>
-            <t t-if="state.showB">
-                <Dropdown state="b">
+            <t t-if="this.state.showB">
+                <Dropdown state="this.b">
                     <button class="b">b</button>
                     <t t-set-slot="content"><DropdownItem>cb</DropdownItem></t>
                 </Dropdown>
@@ -1736,11 +1736,11 @@ test("an established dropdown closes an already-open peer", async () => {
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
         static template = xml`
-            <Dropdown state="a">
+            <Dropdown state="this.a">
                 <button class="a">a</button>
                 <t t-set-slot="content"><DropdownItem>ca</DropdownItem></t>
             </Dropdown>
-            <Dropdown state="b">
+            <Dropdown state="this.b">
                 <button class="b">b</button>
                 <t t-set-slot="content"><DropdownItem>cb</DropdownItem></t>
             </Dropdown>`;
@@ -1766,7 +1766,7 @@ test("a menuClass that changes while the menu is open reaches it", async () => {
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
         static template = xml`
-            <Dropdown menuClass="state.cls">
+            <Dropdown menuClass="this.state.cls">
                 <button class="tog">tog</button>
                 <t t-set-slot="content"><DropdownItem>c</DropdownItem></t>
             </Dropdown>`;
@@ -1793,7 +1793,7 @@ test("an object menuClass is toggled off as well as on", async () => {
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
         static template = xml`
-            <Dropdown menuClass="{ dark: state.dark, always: true }">
+            <Dropdown menuClass="{ dark: this.state.dark, always: true }">
                 <button class="tog">tog</button>
                 <t t-set-slot="content"><DropdownItem>c</DropdownItem></t>
             </Dropdown>`;
@@ -1819,7 +1819,7 @@ test("a menuClass repeating a popover class cannot strip it", async () => {
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
         static template = xml`
-            <Dropdown menuClass="state.cls">
+            <Dropdown menuClass="this.state.cls">
                 <button class="tog">tog</button>
                 <t t-set-slot="content"><DropdownItem>c</DropdownItem></t>
             </Dropdown>`;
@@ -1845,7 +1845,7 @@ test("reopening after a menuClass change while closed uses the current one", asy
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
         static template = xml`
-            <Dropdown menuClass="state.cls">
+            <Dropdown menuClass="this.state.cls">
                 <button class="tog">tog</button>
                 <t t-set-slot="content"><DropdownItem>c</DropdownItem></t>
             </Dropdown>`;
@@ -1919,7 +1919,7 @@ test("a swapped `state` prop is refused rather than silently ignored", async () 
         static components = { Dropdown };
         static props = [];
         static template = xml`
-            <Dropdown state="state.which === 'a' ? stateA : stateB">
+            <Dropdown state="this.state.which === 'a' ? this.stateA : this.stateB">
                 <button class="toggler">toggle</button>
                 <t t-set-slot="content"><div class="menu-body">menu</div></t>
             </Dropdown>`;
@@ -1964,7 +1964,7 @@ test("an open menu is watched by one observer, however often the dropdown re-ren
             <Dropdown>
                 <button class="toggler">toggle</button>
                 <t t-set-slot="content">
-                    <t t-foreach="state.items" t-as="item" t-key="item">
+                    <t t-foreach="this.state.items" t-as="item" t-key="item">
                         <DropdownItem class="'item'" t-out="item"/>
                     </t>
                 </t>
@@ -1998,10 +1998,10 @@ test("an open menu follows the dropdown's later renders: slot fields and items",
         static props = ["*"];
         static components = { Dropdown };
         static template = xml`
-            <Dropdown items="items">
+            <Dropdown items="this.items">
                 <button class="toggler">toggle</button>
                 <t t-set-slot="content">
-                    <span class="plain" t-out="plain"/>
+                    <span class="plain" t-out="this.plain"/>
                 </t>
             </Dropdown>
         `;

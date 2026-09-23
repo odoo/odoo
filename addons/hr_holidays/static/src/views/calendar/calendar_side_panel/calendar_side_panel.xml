@@ -10,24 +10,24 @@
                     <span class="align-middle"><img class="o_calendar_filter_line" src="/hr/static/src/img/icons/line.svg"/> Refused</span>
                 </div>
 
-                <div class="d-flex flex-column mt-4" t-if="leaveState.mandatoryDays.length">
+                <div class="d-flex flex-column mt-4" t-if="this.leaveState.mandatoryDays.length">
                     <h5>Mandatory Days</h5>
                     <ul class="ps-0">
-                        <li t-foreach="leaveState.mandatoryDays" t-as="mandatoryDay" t-key="mandatoryDay.id" class="mt-2 list-unstyled">
+                        <li t-foreach="this.leaveState.mandatoryDays" t-as="mandatoryDay" t-key="mandatoryDay.id" class="mt-2 list-unstyled">
                             <strong
-                                    t-out="getFormattedDateSpan(mandatoryDay.start, mandatoryDay.end)"
+                                    t-out="this.getFormattedDateSpan(mandatoryDay.start, mandatoryDay.end)"
                                     t-att-class="'hr_mandatory_day_'+mandatoryDay.colorIndex"/>
                             : <t t-out="mandatoryDay.title"/>
                         </li>
                     </ul>
                 </div>
 
-                <div class="d-flex flex-column mt-4" t-if="leaveState.bankHolidays.length">
+                <div class="d-flex flex-column mt-4" t-if="this.leaveState.bankHolidays.length">
                     <h5>Public Holidays</h5>
                     <ul class="ps-0">
-                        <li t-foreach="leaveState.bankHolidays" t-as="bankHoliday" t-key="bankHoliday.id" class="mt-2 list-unstyled">
+                        <li t-foreach="this.leaveState.bankHolidays" t-as="bankHoliday" t-key="bankHoliday.id" class="mt-2 list-unstyled">
                             <strong
-                                    t-out="getFormattedDateSpan(bankHoliday.start, bankHoliday.end)"/>
+                                    t-out="this.getFormattedDateSpan(bankHoliday.start, bankHoliday.end)"/>
                             : <t t-out="bankHoliday.title"/>
                         </li>
                     </ul>

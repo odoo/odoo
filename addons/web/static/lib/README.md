@@ -43,7 +43,7 @@ commit as the files it describes.
 | `hoot-dom/` | internal | — | Odoo HOOT DOM helpers, developed in-tree. |
 | `luxon/` | 3.7.2 | `luxon` | Reached only through the `@web/core/l10n/luxon` facade. 1 `AgroMarin:` marker (`luxon.js:8135`). **Fork-modified**. |
 | `odoo_ui_icons/` | 1.2 | — | IcoMoon build over Carbon + Material; see `Read Me.txt`. |
-| `owl/` | 2.8.4 | `@odoo/owl` | `dist/owl.es.js` built from [`Agro-Marin/owl` `2.8-marin`](https://github.com/Agro-Marin/owl/tree/2.8-marin): upstream v2.8.4 + `t-out` renders non-block objects as text (owl 3 semantics). |
+| `owl/` | 2.8.4 | `@odoo/owl` | `dist/owl.es.js` built from [`Agro-Marin/owl` `2.8-marin`](https://github.com/Agro-Marin/owl/tree/2.8-marin): upstream v2.8.4 + four owl-3-form commits: `t-out` renders non-block objects as text, a `t-call-context` template reads its context as `this`, `<t t-call="x" a="expr"/>` passes `a` to the callee, and `a.translate="Text"` passes the translated text. |
 | `pdfjs/` | 6.1.200 | `pdfjs-dist` | Largest vendored library. 13 `AgroMarin:` markers, 12 in `web/viewer.js` and 1 in `web/viewer.html`. **Fork-modified** — see below. Lazy (`@web/core/utils/pdfjs`). |
 | `popper_compat/` | generated | — | **Not a third-party library.** Self-contained build of `@web/libs/popper_compat`, which replaced Popper. See below. |
 | `prismjs/` | 1.30.0 | `prismjs` | Custom download with a fixed language set; keep the set when bumping. |

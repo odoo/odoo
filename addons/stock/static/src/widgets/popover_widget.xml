@@ -2,14 +2,14 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="stock.popoverButton">
-        <button type="button" t-on-click.stop="showPopup"
-            t-att-aria-label="buttonLabel" t-att-title="buttonLabel"
-            t-attf-class="btn p-1 border-0 bg-transparent #{ icon } #{ color || 'text-primary'}"/>
+        <button type="button" t-on-click.stop="this.showPopup"
+            t-att-aria-label="this.buttonLabel" t-att-title="this.buttonLabel"
+            t-attf-class="btn p-1 border-0 bg-transparent #{ this.icon } #{ this.color || 'text-primary'}"/>
     </t>
 
     <div t-name="stock.popoverContent" class="m-3">
-        <h6 t-out="props.title"/>
-        <t t-if="props.popoverTemplate" t-call="{{props.popoverTemplate}}" />
-        <t t-else="" t-out="props.msg"/>
+        <h6 t-out="this.props.title"/>
+        <t t-if="this.props.popoverTemplate" t-call="{{this.props.popoverTemplate}}" />
+        <t t-else="" t-out="this.props.msg"/>
     </div>
 </templates>

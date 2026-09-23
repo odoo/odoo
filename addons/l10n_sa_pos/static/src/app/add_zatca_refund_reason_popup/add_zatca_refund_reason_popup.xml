@@ -5,17 +5,17 @@
         <Dialog title.translate="Additional Refund Information"> 
             <div class="mb-3">
                 <label for="zatca_refund_reason" class="form-label">ZATCA Refund Reason: </label>
-                <select class="detail form-select" id="zatca_refund_reason" name="l10n_sa_reason" t-model="state.l10n_sa_reason">
-                    <t t-foreach="pos.config._zatca_refund_reasons" t-as="l10n_sa_reason" t-key="l10n_sa_reason.value">
+                <select class="detail form-select" id="zatca_refund_reason" name="l10n_sa_reason" t-model="this.state.l10n_sa_reason">
+                    <t t-foreach="this.pos.config._zatca_refund_reasons" t-as="l10n_sa_reason" t-key="l10n_sa_reason.value">
                         <option t-att-value="l10n_sa_reason.value"
-                                t-att-selected="l10n_sa_reason.value === state.l10n_sa_reason ? 'selected' : undefined">
+                                t-att-selected="l10n_sa_reason.value === this.state.l10n_sa_reason ? 'selected' : undefined">
                             <t t-out="l10n_sa_reason.name"/>
                         </option>
                     </t>
                 </select>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
+                <button class="btn btn-primary o-default-button" t-on-click="this.confirm">Ok</button>
             </t>
         </Dialog>
     </t>

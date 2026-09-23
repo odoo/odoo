@@ -9,8 +9,8 @@ const log = makeLogger("portal.chatter");
 
 export class PortalChatter extends Component {
     static template = xml`
-        <Chatter threadId="props.resId" threadModel="props.resModel" composer="props.composer" twoColumns="props.twoColumns"/>
-        <div class="position-fixed" style="z-index:1030"><OverlayContainer overlays="overlayService.overlays" rootId="'chatterRoot'"/></div>
+        <Chatter threadId="this.props.resId" threadModel="this.props.resModel" composer="this.props.composer" twoColumns="this.props.twoColumns"/>
+        <div class="position-fixed" style="z-index:1030"><OverlayContainer overlays="this.overlayService.overlays" rootId="'chatterRoot'"/></div>
     `;
     static components = { Chatter, OverlayContainer };
     static props = ["resId", "resModel", "composer", "twoColumns", "displayRating"];

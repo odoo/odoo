@@ -11,7 +11,7 @@ test("Can be rendered with different tags", async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { TagsList };
-        static template = xml`<TagsList tags="tags" />`;
+        static template = xml`<TagsList tags="this.tags" />`;
         setup() {
             this.tags = [
                 {
@@ -52,7 +52,7 @@ test("Tags can be displayed with an image", async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { TagsList };
-        static template = xml`<TagsList tags="tags" />`;
+        static template = xml`<TagsList tags="this.tags" />`;
         setup() {
             this.tags = [
                 {
@@ -79,7 +79,7 @@ test("Tags can be displayed with an icon", async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { TagsList };
-        static template = xml`<TagsList tags="tags" />`;
+        static template = xml`<TagsList tags="this.tags" />`;
         setup() {
             this.tags = [
                 {
@@ -106,7 +106,7 @@ test("Limiting the visible tags displays a counter", async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { TagsList };
-        static template = xml`<TagsList tags="tags" visibleItemsLimit="state.visibleItemsLimit" />`;
+        static template = xml`<TagsList tags="this.tags" visibleItemsLimit="this.state.visibleItemsLimit" />`;
         setup() {
             this.state = useState({
                 visibleItemsLimit: 3,
@@ -173,7 +173,7 @@ test("Tags with img have a backdrop only if they can be deleted", async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { TagsList };
-        static template = xml`<TagsList tags="tags" />`;
+        static template = xml`<TagsList tags="this.tags" />`;
         setup() {
             this.tags = [
                 {

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.AttachmentList" t-inherit-mode="extension">
         <xpath expr="//button[hasclass('o-mail-Attachment-unlink')]" position="after">
-            <button t-if="canAddToDocuments(attachment)"
+            <button t-if="this.canAddToDocuments(attachment)"
                 class="btn bg-500 w-100 h-100 o-p-1_5 d-flex ms-2 justify-content-center align-items-center shadow-sm"
                 title="Add to Documents" t-on-click.stop="() => this.onClickAddToDocuments(attachment)">
                 <i class="fa-regular fa-hard-drive o-text-white fw-bolder" role="img" aria-label="Add to Documents"/>

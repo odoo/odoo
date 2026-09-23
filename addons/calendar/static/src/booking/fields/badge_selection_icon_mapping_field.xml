@@ -7,7 +7,7 @@
             <attribute name="class" add="me-2" remove="badge rounded-pill" separator=" "/>
         </xpath>
         <xpath expr="//span[hasclass('o_selection_badge')]" position="inside">
-            <span t-attf-class="{{getIconMapping(option[0])}} pe-1"/>
+            <span t-attf-class="{{this.getIconMapping(option[0])}} pe-1"/>
             <span t-out="option[1]"/>
         </xpath>
     </t>

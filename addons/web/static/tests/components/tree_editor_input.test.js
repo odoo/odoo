@@ -9,7 +9,7 @@ import { Input } from "@web/components/tree_editor/tree_editor_components";
 describe.current.tags("headless");
 
 class Host extends Component {
-    static template = xml`<Input value="displayed" update.bind="update" startEmpty="props.startEmpty"/>`;
+    static template = xml`<Input value="this.displayed" update.bind="this.update" startEmpty="this.props.startEmpty"/>`;
     static components = { Input };
     static props = ["*"];
     /** @type {{ value: number }} */

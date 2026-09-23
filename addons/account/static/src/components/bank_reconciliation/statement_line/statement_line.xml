@@ -3,36 +3,36 @@
     <t t-name="account.BankRecStatementLine" t-inherit="web.KanbanRecord" t-inherit-mode="primary">
         <xpath expr="//article" position="replace">
             <article
-                    t-att-class="getRecordClasses()"
-                    t-att-data-id="record.id"
-                    t-att-tabindex="record.model.useSampleModel ? -1 : 0"
+                    t-att-class="this.getRecordClasses()"
+                    t-att-data-id="this.record.id"
+                    t-att-tabindex="this.record.model.useSampleModel ? -1 : 0"
                     t-custom-click="onGlobalClick"
-                    t-on-touchstart="onTouchStart"
-                    t-on-touchmove="onTouchMoveOrCancel"
-                    t-on-touchcancel="onTouchMoveOrCancel"
-                    t-on-touchend="onTouchEnd"
+                    t-on-touchstart="this.onTouchStart"
+                    t-on-touchmove="this.onTouchMoveOrCancel"
+                    t-on-touchcancel="this.onTouchMoveOrCancel"
+                    t-on-touchend="this.onTouchEnd"
                     t-ref="root">
-                <div name="bank_statement_line" class="o_statement_line w-100 p-2" t-on-click="selectStatementLine" t-att-class="{'o_selected_statement_line': isSelected}">
-                    <button t-if="!recordData.statement_id" type="button" class="o_statement_btn d-none d-md-block position-absolute top-0 end-0 btn btn-sm btn-secondary" t-on-click.stop="openStatementCreate">
+                <div name="bank_statement_line" class="o_statement_line w-100 p-2" t-on-click="this.selectStatementLine" t-att-class="{'o_selected_statement_line': this.isSelected}">
+                    <button t-if="!this.recordData.statement_id" type="button" class="o_statement_btn d-none d-md-block position-absolute top-0 end-0 btn btn-sm btn-secondary" t-on-click.stop="this.openStatementCreate">
                         Statement
                     </button>
                     <div class="o_grid_container">
                         <div class="o_row">
                             <div class="d-flex gap-3">
-                                <div t-att-data-tooltip="formattedFullDate">
-                                    <t t-out="formattedDate"/>
+                                <div t-att-data-tooltip="this.formattedFullDate">
+                                    <t t-out="this.formattedDate"/>
                                 </div>
-                                <div t-on-click.stop="openChatter" t-if="!ui.isSmall" class="o_chatter_icon btn-link text-action" t-att-class="{'visible': activityNumber or hasAttachment}">
-                                    <div t-if="activityNumber" class="activity-container position-relative">
+                                <div t-on-click.stop="this.openChatter" t-if="!this.ui.isSmall" class="o_chatter_icon btn-link text-action" t-att-class="{'visible': this.activityNumber or this.hasAttachment}">
+                                    <div t-if="this.activityNumber" class="activity-container position-relative">
                                         <i class="fa-regular fa-clock fa-lg" role="img" aria-label="Activities"/>
-                                        <span class="activity-badge badge rounded-pill" t-out="activityNumber"/>
+                                        <span class="activity-badge badge rounded-pill" t-out="this.activityNumber"/>
                                     </div>
-                                    <i t-elif="hasAttachment"
+                                    <i t-elif="this.hasAttachment"
                                        class="fa-solid fa-paperclip fa-lg"
                                        role="img"
                                        aria-label="Attachment"
                                     />
-                                    <i t-elif="!isChatterOpen"
+                                    <i t-elif="!this.isChatterOpen"
                                        class="fa-regular fa-comments fa-lg"
                                        role="img"
                                        aria-label="Journal Entry"
@@ -40,75 +40,75 @@
                                 </div>
                             </div>
                             <div class="o_payment_ref user-select-text d-none d-md-block"
-                                 t-att-class="isUnfolded ? 'overflow-wrap' : 'text-truncate'">
+                                 t-att-class="this.isUnfolded ? 'overflow-wrap' : 'text-truncate'">
                                 <span class="d-inline">
-                                    <t t-if="partner">
-                                        <a class="fw-bold" href="#" t-on-click.prevent.stop="openPartner">
-                                            <span t-out="partner.display_name" name="statement_line_partner_name"/>
+                                    <t t-if="this.partner">
+                                        <a class="fw-bold" href="#" t-on-click.prevent.stop="this.openPartner">
+                                            <span t-out="this.partner.display_name" name="statement_line_partner_name"/>
                                         </a>
-                                        <button class="btn btn-link oi oi-close p-0 align-baseline" t-on-click.stop="removePartner" t-if="!linesToReconcile.length"/>
+                                        <button class="btn btn-link oi oi-close p-0 align-baseline" t-on-click.stop="this.removePartner" t-if="!this.linesToReconcile.length"/>
                                     </t>
-                                    <t t-elif="recordData.partner_name">
-                                        <span class="fw-bold" t-out="recordData.partner_name" name="statement_line_partner_name"/>
+                                    <t t-elif="this.recordData.partner_name">
+                                        <span class="fw-bold" t-out="this.recordData.partner_name" name="statement_line_partner_name"/>
                                     </t>
-                                    <span t-att-class="partner or recordData.partner_name ? 'ms-1' : undefined"
-                                          t-out="recordData.payment_ref"
+                                    <span t-att-class="this.partner or this.recordData.partner_name ? 'ms-1' : undefined"
+                                          t-out="this.recordData.payment_ref"
                                     />
                                 </span>
                             </div>
                             <div class="o_button_line d-none d-md-flex align-items-start">
-                                <BankRecButtonList t-props="buttonListProps" suspenseAccountLine="suspenseAccountLine" t-if="!recordData.is_reconciled or (userCanReview and !recordData.checked)"/>
-                                <span class="badge rounded-pill py-1 ps-1" t-att-class="{ 'pe-1': !isUnfolded, 'text-success bg-success-subtle': !hasInvalidAnalytics, 'text-warning bg-warning-subtle': hasInvalidAnalytics}" t-if="recordData.is_reconciled">
-                                    <i t-if="hasInvalidAnalytics" class="fa-solid fa-exclamation-triangle" data-tooltip="Some lines have invalid analytic distribution"/>
-                                    <i t-if="!hasInvalidAnalytics" class="fa-solid fa-check"/>
-                                    <span t-if="isUnfolded" class="ms-1">
+                                <BankRecButtonList t-props="this.buttonListProps" suspenseAccountLine="this.suspenseAccountLine" t-if="!this.recordData.is_reconciled or (this.userCanReview and !this.recordData.checked)"/>
+                                <span class="badge rounded-pill py-1 ps-1" t-att-class="{ 'pe-1': !this.isUnfolded, 'text-success bg-success-subtle': !this.hasInvalidAnalytics, 'text-warning bg-warning-subtle': this.hasInvalidAnalytics}" t-if="this.recordData.is_reconciled">
+                                    <i t-if="this.hasInvalidAnalytics" class="fa-solid fa-exclamation-triangle" data-tooltip="Some lines have invalid analytic distribution"/>
+                                    <i t-if="!this.hasInvalidAnalytics" class="fa-solid fa-check"/>
+                                    <span t-if="this.isUnfolded" class="ms-1">
                                         Reconciled
                                     </span>
                                 </span>
-                                <div t-if="recordData.is_reconciled and !isUnfolded" class="text-start text-truncate text-muted" name="reconciled_line_name">
-                                    <t t-set="reconciledLineEntries" t-value="Object.entries(reconciledLineName)"/>
+                                <div t-if="this.recordData.is_reconciled and !this.isUnfolded" class="text-start text-truncate text-muted" name="reconciled_line_name">
+                                    <t t-set="reconciledLineEntries" t-value="Object.entries(this.reconciledLineName)"/>
                                     <t t-foreach="reconciledLineEntries" t-as="line" t-key="line_index">
-                                        <BankRecReconciledLineName statementLine="record" linesToReconcile="linesToReconcile" moveLineId="line[0]" valueToDisplay="line[1]"/>
+                                        <BankRecReconciledLineName statementLine="this.record" linesToReconcile="this.linesToReconcile" moveLineId="line[0]" valueToDisplay="line[1]"/>
                                         <t t-if="line_index &lt; reconciledLineEntries.length - 1">, </t>
                                     </t>
                                 </div>
-                                <button class="btn btn-link p-0 text-600" t-on-click.stop="undoReconciliation" t-if="recordData.is_reconciled" data-tooltip="Undo reconciliation">
+                                <button class="btn btn-link p-0 text-600" t-on-click.stop="this.undoReconciliation" t-if="this.recordData.is_reconciled" data-tooltip="Undo reconciliation">
                                     <i class="fa-solid fa-undo"/>
                                 </button>
                             </div>
                             <div class="d-flex align-items-start justify-content-between o_line_amount">
-                                <span class="text-muted w-50 text-end text-nowrap" t-if="recordData.foreign_currency_id">
-                                    <t t-out="formattedAmountCurrencyInForeign"/>
+                                <span class="text-muted w-50 text-end text-nowrap" t-if="this.recordData.foreign_currency_id">
+                                    <t t-out="this.formattedAmountCurrencyInForeign"/>
                                 </span>
-                                <span t-att-class="amountClasses" class="text-end text-nowrap" t-out="formattedAmount"/>
+                                <span t-att-class="this.amountClasses" class="text-end text-nowrap" t-out="this.formattedAmount"/>
                             </div>
-                            <div class="d-none d-md-block text-end" t-on-click.stop="toggleUnfold" t-if="recordData.is_reconciled">
-                                <i class="oi" t-att-class="{'oi-chevron-up': isUnfolded, 'oi-chevron-down': !isUnfolded}"/>
+                            <div class="d-none d-md-block text-end" t-on-click.stop="this.toggleUnfold" t-if="this.recordData.is_reconciled">
+                                <i class="oi" t-att-class="{'oi-chevron-up': this.isUnfolded, 'oi-chevron-down': !this.isUnfolded}"/>
                             </div>
                             <div class="d-none d-md-block" t-else=""/>                        </div>
 
                         <div class="o_row d-md-none">
                             <span class="text-truncate o_payment_ref"
-                                  t-out="recordData.payment_ref"
+                                  t-out="this.recordData.payment_ref"
                             />
                         </div>
-                        <t t-if="isUnfolded or !recordData.is_reconciled">
-                            <t t-foreach="linesToReconcile" t-as="line" t-key="line_index">
-                                <BankRecLineToReconcile statementLine="record" line="line"/>
+                        <t t-if="this.isUnfolded or !this.recordData.is_reconciled">
+                            <t t-foreach="this.linesToReconcile" t-as="line" t-key="line_index">
+                                <BankRecLineToReconcile statementLine="this.record" line="line"/>
                             </t>
-                            <div class="o_row" t-if="linesToReconcile.length">
-                                <div t-if="suspenseAccountLine" class="d-none d-md-flex fw-bold text-muted align-items-center justify-content-end o_line_amount" t-att-class="hasForeignCurrencyAndSameCurrencyForAllLines ? 'w-50' : 'w-100'">
-                                    <t t-out="suspenseAccountLineFormattedAmount"/>
+                            <div class="o_row" t-if="this.linesToReconcile.length">
+                                <div t-if="this.suspenseAccountLine" class="d-none d-md-flex fw-bold text-muted align-items-center justify-content-end o_line_amount" t-att-class="this.hasForeignCurrencyAndSameCurrencyForAllLines ? 'w-50' : 'w-100'">
+                                    <t t-out="this.suspenseAccountLineFormattedAmount"/>
                                 </div>
                             </div>
                         </t>
                         <div class="o_row d-md-none">
                             <div class="o_button_line">
-                                <BankRecButtonList t-props="buttonListProps" suspenseAccountLine="suspenseAccountLine" t-if="!recordData.is_reconciled or (userCanReview and !recordData.checked)"/>
-                                <span t-if="recordData.is_reconciled and !isUnfolded" class="text-start text-muted">
-                                    <t t-set="reconciledLineEntries" t-value="Object.entries(reconciledLineName)"/>
+                                <BankRecButtonList t-props="this.buttonListProps" suspenseAccountLine="this.suspenseAccountLine" t-if="!this.recordData.is_reconciled or (this.userCanReview and !this.recordData.checked)"/>
+                                <span t-if="this.recordData.is_reconciled and !this.isUnfolded" class="text-start text-muted">
+                                    <t t-set="reconciledLineEntries" t-value="Object.entries(this.reconciledLineName)"/>
                                     <t t-foreach="reconciledLineEntries" t-as="line" t-key="line_index">
-                                        <BankRecReconciledLineName statementLine="record" linesToReconcile="linesToReconcile" moveLineId="line[0]" valueToDisplay="line[1]"/>
+                                        <BankRecReconciledLineName statementLine="this.record" linesToReconcile="this.linesToReconcile" moveLineId="line[0]" valueToDisplay="line[1]"/>
                                         <t t-if="line_index &lt; reconciledLineEntries.length - 1">, </t>
                                     </t>
                                 </span>

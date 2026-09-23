@@ -41,7 +41,7 @@ function cleanLogging() {
 function makeProbe() {
     const log = makeLogger("test.hooks");
     class Probe extends Component {
-        static template = xml`<span><t t-out="state.tick"/></span>`;
+        static template = xml`<span><t t-out="this.state.tick"/></span>`;
         static props = {};
         setup() {
             useLifecycleLog(log);

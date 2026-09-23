@@ -7,14 +7,14 @@
         <xpath expr="//t[@t-set-slot='control-panel-create-button']" position="inside">
             <t t-call="document.DocumentsViews.ControlPanel"/>
         </xpath>
-        <xpath expr="//ViewLayout/t[@t-component='props.Renderer']" position="attributes">
-            <attribute name="previewStore">documentStates.previewStore</attribute>
+        <xpath expr="//ViewLayout/t[@t-component='this.props.Renderer']" position="attributes">
+            <attribute name="previewStore">this.documentStates.previewStore</attribute>
         </xpath>
-        <xpath expr="//div[@t-if='hasSelectedRecords']" position="attributes">
-            <attribute name="t-if">hasSelectedRecords and !rightPanelState.previewedDocument</attribute>
+        <xpath expr="//div[@t-if='this.hasSelectedRecords']" position="attributes">
+            <attribute name="t-if">this.hasSelectedRecords and !this.rightPanelState.previewedDocument</attribute>
         </xpath>
         <xpath expr="//ActionMenus" position="attributes">
-            <attribute name="t-if">showActions</attribute>
+            <attribute name="t-if">this.showActions</attribute>
         </xpath>
     </t>
 </templates>

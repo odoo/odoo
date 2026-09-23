@@ -3,18 +3,18 @@
 
     <t t-name="web.MultiRecordSelector" >
         <div class="o_input d-flex flex-wrap gap-1 o_multi_record_selector" t-ref="multiRecordSelector">
-            <TagsList tags="tags"/>
+            <TagsList tags="this.tags"/>
             <RecordAutocomplete
-                resModel="props.resModel"
+                resModel="this.props.resModel"
                 value="''"
-                domain="props.domain"
-                context="props.context"
+                domain="this.props.domain"
+                context="this.props.context"
                 className="'o_record_autocomplete_with_caret flex-grow-1'"
-                fieldString="props.fieldString"
-                placeholder="placeholder"
+                fieldString="this.props.fieldString"
+                placeholder="this.placeholder"
                 multiSelect="true"
-                getIds.bind="getIds"
-                update.bind="update"
+                getIds.bind="this.getIds"
+                update.bind="this.update"
             />
         </div>
     </t>

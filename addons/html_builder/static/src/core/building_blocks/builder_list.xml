@@ -4,27 +4,27 @@
 <t t-name="html_builder.BuilderList">
     <BuilderComponent>
         <div class="w-100 p-2 py-0">
-            <t t-if="state.value?.length > 2">
+            <t t-if="this.state.value?.length > 2">
                 <div class="o_we_table_wrapper">
                     <table t-ref="table">
-                        <t t-set="items" t-value="formatRawValue(state.value)"/>
+                        <t t-set="items" t-value="this.formatRawValue(this.state.value)"/>
                         <t t-foreach="items" t-as="item" t-key="item._id">
                             <tr class="o_row_draggable" t-att-data-id="item._id">
-                                <td t-if="props.sortable" class="o_handle_cell w-0">
+                                <td t-if="this.props.sortable" class="o_handle_cell w-0">
                                     <button type="button" class="btn">
                                         <i class="fa-solid fa-up-down-left-right" aria-hidden="true"/>
                                         <span class="visually-hidden">Drag and sort field</span>
                                     </button>
                                 </td>
-                                <t t-foreach="Object.entries(props.itemShape).filter(([key,_]) => !props.hiddenProperties.includes(key))" t-as="entry" t-key="entry[0]">
-                                    <td t-att-class="props.columnWidth[entry[0]] || ''">
+                                <t t-foreach="Object.entries(this.props.itemShape).filter(([key,_]) => !this.props.hiddenProperties.includes(key))" t-as="entry" t-key="entry[0]">
+                                    <td t-att-class="this.props.columnWidth[entry[0]] || ''">
                                         <t t-if="entry[1].endsWith('boolean')">
                                             <div class="o-hb-checkbox o-checkbox form-check o_field_boolean o_boolean_toggle form-switch">
                                                 <input type="checkbox" class="form-check-input"
                                                     t-att-name="entry[0]"
                                                     t-att-checked="item[entry[0]]"
                                                     t-att-data-id="item._id"
-                                                    t-on-click="onChange"
+                                                    t-on-click="this.onChange"
                                                 />
                                             </div>
                                         </t>
@@ -34,9 +34,9 @@
                                                     t-att-name="entry[0]"
                                                     t-att-value="item[entry[0]]"
                                                     t-att-data-id="item._id"
-                                                    t-att-disabled="props.isInputDisabled"
-                                                    t-on-input="onInput"
-                                                    t-on-change="onChange"
+                                                    t-att-disabled="this.props.isInputDisabled"
+                                                    t-on-input="this.onInput"
+                                                    t-on-change="this.onChange"
                                             />
                                         </t>
                                     </td>
@@ -64,18 +64,18 @@
                             <span class=""
                                 t-att-title="!availableRecords.length ? noAvailableRecordLabel : ''"
                                 t-att-style="!availableRecords.length ? 'pointer-events: auto; display: inline-block;' : ''">
-                                <t t-out="props.addItemTitle" />
+                                <t t-out="this.props.addItemTitle" />
                             </span>
                         </button>
                         <t t-set-slot="content">
                             <t t-foreach="availableRecords" t-as="item" t-key="item.id">
-                                <t t-foreach="Object.entries(props.itemShape).filter(([key, value]) => !value.endsWith('boolean'))" t-as="entry" t-key="entry[0]">
+                                <t t-foreach="Object.entries(this.props.itemShape).filter(([key, value]) => !value.endsWith('boolean'))" t-as="entry" t-key="entry[0]">
                                     <div class="o-hb-select-dropdown-item d-flex flex-column cursor-pointer o-dropdown-item dropdown-item o-navigable w-100 mx-auto"
                                         style="max-height: 50vh;"
                                         t-att-type="entry[1]"
                                         t-att-name="entry[0]"
                                         t-att-data-id="item.id"
-                                        t-on-click="addItem"
+                                        t-on-click="this.addItem"
                                     >
                                         <t t-out="item[entry[0]]" />
                                     </div>
@@ -88,8 +88,8 @@
             <t t-else="">
                 <div class="text-end mt-1">
                     <button type="button" class="builder_list_add_item o-hb-btn btn btn-success px-3"
-                            t-on-click="addItem">
-                        <t t-out="props.addItemTitle"/>
+                            t-on-click="this.addItem">
+                        <t t-out="this.props.addItemTitle"/>
                     </button>
                 </div>
             </t>

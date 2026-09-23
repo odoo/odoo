@@ -27,7 +27,7 @@
                     <t t-foreach="this.snippetModel.snippetCustomInnerContents" t-as="snippet" t-key="snippet.id">
                         <CustomInnerSnippet snippet="snippet"
                                             snippetModel="this.snippetModel"
-                                            onClickHandler.bind="showSnippetTooltip"
+                                            onClickHandler.bind="this.showSnippetTooltip"
                                             disabledTooltip="disabledBlockTooltip"/>
                     </t>
                 </div>
@@ -41,7 +41,7 @@
                 <t t-foreach="this.snippetModel.snippetInnerContents" t-as="snippet" t-key="snippet.id">
                     <Snippet snippet="snippet"
                              snippetModel="this.snippetModel"
-                             onClickHandler.bind="showSnippetTooltip"
+                             onClickHandler.bind="this.showSnippetTooltip"
                              disabledTooltip="disabledBlockTooltip"/>
                 </t>
             </div>

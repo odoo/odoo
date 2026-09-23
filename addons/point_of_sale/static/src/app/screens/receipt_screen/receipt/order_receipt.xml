@@ -2,25 +2,25 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderReceipt">
         <div class="pos-receipt p-2">
-            <t t-set="showTaxGroupLabels" t-value="doesAnyOrderlineHaveTaxLabel()"/>
-            <ReceiptHeader order="order" />
+            <t t-set="showTaxGroupLabels" t-value="this.doesAnyOrderlineHaveTaxLabel()"/>
+            <ReceiptHeader order="this.order" />
             <div class="pt-3"/>
-            <OrderDisplay order="order" t-slot-scope="scope" mode="'receipt'">
+            <OrderDisplay order="this.order" t-slot-scope="scope" mode="'receipt'">
                 <t t-set="line" t-value="scope.line"/>
-                <Orderline line="line" showTaxGroup="showTaxGroupLabels" mode="'receipt'" basic_receipt="props.basic_receipt">
+                <Orderline line="line" showTaxGroup="showTaxGroupLabels" mode="'receipt'" basic_receipt="this.props.basic_receipt">
                     <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break">
                         <i class="fa-solid fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
                         <t t-out="line.customerNote" />
                     </li>
                 </Orderline>
             </OrderDisplay>
-            <t t-if="!props.basic_receipt">
-                <t t-set="taxTotals" t-value="order.prices.taxDetails"/>
+            <t t-if="!this.props.basic_receipt">
+                <t t-set="taxTotals" t-value="this.order.prices.taxDetails"/>
                 <div t-if="taxTotals and taxTotals.has_tax_groups" class="pos-receipt-taxes pt-3">
                     <t t-foreach="taxTotals.subtotals" t-as="subtotal" t-key="subtotal.name">
                         <div class="d-flex">
                             <span class="text-nowrap mw-100">Subtotal</span>
-                            <span t-out="formatCurrency(order.priceExcl)" class="ms-auto font-monospace"/>
+                            <span t-out="this.formatCurrency(this.order.priceExcl)" class="ms-auto font-monospace"/>
                         </div>
 
                         <div t-foreach="subtotal.tax_groups" t-as="tax_group" t-key="tax_group.id" class="d-flex">
@@ -31,72 +31,72 @@
                                 </t>
                                 <t id="tax_base" t-if="!taxTotals.same_tax_base">
                                     on
-                                    <span t-out="formatCurrency(tax_group.base_amount_currency)"/>
+                                    <span t-out="this.formatCurrency(tax_group.base_amount_currency)"/>
                                 </t>
                             </span>
-                            <span t-out="formatCurrency(tax_group.tax_amount_currency)" class="ms-auto font-monospace"/>
+                            <span t-out="this.formatCurrency(tax_group.tax_amount_currency)" class="ms-auto font-monospace"/>
                         </div>
                     </t>
                 </div>
 
                 <div class="pos-receipt-amount receipt-total fw-bolder">
                     <span class="label-total">Total</span>
-                    <span t-out="order.currencyDisplayPriceIncl" class="pos-receipt-right-align font-monospace"/>
+                    <span t-out="this.order.currencyDisplayPriceIncl" class="pos-receipt-right-align font-monospace"/>
                 </div>
-                <t t-if="order.appliedRounding">
+                <t t-if="this.order.appliedRounding">
                     <div class="pos-receipt-amount receipt-rounding">
                         <span class="label-rounding">Rounding</span>
-                        <span t-out='formatCurrency(order.appliedRounding)' class="pos-receipt-right-align font-monospace"/>
+                        <span t-out='this.formatCurrency(this.order.appliedRounding)' class="pos-receipt-right-align font-monospace"/>
                     </div>
                     <div class="pos-receipt-amount receipt-to-pay">
                         To Pay
-                        <span t-out='formatCurrency(order.totalDue)' class="pos-receipt-right-align font-monospace"/>
+                        <span t-out='this.formatCurrency(this.order.totalDue)' class="pos-receipt-right-align font-monospace"/>
                     </div>
                 </t>
 
-                <div class="paymentlines text-start pt-1" t-foreach="paymentLines" t-as="line" t-key="line_index">
+                <div class="paymentlines text-start pt-1" t-foreach="this.paymentLines" t-as="line" t-key="line_index">
                     <t t-out="line.payment_method_id.name" />
-                    <span t-out="formatCurrency(line.getAmount())" class="pos-receipt-right-align font-monospace"/>
+                    <span t-out="this.formatCurrency(line.getAmount())" class="pos-receipt-right-align font-monospace"/>
                 </div>
 
-                <div t-if="order.showChange" class="pos-receipt-amount receipt-change">
+                <div t-if="this.order.showChange" class="pos-receipt-amount receipt-change">
                     <span class="label-change">Change</span>
-                    <span t-out="formatCurrency(order.change)" class="pos-receipt-right-align font-monospace"/>
+                    <span t-out="this.formatCurrency(this.order.change)" class="pos-receipt-right-align font-monospace"/>
                 </div>
 
-                <t t-set="totalDiscount" t-value="order.getTotalDiscount()" />
+                <t t-set="totalDiscount" t-value="this.order.getTotalDiscount()" />
                 <t t-if="totalDiscount">
                     <div class="text-start">
                         <span class="label-discount">Discounts</span>
-                        <span t-out="formatCurrency(totalDiscount)" class="pos-receipt-right-align font-monospace"/>
+                        <span t-out="this.formatCurrency(totalDiscount)" class="pos-receipt-right-align font-monospace"/>
                     </div>
                 </t>
 
-                <div t-if="order.company.point_of_sale_use_ticket_qr_code and order.finalized" class="gap-2 d-flex flex-row pt-3" style="font-size: 75%;">
-                    <div t-if="['qr_code', 'qr_code_and_url'].includes(header.company.point_of_sale_ticket_portal_url_display_mode)" class="pt-1">
+                <div t-if="this.order.company.point_of_sale_use_ticket_qr_code and this.order.finalized" class="gap-2 d-flex flex-row pt-3" style="font-size: 75%;">
+                    <div t-if="['qr_code', 'qr_code_and_url'].includes(this.header.company.point_of_sale_ticket_portal_url_display_mode)" class="pt-1">
                         <img id="posqrcode" t-att-src="this.qrCode" class="m-0"/>
                     </div>
                     <div class="w-100 ms-1">
                         <div class="fw-bolder">
                             Need an invoice?
                         </div>
-                        <div t-if="['url', 'qr_code_and_url'].includes(header.company.point_of_sale_ticket_portal_url_display_mode)" class="portal-url text-break">
-                            <t t-out="getPortalURL()"/>
+                        <div t-if="['url', 'qr_code_and_url'].includes(this.header.company.point_of_sale_ticket_portal_url_display_mode)" class="portal-url text-break">
+                            <t t-out="this.getPortalURL()"/>
                         </div>
                         <div class="unique-code">
-                            Code: <t t-out="order.ticket_code"/>
+                            Code: <t t-out="this.order.ticket_code"/>
                         </div>
                     </div>
                 </div>
                 <div class="before-footer"/>
             </t>
 
-            <div t-if="order.config.receipt_footer" class="pos-receipt-center-align pt-3 text-center" style="white-space:pre-line">
-                <t t-out="order.config.receipt_footer" />
+            <div t-if="this.order.config.receipt_footer" class="pos-receipt-center-align pt-3 text-center" style="white-space:pre-line">
+                <t t-out="this.order.config.receipt_footer" />
             </div>
 
             <div class="after-footer">
-                <t t-foreach="paymentLines" t-as="line" t-key="line_index">
+                <t t-foreach="this.paymentLines" t-as="line" t-key="line_index">
                     <t t-if="line.ticket">
                         <div class="pos-payment-terminal-receipt pt-3">
                             <pre t-out="line.ticket" />
@@ -105,17 +105,17 @@
                 </t>
             </div>
 
-            <t t-if="order.shipping_date">
+            <t t-if="this.order.shipping_date">
                 <div class="pos-receipt-order-data d-flex gap-2 pt-3">
                     Expected delivery:
-                    <div><t t-out="order.formatDateOrTime('shipping_date', 'date')" /></div>
+                    <div><t t-out="this.order.formatDateOrTime('shipping_date', 'date')" /></div>
                 </div>
             </t>
 
-            <t t-set="company" t-value="order.company" />
+            <t t-set="company" t-value="this.order.company" />
             <div class="d-flex gap-2 pt-3">
                 <div class="w-50 text-break text-start" style="font-size: 75%;">
-                    <div class="pos-config-name" t-out="order.config.name"/>
+                    <div class="pos-config-name" t-out="this.order.config.name"/>
                     <div>
                         <t t-if="company.street" t-out="company.street"/>
                         <t t-if="company.city" t-out="', ' + company.city"/>
@@ -126,7 +126,7 @@
 
                 <div class="w-50 text-break text-end" style="font-size: 75%;">
                     <div>
-                        <div t-if="company.vat" t-out="vatText"/>
+                        <div t-if="company.vat" t-out="this.vatText"/>
                         <div t-if="company.phone_ids?.length">
                             Tel: <span dir="ltr"><t t-out="company.phone_ids[0].number"/></span>
                         </div>

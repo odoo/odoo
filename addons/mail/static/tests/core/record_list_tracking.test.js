@@ -108,7 +108,7 @@ test("component reading related fields through a list read method re-renders", a
     class Labels extends Component {
         static props = ["contact"];
         static template = xml`
-            <div class="labels"><t t-foreach="labels" t-as="l" t-key="l_index"><span t-out="l"/></t></div>`;
+            <div class="labels"><t t-foreach="this.labels" t-as="l" t-key="l_index"><span t-out="l"/></t></div>`;
         setup() {
             this.contact = useState(this.props.contact);
         }

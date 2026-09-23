@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="stock.GenerateSerials">
-        <button class="btn btn-link" t-on-click="openDialog">Generate Serials/Lots</button>
+        <button class="btn btn-link" t-on-click="this.openDialog">Generate Serials/Lots</button>
     </t>
     <t t-name="stock.ImportLots">
-        <button class="btn btn-link" t-on-click="openDialog">Import Serials/Lots</button>
+        <button class="btn btn-link" t-on-click="this.openDialog">Import Serials/Lots</button>
     </t>
     <t t-name="stock.generate_serial_dialog">
-        <Dialog size="size" title="title" withBodyPadding="false">
+        <Dialog size="this.size" title="this.title" withBodyPadding="false">
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-att-disabled="busy" t-on-click="_onGenerate">Generate</button>
+                <button class="btn btn-primary" t-att-disabled="this.busy" t-on-click="this._onGenerate">Generate</button>
                 <button class="btn btn-secondary" t-on-click="() => this.props.close()">
                     Discard
                 </button>
             </t>
             <div class="o_form_view o_form_nosheet">
-                <div t-if="state.error" class="alert alert-warning mx-3 mt-3 mb-0" role="alert">
-                    <t t-out="state.error"/>
+                <div t-if="this.state.error" class="alert alert-warning mx-3 mt-3 mb-0" role="alert">
+                    <t t-out="this.state.error"/>
                 </div>
-                <t t-if="props.mode === 'generate'">
+                <t t-if="this.props.mode === 'generate'">
                     <div class="container">
                         <div class="row mb-2">
                             <div class="col-3">
                                 <label class="o_form_label" for="generate_next_serial">
-                                    <t t-if="isLot">First Lot Number</t>
+                                    <t t-if="this.isLot">First Lot Number</t>
                                     <t t-else="">First Serial Number</t>
                                 </label>
                             </div>
                             <div class="col-7">
                                 <div name="next_serial" class="o_field_widget o_field_char">
                                     <input placeholder="e.g. LOT-PR-00012" class="o_input" id="generate_next_serial" type="text"
-                                        t-model="state.nextSerial"/>
+                                        t-model="this.state.nextSerial"/>
                                 </div>
                             </div>
                             <div class="col">
-                                <button class="btn btn-primary py-1" t-on-click="onGenerateCustomSerial">New</button>
+                                <button class="btn btn-primary py-1" t-on-click="this.onGenerateCustomSerial">New</button>
                             </div>
                         </div>
                         <div class="row mb-2">
                             <div class="col">
                                 <label class="o_form_label" for="generate_next_serial_count">
-                                    <t t-if="isLot">Quantity per Lot</t>
+                                    <t t-if="this.isLot">Quantity per Lot</t>
                                     <t t-else="">Number of SN</t>
                                 </label>
                             </div>
                             <div class="col-9">
                                 <div name="next_serial_count" class="o_field_widget o_field_integer">
                                     <input inputmode="decimal" class="o_input" id="generate_next_serial_count" type="text"
-                                        t-model="state.count"/>
+                                        t-model="this.state.count"/>
                                 </div>
-                                <span t-if="isLot and displayUOM" t-out="props.move.data.product_uom_id.display_name"/>
+                                <span t-if="this.isLot and this.displayUOM" t-out="this.props.move.data.product_uom_id.display_name"/>
                             </div>
                         </div>
-                        <div t-if="isLot" class="row mb-2">
+                        <div t-if="this.isLot" class="row mb-2">
                             <div class="col">
                                 <label class="o_form_label" for="generate_total_received">Quantity Received</label>
                             </div>
                             <div class="col-9">
                                 <div name="total_received" class="o_field_widget o_field_integer">
                                     <input inputmode="decimal" class="o_input" id="generate_total_received" type="text"
-                                        t-model="state.totalReceived"/>
+                                        t-model="this.state.totalReceived"/>
                                 </div>
-                                <span t-if="displayUOM" t-out="props.move.data.product_uom_id.display_name"/>
+                                <span t-if="this.displayUOM" t-out="this.props.move.data.product_uom_id.display_name"/>
                             </div>
                         </div>
                         <div class="row">
@@ -70,18 +70,18 @@
                             </div>
                             <div class="col-9">
                                 <div name="keep_lines">
-                                    <input type="checkbox" id="generate_keep_lines" t-model="state.keepLines"/>
+                                    <input type="checkbox" id="generate_keep_lines" t-model="this.state.keepLines"/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </t>
-                <t t-if="props.mode === 'import'" class="d-flex">
+                <t t-if="this.props.mode === 'import'" class="d-flex">
                     <div class="grid o_inner_group">
                         <div class="d-flex">
                             <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
                                 <label class="o_form_label" for="import_lots">
-                                    <t t-if="isLot">Lot numbers</t>
+                                    <t t-if="this.isLot">Lot numbers</t>
                                     <t t-else="">Serial numbers</t>
                                 </label>
                             </div>
@@ -90,7 +90,7 @@
                             <div name="next_serial" class="o_field_widget o_field_char">
                                 <textarea
                                     placeholder="Write one lot/serial name per line, followed by the quantity."
-                                    class="o_input" id="import_lots" t-model="state.lots"/>
+                                    class="o_input" id="import_lots" t-model="this.state.lots"/>
                             </div>
                         </div>
                         <div class="d-flex">
@@ -100,7 +100,7 @@
                         </div>
                         <div class="o_cell flex-grow-1 flex-sm-grow-0">
                             <div name="keep_lines">
-                                <input type="checkbox" id="import_keep_lines" t-model="state.keepLines"/>
+                                <input type="checkbox" id="import_keep_lines" t-model="this.state.keepLines"/>
                             </div>
                         </div>
                     </div>

@@ -3,7 +3,7 @@
     <t t-name="accountant.BankRecFormDialog.buttons" t-inherit="web.FormViewDialog.ToOne.buttons" t-inherit-mode="primary">
         <xpath expr="//button[hasclass('o_form_button_save')]" position="after">
             <button
-                t-if="userCanReview and this.isReviewed"
+                t-if="this.userCanReview and this.isReviewed"
                 class="btn btn-info"
                 t-on-click.stop="() => this.toReviewButtonClicked({closable: true})"
                 data-hotkey="q">

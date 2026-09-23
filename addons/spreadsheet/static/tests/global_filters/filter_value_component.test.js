@@ -27,8 +27,8 @@ defineSpreadsheetModels();
 class FilterValueWrapper extends Component {
     static template = xml`
         <FilterValue
-            t-props="props"
-            globalFilterValue="globalFilterValue"
+            t-props="this.props"
+            globalFilterValue="this.globalFilterValue"
         />`;
     static components = { FilterValue };
     static props = FilterValue.props;

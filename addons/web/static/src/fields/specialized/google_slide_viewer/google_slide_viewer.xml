@@ -3,13 +3,13 @@
 
     <t t-name="web.GoogleSlideViewer" t-inherit="web.CharField">
         <xpath expr="//t[@t-else='']" position="after">
-            <t t-if="url">
+            <t t-if="this.url">
                 <div class="o_google_slide">
                     <iframe class="o_google_slide_iframe w-100"
                         alt="Google Slide Viewer"
-                        t-att-src="url"
-                        t-att-name="props.name"
-                        t-on-error="onLoadFailed"
+                        t-att-src="this.url"
+                        t-att-name="this.props.name"
+                        t-on-error="this.onLoadFailed"
                     />
                 </div>
             </t>

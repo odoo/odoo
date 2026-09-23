@@ -295,7 +295,7 @@ test("a popover still closes when its target leaves the DOM", async () => {
 
 test("a hosted rainbowman component keeps its clicks", async () => {
     class Hosted extends Component {
-        static template = xml`<button class="rm-btn" t-on-click="onClick">go</button>`;
+        static template = xml`<button class="rm-btn" t-on-click="this.onClick">go</button>`;
         static props = ["*"];
         onClick() {
             expect.step("button");
@@ -523,7 +523,7 @@ test("a popover forwards its hosted component's close parameters", async () => {
 test("a slotted popover is rejected rather than silently empty", async () => {
     await makeMockEnv();
     class SlotHost extends Component {
-        static template = xml`<Popover target="target" close="() => {}" component="comp"><div class="slotted"/></Popover>`;
+        static template = xml`<Popover target="this.target" close="() => {}" component="this.comp"><div class="slotted"/></Popover>`;
         static components = { Popover };
         static props = ["*"];
         setup() {
@@ -583,7 +583,7 @@ class FocusableContent extends Component {
 test("a <Popover> written in a template claims the UI like a sheet does", async () => {
     await makeMockEnv();
     class DirectHost extends Component {
-        static template = xml`<Popover target="t" close="() => {}" component="c"/>`;
+        static template = xml`<Popover target="this.t" close="() => {}" component="this.c"/>`;
         static components = { Popover };
         static props = ["*"];
         setup() {
@@ -856,7 +856,7 @@ test("the portal chatter shape: a second container in the same env, fed by a pro
     class ChatterRoot extends Component {
         static components = { OverlayContainer };
         static props = {};
-        static template = xml`<OverlayContainer overlays="overlays" rootId="'chatterRoot'"/>`;
+        static template = xml`<OverlayContainer overlays="this.overlays" rootId="'chatterRoot'"/>`;
         setup() {
             this.overlays = overlays;
         }

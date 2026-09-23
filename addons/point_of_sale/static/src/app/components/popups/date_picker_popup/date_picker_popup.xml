@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.DatePickerPopup">
-        <Dialog title="props.title">
-            <input class="form-control form-control-lg w-75 mx-auto" type="date" t-model="state.shippingDate" t-ref="input" t-att-min="_today()"/>
+        <Dialog title="this.props.title">
+            <input class="form-control form-control-lg w-75 mx-auto" type="date" t-model="this.state.shippingDate" t-ref="input" t-att-min="this._today()"/>
             <t t-set-slot="footer">
-                <button class="btn btn-lg btn-primary" t-on-click="confirm" t-out="props.confirmLabel" />
+                <button class="btn btn-lg btn-primary" t-on-click="this.confirm" t-out="this.props.confirmLabel" />
             </t>
         </Dialog>
     </t>

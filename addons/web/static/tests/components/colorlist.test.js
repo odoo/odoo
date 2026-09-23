@@ -8,7 +8,7 @@ import { ColorList } from "@web/components/colorlist/colorlist";
 
 class Parent extends Component {
     static template = xml`
-        <t t-component="Component" t-props="componentProps"/>
+        <t t-component="this.Component" t-props="this.componentProps"/>
         <div class="outsideDiv">Outside div</div>
     `;
     static props = ["*"];
@@ -89,7 +89,7 @@ test("open the list of colors if canToggle props is given", async function () {
 
 test("the isExpanded prop is followed after it changes", async () => {
     class Controller extends Component {
-        static template = xml`<ColorList colors="[1,2,3]" onColorSelected="() => {}" isExpanded="state.expanded" canToggle="true"/>`;
+        static template = xml`<ColorList colors="[1,2,3]" onColorSelected="() => {}" isExpanded="this.state.expanded" canToggle="true"/>`;
         static components = { ColorList };
         static props = /** @type {string[]} */ ([]);
 
@@ -115,8 +115,8 @@ test("the isExpanded prop is followed after it changes", async () => {
 test("the isExpanded prop sync does not undo the user's own toggle", async () => {
     class Controller extends Component {
         static template = xml`
-            <ColorList colors="[1,2,3]" onColorSelected="() => {}" isExpanded="state.expanded" canToggle="true"/>
-            <span t-out="state.tick"/>`;
+            <ColorList colors="[1,2,3]" onColorSelected="() => {}" isExpanded="this.state.expanded" canToggle="true"/>
+            <span t-out="this.state.tick"/>`;
         static components = { ColorList };
         static props = /** @type {string[]} */ ([]);
 

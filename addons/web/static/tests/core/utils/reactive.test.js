@@ -52,7 +52,7 @@ test("a subscription belongs to the proxy the read went through", async () => {
     const fullName = () => `${store.first} ${store.last}`;
 
     class Name extends Component {
-        static template = xml`<span t-out="fullName()"/>`;
+        static template = xml`<span t-out="this.fullName()"/>`;
         static props = {};
         setup() {
             useState(store);
@@ -80,7 +80,7 @@ test("reading the same state through the component's own proxy does subscribe", 
     })();
 
     class Name extends Component {
-        static template = xml`<span t-out="fullName"/>`;
+        static template = xml`<span t-out="this.fullName"/>`;
         static props = {};
         /** @type {typeof store} */
         state;

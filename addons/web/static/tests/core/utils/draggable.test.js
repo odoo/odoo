@@ -465,7 +465,7 @@ test("allowDisconnected option", async () => {
     class List extends Component {
         static template = xml`
             <div t-ref="root" class="root">
-                <button class="handle" t-if="state.hasHandle">Handle</button>
+                <button class="handle" t-if="this.state.hasHandle">Handle</button>
                 <ul class="list list-unstyled m-0 d-flex flex-column">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item w-50 h-100" />
                 </ul>
@@ -596,7 +596,7 @@ test("unmounting mid-drag releases the document", async () => {
     const state = reactive({ visible: true });
     class Parent extends Component {
         static components = { List: makeDraggableList() };
-        static template = xml`<t t-if="state.visible"><List/></t>`;
+        static template = xml`<t t-if="this.state.visible"><List/></t>`;
         static props = ["*"];
         setup() {
             this.state = useState(state);
@@ -685,7 +685,7 @@ function makeScrollableDraggableList(hookParams = {}) {
             <div class="scroll" style="height: 100px; overflow-y: auto;">
                 <div t-ref="root" class="root">
                     <ul class="list">
-                        <li t-foreach="items" t-as="i" t-key="i" t-out="i"
+                        <li t-foreach="this.items" t-as="i" t-key="i" t-out="i"
                             class="item" style="height: 30px;"/>
                     </ul>
                 </div>

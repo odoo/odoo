@@ -4,16 +4,16 @@
 <t t-name="html_builder.BuilderNumberInput">
     <BuilderComponent>
         <BuilderTextInputBase
-            t-props="textInputBaseProps"
-            inputRef="inputRef"
-            value="displayValue"
+            t-props="this.textInputBaseProps"
+            inputRef="this.inputRef"
+            value="this.displayValue"
             classes="'o-hb-input-field-number justify-content-end'"
-            inputClasses="props.inputClasses ? `o-hb-input-number text-end ${props.inputClasses}` : 'o-hb-input-number text-end'"
-            commit="commit"
-            preview="preview"
-            onKeydown.bind="onKeydown"
+            inputClasses="this.props.inputClasses ? `o-hb-input-number text-end ${this.props.inputClasses}` : 'o-hb-input-number text-end'"
+            commit="this.commit"
+            preview="this.preview"
+            onKeydown.bind="this.onKeydown"
             >
-            <span class="o-hb-input-field-unit" t-out="props.unit"/>
+            <span class="o-hb-input-field-unit" t-out="this.props.unit"/>
         </BuilderTextInputBase>
     </BuilderComponent>
 </t>

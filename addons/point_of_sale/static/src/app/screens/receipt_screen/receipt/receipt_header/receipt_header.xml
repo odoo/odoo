@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ReceiptHeader">
-        <img t-att-src="logoUrl" alt="Logo" class="pos-receipt-logo"/>
+        <img t-att-src="this.logoUrl" alt="Logo" class="pos-receipt-logo"/>
         <div class="text-center pt-3" style="font-size: 75%;">
             <span class="pos-receipt-vat">
                 <span class="ticket-name-prefix">
-                    <t t-if="order.config._IS_VAT"> VAT </t>
+                    <t t-if="this.order.config._IS_VAT"> VAT </t>
                     Ticket
                 </span>
-                <t t-out="order.pos_reference"/>
+                <t t-out="this.order.pos_reference"/>
             </span>
-            <div t-if="order.date_order" id="order-date" t-out="order.formatDateOrTime('date_order')"/>
+            <div t-if="this.order.date_order" id="order-date" t-out="this.order.formatDateOrTime('date_order')"/>
         </div>
         <div class="d-flex flex-column align-items-center">
             <div class="pos-receipt-contact">
-                <div t-if="order.config.receipt_header" style="white-space:pre-line" t-out="order.config.receipt_header" />
-                <div t-if="order?.getCashierName()" class="cashier">
-                    <div>Served by: <t t-out="order.getCashierName()" /></div>
+                <div t-if="this.order.config.receipt_header" style="white-space:pre-line" t-out="this.order.config.receipt_header" />
+                <div t-if="this.order?.getCashierName()" class="cashier">
+                    <div>Served by: <t t-out="this.order.getCashierName()" /></div>
                 </div>
-                <div t-if="order.tracking_number and order.config.displayTrackingNumber and !order.config.displayBigTrackingNumber">
-                    <span class="tracking-number fs-1" t-out="order.tracking_number" />
+                <div t-if="this.order.tracking_number and this.order.config.displayTrackingNumber and !this.order.config.displayBigTrackingNumber">
+                    <span class="tracking-number fs-1" t-out="this.order.tracking_number" />
                 </div>
             </div>
-            <div t-if="order.partner_id" class="pos-receipt-customer mt-2">
-                <div t-if="order.partner_id.name">
-                    <t t-if="order.partner_id.parent_name">
-                        <span t-out="order.partner_id.parent_name" />,
+            <div t-if="this.order.partner_id" class="pos-receipt-customer mt-2">
+                <div t-if="this.order.partner_id.name">
+                    <t t-if="this.order.partner_id.parent_name">
+                        <span t-out="this.order.partner_id.parent_name" />,
                     </t>
-                    <span t-out="order.partner_id.name" />
+                    <span t-out="this.order.partner_id.name" />
                 </div>
-                <div t-if="order.partner_id.pos_contact_address">
-                    <span t-out="order.partner_id.pos_contact_address" />
+                <div t-if="this.order.partner_id.pos_contact_address">
+                    <span t-out="this.order.partner_id.pos_contact_address" />
                 </div>
-                <div t-if="order.partner_id.vat">
-                    <span t-out="order.partner_id.vat" />
+                <div t-if="this.order.partner_id.vat">
+                    <span t-out="this.order.partner_id.vat" />
                 </div>
             </div>
         </div>
-        <div t-if="order?.presetDateTime" class="pt-2 text-center">
+        <div t-if="this.order?.presetDateTime" class="pt-2 text-center">
             <span>
-                <t t-out="order.preset_id.name"/>: <t t-out="order.presetDateTime"/>
+                <t t-out="this.order.preset_id.name"/>: <t t-out="this.order.presetDateTime"/>
             </span>
         </div>
     </t>

@@ -3,29 +3,29 @@
 
     <t t-name="document.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
         <xpath expr="//t[@t-else='']/Breadcrumbs" position="replace">
-            <DocumentsBreadcrumbs breadcrumbs="pathBreadcrumbs"/>
+            <DocumentsBreadcrumbs breadcrumbs="this.pathBreadcrumbs"/>
         </xpath>
 
         <xpath expr="//div[hasclass('o_control_panel_actions')]" position="inside">
-            <DocumentsAction t-if="showActions" folderId="currentFolderId" targetRecords="this.env.model.root.selection"/>
+            <DocumentsAction t-if="this.showActions" folderId="this.currentFolderId" targetRecords="this.env.model.root.selection"/>
         </xpath>
 
         <xpath expr="//*[hasclass('o_control_panel_navigation')]" position="inside">
-            <button t-if="documentService.userIsInternal &amp;&amp; !env.searchModel.context.documents_view_secondary"
-                t-on-click="() => documentService.toggleRightPanelVisibility()"
+            <button t-if="this.documentService.userIsInternal &amp;&amp; !this.env.searchModel.context.documents_view_secondary"
+                t-on-click="() => this.documentService.toggleRightPanelVisibility()"
                 data-tooltip="Info &amp; tags"
                 class="btn btn-secondary o_switch_view o_kanban o_documents_info_toggle d-none d-md-inline"
-                t-att-class="{'active': rightPanelState.visible}">
-                <i t-attf-class="fa-fw {{ rightPanelState.visible ? 'fa-solid fa-xmark' : 'fa-solid fa-circle-info' }} mt-1"/>
+                t-att-class="{'active': this.rightPanelState.visible}">
+                <i t-attf-class="fa-fw {{ this.rightPanelState.visible ? 'fa-solid fa-xmark' : 'fa-solid fa-circle-info' }} mt-1"/>
             </button>
         </xpath>
 
         <xpath expr="//div[hasclass('o_cp_pager')]" position="attributes">
-            <attribute name="t-if" add="!rightPanelState.visible" separator=" and "/>
+            <attribute name="t-if" add="!this.rightPanelState.visible" separator=" and "/>
         </xpath>
 
         <xpath expr="//nav[hasclass('o_cp_switch_buttons')]" position="attributes">
-            <attribute name="t-if" add="!rightPanelState.previewedDocument" separator=" and "/>
+            <attribute name="t-if" add="!this.rightPanelState.previewedDocument" separator=" and "/>
         </xpath>
     </t>
 </templates>

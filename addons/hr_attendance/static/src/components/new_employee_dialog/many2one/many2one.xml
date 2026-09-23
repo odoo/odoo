@@ -3,9 +3,9 @@
 <templates xml:space="preserve">
     <t t-name="hr_attendance.Many2One">
         <AutoComplete
-            value="props.value"
-            placeholder="props.placeholder || 'Select an employee'"
-            sources="sources"
+            value="this.props.value"
+            placeholder="this.props.placeholder || 'Select an employee'"
+            sources="this.sources"
             dropdown="true"
             autofocus="true">
             <t t-set-slot="option" t-slot-scope="optionScope">

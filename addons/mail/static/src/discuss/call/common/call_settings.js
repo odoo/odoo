@@ -192,7 +192,7 @@ export class CallSettings extends Component {
 
 export class CallSettingsDialog extends Component {
     static template = xml`
-        <Dialog size="medium" footer="false" title.translate="Voice &amp; Video Settings">
+        <Dialog size="this.medium" footer="false" title.translate="Voice &amp; Video Settings">
             <CallSettings withActionPanel="false"/>
         </Dialog>
     `;

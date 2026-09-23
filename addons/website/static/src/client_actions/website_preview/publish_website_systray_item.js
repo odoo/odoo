@@ -16,10 +16,10 @@ const log = makeLogger("website.systray.publish");
 
 export class PublishSystrayItem extends Component {
     static template = xml`
-        <div t-on-click="publishContent" class="o_menu_systray_item o_website_publish_container d-flex ms-auto" t-att-data-processing="state.processing and 1">
+        <div t-on-click="this.publishContent" class="o_menu_systray_item o_website_publish_container d-flex ms-auto" t-att-data-processing="this.state.processing and 1">
             <a href="#" class="d-flex align-items-center mx-1 px-2 px-md-0" data-hotkey="p">
                 <span class="o_nav_entry d-none d-md-block mx-0 pe-1" t-out="this.label"/>
-                <CheckBox value="state.published" className="'form-switch d-flex justify-content-center m-0 pe-none'"/>
+                <CheckBox value="this.state.published" className="'form-switch d-flex justify-content-center m-0 pe-none'"/>
             </a>
         </div>`;
     static components = {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="stock.MovesListRendererCreateControls" t-inherit="web.ListRenderer.CreateControls" t-inherit-mode="primary">
-        <xpath expr="//t[@t-foreach='controls']" position="after">
-            <a t-if="canAddPackage" href="#" class="px-3" tabindex="0" t-on-click.stop.prevent="() => this.onClickMovePackage()">Move a Pack</a>
+        <xpath expr="//t[@t-foreach='this.controls']" position="after">
+            <a t-if="this.canAddPackage" href="#" class="px-3" tabindex="0" t-on-click.stop.prevent="() => this.onClickMovePackage()">Move a Pack</a>
         </xpath>
     </t>
 </templates>

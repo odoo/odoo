@@ -2,48 +2,48 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ViewLayout">
-        <div t-att-class="props.className" t-ref="root">
-            <Layout className="layoutClassName" display="props.display">
+        <div t-att-class="this.props.className" t-ref="root">
+            <Layout className="this.layoutClassName" display="this.props.display">
 
                 <t t-set-slot="control-panel-create-button">
-                    <t t-if="hasSlot('control-panel-create-button')" t-slot="control-panel-create-button"/>
+                    <t t-if="this.hasSlot('control-panel-create-button')" t-slot="control-panel-create-button"/>
                 </t>
 
                 <t t-set-slot="layout-buttons">
-                    <t t-if="hasSlot('layout-buttons')" t-slot="layout-buttons"/>
+                    <t t-if="this.hasSlot('layout-buttons')" t-slot="layout-buttons"/>
                 </t>
 
                 <t t-set-slot="control-panel-always-buttons">
-                    <t t-if="hasSlot('control-panel-always-buttons')" t-slot="control-panel-always-buttons"/>
+                    <t t-if="this.hasSlot('control-panel-always-buttons')" t-slot="control-panel-always-buttons"/>
                 </t>
 
                 <t t-set-slot="control-panel-selection-actions">
-                    <t t-if="hasSlot('control-panel-selection-actions')" t-slot="control-panel-selection-actions"/>
+                    <t t-if="this.hasSlot('control-panel-selection-actions')" t-slot="control-panel-selection-actions"/>
                 </t>
 
                 <t t-set-slot="layout-actions">
-                    <t t-if="hasSlot('layout-actions-start')" t-slot="layout-actions-start"/>
-                    <SearchBar t-if="props.searchBar" toggler="props.searchBarToggler" autofocus="props.autofocusSearchBar"/>
-                    <t t-if="hasSlot('layout-actions')" t-slot="layout-actions"/>
+                    <t t-if="this.hasSlot('layout-actions-start')" t-slot="layout-actions-start"/>
+                    <SearchBar t-if="this.props.searchBar" toggler="this.props.searchBarToggler" autofocus="this.props.autofocusSearchBar"/>
+                    <t t-if="this.hasSlot('layout-actions')" t-slot="layout-actions"/>
                 </t>
 
                 <t t-set-slot="control-panel-navigation-additional">
-                    <t t-if="props.searchBar and props.searchBarToggler and props.showSearchBarToggler"
-                       t-component="props.searchBarToggler.component"
-                       t-props="props.searchBarToggler.props"/>
-                    <t t-if="hasSlot('control-panel-navigation-additional')" t-slot="control-panel-navigation-additional"/>
+                    <t t-if="this.props.searchBar and this.props.searchBarToggler and this.props.showSearchBarToggler"
+                       t-component="this.props.searchBarToggler.component"
+                       t-props="this.props.searchBarToggler.props"/>
+                    <t t-if="this.hasSlot('control-panel-navigation-additional')" t-slot="control-panel-navigation-additional"/>
                 </t>
 
                 <t t-set-slot="control-panel-additional-actions">
-                    <t t-if="hasSlot('control-panel-additional-actions')" t-slot="control-panel-additional-actions"/>
-                    <CogMenu t-elif="props.cogMenu"/>
+                    <t t-if="this.hasSlot('control-panel-additional-actions')" t-slot="control-panel-additional-actions"/>
+                    <CogMenu t-elif="this.props.cogMenu"/>
                 </t>
 
                 <t t-set-slot="default" t-slot-scope="layout">
-                    <t t-if="hasSlot('no-content')" t-slot="no-content"/>
-                    <ActionHelper t-elif="props.displayNoContent"
-                                  noContentHelp="props.noContentHelp"
-                                  showRibbon="props.useSampleModel"/>
+                    <t t-if="this.hasSlot('no-content')" t-slot="no-content"/>
+                    <ActionHelper t-elif="this.props.displayNoContent"
+                                  noContentHelp="this.props.noContentHelp"
+                                  showRibbon="this.props.useSampleModel"/>
                     <t t-slot="default" contentRef="layout.contentRef"/>
                 </t>
 

@@ -6,7 +6,7 @@
                 <div class="d-flex w-100">
                     <h4>How to get the application</h4>
                     <button
-                        t-on-click="onClose"
+                        t-on-click="this.onClose"
                         type="button"
                         class="btn-close"
                         aria-label="Close"
@@ -18,7 +18,7 @@
         </Dialog>
     </t>
     <t t-name="web.InstallStepsSafari">
-        <t t-if="isMobileSafari">
+        <t t-if="this.isMobileSafari">
             <ul class="mb-0">
                 <li>
                     Tap on the share icon

@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="document.DocumentsBooleanIconField">
-        <button t-attf-class="btn {{this.props.record.data[this.props.name] ? props.btnTrueClass:props.btnFalseClass}}"
-            t-att-data-tooltip="props.label" t-on-click.prevent.stop="update">
-            <i t-attf-class="{{props.icon}}"/>
+        <button t-attf-class="btn {{this.props.record.data[this.props.name] ? this.props.btnTrueClass:this.props.btnFalseClass}}"
+            t-att-data-tooltip="this.props.label" t-on-click.prevent.stop="this.update">
+            <i t-attf-class="{{this.props.icon}}"/>
         </button>
     </t>
 

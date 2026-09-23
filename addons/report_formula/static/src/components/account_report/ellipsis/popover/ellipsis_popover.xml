@@ -2,8 +2,8 @@
 <templates>
     <t t-name="report_formula.AccountReportEllipsisPopover">
         <div class="account_report_popover_ellipsis">
-            <p t-out="props.name"/>
-            <button class="btn account_report_btn_clone" t-on-click="() => props.copyEllipsisText()">
+            <p t-out="this.props.name"/>
+            <button class="btn account_report_btn_clone" t-on-click="() => this.props.copyEllipsisText()">
                 <i class="fa-solid fa-paste"/>
             </button>
         </div>

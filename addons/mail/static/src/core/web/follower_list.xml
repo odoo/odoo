@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.FollowerList">
-        <DropdownItem t-if="props.thread.selfFollower" class="'d-flex px-1 o-mail-FollowerList-unfollow'" onSelected="() => this.onClickUnfollow()">
+        <DropdownItem t-if="this.props.thread.selfFollower" class="'d-flex px-1 o-mail-FollowerList-unfollow'" onSelected="() => this.onClickUnfollow()">
             <span class="o-mail-FollowerList-unfollowBtn text-danger d-flex align-items-center flex-grow-1 px-3 fw-bold">
                 Unfollow
             </span>
@@ -14,19 +14,19 @@
             Follow
         </DropdownItem>
         <div role="separator" class="dropdown-divider opacity-50"/>
-        <t t-if="props.thread.hasWriteAccess">
+        <t t-if="this.props.thread.hasWriteAccess">
             <DropdownItem onSelected="() => this.onClickAddFollowers()" tag="'a'">
                 Add Followers
             </DropdownItem>
-            <div t-if="props.thread.followers.length > 0" role="separator" class="dropdown-divider opacity-50"/>
+            <div t-if="this.props.thread.followers.length > 0" role="separator" class="dropdown-divider opacity-50"/>
         </t>
-        <div t-if="props.thread.followers.length > 0" class="d-flex flex-column gap-1">
-            <t t-foreach="props.thread.followers" t-as="follower" t-key="follower.id">
-                <Follower follower="follower" onFollowerChanged="props.onFollowerChanged" close="props.dropdown.close"/>
+        <div t-if="this.props.thread.followers.length > 0" class="d-flex flex-column gap-1">
+            <t t-foreach="this.props.thread.followers" t-as="follower" t-key="follower.id">
+                <Follower follower="follower" onFollowerChanged="this.props.onFollowerChanged" close="this.props.dropdown.close"/>
             </t>
-            <span t-if="!props.thread.followersFullyLoaded" class="btn btn-link" t-on-click="props.thread.loadMoreFollowers" t-ref="load-more">Load more</span>
+            <span t-if="!this.props.thread.followersFullyLoaded" class="btn btn-link" t-on-click="this.props.thread.loadMoreFollowers" t-ref="load-more">Load more</span>
         </div>
-        <div t-elif="!props.thread.hasWriteAccess" class="dropdown-item disabled">
+        <div t-elif="!this.props.thread.hasWriteAccess" class="dropdown-item disabled">
             No Followers
         </div>
     </t>

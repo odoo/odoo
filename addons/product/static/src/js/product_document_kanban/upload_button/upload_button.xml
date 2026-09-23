@@ -5,9 +5,9 @@
             type="file"
             multiple="true"
             t-ref="uploadFileInput"
-            t-att-accept="props.allowedMIMETypes"
+            t-att-accept="this.props.allowedMIMETypes"
             class="o_input_file o_hidden"
-            t-on-change.stop="onFileInputChange"
+            t-on-change.stop="this.onFileInputChange"
         />
         <button
             type="button"

@@ -5,7 +5,7 @@
 
         <xpath expr="//h3" position="replace">
             <h3 class="px-0">
-                Odoo <t t-out="serverVersion"/> (Enterprise Edition)
+                Odoo <t t-out="this.serverVersion"/> (Enterprise Edition)
             </h3>
         </xpath>
 
@@ -14,8 +14,8 @@
         </xpath>
 
         <xpath expr="//h3" position="after">
-            <t t-if="expirationDate">
-                <h5>Database expiration: <t t-out="expirationDate"/></h5>
+            <t t-if="this.expirationDate">
+                <h5>Database expiration: <t t-out="this.expirationDate"/></h5>
             </t>
         </xpath>
 

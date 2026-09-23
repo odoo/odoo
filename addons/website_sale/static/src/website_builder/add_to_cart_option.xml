@@ -22,8 +22,8 @@
     </BuilderRow>
     <BuilderRow label.translate="Action" t-if="this.domState.shouldShowActionChoice">
         <BuilderSelect action="'addToCartAction'">
-            <BuilderSelectItem actionParam="addToCartValues.addToCart"><t t-out="addToCartValues.addToCart.label"/></BuilderSelectItem>
-            <BuilderSelectItem actionParam="addToCartValues.buyNow"><t t-out="addToCartValues.buyNow.label"/></BuilderSelectItem>
+            <BuilderSelectItem actionParam="this.addToCartValues.addToCart"><t t-out="this.addToCartValues.addToCart.label"/></BuilderSelectItem>
+            <BuilderSelectItem actionParam="this.addToCartValues.buyNow"><t t-out="this.addToCartValues.buyNow.label"/></BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 </t>

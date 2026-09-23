@@ -16,8 +16,8 @@ class ChannelActionDialog extends Component {
     static props = ["title", "contentComponent", "contentProps", "close?"];
     static components = { Dialog };
     static template = xml`
-        <Dialog size="'md'" title="props.title" footer="false" contentClass="'o-bg-body'" bodyClass="'p-1'">
-            <t t-component="props.contentComponent" t-props="props.contentProps"/>
+        <Dialog size="'md'" title="this.props.title" footer="false" contentClass="'o-bg-body'" bodyClass="'p-1'">
+            <t t-component="this.props.contentComponent" t-props="this.props.contentProps"/>
         </Dialog>
     `;
 }

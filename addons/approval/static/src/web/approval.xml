@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="approval.Approval">
-        <div t-if="props.activity.approver_id.state === 'pending'">
-            <button class="btn btn-success btn-link ps-0 pt-0" t-on-click="onClickApprove">
+        <div t-if="this.props.activity.approver_id.state === 'pending'">
+            <button class="btn btn-success btn-link ps-0 pt-0" t-on-click="this.onClickApprove">
                 <i class="fa-solid fa-check" /> Approve
             </button>
-            <button class="btn btn-danger btn-link pt-0" t-on-click="onClickRefuse">
+            <button class="btn btn-danger btn-link pt-0" t-on-click="this.onClickRefuse">
                 <i class="fa-solid fa-times" /> Refuse
             </button>
         </div>

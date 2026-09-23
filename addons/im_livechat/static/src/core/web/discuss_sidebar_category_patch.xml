@@ -2,14 +2,13 @@
 <templates xml:space="preserve">
  <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
  <xpath expr="//*[@name='threadAvatar']" position="before">
- <i t-if="store.discuss.isSidebarCompact and thread.discussAppCategory.eq(store.discuss.livechatLookingForHelpCategory) and thread.matchesSelfExpertise"
+ <i t-if="this.store.discuss.isSidebarCompact and this.thread.discussAppCategory.eq(this.store.discuss.livechatLookingForHelpCategory) and this.thread.matchesSelfExpertise"
  class="fa-solid fa-star o-mail-starred position-absolute top-0 start-0 z-1"
  role="image"
  title="Relevant to your expertise"
  />
- <t t-else="" t-call="im_livechat.LivechatStatusLabelOfThread">
- <t t-set="templateParams" t-value="{ livechatThread: props.thread }"/>
- </t>
+ <t t-else="" t-call="im_livechat.LivechatStatusLabelOfThread"
+     templateParams="{ livechatThread: this.props.thread }"/>
  </xpath>
  </t>
 
@@ -32,18 +31,18 @@
  <t t-name="im_livechat.LivechatStatusLabelOfThread">
  <t t-set="livechatThread" t-value="templateParams.livechatThread"/>
  <span t-if="livechatThread.channel_type === 'livechat' and (['waiting', 'need_help'].includes(livechatThread.livechat_status) or livechatThread.livechat_end_dt)" class="o-livechat-LivechatStatusLabel" t-att-title="livechatThread.livechatStatusLabel" t-att-class="{
- 'position-absolute top-0 start-0': env.inDiscussSidebar or env.inChatBubble or env.inNotificationItem,
- 'o-livechat-LivechatStatusLabel-Sidebar end-0 bottom-0 rounded-2 border': env.inDiscussSidebar,
- 'm-n2 z-1 bg-opacity-100': env.inChatBubble or env.inNotificationItem,
+ 'position-absolute top-0 start-0': this.env.inDiscussSidebar or this.env.inChatBubble or this.env.inNotificationItem,
+ 'o-livechat-LivechatStatusLabel-Sidebar end-0 bottom-0 rounded-2 border': this.env.inDiscussSidebar,
+ 'm-n2 z-1 bg-opacity-100': this.env.inChatBubble or this.env.inNotificationItem,
  'text-warning': livechatThread.livechat_status === 'waiting',
  'o-help': livechatThread.livechat_status === 'need_help',
- 'bg-warning': livechatThread.livechat_status === 'waiting' and env.inDiscussSidebar,
- 'bg-info': livechatThread.livechat_status === 'need_help' and env.inDiscussSidebar,
+ 'bg-warning': livechatThread.livechat_status === 'waiting' and this.env.inDiscussSidebar,
+ 'bg-info': livechatThread.livechat_status === 'need_help' and this.env.inDiscussSidebar,
  }">
- <i class="o-livechat-LivechatStatusLabel-icon" t-attf-class="{{ livechatThread.livechat_end_dt ? 'fa-solid fa-flag-checkered' : store.livechatStatusButtons.find(btn => btn.status === livechatThread.livechat_status)?.icon }}" t-att-class="{
+ <i class="o-livechat-LivechatStatusLabel-icon" t-attf-class="{{ livechatThread.livechat_end_dt ? 'fa-solid fa-flag-checkered' : this.store.livechatStatusButtons.find(btn => btn.status === livechatThread.livechat_status)?.icon }}" t-att-class="{
  'o-white': livechatThread.livechat_end_dt,
- 'position-absolute start-0 top-0 z-1 o-inDiscussSidebar rounded-circle o-px-0_5 m-n1': env.inDiscussSidebar,
- '': !env.inDiscussSidebar,
+ 'position-absolute start-0 top-0 z-1 o-inDiscussSidebar rounded-circle o-px-0_5 m-n1': this.env.inDiscussSidebar,
+ '': !this.env.inDiscussSidebar,
  }"/>
  </span>
  </t>
@@ -51,7 +50,7 @@
  <t t-name="im_livechat.LivechatStatusSelection">
  <t t-set="livechatThread" t-value="templateParams.livechatThread"/>
  <div class="o-livechat-LivechatStatusSelection list-group" t-ref="livechat-status-selection">
- <t t-foreach="store.livechatStatusButtons" t-as="btn" t-key="btn.status">
+ <t t-foreach="this.store.livechatStatusButtons" t-as="btn" t-key="btn.status">
  <t t-set="isBtnActive" t-value="livechatThread.livechat_status === btn.status"/>
  <button
  class="list-group-item list-group-item-action d-flex align-items-center gap-2"
@@ -62,7 +61,7 @@
  'o-need-help': isBtnActive and btn.status === 'need_help',
  'o-waiting bg-warning-subtle text-warning': isBtnActive and btn.status === 'waiting',
  }"
- t-att-disabled="!store.has_access_livechat"
+ t-att-disabled="!this.store.has_access_livechat"
  t-on-click="() => livechatThread.updateLivechatStatus(btn.status)"
  >
  <input
@@ -71,9 +70,7 @@
  class="form-check-input m-0"
  />
  <span class="o-livechat-LivechatStatusSelection-Label text-truncate cursor-pointer flex-grow-1 " t-out="btn.label"/>
- <t t-call="im_livechat.LivechatStatusLabel">
- <t t-set="templateParams" t-value="{ btn }"/>
- </t>
+ <t t-call="im_livechat.LivechatStatusLabel" templateParams="{ btn }"/>
  </button>
  </t>
  </div>

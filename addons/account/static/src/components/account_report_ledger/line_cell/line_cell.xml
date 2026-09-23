@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-inherit="report_formula.AccountReportLineCellCustomizable" t-inherit-mode="extension">
-        <xpath expr="//t[@t-if='props.cell.edit_popup_data']" position="before">
-                    <t t-if="props.cell.info_popup_data">
+        <xpath expr="//t[@t-if='this.props.cell.edit_popup_data']" position="before">
+                    <t t-if="this.props.cell.info_popup_data">
                         <a
                             class="fa-solid fa-question-circle cursor-pointer me-2"
                             t-on-click="(ev) => this.carryoverPopover(ev)"

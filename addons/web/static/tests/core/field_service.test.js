@@ -413,7 +413,7 @@ test("async method loadFields is protected", async () => {
     class Parent extends Component {
         static components = { Child };
         static template = xml`
-            <t t-if="state.displayChild">
+            <t t-if="this.state.displayChild">
                 <Child />
             </t>
         `;

@@ -3,32 +3,32 @@
 
     <t t-name="web.EmbeddedActionsBar">
         <div class="o_embedded_actions_bar d-contents" t-ref="root">
-            <Transition visible="state.embeddedInfos.showEmbedded" name="'o-fade'" t-slot-scope="transition" leaveDuration="500">
+            <Transition visible="this.state.embeddedInfos.showEmbedded" name="'o-fade'" t-slot-scope="transition" leaveDuration="500">
                 <div class="o_embedded_actions d-flex flex-wrap w-100 align-items-center justify-content-center gap-2" t-att-class="transition.className">
-                    <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
-                        <t t-if="_isEmbeddedActionVisible(action)">
+                    <t t-foreach="this.state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
+                        <t t-if="this._isEmbeddedActionVisible(action)">
                             <button class="btn btn-secondary o_draggable"
-                                    t-att-class="{ 'active': state.embeddedInfos.currentEmbeddedAction?.id === action.id}"
-                                    t-on-click="() => props.embeddedActions.openAction(action)"
+                                    t-att-class="{ 'active': this.state.embeddedInfos.currentEmbeddedAction?.id === action.id}"
+                                    t-on-click="() => this.props.embeddedActions.openAction(action)"
                                     t-att-data-embedded-index="action_index"
                             >
                                 <span t-out="action.name"/>
                             </button>
                         </t>
                     </t>
-                    <EmbeddedActionsDropdown embeddedActions="props.embeddedActions" state="dropdownState"/>
+                    <EmbeddedActionsDropdown embeddedActions="this.props.embeddedActions" state="this.dropdownState"/>
                 </div>
             </Transition>
         </div>
     </t>
 
     <t t-name="web.EmbeddedActionsDropdown">
-        <Dropdown state="dropdownState" menuClass="'o_embedded_actions_dropdown_menu'">
+        <Dropdown state="this.dropdownState" menuClass="'o_embedded_actions_dropdown_menu'">
             <button name="openEmbeddedActions" class="btn btn-secondary" title="Embedded actions" aria-label="Embedded actions">
                 <i class="fa-solid fa-fw fa-sliders"/>
             </button>
             <t t-set-slot="content">
-                <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
+                <t t-foreach="this.state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
                     <DropdownItem
                         class="this.getDropdownClass(action)"
                         onSelected="() => this.env.isSmall ? this.onEmbeddedActionClick(action) : this.setVisibility(action.id)"
@@ -46,14 +46,14 @@
                         <input type="text"
                             t-ref="newActionNameRef"
                             class="o_input mb-2"
-                            t-model.trim="state.embeddedInfos.newActionName"
+                            t-model.trim="this.state.embeddedInfos.newActionName"
                         />
-                        <CheckBox value="state.embeddedInfos.newActionIsShared" onChange.bind="onShareCheckboxChange">
+                        <CheckBox value="this.state.embeddedInfos.newActionIsShared" onChange.bind="this.onShareCheckboxChange">
                             <span data-tooltip="Make this embedded action available to other users">Shared</span>
                         </CheckBox>
                     </div>
                     <div class="px-3 py-2">
-                        <button class="o_save_favorite btn btn-primary w-100" t-on-click="saveNewAction">
+                        <button class="o_save_favorite btn btn-primary w-100" t-on-click="this.saveNewAction">
                             Save
                         </button>
                     </div>

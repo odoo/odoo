@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="html_editor.HistoryDialog">
-        <Dialog size="size" title="title" contentClass="'h-100 html-history-dialog-container'"
-                t-on-close="props.close" t-on-cancel="props.close" t-on-confirm="_onRestoreRevisionClick"
-                t-on-after-render="_onAfterRender">
-            <div t-attf-class="dialog-container html-history-dialog #{state.revisionLoading ? 'html-history-loading' : 'html-history-loaded'}">
-                <div class="revision-list d-flex flex-column align-content-stretch" t-attf-style="max-height: {{state.cssMaxHeight}}px;">
-                    <t t-if="!state.revisionsData.length">
+        <Dialog size="this.size" title="this.title" contentClass="'h-100 html-history-dialog-container'"
+                t-on-close="this.props.close" t-on-cancel="this.props.close" t-on-confirm="this._onRestoreRevisionClick"
+                t-on-after-render="this._onAfterRender">
+            <div t-attf-class="dialog-container html-history-dialog #{this.state.revisionLoading ? 'html-history-loading' : 'html-history-loaded'}">
+                <div class="revision-list d-flex flex-column align-content-stretch" t-attf-style="max-height: {{this.state.cssMaxHeight}}px;">
+                    <t t-if="!this.state.revisionsData.length">
                         <div class="text-center w-100 pb-2 pt-0 px-0 fw-bolder">No history</div>
                     </t>
 
-                    <t t-foreach="state.revisionsData" t-as="rev"
+                    <t t-foreach="this.state.revisionsData" t-as="rev"
                        t-key="rev.revision_id">
                         <a type="object" href="#" role="button"
                            t-attf-title="Show the document submited by #{rev.create_user_name}, on #{this.getRevisionDate(rev)}"
@@ -24,8 +24,8 @@
                         </a>
                     </t>
                 </div>
-                <div class="history-container" t-attf-style="max-height: {{state.cssMaxHeight}}px;">
-                    <div t-attf-class="history-content-view #{state.currentView === 'content' ? '' : 'd-none'}">
+                <div class="history-container" t-attf-style="max-height: {{this.state.cssMaxHeight}}px;">
+                    <div t-attf-class="history-content-view #{this.state.currentView === 'content' ? '' : 'd-none'}">
                         <div class="history-view-top-bar">
                             <div>
                                 <div class="text-info smaller">
@@ -34,14 +34,14 @@
                                 </div>
                             </div>
                             <div>
-                                <a type="object" href="#" role="button" class="btn btn-secondary" t-on-click="() => state.currentView = 'comparison'">
+                                <a type="object" href="#" role="button" class="btn btn-secondary" t-on-click="() => this.state.currentView = 'comparison'">
                                     <i class="fa-solid fa-right-left" title="View comparison" />
                                     View comparison
                                 </a>
                             </div>
                         </div>
-                        <div class="history-view-inner" t-attf-style="max-height: {{state.cssMaxHeight-20}}px;">
-                            <t t-if="state.revisionLoading">
+                        <div class="history-view-inner" t-attf-style="max-height: {{this.state.cssMaxHeight-20}}px;">
+                            <t t-if="this.state.revisionLoading">
                                 <div class="d-flex flex-column justify-content-center align-items-center">
                                     <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
                                          style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
@@ -50,26 +50,26 @@
                                     </p>
                                 </div>
                             </t>
-                            <t t-elif="state.revisionContent?.length">
+                            <t t-elif="this.state.revisionContent?.length">
                                 <div class="pe-none">
-                                    <HtmlViewer config="getConfig('revisionContent')"/>
+                                    <HtmlViewer config="this.getConfig('revisionContent')"/>
                                 </div>
                             </t>
-                            <t t-else="" t-out="props.noContentHelper" />
+                            <t t-else="" t-out="this.props.noContentHelper" />
                         </div>
                     </div>
-                    <div t-attf-class="history-comparison-view #{state.currentView === 'comparison' ? '' : 'd-none'}">
+                    <div t-attf-class="history-comparison-view #{this.state.currentView === 'comparison' ? '' : 'd-none'}">
                         <div class="history-view-top-bar">
-                            <t t-if="env.debug">
+                            <t t-if="this.env.debug">
                                 <div class="toggle-view-btns">
                                     <div class="btn-group" role="group">
                                         <input type="radio" class="btn-check" name="vbtn-radio" id="unified-view-btn"
-                                               t-on-click="() => state.isComparisonSplit = false"
-                                               t-att-checked="state.isComparisonSplit ? '' : 'checked'" />
+                                               t-on-click="() => this.state.isComparisonSplit = false"
+                                               t-att-checked="this.state.isComparisonSplit ? '' : 'checked'" />
                                         <label class="btn btn-secondary" for="unified-view-btn">Unified view</label>
                                         <input type="radio" class="btn-check" name="vbtn-radio" id="split-view-btn"
-                                               t-on-click="() => state.isComparisonSplit = true"
-                                               t-att-checked="state.isComparisonSplit ? 'checked' : ''" />
+                                               t-on-click="() => this.state.isComparisonSplit = true"
+                                               t-att-checked="this.state.isComparisonSplit ? 'checked' : ''" />
                                         <label class="btn btn-secondary" for="split-view-btn">Split view</label>
                                     </div>
                                 </div>
@@ -81,14 +81,14 @@
                                 </div>
                             </div>
                             <div>
-                                <a type="object" href="#" role="button" class="btn btn-secondary" t-on-click="() => state.currentView = 'content'">
+                                <a type="object" href="#" role="button" class="btn btn-secondary" t-on-click="() => this.state.currentView = 'content'">
                                     <i class="fa-regular fa-eye" title="View Content"/>
                                     View content
                                 </a>
                             </div>
                         </div>
-                        <div class="history-view-inner" t-attf-style="max-height: {{state.cssMaxHeight-60}}px;">
-                            <t t-if="state.revisionLoading">
+                        <div class="history-view-inner" t-attf-style="max-height: {{this.state.cssMaxHeight-60}}px;">
+                            <t t-if="this.state.revisionLoading">
                                 <div class="d-flex flex-column justify-content-center align-items-center">
                                     <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
                                          style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
@@ -97,12 +97,12 @@
                                     </p>
                                 </div>
                             </t>
-                            <t t-elif="state.revisionComparison?.length">
-                                <div t-attf-class="history-comparison-split #{state.isComparisonSplit ? '' : 'd-none'}">
-                                    <HtmlViewer config="getConfig('revisionComparisonSplit')"/>
+                            <t t-elif="this.state.revisionComparison?.length">
+                                <div t-attf-class="history-comparison-split #{this.state.isComparisonSplit ? '' : 'd-none'}">
+                                    <HtmlViewer config="this.getConfig('revisionComparisonSplit')"/>
                                 </div>
-                                <div t-attf-class="pe-none history-comparison-unified #{state.isComparisonSplit ? 'd-none' : ''}">
-                                    <HtmlViewer config="getConfig('revisionComparison')"/>
+                                <div t-attf-class="pe-none history-comparison-unified #{this.state.isComparisonSplit ? 'd-none' : ''}">
+                                    <HtmlViewer config="this.getConfig('revisionComparison')"/>
                                 </div>
                             </t>
                             <t t-else="">
@@ -113,8 +113,8 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="_onRestoreRevisionClick" t-att-disabled="state.revisionLoading || state.revisionId === -1">Restore history</button>
-                <button class="btn btn-secondary" t-on-click="props.close">Discard</button>
+                <button class="btn btn-primary" t-on-click="this._onRestoreRevisionClick" t-att-disabled="this.state.revisionLoading || this.state.revisionId === -1">Restore history</button>
+                <button class="btn btn-secondary" t-on-click="this.props.close">Discard</button>
             </t>
         </Dialog>
     </t>

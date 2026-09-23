@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="report_formula.AccountReportFilterDateSelection">
-        <t t-foreach="this.dateFilters(controller.cachedFilterOptions.date.mode)" t-as="dateFilter" t-key="dateFilter_index">
+        <t t-foreach="this.dateFilters(this.controller.cachedFilterOptions.date.mode)" t-as="dateFilter" t-key="dateFilter_index">
             <DropdownItem
                 tag="'div'"
                 class="{
@@ -15,7 +15,7 @@
                     'data-period-type': dateFilter.period,
                     'data-mode': dateFilter.mode,
                 }"
-                onSelected="() => this.selectDateFilter(dateFilter.period, dateFilter.period != controller.cachedFilterOptions.date.period_type)"
+                onSelected="() => this.selectDateFilter(dateFilter.period, dateFilter.period != this.controller.cachedFilterOptions.date.period_type)"
                 closingMode="'none'"
             >
                 <div class="filter_name pe-3" t-out="dateFilter.name"/>
@@ -45,20 +45,20 @@
     <t t-name="report_formula.AccountReportFilterDate">
         <Dropdown
             menuClass="'account_report_filter date'"
-            navigationOptions="dateNavigationOptions"
+            navigationOptions="this.dateNavigationOptions"
         >
             <button class="btn btn-secondary">
                 <i class="fa-solid fa-calendar-days me-1"/>
-                <t t-out="controller.cachedFilterOptions.date.string"/>
+                <t t-out="this.controller.cachedFilterOptions.date.string"/>
             </button>
 
             <t t-set-slot="content">
-                <t t-if="controller.cachedFilterOptions.date.mode === 'single'">
+                <t t-if="this.controller.cachedFilterOptions.date.mode === 'single'">
                     <DropdownItem
                         tag="'div'"
                         class="{ 'selected': this.isPeriodSelected('today') }"
                         attrs="{ 'data-period-type': 'today' }"
-                        onSelected="() => this.selectDateFilter('today', 'today' != controller.cachedFilterOptions.date.filter)"
+                        onSelected="() => this.selectDateFilter('today', 'today' != this.controller.cachedFilterOptions.date.filter)"
                         closingMode="'none'"
                     >
                         Today
@@ -76,9 +76,9 @@
                         }"
                         attrs="{
                             'data-period-type': 'custom',
-                            'data-mode': dateFilter.editing === 'custom' ? 'edit' : 'view',
+                            'data-mode': this.dateFilter.editing === 'custom' ? 'edit' : 'view',
                         }"
-                        onSelected="() => this.selectDateFilter('custom', 'custom' != controller.cachedFilterOptions.date.filter)"
+                        onSelected="() => this.selectDateFilter('custom', 'custom' != this.controller.cachedFilterOptions.date.filter)"
                         closingMode="'none'"
                     >
                         <div class="d-flex align-items-center filter_name">
@@ -87,19 +87,19 @@
 
                         <div
                             class="d-flex justify-content-center flex-grow-1"
-                            t-if="controller.cachedFilterOptions.date.filter === 'custom'"
+                            t-if="this.controller.cachedFilterOptions.date.filter === 'custom'"
                         >
                             <DateTimeInput
                                 type="'date'"
                                 class="'o-navigable'"
-                                value="dateTo('date')"
+                                value="this.dateTo('date')"
                                 onChange="(dateTo) => this.setDateTo('date', dateTo)"
                             />
                         </div>
                     </DropdownItem>
                 </t>
 
-                <t t-if="controller.cachedFilterOptions.date.mode === 'range'">
+                <t t-if="this.controller.cachedFilterOptions.date.mode === 'range'">
                     <t t-call="report_formula.AccountReportFilterDateSelection"/>
 
                     <div id="filter_date_divider_range" class="dropdown-divider"/>
@@ -112,19 +112,19 @@
                         }"
                         attrs="{
                             'data-period-type': 'custom',
-                            'data-mode': dateFilter.editing === 'custom' ? 'edit' : 'view',
+                            'data-mode': this.dateFilter.editing === 'custom' ? 'edit' : 'view',
                         }"
-                        onSelected="() => this.selectDateFilter('custom', 'custom' != controller.cachedFilterOptions.date.filter)"
+                        onSelected="() => this.selectDateFilter('custom', 'custom' != this.controller.cachedFilterOptions.date.filter)"
                         closingMode="'none'"
                     >
                         <div class="d-flex align-items-center">
                             Custom Dates
                         </div>
-                        <div class="d-flex flex-row" t-if="controller.cachedFilterOptions.date.filter === 'custom'">
+                        <div class="d-flex flex-row" t-if="this.controller.cachedFilterOptions.date.filter === 'custom'">
                             <DateTimeInput
                                 type="'date'"
                                 class="'o-navigable'"
-                                value="dateFrom('date')"
+                                value="this.dateFrom('date')"
                                 onChange="(dateFrom) => this.setDateFrom('date', dateFrom)"
                             />
                             <span class="d-flex align-items-center">
@@ -133,7 +133,7 @@
                             <DateTimeInput
                                 type="'date'"
                                 class="'o-navigable'"
-                                value="dateTo('date')"
+                                value="this.dateTo('date')"
                                 onChange="(dateTo) => this.setDateTo('date', dateTo)"
                             />
                         </div>

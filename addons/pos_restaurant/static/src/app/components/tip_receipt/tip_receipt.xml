@@ -3,16 +3,16 @@
 
     <t t-name="pos_restaurant.TipReceipt">
         <div class="pos-receipt">
-            <ReceiptHeader order="props.order" />
+            <ReceiptHeader order="this.props.order" />
             <div class="pos-payment-terminal-receipt">
-                <pre t-out="data" />
+                <pre t-out="this.data" />
             </div>
             <br/>
 
 
             <div class="subtotal">
                 <span>Subtotal</span>
-                <div class="pos-receipt-right-align"><t t-out="total"/></div>
+                <div class="pos-receipt-right-align"><t t-out="this.total"/></div>
             </div>
             <br/>
 

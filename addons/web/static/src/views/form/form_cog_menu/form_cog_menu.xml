@@ -3,7 +3,7 @@
 
     <t t-name="web.FormCogMenu" t-inherit="web.CogMenu">
         <xpath expr="//div[hasclass('o_cp_action_menus')]" position="attributes">
-            <attribute name="t-if">env.isSmall or hasItems</attribute>
+            <attribute name="t-if">this.env.isSmall or this.hasItems</attribute>
         </xpath>
     </t>
 

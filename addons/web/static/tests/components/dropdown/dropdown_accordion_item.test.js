@@ -88,7 +88,7 @@ test("dropdown with accordion keyboard navigation", async () => {
 test("the parent hears an accordion state change only when the state changed", async () => {
     class Parent extends Component {
         static template = xml`
-            <t t-out="state.tick"/>
+            <t t-out="this.state.tick"/>
             <AccordionItem description="'item'" selected="false">
                 <span>content</span>
             </AccordionItem>`;

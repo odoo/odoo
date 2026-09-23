@@ -172,7 +172,7 @@ test("multiple overlays", async () => {
     await mountWithCleanup(MainComponentsContainer);
     class MyComp extends Component {
         static template = xml`
-            <div class="overlayed" t-att-class="props.className"></div>
+            <div class="overlayed" t-att-class="this.props.className"></div>
         `;
         static props = ["*"];
     }
@@ -206,7 +206,7 @@ test("sequence", async () => {
     await mountWithCleanup(MainComponentsContainer);
     class MyComp extends Component {
         static template = xml`
-            <div class="overlayed" t-att-class="props.className"></div>
+            <div class="overlayed" t-att-class="this.props.className"></div>
         `;
         static props = ["*"];
     }
@@ -255,8 +255,8 @@ test("allow env as option", async () => {
         static props = ["*"];
         static template = xml`
             <ul class="outer">
-                <li>A=<t t-out="env.A"/></li>
-                <li>B=<t t-out="env.B"/></li>
+                <li>A=<t t-out="this.env.A"/></li>
+                <li>B=<t t-out="this.env.B"/></li>
             </ul>
         `;
         setup() {
@@ -283,7 +283,7 @@ async function mountShadowOverlayContainer(hostId, parent) {
     class ShadowHost extends Component {
         static components = { OverlayContainer };
         static props = {};
-        static template = xml`<OverlayContainer overlays="overlays" rootId="rootId"/>`;
+        static template = xml`<OverlayContainer overlays="this.overlays" rootId="this.rootId"/>`;
         setup() {
             this.overlays = overlays;
             this.rootId = hostId;
@@ -380,7 +380,7 @@ test("click-away containment spans sub-overlays without allocating per sibling",
     await mountWithCleanup(MainComponentsContainer);
     class Layer extends Component {
         static props = ["*"];
-        static template = xml`<div t-att-class="props.name"/>`;
+        static template = xml`<div t-att-class="this.props.name"/>`;
     }
     const overlay = getService("overlay");
     overlay.add(Layer, { name: "low" }, { sequence: 10 });

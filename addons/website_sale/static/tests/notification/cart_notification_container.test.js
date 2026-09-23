@@ -10,7 +10,7 @@ import { CartNotificationContainer } from "@website_sale/js/notification/notific
 
 class Boom extends Component {
     static props = ["*"];
-    static template = xml`<div t-out="props.missing.length"/>`;
+    static template = xml`<div t-out="this.props.missing.length"/>`;
 }
 
 class TestCartContainer extends CartNotificationContainer {

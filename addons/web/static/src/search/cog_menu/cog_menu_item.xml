@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CogMenuItem">
-        <DropdownItem class="itemClass" onSelected="props.onSelected" closingMode="props.closingMode" attrs="props.attrs">
-            <i class="o_cog_menu_item_icon me-1" t-att-class="props.icon" aria-hidden="true"/>
-            <t t-out="props.description"/>
+        <DropdownItem class="this.itemClass" onSelected="this.props.onSelected" closingMode="this.props.closingMode" attrs="this.props.attrs">
+            <i class="o_cog_menu_item_icon me-1" t-att-class="this.props.icon" aria-hidden="true"/>
+            <t t-out="this.props.description"/>
             <t t-slot="default"/>
         </DropdownItem>
     </t>

@@ -255,7 +255,7 @@ test("should preserve color slider when picking max lightness color", async () =
     class TestColorPicker extends Component {
         static template = xml`
             <div style="width: 222px">
-                <CustomColorPicker selectedColor="state.color" onColorPreview.bind="onColorChange" onColorSelect.bind="onColorChange"/>
+                <CustomColorPicker selectedColor="this.state.color" onColorPreview.bind="this.onColorChange" onColorSelect.bind="this.onColorChange"/>
             </div>`;
         static components = { CustomColorPicker };
         static props = ["*"];

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="account.Thread" t-inherit="mail.Thread" t-inherit-mode="primary">
         <xpath expr="//Message" position="attributes" type="add">
-            <attribute name="reportController">props.reportController</attribute>
+            <attribute name="reportController">this.props.reportController</attribute>
         </xpath>
     </t>
 </templates>

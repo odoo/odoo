@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="report_formula.AccountReportEllipsis">
-        <t t-call="{{ env.template('AccountReportEllipsis') }}"/>
+        <t t-call="{{ this.env.template('AccountReportEllipsis') }}"/>
     </t>
 
     <t t-name="report_formula.AccountReportEllipsisCustomizable">
-        <t t-if="props.type === 'string'">
+        <t t-if="this.props.type === 'string'">
             <div class="name">
-                <t t-out="(props.name) ? props.name.substring(0, props.maxCharacters) : ''"/>
+                <t t-out="(this.props.name) ? this.props.name.substring(0, this.props.maxCharacters) : ''"/>
             </div>
 
-            <t t-if="triggersEllipsis">
+            <t t-if="this.triggersEllipsis">
                 <button
                     class="btn btn_ellipsis"
                     t-on-click="(ev) => this.showEllipsisPopover(ev)"
@@ -21,7 +21,7 @@
         </t>
         <t t-else="">
             <div class="name">
-                <t t-out="props.name"/>
+                <t t-out="this.props.name"/>
             </div>
         </t>
     </t>

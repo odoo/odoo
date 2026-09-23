@@ -486,7 +486,7 @@ assert_eq "_pl selects via Intl.PluralRules with an 'other' fallback" \
     "$(grep -c 'forms\[category\] ?? forms.other' "$WEB/static/src/core/translation.js")" "1"
 
 # ------- OWL bundle -------
-assert_eq "OWL bundle bytes" "$(stat -c '%s' "$WEB/static/lib/owl/owl.es.js")" "234211"
+assert_eq "OWL bundle bytes" "$(stat -c '%s' "$WEB/static/lib/owl/owl.es.js")" "234967"
 assert_eq "OWL version string" \
     "$(grep -oE 'version = "[0-9]+\.[0-9]+\.[0-9]+"' "$WEB/static/lib/owl/owl.es.js" | head -1)" \
     'version = "2.8.4"'
@@ -1880,7 +1880,7 @@ assert_eq "OBSERVABILITY names the suite that pins the double render" \
         | awk '{print ($1>0)?1:0}')" "1"
 # SearchBarMenu must stay unconditional, or fact 3 above means something else.
 assert_eq "SearchBarMenu is still unconditional in search_bar.xml" \
-    "$(grep -c '<SearchBarMenu dropdownState="searchBarDropdownState">' \
+    "$(grep -c '<SearchBarMenu dropdownState="this.searchBarDropdownState">' \
         "$WEB/static/src/search/search_bar/search_bar.xml")" "1"
 
 # The double render is the designed cost of lazy model loading. Both halves of

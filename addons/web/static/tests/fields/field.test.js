@@ -39,7 +39,7 @@ test("duplicate field widgets preserve their own context objects across renders"
     });
     class Probe extends Component {
         static props = ["*"];
-        static template = xml`<span t-out="props.record.data.name"/>`;
+        static template = xml`<span t-out="this.props.record.data.name"/>`;
     }
     registry.category("fields").add("context_owner_probe", {
         component: Probe,

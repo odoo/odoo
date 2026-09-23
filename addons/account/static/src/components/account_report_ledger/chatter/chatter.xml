@@ -2,43 +2,43 @@
 <templates>
     <t t-inherit="report_formula.AccountReportCustomizable" t-inherit-mode="extension">
         <xpath expr="//div[@t-ref='root']" position="attributes">
-            <attribute name="t-on-keydown">onKeydown</attribute>
-            <attribute name="t-on-click">onClick</attribute>
+            <attribute name="t-on-keydown">this.onKeydown</attribute>
+            <attribute name="t-on-click">this.onClick</attribute>
         </xpath>
         <xpath expr="//ControlPanel" position="inside">
-                <t t-set-slot="control-panel-navigation-additional" t-if="controller.chatterState.lineId">
+                <t t-set-slot="control-panel-navigation-additional" t-if="this.controller.chatterState.lineId">
                     <button
-                        t-on-click="() => controller.closeChatter()"
+                        t-on-click="() => this.controller.closeChatter()"
                         data-tooltip="Chatter"
                         class="btn btn-secondary o_switch_view o_kanban d-inline"
-                        t-att-class="{'active': controller.chatterState.model}">
-                            <i t-attf-class="fa-fw {{ controller.chatterState.model ? 'fa-solid fa-xmark' : 'fa-regular fa-comments' }} mt-1"/>
+                        t-att-class="{'active': this.controller.chatterState.model}">
+                            <i t-attf-class="fa-fw {{ this.controller.chatterState.model ? 'fa-solid fa-xmark' : 'fa-regular fa-comments' }} mt-1"/>
                     </button>
                 </t>
         </xpath>
         <xpath expr="//div[hasclass('o_content')]/div[1]" position="inside">
-                    <t t-if="ui.isSmall"> <!-- Spacer to avoid chatter overlapping content on small devices due to the fixed position of the chatter -->
+                    <t t-if="this.ui.isSmall"> <!-- Spacer to avoid chatter overlapping content on small devices due to the fixed position of the chatter -->
                         <div
                             style="transition: height 0.2s ease-in-out;"
-                            t-att-style="controller.chatterState.id ? 'height: 60vh;' : 'height: 0;'"
+                            t-att-style="this.controller.chatterState.id ? 'height: 60vh;' : 'height: 0;'"
                         />
                     </t>
         </xpath>
         <xpath expr="//div[hasclass('o_content')]" position="inside">
                 <div t-att-class="{
-                        'o_account_report_chatter o-mail-ChatterContainer h-100 o-aside d-flex flex-column': !ui.isSmall,
-                        'o_account_report_chatter_hidden': !ui.isSmall &amp;&amp; !controller.chatterState.id,
-                        'o_account_report_mobile_chatter': ui.isSmall,
-                        'o_account_report_mobile_chatter_hidden': ui.isSmall &amp;&amp; !controller.chatterState.id,
+                        'o_account_report_chatter o-mail-ChatterContainer h-100 o-aside d-flex flex-column': !this.ui.isSmall,
+                        'o_account_report_chatter_hidden': !this.ui.isSmall &amp;&amp; !this.controller.chatterState.id,
+                        'o_account_report_mobile_chatter': this.ui.isSmall,
+                        'o_account_report_mobile_chatter_hidden': this.ui.isSmall &amp;&amp; !this.controller.chatterState.id,
                     }"
                 >
-                    <t t-if="controller.chatterState.model">
+                    <t t-if="this.controller.chatterState.model">
                         <AccountReportChatter
-                            threadModel="controller.chatterState.model"
-                            threadId="controller.chatterState.id"
-                            isChatterAside="!ui.isSmall"
-                            reportController="controller"
-                            date_to="controller.options.date.date_to"
+                            threadModel="this.controller.chatterState.model"
+                            threadId="this.controller.chatterState.id"
+                            isChatterAside="!this.ui.isSmall"
+                            reportController="this.controller"
+                            date_to="this.controller.options.date.date_to"
                         />
                     </t>
                 </div>
@@ -50,13 +50,13 @@
                         <button
                             tabindex="-1"
                             class="btn btn_annotation"
-                            t-on-click="openChatter"
+                            t-on-click="this.openChatter"
                             t-if="this.props.line.chatter"
                             t-att-class="{
-                                'o_account_report_chatter_selected': isChatterSelected,
-                                'o_account_report_chatter_annoted': isChatterAnnotated,
+                                'o_account_report_chatter_selected': this.isChatterSelected,
+                                'o_account_report_chatter_annoted': this.isChatterAnnotated,
                             }">
-                            <i class="fa-solid fa-comment-dots" t-if="isChatterSelected || isChatterAnnotated"/>
+                            <i class="fa-solid fa-comment-dots" t-if="this.isChatterSelected || this.isChatterAnnotated"/>
                             <i class="fa-regular fa-comment-dots" t-else=""/>
                         </button>
         </xpath>

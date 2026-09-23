@@ -711,7 +711,7 @@ test("the navbar hides the breadcrumb's slot, not the breadcrumb another compone
 test("a systray item that throws while rendering is dropped and the navbar still renders", async () => {
     class CrashingItem extends Component {
         static props = ["*"];
-        static template = xml`<li class="my-crashing-item" t-out="boom"/>`;
+        static template = xml`<li class="my-crashing-item" t-out="this.boom"/>`;
         get boom() {
             throw new Error("render boom");
         }

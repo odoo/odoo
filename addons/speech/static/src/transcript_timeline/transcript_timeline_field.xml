@@ -6,13 +6,13 @@
         t-inherit="media.MediaTimelineField"
         t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_media_timeline_controls')]" position="after">
-            <div t-if="cues.length" class="o_media_timeline_transcript">
+            <div t-if="this.cues.length" class="o_media_timeline_transcript">
                 <div
-                    t-foreach="cues"
+                    t-foreach="this.cues"
                     t-as="cue"
                     t-key="cue_index"
                     class="o_media_timeline_cue"
-                    t-att-class="{ 'fw-bold': isCueActive(cue) }"
+                    t-att-class="{ 'fw-bold': this.isCueActive(cue) }"
                     t-on-click="() => this.onCueClick(cue)">
                     <span t-if="cue.speaker" class="text-muted me-1">
                         <t t-out="cue.speaker" />:

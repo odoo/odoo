@@ -15,9 +15,9 @@ function makeParent(params = {}) {
         static template = xml`
             <div class="carousel slide carousel-fade">
                 <div class="carousel-inner">
-                    <t t-foreach="slides" t-as="slide" t-key="slide">
+                    <t t-foreach="this.slides" t-as="slide" t-key="slide">
                         <div t-attf-class="carousel-item item-{{slide}}"
-                             t-att-class="{active: carousel.state.index === slide_index}"/>
+                             t-att-class="{active: this.carousel.state.index === slide_index}"/>
                     </t>
                 </div>
                 <button class="prev" t-on-click="() => this.carousel.previous()">P</button>
@@ -108,9 +108,9 @@ function makeShrinkingParent() {
         static props = ["*"];
         static template = xml`
             <div class="carousel">
-                <t t-foreach="state.slides" t-as="slide" t-key="slide">
+                <t t-foreach="this.state.slides" t-as="slide" t-key="slide">
                     <div t-attf-class="carousel-item item-{{slide}}"
-                         t-att-class="{active: carousel.state.index === slide_index}"/>
+                         t-att-class="{active: this.carousel.state.index === slide_index}"/>
                 </t>
                 <button class="next" t-on-click="() => this.carousel.next()">N</button>
                 <button class="drop" t-on-click="() => this.state.slides = ['a']">D</button>

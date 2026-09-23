@@ -5,8 +5,8 @@
             <span class="o_cw_filter_title flex-grow-1 text-truncate lh-base">
                 <t t-out="filter.label"/>
 
-                <t t-if="env.isSmall">
-                    <t t-set="holiday" t-value="leaveState.holidays[filter.value]"/>
+                <t t-if="this.env.isSmall">
+                    <t t-set="holiday" t-value="this.leaveState.holidays[filter.value]"/>
                     <TimeOffCardMobile t-if="holiday" name="holiday[0]" id="holiday[3]" data="holiday[1]" requires_allocation="holiday[2]"/>
                 </t>
             </span>

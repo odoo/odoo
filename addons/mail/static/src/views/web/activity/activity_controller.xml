@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityController">
-        <ViewLayout t-props="chassisProps">
-            <t t-component="props.Renderer" t-props="rendererProps" />
+        <ViewLayout t-props="this.chassisProps">
+            <t t-component="this.props.Renderer" t-props="this.rendererProps" />
         </ViewLayout>
     </t>
 </templates>

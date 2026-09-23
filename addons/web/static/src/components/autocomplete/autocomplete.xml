@@ -2,42 +2,42 @@
 <templates xml:space="preserve">
 
     <t t-name="web.AutoComplete">
-        <div class="o-autocomplete" t-ref="root" t-att-class="autoCompleteRootClass">
+        <div class="o-autocomplete" t-ref="root" t-att-class="this.autoCompleteRootClass">
             <input
                 type="text"
-                t-att-id="props.id"
+                t-att-id="this.props.id"
                 class="o-autocomplete--input o_input pe-3 text-truncate"
-                t-att-autocomplete="props.autocomplete"
-                t-att-placeholder="props.placeholder"
-                t-att-title="props.title"
+                t-att-autocomplete="this.props.autocomplete"
+                t-att-placeholder="this.props.placeholder"
+                t-att-title="this.props.title"
                 role="combobox"
-                t-attf-aria-controls="{{idPrefix}}_listbox"
-                t-att-aria-expanded="displayOptions ? 'true' : 'false'"
+                t-attf-aria-controls="{{this.idPrefix}}_listbox"
+                t-att-aria-expanded="this.displayOptions ? 'true' : 'false'"
                 aria-autocomplete="list"
                 aria-haspopup="listbox"
-                t-on-blur="onInputBlur"
-                t-on-click="onInputClick"
-                t-on-change="onInputChange"
-                t-on-input="onInput"
-                t-on-keydown="onInputKeydown"
-                t-on-focus="onInputFocus"
+                t-on-blur="this.onInputBlur"
+                t-on-click="this.onInputClick"
+                t-on-change="this.onInputChange"
+                t-on-input="this.onInput"
+                t-on-keydown="this.onInputKeydown"
+                t-on-focus="this.onInputFocus"
                 t-ref="input"
             />
-            <t t-if="displayOptions">
+            <t t-if="this.displayOptions">
                 <ul
-                    t-attf-id="{{idPrefix}}_listbox"
+                    t-attf-id="{{this.idPrefix}}_listbox"
                     role="listbox"
-                    t-att-aria-busy="isLoadingSources and 'true'"
+                    t-att-aria-busy="this.isLoadingSources and 'true'"
                     class="o-autocomplete--dropdown-menu ui-widget show"
-                    t-att-class="ulDropdownClass"
+                    t-att-class="this.ulDropdownClass"
                     t-ref="sourcesList">
-                    <t t-foreach="sources" t-as="source" t-key="source.id">
+                    <t t-foreach="this.sources" t-as="source" t-key="source.id">
                         <t t-if="source.isLoading">
                             <li class="ui-menu-item"
                                 role="presentation"
                                 t-att-class="{
-                                    'o-autocomplete--dropdown-item': props.dropdown,
-                                    'd-block': !props.dropdown
+                                    'o-autocomplete--dropdown-item': this.props.dropdown,
+                                    'd-block': !this.props.dropdown
                                 }">
                                 <span class="o_loading dropdown-item ui-menu-item-wrapper">
                                     <i class="fa-solid fa-circle-notch fa-spin" /> <t t-out="source.placeholder" />
@@ -56,11 +56,11 @@
                                 >
                                     <t t-tag="option.unselectable ? 'span' : 'a'"
                                         class="dropdown-item ui-menu-item-wrapper text-truncate"
-                                        t-attf-id="{{idPrefix}}_{{source_index}}_{{option_index}}"
+                                        t-attf-id="{{this.idPrefix}}_{{source_index}}_{{option_index}}"
                                         t-att-data-option-id="option.id"
                                         t-att-role="!option.unselectable and 'option'"
                                         t-att-href="!option.unselectable and '#'"
-                                        t-att-tabindex="!option.unselectable and props.dropdown and '-1'"
+                                        t-att-tabindex="!option.unselectable and this.props.dropdown and '-1'"
                                         t-att-aria-selected="option.unselectable ? 'false' : undefined"
                                     >
                                         <t t-slot="{{ source.optionSlot }}" label="option.label" data="option.data">

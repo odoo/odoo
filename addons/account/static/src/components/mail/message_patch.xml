@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="account.Message" t-inherit="mail.Message" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-Message-header')]" position="inside">
-            <div class="o_account_reports_annotation text-muted opacity-50 me-2" style="margin-left: auto" t-if="message.account_reports_annotation_date &amp;&amp; !message.isEmpty">
-                Annotated for <t t-out="formatAccountReportsAnnotationDate(message.account_reports_annotation_date)"/>
+            <div class="o_account_reports_annotation text-muted opacity-50 me-2" style="margin-left: auto" t-if="this.message.account_reports_annotation_date &amp;&amp; !this.message.isEmpty">
+                Annotated for <t t-out="this.formatAccountReportsAnnotationDate(this.message.account_reports_annotation_date)"/>
             </div>
         </xpath>
     </t>

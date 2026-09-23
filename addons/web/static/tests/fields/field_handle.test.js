@@ -28,7 +28,7 @@ class FakeRecord extends SignalStore {
 }
 
 class Widget extends Component {
-    static template = xml`<span t-out="handle.value"/>`;
+    static template = xml`<span t-out="this.handle.value"/>`;
     static props = ["record", "name", "readonly?"];
     get handle() {
         return fieldHandle(this);
@@ -37,7 +37,7 @@ class Widget extends Component {
 
 async function mountWidget(/** @type {any} */ record, name = "foo") {
     class Parent extends Component {
-        static template = xml`<Widget record="state.record" name="state.name"/>`;
+        static template = xml`<Widget record="this.state.record" name="this.state.name"/>`;
         static components = { Widget };
         static props = {};
         setup() {
@@ -121,11 +121,11 @@ test("the handle follows a swapped name prop", async () => {
 test("a parent-built handle does NOT subscribe the child", async () => {
     const record = new FakeRecord();
     class Leaf extends Component {
-        static template = xml`<span t-out="props.handle.value"/>`;
+        static template = xml`<span t-out="this.props.handle.value"/>`;
         static props = ["handle"];
     }
     class Parent extends Component {
-        static template = xml`<Leaf handle="handle"/>`;
+        static template = xml`<Leaf handle="this.handle"/>`;
         static components = { Leaf };
         static props = {};
         setup() {
@@ -150,11 +150,11 @@ test("a parent-built handle does NOT subscribe the child", async () => {
 test("wrapping the record in useState in the PARENT does not fix it", async () => {
     const record = new FakeRecord();
     class Leaf extends Component {
-        static template = xml`<span t-out="props.handle.value"/>`;
+        static template = xml`<span t-out="this.props.handle.value"/>`;
         static props = ["handle"];
     }
     class Parent extends Component {
-        static template = xml`<Leaf handle="handle"/>`;
+        static template = xml`<Leaf handle="this.handle"/>`;
         static components = { Leaf };
         static props = {};
         setup() {
@@ -179,7 +179,7 @@ test("the handle survives a subclass that overrides setup without super", async 
     const record = new FakeRecord();
 
     class Base extends Component {
-        static template = xml`<span t-out="field.value"/>`;
+        static template = xml`<span t-out="this.field.value"/>`;
         static props = ["record", "name"];
         setup() {
             this.fromBase = true;
@@ -192,7 +192,7 @@ test("the handle survives a subclass that overrides setup without super", async 
         setup() {}
     }
     class Parent extends Component {
-        static template = xml`<Derived record="record" name="'foo'"/>`;
+        static template = xml`<Derived record="this.record" name="'foo'"/>`;
         static components = { Derived };
         static props = {};
         setup() {

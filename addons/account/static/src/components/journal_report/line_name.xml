@@ -2,41 +2,41 @@
 <templates>
     <t t-name="account.JournalReportLineName" t-inherit="report_formula.AccountReportLineNameCustomizable">
         <xpath expr="//td[@data-id='line_name']//div[@data-id='content']" position="replace">
-            <t t-if="'journal_id' in props.line and 'account_id' in props.line">
+            <t t-if="'journal_id' in this.props.line and 'account_id' in this.props.line">
                 <a
                     class="link cursor-pointer"
                     t-on-click="
-                    (ev) => controller.reportAction(
+                    (ev) => this.controller.reportAction(
                         ev,
                         'journal_report_action_view_account_move_lines_by_account',
                         {
-                            journal_id: props.line.journal_id,
-                            account_id: props.line.account_id
+                            journal_id: this.props.line.journal_id,
+                            account_id: this.props.line.account_id
                         }
                     )"
                 >
-                    <t t-out="props.line.name"/>
+                    <t t-out="this.props.line.name"/>
                 </a>
             </t>
             <t t-else="">
-                <t t-out="props.line.name"/>
+                <t t-out="this.props.line.name"/>
 
-                <t t-if="'journal_id' in props.line">
+                <t t-if="'journal_id' in this.props.line">
                     <button
                         class="btn btn_action"
-                        t-on-click="(ev) => controller.reportAction(ev, 'journal_report_open_aml_by_move', {
-                            journal_id: props.line.journal_id,
-                            line_id: props.line.id,
+                        t-on-click="(ev) => this.controller.reportAction(ev, 'journal_report_open_aml_by_move', {
+                            journal_id: this.props.line.journal_id,
+                            line_id: this.props.line.id,
                         })"
                     >
                         Audit
                     </button>
                     <button
                         class="btn btn_action"
-                        t-if="props.line.to_review"
-                        t-on-click="(ev) => controller.reportAction(ev, 'journal_report_open_aml_by_move', {
-                            journal_id: props.line.journal_id,
-                            line_id: props.line.id,
+                        t-if="this.props.line.to_review"
+                        t-on-click="(ev) => this.controller.reportAction(ev, 'journal_report_open_aml_by_move', {
+                            journal_id: this.props.line.journal_id,
+                            line_id: this.props.line.id,
                             review: true,
                         })"
                     >

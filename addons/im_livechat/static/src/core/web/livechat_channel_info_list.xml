@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="im_livechat.LivechatChannelInfoList">
-        <ActionPanel title.translate="Information" minWidth="200" initialWidth="env.inMeetingView ? 400 : 300" icon="'fa-solid fa-info'">
-            <a t-if="visitorProfileURL" class="btn btn-primary mt-1" t-on-click.prevent="openVisitorProfile" t-att-href="visitorProfileURL" title="View Contact">
+        <ActionPanel title.translate="Information" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 300" icon="'fa-solid fa-info'">
+            <a t-if="this.visitorProfileURL" class="btn btn-primary mt-1" t-on-click.prevent="this.openVisitorProfile" t-att-href="this.visitorProfileURL" title="View Contact">
                 View Contact
             </a>
-            <div t-if="!props.thread.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
+            <div t-if="!this.props.thread.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-1">Status</h6>
-                <t t-call="im_livechat.LivechatStatusSelection">
-                    <t t-set="templateParams" t-value="{ livechatThread: props.thread }"/>
-                </t>
+                <t t-call="im_livechat.LivechatStatusSelection"
+                    templateParams="{ livechatThread: this.props.thread }"/>
             </div>
-            <div t-if="props.thread.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
+            <div t-if="this.props.thread.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-1">Outcome</h6>
                 <div class="d-flex text-truncate">
-                    <t t-if="props.thread.livechat_outcome === 'no_answer'">Never Answered</t>
-                    <t t-elif="props.thread.livechat_outcome === 'no_agent'">No one Available</t>
-                    <t t-elif="props.thread.livechat_outcome === 'no_failure'">Success</t>
-                    <t t-elif="props.thread.livechat_outcome === 'escalated'">Escalated</t>
+                    <t t-if="this.props.thread.livechat_outcome === 'no_answer'">Never Answered</t>
+                    <t t-elif="this.props.thread.livechat_outcome === 'no_agent'">No one Available</t>
+                    <t t-elif="this.props.thread.livechat_outcome === 'no_failure'">Success</t>
+                    <t t-elif="this.props.thread.livechat_outcome === 'escalated'">Escalated</t>
                 </div>
             </div>
             <div class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Notes</h6>
-                <textarea class="form-control" t-att-disabled="!store.has_access_livechat"  rows="3" placeholder="Add your notes here..." t-model="props.thread.livechatNoteText" t-on-blur="onBlurNote"></textarea>
+                <textarea class="form-control" t-att-disabled="!this.store.has_access_livechat"  rows="3" placeholder="Add your notes here..." t-model="this.props.thread.livechatNoteText" t-on-blur="this.onBlurNote"></textarea>
             </div>
             <div class="d-flex flex-column bg-inherit gap-1" t-ref="tagsContainer">
                 <h6 class="align-items-baseline pt-3 d-flex">
                     <span class="pt-3 mb-1">Tags</span>
-                    <button t-if="store.has_access_livechat" class="btn btn-link text-dark opacity-75 opacity-100-hover p-0 ms-1" t-on-click="onClickEditTags"><i class="oi oi-plus"/></button>
+                    <button t-if="this.store.has_access_livechat" class="btn btn-link text-dark opacity-75 opacity-100-hover p-0 ms-1" t-on-click="this.onClickEditTags"><i class="oi oi-plus"/></button>
                 </h6>
-                <div t-if="conversationTags.length" class="d-flex flex-wrap flex-grow-1 gap-1">
-                    <TagsList displayText="true" tags="conversationTags"/>
-                    <button t-if="this.store.has_access_livechat" class="btn btn-sm btn-link text-dark opacity-75 opacity-100 lh-1" t-on-click="onClickEditTags"><i class="fa-solid fa-pencil"/></button>
+                <div t-if="this.conversationTags.length" class="d-flex flex-wrap flex-grow-1 gap-1">
+                    <TagsList displayText="true" tags="this.conversationTags"/>
+                    <button t-if="this.store.has_access_livechat" class="btn btn-sm btn-link text-dark opacity-75 opacity-100 lh-1" t-on-click="this.onClickEditTags"><i class="fa-solid fa-pencil"/></button>
                 </div>
             </div>
-            <div t-if="expectAnswerSteps.length" class="d-flex flex-column bg-inherit gap-1">
+            <div t-if="this.expectAnswerSteps.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Chatbot answers</h6>
-                <t t-foreach="expectAnswerSteps" t-as="step" t-key="step.id">
+                <t t-foreach="this.expectAnswerSteps" t-as="step" t-key="step.id">
                     <div class="d-flex align-items-center gap-1 bg-inherit rounded-3">
                         <i class="fa-regular fa-comment me-1"/>
                         <span class="text-truncate" t-out="step.answer"/>
@@ -45,20 +44,20 @@
             </div>
             <div class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-1">Expertise</h6>
-                <ExpertiseTagsAutocomplete channel="props.thread" disabled="!store.has_access_livechat"/>
+                <ExpertiseTagsAutocomplete channel="this.props.thread" disabled="!this.store.has_access_livechat"/>
             </div>
-            <div t-if="props.thread.correspondentCountry or props.thread.livechat_lang_id">
+            <div t-if="this.props.thread.correspondentCountry or this.props.thread.livechat_lang_id">
                 <h6 class="pt-3">Country &amp; Language</h6>
                 <div class="d-flex bg-inherit align-items-center gap-1">
-                    <img t-if="props.thread.showCorrespondentCountry" class="o_country_flag" t-att-src="props.thread.correspondentCountry.flagUrl" t-att-title="props.thread.correspondentCountry.code or props.thread.correspondentCountry.name" aria-label="Country"/>
-                    <span t-if="props.thread.livechat_lang_id" title="Language" t-out="props.thread.livechat_lang_id.name"/>
+                    <img t-if="this.props.thread.showCorrespondentCountry" class="o_country_flag" t-att-src="this.props.thread.correspondentCountry.flagUrl" t-att-title="this.props.thread.correspondentCountry.code or this.props.thread.correspondentCountry.name" aria-label="Country"/>
+                    <span t-if="this.props.thread.livechat_lang_id" title="Language" t-out="this.props.thread.livechat_lang_id.name"/>
                 </div>
             </div>
             <t t-name="extra_infos"/>
-            <div t-if="props.thread.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">
+            <div t-if="this.props.thread.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Send conversation</h6>
-                <TranscriptSender thread="props.thread"/>
-                <a class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="props.thread.transcriptUrl"><i class="pe-2 fa-solid fa-download"/>Download</a>
+                <TranscriptSender thread="this.props.thread"/>
+                <a class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="this.props.thread.transcriptUrl"><i class="pe-2 fa-solid fa-download"/>Download</a>
             </div>
         </ActionPanel>
     </t>

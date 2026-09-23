@@ -7,10 +7,10 @@
                 <i class="oi oi-fw oi-ellipsis-v" />
             </button>
             <t t-set-slot="content">
-                <DropdownItem onSelected="props.replaceVideo">
+                <DropdownItem onSelected="this.props.replaceVideo">
                     <i class="fa-solid fa-right-left me-1"></i>Replace
                 </DropdownItem>
-                <DropdownItem onSelected="props.removeVideo" class="'text-danger'">
+                <DropdownItem onSelected="this.props.removeVideo" class="'text-danger'">
                     <i class="fa-solid fa-trash-can me-1"></i>Remove
                 </DropdownItem>
             </t>

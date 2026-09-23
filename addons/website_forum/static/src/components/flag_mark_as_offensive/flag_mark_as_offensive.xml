@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
   <t t-name="website_forum.FlagMarkAsOffensiveDialog">
-    <Dialog size="'md'" title="props.title" footer="false" modalRef="modalRef" >
-      <t t-out="props.body"/>
+    <Dialog size="'md'" title="this.props.title" footer="false" modalRef="this.modalRef" >
+      <t t-out="this.props.body"/>
     </Dialog>
   </t>
 

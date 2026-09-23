@@ -5,48 +5,48 @@
             type="text"
             t-attf-class="o_input {{inputClass}}"
             t-ref="{{ isPrimaryInput ? 'inputRef' : '' }}"
-            t-on-input="onSearchInput"
-            t-on-focus="onInputFocus"
-            t-on-blur="onInputBlur"
-            t-att-placeholder="placeholderValue"
-            t-att-value="displayValue"
-            t-att-id="isPrimaryInput ? props.id : undefined"
-            t-att-name="isPrimaryInput ? props.name : undefined"
-            t-att-disabled="props.disabled"
-            t-on-click="onInputClick"
+            t-on-input="this.onSearchInput"
+            t-on-focus="this.onInputFocus"
+            t-on-blur="this.onInputBlur"
+            t-att-placeholder="this.placeholderValue"
+            t-att-value="this.displayValue"
+            t-att-id="isPrimaryInput ? this.props.id : undefined"
+            t-att-name="isPrimaryInput ? this.props.name : undefined"
+            t-att-disabled="this.props.disabled"
+            t-on-click="this.onInputClick"
             autocomplete="off"
             autocorrect="off"
             spellcheck="false"
             t-att-role="isPrimaryInput ? 'combobox' : undefined"
             t-att-aria-haspopup="isPrimaryInput ? 'listbox' : undefined"
-            t-att-aria-autocomplete="isPrimaryInput and props.searchable ? 'list' : undefined"
-            t-att-aria-expanded="isPrimaryInput ? (dropdownState.isOpen ? 'true' : 'false') : undefined"
-            t-att-aria-controls="isPrimaryInput ? listboxId : undefined"
+            t-att-aria-autocomplete="isPrimaryInput and this.props.searchable ? 'list' : undefined"
+            t-att-aria-expanded="isPrimaryInput ? (this.dropdownState.isOpen ? 'true' : 'false') : undefined"
+            t-att-aria-controls="isPrimaryInput ? this.listboxId : undefined"
         />
     </t>
 
     <t t-name="web.SelectMenu">
-        <div t-att-class="`o_select_menu w-auto position-relative ${props.multiSelect ? 'o_select_menu_multi_select' : ''} ${displayInputInToggler ? 'o_input_dropdown' : ''} ${props.class || ''}`" t-att-data-id="selectMenuId">
+        <div t-att-class="`o_select_menu w-auto position-relative ${this.props.multiSelect ? 'o_select_menu_multi_select' : ''} ${this.displayInputInToggler ? 'o_input_dropdown' : ''} ${this.props.class || ''}`" t-att-data-id="this.selectMenuId">
             <Dropdown
-                disabled="props.disabled"
+                disabled="this.props.disabled"
                 menuClass="this.menuClass"
                 menuRef="this.menuRef"
                 position="'bottom-fit'"
-                beforeOpen.bind="onBeforeOpen"
-                focusToggleOnClosed="!isBottomSheet"
-                onStateChanged.bind="onStateChanged"
-                navigationOptions="navigationOptions"
-                state="dropdownState"
+                beforeOpen.bind="this.onBeforeOpen"
+                focusToggleOnClosed="!this.isBottomSheet"
+                onStateChanged.bind="this.onStateChanged"
+                navigationOptions="this.navigationOptions"
+                state="this.dropdownState"
                 role="'presentation'"
-                menuId="menuId"
+                menuId="this.menuId"
                 >
-                <t t-if="displayInputInToggler">
-                    <t t-set="inputClass" t-value="'o_select_menu_toggler ' + (!displayInputInDropdown ? 'o_select_menu_input ' : '') + props.togglerClass"/>
-                    <t t-set="isPrimaryInput" t-value="!displayInputInDropdown"/>
+                <t t-if="this.displayInputInToggler">
+                    <t t-set="inputClass" t-value="'o_select_menu_toggler ' + (!this.displayInputInDropdown ? 'o_select_menu_input ' : '') + this.props.togglerClass"/>
+                    <t t-set="isPrimaryInput" t-value="!this.displayInputInDropdown"/>
                     <div class="w-100 d-flex flex-column">
-                        <t t-if="props.multiSelect">
-                            <div t-if="selectedValues.length" class="d-flex flex-wrap mb-1">
-                                <TagsList tags="multiSelectChoices"/>
+                        <t t-if="this.props.multiSelect">
+                            <div t-if="this.selectedValues.length" class="d-flex flex-wrap mb-1">
+                                <TagsList tags="this.multiSelectChoices"/>
                             </div>
                         </t>
                         <div class="position-relative d-flex">
@@ -56,43 +56,42 @@
                     </div>
                 </t>
                 <t t-else="">
-                    <button type="button" t-attf-class="o_select_menu_toggler d-flex border btn btn-light w-100 bg-light {{ props.togglerClass }}" t-att-disabled="props.disabled"
+                    <button type="button" t-attf-class="o_select_menu_toggler d-flex border btn btn-light w-100 bg-light {{ this.props.togglerClass }}" t-att-disabled="this.props.disabled"
                         role="combobox" aria-haspopup="listbox"
-                        t-att-aria-expanded="dropdownState.isOpen ? 'true' : 'false'"
-                        t-att-aria-controls="listboxId">
+                        t-att-aria-expanded="this.dropdownState.isOpen ? 'true' : 'false'"
+                        t-att-aria-controls="this.listboxId">
                         <span class="o_select_menu_toggler_slot text-start text-truncate">
-                            <span t-if="props.placeholder and !hasSelection" class="text-muted" t-out="props.placeholder"/>
+                            <span t-if="this.props.placeholder and !this.hasSelection" class="text-muted" t-out="this.props.placeholder"/>
                             <t t-slot="default" />
                         </span>
-                        <span t-if="canDeselect" t-on-click.stop="onInputClear" class="o_select_menu_toggler_clear position-absolute top-50 end-0 me-3">
+                        <span t-if="this.canDeselect" t-on-click.stop="this.onInputClear" class="o_select_menu_toggler_clear position-absolute top-50 end-0 me-3">
                             <i class="fa-solid fa-times"></i>
                         </span>
                         <span class="o_select_menu_caret align-self-center" />
                     </button>
                 </t>
                 <t t-set-slot="content">
-                    <button t-if="isBottomSheet and canDeselect" class="btn o_clear_button px-4 d-block ms-auto" t-on-click="onInputClear">Clear</button>
-                    <div class="o_select_menu_searchbox position-sticky start-0 d-empty-none" t-att-data-id="selectMenuId">
-                        <t t-if="displayInputInDropdown">
+                    <button t-if="this.isBottomSheet and this.canDeselect" class="btn o_clear_button px-4 d-block ms-auto" t-on-click="this.onInputClear">Clear</button>
+                    <div class="o_select_menu_searchbox position-sticky start-0 d-empty-none" t-att-data-id="this.selectMenuId">
+                        <t t-if="this.displayInputInDropdown">
                             <t t-set="inputClass" t-value="'o_select_menu_input dropdown-item'"/>
                             <t t-set="isPrimaryInput" t-value="true"/>
                             <t t-call="web.SelectMenu.search" />
                         </t>
                     </div>
-                    <t t-if="filtered.choices.length === 0">
+                    <t t-if="this.filtered.choices.length === 0">
                         <p class="text-muted fst-italic mx-4 my-1" role="status">No results</p>
                     </t>
-                    <div t-att-id="listboxId" role="listbox"
-                         t-att-aria-multiselectable="props.multiSelect ? 'true' : undefined">
-                        <t t-foreach="filtered.displayed" t-as="choice" t-key="choice_index">
-                            <t t-call="{{ this.constructor.choiceItemTemplate }}">
-                                <t t-set="choice" t-value="choice" />
-                                <t t-set="choice_index" t-value="choice_index" />
-                            </t>
+                    <div t-att-id="this.listboxId" role="listbox"
+                         t-att-aria-multiselectable="this.props.multiSelect ? 'true' : undefined">
+                        <t t-foreach="this.filtered.displayed" t-as="choice" t-key="choice_index">
+                            <t t-call="{{ this.constructor.choiceItemTemplate }}"
+                                choice="choice"
+                                choice_index="choice_index"/>
                         </t>
                     </div>
                     <div t-ref="loadMoreSentinel"/>
-                    <t t-if="props.slots and props.slots.bottomArea" t-slot="bottomArea" data="slotData"/>
+                    <t t-if="this.props.slots and this.props.slots.bottomArea" t-slot="bottomArea" data="this.slotData"/>
                 </t>
             </Dropdown>
         </div>
@@ -102,7 +101,7 @@
         <div
             t-if="choice.isGroup and choice.label"
             class="o_select_menu_group position-sticky start-0 px-1 fw-bolder user-select-none"
-            t-att-class="{'o_select_menu_searchable_group': displayInputInDropdown, 'ms-2': !!choice.section }"
+            t-att-class="{'o_select_menu_searchable_group': this.displayInputInDropdown, 'ms-2': !!choice.section }"
             role="presentation"
         >
             <span t-out="choice.label" />
@@ -110,11 +109,11 @@
         <DropdownItem
             t-if="!choice.isGroup"
             onSelected="() => this.onItemSelected(choice.value)"
-            class="getItemClass(choice) + ' text-wrap'"
+            class="this.getItemClass(choice) + ' text-wrap'"
             role="'option'"
-            attrs="getItemAttrs(choice, choice_index)"
+            attrs="this.getItemAttrs(choice, choice_index)"
         >
-            <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
+            <t t-if="this.props.slots and this.props.slots.choice" t-slot="choice" data="choice"/>
             <t t-else="">
                 <div t-out="choice.label || choice.value" />
             </t>

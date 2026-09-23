@@ -3,11 +3,11 @@
     <t t-name="account.AccountReportAmlIrFilters">
         <Dropdown>
             <button class="btn btn-secondary">
-                <i class="fa-solid fa-star me-1"/>Filters: <t t-out="selectedAmlIrFilters"/>
+                <i class="fa-solid fa-star me-1"/>Filters: <t t-out="this.selectedAmlIrFilters"/>
             </button>
 
             <t t-set-slot="content">
-                <t t-foreach="controller.cachedFilterOptions.aml_ir_filters" t-as="amlIrFilter" t-key="amlIrFilter_index">
+                <t t-foreach="this.controller.cachedFilterOptions.aml_ir_filters" t-as="amlIrFilter" t-key="amlIrFilter_index">
                     <DropdownItem
                         class="{ 'selected': amlIrFilter.selected }"
                         onSelected="() => this.filterClicked({ optionKey: 'aml_ir_filters.' + amlIrFilter_index + '.selected', reload: true})"

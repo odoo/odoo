@@ -2,7 +2,7 @@
 <templates>
     <t t-name="report_formula.AccountReportEditPopover">
         <div class="account_report_popover_edit">
-            <t t-if="props.cell.figure_type === 'boolean'">
+            <t t-if="this.props.cell.figure_type === 'boolean'">
                 <div class="edit_popover_boolean">
                     <!-- Yes -->
                     <input
@@ -10,7 +10,7 @@
                         name="edit_popover_boolean"
                         type="radio"
                         value="1"
-                        t-att-checked="props.cell.no_format"
+                        t-att-checked="this.props.cell.no_format"
                         t-ref="booleanTrue"
                     />
                     <label for="edit_popover_boolean_true">Yes</label>
@@ -21,18 +21,18 @@
                         name="edit_popover_boolean"
                         type="radio"
                         value="0"
-                        t-att-checked="!props.cell.no_format"
+                        t-att-checked="!this.props.cell.no_format"
                         t-ref="booleanFalse"
                     />
                     <label for="edit_popover_boolean_false">No</label>
                 </div>
             </t>
-            <t t-elif="props.cell.figure_type === 'string'">
+            <t t-elif="this.props.cell.figure_type === 'string'">
                 <textarea class="edit_popover_string" rows="3" t-ref="input">
-                    <t t-out="props.cell.no_format"/>
+                    <t t-out="this.props.cell.no_format"/>
                 </textarea>
             </t>
-            <t t-elif="props.cell.figure_type === 'percentage'">
+            <t t-elif="this.props.cell.figure_type === 'percentage'">
                 <div class="input-group">
                     <input
                         class="form-control"
@@ -44,7 +44,7 @@
                     <span class="input-group-text">%</span>
                 </div>
             </t>
-            <t t-elif="props.cell.figure_type === 'monetary' and props.cell.currency_symbol">
+            <t t-elif="this.props.cell.figure_type === 'monetary' and this.props.cell.currency_symbol">
                 <div class="input-group">
                     <input
                         class="form-control"
@@ -54,7 +54,7 @@
                         t-att-value="this.editableNumericValue"
                     />
                     <span class="input-group-text">
-                        <t t-out="props.cell.currency_symbol"/>
+                        <t t-out="this.props.cell.currency_symbol"/>
                     </span>
                 </div>
             </t>

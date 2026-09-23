@@ -271,7 +271,7 @@ test("react to prop 'domain' changes", async () => {
     class Parent extends Component {
         static props = ["*"];
         static template = xml`
-            <WithSearch t-props="searchState" t-slot-scope="search">
+            <WithSearch t-props="this.searchState" t-slot-scope="search">
                 <TestComponent domain="search.domain"/>
             </WithSearch>
         `;
@@ -307,7 +307,7 @@ test("reload with partial props preserves the unspecified search keys", async ()
     class Parent extends Component {
         static props = ["*"];
         static template = xml`
-            <WithSearch t-props="searchProps" t-slot-scope="search">
+            <WithSearch t-props="this.searchProps" t-slot-scope="search">
                 <TestComponent/>
             </WithSearch>
         `;
@@ -379,7 +379,7 @@ test("search defaults are removed from context at reload", async function () {
     class Parent extends Component {
         static props = ["*"];
         static template = xml`
-            <WithSearch t-props="searchState" t-slot-scope="search">
+            <WithSearch t-props="this.searchState" t-slot-scope="search">
                 <TestComponent
                     context="search.context"
                 />
@@ -440,7 +440,7 @@ describe("a query mutation racing a props-driven reload", () => {
         const renderedDomains = [];
         class Child extends Component {
             static props = ["*"];
-            static template = xml`<div class="o_child" t-out="tag"/>`;
+            static template = xml`<div class="o_child" t-out="this.tag"/>`;
             setup() {
                 searchModel = this.env.searchModel;
             }
@@ -453,7 +453,7 @@ describe("a query mutation racing a props-driven reload", () => {
             static props = ["*"];
             static components = { WithSearch, Child };
             static template = xml`
-                <WithSearch t-props="searchProps" t-slot-scope="search">
+                <WithSearch t-props="this.searchProps" t-slot-scope="search">
                     <Child domain="search.domain"/>
                 </WithSearch>`;
             setup() {

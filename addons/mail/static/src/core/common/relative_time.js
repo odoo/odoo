@@ -27,7 +27,7 @@ export function computeUpdateDelay(delta) {
 
 export class RelativeTime extends Component {
     static props = ["datetime"];
-    static template = xml`<t t-out="relativeTime"/>`;
+    static template = xml`<t t-out="this.relativeTime"/>`;
 
     setup() {
         super.setup();

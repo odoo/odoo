@@ -4,22 +4,22 @@
     <t t-name="web.FlowPort">
         <div class="o_flow_editor_port position-absolute"
             t-att-class="{
-                'o_flow_editor_port_input': props.port.direction === 'input',
-                'o_flow_editor_port_output': props.port.direction === 'output',
-                'o_flow_editor_port_connected': props.connected,
-                'o_flow_editor_port_valid': props.validation === 'valid',
-                'o_flow_editor_port_invalid': props.validation === 'invalid',
+                'o_flow_editor_port_input': this.props.port.direction === 'input',
+                'o_flow_editor_port_output': this.props.port.direction === 'output',
+                'o_flow_editor_port_connected': this.props.connected,
+                'o_flow_editor_port_valid': this.props.validation === 'valid',
+                'o_flow_editor_port_invalid': this.props.validation === 'invalid',
             }"
-            t-att-style="style"
-            t-att-title="props.port.label"
-            t-att-data-node-id="props.nodeId"
-            t-att-data-port-id="props.port.id"
-            t-att-data-port-direction="props.port.direction"
-            t-on-click="onClick"
-            t-on-pointerdown="onPointerDown">
-            <span t-if="props.port.direction === 'output' and props.port.label"
+            t-att-style="this.style"
+            t-att-title="this.props.port.label"
+            t-att-data-node-id="this.props.nodeId"
+            t-att-data-port-id="this.props.port.id"
+            t-att-data-port-direction="this.props.port.direction"
+            t-on-click="this.onClick"
+            t-on-pointerdown="this.onPointerDown">
+            <span t-if="this.props.port.direction === 'output' and this.props.port.label"
                 class="o_flow_editor_port_label position-absolute">
-                <t t-out="props.port.label"/>
+                <t t-out="this.props.port.label"/>
             </span>
         </div>
     </t>

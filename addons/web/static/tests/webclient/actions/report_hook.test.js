@@ -89,7 +89,7 @@ test("enrich still wraps elements added after the first pass", async () => {
 class ConditionalEnrichHost extends Component {
     static template = xml`
         <div>
-            <div t-if="state.shown" t-ref="root">
+            <div t-if="this.state.shown" t-ref="root">
                 <span res-id="1" res-model="partner" view-type="form" class="tgt">x</span>
             </div>
         </div>`;
@@ -118,7 +118,7 @@ test("a target removed from the DOM hands the hook a null ref, not a crash", asy
 });
 
 class IframeEnrichHost extends Component {
-    static template = xml`<iframe t-ref="frame" t-att-srcdoc="doc"/>`;
+    static template = xml`<iframe t-ref="frame" t-att-srcdoc="this.doc"/>`;
     static props = {};
     doc = `<body><span res-id="7" res-model="partner" view-type="form" class="tgt">x</span></body>`;
 

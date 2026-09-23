@@ -132,7 +132,7 @@ test("minWidth props can be updated", async () => {
         static components = { ResizablePanel };
         static template = xml`
             <div class="d-flex">
-                <ResizablePanel minWidth="props.state.minWidth">
+                <ResizablePanel minWidth="this.props.state.minWidth">
                     <div style="width: 10px;" class="text-break">
                         A cool paragraph
                     </div>
@@ -185,7 +185,7 @@ test("a raised minWidth widens the panel already in place", async () => {
         static components = { ResizablePanel };
         static template = xml`
             <div style="width: 1000px;">
-                <ResizablePanel minWidth="state.minWidth" initialWidth="300">
+                <ResizablePanel minWidth="this.state.minWidth" initialWidth="300">
                     <p>body</p>
                 </ResizablePanel>
             </div>`;
@@ -209,7 +209,7 @@ test("a changed initialWidth is applied after mount", async () => {
         static components = { ResizablePanel };
         static template = xml`
             <div style="width: 1000px;">
-                <ResizablePanel minWidth="60" initialWidth="state.width">
+                <ResizablePanel minWidth="60" initialWidth="this.state.width">
                     <p>body</p>
                 </ResizablePanel>
             </div>`;
@@ -234,8 +234,8 @@ test("a props update that changes no size does not notify onResize", async () =>
         static components = { ResizablePanel };
         static template = xml`
             <div style="width: 1000px;">
-                <ResizablePanel minWidth="60" initialWidth="300" onResize="onResize">
-                    <p t-out="state.label"/>
+                <ResizablePanel minWidth="60" initialWidth="300" onResize="this.onResize">
+                    <p t-out="this.state.label"/>
                 </ResizablePanel>
             </div>`;
         static props = ["*"];
@@ -280,7 +280,7 @@ test("a replaced onResize prop is the one notified", async () => {
         static components = { ResizablePanel };
         static template = xml`
             <div style="width: 1000px;">
-                <ResizablePanel minWidth="60" initialWidth="300" onResize="onResize">
+                <ResizablePanel minWidth="60" initialWidth="300" onResize="this.onResize">
                     <p>body</p>
                 </ResizablePanel>
             </div>`;

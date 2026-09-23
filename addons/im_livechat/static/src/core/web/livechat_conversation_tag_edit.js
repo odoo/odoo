@@ -58,7 +58,7 @@ export class ConversationTagEdit extends Component {
                 this.toggleSelectedTag(option.tag);
                 this.state.searchStr = "";
             },
-            optionTemplate: xml`<t t-out="option.label"/>`,
+            optionTemplate: xml`<t t-out="this.option.label"/>`,
             options: this.remainingSelectableTags.map((tag) => ({
                 tag,
                 label: highlightText(

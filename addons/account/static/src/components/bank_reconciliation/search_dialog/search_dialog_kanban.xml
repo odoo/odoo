@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
     <t t-name="account.BankRecReconcileDialogKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
 
-        <xpath expr="//t[@t-foreach='getGroupsOrRecords()']" position="before">
-            <div t-if="props.bankRecInfo and env.isSmall" class="o_bank_rec_info_header border-top border-bottom d-flex align-items-center gap-2 w-100 p-3" name="bank_reconciliation_info">
-                <span class="text-nowrap min-w-2" t-out="props.bankRecInfo.date"/> -
-                <div class="text-truncate" t-out="props.bankRecInfo.reference"/>
+        <xpath expr="//t[@t-foreach='this.getGroupsOrRecords()']" position="before">
+            <div t-if="this.props.bankRecInfo and this.env.isSmall" class="o_bank_rec_info_header border-top border-bottom d-flex align-items-center gap-2 w-100 p-3" name="bank_reconciliation_info">
+                <span class="text-nowrap min-w-2" t-out="this.props.bankRecInfo.date"/> -
+                <div class="text-truncate" t-out="this.props.bankRecInfo.reference"/>
                 <div class="text-nowrap text-end ms-auto" name="remaining_amount">
                     <span class="text-muted">Balance: </span>
-                    <t t-if="!bankRecState.hideRemainingAmount" t-out="bankRecState.remainingAmountFormatted"/>
+                    <t t-if="!this.bankRecState.hideRemainingAmount" t-out="this.bankRecState.remainingAmountFormatted"/>
                     <t t-else=""> / </t>
                 </div>
             </div>
@@ -17,8 +17,8 @@
     </t>
 
     <t t-name="account.BankRecReconcileDialogKanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary">
-        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
-            <attribute name="bankRecInfo">props.bankRecInfo</attribute>
+        <xpath expr="//t[@t-component='this.props.Renderer']" position="attributes">
+            <attribute name="bankRecInfo">this.props.bankRecInfo</attribute>
         </xpath>
     </t>
 </templates>

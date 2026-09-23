@@ -181,7 +181,7 @@ test("the input follows the prop when it changes and the input is not focused", 
         static components = { NumericFilterValue };
         static props = {};
         static template = xml`
-            <NumericFilterValue value="state.value" onValueChanged="() => {}"/>`;
+            <NumericFilterValue value="this.state.value" onValueChanged="() => {}"/>`;
         setup() {
             this.state = useState({ value: 1999 });
         }

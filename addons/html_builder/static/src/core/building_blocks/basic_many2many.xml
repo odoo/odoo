@@ -4,7 +4,7 @@
 <t t-name="html_builder.BasicMany2Many">
     <div class="d-flex flex-column">
         <table class="o-hb-m2m-table">
-            <tr t-foreach="props.selection" t-as="entry" t-key="entry.id">
+            <tr t-foreach="this.props.selection" t-as="entry" t-key="entry.id">
                 <td>
                     <input type="text" class="o-hb-input-base" disabled="" t-att-data-name="entry.display_name" t-att-value="entry.display_name"/>
                 </td>
@@ -14,13 +14,13 @@
             </tr>
         </table>
         <SelectMany2X
-            model="props.model"
-            fields="props.fields"
-            limit="props.limit"
-            domain="props.domain"
-            selected="props.selection"
-            select="select.bind(this)"
-            create="props.create"
+            model="this.props.model"
+            fields="this.props.fields"
+            limit="this.props.limit"
+            domain="this.props.domain"
+            selected="this.props.selection"
+            select="this.select.bind(this)"
+            create="this.props.create"
         />
     </div>
 </t>

@@ -6,7 +6,7 @@
         <BuilderCheckbox id="'make_slide_clickable_opt'" action="'makeSlideClickable'" classAction="'clickable-slide'"/>
     </BuilderRow>
 
-    <BuilderRow t-if="isActiveItem('make_slide_clickable_opt')" label.translate="Your URL" level="1">
+    <BuilderRow t-if="this.isActiveItem('make_slide_clickable_opt')" label.translate="Your URL" level="1">
         <WebsiteUrlPicker title.translate="Your URL"
             action="'setSlideAnchorUrl'"
             placeholder.translate="e.g. /your-website-page"/>

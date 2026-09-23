@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-inherit="resource_mail.AvatarCardResourcePopover" t-inherit-mode="extension">
         <xpath expr="//span[@name='icon'][hasclass('o_user_im_status')]/i[hasclass('fa-question-circle')]" position="before">
-            <i t-elif="workLocation" t-attf-class="{{workLocation.icon}} {{workLocation.color}}" t-att-title="workLocation.title" role="img" t-att-aria-label="workLocation.title"/>
+            <i t-elif="this.workLocation" t-attf-class="{{this.workLocation.icon}} {{this.workLocation.color}}" t-att-title="this.workLocation.title" role="img" t-att-aria-label="this.workLocation.title"/>
         </xpath>
         <xpath expr="//span[@name='icon'][hasclass('o_employee_presence_status')]" position="inside">
-            <i t-if="record.hr_icon_display === 'presence_home'" class="fa-solid fa-house text-success me-1" title="At Home - Present" role="img" aria-label="At Home"/>
-            <i t-if="record.hr_icon_display === 'presence_office'" class="fa-solid fa-building text-success me-1" title="At Office - Present" role="img" aria-label="At Office"/>
-            <i t-if="record.hr_icon_display === 'presence_other'" class="fa-solid fa-location-dot text-success me-1" title="Present" role="img" aria-label="At Other"/>
+            <i t-if="this.record.hr_icon_display === 'presence_home'" class="fa-solid fa-house text-success me-1" title="At Home - Present" role="img" aria-label="At Home"/>
+            <i t-if="this.record.hr_icon_display === 'presence_office'" class="fa-solid fa-building text-success me-1" title="At Office - Present" role="img" aria-label="At Office"/>
+            <i t-if="this.record.hr_icon_display === 'presence_other'" class="fa-solid fa-location-dot text-success me-1" title="Present" role="img" aria-label="At Other"/>
         </xpath>
     </t>
 </templates>

@@ -4,10 +4,10 @@
         <div name="quantity_buttons_wrapper" class="input-group justify-content-end ">
             <button
                 name="sale_quantity_button_minus"
-                t-attf-class="px-2 px-md-3 btn btn-secondary {{ props.btnClasses or 'd-md-inline-block' }}"
+                t-attf-class="px-2 px-md-3 btn btn-secondary {{ this.props.btnClasses or 'd-md-inline-block' }}"
                 aria-label="Remove one"
-                t-att-disabled="props.isMinusButtonDisabled"
-                t-on-click="decreaseQuantity"
+                t-att-disabled="this.props.isMinusButtonDisabled"
+                t-on-click="this.decreaseQuantity"
             >
                 <i class="oi oi-minus"/>
             </button>
@@ -15,15 +15,15 @@
                 class="form-control quantity text-center"
                 name="sale_quantity"
                 type="number"
-                t-att-value="props.quantity"
-                t-on-change="setQuantity"
+                t-att-value="this.props.quantity"
+                t-on-change="this.setQuantity"
             />
             <button
-                t-attf-class="px-2 px-md-3 btn btn-secondary {{ props.btnClasses or 'd-md-inline-block' }}"
+                t-attf-class="px-2 px-md-3 btn btn-secondary {{ this.props.btnClasses or 'd-md-inline-block' }}"
                 name="sale_quantity_button_plus"
                 aria-label="Add one"
-                t-att-disabled="props.isPlusButtonDisabled"
-                t-on-click="increaseQuantity"
+                t-att-disabled="this.props.isPlusButtonDisabled"
+                t-on-click="this.increaseQuantity"
             >
                 <i class="oi oi-plus"/>
             </button>

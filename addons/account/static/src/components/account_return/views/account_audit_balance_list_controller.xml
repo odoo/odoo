@@ -7,8 +7,8 @@
                     data-tooltip="Chatter"
                     class="btn btn-secondary o_switch_view o_kanban active"
                     t-att-class="{
-                        'd-none': !chatterService.chatterState.res_id,
-                        'd-md-inline': chatterService.chatterState.res_id,
+                        'd-none': !this.chatterService.chatterState.res_id,
+                        'd-md-inline': this.chatterService.chatterState.res_id,
                     }">
                         <i t-attf-class="fa-solid fa-xmark mt-1"/>
                 </button>
@@ -16,7 +16,7 @@
         </xpath>
 
         <xpath expr="//SelectionBox" position="before">
-            <div t-if="this.model.root.selection.length &gt; 1" t-on-click="openJournalItems">
+            <div t-if="this.model.root.selection.length &gt; 1" t-on-click="this.openJournalItems">
                 <button class="btn btn-secondary">
                     <i class="fa-solid fa-list me-1"></i>
                     <span>Journal Items</span>

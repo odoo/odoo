@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="document.DocumentsFileViewer">
-        <div t-if="props.previewStore.attachments" t-ref="root"
-            t-attf-class="o-DocumentsFileViewer-main position-fixed start-0 top-0 vh-100 d-flex justify-content-center align-items-center {{isRightPanelVisible ? 'o-DocumentsFileViewer-main-with-chatter' : 'o-DocumentsFileViewer-main-without-chatter'}}"
-            t-on-keydown="onGlobalKeydown"
+        <div t-if="this.props.previewStore.attachments" t-ref="root"
+            t-attf-class="o-DocumentsFileViewer-main position-fixed start-0 top-0 vh-100 d-flex justify-content-center align-items-center {{this.isRightPanelVisible ? 'o-DocumentsFileViewer-main-with-chatter' : 'o-DocumentsFileViewer-main-without-chatter'}}"
+            t-on-keydown="this.onGlobalKeydown"
         >
             <DocumentsFileViewer
-                files="props.previewStore.attachments"
-                startIndex="props.previewStore.startIndex"
+                files="this.props.previewStore.attachments"
+                startIndex="this.props.previewStore.startIndex"
                 modal="false"
             />
         </div>

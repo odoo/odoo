@@ -8,8 +8,8 @@ import { boxExtraWidth, useAutoresize } from "@web/core/utils/dom/autoresize";
 
 class Sized extends Component {
     static template = xml`
-        <div class="host" t-att-style="props.hostStyle">
-            <input class="resizable" t-ref="input" t-att-style="props.inputStyle"/>
+        <div class="host" t-att-style="this.props.hostStyle">
+            <input class="resizable" t-ref="input" t-att-style="this.props.inputStyle"/>
         </div>`;
     static props = ["*"];
     setup() {

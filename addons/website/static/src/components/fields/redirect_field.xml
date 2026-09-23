@@ -3,9 +3,9 @@
 
 <t t-name="website.RedirectField">
     <button type="button" class="btn oe_stat_button btn-outline-secondary flex-grow-1 flex-lg-grow-0"
-        t-on-click="onClick"
-        t-att-aria-label="info"
-        t-att-title="info">
+        t-on-click="this.onClick"
+        t-att-aria-label="this.info"
+        t-att-title="this.info">
         <i class="fa-solid fa-earth-americas o_button_icon" t-att-class="this.props.record.data[this.props.name] ? 'text-success' : 'text-danger'"/>
         <div class="o_stat_info">
             <span class="o_stat_text">Go to<br/>Website</span>

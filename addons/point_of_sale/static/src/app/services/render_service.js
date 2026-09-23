@@ -12,7 +12,7 @@ class ComponentRenderer extends Component {
     static props = ["comp"];
     static template = xml`
         <div t-ref="ref">
-            <t t-component="props.comp.component" t-props="props.comp.props"/>
+            <t t-component="this.props.comp.component" t-props="this.props.comp.props"/>
         </div>
     `;
     setup() {
@@ -28,8 +28,8 @@ export class RenderContainer extends Component {
     static components = { ComponentRenderer };
     static template = xml`
         <div class="render-container-parent" style="left: -1000px; position: fixed;">
-            <t t-if="props.comp.job">
-                <ComponentRenderer t-key="props.comp.job.id" comp="props.comp.job" />
+            <t t-if="this.props.comp.job">
+                <ComponentRenderer t-key="this.props.comp.job.id" comp="this.props.comp.job" />
             </t>
             <div class="render-container" />
         </div>`;

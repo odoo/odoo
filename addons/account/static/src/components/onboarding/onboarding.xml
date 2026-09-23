@@ -3,7 +3,7 @@
 
     <t t-name="account.Onboarding">
         <div class="">
-            <div class="col-auto my-1" t-foreach="recordOnboardingSteps" t-as="step" t-key="step.id">
+            <div class="col-auto my-1" t-foreach="this.recordOnboardingSteps" t-as="step" t-key="step.id">
                 <i class="fa me-2 fs-5" t-att-class="{
                     'fa-circle text-secondary': step.state == 'not_done',
                     'fa-check-circle text-success': step.state != 'not_done',

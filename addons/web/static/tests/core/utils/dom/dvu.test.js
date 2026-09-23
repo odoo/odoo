@@ -44,7 +44,7 @@ test("useViewportChange: fires on viewport change while mounted, stops after unm
     }
     class Parent extends Component {
         static components = { Child };
-        static template = xml`<Child t-if="state.show"/>`;
+        static template = xml`<Child t-if="this.state.show"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ show: true });
@@ -95,7 +95,7 @@ test("useViewportChange subscribes lazily and releases with its last consumer", 
     let state;
     class Parent extends Component {
         static components = { Child };
-        static template = xml`<Child t-if="state.show"/>`;
+        static template = xml`<Child t-if="this.state.show"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ show: true });

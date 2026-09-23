@@ -7,19 +7,19 @@
                  t-att-data-index="tag_index"
                  t-att-data-id="tag.resId"
                  t-att-title="tag.text"
-                 t-on-click="(ev) => tag.onClick and tag.onClick(ev)" t-ref="{{tagEquals(tag, state.tagToUpdate) ? 'tagToUpdate' : `tag_${tag_index}`}}">
+                 t-on-click="(ev) => tag.onClick and tag.onClick(ev)" t-ref="{{this.tagEquals(tag, this.state.tagToUpdate) ? 'tagToUpdate' : `tag_${tag_index}`}}">
                 <span class="o_badge_text" t-att-title="tag.email"><t t-out="tag.text"/></span>
-                <a t-if="!readonly &amp;&amp; tag.onDelete" t-on-click.stop.prevent="tag.onDelete" href="#" class="fa-solid fa-times o_delete ms-1" title="Delete" aria-label="Delete"/>
+                <a t-if="!this.readonly &amp;&amp; tag.onDelete" t-on-click.stop.prevent="tag.onDelete" href="#" class="fa-solid fa-times o_delete ms-1" title="Delete" aria-label="Delete"/>
             </div>
         </xpath>
     </t>
     <t t-name="FieldMany2ManyTagsEmailTags" t-inherit="web.Many2ManyTagsField">
         <xpath expr="//Many2XAutocomplete" position="attributes">
-            <attribute name="autofocus">props.context.forward_mode</attribute>
-            <attribute name="quickCreate">quickCreate</attribute>
+            <attribute name="autofocus">this.props.context.forward_mode</attribute>
+            <attribute name="quickCreate">this.quickCreate</attribute>
         </xpath>
         <xpath expr="//TagsList" position="attributes">
-            <attribute name="updateRecipient.bind">updateRecipient</attribute>
+            <attribute name="updateRecipient.bind">this.updateRecipient</attribute>
         </xpath>
     </t>
 </templates>

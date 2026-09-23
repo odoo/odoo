@@ -18,8 +18,8 @@ class Parent extends Component {
     static template = xml`
         <button class="opener" t-on-click="() => this.state.open = true">Open</button>
         <Offcanvas
-            open="state.open"
-            placement="props.placement or 'end'"
+            open="this.state.open"
+            placement="this.props.placement or 'end'"
             onClose="() => this.onClose()"
             class="'panel'"
         >
@@ -139,7 +139,7 @@ test("opening does not steal focus from content that already has it", async () =
         static components = { Offcanvas };
         static props = ["*"];
         static template = xml`
-            <Offcanvas open="state.open" ariaLabel="'Panel'" class="'panel'">
+            <Offcanvas open="this.state.open" ariaLabel="'Panel'" class="'panel'">
                 <button class="inside" t-ref="inside">Inside</button>
             </Offcanvas>`;
 

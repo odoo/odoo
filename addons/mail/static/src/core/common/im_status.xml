@@ -2,29 +2,29 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ImStatus">
-        <div class="o-mail-ImStatus d-flex justify-content-center flex-shrink-0 align-items-center bg-white bg-opacity-100" t-attf-class="{{ props.className }}" t-att-style="props.style" t-att-class="{
-            'o-md': props.size === 'md' or props.size === 'medium',
-            'o-sm': props.size === 'sm' or props.size === 'small',
-            'rounded-circle': !props.member?.isTyping,
-            'rounded-pill': props.member?.isTyping,
+        <div class="o-mail-ImStatus d-flex justify-content-center flex-shrink-0 align-items-center bg-white bg-opacity-100" t-attf-class="{{ this.props.className }}" t-att-style="this.props.style" t-att-class="{
+            'o-md': this.props.size === 'md' or this.props.size === 'medium',
+            'o-sm': this.props.size === 'sm' or this.props.size === 'small',
+            'rounded-circle': !this.props.member?.isTyping,
+            'rounded-pill': this.props.member?.isTyping,
         }">
             <span class="d-flex flex-column" t-att-class="{
-                'smaller': props.size === 'md' or props.size === 'medium',
-                'o-xsmaller': props.size === 'sm' or props.size === 'small',
+                'smaller': this.props.size === 'md' or this.props.size === 'medium',
+                'o-xsmaller': this.props.size === 'sm' or this.props.size === 'small',
             }">
                 <t t-slot="pre_icon"/>
                 <t name="icon">
-                    <t t-if="(!props.member or !props.member.isTyping) and persona">
-                        <i t-if="persona.im_status === 'online'" class="fa-solid fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
-                        <i t-elif="persona.im_status === 'away'" class="fa-solid fa-circle o-yellow" title="Idle" role="img" aria-label="User is idle"/>
-                        <i t-elif="persona.im_status === 'busy'" class="fa-solid fa-minus-circle text-danger" title="Busy" role="img" aria-label="User is busy"/>
-                        <i t-elif="persona.im_status === 'offline'" class="fa-regular fa-circle text-700 opacity-75" title="Offline" role="img" aria-label="User is offline"/>
-                        <i t-elif="persona.im_status === 'bot'" class="fa-solid fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
+                    <t t-if="(!this.props.member or !this.props.member.isTyping) and this.persona">
+                        <i t-if="this.persona.im_status === 'online'" class="fa-solid fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
+                        <i t-elif="this.persona.im_status === 'away'" class="fa-solid fa-circle o-yellow" title="Idle" role="img" aria-label="User is idle"/>
+                        <i t-elif="this.persona.im_status === 'busy'" class="fa-solid fa-minus-circle text-danger" title="Busy" role="img" aria-label="User is busy"/>
+                        <i t-elif="this.persona.im_status === 'offline'" class="fa-regular fa-circle text-700 opacity-75" title="Offline" role="img" aria-label="User is offline"/>
+                        <i t-elif="this.persona.im_status === 'bot'" class="fa-solid fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
                         <i t-else="" class="fa-solid fa-question-circle opacity-75" title="No IM status available"/>
                     </t>
-                    <div t-if="props.member?.isTyping" class="rounded-pill" style="padding: 1px;" t-att-class="{ 'bg-300': env.inChatBubble, 'bg-inherit': !env.inChatBubble }">
+                    <div t-if="this.props.member?.isTyping" class="rounded-pill" style="padding: 1px;" t-att-class="{ 'bg-300': this.env.inChatBubble, 'bg-inherit': !this.env.inChatBubble }">
                         <div class="bg-success rounded-pill" style="padding: 3px;">
-                            <Typing member="props.member" channel="props.member.threadAsTyping" size="['sm', 'smaller'].includes(props.size) ? 'sm' : 'md'" displayText="false" />
+                            <Typing member="this.props.member" channel="this.props.member.threadAsTyping" size="['sm', 'smaller'].includes(this.props.size) ? 'sm' : 'md'" displayText="false" />
                         </div>
                     </div>
                 </t>

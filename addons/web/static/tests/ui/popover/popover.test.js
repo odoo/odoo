@@ -427,7 +427,7 @@ test("popover position is updated when the content dimensions change", async () 
         static props = ["*"];
         static template = xml`<div id="popover">
         Click on this <button t-on-click="() => this.state.showMore = true">button</button> to read more
-        <span t-if="state.showMore">
+        <span t-if="this.state.showMore">
             This tooltip gives your more information on this topic!
         </span>
     </div>`;
@@ -492,7 +492,7 @@ test("arrow follows target and can get sucked", async () => {
         static props = ["*"];
         static template = xml`
             <div class="popover-container" t-ref="popover-container">
-                <div class="popover-target" t-ref="popover-target" t-on-click="openPopover"/>
+                <div class="popover-target" t-ref="popover-target" t-on-click="this.openPopover"/>
             </div>
         `;
         setup() {
@@ -690,7 +690,7 @@ test("opening positions once; only a later resize of the content repositions", a
     let grow;
     class GrowingContent extends Component {
         static props = ["*"];
-        static template = xml`<div id="popover" t-att-style="'height: ' + state.height + 'px'">Popover Content</div>`;
+        static template = xml`<div id="popover" t-att-style="'height: ' + this.state.height + 'px'">Popover Content</div>`;
         setup() {
             this.state = useState({ height: 30 });
             grow = () => (this.state.height = 300);

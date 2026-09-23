@@ -12,42 +12,42 @@ export class FieldWidgetsDialog extends Component {
         close: Function,
     };
     static template = xml`
-        <Dialog title="title" size="'lg'">
+        <Dialog title="this.title" size="'lg'">
             <div class="o_field_widgets_inspector">
                 <div class="d-flex align-items-center gap-2 mb-2">
                     <input
                         type="search"
                         class="form-control flex-grow-1"
-                        t-att-placeholder="labels.filter"
-                        t-model="state.filter"
+                        t-att-placeholder="this.labels.filter"
+                        t-model="this.state.filter"
                         autofocus="true"
                     />
                     <small class="text-muted text-nowrap">
-                        <t t-out="filteredEntries.length"/> / <t t-out="entries.length"/>
+                        <t t-out="this.filteredEntries.length"/> / <t t-out="this.entries.length"/>
                     </small>
                 </div>
                 <div class="table-responsive" style="max-height: 60vh">
                     <table class="table table-sm table-hover table-striped mb-0">
                         <thead class="position-sticky top-0 bg-white">
                             <tr>
-                                <th t-out="labels.name"/>
-                                <th t-out="labels.displayName"/>
-                                <th t-out="labels.supportedTypes"/>
-                                <th t-out="labels.component"/>
-                                <th class="text-end" t-out="labels.options"/>
+                                <th t-out="this.labels.name"/>
+                                <th t-out="this.labels.displayName"/>
+                                <th t-out="this.labels.supportedTypes"/>
+                                <th t-out="this.labels.component"/>
+                                <th class="text-end" t-out="this.labels.options"/>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="filteredEntries" t-as="entry" t-key="entry[0]">
+                            <tr t-foreach="this.filteredEntries" t-as="entry" t-key="entry[0]">
                                 <td><code t-out="entry[0]"/></td>
-                                <td t-out="displayName(entry[1])"/>
-                                <td t-out="supportedTypes(entry[1])"/>
-                                <td><code t-out="componentName(entry[1])"/></td>
-                                <td class="text-end" t-out="optionCount(entry[1])"/>
+                                <td t-out="this.displayName(entry[1])"/>
+                                <td t-out="this.supportedTypes(entry[1])"/>
+                                <td><code t-out="this.componentName(entry[1])"/></td>
+                                <td class="text-end" t-out="this.optionCount(entry[1])"/>
                             </tr>
-                            <tr t-if="!filteredEntries.length">
+                            <tr t-if="!this.filteredEntries.length">
                                 <td colspan="5" class="text-center text-muted py-3"
-                                    t-out="labels.empty"/>
+                                    t-out="this.labels.empty"/>
                             </tr>
                         </tbody>
                     </table>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="document.DocumentsAction">
-        <div t-if="props.targetRecords.length" class="btn-group mt-1 mt-sm-0 d-empty-none">
-            <ActionMenus t-if="props.isPreview and state.actionMenuProps" t-props="state.actionMenuProps"/>
-            <div t-if="!ui.isSmall and topbarActions.length" class="d-flex flex-row flex-wrap btn-group d-none d-md-inline">
+        <div t-if="this.props.targetRecords.length" class="btn-group mt-1 mt-sm-0 d-empty-none">
+            <ActionMenus t-if="this.props.isPreview and this.state.actionMenuProps" t-props="this.state.actionMenuProps"/>
+            <div t-if="!this.ui.isSmall and this.topbarActions.length" class="d-flex flex-row flex-wrap btn-group d-none d-md-inline">
                 <t t-set="firstEmbeddedActions"
-                   t-value="props.folderId === 'TRASH' ? topbarActions.slice(0, 1) : topbarActions.slice(0, ui.isSmall ? 0 : this.visibleTopbarActions)"/>
+                   t-value="this.props.folderId === 'TRASH' ? this.topbarActions.slice(0, 1) : this.topbarActions.slice(0, this.ui.isSmall ? 0 : this.visibleTopbarActions)"/>
                 <t t-set="lastEmbeddedActions"
-                   t-value="props.folderId === 'TRASH' ? [] : topbarActions.slice(ui.isSmall ? 0 : this.visibleTopbarActions)"/>
+                   t-value="this.props.folderId === 'TRASH' ? [] : this.topbarActions.slice(this.ui.isSmall ? 0 : this.visibleTopbarActions)"/>
                 <button t-foreach="firstEmbeddedActions" t-as="action" t-key="action_index" class="btn btn-secondary"
                     t-on-click="() => action.callback()" t-out="action.description" />
                 <div class="dropdown btn-group" t-if="lastEmbeddedActions?.length">

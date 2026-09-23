@@ -424,7 +424,7 @@ test("known options still reach the notification", async () => {
 
 test("a subclassed container still receives its own extra props", async () => {
     class CustomNotification extends Component {
-        static template = xml`<div class="o_custom_notif" t-out="props.flavour"/>`;
+        static template = xml`<div class="o_custom_notif" t-out="this.props.flavour"/>`;
         static props = {
             message: { type: String },
             flavour: { type: String },

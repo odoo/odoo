@@ -61,7 +61,7 @@ test("update default prop", async () => {
     addBuilderOption(
         class extends BaseOptionComponent {
             static selector = ".parent-target";
-            static template = xml`<BuilderTextInput action="'customAction'" default="state.default"/>`;
+            static template = xml`<BuilderTextInput action="'customAction'" default="this.state.default"/>`;
             static components = { BuilderTextInput };
 
             setup() {

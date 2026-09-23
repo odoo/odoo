@@ -2,17 +2,17 @@
 <templates>
 
     <t t-name="purchase.PurchaseDashboardCard">
-        <div class="g-col-12 p-0" t-att-title="props.title" t-on-click="() => props.onSelected()">
+        <div class="g-col-12 p-0" t-att-title="this.props.title" t-on-click="() => this.props.onSelected()">
             <a href="#" t-attf-class="btn purchase-dashboard-card p-1 p-lg-2 text-truncate text-wrap
-                                      o_purchase_dashboard_card_{{ props.position }} {{ colorClass }}">
-                <div t-attf-class="{{ props.label ? 'fs-2' : '' }}">
-                    <span t-out="props.values.all"/>
-                    <span class="ps-4" t-if="props.values.priority">
+                                      o_purchase_dashboard_card_{{ this.props.position }} {{ this.colorClass }}">
+                <div t-attf-class="{{ this.props.label ? 'fs-2' : '' }}">
+                    <span t-out="this.props.values.all"/>
+                    <span class="ps-4" t-if="this.props.values.priority">
                         <span class="o_priority_star fa-solid fa-star"/>
-                        <span t-out="props.values.priority"/>
+                        <span t-out="this.props.values.priority"/>
                     </span>
                 </div>
-                <t t-out="props.label"/>
+                <t t-out="this.props.label"/>
             </a>
         </div>
     </t>
@@ -30,13 +30,13 @@
 
     <t t-name="purchase.PurchaseDashboardRow">
         <div class="g-col-12 g-col-lg-11 grid gap-1" t-attf-style="--columns: 61">
-            <t t-foreach="cards" t-as="card" t-key="card.spacer ? 'spacer' + card_index : card.key">
+            <t t-foreach="this.cards" t-as="card" t-key="card.spacer ? 'spacer' + card_index : card.key">
                 <div t-if="card.spacer" class="g-col-1"/>
                 <PurchaseDashboardCard t-else=""
                     label="showLabels ? card.label : ''"
                     title="titlePrefix + ' ' + card.title"
                     emphasis="card.emphasis"
-                    values="purchaseData[scope][card.key]"
+                    values="this.purchaseData[scope][card.key]"
                     position="position"
                     onSelected="() => this.setSearchContext(scope === 'my' ? [...card.filters, 'my_purchases'] : card.filters)"/>
             </t>
@@ -44,30 +44,28 @@
     </t>
 
     <t t-name="purchase.PurchaseDashboard">
-        <div class="o_purchase_dashboard container-fluid py-4 border-bottom bg-view" t-if="purchaseData">
+        <div class="o_purchase_dashboard container-fluid py-4 border-bottom bg-view" t-if="this.purchaseData">
             <div class="row justify-content-between gap-2 gap-lg-0">
                 <div class="col-12 col-lg-8 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
                     <div class="grid gap-1 gap-lg-4">
                         <div class="g-col-12 g-col-lg-1 d-flex align-items-center pt-2 pb-lg-2 justify-content-lg-end text-break">
-                            <t t-if="multiuser">All</t>
+                            <t t-if="this.multiuser">All</t>
                         </div>
-                        <t t-call="purchase.PurchaseDashboardRow">
-                            <t t-set="scope" t-value="'global'"/>
-                            <t t-set="showLabels" t-value="true"/>
-                            <t t-set="titlePrefix" t-value="'All'"/>
-                            <t t-set="position" t-value="multiuser ? 'top' : 'sole'"/>
-                        </t>
+                        <t t-call="purchase.PurchaseDashboardRow"
+                            scope="'global'"
+                            showLabels="true"
+                            titlePrefix="'All'"
+                            position="this.multiuser ? 'top' : 'sole'"/>
                     </div>
-                    <div t-if="multiuser" class="grid gap-1 gap-lg-4">
+                    <div t-if="this.multiuser" class="grid gap-1 gap-lg-4">
                         <div class="g-col-12 g-col-lg-1 d-flex align-items-center pt-2 pb-lg-2 justify-content-lg-end text-break">
                             My
                         </div>
-                        <t t-call="purchase.PurchaseDashboardRow">
-                            <t t-set="scope" t-value="'my'"/>
-                            <t t-set="showLabels" t-value="false"/>
-                            <t t-set="titlePrefix" t-value="'My'"/>
-                            <t t-set="position" t-value="'bottom'"/>
-                        </t>
+                        <t t-call="purchase.PurchaseDashboardRow"
+                            scope="'my'"
+                            showLabels="false"
+                            titlePrefix="'My'"
+                            position="'bottom'"/>
                     </div>
                 </div>
                 <div class="col-12 col-lg-3 flex-shrink-0">
@@ -77,27 +75,27 @@
                         </div>
                         <div class="g-col-12 g-col-lg-12 grid gap-1">
                             <div class="d-none d-lg-block g-col-6 p-0" id="left_grid_top"/>
-                            <t t-call="purchase.PurchaseDashboardDaysCard">
-                                <t t-set="title" t-value="'All Days to Order'"/>
-                                <t t-set="value" t-value="purchaseData['global']['days_to_order']"/>
-                                <t t-set="overBudget" t-value="purchaseData['days_to_purchase'] and purchaseData['global']['days_to_order'] > purchaseData['days_to_purchase']"/>
-                                <t t-set="position" t-value="multiuser ? 'top' : 'sole'"/>
-                                <t t-set="showLabel" t-value="true"/>
+                            <t t-call="purchase.PurchaseDashboardDaysCard"
+                                title="'All Days to Order'"
+                                value="this.purchaseData['global']['days_to_order']"
+                                overBudget="this.purchaseData['days_to_purchase'] and this.purchaseData['global']['days_to_order'] > this.purchaseData['days_to_purchase']"
+                                position="this.multiuser ? 'top' : 'sole'"
+                                showLabel="true">
                             </t>
                         </div>
                     </div>
-                    <div t-if="multiuser" class="grid gap-1 gap-lg-4 pt-0 pt-lg-1">
+                    <div t-if="this.multiuser" class="grid gap-1 gap-lg-4 pt-0 pt-lg-1">
                         <div class="d-lg-none g-col-12 d-flex align-items-center pt-2 pb-lg-2 justify-content-lg-end text-break">
                             My
                         </div>
                         <div class="g-col-12 g-col-lg-12 grid gap-1">
                             <div class="d-none d-lg-block g-col-6 p-0" id="left_grid_bottom"/>
-                            <t t-call="purchase.PurchaseDashboardDaysCard">
-                                <t t-set="title" t-value="'My Days to Order'"/>
-                                <t t-set="value" t-value="purchaseData['my']['days_to_order']"/>
-                                <t t-set="overBudget" t-value="purchaseData['days_to_purchase'] and purchaseData['my']['days_to_order'] > purchaseData['days_to_purchase']"/>
-                                <t t-set="position" t-value="'bottom'"/>
-                                <t t-set="showLabel" t-value="false"/>
+                            <t t-call="purchase.PurchaseDashboardDaysCard"
+                                title="'My Days to Order'"
+                                value="this.purchaseData['my']['days_to_order']"
+                                overBudget="this.purchaseData['days_to_purchase'] and this.purchaseData['my']['days_to_order'] > this.purchaseData['days_to_purchase']"
+                                position="'bottom'"
+                                showLabel="false">
                             </t>
                         </div>
                     </div>

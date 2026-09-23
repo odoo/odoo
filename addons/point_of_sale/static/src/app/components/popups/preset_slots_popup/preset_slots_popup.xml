@@ -4,29 +4,29 @@
         <Dialog size="'xl'" title.translate="Select a preset">
             <div>
                 <div class="d-flex align-items-center gap-2">
-                    <button t-foreach="timedPresets"
+                    <button t-foreach="this.timedPresets"
                         t-as="preset"
                         t-key="preset.id"
                         class="btn btn-lg flex-grow-1"
-                        t-attf-class="{{ preset.id === state.selectedPresetId ? 'btn-primary' : 'btn-secondary' }}"
-                        t-on-click="() => state.selectedPresetId = preset.id"
+                        t-attf-class="{{ preset.id === this.state.selectedPresetId ? 'btn-primary' : 'btn-secondary' }}"
+                        t-on-click="() => this.state.selectedPresetId = preset.id"
                         t-out="preset.name" />
                 </div>
-                <div t-foreach="timedPresets"
+                <div t-foreach="this.timedPresets"
                     t-as="preset"
                     t-key="preset.id"
-                    t-if="preset.id === state.selectedPresetId">
+                    t-if="preset.id === this.state.selectedPresetId">
                     <div class="d-flex w-100 flex-wrap gap-2 mt-2">
                         <button class="btn flex-grow-1"
                             t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate"
-                            t-attf-class="{{ state.selectedDate === sqlDate ? 'btn-primary' : 'btn-secondary' }}"
+                            t-attf-class="{{ this.state.selectedDate === sqlDate ? 'btn-primary' : 'btn-secondary' }}"
                             t-att-class="{'o_colorlist_item_color_transparent_6': Object.values(preset.availabilities[sqlDate]).length === 0}"
-                            t-on-click="() => state.selectedDate = sqlDate"
-                            t-out="formatDate(sqlDate)" />
+                            t-on-click="() => this.state.selectedDate = sqlDate"
+                            t-out="this.formatDate(sqlDate)" />
                     </div>
                     <hr/>
                     <div class="w-100 mt-3">
-                        <div t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate" t-if="state.selectedDate === sqlDate" class="row">
+                        <div t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate" t-if="this.state.selectedDate === sqlDate" class="row">
                             <t t-set="slotByPeriod" t-value="Object.entries(this.getSlotsForDate(preset, sqlDate))"/>
                             <div t-foreach="slotByPeriod"
                                 t-as="entries"
@@ -38,7 +38,7 @@
                                         t-as="slot"
                                         t-key="slot_index"
                                         class="btn preset-slot-button"
-                                        t-attf-class="{{getSlotColor(slot, preset)}}"
+                                        t-attf-class="{{this.getSlotColor(slot, preset)}}"
                                         t-on-click="() => this.confirm(slot, preset)">
                                             <span t-out="slot.datetime.toFormat('HH:mm')" />
                                     </button>

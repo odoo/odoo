@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
     <t t-name="document.DocumentsListActionItem">
         <i
-            t-if="isVisible"
-            t-attf-class="#{icon} fa-fw me-2"
-            t-att-title="description"
-            t-on-click="onActionClicked"
+            t-if="this.isVisible"
+            t-attf-class="#{this.icon} fa-fw me-2"
+            t-att-title="this.description"
+            t-on-click="this.onActionClicked"
         />
     </t>
 </templates>

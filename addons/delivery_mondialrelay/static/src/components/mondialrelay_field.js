@@ -21,7 +21,7 @@ function corsIgnoredErrorHandler(env, error) {
 }
 
 export class MondialRelayField extends Component {
-    static template = xml`<div t-if="enabled" t-ref="root"/>`;
+    static template = xml`<div t-if="this.enabled" t-ref="root"/>`;
     static props = { ...standardFieldProps };
     setup() {
         this.root = useRef("root");

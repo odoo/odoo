@@ -67,8 +67,8 @@ export async function mountWithSearch(
 ) {
     class ComponentWithSearch extends Component {
         static template = xml`
-            <WithSearch t-props="withSearchProps" t-slot-scope="search">
-                <t t-component="component" t-props="getProps(search)"/>
+            <WithSearch t-props="this.withSearchProps" t-slot-scope="search">
+                <t t-component="this.component" t-props="this.getProps(search)"/>
             </WithSearch>
         `;
         static components = { WithSearch };

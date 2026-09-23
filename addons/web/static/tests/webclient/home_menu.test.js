@@ -1287,7 +1287,7 @@ test("a menu reload that changes the apps re-counts their badges", async () => {
     class Parent extends Component {
         static components = { HomeMenu };
         static props = {};
-        static template = xml`<HomeMenu t-props="state.props"/>`;
+        static template = xml`<HomeMenu t-props="this.state.props"/>`;
         /** @type {any} */
         state;
         setup() {
@@ -1318,7 +1318,7 @@ test("a re-render that leaves the grid alone keeps the keyboard selection", asyn
     class Parent extends Component {
         static components = { HomeMenu };
         static props = {};
-        static template = xml`<HomeMenu t-props="state.props"/>`;
+        static template = xml`<HomeMenu t-props="this.state.props"/>`;
         /** @type {any} */
         state;
         setup() {
@@ -2053,7 +2053,7 @@ test("metadata-only menu reload refreshes badge ownership", async () => {
     class Parent extends Component {
         static components = { HomeMenu };
         static props = {};
-        static template = xml`<HomeMenu t-props="state.props"/>`;
+        static template = xml`<HomeMenu t-props="this.state.props"/>`;
         /** @type {any} */
         state;
         setup() {

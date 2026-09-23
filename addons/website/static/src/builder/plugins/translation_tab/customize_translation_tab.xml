@@ -4,7 +4,7 @@
 <t t-name="website.CustomizeTranslationTab">
     <div class="o_customize_tab h-100">
         <div class="d-flex flex-column h-100">
-            <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+            <t t-foreach="this.optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
                 <OptionsContainer
                     snippetModel="optionsContainer.snippetModel"
                     editingElement="optionsContainer.element"

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="report_formula.AccountReportButtonsBar">
-        <t t-if="controller.buttons.length">
-            <t t-foreach="barButtons" t-as="barButton" t-key="barButton_index">
+        <t t-if="this.controller.buttons.length">
+            <t t-foreach="this.barButtons" t-as="barButton" t-key="barButton_index">
                 <button
                     t-att-class="'btn text-nowrap' + (barButton.disabled ? ' disabled' : '') + (barButton_first ? ' btn-primary' : ' btn-secondary')"
-                    t-on-click="(ev) => controller.buttonAction(ev, barButton)"
+                    t-on-click="(ev) => this.controller.buttonAction(ev, barButton)"
                 >
                     <t t-out="barButton.name"/>
                 </button>

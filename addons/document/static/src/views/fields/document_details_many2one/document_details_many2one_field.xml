@@ -3,11 +3,11 @@
 
     <t t-name="document.DocumentsDetailsMany2One">
         <span
-            t-if="props.readonly &amp;&amp; !value"
-            t-out="props.readonlyPlaceholder || props.placeholder"
+            t-if="this.props.readonly &amp;&amp; !this.value"
+            t-out="this.props.readonlyPlaceholder || this.props.placeholder"
             class="o_documents_details_panel_placeholder"
         />
-        <Many2OneField t-else="" t-props="fieldProps"/>
+        <Many2OneField t-else="" t-props="this.fieldProps"/>
     </t>
 
 </templates>

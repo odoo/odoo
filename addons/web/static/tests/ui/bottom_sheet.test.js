@@ -315,7 +315,7 @@ test("the sheet re-measures smaller when its content shrinks", async () => {
     `);
     class Child extends Component {
         static props = ["*"];
-        static template = xml`<div class="sheet-child" t-attf-style="height: {{props.h}}px"/>`;
+        static template = xml`<div class="sheet-child" t-attf-style="height: {{this.props.h}}px"/>`;
     }
     const sheet = await mountWithCleanup(BottomSheet, {
         props: { component: Child, componentProps: { h: 600 }, close: () => {} },

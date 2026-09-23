@@ -3,11 +3,11 @@
 
     <t t-name="iot.HeaderButton">
         <button type="button"
-                t-att-class="'btn btn-' + props.btn_class"
-                t-att-data-tooltip="props.btn_name"
-                t-att-aria-label="props.btn_name"
-                t-on-click.stop="onClick">
-            <t t-out='props.btn_name'/>
+                t-att-class="'btn btn-' + this.props.btn_class"
+                t-att-data-tooltip="this.props.btn_name"
+                t-att-aria-label="this.props.btn_name"
+                t-on-click.stop="this.onClick">
+            <t t-out='this.props.btn_name'/>
         </button>
     </t>
 

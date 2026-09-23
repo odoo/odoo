@@ -3,17 +3,17 @@
 
     <t t-name="web.RecordAutocomplete" >
         <AutoComplete
-            placeholder="props.placeholder"
-            value="props.value"
+            placeholder="this.props.placeholder"
+            value="this.props.value"
             autoSelect="true"
-            resetOnSelect="props.multiSelect"
-            class="props.className"
-            sources="sources"
-            onChange.bind="onChange"
+            resetOnSelect="this.props.multiSelect"
+            class="this.props.className"
+            sources="this.sources"
+            onChange.bind="this.onChange"
         >
             <t t-set-slot="option" t-slot-scope="optionScope">
-                <span t-if="isAvatarModel and optionScope.data.record" class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
-                    <img class="rounded me-1" t-att-src="avatarUrl(optionScope.data.record.id)" alt=""/>
+                <span t-if="this.isAvatarModel and optionScope.data.record" class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+                    <img class="rounded me-1" t-att-src="this.avatarUrl(optionScope.data.record.id)" alt=""/>
                     <t t-out="optionScope.label"/>
                 </span>
                 <t t-else="" t-out="optionScope.label"/>

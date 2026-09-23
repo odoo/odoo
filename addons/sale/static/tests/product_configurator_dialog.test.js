@@ -122,7 +122,7 @@ test("ProductCard is operable from the keyboard", async () => {
     const clicks = [];
     class Parent extends Component {
         static components = { ProductCard };
-        static template = xml`<ProductCard product="product" onClick="() => this.onClick()"/>`;
+        static template = xml`<ProductCard product="this.product" onClick="() => this.onClick()"/>`;
         static props = {};
         setup() {
             this.product = new ProductProduct({

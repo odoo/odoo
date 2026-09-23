@@ -5,22 +5,22 @@
             <attribute name="class" add="o_bank_reconciliation_kanban_renderer" separator=" "/>
         </xpath>
         <xpath expr="//div[@t-ref='root']" position="attributes">
-            <attribute name="t-attf-class" add="{{ bankReconciliation.chatterState.visible and !ui.isSmall ? 'o_bank_reconciliation_kanban_renderer_mobile' : ''}}" separator=" "/>
+            <attribute name="t-attf-class" add="{{ this.bankReconciliation.chatterState.visible and !this.ui.isSmall ? 'o_bank_reconciliation_kanban_renderer_mobile' : ''}}" separator=" "/>
         </xpath>
         <xpath expr="//t[@t-as='groupOrRecord']" position="before">
             <BankRecStatementSummary
-                t-if="hasStatementLine > 1"
-                label="totalJournalLabel"
-                amount="globalState.totalJournalAmount"
+                t-if="this.hasStatementLine > 1"
+                label="this.totalJournalLabel"
+                amount="this.globalState.totalJournalAmount"
                 action="() => this.actionOpenBankGL()"
-                journalId="globalState.journalId"
-                journalIsInvalid="globalState.totalIsInvalid"
+                journalId="this.globalState.journalId"
+                journalIsInvalid="this.globalState.totalIsInvalid"
             />
             <BankRecQuickCreate
-                t-if="isQuickCreateVisible"
-                resModel="globalState.resModel"
-                context="quickCreateContext"
-                quickCreateView="globalState.quickCreate.quickCreateView"
+                t-if="this.isQuickCreateVisible"
+                resModel="this.globalState.resModel"
+                context="this.quickCreateContext"
+                quickCreateView="this.globalState.quickCreate.quickCreateView"
                 onValidate="(record, mode) => this.validateQuickCreate(record, mode)"
                 onCancel="() => this.cancelQuickCreate()"
             />
@@ -28,23 +28,23 @@
 
         <xpath expr="//t[@t-else='']/KanbanRecord" position="replace">
             <BankRecStatementLine
-                archInfo="props.archInfo"
-                Compiler="props.Compiler"
-                canResequence="!isProcessing(groupOrRecord.record.id) and canResequenceRecords"
-                forceGlobalClick="props.forceGlobalClick"
-                groupByField="props.list.groupByField"
-                getSelection.bind="getSelection"
-                toggleSelection.bind="toggleSelection"
-                deleteRecord="props.deleteRecord"
+                archInfo="this.props.archInfo"
+                Compiler="this.props.Compiler"
+                canResequence="!this.isProcessing(groupOrRecord.record.id) and this.canResequenceRecords"
+                forceGlobalClick="this.props.forceGlobalClick"
+                groupByField="this.props.list.groupByField"
+                getSelection.bind="this.getSelection"
+                toggleSelection.bind="this.toggleSelection"
+                deleteRecord="this.props.deleteRecord"
                 archiveRecord="(record, active) => this.archiveRecord(record, active)"
-                openRecord="props.openRecord"
-                readonly="props.readonly"
+                openRecord="this.props.openRecord"
+                readonly="this.props.readonly"
                 record="groupOrRecord.record"
                 selectionAvailable="false"
             />
         </xpath>
         <xpath expr="//t[@t-else='']/BankRecStatementLine" position="before">
-            <t t-set="recordData" t-value="statementGroups?.[groupOrRecord.record.data.id]"/>
+            <t t-set="recordData" t-value="this.statementGroups?.[groupOrRecord.record.data.id]"/>
             <t t-if="recordData">
                 <BankRecStatementSummary
                     label="recordData.name"
@@ -56,14 +56,14 @@
         </xpath>
 
         <xpath expr="//div[hasclass('o_kanban_renderer')]" position="after">
-            <div t-if="bankReconciliation.chatterState.visible and !ui.isSmall"
+            <div t-if="this.bankReconciliation.chatterState.visible and !this.ui.isSmall"
                  class="o_bank_rec_widget_chatter_container o-mail-ChatterContainer o-aside d-flex flex-column border-start"
             >
                 <BankRecChatter
-                    statementLine="bankReconciliation.chatterState.statementLine"
-                    threadId="bankReconciliation.statementLineMoveId"
+                    statementLine="this.bankReconciliation.chatterState.statementLine"
+                    threadId="this.bankReconciliation.statementLineMoveId"
                     threadModel="'account.move'"
-                    isChatterAside="!ui.isSmall"
+                    isChatterAside="!this.ui.isSmall"
                     hasParentReloadOnActivityChanged="true"
                     hasParentReloadOnAttachmentsChanged="true"
                     isAttachmentBoxVisibleInitially="true"

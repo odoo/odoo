@@ -3,7 +3,7 @@
 
     <t t-inherit="web.views.ViewButton" t-inherit-mode="extension">
         <xpath expr="//t[@t-slot='contents']" position="after">
-            <ApprovalButton t-if="approvalGate" gate="approvalGate"/>
+            <ApprovalButton t-if="this.approvalGate" gate="this.approvalGate"/>
         </xpath>
     </t>
 

@@ -3,16 +3,16 @@
     <t t-name="report_formula.AccountReportFilterRoundingUnit">
         <Dropdown>
             <button class="btn btn-secondary">
-                <t t-out="roundingUnitName(this.controller.cachedFilterOptions['rounding_unit'])"/>
+                <t t-out="this.roundingUnitName(this.controller.cachedFilterOptions['rounding_unit'])"/>
             </button>
 
             <t t-set-slot="content">
-                <t t-foreach="controller.cachedFilterOptions.rounding_unit_names" t-as="roundingUnitValue" t-key="roundingUnitValue_index">
+                <t t-foreach="this.controller.cachedFilterOptions.rounding_unit_names" t-as="roundingUnitValue" t-key="roundingUnitValue_index">
                     <DropdownItem
-                        class="{ 'selected': (controller.cachedFilterOptions.rounding_unit == roundingUnitValue) }"
+                        class="{ 'selected': (this.controller.cachedFilterOptions.rounding_unit == roundingUnitValue) }"
                         onSelected="() => this.filterRoundingUnit(roundingUnitValue)"
                     >
-                        <t t-out="roundingUnitName(roundingUnitValue)"/>
+                        <t t-out="this.roundingUnitName(roundingUnitValue)"/>
                     </DropdownItem>
                 </t>
             </t>

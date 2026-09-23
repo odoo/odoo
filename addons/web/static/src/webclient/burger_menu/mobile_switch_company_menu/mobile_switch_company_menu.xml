@@ -3,17 +3,17 @@
 
 <t t-name="web.MobileSwitchCompanyMenu">
     <div class="o_burger_menu_companies p-3 pb-0">
-        <button t-if="hasLotsOfCompanies" type="button"
+        <button t-if="this.hasLotsOfCompanies" type="button"
             class="o_burger_menu_companies_toggle w-100 d-flex align-items-center border-0 bg-transparent p-0 text-start text-reset"
-            t-att-aria-expanded="state.isOpen ? 'true' : 'false'"
+            t-att-aria-expanded="this.state.isOpen ? 'true' : 'false'"
             t-on-click="() => this.toggleCollapsible()">
-            <i class="fa-solid me-2" style="width: 10px" t-att-class="{ 'fa-caret-right': !state.isOpen, 'fa-caret-down': state.isOpen }"/>
+            <i class="fa-solid me-2" style="width: 10px" t-att-class="{ 'fa-caret-right': !this.state.isOpen, 'fa-caret-down': this.state.isOpen }"/>
             <span class="mb-3 fs-4">Companies</span>
         </button>
         <div t-else="" class="w-100">
             <span class="mb-3 fs-4">Companies</span>
         </div>
-        <div t-if="show" class="mt-2">
+        <div t-if="this.show" class="mt-2">
             <t t-call="web.SwitchCompanyMenu.Items"/>
         </div>
     </div>

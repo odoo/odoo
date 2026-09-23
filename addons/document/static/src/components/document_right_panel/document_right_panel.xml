@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="document.DocumentsViews.RightPanel">
-        <div t-if="state.visible"
+        <div t-if="this.state.visible"
             class="o_document_chatter_container o-mail-ChatterContainer"
-            t-att-class="{'mt-2': isMobile, 'h-100 o-aside': !isMobile, 'd-flex flex-column' : !panelDisabled}"
+            t-att-class="{'mt-2': this.isMobile, 'h-100 o-aside': !this.isMobile, 'd-flex flex-column' : !this.panelDisabled}"
             t-ref="chatterContainer"
         >
-            <t t-if="panelDisabled" t-call="document.DocumentsViews.ChatterOverlay"/>
-            <DocumentsDetailsPanel t-if="!panelDisabled" record="state.previewedDocument?.record || state.focusedRecord" nbViewItems="props.nbViewItems" />
-            <Chatter t-if="state.focusedRecord?.data and documentService.userIsInternal"
-                threadId="typeof state.focusedRecord.data.id === 'number' and state.focusedRecord.data.id"
+            <t t-if="this.panelDisabled" t-call="document.DocumentsViews.ChatterOverlay"/>
+            <DocumentsDetailsPanel t-if="!this.panelDisabled" record="this.state.previewedDocument?.record || this.state.focusedRecord" nbViewItems="this.props.nbViewItems" />
+            <Chatter t-if="this.state.focusedRecord?.data and this.documentService.userIsInternal"
+                threadId="typeof this.state.focusedRecord.data.id === 'number' and this.state.focusedRecord.data.id"
                 threadModel="'document.document'"
-                isChatterAside="!isMobile"/>
+                isChatterAside="!this.isMobile"/>
         </div>
     </t>
 </templates>

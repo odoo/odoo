@@ -8,13 +8,13 @@
                     <h3>Table selection</h3>
                     <span>Could you please confirm your table number?<br/>Thanks a lot!</span>
                 </div>
-                <button class="btn btn-close" t-on-click="close"/>
+                <button class="btn btn-close" t-on-click="this.close"/>
             </div>
-            <select class="form-select form-select-lg mb-5" t-model="state.selectedTable">
+            <select class="form-select form-select-lg mb-5" t-model="this.state.selectedTable">
                 <option value="0">
                     Select a table
                 </option>
-                <t t-foreach="selfOrder.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
+                <t t-foreach="this.selfOrder.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
                     <option value="floor" disabled="true">
                         <t t-out="floor.name" />
                     </option>

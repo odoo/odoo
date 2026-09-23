@@ -195,9 +195,9 @@ export class SubscriptionManager {
 class ExpiredSubscriptionBlockUI extends Component {
     static props = {};
     static template = xml`
-        <t t-if="subscription.daysLeft &lt;= 0">
+        <t t-if="this.subscription.daysLeft &lt;= 0">
             <div class="o_expired_subscription_overlay position-absolute top-0 start-0 end-0 bottom-0 d-flex align-items-center justify-content-center">
-                <ExpirationPanel t-if="!subscription.sysadmin.replace"/>
+                <ExpirationPanel t-if="!this.subscription.sysadmin.replace"/>
                 <!-- Only daysLeft and the message's existence belong here.
                      Who may SEE a message is showMessage's job: it already
                      tells the reader's level (warningType) apart from the
@@ -205,7 +205,7 @@ class ExpiredSubscriptionBlockUI extends Component {
                      admin test here conflated the two and hid a user-audience
                      message from every non-admin reader exactly while the UI
                      was blocked. -->
-                <SysAdminPanel t-if="subscription.sysadmin.message"/>
+                <SysAdminPanel t-if="this.subscription.sysadmin.message"/>
             </div>
         </t>`;
     static components = { ExpirationPanel, SysAdminPanel };

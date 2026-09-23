@@ -24,7 +24,7 @@ beforeEach(() => {
 class Parent extends Component {
     static components = { DomainSelector };
     static template = xml`
-        <DomainSelector resModel="'partner'" domain="state.domain"
+        <DomainSelector resModel="'partner'" domain="this.state.domain"
             update="(d) => this.state.domain = d" isDebugMode="false" readonly="false"/>`;
     static props = ["*"];
     static startDomain = `["&", "&", ("foo", "=", "aaa"), ("foo", "=", "bbb"), ("foo", "=", "ccc")]`;

@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-name="l10n_mx_fleet_emission.EmissionStickerColorField">
         <span
-            t-if="value"
+            t-if="this.value"
             class="o_l10n_mx_emission_sticker badge rounded-1"
-            t-att-class="colorClass + ' o_l10n_mx_emission_sticker_' + props.size"
-            t-att-title="period ? string + ' · ' + period : string">
-            <t t-out="string" />
-            <span t-if="period" class="o_l10n_mx_emission_sticker_period ms-1 fw-normal">· <t t-out="period" /></span>
+            t-att-class="this.colorClass + ' o_l10n_mx_emission_sticker_' + this.props.size"
+            t-att-title="this.period ? this.string + ' · ' + this.period : this.string">
+            <t t-out="this.string" />
+            <span t-if="this.period" class="o_l10n_mx_emission_sticker_period ms-1 fw-normal">· <t t-out="this.period" /></span>
         </span>
     </t>
 </templates>

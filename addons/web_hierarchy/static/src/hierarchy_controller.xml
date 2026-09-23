@@ -2,24 +2,24 @@
 <templates>
     <t t-name="web_hierarchy.HierarchyButtons">
         <div class="d-flex o_grid_buttons">
-            <div class="me-2" t-if="props.archInfo.activeActions.create">
+            <div class="me-2" t-if="this.props.archInfo.activeActions.create">
                 <button class="btn btn-primary o_hierarchy_button_add"
                         type="button"
-                        t-on-click="props.createRecord">
+                        t-on-click="this.props.createRecord">
                     New
                 </button>
             </div>
         </div>
     </t>
     <t t-name="web_hierarchy.HierarchyView">
-        <ViewLayout t-props="chassisProps">
+        <ViewLayout t-props="this.chassisProps">
             <t t-set-slot="layout-buttons">
-                <t t-call="{{ props.buttonTemplate }}"/>
+                <t t-call="{{ this.props.buttonTemplate }}"/>
             </t>
-            <t t-component="props.Renderer"
-                model="model"
-                openRecord.bind="openRecord"
-                archInfo="props.archInfo"
+            <t t-component="this.props.Renderer"
+                model="this.model"
+                openRecord.bind="this.openRecord"
+                archInfo="this.props.archInfo"
             />
         </ViewLayout>
     </t>

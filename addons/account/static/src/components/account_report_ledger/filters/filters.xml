@@ -3,35 +3,35 @@
     <t t-inherit="report_formula.AccountReportFiltersCustomizable" t-inherit-mode="extension">
         <xpath expr="//div[@id='filter_comparison']/.." position="after">
             <!-- Journal filter -->
-            <t t-if="'journals' in controller.cachedFilterOptions">
+            <t t-if="'journals' in this.controller.cachedFilterOptions">
                 <div id="filter_journal">
                     <t t-call="account.AccountReportFilterJournal"/>
                 </div>
             </t>
 
             <!-- Account type filter -->
-            <t t-if="'account_type' in controller.cachedFilterOptions">
+            <t t-if="'account_type' in this.controller.cachedFilterOptions">
                 <div id="filter_account_type">
                     <t t-call="account.AccountReportFilterAccountType"/>
                 </div>
             </t>
 
             <!-- Analytic filter -->
-            <t t-if="controller.cachedUserGroups.analytic_accounting and controller.filters.show_analytic">
+            <t t-if="this.controller.cachedUserGroups.analytic_accounting and this.controller.filters.show_analytic">
                 <div id="filter_analytic" class="filter_analytic">
                     <t t-call="account.AccountReportFilterAnalytic"/>
                 </div>
             </t>
 
             <!-- Analytic groupby filter -->
-            <t t-if="hasAnalyticGroupbyFilter">
+            <t t-if="this.hasAnalyticGroupbyFilter">
                 <div id="filter_analytic_groupby" class="filter_analytic_groupby">
                     <t t-call="account.AccountReportFilterAnalyticGroupby"/>
                 </div>
             </t>
 
             <!-- Horizontal groups filter -->
-            <t t-if="controller.cachedFilterOptions.available_horizontal_groups.length > 0">
+            <t t-if="this.controller.cachedFilterOptions.available_horizontal_groups.length > 0">
                 <div id="filter_horizontal_groups">
                     <t t-call="account.AccountReportFilterHorizontalGroups"/>
                 </div>
@@ -39,21 +39,21 @@
         </xpath>
         <xpath expr="//div[@id='filter_variant']/.." position="after">
             <!-- Tax unit filter -->
-            <t t-if="'available_tax_units' in this.controller.cachedFilterOptions and controller.cachedFilterOptions.available_tax_units.length > 0">
+            <t t-if="'available_tax_units' in this.controller.cachedFilterOptions and this.controller.cachedFilterOptions.available_tax_units.length > 0">
                 <div id="filter_tax_unit">
                     <t t-call="account.AccountReportFilterTaxUnit"/>
                 </div>
             </t>
 
             <!-- Budget filter -->
-            <t t-if="'budgets' in controller.cachedFilterOptions">
+            <t t-if="'budgets' in this.controller.cachedFilterOptions">
                 <div id="filter_budget">
                     <t t-call="account.AccountReportFilterBudget"/>
                 </div>
             </t>
 
             <!-- User defined filter on journal items -->
-            <t t-if="'aml_ir_filters' in controller.cachedFilterOptions and controller.cachedFilterOptions.aml_ir_filters.length > 0">
+            <t t-if="'aml_ir_filters' in this.controller.cachedFilterOptions and this.controller.cachedFilterOptions.aml_ir_filters.length > 0">
                 <div id="filter_aml_ir_filters">
                     <t t-call="account.AccountReportAmlIrFilters"/>
                 </div>
@@ -63,11 +63,11 @@
 
     <t t-inherit="report_formula.AccountReportFilterDate" t-inherit-mode="extension">
         <xpath
-            expr="//t[@t-if=&quot;controller.cachedFilterOptions.date.mode === 'range'&quot;]/t[@t-call='report_formula.AccountReportFilterDateSelection']"
+            expr="//t[@t-if=&quot;this.controller.cachedFilterOptions.date.mode === 'range'&quot;]/t[@t-call='report_formula.AccountReportFilterDateSelection']"
             position="before"
         >
                     <DropdownItem
-                        t-if="shouldDisplayReturnPeriod"
+                        t-if="this.shouldDisplayReturnPeriod"
                         tag="'div'"
                         class="{
                             'd-flex justify-content-between date_filter date_filter_tax_period': true,
@@ -77,7 +77,7 @@
                             'data-period-type': 'return_period',
                             'data-mode': this.dateFilter.editing === 'return_period' ? 'edit' : 'view',
                         }"
-                        onSelected="() => this.selectDateFilter('return_period', controller.cachedFilterOptions.date.period_type != 'return_period')"
+                        onSelected="() => this.selectDateFilter('return_period', this.controller.cachedFilterOptions.date.period_type != 'return_period')"
                         closingMode="'none'"
                     >
                         <div class="filter_name pe-3">

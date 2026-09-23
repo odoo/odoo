@@ -2,7 +2,7 @@
 <templates>
 
     <t t-name="document.DocumentsUserFolderIdChar" >
-        <DocumentsSearchPanelUserFolderId onChange.bind="onChange" value="value" ulClass="props.ulClass"/>
+        <DocumentsSearchPanelUserFolderId onChange.bind="this.onChange" value="this.value" ulClass="this.props.ulClass"/>
     </t>
 
 </templates>

@@ -7,9 +7,9 @@
             <BuilderButton action="'setGridLayout'" id="'grid_mode'">Grid</BuilderButton>
             <BuilderButton action="'setColumnLayout'" id="'column_mode'">Column</BuilderButton>
         </BuilderButtonGroup>
-        <SelectNumberColumn t-if="isActiveItem('column_mode')"/>
+        <SelectNumberColumn t-if="this.isActiveItem('column_mode')"/>
     </BuilderRow>
-    <t t-if="isActiveItem('grid_mode')">
+    <t t-if="this.isActiveItem('grid_mode')">
         <AddElementOption level="1" applyTo="'.o_grid_mode'"/>
         <SpacingOption level="1" applyTo="'.o_grid_mode'"/>
     </t>

@@ -85,7 +85,7 @@ test("the crop area follows the preview's size, in source pixels", async () => {
         static props = {};
         static components = { BarcodeVideoScanner };
         static template = xml`
-            <div t-attf-style="width: {{ state.size }}px; height: {{ state.size }}px;">
+            <div t-attf-style="width: {{ this.state.size }}px; height: {{ this.state.size }}px;">
                 <BarcodeVideoScanner facingMode="'environment'"
                     onReady="() => this.ready.resolve()"
                     onResult="() => {}" onError="() => {}"/>

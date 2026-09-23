@@ -8,18 +8,18 @@
             <div class="d-flex flex-nowrap">
                 <select class="me-1" t-on-change="event => this.selectLanguage(event.target.value)">
                     <option
-                        t-foreach="LANGUAGES"
+                        t-foreach="this.LANGUAGES"
                         t-as="lang"
                         t-key="lang"
-                        t-att-selected="state.exampleLanguage === lang"
+                        t-att-selected="this.state.exampleLanguage === lang"
                         t-att-value="lang"
                         t-out="lang"
                     />
                 </select>
                 <button
                     class="btn primary d-flex flex-nowrap align-items-center"
-                    t-on-click="execute"
-                    t-att-disabled="state.exampleLanguage !== 'json'"
+                    t-on-click="this.execute"
+                    t-att-disabled="this.state.exampleLanguage !== 'json'"
                 >
                     <span>Run</span>
                     <i class="fa-solid fa-play ms-2" aria-hidden="true"></i>
@@ -28,51 +28,51 @@
         </div>
 
         <CodeEditor
-            mode="LANGUAGES[state.exampleLanguage]"
-            value="state.exampleLanguage === 'json' ? state.requestCode : state.exampleCode"
-            readonly="state.exampleLanguage !== 'json'"
+            mode="this.LANGUAGES[this.state.exampleLanguage]"
+            value="this.state.exampleLanguage === 'json' ? this.state.requestCode : this.state.exampleCode"
+            readonly="this.state.exampleLanguage !== 'json'"
             onChange="value => this.state.requestCode = value"
-            maxLines="maxLines"
+            maxLines="this.maxLines"
             theme="'monokai'"
             showLineNumbers="false"
         />
 
         <div class="mt-2 d-flex flex-nowrap align-items-center mb-1">
             <h4>Response</h4>
-            <span t-if="hasResponse and !state.response.error" class="badge success ms-1 mb-1">Success</span>
-            <span t-if="hasResponse and state.response.error" class="badge error ms-1 mb-1">Failed</span>
+            <span t-if="this.hasResponse and !this.state.response.error" class="badge success ms-1 mb-1">Success</span>
+            <span t-if="this.hasResponse and this.state.response.error" class="badge error ms-1 mb-1">Failed</span>
         </div>
 
-        <t t-if="hasResponse">
+        <t t-if="this.hasResponse">
             <CodeEditor
-                t-if="!state.response.error"
+                t-if="!this.state.response.error"
                 mode="'json'"
-                value="state.response.body"
+                value="this.state.response.body"
                 readonly="true"
-                maxLines="maxLines"
+                maxLines="this.maxLines"
                 theme="'monokai'"
                 showLineNumbers="false"
             />
             <div t-else="" class="alert error mt-1 d-flex flex-nowrap flex-column">
                 <h5 class="mb-2 d-flex flex-nowrap align-items-center">
                     <i class="pe-1 fa-solid fa-exclamation-triangle" aria-hidden="true"></i>
-                    <span>Error <t t-out="state.response.status"/> while executing request</span>
+                    <span>Error <t t-out="this.state.response.status"/> while executing request</span>
                 </h5>
-                <div t-if="state.showTraceback">
+                <div t-if="this.state.showTraceback">
                     <button
                         class="btn bg-100 position-absolute top-0 end-0 p-1"
                         t-ref="copyButton"
-                        t-on-click="onClickClipboard"
+                        t-on-click="this.onClickClipboard"
                     >
                         <span class="fa-solid fa-clipboard"/>
                     </button>
-                    <span t-out="errorTitle"/>
-                    <pre t-if="errorTraceback" class="p-2 mt-2" style="max-height: 500px" t-out="errorTraceback"/>
+                    <span t-out="this.errorTitle"/>
+                    <pre t-if="this.errorTraceback" class="p-2 mt-2" style="max-height: 500px" t-out="this.errorTraceback"/>
                 </div>
                 <button
                     class="btn btn-sm mt-2 align-self-center"
-                    t-on-click="toggleTraceback"
-                    t-out="state.showTraceback ? 'Hide Details' : 'Show Technical Details'"
+                    t-on-click="this.toggleTraceback"
+                    t-out="this.state.showTraceback ? 'Hide Details' : 'Show Technical Details'"
                 />
             </div>
         </t>
@@ -82,13 +82,13 @@
 
 <t t-name="api_doc.DocRequest.CodeEditor">
     <div class="o-doc-code-editor position-relative p-2 rounded w-100">
-        <t t-call="web.CodeEditor"></t>
+        <t t-call="web.CodeEditor"/>
         <button
             class="position-absolute p-1 top-0 end-0 d-flex align-items-center cursor-pointer"
-            t-on-click="copyToClipboard"
+            t-on-click="this.copyToClipboard"
             type="button"
         >
-            <i t-if="!state.copied" class="fa-solid fa-paste fs-6 text-light"/>
+            <i t-if="!this.state.copied" class="fa-solid fa-paste fs-6 text-light"/>
             <span t-else="" class="fs-6 text-light">Copied!</span>
         </button>
     </div>

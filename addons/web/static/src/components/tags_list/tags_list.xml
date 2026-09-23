@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.TagsList">
-        <t t-foreach="visibleTags" t-as="tag" t-key="tagKey(tag, tag_index)">
+        <t t-foreach="this.visibleTags" t-as="tag" t-key="this.tagKey(tag, tag_index)">
             <span
                 class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100"
                 t-att-class="{
@@ -19,7 +19,7 @@
             >
 
                 <span
-                    t-if="tag.img and props.displayText and tag.onDelete"
+                    t-if="tag.img and this.props.displayText and tag.onDelete"
                     class="o_avatar_backdrop position-absolute top-0 end-0 bottom-0 start-0 ms-n2 mt-n1 mb-n1 bg-view rounded border shadow opacity-0 opacity-100-hover"/>
 
                 <img
@@ -31,7 +31,7 @@
                 <i t-if="tag.icon" t-attf-class="p-1 {{ tag.icon }}" t-att-class="tag.className"/>
 
                 <div
-                    t-if="props.displayText"
+                    t-if="this.props.displayText"
                     class="o_tag_badge_text text-truncate"
                     t-att-class="{'position-relative ms-1' : tag.img}"
                     t-out="tag.text"/>
@@ -52,14 +52,14 @@
                 </a>
             </span>
         </t>
-        <span t-if="otherTags.length" class="o_m2m_avatar_empty rounded text-center fw-bold cursor-default" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo" t-on-click.stop="">
-            <span t-if="otherTags.length > 9" t-out="'9+'" />
-            <span t-else="" t-out="'+' + otherTags.length" />
+        <span t-if="this.otherTags.length" class="o_m2m_avatar_empty rounded text-center fw-bold cursor-default" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="this.tooltipInfo" t-on-click.stop="">
+            <span t-if="this.otherTags.length > 9" t-out="'9+'" />
+            <span t-else="" t-out="'+' + this.otherTags.length" />
         </span>
     </t>
 
     <t t-name="web.TagsList.Tooltip">
-        <t t-foreach="tags" t-as="tag" t-key="tag.resId or tag.id or tag_index">
+        <t t-foreach="this.tags" t-as="tag" t-key="tag.resId or tag.id or tag_index">
             <div t-out="tag.text"/>
         </t>
     </t>

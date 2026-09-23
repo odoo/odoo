@@ -4,7 +4,7 @@
     <t t-name="web.DefaultFooter">
         <span>
         <span class="fw-bolder text-primary">TIP</span> — search for
-        <t t-foreach="elements" t-as="element" t-key="element.namespace">
+        <t t-foreach="this.elements" t-as="element" t-key="element.namespace">
             <t t-if="!(element_first || element_last)">, </t>
             <t t-if="element_last and !element_first"> and </t>
             <button type="button" class="o_namespace btn btn-link text-primary p-0 border-0 align-baseline" t-on-click="() => this.onClick(element.namespace)">
@@ -25,7 +25,7 @@
         <div class="o_command_hotkey d-flex align-items-center justify-content-between px-4 py-2 cursor-pointer">
         <t t-slot="name"/>
         <span>
-            <t t-foreach="keysToPress" t-as="key" t-key="key_index">
+            <t t-foreach="this.keysToPress" t-as="key" t-key="key_index">
             <kbd t-out="key" class="d-inline-block px-3 py-1" />
             <span t-if="!key_last"> + </span>
             </t>

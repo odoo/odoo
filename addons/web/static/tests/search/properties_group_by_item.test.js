@@ -182,8 +182,8 @@ describe("what triggers the fetch", () => {
         class Parent extends Component {
             static components = { PropertiesGroupByItem };
             static template = xml`
-                <t t-out="state.tick"/>
-                <PropertiesGroupByItem item="item" onGroup="() => {}"/>`;
+                <t t-out="this.state.tick"/>
+                <PropertiesGroupByItem item="this.item" onGroup="() => {}"/>`;
             static props = ["*"];
             setup() {
                 this.item = { fieldName: "props", description: "Properties" };

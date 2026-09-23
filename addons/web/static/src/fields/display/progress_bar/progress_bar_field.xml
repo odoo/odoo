@@ -3,37 +3,37 @@
 
     <t t-name="web.ProgressBarField">
         <div class="o_progressbar w-100 d-flex align-items-center" t-ref="numpadDecimal">
-            <div t-if="props.title" class="o_progressbar_title text-nowrap pe-1"><t t-out="props.title"/></div>
-            <div class="o_progress align-middle overflow-hidden" role="progressbar" aria-valuemin="0" t-att-aria-valuemax="this.maxValue" t-att-aria-valuenow="this.currentValue" t-att-aria-label="props.title">
-                <div t-attf-class="{{ progressBarColorClass }} h-100" t-att-style="progressBarStyle"></div>
+            <div t-if="this.props.title" class="o_progressbar_title text-nowrap pe-1"><t t-out="this.props.title"/></div>
+            <div class="o_progress align-middle overflow-hidden" role="progressbar" aria-valuemin="0" t-att-aria-valuemax="this.maxValue" t-att-aria-valuenow="this.currentValue" t-att-aria-label="this.props.title">
+                <div t-attf-class="{{ this.progressBarColorClass }} h-100" t-att-style="this.progressBarStyle"></div>
             </div>
             <div class="o_progressbar_value d-flex">
                 <input
-                    t-if="isEditable and props.isCurrentValueEditable"
+                    t-if="this.isEditable and this.props.isCurrentValueEditable"
                     t-ref="currentValue"
                     class="o_input h-100 text-center"
                     type="text"
                     inputmode="decimal"
                     autocomplete="off"
-                    t-att-required="props.required"
-                    t-on-focus="onInputFocus"
-                    t-on-blur="onInputBlur"
+                    t-att-required="this.props.required"
+                    t-on-focus="this.onInputFocus"
+                    t-on-blur="this.onInputBlur"
                 />
-                <span t-else="" class="mx-1" t-out="formatCurrentValue(true)"/>
-                <span t-if="isPercentage">%</span>
+                <span t-else="" class="mx-1" t-out="this.formatCurrentValue(true)"/>
+                <span t-if="this.isPercentage">%</span>
                 <t t-else="">
                     /
                     <input
-                        t-if="canEditMaxValue"
+                        t-if="this.canEditMaxValue"
                         t-ref="maxValue"
                         class="o_input h-100 text-center"
                         type="text"
                         inputmode="decimal"
                         autocomplete="off"
-                        t-on-focus="onInputFocus"
-                        t-on-blur="onInputBlur"
+                        t-on-focus="this.onInputFocus"
+                        t-on-blur="this.onInputBlur"
                     />
-                    <span t-else="" class="mx-1" t-out="formatMaxValue(true)"/>
+                    <span t-else="" class="mx-1" t-out="this.formatMaxValue(true)"/>
                 </t>
             </div>
         </div>

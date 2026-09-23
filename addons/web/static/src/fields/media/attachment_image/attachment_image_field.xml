@@ -3,9 +3,9 @@
 
     <t t-name="web.AttachmentImageField">
         <div class="o_attachment_image">
-            <img t-if="props.record.data[props.name]"
-                t-attf-src="/web/image/{{ props.record.data[props.name].id }}/300x300?unique=1"
-                t-att-title="!!env.debug and props.record.data[props.name].display_name"
+            <img t-if="this.props.record.data[this.props.name]"
+                t-attf-src="/web/image/{{ this.props.record.data[this.props.name].id }}/300x300?unique=1"
+                t-att-title="!!this.env.debug and this.props.record.data[this.props.name].display_name"
                 alt="Image"/>
         </div>
     </t>

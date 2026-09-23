@@ -356,9 +356,9 @@ test("leaving while the camera is still starting releases it and reports nothing
         static props = ["*"];
         static components = { BarcodeVideoScanner };
         static template = xml`
-            <t t-if="state.scanning">
+            <t t-if="this.state.scanning">
                 <BarcodeVideoScanner facingMode="'environment'"
-                    onResult="() => {}" onError.bind="onError"/>
+                    onResult="() => {}" onError.bind="this.onError"/>
             </t>`;
         setup() {
             this.state = hostState = useState(hostState);

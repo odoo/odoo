@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.NotificationItem" t-inherit-mode="extension">
         <xpath expr="//*[@name='notificationBody']" position="replace">
-            <t t-if="props.rating">
+            <t t-if="this.props.rating">
                 <span>Rating:</span>
-                <img class="o-rating-preview-image ms-2" t-att-src="props.rating.rating_image_url" t-att-alt="props.rating.rating_text"/>
+                <img class="o-rating-preview-image ms-2" t-att-src="this.props.rating.rating_image_url" t-att-alt="this.props.rating.rating_text"/>
             </t>
             <t t-else="">$0</t>
         </xpath>

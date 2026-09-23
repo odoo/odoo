@@ -6,21 +6,21 @@
             <h1 class="display-6 pos-receipt-center-align">交易明細</h1>
             <div class="fs-2">
                 <span>訂單編號:</span>
-                <t t-out="order.name"/>
+                <t t-out="this.order.name"/>
             </div>
             <div class="fs-2">
                 <span>發票號碼:</span>
-                <t t-out="order.iis_number"/>
+                <t t-out="this.order.iis_number"/>
             </div>
             <div class="fs-2">
-                <span t-if="order.iis_carrier_num != '' and (order.iis_carrier_type == '' or order.iis_carrier_type == '1')">共通載具: </span>
-                <span t-if="order.iis_carrier_type == '2'">自然人憑證: </span>
-                <span t-if="order.iis_carrier_type == '3'">手機載具: </span>
-                <span><t t-out="order.iis_carrier_num"/></span>
+                <span t-if="this.order.iis_carrier_num != '' and (this.order.iis_carrier_type == '' or this.order.iis_carrier_type == '1')">共通載具: </span>
+                <span t-if="this.order.iis_carrier_type == '2'">自然人憑證: </span>
+                <span t-if="this.order.iis_carrier_type == '3'">手機載具: </span>
+                <span><t t-out="this.order.iis_carrier_num"/></span>
             </div>
             <div class="fs-2">
                 <span>結帳時間:</span>
-                <t t-out="order.iis_create_date"/>
+                <t t-out="this.order.iis_create_date"/>
             </div>
             <br/>
             <table class="table table-borderless fs-2">
@@ -33,18 +33,18 @@
                 </thead>
                 <tbody>
                     <t t-set="total_quantity" t-value="0"/>
-                    <t t-foreach="orderLines" t-as="line" t-key="line_index">
+                    <t t-foreach="this.orderLines" t-as="line" t-key="line_index">
                         <tr class="pos-receipt-left-align">
                             <td width="40%">
                                 <t t-out="line.product_id.display_name"/>
                             </td>
                             <td width="30%">
-                                <t t-out="formatCurrency(line.displayPriceUnitIncl)"/>
+                                <t t-out="this.formatCurrency(line.displayPriceUnitIncl)"/>
                                 *
                                 <t t-out="line.qty"/>
                             </td>
                             <td width="30%">
-                                <t t-out="formatCurrency(line.priceIncl)"/>
+                                <t t-out="this.formatCurrency(line.priceIncl)"/>
                                 <span> TX</span>
                             </td>
                         </tr>
@@ -60,20 +60,20 @@
                 </div>
                 <div class="fs-2">
                     <span>小計 </span>
-                    <t t-out="formatCurrency(order.l10n_tw_edi_invoice_amount-order.iis_tax_amount)" />
+                    <t t-out="this.formatCurrency(this.order.l10n_tw_edi_invoice_amount-this.order.iis_tax_amount)" />
                 </div>
                 <div class="fs-2">
                     <span>發票金額 </span>
-                    <t t-out="formatCurrency(order.l10n_tw_edi_invoice_amount)" />
+                    <t t-out="this.formatCurrency(this.order.l10n_tw_edi_invoice_amount)" />
                 </div>
-                <t t-foreach="paymentLines" t-as="line" t-key="line_index">
+                <t t-foreach="this.paymentLines" t-as="line" t-key="line_index">
                     <div class="fs-2">
                         <t t-out="line.payment_method_id.name" /> <t t-out="line.amount" />
                     </div>
                 </t>
                 <div class="fs-2">
                     <span>找零 </span>
-                    <t t-out="order.change" />
+                    <t t-out="this.order.change" />
                 </div>
             </div>
         </div>

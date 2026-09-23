@@ -3,11 +3,11 @@
     <t t-name="account.AccountReportFilterAccountType">
         <Dropdown>
             <button class="btn btn-secondary">
-                <i class="fa-solid fa-user me-1"/>Account: <t t-out="selectedAccountType"/>
+                <i class="fa-solid fa-user me-1"/>Account: <t t-out="this.selectedAccountType"/>
             </button>
 
             <t t-set-slot="content">
-                <t t-foreach="controller.cachedFilterOptions.account_type" t-as="accountTypeItem" t-key="accountTypeItem_index">
+                <t t-foreach="this.controller.cachedFilterOptions.account_type" t-as="accountTypeItem" t-key="accountTypeItem_index">
                     <DropdownItem
                         class="{ selected: accountTypeItem.selected }"
                         onSelected="() => this.filterClicked({ optionKey: 'account_type.' + accountTypeItem_index + '.selected', reload: true})"

@@ -185,7 +185,7 @@ test("close popover when owner component is unmounted", async () => {
     class DateTimeToggler extends Component {
         static components = { Child };
         static props = [];
-        static template = xml`<Child t-if="!state.hidden"/>`;
+        static template = xml`<Child t-if="!this.state.hidden"/>`;
 
         setup() {
             this.state = useState({
@@ -240,7 +240,7 @@ test("popover closed on owner unmount does not apply against the destroyed owner
     class DateTimeToggler extends Component {
         static components = { Child };
         static props = [];
-        static template = xml`<Child t-if="!state.hidden"/>`;
+        static template = xml`<Child t-if="!this.state.hidden"/>`;
 
         setup() {
             this.state = useState({ hidden: false });

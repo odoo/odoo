@@ -2,8 +2,8 @@
 <templates>
     <t t-name="document.FileViewer" t-inherit="web.FileViewer" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o-FileViewer-download')]" position="before">
-            <div t-attf-class="d-flex align-items-center flex-shrink-0 {{env.isSmall ? 'pe-2' : 'pe-4'}}">
-                <DocumentsAction folderId="folderId" targetRecords="[previewed.document?.record]" isPreview="true"/>
+            <div t-attf-class="d-flex align-items-center flex-shrink-0 {{this.env.isSmall ? 'pe-2' : 'pe-4'}}">
+                <DocumentsAction folderId="this.folderId" targetRecords="[this.previewed.document?.record]" isPreview="true"/>
             </div>
         </xpath>
         <xpath expr="//div[hasclass('o-FileViewer-download')]" position="replace"/>
@@ -20,14 +20,14 @@
             <attribute name="class" add="ps-1 text-white" separator=" "/>
         </xpath>
         <xpath expr="//div[hasclass('o-FileViewer-main')]" position="inside">
-            <t t-if="state.file.documentEmailContent">
+            <t t-if="this.state.file.documentEmailContent">
                 <div class="position-absolute top-50 start-50 text-muted opacity-25 fs-1 o_documents_watermark_file_viewer">EMAIL</div>
-                <iframe class="o-FileViewer-view o-isText o_text w-75 h-100 border-0" t-att-srcdoc="state.file.documentEmailContent" sandbox=""/>
+                <iframe class="o-FileViewer-view o-isText o_text w-75 h-100 border-0" t-att-srcdoc="this.state.file.documentEmailContent" sandbox=""/>
             </t>
         </xpath>
-        <xpath expr="//iframe[@t-if='state.file.isText']" position="replace">
-            <iframe t-if="state.file.isJson || state.file.isHtml" class="o-FileViewer-view o-isText o_text w-75 h-100 border-0" t-att-src="state.file.defaultSource" sandbox=""/>
-            <iframe t-elif="state.file.isMimetypeTextual" class="o-FileViewer-view o-isText o_text w-75 h-100 border-0" t-att-srcdoc="state.file.documentTextContent" sandbox=""/>
+        <xpath expr="//iframe[@t-if='this.state.file.isText']" position="replace">
+            <iframe t-if="this.state.file.isJson || this.state.file.isHtml" class="o-FileViewer-view o-isText o_text w-75 h-100 border-0" t-att-src="this.state.file.defaultSource" sandbox=""/>
+            <iframe t-elif="this.state.file.isMimetypeTextual" class="o-FileViewer-view o-isText o_text w-75 h-100 border-0" t-att-srcdoc="this.state.file.documentTextContent" sandbox=""/>
         </xpath>
     </t>
 </templates>

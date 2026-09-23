@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ParallaxOption">
-    <BuilderRow t-if="isActiveItem('toggle_bg_image_id') and !isActiveItem('toggle_bg_video_id')" label.translate="Scroll Effect" level="2" preview="false">
+    <BuilderRow t-if="this.isActiveItem('toggle_bg_image_id') and !this.isActiveItem('toggle_bg_video_id')" label.translate="Scroll Effect" level="2" preview="false">
         <BuilderSelect action="'setParallaxType'">
             <BuilderSelectItem actionValue="'none'">None</BuilderSelectItem>
             <BuilderSelectItem actionValue="'fixed'">Fixed</BuilderSelectItem>
@@ -13,7 +13,7 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderContext preview="false">
-        <BuilderRow t-if="isActiveItem('parallax_top_opt')" level="3" label.translate="Intensity">
+        <BuilderRow t-if="this.isActiveItem('parallax_top_opt')" level="3" label.translate="Intensity">
             <BuilderRange
                 dataAttributeAction="'scrollBackgroundRatio'"
                 min="0.15"
@@ -21,7 +21,7 @@
                 step="0.15"
             />
         </BuilderRow>
-        <BuilderRow t-if="isActiveItem('parallax_bottom_opt')" level="3" label.translate="Intensity">
+        <BuilderRow t-if="this.isActiveItem('parallax_bottom_opt')" level="3" label.translate="Intensity">
             <BuilderRange
                 dataAttributeAction="'scrollBackgroundRatio'"
                 min="-0.15"
@@ -29,7 +29,7 @@
                 step="0.15"
             />
         </BuilderRow>
-        <BuilderRow t-if="isActiveItem('parallax_zoom_in_opt')" level="3" label.translate="Intensity">
+        <BuilderRow t-if="this.isActiveItem('parallax_zoom_in_opt')" level="3" label.translate="Intensity">
             <BuilderRange
                 dataAttributeAction="'scrollBackgroundRatio'"
                 min="0.05"
@@ -37,7 +37,7 @@
                 step="0.05"
             />
         </BuilderRow>
-        <BuilderRow t-if="isActiveItem('parallax_zoom_out_opt')" level="3" label.translate="Intensity">
+        <BuilderRow t-if="this.isActiveItem('parallax_zoom_out_opt')" level="3" label.translate="Intensity">
             <BuilderRange
                 dataAttributeAction="'scrollBackgroundRatio'"
                 min="0.15"

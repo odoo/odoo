@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
     <t t-name="barcodes.BarcodeInput">
         <div class="input-group">
-            <input id="manual_barcode" t-model="state.barcode" type="text" name="barcode"
+            <input id="manual_barcode" t-model="this.state.barcode" type="text" name="barcode"
                     class="form-control" t-ref="manualBarcode"
-                    t-att-placeholder="props.placeholder" t-on-keydown="onKeydown"/>
-            <button class="input-group-text" t-att-disabled="!state.barcode.trim()"
+                    t-att-placeholder="this.props.placeholder" t-on-keydown="this.onKeydown"/>
+            <button class="input-group-text" t-att-disabled="!this.state.barcode.trim()"
                     t-on-click.prevent="() => this.submit()">
                 Apply
             </button>
@@ -18,7 +18,7 @@
         </Dialog>
         <Dialog position="inside">
             <t t-set-slot="footer">
-                <BarcodeInput onSubmit="props.onResult" placeholder="props.placeholder"/>
+                <BarcodeInput onSubmit="this.props.onResult" placeholder="this.props.placeholder"/>
             </t>
         </Dialog>
     </t>

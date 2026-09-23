@@ -52,7 +52,7 @@ test("mobile picker dialog is torn down with its owner", async () => {
     }
     class Parent extends Component {
         static components = { Host };
-        static template = xml`<Host t-if="state.show"/>`;
+        static template = xml`<Host t-if="this.state.show"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ show: true });
@@ -85,7 +85,7 @@ test("mobile picker app is torn down with its owner", async () => {
     }
     class Parent extends Component {
         static components = { Host };
-        static template = xml`<Host t-if="state.show"/>`;
+        static template = xml`<Host t-if="this.state.show"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ show: true });
@@ -301,7 +301,7 @@ test("external state search rebuilds the navigation grid", async () => {
     class Parent extends Component {
         static components = { EmojiPicker: Probe };
         static props = ["*"];
-        static template = xml`<EmojiPicker onSelect="() => {}" state="props.st"/>`;
+        static template = xml`<EmojiPicker onSelect="() => {}" state="this.props.st"/>`;
     }
     await mountWithCleanup(Parent, { props: { st: external } });
     await animationFrame();
@@ -390,7 +390,7 @@ test("an externally driven search brings the keyboard selection back in range", 
     class Parent extends Component {
         static components = { EmojiPicker: Probe };
         static props = ["*"];
-        static template = xml`<EmojiPicker onSelect="(codepoints) => this.props.onSelect(codepoints)" state="props.st"/>`;
+        static template = xml`<EmojiPicker onSelect="(codepoints) => this.props.onSelect(codepoints)" state="this.props.st"/>`;
     }
     await mountWithCleanup(Parent, {
         props: { st: external, onSelect: (codepoints) => expect.step(codepoints) },
@@ -425,7 +425,7 @@ test("the keyboard grid is rebuilt when the picker is resized", async () => {
         static props = ["*"];
         static components = { Probe };
         static template = xml`
-            <div t-attf-style="width: {{state.width}}px">
+            <div t-attf-style="width: {{this.state.width}}px">
                 <Probe onSelect="() => {}"/>
             </div>
         `;

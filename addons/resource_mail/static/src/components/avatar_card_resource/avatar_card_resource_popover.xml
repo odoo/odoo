@@ -2,20 +2,20 @@
 <templates xml:space="preserve">
  <t t-name="resource_mail.AvatarCardResourcePopover" t-inherit="mail.AvatarCardPopover">
  <xpath expr="//span[hasclass('o_avatar')]/img" position="attributes">
- <attribute name="t-attf-src">/web/image/{{ props.recordModel }}/{{ props.id }}/avatar_128</attribute>
+ <attribute name="t-attf-src">/web/image/{{ this.props.recordModel }}/{{ this.props.id }}/avatar_128</attribute>
  </xpath>
  <xpath expr="//span[hasclass('o_card_avatar_im_status')]" position="replace">
- <span t-if="record.user_id" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_user_im_status bg-inherit">
- <i t-if="record.im_status === 'online'" class="fa-solid fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
- <i t-elif="record.im_status === 'away'" class="fa-solid fa-circle text-warning" title="Idle" role="img" aria-label="User is idle"/>
- <i t-elif="record.im_status === 'busy'" class="fa-solid fa-minus-circle text-danger" title="Busy" role="img" aria-label="User is busy"/>
- <i t-elif="record.im_status === 'offline'" class="fa-regular fa-circle text-700" title="Offline" role="img" aria-label="User is offline"/>
- <i t-elif="record.im_status === 'bot'" class="fa-solid fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
- <i t-elif="!record.im_status" class="fa-solid fa-question-circle" title="No IM status available"/>
+ <span t-if="this.record.user_id" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_user_im_status bg-inherit">
+ <i t-if="this.record.im_status === 'online'" class="fa-solid fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
+ <i t-elif="this.record.im_status === 'away'" class="fa-solid fa-circle text-warning" title="Idle" role="img" aria-label="User is idle"/>
+ <i t-elif="this.record.im_status === 'busy'" class="fa-solid fa-minus-circle text-danger" title="Busy" role="img" aria-label="User is busy"/>
+ <i t-elif="this.record.im_status === 'offline'" class="fa-regular fa-circle text-700" title="Offline" role="img" aria-label="User is offline"/>
+ <i t-elif="this.record.im_status === 'bot'" class="fa-solid fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
+ <i t-elif="!this.record.im_status" class="fa-solid fa-question-circle" title="No IM status available"/>
  </span>
  </xpath>
  <xpath expr="//div[hasclass('o_avatar_card_buttons')]/button" position="attributes">
- <attribute name="t-if">record.user_id and !record.share</attribute>
+ <attribute name="t-if">this.record.user_id and !this.record.share</attribute>
  </xpath>
  </t>
 </templates>

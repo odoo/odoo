@@ -25,7 +25,7 @@ test("globals are installed", () => {
 
 test("counter increments per render when trace is on", async () => {
     class Probe extends Component {
-        static template = xml`<span><t t-out="state.tick"/></span>`;
+        static template = xml`<span><t t-out="this.state.tick"/></span>`;
         static props = {};
         setup() {
             useRenderCounter("probe");
@@ -47,7 +47,7 @@ test("counter increments per render when trace is on", async () => {
 
 test("counter is a no-op when trace is off", async () => {
     class Probe extends Component {
-        static template = xml`<span><t t-out="state.tick"/></span>`;
+        static template = xml`<span><t t-out="this.state.tick"/></span>`;
         static props = {};
         setup() {
             useRenderCounter("probe");

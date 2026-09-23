@@ -2,41 +2,41 @@
 <templates xml:space="preserve">
     <t t-name="document.component.PdfManager">
         <div role="dialog" class="modal d-block o_technical_modal o_dialog_split_tools position-fixed" tabindex="-1">
-            <div class='o_documents_pdf_manager' t-ref="root" t-att-class="{'pe-none': state.isSelecting}">
+            <div class='o_documents_pdf_manager' t-ref="root" t-att-class="{'pe-none': this.state.isSelecting}">
                 <div class="o_documents_pdf_manager_top_bar">
-                    <input type="file" t-ref="addFileInput" class="o_input_file o_hidden" accept="application/pdf" t-on-change.stop="onFileInputChange"/>
-                    <t t-if="env.isSmall" t-call="document.component.PdfManager.ButtonsMobile"/>
+                    <input type="file" t-ref="addFileInput" class="o_input_file o_hidden" accept="application/pdf" t-on-change.stop="this.onFileInputChange"/>
+                    <t t-if="this.env.isSmall" t-call="document.component.PdfManager.ButtonsMobile"/>
                     <span t-else="" class="o_pdf_global_buttons">
                         <div>
                             <t t-call="document.component.PdfManager.GlobalButtons"/>
                         </div>
                     </span>
                     <span class="pdf_manager_topbar_buttons_right">
-                        <span class="o_pdf_archive_menu me-2" t-on-click="onClickArchive" t-if="isDebugMode">
+                        <span class="o_pdf_archive_menu me-2" t-on-click="this.onClickArchive" t-if="this.isDebugMode">
                             <span>Archive original file(s) </span>
-                            <input class="ms-2 form-check-input mt-0" id="pdf_archive" type="checkbox" name="archive" t-att-checked="state.archive" t-att-disabled="state.viewedPage"/>
+                            <input class="ms-2 form-check-input mt-0" id="pdf_archive" type="checkbox" name="archive" t-att-checked="this.state.archive" t-att-disabled="this.state.viewedPage"/>
                         </span>
                         <button class="btn btn-danger me-2 o_pdf_manager_button text-uppercase"
-                            t-att-class="{'o_pdf_manager_button': !env.isSmall}"
+                            t-att-class="{'o_pdf_manager_button': !this.env.isSmall}"
                             aria-label="Move to trash"
                             title="Move to trash"
-                            t-att-disabled="state.uploadingLock || state.viewedPage"
-                            t-on-click.stop="onArchive">Delete
+                            t-att-disabled="this.state.uploadingLock || this.state.viewedPage"
+                            t-on-click.stop="this.onArchive">Delete
                         </button>
                     </span>
                 </div>
-                <div class="o_documents_pdf_page_preview" t-ref="pagePreview" t-att-class="{'z-0 pt-0 pb-0 h-0' : !state.viewedPage}" t-on-click="onClickExitPreview">
-                    <t t-if="state.viewedPage">
+                <div class="o_documents_pdf_page_preview" t-ref="pagePreview" t-att-class="{'z-0 pt-0 pb-0 h-0' : !this.state.viewedPage}" t-on-click="this.onClickExitPreview">
+                    <t t-if="this.state.viewedPage">
                         <div class="o_top_bar_previewer">
                             <div class="o_page_name d-flex justify-content-center align-items-center px-2 text-white opacity-75">
-                                <t t-out="state.viewedPageName"/>
+                                <t t-out="this.state.viewedPageName"/>
                             </div>
                             <div class="d-flex justify-content-center align-items-center me-3">
                                 <div class="o_page_index d-flex justify-content-center align-items-center px-2 text-white opacity-75">
-                                    <t t-out="state.viewedPageIndex + 1"/>/<t t-out="store.numberOfPages"/>
+                                    <t t-out="this.state.viewedPageIndex + 1"/>/<t t-out="this.store.numberOfPages"/>
                                 </div>
                                 <button class="o_delete_button d-flex justify-content-center align-items-center px-2 text-white opacity-75 h-100 btn fa-solid fa-trash-can" 
-                                    t-on-click="onArchive"
+                                    t-on-click="this.onArchive"
                                     title="Move this page to trash">
                                 </button>
                                 <button class="o_close_button d-flex justify-content-center align-items-center px-2 text-white opacity-75 h4 mb-0 h-100">
@@ -44,53 +44,53 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="o_navigation_left" t-if="state.viewedPageIndex !== 0">
-                            <i class="fa-solid fa-chevron-left ps-1 text-white display-6" role="button" t-on-click="onClickPrevious"/>
+                        <div class="o_navigation_left" t-if="this.state.viewedPageIndex !== 0">
+                            <i class="fa-solid fa-chevron-left ps-1 text-white display-6" role="button" t-on-click="this.onClickPrevious"/>
                         </div>
-                        <div class="o_navigation_right" t-if="state.viewedPageIndex !== store.numberOfPages - 1">
-                            <i class="fa-solid fa-chevron-right ps-1 text-white display-6" role="button" t-on-click="onClickNext"/>
+                        <div class="o_navigation_right" t-if="this.state.viewedPageIndex !== this.store.numberOfPages - 1">
+                            <i class="fa-solid fa-chevron-right ps-1 text-white display-6" role="button" t-on-click="this.onClickNext"/>
                         </div>
-                        <PdfPage pageId="state.viewedPage"
-                            canvas="previewCanvas"
+                        <PdfPage pageId="this.state.viewedPage"
+                            canvas="this.previewCanvas"
                             isPreview="true"
                             toRender="true"
                         />
                     </t>
                 </div>
-                <div class='o_documents_pdf_page_viewer' t-ref="pageViewer" t-att-class="{'pe-auto': state.isSelecting}">
+                <div class='o_documents_pdf_page_viewer' t-ref="pageViewer" t-att-class="{'pe-auto': this.state.isSelecting}">
                     <div
                         id="area_selection"
                         t-ref="selectionBox" 
-                        t-att-class="{ 'd-block' : state.isSelecting }"
-                        t-att-style="` left : ${state.selectionBoxArgs.left}; top : ${state.selectionBoxArgs.top}; width : ${state.selectionBoxArgs.width}; height : ${state.selectionBoxArgs.height}; `"
+                        t-att-class="{ 'd-block' : this.state.isSelecting }"
+                        t-att-style="` left : ${this.state.selectionBoxArgs.left}; top : ${this.state.selectionBoxArgs.top}; width : ${this.state.selectionBoxArgs.width}; height : ${this.state.selectionBoxArgs.height}; `"
                     />
-                    <t t-foreach="store.groupIds" t-as="groupId" t-key="groupId">
-                        <t t-foreach="store.groupData[groupId].pageIds" t-as="pageId" t-key="pageId">
+                    <t t-foreach="this.store.groupIds" t-as="groupId" t-key="groupId">
+                        <t t-foreach="this.store.groupData[groupId].pageIds" t-as="pageId" t-key="pageId">
                             <div class="d-flex flex-md-row flex-column align-items-md-start align-items-center">
-                                <div class="o_documents_pdf_page_frame" t-key="'div_' + pageId" t-att-class="{'pe-none': state.isSelecting}">
+                                <div class="o_documents_pdf_page_frame" t-key="'div_' + pageId" t-att-class="{'pe-none': this.state.isSelecting}">
                                     <PdfPage
-                                        canvas="state.pageCanvases[pageId].canvas"
+                                        canvas="this.state.pageCanvases[pageId].canvas"
                                         isPreview="false"
-                                        isSelected="store.pages[pageId].isSelected"
-                                        isFocused="store.focusedPage === pageId"
+                                        isSelected="this.store.pages[pageId].isSelected"
+                                        isFocused="this.store.focusedPage === pageId"
                                         pageId="pageId"
-                                        onPageClicked.bind="onClickPage"
-                                        onPageDragged.bind="onPageDragStart"
-                                        onPageDropped.bind="onPageDrop"
-                                        onSelectClicked.bind="onSelectClicked"
+                                        onPageClicked.bind="this.onClickPage"
+                                        onPageDragged.bind="this.onPageDragStart"
+                                        onPageDropped.bind="this.onPageDrop"
+                                        onSelectClicked.bind="this.onSelectClicked"
                                     />
                                     <div t-if="pageId_first" class="o_pdf_group_name_wrapper">
                                         <PdfGroupName groupId="groupId"
-                                            name="store.groupData[groupId].name"
-                                            onEditName.bind="onEditName"
-                                            onToggleEdit.bind="onToggleEdit"
-                                            onGroupNameClicked.bind="onClickGroupName"
-                                            edit="groupId === state.edit"
+                                            name="this.store.groupData[groupId].name"
+                                            onEditName.bind="this.onEditName"
+                                            onToggleEdit.bind="this.onToggleEdit"
+                                            onGroupNameClicked.bind="this.onClickGroupName"
+                                            edit="groupId === this.state.edit"
                                         />
                                     </div>
                                 </div>
                                 <div t-if="!(groupId_last and pageId_last)" class="o_page_splitter_wrapper"
-                                    t-att-class="{ 'o_pdf_separator_selected': pageId_last, 'pe-none': state.isSelecting}"
+                                    t-att-class="{ 'o_pdf_separator_selected': pageId_last, 'pe-none': this.state.isSelecting}"
                                     t-on-click.stop="() => this.onClickPageSeparator(pageId, groupId)"
                                 >
                                     <div class="o_page_splitter"/>
@@ -105,42 +105,42 @@
     </t>
 
     <t t-name="document.component.PdfManager.GlobalButtons">
-        <t t-set="isMobile" t-value="env.isSmall"/>
+        <t t-set="isMobile" t-value="this.env.isSmall"/>
         <button class="btn btn-primary o_pdf_manager_button"
             t-att-class="{'dropdown-item': isMobile, 'm-0': isMobile, 'h-auto': isMobile}"
             title="Split selected pages"
-            t-att-disabled="state.uploadingLock || state.viewedPage"
-            t-on-click.stop="onClickSplit"
+            t-att-disabled="this.state.uploadingLock || this.state.viewedPage"
+            t-on-click.stop="this.onClickSplit"
             data-hotkey="s"
         >
             Split
-            <span t-if="state.uploadingLock" class="fa-solid fa-circle-notch fa-spin"/>
+            <span t-if="this.state.uploadingLock" class="fa-solid fa-circle-notch fa-spin"/>
         </button>
         <button class="btn btn-secondary o_pdf_manager_button text-uppercase"
             t-att-class="{'dropdown-item': isMobile, 'm-0': isMobile, 'h-auto': isMobile}"
             title="Close split tools"
-            t-att-disabled="state.uploadingLock || state.viewedPage"
-            t-on-click.stop="onClickExit"
+            t-att-disabled="this.state.uploadingLock || this.state.viewedPage"
+            t-on-click.stop="this.onClickExit"
         >
             Close
         </button>
         <button class="btn btn-secondary o_pdf_manager_button text-uppercase"
             t-att-class="{'dropdown-item': isMobile, 'm-0': isMobile, 'h-auto': isMobile}"
             title="Add new file"
-            t-att-disabled="state.uploadingLock || state.viewedPage"
-            t-on-click.stop="onClickGlobalAdd"
+            t-att-disabled="this.state.uploadingLock || this.state.viewedPage"
+            t-on-click.stop="this.onClickGlobalAdd"
             data-hotkey="f"
         >
             Add File
         </button>
-        <t t-foreach="props.embeddedActions" t-as="embeddedAction" t-key="embeddedAction.id">
+        <t t-foreach="this.props.embeddedActions" t-as="embeddedAction" t-key="embeddedAction.id">
             <t t-set="hotkey" t-value="embeddedAction_index lt 9 ? `shift+${embeddedAction_index + 1}` : undefined"/>
             <button class="btn btn-secondary o_pdf_manager_button text-uppercase"
                 t-att-class="{'dropdown-item': isMobile, 'm-0': isMobile, 'h-auto': isMobile}"
                 t-on-click.stop="(ev) => this.onClickEmbeddedAction(embeddedAction.id)"
                 t-out="embeddedAction.name"
                 t-att-data-hotkey="hotkey"
-                t-att-disabled="state.uploadingLock || state.viewedPage"/>
+                t-att-disabled="this.state.uploadingLock || this.state.viewedPage"/>
         </t>
     </t>
 

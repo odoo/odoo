@@ -9,9 +9,9 @@
         <i t-if="type === 'folder'" class="fa-regular fa-folder ms-1" title="Folder"/>
         <i t-elif="type === 'url'" class="fa-solid fa-link ms-1" title="Link"/>
         <i t-elif="type === 'binary' and mimetype" class="o_documents_mimetype_icon o_image" t-att-data-mimetype="mimetype" t-att-title="mimetype"/>
-        <div t-elif="this.props.record.isRequest?.()" t-on-click.stop.prevent="onClickDocumentsRequest" class="fa-solid fa-upload text-muted ms-1 mt-1"
+        <div t-elif="this.props.record.isRequest?.()" t-on-click.stop.prevent="this.onClickDocumentsRequest" class="fa-solid fa-upload text-muted ms-1 mt-1"
             role="button" tabindex="0" aria-label="Upload the requested file">
-            <input type="file" class="o_input_file o_hidden" t-ref="fileInput" t-on-change.stop.prevent="onReplaceDocument" t-on-click.stop="() => {}"/>
+            <input type="file" class="o_input_file o_hidden" t-ref="fileInput" t-on-change.stop.prevent="this.onReplaceDocument" t-on-click.stop="() => {}"/>
         </div>
         <i t-else="" class="fa-regular fa-file ms-1" title="File"/>
     </t>

@@ -27,7 +27,7 @@ const actionRegistry = registry.category("actions");
 class TestClientAction extends Component {
     static template = xml`
         <div class="test_client_action">
-            ClientAction_<t t-out="props.action.params?.description"/>
+            ClientAction_<t t-out="this.props.action.params?.description"/>
         </div>`;
     static props = ["*"];
     setup() {
@@ -271,7 +271,7 @@ test("ClientAction receives breadcrumbs and exports title", async () => {
     expect.assertions(4);
 
     class ClientAction extends Component {
-        static template = xml`<div class="my_action" t-on-click="onClick">client action</div>`;
+        static template = xml`<div class="my_action" t-on-click="this.onClick">client action</div>`;
         static props = ["*"];
         setup() {
             this.breadcrumbTitle = "myAction";
@@ -327,7 +327,7 @@ test("ClientAction with extractProps", async () => {
         },
     ]);
     class ClientAction extends Component {
-        static template = xml`<div class="my_client_action" t-out="props.myProp"/>`;
+        static template = xml`<div class="my_client_action" t-out="this.props.myProp"/>`;
         static props = ["*"];
         static extractProps(/** @type {any} */ action) {
             return { myProp: action.params.my_prop };

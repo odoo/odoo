@@ -16,7 +16,7 @@
                     <div class="d-flex justify-content-center align-items-center my-auto me-2 position-relative gradient-angle-knob"
                         t-ref="gradientAngleKnob"
                         t-attf-style="--angle: #{this.state.angle}deg;"
-                        t-on-mousedown="onKnobMouseDown">
+                        t-on-mousedown="this.onKnobMouseDown">
                         <div class="position-absolute gradient-angle-thumb"></div>
                     </div>
                     <div class="o_color_gradient_input d-flex align-items-center">
@@ -26,7 +26,7 @@
                             min="0"
                             max="360"
                             t-att-value="this.state.angle"
-                            t-on-change="onAngleChange"
+                            t-on-change="this.onAngleChange"
                         />
                         <label class="flex-grow-0 ms-1 mb-0">deg</label>
                     </div>
@@ -127,13 +127,13 @@
             </div>
 
             <ColorPicker
-                onColorSelect.bind="onColorChange"
-                onColorPreview.bind="onColorPreview"
-                setOnCloseCallback.bind="props.setOnCloseCallback"
-                setOperationCallbacks.bind="props.setOperationCallbacks"
+                onColorSelect.bind="this.onColorChange"
+                onColorPreview.bind="this.onColorPreview"
+                setOnCloseCallback.bind="this.props.setOnCloseCallback"
+                setOperationCallbacks.bind="this.props.setOperationCallbacks"
                 defaultColor="this.currentColorHex"
                 selectedColor="this.currentColorHex"
-                noTransparency="props.noTransparency"
+                noTransparency="this.props.noTransparency"
             />
         </div>
     </t>

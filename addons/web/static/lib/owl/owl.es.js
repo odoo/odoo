@@ -4644,6 +4644,7 @@ class CodeGenerator {
         if (ast.context) {
             ctxVar = generateId("ctx");
             this.addLine(`let ${ctxVar} = ${compileExpr(ast.context)};`);
+            this.addLine(`${ctxVar} = Object.assign(Object.create(${ctxVar}), { this: ${ctxVar} });`);
         }
         const isDynamic = INTERP_REGEXP.test(ast.name);
         const subTemplate = isDynamic ? interpolate(ast.name) : "`" + ast.name + "`";
@@ -5401,7 +5402,21 @@ function parseTCall(node, ctx) {
             };
         }
     }
-    const body = parseChildren(node, ctx);
+    const params = [];
+    for (const attributeName of node.getAttributeNames()) {
+        if (!attributeName.startsWith("t-")) {
+            const translated = attributeName.endsWith(".translate");
+            params.push({
+                type: 6 /* TSet */,
+                name: translated ? attributeName.slice(0, -".translate".length) : attributeName,
+                value: translated ? null : node.getAttribute(attributeName),
+                defaultValue: translated ? node.getAttribute(attributeName) : null,
+                body: null,
+                hasNoRepresentation: true,
+            });
+        }
+    }
+    const body = [...params, ...parseChildren(node, ctx)];
     return {
         type: 7 /* TCall */,
         name: subTemplate,
@@ -6343,6 +6358,6 @@ TemplateSet.prototype._compileTemplate = function _compileTemplate(name, templat
 export { App, Component, EventBus, OwlError, __info__, batched, blockDom, htmlEscape, loadFile, markRaw, markup, mount, onError, onMounted, onPatched, onRendered, onWillDestroy, onWillPatch, onWillRender, onWillStart, onWillUnmount, onWillUpdateProps, reactive, status, toRaw, useChildSubEnv, useComponent, useEffect, useEnv, useExternalListener, useRef, useState, useSubEnv, validate, validateType, whenReady, xml };
 
 
-__info__.date = '2026-09-22T23:28:36.057Z';
-__info__.hash = '42a915b';
+__info__.date = '2026-09-23T02:59:43.894Z';
+__info__.hash = '1be3eb1';
 __info__.url = 'https://github.com/odoo/owl';

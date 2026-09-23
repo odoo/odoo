@@ -7,7 +7,7 @@
         <xpath expr="//section" position="attributes">
             <attribute name="t-att-data-section-id">section.id</attribute>
         </xpath>
-        <xpath expr="//button[@t-on-click='toggleSidebar']" position="replace"/>
+        <xpath expr="//button[@t-on-click='this.toggleSidebar']" position="replace"/>
         <xpath expr="//header" position="replace"/>
     </t>
 
@@ -51,7 +51,7 @@
                     <div class="ms-auto">
                         <i t-if="value.shortcut_document_id" class="o_documents_search_panel_section_edit me-1 fa-solid fa-up-right-from-square"
                                 title="This is a shortcut"/>
-                        <span t-if="isUploadingInFolder(valueId)" class="fa-solid fa-circle-notch fa-spin"/>
+                        <span t-if="this.isUploadingInFolder(valueId)" class="fa-solid fa-circle-notch fa-spin"/>
                     </div>
                 </div>
             </div>
@@ -91,13 +91,13 @@
 
     <t t-name="document.DocumentsSearchPanelItemSettingsPopover">
         <div class="o_search_panel_value_edit list-group">
-            <a t-if="props.createChildEnabled" t-on-click.stop.prevent="props.onCreateChild" class="o_search_panel_value_edit_create py-1 list-group-item list-group-item-action row d-flex justify-content-between align-items-center g-0 cursor-pointer">
+            <a t-if="this.props.createChildEnabled" t-on-click.stop.prevent="this.props.onCreateChild" class="o_search_panel_value_edit_create py-1 list-group-item list-group-item-action row d-flex justify-content-between align-items-center g-0 cursor-pointer">
                 New Folder
             </a>
-            <a t-if="props.isEditable" t-on-click.stop.prevent="props.onEdit" class="o_search_panel_value_edit_edit py-1 list-group-item list-group-item-action row d-flex justify-content-between align-items-center g-0 cursor-pointer">
+            <a t-if="this.props.isEditable" t-on-click.stop.prevent="this.props.onEdit" class="o_search_panel_value_edit_edit py-1 list-group-item list-group-item-action row d-flex justify-content-between align-items-center g-0 cursor-pointer">
                 Edit
             </a>
-            <a t-if="props.isShareable" t-on-click.stop.prevent="props.onShare" class="o_search_panel_value_share py-1 list-group-item list-group-item-action row d-flex justify-content-between align-items-center g-0 cursor-pointer">
+            <a t-if="this.props.isShareable" t-on-click.stop.prevent="this.props.onShare" class="o_search_panel_value_share py-1 list-group-item list-group-item-action row d-flex justify-content-between align-items-center g-0 cursor-pointer">
                 Share
             </a>
         </div>

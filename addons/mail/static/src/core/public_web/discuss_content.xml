@@ -2,60 +2,60 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.DiscussContent">
-    <t t-set="partitionedActions" t-value="threadActions.partition"/>
+    <t t-set="partitionedActions" t-value="this.threadActions.partition"/>
     <div class="o-mail-DiscussContent d-flex flex-column h-100 w-100 overflow-auto o-scrollbar-thin" t-ref="root">
         <div class="o-mail-DiscussContent-header py-1 ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-secondary gap-1 z-1 flex-grow-0" t-ref="header">
-            <t t-if="thread">
-                <div t-if="showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
-                    <img class="rounded-2 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
-                    <FileUploader t-if="isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
+            <t t-if="this.thread">
+                <div t-if="this.showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
+                    <img class="rounded-2 object-fit-cover" t-att-src="this.thread.parent_channel_id?.avatarUrl ?? this.thread.avatarUrl" alt="Thread Image"/>
+                    <FileUploader t-if="this.isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                         <t t-set-slot="toggler">
                             <a href="#" class="position-absolute z-1 h-100 w-100 rounded-2 start-0 bottom-0" title="Upload Avatar">
                                 <i class="position-absolute top-50 start-50 fa-solid fa-pencil fa-sm text-white"/>
                             </a>
                         </t>
                     </FileUploader>
-                    <ImStatus t-if="thread.correspondent and showImStatus" className="'o-mail-DiscussContent-headerImStatus position-absolute'" member="thread.correspondent"/>
+                    <ImStatus t-if="this.thread.correspondent and this.showImStatus" className="'o-mail-DiscussContent-headerImStatus position-absolute'" member="this.thread.correspondent"/>
                 </div>
                 <t t-else="">
-                    <ThreadIcon className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="thread"/>
+                    <ThreadIcon className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="this.thread"/>
                 </t>
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-1">
-                    <div t-if="thread.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
-                        <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-out="thread.parent_channel_id.displayName" t-on-click="() => this.thread?.parent_channel_id?.open({ focus: true })"/>
+                    <div t-if="this.thread.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
+                        <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-out="this.thread.parent_channel_id.displayName" t-on-click="() => this.thread?.parent_channel_id?.open({ focus: true })"/>
                         <i class="oi oi-chevron-right o-xsmaller mx-1"/>
                     </div>
                     <AutoresizeInput
                         className="'o-mail-DiscussContent-threadName fw-bold flex-shrink-1 py-0 fs-4'"
-                        enabled="thread.is_editable or thread.channel_type === 'chat'"
-                        onValidate.bind="renameThread"
-                        value="thread.displayName || ''"
+                        enabled="this.thread.is_editable or this.thread.channel_type === 'chat'"
+                        onValidate.bind="this.renameThread"
+                        value="this.thread.displayName || ''"
                     />
-                    <t t-if="thread.allowDescription and (thread.is_editable or (!thread.is_editable and thread.description))">
+                    <t t-if="this.thread.allowDescription and (this.thread.is_editable or (!this.thread.is_editable and this.thread.description))">
                         <div class="flex-shrink-0 mx-1 py-2 border-start"/>
                         <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                         <AutoresizeInput
                             className="'o-mail-DiscussContent-threadDescription flex-shrink-1 small pt-1'"
-                            enabled="thread.is_editable"
-                            onValidate.bind="updateThreadDescription"
-                            placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
-                            value="thread.description or ''"
+                            enabled="this.thread.is_editable"
+                            onValidate.bind="this.updateThreadDescription"
+                            placeholder="this.thread.is_editable ? autogrowDescriptionPlaceholder : ''"
+                            value="this.thread.description or ''"
                         />
                     </t>
                     <div class="ms-1 flex-grow-1"/>
                     <div class="pe-3 flex-shrink-0">
-                        <ActionList actions="[partitionedActions.quick, partitionedActions.other, ...partitionedActions.group.slice().reverse()]" inline="true" odooControlPanelSwitchStyle="true" thread="thread"/>
+                        <ActionList actions="[partitionedActions.quick, partitionedActions.other, ...partitionedActions.group.slice().reverse()]" inline="true" odooControlPanelSwitchStyle="true" thread="this.thread"/>
                     </div>
                 </div>
-                <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
-                    <img class="o-mail-DiscussContent-selfAvatar ms-3 me-1 rounded-3 object-fit-cover flex-shrink-0 smaller" alt="Avatar" t-att-src="store.self.avatarUrl"/>
+                <div t-if="this.store.inPublicPage and !this.ui.isSmall" class="d-flex align-items-center">
+                    <img class="o-mail-DiscussContent-selfAvatar ms-3 me-1 rounded-3 object-fit-cover flex-shrink-0 smaller" alt="Avatar" t-att-src="this.store.self.avatarUrl"/>
                     <div class="fw-bold flex-shrink-1 text-dark">
-                        <t t-if="store.self_partner" t-out="store.self.name"/>
+                        <t t-if="this.store.self_partner" t-out="this.store.self.name"/>
                         <t t-else="">
                             <AutoresizeInput
                                 className="'py-1'"
-                                onValidate.bind="renameGuest"
-                                value="store.self.name"
+                                onValidate.bind="this.renameGuest"
+                                value="this.store.self.name"
                             />
                         </t>
                     </div>
@@ -63,19 +63,19 @@
             </t>
         </div>
         <div class="o-mail-DiscussContent-main d-flex overflow-hidden flex-grow-1" t-ref="main">
-            <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>
+            <t t-if="this.ui.isSmall" t-call="mail.Discuss.loading"/>
             <div class="o-mail-DiscussContent-core overflow-auto o-scrollbar-thin d-flex flex-grow-1 w-100" t-ref="core">
                 <t name="core-content">
-                    <t t-if="thread">
-                        <div t-if="!ui.isSmall or !threadActions.activeAction?.actionPanelComponentCondition" class="d-flex flex-column flex-grow-1 bg-inherit o-min-width-0">
-                            <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" autofocus="thread.composerDisabled"/></t>
-                            <Composer t-if="thread.model !== 'mail.box' or thread.composer.replyToMessage" t-key="thread.localId" composer="thread.composer" autofocus="!thread.composerDisabled" onDiscardCallback="() => (thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="root" type="thread.composer.replyToMessage ? (thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
+                    <t t-if="this.thread">
+                        <div t-if="!this.ui.isSmall or !this.threadActions.activeAction?.actionPanelComponentCondition" class="d-flex flex-column flex-grow-1 bg-inherit o-min-width-0">
+                            <t name="thread"><Thread thread="this.thread" t-key="this.thread.localId" jumpPresent="this.state.jumpThreadPresent" autofocus="this.thread.composerDisabled"/></t>
+                            <Composer t-if="this.thread.model !== 'mail.box' or this.thread.composer.replyToMessage" t-key="this.thread.localId" composer="this.thread.composer" autofocus="!this.thread.composerDisabled" onDiscardCallback="() => (this.thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="this.root" type="this.thread.composer.replyToMessage ? (this.thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
                         </div>
-                        <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-secondary flex-shrink-0" t-att-class="{ 'w-100': ui.isSmall }">
-                            <t t-component="threadActions.activeAction.actionPanelComponent" thread="thread" t-props="threadActions.activeAction.actionPanelComponentProps"/>
+                        <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.threadActions.activeAction.panelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-secondary flex-shrink-0" t-att-class="{ 'w-100': this.ui.isSmall }">
+                            <t t-component="this.threadActions.activeAction.actionPanelComponent" thread="this.thread" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>
                         </div>
                     </t>
-                    <div t-elif="(!ui.isSmall or store.discuss.activeTab === 'notification') and store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100">
+                    <div t-elif="(!this.ui.isSmall or this.store.discuss.activeTab === 'notification') and this.store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100">
                         <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
                     </div>
                 </t>

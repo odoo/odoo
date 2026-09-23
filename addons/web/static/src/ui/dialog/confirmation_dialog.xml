@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
   <t t-name="web.ConfirmationDialog">
-    <Dialog size="'md'" title="props.title" modalRef="modalRef">
-      <p t-out="props.body" class="text-prewrap"/>
+    <Dialog size="'md'" title="this.props.title" modalRef="this.modalRef">
+      <p t-out="this.props.body" class="text-prewrap"/>
       <t t-set-slot="footer">
-        <button type="button" class="btn" t-att-class="props.confirmClass" t-att-disabled="state.isProcess" t-on-click="confirm" t-out="props.confirmLabel" data-hotkey="q"/>
-        <button type="button" t-if="props.cancel" class="btn btn-secondary" t-att-disabled="state.isProcess" t-on-click="cancel" t-out="props.cancelLabel" data-hotkey="x"/>
+        <button type="button" class="btn" t-att-class="this.props.confirmClass" t-att-disabled="this.state.isProcess" t-on-click="this.confirm" t-out="this.props.confirmLabel" data-hotkey="q"/>
+        <button type="button" t-if="this.props.cancel" class="btn btn-secondary" t-att-disabled="this.state.isProcess" t-on-click="this.cancel" t-out="this.props.cancelLabel" data-hotkey="x"/>
       </t>
     </Dialog>
   </t>
@@ -14,7 +14,7 @@
   <t t-name="web.AlertDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary">
     <xpath expr="//Dialog" position="attributes">
       <attribute name="size">'sm'</attribute>
-      <attribute name="contentClass">props.contentClass</attribute>
+      <attribute name="contentClass">this.props.contentClass</attribute>
     </xpath>
   </t>
 

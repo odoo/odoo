@@ -3,13 +3,13 @@
         <xpath expr="." position="inside">
             <div id="filter_date" t-ref="filterDate"
                  class="d-print-none me-1"
-                 t-on-click="onDateClick">
+                 t-on-click="this.onDateClick">
                 <button class="btn btn-secondary">
-                    <i class="fa-solid fa-calendar-days me-1"/>As of <t t-out="date"/>
+                    <i class="fa-solid fa-calendar-days me-1"/>As of <t t-out="this.date"/>
                 </button>
             </div>
             <div class="d-none d-print-block">
-                At the date of <t t-out="date"/>
+                At the date of <t t-out="this.date"/>
             </div>
         </xpath>
     </t>

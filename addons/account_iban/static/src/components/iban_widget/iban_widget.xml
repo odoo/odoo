@@ -3,8 +3,8 @@
     <t t-name="account_iban.iban" t-inherit="web.CharField">
         <xpath expr="//input" position="attributes">
             <attribute name="class" add="o_iban_input_with_validator" separator=" "/>
-            <attribute name="t-on-input">validateIbanDebounced</attribute>
-            <attribute name="t-on-focus">validateIbanDebounced</attribute>
+            <attribute name="t-on-input">this.validateIbanDebounced</attribute>
+            <attribute name="t-on-focus">this.validateIbanDebounced</attribute>
             <attribute name="t-on-blur">(ev) => { this.state.isValidIBAN = null; }</attribute>
         </xpath>
         <xpath expr="//input" position="after">

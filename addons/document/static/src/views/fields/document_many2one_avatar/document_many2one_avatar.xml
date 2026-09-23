@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="document.DocumentsMany2OneAvatarField">
-        <t t-set="relation" t-value="props.record.fields[props.name].relation"/>
-        <t t-set="value" t-value="props.record.data[props.name]"/>
-        <t t-set="isMe" t-value="(relation === 'res.users' and user.userId === value.id) || (relation === 'res.partner' and user.partnerId === value.id)"/>
+        <t t-set="relation" t-value="this.props.record.fields[this.props.name].relation"/>
+        <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
+        <t t-set="isMe" t-value="(relation === 'res.users' and this.user.userId === value.id) || (relation === 'res.partner' and this.user.partnerId === value.id)"/>
         <div class="d-flex align-items-center gap-1" t-if="value">
             <Avatar resModel="relation" resId="value.id" cssClass="{ 'opacity-50': !value.active }"/>
             <div class="flex-grow-1 d-flex flex-column">

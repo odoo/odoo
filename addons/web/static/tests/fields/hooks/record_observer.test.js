@@ -28,8 +28,8 @@ async function mountObserver(record) {
     class Parent extends Component {
         static components = { Child };
         static template = xml`
-            <t t-if="state.mounted">
-                <Child record="state.record" readonly="state.readonly"/>
+            <t t-if="this.state.mounted">
+                <Child record="this.state.record" readonly="this.state.readonly"/>
             </t>`;
         static props = ["*"];
         setup() {
@@ -111,7 +111,7 @@ test("a rejection after the initial call is reported, not silently dropped", asy
     }
     class Parent extends Component {
         static components = { Child };
-        static template = xml`<Child record="state.record"/>`;
+        static template = xml`<Child record="this.state.record"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ record });

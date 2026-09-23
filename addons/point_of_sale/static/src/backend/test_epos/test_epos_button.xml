@@ -6,8 +6,8 @@
                 class="btn btn-secondary"
                 data-tooltip="Test"
                 aria-label="Test"
-                t-att-disabled="state.printing"
-                t-on-click.stop="onClick">
+                t-att-disabled="this.state.printing"
+                t-on-click.stop="this.onClick">
             Test
         </button>
     </t>

@@ -2,15 +2,15 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FlowConnection">
-        <g t-att-class="classNames" t-on-click="onClick" aria-hidden="true">
-            <path class="o_flow_editor_connection_hitbox" t-att-d="props.geometry.path"
+        <g t-att-class="this.classNames" t-on-click="this.onClick" aria-hidden="true">
+            <path class="o_flow_editor_connection_hitbox" t-att-d="this.props.geometry.path"
                 fill="none" vector-effect="non-scaling-stroke"/>
-            <path class="o_flow_editor_connection_path" t-att-d="props.geometry.path"
+            <path class="o_flow_editor_connection_path" t-att-d="this.props.geometry.path"
                 fill="none" vector-effect="non-scaling-stroke"/>
-            <text t-if="props.label" class="o_flow_editor_connection_label"
-                t-att-x="props.geometry.midpoint.x" t-att-y="props.geometry.midpoint.y"
+            <text t-if="this.props.label" class="o_flow_editor_connection_label"
+                t-att-x="this.props.geometry.midpoint.x" t-att-y="this.props.geometry.midpoint.y"
                 text-anchor="middle" dominant-baseline="central">
-                <t t-out="props.label"/>
+                <t t-out="this.props.label"/>
             </text>
         </g>
     </t>

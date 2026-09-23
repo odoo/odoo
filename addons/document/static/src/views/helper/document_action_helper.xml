@@ -3,12 +3,12 @@
     <t t-name="document.DocumentsActionHelper">
         <div class="o_view_nocontent">
             <div class="o_nocontent_help">
-                <t t-out="noContentHelp"/>
-                <t t-if="selectedFolderId and !['MY', 'RECENT', 'SHARED', 'TRASH', 'COMPANY'].includes(selectedFolderId)">
-                    <div t-if="state.mailTo">
+                <t t-out="this.noContentHelp"/>
+                <t t-if="this.selectedFolderId and !['MY', 'RECENT', 'SHARED', 'TRASH', 'COMPANY'].includes(this.selectedFolderId)">
+                    <div t-if="this.state.mailTo">
                         <p class="fw-normal">Or send emails to
-                            <a t-attf-href="mailto:{{state.mailTo}}">
-                                <t t-out="state.mailTo"/>
+                            <a t-attf-href="mailto:{{this.state.mailTo}}">
+                                <t t-out="this.state.mailTo"/>
                             </a>
                         </p>
                         <p class="fw-normal"><em>Tip: configure your scanner to send all documents to this address.</em></p>

@@ -251,7 +251,7 @@ test("models arriving after mount are loaded", async () => {
     class Parent extends Component {
         static components = { ModelSelector };
         static props = ["*"];
-        static template = xml`<ModelSelector models="state.models" onModelSelected="() => {}"/>`;
+        static template = xml`<ModelSelector models="this.state.models" onModelSelected="() => {}"/>`;
         setup() {
             this.state = useState({ models: [] });
         }
@@ -277,7 +277,7 @@ test("an unchanged models prop is not reloaded", async () => {
     class Parent extends Component {
         static components = { ModelSelector };
         static props = ["*"];
-        static template = xml`<ModelSelector models="models" onModelSelected="() => {}"/><span t-out="state.tick"/>`;
+        static template = xml`<ModelSelector models="this.models" onModelSelected="() => {}"/><span t-out="this.state.tick"/>`;
         setup() {
             this.models = models;
             this.state = useState({ tick: 0 });
@@ -310,7 +310,7 @@ test("a superseded model load does not overwrite the newer one", async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { Probe };
-        static template = xml`<Probe models="state.models" onModelSelected="() => {}"/>`;
+        static template = xml`<Probe models="this.state.models" onModelSelected="() => {}"/>`;
         setup() {
             this.state = useState({ models: ["first.model"] });
         }

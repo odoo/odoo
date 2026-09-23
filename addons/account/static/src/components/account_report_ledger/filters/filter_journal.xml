@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="account.AccountReportFilterJournal">
-        <Dropdown disabled="!controller.cachedFilterOptions.journals.length">
+        <Dropdown disabled="!this.controller.cachedFilterOptions.journals.length">
             <button class="btn btn-secondary">
-                <i class="fa-solid fa-book me-1"/><t t-out="controller.cachedFilterOptions.name_journal_group"/>
+                <i class="fa-solid fa-book me-1"/><t t-out="this.controller.cachedFilterOptions.name_journal_group"/>
             </button>
 
             <t t-set-slot="content">
-                <t t-foreach="controller.cachedFilterOptions.journals" t-as="journal" t-key="journal_index">
+                <t t-foreach="this.controller.cachedFilterOptions.journals" t-as="journal" t-key="journal_index">
                     <t t-if="journal.id === 'divider'">
                         <div t-att-class="'d-flex dropdown-header w-100 align-items-center' + (journal.model == 'res.company' ? ' pt-0 ps-0 mx-0 my-1' : '')">
                             <t t-if="journal.model == 'account.journal.group'">

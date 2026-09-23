@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="survey.SurveyKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
-        <xpath expr="//t[@t-if='showNoContentHelper']" position="replace">
-            <t t-if="showNoContentHelper">
+        <xpath expr="//t[@t-if='this.showNoContentHelper']" position="replace">
+            <t t-if="this.showNoContentHelper">
                 <SurveySurveyActionHelper/>
             </t>
         </xpath>

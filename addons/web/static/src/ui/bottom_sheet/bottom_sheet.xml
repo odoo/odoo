@@ -4,22 +4,22 @@
         <div
             class="o_bottom_sheet"
             t-att-class="{
-                'o_bottom_sheet_ready': state.isPositionedReady,
-                'o_bottom_sheet_dismissing': state.isDismissing,
-                'o_bottom_sheet_snapping': state.isSnappingEnabled,
+                'o_bottom_sheet_ready': this.state.isPositionedReady,
+                'o_bottom_sheet_dismissing': this.state.isDismissing,
+                'o_bottom_sheet_snapping': this.state.isSnappingEnabled,
             }"
-            t-attf-style="--BottomSheet-progress: {{state.progress}}"
-            t-att-inert="isClosing or undefined"
+            t-attf-style="--BottomSheet-progress: {{this.state.progress}}"
+            t-att-inert="this.isClosing or undefined"
             t-ref="container"
             >
             <div
                 class="o_bottom_sheet_rail"
                 t-att-class="{
-                        o_bottom_sheet_rail_prevent_overscroll : props.preventDismissOnContentScroll
+                        o_bottom_sheet_rail_prevent_overscroll : this.props.preventDismissOnContentScroll
                     }"
                 t-ref="scrollRail"
                 >
-                <div class="o_bottom_sheet_backdrop" t-on-click="onBackdropClick"/>
+                <div class="o_bottom_sheet_backdrop" t-on-click="this.onBackdropClick"/>
 
                 <div class="o_bottom_sheet_dismiss"/>
 
@@ -28,7 +28,7 @@
                 <div
                     class="o_bottom_sheet_sheet offcanvas position-relative overflow-hidden"
                     role="dialog"
-                    t-att-aria-modal="props.setActiveElement ? 'true' : undefined"
+                    t-att-aria-modal="this.props.setActiveElement ? 'true' : undefined"
                     t-ref="sheet"
                     >
 
@@ -36,25 +36,25 @@
                         type="button"
                         aria-label="Close"
                         class="o_bottom_sheet_handle btn text-center d-flex align-items-center justify-content-center opacity-50 py-2 w-100 border-0"
-                        t-on-click.stop="slideOut"
+                        t-on-click.stop="this.slideOut"
                         >
                         <div class="o_bottom_sheet_handle_bar pt-1 mx-auto rounded-pill d-inline-block px-5 bg-dark"/>
                     </button>
 
                     <div
                         class="o_bottom_sheet_body offcanvas-body"
-                        t-att-id="props.id"
-                        t-att-role="props.role"
-                        t-att-class="props.class"
+                        t-att-id="this.props.id"
+                        t-att-role="this.props.role"
+                        t-att-class="this.props.class"
                         t-ref="ref"
                         >
 
-                        <t t-if="props.component">
-                            <t t-component="props.component" t-props="props.componentProps" close="close"/>
+                        <t t-if="this.props.component">
+                            <t t-component="this.props.component" t-props="this.props.componentProps" close="this.close"/>
                         </t>
 
                         <t t-else="">
-                            <t t-slot="default" close="close" back="back"/>
+                            <t t-slot="default" close="this.close" back="this.back"/>
                         </t>
                     </div>
                 </div>

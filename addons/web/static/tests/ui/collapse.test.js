@@ -22,7 +22,7 @@ class Parent extends Component {
     static props = ["*"];
     static template = xml`
         <button class="toggle" t-on-click="() => this.state.open = !this.state.open">Toggle</button>
-        <Collapse open="state.open" class="'region'">
+        <Collapse open="this.state.open" class="'region'">
             <div class="content">body</div>
         </Collapse>
     `;
@@ -36,7 +36,7 @@ class TallParent extends Component {
     static components = { Collapse };
     static props = ["*"];
     static template = xml`
-        <Collapse open="state.open" class="'region'">
+        <Collapse open="this.state.open" class="'region'">
             <div class="content" style="height: 200px">body</div>
         </Collapse>
     `;

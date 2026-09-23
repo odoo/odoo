@@ -80,7 +80,7 @@ describe("forecast_widget", () => {
 describe("useOperationGuard", () => {
     class Guarded extends Component {
         static template = xml`
-            <button class="go" t-att-disabled="guard.busy" t-on-click="run">go</button>`;
+            <button class="go" t-att-disabled="this.guard.busy" t-on-click="this.run">go</button>`;
         static props = ["onRun"];
         setup() {
             this.guard = useOperationGuard();

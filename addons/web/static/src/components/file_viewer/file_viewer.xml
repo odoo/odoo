@@ -2,79 +2,79 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FileViewer">
-        <div t-if="state.file" class="d-flex justify-content-center" t-att-class="{ 'modal modal-fullscreen': props.modal }">
+        <div t-if="this.state.file" class="d-flex justify-content-center" t-att-class="{ 'modal modal-fullscreen': this.props.modal }">
             <div class="o-FileViewer flex-column align-items-center d-flex w-100 h-100" tabindex="0" t-ref="autofocus" t-on-keydown.stop="(ev) => this.onKeydown(ev)">
                 <div class="o-FileViewer-header position-absolute top-0 d-flex w-100" t-on-click.stop="">
-                    <div t-if="state.file.isViewable" class="d-flex align-items-center ms-4 me-2">
-                        <i t-if="state.file.isImage" class="fa-regular fa-image" role="img" title="Image"/>
-                        <i t-if="state.file.isPdf" class="fa-solid fa-file-lines" role="img" title="PDF file"/>
-                        <i t-if="state.file.isText" class="fa-solid fa-file-lines" role="img" title="Text file"/>
-                        <i t-if="state.file.isVideo" class="fa-solid fa-video" role="img" title="Video"/>
-                        <i t-if="state.file.isAudio" class="fa-solid fa-volume-high" role="img" title="Audio"/>
+                    <div t-if="this.state.file.isViewable" class="d-flex align-items-center ms-4 me-2">
+                        <i t-if="this.state.file.isImage" class="fa-regular fa-image" role="img" title="Image"/>
+                        <i t-if="this.state.file.isPdf" class="fa-solid fa-file-lines" role="img" title="PDF file"/>
+                        <i t-if="this.state.file.isText" class="fa-solid fa-file-lines" role="img" title="Text file"/>
+                        <i t-if="this.state.file.isVideo" class="fa-solid fa-video" role="img" title="Video"/>
+                        <i t-if="this.state.file.isAudio" class="fa-solid fa-volume-high" role="img" title="Audio"/>
                     </div>
                     <div class="d-flex align-items-center ms-4 overflow-auto">
-                        <span class="text-truncate" t-out="state.file.name"/>
+                        <span class="text-truncate" t-out="this.state.file.name"/>
                     </div>
                     <div class="flex-grow-1"/>
-                    <div class="o-FileViewer-download o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download" t-on-click.stop="onClickDownload">
+                    <div class="o-FileViewer-download o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download" t-on-click.stop="this.onClickDownload">
                         <span class="text-reset d-flex align-items-baseline">
                             <i class="fa-solid fa-download me-1" role="img"/>
                             <span>Download</span>
                         </span>
                     </div>
 
-                    <div t-on-click.stop="close" class="o-FileViewer-headerButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
+                    <div t-on-click.stop="this.close" class="o-FileViewer-headerButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
                         <i class="fa-solid fa-times" role="img"/>
                     </div>
                 </div>
-                <div t-on-click.stop="onClickView" t-on-pointermove="onPointermoveView" t-on-pointerup="onPointerupView" t-on-pointercancel="onPointerupView" class="o-FileViewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'overflow-hidden': state.file.isImage }">
-                    <div t-if="state.file.isImage" class="o-FileViewer-zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="zoomer">
-                        <div t-if="!state.imageLoaded" class="position-absolute">
+                <div t-on-click.stop="this.onClickView" t-on-pointermove="this.onPointermoveView" t-on-pointerup="this.onPointerupView" t-on-pointercancel="this.onPointerupView" class="o-FileViewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'overflow-hidden': this.state.file.isImage }">
+                    <div t-if="this.state.file.isImage" class="o-FileViewer-zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="zoomer">
+                        <div t-if="!this.state.imageLoaded" class="position-absolute">
                             <i class="fa-solid fa-circle-notch fa-3x fa-spin text-white" role="img" title="Loading"/>
                         </div>
-                        <img t-on-click.stop="onClickImage" t-on-load="onImageLoaded" t-on-wheel="onWheelImage" t-on-pointerdown.stop="onPointerdownImage" class="o-FileViewer-view o-FileViewer-viewImage mw-100 mh-100 transition-base" t-att-src="state.file.defaultSource" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
+                        <img t-on-click.stop="this.onClickImage" t-on-load="this.onImageLoaded" t-on-wheel="this.onWheelImage" t-on-pointerdown.stop="this.onPointerdownImage" class="o-FileViewer-view o-FileViewer-viewImage mw-100 mh-100 transition-base" t-att-src="this.state.file.defaultSource" t-att-style="this.imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
                     </div>
-                    <iframe t-if="state.file.isPdf" class="o-FileViewer-view w-75 h-100 border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': ui.isSmall }" t-att-src="state.file.defaultSource"/>
-                    <iframe t-if="state.file.isText" class="o-FileViewer-view o-isText o_text w-75 h-100 border-0"
-                        t-att-class="{ 'o-FileViewer-loading': !state.isIframeLoaded }"
-                        t-att-src="state.file.defaultSource"
-                        t-on-load="onIframeLoaded"
+                    <iframe t-if="this.state.file.isPdf" class="o-FileViewer-view w-75 h-100 border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': this.ui.isSmall }" t-att-src="this.state.file.defaultSource"/>
+                    <iframe t-if="this.state.file.isText" class="o-FileViewer-view o-isText o_text w-75 h-100 border-0"
+                        t-att-class="{ 'o-FileViewer-loading': !this.state.isIframeLoaded }"
+                        t-att-src="this.state.file.defaultSource"
+                        t-on-load="this.onIframeLoaded"
                         loading="lazy"
                     />
-                    <iframe t-if="state.file.isUrlYoutube" allow="autoplay; encrypted-media" class="o-FileViewer-view w-75 h-100 border-0" t-att-src="state.file.defaultSource" height="315" width="560"/>
-                    <video t-if="state.file.isVideo" class="o-FileViewer-view w-75 h-75" t-att-class="{ 'w-100 h-100': ui.isSmall }" t-on-click.stop="" controls="controls">
-                        <source t-att-data-type="state.file.mimetype" t-att-src="state.file.defaultSource"/>
-                        <track t-if="state.file.subtitlesUrl" kind="captions" default="default" t-att-src="state.file.subtitlesUrl"/>
+                    <iframe t-if="this.state.file.isUrlYoutube" allow="autoplay; encrypted-media" class="o-FileViewer-view w-75 h-100 border-0" t-att-src="this.state.file.defaultSource" height="315" width="560"/>
+                    <video t-if="this.state.file.isVideo" class="o-FileViewer-view w-75 h-75" t-att-class="{ 'w-100 h-100': this.ui.isSmall }" t-on-click.stop="" controls="controls">
+                        <source t-att-data-type="this.state.file.mimetype" t-att-src="this.state.file.defaultSource"/>
+                        <track t-if="this.state.file.subtitlesUrl" kind="captions" default="default" t-att-src="this.state.file.subtitlesUrl"/>
                     </video>
-                    <audio t-if="state.file.isAudio" class="o-FileViewer-view o-FileViewer-viewAudio w-75" t-att-class="{ 'w-100': ui.isSmall }" t-on-click.stop="" controls="controls">
-                        <source t-att-data-type="state.file.mimetype" t-att-src="state.file.defaultSource"/>
+                    <audio t-if="this.state.file.isAudio" class="o-FileViewer-view o-FileViewer-viewAudio w-75" t-att-class="{ 'w-100': this.ui.isSmall }" t-on-click.stop="" controls="controls">
+                        <source t-att-data-type="this.state.file.mimetype" t-att-src="this.state.file.defaultSource"/>
                     </audio>
                 </div>
-                <div t-if="state.file.isImage" class="position-absolute bottom-0 d-flex" role="toolbar">
-                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="zoomIn" title="Zoom In (+)" role="button">
+                <div t-if="this.state.file.isImage" class="position-absolute bottom-0 d-flex" role="toolbar">
+                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="this.zoomIn" title="Zoom In (+)" role="button">
                         <i class="fa-solid fa-plus" role="img"/>
                     </div>
-                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': state.scale === 1 }" t-on-click.stop="resetZoom" role="button" title="Reset Zoom (0)">
+                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': this.state.scale === 1 }" t-on-click.stop="this.resetZoom" role="button" title="Reset Zoom (0)">
                         <i class="fa-solid fa-search" role="img"/>
                     </div>
-                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': state.scale === minScale }" t-on-click.stop="zoomOut" title="Zoom Out (-)" role="button">
+                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': this.state.scale === this.minScale }" t-on-click.stop="this.zoomOut" title="Zoom Out (-)" role="button">
                         <i class="fa-solid fa-minus" role="img"/>
                     </div>
-                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="rotate" title="Rotate (r)" role="button">
+                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="this.rotate" title="Rotate (r)" role="button">
                         <i class="fa-solid fa-arrow-rotate-right" role="img"/>
                     </div>
-                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="onClickPrint" title="Print" role="button">
+                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="this.onClickPrint" title="Print" role="button">
                         <i class="fa-solid fa-print" role="img"/>
                     </div>
-                    <div class="o-FileViewer-download o-FileViewer-toolbarButton p-3 rounded-0 cursor-pointer" title="Download" role="button" t-on-click.stop="onClickDownload">
+                    <div class="o-FileViewer-download o-FileViewer-toolbarButton p-3 rounded-0 cursor-pointer" title="Download" role="button" t-on-click.stop="this.onClickDownload">
                         <i class="fa-solid fa-download" role="img"/>
                     </div>
                 </div>
-                <t t-if="props.files.length > 1">
-                    <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle bg-dark text-white" t-on-click.stop="previous" title="Previous (Left-Arrow)" aria-label="Previous" role="button">
+                <t t-if="this.props.files.length > 1">
+                    <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle bg-dark text-white" t-on-click.stop="this.previous" title="Previous (Left-Arrow)" aria-label="Previous" role="button">
                         <span class="oi oi-chevron-left" role="img"/>
                     </div>
-                    <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle bg-dark text-white" t-on-click.stop="next" title="Next (Right-Arrow)" aria-label="Next" role="button">
+                    <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle bg-dark text-white" t-on-click.stop="this.next" title="Next (Right-Arrow)" aria-label="Next" role="button">
                         <span class="oi oi-chevron-right" role="img"/>
                     </div>
                 </t>

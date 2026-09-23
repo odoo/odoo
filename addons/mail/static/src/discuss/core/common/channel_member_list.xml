@@ -2,30 +2,25 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelMemberList">
-        <ActionPanel title.translate="Members" minWidth="200" initialWidth="env.inMeetingView ? 400 : 250" icon="'oi oi-users'">
-            <button name="inviteButton" t-on-click="() => props.openChannelInvitePanel({ keepPrevious: env.inChatWindow })" class="btn btn-sm btn-secondary mt-2 d-flex align-items-center justify-content-center gap-1 rounded-3"><i class="oi oi-user-plus"/><span>Invite a User</span></button>
-            <t t-if="props.thread.onlineMembers.length > 0">
-                <t t-call="discuss.ChannelMemberList.section">
-                    <t t-set="sectionName" t-value="onlineSectionText"/>
-                </t>
+        <ActionPanel title.translate="Members" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 250" icon="'oi oi-users'">
+            <button name="inviteButton" t-on-click="() => this.props.openChannelInvitePanel({ keepPrevious: this.env.inChatWindow })" class="btn btn-sm btn-secondary mt-2 d-flex align-items-center justify-content-center gap-1 rounded-3"><i class="oi oi-user-plus"/><span>Invite a User</span></button>
+            <t t-if="this.props.thread.onlineMembers.length > 0">
+                <t t-call="discuss.ChannelMemberList.section" sectionName="this.onlineSectionText"/>
                 <div class="d-flex flex-column bg-inherit gap-1">
-                    <t t-foreach="props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
+                    <t t-foreach="this.props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
                 </div>
             </t>
-            <t name="offlineMembers" t-if="props.thread.offlineMembers.length > 0">
-                <t t-call="discuss.ChannelMemberList.section">
-                    <t t-set="sectionName" t-value="offlineSectionText"/>
-                </t>
+            <t name="offlineMembers" t-if="this.props.thread.offlineMembers.length > 0">
+                <t t-call="discuss.ChannelMemberList.section" sectionName="this.offlineSectionText"/>
                 <div class="d-flex flex-column bg-inherit gap-1">
-                    <t t-foreach="props.thread.offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member">
-                        <t t-set="offline" t-value="1"/>
-                    </t>
+                    <t t-foreach="this.props.thread.offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"
+                        offline="1"/>
                 </div>
             </t>
-            <span t-if="props.thread.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
-            <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-out="props.thread.unknownMembersCount"/> other members.</span>
-            <div t-if="!props.thread.areAllMembersLoaded" class="mx-2 my-1">
-                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => props.thread.fetchChannelMembers()">Load more</button>
+            <span t-if="this.props.thread.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
+            <span t-if="this.props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-out="this.props.thread.unknownMembersCount"/> other members.</span>
+            <div t-if="!this.props.thread.areAllMembersLoaded" class="mx-2 my-1">
+                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => this.props.thread.fetchChannelMembers()">Load more</button>
             </div>
         </ActionPanel>
     </t>
@@ -35,7 +30,7 @@
     </t>
 
     <t t-name="discuss.channel_member">
-        <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="{ 'cursor-pointer': canOpenChatWith(member), 'o-offline': offline }" t-on-click.stop="(ev) => this.onClickAvatar(ev, member)">
+        <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="{ 'cursor-pointer': this.canOpenChatWith(member), 'o-offline': offline }" t-on-click.stop="(ev) => this.onClickAvatar(ev, member)">
             <div class="bg-inherit o-discuss-ChannelMember-avatar position-relative d-flex flex-shrink-0 rounded-3">
                 <img class="w-100 h-100 rounded-3 object-fit-cover" t-att-src="member.avatarUrl"/>
                 <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ' + (member.isTyping ? 'ms-n2' : 'ms-n1')" size="'md'"/>
@@ -44,7 +39,7 @@
                 <span class="ms-2 text-truncate text-muted fw-bold" t-out="member.name" t-att-title="member.name"/>
             </div>
             <span class="ms-auto">
-                <span t-if="member.in(props.thread.invited_member_ids)" class="p-1 oi oi-user-plus opacity-75"/>
+                <span t-if="member.in(this.props.thread.invited_member_ids)" class="p-1 oi oi-user-plus opacity-75"/>
                 <span t-if="member.rtcSession?.is_muted and !member.rtcSession?.is_deaf" class="p-1 fa-solid fa-microphone-slash opacity-75"/>
                 <span t-elif="member.rtcSession?.is_deaf" class="p-1 fa-solid fa-deaf opacity-75"/>
                 <span t-if="member.rtcSession?.raisingHand" class="p-1 fa-regular fa-hand"/>

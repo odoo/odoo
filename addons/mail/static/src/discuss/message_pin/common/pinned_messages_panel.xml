@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="discuss.PinnedMessagesPanel">
         <ActionPanel title.translate="Pinned Messages" minWidth="200" initialWidth="400" icon="'fa-solid fa-thumbtack'">
-            <MessageCardList emptyText="emptyText" messages="props.thread.pinnedMessages" thread="props.thread" mode="'pin'"/>
+            <MessageCardList emptyText="this.emptyText" messages="this.props.thread.pinnedMessages" thread="this.props.thread" mode="'pin'"/>
         </ActionPanel>
     </t>
 </templates>

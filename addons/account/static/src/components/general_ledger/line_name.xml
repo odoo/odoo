@@ -2,11 +2,11 @@
 <templates>
     <t t-name="account.GeneralLedgerLineName" t-inherit="report_formula.AccountReportLineNameCustomizable">
         <xpath expr="//t[@data-id='line_buttons']" position="inside">
-            <t t-if="props.line.unfoldable">
+            <t t-if="this.props.line.unfoldable">
                 <button
                     class="btn btn_action"
-                    t-on-click="(ev) => controller.reportAction(ev, 'open_journal_items', {
-                        line_id: props.line.id,
+                    t-on-click="(ev) => this.controller.reportAction(ev, 'open_journal_items', {
+                        line_id: this.props.line.id,
                         view_ref: 'account.view_account_move_line_list_grouped_partner',
                     })"
                 >

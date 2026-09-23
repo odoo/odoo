@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <templates id="template" xml:space="preserve">
     <t t-name="document.DocumentCogMenuItem">
-        <CogMenuItem icon="icon" description="label" onSelected.bind="onItemSelected"/>
+        <CogMenuItem icon="this.icon" description="this.label" onSelected.bind="this.onItemSelected"/>
     </t>
 </templates>

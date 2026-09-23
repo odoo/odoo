@@ -3,8 +3,8 @@
 
     <t t-name="pos_coupon.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('pos-receipt')]//div[hasclass('before-footer')]" position="inside">
-            <t t-if="order.models['loyalty.program'].length">
-                <t t-foreach="order.getLoyaltyPoints() or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
+            <t t-if="this.order.models['loyalty.program'].length">
+                <t t-foreach="this.order.getLoyaltyPoints() or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
                     <div t-if="_loyaltyStat.program.portal_visible and (_loyaltyStat.points.won || _loyaltyStat.points.spent)" class='pt-3 loyalty'>
                         <t t-if='_loyaltyStat.points.won'>
                             <div class="d-flex" style="font-size: 75%;">
@@ -27,9 +27,9 @@
                     </div>
                 </t>
             </t>
-            <t t-if="order.new_coupon_info and order.new_coupon_info.length !== 0">
+            <t t-if="this.order.new_coupon_info and this.order.new_coupon_info.length !== 0">
                 <div class="pos-coupon-rewards pt-3">
-                    <t t-foreach="order.new_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
+                    <t t-foreach="this.order.new_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
                         <div class="coupon-container">
                             <div class="row g-2">
                                 <div class="col-4">

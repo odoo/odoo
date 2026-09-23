@@ -154,7 +154,7 @@ test("tracked emojis are capped, and a newly used one is never the eviction", as
 
 test("a cross-tab update reaches a component watching the service", async () => {
     class Watcher extends Component {
-        static template = xml`<div class="revision" t-out="emoji.revision"/>`;
+        static template = xml`<div class="revision" t-out="this.emoji.revision"/>`;
         static props = ["*"];
         setup() {
             this.emoji = useState(useService("web.frequent.emoji"));

@@ -4,66 +4,66 @@
     <t t-name="web.FlowNode">
         <article class="o_flow_editor_node card position-absolute"
             t-att-class="{
-                'o_flow_editor_node_circle': props.node.shape === 'circle',
-                'o_flow_editor_node_disconnected': !props.hasConnectedPath,
-                'o_flow_editor_node_selected': props.selected,
-                'o_flow_editor_node_readonly': props.readonly or props.node.readonly,
+                'o_flow_editor_node_circle': this.props.node.shape === 'circle',
+                'o_flow_editor_node_disconnected': !this.props.hasConnectedPath,
+                'o_flow_editor_node_selected': this.props.selected,
+                'o_flow_editor_node_readonly': this.props.readonly or this.props.node.readonly,
             }"
-            t-att-style="style"
-            t-att-aria-disabled="props.readonly or props.node.readonly"
-            t-att-aria-label="label"
-            t-att-aria-pressed="props.selected"
-            t-on-click="onClick"
-            t-on-keydown="onKeyDown"
-            t-on-pointerdown="onPointerDown"
+            t-att-style="this.style"
+            t-att-aria-disabled="this.props.readonly or this.props.node.readonly"
+            t-att-aria-label="this.label"
+            t-att-aria-pressed="this.props.selected"
+            t-on-click="this.onClick"
+            t-on-keydown="this.onKeyDown"
+            t-on-pointerdown="this.onPointerDown"
             role="button" tabindex="0">
-            <FlowPort t-if="props.node.input"
-                nodeId="props.node.id"
-                port="props.node.input"
-                offset="getPortOffset(props.node.input.id)"
-                connected="isPortConnected(props.node.input.id)"
-                validation="getPortValidation(props.node.input.id)"
-                onPointerDown="props.onPortPointerDown"/>
-            <t t-foreach="props.node.outputs" t-as="output" t-key="output.id">
-                <FlowPort nodeId="props.node.id"
+            <FlowPort t-if="this.props.node.input"
+                nodeId="this.props.node.id"
+                port="this.props.node.input"
+                offset="this.getPortOffset(this.props.node.input.id)"
+                connected="this.isPortConnected(this.props.node.input.id)"
+                validation="this.getPortValidation(this.props.node.input.id)"
+                onPointerDown="this.props.onPortPointerDown"/>
+            <t t-foreach="this.props.node.outputs" t-as="output" t-key="output.id">
+                <FlowPort nodeId="this.props.node.id"
                     port="output"
-                    offset="getPortOffset(output.id)"
-                    connected="isPortConnected(output.id)"
-                    validation="getPortValidation(output.id)"
-                    onPointerDown="props.onPortPointerDown"/>
+                    offset="this.getPortOffset(output.id)"
+                    connected="this.isPortConnected(output.id)"
+                    validation="this.getPortValidation(output.id)"
+                    onPointerDown="this.props.onPortPointerDown"/>
             </t>
-            <t t-if="nodeComponent">
-                <t t-component="nodeComponent" t-props="nodeComponentProps"/>
+            <t t-if="this.nodeComponent">
+                <t t-component="this.nodeComponent" t-props="this.nodeComponentProps"/>
             </t>
-            <t t-elif="props.node.shape === 'circle'">
+            <t t-elif="this.props.node.shape === 'circle'">
                 <div class="o_flow_editor_node_circle_content d-flex align-items-center justify-content-center h-100 p-2 text-center fw-semibold">
-                    <t t-out="label"/>
+                    <t t-out="this.label"/>
                 </div>
             </t>
             <t t-else="">
                 <header class="o_flow_editor_node_header card-header text-truncate fw-semibold"
-                    t-att-style="headerStyle">
-                    <t t-out="label"/>
+                    t-att-style="this.headerStyle">
+                    <t t-out="this.label"/>
                 </header>
                 <div class="o_flow_editor_node_body card-body overflow-hidden">
-                    <div t-if="props.node.record" class="small text-muted text-truncate">
-                        <t t-out="props.node.record.resModel"/> #<t t-out="props.node.record.resId"/>
+                    <div t-if="this.props.node.record" class="small text-muted text-truncate">
+                        <t t-out="this.props.node.record.resModel"/> #<t t-out="this.props.node.record.resId"/>
                     </div>
                 </div>
             </t>
-            <button t-if="!props.readonly and !props.node.readonly and props.node.deletable !== false and props.node.shape !== 'circle'"
+            <button t-if="!this.props.readonly and !this.props.node.readonly and this.props.node.deletable !== false and this.props.node.shape !== 'circle'"
                 class="o_flow_editor_node_delete btn btn-sm btn-link p-1 position-absolute"
-                t-att-title="deleteLabel"
-                t-att-aria-label="deleteLabel"
-                t-on-click="onDeleteClick"
-                t-on-pointerdown="onDeletePointerDown"
+                t-att-title="this.deleteLabel"
+                t-att-aria-label="this.deleteLabel"
+                t-on-click="this.onDeleteClick"
+                t-on-pointerdown="this.onDeletePointerDown"
                 type="button">
                 <i class="fa-solid fa-xmark text-muted" aria-hidden="true"/>
             </button>
-            <div t-if="props.node.shape !== 'circle' and props.node.resizable !== false and !props.readonly and !props.node.readonly"
+            <div t-if="this.props.node.shape !== 'circle' and this.props.node.resizable !== false and !this.props.readonly and !this.props.node.readonly"
                 class="o_flow_editor_node_resize_handle position-absolute"
-                t-on-click="onResizeClick"
-                t-on-pointerdown="onResizePointerDown"
+                t-on-click="this.onResizeClick"
+                t-on-pointerdown="this.onResizePointerDown"
                 aria-hidden="true"/>
         </article>
     </t>

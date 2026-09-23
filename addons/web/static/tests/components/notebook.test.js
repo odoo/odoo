@@ -17,7 +17,7 @@ for (const change of ["hidden", "disabled"]) {
                 <Notebook onWillActivatePage="() => this.beforeActivate()">
                     <t t-set-slot="a" title="'A'" isVisible="true"><div class="page-a"/></t>
                     <t t-set-slot="b" title="'B'"
-                       isVisible="!state.hidden" isDisabled="state.disabled"><div class="page-b"/></t>
+                       isVisible="!this.state.hidden" isDisabled="this.state.disabled"><div class="page-b"/></t>
                 </Notebook>`;
             setup() {
                 this.state = useState({ hidden: false, disabled: false });
@@ -44,12 +44,12 @@ test("pending page activation does not select a removed page", async () => {
     const gate = new Deferred();
     class Page extends Component {
         static props = ["*"];
-        static template = xml`<div class="page-body" t-out="props.title"/>`;
+        static template = xml`<div class="page-body" t-out="this.props.title"/>`;
     }
     class Host extends Component {
         static props = ["*"];
         static components = { Notebook };
-        static template = xml`<Notebook pages="state.pages" onWillActivatePage="() => this.beforeActivate()"/>`;
+        static template = xml`<Notebook pages="this.state.pages" onWillActivatePage="() => this.beforeActivate()"/>`;
         setup() {
             this.state = useState({
                 pages: ["A", "B"].map((title) => ({
@@ -219,8 +219,8 @@ test("notebook set vertically", async () => {
 test("notebook pages rendered by a template component", async () => {
     class NotebookPageRenderer extends Component {
         static template = xml`
-                <h3 t-out="props.heading"></h3>
-                <p t-out="props.text" />
+                <h3 t-out="this.props.heading"></h3>
+                <p t-out="this.props.text" />
             `;
         static props = {
             heading: String,
@@ -229,7 +229,7 @@ test("notebook pages rendered by a template component", async () => {
     }
 
     class Parent extends Component {
-        static template = xml`<Notebook defaultPage="'page_three'" pages="pages">
+        static template = xml`<Notebook defaultPage="'page_three'" pages="this.pages">
                 <t t-set-slot="page_one" title="'Page 1'" isVisible="true">
                     <h3>Page 1</h3>
                     <p>First page set directly as a slot</p>
@@ -283,12 +283,12 @@ test("notebook pages rendered by a template component", async () => {
 
 test("a programmatic page with index 0 is ordered first", async () => {
     class Page extends Component {
-        static template = xml`<h3 t-out="props.heading"/>`;
+        static template = xml`<h3 t-out="this.props.heading"/>`;
         static props = ["*"];
     }
 
     class Parent extends Component {
-        static template = xml`<Notebook pages="pages"/>`;
+        static template = xml`<Notebook pages="this.pages"/>`;
         static components = { Notebook };
         static props = ["*"];
         setup() {
@@ -322,7 +322,7 @@ test("each page is different", async () => {
     }
 
     class Parent extends Component {
-        static template = xml`<Notebook pages="pages"/>`;
+        static template = xml`<Notebook pages="this.pages"/>`;
         static components = { Notebook };
         static props = ["*"];
         setup() {
@@ -364,7 +364,7 @@ test("defaultPage recomputed when isVisible is dynamic", async () => {
                     <t t-set-slot="2" title="'page2'" isVisible="true">
                         <div class="page2" />
                     </t>
-                    <t t-set-slot="3" title="'page3'" isVisible="defaultPageVisible">
+                    <t t-set-slot="3" title="'page3'" isVisible="this.defaultPageVisible">
                         <div class="page3" />
                     </t>
                 </Notebook>`;
@@ -436,7 +436,7 @@ test("icons can be given for each page tab", async () => {
     class Parent extends Component {
         static components = { Notebook };
         static template = xml`
-            <Notebook defaultPage="'1'" icons="icons">
+            <Notebook defaultPage="'1'" icons="this.icons">
                 <t t-set-slot="1" title="'page1'" isVisible="true">
                     <div class="page1" />
                 </t>
@@ -473,7 +473,7 @@ test("invalid pages come from the isFieldInvalid prop, not from env.model", asyn
     class Parent extends Component {
         static components = { Notebook };
         static props = {};
-        static template = xml`<Notebook pages="pages" isFieldInvalid="(f) => f === 'bar'"/>`;
+        static template = xml`<Notebook pages="this.pages" isFieldInvalid="(f) => f === 'bar'"/>`;
         get pages() {
             return [
                 {
@@ -506,7 +506,7 @@ test("no isFieldInvalid prop means no page is flagged", async () => {
     class Parent extends Component {
         static components = { Notebook };
         static props = {};
-        static template = xml`<Notebook pages="pages"/>`;
+        static template = xml`<Notebook pages="this.pages"/>`;
         get pages() {
             return [
                 {
@@ -530,7 +530,7 @@ test("both class spellings reach the root, because both callers exist", async ()
         static props = ["*"];
     }
     class Parent extends Component {
-        static template = xml`<Notebook className="'from-template'" class="'from-compiler'" pages="pages"/>`;
+        static template = xml`<Notebook className="'from-template'" class="'from-compiler'" pages="this.pages"/>`;
         static components = { Notebook };
         static props = ["*"];
         setup() {
@@ -549,8 +549,8 @@ for (const intent of ["current page", "new default", "ordinary render"]) {
             static components = { Notebook };
             static props = {};
             static template = xml`
-                <Notebook defaultPage="state.defaultPage" className="state.className"
-                    onWillActivatePage="() => pending">
+                <Notebook defaultPage="this.state.defaultPage" className="this.state.className"
+                    onWillActivatePage="() => this.pending">
                     <t t-set-slot="a" title="'A'" isVisible="true"><div class="page-a"/></t>
                     <t t-set-slot="b" title="'B'" isVisible="true"><div class="page-b"/></t>
                     <t t-set-slot="c" title="'C'" isVisible="true"><div class="page-c"/></t>

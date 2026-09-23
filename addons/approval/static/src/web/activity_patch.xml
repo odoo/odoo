@@ -3,7 +3,7 @@
 
     <t t-inherit="mail.Activity" t-inherit-mode="extension">
         <xpath expr="//t[@name='tools']" position="replace">
-            <Approval t-if="props.activity.approver_id" activity="props.activity" onChange="props.reloadParentView" />
+            <Approval t-if="this.props.activity.approver_id" activity="this.props.activity" onChange="this.props.reloadParentView" />
             <t t-else="">$0</t>
         </xpath>
     </t>

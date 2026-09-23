@@ -17,7 +17,7 @@ describe.current.tags("headless");
 defineSpreadsheetModels();
 
 class FilterValuesListWrapper extends Component {
-    static template = xml`<FilterValuesList t-props="props" />`;
+    static template = xml`<FilterValuesList t-props="this.props" />`;
     static components = { FilterValuesList };
     static props = {
         ...FilterValuesList.props,
