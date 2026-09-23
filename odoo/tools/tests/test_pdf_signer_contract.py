@@ -51,11 +51,23 @@ if __name__ == "__main__":
 
 class TestSetIdentifier(unittest.TestCase):
     def test_the_identifier_is_stored_on_the_instance(self):
-        from odoo.tools.pdf import OdooPdfFileWriter
+        from odoo.tools.pdf import (
+            ArrayObject,
+            ByteStringObject,
+            OdooPdfFileWriter,
+            TextStringObject,
+        )
 
         writer = OdooPdfFileWriter()
-        writer._set_id("some-id")
-        self.assertEqual(writer._ID, "some-id")
+        identifier = b"\x01" * 16
+        writer._set_id(
+            ArrayObject([ByteStringObject(identifier), TextStringObject("text")])
+        )
+        self.assertEqual([bytes(part) for part in writer._ID], [identifier, b"text"])
+        self.assertTrue(
+            all(isinstance(part, ByteStringObject) for part in writer._ID),
+            "a text-decoded identifier must be written back as its original bytes",
+        )
 
     def test_a_falsy_identifier_is_ignored(self):
         from odoo.tools.pdf import OdooPdfFileWriter

@@ -640,7 +640,7 @@ class AccountEdiFormat(models.Model):
         xml_content = attachment.raw
         file_name = attachment.name
 
-        pdf_writer.addAttachment(file_name, xml_content, subtype="text/xml")
+        pdf_writer.add_attachment(file_name, xml_content, subtype="text/xml")
         if not pdf_writer.is_pdfa:
             try:
                 pdf_writer.convert_to_pdfa()
@@ -653,9 +653,4 @@ class AccountEdiFormat(models.Model):
                     "date": fields.Date.context_today(self),
                 },
             )
-            if "<pdfaid:conformance>B</pdfaid:conformance>" in content:
-                content.replace(
-                    "<pdfaid:conformance>B</pdfaid:conformance>",
-                    "<pdfaid:conformance>A</pdfaid:conformance>",
-                )
             pdf_writer.add_file_metadata(content.encode())

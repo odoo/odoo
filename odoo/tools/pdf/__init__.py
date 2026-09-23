@@ -3,7 +3,7 @@ import io
 import re
 import unicodedata
 from collections.abc import Iterable
-from datetime import datetime
+from datetime import UTC, datetime
 from hashlib import md5
 from logging import getLogger
 from typing import Any, TYPE_CHECKING
@@ -33,21 +33,19 @@ from pypdf.generic import (
     IndirectObject,
     NameObject,
     NumberObject,
+    TextStringObject,
 )
 
 PdfReadError = errors.PdfReadError
 PdfStreamError = errors.PdfStreamError
-try:
-    DependencyError = errors.DependencyError
-except AttributeError:
-    DependencyError = NotImplementedError
+DependencyError = errors.DependencyError
 
 
 class PdfReader(PdfReaderBase):
     def __init__(
         self, stream: io.BytesIO | str, strict: bool = True, *args: Any, **kwargs: Any
     ) -> None:
-        super().__init__(stream, strict)
+        super().__init__(stream, strict, *args, **kwargs)
 
 
 _logger = getLogger(__name__)
@@ -55,6 +53,8 @@ _debug = DebugLog(__name__)
 DEFAULT_PDF_DATETIME_FORMAT = "D:%Y%m%d%H%M%S+00'00'"
 REGEX_SUBTYPE_UNFORMATED = re.compile(r"^\w+/[\w-]+$")
 REGEX_SUBTYPE_FORMATED = re.compile(r"^/\w+#2F[\w-]+$")
+PDFA_ID_NAMESPACE = "http://www.aiim.org/pdfa/ns/id/"
+RDF_NAMESPACE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 
 
 _ = PdfImagePlugin.__name__
@@ -274,8 +274,13 @@ class OdooPdfFileReader(PdfReader):
                 except KeyError, AttributeError:
                     continue
             for kid in obj.get("/Kids", []):
-                if id(kid) not in visited_nodes:
-                    visited_nodes.add(id(kid))
+                key = (
+                    (kid.idnum, kid.generation)
+                    if isinstance(kid, IndirectObject)
+                    else id(kid)
+                )
+                if key not in visited_nodes:
+                    visited_nodes.add(key)
                     yield from _traverse_nodes(kid.get_object())
 
         try:
@@ -302,17 +307,16 @@ class OdooPdfFileWriter(BrandedFileWriter):
         if not subtype:
             return subtype
 
-        adapted_subtype = subtype
         if REGEX_SUBTYPE_UNFORMATED.match(subtype):
             return "/" + subtype
+        if REGEX_SUBTYPE_FORMATED.match(subtype):
+            return subtype.replace("#2F", "/")
 
-        if not REGEX_SUBTYPE_FORMATED.match(adapted_subtype):
-            _logger.warning(
-                "Attempt to add an attachment with the incorrect subtype '%s'. The subtype will be ignored.",
-                subtype,
-            )
-            adapted_subtype = ""
-        return adapted_subtype
+        _logger.warning(
+            "Attempt to add an attachment with the incorrect subtype '%s'. The subtype will be ignored.",
+            subtype,
+        )
+        return ""
 
     def add_attachment(
         self,
@@ -405,25 +409,46 @@ class OdooPdfFileWriter(BrandedFileWriter):
         self._reader = reader
         stream = reader.stream
         stream.seek(0)
-        header = stream.readlines(9)
-        if len(header) == 1:
-            self._header = header[0]
-            second_line = stream.readlines(1)[0]
-            if second_line.decode("latin-1")[0] == "%" and len(second_line) == 6:
-                self.is_pdfa = True
-        if not hasattr(self, "_ID"):
+        header = stream.readline(32).rstrip(b"\r\n")
+        if header.startswith(b"%PDF-"):
+            self._header = header
+        self.is_pdfa = self._declares_pdfa(reader)
+        if self._ID is None:
             self._set_id(reader.trailer.get("/ID", None))
         _debug.lifecycle(
             "pdf.reader_cloned",
             pages=len(reader.pages),
             pdfa=self.is_pdfa,
-            has_id=hasattr(self, "_ID"),
+            has_id=self._ID is not None,
+        )
+
+    @staticmethod
+    def _declares_pdfa(reader: PdfReader) -> bool:
+        try:
+            xmp = reader.xmp_metadata
+        except errors.PyPdfError as exc:
+            _debug.logic("pdf.xmp_unreadable", error=type(exc).__name__)
+            return False
+        if xmp is None:
+            return False
+        if xmp.rdf_root.getElementsByTagNameNS(PDFA_ID_NAMESPACE, "part"):
+            return True
+        return any(
+            description.getAttributeNodeNS(PDFA_ID_NAMESPACE, "part") is not None
+            for description in xmp.rdf_root.getElementsByTagNameNS(
+                RDF_NAMESPACE, "Description"
+            )
         )
 
     def _set_id(self, pdf_id: Any) -> None:
         if not pdf_id:
             return
-        self._ID = pdf_id
+        self._ID = ArrayObject(
+            ByteStringObject(part.get_original_bytes())
+            if isinstance(part, TextStringObject)
+            else part
+            for part in pdf_id
+        )
 
     _PDFA_ANNOT_INVISIBLE = 1 << 0
     _PDFA_ANNOT_HIDDEN = 1 << 1
@@ -474,7 +499,6 @@ class OdooPdfFileWriter(BrandedFileWriter):
             {
                 NameObject("/Filter"): NameObject("/FlateDecode"),
                 NameObject("/N"): NumberObject(3),
-                NameObject("/Length"): NameObject(str(len(icc_profile_file_data))),
             }
         )
 
@@ -503,8 +527,9 @@ class OdooPdfFileWriter(BrandedFileWriter):
 
         self._normalize_annotation_flags(pages)
 
-        outlines = self._root_object["/Outlines"].get_object()
-        outlines[NameObject("/Count")] = NumberObject(1)
+        outlines = self._root_object.get("/Outlines")
+        if outlines is not None:
+            outlines.get_object()[NameObject("/Count")] = NumberObject(1)
 
         mark_info = DictionaryObject({NameObject("/Marked"): BooleanObject(True)})
         self._root_object[NameObject("/MarkInfo")] = mark_info
@@ -572,7 +597,6 @@ class OdooPdfFileWriter(BrandedFileWriter):
             {
                 NameObject("/Type"): NameObject("/Metadata"),
                 NameObject("/Subtype"): NameObject("/XML"),
-                NameObject("/Length"): NameObject(str(len(metadata))),
             }
         )
 
@@ -587,11 +611,11 @@ class OdooPdfFileWriter(BrandedFileWriter):
                 NameObject("/Type"): NameObject("/EmbeddedFile"),
                 NameObject("/Params"): DictionaryObject(
                     {
-                        NameObject("/CheckSum"): create_string_object(
-                            md5(attachment["content"]).hexdigest()
+                        NameObject("/CheckSum"): ByteStringObject(
+                            md5(attachment["content"]).digest()
                         ),
                         NameObject("/ModDate"): create_string_object(
-                            datetime.now().strftime(DEFAULT_PDF_DATETIME_FORMAT)
+                            datetime.now(UTC).strftime(DEFAULT_PDF_DATETIME_FORMAT)
                         ),
                         NameObject("/Size"): NumberObject(len(attachment["content"])),
                     }
