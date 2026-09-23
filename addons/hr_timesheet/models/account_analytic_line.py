@@ -412,6 +412,8 @@ class AccountAnalyticLine(models.Model):
         if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             # Then, he is internal user, and we take the domain for this current user
             return self._access_domain('read')
+        elif self.env.user._is_public():
+            return Domain.FALSE
         return (
             (
                 Domain('message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id])
