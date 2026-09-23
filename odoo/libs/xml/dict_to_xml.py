@@ -1,10 +1,18 @@
-from lxml import etree
+import re
 
-from .utils import remove_control_characters
+from lxml import etree
 
 __all__ = [
     "dict_to_xml",
 ]
+
+_NOT_XML_CHARACTER_RE = re.compile(
+    r"[\x00-\x08\x0b\x0c\x0e-\x1f\ud800-\udfff\ufffe\uffff]"
+)
+
+
+def _xml_characters(value: object) -> str:
+    return _NOT_XML_CHARACTER_RE.sub("", str(value))
 
 
 def dict_to_xml(
@@ -46,11 +54,13 @@ def dict_to_xml(
             and attr_value is not None
             and attr_value is not False
         ):
-            element.set(convert_tag_to_lxml_convention(attr_name), str(attr_value))
+            element.set(
+                convert_tag_to_lxml_convention(attr_name), _xml_characters(attr_value)
+            )
 
     text = node.get("_text")
     if text is not None and text is not False:
-        element.text = remove_control_characters(str(text).encode()).decode()
+        element.text = _xml_characters(text)
 
     for child_tag, child in node.items():
         if not child_tag.startswith("_") and isinstance(child, (dict, list)):
