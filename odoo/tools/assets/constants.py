@@ -9,7 +9,6 @@ __all__ = [
     "STYLE_EXTENSIONS",
     "TEMPLATE_EXTENSIONS",
     "ExternalAsset",
-    "like_escape",
 ]
 
 SCRIPT_EXTENSIONS = ("js",)
@@ -41,7 +40,3 @@ EXTENSION_TO_WEB_MIMETYPES = {
     ".csv": "text/csv",
     ".html": "text/html",
 }
-
-
-def like_escape(literal: str) -> str:
-    return literal.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")

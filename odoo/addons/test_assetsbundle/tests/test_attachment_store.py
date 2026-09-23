@@ -9,7 +9,7 @@ from odoo.db import db_connect
 from odoo.exceptions import MissingError
 from odoo.modules.registry import Registry
 from odoo.tests.common import BaseCase, TransactionCase, get_db_name, tagged
-from odoo.tools.assets.constants import like_escape
+from odoo.tools import escape_psql
 from odoo.tools.misc import file_path
 
 from .common import asset_file, make_cursor_readonly
@@ -38,7 +38,7 @@ class _FakeIrAsset:
         return f"/web/assets/{unique}/{bundle_name}"
 
     def _get_asset_bundle_url_pattern(self, filename, unique, assets_params):
-        return self._get_asset_bundle_url(like_escape(filename), unique, assets_params)
+        return self._get_asset_bundle_url(escape_psql(filename), unique, assets_params)
 
 
 class _FakeIrAttachment:

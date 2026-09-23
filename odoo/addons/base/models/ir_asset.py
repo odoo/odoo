@@ -13,8 +13,8 @@ from odoo.api import ValuesType
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.modules import Manifest
-from odoo.tools import misc
-from odoo.tools.assets.constants import EXTERNAL_ASSET, like_escape
+from odoo.tools import escape_psql, misc
+from odoo.tools.assets.constants import EXTERNAL_ASSET
 
 from .ir_asset_paths import (
     AFTER_DIRECTIVE,
@@ -212,7 +212,7 @@ class IrAsset(models.Model):
     def _get_asset_bundle_url_pattern(
         self, filename: str, unique: str, assets_params: dict[str, Any]
     ) -> str:
-        return self._get_asset_bundle_url(like_escape(filename), unique, assets_params)
+        return self._get_asset_bundle_url(escape_psql(filename), unique, assets_params)
 
     def _parse_bundle_name(
         self, bundle_name: str, debug_assets: bool
