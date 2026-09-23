@@ -444,6 +444,19 @@ class ResUsers(models.Model):
         self.ensure_one()
         return limited_field_access_token(self, "im_status", scope="mail.presence")
 
+    def _get_im_status_version(self):
+        """Return the version to use when broadcasting `im_status` for this user.
+
+        `im_status` is either the user's own `manual_im_status` or a value computed from
+        presence (`presence_ids.status`), whose actual clock is `presence_ids.last_poll`
+        and not this row's `write_date`.
+        """
+        self.ensure_one()
+        if self.manual_im_status:
+            return None
+        # sudo: mail.presence - can read own presence (0 or 1 record, unique per user)
+        return self.sudo().presence_ids.last_poll
+
     def _store_init_global_fields(self, res: Store.FieldList):
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         # sudo: res.partner - exposing OdooBot data is considered acceptable
@@ -490,7 +503,11 @@ class ResUsers(models.Model):
     def _store_im_status_fields(self, res: Store.FieldList):
         res.attr("im_status")
         res.attr("im_status_access_token", lambda p: p._get_im_status_access_token())
-        res.one("partner_id", "_store_im_status_fields")
+        res.one(
+            "partner_id",
+            "_store_im_status_fields",
+            version=lambda u: u._get_im_status_version(),
+        )
 
     def _store_manual_im_status_fields(self, res: Store.FieldList):
         res.attr("im_status")
