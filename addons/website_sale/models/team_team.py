@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 
 
 class TeamTeam(models.Model):
@@ -20,6 +20,7 @@ class TeamTeam(models.Model):
         groups="sale.group_sale_salesman,sale.group_sale_readonly",
     )
 
+    @api.depends("website_ids")
     def _compute_abandoned_carts(self):
         website_teams = self.filtered(lambda team: team.website_ids)
         abandoned_carts_data = self.env["sale.order"]._read_group(

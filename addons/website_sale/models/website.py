@@ -288,6 +288,7 @@ class Website(models.Model):
         domain=[("model", "=", "sale.order")],
     )
 
+    @api.depends("company_id")
     def _compute_pricelist_ids(self):
         for website in self:
             website = website.with_company(website.company_id)
