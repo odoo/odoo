@@ -60,5 +60,20 @@ class TestSubscriptSupportIsWholeNotHalf(unittest.TestCase):
         self.assertIn(ast.Slice, _CONTEXTUAL_CHILDREN)
 
 
+class TestCallKeywordArguments(unittest.TestCase):
+    def test_a_keyword_argument_is_read_like_a_positional_one(self):
+        self.assertEqual(
+            get_expression_field_names("date_start + relativedelta(days=delay)"),
+            {"date_start", "delay"},
+        )
+
+    def test_a_keyword_argument_in_a_domain_value_is_read(self):
+        domain = (
+            "[('date', '<', (context_today() + relativedelta(days=lead_days))"
+            ".strftime('%Y-%m-%d'))]"
+        )
+        self.assertEqual(get_domain_value_names(domain), ({"date"}, {"lead_days"}))
+
+
 if __name__ == "__main__":
     unittest.main()

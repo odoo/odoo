@@ -193,7 +193,7 @@ _CONTEXTUAL_CHILDREN: dict[type, Callable[[typing.Any], tuple]] = {
     ast.BinOp: lambda n: (n.left, n.right),
     ast.BoolOp: lambda n: tuple(n.values),
     ast.UnaryOp: lambda n: (n.operand,),
-    ast.Call: lambda n: (n.func, *n.args),
+    ast.Call: lambda n: (n.func, *n.args, *(k.value for k in n.keywords)),
     ast.IfExp: lambda n: (n.test, n.body, n.orelse),
     ast.Dict: lambda n: (*n.keys, *n.values),
 }
