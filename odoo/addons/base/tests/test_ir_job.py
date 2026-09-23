@@ -1342,6 +1342,12 @@ class TestIrJobClaimSnapshot(BaseCase):
             setup.commit()
         self.addCleanup(self._clear_capsnap)
 
+        free = odoo.db.registry.get_budget_for_readonly(False).available
+        if free < 6:
+            self.skipTest(
+                f"six claimers hold a connection each at once, and the pool has "
+                f"{free} free: run with a larger --db_maxconn"
+            )
         claimers = [self.registry.cursor() for _ in range(6)]
         try:
             for cr in claimers:
