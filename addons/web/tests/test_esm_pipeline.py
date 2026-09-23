@@ -1928,10 +1928,19 @@ class TestReadonlyDeclineIsRemembered(TransactionCase):
             patch.object(AssetsBundle, "esbuild_native_bundle", self._compile)
         )
         # the memo is about compiling; a build another test committed for the
-        # same sources would be reused instead and hide every compile
+        # same sources would be reused instead and hide every compile, and a
+        # fake build published over a real one would supersede it and clear
+        # the cache the memo lives in
         stack.enter_context(
             patch.object(
                 IrQweb, "_load_esbuild_result_by_source", lambda *_a, **_k: None
+            )
+        )
+        stack.enter_context(
+            patch.object(
+                type(self.env["ir.asset.build"]),
+                "_publish",
+                lambda build, _spec: build.browse(),
             )
         )
 

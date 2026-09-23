@@ -4,7 +4,7 @@ from collections.abc import Iterable
 from datetime import timedelta
 from typing import Any
 
-from psycopg.errors import UniqueViolation
+from psycopg.errors import SerializationFailure, UniqueViolation
 
 from odoo import api, fields, models
 from odoo.fields import Domain
@@ -94,16 +94,28 @@ class IrAssetBuild(models.Model):
 
     @api.model
     def _publish(self, spec: dict[str, Any]) -> IrAssetBuild:
-        try:
-            with self.env.cr.savepoint():
-                return self._publish_once(spec)
-        except UniqueViolation:
-            # another connection published this variant between our read and
-            # our write; its commit is visible now, and publishing again
-            # supersedes or re-currents against it
-            _debug.logic("asset_build.publish_raced", bundle=spec["bundle"])
-            self.env.invalidate_all()
-            return self._publish_once(spec)
+        # another connection may publish this variant between our read and our
+        # write: on a READ COMMITTED cursor the retry sees its commit and settles
+        # against it; on a REPEATABLE READ one it cannot, and the build is left to
+        # the next render to publish -- its rows are saved either way
+        for attempt in (1, 2):
+            try:
+                with self.env.cr.savepoint():
+                    return self._publish_once(spec)
+            except UniqueViolation, SerializationFailure:
+                _debug.logic(
+                    "asset_build.publish_raced", bundle=spec["bundle"], attempt=attempt
+                )
+                self.env.invalidate_all()
+        log_event(
+            _attach_log,
+            logging.WARNING,
+            "build_publish_deferred",
+            kind=spec["kind"],
+            bundle=spec["bundle"],
+            variant=spec["variant"],
+        )
+        return self.browse()
 
     def _publish_once(self, spec: dict[str, Any]) -> IrAssetBuild:
         key = self._key_domain(spec["kind"], spec["bundle"], spec["variant"])
@@ -122,6 +134,9 @@ class IrAssetBuild(models.Model):
             # the partial unique index must see the old build superseded before
             # the new one becomes current
             replaced.flush_recordset(["state", "superseded_at"])
+            # every worker that cached the superseded build's urls resolves them
+            # again, so the grace starts when they stop being handed out
+            self.env.registry.clear_cache("assets")
         if same:
             same.write({"state": "current", "superseded_at": False, **values})
             action = "recurrent"

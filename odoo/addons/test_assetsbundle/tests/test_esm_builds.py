@@ -2,7 +2,7 @@ import importlib.util
 from datetime import timedelta
 from unittest.mock import patch
 
-from psycopg.errors import UniqueViolation
+from psycopg.errors import SerializationFailure, UniqueViolation
 
 from odoo import fields
 from odoo.api import SUPERUSER_ID
@@ -231,3 +231,71 @@ class TestEsmBuildAdoption(TransactionCase):
         self.assertEqual(owned.state, "current", "an owned directory is left alone")
         self.assertTrue(bridge.exists(), "a bridge belongs to no build")
         self.assertFalse(pointer.exists(), "the build carries the source key now")
+
+
+@tagged("post_install", "-at_install", "assets_bundle")
+class TestEsmBuildRobustness(TransactionCase):
+    def test_the_publication_lock_works_on_a_cursor_already_in_a_transaction(self):
+        # a test cursor serving an HTTP test shares the test's transaction; the
+        # lock must not ask it to change its isolation
+        self.env.cr.execute("SELECT 1")
+        self.env["ir.qweb"]._lock_esm_publication(self.env.cr)
+
+    def test_a_group_is_named_by_its_code_not_its_metafile(self):
+        qweb = self.env["ir.qweb"]
+        code = {"g6.child.esm.js": b"export const x = 1;"}
+        with patch.object(ir_qweb_assets._module, "current_test", None):
+            first = qweb._save_esm_group(
+                "runtime:g6.parent",
+                {**code, "group.meta.json": b'{"tmp": "/tmp/odoo-esbuild-aaaa"}'},
+                ["g6.child"],
+                variant="default",
+                source_key="g6",
+            )
+            second = qweb._save_esm_group(
+                "runtime:g6.parent",
+                {**code, "group.meta.json": b'{"tmp": "/tmp/odoo-esbuild-bbbb"}'},
+                ["g6.child"],
+                variant="default",
+                source_key="g6",
+            )
+        self.assertEqual(first, second)
+
+    def test_a_publication_race_that_cannot_settle_does_not_raise(self):
+        Build = self.env["ir.asset.build"].sudo()
+        with patch.object(
+            type(Build), "_publish_once", side_effect=SerializationFailure("raced")
+        ):
+            published = Build._publish(
+                {
+                    "kind": "bundle",
+                    "bundle": "test.builds.race",
+                    "variant": "default",
+                    "directories": ["/web/assets/esm/rrrr/"],
+                }
+            )
+        self.assertFalse(published)
+
+    def test_a_readonly_cursor_defers_a_build_whose_rows_are_served(self):
+        qweb = self.env["ir.qweb"]
+        build = {
+            "kind": "bundle",
+            "bundle": "test.builds.readonly",
+            "variant": "default",
+            "directories": ["/web/assets/esm/ssss/"],
+        }
+        with (
+            patch.object(ir_qweb_assets._module, "current_test", None),
+            patch.object(self.env.cr, "_readonly", True),
+        ):
+            qweb._save_esm_attachment_rows(
+                [], bundle="test.builds.readonly", build=build
+            )
+
+    def test_a_supersession_invalidates_every_worker_s_assets_cache(self):
+        Build = self.env["ir.asset.build"].sudo()
+        spec = {"kind": "bundle", "bundle": "test.builds.inval", "variant": "default"}
+        Build._publish({**spec, "directories": ["/web/assets/esm/tttt/"]})
+        with patch.object(type(self.env.registry), "clear_cache") as clear_cache:
+            Build._publish({**spec, "directories": ["/web/assets/esm/uuuu/"]})
+        clear_cache.assert_any_call("assets")
