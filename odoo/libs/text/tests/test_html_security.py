@@ -183,3 +183,20 @@ class TestSanitizeRemovesActiveContent(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestSmallHtmlHelpers(unittest.TestCase):
+    def test_a_non_web_scheme_is_kept_as_written(self):
+        for url in ("mailto:a@b.com", "tel:+3212345", "sms:+3212345"):
+            with self.subTest(url=url):
+                self.assertEqual(normalize_url(url), url)
+        self.assertEqual(normalize_url("example.com"), "http://example.com")
+        self.assertEqual(normalize_url("localhost:8069"), "http://localhost:8069")
+
+    def test_prepend_finds_an_uppercase_body(self):
+        from odoo.libs.text.html import prepend_html_content
+
+        self.assertEqual(
+            prepend_html_content("<HTML><BODY><p>b</p></BODY></HTML>", "<p>c</p>"),
+            "<HTML><BODY><p>c</p><p>b</p></BODY></HTML>",
+        )

@@ -697,7 +697,7 @@ _BR_TAGS_RE = re.compile(r"(([<]\s*[bB][rR]\s*/?[>]\s*){2,})")
 
 
 def normalize_url(url: str) -> str:
-    if urlparse(url).scheme in ("http", "https", "ftp", "ftps"):
+    if urlparse(url).scheme in ("http", "https", "ftp", "ftps", "mailto", "tel", "sms"):
         return url
     if url.startswith(("?", "#")) or (url.startswith("/") and not url.startswith("//")):
         return url
@@ -902,8 +902,8 @@ def add_html_content(
 def prepend_html_content(html_body: str, html_content: str | markupsafe.Markup) -> str:
     stripped = _DOCUMENT_SHELL_RE.sub("", html_content).strip()
 
-    body_match = re.search(r"<body[^>]*>", html_body) or re.search(
-        r"<html[^>]*>", html_body
+    body_match = re.search(r"<body[^>]*>", html_body, re.IGNORECASE) or re.search(
+        r"<html[^>]*>", html_body, re.IGNORECASE
     )
     insert_index = body_match.end() if body_match else 0
 
