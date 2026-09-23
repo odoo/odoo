@@ -7,6 +7,7 @@ import {
     insertText,
     isInViewportOf,
     listenStoreFetch,
+    onRpcAfter,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -878,6 +879,92 @@ test("can be marked as read while loading", async () => {
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     loadDeferred.resolve();
     await contains(".o-discuss-badge", { count: 0 });
+});
+
+test("message received while loading thread is kept in the thread", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "General",
+    });
+    const { promise: loadPromise, resolve: loadResolve } = Promise.withResolvers();
+    // Simulate an answer computed before Demo posts: a delayed mock route could include the post.
+    onRpcBefore("/discuss/channel/messages", async () => {
+        await loadPromise;
+        return { data: {}, messages: [] };
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Thread-empty");
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Hello", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    // The message list is not rendered while the thread loads, so the empty
+    // state going away is the only sign that the message reached the thread.
+    await contains(".o-mail-Thread-empty", { count: 0 });
+    loadResolve();
+    await contains(".o-mail-Message-content:has(:text('Hello'))");
+});
+
+test("message received while loading thread on last read message is shown once after scrolling down", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "General",
+    });
+    const messageIds = pyEnv["mail.message"].create(
+        Array.from({ length: 55 }, (_, i) => ({
+            author_id: partnerId,
+            body: `msg${i}`,
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
+    );
+    const [selfMemberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMemberId], {
+        new_message_separator: messageIds[9],
+    });
+    const { promise: loadPromise, resolve: loadResolve } = Promise.withResolvers();
+    // Simulate the answer reaching the client after Demo posts.
+    onRpcAfter("/discuss/channel/messages", async (response) => {
+        await response;
+        await loadPromise;
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Thread-empty");
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Hello", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Thread-empty", { count: 0 }); // wait for the message
+    loadResolve();
+    await contains(".o-mail-Message-content:has(:text('msg39'))");
+    await contains(".o-mail-Message-content:has(:text('Hello'))", { count: 0 });
+    await scroll(".o-mail-Thread", "bottom");
+    await contains(".o-mail-Message-content:has(:text('msg54'))");
+    await contains(".o-mail-Message-content:has(:text('Hello'))");
 });
 
 test("New message separator not appearing after showing composer on thread", async () => {
