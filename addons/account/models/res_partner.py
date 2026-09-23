@@ -2,7 +2,7 @@ import logging
 import re
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -617,7 +617,7 @@ class ResPartner(models.Model):
                 {
                     "iconClass": "fa-solid fa-pen-to-square",
                     "value": count,
-                    "label": _("Invoices/Bills/Mandates"),
+                    "label": self.env._("Invoices/Bills/Mandates"),
                     "tagClass": "o_tag_color_9",
                 }
             )
@@ -757,7 +757,7 @@ class ResPartner(models.Model):
         if mismatched is not None:
             _debug.logic("parent_vat_mismatch", partner=mismatched, parent=parent_id)
             raise UserError(
-                _(
+                self.env._(
                     "You cannot set a partner as an invoicing address of another if they have a different %(vat_label)s.",
                     vat_label=mismatched.vat_label,
                 )
@@ -792,7 +792,7 @@ class ResPartner(models.Model):
                     **unlocked
                 ).commercial_partner_id = commercial_partner
 
-        body = _(
+        body = self.env._(
             "The commercial partner has been updated for all related accounting entries."
         )
         updated = self.browse(partner.id for partner in partner2move_lines).sudo()
@@ -832,7 +832,9 @@ class ResPartner(models.Model):
         )
         if moves:
             raise UserError(
-                _("The partner cannot be deleted because it is used in Accounting")
+                self.env._(
+                    "The partner cannot be deleted because it is used in Accounting"
+                )
             )
 
     @_debug.perf.timed
@@ -1234,7 +1236,7 @@ class ResPartner(models.Model):
             )
         ):
             raise UserError(
-                _("Partners that are used in hashed entries cannot be merged.")
+                self.env._("Partners that are used in hashed entries cannot be merged.")
             )
         return super()._merge_method(destination, source)
 
@@ -1254,9 +1256,9 @@ class ResPartner(models.Model):
         for partner in self:
             expected_vat = self._get_expected_vat_format(partner.country_id.code)
             partner.partner_vat_placeholder = (
-                _("%s, or not applicable", expected_vat)
+                self.env._("%s, or not applicable", expected_vat)
                 if expected_vat
-                else _("not applicable")
+                else self.env._("not applicable")
             )
 
     @api.depends(

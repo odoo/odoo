@@ -2,7 +2,7 @@ from datetime import datetime
 
 from markupsafe import Markup
 
-from odoo import Command, _, api, models
+from odoo import Command, api, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.documents import mimetype_for
 from odoo.libs.numbers import float_round
@@ -324,7 +324,7 @@ class AccountEdiCommon(models.AbstractModel):
             try:
                 tax._check_repartition_line_ids()
             except ValidationError as e:
-                error_msg = _(
+                error_msg = self.env._(
                     "Tax '%(tax_name)s' is invalid: %(error_message)s",
                     tax_name=tax.name,
                     error_message=e.args[0],
@@ -406,7 +406,7 @@ class AccountEdiCommon(models.AbstractModel):
                 "tax_exemption_reason_code": code,
                 "tax_exemption_reason": TAX_EXEMPTION_MAPPING.get(
                     code,
-                    _("Exempt from tax")
+                    self.env._("Exempt from tax")
                     if tax.ubl_cii_requires_exemption_reason
                     else None,
                 ),
@@ -416,16 +416,16 @@ class AccountEdiCommon(models.AbstractModel):
         tax_exemption_reason = tax_exemption_reason_code = None
 
         if not tax:
-            tax_exemption_reason = _("Exempt from tax")
+            tax_exemption_reason = self.env._("Exempt from tax")
         elif tax_category_code == "E":
-            tax_exemption_reason = _(
+            tax_exemption_reason = self.env._(
                 "Articles 226 items 11 to 15 Directive 2006/112/EN"
             )
         elif tax_category_code == "G":
-            tax_exemption_reason = _("Export outside the EU")
+            tax_exemption_reason = self.env._("Export outside the EU")
             tax_exemption_reason_code = "VATEX-EU-G"
         elif tax_category_code == "K":
-            tax_exemption_reason = _("Intra-Community supply")
+            tax_exemption_reason = self.env._("Intra-Community supply")
             tax_exemption_reason_code = "VATEX-EU-IC"
 
         return {
@@ -447,7 +447,7 @@ class AccountEdiCommon(models.AbstractModel):
         :return: an Error message or None
         """
         if not record:
-            return custom_warning_message or _(
+            return custom_warning_message or self.env._(
                 "The element %(record)s is required on %(field_list)s.",
                 record=record,
                 field_list=field_names,
@@ -465,7 +465,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         # field is not present
         if custom_warning_message or isinstance(record, dict):
-            return custom_warning_message or _(
+            return custom_warning_message or self.env._(
                 "The element %(record)s is required on %(field_list)s.",
                 record=record,
                 field_list=field_names,
@@ -474,7 +474,7 @@ class AccountEdiCommon(models.AbstractModel):
         display_field_names = record.fields_get(field_names)
         if len(field_names) == 1:
             display_field = f"'{display_field_names[field_names[0]]['string']}'"
-            return _(
+            return self.env._(
                 "The field %(field)s is required on %(record)s.",
                 field=display_field,
                 record=record.display_name,
@@ -483,7 +483,7 @@ class AccountEdiCommon(models.AbstractModel):
             display_fields = [
                 f"'{display_field_names[x]['string']}'" for x in display_field_names
             ]
-            return _(
+            return self.env._(
                 "At least one of the following fields %(field_list)s is required on %(record)s.",
                 field_list=display_fields,
                 record=record.display_name,
@@ -503,7 +503,9 @@ class AccountEdiCommon(models.AbstractModel):
         ):
             if not line.tax_ids:
                 return {
-                    "tax_on_line": _("Each invoice line should have at least one tax.")
+                    "tax_on_line": self.env._(
+                        "Each invoice line should have at least one tax."
+                    )
                 }
         return {}
 
@@ -701,14 +703,14 @@ class AccountEdiCommon(models.AbstractModel):
                     country, vat, validation="setnull"
                 )
             logs.append(
-                _(
+                self.env._(
                     "Could not retrieve a partner corresponding to '%s'. A new partner was created.",
                     name,
                 )
             )
         elif not partner and not logs:
             logs.append(
-                _(
+                self.env._(
                     "Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, Phone: %(phone)s, Email: %(email)s",
                     name=name,
                     vat=vat,
@@ -759,7 +761,7 @@ class AccountEdiCommon(models.AbstractModel):
                 )
             except UserError as e:
                 invoice._message_log(
-                    body=_("The bank account couldn't be fetched: %s", str(e))
+                    body=self.env._("The bank account couldn't be fetched: %s", str(e))
                 )
         if banks:
             invoice.bank_account_id = banks[0]
@@ -814,7 +816,7 @@ class AccountEdiCommon(models.AbstractModel):
                     tax_ids += tax.ids
                 elif name:
                     logs.append(
-                        _(
+                        self.env._(
                             "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'.",
                             tax_percentage=tax_amount,
                             line=name,
@@ -822,7 +824,7 @@ class AccountEdiCommon(models.AbstractModel):
                     )
                 else:
                     logs.append(
-                        _(
+                        self.env._(
                             "Could not retrieve the tax: %s for the document level allowance/charge.",
                             tax_amount,
                         )
@@ -844,10 +846,12 @@ class AccountEdiCommon(models.AbstractModel):
             )
             if currency:
                 if not currency.active:
-                    logs.append(_("The currency '%s' is not active.", currency.name))
+                    logs.append(
+                        self.env._("The currency '%s' is not active.", currency.name)
+                    )
             else:
                 logs.append(
-                    _(
+                    self.env._(
                         "Could not retrieve currency: %s. Did you enable the multicurrency option "
                         "and activate the currency?",
                         currency_name,
@@ -871,7 +875,7 @@ class AccountEdiCommon(models.AbstractModel):
             formatted_amount = formatLang(
                 self.env, amount, currency_obj=invoice.currency_id
             )
-            logs.append(_("A payment of %s was detected.", formatted_amount))
+            logs.append(self.env._("A payment of %s was detected.", formatted_amount))
         return logs
 
     def _import_lines(
@@ -930,7 +934,7 @@ class AccountEdiCommon(models.AbstractModel):
         lines_values.append(
             {
                 "display_type": "product",
-                "name": _("Rounding"),
+                "name": self.env._("Rounding"),
                 "quantity": 1,
                 "product_id": False,
                 "price_unit": rounding_amount_currency,
@@ -945,7 +949,9 @@ class AccountEdiCommon(models.AbstractModel):
         formatted_amount = formatLang(
             self.env, rounding_amount_currency, currency_obj=currency
         )
-        logs.append(_("A rounding amount of %s was detected.", formatted_amount))
+        logs.append(
+            self.env._("A rounding amount of %s was detected.", formatted_amount)
+        )
 
         return lines_values, logs
 
@@ -1147,7 +1153,7 @@ class AccountEdiCommon(models.AbstractModel):
             price_unit = (price_subtotal + allow_charge_amount) / (delivered_qty or 1)
         else:
             raise UserError(
-                _(
+                self.env._(
                     "No gross price, net price nor line subtotal amount found for line in xml"
                 )
             )
@@ -1277,7 +1283,7 @@ class AccountEdiCommon(models.AbstractModel):
                     )
                 if not tax:
                     logs.append(
-                        _(
+                        self.env._(
                             "Tax with matching exigibility could not be retrieved: '%(exigibility)s' for line '%(line)s'.",
                             exigibility=tax_exigibility,
                             line=line_values["name"],
@@ -1297,7 +1303,7 @@ class AccountEdiCommon(models.AbstractModel):
 
             if not tax:
                 logs.append(
-                    _(
+                    self.env._(
                         "Could not retrieve the tax: %(amount)s %% for line '%(line)s'.",
                         amount=amount,
                         line=line_values["name"],

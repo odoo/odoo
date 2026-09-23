@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.documents import mimetype_for
@@ -195,10 +195,10 @@ class AccountReportSend(models.TransientModel):
                 wizard.checkbox_send_mail and partners_without_mail
             ):
                 warnings["account_missing_email"] = {
-                    "message": _("Partner(s) should have an email address."),
-                    "action_text": _("View Partner(s)"),
+                    "message": self.env._("Partner(s) should have an email address."),
+                    "action_text": self.env._("View Partner(s)"),
                     "action": partners_without_mail._get_records_action(
-                        name=_("Check Partner(s) Email(s)")
+                        name=self.env._("Check Partner(s) Email(s)")
                     ),
                 }
 
@@ -393,7 +393,7 @@ class AccountReportSend(models.TransientModel):
             and not self.mail_template_id
         ):
             raise UserError(
-                _("Please select a mail template to send multiple statements.")
+                self.env._("Please select a mail template to send multiple statements.")
             )
 
         force_synchronous = force_synchronous or self.checkbox_download
@@ -412,7 +412,7 @@ class AccountReportSend(models.TransientModel):
             # Set sending information on report
             if self.account_report_id.send_and_print_values:
                 raise UserError(
-                    _(
+                    self.env._(
                         "There are currently reports waiting to be sent, please try again later."
                     )
                 )
@@ -425,8 +425,10 @@ class AccountReportSend(models.TransientModel):
                 "tag": "display_notification",
                 "params": {
                     "type": "info",
-                    "title": _("Sending statements"),
-                    "message": _("Statements are being sent in the background."),
+                    "title": self.env._("Sending statements"),
+                    "message": self.env._(
+                        "Statements are being sent in the background."
+                    ),
                     "next": {"type": "ir.actions.act_window_close"},
                 },
             }

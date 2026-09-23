@@ -5,7 +5,7 @@ from datetime import UTC
 
 from asn1crypto import algos, cms, core, tsp, x509
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -131,7 +131,7 @@ class L10n_Eg_EdiThumbDrive(models.Model):
             .get_param("l10n_eg_eta.sign.host", "http://localhost:8069")
         )
         if not sign_host:
-            raise ValidationError(_("Please define the host of sign tool."))
+            raise ValidationError(self.env._("Please define the host of sign tool."))
         return sign_host
 
     def _serialize_for_signing(self, eta_inv):

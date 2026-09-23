@@ -3,7 +3,7 @@ from ast import literal_eval
 from collections import defaultdict, deque
 from itertools import chain
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -109,7 +109,9 @@ class AccountReportExpressionEval(models.Model):
             for expression in expressions
         ):
             raise UserError(
-                _("Trying to expand groupby results on lines without a groupby value.")
+                self.env._(
+                    "Trying to expand groupby results on lines without a groupby value."
+                )
             )
 
         # Group formulas for batching (when possible)
@@ -270,7 +272,7 @@ class AccountReportExpressionEval(models.Model):
             )
             for (_key, expressions), result in formula_results.items():
                 for expression in expressions:
-                    subformula_error_format = _(
+                    subformula_error_format = self.env._(
                         'Invalid subformula in expression "%(expression)s" of line "%(line)s": %(subformula)s',
                         expression=expression.label,
                         line=expression.report_line_id.name,
@@ -353,7 +355,7 @@ class AccountReportExpressionEval(models.Model):
                             # but forcing a different date_scope onto it. This case is not supported for now ; splitting the aggregation can be
                             # used as a workaround.
                             raise UserError(
-                                _(
+                                self.env._(
                                     "Expression labelled '%(label)s' of line '%(line)s' is being overwritten when computing the current report. "
                                     "Make sure the cross-report aggregations of this report only reference terms belonging to other reports.",
                                     label=expression.label,
@@ -708,7 +710,7 @@ class AccountReportExpressionEval(models.Model):
                     max_expansion_rounds=max_expansion_rounds,
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cyclic aggregation: %(expressions)s cannot be computed, because its formula %(formula)s references expressions that reference it back.",
                         expressions=", ".join(
                             sorted(
@@ -759,7 +761,7 @@ class AccountReportExpressionEval(models.Model):
                             date_scope=forced_date_scope,
                         )
                         raise UserError(
-                            _(
+                            self.env._(
                                 "Could not expand term %(term)s while evaluating formula %(unexpanded_formula)s",
                                 term=term,
                                 unexpanded_formula=unexpanded_formula,
@@ -781,7 +783,7 @@ class AccountReportExpressionEval(models.Model):
                     for expr in formulas_dict[unexpanded_formula, forced_date_scope]:
                         if expr.subformula != "ignore_zero_division":
                             raise UserError(
-                                _(
+                                self.env._(
                                     "Division by zero occurred while evaluating Expression: %(line_name)s > %(label)s.",
                                     line_name=expr.report_line_name,
                                     label=expr.label,
@@ -811,7 +813,7 @@ class AccountReportExpressionEval(models.Model):
                         )
                         if not other_expr_criterium_match:
                             raise UserError(
-                                _(
+                                self.env._(
                                     "Wrong format for if_other_expr_above/if_other_expr_below formula: %s",
                                     expression.subformula,
                                 )
@@ -826,7 +828,7 @@ class AccountReportExpressionEval(models.Model):
 
                         if not criterium_expression_id:
                             raise UserError(
-                                _(
+                                self.env._(
                                     "This subformula references an unknown expression: %s",
                                     expression.subformula,
                                 )
@@ -930,7 +932,7 @@ class AccountReportExpressionEval(models.Model):
             )
             if not matches:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Invalid rounding subformula: %(subformula)s. Expected round(decimal_places) or round(decimal_places, ROUNDING-METHOD), with a method among HALF-UP, HALF-DOWN, HALF-EVEN, UP, DOWN.",
                         subformula=subformula,
                     )
@@ -974,7 +976,7 @@ class AccountReportExpressionEval(models.Model):
             )
             if not match:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Invalid bound subformula: %(subformula)s. Expected if_above(CUR(amount)), if_below(CUR(amount)) or if_between(CUR(amount), CUR(amount)), with CUR an upper-case currency code.",
                         subformula=subformula,
                     )
@@ -1002,7 +1004,7 @@ class AccountReportExpressionEval(models.Model):
                 missing_codes = set(currency_codes) - set(currencies.mapped("name"))
                 if missing_codes:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Unknown currency code in bound subformula %(subformula)s: %(codes)s.",
                             subformula=subformula,
                             codes=", ".join(sorted(missing_codes)),
@@ -1051,7 +1053,7 @@ class AccountReportExpressionEval(models.Model):
                     _debug.logic("between_bound_suppressed", report=self)
                     return None
             else:
-                raise UserError(_("Unknown bound criterium: %s", criterium))
+                raise UserError(self.env._("Unknown bound criterium: %s", criterium))
 
         return unbounded_value
 
@@ -1133,7 +1135,7 @@ class AccountReportExpressionEval(models.Model):
                 domain = literal_eval(formula)
             except ValueError, SyntaxError:
                 raise UserError(
-                    _(
+                    self.env._(
                         'Invalid domain formula in expression "%(expression)s" of line "%(line)s": %(formula)s',
                         expression=expressions[0].label,
                         line=expressions[0].report_line_id.name,
@@ -1428,7 +1430,9 @@ class AccountReportExpressionEval(models.Model):
 
         if current_groupby or next_groupby or offset or limit:
             raise UserError(
-                _("'external' engine does not support groupby, limit nor offset.")
+                self.env._(
+                    "'external' engine does not support groupby, limit nor offset."
+                )
             )
 
         date_from, date_to = self._get_date_bounds_info(options, date_scope)
@@ -1732,7 +1736,7 @@ class AccountReportExpressionEval(models.Model):
                     not in self.env[custom_handler_name]._get_custom_groupby_map()
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "Field %(field)s does not exist on %(model)s, and is not supported by this report's custom handler.",
                             field=field_name,
                             model=source_model._name,
@@ -1740,7 +1744,7 @@ class AccountReportExpressionEval(models.Model):
                     )
             else:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Field %(field)s does not exist on %(model)s.",
                         field=field_name,
                         model=source_model._name,

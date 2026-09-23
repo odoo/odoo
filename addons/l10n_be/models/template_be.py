@@ -1,4 +1,4 @@
-from odoo import Command, _, models
+from odoo import Command, models
 
 from odoo.addons.account.models.chart_template import template
 
@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template("be")
     def _prepare_be_template_data(self):
         return {
-            "name": _("Base"),
+            "name": self.env._("Base"),
             "visible": False,
             "code_digits": "6",
             "property_account_receivable_id": "a400",

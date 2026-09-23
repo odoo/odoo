@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.account_payment_provider.const import REPORT_REASONS_MAPPING
@@ -222,7 +222,7 @@ class PaymentProvider(models.Model):
         # If the payment method is used by any payments, we block the uninstallation of the module.
         if self._has_existing_payment(payment_method):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot uninstall this module as payments using this payment method already exist."
                 )
             )

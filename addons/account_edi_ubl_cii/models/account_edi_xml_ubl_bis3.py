@@ -3,7 +3,7 @@ from typing import Literal
 from markupsafe import Markup
 from stdnum.no import mva
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.fields import Domain
 from odoo.tools.misc import NON_BREAKING_SPACE, formatLang
 from odoo.tools.xml_utils import dict_to_xml
@@ -112,7 +112,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         if tax_withholding_amount := ubl_values[
             "payable_amount_tax_withholding_currency"
         ]:
-            note = _(
+            note = self.env._(
                 "The prepaid amount of %s corresponds to the withholding tax applied.",
                 formatLang(
                     self.env, tax_withholding_amount, currency_obj=vals["currency_id"]
@@ -745,7 +745,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             # [BR-IC-12]-In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
             # "Intra-community supply" the Deliver to country code (BT-80) shall not be blank.
             "cen_en16931_delivery_country_code": (
-                _("For intracommunity supply, the delivery address should be included.")
+                self.env._(
+                    "For intracommunity supply, the delivery address should be included."
+                )
             )
             if intracom_delivery
             and dict_to_xml(
@@ -759,7 +761,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             # "Intra-community supply" the Actual delivery date (BT-72) or the Invoicing period (BG-14)
             # shall not be blank.
             "cen_en16931_delivery_date_invoicing_period": (
-                _(
+                self.env._(
                     "For intracommunity supply, the actual delivery date or the invoicing period should be included."
                 )
                 if (
@@ -789,7 +791,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 # [BR-25]-Each Invoice line (BG-25) shall contain the Item name (BT-153).
                 constraints.update(
                     {
-                        "cen_en16931_item_name": _(
+                        "cen_en16931_item_name": self.env._(
                             "Each invoice line should have a product or a label."
                         )
                     }
@@ -799,7 +801,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             if len(line_node["cac:Item"]["cac:ClassifiedTaxCategory"]) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
-                constraints["cen_en16931_tax_line"] = _(
+                constraints["cen_en16931_tax_line"] = self.env._(
                     "Each invoice line shall have one and only one tax."
                 )
 
@@ -810,7 +812,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 else vals["document_node"]["cac:AccountingSupplierParty"]
             )
             constraints[f"cen_en16931_{role}_country"] = (
-                _("The country is required for the %s.", role)
+                self.env._("The country is required for the %s.", role)
                 if not party_node["cac:Party"]["cac:PostalAddress"]["cac:Country"][
                     "cbc:IdentificationCode"
                 ]["_text"]
@@ -832,7 +834,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 # alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix 'EL'.
                 constraints.update(
                     {
-                        f"cen_en16931_{role}_vat_country_code": _(
+                        f"cen_en16931_{role}_vat_country_code": self.env._(
                             "The VAT of the %s should be prefixed with its country code.",
                             role,
                         )
@@ -897,7 +899,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                     ),
                     # [NL-R-003] For suppliers in the Netherlands, the legal entity identifier MUST be either a
                     # KVK or OIN number (schemeID 0106 or 0190)
-                    "nl_r_003": _(
+                    "nl_r_003": self.env._(
                         "%s should have a KVK or OIN number set in Company ID field or as Peppol e-address (EAS code 0106 or 0190).",
                         vals["supplier"].display_name,
                     )
@@ -932,7 +934,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                         ),
                         # [NL-R-005] For suppliers in the Netherlands, if the customer is in the Netherlands,
                         # the customer's legal entity identifier MUST be either a KVK or OIN number (schemeID 0106 or 0190)
-                        "nl_r_005": _(
+                        "nl_r_005": self.env._(
                             "%s should have a KVK or OIN number set in Company ID field or as Peppol e-address (EAS code 0106 or 0190).",
                             vals["customer"].display_name,
                         )
@@ -962,7 +964,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                     # NO-R-001: For Norwegian suppliers, a VAT number MUST be the country code prefix NO followed by a
                     # valid Norwegian organization number (nine numbers) followed by the letters MVA.
                     # Note: mva.is_valid("179728982MVA") is True while it lacks the NO prefix
-                    "no_r_001": _(
+                    "no_r_001": self.env._(
                         "The VAT number of the supplier does not seem to be valid. It should be of the form: NO179728982MVA."
                     )
                     if not mva.is_valid(vat)
@@ -1047,7 +1049,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             order.write(order_vals)
             order.message_post(
                 body=Markup("<strong>%s</strong>")
-                % _("Format used to import the document: %s", self._description)
+                % self.env._(
+                    "Format used to import the document: %s", self._description
+                )
             )
             if logs:
                 order._create_activity_set_details(

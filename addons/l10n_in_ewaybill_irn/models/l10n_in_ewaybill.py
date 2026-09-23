@@ -128,6 +128,7 @@ class L10nInEwaybill(models.Model):
         )
         if not l10n_in_edi_response_json:
             raise EWayBillError(
+                self.env,
                 {
                     "error": [
                         {
@@ -137,7 +138,7 @@ class L10nInEwaybill(models.Model):
                             ),
                         }
                     ]
-                }
+                },
             )
         return l10n_in_edi_response_json["Irn"]
 
@@ -145,6 +146,7 @@ class L10nInEwaybill(models.Model):
         self.check_singleton()
         if not self.company_id._l10n_in_edi_get_token():
             raise EWayBillError(
+                self.env,
                 {
                     "error": [
                         {
@@ -156,7 +158,7 @@ class L10nInEwaybill(models.Model):
                             ),
                         }
                     ]
-                }
+                },
             )
         response = self.account_move_id._l10n_in_edi_connect_to_server(
             url_end_point="generate_ewaybill_by_irn", json_payload=json_payload
@@ -191,5 +193,5 @@ class L10nInEwaybill(models.Model):
                     }
                 )
             if response.get("error"):
-                raise EWayBillError(response)
+                raise EWayBillError(self.env, response)
         return response

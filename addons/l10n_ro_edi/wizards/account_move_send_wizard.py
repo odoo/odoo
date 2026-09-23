@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class AccountMoveSendWizard(models.TransientModel):
@@ -16,8 +16,8 @@ class AccountMoveSendWizard(models.TransientModel):
                     "ro_spv": {
                         "checked": False,
                         "readonly": True,
-                        "label": _("Send E-Factura to SPV"),
-                        "question_circle": _(
+                        "label": self.env._("Send E-Factura to SPV"),
+                        "question_circle": self.env._(
                             "You can't send now. Invoice is waiting for an answer."
                         ),
                     }

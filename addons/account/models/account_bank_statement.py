@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -118,7 +118,7 @@ class AccountBankStatement(models.Model):
             name = ""
             if stmt.journal_id:
                 name = stmt.journal_id.code + " "
-            stmt.name = name + _(
+            stmt.name = name + self.env._(
                 "Statement %(date)s",
                 date=stmt.date or fields.Date.to_date(stmt.create_date),
             )
@@ -237,11 +237,11 @@ class AccountBankStatement(models.Model):
         for stmt in self:
             description = None
             if not stmt.is_valid:
-                description = _(
+                description = self.env._(
                     "The starting balance doesn't match the ending balance of the previous statement, or an earlier statement is missing."
                 )
             elif not stmt.is_complete:
-                description = _(
+                description = self.env._(
                     "The running balance (%s) doesn't match the specified ending balance.",
                     formatLang(
                         self.env, stmt.balance_end, currency_obj=stmt.currency_id
@@ -372,7 +372,9 @@ class AccountBankStatement(models.Model):
             lines = self.env["account.bank.statement.line"].browse(active_ids).sorted()
             if len(lines.journal_id) > 1:
                 raise UserError(
-                    _("A statement should only contain lines from the same journal.")
+                    self.env._(
+                        "A statement should only contain lines from the same journal."
+                    )
                 )
             indexes = lines.mapped("internal_index")
             lines_between = self.env["account.bank.statement.line"].search(
@@ -385,7 +387,7 @@ class AccountBankStatement(models.Model):
             canceled_lines = lines_between.filtered(lambda l: l.state == "cancel")
             if len(lines) != len(lines_between - canceled_lines):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Unable to create a statement due to missing transactions. You may want to reorder the transactions before proceeding."
                     )
                 )

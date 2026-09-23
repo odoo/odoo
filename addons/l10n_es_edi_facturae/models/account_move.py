@@ -7,7 +7,7 @@ from hashlib import sha1
 from lxml import etree
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.db.schema import column_exists, create_column
 from odoo.exceptions import UserError
 from odoo.libs.xml import (
@@ -518,7 +518,7 @@ class AccountMove(models.Model):
         if self.move_type.endswith("refund"):
             if not self.reversed_entry_id:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The credit note/refund appears to have been issued manually. For the purpose of "
                         "generating a Facturae document, it's necessary that the credit note/refund is created "
                         "directly from the associated invoice/bill."
@@ -725,14 +725,18 @@ class AccountMove(models.Model):
 
         if not company.vat:
             raise UserError(
-                _("The company needs a set tax identification number or VAT number")
+                self.env._(
+                    "The company needs a set tax identification number or VAT number"
+                )
             )
         if not partner.vat:
             raise UserError(
-                _("The partner needs a set tax identification number or VAT number")
+                self.env._(
+                    "The partner needs a set tax identification number or VAT number"
+                )
             )
         if not partner.country_id:
-            raise UserError(_("The partner needs a set country"))
+            raise UserError(self.env._("The partner needs a set country"))
         if self.move_type == "entry":
             return False
 
@@ -917,7 +921,7 @@ class AccountMove(models.Model):
             xml_content = self._l10n_es_facturae_sign_xml(xml_content, signature_values)
         except ValueError:
             errors.append(
-                _(
+                self.env._(
                     "No valid certificate found for this company, Facturae EDI file will not be signed.\n"
                 )
             )
@@ -1049,7 +1053,7 @@ class AccountMove(models.Model):
             invoice.partner_id = partner
         else:
             logs.append(
-                _(
+                self.env._(
                     "Customer/Vendor could not be found and could not be created due to missing data in the XML."
                 )
             )
@@ -1064,7 +1068,7 @@ class AccountMove(models.Model):
                 invoice.currency_id = currency
             else:
                 logs.append(
-                    _(
+                    self.env._(
                         "Could not retrieve currency: %s. Did you enable the multicurrency option "
                         "and activate the currency?",
                         invoice_currency_code,
@@ -1091,7 +1095,7 @@ class AccountMove(models.Model):
         # === invoice_line_ids ===
         logs += self._import_invoice_add_lines(invoice, tree, ref_multiplier)
 
-        body = Markup("<strong>%s</strong>") % _(
+        body = Markup("<strong>%s</strong>") % self.env._(
             "Invoice imported from Factura-E XML file."
         )
 
@@ -1118,7 +1122,9 @@ class AccountMove(models.Model):
                     line_vals["product_id"] = product.id
                 else:
                     logs.append(
-                        _("The product '%s' could not be found.", item_description)
+                        self.env._(
+                            "The product '%s' could not be found.", item_description
+                        )
                     )
                 line_vals["name"] = item_description
 
@@ -1209,7 +1215,7 @@ class AccountMove(models.Model):
                     line_vals["price_unit"] *= 1.0 + float(tax_rate) / 100.0
                 else:
                     logs.append(
-                        _(
+                        self.env._(
                             "Could not retrieve the tax: %(tax_rate)s %% for line '%(line)s'.",
                             tax_rate=tax_rate,
                             line=line_vals.get("name", ""),
@@ -1272,7 +1278,7 @@ class AccountMove(models.Model):
             )
         )
         if not certificates_sudo:
-            raise UserError(_("No valid certificate found"))
+            raise UserError(self.env._("No valid certificate found"))
 
         certificate_sudo = certificates_sudo[0]
 
@@ -1351,7 +1357,7 @@ class AccountMove(models.Model):
             print_items.append(
                 {
                     "key": "download_xml_facturae",
-                    "description": _("Factura-e XML"),
+                    "description": self.env._("Factura-e XML"),
                     **self.action_invoice_download_facturae(),
                 }
             )

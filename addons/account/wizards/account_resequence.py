@@ -1,7 +1,7 @@
 import json
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.date_utils import get_fiscal_year
@@ -57,7 +57,9 @@ class AccountResequenceWizard(models.TransientModel):
                 self.env.context["active_ids"]
             )
         if len(active_move_ids.journal_id) > 1:
-            raise UserError(_("You can only resequence items from the same journal"))
+            raise UserError(
+                self.env._("You can only resequence items from the same journal")
+            )
         move_types = set(active_move_ids.mapped("move_type"))
         if (
             active_move_ids.journal_id.refund_sequence
@@ -65,14 +67,14 @@ class AccountResequenceWizard(models.TransientModel):
             and len(move_types) > 1
         ):
             raise UserError(
-                _(
+                self.env._(
                     "The sequences of this journal are different for Invoices and Refunds but you selected some of both types."
                 )
             )
         is_payment = set(active_move_ids.mapped(lambda x: bool(x.origin_payment_id)))
         if active_move_ids.journal_id.payment_sequence and len(is_payment) > 1:
             raise UserError(
-                _(
+                self.env._(
                     "The sequences of this journal are different for Payments and non-Payments but you selected some of both types."
                 )
             )
@@ -143,7 +145,7 @@ class AccountResequenceWizard(models.TransientModel):
                         change_lines.append(
                             {
                                 "id": "other_" + str(line["id"]),
-                                "current_name": _(
+                                "current_name": self.env._(
                                     "... (%(nb_of_values)s other)",
                                     nb_of_values=in_elipsis,
                                 ),
@@ -295,7 +297,7 @@ class AccountResequenceWizard(models.TransientModel):
         ):
             if self.ordering == "date":
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can not reorder sequence by date when the journal is locked with a hash."
                     )
                 )

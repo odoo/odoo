@@ -7,7 +7,7 @@ from itertools import groupby
 
 import markupsafe
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.documents import SHEETS, SheetBuilder, get_writers, mimetype_for
 from odoo.tools.mail import html_to_inner_content
@@ -424,8 +424,10 @@ class AccountReportExport(models.Model):
 
         if account_lines_split_names:
             # If we have a separate account code column, add a title for it
-            write_cell(sheet, x_offset - 2, y_offset, _("Code"), title_format)
-            write_cell(sheet, x_offset - 1, y_offset, _("Account Name"), title_format)
+            write_cell(sheet, x_offset - 2, y_offset, self.env._("Code"), title_format)
+            write_cell(
+                sheet, x_offset - 1, y_offset, self.env._("Account Name"), title_format
+            )
         sheet.column(x_offset, x_offset + len(options["columns"]), 10)
 
         for column in options["columns"]:
@@ -615,7 +617,7 @@ class AccountReportExport(models.Model):
                 new_columns.append(
                     {
                         **col,
-                        "name": _("Currency Code"),
+                        "name": self.env._("Currency Code"),
                         "figure_type": "string",
                         "expression_label": f"_xlsx_currency_code_{col['expression_label']}",
                     }
@@ -651,7 +653,7 @@ class AccountReportExport(models.Model):
     @_debug.perf.timed
     def _get_xlsx_options_sheet(self, options_list):
         """A sheet summarising every filter and option active at the moment of the export."""
-        filters_sheet = SheetBuilder(_("Filters"))
+        filters_sheet = SheetBuilder(self.env._("Filters"))
         filters_sheet.column(0, 0, 20)
         filters_sheet.column(1, 1, 50)
         name_style = {"font_name": "Arial", "bold": True, "bottom": 2}
@@ -688,7 +690,7 @@ class AccountReportExport(models.Model):
         )
 
         # Write common options to the sheet.
-        filters_sheet.cell(y_offset, 0, _("All"), name_style)
+        filters_sheet.cell(y_offset, 0, self.env._("All"), name_style)
         y_offset += 1
         y_offset = self._write_report_options_to_xlsx_sheet(
             common_options_values, filters_sheet, y_offset
@@ -750,7 +752,7 @@ class AccountReportExport(models.Model):
             return title
         if "sections_source_id" not in options:
             _debug.logic("filename_generic", report=self, extension=extension)
-            return _("report.%(file_extension)s", file_extension=extension)
+            return self.env._("report.%(file_extension)s", file_extension=extension)
 
         def _transform_period(period=""):
             if dates := re.findall(r"\d{2}/\d{2}/\d{4}", period):
@@ -1001,19 +1003,21 @@ class AccountReportExport(models.Model):
             (
                 10,
                 "companies",
-                _("Companies") if len(companies) > 1 else _("Company"),
+                self.env._("Companies")
+                if len(companies) > 1
+                else self.env._("Company"),
                 [company["name"] for company in companies],
             ),
             (
                 30,
                 "selected_partner_ids",
-                _("Partners"),
+                self.env._("Partners"),
                 options.get("selected_partner_ids"),
             ),
             (
                 40,
                 "selected_partner_categories",
-                _("Partner Categories"),
+                self.env._("Partner Categories"),
                 options.get("selected_partner_categories"),
             ),
         ]
@@ -1022,7 +1026,7 @@ class AccountReportExport(models.Model):
                 (
                     50,
                     "selected_horizontal_group_id",
-                    _("Horizontal Group"),
+                    self.env._("Horizontal Group"),
                     [
                         group["name"]
                         for group in options["available_horizontal_groups"]
@@ -1035,7 +1039,7 @@ class AccountReportExport(models.Model):
                 (
                     60,
                     "company_currency",
-                    _("Company Currency"),
+                    self.env._("Company Currency"),
                     [options["company_currency"]["currency_name"]],
                 )
             )

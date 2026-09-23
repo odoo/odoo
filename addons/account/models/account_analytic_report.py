@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
@@ -163,7 +163,7 @@ class AccountReport(models.AbstractModel):
                 )
             else:
                 # We add the analytic layer to the column_headers before creating the columns
-                analytic_headers.append({"name": _("Total")})
+                analytic_headers.append({"name": self.env._("Total")})
 
                 options["column_headers"] = [
                     *options["column_headers"],

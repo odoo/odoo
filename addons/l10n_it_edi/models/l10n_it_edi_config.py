@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 TAX_SYSTEM = [
@@ -118,7 +118,7 @@ class L10nItEdiConfig(models.Model):
                 and not company.l10n_it_edi_purchase_journal_id.default_account_id
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The Italian default purchase journal requires a default account."
                     )
                 )
@@ -137,7 +137,7 @@ class L10nItEdiConfig(models.Model):
                 or not record.l10n_it_eco_index_liquidation_state
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "All fields about the Economic and Administrative Index must be completed."
                     )
                 )
@@ -160,7 +160,7 @@ class L10nItEdiConfig(models.Model):
                 )
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "If one of Share Capital or Sole Shareholder is present, "
                         "then they must be both filled out."
                     )
@@ -174,14 +174,18 @@ class L10nItEdiConfig(models.Model):
             if not record.l10n_it_has_tax_representative:
                 continue
             if not record.l10n_it_tax_representative_partner_id:
-                raise ValidationError(_("You must select a tax representative."))
+                raise ValidationError(
+                    self.env._("You must select a tax representative.")
+                )
             if not record.l10n_it_tax_representative_partner_id.vat:
                 raise ValidationError(
-                    _("Your tax representative partner must have a tax number.")
+                    self.env._(
+                        "Your tax representative partner must have a tax number."
+                    )
                 )
             if not record.l10n_it_tax_representative_partner_id.country_id:
                 raise ValidationError(
-                    _("Your tax representative partner must have a country.")
+                    self.env._("Your tax representative partner must have a country.")
                 )
 
     @api.depends("company_id.country_code")

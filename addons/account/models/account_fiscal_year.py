@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -40,14 +40,16 @@ class AccountFiscalYear(models.Model):
                     "fiscal_year_rejected", fiscal_year=fy, reason="inverted_dates"
                 )
                 raise ValidationError(
-                    _("The ending date must not be prior to the starting date.")
+                    self.env._(
+                        "The ending date must not be prior to the starting date."
+                    )
                 )
             if fy.company_id.parent_id:
                 _debug.logic(
                     "fiscal_year_rejected", fiscal_year=fy, reason="child_company"
                 )
                 raise ValidationError(
-                    _("You cannot have a fiscal year on a child company.")
+                    self.env._("You cannot have a fiscal year on a child company.")
                 )
 
             overlapping = any(
@@ -59,7 +61,7 @@ class AccountFiscalYear(models.Model):
             if overlapping:
                 _debug.logic("fiscal_year_rejected", fiscal_year=fy, reason="overlap")
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can not have an overlap between two fiscal years, please correct the start and/or end dates of your fiscal years."
                     )
                 )

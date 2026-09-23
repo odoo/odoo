@@ -4,7 +4,7 @@ import re
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -31,33 +31,33 @@ class AccountReportActions(models.Model):
             **super()._caret_options_initializer_default(),
             "account.account": [
                 {
-                    "name": _("General Ledger"),
+                    "name": self.env._("General Ledger"),
                     "action": "caret_option_open_general_ledger",
                 },
             ],
             "account.move": [
                 {
-                    "name": _("View Journal Entry"),
+                    "name": self.env._("View Journal Entry"),
                     "action": "caret_option_open_record_form",
                 },
             ],
             "account.move.line": [
                 {
-                    "name": _("View Journal Entry"),
+                    "name": self.env._("View Journal Entry"),
                     "action": "caret_option_open_record_form",
                     "action_param": "move_id",
                 },
             ],
             "account.payment": [
                 {
-                    "name": _("View Payment"),
+                    "name": self.env._("View Payment"),
                     "action": "caret_option_open_record_form",
                     "action_param": "payment_id",
                 },
             ],
             "account.bank.statement": [
                 {
-                    "name": _("View Bank Statement"),
+                    "name": self.env._("View Bank Statement"),
                     "action": "caret_option_open_statement_line_reco_widget",
                 },
             ],
@@ -74,7 +74,7 @@ class AccountReportActions(models.Model):
         if not self._reads_ledger():
             return super()._get_default_audit_action_dict()
         return {
-            "name": _("Journal Items"),
+            "name": self.env._("Journal Items"),
             "type": "ir.actions.act_window",
             "res_model": "account.move.line",
             "view_mode": "list",
@@ -163,7 +163,7 @@ class AccountReportActions(models.Model):
         )
         if not account_id_to_search and not company_id_to_search:
             raise UserError(
-                _(
+                self.env._(
                     "'Open General Ledger' caret option is only available form report lines targetting "
                     "accounts or Result Brought Forward."
                 )
@@ -176,7 +176,7 @@ class AccountReportActions(models.Model):
         elif len(self.env.companies) == 1:
             search_content = str(UNDISTR_LINE_NAME)
         else:
-            search_content = _(
+            search_content = self.env._(
                 "%(line_name)s - %(company_name)s",
                 line_name=UNDISTR_LINE_NAME,
                 company_name=self.env["res.company"].browse(company_id_to_search).name,
@@ -217,7 +217,7 @@ class AccountReportActions(models.Model):
         elif record._name == "account.bank.statement":
             return record.action_view_bank_reconcile_widget()
         raise UserError(
-            _(
+            self.env._(
                 "'View Bank Statement' caret option is only available for report lines targeting bank statements."
             )
         )
@@ -508,7 +508,7 @@ class AccountReportActions(models.Model):
         deferral_line_ids = self.env["account.move"].search(domain).line_ids.ids
         return {
             "type": "ir.actions.act_window",
-            "name": _("Deferred Entries"),
+            "name": self.env._("Deferred Entries"),
             "res_model": "account.move.line",
             "domain": [("id", "in", deferral_line_ids)],
             "views": [(False, "list"), (False, "form")],
@@ -525,7 +525,7 @@ class AccountReportActions(models.Model):
 
         return {
             "type": "ir.actions.act_window",
-            "name": _("Enable Sections"),
+            "name": self.env._("Enable Sections"),
             "view_mode": "list,form",
             "res_model": "report.formula",
             "domain": [
@@ -622,11 +622,15 @@ class AccountReportActions(models.Model):
         try:
             value_to_set = float_round(float(new_value_str), precision_digits=rounding)
         except ValueError:
-            raise UserError(_("%s is not a numeric value", new_value_str)) from None
+            raise UserError(
+                self.env._("%s is not a numeric value", new_value_str)
+            ) from None
 
         model, account_id = self._get_model_info_from_id(line_id)
         if model != "account.account":
-            raise UserError(_("Budget items can only be edited from account lines."))
+            raise UserError(
+                self.env._("Budget items can only be edited from account lines.")
+            )
 
         # Depending on the expression's formula, the balance of the account could be multiplied by -1
         # within the report. We need to apply the same multiplier on the budget item we create.

@@ -1,7 +1,7 @@
 import re
 from itertools import starmap
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -35,7 +35,7 @@ class ResPartnerBankAccount(models.Model):
                 False,
             ]:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The QR Code Type must be either Merchant ID, ATM Card Number or Bank Account to generate a Vietnam Bank QR code for account number %s.",
                         bank.acc_number,
                     )
@@ -117,11 +117,11 @@ class ResPartnerBankAccount(models.Model):
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         if qr_method == "emv_qr" and self.country_code == "VN":
             if currency.name != "VND":
-                return _(
+                return self.env._(
                     "Can't generate a Vietnamese QR banking code with a currency other than VND."
                 )
             if not self.bank_bic:
-                return _(
+                return self.env._(
                     "Missing Bank Identifier Code.\n"
                     "Please configure the Bank Identifier Code inside the bank settings."
                 )
@@ -149,21 +149,21 @@ class ResPartnerBankAccount(models.Model):
             )
 
         if not (self.partner_id.city or self.partner_id.state_id):
-            return _("Missing Merchant City or State.")
+            return self.env._("Missing Merchant City or State.")
         if not self.proxy_type:
-            return _("Missing Proxy Type.")
+            return self.env._("Missing Proxy Type.")
         if self.proxy_type not in [
             "merchant_id",
             "payment_service",
             "atm_card",
             "bank_acc",
         ]:
-            return _(
+            return self.env._(
                 "The proxy type %s is not supported for Vietnamese partners. It must be either Merchant ID, ATM Card Number or Bank Account",
                 self.proxy_type,
             )
         if not self.proxy_value:
-            return _("Missing Proxy Value.")
+            return self.env._("Missing Proxy Value.")
         if not self._get_merchant_account_info():
-            return _("Missing Merchant Account Information.")
+            return self.env._("Missing Merchant Account Information.")
         return None

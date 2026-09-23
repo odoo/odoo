@@ -1,7 +1,6 @@
 import re
 from json import JSONDecodeError
 
-from odoo import _
 from odoo.libs.debug_log import DebugLog
 
 SCHEMATRON_ERROR_ID_PATTERN = r"BR-(?:CL-)?\d{3}"
@@ -81,10 +80,10 @@ class ETransportAPI:
             case 404:
                 return {"error": response.json()["message"]}
             case 403:
-                return {"error": _("Access token is forbidden.")}
+                return {"error": company.env._("Access token is forbidden.")}
             case 204:
                 return {
-                    "error": _(
+                    "error": company.env._(
                         "You reached the limit of requests. Please try again later."
                     )
                 }

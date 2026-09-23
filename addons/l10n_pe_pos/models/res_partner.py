@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -10,7 +10,7 @@ class ResPartner(models.Model):
         consumidor_final_anonimo = self.env.ref("l10n_pe_pos.partner_pe_cf")
         if consumidor_final_anonimo & self:
             raise UserError(
-                _(
+                self.env._(
                     "Deleting the partner %s is not allowed because it is required by the Peruvian point of sale.",
                     consumidor_final_anonimo.display_name,
                 )

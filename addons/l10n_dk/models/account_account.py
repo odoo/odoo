@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -48,7 +48,7 @@ class AccountAccount(models.Model):
             )
             if count - nb_to_delete < 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You must keep at least one bank and cash account for %(company)s!",
                         company=company_id.name,
                     )

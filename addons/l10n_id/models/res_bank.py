@@ -2,7 +2,7 @@ import datetime
 
 import requests
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs import guarded_http, netguard
 from odoo.libs.web import urljoin
@@ -10,7 +10,7 @@ from odoo.libs.web import urljoin
 QRIS_TIMEOUT = 35  # They say that the time to get a response vary between 6 to 30s
 
 
-def _l10n_id_make_qris_request(endpoint, params):
+def _l10n_id_make_qris_request(env, endpoint, params):
     """Make an API request to QRIS, using the given path and params."""
     url = urljoin("https://qris.online/restapi/qris/", endpoint)
     try:
@@ -20,14 +20,14 @@ def _l10n_id_make_qris_request(endpoint, params):
         response = response.json()
     except requests.exceptions.HTTPError as err:
         raise ValidationError(
-            _(
+            env._(
                 "Communication with QRIS failed. QRIS returned with the following error: %s",
                 err,
             )
         ) from None
     except requests.RequestException, ValueError:
         raise ValidationError(
-            _("Could not establish a connection to the QRIS API.")
+            env._("Could not establish a connection to the QRIS API.")
         ) from None
 
     return response
@@ -49,22 +49,22 @@ class ResPartnerBankAccount(models.Model):
     def _get_available_qr_methods(self):
         # EXTENDS account
         rslt = super()._get_available_qr_methods()
-        rslt.append(("id_qr", _("QRIS"), 40))
+        rslt.append(("id_qr", self.env._("QRIS"), 40))
         return rslt
 
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         # EXTENDS account
         if qr_method == "id_qr":
             if self.country_code != "ID":
-                return _(
+                return self.env._(
                     "You cannot generate a QRIS QR code with a bank account that is not in Indonesia."
                 )
             if currency.name != "IDR":
-                return _(
+                return self.env._(
                     "You cannot generate a QRIS QR code with a currency other than IDR"
                 )
             if not (self.sudo().l10n_id_qris_api_key and self.sudo().l10n_id_qris_mid):
-                return _(
+                return self.env._(
                     "To use QRIS QR code, Please setup the QRIS API Key and Merchant ID on the bank's configuration"
                 )
             return None
@@ -83,7 +83,7 @@ class ResPartnerBankAccount(models.Model):
         # EXTENDS account
         if qr_method == "id_qr":
             if not amount:
-                return _("The amount must be set to generate a QR code.")
+                return self.env._("The amount must be set to generate a QR code.")
 
         return super()._check_for_qr_code_errors(
             qr_method,
@@ -135,7 +135,7 @@ class ResPartnerBankAccount(models.Model):
                 "cliTrxNumber": free_communication or structured_communication,
                 "cliTrxAmount": int(amount),
             }
-            response = _l10n_id_make_qris_request("show_qris.php", params)
+            response = _l10n_id_make_qris_request(self.env, "show_qris.php", params)
             if response.get("status") == "failed":
                 raise ValidationError(response.get("data"))
             data = response.get("data")
@@ -219,6 +219,7 @@ class ResPartnerBankAccount(models.Model):
             - the datetime at which the QR code was generated
         """
         return _l10n_id_make_qris_request(
+            self.env,
             "checkpaid_qris.php",
             {
                 "do": "checkStatus",

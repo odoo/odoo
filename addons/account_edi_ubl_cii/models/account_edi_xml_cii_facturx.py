@@ -3,7 +3,7 @@ from datetime import datetime
 
 from lxml import etree
 
-from odoo import Command, _, models
+from odoo import Command, models
 from odoo.tools import cleanup_xml_node, float_repr, html2plaintext, is_html_empty
 
 _logger = logging.getLogger(__name__)
@@ -50,7 +50,7 @@ class AccountEdiXmlCii(models.AbstractModel):
                     "seller_payment_instructions_2": self._check_required_fields(
                         vals["record"]["bank_account_id"],
                         "sanitized_acc_number",
-                        _(
+                        self.env._(
                             "The field 'Sanitized Account Number' is required on the Recipient Bank."
                         ),
                     ),
@@ -109,7 +109,7 @@ class AccountEdiXmlCii(models.AbstractModel):
         for line_vals in vals["invoice_line_vals_list"]:
             line = line_vals["line"]
             if not vals["tax_details"]["tax_details_per_record"][line]["tax_details"]:
-                return _(
+                return self.env._(
                     "You should include at least one tax per invoice line. [BR-CO-04]-Each Invoice line (BG-25) "
                     "shall be categorized with an Invoiced item VAT category code (BT-151)."
                 )
@@ -119,7 +119,7 @@ class AccountEdiXmlCii(models.AbstractModel):
         for line_vals in vals["tax_details"]["tax_details_per_record"]:
             tax_rate_list = line_vals.tax_ids.flatten_taxes_hierarchy().mapped("amount")
             if not any(rate > 0 for rate in tax_rate_list):
-                return _(
+                return self.env._(
                     "When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
                     "each invoice line should be greater than 0."
                 )
@@ -391,7 +391,7 @@ class AccountEdiXmlCii(models.AbstractModel):
         invoice_values = {}
         if qty_factor == -1:
             logs.append(
-                _(
+                self.env._(
                     "The invoice has been converted into a credit note and the quantities have been reverted."
                 )
             )

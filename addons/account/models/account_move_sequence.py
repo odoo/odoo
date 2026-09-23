@@ -2,7 +2,7 @@ import re
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -196,7 +196,7 @@ class AccountMove(models.Model):
             partner_identifier = (
                 str(self.partner_id.commercial_partner_id.id)
                 if self.partner_id
-                else _("[Partner id]")
+                else self.env._("[Partner id]")
             )
             starting_sequence = "%s%s/%s/%02d/0000" % (
                 self.journal_id.code,
@@ -318,7 +318,7 @@ class AccountMove(models.Model):
 
     def _get_invoice_reference_odoo_partner(self):
         ref = self.partner_id.ref or str(self.partner_id.id)
-        prefix = _("CUST")
+        prefix = self.env._("CUST")
         return "%s/%s" % (prefix, ref)
 
     def _get_invoice_computed_reference(self):
@@ -330,7 +330,7 @@ class AccountMove(models.Model):
         )
         if ref_function is None:
             raise UserError(
-                _(
+                self.env._(
                     "The combination of reference model and reference type on the journal is not implemented"
                 )
             )

@@ -1,6 +1,6 @@
 from itertools import starmap
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import SQL, TransactionMemo
@@ -58,7 +58,7 @@ class AccountAnalyticDistributionModel(models.Model):
         self.env.cr.execute(query)
         if self.env.cr.dictfetchone():
             raise UserError(
-                _(
+                self.env._(
                     "You defined a distribution with analytic account(s) belonging to a specific company but a model shared between companies or with a different company"
                 )
             )

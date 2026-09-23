@@ -1,7 +1,7 @@
 import re
 from itertools import product
 
-from odoo import Command, _, api, models
+from odoo import Command, api, models
 from odoo.exceptions import RedirectWarning
 
 from .eu_account_map import EU_ACCOUNT_MAP
@@ -266,7 +266,7 @@ class ResCompany(models.Model):
                                 order="sequence,id desc",
                                 limit=1,
                             )
-                            foreign_tax_copy_name = existing_foreign_tax and _(
+                            foreign_tax_copy_name = existing_foreign_tax and self.env._(
                                 "%(tax_name)s (Copy)",
                                 tax_name=existing_foreign_tax.name,
                             )

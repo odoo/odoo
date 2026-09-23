@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 
 
@@ -19,7 +19,7 @@ class AccountConfig(models.Model):
                 [("company_id", "in", german_configs.company_id.ids)], limit=1
             )
         ):
-            raise ValidationError(_("You cannot change the fiscal country."))
+            raise ValidationError(self.env._("You cannot change the fiscal country."))
         return super().write(vals)
 
     @api.depends("company_id.country_code")

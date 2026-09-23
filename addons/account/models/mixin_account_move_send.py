@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from markupsafe import Markup
 
-from odoo import Command, _, api, models, modules, tools
+from odoo import Command, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -67,7 +67,9 @@ class MixinAccountMoveSend(models.AbstractModel):
             return action_report
 
         _debug.logic("pdf_report_missing", move=move)
-        raise UserError(_("There is no template that applies to this move type."))
+        raise UserError(
+            self.env._("There is no template that applies to this move type.")
+        )
 
     @api.model
     def _get_default_mail_template_id(self, move):
@@ -182,16 +184,16 @@ class MixinAccountMoveSend(models.AbstractModel):
         )
         if len(moves) > 1 and send_cron and not send_cron.sudo().active:
             has_cron_access = send_cron.has_access("write")
-            has_access_message = _(
+            has_access_message = self.env._(
                 "The scheduled action 'Send Invoices automatically' is archived. You won't be able to send invoices in batch."
             )
-            no_access_addendum = _("\nPlease contact your administrator.")
+            no_access_addendum = self.env._("\nPlease contact your administrator.")
             alerts["account_send_cron_archived"] = {
                 "level": "warning",
                 "message": has_access_message
                 if has_cron_access
                 else has_access_message + no_access_addendum,
-                "action_text": _("Check") if has_cron_access else None,
+                "action_text": self.env._("Check") if has_cron_access else None,
                 "action": send_cron._get_records_action() if has_cron_access else None,
             }
         email_moves = moves.filtered(
@@ -211,11 +213,11 @@ class MixinAccountMoveSend(models.AbstractModel):
             if partners_without_mail:
                 alerts["account_missing_email"] = {
                     "level": "warning" if is_batch else "danger",
-                    "message": _("Partner(s) should have an email address."),
-                    "action_text": _("View Partner(s)") if is_batch else False,
+                    "message": self.env._("Partner(s) should have an email address."),
+                    "action_text": self.env._("View Partner(s)") if is_batch else False,
                     "action": (
                         partners_without_mail._get_records_action(
-                            name=_("Check Partner(s) Email(s)")
+                            name=self.env._("Check Partner(s) Email(s)")
                         )
                         if is_batch
                         else False
@@ -438,14 +440,14 @@ class MixinAccountMoveSend(models.AbstractModel):
     def _get_move_constraints(self, move):
         constraints = {}
         if move.state != "posted":
-            constraints["not_posted"] = _(
+            constraints["not_posted"] = self.env._(
                 "You can't generate invoices that are not posted."
             )
         is_self_billing = move.journal_id.is_self_billing and move.is_purchase_document(
             include_receipts=True
         )
         if not move.is_sale_document(include_receipts=True) and not is_self_billing:
-            constraints["not_sale_document"] = _(
+            constraints["not_sale_document"] = self.env._(
                 "You can only generate sales documents."
             )
         return constraints
@@ -464,7 +466,7 @@ class MixinAccountMoveSend(models.AbstractModel):
             for move in moves
         ):
             raise UserError(
-                _(
+                self.env._(
                     "The sending of invoices is not set up properly, make sure the report used is set for invoices."
                 )
             )
@@ -557,7 +559,7 @@ class MixinAccountMoveSend(models.AbstractModel):
                     ]._get_splitted_report(pdf_report.report_name, content, report_type)
                     if invoice.id not in splitted_report:
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "Cannot identify the invoices in the generated PDF: %s",
                                 invoice.ids,
                             )
@@ -572,7 +574,9 @@ class MixinAccountMoveSend(models.AbstractModel):
                 )
                 if len(content_by_id) == 1 and False in content_by_id:
                     raise ValidationError(
-                        _("Cannot identify the invoices in the generated PDF: %s", ids)
+                        self.env._(
+                            "Cannot identify the invoices in the generated PDF: %s", ids
+                        )
                     )
 
             for invoice, invoice_data in group_invoices_data.items():
@@ -726,22 +730,21 @@ class MixinAccountMoveSend(models.AbstractModel):
             return
 
         def get_account_notification(move_ids, is_success: bool):
-            _ = self.env._
             return [
                 "account_notification",
                 {
                     "type": "success" if is_success else "warning",
-                    "title": _("Invoices sent")
+                    "title": self.env._("Invoices sent")
                     if is_success
-                    else _("Invoices in error"),
-                    "message": _("Invoices sent successfully.")
+                    else self.env._("Invoices in error"),
+                    "message": self.env._("Invoices sent successfully.")
                     if is_success
-                    else _("One or more invoices couldn't be processed."),
+                    else self.env._("One or more invoices couldn't be processed."),
                     "action_button": {
-                        "name": _("Open"),
-                        "action_name": _("Sent invoices")
+                        "name": self.env._("Open"),
+                        "action_name": self.env._("Sent invoices")
                         if is_success
-                        else _("Invoices in error"),
+                        else self.env._("Invoices in error"),
                         "model": "account.move",
                         "res_ids": move_ids,
                     },
@@ -1102,7 +1105,7 @@ class MixinAccountMoveSend(models.AbstractModel):
             in dict(self.env["res.partner"]._fields["invoice_sending_method"].selection)
             for sending_method in custom_settings.get("sending_methods", [])
         ):
-            raise ValidationError(_("Invalid sending method provided."))
+            raise ValidationError(self.env._("Invalid sending method provided."))
 
     @api.model
     @_debug.perf.timed

@@ -3,7 +3,7 @@ from datetime import date
 
 import markupsafe
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import OrderedSet, frozendict
@@ -445,13 +445,13 @@ class AccountPaymentRegister(models.TransientModel):
 
             if len(lines.company_id.root_id) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't create payments for entries belonging to different companies."
                     )
                 )
             if not lines:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't open the register payment wizard without at least one receivable/payable line."
                     )
                 )
@@ -1134,16 +1134,16 @@ class AccountPaymentRegister(models.TransientModel):
                         wizard.amount
                     ):
                         switch_message = (
-                            _(
+                            self.env._(
                                 "Consider paying the amount with %(btn_start)searly payment discount%(btn_end)s instead."
                             )
                             if total_amount_values["epd_applied"]
-                            else _(
+                            else self.env._(
                                 "Consider paying in %(btn_start)sinstallments%(btn_end)s instead."
                             )
                         )
                         html_lines += [
-                            _("This is the full amount."),
+                            self.env._("This is the full amount."),
                             switch_message,
                         ]
                 elif wizard.installments_mode == "overdue":
@@ -1151,8 +1151,10 @@ class AccountPaymentRegister(models.TransientModel):
                         "full_amount"
                     ]
                     html_lines += [
-                        _("This is the overdue amount."),
-                        _("Consider paying the %(btn_start)sfull amount%(btn_end)s."),
+                        self.env._("This is the overdue amount."),
+                        self.env._(
+                            "Consider paying the %(btn_start)sfull amount%(btn_end)s."
+                        ),
                     ]
                 elif wizard.installments_mode == "before_date":
                     wizard.installments_switch_amount = total_amount_values[
@@ -1160,19 +1162,23 @@ class AccountPaymentRegister(models.TransientModel):
                     ]
                     next_payment_date = self._extract_next_payment_date_from_context()
                     html_lines += [
-                        _(
+                        self.env._(
                             "Total for the installments before %(date)s.",
                             date=(next_payment_date or fields.Date.context_today(self)),
                         ),
-                        _("Consider paying the %(btn_start)sfull amount%(btn_end)s."),
+                        self.env._(
+                            "Consider paying the %(btn_start)sfull amount%(btn_end)s."
+                        ),
                     ]
                 elif wizard.installments_mode == "next":
                     wizard.installments_switch_amount = total_amount_values[
                         "full_amount"
                     ]
                     html_lines += [
-                        _("This is the next unreconciled installment."),
-                        _("Consider paying the %(btn_start)sfull amount%(btn_end)s."),
+                        self.env._("This is the next unreconciled installment."),
+                        self.env._(
+                            "Consider paying the %(btn_start)sfull amount%(btn_end)s."
+                        ),
                     ]
                 else:
                     wizard.installments_switch_amount = (
@@ -1352,7 +1358,7 @@ class AccountPaymentRegister(models.TransientModel):
                 )
             else:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The register payment wizard should only be called on account.move or account.move.line records."
                     )
                 )
@@ -1392,13 +1398,13 @@ class AccountPaymentRegister(models.TransientModel):
             )
             if not available_lines:
                 raise UserError(
-                    _(
+                    self.env._(
                         "There's nothing left to pay for the selected journal items, so no payment registration is necessary. You've got your finances under control like a boss!"
                     )
                 )
             if len(lines.company_id.root_id) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't create payments for entries belonging to different companies."
                     )
                 )
@@ -1407,13 +1413,13 @@ class AccountPaymentRegister(models.TransientModel):
                 and lines.company_id.root_id not in self.env.user.company_ids
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't create payments for entries belonging to different branches without access to parent company."
                     )
                 )
             if len(set(available_lines.mapped("account_type"))) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't register payments for both inbound and outbound moves at the same time."
                     )
                 )
@@ -1731,7 +1737,7 @@ class AccountPaymentRegister(models.TransientModel):
             )
         if not batches:
             raise UserError(
-                _(
+                self.env._(
                     "To record payments with %(payment_method)s, the recipient bank account must be manually validated. You should go on the partner bank account in order to validate it.",
                     payment_method=self.payment_channel_id.name,
                 )
@@ -1901,7 +1907,7 @@ class AccountPaymentRegister(models.TransientModel):
             return True
 
         action = {
-            "name": _("Payments"),
+            "name": self.env._("Payments"),
             "type": "ir.actions.act_window",
             "res_model": "account.payment",
             "context": {"create": False},

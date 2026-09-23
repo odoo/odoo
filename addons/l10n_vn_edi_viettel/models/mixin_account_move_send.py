@@ -1,7 +1,7 @@
 import base64
 import json
 
-from odoo import SUPERUSER_ID, _, api, models
+from odoo import SUPERUSER_ID, api, models
 
 
 class MixinAccountMoveSend(models.AbstractModel):
@@ -20,7 +20,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         res.update(
             {
                 "vn_sinvoice_send": {
-                    "label": _("Send to SInvoice"),
+                    "label": self.env._("Send to SInvoice"),
                     "is_applicable": self._is_vn_edi_applicable,
                 }
             }
@@ -103,7 +103,7 @@ class MixinAccountMoveSend(models.AbstractModel):
                 ]
             else:
                 invoice_data["error"] = {
-                    "error_title": _("Error when generating SInvoice file."),
+                    "error_title": self.env._("Error when generating SInvoice file."),
                     "errors": errors,
                 }
 
@@ -148,7 +148,7 @@ class MixinAccountMoveSend(models.AbstractModel):
 
                 if errors:
                     invoice_data["error"] = {
-                        "error_title": _("Error when sending to SInvoice"),
+                        "error_title": self.env._("Error when sending to SInvoice"),
                         "errors": errors,
                     }
 
@@ -188,7 +188,7 @@ class MixinAccountMoveSend(models.AbstractModel):
             )
             if xml_error_message or pdf_error_message:
                 invoice_data["error"] = {
-                    "error_title": _("Error when receiving SInvoice files."),
+                    "error_title": self.env._("Error when receiving SInvoice files."),
                     "errors": [
                         error_message
                         for error_message in [xml_error_message, pdf_error_message]
@@ -234,7 +234,7 @@ class MixinAccountMoveSend(models.AbstractModel):
 
                 # Log the new attachment in the chatter for reference. Make sure to add the JSON file.
                 invoice.message_post(
-                    body=_("Invoice sent to SInvoice"),
+                    body=self.env._("Invoice sent to SInvoice"),
                     attachment_ids=attachments.ids
                     + invoice.l10n_vn_edi_sinvoice_file_id.ids,
                 )

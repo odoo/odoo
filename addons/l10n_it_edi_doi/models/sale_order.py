@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -233,7 +233,7 @@ class SaleOrder(models.Model):
             )
             if declaration_tax_lines and not order.l10n_it_edi_doi_id:
                 errors.append(
-                    _(
+                    self.env._(
                         "Given the tax %s is applied, there should be a Declaration of Intent selected.",
                         declaration_of_intent_tax.name,
                     )
@@ -243,7 +243,7 @@ class SaleOrder(models.Model):
                 for line in declaration_tax_lines
             ):
                 errors.append(
-                    _(
+                    self.env._(
                         "A line using tax %s should not contain any other taxes",
                         declaration_of_intent_tax.name,
                     )
@@ -286,7 +286,7 @@ class SaleOrder(models.Model):
     def action_view_declaration_of_intent(self):
         self.check_singleton()
         return {
-            "name": _("Declaration of Intent for %s", self.display_name),
+            "name": self.env._("Declaration of Intent for %s", self.display_name),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "l10n_it_edi_doi.declaration_of_intent",

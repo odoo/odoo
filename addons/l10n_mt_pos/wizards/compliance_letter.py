@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from odoo import _, fields, models, release
+from odoo import fields, models, release
 from odoo.exceptions import UserError
 
 
@@ -17,7 +17,7 @@ class ComplianceLetter(models.TransientModel):
     def generate_letter(self):
         if self.company_id.country_id.code != "MT":
             raise UserError(
-                _(
+                self.env._(
                     "Compliance letters can only be created for companies registered in Malta. Please ensure the company's country is set to Malta."
                 )
             )

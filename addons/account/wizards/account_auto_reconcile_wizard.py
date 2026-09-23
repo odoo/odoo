@@ -1,6 +1,6 @@
 from datetime import date
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -203,7 +203,7 @@ class AccountAutoReconcileWizard(models.TransientModel):
         )
         if reconciled_amls_and_related:
             return {
-                "name": _("Automatically Reconciled Entries"),
+                "name": self.env._("Automatically Reconciled Entries"),
                 "type": "ir.actions.act_window",
                 "res_model": "account.move.line",
                 "context": "{'search_default_group_by_matching': True}",

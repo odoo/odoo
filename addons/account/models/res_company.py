@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import date, timedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import LockError, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, date_utils, format_list
@@ -129,7 +129,7 @@ class ResCompany(models.Model):
                 .sudo()
                 .create(
                     {
-                        "name": _("Group Payments Number Sequence"),
+                        "name": self.env._("Group Payments Number Sequence"),
                         "implementation": "no_gap",
                         "padding": 5,
                         "use_date_range": True,
@@ -218,7 +218,7 @@ class ResCompany(models.Model):
         self, unreconciled_statement_lines
     ):
         action = {
-            "name": _("Unreconciled Transactions"),
+            "name": self.env._("Unreconciled Transactions"),
             "type": "ir.actions.act_window",
             "res_model": "account.bank.statement.line",
             "context": {"create": False},
@@ -397,7 +397,7 @@ class ResCompany(models.Model):
                     and company.root_id._existing_accounting()
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot change the currency of the company since some journal items already exist"
                         )
                     )
@@ -409,7 +409,7 @@ class ResCompany(models.Model):
         context = {"dialog_size": "medium", **self.env.context}
         return {
             "type": "ir.actions.act_window",
-            "name": _("Setup Bank Account"),
+            "name": self.env._("Setup Bank Account"),
             "res_model": "account.setup.bank.manual.config",
             "target": "new",
             "view_mode": "form",
@@ -423,7 +423,7 @@ class ResCompany(models.Model):
         context = {"dialog_size": "medium", **self.env.context}
         return {
             "type": "ir.actions.act_window",
-            "name": _("Setup Credit Card Account"),
+            "name": self.env._("Setup Credit Card Account"),
             "res_model": "account.setup.bank.manual.config",
             "target": "new",
             "view_mode": "form",
@@ -443,13 +443,13 @@ class ResCompany(models.Model):
 
         if not default_journal:
             raise UserError(
-                _(
+                self.env._(
                     "Please install a chart of accounts or create a miscellaneous journal before proceeding."
                 )
             )
 
         return {
-            "ref": _("Opening Journal Entry"),
+            "ref": self.env._("Opening Journal Entry"),
             "company_id": self.id,
             "journal_id": default_journal.id,
             "date": (
@@ -517,7 +517,7 @@ class ResCompany(models.Model):
                         "xml_id": f"account.{self.id!s}_unaffected_earnings_account",
                         "values": {
                             "code": str(code),
-                            "name": _("Profit or Loss Appropriation"),
+                            "name": self.env._("Profit or Loss Appropriation"),
                             "account_type": unaffected_earnings_type,
                             "company_ids": [Command.link(self.id)],
                         },
@@ -606,7 +606,7 @@ class ResCompany(models.Model):
         opening_move = self.account_config_id.account_opening_move_id
         if opening_move and opening_move.state != "draft":
             raise UserError(
-                _(
+                self.env._(
                     'You cannot import the "opening_balance" if the opening move (%s) is already posted. '
                     "If you are absolutely sure you want to modify the opening balance of your accounts, "
                     "reset the move to draft.",
@@ -662,8 +662,8 @@ class ResCompany(models.Model):
                 balance, account.currency_id or company_currency, date=conversion_date
             ),
             currency_id_of=lambda account: (account.currency_id or company_currency).id,
-            opening_name=_("Opening balance"),
-            balancing_name=_("Automatic Balancing Line"),
+            opening_name=self.env._("Opening balance"),
+            balancing_name=self.env._("Automatic Balancing Line"),
         )
 
         _debug.logic(
@@ -753,7 +753,9 @@ class ResCompany(models.Model):
     def _check_hash_integrity(self):
         if not self.env.user.has_group("account.group_account_user"):
             raise UserError(
-                _("Please contact your accountant to print the Hash integrity result.")
+                self.env._(
+                    "Please contact your accountant to print the Hash integrity result."
+                )
             )
 
         journals = self.env["account.journal"].search(
@@ -880,7 +882,7 @@ class ResCompany(models.Model):
             "journal_name": journal.name,
             "restricted_by_hash_table": restricted_flag,
             "status": "no_data",
-            "msg_cover": _(
+            "msg_cover": self.env._(
                 "There is no journal entry flagged for accounting data inalterability yet."
             ),
         }
@@ -894,7 +896,7 @@ class ResCompany(models.Model):
                 "restricted_by_hash_table": restricted_flag,
                 "journal_name": journal_name,
                 "status": "corrupted",
-                "msg_cover": _(
+                "msg_cover": self.env._(
                     "Corrupted data on journal entry with id %(id)s (%(name)s).",
                     id=corrupted_move.id,
                     name=corrupted_move.name,
@@ -906,7 +908,7 @@ class ResCompany(models.Model):
             "restricted_by_hash_table": restricted_flag,
             "journal_name": journal_name,
             "status": "verified",
-            "msg_cover": _("Entries are correctly hashed"),
+            "msg_cover": self.env._("Entries are correctly hashed"),
             "first_move_name": first_move.name,
             "first_hash": first_move.inalterable_hash,
             "first_move_date": format_date(self.env, first_move.date),
@@ -923,7 +925,7 @@ class ResCompany(models.Model):
             if not allow_raising:
                 return False
             raise UserError(
-                _("Some documents are being sent by another process already.")
+                self.env._("Some documents are being sent by another process already.")
             ) from err
         return True
 

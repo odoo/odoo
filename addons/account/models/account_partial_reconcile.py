@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -116,7 +116,7 @@ class AccountPartialReconcile(models.Model):
         )
         if bad_partials:
             raise ValidationError(
-                _(
+                self.env._(
                     "Missing foreign currencies on partials having ids: %s",
                     bad_partials.ids,
                 )
@@ -134,7 +134,7 @@ class AccountPartialReconcile(models.Model):
         )
         if bad_partials:
             raise ValidationError(
-                _(
+                self.env._(
                     "Partial reconciliations must belong to the same company hierarchy and use the invoice-side company."
                 )
             )
@@ -157,7 +157,7 @@ class AccountPartialReconcile(models.Model):
         )
         if bad_partials:
             raise ValidationError(
-                _(
+                self.env._(
                     "Partial reconciliations require journal items on the same account, with a positive debit direction and a negative credit direction."
                 )
             )
@@ -219,7 +219,7 @@ class AccountPartialReconcile(models.Model):
                             "date": move._get_accounting_date(
                                 move.date, move._affect_tax_report()
                             ),
-                            "ref": _("Reversal of: %s", move.name),
+                            "ref": self.env._("Reversal of: %s", move.name),
                         }
                         for move in not_draft_moves
                     ],

@@ -1,7 +1,7 @@
 import re
 from collections import defaultdict
 
-from odoo import SUPERUSER_ID, Command, _, models
+from odoo import SUPERUSER_ID, Command, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_is_zero
 
@@ -276,7 +276,7 @@ class AccountBankStatementLine(models.Model):
                     Command.create(
                         {
                             "account_id": account_id,
-                            "label": _("Bank Fees"),
+                            "label": self.env._("Bank Fees"),
                             "amount_type": "percentage",
                             "amount_string": "100",
                         }

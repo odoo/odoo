@@ -8,7 +8,7 @@ from uuid import uuid4
 from lxml import etree
 from requests.exceptions import RequestException
 
-from odoo import _, api, fields, models, release
+from odoo import api, fields, models, release
 from odoo.exceptions import UserError
 from odoo.libs.datetime import timezone
 from odoo.libs.numbers import float_repr, float_round
@@ -342,15 +342,19 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
     def _check_can_post(self, values):
         # Ensure a certificate is available.
         if not self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_certificate_id:
-            return _("Please configure the certificate for TicketBAI.")
+            return self.env._("Please configure the certificate for TicketBAI.")
 
         # Ensure a tax agency is available.
         if not self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency:
-            return _("Please specify a tax agency on your company for TicketBAI.")
+            return self.env._(
+                "Please specify a tax agency on your company for TicketBAI."
+            )
 
         # Ensure a vat is available.
         if not self.company_id.vat:
-            return _("Please configure the Tax ID on your company for TicketBAI.")
+            return self.env._(
+                "Please configure the Tax ID on your company for TicketBAI."
+            )
 
         if (
             self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency
@@ -360,7 +364,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             .sudo()
             .get_param("l10n_es_edi_tbai.epigrafe", False)
         ):
-            return _(
+            return self.env._(
                 "In order to use Ticketbai Batuz for freelancers, you will need to configure the "
                 "Epigrafe or Main Activity.  In this version, you need to go in debug mode to "
                 "Settings > Technical > System Parameters and set the parameter 'l10n_es_edi_tbai.epigrafe'"
@@ -381,7 +385,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 and chain_head_doc != self
                 and chain_head_doc.state != "accepted"
             ):
-                return _(
+                return self.env._(
                     "TicketBAI: Cannot post invoice while chain head (%s) has not been posted",
                     chain_head_doc.name,
                 )
@@ -392,7 +396,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 and values["partner"]._l10n_es_is_foreign()
                 and values["taxes"].filtered(lambda t: not t.tax_scope)
             ):
-                return _(
+                return self.env._(
                     "In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
                     "\n".join(values["taxes"].mapped("name")),
                 )
@@ -414,17 +418,17 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                             domain, order="date", limit=1
                         )
                     if invoice_sent_before_original:  # No error if the original invoice was imported from a previous system
-                        return _(
+                        return self.env._(
                             "TicketBAI: Cannot post a reversal document while the source document has not been posted"
                         )
                 if not refund_reason:
-                    return _("Refund reason must be specified (TicketBAI)")
+                    return self.env._("Refund reason must be specified (TicketBAI)")
                 if is_simplified and refund_reason != "R5":
-                    return _(
+                    return self.env._(
                         "Refund reason must be R5 for simplified invoices (TicketBAI)"
                     )
                 if not is_simplified and refund_reason == "R5":
-                    return _(
+                    return self.env._(
                         "Refund reason cannot be R5 for non-simplified invoices (TicketBAI)"
                     )
         return None
@@ -1096,7 +1100,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             xml_doc = self._sign_sale_document(xml_doc)
         except ValueError:
             raise UserError(
-                _(
+                self.env._(
                     "No valid certificate found for this company, TicketBAI file will not be signed.\n"
                 )
             ) from None
@@ -1111,7 +1115,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             company.sudo().l10n_es_edi_tbai_config_id.l10n_es_tbai_certificate_id
         )
         if not certificate_sudo:
-            raise UserError(_("No certificate found"))
+            raise UserError(self.env._("No certificate found"))
 
         # Identifiers
         document_id = "Document-" + str(uuid4())

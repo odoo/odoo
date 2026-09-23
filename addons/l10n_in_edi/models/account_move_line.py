@@ -10,14 +10,15 @@ class AccountMoveLine(models.Model):
         return not self.tax_ids and self.price_subtotal < 0
 
     def _l10n_in_check_einvoice_validation(self):
-        _ = self.env._
         error_messages = {
-            "invalid_hsn": _(
+            "invalid_hsn": self.env._(
                 "Missing or invalid HSN/SAC code: Ensure that invoice lines contain "
                 "4, 6 or 8 digits"
             ),
-            "restrict_negative_discount_line": _("Negative discount is not allowed"),
-            "tax_validation": _(
+            "restrict_negative_discount_line": self.env._(
+                "Negative discount is not allowed"
+            ),
+            "tax_validation": self.env._(
                 "Set an appropriate GST tax on invoice lines "
                 "(if it's zero rated or nil rated then apply it too)"
             ),
@@ -46,13 +47,13 @@ class AccountMoveLine(models.Model):
             f"l10n_in_edi_{error_code}": {
                 "level": "danger" if error_code == "invalid_hsn" else "warning",
                 "message": error_messages[error_code],
-                "action_text": _("View Invoice Line(s)"),
+                "action_text": self.env._("View Invoice Line(s)"),
                 # The context are set in view_stock_move_line_list_hsn_l10n_in
                 # Please make sure to change, if any change in error codes
                 "action": lines.with_context(
                     **{error_code: True, "send_and_print": True}
                 )._get_records_action(
-                    name=_("Check Invoice Line(s)"),
+                    name=self.env._("Check Invoice Line(s)"),
                     domain=[("id", "in", lines.ids)],
                     views=[
                         (

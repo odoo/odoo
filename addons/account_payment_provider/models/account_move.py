@@ -3,7 +3,6 @@ import base64
 from odoo import api, fields, models
 from odoo.tools import SQL, format_date, str2bool
 from odoo.tools.image import image_data_uri
-from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -124,17 +123,19 @@ class AccountMove(models.Model):
         )
         errors = []
         if not enabled_feature:
-            errors.append(_("This invoice cannot be paid online."))
+            errors.append(self.env._("This invoice cannot be paid online."))
         if transactions and not self.currency_id.is_zero(self.amount_residual):
-            errors.append(_("There is no amount to be paid."))
+            errors.append(self.env._("There is no amount to be paid."))
         if self.state != "posted":
-            errors.append(_("This invoice isn't posted."))
+            errors.append(self.env._("This invoice isn't posted."))
         if self.currency_id.is_zero(self.amount_residual):
-            errors.append(_("This invoice has already been paid."))
+            errors.append(self.env._("This invoice has already been paid."))
         if self.move_type != "out_invoice":
-            errors.append(_("This is not an outgoing invoice."))
+            errors.append(self.env._("This is not an outgoing invoice."))
         if pending_transactions:
-            errors.append(_("There are pending transactions for this invoice."))
+            errors.append(
+                self.env._("There are pending transactions for this invoice.")
+            )
         return "\n".join(errors)
 
     @api.private

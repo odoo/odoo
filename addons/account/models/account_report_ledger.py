@@ -7,7 +7,7 @@ from collections.abc import Collection
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
@@ -144,7 +144,7 @@ class AccountReport(models.Model):
         for record in self:
             if record.availability_condition == "coa" and not record.chart_template:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The Availability is set to 'Chart of Accounts Matches' but the field Chart of Accounts is not set."
                     )
                 )
@@ -388,7 +388,7 @@ class AccountReport(models.Model):
             if not annual_statements:
                 annual_statements = Report.create(
                     {
-                        "name": _("Annual Statements"),
+                        "name": self.env._("Annual Statements"),
                         "root_report_id": root_annual_statements.id,
                         "country_id": asr_section_report.country_id.id,
                         "use_sections": True,
@@ -575,7 +575,7 @@ class AccountReport(models.Model):
             options["journals"] = [
                 {
                     "id": "divider",
-                    "name": _("Multi-ledger"),
+                    "name": self.env._("Multi-ledger"),
                     "model": "account.journal.group",
                 }
             ] + options_journal_groups
@@ -592,7 +592,7 @@ class AccountReport(models.Model):
             companies=len(company_journals_map),
         )
         if not company_journals_map:
-            options["name_journal_group"] = _("No Journal")
+            options["name_journal_group"] = self.env._("No Journal")
             return
 
         _debug.logic(
@@ -677,7 +677,7 @@ class AccountReport(models.Model):
         if options.get("selected_journal_groups"):
             names_to_display = [options["selected_journal_groups"]["name"]]
         elif len(all_journals) == len(journals_selected) or not journals_selected:
-            names_to_display = [_("All Journals")]
+            names_to_display = [self.env._("All Journals")]
         else:
             names_to_display = []
             for journal in options["journals"]:
@@ -697,11 +697,11 @@ class AccountReport(models.Model):
         )
         displayed_names = ", ".join(names_to_display[:max_nb_journals_displayed])
         if nb_remaining == 1:
-            options["name_journal_group"] = _(
+            options["name_journal_group"] = self.env._(
                 "%(names)s and one other", names=displayed_names
             )
         elif nb_remaining > 1:
-            options["name_journal_group"] = _(
+            options["name_journal_group"] = self.env._(
                 "%(names)s and %(remaining)s others",
                 names=displayed_names,
                 remaining=nb_remaining,
@@ -950,16 +950,20 @@ class AccountReport(models.Model):
             return
 
         account_type_list = [
-            {"id": "trade_receivable", "name": _("Receivable"), "selected": True},
+            {
+                "id": "trade_receivable",
+                "name": self.env._("Receivable"),
+                "selected": True,
+            },
             {
                 "id": "non_trade_receivable",
-                "name": _("Non Trade Receivable"),
+                "name": self.env._("Non Trade Receivable"),
                 "selected": False,
             },
-            {"id": "trade_payable", "name": _("Payable"), "selected": True},
+            {"id": "trade_payable", "name": self.env._("Payable"), "selected": True},
             {
                 "id": "non_trade_payable",
-                "name": _("Non Trade Payable"),
+                "name": self.env._("Non Trade Payable"),
                 "selected": False,
             },
         ]
@@ -1527,7 +1531,7 @@ class AccountReport(models.Model):
         if len(return_types) > 1:
             if len(set(return_types.mapped("deadline_periodicity"))) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "'%s' date scope cannot be evaluated for a report used by multiple return types using different periodicities.",
                         dict(
                             self.env["report.formula.expression"]
@@ -1560,7 +1564,7 @@ class AccountReport(models.Model):
         ):
             options["buttons"].append(
                 {
-                    "name": _("Returns"),
+                    "name": self.env._("Returns"),
                     "action": "action_view_returns",
                     "sequence": 110,
                     "always_show": True,
@@ -1754,7 +1758,7 @@ class AccountReport(models.Model):
 
                 if not token_match:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Invalid token '%(token)s' in account_codes formula '%(formula)s'",
                             token=token,
                             formula=formula,
@@ -2608,7 +2612,7 @@ class AccountReport(models.Model):
         if len(options["column_groups"]) > 1:
             # The options must be forged in order to generate carryover values. Entering this conditions means this hasn't been done in the right way.
             raise UserError(
-                _("Carryover can only be generated for a single column group.")
+                self.env._("Carryover can only be generated for a single column group.")
             )
 
         # Get the expressions to evaluate from the report
@@ -2692,7 +2696,7 @@ class AccountReport(models.Model):
                     options,
                     main_company,
                     {expr: difference},
-                    label=_("Carryover adjustment for tax unit"),
+                    label=self.env._("Carryover adjustment for tax unit"),
                 )
 
     @api.model
@@ -2826,7 +2830,7 @@ class AccountReport(models.Model):
                 )
                 external_values_create_vals.append(
                     {
-                        "name": _("Manual value"),
+                        "name": self.env._("Manual value"),
                         field_name: expression_totals[expression]["value"],
                         "date": date_to,
                         "target_report_expression_id": target_expression,
@@ -2855,7 +2859,7 @@ class AccountReport(models.Model):
                 external_values_create_vals.append(
                     {
                         "name": label
-                        or _(
+                        or self.env._(
                             "Carryover from %(date_from)s to %(date_to)s",
                             date_from=format_date(self.env, date_from),
                             date_to=format_date(self.env, date_to),
@@ -3041,7 +3045,7 @@ class AccountReport(models.Model):
                 "name": (
                     str(UNDISTR_LINE_NAME)
                     if len(self.env.companies) == 1
-                    else _(
+                    else self.env._(
                         "%(line_name)s - %(company)s",
                         line_name=UNDISTR_LINE_NAME,
                         company=self.env["res.company"].browse(company_id).name,
@@ -3109,7 +3113,7 @@ class AccountReport(models.Model):
             "id": self._get_generic_line_id(
                 None, None, parent_line_id=parent_line_id, markup="initial"
             ),
-            "name": _("Initial Balance"),
+            "name": self.env._("Initial Balance"),
             "level": 3 + level_shift,
             "parent_id": parent_line_id,
             "columns": line_columns,
@@ -3175,7 +3179,7 @@ class AccountReport(models.Model):
 
     def show_error_branch_allowed(self, *args, **kwargs):
         raise UserError(
-            _(
+            self.env._(
                 "Please select the main company and its branches in the company selector to proceed."
             )
         )
@@ -3244,7 +3248,11 @@ class AccountReport(models.Model):
                 parent_line_id=parent_id,
             )
             unfolded = line_id in options.get("unfolded_lines") or options["unfold_all"]
-            name = account_group.display_name if account_group else _("(No Group)")
+            name = (
+                account_group.display_name
+                if account_group
+                else self.env._("(No Group)")
+            )
             columns = []
             for col_total, column in zip(
                 column_totals, options["columns"], strict=False
@@ -3826,7 +3834,7 @@ class AccountReportExpression(models.Model):
                     reason="label_prefix",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot use the field carryover_target in an expression that does not have the label starting with _carryover_"
                     )
                 )
@@ -3838,7 +3846,7 @@ class AccountReportExpression(models.Model):
                     target_label=target_label,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "When targeting an expression for carryover, the label of that expression must start with _applied_carryover_"
                     )
                 )
@@ -3848,7 +3856,7 @@ class AccountReportExpression(models.Model):
         parts = self.carryover_target.split(".")
         if len(parts) != 2 or not all(parts):
             raise ValidationError(
-                _(
+                self.env._(
                     "The carryover target of expression '%(label)s' must have the form "
                     "'line_code.expression_label', but is '%(target)s'.",
                     label=self.label,
@@ -4018,7 +4026,7 @@ class AccountReportExpression(models.Model):
                 "carryover_target_not_found", expression=self, target_label=target_label
             )
             raise UserError(
-                _(
+                self.env._(
                     "Could not determine carryover target automatically for expression %s.",
                     self.label,
                 )
@@ -4043,7 +4051,7 @@ class AccountReportExpression(models.Model):
 
         return {
             "type": "ir.actions.act_window",
-            "name": _("Carryover lines for: %s", self.report_line_name),
+            "name": self.env._("Carryover lines for: %s", self.report_line_name),
             "res_model": "report.formula.external.value",
             "views": [(False, "list")],
             "domain": [
@@ -4129,5 +4137,7 @@ class AccountReportExternalValue(models.Model):
                 ]
                 lock_dates = "\n- " + "\n- ".join(lock_date_names)
                 raise ValidationError(
-                    _("You cannot update this value as it's locked by: %s", lock_dates)
+                    self.env._(
+                        "You cannot update this value as it's locked by: %s", lock_dates
+                    )
                 )

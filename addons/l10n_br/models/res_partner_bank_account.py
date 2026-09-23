@@ -1,7 +1,7 @@
 import re
 from itertools import starmap
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_repr
 
@@ -33,21 +33,21 @@ class ResPartnerBankAccount(models.Model):
         ):
             if bank.proxy_type not in ("email", "mobile", "br_cpf_cnpj", "br_random"):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The proxy type must be Email Address, Mobile Number, CPF/CNPJ (BR) or Random Key (BR) for Pix code generation."
                     )
                 )
 
             value = bank.proxy_value
             if bank.proxy_type == "email" and not is_valid_email(value):
-                raise ValidationError(_("%s is not a valid email.", value))
+                raise ValidationError(self.env._("%s is not a valid email.", value))
 
             if bank.proxy_type == "br_cpf_cnpj" and (
                 not self.partner_id.check_vat_br(value)
                 or any(not char.isdecimal() for char in value)
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "%s is not a valid CPF or CNPJ (don't include periods or dashes).",
                         value,
                     )
@@ -57,7 +57,7 @@ class ResPartnerBankAccount(models.Model):
                 not value or not value.startswith("+55") or len(value) != 14
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The mobile number %s is invalid. It must start with +55, contain a 2 digit territory or state code followed by a 9 digit number.",
                         value,
                     )
@@ -70,7 +70,7 @@ class ResPartnerBankAccount(models.Model):
                 regex, bank.proxy_value
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The random key %s is invalid, the format looks like this: 71d6c6e1-64ea-4a11-9560-a10870c40ca2",
                         value,
                     )
@@ -130,7 +130,9 @@ class ResPartnerBankAccount(models.Model):
         """Override."""
         if qr_method == "emv_qr" and self.country_code == "BR":
             if currency.name != "BRL":
-                return _("Can't generate a Pix QR code with a currency other than BRL.")
+                return self.env._(
+                    "Can't generate a Pix QR code with a currency other than BRL."
+                )
             return None
 
         return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
@@ -150,7 +152,7 @@ class ResPartnerBankAccount(models.Model):
             and self.country_code == "BR"
             and self.proxy_type not in ("email", "mobile", "br_cpf_cnpj", "br_random")
         ):
-            return _(
+            return self.env._(
                 "To generate a Pix code the proxy type for %s must be Email Address, Mobile Number, CPF/CNPJ (BR) or Random Key (BR).",
                 self.display_name,
             )

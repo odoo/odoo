@@ -1,4 +1,4 @@
-from odoo import Command, _, models
+from odoo import Command, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -122,7 +122,7 @@ class AccountBankStatementLine(models.Model):
         base_lines = self.env["account.move.line"].browse(aml_id)
         if len(base_lines) != len(statement_lines):
             raise UserError(
-                _(
+                self.env._(
                     "Expected one journal item per transaction, got %(lines)s for "
                     "%(transactions)s.",
                     lines=len(base_lines),
@@ -314,7 +314,7 @@ class AccountBankStatementLine(models.Model):
             and not self.move_id._is_user_able_to_review()
         ):
             raise ValidationError(
-                _("Validated entries can only be changed by your accountant.")
+                self.env._("Validated entries can only be changed by your accountant.")
             )
 
         move_lines_to_remove = self.env["account.move.line"].browse(move_line_ids)
@@ -372,7 +372,7 @@ class AccountBankStatementLine(models.Model):
             and not self.move_id._is_user_able_to_review()
         ):
             raise ValidationError(
-                _("Validated entries can only be changed by your accountant.")
+                self.env._("Validated entries can only be changed by your accountant.")
             )
 
         move_line_to_edit = self.env["account.move.line"].browse(move_line_id)

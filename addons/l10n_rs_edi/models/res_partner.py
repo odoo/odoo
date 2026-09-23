@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -24,7 +24,7 @@ class ResPartner(models.Model):
                 or not record.l10n_rs_edi_public_funds.isdigit()
             ):
                 raise ValidationError(
-                    _("Public Funds ID(JBKJS) must be exactly five digits")
+                    self.env._("Public Funds ID(JBKJS) must be exactly five digits")
                 )
 
     @api.constrains("l10n_rs_edi_registration_number")
@@ -35,5 +35,7 @@ class ResPartner(models.Model):
                 or not record.l10n_rs_edi_registration_number.isdigit()
             ):
                 raise ValidationError(
-                    _("Customer identification number should be 8 or 13 digits")
+                    self.env._(
+                        "Customer identification number should be 8 or 13 digits"
+                    )
                 )

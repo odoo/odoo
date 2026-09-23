@@ -1,7 +1,7 @@
 import ast
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
@@ -237,7 +237,7 @@ class AccountReport(models.Model):
                 current_model = self.env[report.custom_handler_model_name]
                 if not isinstance(current_model, custom_handler_model):
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Field 'Custom Handler Model' can only reference records inheriting from [%s].",
                             custom_handler_model._name,
                         )
@@ -247,7 +247,7 @@ class AccountReport(models.Model):
         source_model = self._get_source_model()
         if source_model is None:
             raise UserError(
-                _(
+                self.env._(
                     "Report '%(report)s' has no source model, so it can neither "
                     "evaluate a 'domain' expression nor group its lines.",
                     report=self.display_name,
@@ -273,7 +273,7 @@ class AccountReport(models.Model):
                 continue
             if report.source_model not in self.env:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Report '%(report)s' names the source model '%(model)s', "
                         "which does not exist.",
                         report=report.name,
@@ -284,7 +284,7 @@ class AccountReport(models.Model):
             for fname in (report.source_date_field, report.source_measure_field):
                 if fname and fname not in source_fields:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Report '%(report)s': '%(field)s' is not a field of "
                             "'%(model)s'.",
                             report=report.name,
@@ -441,7 +441,7 @@ class AccountReport(models.Model):
                     "root_report_rejected", report=report, reason="root_has_root"
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Only a report without a root report of its own can be selected as root report."
                     )
                 )
@@ -452,7 +452,7 @@ class AccountReport(models.Model):
                     variants=report.variant_report_ids,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Report "%(report)s" is the root report of %(count)s other '
                         "report(s), so it cannot become a variant itself.",
                         report=report.display_name,
@@ -468,7 +468,7 @@ class AccountReport(models.Model):
             for line in report.line_ids.sorted(lambda x: (x.sequence, x.id)):
                 if line.parent_id and line.parent_id.id not in seen_ids:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             'Line "%(line)s" defines line "%(parent_line)s" as its parent, but appears before it in the report. '
                             "The parent must always come first.",
                             line=line.name,
@@ -488,7 +488,7 @@ class AccountReport(models.Model):
                 or record.section_main_report_ids
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The sections defined on a report cannot have sections themselves."
                     )
                 )
@@ -499,7 +499,7 @@ class AccountReport(models.Model):
         for record in self:
             if record.availability_condition == "country" and not record.country_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The Availability is set to 'Country Matches' but the field Country is not set."
                     )
                 )
@@ -532,12 +532,12 @@ class AccountReport(models.Model):
     def _unlink_if_no_variant(self):
         _debug.lifecycle("_unlink_if_no_variant", records=self)
         if self.variant_report_ids:
-            raise UserError(_("You can't delete a report that has variants."))
+            raise UserError(self.env._("You can't delete a report that has variants."))
         self.line_ids.unlink()
 
     def _get_copied_name(self):
         self.check_singleton()
-        base_name = f"{self.name} {_('(copy)')}"
+        base_name = f"{self.name} {self.env._('(copy)')}"
         taken = set(
             self.with_context(active_test=False)
             .search([("name", "=like", f"{base_name}%")])

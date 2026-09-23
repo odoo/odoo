@@ -5,7 +5,7 @@ import re
 
 from lxml import etree
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.http import request
 from odoo.tools import (
@@ -134,7 +134,7 @@ class AccountMove(models.Model):
                 "cancelled",
             ]:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Cannot reset to draft or cancel invoice %s because an electronic document was already sent to NAV!",
                         move.name,
                     )
@@ -207,7 +207,7 @@ class AccountMove(models.Model):
             "confirmed_warning",
         ]:
             return {
-                "name": _("Technical Annulment"),
+                "name": self.env._("Technical Annulment"),
                 "type": "ir.actions.act_window",
                 "view_type": "form",
                 "view_mode": "form",
@@ -373,7 +373,7 @@ class AccountMove(models.Model):
             self.lock_for_update()
         except LockError:
             raise UserError(
-                _(
+                self.env._(
                     "Could not acquire lock on invoices - is another user performing operations on them?"
                 )
             ) from None
@@ -396,8 +396,8 @@ class AccountMove(models.Model):
         checks = {
             "company_vat_missing": {
                 "records": self.company_id.filtered(lambda c: not c.vat),
-                "message": _("Please set company VAT number!"),
-                "action_text": _("View Company/ies"),
+                "message": self.env._("Please set company VAT number!"),
+                "action_text": self.env._("View Company/ies"),
             },
             "company_vat_invalid": {
                 "records": self.company_id.filtered(
@@ -409,10 +409,10 @@ class AccountMove(models.Model):
                         )
                     )
                 ),
-                "message": _(
+                "message": self.env._(
                     "Please enter the Hungarian VAT (and/or Group VAT) number in 12345678-1-12 format!"
                 ),
-                "action_text": _("View Company/ies"),
+                "action_text": self.env._("View Company/ies"),
             },
             "company_address_missing": {
                 "records": self.company_id.filtered(
@@ -420,29 +420,35 @@ class AccountMove(models.Model):
                         not c.country_id or not c.zip or not c.city or not c.street
                     )
                 ),
-                "message": _("Please set company Country, Zip, City and Street!"),
-                "action_text": _("View Company/ies"),
+                "message": self.env._(
+                    "Please set company Country, Zip, City and Street!"
+                ),
+                "action_text": self.env._("View Company/ies"),
             },
             "company_not_huf": {
                 "records": self.company_id.filtered(
                     lambda c: c.currency_id.name not in ["HUF", "EUR"]
                 ),
-                "message": _("Please use HUF or EUR as your company currency."),
-                "action_text": _("View Company/ies"),
+                "message": self.env._(
+                    "Please use HUF or EUR as your company currency."
+                ),
+                "action_text": self.env._("View Company/ies"),
             },
             "partner_bank_account_invalid": {
                 "records": self.bank_account_id.filtered(
                     lambda p: not hu_bank_account_regex.fullmatch(p.acc_number)
                 ),
-                "message": _("Please set a valid recipient bank account number!"),
-                "action_text": _("View partner(s)"),
+                "message": self.env._(
+                    "Please set a valid recipient bank account number!"
+                ),
+                "action_text": self.env._("View partner(s)"),
             },
             "partner_vat_missing": {
                 "records": self.partner_id.commercial_partner_id.filtered(
                     lambda p: p.is_company and not p.vat
                 ),
-                "message": _("Please set partner Tax ID on company partners!"),
-                "action_text": _("View partner(s)"),
+                "message": self.env._("Please set partner Tax ID on company partners!"),
+                "action_text": self.env._("View partner(s)"),
             },
             "partner_vat_invalid": {
                 "records": self.partner_id.commercial_partner_id.filtered(
@@ -458,10 +464,10 @@ class AccountMove(models.Model):
                         )
                     )
                 ),
-                "message": _(
+                "message": self.env._(
                     "Please enter the Hungarian VAT (and/or Group VAT) number in 12345678-1-12 format!"
                 ),
-                "action_text": _("View partner(s)"),
+                "action_text": self.env._("View partner(s)"),
             },
             "partner_address_missing": {
                 "records": self.partner_id.commercial_partner_id.filtered(
@@ -472,15 +478,17 @@ class AccountMove(models.Model):
                         )
                     ),
                 ),
-                "message": _("Please set partner Country, Zip, City and Street!"),
-                "action_text": _("View partner(s)"),
+                "message": self.env._(
+                    "Please set partner Country, Zip, City and Street!"
+                ),
+                "action_text": self.env._("View partner(s)"),
             },
             "invoice_date_not_today": {
                 "records": self.filtered(
                     lambda m: m.invoice_date != fields.Date.context_today(m)
                 ),
-                "message": _("Please set invoice date to today!"),
-                "action_text": _("View invoice(s)"),
+                "message": self.env._("Please set invoice date to today!"),
+                "action_text": self.env._("View invoice(s)"),
             },
             "invoice_chain_not_confirmed": {
                 "records": self.env["account.move"].union(
@@ -498,10 +506,10 @@ class AccountMove(models.Model):
                         for move in self
                     ]
                 ),
-                "message": _(
+                "message": self.env._(
                     "The following invoices appear to be earlier in the chain, but have not yet been sent. Please send them first."
                 ),
-                "action_text": _("View invoice(s)"),
+                "action_text": self.env._("View invoice(s)"),
             },
             "invoice_advance_not_paid": {
                 "records": advance_invoices.filtered(
@@ -513,10 +521,10 @@ class AccountMove(models.Model):
                         )  # It's okay to send an advance and a final invoice together, as we sort by id before sending.
                     )
                 ),
-                "message": _(
+                "message": self.env._(
                     "All advance invoices must be paid and sent to NAV before the final invoice is issued."
                 ),
-                "action_text": _("View advance invoice(s)"),
+                "action_text": self.env._("View advance invoice(s)"),
             },
             "invoice_line_not_one_vat_tax": {
                 "records": self.filtered(
@@ -527,8 +535,10 @@ class AccountMove(models.Model):
                         )
                     )
                 ),
-                "message": _("Please set exactly one VAT tax on each invoice line!"),
-                "action_text": _("View invoice(s)"),
+                "message": self.env._(
+                    "Please set exactly one VAT tax on each invoice line!"
+                ),
+                "action_text": self.env._("View invoice(s)"),
             },
             "invoice_line_non_vat_taxes_misconfigured": {
                 "records": self.invoice_line_ids.tax_ids.filtered(
@@ -537,19 +547,19 @@ class AccountMove(models.Model):
                         and (not t.price_include or not t.include_base_amount)
                     )
                 ),
-                "message": _(
+                "message": self.env._(
                     "Please set any non-VAT (excise) taxes to be 'Included in Price' and 'Affects subsequent taxes'!"
                 ),
-                "action_text": _("View tax(es)"),
+                "action_text": self.env._("View tax(es)"),
             },
             "invoice_line_vat_taxes_misconfigured": {
                 "records": self.invoice_line_ids.tax_ids.filtered(
                     lambda t: t.l10n_hu_tax_type and not t.is_base_affected
                 ),
-                "message": _(
+                "message": self.env._(
                     "Please set any VAT taxes to be 'Affected by previous taxes'!"
                 ),
-                "action_text": _("View tax(es)"),
+                "action_text": self.env._("View tax(es)"),
             },
         }
 
@@ -569,8 +579,10 @@ class AccountMove(models.Model):
             lambda c: not c.l10n_hu_edi_config_id.l10n_hu_edi_server_mode
         ):
             errors["l10n_hu_edi_company_credentials_missing"] = {
-                "message": _("Please set NAV credentials in the Accounting Settings!"),
-                "action_text": _("Open Accounting Settings"),
+                "message": self.env._(
+                    "Please set NAV credentials in the Accounting Settings!"
+                ),
+                "action_text": self.env._("Open Accounting Settings"),
                 "action": self.env.ref("account.action_account_config")
                 .with_company(companies_missing_credentials[0])
                 ._get_action_dict(),
@@ -653,7 +665,7 @@ class AccountMove(models.Model):
                     "l10n_hu_edi_state": "rejected",
                     "l10n_hu_edi_transaction_code": False,
                     "l10n_hu_edi_messages": {
-                        "error_title": _(
+                        "error_title": self.env._(
                             "Could not authenticate with NAV. Check your credentials and try again."
                         ),
                         "errors": e.errors,
@@ -689,7 +701,7 @@ class AccountMove(models.Model):
                         "l10n_hu_edi_state": "send_timeout",
                         "l10n_hu_edi_transaction_code": False,
                         "l10n_hu_edi_messages": {
-                            "error_title": _(
+                            "error_title": self.env._(
                                 "Invoice submission timed out. Please wait at least 6 minutes, then update the status."
                             ),
                             "errors": e.errors,
@@ -703,7 +715,7 @@ class AccountMove(models.Model):
                     "l10n_hu_edi_transaction_code": False,
                     "l10n_hu_invoice_chain_index": 0,
                     "l10n_hu_edi_messages": {
-                        "error_title": _("Invoice submission failed."),
+                        "error_title": self.env._("Invoice submission failed."),
                         "errors": e.errors,
                         "blocking_level": "error",
                     },
@@ -715,7 +727,9 @@ class AccountMove(models.Model):
                 "l10n_hu_edi_state": "sent",
                 "l10n_hu_edi_transaction_code": transaction_code,
                 "l10n_hu_edi_messages": {
-                    "error_title": _("Invoice submitted, waiting for response."),
+                    "error_title": self.env._(
+                        "Invoice submitted, waiting for response."
+                    ),
                     "errors": [],
                 },
             }
@@ -757,7 +771,7 @@ class AccountMove(models.Model):
                 return self.write(
                     {
                         "l10n_hu_edi_messages": {
-                            "error_title": _(
+                            "error_title": self.env._(
                                 "The invoice was sent to the NAV, but there was an error querying its status."
                             ),
                             "errors": e.errors,
@@ -769,7 +783,7 @@ class AccountMove(models.Model):
                 return self.write(
                     {
                         "l10n_hu_edi_messages": {
-                            "error_title": _(
+                            "error_title": self.env._(
                                 "The annulment was sent to the NAV, but there was an error querying its status."
                             ),
                             "errors": e.errors,
@@ -786,7 +800,7 @@ class AccountMove(models.Model):
             )
             if not invoice:
                 _logger.error(
-                    _(
+                    self.env._(
                         "Could not match NAV transaction_code %(code)s, index %(index)s to an invoice in Odoo",
                         code=self[0].l10n_hu_edi_transaction_code,
                         index=processing_result["index"],
@@ -818,7 +832,7 @@ class AccountMove(models.Model):
                     {
                         "l10n_hu_edi_state": "sent",
                         "l10n_hu_edi_messages": {
-                            "error_title": _(
+                            "error_title": self.env._(
                                 "The invoice was received by the NAV, but has not been confirmed yet."
                             ),
                             "errors": get_errors_from_processing_result(
@@ -833,7 +847,7 @@ class AccountMove(models.Model):
                     {
                         "l10n_hu_edi_state": "cancel_sent",
                         "l10n_hu_edi_messages": {
-                            "error_title": _(
+                            "error_title": self.env._(
                                 "The annulment request was received by the NAV, but has not been confirmed yet."
                             ),
                             "errors": get_errors_from_processing_result(
@@ -854,7 +868,7 @@ class AccountMove(models.Model):
                         {
                             "l10n_hu_edi_state": "confirmed",
                             "l10n_hu_edi_messages": {
-                                "error_title": _(
+                                "error_title": self.env._(
                                     "The invoice was successfully accepted by the NAV."
                                 ),
                                 "errors": get_errors_from_processing_result(
@@ -868,7 +882,7 @@ class AccountMove(models.Model):
                         {
                             "l10n_hu_edi_state": "confirmed_warning",
                             "l10n_hu_edi_messages": {
-                                "error_title": _(
+                                "error_title": self.env._(
                                     "The invoice was accepted by the NAV, but warnings were reported. "
                                     "To reverse, create a credit note / debit note."
                                 ),
@@ -889,7 +903,7 @@ class AccountMove(models.Model):
                         {
                             "l10n_hu_edi_state": "confirmed_warning",
                             "l10n_hu_edi_messages": {
-                                "error_title": _(
+                                "error_title": self.env._(
                                     "The annulment request was rejected by NAV."
                                 ),
                                 "errors": get_errors_from_processing_result(
@@ -904,7 +918,7 @@ class AccountMove(models.Model):
                         {
                             "l10n_hu_edi_state": "cancel_pending",
                             "l10n_hu_edi_messages": {
-                                "error_title": _(
+                                "error_title": self.env._(
                                     "The annulment request is pending, please confirm it on the OnlineSzámla portal."
                                 ),
                                 "errors": get_errors_from_processing_result(
@@ -928,7 +942,7 @@ class AccountMove(models.Model):
                             "l10n_hu_edi_state": "cancelled",
                             "l10n_hu_invoice_chain_index": 0,
                             "l10n_hu_edi_messages": {
-                                "error_title": _(
+                                "error_title": self.env._(
                                     "The annulment request has been approved by the user on the OnlineSzámla portal."
                                 ),
                                 "errors": get_errors_from_processing_result(
@@ -943,7 +957,7 @@ class AccountMove(models.Model):
                         {
                             "l10n_hu_edi_state": "confirmed_warning",
                             "l10n_hu_edi_messages": {
-                                "error_title": _(
+                                "error_title": self.env._(
                                     "The annulment request was rejected by the user on the OnlineSzámla portal."
                                 ),
                                 "errors": get_errors_from_processing_result(
@@ -961,7 +975,9 @@ class AccountMove(models.Model):
                         "l10n_hu_edi_state": "rejected",
                         "l10n_hu_invoice_chain_index": 0,
                         "l10n_hu_edi_messages": {
-                            "error_title": _("The invoice was rejected by the NAV."),
+                            "error_title": self.env._(
+                                "The invoice was rejected by the NAV."
+                            ),
                             "errors": get_errors_from_processing_result(
                                 processing_result
                             ),
@@ -978,7 +994,7 @@ class AccountMove(models.Model):
                     {
                         "l10n_hu_edi_state": "confirmed_warning",
                         "l10n_hu_edi_messages": {
-                            "error_title": _(
+                            "error_title": self.env._(
                                 "The cancellation request could not be performed."
                             ),
                             "errors": get_errors_from_processing_result(
@@ -1020,7 +1036,7 @@ class AccountMove(models.Model):
             return self.write(
                 {
                     "l10n_hu_edi_messages": {
-                        "error_title": _(
+                        "error_title": self.env._(
                             "Could not authenticate with NAV. Check your credentials and try again."
                         ),
                         "errors": e.errors,
@@ -1043,7 +1059,7 @@ class AccountMove(models.Model):
                     {
                         "l10n_hu_edi_state": "cancel_timeout",
                         "l10n_hu_edi_messages": {
-                            "error_title": _(
+                            "error_title": self.env._(
                                 "Cancellation request timed out. Please wait at least 6 minutes, then update the status."
                             ),
                             "errors": e.errors,
@@ -1054,7 +1070,7 @@ class AccountMove(models.Model):
             return self.write(
                 {
                     "l10n_hu_edi_messages": {
-                        "error_title": _("Cancellation request failed."),
+                        "error_title": self.env._("Cancellation request failed."),
                         "errors": e.errors,
                         "blocking_level": "error",
                     },
@@ -1066,7 +1082,7 @@ class AccountMove(models.Model):
                 "l10n_hu_edi_state": "cancel_sent",
                 "l10n_hu_edi_transaction_code": transaction_code,
                 "l10n_hu_edi_messages": {
-                    "error_title": _(
+                    "error_title": self.env._(
                         "Cancellation request submitted, waiting for response."
                     ),
                     "errors": [],
@@ -1303,7 +1319,7 @@ class AccountMove(models.Model):
                 )
                 if not atk_tax:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Please create a sales tax with type ATK (outside the scope of the VAT Act)."
                         )
                     )

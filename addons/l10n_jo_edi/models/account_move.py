@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 import requests
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
@@ -156,7 +156,9 @@ class AccountMove(models.Model):
             or self._l10n_jo_get_field_errors()
         ):
             raise ValidationError(
-                _("The following errors have to be fixed in order to create an XML:\n")
+                self.env._(
+                    "The following errors have to be fixed in order to create an XML:\n"
+                )
                 + error_message
             )
         params = urlencode(
@@ -268,17 +270,17 @@ class AccountMove(models.Model):
                 timeout=50,
             )
         except requests.exceptions.Timeout:
-            return {"error": _("Request timeout! Please try again.")}
+            return {"error": self.env._("Request timeout! Please try again.")}
         except requests.exceptions.RequestException as e:
-            return {"error": _("Invalid request: %s", e)}
+            return {"error": self.env._("Invalid request: %s", e)}
 
         if not response.ok:
             content = response.content.decode()
             if response.status_code == 403:
-                content = _(
+                content = self.env._(
                     "Access forbidden. Please verify your JoFotara credentials."
                 )
-            return {"error": _("Request failed: %s", content)}
+            return {"error": self.env._("Request failed: %s", content)}
         return response.json()
 
     def _submit_to_jofotara(self):
@@ -308,18 +310,18 @@ class AccountMove(models.Model):
     def _l10n_jo_get_config_errors(self):
         error_msgs = []
         if not self.sudo().company_id.l10n_jo_edi_config_id.l10n_jo_edi_client_identifier:
-            error_msgs.append(_("Client ID is missing."))
+            error_msgs.append(self.env._("Client ID is missing."))
         if not self.sudo().company_id.l10n_jo_edi_secret_key:
-            error_msgs.append(_("Secret key is missing."))
+            error_msgs.append(self.env._("Secret key is missing."))
         if not self.company_id.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type:
-            error_msgs.append(_("Taxpayer type is missing."))
+            error_msgs.append(self.env._("Taxpayer type is missing."))
         if not self.company_id.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source:
             error_msgs.append(
-                _("Activity number (Sequence of income source) is missing.")
+                self.env._("Activity number (Sequence of income source) is missing.")
             )
 
         if error_msgs:
-            return _(
+            return self.env._(
                 "%s \nTo set: Configuration > Settings > Electronic Invoicing (Jordan)",
                 "\n".join(error_msgs),
             )
@@ -329,7 +331,7 @@ class AccountMove(models.Model):
         def has_non_digit_vat(partner, partner_type, error_msgs):
             if partner.vat and not partner.vat.isdigit():
                 error_msgs.append(
-                    _(
+                    self.env._(
                         "JoFotara portal cannot process %s VAT with non-digit characters in it",
                         partner_type,
                     )
@@ -338,10 +340,12 @@ class AccountMove(models.Model):
         error_msgs = []
 
         if not self.preferred_payment_channel_id:
-            error_msgs.append(_("Please select a payment method before submission."))
+            error_msgs.append(
+                self.env._("Please select a payment method before submission.")
+            )
         if not self.l10n_jo_edi_invoice_type:
             error_msgs.append(
-                _(
+                self.env._(
                     "Please select an invoice type before submitting this invoice to JoFotara."
                 )
             )
@@ -355,20 +359,20 @@ class AccountMove(models.Model):
         if self.move_type == "out_refund":
             if not self.reversed_entry_id:
                 error_msgs.append(
-                    _(
+                    self.env._(
                         'Please use "Reversal of" to link this credit note with an Invoice'
                     )
                 )
             elif self.currency_id != self.reversed_entry_id.currency_id:
                 error_msgs.append(
-                    _(
+                    self.env._(
                         "Please make sure the currency of the credit note is the same as the related invoice"
                     )
                 )
 
             if not self.ref:
                 error_msgs.append(
-                    _(
+                    self.env._(
                         'Please make sure the "Customer Reference" contains the reason for the return'
                     )
                 )
@@ -379,7 +383,7 @@ class AccountMove(models.Model):
             for line in self.invoice_line_ids
         ):
             error_msgs.append(
-                _(
+                self.env._(
                     "JoFotara portal cannot process negative quantity nor negative price on invoice lines"
                 )
             )
@@ -393,7 +397,7 @@ class AccountMove(models.Model):
                 and len(line.tax_ids) != 0
             ):
                 error_msgs.append(
-                    _(
+                    self.env._(
                         "No taxes are allowed on invoice lines for taxpayers unregistered in the sales tax"
                     )
                 )
@@ -403,7 +407,7 @@ class AccountMove(models.Model):
                 and len(line.tax_ids) != 1
             ):
                 error_msgs.append(
-                    _(
+                    self.env._(
                         "One general tax per invoice line is expected for taxpayers registered in the sales tax"
                     )
                 )
@@ -413,7 +417,7 @@ class AccountMove(models.Model):
                 and len(line.tax_ids) != 2
             ):
                 error_msgs.append(
-                    _(
+                    self.env._(
                         "One special and one general tax per invoice line is expected for taxpayers registered in the special tax"
                     )
                 )
@@ -444,7 +448,7 @@ class AccountMove(models.Model):
         else:
             self._mark_sent_jo_edi()
             self.message_post(
-                body=_("E-invoice (JoFotara) submitted successfully."),
+                body=self.env._("E-invoice (JoFotara) submitted successfully."),
                 attachment_ids=self.l10n_jo_edi_xml_attachment_id.ids,
             )
         return None

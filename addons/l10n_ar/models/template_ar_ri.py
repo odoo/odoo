@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.account.models.chart_template import template
 
@@ -9,7 +9,9 @@ class AccountChartTemplate(models.AbstractModel):
     @template("ar_ri")
     def _prepare_ar_ri_template_data(self):
         return {
-            "name": _("Argentine Generic Chart of Accounts for Registered Accountants"),
+            "name": self.env._(
+                "Argentine Generic Chart of Accounts for Registered Accountants"
+            ),
             "parent": "ar_ex",
             "code_digits": "12",
             "sequence": 0,

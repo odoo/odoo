@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -49,7 +49,7 @@ class AccountAccountTag(models.Model):
             )
             if master_tag and master_tag in self:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot delete this account tag (%s), it is used "
                         "on the chart of account definition.",
                         master_tag.name,
@@ -71,7 +71,7 @@ class AccountAccountTag(models.Model):
                 and tag.country_id
                 != self.env.company.account_config_id.account_fiscal_country_id
             ):
-                name = _(
+                name = self.env._(
                     "%(tag)s (%(country_code)s)",
                     tag=tag.name,
                     country_code=tag.country_id.code,

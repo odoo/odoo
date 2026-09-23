@@ -1,6 +1,6 @@
 from lxml.builder import E
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -102,7 +102,9 @@ class MixinAnalyticPlanFields(models.AbstractModel):
         fnames = self._get_plan_fnames()
         for line in self:
             if not any(line[fname] for fname in fnames):
-                raise ValidationError(_("At least one analytic account must be set"))
+                raise ValidationError(
+                    self.env._("At least one analytic account must be set")
+                )
 
     @api.model
     def default_get(self, fields):

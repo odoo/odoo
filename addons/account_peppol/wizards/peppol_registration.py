@@ -6,7 +6,7 @@ try:
 except ImportError:
     phonenumbers = None
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.urls import urljoin
 
@@ -227,7 +227,7 @@ class PeppolRegistration(models.TransientModel):
             ):
                 peppol_warnings["company_peppol_endpoint_warning"] = {
                     "level": "warning",
-                    "message": _(
+                    "message": self.env._(
                         "The endpoint number might not be correct. "
                         "Please check if you entered the right identification number."
                     ),
@@ -242,7 +242,7 @@ class PeppolRegistration(models.TransientModel):
             ):
                 peppol_warnings["company_already_on_smp"] = {
                     "level": "info",
-                    "message": _(
+                    "message": self.env._(
                         "Your company is already registered on an Access Point (%s) for receiving invoices. "
                         "We will register you on Odoo as a sender only.",
                         wizard.peppol_external_provider,
@@ -251,7 +251,7 @@ class PeppolRegistration(models.TransientModel):
             if wizard.peppol_eas == "9925":
                 peppol_warnings["be_9925_warning"] = {
                     "level": "warning",
-                    "message": _(
+                    "message": self.env._(
                         "You are about to register with your VAT number. Make sure you register with your "
                         "Company Registry (BCE/KBO) first to be compliant with the new regulation."
                     ),
@@ -307,19 +307,25 @@ class PeppolRegistration(models.TransientModel):
 
     def _check_mandatory_fields(self):
         if not self.selected_company_id.account_config_id.account_fiscal_country_id.code:
-            raise ValidationError(_("Please select a country for your company."))
+            raise ValidationError(
+                self.env._("Please select a country for your company.")
+            )
         if not self.contact_email or not self.phone_number:
-            raise ValidationError(_("Contact email and phone number are required."))
+            raise ValidationError(
+                self.env._("Contact email and phone number are required.")
+            )
         if not self.peppol_eas or not self.peppol_endpoint:
-            raise ValidationError(_("Peppol Address should be provided."))
+            raise ValidationError(self.env._("Peppol Address should be provided."))
         if self._branch_with_same_address():
-            raise ValidationError(_("Peppol ID should be different from main company."))
+            raise ValidationError(
+                self.env._("Peppol ID should be different from main company.")
+            )
         if (
             self.company_id.account_peppol_config_id.account_peppol_proxy_state
             != "not_registered"
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "Cannot register a user with a %s application",
                     self.account_peppol_proxy_state,
                 )
@@ -331,7 +337,7 @@ class PeppolRegistration(models.TransientModel):
         if "itsme" not in view.arch_db:
             view.reset_arch(mode="hard")
         action_dict = {
-            "name": _("Activate Electronic Invoicing (via Peppol)"),
+            "name": self.env._("Activate Electronic Invoicing (via Peppol)"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "peppol.registration",
@@ -375,13 +381,15 @@ class PeppolRegistration(models.TransientModel):
     def _check_can_connect(self, can_connect_vals, selected_auth=None):
         """Checks the answer from the /can_connect endpoint and raises an error if it's invalid."""
         if not can_connect_vals:
-            raise UserError(_("Could not connect to Proxy Server."))
+            raise UserError(self.env._("Could not connect to Proxy Server."))
         if identifier_invalid := can_connect_vals.get("identifier_invalid"):
             if identifier_invalid.get("code") == "IDENTIFIER_NOT_ON_PEPPOL":
-                raise UserError(_("Your identifier you entered is invalid for Peppol."))
+                raise UserError(
+                    self.env._("Your identifier you entered is invalid for Peppol.")
+                )
             if identifier_invalid.get("code") == "IDENTIFIER_INCORRECT_FORMAT":
                 example = (
-                    _(
+                    self.env._(
                         " Expected format: %(expected_format)s.",
                         identifier_invalid["example"],
                     )
@@ -389,21 +397,25 @@ class PeppolRegistration(models.TransientModel):
                     else ""
                 )
                 raise UserError(
-                    _("Your identifier does not have a valid format.%s", example)
+                    self.env._(
+                        "Your identifier does not have a valid format.%s", example
+                    )
                 )
-            raise UserError(_("Your identifier is invalid."))
+            raise UserError(self.env._("Your identifier is invalid."))
         if can_connect_vals.get("db_invalid"):
             raise UserError(
-                _(
+                self.env._(
                     "The database you are trying to connect to is not suitable for Peppol."
                 )
             )
         if not selected_auth and can_connect_vals.get("auth_required"):
-            raise UserError(_("You need to authenticate to continue."))
+            raise UserError(self.env._("You need to authenticate to continue."))
         if selected_auth and not can_connect_vals.get("available_auths", {}).get(
             selected_auth
         ):
-            raise UserError(_("Selected authentication method is not available."))
+            raise UserError(
+                self.env._("Selected authentication method is not available.")
+            )
 
     @api.model
     def _generate_connect_token(self, peppol_identifier, company):
@@ -568,21 +580,23 @@ class PeppolRegistration(models.TransientModel):
         self._create_connection(peppol_identifier, db_uuid, self.company_id)
         notifications = {
             "sender": {
-                "message": _("You can now send electronic invoices via Peppol."),
+                "message": self.env._(
+                    "You can now send electronic invoices via Peppol."
+                ),
             },
             "smp_registration": {
-                "message": _(
+                "message": self.env._(
                     "Your Peppol registration will be activated soon. You can already send invoices."
                 ),
             },
             "receiver": {
-                "message": _(
+                "message": self.env._(
                     "You can now send and receive electronic invoices via Peppol"
                 ),
             },
             "rejected": {
-                "title": _("Registration rejected."),
-                "message": _(
+                "title": self.env._("Registration rejected."),
+                "message": self.env._(
                     "Your registration has been rejected. Please contact the support for further assistance."
                 ),
             },

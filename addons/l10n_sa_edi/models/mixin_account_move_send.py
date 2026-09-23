@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class MixinAccountMoveSend(models.AbstractModel):
@@ -22,7 +22,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         res.update(
             {
                 "sa_edi": {
-                    "label": _("To ZATCA"),
+                    "label": self.env._("To ZATCA"),
                     "is_applicable": self._is_sa_edi_applicable,
                 }
             }

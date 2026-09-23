@@ -2,7 +2,7 @@ import enum
 
 import stdnum
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -69,7 +69,7 @@ class ResPartner(models.Model):
             ):
                 if len(partner.vat) != 10 or not partner.vat.isdecimal():
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "If your identification type is %s, it must be 10 digits",
                             it_dni.display_name,
                         )
@@ -98,7 +98,7 @@ class ResPartner(models.Model):
                         partner.l10n_latam_identification_type_id.id == it_dni.id
                         and not ci.is_valid(partner.vat)
                     ):
-                        partner.l10n_ec_vat_validation = _(
+                        partner.l10n_ec_vat_validation = self.env._(
                             "The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
                             "(could be an old VAT number)",
                             partner.vat,
@@ -107,7 +107,7 @@ class ResPartner(models.Model):
                         partner.l10n_latam_identification_type_id.id == it_ruc.id
                         and not ruc.is_valid(partner.vat)
                     ):
-                        partner.l10n_ec_vat_validation = _(
+                        partner.l10n_ec_vat_validation = self.env._(
                             "The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
                             "(SRI has stated that this validation is not required anymore for some VAT numbers)",
                             partner.vat,

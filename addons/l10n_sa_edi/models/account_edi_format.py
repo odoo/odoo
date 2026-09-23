@@ -6,7 +6,7 @@ from hashlib import sha256
 from lxml import etree
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -153,7 +153,9 @@ class AccountEdiFormat(models.Model):
             and clearance_data.get("clearanceStatus", "") != "CLEARED"
         ):
             return {
-                "error": _("Invoice could not be cleared:\n%s", clearance_data),
+                "error": self.env._(
+                    "Invoice could not be cleared:\n%s", clearance_data
+                ),
                 "blocking_level": "error",
             }
         elif (
@@ -161,7 +163,9 @@ class AccountEdiFormat(models.Model):
             and clearance_data.get("reportingStatus", "") != "REPORTED"
         ):
             return {
-                "error": _("Invoice could not be reported:\n%s", clearance_data),
+                "error": self.env._(
+                    "Invoice could not be reported:\n%s", clearance_data
+                ),
                 "blocking_level": "error",
             }
         return clearance_data
@@ -200,7 +204,7 @@ class AccountEdiFormat(models.Model):
         )
         if errors:
             return {
-                "error": _(
+                "error": self.env._(
                     "Could not generate Invoice UBL content: %s", ", \n".join(errors)
                 ),
                 "blocking_level": "error",
@@ -320,7 +324,7 @@ class AccountEdiFormat(models.Model):
         except UserError:
             return (
                 {
-                    "error": _(
+                    "error": self.env._(
                         "Something went wrong. Please retry, and if that does not work, then onboard the journal again."
                     ),
                     "blocking_level": "error",
@@ -341,9 +345,9 @@ class AccountEdiFormat(models.Model):
         partner_id = invoice.company_id.partner_id.commercial_partner_id
         missing_fields = []
         if not partner_id.state_id:
-            missing_fields.append(_("State"))
+            missing_fields.append(self.env._("State"))
         if not partner_id.city:
-            missing_fields.append(_("City"))
+            missing_fields.append(self.env._("City"))
         return missing_fields
 
     def _l10n_sa_check_buyer_missing_info(self, invoice):
@@ -363,14 +367,14 @@ class AccountEdiFormat(models.Model):
             or not partner_id.l10n_sa_edi_additional_identification_number
         ):
             missing.append(
-                _(
+                self.env._(
                     "Please set the Identification Scheme as National ID and Identification Number as the respective "
                     "number on the Customer as the Tax Exemption Reason is set either as VATEX-SA-HEA or VATEX-SA-EDU"
                 )
             )
         if identification_scheme == "TIN" and not partner_id.vat:
             missing.append(
-                _(
+                self.env._(
                     "Please set the VAT Number as the Identification Scheme is Tax Identification Number"
                 )
             )
@@ -396,7 +400,7 @@ class AccountEdiFormat(models.Model):
             invoice.l10n_sa_edi_chain_head_id = chain_head
             return {
                 invoice: {
-                    "error": _(
+                    "error": self.env._(
                         "Error: This invoice is blocked due to %s. Please check it.",
                         chain_head.name,
                     ),
@@ -493,7 +497,9 @@ class AccountEdiFormat(models.Model):
             == invoice.company_id.partner_id.commercial_partner_id
         ):
             errors.append(
-                _("- Invoice cannot be posted as the Supplier and Buyer are the same.")
+                self.env._(
+                    "- Invoice cannot be posted as the Supplier and Buyer are the same."
+                )
             )
 
         if not all(
@@ -505,14 +511,14 @@ class AccountEdiFormat(models.Model):
             )
         ):
             errors.append(
-                _(
+                self.env._(
                     "- Invoice lines need at least one tax. Please input it and try again."
                 )
             )
 
         if not journal._l10n_sa_ready_to_submit_einvoices():
             errors.append(
-                _(
+                self.env._(
                     "- The Journal (%s) is not onboarded yet. Please onboard it and try again.",
                     journal.name,
                 )
@@ -520,13 +526,13 @@ class AccountEdiFormat(models.Model):
 
         if not company._l10n_sa_check_organization_unit():
             errors.append(
-                _(
+                self.env._(
                     "- The company VAT identification must contain 15 digits, with the first and last digits being '3' as per the BR-KSA-39 and BR-KSA-40 of ZATCA KSA business rule."
                 )
             )
         if not journal.company_id.sudo().l10n_sa_edi_config_id.l10n_sa_private_key_id:
             errors.append(
-                _(
+                self.env._(
                     "- No Private Key was generated for company %s. A Private Key is mandatory in order to generate Certificate Signing Requests (CSR).",
                     company.name,
                 )
@@ -537,7 +543,7 @@ class AccountEdiFormat(models.Model):
 
         if supplier_missing_info:
             errors.append(
-                _(
+                self.env._(
                     "- Please set the following fields on the %(company_name)s: %(missing_fields)s",
                     company_name=company.name,
                     missing_fields=", ".join(supplier_missing_info),
@@ -545,7 +551,7 @@ class AccountEdiFormat(models.Model):
             )
         if customer_missing_info:
             errors.append(
-                _(
+                self.env._(
                     "- %(missing_info)s",
                     missing_info=", ".join(customer_missing_info),
                 )
@@ -554,14 +560,14 @@ class AccountEdiFormat(models.Model):
             self.with_context(tz="Asia/Riyadh")
         ):
             errors.append(
-                _(
+                self.env._(
                     "- Please set the Invoice Date to be either less than or equal to today."
                 )
             )
 
         if invoice.l10n_sa_show_reason and not invoice.l10n_sa_reason:
             errors.append(
-                _(
+                self.env._(
                     "- Please make sure the 'ZATCA Reason' for the issuance of the Credit/Debit Note is specified."
                 )
             )
@@ -570,7 +576,7 @@ class AccountEdiFormat(models.Model):
             and not invoice._l10n_sa_check_billing_reference()
         ):
             errors.append(
-                _(
+                self.env._(
                     "- Please make sure the 'Customer Reference' contains the sequential number of the original invoice(s) that the Credit/Debit Note is related to."
                 )
             )

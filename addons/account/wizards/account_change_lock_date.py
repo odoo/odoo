@@ -1,6 +1,6 @@
 from datetime import date, timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -332,7 +332,9 @@ class AccountChangeLockDate(models.TransientModel):
                 "lock_date_change_rejected", wizard=self, reason="hard_lock_decreased"
             )
             raise UserError(
-                _("It is not possible to decrease or remove the Hard Lock Date.")
+                self.env._(
+                    "It is not possible to decrease or remove the Hard Lock Date."
+                )
             )
 
         lock_date_values = {
@@ -349,7 +351,7 @@ class AccountChangeLockDate(models.TransientModel):
                     reason="future_date",
                     lock_date=lock_date,
                 )
-                raise UserError(_("You cannot set a Lock Date in the future."))
+                raise UserError(self.env._("You cannot set a Lock Date in the future."))
 
         if exception_vals_list:
             for exception_vals in exception_vals_list:
@@ -397,11 +399,11 @@ class AccountChangeLockDate(models.TransientModel):
         exception_errors = []
         if not self.exception_applies_to:
             exception_errors.append(
-                _("You need to select who the exception applies to.")
+                self.env._("You need to select who the exception applies to.")
             )
         if not self.exception_duration:
             exception_errors.append(
-                _("You need to select a duration for the exception.")
+                self.env._("You need to select a duration for the exception.")
             )
         if exception_errors:
             raise UserError("\n".join(exception_errors))
@@ -513,7 +515,9 @@ class AccountChangeLockDate(models.TransientModel):
             self._change_lock_date(changed_lock_date_values)
         else:
             raise UserError(
-                _("Only Billing Administrators are allowed to change lock dates!")
+                self.env._(
+                    "Only Billing Administrators are allowed to change lock dates!"
+                )
             )
         return {"type": "ir.actions.act_window_close"}
 
@@ -523,7 +527,7 @@ class AccountChangeLockDate(models.TransientModel):
         self.check_singleton()
         return {
             "view_mode": "list",
-            "name": _("Draft Entries"),
+            "name": self.env._("Draft Entries"),
             "res_model": "account.move",
             "type": "ir.actions.act_window",
             "domain": self._get_domain_draft_moves_in_locked_period(),
@@ -580,7 +584,7 @@ class AccountChangeLockDate(models.TransientModel):
                 scope=scope,
             )
             raise UserError(
-                _(
+                self.env._(
                     "Unknown lock date exception to revoke: %(field)s / %(scope)s.",
                     field=lock_date_field,
                     scope=scope,

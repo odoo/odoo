@@ -4,7 +4,7 @@ import logging
 
 from lxml import etree
 
-from odoo import SUPERUSER_ID, _, api, fields, models, tools
+from odoo import SUPERUSER_ID, api, fields, models, tools
 from odoo.tools import cleanup_xml_node
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 from odoo.tools.xml_utils import dict_to_xml
@@ -48,11 +48,11 @@ class MixinAccountMoveSend(models.AbstractModel):
             )
             if not_configured_company_partners:
                 alerts["account_edi_ubl_cii_configure_company"] = {
-                    "message": _(
+                    "message": self.env._(
                         "Please fill in your company's VAT or Peppol Address to generate a complete XML file."
                     ),
                     "level": "info",
-                    "action_text": _("Configure"),
+                    "action_text": self.env._("Configure"),
                     "action": not_configured_company_partners._get_records_action(),
                 }
             not_configured_partners = (
@@ -62,11 +62,13 @@ class MixinAccountMoveSend(models.AbstractModel):
             )
             if not_configured_partners:
                 alerts["account_edi_ubl_cii_configure_partner"] = {
-                    "message": _("Please fill in partner's VAT or Peppol Address."),
+                    "message": self.env._(
+                        "Please fill in partner's VAT or Peppol Address."
+                    ),
                     "level": "info",
-                    "action_text": _("View Partner(s)"),
+                    "action_text": self.env._("View Partner(s)"),
                     "action": not_configured_partners._get_records_action(
-                        name=_("Check Partner(s)")
+                        name=self.env._("Check Partner(s)")
                     ),
                 }
 
@@ -83,12 +85,12 @@ class MixinAccountMoveSend(models.AbstractModel):
                 )
                 if chorus_pro and chorus_pro.state != "installed":
                     alerts["account_edi_ubl_cii_chorus_pro_install"] = {
-                        "message": _(
+                        "message": self.env._(
                             "Please install the french Chorus pro module to have all the specific rules."
                         ),
                         "level": "info",
                         "action": chorus_pro._get_records_action(),
-                        "action_text": _("Install Chorus Pro"),
+                        "action_text": self.env._("Install Chorus Pro"),
                     }
         return alerts
 
@@ -176,7 +178,7 @@ class MixinAccountMoveSend(models.AbstractModel):
             # Failed.
             if errors:
                 invoice_data["error"] = {
-                    "error_title": _(
+                    "error_title": self.env._(
                         "Errors occurred while creating the EDI document (format: %s):",
                         builder._description,
                     ),

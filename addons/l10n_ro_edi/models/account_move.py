@@ -1,6 +1,6 @@
 import base64
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -91,17 +91,17 @@ class AccountMove(models.Model):
         self.check_singleton()
         errors = []
         if self.state != "posted":
-            errors.append(_("Only posted entries can be sent to SPV."))
+            errors.append(self.env._("Only posted entries can be sent to SPV."))
         if not self.company_id.l10n_ro_edi_access_token:
             errors.append(
-                _(
+                self.env._(
                     "Romanian access token not found. Please generate or fill it in the settings."
                 )
             )
         if not xml_data:
-            errors.append(_("CIUS-RO XML attachment not found."))
+            errors.append(self.env._("CIUS-RO XML attachment not found."))
         if self.l10n_ro_edi_document_ids:
-            errors.append(_("The invoice has already been sent to the SPV."))
+            errors.append(self.env._("The invoice has already been sent to the SPV."))
         return errors
 
     def _l10n_ro_edi_send_invoice(self, xml_data):
@@ -119,7 +119,9 @@ class AccountMove(models.Model):
         self.check_singleton()
         if errors := self._l10n_ro_edi_get_pre_send_errors(xml_data):
             self.message_post(
-                body=_("The invoice is not ready to be sent: %s", ", ".join(errors))
+                body=self.env._(
+                    "The invoice is not ready to be sent: %s", ", ".join(errors)
+                )
             )
             return errors
 
@@ -132,7 +134,7 @@ class AccountMove(models.Model):
         )
         if "error" in result:
             self.message_post(
-                body=_(
+                body=self.env._(
                     "Error when trying to send the e-Factura to the SPV: %s",
                     result["error"],
                 )
@@ -149,7 +151,7 @@ class AccountMove(models.Model):
         if result["key_loading"]:
             self.l10n_ro_edi_index = result["key_loading"]
             self.message_post(
-                body=_(
+                body=self.env._(
                     "The e-Factura has been sent and is now being validated by the SPV with index key: %s",
                     self.l10n_ro_edi_index,
                 )
@@ -157,7 +159,7 @@ class AccountMove(models.Model):
         else:
             self.l10n_ro_edi_state = "invoice_not_indexed"
             self.message_post(
-                body=_(
+                body=self.env._(
                     "SPV failed to return with an index on time, synchronize this invoice to recover the index and the status."
                 )
             )
@@ -196,7 +198,7 @@ class AccountMove(models.Model):
                 not result
             ):  # SPV is still processing the XML (no answer yet); do nothing
                 invoice.message_post(
-                    body=_(
+                    body=self.env._(
                         "SPV has not finished processing the invoice, try again later."
                     )
                 )
@@ -204,7 +206,7 @@ class AccountMove(models.Model):
 
             if "error" in result:  # Fetch error
                 invoice.message_post(
-                    body=_(
+                    body=self.env._(
                         "Error when trying to fetch the E-Factura status from the SPV: %s",
                         result["error"],
                     )
@@ -220,7 +222,7 @@ class AccountMove(models.Model):
             )
             if "error" in download_data:  # Fetch error
                 invoice.message_post(
-                    body=_(
+                    body=self.env._(
                         "Error when trying to download the E-Factura data from the SPV: %s",
                         result["error"],
                     )
@@ -241,7 +243,7 @@ class AccountMove(models.Model):
             if result["state_status"] == "nok":  # Invoice refused
                 error_message = download_data["invoice"]["error"].replace("\t", "")
                 invoice.message_post(
-                    body=_(
+                    body=self.env._(
                         "This invoice was refused by the SPV for the following reason: %s",
                         error_message,
                     )
@@ -254,7 +256,7 @@ class AccountMove(models.Model):
                 )
             else:  # Invoice accepted
                 invoice.message_post(
-                    body=_("This invoice has been accepted by the SPV.")
+                    body=self.env._("This invoice has been accepted by the SPV.")
                 )
                 document_data["state"] = "invoice_validated"
 
@@ -307,7 +309,7 @@ class AccountMove(models.Model):
             ).days > HOLDING_DAYS:
                 document_ids_to_delete += invoice.l10n_ro_edi_document_ids.ids
 
-                error_message = _(
+                error_message = self.env._(
                     "The invoice has probably been refused by the SPV. We were unable to recover the reason of the refusal because "
                     "the invoice had not received its index. Duplicate the invoice and attempt to send it again."
                 )
@@ -394,7 +396,7 @@ class AccountMove(models.Model):
 
             if "error" in message["answer"]:
                 invoice.message_post(
-                    body=_(
+                    body=self.env._(
                         "Error when trying to download the E-Factura data from the SPV: %s",
                         message["answer"]["error"],
                     )
@@ -410,7 +412,9 @@ class AccountMove(models.Model):
                 lambda document: document.state == "invoice_sent"
             ).ids
 
-            invoice.message_post(body=_("This invoice has been accepted by the SPV."))
+            invoice.message_post(
+                body=self.env._("This invoice has been accepted by the SPV.")
+            )
             self.env["l10n_ro_edi.document"].sudo().create(
                 {
                     "invoice_id": invoice.id,
@@ -456,7 +460,7 @@ class AccountMove(models.Model):
 
             if "error" in message["answer"]:
                 invoice.message_post(
-                    body=_(
+                    body=self.env._(
                         "Error when trying to download the E-Factura data from the SPV: %s",
                         message["answer"]["error"],
                     )
@@ -467,7 +471,7 @@ class AccountMove(models.Model):
 
             error_message = message["answer"]["invoice"]["error"].replace("\t", "")
             invoice.message_post(
-                body=_(
+                body=self.env._(
                     "This invoice was refused by the SPV for the following reason: %s",
                     error_message,
                 )
@@ -614,7 +618,7 @@ class AccountMove(models.Model):
             )
             bill._extend_with_attachments(files_data)
             bill.message_post(
-                body=_("Synchronized with SPV from message %s", message["id"])
+                body=self.env._("Synchronized with SPV from message %s", message["id"])
             )
 
     def action_l10n_ro_edi_fetch_invoices(self):

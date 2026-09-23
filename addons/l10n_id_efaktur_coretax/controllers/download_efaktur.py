@@ -1,4 +1,4 @@
-from odoo import _, http
+from odoo import http
 from odoo.http import prepare_content_disposition_header, request
 
 # from odoo.addons.account.controllers.download_docs import _get_headers
@@ -32,7 +32,7 @@ class EfakturDownloadController(http.Controller):
             )
             return request.prepare_response(attachments.raw, headers)
         else:
-            filename = _("efaktur") + ".zip"
+            filename = request.env._("efaktur") + ".zip"
             content = attachments._prepare_zip_from_attachments()
             headers = _get_headers(filename, "zip", content)
             return request.prepare_response(content, headers)

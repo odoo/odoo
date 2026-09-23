@@ -1,4 +1,4 @@
-from odoo import SUPERUSER_ID, _, api, models
+from odoo import SUPERUSER_ID, api, models
 
 
 class MixinAccountMoveSend(models.AbstractModel):
@@ -24,8 +24,8 @@ class MixinAccountMoveSend(models.AbstractModel):
             {
                 "rs_cir_checkbox": {
                     "is_applicable": self._is_rs_edi_applicable,
-                    "label": _("Send to CIR"),
-                    "help": _(
+                    "label": self.env._("Send to CIR"),
+                    "help": self.env._(
                         "Send to Central Invoice Register(For B2G and the public sector)"
                     ),
                 }
@@ -51,9 +51,9 @@ class MixinAccountMoveSend(models.AbstractModel):
                 continue
             if not invoice.company_id.l10n_rs_edi_api_key:
                 invoice_data["error"] = {
-                    "error_title": _("eFaktura API Key is missing."),
+                    "error_title": self.env._("eFaktura API Key is missing."),
                     "errors": [
-                        _(
+                        self.env._(
                             "Please configure the eFaktura API Key in the company settings."
                         )
                     ],
@@ -63,7 +63,7 @@ class MixinAccountMoveSend(models.AbstractModel):
             xml, error = invoice._l10n_rs_edi_send(send_to_cir)
             if error:
                 invoice_data["error"] = {
-                    "error_title": _(
+                    "error_title": self.env._(
                         "Errors when submitting the e-invoice to eFaktura:"
                     ),
                     "errors": [error],

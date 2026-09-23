@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -85,7 +85,9 @@ class AccountPeppolConfig(models.Model):
                 and company.peppol_purchase_journal_id.type != "purchase"
             ):
                 raise ValidationError(
-                    _("A purchase journal must be used to receive Peppol documents.")
+                    self.env._(
+                        "A purchase journal must be used to receive Peppol documents."
+                    )
                 )
 
     @api.depends("account_peppol_proxy_state")

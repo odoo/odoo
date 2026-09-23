@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, LockError, UserError
 from odoo.tools import float_compare, float_is_zero
 
@@ -99,11 +99,11 @@ class AccountMove(models.Model):
             return (
                 self.env["l10n_in_edi.cancel"]
                 .with_context(default_move_id=self.id)
-                ._get_records_action(name=_("Cancel E-Invoice"), target="new")
+                ._get_records_action(name=self.env._("Cancel E-Invoice"), target="new")
             )
         elif self.l10n_in_edi_status == "sent":
             self.message_post(
-                body=_(
+                body=self.env._(
                     "Force cancelled %(invoice)s by %(username)s",
                     invoice=self.name,
                     username=self.env.user.name,
@@ -196,7 +196,7 @@ class AccountMove(models.Model):
             self.lock_for_update()
         except LockError:
             raise UserError(
-                _("This electronic document is being processed already.")
+                self.env._("This electronic document is being processed already.")
             ) from None
 
     def _l10n_in_edi_optional_field_validation(self, partner):
@@ -210,15 +210,17 @@ class AccountMove(models.Model):
             not re.match(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", partner.email)
             or not re.match(r"^.{6,100}$", partner.email)
         ):
-            message.append(_("- Email: invalid or longer than 100 characters."))
+            message.append(
+                self.env._("- Email: invalid or longer than 100 characters.")
+            )
         partner_phone = partner._phone_get_number().number
         if partner_phone and not re.match(
             r"^[0-9]{10,12}$",
             partner.env["account.move"]._l10n_in_extract_digits(partner_phone),
         ):
-            message.append(_("- Phone number: must be 10–12 digits."))
+            message.append(self.env._("- Phone number: must be 10–12 digits."))
         if partner.street2 and not re.match(r"^.{3,100}$", partner.street2):
-            message.append(_("- Street2: must be 3–100 characters."))
+            message.append(self.env._("- Street2: must be 3–100 characters."))
         return message
 
     def _l10n_in_edi_send_invoice(self):
@@ -227,7 +229,7 @@ class AccountMove(models.Model):
             # make sure to clear the error before sending again
             self.l10n_in_edi_error = False
             self.message_post(
-                body=_("Retrying to send your E-Invoice to government portal.")
+                body=self.env._("Retrying to send your E-Invoice to government portal.")
             )
         partners = set(self._get_l10n_in_seller_buyer_party().values())
         for partner in partners:
@@ -294,7 +296,7 @@ class AccountMove(models.Model):
                         mismatch_error = [
                             {
                                 "code": "2150",
-                                "message": _(
+                                "message": self.env._(
                                     "Duplicate IRN found for this invoice, but the buyer details or invoice values do not match."
                                 ),
                             }
@@ -306,10 +308,10 @@ class AccountMove(models.Model):
                     error = []
                     link = Markup(
                         "<a href='https://einvoice1.gst.gov.in/Others/VSignedInvoice'>%s</a>"
-                    ) % (_("here"))
+                    ) % (self.env._("here"))
                     self.message_post(
                         author_id=odoobot_id,
-                        body=_(
+                        body=self.env._(
                             "Somehow this invoice has been submited to government before."
                             "%(br)sNormally, this should not happen too often"
                             "%(br)sJust verify value of invoice by upload json to government website %(link)s.",
@@ -374,7 +376,7 @@ class AccountMove(models.Model):
             self.message_post(
                 attachment_ids=[request_attachment.id, attachment.id],
                 body=Markup("<strong>%s</strong><br>%s")
-                % (_("Following:"), Markup("<br>").join(message)),
+                % (self.env._("Following:"), Markup("<br>").join(message)),
             )
         return None
 
@@ -383,7 +385,7 @@ class AccountMove(models.Model):
             # make sure to clear the error before cancelling again
             self.l10n_in_edi_error = False
             self.message_post(
-                body=_(
+                body=self.env._(
                     "Retrying to send cancellation request for E-Invoice to government portal."
                 )
             )
@@ -409,10 +411,10 @@ class AccountMove(models.Model):
                 error = []
                 link = Markup(
                     "<a href='https://einvoice1.gst.gov.in/Others/VSignedInvoice'>%s</a>"
-                ) % (_("here"))
+                ) % (self.env._("here"))
                 self.message_post(
                     author_id=_get_odoobot_id(self),
-                    body=_(
+                    body=self.env._(
                         "Somehow this invoice had been cancelled to government before."
                         "%(br)sNormally, this should not happen too often"
                         "%(br)sJust verify by logging into government website %(link)s",
@@ -454,7 +456,7 @@ class AccountMove(models.Model):
             )
             self.message_post(
                 author_id=_get_odoobot_id(self),
-                body=_(
+                body=self.env._(
                     "E-Invoice has been cancelled successfully. "
                     "Cancellation Reason: %(reason)s and Cancellation Remark: %(remark)s",
                     reason=EDI_CANCEL_REASON[self.l10n_in_edi_cancel_reason],
@@ -688,7 +690,7 @@ class AccountMove(models.Model):
             return json_payload
         self.message_post(
             author_id=self.env.ref("base.partner_root").id,
-            body=_(
+            body=self.env._(
                 "Negative lines will be decreased from positive invoice lines having the same taxes and HSN code"
             ),
         )
@@ -909,9 +911,13 @@ class AccountMove(models.Model):
             lambda m: not re.match(r"^.{1,16}$", m.name)
         ):
             alerts["l10n_in_edi_invalid_invoice_number"] = {
-                "message": _("Invoice number should not be more than 16 characters"),
-                "action_text": _("View Invoices"),
-                "action": invalid_records._get_records_action(name=_("Check Invoices")),
+                "message": self.env._(
+                    "Invoice number should not be more than 16 characters"
+                ),
+                "action_text": self.env._("View Invoices"),
+                "action": invalid_records._get_records_action(
+                    name=self.env._("Check Invoices")
+                ),
             }
         return alerts
 
@@ -930,7 +936,7 @@ class AccountMove(models.Model):
                 "error": [
                     {
                         "code": "0",
-                        "message": _(
+                        "message": self.env._(
                             "Ensure GST Number set on company setting and API are Verified."
                         ),
                     }
@@ -959,7 +965,7 @@ class AccountMove(models.Model):
                 "error": [
                     {
                         "code": "404",
-                        "message": _(
+                        "message": self.env._(
                             "Unable to connect to the online E-invoice service."
                             "The web service may be temporary down. Please try again in a moment."
                         ),

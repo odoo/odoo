@@ -2,7 +2,7 @@ import base64
 
 from stdnum.in_ import pan
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -83,7 +83,7 @@ class L10nInPanEntity(models.Model):
         for record in self:
             if record.name and not pan.is_valid(record.name):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The entered PAN %s seems invalid. Please enter a valid PAN.",
                         record.name,
                     )
@@ -103,7 +103,7 @@ class L10nInPanEntity(models.Model):
         if vals.get("tds_certificate"):
             for rec in self:
                 rec.message_post(
-                    body=_("TDS Certificate Added"),
+                    body=self.env._("TDS Certificate Added"),
                     message_type="notification",
                     subtype_xmlid="mail.mt_note",
                     attachments=[

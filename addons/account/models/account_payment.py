@@ -1,7 +1,7 @@
 from collections import defaultdict
 from itertools import zip_longest
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import MissingError, UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -412,7 +412,7 @@ class AccountPayment(models.Model):
         label = (
             self.payment_channel_id.name
             if self.payment_channel_id
-            else _("No Payment Method")
+            else self.env._("No Payment Method")
         )
 
         if self.memo:
@@ -474,7 +474,7 @@ class AccountPayment(models.Model):
 
         if not self.outstanding_account_id:
             raise UserError(
-                _(
+                self.env._(
                     "You can't create a new payment without an outstanding payments/receipts account set either on the company or the %(payment_method)s payment method in the %(journal)s journal.",
                     payment_method=self.payment_channel_id.name,
                     journal=self.journal_id.display_name,
@@ -737,7 +737,7 @@ class AccountPayment(models.Model):
     def action_view_business_doc(self):
         _debug.lifecycle("action_view_business_doc", records=self)
         return {
-            "name": _("Payment"),
+            "name": self.env._("Payment"),
             "type": "ir.actions.act_window",
             "views": [(False, "form")],
             "res_model": "account.payment",
@@ -1070,7 +1070,7 @@ class AccountPayment(models.Model):
             )
 
     def _compute_payment_receipt_title(self):
-        self.payment_receipt_title = _("Payment Receipt")
+        self.payment_receipt_title = self.env._("Payment Receipt")
 
     @api.depends(
         "partner_id",
@@ -1207,14 +1207,14 @@ class AccountPayment(models.Model):
         for pay in self:
             if not pay.payment_channel_id:
                 raise ValidationError(
-                    _("Please define a payment method line on your payment.")
+                    self.env._("Please define a payment method line on your payment.")
                 )
             if (
                 pay.payment_channel_id.journal_id
                 and pay.payment_channel_id.journal_id != pay.journal_id
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The selected payment method is not available for this payment, please select the payment method again."
                     )
                 )
@@ -1232,7 +1232,7 @@ class AccountPayment(models.Model):
                 )
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A payment with an outstanding account cannot be confirmed without having a journal entry."
                     )
                 )
@@ -1305,7 +1305,7 @@ class AccountPayment(models.Model):
         )
         if not outstanding_account:
             raise UserError(
-                _("No outstanding account could be found to make the payment")
+                self.env._("No outstanding account could be found to make the payment")
             )
         return outstanding_account
 
@@ -1342,7 +1342,7 @@ class AccountPayment(models.Model):
     @api.depends("name")
     def _compute_display_name(self):
         for payment in self:
-            payment.display_name = payment.name or _("Draft Payment")
+            payment.display_name = payment.name or self.env._("Draft Payment")
 
     @_debug.perf.timed
     def copy_data(self, default=None):
@@ -1402,7 +1402,7 @@ class AccountPayment(models.Model):
 
             if "amount" in changed_fields and len(liquidity_lines) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot change the amount of a payment with multiple liquidity lines."
                     )
                 )
@@ -1542,7 +1542,7 @@ class AccountPayment(models.Model):
                 and payment.payment_type == "outbound"
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "To record payments with %(method_name)s, the recipient bank account must be manually validated. "
                         "You should go on the partner bank account of %(partner)s in order to validate it.",
                         method_name=payment.payment_channel_id.name,
@@ -1597,7 +1597,7 @@ class AccountPayment(models.Model):
         return self.reconciled_invoice_ids.with_context(
             create=False
         )._get_records_action(
-            name=_("Paid Invoices"),
+            name=self.env._("Paid Invoices"),
         )
 
     @_debug.perf.timed
@@ -1605,7 +1605,7 @@ class AccountPayment(models.Model):
         _debug.lifecycle("button_open_bills", records=self)
         self.check_singleton()
         return self.reconciled_bill_ids.with_context(create=False)._get_records_action(
-            name=_("Paid Bills"),
+            name=self.env._("Paid Bills"),
         )
 
     @_debug.perf.timed
@@ -1615,7 +1615,7 @@ class AccountPayment(models.Model):
         return self.reconciled_statement_line_ids.with_context(
             create=False
         )._get_records_action(
-            name=_("Matched Transactions"),
+            name=self.env._("Matched Transactions"),
         )
 
     @_debug.perf.timed
@@ -1623,7 +1623,7 @@ class AccountPayment(models.Model):
         _debug.lifecycle("button_open_journal_entry", records=self)
         self.check_singleton()
         return self.move_id.with_context(create=False)._get_records_action(
-            name=_("Journal Entry"),
+            name=self.env._("Journal Entry"),
         )
 
 

@@ -2,7 +2,7 @@ import ast
 import re
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -95,7 +95,7 @@ class AccountReportExpression(models.Model):
         for expression in self:
             if REFERENCE_UNSAFE_CHARS_REGEX.search(expression.label or ""):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'The label of expression "%(label)s" on line "%(line)s" is the '
                         "second half of an aggregation term, so it cannot contain a "
                         "dot, a bracket, whitespace or an operator.",
@@ -165,7 +165,7 @@ class AccountReportExpression(models.Model):
                     expression._fields["engine"]._description_selection(self.env)
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Groupby feature isn't supported by '%(engine)s' engine. Please remove the groupby value on '%(report_line)s'",
                         engine=engine_description[expression.engine],
                         report_line=expression.report_line_id.display_name,
@@ -282,7 +282,7 @@ class AccountReportExpression(models.Model):
         subformula_match = CROSS_REPORT_REGEX.match(self.subformula or "")
         if not subformula_match:
             raise UserError(
-                _(
+                self.env._(
                     "In report '%(report_name)s', on line '%(line_name)s', with label '%(label)s',\n"
                     "The format of the cross report expression is invalid. \n"
                     "Expected: cross_report(<report_id>|<xml_id>)"
@@ -310,14 +310,14 @@ class AccountReportExpression(models.Model):
             )
         if not target_report:
             raise UserError(
-                _(
+                self.env._(
                     "In report '%(report_name)s', on line '%(line_name)s', with label '%(label)s',\n"
                     "Failed to parse the cross report id or xml_id.\n",
                     **error_context,
                 )
             )
         if target_report == self.report_line_id.report_id:
-            raise UserError(_("You cannot use cross report on itself"))
+            raise UserError(self.env._("You cannot use cross report on itself"))
         return target_report.id
 
     @staticmethod
@@ -340,7 +340,7 @@ class AccountReportExpression(models.Model):
                     engine=expression.engine,
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot get aggregation details from a line not using 'aggregation' engine"
                     )
                 )

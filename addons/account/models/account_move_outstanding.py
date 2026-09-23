@@ -3,7 +3,7 @@ from contextlib import contextmanager
 
 import markupsafe
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -156,9 +156,9 @@ class AccountMove(models.Model):
                 "outstanding": True,
                 "content": [],
                 "move_id": move.id,
-                "title": _("Outstanding credits")
+                "title": self.env._("Outstanding credits")
                 if move.is_inbound()
-                else _("Outstanding debits"),
+                else self.env._("Outstanding debits"),
             }
 
             for line in lines_by_move[move.id]:
@@ -326,9 +326,11 @@ class AccountMoveLine(models.Model):
                 reconciled_lines.amount_currency + line.amount_currency
             ):
                 lines = [
-                    _("%(display_name_html)s will be entirely paid by the transaction.")
+                    self.env._(
+                        "%(display_name_html)s will be entirely paid by the transaction."
+                    )
                     if is_invoice
-                    else _(
+                    else self.env._(
                         "%(display_name_html)s will be fully reconciled by the transaction."
                     )
                 ]
@@ -348,25 +350,25 @@ class AccountMoveLine(models.Model):
                         "<a name='apply_partial_amount' type='object' class='btn btn-link p-0 align-baseline'>"
                     )
                     lines.append(
-                        _(
+                        self.env._(
                             "You might want to record a %(btn_start)spartial payment%(btn_end)s."
                         )
                         if is_invoice
-                        else _(
+                        else self.env._(
                             "You might want to make a %(btn_start)spartial reconciliation%(btn_end)s instead."
                         )
                     )
             elif is_invoice:
                 lines = [
-                    _("%(display_name_html)s will be reduced by %(amount)s."),
-                    _(
+                    self.env._("%(display_name_html)s will be reduced by %(amount)s."),
+                    self.env._(
                         "You might want to set the invoice as %(btn_start)sfully paid%(btn_end)s."
                     ),
                 ]
             else:
                 lines = [
-                    _("%(display_name_html)s will be reduced by %(amount)s."),
-                    _(
+                    self.env._("%(display_name_html)s will be reduced by %(amount)s."),
+                    self.env._(
                         "You might want to %(btn_start)sfully reconcile%(btn_end)s the document."
                     ),
                 ]

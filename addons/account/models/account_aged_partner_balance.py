@@ -3,7 +3,7 @@ from itertools import chain
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
@@ -747,7 +747,11 @@ class AccountAgedPayableReportHandler(models.AbstractModel):
     _aged_audit_journal_type = "purchase"
 
     def _get_aged_account_type_option(self):
-        return {"id": self._aged_account_type, "name": _("Payable"), "selected": True}
+        return {
+            "id": self._aged_account_type,
+            "name": self.env._("Payable"),
+            "selected": True,
+        }
 
 
 class AccountAgedReceivableReportHandler(models.AbstractModel):
@@ -763,6 +767,6 @@ class AccountAgedReceivableReportHandler(models.AbstractModel):
     def _get_aged_account_type_option(self):
         return {
             "id": self._aged_account_type,
-            "name": _("Receivable"),
+            "name": self.env._("Receivable"),
             "selected": True,
         }

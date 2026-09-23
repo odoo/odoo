@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -33,13 +33,13 @@ class StockPicking(models.Model):
             lambda p: not p.l10n_in_hsn_code
         ):
             raise UserError(
-                _(
+                self.env._(
                     "Please set HSN code in below products: \n%s",
                     "\n".join(product_with_no_hsn.mapped("name")),
                 )
             )
         if self.l10n_in_ewaybill_ids:
-            raise UserError(_("Ewaybill already created for this picking."))
+            raise UserError(self.env._("Ewaybill already created for this picking."))
         action = self._get_l10n_in_ewaybill_form_action()
         type_xml_trailing_id = (
             "type_delivery_challan_sub_sales_return"

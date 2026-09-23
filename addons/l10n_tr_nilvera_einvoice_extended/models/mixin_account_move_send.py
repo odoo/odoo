@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class MixinAccountMoveSend(models.AbstractModel):
@@ -18,7 +18,7 @@ class MixinAccountMoveSend(models.AbstractModel):
             lambda p: not p.l10n_tr_ctsp_number and "TR" in p.fiscal_country_codes,
         ):
             alerts["l10n_tr_non_eligible_products"] = {
-                "message": _(
+                "message": self.env._(
                     "The following products are missing a CTSP Number:\n%(products)s\n",
                     products="\n".join(
                         f"- {product.display_name}"
@@ -26,9 +26,9 @@ class MixinAccountMoveSend(models.AbstractModel):
                     ),
                 ),
                 "level": "warning",
-                "action_text": _("View Product(s)"),
+                "action_text": self.env._("View Product(s)"),
                 "action": non_eligible_tr_products._get_records_action(
-                    name=_("Check Products"),
+                    name=self.env._("Check Products"),
                 ),
             }
         return alerts
@@ -42,12 +42,12 @@ class MixinAccountMoveSend(models.AbstractModel):
             ),
         ):
             return {
-                "message": _(
+                "message": self.env._(
                     "The Tax Office is not set on the following TR Partner(s)."
                 ),
-                "action_text": _("View Partner(s)"),
+                "action_text": self.env._("View Partner(s)"),
                 "action": tr_einvoice_partners_missing_ref._get_records_action(
-                    name=_("Check reference on Partner(s)"),
+                    name=self.env._("Check reference on Partner(s)"),
                 ),
                 "level": "danger",
             }
@@ -59,12 +59,12 @@ class MixinAccountMoveSend(models.AbstractModel):
             lambda c: not c.l10n_tr_tax_office_id and c.country_code == "TR",
         ):
             return {
-                "message": _(
+                "message": self.env._(
                     "The Tax Office is not set on the following TR Company(s)."
                 ),
-                "action_text": _("View Company(s)"),
+                "action_text": self.env._("View Company(s)"),
                 "action": tr_companies_missing_tax_office._get_records_action(
-                    name=_(" TR Company(s)"),
+                    name=self.env._(" TR Company(s)"),
                 ),
                 "level": "danger",
             }

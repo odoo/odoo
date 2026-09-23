@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -84,7 +84,7 @@ class AccountAnalyticApplicability(models.Model):
                 account=account,
                 prefixes=account_prefixes,
             )
-            applicability.account_prefix_placeholder = _(
+            applicability.account_prefix_placeholder = self.env._(
                 "e.g. %(prefix)s", prefix=account_prefixes
             )
 

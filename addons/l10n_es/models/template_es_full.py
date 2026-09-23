@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.account.models.chart_template import template
 
@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template("es_full")
     def _prepare_es_full_template_data(self):
         return {
-            "name": _("Complete (2008)"),
+            "name": self.env._("Complete (2008)"),
             "parent": "es_common_mainland",
         }
 

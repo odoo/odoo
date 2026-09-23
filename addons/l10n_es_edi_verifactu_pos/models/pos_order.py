@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -74,7 +74,7 @@ class PosOrder(models.Model):
                 warning_level = "danger"
 
             if last_document._filtered_waiting():
-                warning = _(
+                warning = self.env._(
                     "%(existing_warning)sA Veri*Factu document is waiting to be sent as soon as possible.",
                     existing_warning=(warning + "\n" if warning else ""),
                 )
@@ -150,7 +150,7 @@ class PosOrder(models.Model):
 
         if self.state not in ("paid", "done"):
             errors.append(
-                _(
+                self.env._(
                     "Veri*Factu documents can only be generated for paid or posted Point of Sale Orders."
                 )
             )
@@ -262,7 +262,7 @@ class PosOrder(models.Model):
                 > self.company_id.l10n_es_config_id.l10n_es_simplified_invoice_limit
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "The order needs to be invoiced since its total amount is above %s€.",
                         self.company_id.l10n_es_config_id.l10n_es_simplified_invoice_limit,
                     )
@@ -270,7 +270,7 @@ class PosOrder(models.Model):
             refunded_order = self.refunded_order_id
             if refunded_order:
                 if not self.l10n_es_edi_verifactu_refund_reason:
-                    raise UserError(_("You have to specify a refund reason."))
+                    raise UserError(self.env._("You have to specify a refund reason."))
                 simplified_partner = self.env.ref(
                     "l10n_es.partner_simplified", raise_if_not_found=False
                 )
@@ -282,7 +282,7 @@ class PosOrder(models.Model):
                     and self.l10n_es_edi_verifactu_refund_reason != "R5"
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "A partner has to be specified for the selected Veri*Factu Refund Reason."
                         )
                     )
@@ -311,7 +311,7 @@ class PosOrder(models.Model):
             )
             if waiting_documents:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The order can not be invoiced. It is waiting to send a Veri*Factu record to the AEAT already."
                     )
                 )

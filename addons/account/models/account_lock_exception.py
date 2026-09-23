@@ -1,6 +1,6 @@
 from datetime import date
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
@@ -88,7 +88,7 @@ class AccountLock_Exception(models.Model):
 
     def _compute_display_name(self):
         for record in self:
-            record.display_name = _("Lock Date Exception %s", record.id)
+            record.display_name = self.env._("Lock Date Exception %s", record.id)
 
     @api.depends("active", "end_datetime")
     def _compute_state(self):
@@ -180,7 +180,9 @@ class AccountLock_Exception(models.Model):
                 ]
                 if len(changed_fields) != 1:
                     raise ValidationError(
-                        _("A single exception must change exactly one lock date field.")
+                        self.env._(
+                            "A single exception must change exactly one lock date field."
+                        )
                     )
                 field = changed_fields[0]
                 _debug.logic("lock_date_field_deduced", field=field)
@@ -227,11 +229,15 @@ class AccountLock_Exception(models.Model):
             tracking_value_ids = [Command.create(tracking_values)]
 
             end_datetime_string = (
-                _(" valid until %s", format_datetime(self.env, exception.end_datetime))
+                self.env._(
+                    " valid until %s", format_datetime(self.env, exception.end_datetime)
+                )
                 if exception.end_datetime
                 else ""
             )
-            reason_string = _(" for '%s'", exception.reason) if exception.reason else ""
+            reason_string = (
+                self.env._(" for '%s'", exception.reason) if exception.reason else ""
+            )
             _debug.logic(
                 "lock_exception_scope",
                 exception=exception,
@@ -240,12 +246,12 @@ class AccountLock_Exception(models.Model):
                 everyone=not exception.user_id,
                 has_end=bool(exception.end_datetime),
             )
-            company_chatter_message = _(
+            company_chatter_message = self.env._(
                 "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s.",
-                exception=exception._get_html_link(title=_("Exception")),
+                exception=exception._get_html_link(title=self.env._("Exception")),
                 user=exception.user_id.display_name
                 if exception.user_id
-                else _("everyone"),
+                else self.env._("everyone"),
                 end_datetime_string=end_datetime_string,
                 reason=reason_string,
             )
@@ -261,7 +267,7 @@ class AccountLock_Exception(models.Model):
     @_debug.perf.timed
     def copy(self, default=None):
         _debug.lifecycle("copy", records=self)
-        raise UserError(_("You cannot duplicate a Lock Date Exception."))
+        raise UserError(self.env._("You cannot duplicate a Lock Date Exception."))
 
     def _recreate(self):
         if not self:
@@ -281,7 +287,7 @@ class AccountLock_Exception(models.Model):
         ):
             _debug.logic("revoke_denied", exceptions=self, reason="not_account_manager")
             raise UserError(
-                _(
+                self.env._(
                     "You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."
                 )
             )
@@ -372,7 +378,7 @@ class AccountLock_Exception(models.Model):
         _debug.lifecycle("action_show_audit_trail_during_exception", records=self)
         self.check_singleton()
         return {
-            "name": _("Journal Items"),
+            "name": self.env._("Journal Items"),
             "type": "ir.actions.act_window",
             "res_model": "account.move.line",
             "view_mode": "list,form",

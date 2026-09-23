@@ -3,7 +3,7 @@ from itertools import chain
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -66,7 +66,7 @@ class AccountMove(models.Model):
             for deferral_move in self.deferred_move_ids
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot reset to draft an invoice that is grouped in deferral entry. You can create a credit note instead."
                 )
             )
@@ -276,7 +276,9 @@ class AccountMove(models.Model):
                 missing="journal",
             )
             raise UserError(
-                _("Please set the deferred journal in the accounting settings.")
+                self.env._(
+                    "Please set the deferred journal in the accounting settings."
+                )
             )
         if not deferred_account:
             _debug.logic(
@@ -286,7 +288,9 @@ class AccountMove(models.Model):
                 missing="account",
             )
             raise UserError(
-                _("Please set the deferred accounts in the accounting settings.")
+                self.env._(
+                    "Please set the deferred accounts in the accounting settings."
+                )
             )
         return deferred_account, deferred_journal, deferred_method
 
@@ -420,7 +424,7 @@ class AccountMove(models.Model):
                     )
                     continue
 
-                ref = _("Deferral of %s", line.move_id.name or "")
+                ref = self.env._("Deferral of %s", line.move_id.name or "")
                 moves_vals_to_create.append(
                     self._prepare_deferral_move_vals(line, deferred_journal, ref)
                 )
@@ -488,7 +492,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Deferred Entries"),
+            "name": self.env._("Deferred Entries"),
             "res_model": "account.move.line",
             "domain": [("id", "in", self.deferred_move_ids.line_ids.ids)],
             "views": [
@@ -509,7 +513,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         action = {
             "type": "ir.actions.act_window",
-            "name": _("Original Deferred Entries"),
+            "name": self.env._("Original Deferred Entries"),
             "res_model": "account.move.line",
             "domain": [("id", "in", self.deferred_original_move_ids.line_ids.ids)],
             "views": [(False, "list"), (False, "form")],
@@ -583,7 +587,7 @@ class AccountMoveLine(models.Model):
                         account_id=vals.get("account_id"),
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot change the account for a deferred line in %(move_name)s if it has already been deferred.",
                             move_name=line.move_id.display_name,
                         )
@@ -665,7 +669,7 @@ class AccountMoveLine(models.Model):
                     "deferred_dates_invalid", line=line, reason="start_without_end"
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot create a deferred entry with a start date but no end date."
                     )
                 )
@@ -678,7 +682,7 @@ class AccountMoveLine(models.Model):
                     "deferred_dates_invalid", line=line, reason="start_after_end"
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot create a deferred entry with a start date later than the end date."
                     )
                 )

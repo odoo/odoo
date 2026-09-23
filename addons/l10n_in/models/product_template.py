@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ProductTemplate(models.Model):
@@ -30,7 +30,11 @@ class ProductTemplate(models.Model):
 
     @api.depends("sale_ok", "l10n_in_hsn_code")
     def _compute_l10n_in_hsn_warning(self):
-        digit_suffixes = {"4": _("either 4, 6 or 8"), "6": _("either 6 or 8"), "8": "8"}
+        digit_suffixes = {
+            "4": self.env._("either 4, 6 or 8"),
+            "6": self.env._("either 6 or 8"),
+            "8": "8",
+        }
         active_hsn_code_digit_len = max(
             int(company.l10n_in_config_id.l10n_in_hsn_code_digit)
             for company in self.env.companies
@@ -43,7 +47,7 @@ class ProductTemplate(models.Model):
                 not re.match(r"^\d{4}$|^\d{6}$|^\d{8}$", record.l10n_in_hsn_code)
                 or len(record.l10n_in_hsn_code) < active_hsn_code_digit_len
             ):
-                record.l10n_in_hsn_warning = _(
+                record.l10n_in_hsn_warning = self.env._(
                     "HSN code field must consist solely of digits and be %s in length.",
                     digit_suffixes.get(str(active_hsn_code_digit_len)),
                 )

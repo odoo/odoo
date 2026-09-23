@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.db.schema import get_table_columns
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
@@ -32,7 +32,9 @@ class AccountMoveLine(models.Model):
     def _check_taxes_on_closing_entries(self):
         for aml in self:
             if aml.move_id.closing_return_id and (aml.tax_ids or aml.tax_tag_ids):
-                raise UserError(_("You cannot add taxes on a tax closing move line."))
+                raise UserError(
+                    self.env._("You cannot add taxes on a tax closing move line.")
+                )
 
     @api.depends("product_id", "product_uom_id", "move_id.closing_return_id")
     def _compute_tax_ids(self):

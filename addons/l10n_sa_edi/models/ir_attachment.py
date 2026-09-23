@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -17,7 +17,7 @@ class IrAttachment(models.Model):
             move = self.env["account.move"].browse(attach.res_id).exists()
             if move and move.country_code == "SA":
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't unlink an attachment being an EDI document refused by the government."
                     )
                 )
@@ -52,7 +52,7 @@ class IrAttachment(models.Model):
                 restricted_attachments += attachment
         if restricted_attachments:
             raise UserError(
-                _(
+                self.env._(
                     "Oops! The invoice PDF(s) are linked to a validated EDI document and cannot be deleted according to ZATCA rules: %s",
                     ", ".join(restricted_attachments.mapped("name")),
                 )

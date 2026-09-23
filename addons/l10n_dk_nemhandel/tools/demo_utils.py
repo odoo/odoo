@@ -1,7 +1,6 @@
 import uuid
 
 from odoo.exceptions import ValidationError
-from odoo.tools import _
 
 DEMO_PRIVATE_KEY = "l10n_dk_nemhandel/tools/private_key.pem"
 
@@ -10,9 +9,9 @@ DEMO_PRIVATE_KEY = "l10n_dk_nemhandel/tools/private_key.pem"
 # -------------------------------------------------------------------------
 
 
-def _get_notification_message():
-    title = _("Registered to receive documents via Nemhandel (demo).")
-    message = _("You can now fake sending invoices in demo mode.")
+def _get_notification_message(env):
+    title = env._("Registered to receive documents via Nemhandel (demo).")
+    message = env._("You can now fake sending invoices in demo mode.")
     return title, message
 
 
@@ -75,25 +74,27 @@ def _mock_user_creation(func, self, *args, **kwargs):
     func(self, *args, **kwargs)
     self.l10n_dk_nemhandel_proxy_state = "receiver"
     return self._action_send_notification(
-        *_get_notification_message(),
+        *_get_notification_message(self.env),
     )
 
 
 def _mock_receiver_registration(func, self, *args, **kwargs):
     if not self.phone_number:
         raise ValidationError(
-            _("Please enter a phone number to verify your application.")
+            self.env._("Please enter a phone number to verify your application.")
         )
     if not self.contact_email:
         raise ValidationError(
-            _("Please enter a primary contact email to verify your application.")
+            self.env._(
+                "Please enter a primary contact email to verify your application."
+            )
         )
     self.edi_user_id = self.edi_user_id.sudo()._register_proxy_user(
         self.company_id, "nemhandel", self.edi_mode
     )
     self.l10n_dk_nemhandel_proxy_state = "receiver"
     return self.env["nemhandel.registration"]._action_send_notification(
-        *_get_notification_message(),
+        *_get_notification_message(self.env),
     )
 
 
@@ -118,7 +119,7 @@ def _mock_deregister_participant(func, self, *args, **kwargs):
     )
     demo_moves.message_main_attachment_id.unlink()
     demo_moves.ubl_cii_xml_id.unlink()
-    log_message = _(
+    log_message = self.env._(
         "The Nemhandel status of the documents has been reset when switching from Demo to Live."
     )
     demo_moves._message_log_batch(bodies={move.id: log_message for move in demo_moves})

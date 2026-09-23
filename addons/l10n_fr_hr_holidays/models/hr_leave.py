@@ -2,7 +2,7 @@ from datetime import UTC
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.datetime import timezone
 from odoo.libs.debug_log import DebugLog
@@ -56,7 +56,7 @@ class HrLeave(models.Model):
                 calendar=self.resource_calendar_id,
             )
             raise UserError(
-                _(
+                self.env._(
                     "An employee can't take paid time off in a period without any work hours."
                 )
             )

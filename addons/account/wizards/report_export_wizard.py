@@ -3,7 +3,7 @@ import json
 import types
 from urllib.parse import parse_qs, urlparse
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -81,7 +81,7 @@ class Account_ReportsExportWizard(models.TransientModel):
             created_attachments |= self.env["ir.attachment"].create(vals)
         return {
             "type": "ir.actions.act_window",
-            "name": _("Generated Documents"),
+            "name": self.env._("Generated Documents"),
             "view_mode": "kanban,form",
             "res_model": "ir.attachment",
             "domain": [("id", "in", created_attachments.ids)],
@@ -174,7 +174,7 @@ class Account_ReportsExportWizardFormat(models.TransientModel):
 
         else:
             raise UserError(
-                _("One of the formats chosen can not be exported in the DMS")
+                self.env._("One of the formats chosen can not be exported in the DMS")
             )
 
         return self._prepare_attachment_vals(

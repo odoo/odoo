@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -301,7 +301,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         total_column = [
             {
                 **options["columns"][0],
-                "name": _("Total"),
+                "name": self.env._("Total"),
                 "expression_label": "total",
                 "date_from": DEFERRED_DATE_MIN,
                 "date_to": DEFERRED_DATE_MAX,
@@ -310,7 +310,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         not_started_column = [
             {
                 **options["columns"][0],
-                "name": _("Not Started"),
+                "name": self.env._("Not Started"),
                 "expression_label": "not_started",
                 "date_from": options["columns"][-1]["date_to"],
                 "date_to": DEFERRED_DATE_MAX,
@@ -319,7 +319,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         before_column = [
             {
                 **options["columns"][0],
-                "name": _("Before"),
+                "name": self.env._("Before"),
                 "expression_label": "before",
                 "date_from": DEFERRED_DATE_MIN,
                 "date_to": fields.Date.to_string(
@@ -331,7 +331,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         later_column = [
             {
                 **options["columns"][0],
-                "name": _("Later"),
+                "name": self.env._("Later"),
                 "expression_label": "later",
                 "date_from": fields.Date.to_string(
                     fields.Date.to_date(options["columns"][-1]["date_to"])
@@ -343,7 +343,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         recognized_column = [
             {
                 **options["columns"][0],
-                "name": _("Recognized"),
+                "name": self.env._("Recognized"),
                 "expression_label": "recognized",
                 "date_from": DEFERRED_DATE_MIN,
                 "date_to": options["columns"][-1][
@@ -375,7 +375,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         ):
             options["buttons"].append(
                 {
-                    "name": _("Generate entry"),
+                    "name": self.env._("Generate entry"),
                     "action": "action_generate_entry",
                     "sequence": 80,
                     "always_show": True,
@@ -534,7 +534,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
 
         return {
             "type": "ir.actions.act_window",
-            "name": _("Deferred Entries"),
+            "name": self.env._("Deferred Entries"),
             "res_model": "account.move.line",
             "domain": domain,
             "views": [
@@ -557,7 +557,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
     def _caret_options_initializer(self):
         return {
             "deferred_caret": [
-                {"name": _("Journal Items"), "action": "open_journal_items"},
+                {"name": self.env._("Journal Items"), "action": "open_journal_items"},
             ],
         }
 
@@ -617,7 +617,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         )
         return {
             "type": "ir.actions.act_window",
-            "name": _("Deferred Entries"),
+            "name": self.env._("Deferred Entries"),
             "res_model": "account.move.line",
             # An action's domain travels to the client as JSON, which a Domain is not.
             "domain": list(domain),
@@ -706,8 +706,8 @@ class AccountDeferredReportHandler(models.AbstractModel):
                 options["deferred_grouping_field"]
             ]._description
             if options["deferred_grouping_field"] == "product_id":
-                grouping_field_description = _("Product")
-            grouping_name = grouping_record.display_name or _(
+                grouping_field_description = self.env._("Product")
+            grouping_name = grouping_record.display_name or self.env._(
                 "(No %s)", grouping_field_description
             )
             report_lines.append(
@@ -759,7 +759,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         if new_deferred_moves or already_generated:
             return report.open_deferral_entries(options, {})
 
-        raise UserError(_("No entry to generate."))
+        raise UserError(self.env._("No entry to generate."))
 
     @_debug.perf.timed
     def _get_moves_to_defer(self, options):
@@ -767,7 +767,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         date_to = fields.Date.from_string(options["date"]["date_to"])
         if date_to.day != calendar.monthrange(date_to.year, date_to.month)[1]:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot generate entries for a period that does not end at the end of the month."
                 )
             )
@@ -780,8 +780,10 @@ class AccountDeferredReportHandler(models.AbstractModel):
         deferral_entry_period = self.env["report.formula"]._get_dates_period(
             date_from, date_to, "range", period_type="month"
         )
-        ref = _("Grouped Deferral Entry of %s", deferral_entry_period["string"])
-        ref_rev = _(
+        ref = self.env._(
+            "Grouped Deferral Entry of %s", deferral_entry_period["string"]
+        )
+        ref_rev = self.env._(
             "Reversal of Grouped Deferral Entry of %s", deferral_entry_period["string"]
         )
         deferred_account = (
@@ -816,14 +818,16 @@ class AccountDeferredReportHandler(models.AbstractModel):
         )
         if not journal:
             raise UserError(
-                _("Please set the deferred journal in the accounting settings.")
+                self.env._(
+                    "Please set the deferred journal in the accounting settings."
+                )
             )
         move_lines, original_move_ids, ref, ref_rev, date_to = self._get_moves_to_defer(
             options
         )
         if self.env.company._get_violated_lock_dates(date_to, False, journal):
             raise UserError(
-                _("You cannot generate entries for a period that is locked.")
+                self.env._("You cannot generate entries for a period that is locked.")
             )
         _debug.logic(
             "deferral_entry_needed",
@@ -909,7 +913,9 @@ class AccountDeferredReportHandler(models.AbstractModel):
         """
         if not deferred_account:
             raise UserError(
-                _("Please set the deferred accounts in the accounting settings.")
+                self.env._(
+                    "Please set the deferred accounts in the accounting settings."
+                )
             )
 
         deferred_amounts_by_line = self.env[

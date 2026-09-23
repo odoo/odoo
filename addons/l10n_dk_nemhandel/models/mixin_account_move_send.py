@@ -1,7 +1,7 @@
 from base64 import b64encode
 from datetime import timedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -82,7 +82,7 @@ class MixinAccountMoveSend(models.AbstractModel):
                 or not partner.nemhandel_identifier_value
             ):
                 invoice.nemhandel_move_state = "error"
-                invoice_data["error"] = _(
+                invoice_data["error"] = self.env._(
                     "The partner is missing Nemhandel Endpoint Type or Value."
                 )
                 continue
@@ -94,7 +94,7 @@ class MixinAccountMoveSend(models.AbstractModel):
                 != "valid"
             ):
                 invoice.nemhandel_move_state = "error"
-                invoice_data["error"] = _(
+                invoice_data["error"] = self.env._(
                     "Please verify partner configuration in partner settings."
                 )
                 continue
@@ -116,7 +116,7 @@ class MixinAccountMoveSend(models.AbstractModel):
                 builder = invoice.partner_id.commercial_partner_id._get_edi_builder(
                     invoice_data["invoice_edi_format"]
                 )
-                invoice_data["error"] = _(
+                invoice_data["error"] = self.env._(
                     "Errors occurred while creating the EDI document (format: %s):",
                     builder._description,
                 )
@@ -164,7 +164,7 @@ class MixinAccountMoveSend(models.AbstractModel):
                     invoice.nemhandel_message_uuid = message["message_uuid"]
                     invoice.nemhandel_move_state = "processing"
                     invoices |= invoice
-                log_message = _(
+                log_message = self.env._(
                     "The document has been sent to the Nemhandel Access Point for processing"
                 )
                 invoices._message_log_batch(

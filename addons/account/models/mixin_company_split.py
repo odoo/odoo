@@ -1,7 +1,7 @@
 import contextlib
 import json
 
-from odoo import Command, _, models
+from odoo import Command, models
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
@@ -54,7 +54,7 @@ class MixinCompanySplit(models.AbstractModel):
                 companies=forbidden_companies,
             )
             raise UserError(
-                _(
+                self.env._(
                     "You do not have the right to perform this operation as "
                     "you do not have access to the following companies: %s.",
                     ", ".join(c.name for c in forbidden_companies),
@@ -66,7 +66,7 @@ class MixinCompanySplit(models.AbstractModel):
                     "unmerge_rejected", records=record, reason="single_company"
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Account %s cannot be unmerged as it already belongs "
                         "to a single company. The unmerge operation only "
                         "splits a record based on its companies.",
@@ -83,9 +83,9 @@ class MixinCompanySplit(models.AbstractModel):
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             self._unmerge_action_xmlid(),
         )
-        msg = _("Are you sure? This will perform the following operations:\n")
+        msg = self.env._("Are you sure? This will perform the following operations:\n")
         for record in self:
-            msg += _(
+            msg += self.env._(
                 "%(record)s will be split in %(count)s, one for each company:\n",
                 record=record.display_name,
                 count=len(record.company_ids),
@@ -97,7 +97,7 @@ class MixinCompanySplit(models.AbstractModel):
         raise RedirectWarning(
             msg,
             action,
-            _("Unmerge"),
+            self.env._("Unmerge"),
             additional_context={
                 **self.env.context,
                 "account_unmerge_confirm": True,
@@ -546,7 +546,7 @@ class MixinCompanySplit(models.AbstractModel):
         self.write(write_vals)
 
     def _unmerge_log_split(self, new_records, base_company):
-        msg_body = _(
+        msg_body = self.env._(
             "This record was split off from %(source)s (%(company_name)s).",
             source=self._get_html_link(title=self.display_name),
             company_name=base_company.name,

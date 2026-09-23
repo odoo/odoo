@@ -25,7 +25,6 @@ class ResConfigSettings(models.TransientModel):
     def l10n_in_edi_test(self):
         self._l10n_in_check_gst_number()
         response = self.company_id._l10n_in_edi_authenticate()
-        _ = self.env._
         if response.get("error"):
             raise UserError(
                 "\n".join(
@@ -37,7 +36,7 @@ class ResConfigSettings(models.TransientModel):
             )
         if not self.company_id.sudo()._l10n_in_edi_token_is_valid():
             raise UserError(
-                _(
+                self.env._(
                     "Incorrect username or password, or the GST number on company does not match."
                 )
             )
@@ -47,6 +46,6 @@ class ResConfigSettings(models.TransientModel):
             "params": {
                 "type": "info",
                 "sticky": False,
-                "message": _("API credentials validated successfully"),
+                "message": self.env._("API credentials validated successfully"),
             },
         }

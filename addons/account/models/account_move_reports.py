@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -50,12 +50,12 @@ class AccountMove(models.Model):
                 )
                 if len(move.closing_return_id.company_ids) == 1:
                     move.closing_return_id.message_post(
-                        body=_("Closing entry deleted"),
+                        body=self.env._("Closing entry deleted"),
                         message_type="comment",
                     )
                 else:
                     move.closing_return_id.message_post(
-                        body=_(
+                        body=self.env._(
                             "Closing entry deleted for company %s",
                             move.closing_return_id.company_id,
                         ),

@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 # Invoice template that needs to be passed to Sinvoice and will determine the format of the resulting
@@ -114,7 +114,7 @@ class L10n_Vn_Edi_ViettelSinvoiceSymbol(models.Model):
         for record in self:
             if invoices_per_symbol[record.id] > 0:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot change the symbol value or template of the symbol %s because it has "
                         "already been used to send invoices.",
                         record.name,

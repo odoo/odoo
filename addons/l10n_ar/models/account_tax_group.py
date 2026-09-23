@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -69,7 +69,7 @@ class AccountTaxGroup(models.Model):
             lambda g: g.id in profits_tax_group_ids
         ):
             raise UserError(
-                _(
+                self.env._(
                     "The tax group '%s' can't be removed, since it is required in the Argentinian localization.",
                     profit_tax_groups_to_be_deleted[0].name,
                 )

@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.account.models.chart_template import template
 
@@ -50,13 +50,13 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             "cbmx": {
                 "type": "general",
-                "name": _("Effectively Paid"),
+                "name": self.env._("Effectively Paid"),
                 "code": "CBMX",
                 "default_account_id": "cuenta118_01",
                 "show_on_dashboard": True,
             },
             "cash": {
-                "name": _("Cash"),
+                "name": self.env._("Cash"),
                 "type": "cash",
             },
         }
@@ -71,7 +71,7 @@ class AccountChartTemplate(models.AbstractModel):
             accounts_data.update(
                 {
                     "default_cash_difference_income_account_id": {
-                        "name": _("Other Income"),
+                        "name": self.env._("Other Income"),
                         "code": "403.01.01",
                     },
                     "default_cash_difference_expense_account_id": {

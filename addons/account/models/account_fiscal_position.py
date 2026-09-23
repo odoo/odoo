@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -113,7 +113,7 @@ class AccountFiscalPosition(models.Model):
                 or position.zip_from > position.zip_to
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Invalid "Zip Range", You have to configure both "From" and "To" values for the zip range and "To" should be greater than "From".'
                     )
                 )
@@ -137,7 +137,7 @@ class AccountFiscalPosition(models.Model):
 
             if not record.country_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The country of the foreign VAT number could not be detected. Please assign a country to the fiscal position."
                     )
                 )
@@ -154,7 +154,7 @@ class AccountFiscalPosition(models.Model):
                     "foreign_vat_rejected", fpos=record, reason="domestic_no_state"
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."
                     )
                 )
@@ -164,7 +164,7 @@ class AccountFiscalPosition(models.Model):
                 and record.country_id not in record.country_group_id.country_ids
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot create a fiscal position with a country outside of the selected country group."
                     )
                 )
@@ -183,7 +183,7 @@ class AccountFiscalPosition(models.Model):
                     reason="duplicate_in_country",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A fiscal position with a foreign VAT already exists in this country."
                     )
                 )
@@ -342,7 +342,7 @@ class AccountFiscalPosition(models.Model):
                 continue
 
             if record.country_id:
-                fp_label = _("fiscal position [%s]", record.name)
+                fp_label = self.env._("fiscal position [%s]", record.name)
                 record.foreign_vat, _country_code = self.env[
                     "res.partner"
                 ]._run_vat_checks(

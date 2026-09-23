@@ -4,7 +4,7 @@ from collections import defaultdict
 from contextlib import ExitStack, contextmanager
 from datetime import date
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
@@ -706,7 +706,7 @@ class AccountMoveLine(models.Model):
                     index = position_in_move.get(
                         (line.move_id, line.id), len(term_lines)
                     )
-                    name = _(
+                    name = self.env._(
                         "%(name)s installment #%(number)s",
                         name=name or "",
                         number=index + 1,
@@ -1392,7 +1392,7 @@ class AccountMoveLine(models.Model):
                 discount_allocation_needed[key] = frozendict(
                     {
                         "display_type": "discount",
-                        "name": _("Discount"),
+                        "name": self.env._("Discount"),
                         "amount_currency": amount_currency,
                         "balance": amount,
                         "analytic_distribution": {
@@ -1716,7 +1716,7 @@ class AccountMoveLine(models.Model):
         if ctx:
             context.update(ctx)
         return {
-            "name": _("Pay"),
+            "name": self.env._("Pay"),
             "res_model": "account.payment.register",
             "view_mode": "form",
             "views": [[False, "form"]],
@@ -1847,7 +1847,7 @@ class AccountMoveLine(models.Model):
             ):
                 _debug.logic("archived_account_refused", line=line, account=account)
                 raise UserError(
-                    _(
+                    self.env._(
                         "The account %(name)s (%(code)s) is archived.",
                         name=account.name,
                         code=account.code,
@@ -1862,7 +1862,7 @@ class AccountMoveLine(models.Model):
                     journal=line.journal_id,
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Account %(name)s (%(code)s) is not one of the accounts "
                         "allowed on journal %(journal)s.",
                         name=account.name,
@@ -1884,7 +1884,7 @@ class AccountMoveLine(models.Model):
                     line_currency=line.currency_id,
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Account %(name)s (%(code)s) is restricted to %(account_currency)s, "
                         "but this journal item is in %(line_currency)s. Use an account "
                         "without a secondary currency, or change the item's currency.",
@@ -1906,7 +1906,7 @@ class AccountMoveLine(models.Model):
             if any(a.account_type != "off_balance" for a in accounts):
                 _debug.logic("off_balance_mixed_accounts", move=move, accounts=accounts)
                 raise UserError(
-                    _(
+                    self.env._(
                         'If you want to use "Off-Balance Sheet" accounts, all the accounts of the journal entry must be of this type'
                     )
                 )
@@ -1916,12 +1916,14 @@ class AccountMoveLine(models.Model):
                 if line.tax_ids or line.tax_line_id:
                     _debug.logic("off_balance_line_taxed", move=move, line=line)
                     raise UserError(
-                        _("You cannot use taxes on lines with an Off-Balance account")
+                        self.env._(
+                            "You cannot use taxes on lines with an Off-Balance account"
+                        )
                     )
                 if line.reconciled:
                     _debug.logic("off_balance_line_reconciled", move=move, line=line)
                     raise UserError(
-                        _(
+                        self.env._(
                             'Lines from "Off-Balance Sheet" accounts cannot be reconciled'
                         )
                     )
@@ -1935,7 +1937,7 @@ class AccountMoveLine(models.Model):
                 if account_type == "liability_payable":
                     _debug.logic("payable_on_sale_refused", line=line)
                     raise UserError(
-                        _(
+                        self.env._(
                             "Account %s is of payable type, but is used in a sale operation.",
                             line.account_id.code,
                         )
@@ -1950,7 +1952,7 @@ class AccountMoveLine(models.Model):
                         account_type=account_type,
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             "Any journal item on a receivable account must have a due date and vice versa."
                         )
                     )
@@ -1958,7 +1960,7 @@ class AccountMoveLine(models.Model):
                 if account_type == "asset_receivable":
                     _debug.logic("receivable_on_purchase_refused", line=line)
                     raise UserError(
-                        _(
+                        self.env._(
                             "Account %s is of receivable type, but is used in a purchase operation.",
                             line.account_id.code,
                         )
@@ -1973,7 +1975,7 @@ class AccountMoveLine(models.Model):
                         account_type=account_type,
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             "Any journal item on a payable account must have a due date and vice versa."
                         )
                     )
@@ -2008,7 +2010,7 @@ class AccountMoveLine(models.Model):
                     violations=violated_lock_dates,
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "The operation is refused as it would impact an already issued tax statement. "
                         "Please change the journal entry date or the following lock dates to proceed: %(lock_date_info)s.",
                         lock_date_info=self.env["res.company"]._format_lock_dates(
@@ -2069,7 +2071,7 @@ class AccountMoveLine(models.Model):
                     tags=common_tags,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Taxes exigible on payment and on invoice cannot be mixed on the same journal item if they share some tag."
                     )
                 )
@@ -2091,28 +2093,32 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.matching_number:
                 if not re.match(r"^((P?\d+)|(I.+))$", line.matching_number):
-                    raise ValidationError(_("Invalid matching number format"))
+                    raise ValidationError(self.env._("Invalid matching number format"))
                 if line.matching_number.startswith("I") and (
                     line.matched_debit_ids or line.matched_credit_ids
                 ):
                     raise ValidationError(
-                        _("A temporary number can not be used in a real matching")
+                        self.env._(
+                            "A temporary number can not be used in a real matching"
+                        )
                     )
                 if line.matching_number.startswith("P") and not (
                     line.matched_debit_ids or line.matched_credit_ids
                 ):
                     raise ValidationError(
-                        _("A partial matching number must have partials")
+                        self.env._("A partial matching number must have partials")
                     )
                 if line.matching_number.startswith("P") and line.full_reconcile_id:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "A fully reconciled line cannot keep a partial matching number"
                         )
                     )
                 if line.matching_number.isdecimal() and not line.full_reconcile_id:
                     raise ValidationError(
-                        _("A full matching number requires a full reconciliation")
+                        self.env._(
+                            "A full matching number requires a full reconciliation"
+                        )
                     )
                 if line.full_reconcile_id and line.matching_number != str(
                     line.full_reconcile_id.id
@@ -2124,12 +2130,14 @@ class AccountMoveLine(models.Model):
                         full=line.full_reconcile_id,
                     )
                     raise ValidationError(
-                        _("The matching number must equal the full reconciliation id")
+                        self.env._(
+                            "The matching number must equal the full reconciliation id"
+                        )
                     )
             elif line.matched_debit_ids or line.matched_credit_ids:
                 _debug.logic("reconciled_line_unnumbered", line=line)
                 raise ValidationError(
-                    _("A reconciled line must have a matching number")
+                    self.env._("A reconciled line must have a matching number")
                 )
 
     def _is_partially_deductible(self):
@@ -2143,14 +2151,16 @@ class AccountMoveLine(models.Model):
                 include_receipts=True
             ) and float_compare(line.deductible_amount, 100, precision_digits=2):
                 raise ValidationError(
-                    _("Only vendor bills allow for deductibility of product/services.")
+                    self.env._(
+                        "Only vendor bills allow for deductibility of product/services."
+                    )
                 )
             if (
                 float_compare(line.deductible_amount, 0, precision_digits=2) < 0
                 or float_compare(line.deductible_amount, 100, precision_digits=2) > 0
             ):
                 raise ValidationError(
-                    _("The deductibility must be a value between 0 and 100.")
+                    self.env._("The deductibility must be a value between 0 and 100.")
                 )
 
     @api.model
@@ -2424,7 +2434,7 @@ class AccountMoveLine(models.Model):
         lines._check_tax_lock_date()
 
         lines._log_tracked_change(
-            lambda link: _("Journal Item %s created", link),
+            lambda link: self.env._("Journal Item %s created", link),
             lambda line, fnames: (line, dict.fromkeys(fnames)),
         )
 
@@ -2459,7 +2469,7 @@ class AccountMoveLine(models.Model):
             fields=violated_fields,
         )
         raise UserError(
-            _(
+            self.env._(
                 "You cannot edit the following fields: %(fields)s.\n"
                 "The following entries are already hashed:\n%(entries)s",
                 fields=[f["string"] for f in self.fields_get(violated_fields).values()],
@@ -2495,7 +2505,7 @@ class AccountMoveLine(models.Model):
             if posted and changed_fields & {"tax_ids", "tax_line_id"}:
                 _debug.logic("posted_tax_change_refused", line=line)
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so."
                     )
                 )
@@ -2548,7 +2558,7 @@ class AccountMoveLine(models.Model):
         )
 
         if account_to_write and not account_to_write.active:
-            raise UserError(_("You cannot use an archived account."))
+            raise UserError(self.env._("You cannot use an archived account."))
 
         vals = self._normalize_vals(vals)
 
@@ -2607,7 +2617,7 @@ class AccountMoveLine(models.Model):
             self.browse(tax_lock_check_ids)._check_tax_lock_date()
 
             self._log_tracked_change(
-                lambda link: _("Journal Item %s updated", link),
+                lambda link: self.env._("Journal Item %s updated", link),
                 lambda line, fnames: (line, tracking_snapshot.get(line.id, {})),
             )
             if "analytic_line_ids" in vals:
@@ -2629,7 +2639,7 @@ class AccountMoveLine(models.Model):
             restricted = non_zero_lines.move_id.filtered(lambda m: m.state == "posted")
             if restricted:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't delete a posted journal item. Don’t play games with your accounting records; reset the journal entry to draft before deleting it."
                     )
                 )
@@ -2643,14 +2653,14 @@ class AccountMoveLine(models.Model):
                 if line.display_type == "tax" and line.move_id.line_ids.tax_ids:
                     _debug.logic("tax_line_deletion_blocked", line=line)
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "You cannot delete a tax line as it would impact the tax report"
                         )
                     )
                 if line.display_type == "payment_term":
                     _debug.logic("term_line_deletion_blocked", line=line)
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "You cannot delete a payable/receivable line as it would not be consistent "
                             "with the payment terms"
                         )
@@ -2663,7 +2673,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.move_id.inalterable_hash:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot delete journal items belonging to a locked journal entry."
                     )
                 )
@@ -2684,7 +2694,7 @@ class AccountMoveLine(models.Model):
 
         blank_line = self.browse([False])
         self._log_tracked_change(
-            lambda link: _("Journal Item %s deleted", link),
+            lambda link: self.env._("Journal Item %s deleted", link),
             lambda line, fnames: (
                 blank_line,
                 {fname: line[fname] for fname in fnames},
@@ -2713,7 +2723,7 @@ class AccountMoveLine(models.Model):
         ]:
             names.append(line_name)
         name = " ".join(names)
-        return name or _("Draft Entry")
+        return name or self.env._("Draft Entry")
 
     @api.depends("move_id", "ref", "product_id")
     def _compute_display_name(self):
@@ -3339,12 +3349,12 @@ class AccountMoveLine(models.Model):
         if any(aml.reconciled for aml in amls):
             _debug.logic("already_reconciled_refused", reconcile=amls)
             raise UserError(
-                _(
+                self.env._(
                     "You are trying to reconcile some entries that are already reconciled."
                 )
             )
         if any(aml.parent_state == "cancel" for aml in amls):
-            raise UserError(_("You can not reconcile cancelled entries."))
+            raise UserError(self.env._("You can not reconcile cancelled entries."))
         accounts = amls.mapped(
             lambda x: x._get_reconciliation_aml_field_value(
                 "account_id", shadowed_aml_values
@@ -3352,21 +3362,21 @@ class AccountMoveLine(models.Model):
         )
         if not accounts:
             raise UserError(
-                _("You can not reconcile journal items that carry no account.")
+                self.env._("You can not reconcile journal items that carry no account.")
             )
         if len(accounts) > 1:
             _debug.logic(
                 "reconcile_accounts_mismatch", reconcile=amls, accounts=accounts
             )
             raise UserError(
-                _(
+                self.env._(
                     "Entries are not from the same account: %s",
                     ", ".join(accounts.mapped("display_name")),
                 )
             )
         if len(amls.company_id.root_id) > 1:
             raise UserError(
-                _(
+                self.env._(
                     "Entries don't belong to the same company: %s",
                     ", ".join(amls.company_id.mapped("display_name")),
                 )
@@ -3382,7 +3392,7 @@ class AccountMoveLine(models.Model):
                 account_type=accounts.account_type,
             )
             raise UserError(
-                _(
+                self.env._(
                     "Account %s does not allow reconciliation. First change the configuration of this account "
                     "to allow it.",
                     accounts.display_name,
@@ -3778,7 +3788,7 @@ class AccountMoveLine(models.Model):
             side="expense" if amount_residual_to_fix > 0.0 else "income",
             residual_only=not amount_residual,
         )
-        name = _("Currency exchange rate difference")
+        name = self.env._("Currency exchange rate difference")
         debit = -amount_residual if amount_residual < 0.0 else 0.0
         credit = max(0.0, amount_residual)
         counterpart_vals = {
@@ -3823,7 +3833,7 @@ class AccountMoveLine(models.Model):
 
             if not move_vals["journal_id"]:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You have to configure the 'Exchange Gain or Loss Journal' in your company settings, to manage"
                         " automatically the booking of accounting entries related to differences between exchange rates."
                     )
@@ -3835,14 +3845,14 @@ class AccountMoveLine(models.Model):
         for journal in journals:
             if not journal.company_id.account_config_id.expense_currency_exchange_account_id:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You should configure the 'Loss Exchange Rate Account' in your company settings, to manage"
                         " automatically the booking of accounting entries related to differences between exchange rates."
                     )
                 )
             if not journal.company_id.account_config_id.income_currency_exchange_account_id.id:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You should configure the 'Gain Exchange Rate Account' in your company settings, to manage"
                         " automatically the booking of accounting entries related to differences between exchange rates."
                     )
@@ -3952,14 +3962,14 @@ class AccountMoveLine(models.Model):
                 lines=lines_with_missing_analytic_distribution,
                 moves=self.move_id,
             )
-            msg = _("One or more lines require a 100% analytic distribution.")
+            msg = self.env._("One or more lines require a 100% analytic distribution.")
             if len(self.move_id) == 1:
                 raise ValidationError(msg)
             raise RedirectWarning(
                 message=msg,
                 action={
                     "view_mode": "list",
-                    "name": _("Items With Missing Analytic Distribution"),
+                    "name": self.env._("Items With Missing Analytic Distribution"),
                     "res_model": "account.move.line",
                     "type": "ir.actions.act_window",
                     "domain": [
@@ -3969,7 +3979,7 @@ class AccountMoveLine(models.Model):
                         (self.env.ref("account.view_account_move_line_list").id, "list")
                     ],
                 },
-                button_text=_("See items"),
+                button_text=self.env._("See items"),
             )
 
     @_debug.perf.timed
@@ -4338,7 +4348,7 @@ class AccountMoveLine(models.Model):
     def get_import_templates(self):
         return [
             {
-                "label": _("Import Template for Journal Items"),
+                "label": self.env._("Import Template for Journal Items"),
                 "template": "/account/static/xls/aml_import_template.xlsx",
             }
         ]

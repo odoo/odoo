@@ -1,7 +1,7 @@
 import base64
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import LockError, UserError
 
 _logger = logging.getLogger(__name__)
@@ -284,7 +284,9 @@ class AccountEdiDocument(models.Model):
                 )
                 if not with_commit:
                     raise UserError(
-                        _("This document is being sent by another process already. ")
+                        self.env._(
+                            "This document is being sent by another process already. "
+                        )
                     ) from None
                 continue
             self._process_job(job)

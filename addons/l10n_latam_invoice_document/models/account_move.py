@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.db.schema import column_exists, create_column
 from odoo.exceptions import UserError, ValidationError
 
@@ -228,7 +228,9 @@ class AccountMove(models.Model):
         ):
             if rec.move_type in ("in_receipt", "out_receipt"):
                 raise UserError(
-                    _("We do not accept the usage of document types on receipts yet. ")
+                    self.env._(
+                        "We do not accept the usage of document types on receipts yet. "
+                    )
                 )
         return super()._post_entries()
 
@@ -246,7 +248,7 @@ class AccountMove(models.Model):
         )
         if without_doc_type:
             raise ValidationError(
-                _(
+                self.env._(
                     "The journal require a document type but not document type has been selected on invoices %s.",
                     without_doc_type.ids,
                 )
@@ -258,7 +260,7 @@ class AccountMove(models.Model):
         )
         if without_number:
             raise ValidationError(
-                _(
+                self.env._(
                     "Please set the document number on the following invoices %s.",
                     without_number.ids,
                 )
@@ -274,7 +276,7 @@ class AccountMove(models.Model):
                 "in_refund",
             ]:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can not use a %s document type with a refund invoice",
                         internal_type,
                     )
@@ -284,7 +286,7 @@ class AccountMove(models.Model):
                 "in_invoice",
             ]:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can not use a %s document type with a invoice",
                         internal_type,
                     )

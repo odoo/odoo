@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 
@@ -54,13 +54,13 @@ class AccountJournal(models.Model):
     def _selection_l10n_ar_afip_pos_types(self):
         """Return the list of values of the selection field."""
         return [
-            ("II_IM", _("Pre-printed Invoice")),
-            ("RLI_RLM", _("Online Invoice")),
-            ("BFERCEL", _("Electronic Fiscal Bond - Online Invoice")),
-            ("FEERCELP", _("Export Voucher - Billing Plus")),
-            ("FEERCEL", _("Export Voucher - Online Invoice")),
-            ("CPERCEL", _("Product Coding - Online Voucher")),
-            ("CF", _("External Fiscal Controller")),
+            ("II_IM", self.env._("Pre-printed Invoice")),
+            ("RLI_RLM", self.env._("Online Invoice")),
+            ("BFERCEL", self.env._("Electronic Fiscal Bond - Online Invoice")),
+            ("FEERCELP", self.env._("Export Voucher - Billing Plus")),
+            ("FEERCEL", self.env._("Export Voucher - Online Invoice")),
+            ("CPERCEL", self.env._("Product Coding - Online Voucher")),
+            ("CF", self.env._("External Fiscal Controller")),
         ]
 
     def _get_journal_letter(self, counterpart_partner=False):
@@ -100,10 +100,10 @@ class AccountJournal(models.Model):
         }
         if not self.company_id.l10n_ar_afip_responsibility_type_id:
             action = self.env.ref("base.action_res_company_form")
-            msg = _(
+            msg = self.env._(
                 "Can not create chart of account until you configure your company ARCA Responsibility and VAT."
             )
-            raise RedirectWarning(msg, action.id, _("Go to Companies"))
+            raise RedirectWarning(msg, action.id, self.env._("Go to Companies"))
 
         letters = letters_data["issued" if self.l10n_ar_is_pos else "received"][
             self.company_id.l10n_ar_afip_responsibility_type_id.code
@@ -225,7 +225,7 @@ class AccountJournal(models.Model):
         if journals:
             raise ValidationError(
                 "\n".join(
-                    _(
+                    self.env._(
                         "The pos system %(system)s can not be used on a purchase journal (id %(id)s)",
                         system=x.l10n_ar_afip_pos_system,
                         id=x.id,
@@ -237,13 +237,13 @@ class AccountJournal(models.Model):
     @api.constrains("l10n_ar_afip_pos_number")
     def _check_afip_pos_number(self):
         if self.filtered(lambda j: j.l10n_ar_is_pos and j.l10n_ar_afip_pos_number == 0):
-            raise ValidationError(_("Please define an ARCA POS number"))
+            raise ValidationError(self.env._("Please define an ARCA POS number"))
 
         if self.filtered(
             lambda j: j.l10n_ar_is_pos and j.l10n_ar_afip_pos_number > 99999
         ):
             raise ValidationError(
-                _("Please define a valid ARCA POS number (5 digits max)")
+                self.env._("Please define a valid ARCA POS number (5 digits max)")
             )
 
     @api.onchange("l10n_ar_afip_pos_number", "type")
@@ -284,7 +284,7 @@ class AccountJournal(models.Model):
                     # Wouldn't work if there was a relational field, as we would compare an id with a recordset.
                     if vals[field] != journal[field]:
                         raise UserError(
-                            _(
+                            self.env._(
                                 "You can not change %s journal's configuration if it already has validated invoices",
                                 journal.name,
                             )

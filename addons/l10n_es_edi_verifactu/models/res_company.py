@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ResCompany(models.Model):
@@ -78,7 +78,7 @@ class ResCompany(models.Model):
                 "ir.sequence"
             ].create(
                 {
-                    "name": _(
+                    "name": self.env._(
                         "Veri*Factu Document Sequence for company %(name)s (%(id)s)",
                         name=self.name,
                         id=self.id,

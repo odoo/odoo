@@ -9,7 +9,7 @@ try:
 except ImportError:
     load_workbook = None
 
-from odoo import Command, _, fields
+from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import file_open, formatLang
@@ -363,7 +363,9 @@ class TestAccountReportsCommon(AccountTestInvoicingCommon):
         }
         if tag_name and formula:
             raise UserError(
-                _("Can't use this helper to create a line with both tags and formula")
+                cls.env._(
+                    "Can't use this helper to create a line with both tags and formula"
+                )
             )
         if tag_name:
             create_vals["expression_ids"].append(

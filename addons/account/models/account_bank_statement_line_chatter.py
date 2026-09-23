@@ -1,6 +1,6 @@
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -36,9 +36,9 @@ class AccountBankStatementLine(models.Model):
         self.check_singleton()
         if not self.is_reconciled:
             return
-        body = _("Matching done")
+        body = self.env._("Matching done")
         if reconcile_model := self.move_id.line_ids.reconcile_model_id:
-            body += _(
+            body += self.env._(
                 " - %(reconcile_model_name)s",
                 reconcile_model_name=", ".join(reconcile_model.mapped("name")),
             )
@@ -50,7 +50,7 @@ class AccountBankStatementLine(models.Model):
         self.check_singleton()
         if self.is_reconciled:
             return
-        self._post_matching_note(_("Matching unreconciled"))
+        self._post_matching_note(self.env._("Matching unreconciled"))
 
     @_debug.perf.timed
     def _create_payment_with_move_from_invoice(self, move_id):

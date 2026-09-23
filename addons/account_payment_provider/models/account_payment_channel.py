@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -77,7 +77,7 @@ class AccountPaymentChannel(models.Model):
         )
         if active_provider:
             raise UserError(
-                _(
+                self.env._(
                     "You can't delete a payment method that is linked to a provider in the enabled "
                     "or test state.\n"
                     "Linked providers(s): %s",
@@ -89,7 +89,7 @@ class AccountPaymentChannel(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Provider"),
+            "name": self.env._("Provider"),
             "view_mode": "form",
             "res_model": "payment.provider",
             "target": "current",

@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -71,11 +71,11 @@ class AccountAccount(models.Model):
             if record.account_type == "off_balance":
                 if record.reconcile:
                     raise UserError(
-                        _("An Off-Balance account can not be reconcilable"),
+                        self.env._("An Off-Balance account can not be reconcilable"),
                     )
                 if record.tax_ids:
                     raise UserError(
-                        _("An Off-Balance account can not have taxes"),
+                        self.env._("An Off-Balance account can not have taxes"),
                     )
 
     @api.constrains("currency_id")
@@ -132,7 +132,7 @@ class AccountAccount(models.Model):
         if mismatched:
             account, journal = mismatched[0]
             raise ValidationError(
-                _(
+                self.env._(
                     "The foreign currency set on the journal '%(journal)s' and "
                     "the account '%(account)s' must be the same.",
                     journal=journal.display_name,
@@ -160,7 +160,7 @@ class AccountAccount(models.Model):
                 for company in companies_by_account[account.id]
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't unlink this company from this account since "
                         "there are some journal items linked to it.",
                     )
@@ -193,7 +193,7 @@ class AccountAccount(models.Model):
                 "account_type_rejected", accounts=self, reason="sale_purchase_journal"
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "The account is already in use in a 'sale' or 'purchase' "
                     "journal. This means that the account's type couldn't be "
                     "'receivable' or 'payable'.",
@@ -223,7 +223,7 @@ class AccountAccount(models.Model):
                 "account_type_rejected", accounts=self, reason="bank_journal_account"
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "You cannot change the type of an account set as Bank "
                     "Account on a journal to Receivable or Payable.",
                 )
@@ -326,7 +326,7 @@ class AccountAccount(models.Model):
             limit=1,
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot set a currency on this account as it "
                     "already has some journal entries having a different "
                     "foreign currency.",
@@ -340,7 +340,7 @@ class AccountAccount(models.Model):
             limit=1,
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot deprecate an account that is used in a "
                     "tax distribution.",
                 )
@@ -361,7 +361,7 @@ class AccountAccount(models.Model):
             )
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot perform this action on an account that "
                     "contains journal items.",
                 )
@@ -380,7 +380,7 @@ class AccountAccount(models.Model):
             limit=1,
         ):
             raise UserError(
-                _(
+                self.env._(
                     'You cannot remove/deactivate the accounts "%s" which '
                     "are set on the account mapping of a fiscal position.",
                     ", ".join(f"{a.code} - {a.name}" for a in self),
@@ -396,7 +396,7 @@ class AccountAccount(models.Model):
             limit=1,
         ):
             raise UserError(
-                _(
+                self.env._(
                     'You cannot remove/deactivate the accounts "%s" which '
                     "are set on a tax repartition line.",
                     ", ".join(f"{a.code} - {a.name}" for a in self),
@@ -582,7 +582,7 @@ class AccountAccount(models.Model):
         for account in self:
             if formatted_display_name and account.code:
                 suggested = (
-                    f" `{_('Suggested')}`"
+                    f" `{self.env._('Suggested')}`"
                     if account.id in preferred_account_ids
                     else ""
                 )
@@ -717,7 +717,7 @@ class AccountAccount(models.Model):
         )
         if partial_lines_count > 0:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot switch an account to prevent the reconciliation "
                     "if some partial reconciliations are still pending.",
                 )
@@ -951,7 +951,7 @@ class AccountAccount(models.Model):
         )
         return {
             "type": "ir.actions.act_window",
-            "name": _("Taxes"),
+            "name": self.env._("Taxes"),
             "res_model": "account.tax",
             "views": [[False, "list"], [False, "form"]],
             "domain": [("id", "in", related_taxes_ids)],
@@ -969,13 +969,13 @@ class AccountAccount(models.Model):
     def get_import_templates(self):
         return [
             {
-                "label": _("Import Template for Chart of Accounts"),
+                "label": self.env._("Import Template for Chart of Accounts"),
                 "template": "/account/static/xls/coa_import_template.xlsx",
             }
         ]
 
     def _merge_method(self, destination, source):
-        raise UserError(_("You cannot merge accounts."))
+        raise UserError(self.env._("You cannot merge accounts."))
 
     def _unmerge_action_xmlid(self):
         return "account.action_unmerge_accounts"

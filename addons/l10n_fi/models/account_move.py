@@ -1,7 +1,7 @@
 import logging
 import re
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 log = logging.getLogger(__name__)
@@ -16,7 +16,9 @@ class AccountMove(models.Model):
         invoice_number = re.sub(r"\D", "", number)
 
         if invoice_number == "" or invoice_number is False:
-            raise UserError(_("Invoice number must contain numeric characters"))
+            raise UserError(
+                self.env._("Invoice number must contain numeric characters")
+            )
 
         # Make sure the base number is 3...19 characters long
         if len(invoice_number) < 3:

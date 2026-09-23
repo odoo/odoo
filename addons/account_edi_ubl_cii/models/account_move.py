@@ -4,7 +4,7 @@ from contextlib import suppress
 
 from lxml import etree
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.libs.filesystem import guess_mimetype
 
 from odoo.addons.account.tools.import_file_type import (
@@ -112,7 +112,7 @@ class AccountMove(models.Model):
             print_items.append(
                 {
                     "key": "download_ubl",
-                    "description": _("Export XML"),
+                    "description": self.env._("Export XML"),
                     **posted_moves.action_invoice_download_ubl(),
                 }
             )

@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -17,7 +17,7 @@ class AccountFiscalPosition(models.Model):
             ):
                 _debug.logic("doi_fiscal_position_protected", positions=self)
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot delete the special fiscal position for Declarations of Intent."
                     )
                 )

@@ -3,7 +3,7 @@ from collections import defaultdict
 from hashlib import sha256
 from json import dumps, loads
 
-from odoo import _, api, fields, models, release
+from odoo import api, fields, models, release
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -15,7 +15,9 @@ class PosConfig(models.Model):
     def open_ui(self):
         for config in self:
             if not config.company_id.country_id:
-                raise UserError(_("You have to set a country in your company setting."))
+                raise UserError(
+                    self.env._("You have to set a country in your company setting.")
+                )
             if config.company_id._is_accounting_unalterable():
                 if config.current_session_id:
                     config.current_session_id._check_session_timing()
@@ -136,7 +138,7 @@ class PosOrder(models.Model):
                 match = prev_map.get(order.l10n_fr_secure_sequence_number - 1, [])
                 if len(match) > 1:
                     raise UserError(
-                        _(
+                        self.env._(
                             "An error occurred when computing the inalterability. Impossible to get the unique previous posted point of sale order."
                         )
                     )
@@ -294,7 +296,7 @@ class PosOrder(models.Model):
                     ORDER_FIELDS
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "According to the French law, you cannot modify a point of sale order. Forbidden fields: %s."
                         )
                         % ", ".join(ORDER_FIELDS)
@@ -305,7 +307,7 @@ class PosOrder(models.Model):
                     and "l10n_fr_secure_sequence_number" in vals
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot overwrite the values ensuring the inalterability of the point of sale."
                         )
                     )
@@ -332,7 +334,7 @@ class PosOrder(models.Model):
         for order in self:
             if order.company_id._is_accounting_unalterable():
                 raise UserError(
-                    _(
+                    self.env._(
                         "According to French law, you cannot delete a point of sale order."
                     )
                 )
@@ -350,7 +352,7 @@ class PosOrderLine(models.Model):
                 for l in self
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "According to the French law, you cannot modify a point of sale order line. Forbidden fields: %s."
                     )
                     % ", ".join(LINE_FIELDS)

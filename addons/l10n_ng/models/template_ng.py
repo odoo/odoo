@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.account.models.chart_template import template
 
@@ -24,19 +24,19 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             **generic_coa_account_data,
             "l10n_ng_withholding": {
-                "name": _("Withholding Tax on Purchases"),
+                "name": self.env._("Withholding Tax on Purchases"),
                 "code": "252001",
                 "account_type": "liability_current",
                 "reconcile": False,
             },
             "l10n_ng_withholding_transitional": {
-                "name": _("Withholding Tax on Purchases - Transition Account"),
+                "name": self.env._("Withholding Tax on Purchases - Transition Account"),
                 "code": "252002",
                 "account_type": "liability_current",
                 "reconcile": True,
             },
             "l10n_ng_withholding_payable": {
-                "name": _("Withholding Tax Payable"),
+                "name": self.env._("Withholding Tax Payable"),
                 "code": "252003",
                 "account_type": "liability_payable",
                 "reconcile": True,

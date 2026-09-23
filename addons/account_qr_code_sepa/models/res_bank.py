@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 from odoo.addons.account.tools import (
     is_valid_structured_reference,
@@ -123,21 +123,23 @@ class ResPartnerBankAccount(models.Model):
             error_messages = []
             if currency.name != "EUR":
                 error_messages.append(
-                    _(
+                    self.env._(
                         "Can't generate a SEPA QR Code with the %s currency.",
                         currency.name,
                     )
                 )
             if self.acc_type != "iban":
                 error_messages.append(
-                    _("Can't generate a SEPA QR code if the account type isn't IBAN.")
+                    self.env._(
+                        "Can't generate a SEPA QR code if the account type isn't IBAN."
+                    )
                 )
             if not (
                 self.sanitized_acc_number
                 and self.sanitized_acc_number[:2] in sepa_iban_codes
             ):
                 error_messages.append(
-                    _("Can't generate a SEPA QR code with a non SEPA iban.")
+                    self.env._("Can't generate a SEPA QR code with a non SEPA iban.")
                 )
             if len(error_messages) > 0:
                 return "\r\n".join(error_messages)
@@ -155,7 +157,7 @@ class ResPartnerBankAccount(models.Model):
     ):
         if qr_method == "sct_qr":
             if not self.acc_holder_name and not self.partner_id.name:
-                return _(
+                return self.env._(
                     "The account receiving the payment must have an account holder name or partner name set."
                 )
 
@@ -171,5 +173,5 @@ class ResPartnerBankAccount(models.Model):
     @api.model
     def _get_available_qr_methods(self):
         rslt = super()._get_available_qr_methods()
-        rslt.append(("sct_qr", _("SEPA Credit Transfer QR"), 20))
+        rslt.append(("sct_qr", self.env._("SEPA Credit Transfer QR"), 20))
         return rslt

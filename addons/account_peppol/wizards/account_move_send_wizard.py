@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import AccessError, UserError
 
 
@@ -23,11 +23,11 @@ class AccountMoveSendWizard(models.TransientModel):
                 )
                 peppol_proxy_mode = wizard.company_id._get_peppol_edi_mode()
                 if peppol_partner.peppol_verification_state == "not_valid":
-                    addendum_disable_reason = _(" (Customer not on Peppol)")
+                    addendum_disable_reason = self.env._(" (Customer not on Peppol)")
                 elif peppol_partner.peppol_verification_state == "not_verified":
-                    addendum_disable_reason = _(" (no VAT)")
+                    addendum_disable_reason = self.env._(" (no VAT)")
                 elif wizard.company_id._have_unauthorized_peppol_parent_company():
-                    addendum_disable_reason = _(" (no access)")
+                    addendum_disable_reason = self.env._(" (no access)")
                 else:
                     addendum_disable_reason = ""
                 vals_not_valid = (
@@ -37,16 +37,16 @@ class AccountMoveSendWizard(models.TransientModel):
                 )
                 addendum_mode = ""
                 if peppol_proxy_mode == "test":
-                    addendum_mode = _(" (Test)")
+                    addendum_mode = self.env._(" (Test)")
                 elif peppol_proxy_mode == "demo":
-                    addendum_mode = _(" (Demo)")
+                    addendum_mode = self.env._(" (Demo)")
                 if addendum_disable_reason or addendum_mode:
                     wizard.sending_method_checkboxes = {
                         **wizard.sending_method_checkboxes,
                         "peppol": {
                             **peppol_checkbox,
                             **vals_not_valid,
-                            "label": _(
+                            "label": self.env._(
                                 "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s",
                                 peppol_label=peppol_checkbox["label"],
                                 disable_reason=addendum_disable_reason,
@@ -63,10 +63,12 @@ class AccountMoveSendWizard(models.TransientModel):
                 self.move_id.partner_id.commercial_partner_id.peppol_verification_state
                 != "valid"
             ):
-                raise UserError(_("Partner doesn't have a valid Peppol configuration."))
+                raise UserError(
+                    self.env._("Partner doesn't have a valid Peppol configuration.")
+                )
             if self.move_id.company_id._have_unauthorized_peppol_parent_company():
                 raise AccessError(
-                    _(
+                    self.env._(
                         "You are not allowed to send invoice on behalf of %s.",
                         self.move_id.company_id.account_peppol_config_id.peppol_parent_company_id.sudo().name,
                     )

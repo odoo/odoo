@@ -3,7 +3,7 @@ import contextlib
 import io
 import zipfile
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -86,7 +86,7 @@ class L10n_Hu_EdiTax_Audit_Export(models.TransientModel):
 
         invoices = self.env["account.move"].search(domain)
         if not invoices:
-            raise UserError(_("No invoice to export!"))
+            raise UserError(self.env._("No invoice to export!"))
 
         with io.BytesIO() as buf:
             with zipfile.ZipFile(

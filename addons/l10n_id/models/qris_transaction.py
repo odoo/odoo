@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -36,7 +36,9 @@ class L10n_IdQrisTransaction(models.Model):
         # only allow supported models
         if self.model not in self._get_supported_models():
             raise ValidationError(
-                _("QRIS capability is not extended to model %s yet!", self.model)
+                self.env._(
+                    "QRIS capability is not extended to model %s yet!", self.model
+                )
             )
 
     def _get_record(self):

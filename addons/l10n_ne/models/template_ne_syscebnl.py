@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.account.models.chart_template import template
 
@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template("ne_syscebnl")
     def _prepare_ne_syscebnl_template_data(self):
         return {
-            "name": _("SYSCEBNL for Associations"),
+            "name": self.env._("SYSCEBNL for Associations"),
             "parent": "syscebnl",
             "code_digits": "6",
         }

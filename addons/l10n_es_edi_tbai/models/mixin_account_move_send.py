@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class MixinAccountMoveSend(models.AbstractModel):
@@ -14,9 +14,9 @@ class MixinAccountMoveSend(models.AbstractModel):
         res.update(
             {
                 "es_tbai": {
-                    "label": _("TicketBAI"),
+                    "label": self.env._("TicketBAI"),
                     "is_applicable": self._is_tbai_applicable,
-                    "help": _("Send the e-invoice to the Basque Government."),
+                    "help": self.env._("Send the e-invoice to the Basque Government."),
                 }
             }
         )
@@ -74,7 +74,7 @@ class MixinAccountMoveSend(models.AbstractModel):
 
                 if error:
                     invoice_data["error"] = {
-                        "error_title": _(
+                        "error_title": self.env._(
                             "Error when sending the invoice to TicketBAI:"
                         ),
                         "errors": [error],

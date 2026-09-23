@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 TAX_SYSTEM = [
     ("RF01", "[RF01] Ordinario"),
@@ -98,17 +98,19 @@ class ResCompany(models.Model):
         checks = {
             "company_vat_codice_fiscale_missing": {
                 "fields": [("vat", "l10n_it_codice_fiscale")],
-                "message": _("Company/ies should have a VAT number or Codice Fiscale."),
+                "message": self.env._(
+                    "Company/ies should have a VAT number or Codice Fiscale."
+                ),
             },
             "company_address_missing": {
                 "fields": [("street", "street2"), ("zip",), ("city",), ("country_id",)],
-                "message": _(
+                "message": self.env._(
                     "Company/ies should have a complete address, verify their Street, City, Zipcode and Country."
                 ),
             },
             "company_l10n_it_tax_system_missing": {
                 "fields": [("l10n_it_tax_system",)],
-                "message": _("Company/ies should have a Tax System"),
+                "message": self.env._("Company/ies should have a Tax System"),
             },
         }
         errors = {}
@@ -124,18 +126,22 @@ class ResCompany(models.Model):
                 ):
                     errors[f"l10n_it_edi_{key}"] = {
                         "message": check["message"],
-                        "action_text": _("View Company/ies"),
+                        "action_text": self.env._("View Company/ies"),
                         "action": invalid_records._get_records_action(
-                            name=_("Check Company Data")
+                            name=self.env._("Check Company Data")
                         ),
                     }
         if self.filtered(
             lambda x: not x.l10n_it_edi_config_id.l10n_it_edi_proxy_user_id
         ):
             errors["l10n_it_edi_settings_l10n_it_edi_proxy_user_id"] = {
-                "message": _("You need to set the Codice Fiscale on your company."),
-                "action_text": _("View Company/ies"),
-                "action": self._get_records_action(name=_("Check Company Data")),
+                "message": self.env._(
+                    "You need to set the Codice Fiscale on your company."
+                ),
+                "action_text": self.env._("View Company/ies"),
+                "action": self._get_records_action(
+                    name=self.env._("Check Company Data")
+                ),
             }
         return errors
 

@@ -5,7 +5,7 @@ from typing import Literal
 
 import requests
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import LockError, UserError
 from odoo.http import request
 
@@ -155,20 +155,20 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             )
             raise AccountEdiProxyError(
                 "connection_error",
-                _(
+                self.env._(
                     "The url that this service requested returned an error. The url it tried to contact was %s",
                     url,
                 ),
             ) from e
 
         if "error" in response:
-            message = _(
+            message = self.env._(
                 "The url that this service requested returned an error. The url it tried to contact was %(url)s. %(error_message)s",
                 url=url,
                 error_message=response["error"]["message"],
             )
             if response["error"]["code"] == 404:
-                message = _(
+                message = self.env._(
                     "The url that this service tried to contact does not exist. The url was “%s”",
                     url,
                 )
@@ -189,7 +189,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if error_code == "invalid_signature":
                 raise AccountEdiProxyError(
                     error_code,
-                    _(
+                    self.env._(
                         "Failed to connect to Odoo Access Point server. This might be due to another connection to Odoo Access Point "
                         "server. It can occur if you have duplicated your database. \n\n"
                         "If you are not sure how to fix this, please contact our support."
@@ -253,7 +253,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     # Note: Peppol IAP errors weren't made properly with error code that are then translated on
                     # Odoo side. We are for now forced to check the error message.
                     raise UserError(
-                        _(
+                        self.env._(
                             "A user already exists with theses credentials on our server. Please check your information."
                         )
                     )

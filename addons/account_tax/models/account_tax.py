@@ -4,7 +4,7 @@ import re
 from collections import defaultdict, deque
 from itertools import batched
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.numbers import (
@@ -321,7 +321,7 @@ class AccountTax(models.Model):
                 and record.tax_group_id.country_id != record.country_id
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The tax group must have the same country_id as the tax using it."
                     )
                 )
@@ -351,7 +351,7 @@ class AccountTax(models.Model):
 
             if len(invoice_repartition_line_ids) != len(refund_repartition_line_ids):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invoice and credit note distribution should have the same number of lines."
                     )
                 )
@@ -362,7 +362,7 @@ class AccountTax(models.Model):
                 lambda x: x.repartition_type == "tax"
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invoice and credit note repartition should have at least one tax repartition line."
                     )
                 )
@@ -376,7 +376,7 @@ class AccountTax(models.Model):
                     or inv_rep_ln.factor_percent != ref_rep_ln.factor_percent
                 ):
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Invoice and credit note distribution should match (same percentages, in the same order)."
                         )
                     )
@@ -390,7 +390,7 @@ class AccountTax(models.Model):
             )
             if float_compare(total_pos_factor, 1.0, precision_digits=2):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invoice and credit note distribution should have a total factor (+) equals to 100."
                     )
                 )
@@ -401,7 +401,7 @@ class AccountTax(models.Model):
                 total_neg_factor, -1.0, precision_digits=2
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invoice and credit note distribution should have a total factor (-) equals to 100."
                     )
                 )
@@ -411,7 +411,7 @@ class AccountTax(models.Model):
         base_line = lines.filtered(lambda x: x.repartition_type == "base")
         if len(base_line) != 1:
             raise ValidationError(
-                _(
+                self.env._(
                     "Invoice and credit note distribution should each contain exactly one line for the base."
                 )
             )
@@ -420,19 +420,23 @@ class AccountTax(models.Model):
     def _check_children_scope(self):
         for tax in self:
             if tax._has_cycle("children_tax_ids"):
-                raise ValidationError(_("Recursion found for tax “%s”.", tax.name))
+                raise ValidationError(
+                    self.env._("Recursion found for tax “%s”.", tax.name)
+                )
             if any(
                 child.type_tax_use not in ("none", tax.type_tax_use)
                 or child.tax_scope not in (tax.tax_scope, False)
                 for child in tax.children_tax_ids
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The application scope of taxes in a group must be either the same as the group or left empty."
                     )
                 )
             if any(child.amount_type == "group" for child in tax.children_tax_ids):
-                raise ValidationError(_("Nested group of taxes are not allowed."))
+                raise ValidationError(
+                    self.env._("Nested group of taxes are not allowed.")
+                )
 
     @api.model
     @api.readonly
@@ -703,7 +707,7 @@ class AccountTax(models.Model):
         vals_list = super().copy_data(default=default)
         if "name" not in default:
             for tax, vals in zip(self, vals_list, strict=True):
-                vals["name"] = _("%s (copy)", tax.name)
+                vals["name"] = self.env._("%s (copy)", tax.name)
         return vals_list
 
     def copy_translations(self, new, excluded=()):
@@ -952,7 +956,7 @@ class AccountTax(models.Model):
             total_percentage = sum(tax.amount for tax in batch) / 100.0
             if float_compare(total_percentage, 1.0, precision_digits=10) > 0:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Division taxes applied together cannot exceed 100%% "
                         "(got %(total)s%%): it would leave a negative taxable base.",
                         total=round(total_percentage * 100.0, 4),
@@ -2117,7 +2121,7 @@ class AccountTax(models.Model):
             tax_totals_summary["tax_amount_currency"] += values["tax_amount_currency"]
             tax_totals_summary["tax_amount"] += values["tax_amount"]
 
-        untaxed_amount_subtotal_label = _("Untaxed Amount")
+        untaxed_amount_subtotal_label = self.env._("Untaxed Amount")
         subtotals = defaultdict(
             lambda: {
                 "tax_groups": [],

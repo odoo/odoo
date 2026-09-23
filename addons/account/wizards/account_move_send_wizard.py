@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import get_lang
@@ -335,7 +335,7 @@ class AccountMoveSendWizard(models.TransientModel):
             "view_id": self.env.ref(
                 "mail.mail_compose_message_view_form_template_save"
             ).id,
-            "name": _("Create a Mail Template"),
+            "name": self.env._("Create a Mail Template"),
             "res_model": "account.move.send.wizard",
             "context": {"dialog_size": "medium"},
             "target": "new",
@@ -346,7 +346,7 @@ class AccountMoveSendWizard(models.TransientModel):
         self.check_singleton()
         if not self.model or self.model not in self.env:
             raise UserError(
-                _("Template creation from composer requires a valid model.")
+                self.env._("Template creation from composer requires a valid model.")
             )
         model_id = self.env["ir.model"]._get_id(self.model)
         values = {

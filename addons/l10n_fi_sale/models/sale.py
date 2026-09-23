@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -26,7 +26,7 @@ class SaleOrder(models.Model):
         so_number = re.sub(r"\D", "", number)
         if so_number == "" or so_number is False:
             _debug.logic("finnish_reference_rejected", reason="no_digits")
-            raise UserError(_("Reference must contain numeric characters"))
+            raise UserError(self.env._("Reference must contain numeric characters"))
 
         # Make sure the base number is 3...19 characters long
         if len(so_number) < 3:

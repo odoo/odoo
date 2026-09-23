@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -33,7 +33,7 @@ class L10n_Sa_EdiOtpWizard(models.TransientModel):
     def action_submit_otp(self):
         if not self.l10n_sa_otp:
             raise UserError(
-                _("Please provide an OTP to complete the onboarding process")
+                self.env._("Please provide an OTP to complete the onboarding process")
             )
         if self.l10n_sa_renewal:
             return self.journal_id._l10n_sa_get_production_CSID(self.l10n_sa_otp)

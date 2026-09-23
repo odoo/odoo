@@ -2,7 +2,7 @@ import logging
 from base64 import b64encode
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from odoo.addons.account.models.res_company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import (
@@ -56,12 +56,12 @@ class MixinAccountMoveSend(models.AbstractModel):
         invalid_partners = filter_peppol_state(peppol_moves, ["not_valid_format"])
         if invalid_partners and "account_edi_ubl_cii_configure_partner" not in alerts:
             alerts["account_peppol_warning_partner"] = {
-                "message": _(
+                "message": self.env._(
                     "Customer is on Peppol but did not enable receiving documents."
                 ),
-                "action_text": _("View Partner(s)"),
+                "action_text": self.env._("View Partner(s)"),
                 "action": invalid_partners._get_records_action(
-                    name=_("Check Partner(s)")
+                    name=self.env._("Check Partner(s)")
                 ),
             }
         not_peppol_moves = moves.filtered(
@@ -69,9 +69,9 @@ class MixinAccountMoveSend(models.AbstractModel):
         )
         what_is_peppol_alert = {
             "level": "info",
-            "action_text": _("Why should you use it ?"),
+            "action_text": self.env._("Why should you use it ?"),
             "action": {
-                "name": _("Why should I use PEPPOL ?"),
+                "name": self.env._("Why should I use PEPPOL ?"),
                 "type": "ir.actions.client",
                 "tag": "account_peppol.what_is_peppol",
                 "target": "new",
@@ -101,7 +101,9 @@ class MixinAccountMoveSend(models.AbstractModel):
         ):
             alerts.pop("account_edi_ubl_cii_configure_company", False)
             alerts["account_peppol_what_is_peppol"] = {
-                "message": _("You can send this invoice electronically via Peppol."),
+                "message": self.env._(
+                    "You can send this invoice electronically via Peppol."
+                ),
                 **what_is_peppol_alert,
             }
         elif all(
@@ -117,7 +119,7 @@ class MixinAccountMoveSend(models.AbstractModel):
             )
         ):
             alerts["account_peppol_partner_want_peppol"] = {
-                "message": _(
+                "message": self.env._(
                     "%s has requested electronic invoices reception on Peppol.",
                     peppol_not_selected_partners.display_name,
                 ),
@@ -240,14 +242,14 @@ class MixinAccountMoveSend(models.AbstractModel):
                     builder = invoice.partner_id.commercial_partner_id._get_edi_builder(
                         invoice_data["invoice_edi_format"]
                     )
-                    invoice_data["error"] = _(
+                    invoice_data["error"] = self.env._(
                         "Errors occurred while creating the EDI document (format: %s):",
                         builder._description,
                     )
                     continue
 
                 if len(xml_file) > 64000000:
-                    invoice_data["error"] = _(
+                    invoice_data["error"] = self.env._(
                         "Invoice %s is too big to send via peppol (64MB limit)",
                         invoice.name,
                     )
@@ -299,10 +301,10 @@ class MixinAccountMoveSend(models.AbstractModel):
             else:
                 # the response only contains message uuids,
                 # so we have to rely on the order to connect peppol messages to account.move
-                attachments_linked_message = _(
+                attachments_linked_message = self.env._(
                     "The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:"
                 )
-                attachments_not_linked_message = _(
+                attachments_not_linked_message = self.env._(
                     "Some attachments could not be sent with the XML:"
                 )
                 for message, (invoice, invoice_data) in zip(
@@ -387,7 +389,7 @@ class MixinAccountMoveSend(models.AbstractModel):
             # go back to previous (send and print) action
             # to avoid doing participant SML lookup again, we don't go through action_send_and_print
             return {
-                "name": _("Send"),
+                "name": self.env._("Send"),
                 "type": "ir.actions.act_window",
                 "view_mode": "form",
                 "res_model": "account.move.send.wizard"

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -14,7 +14,7 @@ class ResConfigSettings(models.TransientModel):
         super()._compute_company_informations()
         for record in self:
             if self.company_id.country_code == "SA":
-                record.company_informations += _(
+                record.company_informations += self.env._(
                     "\nBuilding Number: %(building_number)s, Plot Identification: %(plot_identification)s\nNeighborhood: %(neighborhood)s",
                     building_number=self.company_id.l10n_sa_edi_building_number,
                     plot_identification=self.company_id.l10n_sa_edi_plot_identification,

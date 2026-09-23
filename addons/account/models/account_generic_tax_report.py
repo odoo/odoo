@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -72,7 +72,7 @@ class AccountTaxReportHandler(models.AbstractModel):
     def action_view_amls_with_archived_tags(self, options, params=None):
         _debug.lifecycle("action_view_amls_with_archived_tags", records=self)
         return {
-            "name": _("Journal items with archived tax tags"),
+            "name": self.env._("Journal items with archived tax tags"),
             "type": "ir.actions.act_window",
             "res_model": "account.move.line",
             "domain": self._get_domain_amls_with_archived_tags(options),
@@ -104,7 +104,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
     def _caret_options_initializer(self):
         return {
             "generic_tax_report": [
-                {"name": _("Audit"), "action": "caret_option_audit_tax"},
+                {"name": self.env._("Audit"), "action": "caret_option_audit_tax"},
             ]
         }
 
@@ -986,7 +986,9 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
         model, tax_id = report._get_model_info_from_id(params["line_id"])
 
         if model != "account.tax":
-            raise UserError(_("Cannot audit tax from another model than account.tax."))
+            raise UserError(
+                self.env._("Cannot audit tax from another model than account.tax.")
+            )
 
         tax = self.env["account.tax"].browse(tax_id)
 
@@ -1034,7 +1036,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
 
         return {
             "type": "ir.actions.act_window",
-            "name": _("Journal Items for Tax Audit"),
+            "name": self.env._("Journal Items for Tax Audit"),
             "res_model": "account.move.line",
             "views": [
                 [self.env.ref("account.view_move_line_tax_audit_tree").id, "list"]

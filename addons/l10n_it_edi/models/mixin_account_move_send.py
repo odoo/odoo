@@ -1,6 +1,6 @@
 import base64
 
-from odoo import _, api, models
+from odoo import api, models
 
 
 class MixinAccountMoveSend(models.AbstractModel):
@@ -22,9 +22,11 @@ class MixinAccountMoveSend(models.AbstractModel):
         res.update(
             {
                 "it_edi_send": {
-                    "label": _("Send to Tax Agency"),
+                    "label": self.env._("Send to Tax Agency"),
                     "is_applicable": self._is_it_edi_applicable,
-                    "help": _("Send the e-invoice XML to the Italian Tax Agency."),
+                    "help": self.env._(
+                        "Send the e-invoice XML to the Italian Tax Agency."
+                    ),
                 }
             }
         )
@@ -50,12 +52,12 @@ class MixinAccountMoveSend(models.AbstractModel):
             if "prod" not in it_moves.mapped("l10n_it_edi_proxy_mode"):
                 alerts["l10n_it_edi_invite_authorize"] = {
                     "level": "info",
-                    "message": _(
+                    "message": self.env._(
                         "You must authorize Odoo in the Settings to use the IT EDI in production mode."
                     ),
-                    "action_text": _("View Settings"),
+                    "action_text": self.env._("View Settings"),
                     "action": {
-                        "name": _("Settings"),
+                        "name": self.env._("Settings"),
                         "type": "ir.actions.act_url",
                         "target": "self",
                         "url": "/odoo/settings#l10n_it_edi_setting",
@@ -92,7 +94,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         ):
             if errors := invoice._l10n_it_edi_export_data_check():
                 invoice_data["error"] = {
-                    "error_title": _(
+                    "error_title": self.env._(
                         "Errors occurred while creating the e-invoice file:"
                     ),
                     "errors": [error["message"] for error in errors.values()],

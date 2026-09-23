@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
@@ -43,7 +43,7 @@ class ResConfigSettings(models.TransientModel):
                         "simple_notification",
                         {
                             "type": "success",
-                            "message": _("Nilvera connection successful!"),
+                            "message": self.env._("Nilvera connection successful!"),
                         },
                     )
                 else:
@@ -52,7 +52,7 @@ class ResConfigSettings(models.TransientModel):
                         "simple_notification",
                         {
                             "type": "success",
-                            "message": _(
+                            "message": self.env._(
                                 "Nilvera connection successful but the tax number on Nilvera and Odoo doesn't match. Check Nilvera."
                             ),
                         },
@@ -63,7 +63,7 @@ class ResConfigSettings(models.TransientModel):
                     "simple_notification",
                     {
                         "type": "danger",
-                        "message": _(
+                        "message": self.env._(
                             "Nilvera connection was unsuccessful, check the API key."
                         ),
                     },
@@ -74,6 +74,6 @@ class ResConfigSettings(models.TransientModel):
                     "simple_notification",
                     {
                         "type": "danger",
-                        "message": _("An error occurred. Try again later."),
+                        "message": self.env._("An error occurred. Try again later."),
                     },
                 )

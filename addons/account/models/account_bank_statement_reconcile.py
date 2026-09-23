@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -27,7 +27,7 @@ class AccountBankStatement(models.Model):
         _debug.lifecycle("action_view_journal_invalid_statements", records=self)
         self.check_singleton()
         return {
-            "name": _("Invalid Bank Statements"),
+            "name": self.env._("Invalid Bank Statements"),
             "type": "ir.actions.act_window",
             "res_model": "account.bank.statement",
             "view_mode": "list",
@@ -51,9 +51,9 @@ class AccountBankStatement(models.Model):
             )
             statement.attachment_ids |= self.env["ir.attachment"].create(
                 {
-                    "name": _("Bank Statement %s.pdf", statement.name)
+                    "name": self.env._("Bank Statement %s.pdf", statement.name)
                     if statement.name
-                    else _("Bank Statement.pdf"),
+                    else self.env._("Bank Statement.pdf"),
                     "type": "binary",
                     "mimetype": "application/pdf",
                     "raw": content,

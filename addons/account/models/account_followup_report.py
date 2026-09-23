@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
@@ -16,7 +16,7 @@ class AccountFollowupCustomHandler(models.AbstractModel):
 
         options["buttons"].append(
             {
-                "name": _("Send"),
+                "name": self.env._("Send"),
                 "action": "action_send_follow_up",
                 "sequence": 100,
                 "always_show": True,
@@ -166,7 +166,7 @@ class AccountFollowupCustomHandler(models.AbstractModel):
         if overdue_aml_values:
             overdue_lines, next_progress, treated_results_count, has_more = (
                 get_aml_lines_with_status_line(
-                    _("Overdue"),
+                    self.env._("Overdue"),
                     overdue_line_id,
                     overdue_aml_values,
                     treated_results_count,
@@ -183,7 +183,7 @@ class AccountFollowupCustomHandler(models.AbstractModel):
         if due_aml_values and not has_more:
             due_lines, next_progress, treated_results_count, has_more = (
                 get_aml_lines_with_status_line(
-                    _("Due"),
+                    self.env._("Due"),
                     due_line_id,
                     due_aml_values,
                     treated_results_count,
@@ -235,9 +235,9 @@ class AccountFollowupCustomHandler(models.AbstractModel):
         )
         partners = self.env["res.partner"].browse(options.get("partner_ids", []))
         return {
-            "name": _("Send %s Follow Up Report", partners.name)
+            "name": self.env._("Send %s Follow Up Report", partners.name)
             if len(partners) == 1
-            else _("Send Follow Up Reports"),
+            else self.env._("Send Follow Up Reports"),
             "type": "ir.actions.act_window",
             "views": [[False, "form"]],
             "res_model": "account.report.send",

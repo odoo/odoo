@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -236,7 +236,7 @@ class AccountTaxUnit(models.Model):
                         reason="company_in_same_country_unit",
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Company %(company)s already belongs to a tax unit in %(country)s. A company can at most be part of one tax unit per country.",
                             company=company.name,
                             country=record.country_id.name,
@@ -250,7 +250,7 @@ class AccountTaxUnit(models.Model):
                     currencies=len(currencies),
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A tax unit can only be created between companies sharing the same main currency."
                     )
                 )
@@ -261,7 +261,7 @@ class AccountTaxUnit(models.Model):
         for record in self:
             if record.main_company_id not in record.company_ids:
                 raise ValidationError(
-                    _("The main company of a tax unit has to be part of it.")
+                    self.env._("The main company of a tax unit has to be part of it.")
                 )
 
     @api.constrains("company_ids")
@@ -270,7 +270,7 @@ class AccountTaxUnit(models.Model):
         for record in self:
             if len(record.company_ids) < 2:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A tax unit must contain a minimum of two companies. You might want to delete the unit."
                     )
                 )
@@ -290,7 +290,7 @@ class AccountTaxUnit(models.Model):
             _vat, checked_country_code = self.env["res.partner"]._run_vat_checks(
                 record.country_id,
                 record.vat,
-                partner_name=_("tax unit [%s]", record.name),
+                partner_name=self.env._("tax unit [%s]", record.name),
             )
             if checked_country_code and checked_country_code != record.country_id.code:
                 _debug.logic(
@@ -299,7 +299,7 @@ class AccountTaxUnit(models.Model):
                     detected_country=checked_country_code,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The country detected for this VAT number does not match the one set on this Tax Unit."
                     )
                 )

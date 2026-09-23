@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -19,7 +19,7 @@ class IrConfigParameter(models.Model):
             and (plan_field := plan._get_plan_column())
         ):
             raise UserError(
-                _(
+                self.env._(
                     "The value for %s must be the ID to a valid analytic plan that is not a subplan",
                     param.key,
                 )

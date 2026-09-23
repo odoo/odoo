@@ -1,6 +1,6 @@
 import logging
 
-from odoo import SUPERUSER_ID, _, api, models
+from odoo import SUPERUSER_ID, api, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         res.update(
             {
                 "es_facturae": {
-                    "label": _("Factura-e"),
+                    "label": self.env._("Factura-e"),
                     "is_applicable": self._is_es_facturae_applicable,
                 },
             }
@@ -101,7 +101,7 @@ class MixinAccountMoveSend(models.AbstractModel):
                 xml_content, errors = invoice._l10n_es_edi_facturae_render_facturae()
                 if errors:
                     invoice_data["error"] = {
-                        "error_title": _(
+                        "error_title": self.env._(
                             "Errors occurred while creating the EDI document (format: %s):",
                             "Facturae",
                         ),

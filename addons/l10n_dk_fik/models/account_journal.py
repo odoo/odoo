@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 L10N_DK_FIK_MODELS = ("dk_fik_71", "dk_fik_75")
@@ -51,5 +51,5 @@ class AccountJournal(models.Model):
             creditor = record.l10n_dk_fik_creditor_number
             if not creditor or not (creditor.isdigit() and len(creditor) == 8):
                 raise ValidationError(
-                    _("FIK Creditor Number must be exactly 8 digits.")
+                    self.env._("FIK Creditor Number must be exactly 8 digits.")
                 )

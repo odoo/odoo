@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -64,7 +64,7 @@ class ResCompany(models.Model):
                     and company.sudo()._existing_accounting()
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "Could not change the ARCA Responsibility of this company because there are already accounting entries."
                         )
                     )

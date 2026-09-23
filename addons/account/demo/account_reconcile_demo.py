@@ -1,6 +1,6 @@
 import time
 
-from odoo import Command, _, api, models
+from odoo import Command, api, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -28,7 +28,7 @@ class AccountChartTemplate(models.AbstractModel):
                             "invoice_line_ids": [
                                 Command.create(
                                     {
-                                        "name": _("Subscription 12 months"),
+                                        "name": self.env._("Subscription 12 months"),
                                         "quantity": 1,
                                         "price_unit": 120,
                                         "deferred_start_date": time.strftime(
@@ -47,7 +47,7 @@ class AccountChartTemplate(models.AbstractModel):
                             "invoice_line_ids": [
                                 Command.create(
                                     {
-                                        "name": _("Insurance 12 months"),
+                                        "name": self.env._("Insurance 12 months"),
                                         "quantity": 1,
                                         "price_unit": 1200,
                                         "deferred_start_date": time.strftime(

@@ -1,7 +1,7 @@
 from lxml import html
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -32,7 +32,7 @@ class QRCodePaymentWizard(models.TransientModel):
                     debtor_partner=wizard.partner_id,
                 )
                 if b64_qr:
-                    txt = _("Scan me with your banking app.")
+                    txt = self.env._("Scan me with your banking app.")
                     qr_html = Markup("""
                         <div class="text-center">
                             <img src="{b64_qr}"/>

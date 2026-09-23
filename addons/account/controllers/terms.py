@@ -1,4 +1,4 @@
-from odoo import _, http
+from odoo import http
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
 
@@ -33,8 +33,8 @@ class TermsController(http.Controller):
             return request.render(
                 "http_routing.http_error",
                 {
-                    "status_code": _("Oops"),
-                    "status_message": _(
+                    "status_code": request.env._("Oops"),
+                    "status_message": request.env._(
                         """The requested page is invalid, or doesn't exist anymore."""
                     ),
                 },

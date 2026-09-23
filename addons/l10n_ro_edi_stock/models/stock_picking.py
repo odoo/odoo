@@ -2,7 +2,7 @@ import base64
 
 import markupsafe
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -60,7 +60,7 @@ class Picking(models.Model):
             # validate carrier
             if not picking.carrier_id:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The picking %(picking_name)s is missing a delivery carrier.",
                         picking_name=picking.name,
                     )
@@ -69,7 +69,7 @@ class Picking(models.Model):
             # validate carrier partner
             if not picking.carrier_id.l10n_ro_edi_stock_partner_id:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The delivery carrier of %(picking_name)s is missing the partner field value.",
                         picking_name=picking.name,
                     )
@@ -88,7 +88,7 @@ class Picking(models.Model):
         # API access token
         if not data["company_id"].l10n_ro_edi_access_token:
             errors.append(
-                _(
+                self.env._(
                     "Romanian access token not found. Please generate or fill it in the settings."
                 )
             )
@@ -98,24 +98,24 @@ class Picking(models.Model):
         missing_carrier_partner_fields = []
 
         if not partner.vat:
-            missing_carrier_partner_fields.append(_("VAT"))
+            missing_carrier_partner_fields.append(self.env._("VAT"))
 
         if not partner.city:
-            missing_carrier_partner_fields.append(_("City"))
+            missing_carrier_partner_fields.append(self.env._("City"))
 
         if not partner.street:
-            missing_carrier_partner_fields.append(_("Street"))
+            missing_carrier_partner_fields.append(self.env._("Street"))
 
         if len(missing_carrier_partner_fields) == 1:
             errors.append(
-                _(
+                self.env._(
                     "The delivery carrier partner is missing the %(field_name)s field.",
                     field_name=missing_carrier_partner_fields[0],
                 )
             )
         elif len(missing_carrier_partner_fields) > 1:
             errors.append(
-                _(
+                self.env._(
                     "The delivery carrier partner is missing following fields: %(field_names)s",
                     field_names=", ".join(missing_carrier_partner_fields),
                 )
@@ -123,16 +123,16 @@ class Picking(models.Model):
 
         # operation type
         if not data["l10n_ro_edi_stock_operation_type"]:
-            errors.append(_("Operation type is missing."))
+            errors.append(self.env._("Operation type is missing."))
             return errors  # return prematurely because a lot of fields depend on the operation type
 
         # operation scope
         if not data["l10n_ro_edi_stock_operation_scope"]:
-            errors.append(_("Operation scope is missing."))
+            errors.append(self.env._("Operation scope is missing."))
 
         # vehicle & trailer numbers
         if not data["l10n_ro_edi_stock_vehicle_number"]:
-            errors.append(_("Vehicle number is missing."))
+            errors.append(self.env._("Vehicle number is missing."))
 
         # All filled-in vehicle and trailer numbers must be unique
         license_plates = [
@@ -145,7 +145,9 @@ class Picking(models.Model):
             if num
         ]
         if len(license_plates) != len(set(license_plates)):
-            errors.append(_("Vehicle number and trailer number fields must be unique."))
+            errors.append(
+                self.env._("Vehicle number and trailer number fields must be unique.")
+            )
 
         # rate codes
         if "intrastat_code_id" in self.env["product.product"]._fields and data[
@@ -162,14 +164,14 @@ class Picking(models.Model):
                 if len(product_without_code_names) == 1:
                     (product_name,) = product_without_code_names
                     errors.append(
-                        _(
+                        self.env._(
                             "Product %(name)s is missing the intrastat code value.",
                             name=product_name,
                         )
                     )
                 else:
                     errors.append(
-                        _(
+                        self.env._(
                             "Products %(names)s are missing the intrastat code value.",
                             names=", ".join(product_without_code_names),
                         )
@@ -178,26 +180,30 @@ class Picking(models.Model):
         # Location types
         if not data["l10n_ro_edi_stock_start_loc_type"]:
             if not data["l10n_ro_edi_stock_end_loc_type"]:
-                errors.append(_("Both 'End' and 'Start Location Type' are missing"))
+                errors.append(
+                    self.env._("Both 'End' and 'Start Location Type' are missing")
+                )
             else:
-                errors.append(_("'Start Location Type' is missing"))
+                errors.append(self.env._("'Start Location Type' is missing"))
 
             return errors  # return prematurely because all the start location fields depend on this field
 
         if not data["l10n_ro_edi_stock_end_loc_type"]:
-            errors.append(_("'End Location Type' is missing"))
+            errors.append(self.env._("'End Location Type' is missing"))
             return errors  # return prematurely because all the end location fields depend on this field
 
         # Location fields
         for location in ("start", "end"):
             loc_value = data[f"l10n_ro_edi_stock_{location}_loc_type"]
             loc_group = (
-                _("'Start Location'") if location == "start" else _("'End Location'")
+                self.env._("'Start Location'")
+                if location == "start"
+                else self.env._("'End Location'")
             )
 
             if loc_value == "bcp" and not data[f"l10n_ro_edi_stock_{location}_bcp"]:
                 errors.append(
-                    _(
+                    self.env._(
                         "The border crossing point is missing under %(location_group)s",
                         location_group=loc_group,
                     )
@@ -207,7 +213,7 @@ class Picking(models.Model):
                 and not data[f"l10n_ro_edi_stock_{location}_customs_office"]
             ):
                 errors.append(
-                    _(
+                    self.env._(
                         "The customs office is missing under %(location_group)s",
                         location_group=loc_group,
                     )
@@ -228,23 +234,25 @@ class Picking(models.Model):
                         )
                     case _other:
                         errors.append(
-                            _("Invalid picking type %(type_code)s", type_code=_other)
+                            self.env._(
+                                "Invalid picking type %(type_code)s", type_code=_other
+                            )
                         )
                         continue
 
                 missing_field_names = []
                 if not partner.state_id:
-                    missing_field_names.append(_("State"))
+                    missing_field_names.append(self.env._("State"))
                 if not partner.city:
-                    missing_field_names.append(_("City"))
+                    missing_field_names.append(self.env._("City"))
                 if not partner.street:
-                    missing_field_names.append(_("Street"))
+                    missing_field_names.append(self.env._("Street"))
                 if not partner.zip:
-                    missing_field_names.append(_("Postal Code"))
+                    missing_field_names.append(self.env._("Postal Code"))
 
                 if len(missing_field_names) == 1:
                     errors.append(
-                        _(
+                        self.env._(
                             "%(location_group)s is missing the %(field_name)s field.",
                             location_group=loc_group,
                             field_name=missing_field_names[0],
@@ -252,7 +260,7 @@ class Picking(models.Model):
                     )
                 elif len(missing_field_names) > 1:
                     errors.append(
-                        _(
+                        self.env._(
                             "%(location_group)s is missing following fields: %(field_names)s",
                             location_group=loc_group,
                             field_names=missing_field_names,
@@ -269,7 +277,7 @@ class Picking(models.Model):
 
         if not self.company_id.l10n_ro_edi_access_token:
             errors.append(
-                _(
+                self.env._(
                     "Romanian access token not found. Please generate or fill it in the settings."
                 )
             )
@@ -279,19 +287,21 @@ class Picking(models.Model):
             case "stock_sending_failed":
                 if not self._l10n_ro_edi_stock_get_last_document("stock_validated"):
                     errors.append(
-                        _(
+                        self.env._(
                             "This document has not been successfully sent yet because it contains errors."
                         )
                     )
                 else:
                     errors.append(
-                        _(
+                        self.env._(
                             "This document has not been corrected yet because it contains errors."
                         )
                     )
             case "stock_validated":
                 errors.append(
-                    _("This document has already been successfully sent to anaf.")
+                    self.env._(
+                        "This document has already been successfully sent to anaf."
+                    )
                 )
 
         return errors
@@ -524,7 +534,9 @@ class Picking(models.Model):
                             new_document_data
                         )
                     case "XML cu erori nepreluat de sistem":
-                        new_document_data["message"] = _("XML contains errors.")
+                        new_document_data["message"] = self.env._(
+                            "XML contains errors."
+                        )
                         picking._l10n_ro_edi_stock_create_document_stock_sending_failed(
                             new_document_data
                         )
@@ -690,5 +702,7 @@ class Picking(models.Model):
         """
         self.check_singleton()
         self.message_post(
-            body=_("Unhandled eTransport document state: %(state)s", state=state)
+            body=self.env._(
+                "Unhandled eTransport document state: %(state)s", state=state
+            )
         )

@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -35,5 +35,7 @@ class ResPartnerBankAccount(models.Model):
                 and not re.match(r"^\d{1,9}$", bank.clearing_number)
             ):
                 raise ValidationError(
-                    _("ABA/Routing should only contain numbers (maximum 9 digits).")
+                    self.env._(
+                        "ABA/Routing should only contain numbers (maximum 9 digits)."
+                    )
                 )

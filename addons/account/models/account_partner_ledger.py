@@ -2,7 +2,7 @@ from collections import defaultdict
 from copy import deepcopy
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -811,7 +811,9 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
 
         if model != "res.partner":
             raise UserError(
-                _("Wrong ID for partner ledger line to expand: %s", line_dict_id)
+                self.env._(
+                    "Wrong ID for partner ledger line to expand: %s", line_dict_id
+                )
             )
 
         prefix_groups_count = 0
@@ -1254,7 +1256,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
         }
 
     def _get_no_partner_line_label(self):
-        return _("Unknown Partner")
+        return self.env._("Unknown Partner")
 
     @api.model
     def _format_aml_name(self, line_name, move_ref, move_name=None):
@@ -1291,7 +1293,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
 
             if col_expr_label not in aml_query_result:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The column '%s' is not available for this report.",
                         col_expr_label,
                     )
@@ -1359,7 +1361,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
 
         return {
             "id": report._get_generic_line_id(None, None, markup="total"),
-            "name": _("Total"),
+            "name": self.env._("Total"),
             "level": 1,
             "columns": column_values,
         }

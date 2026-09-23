@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import mod10r
 
 
@@ -20,7 +20,7 @@ class AccountPayment(models.Model):
                 and payment.bank_account_id.l10n_ch_qr_iban
                 and not payment._l10n_ch_reference_is_valid(payment.memo)
             ):
-                payment.l10n_ch_reference_warning_msg = _(
+                payment.l10n_ch_reference_warning_msg = self.env._(
                     "Please fill in a correct QRR reference in the payment reference. The banks will refuse your payment file otherwise."
                 )
             else:

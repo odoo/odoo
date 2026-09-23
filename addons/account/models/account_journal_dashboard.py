@@ -7,7 +7,7 @@ from typing import NamedTuple
 
 from babel.dates import format_date, format_datetime
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.release import version_info
@@ -280,13 +280,13 @@ class AccountJournal(models.Model):
 
     def _graph_title_and_key(self):
         if self.type in ["sale", "purchase"]:
-            return ["", _("Residual amount")]
+            return ["", self.env._("Residual amount")]
         elif self.type == "cash":
-            return ["", _("Cash: Balance")]
+            return ["", self.env._("Cash: Balance")]
         elif self.type == "bank":
-            return ["", _("Bank: Balance")]
+            return ["", self.env._("Bank: Balance")]
         elif self.type == "credit":
-            return ["", _("Credit Card: Balance")]
+            return ["", self.env._("Credit Card: Balance")]
         return ["", ""]
 
     @_debug.perf.timed
@@ -332,7 +332,7 @@ class AccountJournal(models.Model):
 
             data = []
             if is_sample_data:
-                graph_key = _("Sample data")
+                graph_key = self.env._("Sample data")
                 sample = random.Random(journal.id)
                 for i in range(30, 0, -5):
                     current_date = today + timedelta(days=-i)
@@ -435,7 +435,7 @@ class AccountJournal(models.Model):
                 data[4]["value"] = currency.round(sign * journal_data["total_week4"])
                 data[5]["value"] = currency.round(sign * journal_data["total_after"])
             else:
-                graph_key = _("Sample data")
+                graph_key = self.env._("Sample data")
                 sample = random.Random(journal.id)
                 for index in range(6):
                     data[index]["type"] = "o_sample_data"
@@ -457,10 +457,10 @@ class AccountJournal(models.Model):
         return result
 
     def _get_due_week_buckets(self, first_day_of_week, format_month):
-        buckets = [{"label": _("Due"), "type": "past"}]
+        buckets = [{"label": self.env._("Due"), "type": "past"}]
         for offset in range(-1, 3):
             if offset == 0:
-                label = _("This Week")
+                label = self.env._("This Week")
             else:
                 start = first_day_of_week + timedelta(days=offset * 7)
                 end = start + timedelta(days=6)
@@ -472,7 +472,7 @@ class AccountJournal(models.Model):
                         f" - {end.day} {format_month(end)}"
                     )
             buckets.append({"label": label, "type": "past" if offset < 0 else "future"})
-        buckets.append({"label": _("Not Due"), "type": "future"})
+        buckets.append({"label": self.env._("Not Due"), "type": "future"})
         return buckets
 
     def _get_journal_dashboard_data_batched(self):
@@ -656,7 +656,7 @@ class AccountJournal(models.Model):
                 "image": "/account/static/src/img/bank.svg"
                 if journal.type in ("bank", "credit")
                 else "/web/static/img/rfq.svg",
-                "text": _("Drop to import transactions"),
+                "text": self.env._("Drop to import transactions"),
             }
             last_statement_visible = (
                 not journal.company_id.account_config_id.fiscalyear_lock_date
@@ -798,29 +798,31 @@ class AccountJournal(models.Model):
             )
 
             if journal.type == "purchase":
-                title_has_sequence_holes = _(
+                title_has_sequence_holes = self.env._(
                     "Irregularities due to draft, cancelled or deleted bills with a sequence number since last lock date."
                 )
                 drag_drop_settings = {
                     "image": "/account/static/src/img/bill.svg",
-                    "text": _("Drop and let the AI process your bills automatically."),
+                    "text": self.env._(
+                        "Drop and let the AI process your bills automatically."
+                    ),
                 }
             else:
-                title_has_sequence_holes = _(
+                title_has_sequence_holes = self.env._(
                     "Irregularities due to draft, cancelled or deleted invoices with a sequence number since last lock date."
                 )
                 drag_drop_settings = {
                     "image": "/web/static/img/quotation.svg",
-                    "text": _("Drop to import your invoices."),
+                    "text": self.env._("Drop to import your invoices."),
                 }
 
             dashboard_data[journal.id].update(
                 {
                     "number_to_check": number_to_check,
                     "to_check_balance": currency.format(sum_to_check),
-                    "title": _("Bills to pay")
+                    "title": self.env._("Bills to pay")
                     if journal.type == "purchase"
-                    else _("Invoices owed to you"),
+                    else self.env._("Invoices owed to you"),
                     "number_draft": number_draft,
                     "number_waiting": number_waiting,
                     "number_late": number_late,
@@ -851,7 +853,7 @@ class AccountJournal(models.Model):
         for journal in general_journals:
             drag_drop_settings = {
                 "image": "/web/static/img/folder.svg",
-                "text": _("Drop to create journal entries with attachments."),
+                "text": self.env._("Drop to create journal entries with attachments."),
                 "group": "account.group_account_user",
             }
 
@@ -1176,7 +1178,7 @@ class AccountJournal(models.Model):
     def action_create_new(self):
         _debug.lifecycle("action_create_new", records=self)
         return {
-            "name": _("Create invoice/bill"),
+            "name": self.env._("Create invoice/bill"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "account.move",
@@ -1336,7 +1338,7 @@ class AccountJournal(models.Model):
                 if isinstance(ctx["use_domain"], list)
                 else ["|", ("journal_id", "=", self.id), ("journal_id", "=", False)]
             )
-            action["name"] = _(
+            action["name"] = self.env._(
                 "%(action)s for journal %(journal)s",
                 action=action["name"],
                 journal=self.name,
@@ -1385,7 +1387,7 @@ class AccountJournal(models.Model):
     def _show_sequence_holes(self, domain):
         return {
             "type": "ir.actions.act_window",
-            "name": _("Journal Entries"),
+            "name": self.env._("Journal Entries"),
             "res_model": "account.move",
             "search_view_id": (
                 self.env.ref(
@@ -1426,7 +1428,7 @@ class AccountJournal(models.Model):
         )
         action = {
             "type": "ir.actions.act_window",
-            "name": _("Journal Entries to Hash"),
+            "name": self.env._("Journal Entries to Hash"),
             "res_model": "account.move",
             "domain": [("id", "in", moves.ids)],
             "views": [(False, "list"), (False, "form")],

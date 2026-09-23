@@ -1,7 +1,7 @@
 from hashlib import sha256
 from json import dumps
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -241,21 +241,21 @@ class AccountMove(models.Model):
                 warnings = chain_info.get("warnings") or set()
                 if raise_if_unreconciled and "unreconciled" in warnings:
                     raise UserError(
-                        _(
+                        self.env._(
                             "An error occurred when computing the inalterability. All entries have to be reconciled."
                         )
                     )
 
                 if raise_if_no_document and "no_document" in warnings:
                     raise UserError(
-                        _(
+                        self.env._(
                             "This move could not be locked either because "
                             "some move with the same sequence prefix has a higher number. You may need to resequence it."
                         )
                     )
                 if raise_if_gap and "gap" in warnings:
                     raise UserError(
-                        _(
+                        self.env._(
                             "An error occurred when computing the inalterability. A gap has been detected in the sequence."
                         )
                     )

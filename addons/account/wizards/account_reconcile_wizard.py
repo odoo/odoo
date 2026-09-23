@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -22,14 +22,14 @@ class AccountReconcileWizard(models.TransientModel):
         if self.env.context.get(
             "active_model"
         ) != "account.move.line" or not self.env.context.get("active_ids"):
-            raise UserError(_("This can only be used on journal items"))
+            raise UserError(self.env._("This can only be used on journal items"))
         move_line_ids = self.env["account.move.line"].browse(
             self.env.context["active_ids"]
         )
         accounts = move_line_ids.account_id
         if len(accounts) > 2:
             raise UserError(
-                _(
+                self.env._(
                     "You can only reconcile entries with up to two different accounts: %s",
                     ", ".join(accounts.mapped("display_name")),
                 )
@@ -282,7 +282,9 @@ class AccountReconcileWizard(models.TransientModel):
                         "edit_mode_amount_rejected", recwizard=wizard, reason="zero"
                     )
                     raise UserError(
-                        _("The amount of the write-off of a single line cannot be 0.")
+                        self.env._(
+                            "The amount of the write-off of a single line cannot be 0."
+                        )
                     )
                 is_debit_line = (
                     wizard.move_line_ids.balance > 0.0
@@ -295,7 +297,7 @@ class AccountReconcileWizard(models.TransientModel):
                         reason="negative_on_debit_line",
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             "The amount of the write-off of a single debit line should be strictly positive."
                         )
                     )
@@ -306,7 +308,7 @@ class AccountReconcileWizard(models.TransientModel):
                         reason="positive_on_credit_line",
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             "The amount of the write-off of a single credit line should be strictly negative."
                         )
                     )
@@ -316,7 +318,7 @@ class AccountReconcileWizard(models.TransientModel):
         _debug.lifecycle("_action_view_wizard", records=self)
         self.check_singleton()
         return {
-            "name": _("Write-Off Entry"),
+            "name": self.env._("Write-Off Entry"),
             "type": "ir.actions.act_window",
             "view_type": "form",
             "view_mode": "form",

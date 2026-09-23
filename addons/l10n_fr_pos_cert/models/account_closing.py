@@ -6,7 +6,6 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Datetime as FieldDateTime
 from odoo.fields import Domain
-from odoo.tools.translate import _
 
 
 class AccountSaleClosing(models.Model):
@@ -196,13 +195,13 @@ class AccountSaleClosing(models.Model):
         name_interval = ""
         if frequency == "daily":
             interval_from = date_stop - timedelta(days=1)
-            name_interval = _("Daily Closing")
+            name_interval = self.env._("Daily Closing")
         elif frequency == "monthly":
             interval_from = date_stop - relativedelta(months=1)
-            name_interval = _("Monthly Closing")
+            name_interval = self.env._("Monthly Closing")
         elif frequency == "annually":
             interval_from = date_stop - relativedelta(years=1)
-            name_interval = _("Annual Closing")
+            name_interval = self.env._("Annual Closing")
 
         return {
             "interval_from": FieldDateTime.to_string(interval_from),
@@ -212,7 +211,7 @@ class AccountSaleClosing(models.Model):
 
     def write(self, vals):
         raise UserError(
-            _(
+            self.env._(
                 "Sale Closings are not meant to be written or deleted under any circumstances."
             )
         )
@@ -220,7 +219,7 @@ class AccountSaleClosing(models.Model):
     @api.ondelete(at_uninstall=True)
     def _unlink_never(self):
         raise UserError(
-            _(
+            self.env._(
                 "Sale Closings are not meant to be written or deleted under any circumstances."
             )
         )

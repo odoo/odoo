@@ -1,6 +1,6 @@
 import logging
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -136,7 +136,7 @@ class AccountPaymentRegister(models.TransientModel):
                     line.name = line.tax_id.l10n_ar_withholding_sequence_id.next_by_id()
                 else:
                     raise UserError(
-                        _("Please enter withholding number for tax %s")
+                        self.env._("Please enter withholding number for tax %s")
                         % line.tax_id.name
                     )
             _dummy, account_id, tax_repartition_line_id = line._tax_compute_all_helper()
@@ -232,7 +232,7 @@ class AccountPaymentRegister(models.TransientModel):
             and not self.payment_channel_id.payment_account_id
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "A payment cannot have withholding if the payment method has no outstanding accounts"
                 )
             )

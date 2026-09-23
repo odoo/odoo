@@ -1,7 +1,7 @@
 import re
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -36,7 +36,7 @@ class L10nInEwaybill(models.Model):
     @api.depends("name", "state")
     def _compute_display_name(self):
         challan = self.filtered(lambda ewb: ewb.state == "challan")
-        challan.display_name = _("Challan")
+        challan.display_name = self.env._("Challan")
         super(L10nInEwaybill, self - challan)._compute_display_name()
 
     def _get_ewaybill_dependencies(self):
@@ -119,7 +119,7 @@ class L10nInEwaybill(models.Model):
         if self.picking_id:
             if self.state not in ("cancel", "challan"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Only Delivery Challan and Cancelled E-waybill can be reset to pending."
                     )
                 )
@@ -140,7 +140,7 @@ class L10nInEwaybill(models.Model):
         self.check_singleton()
         if self.state != "pending":
             raise UserError(
-                _("The challan can only be generated in the Pending state.")
+                self.env._("The challan can only be generated in the Pending state.")
             )
         self.write(
             {
@@ -154,7 +154,7 @@ class L10nInEwaybill(models.Model):
             lambda ewaybill: ewaybill.state not in ["generated", "challan"]
         ):
             raise UserError(
-                _(
+                self.env._(
                     "Please generate the E-Waybill or mark the document as a Challan to print it."
                 )
             )
@@ -162,7 +162,7 @@ class L10nInEwaybill(models.Model):
     def _get_print_label(self):
         self.check_singleton()
         if self.state == "challan":
-            return _("Challan")
+            return self.env._("Challan")
         return super()._get_print_label()
 
     def _check_lines(self):
@@ -175,11 +175,13 @@ class L10nInEwaybill(models.Model):
                 )
                 if not hsn_code:
                     error_message.append(
-                        _("HSN code is not set in product %s", line.product_id.name)
+                        self.env._(
+                            "HSN code is not set in product %s", line.product_id.name
+                        )
                     )
                 elif not re.match(r"^[0-9]+$", hsn_code):
                     error_message.append(
-                        _(
+                        self.env._(
                             "Invalid HSN Code (%(hsn_code)s) in product %(product)s",
                             hsn_code=hsn_code,
                             product=line.product_id.name,
@@ -197,7 +199,7 @@ class L10nInEwaybill(models.Model):
             self._is_incoming() and picking_state not in ("done", "assigned")
         ):
             error_message.append(
-                _(
+                self.env._(
                     "An E-waybill cannot be generated for a %s document.",
                     dict(
                         self.env["stock.picking"]

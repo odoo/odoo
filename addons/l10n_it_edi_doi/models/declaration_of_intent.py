@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import formatLang
@@ -205,7 +205,7 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
         )
         if self.currency_id.compare_amounts(updated_remaining, 0) >= 0:
             return ""
-        return _(
+        return self.env._(
             "Pay attention, the threshold of your Declaration of Intent %(name)s of %(threshold)s is exceeded by %(exceeded)s, this document included.\n"
             "Invoiced: %(invoiced)s; Not Yet Invoiced: %(not_yet_invoiced)s",
             name=self.display_name,
@@ -231,7 +231,7 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
         for declaration in self:
             if not company or declaration.company_id != company:
                 errors.append(
-                    _(
+                    self.env._(
                         "The Declaration of Intent belongs to company %(declaration_company)s, not %(company)s.",
                         declaration_company=declaration.company_id.name,
                         company=company.name,
@@ -239,7 +239,7 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
                 )
             if not currency or declaration.currency_id != currency:
                 errors.append(
-                    _(
+                    self.env._(
                         "The Declaration of Intent uses currency %(declaration_currency)s, not %(currency)s.",
                         declaration_currency=declaration.currency_id.name,
                         currency=currency.name,
@@ -247,7 +247,7 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
                 )
             if not partner or declaration.partner_id != partner.commercial_partner_id:
                 errors.append(
-                    _(
+                    self.env._(
                         "The Declaration of Intent belongs to partner %(declaration_partner)s, not %(partner)s.",
                         declaration_partner=declaration.partner_id.name,
                         partner=partner.commercial_partner_id.name,
@@ -280,20 +280,22 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
         for declaration in self:
             errors.extend(declaration._get_validity_errors(company, partner, currency))
             if declaration.state == "draft":
-                errors.append(_("The Declaration of Intent is in draft."))
+                errors.append(self.env._("The Declaration of Intent is in draft."))
             if (
                 declaration.currency_id.compare_amounts(invoiced_amount, 0) > 0
                 or not only_blocking
             ):
                 if declaration.state != "active":
-                    errors.append(_("The Declaration of Intent must be active."))
+                    errors.append(
+                        self.env._("The Declaration of Intent must be active.")
+                    )
                 if not sales_order and (
                     not date
                     or declaration.start_date > date
                     or declaration.end_date < date
                 ):
                     errors.append(
-                        _(
+                        self.env._(
                             "The Declaration of Intent is valid from %(start_date)s to %(end_date)s, not on %(date)s.",
                             start_date=declaration.start_date,
                             end_date=declaration.end_date,
@@ -334,7 +336,7 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
         if self.invoice_ids or self.sale_order_ids:
             _debug.logic("declaration_unlink_refused", declarations=self)
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete Declarations of Intents that are already used on at least one Invoice or Sales Order."
                 )
             )
@@ -371,7 +373,9 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
     def action_view_sale_order_ids(self):
         self.check_singleton()
         return {
-            "name": _("Sales Orders using Declaration of Intent %s", self.display_name),
+            "name": self.env._(
+                "Sales Orders using Declaration of Intent %s", self.display_name
+            ),
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
             "domain": [("id", "in", self.sale_order_ids.ids)],
@@ -390,7 +394,9 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
     def action_view_invoice_ids(self):
         self.check_singleton()
         return {
-            "name": _("Invoices using Declaration of Intent %s", self.display_name),
+            "name": self.env._(
+                "Invoices using Declaration of Intent %s", self.display_name
+            ),
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "domain": [("id", "in", self.invoice_ids.ids)],

@@ -1,6 +1,6 @@
 from datetime import UTC
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import AccessError
 from odoo.libs.datetime import timezone
 
@@ -82,7 +82,7 @@ class ResCompany(models.Model):
                 "error": [
                     {
                         "code": "404",
-                        "message": _(
+                        "message": self.env._(
                             "Unable to connect to the online E-invoice service. "
                             "The web service may be temporary down. Please try again in a moment."
                         ),
@@ -114,7 +114,7 @@ class ResCompany(models.Model):
                     "state_id",
                     "country_id",
                 ),
-                "message": _(
+                "message": self.env._(
                     "Companies should have a complete address, verify their Street, City, State, Country and Zip code."
                 ),
             },
@@ -123,12 +123,12 @@ class ResCompany(models.Model):
             f"l10n_in_edi_{key}": {
                 "message": check["message"],
                 "action_text": (
-                    _("View Companies")
+                    self.env._("View Companies")
                     if len(invalid_records) > 1
-                    else _("View %s", invalid_records.name)
+                    else self.env._("View %s", invalid_records.name)
                 ),
                 "action": invalid_records._get_records_action(
-                    name=_("Check Company Data")
+                    name=self.env._("Check Company Data")
                 ),
             }
             for key, check in checks.items()

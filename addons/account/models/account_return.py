@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import SUPERUSER_ID, Command, _, api, fields, models
+from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -792,7 +792,7 @@ class AccountReturn(models.Model):
             _debug.logic("opening_date_missing", company=company)
             if not self.env.user.has_group("account.group_account_manager"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You first need to define an opening date for your accounting. Please contact your administrator."
                     )
                 )
@@ -802,7 +802,7 @@ class AccountReturn(models.Model):
             )
             return {
                 "type": "ir.actions.act_window",
-                "name": _("Accounting Periods"),
+                "name": self.env._("Accounting Periods"),
                 "view_mode": "form",
                 "res_model": "account.financial.year.op",
                 "res_id": new_wizard.id,
@@ -895,7 +895,7 @@ class AccountReturn(models.Model):
 
         return {
             "type": "ir.actions.act_window",
-            "name": _("Payment"),
+            "name": self.env._("Payment"),
             "res_model": "account.return.payment.wizard",
             "res_id": wizard.id,
             "views": [(False, "form")],
@@ -961,7 +961,7 @@ class AccountReturn(models.Model):
         count = self.env["account.return"].search_count(domain, limit=1)
         if count:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot lock this return as there are previous returns that are waiting to be posted."
                 )
             )
@@ -1226,7 +1226,7 @@ class AccountReturn(models.Model):
                     existing=existing_active_return,
                 )
                 raise UserError(
-                    _("An active return already exists for the same period.")
+                    self.env._("An active return already exists for the same period.")
                 )
         super().action_unarchive()
 
@@ -1241,7 +1241,7 @@ class AccountReturn(models.Model):
         )
         for account_return in checks_to_reset.return_id:
             account_return.message_post(
-                body=_("All checks and approvers have been reset")
+                body=self.env._("All checks and approvers have been reset")
             )
 
     @_debug.perf.timed
@@ -1255,7 +1255,7 @@ class AccountReturn(models.Model):
 
         if not self.env.user.has_group("account.group_account_manager"):
             raise UserError(
-                _("Only an Accounting Administrator can reset a tax return")
+                self.env._("Only an Accounting Administrator can reset a tax return")
             )
 
         # Check if it is the last return locked
@@ -1267,7 +1267,7 @@ class AccountReturn(models.Model):
         ]
         if self.env["account.return"].search_count(domain, limit=1):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot reset this return to new, as another return has been locked at a later date."
                 )
             )
@@ -1292,7 +1292,7 @@ class AccountReturn(models.Model):
                     )
                     if violated_lock_dates:
                         raise UserError(
-                            _(
+                            self.env._(
                                 "The operation is refused as it would impact an already issued tax statement. "
                                 "Please change the following lock dates to proceed: %(lock_date_info)s.",
                                 lock_date_info=self.env[
@@ -1335,7 +1335,7 @@ class AccountReturn(models.Model):
 
             if violated_lock_dates:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot reset this closing entry to draft, as it would delete carryover values impacting the tax report of a locked period. "
                         "Please change the following lock dates to proceed: %(lock_date_info)s.",
                         lock_date_info=self.env["res.company"]._format_lock_dates(
@@ -1386,7 +1386,9 @@ class AccountReturn(models.Model):
 
         if not self.env.user.has_group("account.group_account_manager"):
             raise UserError(
-                _("Only an Accounting Administrator can reset an annual closing")
+                self.env._(
+                    "Only an Accounting Administrator can reset an annual closing"
+                )
             )
 
         self._reset_common()
@@ -1398,7 +1400,9 @@ class AccountReturn(models.Model):
         self.check_singleton()
 
         if not self.env.user.has_group("account.group_account_manager"):
-            raise UserError(_("Only an Accounting Administrator can reset a return"))
+            raise UserError(
+                self.env._("Only an Accounting Administrator can reset a return")
+            )
 
         self._reset_common()
         return True
@@ -1456,7 +1460,7 @@ class AccountReturn(models.Model):
                 "params": {
                     "type": "success",
                     "sticky": False,
-                    "message": _("Return Completed"),
+                    "message": self.env._("Return Completed"),
                     "next": {
                         "type": "ir.actions.client",
                         "tag": "action_return_refresh",
@@ -1473,7 +1477,7 @@ class AccountReturn(models.Model):
         _debug.lifecycle("action_mark_uncompleted", records=self)
         self.check_singleton()
         if not self.is_completed:
-            raise UserError(_("You can only unarchive a completed return."))
+            raise UserError(self.env._("You can only unarchive a completed return."))
         self._mark_uncompleted()
 
     def _mark_uncompleted(self):
@@ -1518,9 +1522,9 @@ class AccountReturn(models.Model):
         _debug.lifecycle("action_view_entry", records=self)
         self.check_singleton()
         name = (
-            _("Closing Entries")
+            self.env._("Closing Entries")
             if len(self.closing_move_ids) > 1
-            else _("Closing Entry")
+            else self.env._("Closing Entry")
         )
         return self.closing_move_ids._get_records_action(name=name)
 
@@ -1701,7 +1705,9 @@ class AccountReturn(models.Model):
             )
 
             raise RedirectWarning(
-                _("Please specify the accounts necessary for the tax closing entry."),
+                self.env._(
+                    "Please specify the accounts necessary for the tax closing entry."
+                ),
                 {
                     "type": "ir.actions.act_window",
                     "name": "Tax groups",
@@ -1710,7 +1716,7 @@ class AccountReturn(models.Model):
                     "views": [[False, "list"]],
                     "domain": tax_groups_domain,
                 },
-                _("Configure accounts"),
+                self.env._("Configure accounts"),
             )
 
     @_debug.perf.timed
@@ -1861,7 +1867,7 @@ class AccountReturn(models.Model):
                 move_vals_lines = [
                     Command.create(
                         {
-                            "name": _("Tax Received Adjustment"),
+                            "name": self.env._("Tax Received Adjustment"),
                             "debit": 0.0,
                             "credit": 0.0,
                             "account_id": rep_ln_out.account_id.id,
@@ -1869,7 +1875,7 @@ class AccountReturn(models.Model):
                     ),
                     Command.create(
                         {
-                            "name": _("Tax Paid Adjustment"),
+                            "name": self.env._("Tax Paid Adjustment"),
                             "debit": 0.0,
                             "credit": 0.0,
                             "account_id": rep_ln_in.account_id.id,
@@ -1952,7 +1958,7 @@ class AccountReturn(models.Model):
         if not currency.is_zero(total_difference):
             results.append(
                 {
-                    "tax_name": _("Difference from rounding taxes"),
+                    "tax_name": self.env._("Difference from rounding taxes"),
                     "amount": total_difference * -1,
                     "tax_group_id": tax_group_id,
                     "account_id": rounding_accounts["profit"].id
@@ -2024,12 +2030,14 @@ class AccountReturn(models.Model):
             # Search if any advance payment done for that configuration
             if key[0] and key[0] not in account_already_balanced:
                 total += _add_line(
-                    key[0], _("Balance tax advance payment account"), currency
+                    key[0], self.env._("Balance tax advance payment account"), currency
                 )
                 account_already_balanced.append(key[0])
             if key[1] and key[1] not in account_already_balanced:
                 total += _add_line(
-                    key[1], _("Balance tax current account (receivable)"), currency
+                    key[1],
+                    self.env._("Balance tax current account (receivable)"),
+                    currency,
                 )
                 account_already_balanced.append(key[1])
 
@@ -2038,9 +2046,9 @@ class AccountReturn(models.Model):
                 line_ids_vals.append(
                     Command.create(
                         {
-                            "name": _("Payable tax amount")
+                            "name": self.env._("Payable tax amount")
                             if total < 0
-                            else _("Receivable tax amount"),
+                            else self.env._("Receivable tax amount"),
                             "debit": max(0, total),
                             "credit": abs(total) if total < 0 else 0,
                             "account_id": key[2] if total < 0 else key[1],
@@ -2071,7 +2079,7 @@ class AccountReturn(models.Model):
         ]
         if self.env["account.return.check"].search_count(domain, limit=1):
             raise UserError(
-                _(
+                self.env._(
                     "Some checks fail in the current stage, please solve them before proceeding."
                 )
             )
@@ -2320,7 +2328,7 @@ class AccountReturn(models.Model):
         if "check_company_data" not in check_codes_to_ignore:
             review_action = {
                 "type": "ir.actions.act_window",
-                "name": _("Set your company data"),
+                "name": self.env._("Set your company data"),
                 "res_model": "res.company",
                 "res_id": self.company_id.id,
                 "views": [
@@ -2406,7 +2414,7 @@ class AccountReturn(models.Model):
 
             review_action = {
                 "type": "ir.actions.act_window",
-                "name": _("Bill Attachments"),
+                "name": self.env._("Bill Attachments"),
                 "view_mode": "list",
                 "res_model": "account.move",
                 "domain": domain,
@@ -2874,7 +2882,7 @@ class AccountReturn(models.Model):
                         "result": "todo",
                         "action": {
                             "type": "ir.actions.act_window",
-                            "name": _("Journal Items"),
+                            "name": self.env._("Journal Items"),
                             "res_model": "account.move.line",
                             "domain": ec_sales_aml_domain,
                             "views": [(False, "list")],
@@ -2893,7 +2901,7 @@ class AccountReturn(models.Model):
                         "result": "todo",
                         "action": {
                             "type": "ir.actions.act_window",
-                            "name": _("Invoices"),
+                            "name": self.env._("Invoices"),
                             "res_model": "account.move",
                             "domain": [("line_ids", "any", ec_sales_aml_domain)],
                             "views": [(False, "list"), (False, "form")],
@@ -2937,7 +2945,7 @@ class AccountReturn(models.Model):
                     )
                     cross_border_action = {
                         **same_country_action,
-                        "name": _("Partners in Wrong Country"),
+                        "name": self.env._("Partners in Wrong Country"),
                         "domain": [
                             "|",
                             *same_country_action["domain"],
@@ -3050,7 +3058,7 @@ class AccountReturn(models.Model):
 
         return {
             "type": "ir.actions.act_window",
-            "name": _("Tax Return"),
+            "name": self.env._("Tax Return"),
             "res_model": "account.return.check",
             "view_mode": "kanban",
             "context": {

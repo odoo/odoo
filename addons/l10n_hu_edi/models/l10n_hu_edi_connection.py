@@ -11,7 +11,7 @@ from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from lxml import etree
 
-from odoo import _, fields, release
+from odoo import fields, release
 from odoo.tools import cleanup_xml_node
 
 _logger = logging.getLogger(__name__)
@@ -125,7 +125,9 @@ class L10nHuEdiConnection:
             token_validity_to = fields.Datetime.now() + timedelta(minutes=5)
 
         if not encrypted_token:
-            raise L10nHuEdiConnectionError(_("Missing token in response from NAV."))
+            raise L10nHuEdiConnectionError(
+                self.env._("Missing token in response from NAV.")
+            )
 
         try:
             token = decrypt_aes128(
@@ -134,7 +136,7 @@ class L10nHuEdiConnection:
             ).decode()
         except ValueError as e:
             raise L10nHuEdiConnectionError(
-                _("Error during decryption of ExchangeToken.")
+                self.env._("Error during decryption of ExchangeToken.")
             ) from e
 
         return {"token": token, "token_validity_to": token_validity_to}
@@ -201,7 +203,9 @@ class L10nHuEdiConnection:
         )
         if not transaction_code:
             raise L10nHuEdiConnectionError(
-                _("Invoice Upload failed: NAV did not return a Transaction ID.")
+                self.env._(
+                    "Invoice Upload failed: NAV did not return a Transaction ID."
+                )
             )
 
         return transaction_code
@@ -401,7 +405,7 @@ class L10nHuEdiConnection:
                 )
             except ValueError as e:
                 raise L10nHuEdiConnectionError(
-                    _("Could not parse time of previous transaction")
+                    self.env._("Could not parse time of previous transaction")
                 ) from e
             transactions.append(
                 {
@@ -486,7 +490,9 @@ class L10nHuEdiConnection:
         )
         if not transaction_code:
             raise L10nHuEdiConnectionError(
-                _("Invoice Upload failed: NAV did not return a Transaction ID.")
+                self.env._(
+                    "Invoice Upload failed: NAV did not return a Transaction ID."
+                )
             )
 
         return transaction_code
@@ -552,7 +558,9 @@ class L10nHuEdiConnection:
         elif mode == "test":
             url = "https://api-test.onlineszamla.nav.gov.hu/invoiceService/v3/"
         else:
-            raise L10nHuEdiConnectionError(_("Mode should be Production or Test!"))
+            raise L10nHuEdiConnectionError(
+                self.env._("Mode should be Production or Test!")
+            )
 
         headers = {"content-type": "application/xml", "accept": "application/xml"}
         try:
@@ -561,7 +569,7 @@ class L10nHuEdiConnection:
             )
         except requests.Timeout as e:
             raise L10nHuEdiConnectionError(
-                _("Connection to NAV servers timed out."), code="timeout"
+                self.env._("Connection to NAV servers timed out."), code="timeout"
             ) from e
         except requests.RequestException as e:
             raise L10nHuEdiConnectionError(str(e)) from e
@@ -569,7 +577,7 @@ class L10nHuEdiConnection:
         try:
             response_xml = etree.fromstring(response_object.text.encode())
         except etree.ParseError as e:
-            raise L10nHuEdiConnectionError(_("Invalid NAV response!")) from e
+            raise L10nHuEdiConnectionError(self.env._("Invalid NAV response!")) from e
 
         return response_xml
 

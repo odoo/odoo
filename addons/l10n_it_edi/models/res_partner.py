@@ -1,6 +1,6 @@
 from stdnum.it import codicefiscale, iva
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -170,7 +170,7 @@ class ResPartner(models.Model):
                 and not iva.is_valid(record.l10n_it_codice_fiscale)
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Invalid Codice Fiscale '%s': should be like 'MRTMTT91D08F205J' for physical person and '12345670546' for businesses.",
                         record.l10n_it_codice_fiscale,
                     )
@@ -184,21 +184,23 @@ class ResPartner(models.Model):
         fields_to_check = {
             "partner_vat_missing": {
                 "fields": [("vat",)],
-                "message": _("Partner(s) should have a VAT number."),
+                "message": self.env._("Partner(s) should have a VAT number."),
             },
             "partner_vat_codice_fiscale_missing": {
                 "fields": [("vat", "l10n_it_codice_fiscale")],
-                "message": _("Partner(s) should have a VAT number or Codice Fiscale."),
+                "message": self.env._(
+                    "Partner(s) should have a VAT number or Codice Fiscale."
+                ),
             },
             "partner_country_missing": {
                 "fields": [("country_id",)],
-                "message": _(
+                "message": self.env._(
                     "Partner(s) should have a Country when used for simplified invoices."
                 ),
             },
             "partner_address_missing": {
                 "fields": [("street", "street2"), ("zip",), ("city",), ("country_id",)],
-                "message": _(
+                "message": self.env._(
                     "Partner(s) should have a complete address, verify their Street, City, Zipcode and Country."
                 ),
             },
@@ -220,9 +222,9 @@ class ResPartner(models.Model):
                     views = single_views if len(invalid_records) == 1 else multi_views
                     errors[f"l10n_it_edi_{key}"] = {
                         "message": check["message"],
-                        "action_text": _("View Partner(s)"),
+                        "action_text": self.env._("View Partner(s)"),
                         "action": invalid_records._get_records_action(
-                            name=_("Check Partner(s)"), views=views
+                            name=self.env._("Check Partner(s)"), views=views
                         ),
                     }
         return errors

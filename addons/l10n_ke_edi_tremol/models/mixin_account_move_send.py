@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class MixinAccountMoveSend(models.AbstractModel):
@@ -16,7 +16,7 @@ class MixinAccountMoveSend(models.AbstractModel):
     def _get_l10n_ke_edi_tremol_warning_message(self, warning_moves):
         return "\n".join(
             [
-                _(
+                self.env._(
                     "The following documents have no details related to the fiscal device."
                 ),
                 *(warning_moves.mapped("name")),
@@ -33,8 +33,10 @@ class MixinAccountMoveSend(models.AbstractModel):
         if warning_moves := self._get_l10n_ke_edi_tremol_warning_moves(moves):
             alerts["l10n_ke_edi_tremol_warning_moves"] = {
                 "message": self._get_l10n_ke_edi_tremol_warning_message(warning_moves),
-                "action_text": _("View Invoice(s)"),
-                "action": warning_moves._get_records_action(name=_("Check Invoice(s)")),
+                "action_text": self.env._("View Invoice(s)"),
+                "action": warning_moves._get_records_action(
+                    name=self.env._("Check Invoice(s)")
+                ),
             }
         return alerts
 
@@ -50,7 +52,7 @@ class MixinAccountMoveSend(models.AbstractModel):
             and not invoice._l10n_ke_fiscal_device_details_filled()
         ):
             invoice_data["error"] = {
-                "error_title": _(
+                "error_title": self.env._(
                     "This document does not have details related to the fiscal device, a proforma invoice will be used."
                 )
             }

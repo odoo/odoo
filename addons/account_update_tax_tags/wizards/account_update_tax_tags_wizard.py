@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -199,7 +199,7 @@ class AccountUpdateTaxTagsWizard(models.TransientModel):
             children_taxes += tax.children_tax_ids.ids
         if len(children_taxes) > len(parent_taxes.children_tax_ids.ids):
             raise UserError(
-                _(
+                self.env._(
                     "Update with children taxes that are child of multiple parents is not supported."
                 )
             )

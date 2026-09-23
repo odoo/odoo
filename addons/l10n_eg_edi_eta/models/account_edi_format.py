@@ -7,7 +7,7 @@ from urllib.parse import quote
 
 import requests
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.libs.numbers import json_float_round
 from odoo.tools import float_compare
 
@@ -167,7 +167,7 @@ class AccountEdiFormat(models.Model):
             )
             return {"attachment": json_doc_attachment_id}
         return {
-            "error": _("an Unknown error has occurred"),
+            "error": self.env._("an Unknown error has occurred"),
             "blocking_level": "warning",
         }
 
@@ -204,7 +204,7 @@ class AccountEdiFormat(models.Model):
         if response_data.get("ok"):
             return {"success": True}
         return {
-            "error": _("an Unknown error has occurred"),
+            "error": self.env._("an Unknown error has occurred"),
             "blocking_level": "warning",
         }
 
@@ -242,25 +242,31 @@ class AccountEdiFormat(models.Model):
         document_summary = self._l10n_eg_get_einvoice_document_summary(invoice)
         return_dict = {
             "Invalid": {
-                "error": _(
+                "error": self.env._(
                     "This invoice has been marked as invalid by the ETA. Please check the ETA website for more information"
                 ),
                 "blocking_level": "error",
             },
             "Submitted": {
-                "error": _(
+                "error": self.env._(
                     "This invoice has been sent to the ETA, but we are still awaiting validation"
                 ),
                 "blocking_level": "info",
             },
             "Valid": {"success": True},
-            "Cancelled": {"error": _("Document Cancelled"), "blocking_level": "error"},
+            "Cancelled": {
+                "error": self.env._("Document Cancelled"),
+                "blocking_level": "error",
+            },
         }
         if document_summary.get("doc_data") and return_dict.get(
             document_summary["doc_data"][0].get("status")
         ):
             return return_dict.get(document_summary["doc_data"][0]["status"])
-        return {"error": _("an Unknown error has occured"), "blocking_level": "warning"}
+        return {
+            "error": self.env._("an Unknown error has occured"),
+            "blocking_level": "warning",
+        }
 
     def _l10n_eg_eta_get_access_token(self, invoice):
         user = invoice.company_id.sudo().l10n_eg_edi_eta_config_id.l10n_eg_client_identifier
@@ -309,7 +315,7 @@ class AccountEdiFormat(models.Model):
         _logger.warning("PDF Function Response %s.", response_data.get("response"))
         if response_data.get("ok"):
             return {"data": response_data.get("content")}
-        return {"error": _("PDF Document is not available")}
+        return {"error": self.env._("PDF Document is not available")}
 
     @api.model
     def _l10n_eg_is_info_address_complete(
@@ -601,7 +607,7 @@ class AccountEdiFormat(models.Model):
 
         if invoice.journal_id.l10n_eg_branch_id.vat == invoice.partner_id.vat:
             errors.append(
-                _(
+                self.env._(
                     "You cannot issue an invoice to a partner with the same VAT number as the branch."
                 )
             )
@@ -609,13 +615,15 @@ class AccountEdiFormat(models.Model):
             invoice.company_id.l10n_eg_edi_eta_config_id.l10n_eg_production_env
         ):
             errors.append(
-                _("Please configure the token domain from the system parameters")
+                self.env._(
+                    "Please configure the token domain from the system parameters"
+                )
             )
         if not self._l10n_eg_get_eta_api_domain(
             invoice.company_id.l10n_eg_edi_eta_config_id.l10n_eg_production_env
         ):
             errors.append(
-                _("Please configure the API domain from the system parameters")
+                self.env._("Please configure the API domain from the system parameters")
             )
         if not all(
             [
@@ -625,17 +633,21 @@ class AccountEdiFormat(models.Model):
             ]
         ):
             errors.append(
-                _("Please set the all the ETA information on the invoice's journal")
+                self.env._(
+                    "Please set the all the ETA information on the invoice's journal"
+                )
             )
         if not self._l10n_eg_is_info_address_complete(
             invoice.journal_id.l10n_eg_branch_id
         ):
-            errors.append(_("Please add all the required fields in the branch details"))
+            errors.append(
+                self.env._("Please add all the required fields in the branch details")
+            )
         if not self._l10n_eg_is_info_address_complete(
             invoice.partner_id, invoice=invoice
         ):
             errors.append(
-                _("Please add all the required fields in the customer details")
+                self.env._("Please add all the required fields in the customer details")
             )
         if not all(
             aml.product_uom_id.l10n_eg_unit_code_id.code
@@ -644,7 +656,7 @@ class AccountEdiFormat(models.Model):
             )
         ):
             errors.append(
-                _(
+                self.env._(
                     "Please make sure the invoice lines UoM codes are all set up correctly"
                 )
             )
@@ -655,7 +667,7 @@ class AccountEdiFormat(models.Model):
             ).tax_ids
         ):
             errors.append(
-                _(
+                self.env._(
                     "Please make sure the invoice lines taxes all have the correct ETA tax code"
                 )
             )
@@ -666,7 +678,7 @@ class AccountEdiFormat(models.Model):
             )
         ):
             errors.append(
-                _(
+                self.env._(
                     "Please make sure the EGS/GS1 Barcode is set correctly on all products"
                 )
             )
@@ -680,7 +692,7 @@ class AccountEdiFormat(models.Model):
         if not invoice.l10n_eg_eta_json_doc_file:
             return {
                 invoice: {
-                    "error": _(
+                    "error": self.env._(
                         "An error occured in created the ETA invoice, please retry signing"
                     ),
                     "blocking_level": "error",
@@ -692,7 +704,7 @@ class AccountEdiFormat(models.Model):
         if not invoice_json.get("signatures"):
             return {
                 invoice: {
-                    "error": _("Please make sure the invoice is signed"),
+                    "error": self.env._("Please make sure the invoice is signed"),
                     "blocking_level": "error",
                 }
             }

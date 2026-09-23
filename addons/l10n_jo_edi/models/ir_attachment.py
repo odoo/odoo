@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -23,7 +23,7 @@ class IrAttachment(models.Model):
         moves_with_jo_qr = moves.filtered("l10n_jo_edi_qr")
         if moves_with_jo_qr:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete this Invoice PDF as it has been submitted to JoFotara"
                 )
             )

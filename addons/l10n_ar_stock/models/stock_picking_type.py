@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -74,7 +74,7 @@ class StockPickingType(models.Model):
             ):
                 if number and not regex.fullmatch(number):
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "%(sequence_number)s is not a valid sequence number. Sequence numbers should contain exactly 8 digits (e.g. 00012345).",
                             sequence_number=number,
                         )
@@ -104,7 +104,7 @@ class StockPickingType(models.Model):
                     .sudo()
                     .create(
                         {
-                            "name": _(
+                            "name": self.env._(
                                 "%(company)s Sequence %(name)s",
                                 company=picking_type.company_id.name,
                                 name=picking_type.display_name,

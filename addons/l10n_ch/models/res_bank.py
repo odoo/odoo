@@ -2,7 +2,7 @@ import re
 
 from stdnum.util import clean
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import LazyTranslate, street_split
 from odoo.tools.misc import mod10r
@@ -322,18 +322,22 @@ class ResPartnerBankAccount(models.Model):
         while preventing to print qr code when executing _check_for_qr_code_errors if the partner is not provided
         """
         if not debtor_partner or debtor_partner.country_id.code not in ("CH", "LI"):
-            return _("The debtor partner's address isn't located in Switzerland.")
+            return self.env._(
+                "The debtor partner's address isn't located in Switzerland."
+            )
         return False
 
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         def _get_error_for_ch_qr():
             error_messages = [
-                _(
+                self.env._(
                     "The Swiss QR code could not be generated for the following reason(s):"
                 )
             ]
             if self.acc_type != "iban":
-                error_messages.append(_("The account type isn't QR-IBAN or IBAN."))
+                error_messages.append(
+                    self.env._("The account type isn't QR-IBAN or IBAN.")
+                )
             debtor_check = self._l10n_ch_qr_debtor_check(debtor_partner)
             if debtor_partner and debtor_check:
                 error_messages.append(debtor_check)
@@ -341,7 +345,7 @@ class ResPartnerBankAccount(models.Model):
                 self.env.ref("base.EUR").id,
                 self.env.ref("base.CHF").id,
             ):
-                error_messages.append(_("The currency isn't EUR nor CHF."))
+                error_messages.append(self.env._("The currency isn't EUR nor CHF."))
             return "\r\n".join(error_messages) if len(error_messages) > 1 else None
 
         if qr_method == "ch_qr":
@@ -367,20 +371,20 @@ class ResPartnerBankAccount(models.Model):
 
         if qr_method == "ch_qr":
             if not _partner_fields_set(self.partner_id):
-                return _(
+                return self.env._(
                     "The partner set on the bank account meant to receive the payment (%s) must have a complete postal address (street, zip, city and country).",
                     self.acc_number,
                 )
 
             if debtor_partner and not _partner_fields_set(debtor_partner):
-                return _(
+                return self.env._(
                     "The partner must have a complete postal address (street, zip, city and country)."
                 )
 
             if self.l10n_ch_qr_iban and not self._is_qr_reference(
                 structured_communication
             ):
-                return _(
+                return self.env._(
                     "When using a QR-IBAN as the destination account of a QR-code, the payment reference must be a QR-reference."
                 )
 
@@ -400,5 +404,5 @@ class ResPartnerBankAccount(models.Model):
     @api.model
     def _get_available_qr_methods(self):
         rslt = super()._get_available_qr_methods()
-        rslt.append(("ch_qr", _("Swiss QR bill"), 10))
+        rslt.append(("ch_qr", self.env._("Swiss QR bill"), 10))
         return rslt

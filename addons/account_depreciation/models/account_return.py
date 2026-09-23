@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class AccountReturn(models.Model):
@@ -28,8 +28,8 @@ class AccountReturn(models.Model):
             if not fixed_assets_exist:
                 checks.append(
                     {
-                        "name": _("Fixed Assets"),
-                        "message": _(
+                        "name": self.env._("Fixed Assets"),
+                        "message": self.env._(
                             "Odoo manages depreciation for your fixed assets. No depreciation was recorded for this period. Ensure assets are properly registered for automatic depreciation calculation."
                         ),
                         "code": "check_fixed_assets",

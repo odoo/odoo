@@ -1,7 +1,7 @@
 import stdnum.de.stnr
 import stdnum.exceptions
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -43,7 +43,9 @@ class ResCompany(models.Model):
                 )
             except stdnum.exceptions.InvalidComponent:
                 raise ValidationError(
-                    _("Your company's SteuerNummer is not compatible with your state")
+                    self.env._(
+                        "Your company's SteuerNummer is not compatible with your state"
+                    )
                 ) from None
             except stdnum.exceptions.InvalidFormat:
                 if stdnum.de.stnr.is_valid(
@@ -52,7 +54,7 @@ class ResCompany(models.Model):
                     national_steuer_nummer = self.l10n_de_config_id.l10n_de_stnr
                 else:
                     raise ValidationError(
-                        _("Your company's SteuerNummer is not valid")
+                        self.env._("Your company's SteuerNummer is not valid")
                     ) from None
 
         elif self.l10n_de_config_id.l10n_de_stnr:

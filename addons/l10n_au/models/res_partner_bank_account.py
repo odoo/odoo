@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -15,7 +15,7 @@ class ResPartnerBankAccount(models.Model):
     @api.model
     def _get_account_types_supported(self):
         rslt = super()._get_account_types_supported()
-        rslt.append(("aba", _("ABA")))
+        rslt.append(("aba", self.env._("ABA")))
         return rslt
 
     @api.constrains("aba_bsb")
@@ -25,7 +25,7 @@ class ResPartnerBankAccount(models.Model):
                 test_bsb = re.sub(r"( |-)", "", record.aba_bsb)
                 if len(test_bsb) != 6 or not test_bsb.isdigit():
                     raise ValidationError(
-                        _(
+                        self.env._(
                             'BSB is not valid (expected format is "NNN-NNN"). Please rectify.'
                         )
                     )

@@ -1,7 +1,7 @@
 from stdnum import luhn
 from stdnum.exceptions import ValidationError as StdnumValidationError
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
@@ -28,8 +28,8 @@ class ResPartner(models.Model):
             except StdnumValidationError:
                 return {
                     "warning": {
-                        "title": _("Warning"),
-                        "message": _(
+                        "title": self.env._("Warning"),
+                        "message": self.env._(
                             "Default vendor OCR number isn't a valid OCR number."
                         ),
                     }

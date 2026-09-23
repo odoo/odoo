@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -18,5 +18,7 @@ class AccountAccount(models.Model):
             if self.env["account.move.line"].search_count(
                 [("account_id", "in", self.ids)], limit=1
             ):
-                raise UserError(_("You can not change the code of an account."))
+                raise UserError(
+                    self.env._("You can not change the code of an account.")
+                )
         return super().write(vals)

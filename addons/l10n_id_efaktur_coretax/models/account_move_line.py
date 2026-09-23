@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import ValidationError
 from odoo.libs.numbers import float_repr
 
@@ -13,7 +13,7 @@ class AccountMoveLine(models.Model):
 
         if self.currency_id.compare_amounts(self.price_subtotal, 0.0) < 0:
             raise ValidationError(
-                _(
+                self.env._(
                     "Price for line '%s' cannot be a negative amount. Please check again.",
                     self.name,
                 )

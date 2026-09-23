@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -43,7 +43,7 @@ class ResPartner(models.Model):
                 if validation == "error":
                     if not partner._check_vat_number("CL", partner.vat):
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "The format of your RUN is not valid.  It should be like 76086428-5."
                             )
                         )

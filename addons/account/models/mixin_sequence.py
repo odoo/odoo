@@ -3,7 +3,7 @@ import re
 from collections import defaultdict
 from datetime import date
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -204,7 +204,7 @@ class MixinSequence(models.AbstractModel):
                     date=record_date,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The %(date_field)s (%(date)s) you've entered isn't aligned with the existing sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
                         "To maintain date-based sequences, select entries and use the resequence option from the actions menu, available in developer mode.",
                         date_field=record._fields[
@@ -296,7 +296,7 @@ class MixinSequence(models.AbstractModel):
                     return ret_val
         _debug.logic("sequence_reset_undeducible", seq_model=self._name, name=name)
         raise ValidationError(
-            _(
+            self.env._(
                 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
                 r"^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$"
             )
@@ -328,7 +328,9 @@ class MixinSequence(models.AbstractModel):
                 seq_model=self._name,
                 field=self._sequence_field,
             )
-            raise ValidationError(_("%s is not a stored field", self._sequence_field))
+            raise ValidationError(
+                self.env._("%s is not a stored field", self._sequence_field)
+            )
         domain = Domain(self._get_domain_last_sequence(relaxed))
         if self._origin.id:
             domain &= Domain("id", "!=", self._origin.id)
@@ -494,7 +496,7 @@ class MixinSequence(models.AbstractModel):
         if new:
             if not self[self._sequence_date_field]:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A %(date_field)s is required to start a new sequence.",
                         date_field=self._fields[
                             self._sequence_date_field

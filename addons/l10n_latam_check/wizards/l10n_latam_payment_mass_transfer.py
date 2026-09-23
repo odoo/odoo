@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -40,7 +40,9 @@ class L10n_LatamPaymentMassTransfer(models.TransientModel):
         journal = self.check_ids._origin.mapped("current_journal_id")
         if len(journal) != 1:
             raise UserError(
-                _("All selected checks must be on the same journal and on hand")
+                self.env._(
+                    "All selected checks must be on the same journal and on hand"
+                )
             )
         self.journal_id = journal
         self.company_id = journal.company_id.id
@@ -51,7 +53,7 @@ class L10n_LatamPaymentMassTransfer(models.TransientModel):
         if "check_ids" in fields and "check_ids" not in res:
             if self.env.context.get("active_model") != "l10n_latam.check":
                 raise UserError(
-                    _(
+                    self.env._(
                         "The register payment wizard should only be called on account.payment records."
                     )
                 )
@@ -62,17 +64,19 @@ class L10n_LatamPaymentMassTransfer(models.TransientModel):
                 lambda x: x.payment_channel_id.code != "new_third_party_checks"
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You have selected payments which are not checks. Please call this action from the Third Party Checks menu"
                     )
                 )
             if not all(
                 check.payment_id.state not in ("draft", "canceled") for check in checks
             ):
-                raise UserError(_("All the selected checks must be posted"))
+                raise UserError(self.env._("All the selected checks must be posted"))
             currency_ids = checks.mapped("currency_id")
             if any(x != currency_ids[0] for x in currency_ids):
-                raise UserError(_("All the selected checks must use the same currency"))
+                raise UserError(
+                    self.env._("All the selected checks must use the same currency")
+                )
             res["check_ids"] = checks.ids
         return res
 
@@ -137,12 +141,13 @@ class L10n_LatamPaymentMassTransfer(models.TransientModel):
             inbound_payment.with_context(l10n_ar_skip_remove_check=True).action_post()
 
         body_inbound = (
-            _("This payment has been created from: ")
+            self.env._("This payment has been created from: ")
             + outbound_payment._get_html_link()
         )
         inbound_payment.message_post(body=body_inbound)
         body_outbound = (
-            _("A second payment has been created: ") + inbound_payment._get_html_link()
+            self.env._("A second payment has been created: ")
+            + inbound_payment._get_html_link()
         )
         outbound_payment.message_post(body=body_outbound)
 
@@ -159,7 +164,7 @@ class L10n_LatamPaymentMassTransfer(models.TransientModel):
         payments = self._create_payments()
 
         action = {
-            "name": _("Payments"),
+            "name": self.env._("Payments"),
             "type": "ir.actions.act_window",
             "res_model": "account.payment",
             "context": {"create": False},

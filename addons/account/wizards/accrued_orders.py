@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils, format_date
@@ -155,16 +155,16 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 )
             ]
             preview_columns = [
-                {"field": "account_id", "label": _("Account")},
-                {"field": "name", "label": _("Label")},
+                {"field": "account_id", "label": self.env._("Account")},
+                {"field": "name", "label": self.env._("Label")},
                 {
                     "field": "debit",
-                    "label": _("Debit"),
+                    "label": self.env._("Debit"),
                     "class": "text-end text-nowrap",
                 },
                 {
                     "field": "credit",
-                    "label": _("Credit"),
+                    "label": self.env._("Credit"),
                     "class": "text-end text-nowrap",
                 },
             ]
@@ -216,7 +216,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         selected = self._get_selected_records()
         if selected is None:
             _debug.logic("accrual_orders_rejected", accrual=self, reason="no_selection")
-            raise UserError(_("Select the orders to accrue first."))
+            raise UserError(self.env._("Select the orders to accrue first."))
         selected = selected.with_company(self.company_id)
         if self.res_model in ("purchase.order.line", "sale.order.line"):
             lines = selected
@@ -231,14 +231,18 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 "accrual_orders_rejected", accrual=self, reason="multi_company"
             )
             raise UserError(
-                _("Entries can only be created for a single company at a time.")
+                self.env._(
+                    "Entries can only be created for a single company at a time."
+                )
             )
         if len(orders.currency_id) > 1:
             _debug.logic(
                 "accrual_orders_rejected", accrual=self, reason="multi_currency"
             )
             raise UserError(
-                _("Cannot create an accrual entry with orders in different currencies.")
+                self.env._(
+                    "Cannot create an accrual entry with orders in different currencies."
+                )
             )
         return orders, lines, is_purchase
 
@@ -250,7 +254,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             0,
             account.id,
             is_purchase,
-            label=_("Manual entry"),
+            label=self.env._("Manual entry"),
             analytic_distribution=order_line.analytic_distribution or {},
         )
 
@@ -306,7 +310,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             self.company_id.currency_id,
             self.company_id,
         )
-        label = _(
+        label = self.env._(
             "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %(quantity_received)s Received at %(unit_price)s each",
             order=order.name,
             order_line=_ellipsis(order_line.name, 20),
@@ -335,7 +339,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             self.company_id.currency_id,
             self.company_id,
         )
-        label = _(
+        label = self.env._(
             "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %(quantity_delivered)s Delivered at %(unit_price)s each",
             order=order.name,
             order_line=_ellipsis(order_line.name, 20),
@@ -408,9 +412,13 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             if amount == 0:
                 continue
             if amount > 0:
-                label = _("(*) Goods Delivered not Invoiced (perpetual valuation)")
+                label = self.env._(
+                    "(*) Goods Delivered not Invoiced (perpetual valuation)"
+                )
             else:
-                label = _("(*) Goods Invoiced not Delivered (perpetual valuation)")
+                label = self.env._(
+                    "(*) Goods Invoiced not Delivered (perpetual valuation)"
+                )
             values.append(
                 self._prepare_aml_vals(
                     orders,
@@ -489,7 +497,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                         0.0,
                         self.account_id.id,
                         is_purchase,
-                        label=_("Accrued total"),
+                        label=self.env._("Accrued total"),
                         analytic_distribution=self._get_accrual_analytic_distribution(
                             orders
                         ),
@@ -509,9 +517,9 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             accrual=self,
             move_lines=len(move_lines),
         )
-        move_type = _("Expense") if is_purchase else _("Revenue")
+        move_type = self.env._("Expense") if is_purchase else self.env._("Revenue")
         move_vals = {
-            "ref": _(
+            "ref": self.env._(
                 "Accrued %(entry_type)s entry as of %(date)s",
                 entry_type=move_type,
                 date=format_date(self.env, self.date),
@@ -526,7 +534,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
 
     def _get_accrual_message_body(self, move, reverse_move):
         self.check_singleton()
-        return _(
+        return self.env._(
             "Accrual entry created on %(date)s: %(accrual_entry)s.\
                 And its reverse entry: %(reverse_entry)s.",
             date=self.date,
@@ -538,7 +546,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         self.check_singleton()
 
         if self.reversal_date <= self.date:
-            raise UserError(_("Reversal date must be posterior to date."))
+            raise UserError(self.env._("Reversal date must be posterior to date."))
         move_vals, orders_with_entries = self._prepare_accrual_move_data()
         _debug.pipeline(
             "reversal",
@@ -552,7 +560,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         reverse_move = move._reverse_moves(
             default_values_list=[
                 {
-                    "ref": _("Reversal of: %s", move.ref),
+                    "ref": self.env._("Reversal of: %s", move.ref),
                     "name": "/",
                     "date": self.reversal_date,
                 }
@@ -562,7 +570,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         for order in orders_with_entries:
             order.message_post(body=self._get_accrual_message_body(move, reverse_move))
         return {
-            "name": _("Accrual Moves"),
+            "name": self.env._("Accrual Moves"),
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "view_mode": "list,form",

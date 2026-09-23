@@ -4,7 +4,7 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -521,14 +521,16 @@ class AccountConfig(models.Model):
             for config in self
         ):
             raise ValidationError(
-                _("Can't disable restricted audit trail: forced by localization.")
+                self.env._(
+                    "Can't disable restricted audit trail: forced by localization."
+                )
             )
 
     @api.constrains("account_price_include")
     def _check_set_account_price_include(self):
         if any(config.company_id.sudo()._existing_accounting() for config in self):
             raise ValidationError(
-                _(
+                self.env._(
                     "Cannot change Price Tax computation method on a company that has already started invoicing."
                 )
             )
@@ -546,7 +548,7 @@ class AccountConfig(models.Model):
                 year = fields.Date.context_today(config).year
             max_day = calendar.monthrange(year, int(config.fiscalyear_last_month))[1]
             if config.fiscalyear_last_day <= 0 or config.fiscalyear_last_day > max_day:
-                raise ValidationError(_("Invalid fiscal year last day"))
+                raise ValidationError(self.env._("Invalid fiscal year last day"))
 
     def _compute_force_restrictive_audit_trail(self):
         for config in self:
@@ -725,9 +727,9 @@ class AccountConfig(models.Model):
             country = config.company_id.country_id or config.account_fiscal_country_id
             expected_vat = Partner._get_expected_vat_format(country.code)
             config.company_vat_placeholder = (
-                _("%s, or / if not applicable", expected_vat)
+                self.env._("%s, or / if not applicable", expected_vat)
                 if expected_vat
-                else _("/ if not applicable")
+                else self.env._("/ if not applicable")
             )
 
     def action_save_onboarding_sale_tax(self):
@@ -936,10 +938,10 @@ class AccountConfig(models.Model):
                 if not config.hard_lock_date:
                     continue
                 if not hard_lock_date:
-                    raise UserError(_("The Hard Lock Date cannot be removed."))
+                    raise UserError(self.env._("The Hard Lock Date cannot be removed."))
                 if hard_lock_date < config.hard_lock_date:
                     raise UserError(
-                        _(
+                        self.env._(
                             "A new Hard Lock Date must be posterior (or equal) to the previous one."
                         )
                     )
@@ -953,12 +955,12 @@ class AccountConfig(models.Model):
                 ]
             )
             if draft_entries:
-                error_msg = _(
+                error_msg = self.env._(
                     "There are still draft entries in the period you want to hard lock. You should either post or delete them."
                 )
                 action_error = {
                     "view_mode": "list",
-                    "name": _("Draft Entries"),
+                    "name": self.env._("Draft Entries"),
                     "res_model": "account.move",
                     "type": "ir.actions.act_window",
                     "domain": [("id", "in", draft_entries.ids)],
@@ -971,7 +973,9 @@ class AccountConfig(models.Model):
                         [self.env.ref("account.view_move_form").id, "form"],
                     ],
                 }
-                raise RedirectWarning(error_msg, action_error, _("Show draft entries"))
+                raise RedirectWarning(
+                    error_msg, action_error, self.env._("Show draft entries")
+                )
         if fiscal_lock_date:
             unreconciled_statement_lines = self.env[
                 "account.bank.statement.line"
@@ -979,7 +983,7 @@ class AccountConfig(models.Model):
                 companies._get_domain_unreconciled_statement_lines(fiscal_lock_date)
             )
             if unreconciled_statement_lines:
-                error_msg = _(
+                error_msg = self.env._(
                     "There are still unreconciled bank statement lines in the period you want to lock."
                     "You should either reconcile or delete them."
                 )
@@ -989,7 +993,9 @@ class AccountConfig(models.Model):
                     )
                 )
                 raise RedirectWarning(
-                    error_msg, action_error, _("Show Unreconciled Bank Statement Line")
+                    error_msg,
+                    action_error,
+                    self.env._("Show Unreconciled Bank Statement Line"),
                 )
 
     def write(self, vals):

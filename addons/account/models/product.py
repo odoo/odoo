@@ -1,7 +1,7 @@
 import logging
 from itertools import batched
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -132,7 +132,7 @@ class ProductTemplate(models.Model):
         included = res["total_included"]
         if currency.compare_amounts(included, price):
             joined.append(
-                _(
+                self.env._(
                     "%(amount)s Incl. Taxes",
                     amount=format_amount(self.env, included, currency),
                 )
@@ -140,7 +140,7 @@ class ProductTemplate(models.Model):
         excluded = res["total_excluded"]
         if currency.compare_amounts(excluded, price):
             joined.append(
-                _(
+                self.env._(
                     "%(amount)s Excl. Taxes",
                     amount=format_amount(self.env, excluded, currency),
                 )
@@ -173,7 +173,7 @@ class ProductTemplate(models.Model):
         if row:
             _debug.logic("uom_change_rejected", templates=self, used_template=row[0])
             raise ValidationError(
-                _(
+                self.env._(
                     "%(product)s is already used on posted journal entries.\n"
                     "To change its Unit of Measure, archive it and create a new product.",
                     product=self.browse(row[0]).display_name,

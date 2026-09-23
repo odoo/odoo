@@ -4,7 +4,7 @@ from functools import cache
 from typing import NamedTuple
 from urllib.parse import urlencode
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -175,7 +175,7 @@ class AccountJournal(models.Model):
         return self.env.ref("account.account_payment_method_manual_out")
 
     def _selection_bank_statements_source(self):
-        return [("undefined", _("Undefined Yet"))]
+        return [("undefined", self.env._("Undefined Yet"))]
 
     def _default_invoice_reference_model(self):
         country_code = self.env.company.country_id.code
@@ -909,7 +909,7 @@ class AccountJournal(models.Model):
             journal.name_placeholder = (
                 self._get_default_name(journal.type, journal.code)
                 if journal.type
-                else _("Select a type")
+                else self.env._("Select a type")
             )
 
     @api.model
@@ -938,7 +938,7 @@ class AccountJournal(models.Model):
                         bank_account=journal.bank_account_id,
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The bank account of a bank journal must belong to the same company (%s).",
                             journal.company_id.name,
                         )
@@ -950,7 +950,7 @@ class AccountJournal(models.Model):
                         bank_account=journal.bank_account_id,
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The holder of a journal's bank account must be the company (%s).",
                             journal.company_id.name,
                         )
@@ -971,7 +971,7 @@ class AccountJournal(models.Model):
                 for move_company in move_companies_by_journal[journal.id]
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can't change the company of your journal since there are some journal entries linked to it."
                     )
                 )
@@ -1053,7 +1053,7 @@ class AccountJournal(models.Model):
         )
         if offending:
             raise ValidationError(
-                _(
+                self.env._(
                     "Journal %(journal)s already has journal items on "
                     "%(account)s, which this list of allowed accounts excludes.",
                     journal=offending.journal_id.display_name,
@@ -1073,7 +1073,7 @@ class AccountJournal(models.Model):
                 "liability_payable",
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The type of the journal's default credit/debit account shouldn't be 'receivable' or 'payable'."
                     )
                 )
@@ -1100,7 +1100,7 @@ class AccountJournal(models.Model):
                     counter[key] += 1
                     if counter[key] > 1:
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "You can't have two payment method lines of the same payment type (%(payment_type)s) "
                                 "and with the same name (%(name)s) on a single journal.",
                                 payment_type=payment_type,
@@ -1140,7 +1140,7 @@ class AccountJournal(models.Model):
         )
         if failing_unicity_payment_methods:
             raise ValidationError(
-                _(
+                self.env._(
                     "Some payment methods supposed to be unique already exists somewhere else.\n(%s)",
                     ", ".join(failing_unicity_payment_methods.mapped("display_name")),
                 )
@@ -1160,7 +1160,7 @@ class AccountJournal(models.Model):
                     "archive_blocked_draft_moves", journal=archived, move=pending_moves
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can not archive a journal containing draft journal entries.\n\n"
                         "To proceed:\n"
                         "1/ click on the top-right button 'Journal Entries' from this journal form\n"
@@ -1234,7 +1234,7 @@ class AccountJournal(models.Model):
                 )
             used.add(vals["code"])
             if "name" not in default:
-                vals["name"] = _("%s (copy)", journal.name or "")
+                vals["name"] = self.env._("%s (copy)", journal.name or "")
         _debug.logic(
             "copy_codes_regenerated",
             journals=self,
@@ -1327,7 +1327,7 @@ class AccountJournal(models.Model):
                 )
                 if bank_account.partner_id != company.partner_id:
                     raise UserError(
-                        _(
+                        self.env._(
                             "The partners of the journal's company and the related bank account mismatch."
                         )
                     )
@@ -1345,7 +1345,7 @@ class AccountJournal(models.Model):
                     self.env
                 )["string"]
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot modify the field %s of a journal that already has accounting entries.",
                         field_string,
                     )
@@ -1555,7 +1555,7 @@ class AccountJournal(models.Model):
                 return candidate
         _debug.logic("journal_code_range_exhausted", prefix=prefix, company=company)
         raise UserError(
-            _(
+            self.env._(
                 "Could not generate a unique journal code from prefix %(prefix)s: "
                 "the whole numeric range is already in use.",
                 prefix=prefix,
@@ -1569,7 +1569,7 @@ class AccountJournal(models.Model):
         journal_code_base = JOURNAL_TYPES.get(journal_type, {}).get("code_prefix")
         if not journal_code_base:
             raise UserError(
-                _(
+                self.env._(
                     "Unknown journal type '%s', cannot generate a default code.",
                     journal_type,
                 )
@@ -1632,7 +1632,7 @@ class AccountJournal(models.Model):
     def _create_default_account(self, company, journal_type, vals):
         if journal_type not in LIQUIDITY_TYPES:
             raise UserError(
-                _(
+                self.env._(
                     "No default account can be created for a journal of type %s.",
                     journal_type,
                 )
@@ -1898,7 +1898,7 @@ class AccountJournal(models.Model):
     @api.model
     @_debug.perf.timed
     def _prepare_no_journal_error_msg(self, company_name, journal_types):
-        return _(
+        return self.env._(
             "No journal could be found in company %(company_name)s for any of those types: %(journal_types)s",
             company_name=company_name,
             journal_types=", ".join(journal_types),
@@ -1922,7 +1922,9 @@ class AccountJournal(models.Model):
                 journal_type = "purchase"
             else:
                 raise UserError(
-                    _("The journal in which to upload the invoice is not specified. ")
+                    self.env._(
+                        "The journal in which to upload the invoice is not specified. "
+                    )
                 )
             self = self.env["account.journal"].search(
                 [
@@ -1936,7 +1938,7 @@ class AccountJournal(models.Model):
 
         attachments = self.env["ir.attachment"].browse(attachment_ids)
         if not attachments:
-            raise UserError(_("No attachment was provided"))
+            raise UserError(self.env._("No attachment was provided"))
 
         if not self:
             raise UserError(
@@ -1969,7 +1971,7 @@ class AccountJournal(models.Model):
     def create_document_from_attachment(self, attachment_ids):
         invoices = self._create_document_from_attachment(attachment_ids)
         action_vals = {
-            "name": _("Generated Documents"),
+            "name": self.env._("Generated Documents"),
             "domain": [("id", "in", invoices.ids)],
             "res_model": "account.move",
             "type": "ir.actions.act_window",

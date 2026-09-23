@@ -1,4 +1,4 @@
-from odoo import _, models, tools
+from odoo import models, tools
 
 DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID = "320"
 
@@ -118,9 +118,11 @@ class AccountEdiXmlOioubl_201(models.AbstractModel):
             partner = vals[partner_type]
             building_number = tools.street_split(partner.street).get("street_number")
             if not building_number:
-                constraints[f"oioubl201_{partner_type}_building_number_required"] = _(
-                    "The following partner's street number is missing: %s",
-                    partner.display_name,
+                constraints[f"oioubl201_{partner_type}_building_number_required"] = (
+                    self.env._(
+                        "The following partner's street number is missing: %s",
+                        partner.display_name,
+                    )
                 )
             if (
                 partner.country_code == "FR"
@@ -128,7 +130,7 @@ class AccountEdiXmlOioubl_201(models.AbstractModel):
             ):
                 constraints[
                     "oioubl201_company_registry_required_for_french_partner"
-                ] = _(
+                ] = self.env._(
                     "The company registry is required for french partner: %s",
                     partner.display_name,
                 )

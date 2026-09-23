@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 
 
@@ -16,9 +16,11 @@ class ResPartner(models.Model):
                     or not record.company_registry.isdigit()
                 )
             ):
-                raise ValidationError(_("ICE number should have exactly 15 digits."))
+                raise ValidationError(
+                    self.env._("ICE number should have exactly 15 digits.")
+                )
 
     def _get_company_registry_labels(self):
         labels = super()._get_company_registry_labels()
-        labels["MA"] = _("ICE")
+        labels["MA"] = self.env._("ICE")
         return labels

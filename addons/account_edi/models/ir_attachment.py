@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -18,7 +18,7 @@ class IrAttachment(models.Model):
         )
         if linked_edi_formats_ws:
             raise UserError(
-                _(
+                self.env._(
                     "You can't unlink an attachment being an EDI document sent to the government."
                 )
             )

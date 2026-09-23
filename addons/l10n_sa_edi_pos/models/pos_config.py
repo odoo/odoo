@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import RedirectWarning
 
 
@@ -17,7 +17,7 @@ class PosConfig(models.Model):
                     and not config.invoice_journal_id._l10n_sa_ready_to_submit_einvoices()
                 )
             ):
-                msg = _(
+                msg = self.env._(
                     "The invoice journal of the point of sale %s must be properly onboarded "
                     "according to ZATCA specifications.\n",
                     config.name,
@@ -29,5 +29,7 @@ class PosConfig(models.Model):
                     "res_id": config.invoice_journal_id.id,
                     "views": [[False, "form"]],
                 }
-                raise RedirectWarning(msg, action, _("Go to Journal configuration"))
+                raise RedirectWarning(
+                    msg, action, self.env._("Go to Journal configuration")
+                )
         return super().open_ui()

@@ -2,7 +2,7 @@ from itertools import zip_longest
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils, float_is_zero, float_round
@@ -32,7 +32,7 @@ class AccountReportBudget(models.Model):
     def _constrains_name(self):
         for budget in self:
             if not budget.name:
-                raise ValidationError(_("Please enter a valid budget name."))
+                raise ValidationError(self.env._("Please enter a valid budget name."))
 
     @api.model_create_multi
     @_debug.perf.timed

@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.db.schema import table_exists
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -125,7 +125,7 @@ class MixinAnalytic(models.AbstractModel):
         # must be spelled out against jsonb values explicitly.
         if self.env.context.get("account_report_analytic_groupby"):
             if operator not in ("in", "not in"):
-                raise UserError(_("Operation not supported"))
+                raise UserError(self.env._("Operation not supported"))
             # to_jsonb(<int account id>) renders as the jsonb number '5'; casting the
             # searched ids through text to jsonb ('5'::jsonb) yields the same value.
             jsonb_ids = [str(int(v)) for v in value if v is not False]
@@ -163,7 +163,7 @@ class MixinAnalytic(models.AbstractModel):
             ids = search_value(value, exact=False)
             operator = "not in" if operator.startswith("not") else "in"
         else:
-            raise UserError(_("Operation not supported"))
+            raise UserError(self.env._("Operation not supported"))
 
         if not ids:
             # not ids found, just let it optimize to a constant
@@ -303,7 +303,9 @@ class MixinAnalytic(models.AbstractModel):
                     != 0
                 ):
                     raise ValidationError(
-                        _("One or more lines require a 100% analytic distribution.")
+                        self.env._(
+                            "One or more lines require a 100% analytic distribution."
+                        )
                     )
 
     def _analytic_distribution_consumes_update(self):

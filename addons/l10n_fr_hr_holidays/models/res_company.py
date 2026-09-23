@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -32,6 +32,8 @@ class ResCompany(models.Model):
                 company=self,
             )
             raise ValidationError(
-                _("You must first define a reference time off type for the company.")
+                self.env._(
+                    "You must first define a reference time off type for the company."
+                )
             )
         return self.l10n_fr_hr_holidays_config_id.l10n_fr_reference_leave_type

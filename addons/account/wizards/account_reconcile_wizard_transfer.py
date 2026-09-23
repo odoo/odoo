@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, models
+from odoo import Command, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import groupby
 from odoo.tools.misc import formatLang
@@ -57,7 +57,7 @@ class AccountReconcileWizard(models.TransientModel):
         amount_formatted = formatLang(
             self.env, abs(transfer_amount_currency), currency_obj=transfer_currency
         )
-        transfer_warning_message = _(
+        transfer_warning_message = self.env._(
             "An entry will transfer %(amount)s from %(from_account)s to %(to_account)s.",
             amount=amount_formatted,
             from_account=transfer_from_account.display_name
@@ -88,7 +88,9 @@ class AccountReconcileWizard(models.TransientModel):
             source_commands.append(
                 Command.create(
                     {
-                        "name": _("Transfer to %s", self.reco_account_id.display_name),
+                        "name": self.env._(
+                            "Transfer to %s", self.reco_account_id.display_name
+                        ),
                         "account_id": self.transfer_from_account_id.id,
                         "partner_id": partner.id,
                         "currency_id": currency.id,
@@ -210,7 +212,7 @@ class AccountReconcileWizard(models.TransientModel):
         destination_commands = [
             Command.create(
                 {
-                    "name": _(
+                    "name": self.env._(
                         "Transfer from %s", self.transfer_from_account_id.display_name
                     ),
                     "account_id": self.reco_account_id.id,

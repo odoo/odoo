@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -38,7 +38,7 @@ class L10n_BrZipRange(models.Model):
                 zip_range.end
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invalid zip range format: %(start)s %(end)s. It should follow this format: 01000-001",
                         start=zip_range.start,
                         end=zip_range.end,
@@ -47,7 +47,7 @@ class L10n_BrZipRange(models.Model):
 
             if zip_range.start >= zip_range.end:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Start should be less than end: %(start)s %(end)s",
                         start=zip_range.start,
                         end=zip_range.end,

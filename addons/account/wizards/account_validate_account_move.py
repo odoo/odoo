@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -92,7 +92,7 @@ class ValidateAccountMove(models.TransientModel):
                     reason="unsupported_active_model",
                     active_model=self.env.context.get("active_model"),
                 )
-                raise UserError(_("Missing 'active_model' in context."))
+                raise UserError(self.env._("Missing 'active_model' in context."))
 
             moves = self.env["account.move"].search(domain)
             _debug.logic(
@@ -102,7 +102,7 @@ class ValidateAccountMove(models.TransientModel):
             )
             if not moves:
                 raise UserError(
-                    _("There are no journal items in the draft state to post.")
+                    self.env._("There are no journal items in the draft state to post.")
                 )
             result["move_ids"] = [Command.set(moves.ids)]
 
@@ -143,7 +143,7 @@ class ValidateAccountMove(models.TransientModel):
                 "tag": "display_notification",
                 "params": {
                     "type": "warning",
-                    "message": _(
+                    "message": self.env._(
                         "The following entries were not posted because they are hash-restricted: %(moves)s. Check the 'Force' option to post them anyway.",
                         moves=", ".join(excluded_moves.mapped("name")),
                     ),

@@ -185,7 +185,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
         """Add products, show QR code and confirm. When confirming, the result will be status
         unpaid and so it should trigger a warning dialog informing it"""
 
-        def _patched_make_qris_request(endpoint, params):
+        def _patched_make_qris_request(env, endpoint, params):
             if endpoint == "show_qris.php":
                 self.assertTrue(params["cliTrxNumber"])
                 return {
@@ -215,7 +215,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
     def test_tour_qris_payment_success(self):
         """Successful fetching status should proceed next to go to receipt screen"""
 
-        def _patched_make_qris_request(endpoint, params):
+        def _patched_make_qris_request(env, endpoint, params):
             if endpoint == "show_qris.php":
                 return {
                     "status": "success",
@@ -254,7 +254,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
         """Simulate generating QR, cancel the popup, when we click show QR again, it shouldn't trigger
         to fetch new QR code from QRIS"""
 
-        def _patched_make_qris_request(endpoint, params):
+        def _patched_make_qris_request(env, endpoint, params):
             if endpoint == "show_qris.php":
                 return {
                     "status": "success",
@@ -294,7 +294,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
         """Test that when user changes the amount of order after generating QRIS QR for the first time,
         it should request for new QR code afterwards. Therefore, there should be 2 API calls instead"""
 
-        def _patched_make_qris_request(endpoint, params):
+        def _patched_make_qris_request(env, endpoint, params):
             if endpoint == "show_qris.php":
                 return {
                     "status": "success",

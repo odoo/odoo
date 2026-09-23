@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -61,7 +61,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "account.move",
             "domain": [("id", "in", account_move_lines.move_id.ids)],
             "context": {"create": False, "default_move_type": "out_invoice"},
-            "name": _("Customer Invoices"),
+            "name": self.env._("Customer Invoices"),
             "view_mode": "list,form",
         }
 
@@ -85,6 +85,6 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "account.move",
             "domain": [("id", "in", account_move_lines.move_id.ids)],
             "context": {"create": False, "default_move_type": "in_invoice"},
-            "name": _("Vendor Bills"),
+            "name": self.env._("Vendor Bills"),
             "view_mode": "list,form",
         }

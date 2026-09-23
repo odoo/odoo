@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
 
@@ -16,13 +16,17 @@ class L10n_InWithholdWizard(models.TransientModel):
         active_model = self.env.context.get("active_model")
         active_ids = self.env.context.get("active_ids", [])
         if active_model not in ("account.move", "account.payment") or not active_ids:
-            raise UserError(_("TDS must be created from an Invoice or a Payment."))
+            raise UserError(
+                self.env._("TDS must be created from an Invoice or a Payment.")
+            )
         if len(active_ids) > 1:
             raise UserError(
-                _("You can only create a withhold for only one record at a time.")
+                self.env._(
+                    "You can only create a withhold for only one record at a time."
+                )
             )
         active_record = self.env[active_model].browse(active_ids)
-        result["reference"] = _("TDS of %s", active_record.name)
+        result["reference"] = self.env._("TDS of %s", active_record.name)
         if active_model == "account.move":
             if (
                 active_record.move_type
@@ -30,7 +34,7 @@ class L10n_InWithholdWizard(models.TransientModel):
                 or active_record.state != "posted"
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "TDS must be created from Posted Customer Invoices, Customer Credit Notes, Vendor Bills or Vendor Refunds."
                     )
                 )
@@ -38,12 +42,12 @@ class L10n_InWithholdWizard(models.TransientModel):
         elif active_model == "account.payment":
             if not active_record.partner_id:
                 type_name = (
-                    _("Vendor Payment")
+                    self.env._("Vendor Payment")
                     if active_record.partner_type == "supplier"
-                    else _("Customer Payment")
+                    else self.env._("Customer Payment")
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Please set a partner on the %s before creating a withhold.",
                         type_name,
                     )
@@ -127,13 +131,13 @@ class L10n_InWithholdWizard(models.TransientModel):
         for wizard in self:
             if wizard.currency_id.compare_amounts(wizard.base, 0.0) <= 0:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Negative or zero values are not allowed in Base Amount for withhold"
                     )
                 )
             if wizard.currency_id.compare_amounts(wizard.amount, 0.0) <= 0:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Negative or zero values are not allowed in TDS Amount for withhold"
                     )
                 )
@@ -169,9 +173,9 @@ class L10n_InWithholdWizard(models.TransientModel):
         for wizard in self:
             if wizard.related_payment_id:
                 wizard.type_name = (
-                    _("Vendor Payment")
+                    self.env._("Vendor Payment")
                     if wizard.related_payment_id.partner_type == "supplier"
-                    else _("Customer Payment")
+                    else self.env._("Customer Payment")
                 )
             else:
                 wizard.type_name = wizard.related_move_id.type_name
@@ -216,7 +220,7 @@ class L10n_InWithholdWizard(models.TransientModel):
                 and not wizard.related_move_id.commercial_partner_id.l10n_in_pan_entity_id
             ):
                 warnings["lower_tds_tax"] = {
-                    "message": _(
+                    "message": self.env._(
                         "Please deduct TDS at higher rate if PAN is missing. Ignore if already applied."
                     )
                 }
@@ -230,7 +234,7 @@ class L10n_InWithholdWizard(models.TransientModel):
                 )
                 < 0
             ):
-                message = _(
+                message = self.env._(
                     "The base amount of TDS is greater than the amount of the %s",
                     wizard.type_name,
                 )
@@ -371,7 +375,7 @@ class L10n_InWithholdWizard(models.TransientModel):
         withhold._message_log(
             body=Markup("%s %s: <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>")
             % (
-                _("TDS created from"),
+                self.env._("TDS created from"),
                 self.type_name,
                 related_record._name,
                 related_record.id,
@@ -481,5 +485,5 @@ class L10n_InWithholdWizard(models.TransientModel):
     def _check_withhold_data_on_post(self, withholding_account_id):
         if not withholding_account_id:
             raise UserError(
-                _("Please configure the withholding account from the settings")
+                self.env._("Please configure the withholding account from the settings")
             )

@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class AccountEdiXmlPint_My(models.AbstractModel):
@@ -96,7 +96,7 @@ class AccountEdiXmlPint_My(models.AbstractModel):
                         tax_category_node["cbc:ID"] == "O"
                         and tax_subtotal_node["cbc:Percent"] != 0
                     ):
-                        constraints["peppol_my_sst_registration"] = _(
+                        constraints["peppol_my_sst_registration"] = self.env._(
                             "If your business is registered for SST, please provide your registration number in your company details.\n"
                             "Otherwise, you are not allowed to charge sales or services taxes in the e-Invoice."
                         )

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.numbers import float_compare
 
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
@@ -149,7 +149,7 @@ class AccountMove(models.Model):
         return {
             "type": "ir.actions.act_window",
             "view_mode": "list,form",
-            "name": _("Linked deliveries"),
+            "name": self.env._("Linked deliveries"),
             "res_model": "stock.picking",
             "domain": [("id", "in", self.l10n_it_ddt_ids.ids)],
         }

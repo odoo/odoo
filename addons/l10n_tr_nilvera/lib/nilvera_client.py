@@ -4,7 +4,6 @@ from json import JSONDecodeError
 
 import requests
 
-from odoo import _
 from odoo.exceptions import UserError
 from odoo.libs import guarded_http, netguard
 
@@ -13,6 +12,7 @@ _logger = logging.getLogger(__name__)
 
 def _get_nilvera_client(company, timeout_limit=None):
     return NilveraClient(
+        company.env,
         test_environment=company.l10n_tr_nilvera_config_id.l10n_tr_nilvera_use_test_env,
         api_key=company.l10n_tr_nilvera_api_key,
         timeout_limit=timeout_limit,
@@ -20,7 +20,8 @@ def _get_nilvera_client(company, timeout_limit=None):
 
 
 class NilveraClient:
-    def __init__(self, test_environment=False, api_key=None, timeout_limit=None):
+    def __init__(self, env, test_environment=False, api_key=None, timeout_limit=None):
+        self.env = env
         self.is_production = not test_environment
         self.base_url = (
             "https://api.nilvera.com"
@@ -57,9 +58,9 @@ class NilveraClient:
                 files=files,
             )
         except requests.exceptions.RequestException as e:
-            _logger.info(_("Network error during request: %s"), e)
+            _logger.info("Network error during request: %s", e)
             raise UserError(
-                _(
+                self.env._(
                     "Network connectivity issue. Please check your internet connection and try again."
                 )
             ) from e
@@ -86,13 +87,13 @@ class NilveraClient:
     def handle_response(self, response):
         if response.status_code in {401, 403}:
             raise UserError(
-                _(
+                self.env._(
                     "Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."
                 )
             )
         if 403 < response.status_code < 600:
             raise UserError(
-                _(
+                self.env._(
                     "Odoo could not perform this action at the moment, try again later.\n%(reason)s - %(status_code)s",
                     reason=response.reason,
                     status_code=response.status_code,
@@ -102,5 +103,5 @@ class NilveraClient:
         try:
             return response.json()
         except JSONDecodeError:
-            _logger.exception(_("Invalid JSON response: %s", response.text))
-            raise UserError(_("An error occurred. Try again later.")) from None
+            _logger.exception("Invalid JSON response: %s", response.text)
+            raise UserError(self.env._("An error occurred. Try again later.")) from None

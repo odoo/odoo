@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -31,7 +31,7 @@ class L10n_LatamDocumentType(models.Model):
             or len(number_part[0]) > 7
         ):
             raise UserError(
-                _(
+                self.env._(
                     "%(document_number)s is not a valid value for %(document_type)s.\n"
                     "The document number must be entered with a maximum of 2 letters for the first part "
                     "and 7 numbers for the second. The following are examples of valid document numbers:\n"

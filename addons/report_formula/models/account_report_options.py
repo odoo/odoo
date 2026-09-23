@@ -3,7 +3,7 @@ import datetime
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models, modules
+from odoo import api, fields, models, modules
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -467,7 +467,7 @@ class AccountReportOptions(models.Model):
         if selected_budgets:
             budget_headers = [
                 {
-                    "name": _("Period Total"),
+                    "name": self.env._("Period Total"),
                     "forced_options": {
                         "budget_base": True,
                         "no_subheader_division": True,
@@ -606,20 +606,20 @@ class AccountReportOptions(models.Model):
     def _init_options_buttons(self, options, previous_options):
         options["buttons"] = [
             {
-                "name": _("PDF"),
+                "name": self.env._("PDF"),
                 "sequence": 10,
                 "action": "export_file",
                 "action_param": "export_to_pdf",
-                "file_export_type": _("PDF"),
+                "file_export_type": self.env._("PDF"),
                 "branch_allowed": True,
                 "always_show": True,
             },
             {
-                "name": _("XLSX"),
+                "name": self.env._("XLSX"),
                 "sequence": 20,
                 "action": "export_file",
                 "action_param": "export_to_xlsx",
-                "file_export_type": _("XLSX"),
+                "file_export_type": self.env._("XLSX"),
                 "branch_allowed": True,
                 "always_show": True,
             },
@@ -1050,7 +1050,7 @@ class AccountReportOptions(models.Model):
         if (
             date_scope and date_scope not in available_scopes
         ):  # date_scope can be passed to None explicitly to ignore the dates
-            raise UserError(_("Unknown date scope: %s", date_scope))
+            raise UserError(self.env._("Unknown date scope: %s", date_scope))
 
         return Domain.AND(
             [
@@ -1236,7 +1236,7 @@ class AccountReportOptions(models.Model):
         if not string:
             fy_day, fy_month = self._get_year_end()
             if mode == "single":
-                string = _("As of %s", format_date(self.env, date_to))
+                string = self.env._("As of %s", format_date(self.env, date_to))
             elif period_type == "year" or (
                 period_type == "fiscalyear"
                 and (date_from, date_to) == date_utils.get_fiscal_year(date_to)
@@ -1256,7 +1256,7 @@ class AccountReportOptions(models.Model):
             else:
                 dt_from_str = format_date(self.env, fields.Date.to_string(date_from))
                 dt_to_str = format_date(self.env, fields.Date.to_string(date_to))
-                string = _(
+                string = self.env._(
                     "%(date_from)s - %(date_to)s",
                     date_from=dt_from_str,
                     date_to=dt_to_str,
@@ -1351,13 +1351,13 @@ class AccountReportOptions(models.Model):
         rounding_unit_names = [
             ("decimals", (f".{currency_symbol}", "")),
             ("units", (f"{currency_symbol}", "")),
-            ("thousands", (f"K{currency_symbol}", _("Amounts in Thousands"))),
-            ("millions", (f"M{currency_symbol}", _("Amounts in Millions"))),
+            ("thousands", (f"K{currency_symbol}", self.env._("Amounts in Thousands"))),
+            ("millions", (f"M{currency_symbol}", self.env._("Amounts in Millions"))),
         ]
 
         if currency_name in CURRENCIES_USING_LAKH:
             rounding_unit_names.insert(
-                3, ("lakhs", (f"L{currency_symbol}", _("Amounts in Lakhs")))
+                3, ("lakhs", (f"L{currency_symbol}", self.env._("Amounts in Lakhs")))
             )
 
         return dict(rounding_unit_names)

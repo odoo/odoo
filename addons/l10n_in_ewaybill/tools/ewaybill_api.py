@@ -6,7 +6,6 @@ from markupsafe import Markup
 
 from odoo import fields
 from odoo.exceptions import AccessError
-from odoo.tools import _
 
 from odoo.addons.l10n_in_ewaybill.models.error_codes import ERROR_CODES
 
@@ -14,7 +13,8 @@ _logger = logging.getLogger(__name__)
 
 
 class EWayBillError(Exception):
-    def __init__(self, response):
+    def __init__(self, env, response):
+        self.env = env
         self.error_json = self._set_missing_error_message(response)
         self.error_json.setdefault("odoo_warning", [])
         self.error_codes = self.get_error_codes()
@@ -26,9 +26,8 @@ class EWayBillError(Exception):
                 error["message"] = self._find_missing_error_message(error.get("code"))
         return response
 
-    @staticmethod
-    def _find_missing_error_message(code):
-        return ERROR_CODES.get(code) or _(
+    def _find_missing_error_message(self, code):
+        return ERROR_CODES.get(code) or self.env._(
             "We don't know the error message for this error code. Please contact support."
         )
 
@@ -66,21 +65,22 @@ class EWayBillApi:
                 timeout=10,
             )
             if response.get("error"):
-                raise EWayBillError(response)
+                raise EWayBillError(self.env, response)
         except AccessError as e:
             _logger.warning("Connection error: %s", e.args[0])
             raise EWayBillError(
+                self.env,
                 {
                     "error": [
                         {
                             "code": "access_error",
-                            "message": _(
+                            "message": self.env._(
                                 "Unable to connect to the E-WayBill service."
                                 "The web service may be temporary down. Please try again in a moment."
                             ),
                         }
                     ]
-                }
+                },
             ) from e
         return response
 
@@ -158,7 +158,7 @@ class EWayBillApi:
                             self.env["l10n.in.ewaybill"]._get_default_help_message(
                                 self.env._("cancelled")
                             ),
-                            _("Error"),
+                            self.env._("Error"),
                             e.get_all_error_message(),
                         ),
                         "message_post": True,
@@ -207,19 +207,19 @@ class EWayBillApi:
         )
         return response
 
-    @staticmethod
-    def _raise_ewaybill_no_config_error():
+    def _raise_ewaybill_no_config_error(self):
         raise EWayBillError(
+            self.env,
             {
                 "error": [
                     {
                         "code": "0",
-                        "message": _(
+                        "message": self.env._(
                             "Unable to send E-waybill."
                             "Create an API user in NIC portal, and set it using the top menu: "
                             "Configuration > Settings."
                         ),
                     }
                 ]
-            }
+            },
         )

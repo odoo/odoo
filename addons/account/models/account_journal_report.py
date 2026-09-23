@@ -2,7 +2,7 @@ import datetime
 import io
 from itertools import chain
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -258,7 +258,7 @@ class AccountJournalReportHandler(models.AbstractModel):
                         "id": report._get_generic_line_id(
                             False, False, markup="tax_report_section_heading"
                         ),
-                        "name": _("Global Tax Summary"),
+                        "name": self.env._("Global Tax Summary"),
                         "level": 0,
                         "columns": [],
                         "unfoldable": False,
@@ -599,7 +599,7 @@ class AccountJournalReportHandler(models.AbstractModel):
                 )
 
         if document_data.get("global_tax_summary"):
-            sheet = SheetBuilder(_("Global Tax Summary"))
+            sheet = SheetBuilder(self.env._("Global Tax Summary"))
             sheets.append(sheet)
             self._write_tax_summaries_to_sheet(
                 report, sheet, 0, 0, document_data["global_tax_summary"]
@@ -705,15 +705,19 @@ class AccountJournalReportHandler(models.AbstractModel):
 
             if len(taxes) > 1:
                 start_align_right += 1
-                columns.append(_("Country"))
+                columns.append(self.env._("Country"))
 
-            columns += [_("Name"), _("Base Amount"), _("Tax Amount")]
+            columns += [
+                self.env._("Name"),
+                self.env._("Base Amount"),
+                self.env._("Tax Amount"),
+            ]
             if tax_summary.get("tax_non_deductible_column"):
-                columns.append(_("Non-Deductible"))
+                columns.append(self.env._("Non-Deductible"))
             if tax_summary.get("tax_deductible_column"):
-                columns.append(_("Deductible"))
+                columns.append(self.env._("Deductible"))
             if tax_summary.get("tax_due_column"):
-                columns.append(_("Due"))
+                columns.append(self.env._("Due"))
 
             # Draw Tax Applied Table
             # Write tax applied header amd columns
@@ -721,7 +725,7 @@ class AccountJournalReportHandler(models.AbstractModel):
                 sheet,
                 cursor_x,
                 cursor_y,
-                _("Taxes Applied"),
+                self.env._("Taxes Applied"),
                 len(columns),
                 False,
                 XLSX_FONT_SIZE_HEADING,
@@ -890,9 +894,9 @@ class AccountJournalReportHandler(models.AbstractModel):
             start_align_right = start_x + 1
             if len(grids) > 1:
                 start_align_right += 1
-                columns.append(_("Country"))
+                columns.append(self.env._("Country"))
 
-            columns += [_("Grid"), "+", "-", _("Impact On Grid")]
+            columns += [self.env._("Grid"), "+", "-", self.env._("Impact On Grid")]
 
             # Draw Tax Applied Table
             # Write tax applied columns and header
@@ -900,7 +904,7 @@ class AccountJournalReportHandler(models.AbstractModel):
                 sheet,
                 cursor_x,
                 cursor_y,
-                _("Impact On Grid"),
+                self.env._("Impact On Grid"),
                 len(columns),
                 False,
                 XLSX_FONT_SIZE_HEADING,
@@ -1209,39 +1213,47 @@ class AccountJournalReportHandler(models.AbstractModel):
             - class (optional):     A string with css classes that need to be applied to all that column
         """
         columns = [
-            {"name": _("Document"), "label": "document"},
+            {"name": self.env._("Document"), "label": "document"},
         ]
 
         # We have different columns regarding we are exporting to a PDF file or an XLSX document
         if export_type == "pdf":
-            columns.append({"name": _("Account"), "label": "account_label"})
+            columns.append({"name": self.env._("Account"), "label": "account_label"})
         else:
             columns.extend(
                 [
-                    {"name": _("Account Code"), "label": "account_code"},
-                    {"name": _("Account Label"), "label": "account_label"},
+                    {"name": self.env._("Account Code"), "label": "account_code"},
+                    {"name": self.env._("Account Label"), "label": "account_label"},
                 ]
             )
 
         columns.extend(
             [
-                {"name": _("Name"), "label": "name"},
-                {"name": _("Debit"), "label": "debit", "class": "o_right_alignment "},
-                {"name": _("Credit"), "label": "credit", "class": "o_right_alignment "},
+                {"name": self.env._("Name"), "label": "name"},
+                {
+                    "name": self.env._("Debit"),
+                    "label": "debit",
+                    "class": "o_right_alignment ",
+                },
+                {
+                    "name": self.env._("Credit"),
+                    "label": "credit",
+                    "class": "o_right_alignment ",
+                },
             ]
         )
 
         if journal.get("tax_summary"):
             columns.append(
-                {"name": _("Taxes"), "label": "taxes"},
+                {"name": self.env._("Taxes"), "label": "taxes"},
             )
             if journal["tax_summary"].get("tax_grid_summary_lines"):
-                columns.append({"name": _("Tax Grids"), "label": "tax_grids"})
+                columns.append({"name": self.env._("Tax Grids"), "label": "tax_grids"})
 
         if self._is_bank_journal_export_required(journal):
             columns.append(
                 {
-                    "name": _("Balance"),
+                    "name": self.env._("Balance"),
                     "label": "balance",
                     "class": "o_right_alignment ",
                 }
@@ -1250,7 +1262,7 @@ class AccountJournalReportHandler(models.AbstractModel):
             if journal.get("multicurrency_column"):
                 columns.append(
                     {
-                        "name": _("Amount Currency"),
+                        "name": self.env._("Amount Currency"),
                         "label": "amount_currency",
                         "class": "o_right_alignment ",
                     }
@@ -1333,7 +1345,7 @@ class AccountJournalReportHandler(models.AbstractModel):
             # Add other currency amout if this move is using multiple currencies
             move_vals_entry = account_move_line_vals_list[0]
             if move_vals_entry["is_multicurrency"]:
-                amount_currency_name = _(
+                amount_currency_name = self.env._(
                     "Amount in currency: %s",
                     report._format_value(
                         options,
@@ -1366,7 +1378,7 @@ class AccountJournalReportHandler(models.AbstractModel):
         lines.append({})
 
         total_line = {
-            "name": {"data": _("Total")},
+            "name": {"data": self.env._("Total")},
             "debit": {"data": report._format_value(options, total_debit, "monetary")},
             "credit": {"data": report._format_value(options, total_credit, "monetary")},
         }
@@ -1403,7 +1415,7 @@ class AccountJournalReportHandler(models.AbstractModel):
         )
         lines.append(
             {
-                "name": {"data": _("Starting Balance")},
+                "name": {"data": self.env._("Starting Balance")},
                 "balance": {
                     "data": report._format_value(options, current_balance, "monetary")
                 },
@@ -1507,7 +1519,7 @@ class AccountJournalReportHandler(models.AbstractModel):
         lines.append({})
 
         total_line = {
-            "name": {"data": _("Total")},
+            "name": {"data": self.env._("Total")},
             "balance": {
                 "data": report._format_value(options, current_balance, "monetary")
             },
@@ -1616,9 +1628,9 @@ class AccountJournalReportHandler(models.AbstractModel):
         if has_taxes:
             tax_val = ""
             if line_entry["taxes"]:
-                tax_val = _("T: %s", ", ".join(line_entry["taxes"]))
+                tax_val = self.env._("T: %s", ", ".join(line_entry["taxes"]))
             elif line_entry["tax_base_amount"] is not None:
-                tax_val = _(
+                tax_val = self.env._(
                     "B: %s",
                     report._format_value(
                         options, line_entry["tax_base_amount"], "monetary"
@@ -1939,7 +1951,7 @@ class AccountJournalReportHandler(models.AbstractModel):
                 missing = set(wanted_columns.values()) - set(by_label)
                 if missing:
                     raise UserError(
-                        _(
+                        self.env._(
                             "The tax report did not provide the columns the journal report's tax summary needs: %(labels)s",
                             labels=", ".join(sorted(missing)),
                         )
@@ -2008,7 +2020,7 @@ class AccountJournalReportHandler(models.AbstractModel):
 
         return {
             "type": "ir.actions.act_window",
-            "name": _("Journal Items for Tax Audit"),
+            "name": self.env._("Journal Items for Tax Audit"),
             "res_model": "account.move.line",
             "views": [
                 [self.env.ref("account.view_move_line_tax_audit_tree").id, "list"]
@@ -2113,7 +2125,7 @@ class AccountJournalReportHandler(models.AbstractModel):
 
         return {
             "type": "ir.actions.act_window",
-            "name": _(
+            "name": self.env._(
                 "%(journal)s - %(account)s", journal=journal.name, account=account.name
             ),
             "res_model": "account.move.line",

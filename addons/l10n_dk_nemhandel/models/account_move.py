@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.account.tools.import_file_type import CUSTOMIZATION_ID, findtext_equals
@@ -63,7 +63,9 @@ class AccountMove(models.Model):
         # then it means it has been already sent to nemhandel proxy and we can't cancel
         if any(move.nemhandel_move_state in {"processing", "done"} for move in self):
             raise UserError(
-                _("Cannot cancel an entry that has already been sent to Nemhandel")
+                self.env._(
+                    "Cannot cancel an entry that has already been sent to Nemhandel"
+                )
             )
         self.nemhandel_move_state = False
         self.sending_data = False

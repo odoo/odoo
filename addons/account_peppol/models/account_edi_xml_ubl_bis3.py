@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class AccountEdiXmlUbl_Bis3(models.AbstractModel):
@@ -14,13 +14,13 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         document_node = vals["document_node"]
         customer_party = document_node["cac:AccountingCustomerParty"]["cac:Party"]
         if not customer_party["cbc:EndpointID"]["_text"]:
-            constraints["ubl_peppol_en16931-r010"] = _(
+            constraints["ubl_peppol_en16931-r010"] = self.env._(
                 "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the customer '%s'.",
                 vals["customer"].display_name,
             )
         supplier_party = document_node["cac:AccountingSupplierParty"]["cac:Party"]
         if not supplier_party["cbc:EndpointID"]["_text"]:
-            constraints["ubl_peppol_en16931-r020"] = _(
+            constraints["ubl_peppol_en16931-r020"] = self.env._(
                 "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the company '%s'.",
                 vals["supplier"].display_name,
             )

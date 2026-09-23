@@ -1,4 +1,3 @@
-from odoo import _
 from odoo.http import request
 
 from odoo.addons.account.controllers.portal import PortalAccount as CustomerPortal
@@ -14,7 +13,7 @@ class PortalAccount(CustomerPortal):
         rendering_values = super()._prepare_my_account_rendering_values(*args, **kwargs)
         if request.env.company.account_peppol_config_id.peppol_can_send:
             rendering_values["invoice_sending_methods"].update(
-                {"peppol": _("by Peppol")}
+                {"peppol": request.env._("by Peppol")}
             )
             rendering_values.update(
                 {
@@ -54,7 +53,9 @@ class PortalAccount(CustomerPortal):
             ):
                 invalid_fields.add("country_id")
                 address_values["country_id"] = "error"
-                error_messages.append(_("That country is not available for Peppol."))
+                error_messages.append(
+                    request.env._("That country is not available for Peppol.")
+                )
             if endpoint_error_message := request.env[
                 "res.partner"
             ]._prepare_error_peppol_endpoint(peppol_eas, peppol_endpoint):
@@ -68,7 +69,7 @@ class PortalAccount(CustomerPortal):
             ):
                 invalid_fields.add("invalid_peppol_config")
                 error_messages.append(
-                    _(
+                    request.env._(
                         "If you want to be invoiced by Peppol, your configuration must be valid."
                     )
                 )

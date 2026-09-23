@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class MixinAccountMoveSend(models.AbstractModel):
@@ -12,7 +12,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         res = super()._get_all_extra_edis()
         res["gr_edi"] = {
-            "label": _("myDATA"),
+            "label": self.env._("myDATA"),
             "is_applicable": self._is_gr_edi_applicable,
         }
         return res
@@ -30,13 +30,13 @@ class MixinAccountMoveSend(models.AbstractModel):
             alerts = invoices_with_alert.l10n_gr_edi_alerts
         elif len(invoices_with_alert) > 1:
             alerts["l10n_gr_edi_not_ready_invoice"] = {
-                "message": _(
+                "message": self.env._(
                     "The following invoice(s) are not ready to be sent to myDATA: \n%s",
                     "\n".join(f"- {move.display_name}" for move in invoices_with_alert),
                 ),
-                "action_text": _("View Invoice(s)"),
+                "action_text": self.env._("View Invoice(s)"),
                 "action": invoices_with_alert._get_records_action(
-                    name=_("Check Invoice(s)")
+                    name=self.env._("Check Invoice(s)")
                 ),
             }
 
@@ -62,7 +62,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         for invoice, invoice_data in invoices_data.items():
             if invoice in invoices and invoice.l10n_gr_edi_state != "invoice_sent":
                 invoice_data["error"] = {
-                    "error_title": _("Error when sending invoice to myDATA"),
+                    "error_title": self.env._("Error when sending invoice to myDATA"),
                     "errors": [
                         invoice._l10n_gr_edi_get_transmission("invoice").message
                     ],

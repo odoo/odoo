@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import format_date, formatLang, str2bool
 
 from odoo.addons.payment import utils as payment_utils
@@ -35,7 +35,7 @@ class PaymentLinkWizard(models.TransientModel):
                 .sudo()
                 .get_param("account_payment_provider.enable_portal_payment")
             ):
-                wizard.warning_message = _(
+                wizard.warning_message = self.env._(
                     "Online payment option is not enabled in Configuration."
                 )
 
@@ -51,7 +51,7 @@ class PaymentLinkWizard(models.TransientModel):
             if wizard.display_open_installments:
                 for installment in wizard.open_installments or []:
                     preview += "<div>"
-                    preview += _(
+                    preview += self.env._(
                         '#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong class="text-primary">%(date)s</strong>',
                         number=installment["number"],
                         amount=formatLang(
@@ -71,7 +71,7 @@ class PaymentLinkWizard(models.TransientModel):
             if wizard.has_eligible_epd and not wizard.currency_id.compare_amounts(
                 wizard.amount, wizard.invoice_amount_due
             ):
-                msg = _(
+                msg = self.env._(
                     "A discount will be applied if the customer pays before %s included.",
                     format_date(wizard.env, wizard.discount_date),
                 )

@@ -5,7 +5,7 @@ from urllib import parse
 import requests
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_dk_nemhandel.tools.demo_utils import handle_demo
@@ -111,7 +111,9 @@ class ResPartner(models.Model):
                 and partner.invoice_sending_method == "nemhandel"
             )
         ):
-            raise ValidationError(_("On Nemhandel, only OIOUBL 2.1 is supported."))
+            raise ValidationError(
+                self.env._("On Nemhandel, only OIOUBL 2.1 is supported.")
+            )
 
     # -------------------------------------------------------------------------
     # OVERRIDE AND HELPERS

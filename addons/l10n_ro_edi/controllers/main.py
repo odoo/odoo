@@ -3,7 +3,7 @@ from urllib.parse import urlencode
 
 import requests
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.tools.urls import urljoin as url_join
@@ -21,7 +21,9 @@ class L10nRoEdiController(http.Controller):
             not company.l10n_ro_edi_config_id.l10n_ro_edi_client_id
             or not company.l10n_ro_edi_client_secret
         ):
-            raise UserError(_("Client ID and Client Secret field must be filled."))
+            raise UserError(
+                request.env._("Client ID and Client Secret field must be filled.")
+            )
 
         auth_url_params = urlencode(
             {
@@ -41,14 +43,16 @@ class L10nRoEdiController(http.Controller):
         access_key = kw.get("code")
 
         def log_and_raise_error(message: str):
-            message += "\n" + _("Received access key: %s", access_key)
+            message += "\n" + request.env._("Received access key: %s", access_key)
             company._l10n_ro_edi_log_message(message, "callback")
             raise UserError(message)
 
         # Without certificate, ANAF won't give any access key in the callback URL's "code" parameter
         if not access_key:
             log_and_raise_error(
-                _("Access key not found. Please try again.\nResponse: %s", kw)
+                request.env._(
+                    "Access key not found. Please try again.\nResponse: %s", kw
+                )
             )
 
         try:
@@ -75,7 +79,7 @@ class L10nRoEdiController(http.Controller):
         except requests.exceptions.RequestException as e:
             log_and_raise_error(f"Request to {URL_ANAF_TOKEN} failed: {e}")
 
-        response_to_log = _(
+        response_to_log = request.env._(
             "Response (code=%(status_code)s) to %(url)s failed:\n%(text)s",
             status_code=response.status_code,
             url=response.url,
@@ -84,7 +88,7 @@ class L10nRoEdiController(http.Controller):
         try:
             response_json = response.json()
         except requests.exceptions.RequestException as e:
-            error_cause = _("Error when converting response to json: %s", e)
+            error_cause = request.env._("Error when converting response to json: %s", e)
             log_and_raise_error(f"{error_cause}\n{response_to_log}")
 
         try:
@@ -92,10 +96,12 @@ class L10nRoEdiController(http.Controller):
         except ValidationError as e:
             log_and_raise_error(f"{e}\n{response_to_log}")
         except binascii.Error as e:
-            error_cause = _("Error when decoding the access token payload: %s", e)
+            error_cause = request.env._(
+                "Error when decoding the access token payload: %s", e
+            )
             log_and_raise_error(f"{error_cause}\n{response_to_log}")
         except Exception as e:
-            error_cause = _("Error when processing the response: %s", e)
+            error_cause = request.env._("Error when processing the response: %s", e)
             log_and_raise_error(f"{error_cause}\n{response_to_log}")
 
         return request.redirect(url_join(request.httprequest.url_root, "web"))

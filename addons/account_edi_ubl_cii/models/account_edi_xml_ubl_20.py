@@ -1,6 +1,6 @@
 from lxml import etree
 
-from odoo import Command, _, models
+from odoo import Command, models
 from odoo.libs.numbers import float_is_zero, float_round
 from odoo.tools import html2plaintext
 from odoo.tools.xml_utils import dict_to_xml
@@ -1003,7 +1003,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 "_text": "66" if base_amount < 0.0 else "ZZZ"
             },
             "cbc:AllowanceChargeReason": {
-                "_text": _("Conditional cash/payment discount")
+                "_text": self.env._("Conditional cash/payment discount")
             },
             "cbc:Amount": {
                 "_text": self.format_float(abs(base_amount), vals["currency_dp"]),
@@ -1342,7 +1342,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice_values = {}
         if qty_factor == -1:
             logs.append(
-                _(
+                self.env._(
                     "The invoice has been converted into a credit note and the quantities have been reverted."
                 )
             )

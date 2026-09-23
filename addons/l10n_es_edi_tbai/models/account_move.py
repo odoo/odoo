@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import LockError, UserError
 from odoo.tools import float_compare
 
@@ -143,7 +143,7 @@ class AccountMove(models.Model):
                 # action_cancel calls action_draft.
                 # Draft button does not appear for user.
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot reset to draft an entry that has been posted to TicketBAI's chain"
                     )
                 )
@@ -156,7 +156,7 @@ class AccountMove(models.Model):
             m.l10n_es_tbai_chain_index for m in self
         ):
             raise UserError(
-                _("You cannot delete a move that has a TicketBAI chain id.")
+                self.env._("You cannot delete a move that has a TicketBAI chain id.")
             )
 
     # -------------------------------------------------------------------------
@@ -166,19 +166,19 @@ class AccountMove(models.Model):
     def _l10n_es_tbai_check_can_send(self):
         # Ensure the move is posted
         if self.state != "posted":
-            return _("Cannot send an entry that is not posted to TicketBAI.")
+            return self.env._("Cannot send an entry that is not posted to TicketBAI.")
         if self.l10n_es_tbai_state in (
             "sent",
             "cancelled",
         ) and not self.env.context.get("batuz_correction"):
-            return _("This entry has already been posted.")
+            return self.env._("This entry has already been posted.")
         if (
             self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency
             == "bizkaia"
             and self.is_purchase_document()
             and not self.ref
         ):
-            return _(
+            return self.env._(
                 "You need to fill in the Reference field as the invoice number from your vendor."
             )
         return None
@@ -229,7 +229,7 @@ class AccountMove(models.Model):
             self.lock_for_update()
         except LockError:
             raise UserError(
-                _("Cannot send this entry as it is already being processed.")
+                self.env._("Cannot send this entry as it is already being processed.")
             ) from None
 
     # -------------------------------------------------------------------------
@@ -243,7 +243,7 @@ class AccountMove(models.Model):
             error = (
                 error
                 + "\n\n"
-                + _(
+                + self.env._(
                     "Be careful if you modified this vendor bill, "
                     "because the official version is still the previous one sent. "
                 )

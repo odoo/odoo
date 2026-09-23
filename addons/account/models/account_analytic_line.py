@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -58,7 +58,9 @@ class AccountAnalyticLine(models.Model):
                 and line.general_account_id != line.move_line_id.account_id
             ):
                 raise ValidationError(
-                    _("The journal item is not linked to the correct financial account")
+                    self.env._(
+                        "The journal item is not linked to the correct financial account"
+                    )
                 )
 
     @api.model_create_multi
@@ -137,7 +139,7 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def view_header_get(self, view_id, view_type):
         if self.env.context.get("account_id"):
-            return _(
+            return self.env._(
                 "Entries: %(account)s",
                 account=self.env["account.analytic.account"]
                 .browse(self.env.context["account_id"])

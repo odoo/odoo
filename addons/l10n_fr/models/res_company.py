@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResCompany(models.Model):
@@ -83,7 +83,7 @@ class ResCompany(models.Model):
             for seq_field in sequence_fields:
                 if not company._config_owner_of(seq_field)[seq_field]:
                     vals = {
-                        "name": _(
+                        "name": self.env._(
                             "Securisation of %(field)s - %(company)s",
                             field=seq_field,
                             company=company.name,

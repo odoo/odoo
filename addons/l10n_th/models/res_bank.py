@@ -1,7 +1,7 @@
 import re
 from itertools import starmap
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -34,7 +34,7 @@ class ResPartnerBankAccount(models.Model):
                 False,
             ]:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The QR Code Type must be either Ewallet ID, Merchant Tax ID or Mobile Number to generate a Thailand Bank QR code for account number %s.",
                         bank.acc_number,
                     )
@@ -43,7 +43,7 @@ class ResPartnerBankAccount(models.Model):
                 not bank.proxy_value or not tax_id_re.match(bank.proxy_value)
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The Merchant Tax ID must be in the format 1234567890123 for account number %s.",
                         bank.acc_number,
                     )
@@ -52,7 +52,7 @@ class ResPartnerBankAccount(models.Model):
                 not bank.proxy_value or not mobile_re.match(bank.proxy_value)
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The Mobile Number must be in the format 0812345678 for account number %s.",
                         bank.acc_number,
                     )
@@ -92,7 +92,7 @@ class ResPartnerBankAccount(models.Model):
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         if qr_method == "emv_qr" and self.country_code == "TH":
             if currency.name != "THB":
-                return _(
+                return self.env._(
                     "Can't generate a PayNow QR code with a currency other than THB."
                 )
             return None
@@ -113,7 +113,7 @@ class ResPartnerBankAccount(models.Model):
             and self.country_code == "TH"
             and self.proxy_type not in ["ewallet_id", "merchant_tax_id", "mobile"]
         ):
-            return _(
+            return self.env._(
                 "The PayNow Type must be either Ewallet ID, Merchant Tax ID or Mobile Number to generate a Thailand Bank QR code"
             )
 

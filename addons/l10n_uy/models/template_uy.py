@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.account.models.chart_template import template
 
@@ -12,7 +12,7 @@ class AccountChartTemplate(models.AbstractModel):
             "property_account_receivable_id": "uy_code_11300",
             "property_account_payable_id": "uy_code_21100",
             "code_digits": "6",
-            "name": _("Uruguayan Generic Chart of Accounts"),
+            "name": self.env._("Uruguayan Generic Chart of Accounts"),
         }
 
     @template("uy", "res.company")
@@ -43,13 +43,13 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_uy_account_journal(self):
         return {
             "sale": {
-                "name": _("Sales"),
+                "name": self.env._("Sales"),
                 "code": "0001",
                 "l10n_latam_use_documents": True,
                 "refund_sequence": False,
             },
             "purchase": {
-                "name": _("Purchases"),
+                "name": self.env._("Purchases"),
                 "code": "0002",
                 "l10n_latam_use_documents": True,
                 "refund_sequence": False,

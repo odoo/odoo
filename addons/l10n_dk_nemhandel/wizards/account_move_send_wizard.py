@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -39,7 +39,7 @@ class AccountMoveSendWizard(models.TransientModel):
                 nemhandel_partner.nemhandel_verification_state == "not_verified"
                 or not nemhandel_partner.vat
             ):
-                addendum_disable_reason = _(" (no VAT)")
+                addendum_disable_reason = self.env._(" (no VAT)")
             else:
                 addendum_disable_reason = ""
             vals_not_valid = (
@@ -47,9 +47,9 @@ class AccountMoveSendWizard(models.TransientModel):
             )
             addendum_mode = ""
             if nemhandel_proxy_mode == "test":
-                addendum_mode = _(" (Test)")
+                addendum_mode = self.env._(" (Test)")
             elif nemhandel_proxy_mode == "demo":
-                addendum_mode = _(" (Demo)")
+                addendum_mode = self.env._(" (Demo)")
             if addendum_disable_reason or addendum_mode:
                 wizard.sending_method_checkboxes = {
                     **wizard.sending_method_checkboxes,
@@ -70,7 +70,7 @@ class AccountMoveSendWizard(models.TransientModel):
                 != "valid"
             ):
                 raise UserError(
-                    _("Partner doesn't have a valid Nemhandel configuration.")
+                    self.env._("Partner doesn't have a valid Nemhandel configuration.")
                 )
 
             move.nemhandel_move_state = "to_send"

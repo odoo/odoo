@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class MixinAccountMoveSend(models.AbstractModel):
@@ -17,7 +17,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         res.update(
             {
                 "jo_edi": {
-                    "label": _("JoFotara (Jordan EDI)"),
+                    "label": self.env._("JoFotara (Jordan EDI)"),
                     "is_applicable": self._l10n_jo_is_edi_applicable,
                 }
             }
@@ -34,7 +34,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         if self.env.company.l10n_jo_edi_config_id.l10n_jo_edi_demo_mode:
             alerts["l10n_jo_edi_demo_mode"] = {
                 "level": "info",
-                "message": _("Demo mode is enabled."),
+                "message": self.env._("Demo mode is enabled."),
             }
         if non_eligible_jo_moves := moves.filtered(
             lambda m: (
@@ -43,15 +43,15 @@ class MixinAccountMoveSend(models.AbstractModel):
             )
         ):
             alerts["l10n_jo_edi_non_eligible_moves"] = {
-                "message": _(
+                "message": self.env._(
                     "JoFotara e-invoicing was enabled but the following invoices cannot be e-invoiced:\n%(moves)s\n",
                     moves="\n".join(
                         f"- {move.display_name}" for move in non_eligible_jo_moves
                     ),
                 ),
-                "action_text": _("View Invoice(s)"),
+                "action_text": self.env._("View Invoice(s)"),
                 "action": non_eligible_jo_moves._get_records_action(
-                    name=_("Check Invoice(s)")
+                    name=self.env._("Check Invoice(s)")
                 ),
             }
         return alerts
@@ -104,7 +104,7 @@ class MixinAccountMoveSend(models.AbstractModel):
                     invoice.company_id
                 )._l10n_jo_edi_send():
                     invoice_data["error"] = {
-                        "error_title": _(
+                        "error_title": self.env._(
                             "Errors when submitting the JoFotara e-invoice:"
                         ),
                         "errors": [error_message],

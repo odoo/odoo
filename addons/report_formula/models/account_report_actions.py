@@ -1,7 +1,7 @@
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -41,7 +41,10 @@ class AccountReportActions(models.Model):
     def _caret_options_initializer_default(self):
         return {
             "res.partner": [
-                {"name": _("View Partner"), "action": "caret_option_open_record_form"},
+                {
+                    "name": self.env._("View Partner"),
+                    "action": "caret_option_open_record_form",
+                },
             ],
         }
 
@@ -116,7 +119,7 @@ class AccountReportActions(models.Model):
                 or report_to_call in self.variant_report_ids
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Trying to dispatch an action on a report unrelated to the provided sections source."
                     )
                 )
@@ -135,7 +138,7 @@ class AccountReportActions(models.Model):
 
         if self.id not in (options["report_id"], options.get("sections_source_id")):
             raise UserError(
-                _(
+                self.env._(
                     "Trying to dispatch an action on a report not compatible with the provided options."
                 )
             )
@@ -218,7 +221,7 @@ class AccountReportActions(models.Model):
                 )
 
             return {
-                "name": _("Manual values"),
+                "name": self.env._("Manual values"),
                 "type": "ir.actions.act_window",
                 "res_model": "report.formula.external.value",
                 "view_mode": "list",
@@ -269,7 +272,7 @@ class AccountReportActions(models.Model):
     def action_view_all_variants(self, options, params):
         _debug.lifecycle("action_view_all_variants", records=self)
         return {
-            "name": _("All Report Variants"),
+            "name": self.env._("All Report Variants"),
             "type": "ir.actions.act_window",
             "res_model": "report.formula",
             "view_mode": "list",
@@ -429,7 +432,7 @@ class AccountReportActions(models.Model):
         action, menuitem = self._get_existing_menuitem()
 
         if menuitem:
-            raise UserError(_("This report already has a menuitem."))
+            raise UserError(self.env._("This report already has a menuitem."))
 
         _debug.logic("menu_action_resolved", report=self, existing_action=action)
         if not action:
@@ -533,7 +536,7 @@ class AccountReportActions(models.Model):
         _debug.lifecycle("_action_modify_manual_external_value", records=self)
         if len(target_column_group_options["companies"]) > 1:
             raise UserError(
-                _(
+                self.env._(
                     "Editing a manual report line is not allowed when multiple companies are selected."
                 )
             )
@@ -563,7 +566,7 @@ class AccountReportActions(models.Model):
             # There should be at most 1
             if len(existing_value_to_modify) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Inconsistent data: more than one external value at the same date for a 'most_recent' external line."
                     )
                 )
@@ -611,7 +614,7 @@ class AccountReportActions(models.Model):
             value_to_set = new_value_str
         else:
             if not is_number:
-                raise UserError(_("%s is not a numeric value", new_value_str))
+                raise UserError(self.env._("%s is not a numeric value", new_value_str))
             if target_expression.figure_type == "boolean":
                 rounding = 0
             value_to_set = float_round(
@@ -636,7 +639,7 @@ class AccountReportActions(models.Model):
         else:
             self.env["report.formula.external.value"].create(
                 {
-                    "name": _("Manual value"),
+                    "name": self.env._("Manual value"),
                     field_name: value_to_set,
                     "date": date_to,
                     "target_report_expression_id": target_expression.id,

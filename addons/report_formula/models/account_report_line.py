@@ -1,7 +1,7 @@
 import re
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -146,7 +146,7 @@ class AccountReportLine(models.Model):
                 report_line.code
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'The code of line "%(line)s" is "%(code)s". A code is what an '
                         "aggregation formula and a carryover target name a line by, so "
                         "it cannot contain a dot, a bracket, whitespace or an operator.",
@@ -190,7 +190,7 @@ class AccountReportLine(models.Model):
         for report_line in self:
             if report_line.parent_id.groupby or report_line.parent_id.user_groupby:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A line cannot have both children and a groupby value (line '%s').",
                         report_line.parent_id.name,
                     )
@@ -202,7 +202,7 @@ class AccountReportLine(models.Model):
         for line in self:
             if line.parent_id and line.parent_id.report_id != line.report_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Line "%(line)s" belongs to report "%(report)s" but its parent '
                         '"%(parent)s" belongs to "%(parent_report)s". A line and its '
                         "parent must be in the same report.",
@@ -218,11 +218,11 @@ class AccountReportLine(models.Model):
     def _check_parent_line(self):
         for line in self.filtered(lambda x: x.parent_id == x):
             raise ValidationError(
-                _('Line "%s" defines itself as its parent.', line.name)
+                self.env._('Line "%s" defines itself as its parent.', line.name)
             )
         if self._has_cycle("parent_id"):
             raise ValidationError(
-                _("Report lines cannot form a recursive parent hierarchy.")
+                self.env._("Report lines cannot form a recursive parent hierarchy.")
             )
 
     @_debug.perf.timed
@@ -321,7 +321,7 @@ class AccountReportLine(models.Model):
             domain_match = DOMAIN_REGEX.match(self.domain_formula)
             if not domain_match:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invalid domain formula '%(formula)s' on report line "
                         "'%(line)s'. Expected the form 'sum(<domain>)' "
                         "(optionally '-sum(<domain>)').",
@@ -690,7 +690,7 @@ class AccountReportLine(models.Model):
                 )
 
             if None in group_lines_by_keys:
-                keys_and_names_in_sequence[None] = _("Unknown")
+                keys_and_names_in_sequence[None] = self.env._("Unknown")
 
             if out_of_sorting_record:
                 keys_and_names_in_sequence[out_of_sorting_record.id] = (
@@ -707,7 +707,9 @@ class AccountReportLine(models.Model):
                 key=lambda k: (k is None, isinstance(k, str), k),
             ):
                 if non_relational_key is None:
-                    keys_and_names_in_sequence[non_relational_key] = _("Undefined")
+                    keys_and_names_in_sequence[non_relational_key] = self.env._(
+                        "Undefined"
+                    )
                 else:
                     groupby_field = self.report_id._get_required_source_model()._fields[
                         groupby_data["current_groupby"]
@@ -717,7 +719,8 @@ class AccountReportLine(models.Model):
                             groupby_field._description_selection(self.env)
                         )
                         keys_and_names_in_sequence[non_relational_key] = (
-                            selection_options.get(non_relational_key) or _("Undefined")
+                            selection_options.get(non_relational_key)
+                            or self.env._("Undefined")
                         )
                     else:
                         keys_and_names_in_sequence[non_relational_key] = str(

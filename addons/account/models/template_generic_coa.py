@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.account.models.chart_template import template
 
@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template("generic_coa")
     def _prepare_generic_coa_template_data(self):
         return {
-            "name": _("Generic Chart of Accounts"),
+            "name": self.env._("Generic Chart of Accounts"),
             "country": None,
             "property_account_receivable_id": "receivable",
             "property_account_payable_id": "payable",

@@ -1,6 +1,6 @@
 from itertools import chain
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_is_zero
@@ -37,7 +37,9 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
         active_currencies = self.env["res.currency"].search([("active", "=", True)])
         if len(active_currencies) < 2:
             raise UserError(
-                _("You need to activate more than one currency to access this report.")
+                self.env._(
+                    "You need to activate more than one currency to access this report."
+                )
             )
         rates = active_currencies._get_rates(
             self.env.company, options.get("date").get("date_to")
@@ -67,7 +69,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
 
         for currency_rates in options["currency_rates"].values():
             if currency_rates["rate"] == 0:
-                raise UserError(_("The currency rate cannot be equal to zero"))
+                raise UserError(self.env._("The currency rate cannot be equal to zero"))
 
         options["company_currency"] = options["currency_rates"].pop(
             str(self.env.company.currency_id.id)
@@ -89,7 +91,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
         options["multi_currency"] = True
         options["buttons"].append(
             {
-                "name": _("Adjustment Entry"),
+                "name": self.env._("Adjustment Entry"),
                 "sequence": 30,
                 "action": "action_multi_currency_revaluation_open_revaluation_wizard",
                 "always_show": True,
@@ -186,7 +188,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
             "account.view_account_multicurrency_revaluation_wizard", False
         )
         return {
-            "name": _("Make Adjustment Entry"),
+            "name": self.env._("Make Adjustment Entry"),
             "type": "ir.actions.act_window",
             "res_model": "account.multicurrency.revaluation.wizard",
             "view_mode": "form",
@@ -259,7 +261,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
         )
         return {
             "type": "ir.actions.act_window",
-            "name": _(
+            "name": self.env._(
                 "Currency Rates (%s)",
                 self.env["res.currency"].browse(currency_id).display_name,
             ),

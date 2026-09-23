@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class AccountMoveReversal(models.TransientModel):
@@ -32,7 +32,7 @@ class AccountMoveReversal(models.TransientModel):
             reason = dict(field._description_selection(self.env)).get(
                 self.l10n_es_edi_facturae_reason_code or "10"
             )
-            values["ref"] = _(
+            values["ref"] = self.env._(
                 "Reversal of: %(move_name)s - %(reason)s",
                 move_name=move.name,
                 reason=reason,

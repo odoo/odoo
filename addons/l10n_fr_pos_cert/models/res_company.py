@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Date, Datetime
 from odoo.tools.misc import format_date
@@ -69,7 +69,7 @@ class ResCompany(models.Model):
         """
 
         def get_order_info(order):
-            entry_reference = _("(Receipt ref.: %s)")
+            entry_reference = self.env._("(Receipt ref.: %s)")
             order_reference_string = (
                 order.pos_reference and entry_reference % order.pos_reference
             ) or ""
@@ -98,7 +98,7 @@ class ResCompany(models.Model):
             )
 
             if not orders:
-                msg_alert = _(
+                msg_alert = self.env._(
                     "There isn't any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS",
                     self.env.company.name,
                 )
@@ -109,7 +109,7 @@ class ResCompany(models.Model):
             for order in orders:
                 if order.l10n_fr_hash != order._get_hash(previous_hash=previous_hash):
                     corrupted_orders.append(order.name)
-                    msg_alert = _(
+                    msg_alert = self.env._(
                         "Corrupted data on point of sale order with id %s.", order.id
                     )
                 previous_hash = order.l10n_fr_hash
@@ -138,7 +138,7 @@ class ResCompany(models.Model):
             }
         else:
             raise UserError(
-                _(
+                self.env._(
                     "Accounting is not unalterable for the company %s. This mechanism is designed for companies where accounting is unalterable.",
                     self.env.company.name,
                 )

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 EXEMPTION_REASON_CODES = [
@@ -64,7 +64,7 @@ class AccountTax(models.Model):
                 and tax.type_tax_use == "sale"
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "The tax is unable to be set as Retention as the Amount is greater than or equal to 0."
                     )
                 )

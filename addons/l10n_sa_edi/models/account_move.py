@@ -6,7 +6,7 @@ from datetime import datetime
 from lxml import etree
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_repr
 
@@ -72,7 +72,7 @@ class AccountMove(models.Model):
                 )
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "The Invoice(s) are linked to a validated EDI document and cannot be modified according to ZATCA rules"
                     )
                 )
@@ -270,7 +270,7 @@ class AccountMove(models.Model):
                 and move.company_id.l10n_sa_edi_config_id.l10n_sa_edi_is_production
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "The Invoice(s) are linked to a validated EDI document and cannot be modified according to ZATCA rules"
                     )
                 )
@@ -318,7 +318,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         bootstrap_cls, title, subtitle, content = (
             "success",
-            _("Success: Invoice accepted by ZATCA"),
+            self.env._("Success: Invoice accepted by ZATCA"),
             "",
             "" if (not error or not response_data) else response_data,
         )
@@ -340,8 +340,11 @@ class AccountMove(models.Model):
                     "mimetype": "application/xml",
                 }
             )
-            bootstrap_cls, title = ("danger", _("Error: Invoice rejected by ZATCA"))
-            subtitle = _(
+            bootstrap_cls, title = (
+                "danger",
+                self.env._("Error: Invoice rejected by ZATCA"),
+            )
+            subtitle = self.env._(
                 "Please check the details below and retry after addressing them:"
             )
             content = response_data["error"]
@@ -350,9 +353,9 @@ class AccountMove(models.Model):
         ):
             bootstrap_cls, title = (
                 "warning",
-                _("Warning: Invoice accepted by ZATCA with warnings"),
+                self.env._("Warning: Invoice accepted by ZATCA with warnings"),
             )
-            subtitle = _("Please check the details below:")
+            subtitle = self.env._("Please check the details below:")
             content = Markup("""<b>%(status_code)s</b>%(errors)s""") % {
                 "status_code": f"[{status_code}] " if status_code else "",
                 "errors": Markup("<br/>").join(
@@ -369,16 +372,18 @@ class AccountMove(models.Model):
         if response_data.get("error") and response_data.get("excepted"):
             bootstrap_cls, title = (
                 "warning",
-                _("Warning: Unable to Retrieve a Response from ZATCA"),
+                self.env._("Warning: Unable to Retrieve a Response from ZATCA"),
             )
-            subtitle = _("Please check the details below:")
+            subtitle = self.env._("Please check the details below:")
             content = response_data["error"]
         if status_code == 409:
             bootstrap_cls, title = (
                 "warning",
-                _("Warning: Invoice was already successfully reported to ZATCA"),
+                self.env._(
+                    "Warning: Invoice was already successfully reported to ZATCA"
+                ),
             )
-            subtitle = _("Please check the details below:")
+            subtitle = self.env._("Please check the details below:")
             content = Markup("""<b>%(status_code)s</b>%(errors)s""") % {
                 "status_code": f"[{status_code}] " if status_code else "",
                 "errors": Markup("<br/>").join(
@@ -524,7 +529,9 @@ class AccountMove(models.Model):
         Action to show the chain head of the invoice
         """
         self.check_singleton()
-        return self.l10n_sa_edi_chain_head_id._get_records_action(name=_("Chain Head"))
+        return self.l10n_sa_edi_chain_head_id._get_records_action(
+            name=self.env._("Chain Head")
+        )
 
 
 class AccountMoveLine(models.Model):

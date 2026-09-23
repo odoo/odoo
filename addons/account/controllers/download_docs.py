@@ -2,7 +2,7 @@ import io
 import zipfile
 from itertools import chain
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import prepare_content_disposition_header, request
 from odoo.libs.debug_log import DebugLog
@@ -43,7 +43,9 @@ class AccountDocumentDownloadController(http.Controller):
             attachment.res_id and attachment.res_model == "account.move"
             for attachment in attachments
         ):
-            raise UserError(_("Some attachments are not linked to an invoice."))
+            raise UserError(
+                request.env._("Some attachments are not linked to an invoice.")
+            )
         if len(attachments) == 1:
             headers = _get_headers(
                 attachments.name, attachments.mimetype, attachments.raw
@@ -55,7 +57,7 @@ class AccountDocumentDownloadController(http.Controller):
                 invoice = request.env["account.move"].browse(inv_ids[0])
                 filename = invoice._get_invoice_report_filename(extension="zip")
             else:
-                filename = _("invoices") + ".zip"
+                filename = request.env._("invoices") + ".zip"
             content = attachments._prepare_zip_from_attachments()
             headers = _get_headers(filename, "application/zip", content)
             return request.prepare_response(content, headers)
@@ -87,7 +89,9 @@ class AccountDocumentDownloadController(http.Controller):
             ):
                 if (errors := doc_data.get("errors")) and len(invoices) == 1:
                     raise UserError(
-                        _("Error while creating XML:\n- %s", "\n- ".join(errors))
+                        request.env._(
+                            "Error while creating XML:\n- %s", "\n- ".join(errors)
+                        )
                     )
                 docs_data.append(doc_data)
         if len(docs_data) == 1:
@@ -99,7 +103,7 @@ class AccountDocumentDownloadController(http.Controller):
         if len(docs_data) > 1:
             zip_content = _prepare_zip_from_data(docs_data)
             headers = _get_headers(
-                _("invoices") + ".zip", "application/zip", zip_content
+                request.env._("invoices") + ".zip", "application/zip", zip_content
             )
             return request.prepare_response(zip_content, headers)
         return None

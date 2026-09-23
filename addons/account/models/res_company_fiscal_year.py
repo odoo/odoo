@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from odoo import _, models
+from odoo import models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
@@ -86,5 +86,5 @@ class ResCompany(models.Model):
             "account.bank.statement.line"
         ]._action_view_bank_reconciliation_widget(
             extra_domain=[("id", "in", unreconciled_statement_lines.ids)],
-            name=_("Unreconciled statements lines"),
+            name=self.env._("Unreconciled statements lines"),
         )

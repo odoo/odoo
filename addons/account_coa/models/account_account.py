@@ -4,7 +4,7 @@ import re
 from bisect import bisect_left
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, Query
@@ -254,7 +254,7 @@ class AccountAccount(models.Model):
                 and not account.reconcile
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot have a receivable/payable account that is "
                         "not reconcilable. (account code: %s)",
                         account.code,
@@ -266,7 +266,7 @@ class AccountAccount(models.Model):
         for record in self:
             if record.account_type == "off_balance" and record.reconcile:
                 raise UserError(
-                    _("An Off-Balance account can not be reconcilable"),
+                    self.env._("An Off-Balance account can not be reconcilable"),
                 )
 
     @api.constrains("code")
@@ -274,7 +274,7 @@ class AccountAccount(models.Model):
         for account in self:
             if account.code and not ACCOUNT_CODE_REGEX.match(account.code):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The account code can only contain alphanumeric "
                         "characters, dots, hyphens, and slashes.",
                     )
@@ -300,7 +300,7 @@ class AccountAccount(models.Model):
             lambda a: a.account_type == "asset_cash" and len(a.company_ids) > 1
         ):
             raise ValidationError(
-                _("Bank & Cash accounts cannot be shared between companies."),
+                self.env._("Bank & Cash accounts cannot be shared between companies."),
             )
 
     @api.depends_context("company")
@@ -645,7 +645,7 @@ class AccountAccount(models.Model):
             ):
                 return new_code
 
-        raise UserError(_("Cannot generate an unused account code."))
+        raise UserError(self.env._("Cannot generate an unused account code."))
 
     @api.model
     def default_get(self, fields):
@@ -684,7 +684,7 @@ class AccountAccount(models.Model):
             record = self.create({"code": code, "name": name})
             return record.id, record.display_name
         raise ValidationError(
-            _("Please create new accounts from the Chart of Accounts menu."),
+            self.env._("Please create new accounts from the Chart of Accounts menu."),
         )
 
     def _sort_vals_for_company_grouping(self, vals_list):
@@ -793,7 +793,7 @@ class AccountAccount(models.Model):
                 code = acc_co.code
                 if not code:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The code must be set for every company to which "
                             "this account belongs.",
                         )
@@ -835,7 +835,7 @@ class AccountAccount(models.Model):
                 duplicate_codes = duplicates.mapped("code")
             if duplicate_codes:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Account codes must be unique. You can't create "
                         "accounts with these duplicate codes: %s",
                         ", ".join(duplicate_codes),

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -60,7 +60,9 @@ class L10nDkNemhandelConfig(models.Model):
                 and config.nemhandel_purchase_journal_id.type != "purchase"
             ):
                 raise ValidationError(
-                    _("A purchase journal must be used to receive Nemhandel documents.")
+                    self.env._(
+                        "A purchase journal must be used to receive Nemhandel documents."
+                    )
                 )
 
     @api.depends("l10n_dk_nemhandel_proxy_state")

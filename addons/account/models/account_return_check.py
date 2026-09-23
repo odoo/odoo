@@ -2,7 +2,7 @@ import ast
 
 from markupsafe import Markup
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import LazyGettext
@@ -269,7 +269,7 @@ class AccountReturnCheck(models.Model):
                 > 1
             ):
                 raise ValidationError(
-                    _("You can only have a unique check code for each return.")
+                    self.env._("You can only have a unique check code for each return.")
                 )
 
     @api.depends("approver_ids", "supervisor_id")
@@ -332,7 +332,7 @@ class AccountReturnCheck(models.Model):
             transformed_tree = transformer.visit(tree)
             return ast.literal_eval(transformed_tree)
         except (SyntaxError, TypeError, ValueError) as error:
-            raise ValidationError(_("Invalid code")) from error
+            raise ValidationError(self.env._("Invalid code")) from error
 
     @_debug.perf.timed
     def action_review(self):

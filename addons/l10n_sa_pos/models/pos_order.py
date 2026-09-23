@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.l10n_sa.models.account_move import ADJUSTMENT_REASONS
@@ -19,7 +19,7 @@ class PosOrder(models.Model):
             mapped_reasons = self.mapped("l10n_sa_reason")
             if len(set(mapped_reasons)) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot create a consolidated invoice for POS orders with different"
                         " ZATCA refund reasons."
                     )

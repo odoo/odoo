@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import format_date
 
@@ -100,7 +100,7 @@ class AccountBankStatementLine(models.Model):
         )
         action.update(
             {
-                "name": name or _("Bank Matching"),
+                "name": name or self.env._("Bank Matching"),
                 "context": {
                     **default_context,
                     "bank_statements_source": default_journal.exists().bank_statements_source,

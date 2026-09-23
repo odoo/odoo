@@ -1,6 +1,6 @@
 from xmlrpc.client import MAXINT
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -366,7 +366,7 @@ class AccountBankStatementLine(models.Model):
                     reason="foreign_currency_is_journal_currency",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The foreign currency must be different than the journal one: %s",
                         st_line.currency_id.name,
                     )
@@ -378,7 +378,7 @@ class AccountBankStatementLine(models.Model):
                     reason="amount_currency_without_foreign_currency",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can't provide an amount in foreign currency without "
                         "specifying a foreign currency."
                     )
@@ -394,7 +394,7 @@ class AccountBankStatementLine(models.Model):
                     reason="foreign_currency_without_amount_currency",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can't provide a foreign currency without specifying an amount in "
                         "'Amount in Currency' field."
                     )
@@ -632,7 +632,7 @@ class AccountBankStatementLine(models.Model):
         _debug.lifecycle("_check_allow_unlink", records=self)
         if self.statement_id.filtered(lambda stmt: stmt.is_valid and stmt.is_complete):
             raise UserError(
-                _(
+                self.env._(
                     "You can not delete a transaction from a valid statement.\n"
                     "If you want to delete it, please remove the statement first."
                 )
@@ -810,7 +810,7 @@ class AccountBankStatementLine(models.Model):
 
         if not counterpart_account_id:
             raise UserError(
-                _(
+                self.env._(
                     "You can't create a new statement line without a suspense account set on the %s journal.",
                     self.journal_id.display_name,
                 )
@@ -929,7 +929,7 @@ class AccountBankStatementLine(models.Model):
 
         if len(liquidity_lines) != 1:
             raise UserError(
-                _(
+                self.env._(
                     "The journal entry %s reached an invalid state regarding its related statement line.\n"
                     "To be consistent, the journal entry must always have exactly one journal item involving the "
                     "bank/cash account.",
@@ -938,7 +938,7 @@ class AccountBankStatementLine(models.Model):
             )
         if len(suspense_lines) > 1:
             raise UserError(
-                _(
+                self.env._(
                     "%(move)s reached an invalid state regarding its related statement line.\n"
                     "To be consistent, the journal entry must always have exactly one suspense line.",
                     move=self.move_id.display_name,
@@ -1040,7 +1040,7 @@ class AccountBankStatementLine(models.Model):
             lambda line: line.balance or line.amount_currency
         ):
             raise UserError(
-                _(
+                self.env._(
                     "%(transaction)s is already matched with journal items, so its "
                     "amount can no longer change: rebuilding it would delete posted "
                     "entries.\n"

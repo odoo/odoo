@@ -3,7 +3,7 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -195,7 +195,9 @@ class AccountReturnType(models.Model):
                 and return_type.report_id.country_id != return_type.country_id
             ):
                 raise ValidationError(
-                    _("The return type country must be the same as the report country")
+                    self.env._(
+                        "The return type country must be the same as the report country"
+                    )
                 )
 
     @api.depends("category")

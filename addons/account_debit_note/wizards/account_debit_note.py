@@ -1,6 +1,5 @@
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
 
 
 class AccountDebitNote(models.TransientModel):
@@ -49,10 +48,10 @@ class AccountDebitNote(models.TransientModel):
             else self.env["account.move"]
         )
         if any(move.state != "posted" for move in move_ids):
-            raise UserError(_("You can only debit posted moves."))
+            raise UserError(self.env._("You can only debit posted moves."))
         if any(move.debit_origin_id for move in move_ids):
             raise UserError(
-                _(
+                self.env._(
                     "You can't make a debit note for an invoice that is already linked to a debit note."
                 )
             )
@@ -62,7 +61,7 @@ class AccountDebitNote(models.TransientModel):
             for move in move_ids
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You can make a debit note only for a Customer Invoice, a Customer Credit Note, a Vendor Bill or a Vendor Credit Note."
                 )
             )
@@ -120,7 +119,7 @@ class AccountDebitNote(models.TransientModel):
             new_moves |= new_move
 
         action = {
-            "name": _("Debit Notes"),
+            "name": self.env._("Debit Notes"),
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "context": {"default_move_type": default_values["move_type"]},

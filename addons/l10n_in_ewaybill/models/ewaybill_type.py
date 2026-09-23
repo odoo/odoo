@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class L10nInEwaybillType(models.Model):
@@ -23,7 +23,7 @@ class L10nInEwaybillType(models.Model):
     def _compute_display_name(self):
         """Show name and sub_type in name"""
         for ewaybill_type in self:
-            ewaybill_type.display_name = _(
+            ewaybill_type.display_name = self.env._(
                 "%(name)s (Sub-Type: %(type)s)",
                 name=ewaybill_type.name,
                 type=ewaybill_type.sub_type,

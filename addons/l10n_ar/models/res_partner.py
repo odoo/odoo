@@ -3,7 +3,7 @@ import re
 
 import stdnum.ar
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -109,7 +109,7 @@ class ResPartner(models.Model):
         self.check_singleton()
         if not self.l10n_ar_vat:
             raise UserError(
-                _(
+                self.env._(
                     "No VAT configured for partner [%(id)i] %(name)s",
                     id=self.id,
                     name=self.name,
@@ -147,21 +147,21 @@ class ResPartner(models.Model):
                 module.validate(rec.vat)
             except module.InvalidChecksum:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'The validation digit is not valid for "%s"',
                         rec.l10n_latam_identification_type_id.name,
                     )
                 ) from None
             except module.InvalidLength:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Invalid length for "%s"',
                         rec.l10n_latam_identification_type_id.name,
                     )
                 ) from None
             except module.InvalidFormat:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Only numbers allowed for "%s"',
                         rec.l10n_latam_identification_type_id.name,
                     )
@@ -180,7 +180,7 @@ class ResPartner(models.Model):
                     "55",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "CUIT number must be prefixed with one of the following: %s",
                         ", ".join(valid_cuit),
                     )

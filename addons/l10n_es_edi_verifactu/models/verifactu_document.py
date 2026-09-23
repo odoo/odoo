@@ -10,7 +10,7 @@ import zeep
 from psycopg import OperationalError
 
 import odoo.release
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.datetime import timezone
 from odoo.tools import float_repr, float_round, frozendict
@@ -171,7 +171,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
     @api.depends("document_type")
     def _compute_display_name(self):
         for document in self:
-            document.display_name = _("Veri*Factu Document %s", document.id)
+            document.display_name = self.env._("Veri*Factu Document %s", document.id)
 
     @api.depends("chain_index", "document_type")
     def _compute_json_attachment_filename(self):
@@ -187,7 +187,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         for document in self:
             if document.chain_index:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot delete Veri*Factu Documents that are part of the chain of all Veri*Factu Documents."
                     )
                 )
@@ -376,7 +376,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         )
         if not company_NIF or len(company_NIF) != 9:  # NIFType
             errors.append(
-                _(
+                self.env._(
                     "The NIF '%(company_NIF)s' of the company is not exactly 9 characters long.",
                     company_NIF=company_NIF,
                 )
@@ -384,7 +384,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         if not vals["name"] or len(vals["name"]) > 60:
             errors.append(
-                _(
+                self.env._(
                     "The name of the record is not between 1 and 60 characters long: %(name)s.",
                     name=vals["name"],
                 )
@@ -392,7 +392,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         if vals["documents"] and vals["documents"]._filtered_waiting():
             errors.append(
-                _("We are waiting to send a Veri*Factu record to the AEAT already.")
+                self.env._(
+                    "We are waiting to send a Veri*Factu record to the AEAT already."
+                )
             )
 
         verifactu_registered = vals["verifactu_state"] in (
@@ -401,28 +403,34 @@ class L10nEsEdiVerifactuDocument(models.Model):
         )
         # We currently do not support updating registered records (resending).
         if not vals["cancellation"] and verifactu_registered:
-            errors.append(_("The record is Veri*Factu registered already."))
+            errors.append(self.env._("The record is Veri*Factu registered already."))
         # We currently do not support cancelling records that are not registered or were registered outside odoo.
         if vals["cancellation"] and not verifactu_registered:
             errors.append(
-                _("The cancelled record is not Veri*Factu registered (inside Odoo).")
+                self.env._(
+                    "The cancelled record is not Veri*Factu registered (inside Odoo)."
+                )
             )
 
         certificate = vals["company"].sudo()._l10n_es_edi_verifactu_get_certificate()
         if not certificate:
             errors.append(
-                _("There is no certificate configured for Veri*Factu on the company.")
+                self.env._(
+                    "There is no certificate configured for Veri*Factu on the company."
+                )
             )
 
         if not vals["invoice_date"]:
-            errors.append(_("The invoice date is missing."))
+            errors.append(self.env._("The invoice date is missing."))
 
         if (
             vals["verifactu_move_type"] == "correction_substitution"
             and not vals["substituted_document"]
         ):
             errors.append(
-                _("There is no Veri*Factu document for the substituted record.")
+                self.env._(
+                    "There is no Veri*Factu document for the substituted record."
+                )
             )
 
         if (
@@ -430,7 +438,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             and not vals["substituted_document_reversal_document"]
         ):
             errors.append(
-                _(
+                self.env._(
                     "There is no Veri*Factu document for the reversal of the substituted record."
                 )
             )
@@ -440,14 +448,16 @@ class L10nEsEdiVerifactuDocument(models.Model):
             in ("correction_incremental", "reversal_for_substitution")
             and not vals["refunded_document"]
         ):
-            errors.append(_("There is no Veri*Factu document for the refunded record."))
+            errors.append(
+                self.env._("There is no Veri*Factu document for the refunded record.")
+            )
 
         need_refund_reason = vals["verifactu_move_type"] in (
             "correction_incremental",
             "correction_substitution",
         )
         if need_refund_reason and not vals["refund_reason"]:
-            errors.append(_("The refund reason is not specified."))
+            errors.append(self.env._("The refund reason is not specified."))
 
         simplified_partner = self.env.ref(
             "l10n_es.partner_simplified", raise_if_not_found=False
@@ -459,7 +469,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             and vals["is_simplified"]
         ):
             errors.append(
-                _(
+                self.env._(
                     "A refund with Refund Reason %(refund_reason)s is not simplified (it needs a partner).",
                     refund_reason=vals["refund_reason"],
                 )
@@ -470,13 +480,15 @@ class L10nEsEdiVerifactuDocument(models.Model):
             and not partner_specified
             and not vals["is_simplified"]
         ):
-            errors.append(_("A non-simplified invoice needs a partner."))
+            errors.append(self.env._("A non-simplified invoice needs a partner."))
 
         if not vals["l10n_es_applicability"]:
-            errors.append(_("Missing Veri*Factu Tax Applicability (Impuesto)."))
+            errors.append(
+                self.env._("Missing Veri*Factu Tax Applicability (Impuesto).")
+            )
 
         if vals["l10n_es_applicability"] in ("01", "03") and not vals["clave_regimen"]:
-            errors.append(_("Missing Veri*Factu Regime Key (ClaveRegimen)."))
+            errors.append(self.env._("Missing Veri*Factu Regime Key (ClaveRegimen)."))
 
         sujeto_tax_types = self.env["account.tax"]._l10n_es_get_sujeto_tax_types()
         ignored_tax_types = ["ignore", "retencion"]
@@ -489,14 +501,14 @@ class L10nEsEdiVerifactuDocument(models.Model):
             self.env["account.tax"]._fields["l10n_es_type"].get_description(self.env)
         )
         if not vals["tax_details"]["tax_details"]:
-            errors.append(_("There are no taxes set on the invoice"))
+            errors.append(self.env._("There are no taxes set on the invoice"))
         for key, tax_detail in vals["tax_details"]["tax_details"].items():
             tax_type = key["l10n_es_type"]
             if tax_type not in supported_tax_types:
                 # tax_type in ('no_deducible', 'dua')
                 # The remaining tax types are purchase taxes (for vendor bills).
                 errors.append(
-                    _(
+                    self.env._(
                         "A tax with value '%(tax_type)s' as %(field)s is not supported.",
                         field=tax_type_description["string"],
                         tax_type=dict(tax_type_description["selection"])[tax_type],
@@ -508,10 +520,10 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 if float_round(tax_percentage, precision_digits=2) or float_round(
                     tax_amount, precision_digits=2
                 ):
-                    errors.append(_("No Sujeto VAT taxes must have 0 amount."))
+                    errors.append(self.env._("No Sujeto VAT taxes must have 0 amount."))
             if len(key["recargo_taxes"]) > 1:
                 errors.append(
-                    _('Only a single recargo tax may be used per "main" tax.')
+                    self.env._('Only a single recargo tax may be used per "main" tax.')
                 )
 
         main_tax_types = self.env["account.tax"]._l10n_es_get_main_tax_types()
@@ -525,7 +537,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 "account.tax"
             ]._l10n_es_edi_verifactu_get_applicability_name_map()
             errors.append(
-                _(
+                self.env._(
                     "We only allow a single Veri*Factu Tax Applicability (Impuesto) per document: %(applicabilities)s.",
                     applicabilities=", ".join(
                         [name_map[t] for t in tax_applicabilities]
@@ -540,7 +552,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 if key["l10n_es_type"] in main_tax_types
             ]
             if len(main_tax_details) > 1:
-                errors.append(_('We only allow a single "main" tax per line.'))
+                errors.append(self.env._('We only allow a single "main" tax per line.'))
                 break  # Giving the errors once should be enough
 
         return errors
@@ -558,7 +570,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         :param list record_values: record values dictionary
         """
         document_vals = record_values["document_vals"]
-        error_title = _("The Veri*Factu document could not be created")
+        error_title = self.env._("The Veri*Factu document could not be created")
 
         if not record_values["errors"]:
             record_values["errors"] = self._check_record_values(record_values)
@@ -596,7 +608,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 requests.exceptions.RequestException,
             ) as error:
                 # The zeep client creation may cause a networking error
-                errors = [_("Networking error: %s", error)]
+                errors = [self.env._("Networking error: %s", error)]
                 document_vals["errors"] = self._format_errors(error_title, errors)
                 _logger.error(
                     "%s\n%s\n%s",
@@ -614,7 +626,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                         batch_dict["Cabecera"], batch_dict["RegistroFactura"]
                     )
                 except zeep.exceptions.ValidationError as error:
-                    errors = [_("Validation error: %s", error)]
+                    errors = [self.env._("Validation error: %s", error)]
                     document_vals["errors"] = self._format_errors(error_title, errors)
                     _logger.error(
                         "%s\n%s\n%s",
@@ -646,7 +658,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                     # Thus we can not generate multiple documents for the same company at the same time.
                     # Function `next_by_id` effectively locks `company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_chain_sequence_id`
                     # to prevent different transactions from chaining documents at the same time.
-                    errors = [_("Error while chaining the document: %s", e)]
+                    errors = [self.env._("Error while chaining the document: %s", e)]
                     document_vals["errors"] = self._format_errors(error_title, errors)
                     _logger.error(
                         "%s\n%s\n%s",
@@ -1215,35 +1227,39 @@ class L10nEsEdiVerifactuDocument(models.Model):
         try:
             register, zeep_info = _get_zeep_operation(self.env.company, "registration")
         except (zeep.exceptions.Error, requests.exceptions.RequestException) as error:
-            errors.append(_("Networking error:\n%s", error))
+            errors.append(self.env._("Networking error:\n%s", error))
             return info
 
         try:
             res = register(batch_dict["Cabecera"], batch_dict["RegistroFactura"])
             # `res` is of type 'zeep.client.SerialProxy'
         except requests.exceptions.SSLError:
-            errors.append(_("The SSL certificate could not be validated."))
+            errors.append(self.env._("The SSL certificate could not be validated."))
         except zeep.exceptions.TransportError as error:
             certificate_error = "No autorizado. Se ha producido un error al verificar el certificado presentado"
             if certificate_error in error.message:
                 errors.append(
-                    _(
+                    self.env._(
                         "The document could not be sent; the access was denied due to a problem with the certificate."
                     )
                 )
             else:
                 errors.append(
-                    _("Networking error while sending the document:\n%s", error)
+                    self.env._(
+                        "Networking error while sending the document:\n%s", error
+                    )
                 )
         except requests.exceptions.ReadTimeout as error:
             # The error is only partially translated since we check for this message for the timeout duplicate handling.
             # (See `_send_as_batch`)
-            error_description = _(
+            error_description = self.env._(
                 "Timeout while waiting for the response from the server:\n%s", error
             )
             errors.append(f"[Read-Timeout] {error_description}")
         except requests.exceptions.RequestException as error:
-            errors.append(_("Networking error while sending the document:\n%s", error))
+            errors.append(
+                self.env._("Networking error while sending the document:\n%s", error)
+            )
         except zeep.exceptions.Fault as soapfault:
             info["soap_fault"] = True
             errors.append(f"[{soapfault.code}] {soapfault.message}")
@@ -1252,15 +1268,19 @@ class L10nEsEdiVerifactuDocument(models.Model):
             certificate_error = "The root element found is html"
             if certificate_error in error.message:
                 errors.append(
-                    _(
+                    self.env._(
                         "The response of the server had the wrong format (HTML instead of XML). It is most likely a problem with the certificate."
                     )
                 )
             else:
-                errors.append(_("Error while sending the batch document:\n%s", error))
+                errors.append(
+                    self.env._("Error while sending the batch document:\n%s", error)
+                )
         except zeep.exceptions.Error as error:
             _logger.error("raw zeep response:\n%s", zeep_info.get("raw_response"))
-            errors.append(_("Error while sending the batch document:\n%s", error))
+            errors.append(
+                self.env._("Error while sending the batch document:\n%s", error)
+            )
 
         if errors:
             return info
@@ -1332,7 +1352,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         batch_errors = self.with_company(sender_company)._send_as_batch_check()
         if batch_errors:
-            error_title = _("The batch document could not be created")
+            error_title = self.env._("The batch document could not be created")
             self.errors = self._format_errors(error_title, batch_errors)
             info = {"errors": batch_errors}
             return None, info
@@ -1370,7 +1390,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 )
                 or {
                     "errors": [
-                        _(
+                        self.env._(
                             "We could not find any information about the record in the linked batch document."
                         )
                     ]
@@ -1419,9 +1439,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
             errors_html = False
             error_list = response_info.get("errors", [])
             if error_list:
-                error_title = _("Error")
+                error_title = self.env._("Error")
                 if response_info.get("state", False):
-                    error_title = _(
+                    error_title = self.env._(
                         "The Veri*Factu document contains the following errors according to the AEAT"
                     )
                 errors_html = self._format_errors(error_title, error_list)
@@ -1460,7 +1480,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         company_NIF = company.partner_id._l10n_es_edi_verifactu_get_values().get("NIF")
         if not company_NIF or len(company_NIF) != 9:  # NIFType
             errors.append(
-                _(
+                self.env._(
                     "The NIF '%(company_NIF)s' of the company is not exactly 9 characters long.",
                     company_NIF=company_NIF,
                 )
@@ -1469,12 +1489,14 @@ class L10nEsEdiVerifactuDocument(models.Model):
         certificate = company.sudo()._l10n_es_edi_verifactu_get_certificate()
         if not certificate:
             errors.append(
-                _("There is no certificate configured for Veri*Factu on the company.")
+                self.env._(
+                    "There is no certificate configured for Veri*Factu on the company."
+                )
             )
 
         if len(self) != len(self._filtered_waiting()):
             errors.append(
-                _(
+                self.env._(
                     "Some of the documents can not be sent. They were sent already or could not be generated correctly."
                 )
             )

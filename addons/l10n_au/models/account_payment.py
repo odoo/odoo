@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class AccountPayment(models.Model):
@@ -11,4 +11,4 @@ class AccountPayment(models.Model):
         for payment in self.filtered(
             lambda p: p.country_code == "AU" and p.partner_type == "supplier"
         ):
-            payment.payment_receipt_title = _("Remittance Advice")
+            payment.payment_receipt_title = self.env._("Remittance Advice")

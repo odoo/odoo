@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -16,4 +16,4 @@ class AccountPayment(models.Model):
             )
             return wizard_action
         else:
-            raise UserError(_("Only Outbound Payment is available."))
+            raise UserError(self.env._("Only Outbound Payment is available."))

@@ -13,7 +13,7 @@ from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.modules import get_resource_from_path
 from odoo.tools import SQL, file_open, float_compare, get_lang
-from odoo.tools.translate import TranslationImporter, _, code_translations
+from odoo.tools.translate import TranslationImporter, code_translations
 
 from odoo.addons.base.models.ir_model_common import MODULE_UNINSTALL_FLAG
 
@@ -202,7 +202,7 @@ class AccountChartTemplate(models.AbstractModel):
             and template_code != company.account_config_id.chart_template
         ):
             raise UserError(
-                _(
+                self.env._(
                     "The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.",
                     template_code,
                 )
@@ -240,14 +240,18 @@ class AccountChartTemplate(models.AbstractModel):
     def _load(self, template_code, company, install_demo, force_create=True):
         _debug.lifecycle("_load", records=self)
         if not self.env.is_system():
-            raise AccessError(_("Only administrators can install chart templates"))
+            raise AccessError(
+                self.env._("Only administrators can install chart templates")
+            )
         self = self.sudo()
         chart_template_mapping = self._get_chart_template_mapping(get_all=True).get(
             template_code
         )
         if chart_template_mapping is None:
             raise UserError(
-                _("No chart template is declared under the code %s.", template_code)
+                self.env._(
+                    "No chart template is declared under the code %s.", template_code
+                )
             )
         if not company.country_id:
             company.country_id = chart_template_mapping.get("country_id")
@@ -1537,37 +1541,37 @@ class AccountChartTemplate(models.AbstractModel):
         )
         return {
             "account_journal_suspense_account_id": {
-                "name": _("Bank Suspense Account"),
+                "name": self.env._("Bank Suspense Account"),
                 "prefix": bank_prefix,
                 "code_digits": code_digits,
                 "account_type": "asset_current",
             },
             "account_journal_early_pay_discount_loss_account_id": {
-                "name": _("Cash Discount Loss"),
+                "name": self.env._("Cash Discount Loss"),
                 "code": str(10**code_digits - 2),
                 "account_type": "expense",
             },
             "account_journal_early_pay_discount_gain_account_id": {
-                "name": _("Cash Discount Gain"),
+                "name": self.env._("Cash Discount Gain"),
                 "code": str(10**code_digits - 3),
                 "account_type": "income_other",
             },
             "default_cash_difference_income_account_id": {
-                "name": _("Cash Difference Gain"),
+                "name": self.env._("Cash Difference Gain"),
                 "prefix": "999",
                 "code_digits": code_digits,
                 "account_type": "income_other",
                 "tag_ids": [Command.set(self.ref("account.account_tag_investing").ids)],
             },
             "default_cash_difference_expense_account_id": {
-                "name": _("Cash Difference Loss"),
+                "name": self.env._("Cash Difference Loss"),
                 "prefix": "999",
                 "code_digits": code_digits,
                 "account_type": "expense",
                 "tag_ids": [Command.set(self.ref("account.account_tag_investing").ids)],
             },
             "transfer_account_id": {
-                "name": _("Liquidity Transfer"),
+                "name": self.env._("Liquidity Transfer"),
                 "prefix": company.account_config_id.transfer_account_code_prefix,
                 "code_digits": code_digits,
                 "account_type": "asset_current",
@@ -1615,14 +1619,14 @@ class AccountChartTemplate(models.AbstractModel):
     def _create_outstanding_accounts(self, company, bank_prefix, code_digits):
         accounts_by_xmlid = {
             "account_journal_payment_debit_account_id": {
-                "name": _("Outstanding Receipts"),
+                "name": self.env._("Outstanding Receipts"),
                 "prefix": bank_prefix,
                 "code_digits": code_digits,
                 "account_type": "asset_current",
                 "reconcile": True,
             },
             "account_journal_payment_credit_account_id": {
-                "name": _("Outstanding Payments"),
+                "name": self.env._("Outstanding Payments"),
                 "prefix": bank_prefix,
                 "code_digits": code_digits,
                 "account_type": "asset_current",
@@ -1664,15 +1668,15 @@ class AccountChartTemplate(models.AbstractModel):
         return (
             (
                 "tax_payable_account_id",
-                _("Foreign tax account payable (%s)", country.code),
+                self.env._("Foreign tax account payable (%s)", country.code),
             ),
             (
                 "tax_receivable_account_id",
-                _("Foreign tax account receivable (%s)", country.code),
+                self.env._("Foreign tax account receivable (%s)", country.code),
             ),
             (
                 "advance_tax_payment_account_id",
-                _("Foreign tax account advance payment (%s)", country.code),
+                self.env._("Foreign tax account advance payment (%s)", country.code),
             ),
         )
 
@@ -1771,7 +1775,7 @@ class AccountChartTemplate(models.AbstractModel):
                         self._foreign_tax_create_account(
                             company,
                             similar.account_id,
-                            _("Foreign tax account (%s)", country.code),
+                            self.env._("Foreign tax account (%s)", country.code),
                         ).id
                     )
         _debug.logic(
@@ -1820,7 +1824,7 @@ class AccountChartTemplate(models.AbstractModel):
             account_xml_id = tax_template.get("cash_basis_transition_account_id")
             if account_xml_id in existing_accounts:
                 continue
-            label = _("Cash basis transition account")
+            label = self.env._("Cash basis transition account")
             if local_cash_basis_tax:
                 _debug.logic("cash_basis_from_local_tax", account_xmlid=account_xml_id)
                 existing_accounts[account_xml_id] = self._foreign_tax_create_account(
@@ -1999,42 +2003,42 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_account_journal(self, template_code):
         return {
             "sale": {
-                "name": _("Sales"),
+                "name": self.env._("Sales"),
                 "type": "sale",
-                "code": _("INV"),
+                "code": self.env._("INV"),
                 "show_on_dashboard": True,
                 "color": 11,
                 "sequence": 5,
             },
             "purchase": {
-                "name": _("Purchases"),
+                "name": self.env._("Purchases"),
                 "type": "purchase",
-                "code": _("BILL"),
+                "code": self.env._("BILL"),
                 "show_on_dashboard": True,
                 "color": 11,
                 "sequence": 6,
             },
             "general": {
-                "name": _("Miscellaneous Operations"),
+                "name": self.env._("Miscellaneous Operations"),
                 "type": "general",
-                "code": _("MISC"),
+                "code": self.env._("MISC"),
                 "show_on_dashboard": False,
                 "sequence": 9,
             },
             "exch": {
-                "name": _("Exchange Difference"),
+                "name": self.env._("Exchange Difference"),
                 "type": "general",
-                "code": _("EXCH"),
+                "code": self.env._("EXCH"),
                 "show_on_dashboard": False,
             },
             "caba": {
-                "name": _("Cash Basis Taxes"),
+                "name": self.env._("Cash Basis Taxes"),
                 "type": "general",
-                "code": _("CABA"),
+                "code": self.env._("CABA"),
                 "show_on_dashboard": False,
             },
             "bank": {
-                "name": _("Bank"),
+                "name": self.env._("Bank"),
                 "type": "bank",
                 "show_on_dashboard": True,
                 "sequence": 7,
@@ -2045,25 +2049,25 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_account_reconcile_model(self, template_code):
         return {
             "internal_transfer_reco": {
-                "name": _("Internal Transfers"),
+                "name": self.env._("Internal Transfers"),
                 "line_ids": [
                     Command.create(
                         {
                             "amount_type": "percentage",
                             "amount_string": "100",
-                            "label": _("Internal Transfers"),
+                            "label": self.env._("Internal Transfers"),
                         }
                     ),
                 ],
             },
             "bank_fees_reco": {
-                "name": _("Bank Fees"),
+                "name": self.env._("Bank Fees"),
                 "match_label": "contains",
                 "match_label_param": "Bank Fees",
                 "line_ids": [
                     Command.create(
                         {
-                            "label": _("Bank Fees"),
+                            "label": self.env._("Bank Fees"),
                             "amount_type": "percentage",
                             "amount_string": "100",
                         }

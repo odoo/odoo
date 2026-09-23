@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class StockPicking(models.Model):
@@ -88,12 +88,12 @@ class StockPickingType(models.Model):
     def _get_ddt_sequence_name_prefix(self, warehouse_id, sequence_code):
         if warehouse_id:
             wh = self.env["stock.warehouse"].browse(warehouse_id)
-            ir_seq_name = _(
+            ir_seq_name = self.env._(
                 "%(warehouse)s Sequence %(code)s", warehouse=wh.name, code=sequence_code
             )
             ir_seq_prefix = wh.code + "/" + sequence_code + "/DDT"
         else:
-            ir_seq_name = _("Sequence %(code)s", code=sequence_code)
+            ir_seq_name = self.env._("Sequence %(code)s", code=sequence_code)
             ir_seq_prefix = sequence_code + "/DDT"
         return ir_seq_name, ir_seq_prefix
 

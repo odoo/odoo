@@ -3,7 +3,7 @@ import logging
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.misc import formatLang
@@ -76,7 +76,7 @@ class AccountMove(models.Model):
         )
         if not_invoices:
             raise ValidationError(
-                _(
+                self.env._(
                     "The selected Journal can't be used in this transaction, please select one that doesn't use documents as these are just for Invoices."
                 )
             )
@@ -220,7 +220,7 @@ class AccountMove(models.Model):
                 )
                 if len(vat_taxes) != 1:
                     raise UserError(
-                        _(
+                        self.env._(
                             "There should be a single tax from the “VAT“ tax group per line, but this is not the case for line “%s”. Please add a tax to this line or check the tax configuration's advanced options for the corresponding field “Tax Group”.",
                             line.name,
                         )
@@ -231,7 +231,7 @@ class AccountMove(models.Model):
                     and vat_taxes.tax_group_id.l10n_ar_vat_afip_code != "0"
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "On invoice id “%s” you must use VAT Not Applicable on every line.",
                             inv.id,
                         )
@@ -241,7 +241,7 @@ class AccountMove(models.Model):
                     and vat_taxes.tax_group_id.l10n_ar_vat_afip_code == "0"
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "On invoice id “%s” you must use a VAT tax that is not VAT Not Applicable",
                             inv.id,
                         )
@@ -276,8 +276,8 @@ class AccountMove(models.Model):
         ):
             return {
                 "warning": {
-                    "title": _("Missing Partner Configuration"),
-                    "message": _(
+                    "title": self.env._("Missing Partner Configuration"),
+                    "message": self.env._(
                         'Please configure the ARCA Responsibility for "%s" in order to continue',
                         self.partner_id.name,
                     ),
@@ -313,7 +313,7 @@ class AccountMove(models.Model):
                 journal = journal.search(
                     domain + [("l10n_ar_afip_pos_system", "in", expo_journals)], limit=1
                 )
-                msg = _(
+                msg = self.env._(
                     "You are trying to create an invoice for foreign partner but you don't have an exportation journal"
                 )
             elif (
@@ -325,7 +325,7 @@ class AccountMove(models.Model):
                     domain + [("l10n_ar_afip_pos_system", "not in", expo_journals)],
                     limit=1,
                 )
-                msg = _(
+                msg = self.env._(
                     "You are trying to create an invoice for domestic partner but you don't have a domestic market journal"
                 )
             if journal:
@@ -333,7 +333,7 @@ class AccountMove(models.Model):
             elif msg:
                 # Throw an error to user in order to proper configure the journal for the type of operation
                 action = self.env.ref("account.action_account_journal_form")
-                raise RedirectWarning(msg, action.id, _("Go to Journals"))
+                raise RedirectWarning(msg, action.id, self.env._("Go to Journals"))
 
     def _compute_l10n_latam_document_type_id(self):
         """We correct the default document type in vendor bills in case the partner is foreign (code 8)
@@ -422,7 +422,7 @@ class AccountMove(models.Model):
                 # If not, avoid that the user change the POS number
                 else:
                     raise UserError(
-                        _(
+                        self.env._(
                             "The document number can not be changed for this journal, you can only modify"
                             " the POS number if there is not posted (or posted before) invoices"
                         )
@@ -495,14 +495,14 @@ class AccountMove(models.Model):
         )
         if not profits_tax_group:
             raise RedirectWarning(
-                message=_(
+                message=self.env._(
                     "A required tax group could not be found (XML ID: %s).\n"
                     "Please reload your chart template in order to reinstall the required tax group.\n\n"
                     "Note: You might have to relink your existing taxes to this new tax group.",
                     "tax_group_percepcion_ganancias",
                 ),
                 action=self.env.ref("account.action_account_config").id,
-                button_text=_("Accounting Settings"),
+                button_text=self.env._("Accounting Settings"),
             )
 
         return {
@@ -737,11 +737,11 @@ class AccountMove(models.Model):
             skip = False
             name = None
             if self._l10n_ar_is_tax_group_other_national_ind_tax(tax_group):
-                name = _(
+                name = self.env._(
                     "Other National Ind. Taxes %s", base_line["currency_id"].symbol
                 )
             elif self._l10n_ar_is_tax_group_vat(tax_group):
-                name = _("VAT Content %s", base_line["currency_id"].symbol)
+                name = self.env._("VAT Content %s", base_line["currency_id"].symbol)
             else:
                 skip = True
             return {

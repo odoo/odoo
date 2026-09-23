@@ -1,7 +1,7 @@
 import json
 from datetime import timedelta
 
-from odoo import Command, _, api, models
+from odoo import Command, api, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import frozendict
@@ -26,7 +26,7 @@ class AccountPartialReconcile(models.Model):
         journal = self.company_id.account_config_id.tax_cash_basis_journal_id
         if not journal:
             raise UserError(
-                _(
+                self.env._(
                     "There is no tax cash basis journal defined for the '%s' company.\n"
                     "Configure it in Accounting/Configuration/Settings",
                     self.company_id.display_name,
@@ -38,7 +38,7 @@ class AccountPartialReconcile(models.Model):
         if move_values["currency"] == move.company_id.currency_id:
             currency = move.company_currency_id
             paid, total = amounts["amount"], move_values["total_balance"]
-            reason = _(
+            reason = self.env._(
                 "Cash-basis taxes cannot be allocated for %(move)s because its company-currency payment total is zero.",
                 move=move.display_name,
             )
@@ -48,7 +48,7 @@ class AccountPartialReconcile(models.Model):
                 amounts["amount_currency"],
                 move_values["total_amount_currency"],
             )
-            reason = _(
+            reason = self.env._(
                 "Cash-basis taxes cannot be allocated for %(move)s because its foreign-currency payment total is zero.",
                 move=move.display_name,
             )

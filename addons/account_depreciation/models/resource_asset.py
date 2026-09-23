@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -53,7 +53,9 @@ class ResourceAsset(models.Model):
                     asset=asset,
                     state=state,
                 )
-                raise UserError(_("You cannot archive a record that is not closed"))
+                raise UserError(
+                    self.env._("You cannot archive a record that is not closed")
+                )
 
     @api.depends("board_id.depreciation_move_ids.date", "board_id.depreciation_state")
     def _compute_disposal_date(self):
@@ -136,7 +138,7 @@ class ResourceAsset(models.Model):
             return self.board_id.action_asset_modify()
         _debug.logic("dispose.refused", reason="several_running_boards", assets=running)
         raise UserError(
-            _(
+            self.env._(
                 "%(assets)s: a running depreciation board is disposed one asset at a time, through its Dispose or Sell action.",
                 assets=", ".join(running.mapped("display_name")),
             )
@@ -163,7 +165,7 @@ class ResourceAsset(models.Model):
                     "transition.refused", reason="running_board", assets=running
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "%(assets)s: a running depreciation board is disposed through its Dispose or Sell action, which books the disposal entry.",
                         assets=", ".join(running.mapped("display_name")),
                     )
@@ -183,7 +185,7 @@ class ResourceAsset(models.Model):
                     "reactivation.refused", reason="board_closed", assets=closed
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "%(assets)s: the depreciation board is closed, so the asset stays disposed. Set the board running again to restore it.",
                         assets=", ".join(closed.mapped("display_name")),
                     )

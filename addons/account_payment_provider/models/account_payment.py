@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -235,7 +235,7 @@ class AccountPayment(models.Model):
     def action_refund_wizard(self):
         self.check_singleton()
         return {
-            "name": _("Refund"),
+            "name": self.env._("Refund"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "payment.refund.wizard",
@@ -245,7 +245,7 @@ class AccountPayment(models.Model):
     def action_view_refunds(self):
         self.check_singleton()
         action = {
-            "name": _("Refund"),
+            "name": self.env._("Refund"),
             "res_model": "account.payment",
             "type": "ir.actions.act_window",
         }
@@ -266,14 +266,16 @@ class AccountPayment(models.Model):
         for payment in self:
             if payment.transaction_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A payment transaction with reference %s already exists.",
                         payment.transaction_id.reference,
                     )
                 )
             if not payment.payment_token_id:
                 raise ValidationError(
-                    _("A token is required to create a new payment transaction.")
+                    self.env._(
+                        "A token is required to create a new payment transaction."
+                    )
                 )
 
         transactions = self.env["payment.transaction"]

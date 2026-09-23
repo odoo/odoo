@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -36,7 +36,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Debit Notes"),
+            "name": self.env._("Debit Notes"),
             "res_model": "account.move",
             "view_mode": "list,form",
             "domain": [("debit_origin_id", "=", self.id)],
@@ -68,5 +68,7 @@ class AccountMove(models.Model):
     def _get_copy_message_content(self, default):
         """Override to handle debit note specific messages."""
         if default and default.get("debit_origin_id"):
-            return _("This debit note was created from: %s", self._get_html_link())
+            return self.env._(
+                "This debit note was created from: %s", self._get_html_link()
+            )
         return super()._get_copy_message_content(default)

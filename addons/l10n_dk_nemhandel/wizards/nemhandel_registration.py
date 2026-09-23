@@ -5,7 +5,7 @@ try:
 except ImportError:
     phonenumbers = None
 
-from odoo import _, api, fields, models, modules
+from odoo import api, fields, models, modules
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import (
@@ -129,14 +129,14 @@ class NemhandelRegistration(models.TransientModel):
     def _action_view_nemhandel_form(self, reopen=True):
         if reopen:
             return self._get_records_action(
-                name=_("Send via Nemhandel"),
+                name=self.env._("Send via Nemhandel"),
                 res_id=self.id,
                 target="new",
                 context={**self.env.context, "disable_sms_verification": True},
             )
 
         return self._get_records_action(
-            name=_("Send via Nemhandel"),
+            name=self.env._("Send via Nemhandel"),
             target="new",
         )
 
@@ -173,7 +173,7 @@ class NemhandelRegistration(models.TransientModel):
 
         if self.l10n_dk_nemhandel_proxy_state != "not_registered":
             raise UserError(
-                _(
+                self.env._(
                     "Cannot register a user with a %s application",
                     self.l10n_dk_nemhandel_proxy_state,
                 )
@@ -181,17 +181,19 @@ class NemhandelRegistration(models.TransientModel):
 
         if not self.phone_number:
             raise ValidationError(
-                _("Please enter a phone number to verify your application.")
+                self.env._("Please enter a phone number to verify your application.")
             )
         if not self.contact_email:
             raise ValidationError(
-                _("Please enter a primary contact email to verify your application.")
+                self.env._(
+                    "Please enter a primary contact email to verify your application."
+                )
             )
         if not self.env.company.vat:
             raise RedirectWarning(
-                _("Please fill in your company's VAT"),
+                self.env._("Please fill in your company's VAT"),
                 self.env.ref("base.action_res_company_form").id,
-                _("Company settings"),
+                self.env._("Company settings"),
             )
 
         if not self.edi_user_id:
@@ -240,8 +242,8 @@ class NemhandelRegistration(models.TransientModel):
             == "receiver"
         ):
             return self._action_send_notification(
-                title=_("Registered to receive documents."),
-                message=_("You can now receive documents via Nemhandel."),
+                title=self.env._("Registered to receive documents."),
+                message=self.env._("You can now receive documents via Nemhandel."),
             )
         return self._action_view_nemhandel_form()
 
@@ -254,7 +256,9 @@ class NemhandelRegistration(models.TransientModel):
         self.check_singleton()
 
         if not self.contact_email:
-            raise ValidationError(_("Contact email and phone number are required."))
+            raise ValidationError(
+                self.env._("Contact email and phone number are required.")
+            )
 
         params = {
             "update_data": {
@@ -277,7 +281,7 @@ class NemhandelRegistration(models.TransientModel):
             endpoint="/api/nemhandel/1/send_verification_code",
             params={
                 "company_details": self.edi_user_id._get_nemhandel_company_details(),
-                "message": _("Your confirmation code is"),
+                "message": self.env._("Your confirmation code is"),
             },
         )
         self.l10n_dk_nemhandel_proxy_state = "in_verification"
@@ -292,13 +296,15 @@ class NemhandelRegistration(models.TransientModel):
         self.check_singleton()
         if self.l10n_dk_nemhandel_proxy_state != "in_verification":
             raise ValidationError(
-                _(
+                self.env._(
                     "Please first verify your phone number by clicking on 'Send a registration code by SMS'."
                 )
             )
 
         if not self.verification_code or len(self.verification_code) != 6:
-            raise ValidationError(_("The verification code should contain six digits."))
+            raise ValidationError(
+                self.env._("The verification code should contain six digits.")
+            )
 
         company = self.company_id
         response = self.edi_user_id._call_nemhandel_proxy(
@@ -308,23 +314,24 @@ class NemhandelRegistration(models.TransientModel):
 
         if error_code := response.get("warning", {}).get("code"):
             errors = {
-                "code_incorrect": _("The verification code is not correct"),
-                "code_expired": _(
+                "code_incorrect": self.env._("The verification code is not correct"),
+                "code_expired": self.env._(
                     "This verification code has expired. Please request a new one."
                 ),
-                "too_many_attempts": _(
+                "too_many_attempts": self.env._(
                     "Too many attempts to request an SMS code. Please try again later."
                 ),
             }
             raise UserError(
-                errors.get(error_code) or _("Connection error, please try again later.")
+                errors.get(error_code)
+                or self.env._("Connection error, please try again later.")
             )
 
         self.verification_code = False
         company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state = "receiver"
         return self._action_send_notification(
-            title=_("Registered to receive documents."),
-            message=_("You can now receive documents via Nemhandel."),
+            title=self.env._("Registered to receive documents."),
+            message=self.env._("You can now receive documents via Nemhandel."),
         )
 
     @handle_demo

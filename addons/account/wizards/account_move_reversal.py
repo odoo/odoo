@@ -1,7 +1,6 @@
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools.translate import _
 
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
 
@@ -88,7 +87,7 @@ class AccountMoveReversal(models.TransientModel):
         for record in self:
             if record.journal_id.type not in record.move_ids.journal_id.mapped("type"):
                 raise ValidationError(
-                    _("Journal should be the same type as the reversed entry.")
+                    self.env._("Journal should be the same type as the reversed entry.")
                 )
 
     @api.model
@@ -107,14 +106,18 @@ class AccountMoveReversal(models.TransientModel):
                 "reversal_defaults_rejected", move=move_ids, reason="multi_company"
             )
             raise UserError(
-                _("All selected moves for reversal must belong to the same company.")
+                self.env._(
+                    "All selected moves for reversal must belong to the same company."
+                )
             )
 
         if any(move.state != "posted" for move in move_ids):
             _debug.logic(
                 "reversal_defaults_rejected", move=move_ids, reason="not_posted"
             )
-            raise UserError(_("To reverse a journal entry, it has to be posted first."))
+            raise UserError(
+                self.env._("To reverse a journal entry, it has to be posted first.")
+            )
         if "company_id" in fields_list:
             res["company_id"] = move_ids.company_id.id or self.env.company.id
         if "move_ids" in fields_list:
@@ -207,7 +210,7 @@ class AccountMoveReversal(models.TransientModel):
 
     def _get_reversal_redirect_action(self, moves_to_redirect):
         action = {
-            "name": _("Reverse Moves"),
+            "name": self.env._("Reverse Moves"),
             "type": "ir.actions.act_window",
             "res_model": "account.move",
         }

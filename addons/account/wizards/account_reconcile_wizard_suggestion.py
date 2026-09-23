@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
@@ -14,7 +14,7 @@ class AccountReconcileWizard(models.TransientModel):
             date_after_lock = wizard._get_date_after_lock_date()
             lock_date_violated_warning_message = None
             if date_after_lock:
-                lock_date_violated_warning_message = _(
+                lock_date_violated_warning_message = self.env._(
                     "The date you set violates the lock date of one of your entry. It will be overriden by the following date : %(replacement_date)s",
                     replacement_date=date_after_lock,
                 )

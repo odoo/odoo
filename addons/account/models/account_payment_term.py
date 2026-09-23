@@ -3,7 +3,7 @@ from functools import partial
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_compare
@@ -209,7 +209,7 @@ class AccountPaymentTerm(models.Model):
                     record.example_amount, untaxed_example, currency
                 )
                 record.example_preview_discount = Markup(
-                    _(
+                    self.env._(
                         "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
                     )
                 ) % {
@@ -245,7 +245,7 @@ class AccountPaymentTerm(models.Model):
                 example_preview += (
                     Markup("<div>%s</div>")
                     % Markup(
-                        _(
+                        self.env._(
                             "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: #704A66;'>%(date)s</b>"
                         )
                     )
@@ -294,7 +294,7 @@ class AccountPaymentTerm(models.Model):
                     total_percent=total_percent,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The Payment Term must have at least one percent line and the sum of the percent must be 100%."
                     )
                 )
@@ -303,7 +303,7 @@ class AccountPaymentTerm(models.Model):
                     "term_rejected", term=terms, reason="early_discount_multi_line"
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The Early Payment Discount functionality can only be used with payment terms using a single 100% line. "
                     )
                 )
@@ -312,12 +312,14 @@ class AccountPaymentTerm(models.Model):
                     "term_rejected", term=terms, reason="early_discount_percentage"
                 )
                 raise ValidationError(
-                    _("The Early Payment Discount must be strictly positive.")
+                    self.env._("The Early Payment Discount must be strictly positive.")
                 )
             if terms.early_discount and terms.discount_days <= 0:
                 _debug.logic("term_rejected", term=terms, reason="early_discount_days")
                 raise ValidationError(
-                    _("The Early Payment Discount days must be strictly positive.")
+                    self.env._(
+                        "The Early Payment Discount days must be strictly positive."
+                    )
                 )
 
     @api.model
@@ -440,7 +442,7 @@ class AccountPaymentTerm(models.Model):
             [("invoice_payment_term_id", "in", self.ids)], limit=1
         ):
             raise UserError(
-                _(
+                self.env._(
                     "Uh-oh! Those payment terms are quite popular and can't be deleted since there are still some records referencing them. How about archiving them instead?"
                 )
             )
@@ -457,7 +459,7 @@ class AccountPaymentTerm(models.Model):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
         return [
-            dict(vals, name=_("%s (copy)", term.name))
+            dict(vals, name=self.env._("%s (copy)", term.name))
             for term, vals in zip(self, vals_list, strict=True)
         ]
 
@@ -571,7 +573,9 @@ class AccountPaymentTermLine(models.Model):
     def _check_days_next_month(self):
         for record in self:
             if not 0 <= record.days_next_month <= 31:
-                raise ValidationError(_("The days added must be between 0 and 31."))
+                raise ValidationError(
+                    self.env._("The days added must be between 0 and 31.")
+                )
 
     @api.depends("delay_type")
     def _compute_display_days_next_month(self):
@@ -588,7 +592,7 @@ class AccountPaymentTermLine(models.Model):
                 0.0 <= term_line.value_amount <= 100.0
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Percentages on the Payment Terms lines must be between 0 and 100."
                     )
                 )

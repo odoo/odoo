@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.account.models.chart_template import template
 
@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template("es_common")
     def _prepare_es_common_template_data(self):
         return {
-            "name": _("Common"),
+            "name": self.env._("Common"),
             "visible": 0,
             "property_account_receivable_id": "account_common_4300",
             "property_account_payable_id": "account_common_4100",

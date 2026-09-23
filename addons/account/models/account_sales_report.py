@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
@@ -126,7 +126,10 @@ class AccountEcSalesReportHandler(models.AbstractModel):
         """Add custom caret option for the report to link to the partner and allow cleaner overrides."""
         return {
             "ec_sales": [
-                {"name": _("View Partner"), "action": "caret_option_open_record_form"}
+                {
+                    "name": self.env._("View Partner"),
+                    "action": "caret_option_open_record_form",
+                }
             ],
         }
 
@@ -205,9 +208,9 @@ class AccountEcSalesReportHandler(models.AbstractModel):
         :param dict previous_options: Previous report options
         """
         default_tax_filter = [
-            {"id": "goods", "name": _("Goods"), "selected": True},
-            {"id": "triangular", "name": _("Triangular"), "selected": True},
-            {"id": "services", "name": _("Services"), "selected": True},
+            {"id": "goods", "name": self.env._("Goods"), "selected": True},
+            {"id": "triangular", "name": self.env._("Triangular"), "selected": True},
+            {"id": "services", "name": self.env._("Services"), "selected": True},
         ]
 
         ec_tax_filter_selection = previous_options.get(
@@ -260,7 +263,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
         return {
             "id": report._get_generic_line_id("res.partner", partner.id, markup=markup),
             "name": (partner is not None and (partner.name or "")[:128])
-            or _("Unknown Partner"),
+            or self.env._("Unknown Partner"),
             "columns": column_values,
             "level": 2,
             "trust": partner.trust if partner else None,
@@ -288,7 +291,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
 
         return {
             "id": report._get_generic_line_id(None, None, markup="total"),
-            "name": _("Total"),
+            "name": self.env._("Total"),
             "class": "total",
             "level": 1,
             "columns": column_values,
@@ -608,7 +611,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
             ]
             act_window.update(
                 {
-                    "name": _("Entries with partners with no VAT"),
+                    "name": self.env._("Entries with partners with no VAT"),
                     "context": {"search_default_group_by_partner": 1, "expand": 1},
                 }
             )
@@ -620,7 +623,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
                     tuple(self._get_ec_country_codes(options)),
                 )
             ]
-            act_window["name"] = _("EC tax on non EC countries")
+            act_window["name"] = self.env._("EC tax on non EC countries")
         elif params["type"] == "duplicated_vat":
             return self._get_duplicated_vat_partners(
                 tuple(params["duplicated_partners_vat"])
@@ -629,7 +632,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
             aml_domains = [
                 ("partner_id.country_id.code", "=", options.get("same_country_warning"))
             ]
-            act_window["name"] = _("EC tax on same country")
+            act_window["name"] = self.env._("EC tax on same country")
         use_taxes_instead_of_tags = options.get("sales_report_taxes", {}).get(
             "use_taxes_instead_of_tags"
         )
@@ -680,7 +683,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
         )
         return {
             "type": "ir.actions.act_window",
-            "name": _("Partners with duplicated VAT numbers"),
+            "name": self.env._("Partners with duplicated VAT numbers"),
             "context": {
                 "group_by": "vat",
                 "expand": 1,

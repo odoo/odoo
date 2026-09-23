@@ -4,7 +4,7 @@ from unittest import mock
 import zeep
 from freezegun import freeze_time
 
-from odoo import Command, _
+from odoo import Command
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tests import tagged
 
@@ -621,7 +621,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         )
 
         errors = [
-            _(
+            self.env._(
                 "We could not find any information about the record in the linked batch document."
             )
         ]

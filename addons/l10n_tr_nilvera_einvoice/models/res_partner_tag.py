@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 l10n_tr_official_code_categories = [
@@ -56,7 +56,7 @@ class PartnerCategory(models.Model):
         official_categories = self._get_l10n_tr_official_categories()
         if any(rec in official_categories for rec in self):
             raise UserError(
-                _(
+                self.env._(
                     "The Contact Tag(s) cannot be deleted because it is used in Türkiye electronic integrations."
                 )
             )

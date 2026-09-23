@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -38,7 +38,7 @@ class ResCompany(models.Model):
                     # Prevent API mode change from 'Production' if any invoice was submitted to ZATCA in Production mode.
                     if company.l10n_sa_edi_config_id.l10n_sa_edi_is_production:
                         raise UserError(
-                            _(
+                            self.env._(
                                 "ZATCA API Mode cannot be changed after an invoice has been successfully submitted under the Production Mode."
                             )
                         )
@@ -52,7 +52,7 @@ class ResCompany(models.Model):
                 )
                 for journal in journals.filtered(lambda j: j.type == "sale"):
                     journal.message_post(
-                        body=_("ZATCA API Mode changed to %s", api_mode)
+                        body=self.env._("ZATCA API Mode changed to %s", api_mode)
                     )
         return super().write(vals)
 

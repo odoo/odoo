@@ -1,6 +1,6 @@
 import uuid
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 CHECK_TYPES = [
     ("check", "Check"),
@@ -81,7 +81,7 @@ class AccountReturnCheckTemplate(models.Model):
         if self.model == "account.bank.statement.line":
             return {
                 "type": "ir.actions.act_window",
-                "name": _("Bank Matching"),
+                "name": self.env._("Bank Matching"),
                 "res_model": "account.bank.statement.line",
                 "view_mode": "kanban,list",
                 "search_view_id": self.env.ref(

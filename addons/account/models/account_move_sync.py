@@ -1,7 +1,7 @@
 from collections import Counter, defaultdict
 from contextlib import ExitStack, contextmanager
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import frozendict
@@ -120,7 +120,7 @@ class AccountMove(models.Model):
         if biggest_tax_line:
             vals.update(
                 {
-                    "name": _(
+                    "name": self.env._(
                         "%(tax_name)s (rounding)", tax_name=biggest_tax_line.name
                     ),
                     "account_id": biggest_tax_line.account_id.id,
@@ -319,7 +319,7 @@ class AccountMove(models.Model):
                 to_create.append(
                     {
                         "balance": balance,
-                        "name": _("Automatic Balancing Line"),
+                        "name": self.env._("Automatic Balancing Line"),
                         "display_type": "balancing",
                         "move_id": move.id,
                         "account_id": move._get_automatic_balancing_account().id,
@@ -533,7 +533,7 @@ class AccountMove(models.Model):
                 or move.journal_id.default_account_id
             ).id,
             "display_type": "non_deductible_tax",
-            "name": _("private part (taxes)"),
+            "name": self.env._("private part (taxes)"),
             "balance": tax_amount,
             "amount_currency": tax_amount_currency,
             "sequence": max(
@@ -771,7 +771,7 @@ class AccountMove(models.Model):
                     or move.journal_id.default_account_id
                 ).id,
                 "display_type": "non_deductible_product_total",
-                "name": _("private part"),
+                "name": self.env._("private part"),
                 "balance": balance_total,
                 "amount_currency": amount_currency_total,
                 "tax_ids": [Command.clear()],

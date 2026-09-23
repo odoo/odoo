@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -63,7 +63,7 @@ class AccountMoveReversal(models.TransientModel):
                     != "INVOICE_HAS_CODE_APPROVED"
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot adjust/replace invoice %s, it has not been approved by the tax authorities.\n"
                             "Please cancel/reverse it and create a new invoice instead.",
                             move.name,

@@ -2,7 +2,7 @@ import io
 
 import xlsxwriter
 
-from odoo import _, http
+from odoo import http
 from odoo.http import request
 from odoo.libs.documents import mimetype_for
 
@@ -156,115 +156,115 @@ class AssetTemplateController(http.Controller):
     def _get_instructions_data(self):
         described = {
             "name": (
-                _("Asset Name"),
+                request.env._("Asset Name"),
                 True,
-                _("Mandatory column. This is the name of the asset."),
+                request.env._("Mandatory column. This is the name of the asset."),
             ),
             "value_original": (
-                _("Original Value"),
+                request.env._("Original Value"),
                 True,
-                _("The amount will be considered in company currency."),
+                request.env._("The amount will be considered in company currency."),
             ),
             "date_acquisition": (
-                _("Acquisition Date"),
+                request.env._("Acquisition Date"),
                 True,
-                _("e.g. 01-27-2025 (format: MM-DD-YYYY)"),
+                request.env._("e.g. 01-27-2025 (format: MM-DD-YYYY)"),
             ),
             "asset_group_id": (
-                _("Asset Group"),
+                request.env._("Asset Group"),
                 False,
-                _(
+                request.env._(
                     "Optional. The name or external ID of the asset group. Must exist in Odoo (e.g., Office Equipment, Vehicles, Machinery)."
                 ),
             ),
             "depreciation_method": (
-                _("Method"),
+                request.env._("Method"),
                 True,
-                _(
+                request.env._(
                     "e.g. Straight Line, Declining Balance. Determines how depreciation is calculated."
                 ),
             ),
             "depreciation_duration": (
-                _("Duration"),
+                request.env._("Duration"),
                 True,
-                _(
+                request.env._(
                     "e.g. 3 for 3 years, or 12 for 12 months. It must be an integer representing the total number of periods."
                 ),
             ),
             "depreciation_period": (
-                _("Months/Years"),
+                request.env._("Months/Years"),
                 True,
-                _(
+                request.env._(
                     'Either "Months" or "Years" (case-insensitive). Specifies the unit of duration.'
                 ),
             ),
             "depreciation_factor": (
-                _("Declining Factor"),
+                request.env._("Declining Factor"),
                 False,
-                _(
+                request.env._(
                     "Only applicable for Declining Balance method (e.g., 2 for double declining). Ignored for Straight Line."
                 ),
             ),
             "depreciation_prorata": (
-                _("Computation"),
+                request.env._("Computation"),
                 True,
-                _(
+                request.env._(
                     "e.g. No Prorata, Constant Periods, Based on days per period. This determines how the first depreciation entry is calculated."
                 ),
             ),
             "date_prorata": (
-                _("Prorata Date"),
+                request.env._("Prorata Date"),
                 True,
-                _(
+                request.env._(
                     "Start date of the depreciation period. Should be in MM-DD-YYYY format. If left blank, it defaults to the acquisition date."
                 ),
             ),
             "value_depreciated_import": (
-                _("Depreciated Amount"),
+                request.env._("Depreciated Amount"),
                 False,
-                _(
+                request.env._(
                     "The total amount of depreciation already recorded for the asset before import. This amount will be considered in company currency."
                 ),
             ),
             "value_salvage": (
-                _("Not Depreciable Value"),
+                request.env._("Not Depreciable Value"),
                 False,
-                _(
+                request.env._(
                     "The estimated residual value of the asset at the end of its useful life. This amount will not be depreciated. Considered in company currency."
                 ),
             ),
             "company_id": (
-                _("Company"),
+                request.env._("Company"),
                 True,
-                _(
+                request.env._(
                     "Must match the selected company during import. Use the company's display name."
                 ),
             ),
             "account_asset_id": (
-                _("Fixed Asset Account"),
+                request.env._("Fixed Asset Account"),
                 True,
-                _(
+                request.env._(
                     'The balance sheet account for the asset itself (e.g., "151000 Fixed Asset"). Must exist in Odoo and be of "Fixed Asset" or "Non-current Assets" type.'
                 ),
             ),
             "account_depreciation_id": (
-                _("Depreciation Account"),
+                request.env._("Depreciation Account"),
                 True,
-                _(
+                request.env._(
                     'The accumulated depreciation account (contra-asset account). Must exist in Odoo and be of "Fixed Asset" or "Non-current Assets" type.'
                 ),
             ),
             "account_depreciation_expense_id": (
-                _("Expense Account"),
+                request.env._("Expense Account"),
                 True,
-                _(
+                request.env._(
                     'The expense account for posting periodic depreciation entries (e.g., "630000 Depreciation Expenses"). Must exist in Odoo and be of "Depreciation" or "Expense" type.'
                 ),
             ),
             "depreciation_journal_id": (
-                _("Journal"),
+                request.env._("Journal"),
                 True,
-                _(
+                request.env._(
                     "The code or name of the associated journal in Odoo for depreciation entries (e.g., MISC - Miscellaneous Operations, INV - Customer Invoices, BILL - Vendor Bills)."
                 ),
             ),

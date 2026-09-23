@@ -1,6 +1,6 @@
 from lxml import etree
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node
 
@@ -69,14 +69,14 @@ class EfakturDocument(models.Model):
 
         if no_trx_code_entries:
             raise UserError(
-                _(
+                self.env._(
                     "Some documents don't have a transaction code: %s",
                     ", ".join(no_trx_code_entries.mapped("name")),
                 )
             )
         if non_invoice_entries:
             raise UserError(
-                _(
+                self.env._(
                     "Some documents are not Customer Invoices: %s",
                     ", ".join(non_invoice_entries.mapped("name")),
                 )
@@ -114,9 +114,9 @@ class EfakturDocument(models.Model):
             )
 
         if not regenerate:
-            message = _("The e-Faktur report has been generated")
+            message = self.env._("The e-Faktur report has been generated")
         else:
-            message = _("The e-Faktur report has been re-generated")
+            message = self.env._("The e-Faktur report has been re-generated")
 
         self.message_post(body=message, attachments=[(attachment.name, attachment.raw)])
 

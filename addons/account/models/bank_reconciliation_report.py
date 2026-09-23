@@ -1,7 +1,7 @@
 import logging
 from datetime import date
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -322,7 +322,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
     ):
         if current_groupby:
             raise UserError(
-                _(
+                self.env._(
                     "Custom engine _report_custom_engine_last_statement_balance_amount does not support groupby"
                 )
             )
@@ -761,7 +761,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
             code = self.env["report.formula.line"].browse(line_id).code
 
             if code == "balance_bank":
-                line["name"] = _(
+                line["name"] = self.env._(
                     "Balance of '%s'", journal.default_account_id.display_name
                 )
 
@@ -1090,7 +1090,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
         )
 
         return {
-            "name": _("Journal Items"),
+            "name": self.env._("Journal Items"),
             "type": "ir.actions.act_window",
             "res_model": "account.move.line",
             "view_type": "list",
@@ -1119,7 +1119,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
             single_form=len(inconsistent_statement_ids) == 1,
         )
         action = {
-            "name": _("Inconsistent Statements"),
+            "name": self.env._("Inconsistent Statements"),
             "type": "ir.actions.act_window",
             "res_model": "account.bank.statement",
         }

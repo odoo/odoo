@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ResCompany(models.Model):
@@ -16,7 +16,9 @@ class ResCompany(models.Model):
         checks = {
             "company_currency_check": {
                 "fields": [("currency_id",)],
-                "message": _("The company's currency must be set to Euro (€)."),
+                "message": self.env._(
+                    "The company's currency must be set to Euro (€)."
+                ),
             },
         }
         errors = {}
@@ -30,9 +32,9 @@ class ResCompany(models.Model):
                     errors[f"l10n_es_edi_facturae_{key}"] = {
                         "level": "danger",
                         "message": check["message"],
-                        "action_text": _("View Company(s)"),
+                        "action_text": self.env._("View Company(s)"),
                         "action": invalid_records._get_records_action(
-                            name=_("Check Company Data")
+                            name=self.env._("Check Company Data")
                         ),
                     }
         if invalid_records := self.filtered(
@@ -40,12 +42,12 @@ class ResCompany(models.Model):
         ):
             errors["l10n_es_edi_company_facturae_certificate_check"] = {
                 "level": "danger",
-                "message": _(
+                "message": self.env._(
                     "Company must have a valid Factura-e certificate configured."
                 ),
-                "action_text": _("View Certificate(s)"),
+                "action_text": self.env._("View Certificate(s)"),
                 "action": {
-                    "name": _("Settings"),
+                    "name": self.env._("Settings"),
                     "type": "ir.actions.act_url",
                     "target": "self",
                     "url": "/odoo/settings#certificates_settings",

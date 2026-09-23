@@ -1,7 +1,7 @@
 import datetime
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, frozendict, groupby
@@ -195,7 +195,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
         header, group, col = self._create_column(
             report,
             options,
-            _("Initial Balance"),
+            self.env._("Initial Balance"),
             initial_dates,
             block_id,
             fiscal_year_start,
@@ -231,7 +231,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
         header, group, col = self._create_column(
             report,
             options,
-            _("End Balance"),
+            self.env._("End Balance"),
             end_dates,
             block_id,
             fiscal_year["date_from"],
@@ -331,7 +331,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
         )
 
         if create_single_column:
-            column_name = _("Balance")
+            column_name = self.env._("Balance")
             new_columns = [
                 {
                     **new_column,
@@ -348,18 +348,18 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
         return {
             "account.account": [
                 {
-                    "name": _("General Ledger"),
+                    "name": self.env._("General Ledger"),
                     "action": "caret_option_open_general_ledger",
                 },
-                {"name": _("Journal Items"), "action": "open_journal_items"},
+                {"name": self.env._("Journal Items"), "action": "open_journal_items"},
             ],
             "undistributed_profits_losses": [
                 {
-                    "name": _("General Ledger"),
+                    "name": self.env._("General Ledger"),
                     "action": "caret_option_open_general_ledger",
                 },
                 {
-                    "name": _("Journal Items"),
+                    "name": self.env._("Journal Items"),
                     "action": "open_unallocated_items_journal_items",
                 },
             ],
@@ -697,7 +697,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
             # To make totals line not blank
             for col in lines[-1]["columns"]:
                 col["blank_if_zero"] = False
-            lines[-1]["name"] = _("Total")
+            lines[-1]["name"] = self.env._("Total")
 
         return lines
 

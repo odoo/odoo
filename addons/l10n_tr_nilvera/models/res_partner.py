@@ -2,7 +2,7 @@ import logging
 import urllib.parse
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
@@ -77,21 +77,21 @@ class ResPartner(models.Model):
 
         if results["failure"]:
             self._send_user_notification(
-                "danger", _("Nilvera verification failed. Please try again.")
+                "danger", self.env._("Nilvera verification failed. Please try again.")
             )
         if results["success"]:
             self._send_user_notification(
-                "success", _("Nilvera status verified successfully.")
+                "success", self.env._("Nilvera status verified successfully.")
             )
         if multi_alias := results["multi_alias"]:
             self._send_user_notification(
                 "warning",
-                _(
+                self.env._(
                     "Multiple alias entries were found for the following partners. Please verify the correct one manually."
                 ),
                 action_button={
-                    "name": _("View Partners"),
-                    "action_name": _("Partners in Error"),
+                    "name": self.env._("View Partners"),
+                    "action_name": self.env._("Partners in Error"),
                     "model": "res.partner",
                     "res_ids": multi_alias.ids,
                 },

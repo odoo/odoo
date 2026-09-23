@@ -2,7 +2,7 @@ import base64
 
 import markupsafe
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.l10n_ro_edi_stock.models.etransport_api import ETransportAPI
@@ -39,7 +39,9 @@ class StockPickingBatch(models.Model):
         first_carrier = self.picking_ids[0].carrier_id
         if any(picking.carrier_id != first_carrier for picking in self.picking_ids):
             raise UserError(
-                _("All Pickings in a Batch Transfer should have the same Carrier")
+                self.env._(
+                    "All Pickings in a Batch Transfer should have the same Carrier"
+                )
             )
 
         # Commercial partner should be the same on all pickings
@@ -49,7 +51,7 @@ class StockPickingBatch(models.Model):
             for picking in self.picking_ids
         ):
             raise UserError(
-                _(
+                self.env._(
                     "All Pickings in a Batch Transfer should have the same Commercial Partner"
                 )
             )
@@ -63,7 +65,7 @@ class StockPickingBatch(models.Model):
 
         if not self.company_id.l10n_ro_edi_access_token:
             errors.append(
-                _(
+                self.env._(
                     "Romanian access token not found. Please generate or fill it in the settings."
                 )
             )
@@ -73,19 +75,21 @@ class StockPickingBatch(models.Model):
             case "stock_sending_failed":
                 if not self._l10n_ro_edi_stock_get_last_document("stock_validated"):
                     errors.append(
-                        _(
+                        self.env._(
                             "This document has not been successfully sent yet because it contains errors."
                         )
                     )
                 else:
                     errors.append(
-                        _(
+                        self.env._(
                             "This document has not been corrected yet because it contains errors."
                         )
                     )
             case "stock_validated":
                 errors.append(
-                    _("This document has already been successfully sent to anaf.")
+                    self.env._(
+                        "This document has already been successfully sent to anaf."
+                    )
                 )
 
         return errors
@@ -330,7 +334,9 @@ class StockPickingBatch(models.Model):
                             new_document_data
                         )
                     case "XML cu erori nepreluat de sistem":
-                        new_document_data["message"] = _("XML contains errors.")
+                        new_document_data["message"] = self.env._(
+                            "XML contains errors."
+                        )
                         batch._l10n_ro_edi_stock_create_document_stock_sending_failed(
                             new_document_data
                         )
@@ -346,5 +352,7 @@ class StockPickingBatch(models.Model):
     def _l10n_ro_edi_stock_report_unhandled_document_state(self, state: str):
         self.check_singleton()
         self.message_post(
-            body=_("Unhandled eTransport document state: %(state)s", state=state)
+            body=self.env._(
+                "Unhandled eTransport document state: %(state)s", state=state
+            )
         )

@@ -7,7 +7,7 @@ from collections import defaultdict
 
 import markupsafe
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -166,11 +166,11 @@ class AccountReportExport(models.Model):
             and options["all_entries"]
             and self.env.user.has_group("account.group_account_readonly")
         ):
-            labels.append(_("With Draft Entries"))
+            labels.append(self.env._("With Draft Entries"))
         if self.filter_unreconciled and options["unreconciled"]:
-            labels.append(_("Unreconciled Entries"))
+            labels.append(self.env._("Unreconciled Entries"))
         if options.get("include_analytic_without_aml"):
-            labels.append(_("Including Analytic Simulations"))
+            labels.append(self.env._("Including Analytic Simulations"))
         return labels + super()._get_pdf_extra_option_labels(options)
 
     @_debug.perf.timed
@@ -263,9 +263,11 @@ class AccountReportExport(models.Model):
         if not company.vat and raise_warning:
             action = self.env.ref("base.action_res_company_form")
             raise RedirectWarning(
-                _("No VAT number associated with your company. Please define one."),
+                self.env._(
+                    "No VAT number associated with your company. Please define one."
+                ),
                 action.id,
-                _("Company Settings"),
+                self.env._("Company Settings"),
             )
         _debug.logic(
             "vat_source",
@@ -288,23 +290,25 @@ class AccountReportExport(models.Model):
         self.check_singleton()
         if not self.is_account_coverage_report_available:
             raise UserError(
-                _("The Accounts Coverage Report is not available for this report.")
+                self.env._(
+                    "The Accounts Coverage Report is not available for this report."
+                )
             )
 
         output = io.BytesIO()
         import xlsxwriter
 
         with xlsxwriter.Workbook(output, {"in_memory": True}) as workbook:
-            worksheet = workbook.add_worksheet(_("Accounts coverage"))
+            worksheet = workbook.add_worksheet(self.env._("Accounts coverage"))
             worksheet.set_column(0, 0, 20)
             worksheet.set_column(1, 1, 75)
             worksheet.set_column(2, 2, 80)
             worksheet.freeze_panes(1, 0)
 
             headers = [
-                _("Account Code / Tag"),
-                _("Error message"),
-                _("Report lines mentioning the account code"),
+                self.env._("Account Code / Tag"),
+                self.env._("Error message"),
+                self.env._("Report lines mentioning the account code"),
                 "#FFFFFF",
             ]
             lines = [headers] + self._generate_accounts_coverage_report_xlsx_lines()
@@ -315,7 +319,7 @@ class AccountReportExport(models.Model):
 
         attachment_id = self.env["ir.attachment"].create(
             {
-                "name": f"{self.display_name} - {_('Accounts Coverage Report')}",
+                "name": f"{self.display_name} - {self.env._('Accounts Coverage Report')}",
                 "datas": base64.encodebytes(output.getvalue()),
             }
         )
@@ -823,35 +827,39 @@ class AccountReportExport(models.Model):
         # Dictionnary of the three possible errors, their message and the corresponding color for the xlsx file
         ERRORS = {
             "NON_REPORTED": {
-                "msg": _(
+                "msg": self.env._(
                     "This account exists in the Chart of Accounts but is not mentioned in any line of the report"
                 ),
                 "color": "#FF0000",
             },
             "DUPLICATE": {
-                "msg": _("This account is reported in multiple lines of the report"),
+                "msg": self.env._(
+                    "This account is reported in multiple lines of the report"
+                ),
                 "color": "#FF8916",
             },
             "DUPLICATE_SAME_LINE": {
-                "msg": _(
+                "msg": self.env._(
                     "This account is reported multiple times on the same line of the report"
                 ),
                 "color": "#E6A91D",
             },
             "NON_EXISTING": {
-                "msg": _(
+                "msg": self.env._(
                     "This account is reported in a line of the report but does not exist in the Chart of Accounts"
                 ),
                 "color": "#FFBF00",
             },
             "NON_LINKED": {
-                "msg": _(
+                "msg": self.env._(
                     "This tag is reported in a line of the report but is not linked to any account of the Chart of Accounts"
                 ),
                 "color": "#FFBF00",
             },
             "BAD_OPERATOR": {
-                "msg": _("The used operator is not supported for this expression."),
+                "msg": self.env._(
+                    "The used operator is not supported for this expression."
+                ),
                 "color": "#FFBF00",
             },
         }
@@ -946,7 +954,7 @@ class AccountReportExport(models.Model):
             (
                 20,
                 "journals",
-                _("Journals"),
+                self.env._("Journals"),
                 [
                     journal.get("title")
                     for journal in options.get("journals") or []
@@ -958,7 +966,7 @@ class AccountReportExport(models.Model):
             (
                 70,
                 "aml_ir_filters",
-                _("Filters"),
+                self.env._("Filters"),
                 [
                     ir_filter["name"]
                     for ir_filter in options.get("aml_ir_filters") or []
@@ -967,15 +975,23 @@ class AccountReportExport(models.Model):
             )
         )
         extra_options = [
-            (_("With Draft Entries"), "all_entries", self.filter_show_draft),
-            (_("Unreconciled Entries"), "unreconciled", self.filter_unreconciled),
-            (_("Including Analytic Simulations"), "include_analytic_without_aml", True),
+            (self.env._("With Draft Entries"), "all_entries", self.filter_show_draft),
+            (
+                self.env._("Unreconciled Entries"),
+                "unreconciled",
+                self.filter_unreconciled,
+            ),
+            (
+                self.env._("Including Analytic Simulations"),
+                "include_analytic_without_aml",
+                True,
+            ),
         ]
         filters.append(
             (
                 80,
                 None,
-                _("Options"),
+                self.env._("Options"),
                 [
                     name
                     for name, option_key, condition in extra_options

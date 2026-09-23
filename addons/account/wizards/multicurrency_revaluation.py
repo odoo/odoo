@@ -2,7 +2,7 @@ import json
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Date
 from odoo.libs.debug_log import DebugLog
@@ -78,7 +78,7 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
             ]
         ):
             _debug.logic("revaluation_defaults_rejected", reason="no_adjustment_needed")
-            raise UserError(_("No adjustment needed"))
+            raise UserError(self.env._("No adjustment needed"))
         return rec
 
     @api.depends(
@@ -119,10 +119,18 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
     @_debug.perf.timed
     def _compute_preview_data(self):
         preview_columns = [
-            {"field": "account_id", "label": _("Account")},
-            {"field": "name", "label": _("Label")},
-            {"field": "debit", "label": _("Debit"), "class": "text-end text-nowrap"},
-            {"field": "credit", "label": _("Credit"), "class": "text-end text-nowrap"},
+            {"field": "account_id", "label": self.env._("Account")},
+            {"field": "name", "label": self.env._("Label")},
+            {
+                "field": "debit",
+                "label": self.env._("Debit"),
+                "class": "text-end text-nowrap",
+            },
+            {
+                "field": "credit",
+                "label": self.env._("Credit"),
+                "class": "text-end text-nowrap",
+            },
         ]
         for record in self:
             preview_vals = [
@@ -211,7 +219,7 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
                 move_lines.append(
                     Command.create(
                         {
-                            "name": _(
+                            "name": self.env._(
                                 "Provision for %(for_cur)s (1 %(comp_cur)s = %(rate)s %(for_cur)s)",
                                 for_cur=self.env["res.currency"]
                                 .browse(currency_id)
@@ -230,12 +238,12 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
                     )
                 )
                 if balance < 0:
-                    move_line_name = _(
+                    move_line_name = self.env._(
                         "Expense Provision for %s",
                         self.env["res.currency"].browse(currency_id).display_name,
                     )
                 else:
-                    move_line_name = _(
+                    move_line_name = self.env._(
                         "Income Provision for %s",
                         self.env["res.currency"].browse(currency_id).display_name,
                     )
@@ -261,7 +269,7 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
             adjusted_accounts=len(move_lines) // 2,
         )
         return {
-            "ref": _(
+            "ref": self.env._(
                 "Foreign currencies adjustment entry as of %s",
                 format_date(self.env, self.date),
             ),
@@ -290,7 +298,7 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
             reverse_move = move._reverse_moves(
                 default_values_list=[
                     {
-                        "ref": _("Reversal of: %s", move.ref),
+                        "ref": self.env._("Reversal of: %s", move.ref),
                     }
                 ]
             )
@@ -309,4 +317,4 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
                 "views": [(form.id, "form")],
                 "context": ctx,
             }
-        raise UserError(_("No provision needed was found."))
+        raise UserError(self.env._("No provision needed was found."))

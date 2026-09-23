@@ -1,6 +1,6 @@
 import json
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
 
@@ -116,7 +116,9 @@ class AccountTax(models.Model):
             formula_context = json.loads(json.dumps(formula_context))
         except TypeError:
             raise ValidationError(
-                _("Only primitive types are allowed in python tax formula context.")
+                self.env._(
+                    "Only primitive types are allowed in python tax formula context."
+                )
             ) from None
         try:
             return safe_eval(normalized_formula, formula_context)

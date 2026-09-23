@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -15,4 +15,6 @@ class ResBank(models.Model):
     def _constrains_intermediary_bank_id(self):
         for bank in self:
             if bank == bank.intermediary_bank_id:
-                raise ValidationError(_("A bank cannot be its own intermediary bank."))
+                raise ValidationError(
+                    self.env._("A bank cannot be its own intermediary bank.")
+                )

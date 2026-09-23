@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, date_utils
@@ -58,7 +58,7 @@ class ResCurrency(models.Model):
                         decimal_places=new_decimal_places,
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot reduce the number of decimal places of a currency which has already been used to make accounting entries."
                         )
                     )

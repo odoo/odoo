@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 
@@ -12,7 +12,9 @@ class L10nInHrLeaveOptionalHoliday(models.Model):
     def default_get(self, fields):
         if self.env.company.country_id.code != "IN":
             raise UserError(
-                _("You must be logged in an Indian company to use this feature")
+                self.env._(
+                    "You must be logged in an Indian company to use this feature"
+                )
             )
         return super().default_get(fields)
 

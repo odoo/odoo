@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 MAX_INT32 = 2147483647
@@ -65,11 +65,11 @@ class AccountJournal(models.Model):
                 r"^[0-9]+$", journal.check_next_number
             ):
                 raise ValidationError(
-                    _("Next Check Number should only contains numbers.")
+                    self.env._("Next Check Number should only contains numbers.")
                 )
             if next_num < journal.check_sequence_id.number_next_actual:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The last check number was %s. In order to avoid a check being rejected "
                         "by the bank, you can only use a greater number.",
                         journal.check_sequence_id.number_next_actual,
@@ -78,7 +78,7 @@ class AccountJournal(models.Model):
             if journal.check_sequence_id:
                 if next_num > MAX_INT32:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The check number you entered (%(num)s) exceeds the maximum allowed value of %(max)d. "
                             "Please enter a smaller number.",
                             num=next_num,
@@ -104,7 +104,7 @@ class AccountJournal(models.Model):
                 .sudo()
                 .create(
                     {
-                        "name": _(
+                        "name": self.env._(
                             "%(journal)s: Check Number Sequence", journal=journal.name
                         ),
                         "implementation": "no_gap",
@@ -134,7 +134,7 @@ class AccountJournal(models.Model):
             lambda l: l.code == "check_printing"
         )[:1].id
         return {
-            "name": _("Checks to Print"),
+            "name": self.env._("Checks to Print"),
             "type": "ir.actions.act_window",
             "view_mode": "list,form,graph",
             "res_model": "account.payment",

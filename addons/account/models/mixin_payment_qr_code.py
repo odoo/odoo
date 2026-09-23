@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -32,5 +32,5 @@ class MixinPaymentQrCode(models.AbstractModel):
         return f'''
             <img class="border border-dark rounded" src="{qr_code}"/>
             <br/>
-            <strong class="text-center">{_("Scan me with your banking app.")}</strong>
+            <strong class="text-center">{self.env._("Scan me with your banking app.")}</strong>
         '''

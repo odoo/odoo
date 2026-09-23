@@ -1,7 +1,7 @@
 import logging
 from datetime import timedelta
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.http import request
 
@@ -45,7 +45,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     def _call_peppol_proxy(self, endpoint, params=None):
         self.check_singleton()
         if self.proxy_type != "peppol":
-            raise UserError(_("EDI user should be of type Peppol"))
+            raise UserError(self.env._("EDI user should be of type Peppol"))
 
         token_out_of_sync_error_message = self.env._(
             "Failed to connect to Peppol Access Point. This might happen if you restored a database from a backup or copied it without neutralization. "
@@ -79,7 +79,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 if not modules.module.current_test:
                     self.env["ir.cron"]._commit_progress()
                 raise UserError(
-                    _(
+                    self.env._(
                         "We could not find a user with this information on our server. Please check your information."
                     )
                 ) from e
@@ -119,7 +119,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 if not tools.config["test_enable"] and not modules.module.current_test:
                     self.env["ir.cron"]._commit_progress()
                 raise UserError(
-                    _(
+                    self.env._(
                         "This connection has been superseded by another database. Register again."
                     )
                 ) from e
@@ -241,7 +241,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if proxy_type == "peppol":
             if not company.peppol_eas or not company.peppol_endpoint:
                 raise UserError(
-                    _("Please fill in the EAS code and the Participant ID code.")
+                    self.env._(
+                        "Please fill in the EAS code and the Participant ID code."
+                    )
                 )
             return f"{company.peppol_eas}:{company.peppol_endpoint}"
         return super()._get_proxy_identification(company, proxy_type)
@@ -325,7 +327,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
             if not edi_user.company_id.account_peppol_config_id.peppol_purchase_journal_id:
-                msg = _(
+                msg = self.env._(
                     "Please set a journal for Peppol invoices on %s before receiving documents.",
                     edi_user.company_id.display_name,
                 )
@@ -430,7 +432,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     # this rare edge case can happen if the participant is not active on the proxy side
                     # in this case we can't get information about the invoices
                     edi_user_moves.peppol_move_state = "error"
-                    log_message = _("Peppol error: %s", content["message"])
+                    log_message = self.env._("Peppol error: %s", content["message"])
                     edi_user_moves._message_log_batch(
                         bodies={move.id: log_message for move in edi_user_moves}
                     )
@@ -449,7 +451,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     continue
 
                 move.peppol_move_state = content["state"]
-                move._message_log(body=_("Peppol status update: %s", content["state"]))
+                move._message_log(
+                    body=self.env._("Peppol status update: %s", content["state"])
+                )
 
             edi_user._call_peppol_proxy(
                 "/api/peppol/1/ack",
@@ -539,7 +543,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 company.account_peppol_config_id.account_peppol_proxy_state
             ]  # handles translation correctly
             raise UserError(
-                _("Cannot register a user with a %s application", peppol_states)
+                self.env._(
+                    "Cannot register a user with a %s application", peppol_states
+                )
             )
 
         edi_identification = self._get_proxy_identification(company, "peppol")

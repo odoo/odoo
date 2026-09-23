@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -28,7 +28,7 @@ class AccountJournal(models.Model):
         for journal in self:
             if journal.l10n_se_invoice_ocr_length < 6:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "OCR Reference Number length need to be greater than 5. Please correct settings under invoice journal settings."
                     )
                 )

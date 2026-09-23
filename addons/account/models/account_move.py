@@ -10,7 +10,7 @@ from textwrap import shorten
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, modules
+from odoo import api, fields, models, modules
 from odoo.db.errors import PG_RETRY_EXCEPTIONS
 from odoo.db.schema import column_exists, create_column
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
@@ -18,6 +18,7 @@ from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import (
     SQL,
+    LazyTranslate,
     TransactionMemo,
     date_utils,
     float_compare,
@@ -36,6 +37,7 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
 
 _logger = logging.getLogger(__name__)
+_lt = LazyTranslate(__name__)
 DEFAULT_JOURNALS = TransactionMemo(
     "account.move.default_journals", invalidated_by=("account.journal",)
 )
@@ -1440,8 +1442,8 @@ class AccountMove(models.Model):
     def _compute_type_name(self):
         type_name_mapping = dict(
             self._fields["move_type"]._description_selection(self.env),
-            out_invoice=_("Invoice"),
-            out_refund=_("Credit Note"),
+            out_invoice=self.env._("Invoice"),
+            out_refund=self.env._("Credit Note"),
         )
 
         for record in self:
@@ -2203,9 +2205,9 @@ class AccountMove(models.Model):
                     "outstanding": True,
                     "content": content,
                     "move_id": move.id,
-                    "title": _("Outstanding credits")
+                    "title": self.env._("Outstanding credits")
                     if move.is_inbound()
-                    else _("Outstanding debits"),
+                    else self.env._("Outstanding debits"),
                 }
 
     @api.depends("invoice_outstanding_credits_debits_widget")
@@ -2233,7 +2235,7 @@ class AccountMove(models.Model):
     def _compute_invoice_payments_widget(self):
         for move in self:
             payments_widget_vals = {
-                "title": _("Less Payment"),
+                "title": self.env._("Less Payment"),
                 "outstanding": False,
                 "content": [],
             }
@@ -2687,11 +2689,11 @@ class AccountMove(models.Model):
             vendor_display_name = move.partner_id.display_name
             if not vendor_display_name:
                 if move.invoice_source_email:
-                    vendor_display_name = _(
+                    vendor_display_name = self.env._(
                         "@From: %(email)s", email=move.invoice_source_email
                     )
                 else:
-                    vendor_display_name = _(
+                    vendor_display_name = self.env._(
                         "#Created by: %s",
                         move.sudo().create_uid.name or self.env.user.name,
                     )
@@ -2820,9 +2822,8 @@ class AccountMove(models.Model):
                 )
             else:
                 baseurl = move.company_id.get_base_url() + "/terms"
-                context = {"lang": lang}
-                narration = _("Terms & Conditions: %s", baseurl)
-                del context
+                terms_env = self.with_context(lang=lang).env if lang else self.env
+                narration = terms_env._("Terms & Conditions: %s", baseurl)
             move.narration = narration or False
 
     def _get_partner_credit_warning_exclude_amount(self):
@@ -2873,7 +2874,7 @@ class AccountMove(models.Model):
             )
         if not partner_id.credit_limit or total_credit <= partner_id.credit_limit:
             return ""
-        msg = _(
+        msg = self.env._(
             "%(partner_name)s has reached its credit limit of: %(credit_limit)s",
             partner_name=partner_id.name,
             credit_limit=formatLang(
@@ -2889,7 +2890,7 @@ class AccountMove(models.Model):
             return (
                 msg
                 + "\n"
-                + _(
+                + self.env._(
                     "Total amount due (including sales orders and this document): %(total_credit)s",
                     total_credit=total_credit_formatted,
                 )
@@ -2898,7 +2899,7 @@ class AccountMove(models.Model):
             return (
                 msg
                 + "\n"
-                + _(
+                + self.env._(
                     "Total amount due (including sales orders): %(total_credit)s",
                     total_credit=total_credit_formatted,
                 )
@@ -2907,7 +2908,7 @@ class AccountMove(models.Model):
             return (
                 msg
                 + "\n"
-                + _(
+                + self.env._(
                     "Total amount due (including this document): %(total_credit)s",
                     total_credit=total_credit_formatted,
                 )
@@ -2916,7 +2917,7 @@ class AccountMove(models.Model):
             return (
                 msg
                 + "\n"
-                + _(
+                + self.env._(
                     "Total amount due: %(total_credit)s",
                     total_credit=total_credit_formatted,
                 )
@@ -3158,7 +3159,7 @@ class AccountMove(models.Model):
             move.invoice_incoterm_placeholder = (
                 move.company_id.account_config_id.incoterm_id.display_name
                 if move.company_id.account_config_id.incoterm_id
-                else _("Define a default in the settings")
+                else self.env._("Define a default in the settings")
             )
 
     def _is_abnormal_detection_enabled(self):
@@ -3197,7 +3198,7 @@ class AccountMove(models.Model):
             not move.partner_id.ignore_abnormal_invoice_date
             and (invoice_date - last_invoice_date).days
             < int(date_diff_mean - wiggle_room_date)
-        ) and _(
+        ) and self.env._(
             "The billing frequency for %(partner_name)s appears unusual. Based on your historical data, "
             "the expected next invoice date is not before %(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
             "Please verify if this date is accurate.",
@@ -3221,7 +3222,7 @@ class AccountMove(models.Model):
                 <= move.amount_total
                 <= amount_mean + wiggle_room_amount
             )
-        ) and _(
+        ) and self.env._(
             "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
             "Please verify if this amount is accurate.",
             partner_name=move.partner_id.display_name,
@@ -3459,7 +3460,7 @@ class AccountMove(models.Model):
             if self.auto_post == "at_date":
                 alerts["account_auto_post_at_date"] = {
                     "level": "info",
-                    "message": _(
+                    "message": self.env._(
                         "This move is configured to be posted automatically at the accounting date: %s.",
                         self.date,
                     ),
@@ -3468,7 +3469,7 @@ class AccountMove(models.Model):
                 unit_labels = dict(
                     self._fields["repeat_unit"]._description_selection(self.env)
                 )
-                message = _(
+                message = self.env._(
                     "Recurring auto-posting enabled, every %(interval)s"
                     " %(unit)s. Next accounting date: %(move_date)s.",
                     interval=self.repeat_interval,
@@ -3477,7 +3478,7 @@ class AccountMove(models.Model):
                 )
                 if self.repeat_until:
                     message += " "
-                    message += _(
+                    message += self.env._(
                         "The recurrence will end on %s (included).",
                         self.repeat_until,
                     )
@@ -3496,15 +3497,17 @@ class AccountMove(models.Model):
             ):
                 alerts["account_remove_empty_lines"] = {
                     "level": "info",
-                    "message": _("We've noticed some empty lines on your invoice."),
-                    "action_text": _("Remove empty lines"),
+                    "message": self.env._(
+                        "We've noticed some empty lines on your invoice."
+                    ),
+                    "action_text": self.env._("Remove empty lines"),
                     "action_call": ("account.move.line", "unlink", zero_lines.ids),
                 }
 
         if self.is_being_sent:
             alerts["account_is_being_sent"] = {
                 "level": "info",
-                "message": _("This invoice is being sent in the background."),
+                "message": self.env._("This invoice is being sent in the background."),
             }
         if has_account_group and self.partner_credit_warning:
             alerts["account_partner_credit_warning"] = {
@@ -3669,7 +3672,7 @@ class AccountMove(models.Model):
         for move in self:
             if not move.company_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "We can't leave this document without any company. Please select a company for this document."
                     )
                 )
@@ -3797,11 +3800,11 @@ class AccountMove(models.Model):
                     company=company,
                 )
                 action = self.env.ref("account.action_account_config")
-                msg = _(
+                msg = self.env._(
                     "Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration."
                 )
                 raise RedirectWarning(
-                    msg, action.id, _("Go to the configuration panel")
+                    msg, action.id, self.env._("Go to the configuration panel")
                 )
 
     @api.onchange("name", "highest_name")
@@ -3842,7 +3845,7 @@ class AccountMove(models.Model):
             if new_format != origin_format or dict(
                 new_format_values, year=0, month=0, seq=0
             ) != dict(origin_format_values, year=0, month=0, seq=0):
-                changed = _(
+                changed = self.env._(
                     "It was previously '%(previous)s' and it is now '%(current)s'.",
                     previous=origin_name,
                     current=self.name,
@@ -3856,26 +3859,26 @@ class AccountMove(models.Model):
                     reset=reset,
                 )
                 if reset == "month":
-                    detected = _(
+                    detected = self.env._(
                         "The sequence will restart at 1 at the start of every month.\n"
                         "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
                         "The incrementing number in this case is '%(formatted_seq)s'."
                     )
                 elif reset == "year":
-                    detected = _(
+                    detected = self.env._(
                         "The sequence will restart at 1 at the start of every year.\n"
                         "The year detected here is '%(year)s'.\n"
                         "The incrementing number in this case is '%(formatted_seq)s'."
                     )
                 elif reset == "year_range":
-                    detected = _(
+                    detected = self.env._(
                         "The sequence will restart at 1 at the start of every financial year.\n"
                         "The financial start year detected here is '%(year)s'.\n"
                         "The financial end year detected here is '%(year_end)s'.\n"
                         "The incrementing number in this case is '%(formatted_seq)s'."
                     )
                 elif reset == "year_range_month":
-                    detected = _(
+                    detected = self.env._(
                         "The sequence will restart at 1 at the start of every month.\n"
                         "The financial start year detected here is '%(year)s'.\n"
                         "The financial end year detected here is '%(year_end)s'.\n"
@@ -3883,7 +3886,7 @@ class AccountMove(models.Model):
                         "The incrementing number in this case is '%(formatted_seq)s'."
                     )
                 else:
-                    detected = _(
+                    detected = self.env._(
                         "The sequence will never restart.\n"
                         "The incrementing number in this case is '%(formatted_seq)s'."
                     )
@@ -3893,7 +3896,7 @@ class AccountMove(models.Model):
                 detected %= new_format_values
                 return {
                     "warning": {
-                        "title": _("The sequence format has changed."),
+                        "title": self.env._("The sequence format has changed."),
                         "message": "%s\n\n%s" % (changed, detected),
                     }
                 }
@@ -3914,11 +3917,11 @@ class AccountMove(models.Model):
             ):
                 return {
                     "warning": {
-                        "title": _(
+                        "title": self.env._(
                             "Warning for Cash Rounding Method: %s",
                             move.invoice_cash_rounding_id.name,
                         ),
-                        "message": _(
+                        "message": self.env._(
                             "You must specify the Profit Account (company dependent)"
                         ),
                     }
@@ -3939,9 +3942,9 @@ class AccountMove(models.Model):
                 "_check_balanced_unbalanced_rows", unbalanced_moves=unbalanced_moves[:8]
             )
             if len(unbalanced_moves) == 1:
-                raise UserError(_("The entry is not balanced."))
+                raise UserError(self.env._("The entry is not balanced."))
 
-            error_msg = _("The following entries are unbalanced:\n\n")
+            error_msg = self.env._("The following entries are unbalanced:\n\n")
             names = self.browse(row[0] for row in unbalanced_moves).mapped("name")
             error_msg += "".join(f"  - {name}\n" for name in names)
 
@@ -3996,7 +3999,7 @@ class AccountMove(models.Model):
                     journal=journal,
                     violations=violated_lock_dates,
                 )
-                message = _(
+                message = self.env._(
                     "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s.",
                     lock_date_info=self.env["res.company"]._format_lock_dates(
                         violated_lock_dates
@@ -4014,7 +4017,7 @@ class AccountMove(models.Model):
                 and not record.invoice_date
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "For this entry to be automatically posted, it required a bill date."
                     )
                 )
@@ -4031,7 +4034,9 @@ class AccountMove(models.Model):
                     "purchase_journal_mismatch", move=move, journal=move.journal_id
                 )
                 raise ValidationError(
-                    _("Cannot create a purchase document in a non purchase journal")
+                    self.env._(
+                        "Cannot create a purchase document in a non purchase journal"
+                    )
                 )
             if (
                 move.is_sale_document(include_receipts=True)
@@ -4041,7 +4046,7 @@ class AccountMove(models.Model):
                     "sale_journal_mismatch", move=move, journal=move.journal_id
                 )
                 raise ValidationError(
-                    _("Cannot create a sale document in a non sale journal")
+                    self.env._("Cannot create a sale document in a non sale journal")
                 )
 
     @_debug.perf.timed
@@ -4082,12 +4087,16 @@ class AccountMove(models.Model):
             for base_line in aggregated_base_lines:
                 result_per_invoice_line[base_line["_invoice_line"]] = {
                     key_line: {
-                        "name": _("Early Payment Discount (%s)", percentage_name),
+                        "name": self.env._(
+                            "Early Payment Discount (%s)", percentage_name
+                        ),
                         "amount_currency": 0.0,
                         "balance": 0.0,
                     },
                     key_counterpart: {
-                        "name": _("Early Payment Discount (%s)", percentage_name),
+                        "name": self.env._(
+                            "Early Payment Discount (%s)", percentage_name
+                        ),
                         "amount_currency": 0.0,
                         "balance": 0.0,
                         "tax_ids": [Command.clear()],
@@ -4173,7 +4182,7 @@ class AccountMove(models.Model):
         forbidden = journals - selectable
         if forbidden:
             raise ValidationError(
-                _(
+                self.env._(
                     "You are not allowed to use the journal %(journals)s.",
                     journals=", ".join(forbidden.mapped("display_name")),
                 )
@@ -4197,7 +4206,7 @@ class AccountMove(models.Model):
                         countries=impacted_countries,
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "This entry contains taxes that are not compatible with your fiscal position. Check the country set in fiscal position and in your tax configuration."
                         )
                     )
@@ -4207,7 +4216,7 @@ class AccountMove(models.Model):
                     countries=impacted_countries,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "This entry contains one or more taxes that are incompatible with your fiscal country. Check company fiscal country in the settings and tax country in taxes configuration."
                     )
                 )
@@ -4223,7 +4232,9 @@ class AccountMove(models.Model):
                 and move.is_invoice(include_receipts=True)
                 and move.invoice_currency_rate <= 0
             ):
-                raise ValidationError(_("The currency rate must be strictly positive."))
+                raise ValidationError(
+                    self.env._("The currency rate must be strictly positive.")
+                )
 
     def _is_eligible_for_early_payment_discount(self, currency, reference_date):
         self.check_singleton()
@@ -4333,7 +4344,7 @@ class AccountMove(models.Model):
                 if not new_move.auto_post_origin_id
                 else (
                     Markup("<br/>")
-                    + _(
+                    + self.env._(
                         "This recurring entry originated from %s",
                         new_move.auto_post_origin_id._get_html_link(),
                     )
@@ -4346,9 +4357,11 @@ class AccountMove(models.Model):
 
     def _get_copy_message_content(self, default):
         return (
-            _("This entry has been reversed from %s", self._get_html_link())
+            self.env._("This entry has been reversed from %s", self._get_html_link())
             if default.get("reversed_entry_id")
-            else _("This entry has been duplicated from %s", self._get_html_link())
+            else self.env._(
+                "This entry has been duplicated from %s", self._get_html_link()
+            )
         )
 
     @_debug.perf.timed
@@ -4376,7 +4389,7 @@ class AccountMove(models.Model):
         for command, line_id, *line_vals in vals["invoice_line_ids"]:
             if command in (Command.SET, Command.CLEAR):
                 raise UserError(
-                    _(
+                    self.env._(
                         "The lines of this entry cannot be replaced wholesale while "
                         "individual journal items are also being modified in the same "
                         "operation. Save the line changes first, then replace them."
@@ -4425,7 +4438,7 @@ class AccountMove(models.Model):
             )
         if any(vals.get("state") == "posted" for vals in vals_list):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot create a move already in the posted state. Please create a draft move and post it after."
                 )
             )
@@ -4497,7 +4510,7 @@ class AccountMove(models.Model):
                 journal_id=vals.get("journal_id"),
             )
             raise UserError(
-                _(
+                self.env._(
                     'You cannot edit the journal of an account move if it has been posted once, unless the name is removed or set to "/". This might create a gap in the sequence.'
                 )
             )
@@ -4515,7 +4528,7 @@ class AccountMove(models.Model):
                 journal_id=vals.get("journal_id"),
             )
             raise UserError(
-                _(
+                self.env._(
                     'You cannot edit the journal of an account move with a sequence number assigned, unless the name is removed or set to "/". This might create a gap in the sequence.'
                 )
             )
@@ -4524,7 +4537,7 @@ class AccountMove(models.Model):
     def _check_write_review_rights(self, move, vals):
         if vals.get("checked") and not move._is_user_able_to_review():
             raise AccessError(
-                _("You don't have the access rights to perform this action.")
+                self.env._("You don't have the access rights to perform this action.")
             )
         if (
             vals.get("state") == "draft"
@@ -4532,7 +4545,7 @@ class AccountMove(models.Model):
             and not move._is_user_able_to_review()
         ):
             raise ValidationError(
-                _("Validated entries can only be changed by your accountant.")
+                self.env._("Validated entries can only be changed by your accountant.")
             )
 
     @_debug.perf.timed
@@ -4545,7 +4558,7 @@ class AccountMove(models.Model):
         ):
             if not self.env.user.has_group("account.group_account_manager"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "The Journal Entry sequence is not conform to the current format. Only the Accountant can change it."
                     )
                 )
@@ -4577,7 +4590,7 @@ class AccountMove(models.Model):
                     fields=len(violated_fields),
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "This document is protected by a hash. "
                         "Therefore, you cannot edit the following fields: %s.",
                         ", ".join(
@@ -4604,7 +4617,7 @@ class AccountMove(models.Model):
             move_state = vals.get("state", move.state)
             if not skip_readonly_check and move_state == "posted" and readonly_fields:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot modify the following readonly fields on a posted move: %s",
                         ", ".join(
                             f["string"]
@@ -4751,7 +4764,7 @@ class AccountMove(models.Model):
                 "chain_unlink_blocked", moves=self, protected_moves=protected_moves
             )
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete this entry, as it has already consumed a sequence number and is not the last one in the chain. "
                     "You should probably revert it instead."
                 )
@@ -4765,7 +4778,7 @@ class AccountMove(models.Model):
             self.mapped("inalterable_hash")
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete a journal entry that has been secured with "
                     "an inalterability hash."
                 )
@@ -4781,7 +4794,7 @@ class AccountMove(models.Model):
             for move in self
         ):
             raise UserError(
-                _(
+                self.env._(
                     "To keep the restrictive audit trail, you can not delete journal entries once they have been posted.\n"
                     "Instead, you can cancel the journal entry."
                 )
@@ -5158,7 +5171,7 @@ class AccountMove(models.Model):
                 }
             )
             tax_line_vals_list[grouping_dict] = {
-                "name": _("Early Payment Discount (%s)", tax_rep.tax_id.name),
+                "name": self.env._("Early Payment Discount (%s)", tax_rep.tax_id.name),
                 "amount_currency": payment_term_line.currency_id.round(
                     tax_line_vals["amount_currency"] * percentage_paid
                 ),
@@ -5202,7 +5215,7 @@ class AccountMove(models.Model):
 
         base_line_vals = {
             grouping_dict: {
-                "name": _("Early Payment Discount"),
+                "name": self.env._("Early Payment Discount"),
                 "amount_currency": payment_term_line.currency_id.round(
                     base_detail["amount_currency"] * percentage_paid
                 ),
@@ -5254,7 +5267,7 @@ class AccountMove(models.Model):
                 document_type=tax_rep.document_type,
             )
             raise UserError(
-                _(
+                self.env._(
                     "The invoice and credit note distribution of tax %(tax)s"
                     " must contain the same number of lines to compute the"
                     " early payment discount.",
@@ -5379,7 +5392,7 @@ class AccountMove(models.Model):
             grouping_dict = {"account_id": cash_discount_account.id}
 
             res["term_lines"][payment_term_line][frozendict(grouping_dict)] = {
-                "name": _("Early Payment Discount"),
+                "name": self.env._("Early Payment Discount"),
                 "partner_id": payment_term_line.partner_id.id,
                 "currency_id": payment_term_line.currency_id.id,
                 "amount_currency": term_amount_currency,
@@ -5457,7 +5470,7 @@ class AccountMove(models.Model):
                 frozendict(grouping_dict),
                 {
                     **grouping_dict,
-                    "name": _("Early Payment Discount (Exchange Difference)"),
+                    "name": self.env._("Early Payment Discount (Exchange Difference)"),
                     "amount_currency": 0.0,
                     "balance": 0.0,
                 },
@@ -5489,7 +5502,7 @@ class AccountMove(models.Model):
             currency_amount = self.currency_id.format(self.amount_total)
             if self.is_sale_document(include_receipts=True) and self.state == "posted":
                 ref = f" - {self.ref}" if self.ref else ""
-                return _(
+                return self.env._(
                     "%(name)s%(ref)s at %(currency_amount)s",
                     name=(self.name),
                     ref=ref,
@@ -5502,27 +5515,29 @@ class AccountMove(models.Model):
             )
             if label:
                 if self.state == "draft":
-                    return _(
+                    return self.env._(
                         "%(label)s at %(currency_amount)s (Draft)",
                         label=label,
                         currency_amount=currency_amount,
                     )
-                return _(
+                return self.env._(
                     "%(label)s at %(currency_amount)s",
                     label=label,
                     currency_amount=currency_amount,
                 )
-            return _("Draft (%(currency_amount)s)", currency_amount=currency_amount)
+            return self.env._(
+                "Draft (%(currency_amount)s)", currency_amount=currency_amount
+            )
         name = ""
         if self.state == "draft":
             name += {
-                "out_invoice": _("Draft Invoice"),
-                "out_refund": _("Draft Credit Note"),
-                "in_invoice": _("Draft Bill"),
-                "in_refund": _("Draft Vendor Credit Note"),
-                "out_receipt": _("Draft Sales Receipt"),
-                "in_receipt": _("Draft Purchase Receipt"),
-                "entry": _("Draft Entry"),
+                "out_invoice": self.env._("Draft Invoice"),
+                "out_refund": self.env._("Draft Credit Note"),
+                "in_invoice": self.env._("Draft Bill"),
+                "in_refund": self.env._("Draft Vendor Credit Note"),
+                "out_receipt": self.env._("Draft Sales Receipt"),
+                "in_receipt": self.env._("Draft Purchase Receipt"),
+                "entry": self.env._("Draft Entry"),
             }[self.move_type]
         if self.name and self.name != "/":
             name = f"{name} {self.name}".strip()
@@ -5845,7 +5860,9 @@ class AccountMove(models.Model):
         if not self.env.su and not self.env.user.has_group(
             "account.group_account_invoice"
         ):
-            raise AccessError(_("You don't have the access rights to post an invoice."))
+            raise AccessError(
+                self.env._("You don't have the access rights to post an invoice.")
+            )
 
     def _post_check_business_rules(self):
         return
@@ -5857,7 +5874,7 @@ class AccountMove(models.Model):
                 "partner_bank_archived", move=invoice, bank=invoice.bank_account_id
             )
             validation_msgs.add(
-                _(
+                self.env._(
                     "The recipient bank account linked to this invoice is archived.\n"
                     "So you cannot confirm the invoice."
                 )
@@ -5880,17 +5897,17 @@ class AccountMove(models.Model):
                 invoice.bank_account_id = False
             elif invoice.bank_account_id._can_user_trust():
                 raise RedirectWarning(
-                    _(
+                    self.env._(
                         "The company bank account (%(account_number)s) linked to this invoice is not trusted. "
                         "Go to the Bank Settings, double-check that it is yours or correct the number, and click on Send Money to trust it.",
                         account_number=invoice.bank_account_id.display_name,
                     ),
                     invoice.bank_account_id._get_records_action(),
-                    _("Bank settings"),
+                    self.env._("Bank settings"),
                 )
             else:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The bank account of your company is not trusted. Please ask an admin or someone with approval rights to check it."
                     )
                 )
@@ -5923,7 +5940,9 @@ class AccountMove(models.Model):
         elif invoice.is_purchase_document(include_receipts=True):
             _debug.logic("bill_date_missing", move=invoice)
             validation_msgs.add(
-                _("The Bill/Refund date is required to validate this document.")
+                self.env._(
+                    "The Bill/Refund date is required to validate this document."
+                )
             )
 
     @_debug.perf.timed
@@ -5946,7 +5965,7 @@ class AccountMove(models.Model):
                     amount_total=invoice.amount_total,
                 )
                 validation_msgs.add(
-                    _(
+                    self.env._(
                         "The current total is %(current_total)s but the expected total is %(expected_total)s. In order to post the invoice/bill, "
                         "you can adjust its lines or the expected Total (tax inc.).",
                         current_total=formatLang(
@@ -5969,7 +5988,7 @@ class AccountMove(models.Model):
                     amount_total=invoice.amount_total,
                 )
                 validation_msgs.add(
-                    _(
+                    self.env._(
                         "You cannot validate an invoice with a negative total amount. "
                         "You should create a credit note instead. "
                         "Use the action menu to transform it into a credit note or refund."
@@ -5980,14 +5999,14 @@ class AccountMove(models.Model):
                 _debug.logic("post_refused_missing_partner", move=invoice)
                 if invoice.is_sale_document():
                     validation_msgs.add(
-                        _(
+                        self.env._(
                             "The 'Customer' field is required to validate the invoice.\n"
                             "You probably don't want to explain to your auditor that you invoiced an invisible man :)"
                         )
                     )
                 elif invoice.is_purchase_document():
                     validation_msgs.add(
-                        _(
+                        self.env._(
                             "The field 'Vendor' is required, please complete it to validate the Vendor Bill."
                         )
                     )
@@ -6000,7 +6019,7 @@ class AccountMove(models.Model):
             if move.state in ["posted", "cancel"]:
                 _debug.logic("post_refused_not_draft", move=move, state=move.state)
                 validation_msgs.add(
-                    _(
+                    self.env._(
                         "The entry %(name)s (id %(id)s) must be in draft.",
                         name=move.name,
                         id=move.id,
@@ -6010,7 +6029,7 @@ class AccountMove(models.Model):
                 lambda line: line.display_type not in NON_ACCOUNTABLE_DISPLAY_TYPES
             ):
                 _debug.logic("post_refused_no_accountable_lines", move=move)
-                validation_msgs.add(_("Even magicians can't post nothing!"))
+                validation_msgs.add(self.env._("Even magicians can't post nothing!"))
             if (
                 posting_now
                 and move.auto_post != "no"
@@ -6024,21 +6043,21 @@ class AccountMove(models.Model):
                 )
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
                 validation_msgs.add(
-                    _(
+                    self.env._(
                         "This move is configured to be auto-posted on %(date)s",
                         date=date_msg,
                     )
                 )
             if not move.journal_id.active:
                 validation_msgs.add(
-                    _(
+                    self.env._(
                         "You cannot post an entry in an archived journal (%(journal)s)",
                         journal=move.journal_id.display_name,
                     )
                 )
             if move.display_inactive_currency_warning:
                 validation_msgs.add(
-                    _(
+                    self.env._(
                         "You cannot validate a document with an inactive currency: %s",
                         move.currency_id.name,
                     )
@@ -6048,7 +6067,7 @@ class AccountMove(models.Model):
                 lambda account: not account.active
             ) and not self.env.context.get("skip_account_deprecation_check"):
                 validation_msgs.add(
-                    _(
+                    self.env._(
                         "A line of this move is using a archived account, you cannot post it."
                     )
                 )
@@ -6099,7 +6118,7 @@ class AccountMove(models.Model):
             .distribution_analytic_account_ids.filtered(lambda a: not a.active)
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot post an entry with an archived analytic account: %s",
                     ", ".join(inactive_analytic_ids.mapped("name")),
                 )
@@ -6225,7 +6244,7 @@ class AccountMove(models.Model):
         future_moves.filtered(lambda move: move.auto_post == "no").auto_post = "at_date"
         future_moves._message_log_batch(
             bodies={
-                move.id: _(
+                move.id: self.env._(
                     "This move will be posted at the accounting date: %(date)s",
                     date=format_date(self.env, move.date),
                 )
@@ -6291,9 +6310,9 @@ class AccountMove(models.Model):
         line_ids_per_name = defaultdict(list)
         for line in non_deductible_lines:
             line_ids_per_name[
-                _("%s - private part", line.move_id.name)
+                self.env._("%s - private part", line.move_id.name)
                 if line.display_type == "non_deductible_product_total"
-                else _("%s - private part (taxes)", line.move_id.name)
+                else self.env._("%s - private part (taxes)", line.move_id.name)
             ].append(line.id)
         for name, line_ids in line_ids_per_name.items():
             self.env["account.move.line"].browse(line_ids).name = name
@@ -6514,7 +6533,7 @@ class AccountMove(models.Model):
         if eligible:
             if self.duplicated_ref_ids:
                 self.message_post(
-                    body=_(
+                    body=self.env._(
                         "Auto-post was disabled on this invoice because a potential duplicate was detected."
                     )
                 )
@@ -6567,7 +6586,7 @@ class AccountMove(models.Model):
             }
         )
         return {
-            "name": _("Autopost Bills"),
+            "name": self.env._("Autopost Bills"),
             "type": "ir.actions.act_window",
             "res_model": "account.autopost.bills.wizard",
             "res_id": wizard.id,
@@ -6579,7 +6598,7 @@ class AccountMove(models.Model):
     def open_payments(self):
         _debug.lifecycle("open_payments", records=self)
         payments = self.reconciled_payment_ids
-        return payments._get_records_action(name=_("Payments"))
+        return payments._get_records_action(name=self.env._("Payments"))
 
     @_debug.perf.timed
     def open_reconcile_view(self):
@@ -6591,15 +6610,15 @@ class AccountMove(models.Model):
         _debug.lifecycle("action_view_business_doc", records=self)
         self.check_singleton()
         if self.origin_payment_id:
-            name = _("Payment")
+            name = self.env._("Payment")
             res_model = "account.payment"
             res_id = self.origin_payment_id.id
         elif self.statement_line_id:
-            name = _("Bank Transaction")
+            name = self.env._("Bank Transaction")
             res_model = "account.bank.statement.line"
             res_id = self.statement_line_id.id
         else:
-            name = _("Journal Entry")
+            name = self.env._("Journal Entry")
             res_model = "account.move"
             res_id = self.id
 
@@ -6620,7 +6639,9 @@ class AccountMove(models.Model):
         if any(move.state != "draft" for move in self):
             _debug.logic("fpos_update_refused", moves=self, reason="not_draft")
             raise UserError(
-                _("The fiscal position values can only be updated on draft entries.")
+                self.env._(
+                    "The fiscal position values can only be updated on draft entries."
+                )
             )
         container = {"records": self}
         with self._check_balanced(container), self._sync_dynamic_lines(container):
@@ -6662,7 +6683,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Cash Basis Entries"),
+            "name": self.env._("Cash Basis Entries"),
             "res_model": "account.move",
             "view_mode": "form",
             "domain": [("id", "in", self.tax_cash_basis_created_move_ids.ids)],
@@ -6696,12 +6717,14 @@ class AccountMove(models.Model):
         _debug.lifecycle("action_switch_move_type", records=self)
         if any((move.posted_before and move.name) for move in self):
             raise ValidationError(
-                _(
+                self.env._(
                     "You cannot switch the type of a document with an existing sequence number."
                 )
             )
         if any(move.move_type == "entry" for move in self):
-            raise ValidationError(_("This action isn't available for this document."))
+            raise ValidationError(
+                self.env._("This action isn't available for this document.")
+            )
 
         for move in self:
             in_out, old_move_type = move.move_type.split("_")
@@ -6764,7 +6787,7 @@ class AccountMove(models.Model):
         _debug.lifecycle("action_register_payment", records=self)
         if any(m.state != "posted" for m in self):
             raise UserError(
-                _("You can only register payment for posted journal entries.")
+                self.env._("You can only register payment for posted journal entries.")
             )
         return self.action_force_register_payment()
 
@@ -6773,11 +6796,11 @@ class AccountMove(models.Model):
         _debug.lifecycle("action_force_register_payment", records=self)
         if any(m.move_type == "entry" for m in self):
             raise UserError(
-                _("You cannot register payments for miscellaneous entries.")
+                self.env._("You cannot register payments for miscellaneous entries.")
             )
         if blocked := self.filtered(lambda m: m.payment_state == "blocked"):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot register payments for blocked invoices: "
                     "%(invoices)s.\nUnblock them first.",
                     invoices=", ".join(blocked.mapped("display_name")),
@@ -6803,7 +6826,7 @@ class AccountMove(models.Model):
         _debug.lifecycle("action_send_and_print", records=self)
         self.env["mixin.account.move.send"]._check_move_constraints(self)
         return {
-            "name": _("Send"),
+            "name": self.env._("Send"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "account.move.send.wizard"
@@ -6858,7 +6881,7 @@ class AccountMove(models.Model):
         )
 
         if self.is_invoice():
-            action["name"] = _("Credit Note")
+            action["name"] = self.env._("Credit Note")
 
         return action
 
@@ -6869,7 +6892,7 @@ class AccountMove(models.Model):
             }
         )
         action = {
-            "name": _("Confirm Entries"),
+            "name": self.env._("Confirm Entries"),
             "type": "ir.actions.act_window",
             "res_model": "validate.account.move",
             "res_id": wizard.id,
@@ -6923,7 +6946,9 @@ class AccountMove(models.Model):
         _debug.lifecycle("action_post_moves_with_confirmation", records=self)
         draft_moves = self.filtered(lambda m: m.state == "draft" and m.line_ids)
         if not draft_moves:
-            raise UserError(_("There are no journal items in the draft state to post."))
+            raise UserError(
+                self.env._("There are no journal items in the draft state to post.")
+            )
 
         return draft_moves._post_needing_confirmation(
             draft_moves._filtered_requiring_confirmation(),
@@ -6942,7 +6967,7 @@ class AccountMove(models.Model):
             or counterpart_line.reconciled
         ):
             raise UserError(
-                _("This line cannot be reconciled with this invoice anymore.")
+                self.env._("This line cannot be reconciled with this invoice anymore.")
             )
         lines = counterpart_line
         lines += self.line_ids.filtered(
@@ -6965,7 +6990,9 @@ class AccountMove(models.Model):
         partial = self.env["account.partial.reconcile"].browse(partial_id).exists()
         if not (partial.debit_move_id + partial.credit_move_id) & self.line_ids:
             raise UserError(
-                _("This partial reconciliation does not concern this document.")
+                self.env._(
+                    "This partial reconciliation does not concern this document."
+                )
             )
         return partial.unlink()
 
@@ -6985,11 +7012,13 @@ class AccountMove(models.Model):
         _debug.lifecycle("action_draft", records=self)
         if any(move.state not in ("cancel", "posted") for move in self):
             raise UserError(
-                _("Only posted/cancelled journal entries can be reset to draft.")
+                self.env._(
+                    "Only posted/cancelled journal entries can be reset to draft."
+                )
             )
         if any(move.need_cancel_request for move in self):
             raise UserError(
-                _(
+                self.env._(
                     "You can't reset to draft those journal entries. You need to request a cancellation instead."
                 )
             )
@@ -7075,7 +7104,7 @@ class AccountMove(models.Model):
                 attachment_name, attachment_extension = (
                     (stem, f".{extension}") if stem else (attachment.name, "")
                 )
-                attachment.name = _(
+                attachment.name = self.env._(
                     "%(attachment_name)s (detached by %(user)s on %(date)s)%(attachment_extension)s",
                     attachment_name=attachment_name,
                     attachment_extension=attachment_extension,
@@ -7103,16 +7132,22 @@ class AccountMove(models.Model):
             if move.id in exchange_move_ids:
                 _debug.logic("draft_blocked_exchange_move", move=move)
                 raise UserError(
-                    _("You cannot reset to draft an exchange difference journal entry.")
+                    self.env._(
+                        "You cannot reset to draft an exchange difference journal entry."
+                    )
                 )
             if move.tax_cash_basis_rec_id or move.tax_cash_basis_origin_move_id:
                 _debug.logic("draft_blocked_cash_basis", move=move)
                 raise UserError(
-                    _("You cannot reset to draft a tax cash basis journal entry.")
+                    self.env._(
+                        "You cannot reset to draft a tax cash basis journal entry."
+                    )
                 )
             if move.inalterable_hash:
                 _debug.logic("draft_blocked_hashed", move=move)
-                raise UserError(_("You cannot reset to draft a locked journal entry."))
+                raise UserError(
+                    self.env._("You cannot reset to draft a locked journal entry.")
+                )
 
     @_debug.perf.timed
     def button_hash(self):
@@ -7125,7 +7160,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         if not self.need_cancel_request:
             raise UserError(
-                _(
+                self.env._(
                     "You can only request a cancellation for invoice sent to the government."
                 )
             )
@@ -7138,7 +7173,7 @@ class AccountMove(models.Model):
             moves_to_reset_draft.action_draft()
 
         if any(move.state != "draft" for move in self):
-            raise UserError(_("Only draft journal entries can be cancelled."))
+            raise UserError(self.env._("Only draft journal entries can be cancelled."))
 
         self.line_ids.remove_move_reconcile()
         self.payment_ids.state = "canceled"
@@ -7153,7 +7188,7 @@ class AccountMove(models.Model):
             self.env.add_to_compute(self._fields["payment_state"], self)
         else:
             if self.payment_state in ("paid", "in_payment"):
-                raise UserError(_("You can't block a paid invoice."))
+                raise UserError(self.env._("You can't block a paid invoice."))
             self.payment_state = "blocked"
 
     @_debug.perf.timed
@@ -7275,7 +7310,7 @@ class AccountMove(models.Model):
                 raise
             except (UserError, ValidationError) as e:
                 self.env.cr.rollback()
-                msg = _(
+                msg = self.env._(
                     "The move could not be posted for the following reason: %(error_message)s",
                     error_message=e,
                 )
@@ -7454,13 +7489,13 @@ class AccountMove(models.Model):
         discount_amount_currency = epd_installment["discount_amount_currency"]
         days_left = max(0, (discount_date - fields.Date.context_today(self)).days)
         if days_left > 0:
-            discount_msg = _(
+            discount_msg = self.env._(
                 "Discount of %(amount)s if paid within %(days)s days",
                 amount=self.currency_id.format(discount_amount_currency),
                 days=days_left,
             )
         else:
-            discount_msg = _(
+            discount_msg = self.env._(
                 "Discount of %(amount)s if paid today",
                 amount=self.currency_id.format(discount_amount_currency),
             )
@@ -7640,7 +7675,7 @@ class AccountMove(models.Model):
             invoice_date = self._get_accounting_date(
                 invoice_date, has_tax, lock_dates=lock_dates
             )
-            return _(
+            return self.env._(
                 "The date is being set prior to: %(lock_date_info)s. "
                 "The Journal Entry will be accounted on %(invoice_date)s upon posting.",
                 lock_date_info=self.env["res.company"]._format_lock_dates(lock_dates),
@@ -7654,7 +7689,7 @@ class AccountMove(models.Model):
         preview_vals = {
             "group_name": "%s, %s"
             % (
-                format_date(self.env, move_vals["date"]) or _("[Not set]"),
+                format_date(self.env, move_vals["date"]) or self.env._("[Not set]"),
                 move_vals["ref"],
             ),
             "items_vals": [
@@ -7672,7 +7707,7 @@ class AccountMove(models.Model):
                 )
             line[2]["account_id"] = self.env["account.account"].browse(
                 line[2]["account_id"]
-            ).display_name or _("Destination Account")
+            ).display_name or self.env._("Destination Account")
             line[2]["debit"] = (
                 currency_id
                 and formatLang(self.env, line[2]["debit"], currency_obj=currency_id)
@@ -7908,7 +7943,9 @@ class AccountMove(models.Model):
         available_reports = moves._get_available_action_reports()
 
         if not available_reports:
-            raise UserError(_("There is no template that applies to invoices."))
+            raise UserError(
+                self.env._("There is no template that applies to invoices.")
+            )
 
         return available_reports
 
@@ -8060,7 +8097,7 @@ class AccountMove(models.Model):
             return [
                 {
                     "key": "download_all",
-                    "description": _("Export ZIP"),
+                    "description": self.env._("Export ZIP"),
                     **moves_to_export.action_move_download_all(),
                 },
             ]
@@ -8116,23 +8153,23 @@ class AccountMove(models.Model):
 
     _IMPORT_TEMPLATES = {
         "entry": (
-            lambda: _("Import Template for Misc. Operations"),
+            _lt("Import Template for Misc. Operations"),
             "misc_operations_import_template",
         ),
         "out_invoice": (
-            lambda: _("Import Template for Invoices"),
+            _lt("Import Template for Invoices"),
             "customer_invoices_credit_notes_import_template",
         ),
         "out_refund": (
-            lambda: _("Import Template for Credit Notes"),
+            _lt("Import Template for Credit Notes"),
             "customer_invoices_credit_notes_import_template",
         ),
         "in_invoice": (
-            lambda: _("Import Template for Bills"),
+            _lt("Import Template for Bills"),
             "vendor_bills_refunds_import_template",
         ),
         "in_refund": (
-            lambda: _("Import Template for Refunds"),
+            _lt("Import Template for Refunds"),
             "vendor_bills_refunds_import_template",
         ),
     }
@@ -8144,7 +8181,12 @@ class AccountMove(models.Model):
         )
         if not stem:
             return []
-        return [{"label": label(), "template": f"/account/static/xls/{stem}.xlsx"}]
+        return [
+            {
+                "label": self.env._(label),  # noqa: E8502  a LazyGettext, extracted where _lt declares it
+                "template": f"/account/static/xls/{stem}.xlsx",
+            }
+        ]
 
     def _get_database_scoped_uuid(self):
         self.check_singleton()

@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -17,7 +17,7 @@ class PrintPrenumberedChecks(models.TransientModel):
                 r"^[0-9]+$", check.next_check_number
             ):
                 raise ValidationError(
-                    _("Next Check Number should only contains numbers.")
+                    self.env._("Next Check Number should only contains numbers.")
                 )
 
     def print_checks(self):

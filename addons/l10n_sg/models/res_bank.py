@@ -1,6 +1,6 @@
 from itertools import starmap
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -17,7 +17,7 @@ class ResPartnerBankAccount(models.Model):
         for bank in self.filtered(lambda b: b.country_code == "SG"):
             if bank.proxy_type not in ["mobile", "uen", "none", False]:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The PayNow Type must be either Mobile or UEN to generate a PayNow QR code for account number %s.",
                         bank.acc_number,
                     )
@@ -61,7 +61,7 @@ class ResPartnerBankAccount(models.Model):
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         if qr_method == "emv_qr" and self.country_code == "SG":
             if currency.name != "SGD":
-                return _(
+                return self.env._(
                     "Can't generate a PayNow QR code with a currency other than SGD."
                 )
             return None
@@ -82,7 +82,7 @@ class ResPartnerBankAccount(models.Model):
             and self.country_code == "SG"
             and self.proxy_type not in ["mobile", "uen"]
         ):
-            return _("The PayNow Type must be either Mobile Number or UEN.")
+            return self.env._("The PayNow Type must be either Mobile Number or UEN.")
 
         return super()._check_for_qr_code_errors(
             qr_method,

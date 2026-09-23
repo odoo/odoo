@@ -1,4 +1,3 @@
-from odoo import _
 from odoo.tests import tagged
 
 from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
@@ -495,7 +494,7 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
                 "transporter_id": self.partner_b.id,
             }
         )
-        expected_msg = _(
+        expected_msg = self.env._(
             "- Transporter %s does not have a valid GST Number", self.partner_b.name
         )
         self.assertEqual(ewaybill_invoice_2._check_transporter(), [expected_msg])

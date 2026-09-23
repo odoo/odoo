@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.db.schema import create_index
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import (
@@ -125,7 +125,7 @@ class AccountAnalyticPlan(models.Model):
         )
         if not project_plan:
             raise UserError(
-                _(
+                self.env._(
                     "A 'Project' plan needs to exist and its id needs to be set as `analytic.project_plan` in the system variables"
                 )
             )
@@ -208,7 +208,9 @@ class AccountAnalyticPlan(models.Model):
         project_plan, __ = self._get_all_plans()
         if self._origin.id == project_plan.id:
             raise UserError(
-                _("You cannot add a parent to the base plan '%s'", project_plan.name)
+                self.env._(
+                    "You cannot add a parent to the base plan '%s'", project_plan.name
+                )
             )
 
     @api.constrains("parent_id")
@@ -221,7 +223,9 @@ class AccountAnalyticPlan(models.Model):
         project_plan, __ = self._get_all_plans()
         if project_plan in self and project_plan.parent_id:
             raise ValidationError(
-                _("You cannot add a parent to the base plan '%s'", project_plan.name)
+                self.env._(
+                    "You cannot add a parent to the base plan '%s'", project_plan.name
+                )
             )
 
     def action_view_analytical_accounts(self):
@@ -230,7 +234,7 @@ class AccountAnalyticPlan(models.Model):
             "res_model": "account.analytic.account",
             "domain": [("plan_id", "child_of", self.id)],
             "context": {"default_plan_id": self.id},
-            "name": _("Analytical Accounts"),
+            "name": self.env._("Analytical Accounts"),
             "view_mode": "list,form",
         }
 
@@ -240,7 +244,7 @@ class AccountAnalyticPlan(models.Model):
             "res_model": "account.analytic.plan",
             "domain": [("parent_id", "=", self.id)],
             "context": {"default_parent_id": self.id, "default_color": self.color},
-            "name": _("Analytical Plans"),
+            "name": self.env._("Analytical Plans"),
             "view_mode": "list,form",
         }
 

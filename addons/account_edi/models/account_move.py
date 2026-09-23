@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -89,17 +89,17 @@ class AccountMove(models.Model):
                 error_levels = {doc.blocking_level for doc in move.edi_document_ids}
                 count = str(move.edi_error_count)
                 if "error" in error_levels:
-                    move.edi_error_message = _(
+                    move.edi_error_message = self.env._(
                         "%(count)s Electronic invoicing error(s)", count=count
                     )
                     move.edi_blocking_level = "error"
                 elif "warning" in error_levels:
-                    move.edi_error_message = _(
+                    move.edi_error_message = self.env._(
                         "%(count)s Electronic invoicing warning(s)", count=count
                     )
                     move.edi_blocking_level = "warning"
                 else:
-                    move.edi_error_message = _(
+                    move.edi_error_message = self.env._(
                         "%(count)s Electronic invoicing info(s)", count=count
                     )
                     move.edi_blocking_level = "info"
@@ -283,7 +283,10 @@ class AccountMove(models.Model):
                     errors = edi_format._check_move_configuration(move)
                     if errors:
                         raise UserError(
-                            _("Invalid invoice configuration:\n\n%s", "\n".join(errors))
+                            self.env._(
+                                "Invalid invoice configuration:\n\n%s",
+                                "\n".join(errors),
+                            )
                         )
 
                     existing_edi_document = move.edi_document_ids.filtered(
@@ -318,7 +321,7 @@ class AccountMove(models.Model):
                 lambda doc: doc.state == "to_cancel"
             )
             move.message_post(
-                body=_(
+                body=self.env._(
                     "This invoice was canceled while the EDIs %s still had a pending cancellation request.",
                     ", ".join(to_cancel_edi_documents.mapped("edi_format_id.name")),
                 )
@@ -350,7 +353,7 @@ class AccountMove(models.Model):
         for move in self:
             if not move._edi_allow_action_draft():
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't edit the following journal entry %s because an electronic document has already been "
                         "sent. Please use the 'Request EDI Cancellation' button instead.",
                         move.display_name,
@@ -382,7 +385,7 @@ class AccountMove(models.Model):
                     is_move_marked = True
             if is_move_marked:
                 move.message_post(
-                    body=_("A cancellation of the EDI has been requested.")
+                    body=self.env._("A cancellation of the EDI has been requested.")
                 )
 
         to_cancel_documents.write(
@@ -405,7 +408,9 @@ class AccountMove(models.Model):
                     is_move_marked = True
             if is_move_marked:
                 move.message_post(
-                    body=_("A request for cancellation of the EDI has been called off.")
+                    body=self.env._(
+                        "A request for cancellation of the EDI has been called off."
+                    )
                 )
 
         documents.write({"state": "sent", "error": False, "blocking_level": False})

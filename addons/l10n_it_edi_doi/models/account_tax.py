@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -14,5 +14,7 @@ class AccountTax(models.Model):
             if tax in tax.company_ids.l10n_it_edi_doi_config_id.l10n_it_edi_doi_tax_id:
                 _debug.logic("doi_tax_protected", taxes=self)
                 raise UserError(
-                    _("You cannot delete the special tax for Declarations of Intent.")
+                    self.env._(
+                        "You cannot delete the special tax for Declarations of Intent."
+                    )
                 )

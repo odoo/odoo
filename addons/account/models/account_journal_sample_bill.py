@@ -1,7 +1,7 @@
 import base64
 from datetime import timedelta
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -38,7 +38,7 @@ class AccountJournal(models.Model):
             )
         if not partner:
             raise UserError(
-                _(
+                self.env._(
                     "You may only use samples in demo mode, try uploading one of your invoices instead."
                 )
             )
@@ -93,7 +93,7 @@ class AccountJournal(models.Model):
             ).ids
         )
         return {
-            "name": _("Bills"),
+            "name": self.env._("Bills"),
             "res_id": bill.id,
             "view_mode": "form",
             "res_model": "account.move",

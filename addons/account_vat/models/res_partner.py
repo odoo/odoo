@@ -10,7 +10,7 @@ from stdnum.util import clean
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import LazyTranslate, _
+from odoo.tools import LazyTranslate
 
 from odoo.addons.base.models.res_partner import EU_EXTRA_VAT_CODES
 
@@ -129,7 +129,9 @@ class ResPartner(models.Model):
                 return "", False
             if validation == "error":
                 raise ValidationError(
-                    _("To explicitly indicate no (valid) VAT, use '/' instead. ")
+                    self.env._(
+                        "To explicitly indicate no (valid) VAT, use '/' instead. "
+                    )
                 )
         vat_prefix, vat_number = self._split_vat(vat)
 
@@ -170,7 +172,7 @@ class ResPartner(models.Model):
             prefixed_country + prefixed_country
         )
         if not self._check_vat_number(code_to_check, vat) or double_prefix:
-            partner_label = _("partner [%s]", partner_name)
+            partner_label = self.env._("partner [%s]", partner_name)
             if do_eu_check:
                 try:
                     return self._run_vat_checks(
@@ -188,7 +190,7 @@ class ResPartner(models.Model):
                     raise ValidationError(
                         msg
                         + "\n\n"
-                        + _(
+                        + self.env._(
                             "If you are trying to input a European number, this is the expected format: "
                         )
                         + _ref_vat[country_code.lower()]
@@ -278,17 +280,17 @@ class ResPartner(models.Model):
                 if partner._origin.id:
                     msg = ""
                     if isinstance(e, OSError):
-                        msg = _(
+                        msg = self.env._(
                             "Connection with the VIES server failed. The VAT number %s could not be validated.",
                             partner.vat,
                         )
                     elif isinstance(e, InvalidComponent):
-                        msg = _(
+                        msg = self.env._(
                             "The VAT number %s could not be interpreted by the VIES server.",
                             partner.vat,
                         )
                     elif isinstance(e, zeep.exceptions.Fault):
-                        msg = _(
+                        msg = self.env._(
                             "The request for VAT validation was not processed. VIES service has responded with the following error: %s",
                             e.message,
                         )
@@ -333,7 +335,7 @@ class ResPartner(models.Model):
         else:
             company = self.env.company
 
-        vat_label = _("VAT")
+        vat_label = self.env._("VAT")
         if (
             country_code
             and company.country_id
@@ -345,14 +347,14 @@ class ResPartner(models.Model):
         expected_format = _ref_vat.get(country_code.lower())
         expected_note = ""
         if expected_format:
-            expected_note = " \n" + _(
+            expected_note = " \n" + self.env._(
                 "Note: the expected format is %(expected_format)s",
                 expected_format=expected_format,
             )
 
         # Catch use case where the record label is about the public user (name: False)
         if "False" not in record_label:
-            return "\n" + _(
+            return "\n" + self.env._(
                 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. %(expected_note)s",
                 vat_label=vat_label,
                 wrong_vat=wrong_vat,
@@ -360,7 +362,7 @@ class ResPartner(models.Model):
                 expected_note=expected_note,
             )
         else:
-            return "\n" + _(
+            return "\n" + self.env._(
                 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %(expected_note)s",
                 vat_label=vat_label,
                 wrong_vat=wrong_vat,

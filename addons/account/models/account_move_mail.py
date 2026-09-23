@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import format_amount, format_date
@@ -312,12 +312,12 @@ class AccountMove(models.Model):
         if not self.is_invoice(include_receipts=True):
             return super()._creation_message()
         return {
-            "out_invoice": _("Invoice Created"),
-            "out_refund": _("Credit Note Created"),
-            "in_invoice": _("Vendor Bill Created"),
-            "in_refund": _("Refund Created"),
-            "out_receipt": _("Sales Receipt Created"),
-            "in_receipt": _("Purchase Receipt Created"),
+            "out_invoice": self.env._("Invoice Created"),
+            "out_refund": self.env._("Credit Note Created"),
+            "in_invoice": self.env._("Vendor Bill Created"),
+            "in_refund": self.env._("Refund Created"),
+            "out_receipt": self.env._("Sales Receipt Created"),
+            "in_receipt": self.env._("Purchase Receipt Created"),
         }[self.move_type]
 
     @_debug.perf.timed
@@ -359,7 +359,7 @@ class AccountMove(models.Model):
                 "paid",
             ):
                 subtitles.append(
-                    _(
+                    self.env._(
                         "%(amount)s due\N{NO-BREAK SPACE}%(date)s",
                         amount=format_amount(
                             self.env,

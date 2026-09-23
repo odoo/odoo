@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -46,7 +46,7 @@ class AccountJournal(models.Model):
         for rec in self:
             if rec in journals_with_posted_moves:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'You can not modify the field "Use Documents?" if there are validated invoices in this journal!'
                     )
                 )

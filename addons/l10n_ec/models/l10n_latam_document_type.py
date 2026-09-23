@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -40,7 +40,7 @@ class L10n_LatamDocumentType(models.Model):
                 )
             else:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Ecuadorian Document %s must be like 001-001-123456789",
                         self.display_name,
                     )

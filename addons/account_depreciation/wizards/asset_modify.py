@@ -1,6 +1,6 @@
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_is_zero
@@ -118,12 +118,12 @@ class AssetModify(models.TransientModel):
 
     def _selection_modify_action(self):
         if self.env.context.get("resume_after_pause"):
-            return [("resume", _("Resume"))]
+            return [("resume", self.env._("Resume"))]
         return [
-            ("dispose", _("Dispose")),
-            ("sell", _("Sell")),
-            ("modify", _("Re-evaluate")),
-            ("pause", _("Pause")),
+            ("dispose", self.env._("Dispose")),
+            ("sell", self.env._("Sell")),
+            ("modify", self.env._("Re-evaluate")),
+            ("pause", self.env._("Pause")),
         ]
 
     @api.depends("company_id")
@@ -161,7 +161,7 @@ class AssetModify(models.TransientModel):
         ):
             _debug.logic("sell.refused", reason="running_increase", board=self.asset_id)
             raise UserError(
-                _(
+                self.env._(
                     "You cannot automate the journal entry for an asset that has a running gross increase. Please use 'Dispose' on the increase(s)."
                 )
             )
@@ -222,7 +222,9 @@ class AssetModify(models.TransientModel):
         self.check_singleton()
         if not self.gain_value:
             return ""
-        return _("An asset will be created for the value increase of the asset. <br/>")
+        return self.env._(
+            "An asset will be created for the value increase of the asset. <br/>"
+        )
 
     @api.depends(
         "loss_account_id",
@@ -237,10 +239,11 @@ class AssetModify(models.TransientModel):
         for wizard in self:
             account = wizard._get_outcome_account_name()
             if wizard.modify_action == "dispose":
-                gain_or_loss = {"gain": _("gain"), "loss": _("loss")}.get(
-                    wizard.gain_or_loss, _("gain/loss")
-                )
-                wizard.informational_text = _(
+                gain_or_loss = {
+                    "gain": self.env._("gain"),
+                    "loss": self.env._("loss"),
+                }.get(wizard.gain_or_loss, self.env._("gain/loss"))
+                wizard.informational_text = self.env._(
                     "A depreciation entry will be posted on and including the date %(date)s."
                     "<br/> A disposal entry will be posted on the %(account_type)s account <b>%(account)s</b>.",
                     date=format_date(self.env, wizard.date),
@@ -248,7 +251,7 @@ class AssetModify(models.TransientModel):
                     account=account,
                 )
             elif wizard.modify_action == "sell":
-                wizard.informational_text = _(
+                wizard.informational_text = self.env._(
                     "A depreciation entry will be posted on and including the date %(date)s."
                     "<br/> A second entry will neutralize the original income and post the  "
                     "outcome of this sale on account <b>%(account)s</b>.",
@@ -256,12 +259,12 @@ class AssetModify(models.TransientModel):
                     account=account,
                 )
             elif wizard.modify_action == "pause":
-                wizard.informational_text = _(
+                wizard.informational_text = self.env._(
                     "A depreciation entry will be posted on and including the date %s.",
                     format_date(self.env, wizard.date),
                 )
             elif wizard.modify_action == "modify":
-                wizard.informational_text = _(
+                wizard.informational_text = self.env._(
                     "A depreciation entry will be posted on and including the date %(date)s. <br/> %(extra_text)s "
                     "Future entries will be recomputed to depreciate the asset following the changes.",
                     date=format_date(self.env, wizard.date),
@@ -269,7 +272,7 @@ class AssetModify(models.TransientModel):
                 )
 
             else:
-                wizard.informational_text = _(
+                wizard.informational_text = self.env._(
                     "%s Future entries will be recomputed to depreciate the asset following the changes.",
                     wizard._get_value_increase_text(),
                 )
@@ -309,7 +312,7 @@ class AssetModify(models.TransientModel):
                     "create.refused", reason="future_posted_entries", board=asset
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Reverse the depreciation entries posted in the future in order to modify the depreciation"
                     )
                 )
@@ -327,7 +330,9 @@ class AssetModify(models.TransientModel):
             _debug.logic(
                 "modify.refused", reason="before_lock_date", wizard=self, date=self.date
             )
-            raise UserError(_("You can't re-evaluate the asset before the lock date."))
+            raise UserError(
+                self.env._("You can't re-evaluate the asset before the lock date.")
+            )
         if self.env.context.get("resume_after_pause"):
             return
         if self.env["account.move"].search_count(
@@ -345,7 +350,7 @@ class AssetModify(models.TransientModel):
                 date=self.date,
             )
             raise UserError(
-                _(
+                self.env._(
                     "There are unposted depreciations prior to the selected operation date, please deal with them first."
                 )
             )
@@ -366,7 +371,9 @@ class AssetModify(models.TransientModel):
                 days=number_days,
             )
             raise UserError(
-                _("You cannot resume at a date equal to or before the pause date")
+                self.env._(
+                    "You cannot resume at a date equal to or before the pause date"
+                )
             )
         return {
             "depreciation_paused_days": self.asset_id.depreciation_paused_days
@@ -377,7 +384,7 @@ class AssetModify(models.TransientModel):
     def _create_gross_increase(self, residual_increase, salvage_increase):
         self.check_singleton()
         increase_total = residual_increase + salvage_increase
-        label = _("Value increase for: %(asset)s", asset=self.asset_id.name)
+        label = self.env._("Value increase for: %(asset)s", asset=self.asset_id.name)
         move = self.env["account.move"].create(
             {
                 "journal_id": self.asset_id.depreciation_journal_id.id,
@@ -449,7 +456,7 @@ class AssetModify(models.TransientModel):
             amount=increase_total,
         )
         self.asset_id.message_post(
-            body=_(
+            body=self.env._(
                 "A gross increase has been created: %(link)s",
                 link=asset_increase._get_html_link(),
             )
@@ -463,7 +470,7 @@ class AssetModify(models.TransientModel):
                 {
                     "amount": decrease,
                     "asset_id": self.asset_id,
-                    "move_ref": _(
+                    "move_ref": self.env._(
                         "Value decrease for: %(asset)s", asset=self.asset_id.name
                     ),
                     "depreciation_beginning_date": self.date,
@@ -515,7 +522,7 @@ class AssetModify(models.TransientModel):
         )
         if changes:
             self.asset_id.message_post(
-                body=_("Depreciation board modified %s", self.name),
+                body=self.env._("Depreciation board modified %s", self.name),
                 tracking_value_ids=tracking_value_ids,
             )
 
@@ -539,7 +546,7 @@ class AssetModify(models.TransientModel):
         }
         if resuming:
             asset_vals.update(self._get_resume_after_pause_vals())
-            self.asset_id.message_post(body=_("Asset unpaused. %s", self.name))
+            self.asset_id.message_post(body=self.env._("Asset unpaused. %s", self.name))
 
         current_asset_book = self.asset_id._get_own_book_value(self.date)
         increase = self._get_requested_book_value() - current_asset_book
@@ -612,7 +619,9 @@ class AssetModify(models.TransientModel):
                 wizard=self,
             )
             raise UserError(
-                _("You cannot select the same account as the Depreciation Account")
+                self.env._(
+                    "You cannot select the same account as the Depreciation Account"
+                )
             )
         invoice_lines = (
             self.env["account.move.line"]

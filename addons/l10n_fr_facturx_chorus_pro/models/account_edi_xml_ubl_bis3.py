@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class AccountEdiXmlUbl_Bis3(models.AbstractModel):
@@ -14,15 +14,15 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         customer, supplier = vals["customer"].commercial_partner_id, vals["supplier"]
         if self._is_customer_behind_chorus_pro(customer):
             if not customer.company_registry:
-                constraints["chorus_customer"] = _(
+                constraints["chorus_customer"] = self.env._(
                     "The Company Registry (Siret) of the final recipient is mandatory for the customer when invoicing through Chorus Pro."
                 )
             if supplier.country_code == "FR" and not supplier.company_registry:
-                constraints["chorus_supplier_fr"] = _(
+                constraints["chorus_supplier_fr"] = self.env._(
                     "The Company Registry (Siret) is mandatory for french suppliers when invoicing through Chorus Pro."
                 )
             if supplier.country_code != "FR" and not supplier.vat:
-                constraints["chorus_supplier_not_fr"] = _(
+                constraints["chorus_supplier_not_fr"] = self.env._(
                     "The VAT is mandatory for non-french suppliers when invoicing through Chorus Pro."
                 )
         return constraints

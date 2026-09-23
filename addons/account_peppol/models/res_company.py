@@ -5,7 +5,7 @@ import requests
 from lxml import etree
 from stdnum import ean, get_cc_module
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
 
@@ -134,12 +134,14 @@ class ResCompany(models.Model):
     @api.model
     def _check_phonenumbers_import(self):
         if not phonenumbers:
-            raise ValidationError(_("Please install the phonenumbers library."))
+            raise ValidationError(
+                self.env._("Please install the phonenumbers library.")
+            )
 
     def _normalize_peppol_phone_number(self, phone_number=None):
         self.check_singleton()
 
-        error_message = _(
+        error_message = self.env._(
             "Please enter the mobile number in the correct international format.\n"
             "For example: +32123456789, where +32 is the country code.\n"
             "Currently, only European countries are supported."
@@ -184,7 +186,9 @@ class ResCompany(models.Model):
                 continue
             if not company._check_peppol_endpoint_number(PEPPOL_ENDPOINT_RULES):
                 raise ValidationError(
-                    _("The Peppol endpoint identification number is not correct.")
+                    self.env._(
+                        "The Peppol endpoint identification number is not correct."
+                    )
                 )
 
     def _first_journal_per_company(self, journal_type):
@@ -319,14 +323,14 @@ class ResCompany(models.Model):
                 participant_info, edi_identification
             )
         ):
-            error_msg = _(
+            error_msg = self.env._(
                 "A participant with these details has already been registered on the network. "
                 "If you have previously registered to a Peppol service, please deregister."
             )
             if (
                 external_provider := _get_peppol_provider(participant_info)
             ) and "Odoo" not in external_provider:
-                error_msg += _(
+                error_msg += self.env._(
                     "The Peppol service that is used is %s.", external_provider
                 )
         return {

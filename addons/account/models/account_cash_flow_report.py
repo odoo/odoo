@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
 
@@ -944,94 +944,96 @@ class AccountCashFlowReportHandler(models.AbstractModel):
         # Indentation of the following dict reflects the structure of the report.
         return {
             "opening_balance": {
-                "name": _("Cash and cash equivalents, beginning of period"),
+                "name": self.env._("Cash and cash equivalents, beginning of period"),
                 "level": 0,
             },
             "net_increase": {
-                "name": _("Net increase in cash and cash equivalents"),
+                "name": self.env._("Net increase in cash and cash equivalents"),
                 "level": 0,
                 "unfolded": True,
             },
             "operating_activities": {
-                "name": _("Cash flows from operating activities"),
+                "name": self.env._("Cash flows from operating activities"),
                 "level": 2,
                 "parent_line_id": "net_increase",
                 "class": "fw-bold",
                 "unfolded": True,
             },
             "advance_payments_customer": {
-                "name": _("Advance Payments received from customers"),
+                "name": self.env._("Advance Payments received from customers"),
                 "level": 4,
                 "parent_line_id": "operating_activities",
             },
             "received_operating_activities": {
-                "name": _("Cash received from operating activities"),
+                "name": self.env._("Cash received from operating activities"),
                 "level": 4,
                 "parent_line_id": "operating_activities",
             },
             "advance_payments_suppliers": {
-                "name": _("Advance payments made to suppliers"),
+                "name": self.env._("Advance payments made to suppliers"),
                 "level": 4,
                 "parent_line_id": "operating_activities",
             },
             "paid_operating_activities": {
-                "name": _("Cash paid for operating activities"),
+                "name": self.env._("Cash paid for operating activities"),
                 "level": 4,
                 "parent_line_id": "operating_activities",
             },
             "investing_activities": {
-                "name": _("Cash flows from investing & extraordinary activities"),
+                "name": self.env._(
+                    "Cash flows from investing & extraordinary activities"
+                ),
                 "level": 2,
                 "parent_line_id": "net_increase",
                 "class": "fw-bold",
                 "unfolded": True,
             },
             "investing_activities_cash_in": {
-                "name": _("Cash in"),
+                "name": self.env._("Cash in"),
                 "level": 4,
                 "parent_line_id": "investing_activities",
             },
             "investing_activities_cash_out": {
-                "name": _("Cash out"),
+                "name": self.env._("Cash out"),
                 "level": 4,
                 "parent_line_id": "investing_activities",
             },
             "financing_activities": {
-                "name": _("Cash flows from financing activities"),
+                "name": self.env._("Cash flows from financing activities"),
                 "level": 2,
                 "parent_line_id": "net_increase",
                 "class": "fw-bold",
                 "unfolded": True,
             },
             "financing_activities_cash_in": {
-                "name": _("Cash in"),
+                "name": self.env._("Cash in"),
                 "level": 4,
                 "parent_line_id": "financing_activities",
             },
             "financing_activities_cash_out": {
-                "name": _("Cash out"),
+                "name": self.env._("Cash out"),
                 "level": 4,
                 "parent_line_id": "financing_activities",
             },
             "unclassified_activities": {
-                "name": _("Cash flows from unclassified activities"),
+                "name": self.env._("Cash flows from unclassified activities"),
                 "level": 2,
                 "parent_line_id": "net_increase",
                 "class": "fw-bold",
                 "unfolded": True,
             },
             "unclassified_activities_cash_in": {
-                "name": _("Cash in"),
+                "name": self.env._("Cash in"),
                 "level": 4,
                 "parent_line_id": "unclassified_activities",
             },
             "unclassified_activities_cash_out": {
-                "name": _("Cash out"),
+                "name": self.env._("Cash out"),
                 "level": 4,
                 "parent_line_id": "unclassified_activities",
             },
             "closing_balance": {
-                "name": _("Cash and cash equivalents, closing balance"),
+                "name": self.env._("Cash and cash equivalents, closing balance"),
                 "level": 0,
             },
         }

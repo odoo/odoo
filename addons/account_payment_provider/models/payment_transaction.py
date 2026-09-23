@@ -1,4 +1,4 @@
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -13,7 +13,7 @@ class PaymentTransaction(models.Model):
         ).invoice_ids
         invoices._lock_for_payment()
         if any(invoice.state == "cancel" for invoice in invoices):
-            raise ValidationError(_("You cannot pay a cancelled invoice."))
+            raise ValidationError(self.env._("You cannot pay a cancelled invoice."))
         return transactions
 
     # The edge is stored once, on `account.payment.transaction_id`, and a partial
@@ -73,7 +73,7 @@ class PaymentTransaction(models.Model):
         self.check_singleton()
 
         action = {
-            "name": _("Invoices"),
+            "name": self.env._("Invoices"),
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "target": "current",
@@ -148,7 +148,7 @@ class PaymentTransaction(models.Model):
 
             # Log the payment and transaction references on the linked documents.
             if tx.payment_id:
-                message = _(
+                message = self.env._(
                     "The payment related to transaction %(ref)s has been posted: %(link)s",
                     ref=tx._get_html_link(),
                     link=tx.payment_id._get_html_link(),

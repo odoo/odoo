@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -14,7 +14,9 @@ class StockPickingType(models.Model):
             and len(self.sequence_code) != 3
         ):
             raise UserError(
-                _("Only 3 characters are allowed in the Sequence Prefix by GİB")
+                self.env._(
+                    "Only 3 characters are allowed in the Sequence Prefix by GİB"
+                )
             )
         return super()._onchange_sequence_code()
 

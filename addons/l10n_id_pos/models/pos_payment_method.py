@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -17,7 +17,7 @@ class PosPaymentMethod(models.Model):
         )
         if not trx:
             raise UserError(
-                _("No QRIS transaction record is found based on this order")
+                self.env._("No QRIS transaction record is found based on this order")
             )
 
         result = trx._l10n_id_get_qris_qr_statuses()

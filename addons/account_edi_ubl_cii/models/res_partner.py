@@ -2,7 +2,7 @@ import re
 
 from stdnum.fr import siret
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.account.models.res_company import PEPPOL_DEFAULT_COUNTRIES
@@ -333,15 +333,15 @@ class ResPartner(models.Model):
     def _prepare_error_peppol_endpoint(self, eas, endpoint):
         """This function contains all the rules regarding the peppol_endpoint."""
         if eas == "0208" and not re.match(r"^\d{10}$", endpoint):
-            return _(
+            return self.env._(
                 "The Peppol endpoint is not valid. The expected format is: 0239843188"
             )
         if eas == "0009" and not siret.is_valid(endpoint):
-            return _(
+            return self.env._(
                 "The Peppol endpoint is not valid. The expected format is: 73282932000074"
             )
         if eas == "0007" and not re.match(r"^\d{10}$", endpoint):
-            return _(
+            return self.env._(
                 "The Peppol endpoint is not valid. "
                 "It should contain exactly 10 digits (Company Registry number)."
                 "The expected format is: 1234567890"
@@ -350,7 +350,7 @@ class ResPartner(models.Model):
             PEPPOL_ENDPOINT_INVALIDCHARS_RE.search(endpoint)
             or not 1 <= len(endpoint) <= 50
         ):
-            return _(
+            return self.env._(
                 "The Peppol endpoint (%s) is not valid. It should contain only letters and digit.",
                 endpoint,
             )

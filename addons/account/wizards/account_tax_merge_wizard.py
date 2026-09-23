@@ -1,6 +1,6 @@
 import json
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -34,9 +34,9 @@ class AccountTaxMergeWizard(models.TransientModel):
         }:
             return res
         if self.env.context.get("active_model") != "account.tax":
-            raise UserError(_("This can only be used on taxes."))
+            raise UserError(self.env._("This can only be used on taxes."))
         if len(self.env.context.get("active_ids") or []) < 2:
-            raise UserError(_("You must select at least 2 taxes."))
+            raise UserError(self.env._("You must select at least 2 taxes."))
         res["tax_ids"] = [fields.Command.set(self.env.context.get("active_ids"))]
         return res
 
@@ -138,7 +138,7 @@ class AccountTaxMergeWizard(models.TransientModel):
             "params": {
                 "type": "success",
                 "sticky": False,
-                "message": _("Taxes successfully merged!"),
+                "message": self.env._("Taxes successfully merged!"),
                 "next": {"type": "ir.actions.act_window_close"},
             },
         }
@@ -154,7 +154,7 @@ class AccountTaxMergeWizard(models.TransientModel):
         taxes.check_access("write")
         if forbidden := (taxes.sudo().company_ids - self.env.user.company_ids):
             raise UserError(
-                _(
+                self.env._(
                     "You do not have the right to perform this operation as you "
                     "do not have access to the following companies: %s.",
                     ", ".join(company.name for company in forbidden),
@@ -326,7 +326,7 @@ class AccountTaxMergeWizardLine(models.TransientModel):
         for line in self:
             if line.is_selected and not line.info:
                 if shared := (line.company_ids & seen):
-                    line.info = _(
+                    line.info = self.env._(
                         "Serves the same company as %s.",
                         owner[shared[0]].display_name,
                     )
@@ -345,7 +345,7 @@ class AccountTaxMergeWizardLine(models.TransientModel):
             if reference is None:
                 reference = (signature, line.tax_id)
             elif signature != reference[0]:
-                line.info = _(
+                line.info = self.env._(
                     "Its distribution differs from %s.",
                     reference[1].display_name,
                 )
@@ -357,7 +357,7 @@ class AccountTaxMergeWizardLine(models.TransientModel):
                 if holder is None:
                     holder = line.tax_id
                 else:
-                    line.info = _(
+                    line.info = self.env._(
                         "Contains hashed entries, but %s also has hashed entries.",
                         holder.display_name,
                     )

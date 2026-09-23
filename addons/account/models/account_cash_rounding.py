@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_round
@@ -58,7 +58,7 @@ class AccountCashRounding(models.Model):
         for record in self:
             if record.rounding <= 0:
                 raise ValidationError(
-                    _("Please set a strictly positive rounding value.")
+                    self.env._("Please set a strictly positive rounding value.")
                 )
 
     def round(self, amount):

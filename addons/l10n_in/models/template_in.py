@@ -51,12 +51,11 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template("in", "account.fiscal.position")
     def _get_in_account_fiscal_position(self):
-        _ = self.env._
         company = self.env.company
         state_ids = [Command.set(company.state_id.ids)] if company.state_id else False
         intra_state_name = (
-            company.state_id and _("Within %s", company.state_id.name)
-        ) or _("Intra State")
+            company.state_id and self.env._("Within %s", company.state_id.name)
+        ) or self.env._("Intra State")
         country_in_id = self.env.ref("base.in").id
         state_specific = {
             "fiscal_position_in_intra_state": {
@@ -70,7 +69,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "country_id": country_in_id,
             },
             "fiscal_position_in_inter_state": {
-                "name": _("Inter State"),
+                "name": self.env._("Inter State"),
                 "sequence": 2,
                 "auto_apply": True,
                 "country_group_id": "l10n_in.inter_state_group",
@@ -84,12 +83,12 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             **state_specific,
             "fiscal_position_in_sez": {
-                "name": _("Special Economic Zone (SEZ)"),
+                "name": self.env._("Special Economic Zone (SEZ)"),
                 "sequence": 3,
                 "auto_apply": True,
                 "state_ids": [Command.set(self.env.ref("l10n_in.state_in_oc").ids)],
                 "country_id": country_in_id,
-                "note": _(
+                "note": self.env._(
                     "SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."
                 ),
                 "tax_ids": self._prepare_l10n_in_fiscal_tax_commands(
@@ -97,10 +96,10 @@ class AccountChartTemplate(models.AbstractModel):
                 ),
             },
             "fiscal_position_in_export_sez_in": {
-                "name": _("Export"),
+                "name": self.env._("Export"),
                 "sequence": 4,
                 "auto_apply": True,
-                "note": _(
+                "note": self.env._(
                     "SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."
                 ),
                 "tax_ids": self._prepare_l10n_in_fiscal_tax_commands(
@@ -108,11 +107,11 @@ class AccountChartTemplate(models.AbstractModel):
                 ),
             },
             "fiscal_position_in_lut_sez_1": {
-                "name": _("SEZ - LUT (WOP)"),
+                "name": self.env._("SEZ - LUT (WOP)"),
                 "sequence": 5,
                 "state_ids": [Command.set(self.env.ref("l10n_in.state_in_oc").ids)],
                 "country_id": country_in_id,
-                "note": _(
+                "note": self.env._(
                     "SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX."
                 ),
                 "tax_ids": self._prepare_l10n_in_fiscal_tax_commands(
@@ -120,9 +119,9 @@ class AccountChartTemplate(models.AbstractModel):
                 ),
             },
             "fiscal_position_in_lut_sez": {
-                "name": _("Export - LUT (WOP)"),
+                "name": self.env._("Export - LUT (WOP)"),
                 "sequence": 6,
-                "note": _(
+                "note": self.env._(
                     "SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX."
                 ),
                 "tax_ids": self._prepare_l10n_in_fiscal_tax_commands(

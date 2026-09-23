@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
@@ -31,7 +31,7 @@ class ResConfigSettings(models.TransientModel):
             raise UserError(e.get_all_error_message()) from e
         if not self.company_id.sudo()._l10n_in_ewaybill_token_is_valid():
             raise UserError(
-                _(
+                self.env._(
                     "Incorrect username or password, or the GST number on company does not match."
                 )
             )
@@ -41,6 +41,6 @@ class ResConfigSettings(models.TransientModel):
             "params": {
                 "type": "info",
                 "sticky": False,
-                "message": _("API credentials validated successfully"),
+                "message": self.env._("API credentials validated successfully"),
             },
         }

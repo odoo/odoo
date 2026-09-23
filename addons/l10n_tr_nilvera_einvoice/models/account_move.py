@@ -4,7 +4,7 @@ from urllib.parse import quote, urlencode, urlparse
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 
@@ -79,13 +79,13 @@ class AccountMove(models.Model):
         for move in self.filtered("l10n_tr_nilvera_uuid"):
             if move.l10n_tr_nilvera_send_status == "error":
                 move.message_post(
-                    body=_(
+                    body=self.env._(
                         "To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."
                     )
                 )
             elif move.l10n_tr_nilvera_send_status != "not_sent":
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot reset to draft an entry that has been sent to Nilvera."
                     )
                 )
@@ -98,7 +98,7 @@ class AccountMove(models.Model):
                 and move.l10n_tr_nilvera_uuid
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."
                     )
                 )
@@ -146,7 +146,7 @@ class AccountMove(models.Model):
                 self.l10n_tr_nilvera_send_status = "sent"
             elif response.status_code in {401, 403}:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."
                     )
                 )
@@ -168,10 +168,12 @@ class AccountMove(models.Model):
                     )
                 raise UserError(error_message)
             elif response.status_code == 500:
-                raise UserError(_("Server error from Nilvera, please try again later."))
+                raise UserError(
+                    self.env._("Server error from Nilvera, please try again later.")
+                )
 
             self.message_post(
-                body=_("The invoice has been successfully sent to Nilvera.")
+                body=self.env._("The invoice has been successfully sent to Nilvera.")
             )
         return None
 
@@ -227,7 +229,9 @@ class AccountMove(models.Model):
                             invoice.message_post(
                                 body=Markup("%s<br/>%s - %s<br/>")
                                 % (
-                                    _("The invoice couldn't be sent to the recipient."),
+                                    self.env._(
+                                        "The invoice couldn't be sent to the recipient."
+                                    ),
                                     response.get("InvoiceStatus", {}).get("Description")
                                     or response.get("StatusDetail"),
                                     response.get("InvoiceStatus", {}).get(
@@ -238,7 +242,7 @@ class AccountMove(models.Model):
                             )
                     else:
                         invoice.message_post(
-                            body=_(
+                            body=self.env._(
                                 "The invoice status couldn't be retrieved from Nilvera."
                             )
                         )
@@ -415,7 +419,9 @@ class AccountMove(models.Model):
             if move.ref:
                 attachment.name = f"{move.ref}.xml"
 
-            move._message_log(body=_("Nilvera document has been received successfully"))
+            move._message_log(
+                body=self.env._("Nilvera document has been received successfully")
+            )
         except Exception:
             # If the invoice creation fails, create an empty invoice with the attachment. The PDF will be
             # added in a later step as well. Nilvera only returns uuid of the successful attachments.
@@ -497,7 +503,9 @@ class AccountMove(models.Model):
 
         response_json = response.json()
         if errors := response_json.get("Errors"):
-            msg += _("The invoice couldn't be sent due to the following errors:\n")
+            msg += self.env._(
+                "The invoice couldn't be sent due to the following errors:\n"
+            )
 
             for error in errors:
                 code = error.get("Code")

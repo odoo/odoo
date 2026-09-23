@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.tools import SQL, groupby
 
@@ -89,7 +89,7 @@ class AccountAnalyticAccount(models.Model):
                 limit=1,
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't change the company of an analytic account that already has analytic items! It's a recipe for an analytical disaster!"
                     )
                 )
@@ -109,7 +109,7 @@ class AccountAnalyticAccount(models.Model):
         vals_list = super().copy_data(default=default)
         if "name" not in default:
             for account, vals in zip(self, vals_list, strict=False):
-                vals["name"] = _("%s (copy)", account.name)
+                vals["name"] = self.env._("%s (copy)", account.name)
         return vals_list
 
     def copy_translations(self, new, excluded=()):
@@ -183,7 +183,7 @@ class AccountAnalyticAccount(models.Model):
                     "analytic.view_account_analytic_line_tree", raise_if_not_found=False
                 )
                 raise RedirectWarning(
-                    message=_(
+                    message=self.env._(
                         "Whoa there! Making this change would wipe out your current data. Let's avoid that, shall we?"
                     ),
                     action={
@@ -193,7 +193,7 @@ class AccountAnalyticAccount(models.Model):
                         "target": "new",
                         "views": [(list_view and list_view.id, "list")],
                     },
-                    button_text=_("See them"),
+                    button_text=self.env._("See them"),
                 )
             self.env.cr.execute(
                 SQL(

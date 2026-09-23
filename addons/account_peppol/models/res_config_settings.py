@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -182,7 +182,7 @@ class ResConfigSettings(models.TransientModel):
             "params": {
                 "title": None,
                 "type": "success",
-                "message": _(
+                "message": self.env._(
                     "Disconnected this branch company peppol configuration from %s.",
                     previous_parent_company_name,
                 ),

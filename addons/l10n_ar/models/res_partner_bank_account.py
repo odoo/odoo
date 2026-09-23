@@ -2,7 +2,7 @@ import logging
 
 from stdnum.ar.cbu import validate
 
-from odoo import _, api, models
+from odoo import api, models
 
 _logger = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ class ResPartnerBankAccount(models.Model):
     def _get_account_types_supported(self):
         """Add new account type named cbu used in Argentina"""
         res = super()._get_account_types_supported()
-        res.append(("cbu", _("CBU")))
+        res.append(("cbu", self.env._("CBU")))
         return res
 
     @api.model

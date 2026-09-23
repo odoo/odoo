@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -14,7 +14,7 @@ class CustomerStatementCustomHandler(models.AbstractModel):
 
         options["buttons"].append(
             {
-                "name": _("Send"),
+                "name": self.env._("Send"),
                 "action": "action_send_statements",
                 "sequence": 90,
                 "always_show": True,
@@ -41,9 +41,9 @@ class CustomerStatementCustomHandler(models.AbstractModel):
         template = self.env.ref("account.email_template_customer_statement", False)
         partners = self.env["res.partner"].browse(options.get("partner_ids", []))
         return {
-            "name": _("Send %s Statement", partners.name)
+            "name": self.env._("Send %s Statement", partners.name)
             if len(partners) == 1
-            else _("Send Partner Ledgers"),
+            else self.env._("Send Partner Ledgers"),
             "type": "ir.actions.act_window",
             "views": [[False, "form"]],
             "res_model": "account.report.send",

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.db.schema import column_exists, create_column
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
@@ -53,7 +53,9 @@ class AccountPayment(models.Model):
     def _constrains_check_number(self):
         for payment_check in self.filtered("check_number"):
             if not payment_check.check_number.isdecimal():
-                raise ValidationError(_("Check numbers can only consist of digits"))
+                raise ValidationError(
+                    self.env._("Check numbers can only consist of digits")
+                )
 
     def _auto_init(self):
         """
@@ -95,10 +97,10 @@ class AccountPayment(models.Model):
         res = self.env.cr.dictfetchall()
         if res:
             raise ValidationError(
-                _(
+                self.env._(
                     "The following numbers are already used:\n%s",
                     "\n".join(
-                        _(
+                        self.env._(
                             "%(number)s in journal %(journal)s",
                             number=r["check_number"],
                             journal=self.env["account.journal"]
@@ -157,7 +159,7 @@ class AccountPayment(models.Model):
             return super()._get_aml_default_display_name_list()
 
         result = [
-            ("label", _("Checks")),
+            ("label", self.env._("Checks")),
             ("sep", " - "),
             ("check_number", self.check_number),
         ]
@@ -193,7 +195,7 @@ class AccountPayment(models.Model):
 
         if len(valid_payments) == 0:
             raise UserError(
-                _(
+                self.env._(
                     "Payments to print as a checks must have 'Check' selected as payment method and "
                     "not have already been reconciled"
                 )
@@ -203,7 +205,7 @@ class AccountPayment(models.Model):
             for payment in valid_payments
         ):
             raise UserError(
-                _(
+                self.env._(
                     "In order to print multiple checks at once, they must belong to the same bank journal."
                 )
             )
@@ -229,7 +231,7 @@ class AccountPayment(models.Model):
             next_check_number = f"{int(last_check_number) + 1:0{number_len}}"
 
             return {
-                "name": _("Print Pre-numbered Checks"),
+                "name": self.env._("Print Pre-numbered Checks"),
                 "type": "ir.actions.act_window",
                 "res_model": "print.prenumbered.checks",
                 "view_mode": "form",
@@ -254,19 +256,19 @@ class AccountPayment(models.Model):
         )
         redirect_action = self.env.ref("account.action_account_config")
         if not check_layout or check_layout == "disabled":
-            msg = _(
+            msg = self.env._(
                 "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
             )
             raise RedirectWarning(
-                msg, redirect_action.id, _("Go to the configuration panel")
+                msg, redirect_action.id, self.env._("Go to the configuration panel")
             )
         report_action = self.env.ref(check_layout, False)
         if not report_action:
-            msg = _(
+            msg = self.env._(
                 "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
             )
             raise RedirectWarning(
-                msg, redirect_action.id, _("Go to the configuration panel")
+                msg, redirect_action.id, self.env._("Go to the configuration panel")
             )
         self.write({"is_sent": "True"})
         return report_action.report_action(self)
@@ -385,8 +387,8 @@ class AccountPayment(models.Model):
 
         stub_lines = []
         type_groups = {
-            ("in_invoice", "in_receipt"): _("Bills"),
-            ("out_refund",): _("Refunds"),
+            ("in_invoice", "in_receipt"): self.env._("Bills"),
+            ("out_refund",): self.env._("Refunds"),
         }
         invoices_grouped = invoices.grouped(
             lambda i: next(group for group in type_groups if i.move_type in group)

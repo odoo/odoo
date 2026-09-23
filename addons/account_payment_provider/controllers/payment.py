@@ -1,4 +1,3 @@
-from odoo import _
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
@@ -27,7 +26,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except MissingError:
             raise
         except AccessError as error:
-            raise ValidationError(_("The access token is invalid.")) from error
+            raise ValidationError(
+                request.env._("The access token is invalid.")
+            ) from error
 
         logged_in = not request.env.user._is_public()
         partner_sudo = (
@@ -53,7 +54,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
         """
         logged_in = not request.env.user._is_public()
         if not logged_in:
-            raise ValidationError(_("Please log in to pay your overdue invoices"))
+            raise ValidationError(
+                request.env._("Please log in to pay your overdue invoices")
+            )
         partner = request.env.user.partner_id
         overdue_invoices = request.env["account.move"].search(
             self._get_domain_overdue_invoices()
@@ -61,7 +64,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         currencies = overdue_invoices.mapped("currency_id")
         if not all(currency == currencies[0] for currency in currencies):
             raise ValidationError(
-                _(
+                request.env._(
                     "Impossible to pay all the overdue invoices if they don't share the same currency."
                 )
             )
@@ -116,7 +119,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 request.env["account.move"].sudo().browse(invoice_id).exists()
             )
             if not invoice_sudo:
-                raise ValidationError(_("The provided parameters are invalid."))
+                raise ValidationError(
+                    request.env._("The provided parameters are invalid.")
+                )
 
             # Check the access token against the invoice values. Done after fetching the invoice
             # as we need the invoice fields to check the access token.
@@ -126,7 +131,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 amount,
                 invoice_sudo.currency_id.id,
             ):
-                raise ValidationError(_("The provided parameters are invalid."))
+                raise ValidationError(
+                    request.env._("The provided parameters are invalid.")
+                )
 
             kwargs.update(
                 {
@@ -180,7 +187,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 )
                 if not invoice_sudo:
                     raise ValidationError(
-                        _("The provided parameters are invalid.")
+                        request.env._("The provided parameters are invalid.")
                     ) from None
 
             # Interrupt the payment flow if the invoice has been canceled.

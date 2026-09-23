@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.account.models.res_company import PEPPOL_LIST
@@ -377,8 +377,8 @@ class ResConfigSettings(models.TransientModel):
         if not self.tax_exigibility and tax:
             self.tax_exigibility = True
             res["warning"] = {
-                "title": _("Error!"),
-                "message": _(
+                "title": self.env._("Error!"),
+                "message": self.env._(
                     "You cannot disable this setting because some of your taxes are cash basis. "
                     "Modify your taxes first before disabling this setting."
                 ),
@@ -402,7 +402,7 @@ class ResConfigSettings(models.TransientModel):
         ):
             return self.env["website"].get_client_action("/terms", True)
         return {
-            "name": _("Update Terms & Conditions"),
+            "name": self.env._("Update Terms & Conditions"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "account.config",

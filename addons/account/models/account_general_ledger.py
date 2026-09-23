@@ -5,7 +5,7 @@ from collections import defaultdict
 from itertools import groupby
 from textwrap import shorten
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_repr
@@ -22,11 +22,11 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
     def _custom_options_initializer(self, report, options, previous_options):
         options["buttons"].append(
             {
-                "name": _("CSV"),
+                "name": self.env._("CSV"),
                 "sequence": 50,
                 "action": "export_file",
                 "action_param": "generate_csv_export",
-                "file_export_type": _("CSV"),
+                "file_export_type": self.env._("CSV"),
             }
         )
 
@@ -73,14 +73,14 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             **default_caret,
             "id_with_accumulated_balance_caret": [
                 {
-                    "name": _("View Journal Entry"),
+                    "name": self.env._("View Journal Entry"),
                     "action": "caret_option_open_record_form_custom_id_groupby",
                     "action_param": "move_id",
                 },
             ],
             "undistributed_profits_losses": [
                 {
-                    "name": _("Journal Items"),
+                    "name": self.env._("Journal Items"),
                     "action": "open_unallocated_items_journal_items",
                 },
             ],
@@ -130,7 +130,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             aml_keys = []
             for grouping_key in grouping_keys:
                 if "balance_line" in grouping_key:
-                    keys_names_in_sequence[grouping_key] = _("Initial Balance")
+                    keys_names_in_sequence[grouping_key] = self.env._("Initial Balance")
                 else:
                     combined_key = json.loads(grouping_key)
                     ids_to_browse.append(combined_key[1])
@@ -505,7 +505,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 accumulated_balance_by_colgroup[col_group_key] += line_balance
                 if line["name"] == "balance_line":
                     has_balance_line = True
-                    line["name"] = _("Initial Balance")
+                    line["name"] = self.env._("Initial Balance")
                 else:
                     line["columns"][colname_to_idx[col_group_key]["balance"]] = (
                         report._prepare_column_dict(
@@ -660,7 +660,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             processed_lines.append(
                 {
                     "id": report._get_generic_line_id(None, None, "total"),
-                    "name": _("Total General Ledger"),
+                    "name": self.env._("Total General Ledger"),
                     "columns": self._adjust_total_with_unaffected_earnings(
                         main_line_dict["columns"], unaffected_earning_values
                     ),
@@ -801,7 +801,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
 
     def generate_csv_export(self, options):
         if len(options["column_groups"]) > 1:
-            raise UserError(_("CSV export only works with one column group"))
+            raise UserError(self.env._("CSV export only works with one column group"))
 
         report = self.env["report.formula"].browse(options["report_id"])
         return {
@@ -902,13 +902,13 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 ),
                 None,
             )
-            header = [_("Code"), _("Name")]
+            header = [self.env._("Code"), self.env._("Name")]
 
             if currency_idx is not None:
                 header += [
                     *col_names[:currency_idx],
-                    _("Amount Currency"),
-                    _("Currency"),
+                    self.env._("Amount Currency"),
+                    self.env._("Currency"),
                     *col_names[currency_idx + 1 :],
                 ]
             else:
@@ -994,7 +994,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                     progress = 0
 
                 if aml_line["id"] is None:
-                    aml_line["move_name"] = _("Initial Balance")
+                    aml_line["move_name"] = self.env._("Initial Balance")
                     aml_line["partner_name"] = ""
 
                 progress = aml_line["balance"] = progress + aml_line["balance"]

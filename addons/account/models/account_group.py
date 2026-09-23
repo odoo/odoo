@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -74,7 +74,7 @@ class AccountGroup(models.Model):
         if res:
             _debug.logic("group_overlap_rejected", groups=self, overlaps=len(res))
             raise ValidationError(
-                _("Account Groups with the same granularity can't overlap"),
+                self.env._("Account Groups with the same granularity can't overlap"),
             )
 
     @api.constrains("parent_id")
@@ -82,7 +82,7 @@ class AccountGroup(models.Model):
     def _check_parent_not_circular(self):
         if self._has_cycle():
             raise ValidationError(
-                _("You cannot create recursive groups."),
+                self.env._("You cannot create recursive groups."),
             )
 
     @api.model_create_multi

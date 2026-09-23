@@ -1,6 +1,6 @@
 import json
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -31,7 +31,7 @@ class AccountReturnSubmissionWizard(models.TransientModel):
             }
         )._get_records_action(target="new")
 
-        record_action["name"] = _("Submission Instructions")
+        record_action["name"] = self.env._("Submission Instructions")
 
         record_action.setdefault("context", {})
         record_action["context"] |= {

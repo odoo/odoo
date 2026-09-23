@@ -1,6 +1,6 @@
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_compare
@@ -161,7 +161,7 @@ class AccountMove(models.Model):
                     "depreciation_value.refused", reason="not_two_lines", move=move
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "The depreciation of %s cannot be set from the board: the entry "
                         "is not a plain two-line depreciation.",
                         move.display_name,
@@ -189,7 +189,7 @@ class AccountMove(models.Model):
                     "post.refused", reason="draft_board", move=move, board=asset_id
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can't post an entry related to a draft asset. Please post the asset before."
                     )
                 )
@@ -246,7 +246,7 @@ class AccountMove(models.Model):
                         )
                     )
 
-                msg = _(
+                msg = self.env._(
                     "Depreciation entry %(name)s reversed (%(value)s)",
                     name=move.name,
                     value=formatLang(
@@ -278,7 +278,9 @@ class AccountMove(models.Model):
             ):
                 _debug.logic("draft.refused", reason="posted_board", move=move)
                 raise UserError(
-                    _("You cannot reset to draft an entry related to a posted asset")
+                    self.env._(
+                        "You cannot reset to draft an entry related to a posted asset"
+                    )
                 )
             drafts = move.capitalised_board_ids.filtered(
                 lambda x: x.depreciation_state == "draft"
@@ -291,7 +293,7 @@ class AccountMove(models.Model):
     def _log_depreciation_asset(self):
         for move in self.filtered(lambda m: m.depreciation_board_id):
             asset = move.depreciation_board_id
-            msg = _(
+            msg = self.env._(
                 "Depreciation entry %(name)s posted (%(value)s)",
                 name=move.name,
                 value=formatLang(
@@ -329,7 +331,9 @@ class AccountMove(models.Model):
                 reason="missing_fields",
                 missing=sorted(missing_fields),
             )
-            raise UserError(_("Some fields are missing %s", ", ".join(missing_fields)))
+            raise UserError(
+                self.env._("Some fields are missing %s", ", ".join(missing_fields))
+            )
         asset = vals["asset_id"]
         analytic_distribution = asset.analytic_distribution
         depreciation_date = vals.get("date", fields.Date.context_today(self))
@@ -342,7 +346,7 @@ class AccountMove(models.Model):
         )
         partner = asset.original_move_line_ids.mapped("partner_id")
         partner = partner[:1] if len(partner) <= 1 else self.env["res.partner"]
-        name = _("%s: Depreciation", asset.name)
+        name = self.env._("%s: Depreciation", asset.name)
         ref = vals.get("move_ref") or name
         depreciates = float_compare(amount, 0.0, precision_digits=prec) > 0
         booked = amount if depreciates else -amount
@@ -505,7 +509,7 @@ class AccountMoveLine(models.Model):
                     defaults.pop("account_asset_id", None)
                     vals.update(defaults)
                 if units > 1:
-                    vals["name"] = _(
+                    vals["name"] = self.env._(
                         "%(move_line)s (%(current)s of %(total)s)",
                         move_line=self.name,
                         current=unit,
@@ -538,7 +542,7 @@ class AccountMoveLine(models.Model):
             if not self.product_id:
                 _debug.logic("asset_vals.refused", reason="no_label", line=self)
                 raise UserError(
-                    _(
+                    self.env._(
                         "Journal Items of %(account)s should have a label in order to generate an asset",
                         account=self.account_id.display_name,
                     )
@@ -565,13 +569,13 @@ class AccountMoveLine(models.Model):
             _debug.logic(
                 "turn_as_asset.refused", reason="several_companies", lines=self
             )
-            raise UserError(_("All the lines should be from the same company"))
+            raise UserError(self.env._("All the lines should be from the same company"))
         if any(line.move_id.state == "draft" for line in self):
             _debug.logic("turn_as_asset.refused", reason="draft_moves", lines=self)
-            raise UserError(_("All the lines should be posted"))
+            raise UserError(self.env._("All the lines should be posted"))
         if any(account != self[0].account_id for account in self.mapped("account_id")):
             _debug.logic("turn_as_asset.refused", reason="several_accounts", lines=self)
-            raise UserError(_("All the lines should be from the same account"))
+            raise UserError(self.env._("All the lines should be from the same account"))
         ctx = self.env.context.copy()
         ctx.update(
             {
@@ -580,7 +584,7 @@ class AccountMoveLine(models.Model):
             }
         )
         return {
-            "name": _("Turn as an asset"),
+            "name": self.env._("Turn as an asset"),
             "type": "ir.actions.act_window",
             "res_model": "account.depreciation.board",
             "views": [[False, "form"]],

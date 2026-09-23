@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.tools import SQL, Query, format_date
 
 MAX_NAME_LENGTH = 50
@@ -45,7 +45,7 @@ class AccountAssetReportHandler(models.AbstractModel):
                 {
                     "id": report._get_generic_line_id(None, None, markup="total"),
                     "level": 1,
-                    "name": _("Total"),
+                    "name": self.env._("Total"),
                     "columns": total_columns,
                     "unfoldable": False,
                     "unfolded": False,
@@ -158,7 +158,10 @@ class AccountAssetReportHandler(models.AbstractModel):
     def _caret_options_initializer(self):
         return {
             "account_asset_line": [
-                {"name": _("Open Asset"), "action": "caret_option_open_record_form"},
+                {
+                    "name": self.env._("Open Asset"),
+                    "action": "caret_option_open_record_form",
+                },
             ]
         }
 
@@ -182,10 +185,10 @@ class AccountAssetReportHandler(models.AbstractModel):
                 )
 
         options["custom_columns_subheaders"] = [
-            {"name": _("Characteristics"), "colspan": 3},
-            {"name": _("Assets"), "colspan": 4},
-            {"name": _("Depreciation"), "colspan": 4},
-            {"name": _("Book Value"), "colspan": 1},
+            {"name": self.env._("Characteristics"), "colspan": 3},
+            {"name": self.env._("Assets"), "colspan": 4},
+            {"name": self.env._("Depreciation"), "colspan": 4},
+            {"name": self.env._("Book Value"), "colspan": 1},
         ]
 
         options["assets_grouping_field"] = (
@@ -232,9 +235,9 @@ class AccountAssetReportHandler(models.AbstractModel):
                     and format_date(self.env, al["asset_acquisition_date"])
                 )
                 or "",
-                "method": (al["asset_method"] == "linear" and _("Linear"))
-                or (al["asset_method"] == "degressive" and _("Declining"))
-                or _("Dec. then Straight"),
+                "method": (al["asset_method"] == "linear" and self.env._("Linear"))
+                or (al["asset_method"] == "degressive" and self.env._("Declining"))
+                or self.env._("Dec. then Straight"),
                 **asset_parent_values,
             }
 
@@ -260,8 +263,8 @@ class AccountAssetReportHandler(models.AbstractModel):
             asset_depreciation_rate = " ".join(
                 part
                 for part in [
-                    years and _("%(years)s y", years=years),
-                    months and _("%(months)s m", months=months),
+                    years and self.env._("%(years)s y", years=years),
+                    months and self.env._("%(months)s m", months=months),
                 ]
                 if part
             )
@@ -413,7 +416,7 @@ class AccountAssetReportHandler(models.AbstractModel):
             if options["assets_grouping_field"] == "account_id":
                 parent_line_vals["name"] = f"{parent_field.code} {parent_field.name}"
             else:
-                parent_line_vals["name"] = parent_field.name or _(
+                parent_line_vals["name"] = parent_field.name or self.env._(
                     "(No %s)", parent_field._description
                 )
 

@@ -1,6 +1,6 @@
 from base64 import b64encode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -65,7 +65,7 @@ class StockPicking(models.Model):
                 <= int(picking_type.l10n_ar_sequence_number_end)
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "The delivery guide number %s exceeds the range specified in the CAI. Please update the range or use a different CAI with a different range.",
                         delivery_guide_number,
                     )
@@ -87,7 +87,7 @@ class StockPicking(models.Model):
         """
         self.check_singleton()
         if not self.partner_id.email:
-            raise UserError(_("The partner does not have an email address."))
+            raise UserError(self.env._("The partner does not have an email address."))
         template = self.env.ref(
             "l10n_ar_stock.email_template_ar_remitos_delivery_guide"
         )

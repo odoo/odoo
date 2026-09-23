@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.libs.debug_log import DebugLog
 
@@ -18,7 +18,7 @@ class DigestDigest(models.Model):
     def _compute_kpi_account_bank_cash_value(self):
         if not self.env.user.has_group("account.group_account_user"):
             raise AccessError(
-                _("Do not have access, skip this data for user's digest email")
+                self.env._("Do not have access, skip this data for user's digest email")
             )
 
         start, end, companies = self._get_kpi_compute_parameters()
