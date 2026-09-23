@@ -120,6 +120,32 @@ test("can post a note on a record thread", async () => {
     await assertSteps(["/mail/message/post"]);
 });
 
+test("post with reload_on_post keeps the changes of an invalid record", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    onRpcBefore("/mail/message/post", () => expect.step("/mail/message/post"));
+    onRpc("res.partner", "web_read", () => expect.step("web_read"));
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
+            <form>
+                <sheet>
+                    <field name="name" required="1"/>
+                </sheet>
+                <chatter reload_on_post="True"/>
+            </form>`,
+    });
+    await expect.waitForSteps(["web_read"]);
+    await insertText(".o_field_widget[name=name] input", "", { replace: true });
+    await click("button:text('Log note')");
+    await insertText(".o-mail-Composer-input", "hey");
+    await click(".o-mail-Composer button:enabled:text('Log')");
+    await contains(".o-mail-Message");
+    await contains(".o_notification:text('Invalid fields: Name')");
+    await contains(".o_field_invalid[name=name] input:value(/^$/)");
+    await expect.waitForSteps(["/mail/message/post"]);
+});
+
 test("No attachment loading spinner when creating records", async () => {
     await start();
     await openFormView("res.partner");
