@@ -36,6 +36,7 @@ const MENTION_CLASSNAMES = new Set([
     "o_channel_redirect",
     "o-discuss-mention",
 ]);
+const JS_HANDLED_LINK_ATTRIBUTES = new Set(["oeId", "oeModel", "oeType"]);
 
 /**
  * @param {string|ReturnType<markup>} rawBody
@@ -543,6 +544,11 @@ export function htmlToHtmlInline(htmlString) {
             const href = node.getAttribute("href");
             if ([...node.classList].some((cls) => MENTION_CLASSNAMES.has(cls))) {
                 parent.append(node);
+            } else if (
+                href === "#" &&
+                Object.keys(node.dataset).some((attr) => JS_HANDLED_LINK_ATTRIBUTES.has(attr))
+            ) {
+                appendText(parent, node.textContent);
             } else if (href) {
                 const link = body.ownerDocument.createElement("a");
                 link.setAttribute("href", href);
