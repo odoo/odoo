@@ -273,13 +273,6 @@ class TestFloatSplitSign:
         assert float_split_str(-0.05, 2) == ("-0", "05")
         assert float_split_str(-2.675, 2) == ("-2", "68")
 
-    def test_int_form_loses_subunit_sign_but_keeps_it_from_minus_one(self):
-        from odoo.libs.numbers.float_utils import float_split
-
-        assert float_split(-0.05, 2) == (0, 5)
-        assert float_split(-2.675, 2) == (-2, 68)
-        assert float_split(-0.001, 2) == (0, 0)
-
 
 class TestGetWebpSize:
     @staticmethod

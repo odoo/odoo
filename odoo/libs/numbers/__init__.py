@@ -6,7 +6,6 @@ from .float_utils import (
     float_is_zero,
     float_repr,
     float_round,
-    float_split,
     float_split_str,
     json_float_round,
 )
@@ -18,7 +17,6 @@ __all__ = [
     "float_is_zero",
     "float_repr",
     "float_round",
-    "float_split",
     "float_split_str",
     "json_float_round",
     "parse_amount",

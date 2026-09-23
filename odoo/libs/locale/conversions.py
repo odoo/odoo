@@ -3,7 +3,6 @@ import re
 import babel
 
 __all__ = [
-    "POSIX_TO_LDML",
     "XPG_LOCALE_RE",
     "posix_to_ldml",
     "py_to_js_locale",
@@ -36,7 +35,7 @@ def py_to_js_locale(locale: str) -> str:
     return "-".join(subtags)
 
 
-POSIX_TO_LDML = {
+_POSIX_TO_LDML = {
     "a": "E",
     "A": "EEEE",
     "b": "MMM",
@@ -92,7 +91,7 @@ def posix_to_ldml(fmt: str, locale: babel.Locale) -> str:
                 buf.append(locale.date_formats["short"].pattern)
             elif c == "X":
                 buf.append(locale.time_formats["medium"].pattern)
-            elif (ldml := POSIX_TO_LDML.get(directive)) is not None:
+            elif (ldml := _POSIX_TO_LDML.get(directive)) is not None:
                 buf.append(ldml)
             else:
                 raise ValueError(

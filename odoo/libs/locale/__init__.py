@@ -8,13 +8,11 @@ from .number_format import (
 from .cardinals_bg import BulgarianNumerals
 from .conversions import (
     XPG_LOCALE_RE,
-    POSIX_TO_LDML,
     py_to_js_locale,
     posix_to_ldml,
 )
 
 __all__ = [
-    "POSIX_TO_LDML",
     "XPG_LOCALE_RE",
     "BulgarianNumerals",
     "LocaleConventions",

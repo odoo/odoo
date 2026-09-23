@@ -24,7 +24,6 @@ __all__ = [
     "real_time",
     "start_of",
     "subtract",
-    "time_to_float",
     "to_timezone",
     "weekend",
     "weeknumber",
@@ -83,15 +82,6 @@ def float_to_time(hours: float) -> time:
     if integral >= 24:
         return time.max
     return time(int(integral), minutes, 0)
-
-
-def time_to_float(duration: time | timedelta) -> float:
-    if isinstance(duration, timedelta):
-        return duration.total_seconds() / 3600
-    if duration == time.max:
-        return 24.0
-    seconds = duration.microsecond / 1_000_000 + duration.second + duration.minute * 60
-    return seconds / 3600 + duration.hour
 
 
 def localized(dt: datetime) -> datetime:

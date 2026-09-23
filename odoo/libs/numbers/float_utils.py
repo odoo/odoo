@@ -11,7 +11,6 @@ __all__ = [
     "float_is_zero",
     "float_repr",
     "float_round",
-    "float_split",
     "float_split_str",
     "json_float_round",
 ]
@@ -174,13 +173,6 @@ def float_split_str(value: float, precision_digits: int) -> tuple[str, str]:
         parts = value_repr.split(".")
         return (parts[0], parts[1])
     return (value_repr, "")
-
-
-def float_split(value: float, precision_digits: int) -> tuple[int, int]:
-    units, cents = float_split_str(value, precision_digits)
-    if not cents:
-        return int(units), 0
-    return int(units), int(cents)
 
 
 def json_float_round(
