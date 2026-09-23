@@ -179,3 +179,32 @@ class TestEmbeddedFileTreeWalk(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestPdfaConversionKeepsWeasyPrintText(unittest.TestCase):
+    TEXT = "Invoice Gross Total (Inclusive of VAT) 100.00 SR"
+
+    def _weasyprint_pdf(self) -> bytes:
+        weasyprint = __import__("weasyprint")
+        return weasyprint.HTML(
+            string=f"<html><body><h1>{self.TEXT}</h1><p>{self.TEXT}</p></body></html>"
+        ).write_pdf()
+
+    @staticmethod
+    def _widths(data: bytes) -> list:
+        return [
+            repr(descendant.get_object().get("/W"))
+            for page in PdfReader(io.BytesIO(data)).pages
+            for font in page["/Resources"]["/Font"].values()
+            for descendant in font.get_object().get("/DescendantFonts") or ()
+        ]
+
+    def test_the_conversion_keeps_every_glyph_width_and_the_text(self):
+        source = self._weasyprint_pdf()
+        writer = _clone(source)
+        writer.convert_to_pdfa()
+        converted = _written(writer)
+        self.assertTrue(self._widths(source))
+        self.assertEqual(self._widths(converted), self._widths(source))
+        text = PdfReader(io.BytesIO(converted)).pages[0].extract_text()
+        self.assertIn(self.TEXT, " ".join(text.split()))
