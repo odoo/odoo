@@ -1,4 +1,4 @@
-import { Component, proxy, usePlugin } from "@odoo/owl";
+import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -14,6 +14,10 @@ import {
 export class NumpadDropdown extends Component {
     static template = "pos_restaurant.NumpadDropdown";
     static components = { Numpad };
+
+    props = useProps({
+        contentClass: t.string().optional(),
+    });
 
     setup() {
         this.pos = usePos();
