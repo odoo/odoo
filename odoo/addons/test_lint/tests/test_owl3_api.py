@@ -7,6 +7,7 @@ from . import _js_sources, lint_case
 
 _VENDORED = ("/static/lib/", "/static/src/o_spreadsheet/")
 _COMMENT = re.compile(r"/\*.*?\*/|//[^\n]*", re.DOTALL)
+_OWN_RENDER = re.compile(r"^\s+render\s*\([^)]*\)\s*\{", re.MULTILINE)
 REMOVED_IN_OWL3 = {
     "owl_on_rendered": re.compile(r"(?<![\w.$])onRendered\s*\("),
     "owl_on_will_render": re.compile(r"(?<![\w.$])onWillRender\s*\("),
@@ -17,6 +18,8 @@ REMOVED_IN_OWL3 = {
 
 def calls(pattern: re.Pattern, source: str) -> list[int]:
     code = _COMMENT.sub(lambda m: "\n" * m.group(0).count("\n"), source)
+    if pattern is REMOVED_IN_OWL3["owl_this_render"] and _OWN_RENDER.search(code):
+        return []
     return [code.count("\n", 0, m.start()) + 1 for m in pattern.finditer(code)]
 
 
@@ -84,3 +87,12 @@ class TestOwl3ApiScan(BaseCase):
         )
         self.assertEqual(calls(REMOVED_IN_OWL3["owl_on_rendered"], source), [1])
         self.assertEqual(calls(REMOVED_IN_OWL3["owl_this_render"], source), [4])
+
+    def test_a_class_with_its_own_render_calls_that_render(self):
+        interaction = (
+            "export class Countdown extends Interaction {\n"
+            "    start() { this.render(); }\n"
+            "    render() { draw(); }\n"
+            "}\n"
+        )
+        self.assertEqual(calls(REMOVED_IN_OWL3["owl_this_render"], interaction), [])

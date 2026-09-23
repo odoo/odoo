@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, toRaw, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillRender, toRaw, useEffect, useRef, useState } from "@odoo/owl";
 import { CallbackRecorder, useSetupAction } from "@web/core/action_hook";
 import { browser } from "@web/core/browser/browser";
 import { reportUncaught } from "@web/core/errors/error_utils";
@@ -57,21 +57,18 @@ export class MultiSelectionButtons extends Component {
         this.viewService = useService("view");
         this.dialogService = useService("dialog");
         this.state = useState({ isReady: false });
-        useEffect(
-            (visible, isReady) => {
-                if (visible && !isReady) {
-                    this._loadViewProm ??= this.loadMultiCreateView()
-                        .then(() => {
-                            this.state.isReady = true;
-                        })
-                        .catch((error) => {
-                            this._loadViewProm = null;
-                            reportUncaught(error);
-                        });
-                }
-            },
-            () => [this.props.reactive.visible, this.state.isReady],
-        );
+        onWillRender(() => {
+            if (this.props.reactive.visible && !this.state.isReady) {
+                this._loadViewProm ??= this.loadMultiCreateView()
+                    .then(() => {
+                        this.state.isReady = true;
+                    })
+                    .catch((error) => {
+                        this._loadViewProm = null;
+                        reportUncaught(error);
+                    });
+            }
+        });
 
         this.multiCreateValues = this.props.reactive.multiCreateValues;
         this.callbackRecorder = new CallbackRecorder();

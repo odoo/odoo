@@ -143,13 +143,11 @@ export class CalendarFilterSection extends Component {
             [filter],
             ev.target.checked,
         );
-        this.render();
     }
 
     onAllFilterInputChange(ev) {
         const { fieldName, filters } = this.section;
         this.props.model.updateFilters(fieldName, filters, ev.target.checked);
-        this.render();
     }
 
     onFilterRemoveBtnClick(filter) {
@@ -160,7 +158,6 @@ export class CalendarFilterSection extends Component {
         Promise.resolve(
             this.props.model.unlinkFilter(this.section.fieldName, filter.recordId),
         ).finally(() => this.unlinkingFilterIds.delete(filter.recordId));
-        this.render();
     }
 
     async onSearchMore(resModel, domain, request) {

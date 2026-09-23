@@ -30,7 +30,7 @@ export class Activity extends Component {
         super.setup();
         this.storeService = useService("mail.store");
         this.linkNavigation = useService("mail.link_navigation");
-        this.state = useState({ showDetails: false });
+        this.state = useState({ showDetails: false, day: 0 });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(discussComponentRegistry.get("AvatarCardPopover"));
         onMounted(() => {
@@ -50,12 +50,13 @@ export class Activity extends Component {
     updateDelayAtNight() {
         browser.clearTimeout(this.updateDelayMidnightTimeout);
         this.updateDelayMidnightTimeout = browser.setTimeout(() => {
-            this.render();
+            this.state.day++;
             this.updateDelayAtNight();
         }, getMsToTomorrow() + 100);
     }
 
     get delay() {
+        void this.state.day;
         return computeDelay(this.props.activity.date_deadline);
     }
 
