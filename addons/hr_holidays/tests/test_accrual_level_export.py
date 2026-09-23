@@ -14,7 +14,7 @@ class TestAccrualLevelExport(HttpCase):
 
     def _import_compatible_field_names(self, model):
         self.authenticate("admin", "admin")
-        result = self.make_jsonrpc_request(
+        result = self.call_jsonrpc(
             "/web/export/get_fields",
             {"model": model, "domain": [], "import_compat": True},
         )
