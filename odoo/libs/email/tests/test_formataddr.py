@@ -33,3 +33,13 @@ def test_an_uppercase_international_domain_is_encoded_not_refused():
 
     assert formataddr(("", "x@EXÄMPLE.com"), "ascii") == "x@xn--exmple-cua.com"
     assert extract_rfc2822_addresses("x@EXÄMPLE.com") == ["x@xn--exmple-cua.com"]
+
+
+def test_an_empty_address_is_refused_not_rendered_as_an_at_sign():
+    import pytest
+
+    from odoo.libs.email.parsing import formataddr
+
+    for pair in (("x", ""), ("", "")):
+        with pytest.raises(ValueError, match="required"):
+            formataddr(pair)

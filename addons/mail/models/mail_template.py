@@ -1016,9 +1016,9 @@ class MailTemplate(models.Model):
                 r["partner_id"] for r in suggested_list if r["partner_id"]
             ]
             emails_by_res_id.setdefault(res_id, {})["email_to"] = ", ".join(
-                tools.mail.formataddr((r["name"] or "", r["email"] or ""))
+                tools.mail.formataddr((r["name"] or "", r["email"]))
                 for r in suggested_list
-                if not r["partner_id"]
+                if not r["partner_id"] and r["email"]
             )
 
     def _update_recipient_vals_partner_ids(

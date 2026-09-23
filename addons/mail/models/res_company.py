@@ -64,7 +64,9 @@ class ResCompany(models.Model):
         for company in self.filtered("alias_domain_id"):
             bounce_email = company.alias_domain_id.bounce_email
             company.bounce_email = bounce_email
-            company.bounce_formatted = tools.formataddr((company.name, bounce_email))
+            company.bounce_formatted = bounce_email and tools.formataddr(
+                (company.name, bounce_email)
+            )
 
     @api.depends("alias_domain_id.catchall_email", "name")
     def _compute_catchall(self) -> None:
@@ -74,7 +76,7 @@ class ResCompany(models.Model):
         for company in self.filtered("alias_domain_id"):
             catchall_email = company.alias_domain_id.catchall_email
             company.catchall_email = catchall_email
-            company.catchall_formatted = tools.formataddr(
+            company.catchall_formatted = catchall_email and tools.formataddr(
                 (company.name, catchall_email)
             )
 

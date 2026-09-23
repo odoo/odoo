@@ -205,7 +205,10 @@ def formataddr(pair: tuple[str, str], charset: str = "utf-8") -> str:
     name, address = pair
     if name:
         name = _HEADER_CONTROL_RE.sub("", name)
-    if address and "@" not in address:
+    if not address:
+        msg = "an email address is required, got an empty one"
+        raise ValueError(msg)
+    if "@" not in address:
         msg = f"invalid email address, missing '@': {address!r}"
         raise ValueError(msg)
     local, _, domain = address.rpartition("@")

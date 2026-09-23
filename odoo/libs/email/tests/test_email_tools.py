@@ -107,12 +107,17 @@ class TestEmailTools(unittest.TestCase):
         ):
             with self.subTest(source=source):
                 self.assertEqual(email_normalize(source, strict=True), expected)
+                if not expected:
+                    for charset in ("utf-8", "ascii"):
+                        with self.assertRaises(ValueError):
+                            formataddr((format_name, ""), charset=charset)
+                    continue
                 self.assertEqual(
-                    formataddr((format_name, (expected or "")), charset="utf-8"),
+                    formataddr((format_name, expected), charset="utf-8"),
                     expected_utf8_fmt,
                 )
                 self.assertEqual(
-                    formataddr((format_name, (expected or "")), charset="ascii"),
+                    formataddr((format_name, expected), charset="ascii"),
                     expected_ascii_fmt,
                 )
 
