@@ -163,3 +163,5 @@ class TestSqlToFlushComposes(unittest.TestCase):
         sep = SQL(", ", to_flush=self.b)
         joined = sep.join([self.inner(), self.inner(), self.inner()])
         self.assertEqual(tuple(joined.to_flush), (self.a, self.a, self.a, self.b))
+        with_params = SQL("%s", ", ", to_flush=self.b).join([self.inner()] * 3)
+        self.assertEqual(tuple(with_params.to_flush), tuple(joined.to_flush))

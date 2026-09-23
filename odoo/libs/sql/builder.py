@@ -198,7 +198,12 @@ class SQL:
         result = [self] * (len(items) * 2 - 1)
         for index, arg in enumerate(items):
             result[index * 2] = arg
-        return SQL("%s" * len(result), *result)
+        return SQL("%s" * len(result), *result).with_to_flush(
+            (
+                *(f for arg in items if isinstance(arg, SQL) for f in arg.__to_flush),
+                *self.__to_flush,
+            )
+        )
 
     EMPTY: SQL
 
