@@ -137,6 +137,7 @@ export class LinkPopover extends Component {
             linkTarget: linkElement.target === "_blank" ? "_blank" : "",
             directDownload: true,
             isDocument: false,
+            isMissingAttachment: false,
             buttonSize: linkElement.className.match(/btn-(sm|lg)/)?.[1] || "",
             buttonShape: this.getButtonShape(),
             customBorderSize: computedStyle.borderWidth.replace("px", "") || "0",
@@ -486,6 +487,7 @@ export class LinkPopover extends Component {
         this.state.urlTitle = this.state.url || _t("No URL specified");
         this.state.urlDescription = "";
         this.state.linkPreviewName = "";
+        this.state.isMissingAttachment = false;
     }
     async loadAsyncLinkPreview() {
         let url;
@@ -502,10 +504,17 @@ export class LinkPopover extends Component {
             return;
         }
         if (this.isAttachmentUrl()) {
-            const { mimetype } = await this.props.getAttachmentMetadata(this.state.url);
+            const { mimetype, missing } = await this.props.getAttachmentMetadata(this.state.url);
             this.resetPreview();
             this.state.urlTitle = this.props.linkElement.textContent;
-            this.state.previewIcon = { type: "mimetype", value: mimetype };
+            if (missing) {
+                // Don't present a link to a deleted file as a valid one: the
+                // content may still be printed or sent with it.
+                this.state.isMissingAttachment = true;
+                this.state.previewIcon = { type: "fa", value: "fa-chain-broken text-danger" };
+            } else {
+                this.state.previewIcon = { type: "mimetype", value: mimetype };
+            }
             return;
         }
         try {
