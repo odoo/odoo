@@ -10,6 +10,7 @@ if typing.TYPE_CHECKING:
     from .._typing import ModelLike
     from .environment import Environment
 
+
 class AccessPolicy:
     __slots__ = ()
 
