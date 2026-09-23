@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime, time, timedelta
 from textwrap import dedent
 
 from odoo import _, api, fields, models
@@ -15,7 +15,12 @@ CRON_DEPENDS = {"name", "active", "send_by", "automatic_email_time", "moment", "
 
 
 def float_to_time(hours, moment="am"):
-    return hours_to_time(hours + 12 if moment == "pm" else hours)
+    moment_time = hours_to_time(hours)
+    if moment != "pm":
+        return moment_time
+    if moment_time.hour >= 12:
+        return time.max
+    return moment_time.replace(hour=moment_time.hour + 12)
 
 
 class LunchSupplier(models.Model):
