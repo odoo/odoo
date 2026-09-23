@@ -2,6 +2,8 @@ import re
 from collections.abc import Iterable
 from typing import Final
 
+__all__ = ["SheetNameCollisionError", "normalize_excel_sheet_name"]
+
 _INVALID_EXCEL_CHARS_RE: Final[re.Pattern[str]] = re.compile(r"[\[\]:*?/\\]")
 _MAX_SHEET_NAME_LENGTH: Final[int] = 31
 _MAX_DEDUP_SUFFIX: Final[int] = 1000

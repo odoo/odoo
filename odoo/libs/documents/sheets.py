@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import contextlib
 import io
-import re
 from typing import Any
 
 from odoo.libs.numbers import float_repr
+from odoo.libs.sheet_names import normalize_excel_sheet_name
 
 from .formats import mimetype_for
 from .representations import SHEETS
@@ -17,7 +17,6 @@ EXCEL_DEFAULT_COLUMN_WIDTH = 8.43
 SHEET_NAME_MAX_LENGTH = 31
 MEASURED_WIDTH_CAP = 75
 MEASURED_WIDTH_PADDING = 4
-_FORBIDDEN_IN_SHEET_NAME = re.compile(r"[\[\]:*?/\\]")
 
 
 class SheetBuilder:
@@ -92,7 +91,7 @@ class XlsxSheetsWriter(BaseWriter):
 
             for sheet in value:
                 worksheet = workbook.add_worksheet(
-                    _unique_sheet_name(workbook, sheet.name)
+                    normalize_excel_sheet_name(sheet.name, workbook.sheetnames) or None
                 )
                 for operation in sheet.operations:
                     kind = operation[0]
@@ -139,23 +138,6 @@ class XlsxSheetsWriter(BaseWriter):
                                 style,
                             )
         return output.getvalue()
-
-
-def _unique_sheet_name(workbook: Any, name: str) -> str:
-    # Excel's rules, which xlsxwriter enforces by raising: none of []:*?/\,
-    # no apostrophe at either end, 31 characters, unique regardless of case
-    name = _FORBIDDEN_IN_SHEET_NAME.sub(" ", name).strip().strip("'") or "Sheet"
-    existing = {sheet_name.casefold() for sheet_name in workbook.sheetnames}
-
-    def fit(suffix: str) -> str:
-        return name[: SHEET_NAME_MAX_LENGTH - len(suffix)].rstrip("'") + suffix
-
-    candidate = fit("")
-    count = 1
-    while candidate.casefold() in existing:
-        candidate = fit(f" ({count})")
-        count += 1
-    return candidate
 
 
 def _load_fonts(paths: dict[str, str], size: int) -> dict[str, Any]:

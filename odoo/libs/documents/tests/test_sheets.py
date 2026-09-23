@@ -58,7 +58,7 @@ class TestXlsxSheetsWriter(unittest.TestCase):
         names = re.findall(
             r'<sheet name="([^"]+)"', book.read("xl/workbook.xml").decode()
         )
-        self.assertEqual(names, ["x" * 31, "x" * 27 + " (1)"])
+        self.assertEqual(names, ["x" * 31, "x" * 29 + "~2"])
 
     def test_sheet_names_follow_excels_rules_instead_of_crashing_the_export(self):
         book = write(
@@ -74,7 +74,7 @@ class TestXlsxSheetsWriter(unittest.TestCase):
         )
         self.assertEqual(
             names,
-            ["Data", "data (1)", "Q1 Q2  draft", "quoted", "x" * 30, "Sheet"],
+            ["Data", "data~2", "Q1Q2 draft", "quoted", "x" * 30, "Sheet6"],
         )
 
     def test_a_measured_date_cell_does_not_crash_the_width(self):

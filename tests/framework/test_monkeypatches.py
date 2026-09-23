@@ -248,7 +248,7 @@ class TestEmailHeaderFolding(unittest.TestCase):
 
 class TestExcelSheetNames(unittest.TestCase):
     def _sanitize(self, name, taken=()):
-        from odoo._monkeypatches._excel_utils import normalize_excel_sheet_name
+        from odoo.libs.sheet_names import normalize_excel_sheet_name
 
         return normalize_excel_sheet_name(name, taken)
 
@@ -295,7 +295,7 @@ class TestExcelSheetNames(unittest.TestCase):
         self.assertNotEqual(self._sanitize("Sales", ["SALES"]).lower(), "sales")
 
     def test_exhausted_dedup_suffixes_raise_instead_of_clashing(self):
-        from odoo._monkeypatches._excel_utils import SheetNameCollisionError
+        from odoo.libs.sheet_names import SheetNameCollisionError
 
         taken = ["Sheet", *(f"Sheet~{n}" for n in range(2, 1000))]
         with self.assertRaises(SheetNameCollisionError):

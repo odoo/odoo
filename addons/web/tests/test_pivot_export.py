@@ -55,6 +55,41 @@ class TestPivotExport(HttpCase):
         self.assertEqual(xml_data["A2"], "0")
         self.assertEqual(xml_data["B2"], "42")
 
+    def test_export_xlsx_titles_excel_refuses_as_a_sheet_name_still_export(self):
+        self.authenticate("admin", "admin")
+        for title in ("Sales A/B: [2024]*?", "x" * 40, "'quoted'"):
+            with self.subTest(title=title):
+                jdata = {
+                    "title": title,
+                    "model": "res.partner",
+                    "measure_count": 1,
+                    "origin_count": 1,
+                    "col_group_headers": [[{"title": "t", "width": 1, "height": 1}]],
+                    "measure_headers": [],
+                    "origin_headers": [],
+                    "rows": [{"title": "r", "indent": 0, "values": [{"value": 1}]}],
+                }
+                response = self.url_open(
+                    "/web/pivot/export_xlsx",
+                    data={
+                        "data": json_dumps(jdata),
+                        "csrf_token": http.Request.csrf_token(self),
+                    },
+                )
+                self.assertEqual(response.status_code, HTTPStatus.OK)
+                with ZipFile(io.BytesIO(response.content)).open(
+                    "xl/workbook.xml"
+                ) as file:
+                    name = (
+                        etree.parse(file)
+                        .find(
+                            ".//{http://schemas.openxmlformats.org/spreadsheetml/2006/main}sheet"
+                        )
+                        .get("name")
+                    )
+                self.assertLessEqual(len(name), 31)
+                self.assertFalse(set(name) & set("[]:*?/\\"))
+
     def test_export_xlsx_non_numeric_sizes_are_handled(self):
         self.authenticate("admin", "admin")
         jdata = {

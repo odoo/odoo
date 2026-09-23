@@ -2,7 +2,7 @@ from typing import Any
 
 import xlsxwriter
 
-from ._excel_utils import normalize_excel_sheet_name
+from odoo.libs.sheet_names import normalize_excel_sheet_name
 
 
 class PatchedXlsxWorkbook(xlsxwriter.Workbook):
