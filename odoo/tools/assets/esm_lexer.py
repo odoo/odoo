@@ -1,6 +1,6 @@
 import atexit
 import contextlib
-import functools
+import hashlib
 import json
 import logging
 import os
@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import threading
 import time
+from collections import OrderedDict
 from pathlib import Path
 from typing import Any
 
@@ -25,15 +26,35 @@ _REQUEST_TIMEOUT_S = 10.0
 
 _MAX_CONSECUTIVE_FAILURES = 2
 
+_DISABLE_COOLDOWN_S = 60.0
+
 
 class _LexerWorker:
     def __init__(self) -> None:
         self._proc: subprocess.Popen | None = None
         self._counter = 0
-        self._disabled = False
+        self._disabled_until = 0.0
         self._consec_failures = 0
         self._inbuf = b""
         self._lock = threading.Lock()
+
+    def _disabled(self) -> bool:
+        return time.monotonic() < self._disabled_until
+
+    def _disable(self) -> None:
+        self._disabled_until = time.monotonic() + _DISABLE_COOLDOWN_S
+
+    def _forget_after_fork(self) -> None:
+        # the worker and its pipes belong to the parent: signalling it or
+        # reading its replies from here would take them from the parent
+        proc, self._proc = self._proc, None
+        self._lock = threading.Lock()
+        self._inbuf = b""
+        if proc is not None:
+            for pipe in (proc.stdin, proc.stdout):
+                if pipe is not None:
+                    with contextlib.suppress(OSError):
+                        pipe.close()
 
     def _spawn(self) -> subprocess.Popen | None:
         node = shutil.which("node")
@@ -63,7 +84,7 @@ class _LexerWorker:
     def close(self) -> None:
         with self._lock:
             self._kill()
-            self._disabled = False
+            self._disabled_until = 0.0
             self._consec_failures = 0
 
     def _kill(self) -> None:
@@ -123,7 +144,7 @@ class _LexerWorker:
             self._inbuf += chunk
 
     def request(self, src: str) -> dict[str, Any] | None:
-        if self._disabled or os.name != "posix":
+        if self._disabled() or os.name != "posix":
             return None
         with self._lock:
             for _attempt in range(2):
@@ -131,13 +152,14 @@ class _LexerWorker:
                 if proc is None or proc.poll() is not None:
                     proc = self._proc = self._spawn()
                     if proc is None:
-                        self._disabled = True
+                        self._disable()
                         log_event(
                             _lexer_log,
                             logging.INFO,
                             "worker_unavailable",
                             hint="node + `npm install` provide es-module-lexer;"
                             " using the regex extractor",
+                            retry_s=_DISABLE_COOLDOWN_S,
                         )
                         return None
                 self._counter += 1
@@ -154,8 +176,6 @@ class _LexerWorker:
                     self._kill()
                     self._consec_failures += 1
                     disabled = self._consec_failures >= _MAX_CONSECUTIVE_FAILURES
-                    if disabled:
-                        self._disabled = True
                     log_event(
                         _lexer_log,
                         logging.WARNING if disabled else logging.DEBUG,
@@ -164,8 +184,11 @@ class _LexerWorker:
                         attempt=_attempt + 1,
                         consecutive=self._consec_failures,
                         disabled=disabled,
+                        retry_s=_DISABLE_COOLDOWN_S if disabled else 0,
                     )
                     if disabled:
+                        self._consec_failures = 0
+                        self._disable()
                         return None
                     continue
                 self._consec_failures = 0
@@ -176,7 +199,6 @@ class _LexerWorker:
                         "source_unlexable",
                         err=str(response.get("error", ""))[:200],
                     )
-                    return None
                 return response
             return None
 
@@ -204,28 +226,49 @@ def _register_worker_cleanup() -> None:
 
 
 def close_lexer_worker() -> None:
-    _debug.lifecycle("esm_lexer.closed", cached=_lex_cached.cache_info().currsize)
+    _debug.lifecycle("esm_lexer.closed", cached=len(_lex_cache))
     _worker.close()
-    _lex_cached.cache_clear()
+    clear_lex_cache()
 
 
 _LEX_CACHE_ENTRIES = 4096
 
-
-@functools.lru_cache(maxsize=_LEX_CACHE_ENTRIES)
-def _lex_cached(src: str) -> dict[str, Any] | None:
-    with _debug.perf("esm_lexer.lex_miss", source_bytes=len(src)) as span:
-        response = _worker.request(src)
-        span.set(lexed=response is not None)
-    return response
+# keyed on a digest: the sources themselves (every JS file of a registry) would
+# otherwise stay alive as keys for as long as the cache does
+_lex_cache: OrderedDict[bytes, dict[str, Any]] = OrderedDict()
+_lex_cache_lock = threading.Lock()
 
 
 def lex_module(src: str) -> dict[str, Any] | None:
-    return _lex_cached(src)
+    key = hashlib.blake2b(src.encode("utf-8", "surrogatepass"), digest_size=16).digest()
+    with _lex_cache_lock:
+        response = _lex_cache.get(key)
+        if response is not None:
+            _lex_cache.move_to_end(key)
+    if response is None:
+        with _debug.perf("esm_lexer.lex_miss", source_bytes=len(src)) as span:
+            response = _worker.request(src)
+            span.set(lexed=response is not None and response.get("ok") is not False)
+        if response is None:
+            # the worker was unreachable: the next call asks again
+            return None
+        with _lex_cache_lock:
+            _lex_cache[key] = response
+            if len(_lex_cache) > _LEX_CACHE_ENTRIES:
+                _lex_cache.popitem(last=False)
+    return None if response.get("ok") is False else response
 
 
 def clear_lex_cache() -> None:
-    _debug.lifecycle(
-        "esm_lexer.cache_cleared", cached=_lex_cached.cache_info().currsize
-    )
-    _lex_cached.cache_clear()
+    with _lex_cache_lock:
+        _debug.lifecycle("esm_lexer.cache_cleared", cached=len(_lex_cache))
+        _lex_cache.clear()
+
+
+def _reset_after_fork() -> None:
+    global _lex_cache_lock  # noqa: PLW0603  a lock held by another thread at fork stays held in the child
+    _lex_cache_lock = threading.Lock()
+    _worker._forget_after_fork()
+
+
+os.register_at_fork(after_in_child=_reset_after_fork)

@@ -397,12 +397,14 @@ Worker robustness contract (`esm_lexer.py`):
   gated by a wall-clock deadline (`_write_all` / `_read_line`), so a worker
   that stopped reading (full ~64 KB pipe) or emitted a partial line can never
   block a caller past the budget — a plain `stdin.write` / `readline` could.
-- **Respawn-once, then disable.** A worker that dies mid-request is respawned
-  and the request retried once; a *spawn* failure (no `node`) disables the
-  worker for the process immediately; and `_MAX_CONSECUTIVE_FAILURES` (2)
-  consecutive request failures also disable it — so a present-but-broken
-  worker degrades the whole process to the regex path fast instead of paying
-  the 10s budget on every module (which would be minutes across a big bundle).
+- **Respawn-once, then pause.** A worker that dies mid-request is respawned
+  and the request retried once; a *spawn* failure (no `node`) or
+  `_MAX_CONSECUTIVE_FAILURES` (2) consecutive request failures pause the worker
+  for `_DISABLE_COOLDOWN_S` (60s) — so a present-but-broken worker degrades to
+  the regex path fast instead of paying the 10s budget on every module, and a
+  single slow reply under load does not blind the process for its lifetime.
+  An outage is never memoised: only the worker's answers are cached (a
+  refusal, `ok: false`, included), keyed on a blake2b digest of the source.
 - **Discovery parity.** The regex fallback (`_IMPORT_ANY_RE`) covers named /
   default / namespace / mixed (`import D, { y } from …`) / bindingless
   side-effect imports, matching the worker's specifier discovery. It reads the

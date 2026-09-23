@@ -26,7 +26,7 @@ class TestLexerWorkerDegradation(BaseCase):
             self.assertIsNone(worker.request("export const a = 1;"))
         self.assertIn("worker_unavailable", "\n".join(logged.output))
         self.assertEqual(len(logged.output), 1, "the notice must not repeat per call")
-        self.assertTrue(worker._disabled)
+        self.assertTrue(worker._disabled())
 
     def test_a_desynchronised_reply_is_retried_then_gives_up(self):
         from odoo.tools.assets import esm_lexer
@@ -48,7 +48,7 @@ class TestLexerWorkerDegradation(BaseCase):
 
         attempts = [ln for ln in logged.output if "worker_request_failed" in ln]
         self.assertEqual(len(attempts), 2, "one retry, then disabled")
-        self.assertTrue(worker._disabled)
+        self.assertTrue(worker._disabled())
         self.assertIn("disabled=True", attempts[-1])
 
     def test_a_transient_failure_does_not_disable_the_worker(self):
@@ -72,7 +72,7 @@ class TestLexerWorkerDegradation(BaseCase):
             response = worker.request("export const a = 1;")
 
         self.assertIsNotNone(response, "the retry must be allowed to succeed")
-        self.assertFalse(worker._disabled)
+        self.assertFalse(worker._disabled())
         self.assertEqual(worker._consec_failures, 0, "the counter must reset")
 
     def test_source_the_worker_cannot_lex_is_not_a_worker_failure(self):
@@ -90,11 +90,12 @@ class TestLexerWorkerDegradation(BaseCase):
             ),
             self.assertLogs("odoo.assets.lexer", level="DEBUG") as logged,
         ):
-            self.assertIsNone(worker.request("this is not javascript {"))
+            response = worker.request("this is not javascript {")
 
+        self.assertIs(response["ok"], False, "a refusal is an answer, not an outage")
         self.assertIn("source_unlexable", "\n".join(logged.output))
         self.assertFalse(
-            worker._disabled, "one unparseable file must not blind the whole run"
+            worker._disabled(), "one unparseable file must not blind the whole run"
         )
 
     @unittest.skipUnless(shutil.which("node"), "node binary not available")
