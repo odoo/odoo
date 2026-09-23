@@ -89,18 +89,6 @@ class IrAttachment(models.Model):
         )
 
     @api.model
-    def _get_domain_esm_generated_assets(self) -> Domain:
-        return self._get_domain_generated_assets() & Domain.OR(
-            [
-                [("url", "=like", f"{ESM_BRIDGES_URL_PREFIX}%")],
-                [("url", "=like", f"{ESM_LIBS_URL_PREFIX}%")],
-                [("name", "=like", "%.esm.js")],
-                [("name", "=like", "%.esm.js.map")],
-                [("name", "=like", "%.meta.json")],
-            ]
-        )
-
-    @api.model
     def _get_esm_bridge_gc_grace_days(self) -> int:
         configured = (
             self.env["ir.config_parameter"]
@@ -126,110 +114,34 @@ class IrAttachment(models.Model):
         )
 
     @api.autovacuum
-    def _gc_esm_assets(self) -> tuple[int, int]:
-        grace_days = self._get_esm_gc_grace_days()
-        cutoff = fields.Datetime.now() - timedelta(days=grace_days)
-        bridge_cutoff = fields.Datetime.now() - timedelta(
+    def _gc_esm_bridges(self) -> int:
+        # a bridge shim belongs to no build: pages import it by content, and a
+        # reuse refreshes its write_date, so age alone says it is unused.
+        # Every other generated ESM file is a build's, collected with it
+        cutoff = fields.Datetime.now() - timedelta(
             days=self._get_esm_bridge_gc_grace_days()
         )
-        is_bridge = Domain("url", "=like", f"{ESM_BRIDGES_URL_PREFIX}%")
-        aged = self._get_domain_esm_generated_assets() & Domain.OR(
-            [
-                ~is_bridge & Domain("write_date", "<", cutoff),
-                is_bridge & Domain("write_date", "<", bridge_cutoff),
-            ]
+        aged = self.sudo().search(
+            self._get_domain_generated_assets(url_pattern=f"{ESM_BRIDGES_URL_PREFIX}%")
+            & Domain("write_date", "<", cutoff),
+            limit=self._ESM_GC_BATCH,
         )
-        deleted_artifacts = deleted_bridges = 0
-        offset = 0
-        more = False
-        _debug.lifecycle(
-            "esm_gc_started", grace_days=grace_days, batch=self._ESM_GC_BATCH
-        )
-        while True:
-            if deleted_artifacts + deleted_bridges >= self._ESM_GC_BATCH:
-                more = True
-                _debug.logic("esm_gc_stopped", reason="batch_full", offset=offset)
-                break
-            candidates = self.sudo().search(
-                aged, order="id", limit=self._ESM_GC_BATCH, offset=offset
-            )
-            if not candidates:
-                _debug.logic("esm_gc_stopped", reason="exhausted", offset=offset)
-                break
-            stale_artifacts, bridges = self._get_esm_gc_collectable(candidates)
-            to_gc = stale_artifacts | bridges
-            _debug.pipeline(
-                "esm_gc_batch",
-                candidates=len(candidates),
-                stale=len(stale_artifacts),
-                bridges=len(bridges),
-            )
-            offset += len(candidates) - len(to_gc)
-            if not to_gc:
-                continue
-            with _debug.perf("esm_gc_unlink", cr=self.env.cr, count=len(to_gc)):
-                to_gc.unlink()
-            deleted_artifacts += len(stale_artifacts)
-            deleted_bridges += len(bridges)
-
-        _debug.lifecycle(
-            "esm_gc_done",
-            artifacts=deleted_artifacts,
-            bridges=deleted_bridges,
-            more=more,
-        )
-        if not deleted_artifacts and not deleted_bridges:
-            return 0, 0
-        _logger.info(
-            "GC'd %d stale ESM artifact(s) and %d aged bridge shim(s) "
-            "older than %d day(s)",
-            deleted_artifacts,
-            deleted_bridges,
-            grace_days,
-        )
-        return deleted_artifacts + deleted_bridges, int(more)
-
-    def _get_esm_gc_collectable(self, candidates):
-        bridges = candidates.filtered(
-            lambda a: a.url.startswith(ESM_BRIDGES_URL_PREFIX)
-        )
-        artifacts = candidates - bridges
-        if not artifacts:
-            _debug.logic(
-                "esm_gc_collectable", reason="bridges_only", bridges=len(bridges)
-            )
-            return self.browse(), bridges
-        live_ids = set()
-        seen_names = set()
-        live_dirs = set()
-        for att in self.sudo().search_fetch(
-            self._get_domain_generated_assets()
-            & Domain("name", "in", list(set(artifacts.mapped("name")))),
-            ["name", "url"],
-            order="write_date desc, id desc",
-        ):
-            if att.name not in seen_names:
-                seen_names.add(att.name)
-                live_ids.add(att.id)
-                live_dirs.add(att.url.rpartition("/")[0])
-        stale = artifacts.filtered(
-            lambda a: a.id not in live_ids and a.url.rpartition("/")[0] not in live_dirs
-        )
-        _debug.logic(
-            "esm_gc_collectable",
-            artifacts=len(artifacts),
-            live=len(live_ids),
-            live_dirs=len(live_dirs),
-            stale=len(stale),
-            bridges=len(bridges),
-        )
-        return stale, bridges
+        _debug.lifecycle("esm_bridges_gc", aged=len(aged), batch=self._ESM_GC_BATCH)
+        if aged:
+            with _debug.perf("esm_gc_unlink", cr=self.env.cr, count=len(aged)):
+                aged.unlink()
+            _logger.info("GC'd %d aged ESM bridge shim(s)", len(aged))
+        return len(aged)
 
     @api.model
     def regenerate_assets_bundles(self) -> None:
         self._check_admin_access()
         generated = self.search(self._get_domain_generated_assets())
-        _debug.lifecycle("regenerate_assets_bundles", generated=len(generated))
+        builds = self.env["ir.asset.build"].sudo().search([])
+        _debug.lifecycle(
+            "regenerate_assets_bundles", generated=len(generated), builds=len(builds)
+        )
+        builds.unlink()
         if generated:
             with _debug.perf(
                 "regenerate_unlink", cr=self.env.cr, generated=len(generated)

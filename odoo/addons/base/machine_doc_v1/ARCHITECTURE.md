@@ -70,7 +70,7 @@ access control, and ORM extensions that those controllers depend on.
 odoo/addons/base/
 ├── __manifest__.py              # Module metadata + asset/data file declarations
 ├── __init__.py                  # Imports models, report, wizard + post_init hook
-├── models/                      # 113 Python model files (core ORM infrastructure)
+├── models/                      # 114 Python model files (core ORM infrastructure)
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
 │   ├── ir_access.py                 #   ir.access: permissions and guards with domains, the decision of every model
@@ -88,6 +88,7 @@ odoo/addons/base/
 │   ├── ir_actions_server_history.py #   Code history of a server action
 │   ├── ir_actions_todo.py           #   Configuration wizard queue
 │   ├── ir_asset.py                  #   Asset bundle management (directives, paths, sorting)
+│   ├── ir_asset_build.py            #   Published ESM builds: current per variant, superseded, swept
 │   ├── ir_asset_paths.py            #   Asset directive walk: paths, anchors, insert/remove/replace
 │   ├── ir_attachment.py             #   File storage (DB or filestore), GC, MIME detection
 │   ├── ir_attachment_assets.py      #   ir.attachment extension: generated-asset GC and regeneration
@@ -284,7 +285,7 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 
 | Category | Count |
 |----------|-------|
-| Python (models) | 113 |
+| Python (models) | 114 |
 | Python (wizards) | 11 |
 | Python (tests) | 144 |
 | XML (views) | 39 |

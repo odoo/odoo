@@ -7,6 +7,7 @@ import shutil
 import tempfile
 import threading
 import time
+from datetime import timedelta
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -14,6 +15,7 @@ from unittest.mock import patch
 from psycopg.errors import ReadOnlySqlTransaction
 
 import odoo
+from odoo import fields
 from odoo.api import SUPERUSER_ID
 from odoo.db import db_connect
 from odoo.fields import Domain
@@ -298,40 +300,41 @@ class TestContentAddressableUrl(TransactionCase):
 
     def test_different_content_produces_different_url(self):
         ir_qweb = self.env["ir.qweb"]
-        url_a = ir_qweb._save_esm_attachment(
-            "test.cas.diff",
-            "export const x = 1;",
-        )
-        url_b = ir_qweb._save_esm_attachment(
-            "test.cas.diff",
-            "export const x = 2;",
-        )
+        # the production branch writes rows and build on this cursor; the test
+        # branch commits the build through its own connection, out of sight
+        with patch.object(ir_qweb_assets._module, "current_test", None):
+            # content no other test saves: a build owns a directory, and a
+            # directory is the hash of its content alone
+            url_a = ir_qweb._save_esm_attachment(
+                "test.cas.diff",
+                "export const casDiff = 1;",
+            )
+            url_b = ir_qweb._save_esm_attachment(
+                "test.cas.diff",
+                "export const casDiff = 2;",
+            )
         self.assertNotEqual(url_a, url_b)
         Attachment = self.env["ir.attachment"].sudo()
-        attachments = Attachment.search(
-            [
-                ("url", "=like", "/web/assets/esm/%/test.cas.diff.esm.js"),
-            ]
-        )
         self.assertEqual(
-            len(attachments),
+            len(Attachment.search([("url", "in", [url_a, url_b])])),
             2,
             msg="superseded version must survive the rebuild (deferred GC)",
         )
-        old_row = attachments.filtered(lambda a: a.url == url_a)
-        self.env.cr.execute(
-            "UPDATE ir_attachment SET write_date = write_date - interval '30 days'"
-            " WHERE id = %s",
-            [old_row.id],
+        Build = self.env["ir.asset.build"].sudo()
+
+        def build_of(url):
+            directory = url.rsplit("/", 1)[0] + "/"
+            return Build.search([("bundle", "=", "test.cas.diff")]).filtered(
+                lambda b: b.directories == [directory]
+            )
+
+        old, new = build_of(url_a), build_of(url_b)
+        self.assertEqual((old.state, new.state), ("superseded", "current"))
+        old.superseded_at = fields.Datetime.now() - timedelta(days=30)
+        Build._gc_asset_builds()
+        self.assertEqual(
+            Attachment.search([("url", "in", [url_a, url_b])]).mapped("url"), [url_b]
         )
-        old_row.invalidate_recordset()
-        Attachment._gc_esm_assets()
-        remaining = Attachment.search(
-            [
-                ("url", "=like", "/web/assets/esm/%/test.cas.diff.esm.js"),
-            ]
-        )
-        self.assertEqual(remaining.mapped("url"), [url_b])
 
 
 @tagged("web_unit", "web_assets")
@@ -1636,6 +1639,8 @@ class TestRuntimeGroupUrls(TransactionCase):
             "runtime:g5.parent",
             {"g5.child.esm.js": b"export const x = 1;"},
             ["g5.child", "g5.carried"],
+            variant="default",
+            source_key="g5",
         )
         self.assertEqual(set(urls), {"g5.child"})
         self.assertTrue(urls["g5.child"].endswith("/g5.child.esm.js"))
@@ -1769,8 +1774,8 @@ class TestEsmSourceKeyedReuse(TransactionCase):
 
         with db_connect(self.env.cr.dbname).cursor() as other:
             other.execute(
-                "DELETE FROM ir_attachment WHERE url LIKE %s",
-                (f"/web/assets/esm/by-source/%/{self.BUNDLE}.json",),
+                "DELETE FROM ir_asset_build WHERE kind = 'bundle' AND bundle = %s",
+                (self.BUNDLE,),
             )
             other.commit()
 
@@ -1835,23 +1840,16 @@ class TestProdNodesDeclineNotCached(TransactionCase):
         self.assertIn("declined=True", caught.output[0])
 
     def test_a_failed_save_statement_leaves_the_transaction_usable(self):
-        # the touch of a row another connection updated is a serialization
-        # failure inside the caller's transaction; served inline, the caller
-        # must still be able to run the next statement
+        # a statement the save runs in the caller's transaction can fail (a
+        # serialization failure on a row another connection wrote); served
+        # inline, the caller must still be able to run the next statement
         ir_qweb = self._qweb
 
-        def failing_touch(cr, touch_ids):
-            cr.execute("SELECT 1 / 0")
+        def failing_plan(self, rows, *_args):
+            self.env.cr.execute("SELECT 1 / 0")
 
         with (
-            patch.object(
-                type(ir_qweb),
-                "_plan_esm_row",
-                lambda self, rows, touch_ids, *a: touch_ids.append(1) or False,
-            ),
-            patch.object(
-                type(ir_qweb), "_touch_esm_attachment_rows", staticmethod(failing_touch)
-            ),
+            patch.object(type(ir_qweb), "_plan_esm_row", failing_plan),
             self.assertLogs(f"{ASSET_ROOT}.attach", level=logging.WARNING) as caught,
         ):
             _pre, post = ir_qweb._get_esm_nodes_prod(
@@ -1928,6 +1926,13 @@ class TestReadonlyDeclineIsRemembered(TransactionCase):
         )
         stack.enter_context(
             patch.object(AssetsBundle, "esbuild_native_bundle", self._compile)
+        )
+        # the memo is about compiling; a build another test committed for the
+        # same sources would be reused instead and hide every compile
+        stack.enter_context(
+            patch.object(
+                IrQweb, "_load_esbuild_result_by_source", lambda *_a, **_k: None
+            )
         )
 
     def _compile(self, *_args, **_kwargs):
@@ -2392,8 +2397,7 @@ class TestGeneratedAssetDomains(TransactionCase):
             "a row this framework did not author is not a generated asset",
         )
 
-    def test_esm_domain_narrows_generated_domain(self):
-        Attachment = self.env["ir.attachment"]
+    def test_an_orphan_sweep_reaches_esm_files_only(self):
         esm = self._make(
             "g4.bundle.esm.js", "/web/assets/esm/deadbeef/g4.bundle.esm.js"
         )
@@ -2403,28 +2407,24 @@ class TestGeneratedAssetDomains(TransactionCase):
         meta = self._make(
             "g4.bundle.meta.json", "/web/assets/esm/deadbeef/g4.bundle.meta.json"
         )
+        lib = self._make("g4/lib.js", "/web/assets/lib/deadbeef/g4/lib.js")
         bridge = self._make("g4-shim.js", "/web/assets/esm/bridges/cafebabe.js")
         classic = self._make(
             "web.assets_g4.min.js", "/web/assets/1/web.assets_g4.min.js"
         )
-        everything = esm | sourcemap | meta | bridge | classic
-
-        generated = Attachment.sudo().search(Attachment._get_domain_generated_assets())
+        everything = esm | sourcemap | meta | lib | bridge | classic
+        self.env.cr.execute(
+            "UPDATE ir_attachment SET write_date = write_date - interval '30 days'"
+            " WHERE id = ANY(%s)",
+            [everything.ids],
+        )
+        everything.invalidate_recordset()
+        self.env["ir.asset.build"].sudo()._sweep_orphan_rows()
         self.assertEqual(
-            everything & generated,
-            everything,
-            "the broad domain must match every generated row, classic included",
-        )
-
-        esm_only = Attachment.sudo().search(
-            Attachment._get_domain_esm_generated_assets()
-        )
-        self.assertEqual(everything & esm_only, esm | sourcemap | meta | bridge)
-        self.assertNotIn(
-            classic,
-            esm_only,
-            "classic .min.js bundles have their own rotation and must never "
-            "match the ESM-narrowed domain",
+            everything.exists(),
+            bridge | classic,
+            "a bridge has its own collection and a classic bundle its own "
+            "rotation; an ESM file no build owns is garbage",
         )
 
 
@@ -3349,7 +3349,7 @@ class TestEsmConcurrentPublication(TransactionCase):
 
         def publish():
             try:
-                qweb._save_esm_attachment_rows_autonomously(vals)
+                qweb._save_esm_attachment_rows_autonomously(vals, None)
             except Exception as exc:
                 errors.append(exc)
 
@@ -4178,7 +4178,7 @@ class TestServedLibraries(TransactionCase):
             [stale.id],
         )
         stale.invalidate_recordset()
-        Attachment._gc_esm_assets()
+        self.env["ir.asset.build"].sudo()._gc_asset_builds()
         self.assertFalse(stale.exists())
         self.assertTrue(current.exists())
 

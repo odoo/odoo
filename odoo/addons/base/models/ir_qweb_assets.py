@@ -1,7 +1,7 @@
 import hashlib
 import logging
 import time
-from collections.abc import Collection, Iterable, Sequence
+from collections.abc import Collection, Iterable
 from pathlib import Path
 from typing import Any
 
@@ -53,6 +53,7 @@ from odoo.tools.json import scriptsafe as json
 from odoo.tools.misc import file_path, str2bool
 
 from odoo.addons.base.models.assetsbundle import AssetsBundle, BundleFileSpec
+from odoo.addons.base.models.ir_asset_build import build_directory
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -469,6 +470,8 @@ class IrQweb(models.AbstractModel):
                     code,
                     metafile=esbuild_result.metafile,
                     sourcemap=None,
+                    kind="standalone",
+                    variant=esm_index.variant_key(assets_params, standalone=True),
                 )
             except Exception as exc:
                 _logger.warning(
@@ -703,9 +706,8 @@ class IrQweb(models.AbstractModel):
             group, entries, templates, parent_specs, stubs
         )
         # a process that has not compiled yet serves what another one did
-        reused = esm_index.resolve_group_index(
-            self._read_generated_asset, group, source_key
-        )
+        variant = esm_index.variant_key(assets_params)
+        reused = self._reuse_esm_group(group, variant, source_key)
         if reused is not None:
             log_event(
                 _fallback_log,
@@ -740,11 +742,9 @@ class IrQweb(models.AbstractModel):
         if result.metafile:
             files["group.meta.json"] = result.metafile.encode("utf-8")
         try:
-            urls = self._save_esm_group(group, files, set(children))
-            self._save_esm_attachment_rows(
-                [esm_index.group_index_row(group, source_key, urls)], bundle=group
+            return self._save_esm_group(
+                group, files, set(children), variant=variant, source_key=source_key
             )
-            return urls
         except ReadOnlySqlTransaction:
             _debug.logic("runtime_group_save_declined", group=group, reason="readonly")
             raise
@@ -759,8 +759,54 @@ class IrQweb(models.AbstractModel):
             )
             return {}
 
+    def _reuse_esm_group(
+        self, group: str, variant: str, source_key: str
+    ) -> dict[str, str] | None:
+        build = (
+            self.env["ir.asset.build"]
+            .sudo()
+            ._find_reusable("group", group, variant, source_key)
+        )
+        if not build:
+            _debug.logic("runtime_group_miss", group=group, reason="no_build")
+            return None
+        prefix = build.directories[0]
+        urls = {name: f"{prefix}{name}.esm.js" for name in build.members or ()}
+        IrAttachment = self.env["ir.attachment"].sudo()
+        present = IrAttachment.search_count(
+            IrAttachment._get_domain_generated_assets()
+            & Domain("url", "in", list(urls.values()))
+        )
+        if present != len(urls):
+            _debug.logic(
+                "runtime_group_miss", group=group, reason="rows_gone", present=present
+            )
+            return None
+        if build.state != "current":
+            # a superseded build served again must not expire under the pages
+            # that are about to reference it
+            self._save_esm_attachment_rows(
+                [],
+                bundle=group,
+                build={
+                    "kind": "group",
+                    "bundle": group,
+                    "variant": variant,
+                    "directories": build.directories,
+                    "source_key": source_key,
+                    "members": build.members,
+                },
+            )
+        return urls
+
     def _save_esm_group(
-        self, group: str, files: dict[str, bytes], children: Iterable[str]
+        self,
+        group: str,
+        files: dict[str, bytes],
+        children: Iterable[str],
+        *,
+        variant: str,
+        source_key: str,
     ) -> dict[str, str]:
         digest = hashlib.sha256()
         for filename in sorted(files):
@@ -789,7 +835,24 @@ class IrQweb(models.AbstractModel):
             for filename, content in files.items()
             if f"{prefix}{filename}" not in present
         ]
-        self._save_esm_attachment_rows(vals_list, touch_ids=existing.ids, bundle=group)
+        # a child whose modules the page already carries compiles to no file
+        urls = {
+            name: f"{prefix}{name}.esm.js"
+            for name in children
+            if f"{name}.esm.js" in files
+        }
+        self._save_esm_attachment_rows(
+            vals_list,
+            bundle=group,
+            build={
+                "kind": "group",
+                "bundle": group,
+                "variant": variant,
+                "directories": [prefix],
+                "source_key": source_key,
+                "members": sorted(urls),
+            },
+        )
         _debug.lifecycle(
             "esm_group_saved",
             group=group,
@@ -807,12 +870,7 @@ class IrQweb(models.AbstractModel):
             new=len(vals_list),
             bytes=sum(len(content) for content in files.values()),
         )
-        # a child whose modules the page already carries compiles to no file
-        return {
-            name: f"{prefix}{name}.esm.js"
-            for name in children
-            if f"{name}.esm.js" in files
-        }
+        return urls
 
     def _get_compiled_runtime_payload(
         self,
@@ -873,7 +931,10 @@ class IrQweb(models.AbstractModel):
         esm_tpl = asset_bundle.generate_esm_template_bundle(use_import=False)
         if esm_tpl:
             payload["template_url"] = self._save_esm_attachment(
-                f"{bundle}.templates", esm_tpl
+                f"{bundle}.templates",
+                esm_tpl,
+                kind="templates",
+                variant=esm_index.variant_key(asset_bundle.assets_params),
             )
         _debug.pipeline(
             "carried_bundle_payload",
@@ -926,7 +987,12 @@ class IrQweb(models.AbstractModel):
         template_url = None
         esm_tpl = asset_bundle.generate_esm_template_bundle(use_import=False)
         if esm_tpl:
-            template_url = self._save_esm_attachment(f"{bundle}.templates", esm_tpl)
+            template_url = self._save_esm_attachment(
+                f"{bundle}.templates",
+                esm_tpl,
+                kind="templates",
+                variant=esm_index.variant_key(assets_params),
+            )
         _debug.pipeline(
             "esm_payload",
             bundle=bundle,
@@ -1331,6 +1397,8 @@ class IrQweb(models.AbstractModel):
         metafile: str | None = None,
         sourcemap: str | None = None,
         source_key: str | None = None,
+        kind: str = "bundle",
+        variant: str = esm_index.DEFAULT_VARIANT,
     ) -> AssetNode:
         url = None
         # a failed statement (a serialization failure on a row another
@@ -1347,6 +1415,8 @@ class IrQweb(models.AbstractModel):
                 metafile=metafile,
                 sourcemap=sourcemap,
                 source_key=source_key,
+                kind=kind,
+                variant=variant,
             )
         except Exception as exc:
             savepoint.close(rollback=self.env.cr.in_failed_transaction())
@@ -1544,6 +1614,7 @@ class IrQweb(models.AbstractModel):
                 metafile=esbuild_result.metafile,
                 sourcemap=esbuild_result.sourcemap,
                 source_key=esbuild_result.source_key,
+                variant=esbuild_result.variant or esm_index.DEFAULT_VARIANT,
             )
         )
         _has_satellites = bool(
@@ -1556,6 +1627,8 @@ class IrQweb(models.AbstractModel):
                     esm_tpl,
                     {"data-templates": bundle},
                     raise_on_decline=raise_on_decline,
+                    kind="templates",
+                    variant=esbuild_result.variant or esm_index.DEFAULT_VARIANT,
                 )
             )
         _debug.pipeline(
@@ -1824,15 +1897,17 @@ class IrQweb(models.AbstractModel):
         metafile: str | None = None,
         sourcemap: str | None = None,
         source_key: str | None = None,
+        *,
+        kind: str = "bundle",
+        variant: str = esm_index.DEFAULT_VARIANT,
     ) -> str:
         content_bytes = content.encode("utf-8")
         content_hash = cache_hash(content_bytes)[:16]
         url = f"/web/assets/esm/{content_hash}/{bundle}.esm.js"
         rows: list[dict] = []
-        touch_ids: list[int] = []
 
         code_is_new = self._plan_esm_row(
-            rows, touch_ids, url, f"{bundle}.esm.js", "text/javascript", content_bytes
+            rows, url, f"{bundle}.esm.js", "text/javascript", content_bytes
         )
         sidecars = esm_index.sidecar_urls(url)
         json_mimetype = mimetype_for("json")
@@ -1840,36 +1915,36 @@ class IrQweb(models.AbstractModel):
         for name, text in (("metafile", metafile), ("sourcemap", sourcemap)):
             if text and self._plan_esm_row(
                 rows,
-                touch_ids,
                 sidecars[name],
                 sidecars[name].rsplit("/", 1)[-1],
                 json_mimetype,
                 text.encode("utf-8"),
             ):
                 sidecar_saved.append(name)
-        if source_key and (
-            self._read_generated_asset(esm_index.index_url(bundle, source_key)) is None
-        ):
-            rows.append(
-                esm_index.index_row(
-                    bundle, source_key, url, bool(metafile), bool(sourcemap)
-                )
-            )
+        build = {
+            "kind": kind,
+            "bundle": bundle,
+            "variant": variant,
+            "directories": [build_directory(url)],
+            "has_metafile": bool(metafile),
+            "has_sourcemap": bool(sourcemap),
+        }
+        if source_key:
+            build["source_key"] = source_key
 
-        self._save_esm_attachment_rows(rows, touch_ids=touch_ids, bundle=bundle)
+        self._save_esm_attachment_rows(rows, bundle=bundle, build=build)
         self._remove_esm_readonly_declines(bundle)
         _debug.lifecycle(
             "esm_attachment_saved",
             bundle=bundle,
+            kind=kind,
+            variant=variant,
             new=code_is_new,
             bytes=len(content_bytes),
             rows=len(rows),
-            touched=len(touch_ids),
             sidecars=len(sidecar_saved),
             indexed=bool(source_key),
         )
-        if code_is_new:
-            self._clean_esm_artifacts_superseded(bundle, url)
         log_event(
             _attach_log,
             logging.INFO if code_is_new else logging.DEBUG,
@@ -1885,19 +1960,16 @@ class IrQweb(models.AbstractModel):
     def _plan_esm_row(
         self,
         rows: list[dict],
-        touch_ids: list[int],
         url: str,
         name: str,
         mimetype: str,
         content: bytes,
     ) -> bool:
         IrAttachment = self.env["ir.attachment"]
-        existing = IrAttachment.sudo().search(
+        if IrAttachment.sudo().search_count(
             IrAttachment._get_domain_generated_assets(url), limit=1
-        )
-        if existing:
-            touch_ids.extend(existing.ids)
-            _debug.logic("esm_row_planned", name=name, action="touch")
+        ):
+            _debug.logic("esm_row_planned", name=name, action="present")
             return False
         rows.append(
             IrAttachment._prepare_generated_asset_vals(
@@ -1907,44 +1979,14 @@ class IrQweb(models.AbstractModel):
         _debug.logic("esm_row_planned", name=name, action="insert", bytes=len(content))
         return True
 
-    def _clean_esm_artifacts_superseded(self, bundle: str, keep_url: str) -> None:
-        IrAttachment = self.env["ir.attachment"].sudo()
-        # Every artifact of one build shares the unique segment of its url, so
-        # what survives a rebuild is that whole directory, not a single row:
-        # the sidecars planned alongside `keep_url` carry their own urls, and
-        # excluding only `keep_url` would delete the sourcemap and the metafile
-        # in the very transaction that wrote them.
-        keep_prefix = keep_url.rsplit("/", 1)[0] + "/"
-        superseded = IrAttachment.search(
-            IrAttachment._get_domain_generated_assets()
-            & Domain.OR(
-                [
-                    [("url", "=like", f"/web/assets/%/{bundle}.esm.js")],
-                    [("url", "=like", f"/web/assets/%/{bundle}.esm.js.map")],
-                    [("url", "=like", f"/web/assets/%/{bundle}.meta.json")],
-                ]
-            )
-        ).filtered(lambda attachment: not attachment.url.startswith(keep_prefix))
-        if not superseded:
-            return
-        count = len(superseded)
-        superseded.unlink()
-        log_event(
-            _attach_log,
-            logging.INFO,
-            "stale_cleaned",
-            bundle=bundle,
-            count=count,
-        )
-
     @staticmethod
     def _lock_esm_publication(cr, lock_timeout: str | None = None) -> None:
         # These dedicated write transactions must see the preceding writer's
         # commit after waiting. REPEATABLE READ would retain the snapshot from
-        # the lock statement and let both writers insert the same URLs. The
-        # isolation level is the transaction's first statement or PostgreSQL
-        # refuses it ("must be called before any query"), so the lock
-        # timeout comes after it
+        # the lock statement and let both writers insert the same URLs or
+        # publish two current builds. The isolation level is the transaction's
+        # first statement or PostgreSQL refuses it ("must be called before any
+        # query"), so the lock timeout comes after it
         cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
         if lock_timeout:
             cr.execute("SELECT set_config('lock_timeout', %s, true)", (lock_timeout,))
@@ -1969,30 +2011,34 @@ class IrQweb(models.AbstractModel):
         return [vals for vals in vals_list if vals.get("url") not in present]
 
     @staticmethod
-    def _touch_esm_attachment_rows(cr, touch_ids: Sequence[int]) -> None:
-        cr.execute(
-            "UPDATE ir_attachment SET write_date = now() at time zone 'UTC'"
-            " WHERE id = ANY(%s)",
-            (list(touch_ids),),
-        )
+    def _publish_esm_rows(
+        env: api.Environment, vals_list: list[dict], build: dict | None
+    ) -> int:
+        fresh = IrQweb._drop_rows_already_present(env.cr, vals_list)
+        if fresh:
+            env["ir.attachment"].with_user(SUPERUSER_ID).create(fresh)
+        if build is not None:
+            env["ir.asset.build"].sudo()._publish(build)
+        return len(fresh)
 
-    def _save_esm_attachment_rows_autonomously(self, vals_list: list[dict]) -> None:
+    def _save_esm_attachment_rows_autonomously(
+        self, vals_list: list[dict], build: dict | None
+    ) -> None:
         from odoo.db import db_connect
 
         with db_connect(self.env.cr.dbname).cursor() as own_cr:
             try:
                 self._lock_esm_publication(own_cr, _AUTONOMOUS_LOCK_TIMEOUT)
-                fresh = self._drop_rows_already_present(own_cr, vals_list)
-                if fresh:
-                    api.Environment(own_cr, SUPERUSER_ID, {})["ir.attachment"].create(
-                        fresh
-                    )
+                fresh = self._publish_esm_rows(
+                    api.Environment(own_cr, SUPERUSER_ID, {}), vals_list, build
+                )
                 own_cr.commit()
                 _debug.lifecycle(
                     "esm_rows_saved",
                     by="autonomous",
                     rows=len(vals_list),
-                    fresh=len(fresh),
+                    fresh=fresh,
+                    build=build is not None,
                 )
             except LockNotAvailable:
                 own_cr.rollback()
@@ -2003,17 +2049,18 @@ class IrQweb(models.AbstractModel):
                 )
 
     def _save_esm_attachment_rows_in_test(
-        self, vals_list: list[dict], touch_ids: Sequence[int]
+        self, vals_list: list[dict], build: dict | None
     ) -> None:
         # the test transaction is rolled back and a read-only test cursor
         # cannot write at all, so what a test compiled was gone before the
-        # next class ran. The rows are content-addressed and idempotent:
-        # they go through their own connection, which outlives the test,
-        # the way a request escalates to a read-write cursor. The test
-        # transaction is REPEATABLE READ and cannot see that commit, so a
-        # writable test cursor also keeps its own copy for the test to read
-        if vals_list:
-            self._save_esm_attachment_rows_autonomously(vals_list)
+        # next class ran. The rows and their build go through their own
+        # connection, which outlives the test, the way a request escalates to
+        # a read-write cursor. The test transaction is REPEATABLE READ and
+        # cannot see that commit, so a writable test cursor also keeps its own
+        # copy of the rows for the test to read. It does not publish the build
+        # again: the build committed beside it would make that a unique
+        # violation the snapshot cannot see coming
+        self._save_esm_attachment_rows_autonomously(vals_list, build)
         if self.env.cr.readonly:
             if vals_list:
                 # persisted for the next process, but not for this
@@ -2031,88 +2078,65 @@ class IrQweb(models.AbstractModel):
             return
         if vals_list:
             self.env["ir.attachment"].with_user(SUPERUSER_ID).create(vals_list)
-        if touch_ids:
-            # the touch stays on the test cursor: the same row updated from
-            # another connection is a serialization failure for a
-            # REPEATABLE READ test transaction that touches it too
-            self._touch_esm_attachment_rows(self.env.cr, touch_ids)
-        _debug.lifecycle(
-            "esm_rows_saved", by="test", rows=len(vals_list), touched=len(touch_ids)
-        )
+        _debug.lifecycle("esm_rows_saved", by="test", rows=len(vals_list))
 
     def _save_esm_attachment_rows(
         self,
         vals_list: list[dict],
-        touch_ids: Sequence[int] = (),
         bundle: str = "",
+        build: dict | None = None,
     ) -> None:
         # Compiled public assets are shared across companies. In particular,
         # autonomous persistence must not take a foreign-key lock on a company
         # held by the transaction that is waiting for this compilation.
         vals_list = [dict(vals, company_id=False) for vals in vals_list]
+        if build is not None and (
+            self.env["ir.asset.build"].sudo()._is_current(build)
+            and not _module.current_test
+        ):
+            build = None
+        if not vals_list and build is None:
+            _debug.logic("esm_rows_unchanged", bundle=bundle)
+            return
         if _module.current_test:
-            self._save_esm_attachment_rows_in_test(vals_list, touch_ids)
+            self._save_esm_attachment_rows_in_test(vals_list, build)
             return
         if not request:
-            if vals_list:
-                if self.env.cr.readonly:
-                    _debug.logic(
-                        "esm_rows_declined",
-                        by="own_cursor",
-                        reason="readonly",
-                        rows=len(vals_list),
-                    )
-                    raise ReadOnlySqlTransaction(
-                        "cannot persist ESM attachments on a read-only cursor"
-                    )
-                self.env["ir.attachment"].with_user(SUPERUSER_ID).create(vals_list)
-            if touch_ids and not self.env.cr.readonly:
-                self._touch_esm_attachment_rows(self.env.cr, touch_ids)
-                self.env["ir.attachment"].browse(list(touch_ids)).invalidate_recordset(
-                    ["write_date"],
+            if self.env.cr.readonly:
+                _debug.logic(
+                    "esm_rows_declined",
+                    by="own_cursor",
+                    reason="readonly",
+                    rows=len(vals_list),
                 )
-            _debug.lifecycle(
-                "esm_rows_saved",
-                by="own_cursor",
-                rows=len(vals_list),
-                touched=len(touch_ids),
-            )
+                raise ReadOnlySqlTransaction(
+                    "cannot persist ESM attachments on a read-only cursor"
+                )
+            fresh = self._publish_esm_rows(self.env, vals_list, build)
+            _debug.lifecycle("esm_rows_saved", by="own_cursor", rows=fresh)
             return
         try:
             with self.env.registry.cursor(readonly=False) as rw_cr:
-                if vals_list:
-                    self._lock_esm_publication(rw_cr)
-                    fresh = self._drop_rows_already_present(rw_cr, vals_list)
-                    if fresh:
-                        rw_env = api.Environment(rw_cr, SUPERUSER_ID, {})
-                        rw_env["ir.attachment"].create(fresh)
-                    _debug.pipeline(
-                        "esm_rows_escalated",
-                        bundle=bundle,
-                        rows=len(vals_list),
-                        fresh=len(fresh),
-                    )
-                if touch_ids:
-                    self._touch_esm_attachment_rows(rw_cr, touch_ids)
-            _debug.lifecycle(
-                "esm_rows_saved",
-                by="rw_cursor",
+                self._lock_esm_publication(rw_cr)
+                fresh = self._publish_esm_rows(
+                    api.Environment(rw_cr, SUPERUSER_ID, {}), vals_list, build
+                )
+            _debug.pipeline(
+                "esm_rows_escalated",
+                bundle=bundle,
                 rows=len(vals_list),
-                touched=len(touch_ids),
+                fresh=fresh,
+                build=build is not None,
             )
         except Exception:
             if not vals_list:
-                log_event(
-                    _attach_log,
-                    logging.DEBUG,
-                    "touch_failed",
-                    bundle=bundle,
-                    ids=len(touch_ids),
-                )
+                # the rows are served already; the build stays as it was
+                # until a writable request publishes it
+                log_event(_attach_log, logging.DEBUG, "publish_failed", bundle=bundle)
                 return
             _logger.warning(
-                "ESM attachment escalation to a read-write cursor failed; "
-                "creating on the request cursor",
+                "ESM publication on a read-write cursor failed; "
+                "publishing on the request cursor",
                 exc_info=True,
             )
             if self.env.cr.readonly:
@@ -2125,8 +2149,8 @@ class IrQweb(models.AbstractModel):
                 raise ReadOnlySqlTransaction(
                     "no writable cursor reachable for ESM attachments"
                 ) from None
-            _debug.lifecycle("esm_rows_saved", by="request_cursor", rows=len(vals_list))
-            self.env["ir.attachment"].with_user(SUPERUSER_ID).create(vals_list)
+            fresh = self._publish_esm_rows(self.env, vals_list, build)
+            _debug.lifecycle("esm_rows_saved", by="request_cursor", rows=fresh)
 
     def _get_asset_link_urls(self, bundle: str, debug: str = "") -> list[str]:
         asset_nodes = self._get_asset_nodes(bundle, js=False, debug=debug)

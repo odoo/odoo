@@ -1636,6 +1636,33 @@ for sym in ODOO_EXTERNAL_LIBS EXTERNAL_BARE_SPECIFIERS _validate_esm_config; do
     fi
 done
 
+# ------- ESM_BUNDLING: the build lifecycle names only symbols that exist -------
+# §Build lifecycle is where a reader learns what keeps a generated file alive;
+# every identifier it backticks must resolve to a definition, and the liveness
+# rules it replaced must not be cited anywhere as if they still ran.
+LIFECYCLE=$(awk '/^### Build lifecycle/{f=1;next} /^#/{f=0} f' "$DOC/ESM_BUNDLING.md")
+LIFECYCLE_SYMS=$(printf '%s' "$LIFECYCLE" | grep -o '`[a-z_]*_[a-z_]*`' | tr -d '`' | sort -u)
+if [ -z "$LIFECYCLE_SYMS" ]; then
+    echo "FAIL: ESM_BUNDLING has no §Build lifecycle symbols to check"; FAIL=$((FAIL+1))
+fi
+for sym in $LIFECYCLE_SYMS; do
+    defined=$(grep -rlE "(def |^    )$sym\b( =|\()" --include="*.py" \
+        "$REPO/odoo/addons/base/models" "$REPO/odoo/tools/assets" 2>/dev/null | wc -l)
+    if [ "$defined" -ge 1 ]; then
+        echo "PASS: ESM_BUNDLING §Build lifecycle names $sym, which is defined [$defined]"; PASS=$((PASS+1))
+    else
+        echo "FAIL: ESM_BUNDLING §Build lifecycle names $sym, which nothing defines"; FAIL=$((FAIL+1))
+    fi
+done
+for sym in _gc_esm_assets _get_esm_gc_collectable _clean_esm_artifacts_superseded resolve_group_index; do
+    cited=$(grep -c "$sym" "$DOC/ESM_BUNDLING.md" 2>/dev/null); cited=${cited:-0}
+    if [ "$cited" -ge 1 ]; then
+        echo "FAIL: ESM_BUNDLING cites $sym, a liveness rule the build lifecycle retired"; FAIL=$((FAIL+1))
+    else
+        echo "PASS: ESM_BUNDLING does not cite the retired $sym"; PASS=$((PASS+1))
+    fi
+done
+
 # Every `esm` manifest key the registry accepts must be documented, and the doc
 # must name no key the registry would reject. Derived from the source both ways,
 # so neither side can drift alone.

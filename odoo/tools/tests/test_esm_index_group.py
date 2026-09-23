@@ -1,4 +1,3 @@
-import json
 from types import SimpleNamespace
 from typing import Any
 
@@ -39,30 +38,22 @@ class TestGroupSourceKey:
         assert _key(group="runtime:web.assets_web") != base
 
 
-class TestGroupIndex:
-    def test_the_pointer_url_is_a_path(self):
-        url = esm_index.group_index_url("runtime:web.assets_web+x:tests", "abc")
-        assert ":" not in url.rsplit("/", 1)[-1] and "+" not in url
-        assert url.startswith("/web/assets/esm/by-source/abc/")
+class TestVariantKey:
+    def test_no_parameter_is_the_default_variant(self):
+        assert esm_index.variant_key() == esm_index.DEFAULT_VARIANT
+        assert esm_index.variant_key({"website_id": None}) == esm_index.DEFAULT_VARIANT
 
-    def test_a_pointer_resolves_only_when_every_child_is_readable(self):
-        row = esm_index.group_index_row(
-            "g",
-            "k",
-            {"a": "/web/assets/esm/h/a.esm.js", "b": "/web/assets/esm/h/b.esm.js"},
-        )
-        assert row["url"] == esm_index.group_index_url("g", "k")
-        store = {row["url"]: row["raw"], "/web/assets/esm/h/a.esm.js": b"a"}
-        assert esm_index.resolve_group_index(store.get, "g", "k") is None
-        store["/web/assets/esm/h/b.esm.js"] = b"b"
-        assert (
-            esm_index.resolve_group_index(store.get, "g", "k")
-            == json.loads(row["raw"])["urls"]
-        )
+    def test_every_selector_makes_its_own_variant(self):
+        keys = {
+            esm_index.variant_key(),
+            esm_index.variant_key({"website_id": 1}),
+            esm_index.variant_key({"website_id": 2}),
+            esm_index.variant_key(page_scope=("web.assets_frontend",)),
+            esm_index.variant_key(standalone=True),
+        }
+        assert len(keys) == 5
 
-    def test_a_missing_or_malformed_pointer_is_a_miss(self):
-        assert esm_index.resolve_group_index(lambda url: None, "g", "k") is None
-        assert (
-            esm_index.resolve_group_index(lambda url: b'{"urls": []}', "g", "k") is None
-        )
-        assert esm_index.resolve_group_index(lambda url: b"nope", "g", "k") is None
+    def test_the_key_is_canonical(self):
+        assert esm_index.variant_key(
+            {"b": 2, "a": 1}, page_scope=("y", "x")
+        ) == esm_index.variant_key({"a": 1, "b": 2}, page_scope=("x", "y"))

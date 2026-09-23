@@ -604,35 +604,54 @@ class TestEsmAssetGc(TransactionCase):
             att.invalidate_recordset()
         return att
 
-    def test_superseded_version_and_sidecar_are_gcd(self):
+    def _own(self, bundle: str, directory: str):
+        return (
+            self.env["ir.asset.build"]
+            .sudo()
+            ._publish(
+                {
+                    "kind": "bundle",
+                    "bundle": bundle,
+                    "variant": "default",
+                    "directories": [directory],
+                }
+            )
+        )
+
+    def _collect(self):
+        self.env["ir.asset.build"].sudo()._gc_asset_builds()
+
+    def test_rows_no_build_owns_are_collected_past_the_grace(self):
         old_v1 = self._mk("x.gcb.esm.js", "/web/assets/esm/aaaa/x.gcb.esm.js", 30)
         old_map = self._mk(
             "x.gcb.esm.js.map", "/web/assets/esm/aaaa/x.gcb.esm.js.map", 30
         )
         new_v2 = self._mk("x.gcb.esm.js", "/web/assets/esm/bbbb/x.gcb.esm.js")
         new_map = self._mk("x.gcb.esm.js.map", "/web/assets/esm/bbbb/x.gcb.esm.js.map")
+        self._own("x.gcb", "/web/assets/esm/bbbb/")
 
-        self.env["ir.attachment"]._gc_esm_assets()
+        self._collect()
 
-        self.assertFalse(old_v1.exists(), "superseded old version must be GC'd")
-        self.assertFalse(old_map.exists(), "superseded old sidecar must be GC'd")
-        self.assertTrue(new_v2.exists(), "current version must survive")
-        self.assertTrue(new_map.exists(), "current sidecar must survive")
+        self.assertFalse(old_v1.exists(), "an unowned old version must be collected")
+        self.assertFalse(old_map.exists(), "and its sidecar with it")
+        self.assertTrue(new_v2.exists(), "the current build's code must survive")
+        self.assertTrue(new_map.exists(), "and its sidecar")
 
-    def test_lone_old_survives_with_no_newer_sibling(self):
+    def test_an_old_row_of_a_current_build_survives_any_age(self):
         lone_old = self._mk("y.gcb.esm.js", "/web/assets/esm/cccc/y.gcb.esm.js", 400)
+        self._own("y.gcb", "/web/assets/esm/cccc/")
 
-        self.env["ir.attachment"]._gc_esm_assets()
+        self._collect()
 
-        self.assertTrue(lone_old.exists(), "newest-per-name survives any age")
+        self.assertTrue(lone_old.exists(), "a current build is served at any age")
 
-    def test_recent_survives_the_grace_window(self):
+    def test_an_unowned_row_inside_the_grace_survives(self):
         recent_old = self._mk("z.gcb.esm.js", "/web/assets/esm/dddd/z.gcb.esm.js", 2)
         recent_new = self._mk("z.gcb.esm.js", "/web/assets/esm/eeee/z.gcb.esm.js")
 
-        self.env["ir.attachment"]._gc_esm_assets()
+        self._collect()
 
-        self.assertTrue(recent_old.exists(), "within grace window — survives")
+        self.assertTrue(recent_old.exists(), "within the grace window, it survives")
         self.assertTrue(recent_new.exists())
 
     def test_bridge_past_its_own_grace_is_gcd(self):
@@ -640,7 +659,7 @@ class TestEsmAssetGc(TransactionCase):
             "aabbccddeeff0011.js", "/web/assets/esm/bridges/aabbccddeeff0011.js", 400
         )
 
-        self.env["ir.attachment"]._gc_esm_assets()
+        self.env["ir.attachment"]._gc_esm_bridges()
 
         self.assertFalse(
             bridge_old.exists(),
@@ -652,7 +671,7 @@ class TestEsmAssetGc(TransactionCase):
             "33445566778899aa.js", "/web/assets/esm/bridges/33445566778899aa.js", 30
         )
 
-        self.env["ir.attachment"]._gc_esm_assets()
+        self.env["ir.attachment"]._gc_esm_bridges()
 
         self.assertTrue(
             bridge_mid.exists(),
@@ -666,14 +685,15 @@ class TestEsmAssetGc(TransactionCase):
             "1100ffeeddccbbaa.js", "/web/assets/esm/bridges/1100ffeeddccbbaa.js", 1
         )
 
-        self.env["ir.attachment"]._gc_esm_assets()
+        self.env["ir.attachment"]._gc_esm_bridges()
 
         self.assertTrue(bridge_new.exists(), "young bridge survives")
 
     def test_classic_bundle_out_of_scope(self):
         classic = self._mk("x.gcb.min.js", "/web/assets/0123456/x.gcb.min.js", 400)
 
-        self.env["ir.attachment"]._gc_esm_assets()
+        self._collect()
+        self.env["ir.attachment"]._gc_esm_bridges()
 
         self.assertTrue(classic.exists(), "classic bundles are out of scope")
 
@@ -695,7 +715,7 @@ class TestEsmAssetGc(TransactionCase):
             before,
             "reusing a shim must push its write_date forward, or the vacuum eats it",
         )
-        self.env["ir.attachment"]._gc_esm_assets()
+        self.env["ir.attachment"]._gc_esm_bridges()
         self.assertTrue(aged.exists(), "a refreshed shim must survive the vacuum")
 
     def test_a_young_shim_is_not_rewritten_on_every_reuse(self):
@@ -734,7 +754,7 @@ class TestEsmAssetGc(TransactionCase):
         young = self._mk(
             "aa334455667788bb.js", "/web/assets/esm/bridges/aa334455667788bb.js", 5
         )
-        self.env["ir.attachment"]._gc_esm_assets()
+        self.env["ir.attachment"]._gc_esm_bridges()
         self.assertFalse(old.exists())
         self.assertTrue(young.exists())
 
@@ -743,7 +763,7 @@ class TestEsmAssetGc(TransactionCase):
         bridge = self._mk(
             "22334455667788aa.js", "/web/assets/esm/bridges/22334455667788aa.js", 30
         )
-        self.env["ir.attachment"]._gc_esm_assets()
+        self.env["ir.attachment"]._gc_esm_bridges()
         self.assertTrue(
             bridge.exists(), "30-day-old bridge survives a 60-day grace window"
         )
@@ -769,12 +789,23 @@ class TestEsmAssetGc(TransactionCase):
             )
         )
         self.assertGreater(phantom.id, stable.id, "phantom must have the higher id")
+        self._own("p.gcb", "/web/assets/esm/aaaa/")
+        self.env.cr.execute(
+            "UPDATE ir_attachment SET write_date = write_date - interval '400 days'"
+            " WHERE id = %s",
+            [phantom.id],
+        )
+        phantom.invalidate_recordset()
 
-        self.env["ir.attachment"]._gc_esm_assets()
+        self._collect()
 
         self.assertTrue(
             stable.exists(),
             "the genuine stable bundle must survive a non-superuser phantom",
+        )
+        self.assertTrue(
+            phantom.exists(),
+            "a row the superuser did not write is not a generated asset to collect",
         )
 
     def test_gc_grace_floor(self):
@@ -782,7 +813,7 @@ class TestEsmAssetGc(TransactionCase):
         fresh = self._mk(
             "0011223344556677.js", "/web/assets/esm/bridges/0011223344556677.js"
         )
-        self.env["ir.attachment"]._gc_esm_assets()
+        self.env["ir.attachment"]._gc_esm_bridges()
         self.assertTrue(
             fresh.exists(), "a fresh bridge survives grace_days=0 (floored to 1)"
         )

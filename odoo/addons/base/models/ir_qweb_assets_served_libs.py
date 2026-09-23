@@ -8,9 +8,11 @@ from odoo import models
 from odoo.fields import Domain
 from odoo.libs.asset_log import get_asset_logger, log_event
 from odoo.libs.debug_log import DebugLog
+from odoo.tools.assets import esm_index
 from odoo.tools.assets.esbuild import minify_js
 from odoo.tools.assets.esm_libs import served_lib_content
 
+from odoo.addons.base.models.ir_asset_build import build_directory
 from odoo.addons.base.models.ir_qweb_assets import _EsmReadonlyDeclined
 
 _attach_log = get_asset_logger("attach")
@@ -76,10 +78,14 @@ class IrQweb(models.AbstractModel):
             present=len(present),
             missing=len(vals_list),
         )
-        if not vals_list:
-            return
+        build = {
+            "kind": "lib",
+            "bundle": "esm.libs",
+            "variant": esm_index.DEFAULT_VARIANT,
+            "directories": sorted({build_directory(url) for url in files}),
+        }
         try:
-            self._save_esm_attachment_rows(vals_list, bundle="esm.libs")
+            self._save_esm_attachment_rows(vals_list, bundle="esm.libs", build=build)
         except ReadOnlySqlTransaction:
             _debug.logic(
                 "served_libs_save_failed",
@@ -97,6 +103,8 @@ class IrQweb(models.AbstractModel):
                 readonly=True,
             )
             raise _EsmReadonlyDeclined from None
+        if not vals_list:
+            return
         log_event(
             _attach_log,
             logging.INFO,

@@ -297,7 +297,10 @@ class IrQweb(models.AbstractModel):
                 secondary_stubs,
                 exported_specs,
             )
-            reused = self._load_esbuild_result_by_source(bundle, source_key)
+            variant = esm_index.variant_key(
+                assets_params, page_scope=page_scope, standalone=standalone
+            )
+            reused = self._load_esbuild_result_by_source(bundle, source_key, variant)
             if reused is not None:
                 _debug.logic("esbuild_result", bundle=bundle, by="reused")
                 return reused, child_bundles
@@ -310,7 +313,7 @@ class IrQweb(models.AbstractModel):
                 registered_reach,
             )
             if result.code:
-                result = result._replace(source_key=source_key)
+                result = result._replace(source_key=source_key, variant=variant)
             _debug.logic(
                 "esbuild_result",
                 bundle=bundle,
@@ -353,17 +356,42 @@ class IrQweb(models.AbstractModel):
         return row.raw if row else None
 
     def _load_esbuild_result_by_source(
-        self, bundle: str, source_key: str
+        self, bundle: str, source_key: str, variant: str
     ) -> EsbuildResult | None:
-        found = esm_index.resolve_index(self._read_generated_asset, bundle, source_key)
-        if found is None:
-            _debug.perf.count("esbuild_index_miss", bundle=bundle)
+        build = (
+            self.env["ir.asset.build"]
+            .sudo()
+            ._find_reusable("bundle", bundle, variant, source_key)
+        )
+        if not build:
+            _debug.perf.count("esbuild_index_miss", bundle=bundle, reason="no_build")
             return None
-        url, code, metafile, sourcemap = found
+        url = f"{build.directories[0]}{bundle}.esm.js"
+        code = self._read_generated_asset(url)
+        sidecars = esm_index.sidecar_urls(url)
+        parts: dict[str, str | None] = {"metafile": None, "sourcemap": None}
+        for name, wanted in (
+            ("metafile", build.has_metafile),
+            ("sourcemap", build.has_sourcemap),
+        ):
+            raw = self._read_generated_asset(sidecars[name]) if wanted else None
+            if wanted and raw is None:
+                code = None
+            parts[name] = raw.decode("utf-8") if raw is not None else None
+        if code is None:
+            _debug.perf.count("esbuild_index_miss", bundle=bundle, reason="rows_gone")
+            return None
         log_event(
             _fallback_log, logging.DEBUG, "reuse_by_source", bundle=bundle, url=url
         )
-        return EsbuildResult(code, metafile, sourcemap, source_key, prebuilt=True)
+        return EsbuildResult(
+            code.decode("utf-8"),
+            parts["metafile"],
+            parts["sourcemap"],
+            source_key,
+            prebuilt=True,
+            variant=variant,
+        )
 
     _SPECIFIER_LITERAL_RE = re.compile(r"""["'](@[\w./+-]+)["']""")
 

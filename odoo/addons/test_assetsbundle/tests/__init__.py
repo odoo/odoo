@@ -4,6 +4,7 @@ from . import test_css_pipeline
 from . import test_esbuild_compiler
 from . import test_esbuild_stub_mirror
 from . import test_esm_bridges
+from . import test_esm_builds
 from . import test_esm_bundles
 from . import test_esm_lexer
 from . import test_esm_manifest_validation

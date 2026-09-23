@@ -219,10 +219,9 @@ The server compiles every child declared under that page **together**
 4. each entry gets its templates appended exactly as a page bundle does, and
    the whole output set is persisted under one content-addressed directory
    `/web/assets/esm/<group hash>/` (`_save_esm_group`: immutable, one year, the
-   404 self-heal applies) with the esbuild metafile as a sidecar named group.meta.json. The
-   garbage collector keeps a directory alive while any entry in it is the
-   newest of its name (`_get_esm_gc_collectable`), because a chunk's hashed name is
-   reused by nothing.
+   404 self-heal applies) with the esbuild metafile as a sidecar named group.meta.json. The directory
+   is one build of the group (kind `group`, §Build lifecycle), so every chunk
+   in it is kept and collected with the group rather than by its own name.
 
 A page stamps the bundle it rendered first, which may be one member of the
 family a child declares (the website frontend stamps `web.assets_frontend_lazy`,
@@ -359,7 +358,8 @@ In production the import map does not name the vendored file: every
 library's relative-import closure (`lib_closure`: the declared file plus every
 `./` and `../` import it reaches inside the addon's `static/`), and the render
 that builds the map persists a minified copy (`minify_js` with `--keep-names`)
-of each file of that closure at those URLs (`IrQweb._ensure_served_libs`).
+of each file of that closure at those URLs (`IrQweb._create_served_libs`); the
+whole set is one build of kind `lib`.
 The route serves them immutable for a year, and a sibling imported by relative
 URL resolves under the same `<unique>` prefix to the same instance. A page
 under `debug=assets` keeps the declared URLs, readable and uncached; the two
@@ -493,8 +493,8 @@ module just like a transitive dependency. It does not import and register that
 module again as an entry. External libraries retain their separate serving path.
 Parent stubs also replace relative imports through a source mirror with symlink
 preservation. Each addon retains separate static sibling directories (`tests`,
-`lib`, etc.). The source index includes a compiler-semantics version; increment it
-when changed compilation semantics could otherwise reuse an old artifact.
+`lib`, etc.). The source key a build carries includes a compiler-semantics version;
+increment it when changed compilation semantics could otherwise reuse an old artifact.
 
 Operators set these via the UI (Settings → Technical → System Parameters)
 or programmatically:
@@ -530,8 +530,8 @@ freshly `stat()`'d by `ir_asset._glob_static_file`. So editing any JS source
 changes its mtime → changes the checksum → changes the version → the render
 path looks up a version with no attachment → **rebuilds** (esbuild for the
 ESM bundle, concatenation for the legacy `.min.js`) and writes the new row.
-Stale content is impossible once the version differs; the old attachment is
-just GC'd later.
+Stale content is impossible once the version differs; the old build is
+superseded, served through its grace, then swept (§Build lifecycle).
 
 The one caveat is the `cache="assets"` **ormcache** on
 `ir_qweb._get_asset_links_cached` / `ir_asset._get_asset_paths`: its key
@@ -569,9 +569,8 @@ attachment rows through a dedicated read-write registry cursor that commits
 independently, so a request rollback can never orphan an ormcached bundle
 URL, and read-only replica renders persist + reference by URL instead of
 inlining the bundle. Inlining survives only as the degradation path when no
-writable cursor exists at all (read-only test cursors, primary down). Content
-reverts (A → B → A) reuse the old row and bump its `write_date`, which
-`_gc_esm_assets` uses for newest-per-name liveness.
+writable cursor exists at all (read-only test cursors, primary down). A content
+revert (A → B → A) publishes the earlier build again, which makes it current.
 
 **Current-cursor guard (deadlock avoidance).** The out-of-band cursor exists
 ONLY to survive an HTTP-request rollback. When there is no request — registry
@@ -584,10 +583,11 @@ release (a one-thread/two-cursor cycle Postgres cannot break). Both savers
 therefore persist on the current cursor when there is no request. **The two
 guards are intentionally NOT identical:**
 
-- `_save_esm_attachment_rows`: `if _module.current_test or not request:`
-  → current cursor. The `current_test` term is required because a plain
-  `TransactionCase`'s `registry.cursor()` is a REAL cursor whose out-of-band
-  commit would leak rows past the test rollback.
+- `_save_esm_attachment_rows`: under a test, the rows and the build commit
+  through a connection of their own (`_save_esm_attachment_rows_in_test`), so
+  what one test class compiled serves the next; a writable test cursor also
+  keeps a copy of the rows, not of the build, which the snapshot could not see
+  conflicting with the committed one. With no request, the current cursor.
 - `_persist_bridge_shims`: `if not request:` → current cursor, else the rw
   cursor **even under a test**. A bare `current_test` branch here would break
   HttpCase tours: the browser fetches loader-bridge URLs on SEPARATE
@@ -595,6 +595,29 @@ guards are intentionally NOT identical:**
   them; persisting on the render's own cursor left dynamic-child bridges
   unfetchable (`Failed to fetch dynamically imported module`). Do not "unify"
   these guards.
+
+### Build lifecycle
+
+Every published artifact belongs to an `ir.asset.build` row: its `kind`
+(bundle, templates, standalone, group, lib), its `bundle`, its `variant` -- what
+selects another build of the same bundle besides its sources, computed by
+`variant_key` from the assets params, the page scope and the standalone flag --
+the url `directories` it owns, and the `source_key` a process that has not
+compiled yet reuses it by (`_find_reusable`). `_publish` makes a build current
+and supersedes the previous current build of the same kind, bundle and variant in
+one transaction, on the cursor that wrote its rows; `_one_current_build_per_variant`
+is a partial unique index. Two variants never supersede each other, so the
+page-scoped build of a secondary and its plain build are served side by side.
+
+A file is served while a build that is current, or superseded less than
+`web.esm.gc_grace_days` ago, owns its directory: pages rendered before a rebuild
+keep loading the previous build through that grace. `_sweep` deletes the builds
+past it and the files no remaining build owns, at publish time for the variant
+just published and in the autovacuum `_gc_asset_builds` for all, which also
+retires the current builds of bundles no installed addon declares
+(`_retire_uninstalled`) and deletes files no build owns past the grace
+(`_sweep_orphan_rows`). Bridge shims own no build: reuse refreshes them and
+`_gc_esm_bridges` collects them by age.
 
 ## Service worker
 

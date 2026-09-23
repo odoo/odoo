@@ -37,13 +37,13 @@ class IrQweb(models.AbstractModel):
     def _get_template_cache_keys(self):
         return super()._get_template_cache_keys() + ["website_id", "cookies_allowed"]
 
-    def _save_esm_attachment_rows(self, vals_list, touch_ids=(), bundle=""):
+    def _save_esm_attachment_rows(self, vals_list, bundle="", build=None):
         # Compiled ESM rows are content-addressed and served without a website
         # filter, so they belong to no website. Left to ir.attachment.create,
         # they would take the request's forced website, which an autonomous
         # save cannot see when that website is still uncommitted.
         vals_list = [dict(vals, website_id=False) for vals in vals_list]
-        super()._save_esm_attachment_rows(vals_list, touch_ids, bundle)
+        super()._save_esm_attachment_rows(vals_list, bundle, build)
 
     def _prepare_frontend_environment(self, values):
         irQweb = super()._prepare_frontend_environment(values)

@@ -562,6 +562,30 @@ Asset bundle management — controls JS/CSS/SCSS file inclusion.
 
 ---
 
+### models/ir_asset_build.py
+
+#### IrAssetBuild — `ir.asset.build` (`_name`)
+
+One published build of a generated ESM artifact: which files it owns and
+whether it is the build pages are handed now.
+
+**Fields:**
+- `kind` (Selection, required) — `bundle`, `templates`, `standalone`, `group`, `lib`
+- `bundle` (Char, required), `variant` (Char, required) — what was built, and which
+  build of it (page scope, standalone, assets params)
+- `directories` (Json, required), `fingerprint` (Char, required) — the url directories it owns
+- `source_key` (Char), `has_metafile`, `has_sourcemap` (Boolean), `members` (Json) — what a
+  process that has not compiled reuses it by
+- `state` (Selection) — `current` / `superseded`; `superseded_at` (Datetime)
+
+**Key Methods:**
+- `_publish(spec)` — make a build current, superseding the previous one of its variant
+- `_find_reusable(kind, bundle, variant, source_key)` — the build a source key names
+- `_sweep(domain)` — delete builds superseded past the grace, and the files only they owned
+- `_gc_asset_builds()` — autovacuum: retire uninstalled bundles, sweep, collect unowned files
+
+---
+
 ### models/ir_asset_paths.py
 
 #### AssetPaths, BundleWalk (non-ORM)
@@ -828,14 +852,15 @@ no filestore rewrite. `_gc_rehash_legacy_keys` converges old keys only if
 
 #### IrAttachment — `ir.attachment` (`_inherit`)
 
-Generated-asset bookkeeping split out of `ir_attachment.py`: the domains
-that identify compiled bundles and ESM outputs, their garbage collection with
-a grace period, and `regenerate_assets_bundles()`.
+Generated-asset bookkeeping split out of `ir_attachment.py`: the domain that
+identifies compiled bundles, the collection of bridge shims by age, and
+`regenerate_assets_bundles()`. Every other generated ESM file belongs to an
+`ir.asset.build` and is collected with it.
 
 **Key Methods:**
-- `_get_domain_generated_assets(...)` / `_get_domain_esm_generated_assets()` — What counts as a generated asset
-- `_gc_esm_assets()` — Sweep, returns `(removed, remaining)`
-- `regenerate_assets_bundles()` — Drop and rebuild
+- `_get_domain_generated_assets(...)` — What counts as a generated asset
+- `_gc_esm_bridges()` — Autovacuum: bridge shims past their own grace
+- `regenerate_assets_bundles()` — Drop every generated asset and build, and rebuild
 
 ### models/ir_attachment_storage.py
 
@@ -2095,6 +2120,7 @@ Quick lookup — file → model → primary role:
 | `ir_actions_server.py` | ir.actions.server | Automated actions (code/CRUD/webhook); delivery in `odoo/libs/webhook.py` |
 | `ir_actions_server_history.py` | ir.actions.server.history | Code versions of a server action |
 | `ir_asset.py` | ir.asset | Asset bundle management |
+| `ir_asset_build.py` | ir.asset.build | Published ESM builds and their lifecycle |
 | `ir_asset_paths.py` | AssetPaths, BundleWalk (non-ORM) | Asset directive walk |
 | `ir_attachment.py` | ir.attachment | File storage (DB/filestore) |
 | `ir_attachment_assets.py` | ir.attachment (extension) | Generated-asset GC and regeneration |
