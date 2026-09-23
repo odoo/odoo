@@ -669,11 +669,15 @@ _RUNS_OF_SPACE_OR_TAB_RE = re.compile(r" {2,}|\t")
 _CLOSING_BODY_RE = re.compile(r"</body\s*>", re.IGNORECASE)
 _CLOSING_HTML_RE = re.compile(r"</html\s*>", re.IGNORECASE)
 
+# an attribute as HTML writes it: bare, or valued with either quote or none
+_ATTRIBUTE = (
+    r"""(?:\s+[A-Za-z_:-][\w:.-]*(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)"""
+)
 _ICON_RE = re.compile(
-    r'<\s*(i|span)\b(\s+[A-Za-z_-][A-Za-z0-9-_]*(\s*=\s*[\'"][^"\']*[\'"])?)*\s*\bclass\s*=\s*["\'][^"\']*\b(fa|fab|fad|far|oi)\b'
+    rf"""<\s*(?:i|span)\b{_ATTRIBUTE}*?\s+class\s*=\s*["']?[^"'>]*\b(?:fa|fab|fad|far|oi)\b"""
 )
 _EMPTY_TAG_RE = re.compile(
-    r'<\s*\/?(?:p|div|section|span|br|b|i|font)\b(?:(\s+[A-Za-z_-][A-Za-z0-9-_]*(\s*=\s*[\'"][^"\']*[\'"]))*)(?:\s*>|\s*\/\s*>)'
+    rf"<\s*\/?(?:p|div|section|span|br|b|i|font)\b{_ATTRIBUTE}*\s*\/?\s*>"
 )
 
 _SCRIPT_STYLE_RE = re.compile(

@@ -231,3 +231,30 @@ class TestReplaceLocalLinks(unittest.TestCase):
         for src in ("<a " * 20000, "<img " * 20000, '<div style="' * 20000):
             self.absolute(src)
         self.assertLess(time.perf_counter() - start, 1.0)
+
+
+class TestIsHtmlEmptyReadsEveryAttributeForm(unittest.TestCase):
+    def test_empty_markup_with_any_attribute_spelling_is_empty(self):
+        from odoo.libs.text.html import is_html_empty
+
+        for html in (
+            "<p style=\"font-family: 'Arial'\"><br></p>",
+            "<p hidden><br></p>",
+            "<div class=o_x><br></div>",
+            '<p data-x="a>b"></p>',
+        ):
+            with self.subTest(html=html):
+                self.assertTrue(is_html_empty(html))
+
+    def test_content_and_icons_are_not_empty(self):
+        from odoo.libs.text.html import is_html_empty
+
+        for html in (
+            "<p style=\"font-family: 'Arial'\">x</p>",
+            '<i data-x=1 class="fa fa-star"></i>',
+            "<span hidden class='oi oi-arrow'></span>",
+            '<img src="x">',
+            "<ul><li><br></li></ul>",
+        ):
+            with self.subTest(html=html):
+                self.assertFalse(is_html_empty(html))
