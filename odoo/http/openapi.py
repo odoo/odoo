@@ -226,6 +226,128 @@ def _prepare_jsonrpc_envelope_schema(params_schema: dict[str, Any]) -> dict[str,
     return envelope
 
 
+def _prepare_query_parameter(name: str, spec: Any) -> dict[str, Any]:
+    return {
+        "name": name,
+        "in": "query",
+        "required": spec.required,
+        "schema": param_spec_to_schema(spec),
+    }
+
+
+def _is_object_shaped(spec: Any) -> bool:
+    return spec.fields is not None or spec.variants is not None
+
+
+def _prepare_http_query_parameters(
+    route: RouteInfo, specs: dict[str, Any]
+) -> list[dict[str, Any]]:
+    parameters = []
+    for name, spec in specs.items():
+        if _is_object_shaped(spec):
+            # The http dispatcher hands the handler query/form
+            # strings and object coercion rejects any non-dict, so
+            # an object-shaped query parameter as documented can
+            # never be satisfied; leave it out rather than lie.
+            _logger.warning(
+                "OpenAPI: %r declares object-shaped parameter %r on a "
+                "type='http' route; the http dispatcher only delivers "
+                "strings, so the documented shape could never be "
+                "satisfied. Parameter omitted from the document.",
+                route.rule,
+                name,
+            )
+            continue
+        parameters.append(_prepare_query_parameter(name, spec))
+    return parameters
+
+
+def _prepare_json_request(
+    route_type: str, method: str, specs: dict[str, Any]
+) -> tuple[list[dict[str, Any]], dict[str, Any] | None]:
+    parameters = []
+    if route_type == "json2" and method.upper() in ("GET", "HEAD"):
+        # A body on GET is unusual enough that clients send the query
+        # string, which json2 reads too; objects cannot travel there.
+        parameters = [
+            _prepare_query_parameter(name, spec)
+            for name, spec in specs.items()
+            if not _is_object_shaped(spec)
+        ]
+        specs = {name: spec for name, spec in specs.items() if _is_object_shaped(spec)}
+    if not specs:
+        return parameters, None
+    body: dict[str, Any] = {
+        "type": "object",
+        "properties": {n: param_spec_to_schema(s) for n, s in specs.items()},
+    }
+    if required := [name for name, spec in specs.items() if spec.required]:
+        body["required"] = required
+    if route_type == "jsonrpc":
+        body = _prepare_jsonrpc_envelope_schema(body)
+    return parameters, {"content": {"application/json": {"schema": body}}}
+
+
+def _prepare_typed_request(
+    route: RouteInfo,
+    method: str,
+    route_type: str,
+    path_params: list[dict[str, Any]],
+    operation: dict[str, Any],
+) -> list[dict[str, Any]]:
+    path_param_names = {p["name"] for p in path_params}
+    specs = {
+        name: spec
+        for name, spec in _get_route_param_specs(route).items()
+        if name not in path_param_names
+    }
+    if route_type == "http":
+        parameters = _prepare_http_query_parameters(route, specs)
+    else:
+        parameters, request_body = _prepare_json_request(route_type, method, specs)
+        if request_body is not None:
+            operation["requestBody"] = request_body
+    operation["responses"]["400"] = {"description": "Invalid request parameters"}
+    return parameters
+
+
+def _prepare_json_response(route: RouteInfo, route_type: str) -> dict[str, Any]:
+    # A JSON route always answers JSON; without a return annotation the
+    # body is any JSON value, which {} states truthfully.
+    result_schema = get_response_schema(route.handler) or {}
+    if route_type == "jsonrpc":
+        result_schema = {
+            "type": "object",
+            "properties": {
+                "jsonrpc": {"type": "string", "const": "2.0"},
+                "id": {"type": ["integer", "string", "null"]},
+                "result": result_schema,
+            },
+        }
+    return {"application/json": {"schema": result_schema}}
+
+
+def _prepare_operation_security(
+    route: RouteInfo,
+    auth: str | None,
+    security_schemes: dict[str, dict[str, str]],
+    security_resolver: SecurityResolver | None,
+) -> list[dict[str, list[str]]] | None:
+    if auth in _SECURITY_SCHEMES:
+        name, definition = _SECURITY_SCHEMES[auth]
+        security_schemes[name] = definition
+        return [{name: []}]
+    if auth in ("public", "none"):
+        return []
+    if security_resolver is None:
+        return None
+    resolved = security_resolver(route)
+    if resolved is None:
+        return None
+    security_schemes.update(resolved)
+    return [{name: []} for name, _definition in resolved]
+
+
 def prepare_openapi_operation(
     route: RouteInfo,
     method: str,
@@ -245,87 +367,13 @@ def prepare_openapi_operation(
     parameters = list(path_params)
     route_type = route.routing.get("type", "http")
     if route.routing.get("typed"):
-        path_param_names = {p["name"] for p in path_params}
-        specs = {
-            name: spec
-            for name, spec in _get_route_param_specs(route).items()
-            if name not in path_param_names
-        }
-        if route_type == "http":
-            for name, spec in specs.items():
-                if spec.fields is not None or spec.variants is not None:
-                    # The http dispatcher hands the handler query/form
-                    # strings and object coercion rejects any non-dict, so
-                    # an object-shaped query parameter as documented can
-                    # never be satisfied; leave it out rather than lie.
-                    _logger.warning(
-                        "OpenAPI: %r declares object-shaped parameter %r on a "
-                        "type='http' route; the http dispatcher only delivers "
-                        "strings, so the documented shape could never be "
-                        "satisfied. Parameter omitted from the document.",
-                        route.rule,
-                        name,
-                    )
-                    continue
-                parameters.append(
-                    {
-                        "name": name,
-                        "in": "query",
-                        "required": spec.required,
-                        "schema": param_spec_to_schema(spec),
-                    }
-                )
-        else:
-            if route_type == "json2" and method.upper() in ("GET", "HEAD"):
-                # A body on GET is unusual enough that clients send the query
-                # string, which json2 reads too; objects cannot travel there.
-                for name, spec in list(specs.items()):
-                    if spec.fields is None and spec.variants is None:
-                        parameters.append(
-                            {
-                                "name": name,
-                                "in": "query",
-                                "required": spec.required,
-                                "schema": param_spec_to_schema(spec),
-                            }
-                        )
-                        del specs[name]
-            if specs:
-                required = [name for name, spec in specs.items() if spec.required]
-                body: dict[str, Any] = {
-                    "type": "object",
-                    "properties": {
-                        n: param_spec_to_schema(s) for n, s in specs.items()
-                    },
-                }
-                if required:
-                    body["required"] = required
-                if route_type == "jsonrpc":
-                    body = _prepare_jsonrpc_envelope_schema(body)
-                operation["requestBody"] = {
-                    "content": {"application/json": {"schema": body}}
-                }
-        operation["responses"]["400"] = {"description": "Invalid request parameters"}
-
+        parameters += _prepare_typed_request(
+            route, method, route_type, path_params, operation
+        )
     if route_type in ("jsonrpc", "json2"):
-        # A JSON route always answers JSON; without a return annotation the
-        # body is any JSON value, which {} states truthfully.
-        result_schema = get_response_schema(route.handler)
-        if result_schema is None:
-            result_schema = {}
-        if route_type == "jsonrpc":
-            result_schema = {
-                "type": "object",
-                "properties": {
-                    "jsonrpc": {"type": "string", "const": "2.0"},
-                    "id": {"type": ["integer", "string", "null"]},
-                    "result": result_schema,
-                },
-            }
-        operation["responses"]["200"]["content"] = {
-            "application/json": {"schema": result_schema}
-        }
-
+        operation["responses"]["200"]["content"] = _prepare_json_response(
+            route, route_type
+        )
     if parameters:
         operation["parameters"] = parameters
 
@@ -335,19 +383,11 @@ def prepare_openapi_operation(
         # reader sees it: a scheme below says how to prove it, this says
         # which door it is.
         operation["x-odoo-auth"] = auth
-    if auth in _SECURITY_SCHEMES:
-        name, definition = _SECURITY_SCHEMES[auth]
-        security_schemes[name] = definition
-        operation["security"] = [{name: []}]
-    elif auth in ("public", "none"):
-        operation["security"] = []
-    elif security_resolver is not None:
-        resolved = security_resolver(route)
-        if resolved is not None:
-            operation["security"] = []
-            for name, definition in resolved:
-                security_schemes[name] = definition
-                operation["security"].append({name: []})
+    security = _prepare_operation_security(
+        route, auth, security_schemes, security_resolver
+    )
+    if security is not None:
+        operation["security"] = security
 
     _debug.pipeline(
         "http.openapi.operation",

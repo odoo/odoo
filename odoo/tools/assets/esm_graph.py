@@ -4,7 +4,7 @@ import posixpath
 import re
 import typing
 from collections import deque
-from collections.abc import Collection, Iterable, Mapping
+from collections.abc import Callable, Collection, Iterable, Iterator, Mapping
 from pathlib import Path
 
 from odoo.libs.asset_log import get_asset_logger, log_event
@@ -344,85 +344,135 @@ def _exports_walk(
     # the third value is the shallowest stack depth a star cycle reached from
     # here: a result that a cycle cut short of an ancestor's names is partial,
     # and only the ancestor that closes the cycle may cache its own
-    names: set[str] = set()
-    reach = len(stack)
+    walk = _ExportsWalk(
+        source_map, importing_specifier, importing_url, stack, exports_cache
+    )
+    return walk.run(src)
 
-    def expand_star(raw_target: str) -> None:
-        nonlocal reach
-        target_spec = _resolve_export_specifier(
-            importing_specifier, raw_target, importing_url
+
+def _export_list_tokens(listing: str) -> Iterator[str]:
+    for raw in listing.split(","):
+        token = raw.strip().split(" as ")[-1]
+        if ":" in token:
+            token = token.rsplit(":", 1)[-1]
+        if "=" in token:
+            token = token.split("=", 1)[0]
+        yield token.strip().removeprefix("...").strip()
+
+
+class _ExportsWalk:
+    __slots__ = (
+        "exports_cache",
+        "has_default",
+        "importing_specifier",
+        "importing_url",
+        "names",
+        "reach",
+        "source_map",
+        "stack",
+    )
+
+    def __init__(
+        self,
+        source_map: _SourceMap | None,
+        importing_specifier: str | None,
+        importing_url: str | None,
+        stack: list[str],
+        exports_cache: dict[str, set[str]] | None,
+    ) -> None:
+        self.source_map = source_map
+        self.importing_specifier = importing_specifier
+        self.importing_url = importing_url
+        self.stack = stack
+        self.exports_cache = exports_cache
+        self.names: set[str] = set()
+        self.reach = len(stack)
+        self.has_default = False
+
+    def run(self, src: str) -> tuple[set[str], bool, int]:
+        lexed = lex_module(src)
+        if lexed is not None:
+            self.names.update(lexed["names"])
+            for raw_target in lexed["starFrom"]:
+                self.expand_star(raw_target)
+            return self.names, lexed["hasDefault"], self.reach
+        src = js_scan.scrub(src)
+        self.has_default = bool(_ESM_EXPORT_DEFAULT_RE.search(src))
+        for kind, pattern in _ESM_EXPORT_PATTERNS_COMPILED:
+            handler = self._REGEX_HANDLERS.get(kind)
+            if handler is None:
+                continue
+            for match in pattern.finditer(src):
+                handler(self, match.group(1))
+        _debug.logic(
+            "esm_graph.exports_by_regex",
+            source_bytes=len(src),
+            names=len(self.names),
+            default=self.has_default,
         )
-        if not target_spec:
+        return self.names, self.has_default, self.reach
+
+    def add_name(self, name: str) -> None:
+        self.names.add(name)
+
+    def add_list(self, listing: str) -> None:
+        for token in _export_list_tokens(listing):
+            if token == "default":
+                self.has_default = True
+            elif token:
+                self.names.add(token)
+
+    def _cached_or_cyclic(self, target_spec: str) -> bool:
+        if self.exports_cache is not None and target_spec in self.exports_cache:
+            self.names.update(self.exports_cache[target_spec])
+            return True
+        if target_spec in self.stack:
+            self.reach = min(self.reach, self.stack.index(target_spec))
+            return True
+        return False
+
+    def expand_star(self, raw_target: str) -> None:
+        target_spec = _resolve_export_specifier(
+            self.importing_specifier, raw_target, self.importing_url
+        )
+        if not target_spec or self._cached_or_cyclic(target_spec):
             return
-        if exports_cache is not None and target_spec in exports_cache:
-            names.update(exports_cache[target_spec])
+        if self.source_map is None:
             return
-        if target_spec in stack:
-            reach = min(reach, stack.index(target_spec))
-            return
-        if source_map is None:
-            return
-        target_src = source_map.get(target_spec)
+        target_src = self.source_map.get(target_spec)
         if target_src is None:
             return
-        depth = len(stack)
-        stack.append(target_spec)
+        depth = len(self.stack)
+        self.stack.append(target_spec)
         try:
             child_names, _default, child_reach = _exports_walk(
                 target_src,
-                source_map,
+                self.source_map,
                 target_spec,
-                _source_map_url(source_map, target_spec),
-                stack,
-                exports_cache,
+                _source_map_url(self.source_map, target_spec),
+                self.stack,
+                self.exports_cache,
             )
         finally:
-            stack.pop()
-        names.update(child_names)
+            self.stack.pop()
+        self.names.update(child_names)
         if child_reach < depth:
-            reach = min(reach, child_reach)
+            self.reach = min(self.reach, child_reach)
             _debug.logic(
                 "esm_graph.star_cycle_partial", spec=target_spec, names=len(child_names)
             )
-        elif exports_cache is not None:
-            exports_cache[target_spec] = child_names
+        elif self.exports_cache is not None:
+            self.exports_cache[target_spec] = child_names
 
-    lexed = lex_module(src)
-    if lexed is not None:
-        names.update(lexed["names"])
-        for raw_target in lexed["starFrom"]:
-            expand_star(raw_target)
-        return names, lexed["hasDefault"], reach
-
-    src = js_scan.scrub(src)
-    has_default = bool(_ESM_EXPORT_DEFAULT_RE.search(src))
-    for kind, pattern in _ESM_EXPORT_PATTERNS_COMPILED:
-        for match in pattern.finditer(src):
-            if kind == "decl":
-                names.add(match.group(1))
-            elif kind in ("list", "destructured", "array_destructured", "list_from"):
-                for raw in match.group(1).split(","):
-                    token = raw.strip().split(" as ")[-1]
-                    if ":" in token:
-                        token = token.rsplit(":", 1)[-1]
-                    if "=" in token:
-                        token = token.split("=", 1)[0]
-                    token = token.strip().removeprefix("...").strip()
-                    if token == "default":
-                        has_default = True
-                    elif token:
-                        names.add(token)
-            elif kind == "ns_from":
-                names.add(match.group(1))
-            elif kind == "star_from":
-                expand_star(match.group(1))
-    _debug.logic(
-        "esm_graph.exports_by_regex",
-        source_bytes=len(src),
-        names=len(names),
-        default=has_default,
-    )
-    return names, has_default, reach
+    _REGEX_HANDLERS: typing.ClassVar[dict[str, Callable[[_ExportsWalk, str], None]]] = {
+        "decl": add_name,
+        "list": add_list,
+        "destructured": add_list,
+        "array_destructured": add_list,
+        "list_from": add_list,
+        "ns_from": add_name,
+        "star_from": expand_star,
+    }
 
 
 def addon_specifier_to_url(spec: str) -> str | None:
