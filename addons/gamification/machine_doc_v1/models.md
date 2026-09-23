@@ -306,7 +306,7 @@ action_cancel() resets state back to inprogress.
 
 | Method | Purpose |
 |--------|---------|
-| `_can_grant_badge()` | Return status code (1-5) |
+| `_get_badge_grant_status()` | Return status code (1-5) |
 | `check_granting()` | Raise UserError if user cannot grant |
 | `_compute_owner_stats()` | One SQL aggregation for owner, per-user and monthly stats |
 | `_compute_remaining_sending()` | Compute remaining grants |

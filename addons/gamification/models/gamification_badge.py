@@ -225,7 +225,7 @@ class GamificationBadge(models.Model):
         -1 if infinite (should not be displayed)
         """
         for badge in self:
-            if badge._can_grant_badge() != self.CAN_GRANT:
+            if badge._get_badge_grant_status() != self.CAN_GRANT:
                 # if the user cannot grant this badge at all, result is 0
                 badge.remaining_sending = 0
             elif not badge.rule_max:
@@ -242,7 +242,7 @@ class GamificationBadge(models.Model):
 
         Do not check for SUPERUSER_ID
         """
-        status_code = self._can_grant_badge()
+        status_code = self._get_badge_grant_status()
         if status_code == self.CAN_GRANT:
             return True
         elif status_code == self.NOBODY_CAN_GRANT:
@@ -259,7 +259,7 @@ class GamificationBadge(models.Model):
             _logger.error("Unknown badge status code: %s", status_code)
         return False
 
-    def _can_grant_badge(self) -> int:
+    def _get_badge_grant_status(self) -> int:
         """Check if a user can grant a badge to another user
 
         :return: integer representing the permission.

@@ -57,7 +57,7 @@ class TestBadgeGranting(common.TransactionCase):
                 "rule_auth": "everyone",
             }
         )
-        status = badge.with_user(self.user_granter)._can_grant_badge()
+        status = badge.with_user(self.user_granter)._get_badge_grant_status()
         self.assertEqual(status, badge.CAN_GRANT)
 
     # --- rule_auth = 'nobody' ---
@@ -70,7 +70,7 @@ class TestBadgeGranting(common.TransactionCase):
                 "rule_auth": "nobody",
             }
         )
-        status = badge.with_user(self.user_granter)._can_grant_badge()
+        status = badge.with_user(self.user_granter)._get_badge_grant_status()
         self.assertEqual(status, badge.NOBODY_CAN_GRANT)
 
     def test_nobody_admin_override(self):
@@ -81,7 +81,7 @@ class TestBadgeGranting(common.TransactionCase):
                 "rule_auth": "nobody",
             }
         )
-        status = badge.with_user(self.user_admin)._can_grant_badge()
+        status = badge.with_user(self.user_admin)._get_badge_grant_status()
         self.assertEqual(status, badge.CAN_GRANT)
 
     # --- rule_auth = 'users' ---
@@ -95,7 +95,7 @@ class TestBadgeGranting(common.TransactionCase):
                 "rule_auth_user_ids": [(6, 0, [self.user_vip.id])],
             }
         )
-        status = badge.with_user(self.user_vip)._can_grant_badge()
+        status = badge.with_user(self.user_vip)._get_badge_grant_status()
         self.assertEqual(status, badge.CAN_GRANT)
 
     def test_users_unauthorized_cannot_grant(self):
@@ -107,7 +107,7 @@ class TestBadgeGranting(common.TransactionCase):
                 "rule_auth_user_ids": [(6, 0, [self.user_vip.id])],
             }
         )
-        status = badge.with_user(self.user_granter)._can_grant_badge()
+        status = badge.with_user(self.user_granter)._get_badge_grant_status()
         self.assertEqual(status, badge.USER_NOT_VIP)
 
     # --- rule_auth = 'having' ---
@@ -136,7 +136,7 @@ class TestBadgeGranting(common.TransactionCase):
             }
         )
 
-        status = badge.with_user(self.user_granter)._can_grant_badge()
+        status = badge.with_user(self.user_granter)._get_badge_grant_status()
         self.assertEqual(status, badge.CAN_GRANT)
 
     def test_having_without_prerequisite_badge(self):
@@ -154,7 +154,7 @@ class TestBadgeGranting(common.TransactionCase):
                 "rule_auth_badge_ids": [(6, 0, [prereq_badge.id])],
             }
         )
-        status = badge.with_user(self.user_granter)._can_grant_badge()
+        status = badge.with_user(self.user_granter)._get_badge_grant_status()
         self.assertEqual(status, badge.BADGE_REQUIRED)
 
     # --- Monthly limits ---
@@ -169,7 +169,7 @@ class TestBadgeGranting(common.TransactionCase):
                 "rule_max_number": 3,
             }
         )
-        status = badge.with_user(self.user_granter)._can_grant_badge()
+        status = badge.with_user(self.user_granter)._get_badge_grant_status()
         self.assertEqual(status, badge.CAN_GRANT)
 
     def test_monthly_limit_exceeded(self):
@@ -193,7 +193,7 @@ class TestBadgeGranting(common.TransactionCase):
 
         # Invalidate computed stats
         badge.invalidate_recordset()
-        status = badge.with_user(self.user_granter)._can_grant_badge()
+        status = badge.with_user(self.user_granter)._get_badge_grant_status()
         self.assertEqual(status, badge.TOO_MANY)
 
     def test_remaining_sending_calc(self):
