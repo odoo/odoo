@@ -542,6 +542,9 @@ function getParsedDataFor(formId, parentEl) {
  * @returns {DocumentFragment}
  */
 export function cloneContentEls(content, keepScripts = false) {
+    if (!content) {
+        return new DocumentFragment();
+    }
     let copyFragment;
     if (typeof content === "string") {
         copyFragment = new Range().createContextualFragment(content);
