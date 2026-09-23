@@ -7,8 +7,8 @@
             <list string="Variant Values">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="display_type"/>
-                <field name="create_variant"/>
+                <field name="display_type" optional="hide"/>
+                <field name="create_variant" optional="hide"/>
             </list>
         </field>
     </record>
@@ -59,17 +59,31 @@
                                 <field name="sequence" widget="handle"/>
                                 <field name="name"/>
                                 <field name="display_type" column_invisible="True"/> <!-- drives column_invisible on is_custom/html_color/image via parent.display_type -->
-                                <field name="is_custom" width="120px"
-                                       column_invisible="parent.display_type == 'multi'"/>
+                                <field 
+                                    name="is_custom"
+                                    width="120px"
+                                    column_invisible="parent.display_type == 'multi'"
+                                    optional="hide"
+                                />
                                 <field name="html_color"
                                        widget="color"
                                        column_invisible="parent.display_type != 'color'"
                                        invisible="image"/>
-                                <field name="image"
-                                       widget="image"
-                                       options="{'size': [30, 30]}"
-                                       class="text-start float-none"
-                                       column_invisible="parent.display_type not in ['color', 'image']"/>
+                                <field 
+                                    name="image"
+                                    widget="image"
+                                    options="{'size': [30, 30]}"
+                                    class="text-start float-none"
+                                    column_invisible="parent.display_type not in ['image']"
+                                />
+                                <field 
+                                    name="image"
+                                    widget="image"
+                                    options="{'size': [30, 30]}"
+                                    class="text-start float-none"
+                                    column_invisible="parent.display_type not in ['color']"
+                                    optional="hide"
+                                />
                                 <field name="default_extra_price" width="160px"/>
                                 <button
                                     name="action_add_to_products"
