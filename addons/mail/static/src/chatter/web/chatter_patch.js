@@ -440,8 +440,8 @@ patch(Chatter.prototype, {
         if (status(this) === "destroyed") {
             return;
         }
-        await this.props.saveRecord?.();
-        if (this.props.record) {
+        const saved = await this.props.saveRecord?.();
+        if (this.props.record && saved) {
             await this.props.record.load();
         }
     },
