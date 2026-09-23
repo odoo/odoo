@@ -14,4 +14,11 @@
         <field name="code">records.action_update_suggested_products()</field>
     </record>
 
+    <record id="action_delivery_provider_modules" model="ir.actions.server">
+        <field name="name">Delivery Providers</field>
+        <field name="model_id" ref="delivery.model_delivery_carrier"/>
+        <field name="state">code</field>
+        <field name="code">action = model.install_more_provider()</field>
+    </record>
+
 </odoo>
