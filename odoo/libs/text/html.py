@@ -335,16 +335,31 @@ def _mark_quote(el: etree._Element, *, container_on_parent: bool = False) -> Non
         parent.set(_QUOTE_CONTAINER, "1")
 
 
+def _quotes_what_follows(el: etree._Element, el_class: str, el_id: str) -> bool:
+    return (
+        el.tag == "hr" and ("stopSpelling" in el_class or "stopSpelling" in el_id)
+    ) or "yahoo_quoted" in el_class
+
+
+def _previous_element(el: etree._Element) -> etree._Element | None:
+    previous = el.getprevious()
+    while previous is not None and not isinstance(previous.tag, str):
+        previous = previous.getprevious()
+    return previous
+
+
 def _quote_client_markers(el: etree._Element, el_class: str, el_id: str) -> None:
     if "gmail_extra" in el_class or "SkyDrivePlaceholder" in el_class:
         _mark_quote(el, container_on_parent=True)
 
-    if (
-        el.tag == "hr" and ("stopSpelling" in el_class or "stopSpelling" in el_id)
-    ) or "yahoo_quoted" in el_class:
+    if _quotes_what_follows(el, el_class, el_id):
         el.set(_QUOTE, "1")
-        for sibling in el.itersiblings(preceding=False):
+        for sibling in el.itersiblings(etree.Element):
             sibling.set(_QUOTE, "1")
+            if _quotes_what_follows(
+                sibling, sibling.get("class", "") or "", sibling.get("id", "") or ""
+            ):
+                break
 
     is_signature_wrapper = (
         "odoo_signature_wrapper" in el_class
@@ -378,11 +393,8 @@ def _quote_inherited_from_parent(el: etree._Element) -> None:
         return
     if not parent.get(_QUOTE_CONTAINER):
         return
-    first_sibling_quote = parent.find(f"*[@{_QUOTE}]")
-    if first_sibling_quote is None:
-        return
-    siblings = list(parent)
-    if siblings.index(first_sibling_quote) < siblings.index(el):
+    previous = _previous_element(el)
+    if previous is not None and previous.get(_QUOTE):
         el.set(_QUOTE, "1")
 
 
@@ -494,14 +506,14 @@ def html_normalize(
         return src
 
     src = re.sub(
-        r"(<[^>]*?)\s+encoding=(?:\"[^\"]*\"|'[^']*'|[^\s>]+)",
+        r"(<[^<>]*?)\s+encoding=(?:\"[^\"]*\"|'[^']*'|[^\s>]+)",
         r"\1",
         src,
     )
 
     src = src.replace("--!>", "-->")
     src = re.sub(r"(<!-->|<!--->)", "<!-- -->", src)
-    src = re.sub(r"</?o:.*?>", "", src)
+    src = re.sub(r"</?o:[^<>\n]*>", "", src)
 
     try:
         doc, single_body_element = fromstring(src)
@@ -676,7 +688,7 @@ _TEXT_COMPLETE_RE = re.compile(
 )
 
 _LINK_TAGS_RE = re.compile(
-    r"""(?<!["'])((ftp|http|https):\/\/(\w+:{0,1}\w*@)?([^\s<"']+)(:[0-9]+)?(\/|\/([^\s<"']))?)(?![^\s<"']*["']|[^\s<"']*</a>)"""
+    r"""(?<!["'])((ftp|http|https):\/\/(\w+(?::\w*)?@)?([^\s<"']++)(:[0-9]+)?(\/|\/([^\s<"']))?)(?![^\s<"']*["']|[^\s<"']*</a>)"""
 )
 
 _SIMPLE_TAG_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9]*$")
@@ -807,9 +819,14 @@ def html2plaintext(
             f"expected str got {html_content.__class__.__name__}"
         )
 
-    tree = etree.fromstring(html_content, parser=etree.HTMLParser())
+    tree = etree.fromstring(
+        html_content.encode(), parser=etree.HTMLParser(encoding="utf-8")
+    )
     if tree is None:
         return ""
+    etree.strip_elements(
+        tree, "script", "style", etree.Comment, etree.PI, with_tail=False
+    )
 
     if body_id is not None:
         source = tree.xpath("//*[@id=$body_id]", body_id=body_id)

@@ -56,3 +56,28 @@ class TestStillConvertsRealContent(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestNonTextContent(unittest.TestCase):
+    def test_a_str_carrying_an_xml_encoding_declaration_parses(self):
+        self.assertEqual(
+            html2plaintext(
+                '<?xml version="1.0" encoding="utf-8"?><html><body><p>hi</p></body></html>'
+            ),
+            "hi",
+        )
+
+    def test_style_and_script_bodies_are_not_text(self):
+        self.assertEqual(
+            html2plaintext(
+                "<body><style>p{color:red}</style><p>Hello</p>"
+                "<script>var a=1;</script></body>"
+            ),
+            "Hello",
+        )
+
+    def test_a_comment_holding_a_bracket_is_dropped_whole(self):
+        self.assertEqual(html2plaintext("<p>a <!-- a > b --> c</p>"), "a c")
+
+    def test_non_ascii_text_survives_the_byte_parse(self):
+        self.assertEqual(html2plaintext("<p>café \U0001f600</p>"), "café \U0001f600")
