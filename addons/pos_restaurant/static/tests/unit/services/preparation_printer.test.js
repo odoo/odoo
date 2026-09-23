@@ -1,6 +1,15 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
-import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
+import {
+    getFilledOrder,
+    setupPosEnv,
+    setupAndMountPosApp,
+} from "@point_of_sale/../tests/unit/utils";
+import { patch } from "@web/core/utils/patch";
+import * as PosUiUtils from "@point_of_sale/../tests/unit/ui_utils";
+import * as ResUiUtils from "@pos_restaurant/../tests/unit/ui_utils";
+const Utils = { ...PosUiUtils, ...ResUiUtils };
 
 definePosModels();
 
@@ -134,4 +143,54 @@ test("only printers with matching categories are used", async () => {
     });
     expect(result).toBe(true);
     expect(printedBy).toEqual(["Printer 1"]);
+});
+
+test("check only matching categories product data printed and reprinted", async () => {
+    // Configure a printer that accepts only the category of the steel desk.
+    const store = await setupAndMountPosApp({ preparation_printer_ids: [1] });
+    let printedData = [];
+    const generateIframeFun = store.ticketPrinter.generateIframe;
+    patch(store.ticketPrinter, {
+        async generateIframe(...args) {
+            const data = args[1];
+            // Capture the rendered lines to verify filtering independently of the printer UI.
+            printedData.push(
+                data.changes.data.map((line) => ({
+                    basic_name: line.basic_name,
+                    quantity: line.quantity,
+                }))
+            );
+            return await generateIframeFun(...args);
+        },
+        print() {
+            return { successful: true };
+        },
+    });
+    await Utils.clickTable("1");
+    await Utils.clickDisplayedProduct("Steel desk");
+    await Utils.clickOrderButton();
+    await animationFrame();
+    await Utils.clickPlanButton();
+    // A newly sent order prints the product matching the printer category.
+    expect(printedData).toHaveLength(1);
+    expect(printedData[0]).toHaveLength(1);
+    expect(printedData[0][0]).toMatchObject({
+        basic_name: "Steel desk",
+        quantity: 1,
+    });
+    printedData = [];
+    await Utils.clickTable("1");
+    await Utils.clickDisplayedProduct("Bacon burger"); // Product category is not included in preparation printer
+    await Utils.checkNoOrderButton();
+    if (store.ui.isSmall) {
+        await Utils.clickBackButton();
+    }
+    await Utils.clickReprintButton();
+    // Reprinting must retain the previously printed matching line and exclude the burger.
+    expect(printedData).toHaveLength(1);
+    expect(printedData[0]).toHaveLength(1);
+    expect(printedData[0][0]).toMatchObject({
+        basic_name: "Steel desk",
+        quantity: 1,
+    });
 });
