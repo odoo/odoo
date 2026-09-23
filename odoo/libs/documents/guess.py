@@ -44,8 +44,9 @@ def guess_encoding(data: bytes) -> str | None:
     # UTF-8 for any practical purpose, while chardet's probers, fed a short
     # Spanish sentence, answered johab
     if data.isascii():
-        # 7-bit data is ASCII unless it carries the escapes of ISO-2022
-        if b"\x1b" not in data:
+        # 7-bit data is ASCII unless it carries the escapes of ISO-2022 or the
+        # NUL bytes of UTF-16/32 without a BOM
+        if b"\x1b" not in data and b"\x00" not in data:
             return "ascii"
     elif _is_valid_utf8(data):
         return "utf-8-sig" if data.startswith(codecs.BOM_UTF8) else "utf-8"

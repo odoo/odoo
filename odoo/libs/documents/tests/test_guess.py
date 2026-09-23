@@ -73,3 +73,15 @@ class TestDecode(unittest.TestCase):
     def test_wrong_declared_encoding_raises(self):
         with self.assertRaises(UnicodeDecodeError):
             decode("Café".encode("latin-1"), "utf-8")
+
+
+class TestWideEncodingsWithoutBom(unittest.TestCase):
+    def test_ascii_text_in_utf16_or_utf32_is_not_ascii(self):
+        from odoo.libs.documents.guess import decode, guess_encoding
+
+        text = "name,qty\nwidget,3\n" * 50
+        for codec in ("utf-16-le", "utf-16-be", "utf-32-le"):
+            with self.subTest(codec=codec):
+                data = text.encode(codec)
+                self.assertNotEqual(guess_encoding(data), "ascii")
+                self.assertEqual(decode(data), text)
