@@ -1,5 +1,6 @@
 import base64
 import datetime
+import itertools
 import re
 import time
 from collections import defaultdict
@@ -11,7 +12,7 @@ from lxml import etree
 from odoo import SUPERUSER_ID, api, fields, models, modules
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import config, date_utils, split_every
+from odoo.tools import config, date_utils
 from odoo.tools.image import image_data_uri
 from odoo.tools.xml_utils import dict_to_xml
 
@@ -823,11 +824,10 @@ class MyInvoisDocument(models.Model):
 
         # MyInvois only supports up to 100 document per submission. To avoid timing out on big batches, we split it client side.
         for proxy_user, records_to_send in records_per_proxy_users.items():
-            for batch in split_every(
-                SUBMISSION_MAX_SIZE,
-                records_to_send.ids,
-                self.env["myinvois.document"].browse,
+            for batch_ids in itertools.batched(
+                records_to_send.ids, SUBMISSION_MAX_SIZE
             ):
+                batch = self.env["myinvois.document"].browse(batch_ids)
                 batch_result = proxy_user._l10n_my_edi_contact_proxy(
                     endpoint="api/l10n_my_edi/1/submit_invoices",
                     params={

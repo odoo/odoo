@@ -1,6 +1,7 @@
+import itertools
+
 from odoo import Command, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import split_every
 
 MAX_LINE_COUNT_PER_INVOICE = 100
 
@@ -58,7 +59,7 @@ class MyInvoisConsolidateInvoiceWizard(models.TransientModel):
             # We now know the amount of lines; we want to create one consolidated invoice per 100 lines.
             consolidated_invoice_vals = []
             for config, lines in lines_per_config.items():
-                for line_batch in split_every(MAX_LINE_COUNT_PER_INVOICE, lines, list):
+                for line_batch in itertools.batched(lines, MAX_LINE_COUNT_PER_INVOICE):
                     orders = self.env["pos.order"].union(*line_batch)
                     consolidated_invoice_vals.append(
                         {
