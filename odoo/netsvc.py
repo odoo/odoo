@@ -150,6 +150,11 @@ class DBFormatter(logging.Formatter):
 
     def formatMessage(self, record):
         if record.munge_traceback:
+            if record.exc_info:
+                record.exc_text = self.formatException(record.exc_info).replace(
+                'Traceback (most recent call last):',
+                '_Traceback_ (most recent call last):',
+            )
             return super().formatMessage(record).replace(
                 'Traceback (most recent call last):',
                 '_Traceback_ (most recent call last):',
