@@ -114,3 +114,30 @@ def test_to_timezone_none_reads_a_naive_value_as_utc_whatever_the_process_zone()
         env={**os.environ, "TZ": "America/Mexico_City", "PYTHONPATH": root},
     )
     assert out.stdout.strip() == "2024-01-01T12:00:00"
+
+
+def test_a_step_with_absolute_fields_still_yields_start_first():
+    from dateutil.relativedelta import FR
+
+    assert list(
+        date_range(
+            date(2024, 1, 15), date(2024, 1, 20), relativedelta(months=1, day=31)
+        )
+    ) == [date(2024, 1, 15)]
+    first = next(
+        date_range(
+            date(2024, 1, 10), date(2024, 3, 1), relativedelta(months=1, weekday=FR(-1))
+        )
+    )
+    assert first == date(2024, 1, 10)
+
+
+@pytest.mark.parametrize("zone", ["GMT", "Etc/GMT", "fixed"])
+def test_gmt_counts_as_utc(zone):
+    from datetime import timedelta
+    from datetime import timezone as fixed_offset
+
+    tz = fixed_offset(timedelta(0)) if zone == "fixed" else ZoneInfo(zone)
+    start = datetime(2024, 1, 1, tzinfo=UTC)
+    end = datetime(2024, 1, 1, 3, tzinfo=tz)
+    assert len(list(date_range(start, end, relativedelta(hours=1)))) == 4

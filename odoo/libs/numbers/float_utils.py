@@ -67,6 +67,9 @@ def _round_r(
 ) -> float:
     if value == 0:
         return 0.0
+    if rounding_factor == 0:
+        # 10 ** -precision_digits underflowed: no step is fine enough to move it
+        return float(value)
 
     step = rounding_factor
     inverted = rounding_factor < 1

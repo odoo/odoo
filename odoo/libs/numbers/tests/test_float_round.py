@@ -144,3 +144,8 @@ class TestFloatRound(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestFloatRoundBeyondFloatPrecision(unittest.TestCase):
+    def test_more_digits_than_a_float_holds_leave_the_value_alone(self):
+        self.assertEqual(float_round(1.5, precision_digits=400), 1.5)

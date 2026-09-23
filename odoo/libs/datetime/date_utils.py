@@ -34,7 +34,7 @@ import calendar
 import math
 import time as _time
 from dataclasses import dataclass
-from datetime import UTC, date, datetime, time, timedelta, tzinfo
+from datetime import UTC, date, datetime, time, timedelta, timezone, tzinfo
 from typing import TYPE_CHECKING, Any, Literal
 
 from dateutil.relativedelta import FR, MO, SA, SU, TH, TU, WE, relativedelta
@@ -281,6 +281,16 @@ _UTC_KEYS = frozenset(
         "Universal",
         "Etc/Zulu",
         "Zulu",
+        "GMT",
+        "GMT0",
+        "GMT+0",
+        "GMT-0",
+        "Greenwich",
+        "Etc/GMT",
+        "Etc/GMT0",
+        "Etc/GMT+0",
+        "Etc/GMT-0",
+        "Etc/Greenwich",
     }
 )
 
@@ -288,7 +298,7 @@ _UTC_KEYS = frozenset(
 def _is_utc(tz: tzinfo | None) -> bool:
     if tz is None:
         return False
-    if tz is UTC:
+    if tz is UTC or (isinstance(tz, timezone) and tz.utcoffset(None) == timedelta(0)):
         return True
     key = getattr(tz, "key", None) or getattr(tz, "zone", None)
     return key in _UTC_KEYS
@@ -364,20 +374,23 @@ def date_range[D: (date, datetime)](
         if exact is not None:
             utc_start = start.astimezone(UTC)
             utc_end = end.astimezone(UTC)
-            k = 0
+            yield start
+            k = 1
             while (instant := utc_start + exact * k) <= utc_end:
                 yield instant.astimezone(tz)
                 k += 1
             return
         wall_start = start.replace(tzinfo=None)
         wall_end = end.replace(tzinfo=None)
-        k = 0
+        yield start
+        k = 1
         while (wall := wall_start + step * k) <= wall_end:
             yield wall.replace(tzinfo=tz)
             k += 1
         return
 
-    k = 0
+    yield start
+    k = 1
     while (value := start + step * k) <= end:
         yield value
         k += 1
