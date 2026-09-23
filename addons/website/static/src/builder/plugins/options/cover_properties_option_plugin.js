@@ -17,8 +17,6 @@ class CoverPropertiesOptionPlugin extends Plugin {
             SetCoverBackgroundAction,
             MarkCoverPropertiesToBeSavedAction,
         },
-        savable_selectors: "#wrapwrap .o_record_cover_container[data-res-model]",
-        content_not_editable_selectors: ".o_savable.o_record_cover_container[data-res-model]",
         before_save_handlers: this.savePendingBackgroundImage.bind(this),
         save_element_handlers: this.saveCoverProperties.bind(this),
     };
@@ -118,7 +116,9 @@ class CoverPropertiesOptionPlugin extends Plugin {
 export class BaseCoverPropertiesAction extends BuilderAction {
     static id = "baseCoverProperties";
     markCoverPropertiesToBeSaved({ editingElement }) {
-        editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
+        const recordCoverContainerEl = editingElement.closest(".o_record_cover_container");
+        recordCoverContainerEl.dataset.coverPropertiesToBeSaved = true;
+        recordCoverContainerEl.classList.add("o_dirty");
     }
 }
 
@@ -173,13 +173,13 @@ export class SetCoverBackgroundAction extends BaseCoverPropertiesAction {
             value: imageSrc ? `url('${imageSrc}')` : "",
         });
 
-        editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
+        this.markCoverPropertiesToBeSaved({ editingElement });
     }
 }
 export class MarkCoverPropertiesToBeSavedAction extends BaseCoverPropertiesAction {
     static id = "markCoverPropertiesToBeSaved";
     apply({ editingElement }) {
-        editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
+        this.markCoverPropertiesToBeSaved({ editingElement });
     }
 }
 
