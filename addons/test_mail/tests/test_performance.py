@@ -1639,7 +1639,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         # 18611cec438. Measured with test_mail alone (27, the 'tm' number) and
         # with account and marketing_card installed too (29, asserted).
         # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
-        with self.assertQueryCount(employee=20):
+        with self.assertQueryCount(employee=19):
             _recipients = records._message_get_suggested_recipients_batch(
                 no_create=False
             )

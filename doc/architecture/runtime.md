@@ -398,7 +398,11 @@ included — or one a comodel's `_search` override declares in
 `AccessMemo.observing`; a whole model when it searched one) empties that
 scope's slots (`_evict_user_scopes_reading_through`, from `write`, a protected
 `__set__`, the `create` of rows the rule reads through, and `unlink`) — the
-verdict may have changed, and the next read searches. A slot whose rule the ORM
+verdict may have changed, and the next read searches. A rule only narrows the
+superuser's answer, so a row whose user and superuser slots both hold it empty
+stays (a static field domain and no `_search` override given): a partner created
+a line earlier keeps its empty `user_ids` through the writes its own create
+reports. A slot whose rule the ORM
 cannot read (a custom SQL condition, a subquery, a searchable compute with no
 dependencies) and a comodel whose override declares nothing are emptied by any
 write of the transaction. The transaction's `AccessMemo` says which fields to

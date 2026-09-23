@@ -83,6 +83,18 @@ class TestX2manyScopeFollowsWhatTheRulesRead(TransactionCase):
         with self.assertQueryCount(0):
             self.assertEqual(self.user_box.item_ids, self.item_shown)
 
+    def test_a_row_the_superuser_holds_empty_keeps_its_slot_through_a_rule_write(
+        self,
+    ):
+        empty = self.env["test_orm.scope_box"].create({"name": "empty"})
+        self.assertFalse(empty.item_ids)
+        self.assertFalse(empty.with_user(self.user).item_ids)
+        self.assertEqual(self.user_box.item_ids, self.item_shown)
+        self.shown.visible = False
+        with self.assertQueryCount(0):
+            self.assertFalse(empty.with_user(self.user).item_ids)
+        self.assertFalse(self.user_box.item_ids)
+
     def test_a_read_verdict_follows_a_write_at_the_end_of_the_rule_path(self):
         item = self.item_shown.with_user(self.user)
         self.assertTrue(item.has_access("read"))

@@ -629,9 +629,14 @@ class _RelationalMulti(_Relational):
     ) -> None:
         # after a write of `fnames` on rows of `model_name`: every user scope
         # whose read of this field reads one of them forgets what it held,
-        # and its next read searches; the superuser reads through no rule
+        # and its next read searches; the superuser reads through no rule.
+        # A rule only narrows the superuser's answer, so a row both scopes
+        # hold empty stays empty whatever the rule now reads
         verdicts: dict[tuple, bool] = {}
         evicted = 0
+        narrows_superuser = not (
+            callable(self.domain) or is_search_overridden(type(env[self.comodel_name]))
+        )
         for key, slot in list(env.core.iter_context_caches(self)):
             if (
                 key == PENDING_SCOPE_KEY
@@ -641,9 +646,26 @@ class _RelationalMulti(_Relational):
                 continue
             if key not in verdicts:
                 verdicts[key] = self._scope_reads_through(env, key, fnames, model_name)
-            if verdicts[key]:
+            if not verdicts[key]:
+                continue
+            superuser_slot = (
+                env.core.get_context_data_or_none(
+                    self, self._superuser_key_of(env, key)
+                )
+                if narrows_superuser
+                else None
+            )
+            if not superuser_slot:
                 evicted += len(slot)
                 slot.clear()
+                continue
+            for id_ in [
+                id_
+                for id_, ids in slot.items()
+                if ids != () or superuser_slot.get(id_) != ()
+            ]:
+                del slot[id_]
+                evicted += 1
         if _debug.logic.enabled and evicted:
             _debug.logic(
                 "field.x2many.scope_evict_rule_field_written",
@@ -679,9 +701,11 @@ class _RelationalMulti(_Relational):
             return
 
     def _superuser_scope_key(self, env: Environment) -> tuple:
-        own = env.get_cache_key(self)
+        return self._superuser_key_of(env, env.get_cache_key(self))
+
+    def _superuser_key_of(self, env: Environment, key: tuple) -> tuple:
         index = env._field_depends_context[self].index("access")
-        return (*own[:index], True, *own[index + 1 :])
+        return (*key[:index], True, *key[index + 1 :])
 
     def _mirror_to_other_scopes(
         self, env: Environment, ids: Collection[IdType], cache_value: typing.Any
