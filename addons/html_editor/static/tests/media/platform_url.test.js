@@ -212,7 +212,14 @@ test("options are embedded in the url of each platform", () => {
             "loom",
             "https://www.loom.com/share/e5b8c04bca094dd8a5507925ab887002",
             { autoplay: true, hideControls: true, startFrom: 62 },
-            "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002?autoplay=1&hideEmbedTopBar=0&hide_share=0&hide_title=0&hide_owner=0&hide_speed=0&muted=1&t=62",
+            "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002?autoplay=1&hideEmbedTopBar=true&hide_share=true&hide_title=true&hide_owner=true&hide_speed=true&muted=1&t=62",
+        ],
+        // Loom hides the top bar whatever the value, as saved by older versions.
+        [
+            "loom",
+            "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002?hideEmbedTopBar=0&hide_share=0&hide_title=0&hide_owner=0&hide_speed=0",
+            {},
+            "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002?hideEmbedTopBar=true&hide_share=true&hide_title=true&hide_owner=true&hide_speed=true",
         ],
     ]) {
         const platformClass = PLATFORMS[platform];
