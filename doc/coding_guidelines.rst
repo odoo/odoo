@@ -4835,8 +4835,8 @@ language. Alternatively, group by the raw column or the select alias.
   keyset search on ``id``, so it has no offset drift and holds no whole-set id
   list. When the total is needed, call ``_commit_progress(0, remaining=n)`` once
   before the loop.
-* **Never use ``split_every``** ``[review]``. It is deprecated. Use
-  ``itertools.batched`` for a plain iterable.
+* **Batch a plain iterable with ``itertools.batched``** ``[review]``.
+  ``split_every`` no longer exists (Appendix C).
 * ``_commit_progress(processed=0, *, remaining=None, deactivate=False)``:
   ``remaining`` is keyword-only. The call returns the remaining cron **time in
   seconds** (``inf`` outside a cron, ``0`` at the deadline). Set ``remaining``
