@@ -7,9 +7,10 @@
             <list string="Vehicles">
                 <field name="name"/>
                 <field name="license_plate"/>
+                <field name="category_id"/>
+                <field name="driver_id"/>
                 <field name="model_year"/>
                 <field name="seats"/>
-                <field name="acquisition_date"/>
             </list>
         </field>
     </record>
@@ -23,17 +24,20 @@
                     <div class="oe_title">
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. Fleet-001"/></h1>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     </div>
                     <group>
                         <group string="Identification">
                             <field name="license_plate"/>
                             <field name="vin_sn"/>
                             <field name="color"/>
+                            <field name="category_id"/>
                         </group>
                         <group string="Specifications">
                             <field name="model_year"/>
                             <field name="seats"/>
                             <field name="acquisition_date"/>
+                            <field name="driver_id"/>
                         </group>
                     </group>
                     <group string="Notes">
@@ -52,9 +56,14 @@
                 <field name="name"/>
                 <field name="license_plate"/>
                 <field name="vin_sn"/>
+                <field name="driver_id"/>
+                <field name="category_id"/>
                 <filter name="filter_inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <filter name="filter_unassigned" string="Unassigned" domain="[('driver_id', '=', False)]"/>
                 <group>
                     <filter name="group_by_model_year" string="Model Year" domain="[]" context="{'group_by': 'model_year'}"/>
+                    <filter name="group_by_category" string="Category" domain="[]" context="{'group_by': 'category_id'}"/>
+                    <filter name="group_by_driver" string="Driver" domain="[]" context="{'group_by': 'driver_id'}"/>
                 </group>
             </search>
         </field>
