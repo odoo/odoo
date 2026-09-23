@@ -1,6 +1,6 @@
 import datetime
 
-from odoo import models
+from odoo import api, models
 
 # Value of each character in the CURP check-digit sum. Ñ sits between N and O,
 # which is why this cannot be a plain ASCII index.
@@ -14,6 +14,13 @@ _GENERIC_RFC = frozenset({"XAXX010101000", "XEXX010101000"})
 
 class ResPartnerIdentifierType(models.Model):
     _inherit = "res.partner.identifier.type"
+
+    @api.model
+    def _get_code_checkers(self):
+        return super()._get_code_checkers() | {
+            "mx_rfc": self._check_code_mx_rfc,
+            "mx_curp": self._check_code_mx_curp,
+        }
 
     def _check_code_mx_rfc(self, value):
         """The RFC's embedded birth or incorporation date must be a real one.

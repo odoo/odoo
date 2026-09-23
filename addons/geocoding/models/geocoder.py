@@ -52,10 +52,9 @@ class Geocoder(models.AbstractModel):
         :return: formatted string
         """
         provider = self._get_provider().tech_name
-        if hasattr(self, "_geo_query_address_" + provider):
-            return getattr(self, "_geo_query_address_" + provider)(
-                street, zip_code, city, state, country
-            )
+        formatter = self._get_geo_address_formatters().get(provider)
+        if formatter:
+            return formatter(street, zip_code, city, state, country)
         else:
             # By default, join the non-empty parameters
             return self._geo_query_address_default(
@@ -74,19 +73,30 @@ class Geocoder(models.AbstractModel):
         :return: (latitude, longitude) or None if not found
         """
         provider = self._get_provider().tech_name
-        try:
-            service = getattr(self, "_call_" + provider)
-            result = service(addr, **kw)
-        except AttributeError as exc:
+        service = self._get_geo_services().get(provider)
+        if not service:
             raise UserError(
                 _("Provider %s is not implemented for geolocation service.", provider)
-            ) from exc
+            )
+        try:
+            result = service(addr, **kw)
         except UserError:
             raise
         except Exception:
             _logger.debug("Geolocalize call failed", exc_info=True)
             result = None
         return result
+
+    @api.model
+    def _get_geo_services(self):
+        return {
+            "openstreetmap": self._call_openstreetmap,
+            "googlemap": self._call_googlemap,
+        }
+
+    @api.model
+    def _get_geo_address_formatters(self):
+        return {"googlemap": self._geo_query_address_googlemap}
 
     @api.model
     def _call_openstreetmap(self, addr, **kw):

@@ -88,6 +88,10 @@ class ResPartnerIdentifierType(models.Model):
                 ) from error
 
     @api.model
+    def _get_code_checkers(self):
+        return {}
+
+    @api.model
     def _normalize(self, value):
         return _NON_ALPHANUMERIC.sub("", value or "").upper()
 
@@ -108,7 +112,7 @@ class ResPartnerIdentifierType(models.Model):
                     name=self.display_name,
                 )
             )
-        checker = getattr(self, f"_check_code_{(self.code or '').lower()}", None)
+        checker = self._get_code_checkers().get((self.code or "").lower())
         _debug.logic(
             "identifier_checked",
             type=self.code,

@@ -1891,6 +1891,10 @@ class IrActionsReport(models.Model):
             button_text=_("View Problematic Record(s)"),
         )
 
+    @api.model
+    def _get_report_renderers(self) -> dict[str, Callable[..., tuple[bytes, str]]]:
+        return super()._get_report_renderers() | {"qweb-pdf": self._render_qweb_pdf}
+
     def _render_qweb_pdf(
         self,
         report_ref: int | str | Any,

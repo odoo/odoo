@@ -554,6 +554,13 @@ class IrActionsReport(models.Model):
         return data
 
     @api.model
+    def _get_report_renderers(self) -> dict[str, Callable[..., tuple[bytes, str]]]:
+        return {
+            "qweb-html": self._render_qweb_html,
+            "qweb-text": self._render_qweb_text,
+        }
+
+    @api.model
     def _render(
         self,
         report_ref: int | str | Any,
@@ -561,8 +568,8 @@ class IrActionsReport(models.Model):
         data: dict[str, Any] | None = None,
     ) -> tuple[bytes, str]:
         report = self._get_report(report_ref)
-        report_type = report.report_type.lower().replace("-", "_")
-        render_func = getattr(self, "_render_" + report_type, None)
+        report_type = report.report_type
+        render_func = self._get_report_renderers().get(report_type)
         if not render_func:
             _debug.logic("render_refused", report=report.report_name, type=report_type)
             raise UserError(

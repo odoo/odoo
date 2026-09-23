@@ -321,7 +321,26 @@ class IrFieldsConverter(models.AbstractModel):
 
     @api.model
     def _get_value_converter(self, field_type: str) -> Callable | None:
-        return getattr(self, f"_str_to_{field_type}", None)
+        return {
+            "boolean": self._str_to_boolean,
+            "integer": self._str_to_integer,
+            "float": self._str_to_float,
+            "monetary": self._str_to_monetary,
+            "char": self._str_to_char,
+            "text": self._str_to_text,
+            "html": self._str_to_html,
+            "binary": self._str_to_binary,
+            "json": self._str_to_json,
+            "properties": self._str_to_properties,
+            "reference": self._str_to_reference,
+            "date": self._str_to_date,
+            "datetime": self._str_to_datetime,
+            "selection": self._str_to_selection,
+            "many2one": self._str_to_many2one,
+            "many2one_reference": self._str_to_many2one_reference,
+            "many2many": self._str_to_many2many,
+            "one2many": self._str_to_one2many,
+        }.get(field_type)
 
     @api.model
     def _str_to_json(self, field: ConvertibleField, value: str) -> tuple[Any, list]:

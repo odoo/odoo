@@ -196,15 +196,14 @@ class TestPartnerIdentifier(TransactionCase):
     def test_a_code_specific_rule_runs_after_the_format(self):
         checked = []
 
-        def _check_code_test_rfc(self, value):
+        def check_test_rfc(value):
             checked.append(value)
             return value.startswith("VAN")
 
         with patch.object(
             type(self.rfc),
-            "_check_code_test_rfc",
-            _check_code_test_rfc,
-            create=True,
+            "_get_code_checkers",
+            lambda self: {"test_rfc": check_test_rfc},
         ):
             self.company._update_identifier("TEST_RFC", "VAN850101QW1")
             self.assertEqual(checked, ["VAN850101QW1"])
