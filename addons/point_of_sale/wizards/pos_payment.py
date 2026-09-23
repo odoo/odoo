@@ -1,6 +1,5 @@
 from odoo import fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero
 
 from ..tools import debug_log as dbg
 
@@ -27,9 +26,8 @@ class PosMakePayment(models.TransientModel):
         order = self._get_order()
         if order:
             amount_total = order.amount_total
-            if float_is_zero(
-                order.refunded_order_id.amount_total + order.amount_total,
-                precision_rounding=order.currency_id.rounding,
+            if order.currency_id.is_zero(
+                order.refunded_order_id.amount_total + order.amount_total
             ):
                 amount_total = -order.refunded_order_id.amount_paid
             return amount_total - order.amount_paid

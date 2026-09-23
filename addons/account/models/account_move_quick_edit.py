@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from odoo import api, fields, models
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, float_is_zero
+from odoo.tools import SQL
 
 _debug = DebugLog(__name__)
 
@@ -222,9 +222,7 @@ class AccountMove(models.Model):
             return
         totals = self.tax_totals
         tax_amount_rounding_error = amount_total - totals["total_amount_currency"]
-        if not float_is_zero(
-            tax_amount_rounding_error, precision_rounding=self.currency_id.rounding
-        ):
+        if not self.currency_id.is_zero(tax_amount_rounding_error):
             for subtotal in totals["subtotals"][:1]:
                 if subtotal["tax_groups"]:
                     subtotal["tax_groups"][0]["tax_amount_currency"] += (

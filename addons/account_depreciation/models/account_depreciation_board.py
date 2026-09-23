@@ -1232,7 +1232,7 @@ class AccountDepreciationBoard(models.Model):
             amount=amount,
             imported=imported_amount,
         )
-        if not float_is_zero(amount, precision_rounding=self.currency_id.rounding):
+        if not self.currency_id.is_zero(amount):
             new_line = self._add_depreciation_line(
                 amount, beginning_depreciation_date, date, days_depreciated
             )
@@ -1484,10 +1484,7 @@ class AccountDepreciationBoard(models.Model):
         )
 
         depreciation_move_values = []
-        if not float_is_zero(
-            self.value_depreciable_residual,
-            precision_rounding=self.currency_id.rounding,
-        ):
+        if not self.currency_id.is_zero(self.value_depreciable_residual):
             while (
                 not self.currency_id.is_zero(residual_amount)
                 and start_depreciation_date < final_depreciation_date
@@ -1527,9 +1524,7 @@ class AccountDepreciationBoard(models.Model):
                 ):
                     period_end_depreciation_date = final_depreciation_date
 
-                if not float_is_zero(
-                    amount, precision_rounding=self.currency_id.rounding
-                ):
+                if not self.currency_id.is_zero(amount):
                     depreciation_move_values.append(
                         self.env["account.move"]._prepare_move_for_asset_depreciation(
                             {

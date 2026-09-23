@@ -1,7 +1,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import float_compare, float_is_zero
+from odoo.tools import float_is_zero
 
 _debug = DebugLog(__name__)
 
@@ -296,8 +296,6 @@ class AccountMoveLine(models.Model):
         self.check_singleton()
         if self.sale_line_ids:
             return False
-        return float_compare(
-            self.credit or 0.0,
-            self.debit or 0.0,
-            precision_rounding=self.company_id.currency_id.rounding,
+        return self.company_id.currency_id.compare_amounts(
+            self.credit or 0.0, self.debit or 0.0
         ) != 1 and self.product_id.expense_policy not in [False, "no"]

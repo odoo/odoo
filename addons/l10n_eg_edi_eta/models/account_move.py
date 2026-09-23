@@ -5,7 +5,6 @@ import logging
 from odoo import _, api, fields, models
 from odoo.db.schema import column_exists, create_column
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_is_zero
 
 _logger = logging.getLogger(__name__)
 
@@ -190,8 +189,6 @@ class AccountMove(models.Model):
         to_currency = self.company_id.currency_id
         if from_currency != to_currency and self.invoice_line_ids:
             amount_currency = self.invoice_line_ids[0].amount_currency
-            if not float_is_zero(
-                amount_currency, precision_rounding=from_currency.rounding
-            ):
+            if not from_currency.is_zero(amount_currency):
                 return abs(self.invoice_line_ids[0].balance / amount_currency)
         return 1.0

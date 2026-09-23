@@ -4,7 +4,7 @@ from contextlib import ExitStack, contextmanager
 from odoo import _, api, models
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import float_compare, frozendict
+from odoo.tools import frozendict
 from odoo.tools.misc import clean_context
 
 from odoo.addons.account.tools.dynamic_lines import plan_dynamic_line_sync
@@ -201,16 +201,12 @@ class AccountMove(models.Model):
 
         if (
             existing_cash_rounding_line
-            and float_compare(
-                existing_cash_rounding_line.balance,
-                diff_balance,
-                precision_rounding=self.company_currency_id.rounding,
+            and self.company_currency_id.compare_amounts(
+                existing_cash_rounding_line.balance, diff_balance
             )
             == 0
-            and float_compare(
-                existing_cash_rounding_line.amount_currency,
-                diff_amount_currency,
-                precision_rounding=self.currency_id.rounding,
+            and self.currency_id.compare_amounts(
+                existing_cash_rounding_line.amount_currency, diff_amount_currency
             )
             == 0
         ):

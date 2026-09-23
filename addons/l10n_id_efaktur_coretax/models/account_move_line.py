@@ -1,6 +1,6 @@
 from odoo import _, models
 from odoo.exceptions import ValidationError
-from odoo.libs.numbers import float_compare, float_repr
+from odoo.libs.numbers import float_repr
 
 
 class AccountMoveLine(models.Model):
@@ -11,12 +11,7 @@ class AccountMoveLine(models.Model):
         self.check_singleton()
         idr = self.env.ref("base.IDR")
 
-        if (
-            float_compare(
-                self.price_subtotal, 0.0, precision_rounding=self.currency_id.rounding
-            )
-            < 0
-        ):
+        if self.currency_id.compare_amounts(self.price_subtotal, 0.0) < 0:
             raise ValidationError(
                 _(
                     "Price for line '%s' cannot be a negative amount. Please check again.",

@@ -118,12 +118,10 @@ class AccountMove(models.Model):
                 depreciation_lines = move._get_asset_depreciation_line()
                 asset_depreciation = sum(depreciation_lines.mapped("balance"))
                 initial_lines = move.line_ids.filtered(
-                    lambda line: (
-                        line.account_id == asset.account_asset_id  # noqa: B023  the lambda runs inside this iteration
-                        and float_compare(
-                            -line.balance,
-                            asset.value_original,  # noqa: B023  the lambda runs inside this iteration
-                            precision_rounding=asset.currency_id.rounding,  # noqa: B023  the lambda runs inside this iteration
+                    lambda line, asset=asset: (
+                        line.account_id == asset.account_asset_id
+                        and asset.currency_id.compare_amounts(
+                            -line.balance, asset.value_original
                         )
                         == 0
                     )

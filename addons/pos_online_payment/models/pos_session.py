@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, models, tools
+from odoo import _, models
 from odoo.exceptions import UserError
 
 
@@ -14,11 +14,10 @@ class PosSession(models.Model):
             return {"amount": 0.0, "amount_converted": 0.0}
 
         split_receivables_online = defaultdict(amounts)
-        currency_rounding = self.currency_id.rounding
         for order in self._get_closed_orders():
             for payment in order.payment_ids:
                 amount = payment.amount
-                if tools.float_is_zero(amount, precision_rounding=currency_rounding):
+                if self.currency_id.is_zero(amount):
                     continue
                 date = payment.payment_date
                 payment_method = payment.payment_method_id

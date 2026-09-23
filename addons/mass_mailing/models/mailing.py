@@ -14,7 +14,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from PIL import Image, UnidentifiedImageError
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import Command, _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Datetime, Domain
 from odoo.http import request

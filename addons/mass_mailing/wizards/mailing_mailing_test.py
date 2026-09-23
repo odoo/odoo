@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, fields, models, tools
+from odoo import Command, _, fields, models, tools
 from odoo.tools.misc import file_open
 
 

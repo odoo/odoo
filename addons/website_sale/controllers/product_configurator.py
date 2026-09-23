@@ -1,6 +1,5 @@
 from odoo.http import request, route
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import float_is_zero
 
 from odoo.addons.sale.controllers.product_configurator import (
     SaleProductConfiguratorController,
@@ -135,9 +134,7 @@ class WebsiteSaleProductConfiguratorController(
         )
 
         if request.is_frontend:
-            has_zero_price = float_is_zero(
-                basic_product_information["price"], precision_rounding=currency.rounding
-            )
+            has_zero_price = currency.is_zero(basic_product_information["price"])
             basic_product_information["can_be_sold"] = not (
                 request.website.prevent_zero_price_sale and has_zero_price
             )

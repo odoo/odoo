@@ -12,7 +12,7 @@ from odoo.db.schema import create_index
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.models import PREFETCH_MAX
-from odoo.tools import float_is_zero, frozendict, plaintext2html
+from odoo.tools import frozendict, plaintext2html
 
 from ..tools import debug_log as dbg
 
@@ -1714,7 +1714,6 @@ class PosSession(models.Model):
         return data
 
     def _accumulate_order_payments(self, order, pos_receivable_account, buckets):
-        currency_rounding = self.currency_id.rounding
         order_is_invoiced = order.is_invoiced
 
         def add(bucket_name, key, amount, date):
@@ -1723,7 +1722,7 @@ class PosSession(models.Model):
 
         for payment in order.payment_ids:
             amount = payment.amount
-            if float_is_zero(amount, precision_rounding=currency_rounding):
+            if self.currency_id.is_zero(amount):
                 continue
             date = payment.payment_date
             payment_method = payment.payment_method_id
@@ -2195,9 +2194,7 @@ class PosSession(models.Model):
         combine_cash_statement_line_vals = []
         combine_cash_receivable_vals = []
         for payment_method, amounts in combine_receivables_cash.items():
-            if not float_is_zero(
-                amounts["amount"], precision_rounding=self.currency_id.rounding
-            ):
+            if not self.currency_id.is_zero(amounts["amount"]):
                 combine_cash_statement_line_vals.append(
                     self._prepare_combine_statement_line_vals(
                         payment_method.journal_id, amounts["amount"], payment_method

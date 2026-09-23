@@ -1,5 +1,4 @@
 from odoo import _, api, fields, models
-from odoo.tools import float_is_zero
 
 
 class EventRegistration(models.Model):
@@ -63,10 +62,7 @@ class EventRegistration(models.Model):
                 cancelled_so_registrations
                 | registrations.filtered(lambda reg: reg.state == "cancel")
             )
-            if float_is_zero(
-                sale_order.amount_total,
-                precision_rounding=sale_order.currency_id.rounding,
-            ):
+            if sale_order.currency_id.is_zero(sale_order.amount_total):
                 registrations.sale_status = "free"
                 registrations.filtered(
                     lambda reg: not reg.state or reg.state == "draft"

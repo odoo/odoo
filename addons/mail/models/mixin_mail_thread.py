@@ -17,7 +17,7 @@ from lxml import etree, html
 from markupsafe import Markup, escape
 from werkzeug.exceptions import NotFound
 
-from odoo import _, api, exceptions, fields, models, tools
+from odoo import Command, _, api, exceptions, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain

@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 import werkzeug
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, fields, http, tools
+from odoo import Command, _, fields, http, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import Response, request

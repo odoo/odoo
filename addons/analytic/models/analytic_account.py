@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
-from odoo.tools import SQL, float_is_zero, groupby
+from odoo.tools import SQL, groupby
 
 
 class AccountAnalyticAccount(models.Model):
@@ -292,7 +292,7 @@ class AccountAnalyticAccount(models.Model):
                     new_amount += existing_aal.amount
                     new_unit_amount += existing_aal.unit_amount
                 currency = accounts[0].currency_id or obj.company_id.currency_id
-                if float_is_zero(new_amount, precision_rounding=currency.rounding):
+                if currency.is_zero(new_amount):
                     existing_aal.unlink()
                 else:
                     existing_aal.amount = new_amount
@@ -321,7 +321,7 @@ class AccountAnalyticAccount(models.Model):
             # branches rounded against different currencies for the same
             # distribution key.
             currency = accounts[0].currency_id or obj.company_id.currency_id
-            if not float_is_zero(new_amount, precision_rounding=currency.rounding):
+            if not currency.is_zero(new_amount):
                 lines_to_link.append(
                     obj._prepare_analytic_line_values(
                         account_field_values, new_amount, unit_amount

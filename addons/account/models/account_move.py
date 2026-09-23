@@ -5962,14 +5962,7 @@ class AccountMove(models.Model):
                     )
                 )
             self._check_post_partner_bank(invoice, validation_msgs)
-            if (
-                float_compare(
-                    invoice.amount_total,
-                    0.0,
-                    precision_rounding=invoice.currency_id.rounding,
-                )
-                < 0
-            ):
+            if invoice.currency_id.compare_amounts(invoice.amount_total, 0.0) < 0:
                 _debug.logic(
                     "post_refused_negative_total",
                     move=invoice,

@@ -1,7 +1,6 @@
 from werkzeug.exceptions import Unauthorized
 
 from odoo import fields, http
-from odoo.tools import float_is_zero
 
 from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 
@@ -50,9 +49,8 @@ class PosSelfOrderControllerStripe(PosSelfOrderController):
         stripe_order_amount = payment_method._stripe_get_amount(order.amount_total)
 
         if (
-            float_is_zero(
-                stripe_order_amount - stripe_confirmation["amount"],
-                precision_rounding=pos_config.currency_id.rounding,
+            pos_config.currency_id.is_zero(
+                stripe_order_amount - stripe_confirmation["amount"]
             )
             and stripe_confirmation["status"] == "succeeded"
         ):

@@ -4,7 +4,7 @@ from odoo import api, fields, models, modules, service
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, float_compare
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -309,14 +309,7 @@ class AccountBankStatementLine(models.Model):
         for st_line_id, all_aml_ids, total_residual in self.env.cr.fetchall():
             st_line = self.browse(st_line_id).with_prefetch(self._prefetch_ids)
             unmatched, _unmatched_currency = st_line._get_unmatched_amounts()
-            exact = (
-                float_compare(
-                    total_residual,
-                    unmatched,
-                    precision_rounding=st_line.currency_id.rounding,
-                )
-                == 0
-            )
+            exact = st_line.currency_id.compare_amounts(total_residual, unmatched) == 0
             _debug.logic(
                 "matching",
                 automatch=st_line_id,

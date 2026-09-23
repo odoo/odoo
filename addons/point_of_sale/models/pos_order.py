@@ -13,7 +13,7 @@ from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_compare, float_is_zero, float_repr, float_round, formatLang
+from odoo.tools import float_is_zero, float_repr, float_round, formatLang
 
 from ..tools import debug_log as dbg
 
@@ -778,10 +778,8 @@ class PosOrder(models.Model):
 
                 if (
                     is_percentage
-                    and float_compare(
-                        line.price_unit,
-                        line.product_id.lst_price,
-                        precision_rounding=order.currency_id.rounding,
+                    and order.currency_id.compare_amounts(
+                        line.price_unit, line.product_id.lst_price
                     )
                     < 0
                 ):
@@ -1024,9 +1022,7 @@ class PosOrder(models.Model):
                     sum(line.price_subtotal for line in order.lines)
                 )
                 order.margin_percent = (
-                    not float_is_zero(
-                        amount_untaxed, precision_rounding=order.currency_id.rounding
-                    )
+                    not order.currency_id.is_zero(amount_untaxed)
                     and order.margin / amount_untaxed
                 ) or 0
             else:
@@ -1465,14 +1461,10 @@ class PosOrder(models.Model):
 
     def _is_pos_order_paid(self):
         amount_total = self.amount_total
-        if float_is_zero(
-            self.refunded_order_id.amount_total + amount_total,
-            precision_rounding=self.currency_id.rounding,
-        ):
+        if self.currency_id.is_zero(self.refunded_order_id.amount_total + amount_total):
             amount_total = -self.refunded_order_id.amount_paid
-        return float_is_zero(
-            self._get_rounded_amount(amount_total) - self.amount_paid,
-            precision_rounding=self.currency_id.rounding,
+        return self.currency_id.is_zero(
+            self._get_rounded_amount(amount_total) - self.amount_paid
         )
 
     def _is_refund_order(self):
@@ -1639,9 +1631,7 @@ class PosOrder(models.Model):
         self.check_singleton()
         cash_rounding = self._is_cash_rounding_applicable()
         total = self._get_rounded_amount(self.amount_total)
-        is_paid = float_is_zero(
-            total - self.amount_paid, precision_rounding=self.currency_id.rounding
-        )
+        is_paid = self.currency_id.is_zero(total - self.amount_paid)
         dbg.logic.debug(
             "[order:%s] payment amount: total=%s rounded=%s paid=%s is_paid=%s"
             " cash_rounding=%s",
@@ -1898,10 +1888,9 @@ class PosOrder(models.Model):
                     for aml_vals in aml_vals_list_per_nature["tax"]:
                         if (
                             not biggest_tax_aml_vals
-                            or float_compare(
+                            or self.currency_id.compare_amounts(
                                 -sign * aml_vals["amount_currency"],
                                 -sign * biggest_tax_aml_vals["amount_currency"],
-                                precision_rounding=self.currency_id.rounding,
                             )
                             > 0
                         ):

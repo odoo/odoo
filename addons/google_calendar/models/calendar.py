@@ -4,7 +4,7 @@ from uuid import uuid4
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models, tools
+from odoo import Command, _, api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 

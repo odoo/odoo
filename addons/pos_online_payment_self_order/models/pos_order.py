@@ -1,4 +1,4 @@
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 
 
 class PosOrder(models.Model):
@@ -108,10 +108,7 @@ class PosOrder(models.Model):
             # If the next online payment is 0, then the online payment of the frontend
             # flow is cancelled, and the default flow is self order if it is configured.
             self.use_self_order_online_payment = (
-                tools.float_is_zero(
-                    next_online_payment_amount,
-                    precision_rounding=self.currency_id.rounding,
-                )
+                self.currency_id.is_zero(next_online_payment_amount)
                 and self.config_id.self_order_online_payment_method_id
             )
         return res

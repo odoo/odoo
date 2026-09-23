@@ -653,14 +653,7 @@ class AccountMove(models.Model):
                 "OthChrg",
                 "TotItemVal",
             )
-            if (
-                float_compare(
-                    discount_to_allow,
-                    discount,
-                    precision_rounding=self.currency_id.rounding,
-                )
-                < 0
-            ):
+            if self.currency_id.compare_amounts(discount_to_allow, discount) < 0:
                 # Update discount line, needed when discount is more then max line, in short remaining_discount is not zero
                 discount_line_vals.update(
                     {

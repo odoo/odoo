@@ -2308,9 +2308,9 @@ class AccountMove(models.Model):
                 move_line.tax_ids = [Command.set(fitting_taxes)]
 
         # Discounts
-        if (discounts := element.xpath(".//ScontoMaggiorazione")) and not float_is_zero(
-            move_line.price_unit, precision_rounding=move_line.currency_id.rounding
-        ):
+        if (
+            discounts := element.xpath(".//ScontoMaggiorazione")
+        ) and not move_line.currency_id.is_zero(move_line.price_unit):
             current_unit_price = move_line.price_unit
             # We apply the discounts in the order they are found in the XML.
             # The first discount is applied to the unit price, the second to the result of the first, etc.
@@ -2322,10 +2322,7 @@ class AccountMove(models.Model):
                 discount_sign = -1 if discount_type == "MG" else 1
                 if (
                     discount_percentage := get_float(discount, ".//Percentuale")
-                ) and not float_is_zero(
-                    discount_percentage,
-                    precision_rounding=move_line.currency_id.rounding,
-                ):
+                ) and not move_line.currency_id.is_zero(discount_percentage):
                     current_unit_price *= (
                         100 - discount_sign * discount_percentage
                     ) / 100
@@ -2334,11 +2331,7 @@ class AccountMove(models.Model):
             expected_total = get_float(element, ".//PrezzoTotale")
             current_total = current_unit_price * move_line.quantity
             if (
-                float_compare(
-                    expected_total,
-                    current_total,
-                    precision_rounding=move_line.currency_id.rounding,
-                )
+                move_line.currency_id.compare_amounts(expected_total, current_total)
                 != 0
             ):
                 message = Markup("<br/>").join(

@@ -12,7 +12,7 @@ from urllib.parse import urlencode, urlparse, urlunparse
 import werkzeug.routing
 from lxml import etree, html
 
-from odoo import api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request

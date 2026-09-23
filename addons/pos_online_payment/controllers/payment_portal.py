@@ -1,6 +1,6 @@
 from urllib.parse import urlencode as url_encode
 
-from odoo import _, http, tools
+from odoo import _, http
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 
@@ -49,11 +49,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
     @staticmethod
     def _is_valid_amount(amount, currency):
-        return (
-            isinstance(amount, float)
-            and tools.float_compare(amount, 0.0, precision_rounding=currency.rounding)
-            > 0
-        )
+        return isinstance(amount, float) and currency.compare_amounts(amount, 0.0) > 0
 
     def _get_allowed_providers_sudo(self, pos_order_sudo, partner_id, amount_to_pay):
         payment_method = pos_order_sudo.online_payment_method_id
@@ -271,12 +267,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         amount_to_pay = self._get_amount_to_pay(pos_order_sudo)
         if not self._is_valid_amount(amount_to_pay, currency_id):
             raise ValidationError(_("There is nothing to pay for this order."))
-        if (
-            tools.float_compare(
-                kwargs["amount"], amount_to_pay, precision_rounding=currency_id.rounding
-            )
-            != 0
-        ):
+        if currency_id.compare_amounts(kwargs["amount"], amount_to_pay) != 0:
             raise ValidationError(
                 _("The amount to pay has changed. Please refresh the page.")
             )

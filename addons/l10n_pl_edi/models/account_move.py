@@ -12,7 +12,7 @@ from stdnum.pl.nip import compact
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import OrderedSet, float_compare, float_is_zero, float_repr, mute_logger
+from odoo.tools import OrderedSet, float_is_zero, float_repr, mute_logger
 
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
@@ -144,12 +144,7 @@ class AccountMove(models.Model):
                 )
                 has_deducted_dp = any(
                     line._get_downpayment_lines()
-                    and float_compare(
-                        line.price_subtotal,
-                        0.0,
-                        precision_rounding=line.currency_id.rounding,
-                    )
-                    == -1
+                    and line.currency_id.compare_amounts(line.price_subtotal, 0.0) == -1
                     for line in self.invoice_line_ids
                 )
 

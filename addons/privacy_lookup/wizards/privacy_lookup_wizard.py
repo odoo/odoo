@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models, tools
+from odoo import Command, _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 

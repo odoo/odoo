@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -40,14 +40,7 @@ class PaymentTransaction(models.Model):
                 and not tx.payment_id.pos_order_id
             ):
                 pos_order = tx.pos_order_id
-                if (
-                    tools.float_compare(
-                        tx.amount,
-                        0.0,
-                        precision_rounding=pos_order.currency_id.rounding,
-                    )
-                    <= 0
-                ):
+                if pos_order.currency_id.compare_amounts(tx.amount, 0.0) <= 0:
                     raise ValidationError(
                         _("The payment transaction (%d) has a negative amount.", tx.id)
                     )

@@ -9,7 +9,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import SQL
-from odoo.tools import float_is_zero, is_html_empty
+from odoo.tools import is_html_empty
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
@@ -644,10 +644,7 @@ class ProductTemplate(models.Model):
         combination_info.update(
             {
                 "prevent_zero_price_sale": website.prevent_zero_price_sale
-                and float_is_zero(
-                    combination_info["price"],
-                    precision_rounding=currency.rounding,
-                ),
+                and currency.is_zero(combination_info["price"]),
                 "currency": currency,
                 "date": date,
                 "product_taxes": product_taxes,

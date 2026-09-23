@@ -1,4 +1,4 @@
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 
 
 class PosOrder(models.Model):
@@ -74,10 +74,7 @@ class PosOrder(models.Model):
         }
         if not isinstance(next_online_payment_amount, bool):
             if (
-                tools.float_is_zero(
-                    next_online_payment_amount,
-                    precision_rounding=self.currency_id.rounding,
-                )
+                self.currency_id.is_zero(next_online_payment_amount)
                 and len(online_payments) == 0
                 and self.state == "draft"
                 and not self.config_id.module_pos_restaurant
@@ -93,16 +90,8 @@ class PosOrder(models.Model):
     def _check_next_online_payment_amount(self, amount):
         self.check_singleton()
         return (
-            tools.float_compare(
-                amount, 0.0, precision_rounding=self.currency_id.rounding
-            )
-            >= 0
-            and tools.float_compare(
-                amount,
-                self.get_amount_unpaid(),
-                precision_rounding=self.currency_id.rounding,
-            )
-            <= 0
+            self.currency_id.compare_amounts(amount, 0.0) >= 0
+            and self.currency_id.compare_amounts(amount, self.get_amount_unpaid()) <= 0
         )
 
     def _get_checked_next_online_payment_amount(self):

@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_is_zero, formatLang
+from odoo.tools import formatLang
 
 from ..tools import debug_log as dbg
 
@@ -217,8 +217,8 @@ class PosPayment(models.Model):
                 continue
             order = payment.pos_order_id
             payment_method = payment.payment_method_id
-            if payment_method.type == "pay_later" or float_is_zero(
-                payment.amount, precision_rounding=order.currency_id.rounding
+            if payment_method.type == "pay_later" or order.currency_id.is_zero(
+                payment.amount
             ):
                 dbg.logic.debug(
                     "[order:%s] payment %s skipped: type=%s amount=%s",

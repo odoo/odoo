@@ -8,7 +8,7 @@ from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tools import float_compare, float_is_zero
+from odoo.tools import float_compare
 
 from ..tools import debug_log as dbg
 
@@ -617,10 +617,7 @@ class PosOrderLine(models.Model):
             else:
                 line.margin = line.price_subtotal - line.total_cost
                 line.margin_percent = (
-                    not float_is_zero(
-                        line.price_subtotal,
-                        precision_rounding=line.currency_id.rounding,
-                    )
+                    not line.currency_id.is_zero(line.price_subtotal)
                     and line.margin / line.price_subtotal
                 ) or 0
 

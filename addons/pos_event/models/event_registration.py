@@ -1,5 +1,4 @@
 from odoo import Command, api, fields, models
-from odoo.tools import float_is_zero
 
 
 class EventRegistration(models.Model):
@@ -46,9 +45,8 @@ class EventRegistration(models.Model):
             for registration in self:
                 if registration.pos_order_id.state == "cancel":
                     registration.state = "cancel"
-                elif float_is_zero(
-                    registration.pos_order_id.amount_total,
-                    precision_rounding=registration.pos_order_id.currency_id.rounding,
+                elif registration.pos_order_id.currency_id.is_zero(
+                    registration.pos_order_id.amount_total
                 ):
                     registration.sale_status = "free"
                     registration.state = "open"

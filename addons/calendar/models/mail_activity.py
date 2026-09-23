@@ -1,6 +1,6 @@
 from datetime import UTC
 
-from odoo import _, fields, models, tools
+from odoo import Command, _, fields, models, tools
 from odoo.libs.datetime import timezone
 from odoo.tools import is_html_empty
 
