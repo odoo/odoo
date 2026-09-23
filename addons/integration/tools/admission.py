@@ -184,6 +184,12 @@ class Admission:
                 self._record_withheld_failure(error)
             return
         if error:
+            if retry:
+                # the retry cron replays the row, so it keeps the body as
+                # received, as an async work item does, not the log copy
+                self.exchange.request_payload = self.body.decode(
+                    "utf-8", errors="replace"
+                )
             self.exchange.mark_failed(redact.mask_text(error), schedule_retry=retry)
         else:
             self.exchange.mark_success()

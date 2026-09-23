@@ -83,15 +83,23 @@ class TestPushRouteAdmission(DeviceHttpCase):
     @mute_logger("odoo.addons.device.controllers.main")
     def test_a_handler_failure_is_a_failed_row_kept_for_retry(self):
         Device = type(self.env["device.device"])
+        body = json.dumps(
+            {"reading": 7, "url": "https://h.invalid/?token=abc", "note": "x" * 5000}
+        ).encode()
         with patch.object(
             Device, "_store_push_data_point", side_effect=RuntimeError("boom")
         ):
-            response = self._push()
+            response = self._push(body)
 
         self.assertEqual(response.status_code, 500)
         row = self._rows()
         self.assertEqual(row.state, "retry", "a failed push is scheduled for a retry")
         self.assertIn("boom", row.error_message)
+        self.assertEqual(
+            row.get_payload_dict(),
+            json.loads(body),
+            "the retry replays the body as received, not the redacted log copy",
+        )
 
     def test_a_wrong_token_leaves_no_row(self):
         response = self._push(token="not-the-token")
