@@ -25,7 +25,6 @@ __all__ = [
     "ResponseHead",
     "encode_chunk",
     "find_head",
-    "http_date",
     "parse_request_head",
     "prepare_response_head",
 ]
@@ -527,7 +526,7 @@ class _DateCache:
         return self._value
 
 
-http_date = _DateCache()
+_http_date = _DateCache()
 
 
 def encode_chunk(data: bytes) -> bytes:
@@ -547,6 +546,12 @@ def prepare_response_head(
         raise ValueError(f"invalid WSGI status {status!r}")
     code = int(match.group(1))
     upgrade = code == 101
+    if code < 200 and not upgrade:
+        # WSGI has no interim responses: a 1xx here would be the final one
+        raise ValueError(f"a WSGI response cannot be an interim {status!r}")
+    # RFC 9110 8.6: no Content-Length on a 204; a 304's describes the
+    # representation, not a body, and may stay
+    bodiless = code == 204
     lines = [f"HTTP/1.1 {status}"]
     content_length: int | None = None
     has_date = False
@@ -561,6 +566,8 @@ def prepare_response_head(
                 keep_alive = False
             continue
         if folded == "content-length":
+            if bodiless:
+                continue
             if not _RESPONSE_CONTENT_LENGTH.match(value) or (
                 content_length is not None and int(value) != content_length
             ):
@@ -572,7 +579,7 @@ def prepare_response_head(
             has_date = True
         lines.append(f"{name}: {value}")
     if not has_date:
-        lines.append(f"Date: {http_date()}")
+        lines.append(f"Date: {_http_date()}")
 
     if upgrade:
         framing = Framing.NONE

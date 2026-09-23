@@ -105,3 +105,27 @@ def test_invalid_status_is_refused():
 def test_chunk_encoding():
     assert encode_chunk(b"hello") == b"5\r\nhello\r\n"
     assert encode_chunk(b"") == b""
+
+
+def test_a_204_carries_no_content_length_and_a_304_keeps_its_own():
+    no_content = head(status="204 No Content", headers=[("Content-Length", "0")])
+    assert not any(
+        line.lower().startswith("content-length") for line in lines(no_content)
+    )
+    assert no_content.keep_alive
+    not_modified = head(status="304 Not Modified", headers=[("Content-Length", "12")])
+    assert "Content-Length: 12" in lines(not_modified)
+    assert not_modified.framing is Framing.NONE
+
+
+@pytest.mark.parametrize("status", ["100 Continue", "103 Early Hints", "199 Custom"])
+def test_an_interim_status_cannot_be_the_final_response(status):
+    with pytest.raises(ValueError, match="interim"):
+        head(status=status)
+
+
+def test_a_switching_protocols_response_is_still_accepted():
+    assert (
+        head(status="101 Switching Protocols", headers=[("Upgrade", "websocket")]).code
+        == 101
+    )
