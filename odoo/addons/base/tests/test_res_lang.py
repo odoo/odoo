@@ -1,3 +1,4 @@
+import contextlib
 import locale
 
 from odoo import tools
@@ -137,24 +138,44 @@ class test_res_lang(TransactionCase):
         coerced = weird if weird in grouping_options else "[3,0]"
         self.assertEqual(coerced, "[3,0]")
 
-    @mute_logger("odoo.addons.base.models.res_lang")
     def test_create_lang_resets_process_locale(self):
-        tools.translate.resetlocale()
-        before = locale.setlocale(locale.LC_ALL)
-        lang = self.env["res.lang"]._create_lang("xx_XX", "Locale Window Test")
+        before = tools.translate.resetlocale()
+        self.addCleanup(locale.setlocale, locale.LC_ALL, before)
+        for name in tools.translate.get_locales("en_GB"):
+            with contextlib.suppress(locale.Error):
+                applied = locale.setlocale(locale.LC_ALL, name)
+                break
+        else:
+            self.skipTest("the en_GB locale is not installed")
+        locale.setlocale(locale.LC_ALL, before)
+        if applied == before:
+            self.skipTest("the process already runs under en_GB")
+
+        ResLang = self.env["res.lang"].with_context(active_test=False)
+        ResLang.search([("code", "=", "en_GB")]).unlink()
+        lang = ResLang._create_lang("en_GB", "Locale Window Test")
+
         self.assertEqual(
             locale.setlocale(locale.LC_ALL),
             before,
-            "_create_lang must reset the process locale after reading it",
+            "_create_lang must restore the process locale it found",
         )
-        self.assertTrue(lang.active)
-        self.assertEqual(lang.code, "xx_XX")
-        self.assertTrue(lang.date_format)
-        self.assertTrue(lang.time_format)
+        self.assertEqual(lang.code, "en_GB")
+        self.assertEqual(lang.date_format, "%d/%m/%Y")
         self.assertIn(
             lang.grouping,
             {v for v, _label in lang._fields["grouping"].selection},
         )
+
+    @mute_logger("odoo.addons.base.models.res_lang")
+    def test_create_lang_without_a_system_locale_keeps_defaults(self):
+        before = tools.translate.resetlocale()
+        self.addCleanup(locale.setlocale, locale.LC_ALL, before)
+        lang = self.env["res.lang"]._create_lang("xx_XX", "Locale Window Test")
+        self.assertEqual(locale.setlocale(locale.LC_ALL), before)
+        self.assertTrue(lang.active)
+        self.assertTrue(lang.date_format)
+        self.assertTrue(lang.time_format)
 
     def test_copy_lang_codes_are_url_safe_and_unique(self):
         lang = self.env["res.lang"]._activate_lang("en_US")

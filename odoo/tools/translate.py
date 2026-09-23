@@ -2417,44 +2417,34 @@ class TranslationImporter:
             _logger.info("translations are loaded successfully")
 
 
-def get_locales(lang: str | None = None) -> Iterator[str | None]:
-    if lang is None:
-        lang = locale.getlocale()[0]
-
-    def process(enc: str) -> Iterator[str]:
-        ln = locale._build_localename((lang, enc))  # type: ignore[attr-defined]
-        yield ln
-        nln = locale.normalize(ln)
-        if nln != ln:
-            yield nln
-
-    for x in process("utf8"):
-        yield x
-
-    prefenc = locale.getpreferredencoding()
-    if prefenc:
-        for x in process(prefenc):
-            yield x
-
-        aliased = {
+def get_locales(lang: str) -> Iterator[str]:
+    encodings = ["utf8"]
+    if prefenc := locale.getpreferredencoding():
+        encodings.append(prefenc)
+        if aliased := {
             "latin1": "latin9",
             "iso-8859-1": "iso8859-15",
             "cp1252": "1252",
-        }.get(prefenc.lower())
-        if aliased:
-            for x in process(aliased):
-                yield x
+        }.get(prefenc.lower()):
+            encodings.append(aliased)
 
-    yield lang
+    seen = set()
+    for enc in encodings:
+        ln = locale._build_localename((lang, enc))  # type: ignore[attr-defined]
+        for name in (ln, locale.normalize(ln)):
+            if name not in seen:
+                seen.add(name)
+                yield name
+    if lang not in seen:
+        yield lang
 
 
-def resetlocale() -> str | None:
-    for ln in get_locales():
-        try:
-            return locale.setlocale(locale.LC_ALL, ln)
-        except locale.Error:
-            continue
-    return None
+def resetlocale() -> str:
+    try:
+        return locale.setlocale(locale.LC_ALL, "")
+    except locale.Error:
+        _debug.logic("translate.locale_env_unusable")
+        return locale.setlocale(locale.LC_ALL, "C")
 
 
 def load_language(cr: BaseCursor, lang: str) -> None:
