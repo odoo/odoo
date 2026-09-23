@@ -50,7 +50,9 @@ export class PortalHomeCounters extends Interaction {
                 ) {
                     const cardEl = documentsCounterEl.closest(".o_portal_index_card");
                     if (cardEl.dataset.showInPortal !== "false") {
-                        documentsCounterEl.classList.remove("d-none");
+                        if (documentsCounterEl.classList.contains("badge")) {
+                            documentsCounterEl.classList.remove("d-none");
+                        }
                         cardEl.classList.remove("d-none");
                     }
                 }
