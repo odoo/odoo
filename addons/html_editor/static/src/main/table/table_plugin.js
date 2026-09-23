@@ -2016,7 +2016,8 @@ export class TablePlugin extends Plugin {
 
             if (!tbody) {
                 tbody = table.ownerDocument.createElement("tbody");
-                tbody.innerHTML = `<tr><td><div class="o-paragraph"><br></div></td></tr>`;
+                const row = tbody.insertRow();
+                row.insertCell().append(this.dependencies.baseContainer.createBaseContainer());
                 table.append(tbody);
             }
         });
