@@ -14,6 +14,7 @@ import {
     getGridItemProperties,
     getGridProperties,
     resizeGrid,
+    rowSize,
     setElementToMaxZindex,
     toggleGridMode,
 } from "@html_builder/utils/grid_layout_utils";
@@ -226,7 +227,6 @@ export class GridLayoutPlugin extends Plugin {
                 // console.log("GRID ITEM");
                 // Lock the row size and adjust the height of the modified grid item.
                 const rowEl = this.modifiedGridItemEl.parentElement;
-                const { rowSize } = getGridProperties(rowEl);
                 rowEl.style["grid-auto-rows"] = `${rowSize}px`;
                 adjustGridItem(this.modifiedGridItemEl);
                 rowEl.style.removeProperty("grid-auto-rows");

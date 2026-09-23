@@ -6,6 +6,7 @@ import {
     resizeGrid,
     setElementToMaxZindex,
     adjustGrid,
+    adjustGridItem,
     rowSize,
     isContentOverflowing,
 } from "@html_builder/utils/grid_layout_utils";
@@ -595,15 +596,18 @@ export class BuilderOverlay {
         // If we are in grid mode, add a background grid and place it in front
         // of the other elements.
         let rowEl, backgroundGridEl;
+        const closestGridItemEl =
+            !this.overlayTarget.matches(".o_grid_item") &&
+            this.overlayTarget.closest(".o_grid_item");
         let adjustment = 0;
         if (isGridHandle) {
             rowEl = this.overlayTarget.parentNode;
             // Adjust the grid and compute the height difference to take it into
             // account for the mouse position.
-            const oldHeight = this.overlayTarget.getBoundingClientRect().bottom;
+            const oldBottom = this.overlayTarget.getBoundingClientRect().bottom;
             adjustGrid(rowEl);
-            const newHeight = this.overlayTarget.getBoundingClientRect().bottom;
-            adjustment = Math.round(newHeight - oldHeight);
+            const newBottom = this.overlayTarget.getBoundingClientRect().bottom;
+            adjustment = Math.round(newBottom - oldBottom);
             // Lock the grid row size so it is fixed during the resize.
             rowEl.style["grid-auto-rows"] = `${rowSize}px`;
             // Add the background grid.
@@ -614,6 +618,8 @@ export class BuilderOverlay {
             const { rowStart, rowEnd } = getGridItemProperties(this.overlayTarget);
             this.resizeState.rowStartAtCursor = rowStart;
             this.resizeState.rowEndAtCursor = rowEnd;
+        } else if (closestGridItemEl) {
+            rowEl = closestGridItemEl.parentNode;
         }
 
         let sizingConfig, onResize;
@@ -699,6 +705,13 @@ export class BuilderOverlay {
                 if (change) {
                     onResize(dir.compass, dir.initialClasses, dir.currentIndex);
                     // TODO notify other options (e.g. steps)
+                    // Resize the closest grid item if any (when resizing an
+                    // inner content).
+                    if (closestGridItemEl) {
+                        rowEl.style["grid-auto-rows"] = `${rowSize}px`;
+                        adjustGridItem(closestGridItemEl);
+                        rowEl.style.removeProperty("grid-auto-rows");
+                    }
                 }
             }
         };

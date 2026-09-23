@@ -487,6 +487,14 @@ export function adjustGridItem(columnEl, shouldResizeGrid = true) {
  *                   - `oldRowCount`: the row count before adapting
  */
 export function adjustGrid(rowEl, draggedItemEl = undefined) {
+    // Only adjust the grid if some rows are bigger than 50px, meaning that some
+    // content is overflowing and therefore stretching the grid.
+    const rows = getComputedStyle(rowEl).gridTemplateRows.split(" ");
+    const isGridStretched = rows.some((row) => row !== "50px");
+    if (!isGridStretched) {
+        return;
+    }
+
     const { rowGap, rowSize } = getGridProperties(rowEl);
     const columnEls = [...rowEl.children].filter(
         (el) => el.classList.contains("o_grid_item") && el !== draggedItemEl
