@@ -33,6 +33,10 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from crypto import sm4_envelope as env  # noqa: E402
 
+import local_env  # noqa: E402
+
+local_env.load()
+
 HOSTS = {
     'test': 'https://llys.51fapiao.cn/openapi',   # 测试环境
     'prod': 'https://ll.51fapiao.cn/openapi',     # 生产环境
