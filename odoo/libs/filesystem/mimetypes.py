@@ -128,10 +128,39 @@ def _get_webp_mimetype(data: bytes) -> str | None:
     return None
 
 
+_BMP_DIB_HEADER_SIZES = frozenset({12, 40, 52, 56, 64, 108, 124})
+
+
+def _get_bmp_mimetype(data: bytes) -> str | None:
+    # "BM" alone opens any text starting with those letters
+    if len(data) >= 18 and data[6:10] == b"\0\0\0\0":
+        if int.from_bytes(data[14:18], "little") in _BMP_DIB_HEADER_SIZES:
+            return "image/bmp"
+    return None
+
+
+_MARKUP_START = re.compile(
+    rb"<(?:\?xml|!--|!DOCTYPE|[A-Za-z_][\w.:-]*[\s/>])", re.IGNORECASE
+)
+_HTML_START = re.compile(rb"<(?:!DOCTYPE\s+html|html[\s>])", re.IGNORECASE)
+
+
+def _get_markup_mimetype(data: bytes) -> str | None:
+    head = data[:1024]
+    if _HTML_START.match(head):
+        return "text/html"
+    if _MARKUP_START.match(head):
+        return "text/xml"
+    return None
+
+
 class _Entry(NamedTuple):
     mimetype: str
     signatures: list[bytes]
     discriminants: list[Callable[[bytes], str | bool | None]]
+    # False when the signature is too weak to name the type by itself: an entry
+    # none of whose discriminants answers leaves the data to later entries
+    decisive: bool = True
 
 
 _mime_mappings = (
@@ -149,22 +178,15 @@ _mime_mappings = (
     ),
     _Entry("image/png", [b"\x89PNG\r\n\x1a\n"], []),
     _Entry("image/gif", [b"GIF87a", b"GIF89a"], []),
-    _Entry("image/bmp", [b"BM"], []),
+    _Entry("image/bmp", [b"BM"], [_get_bmp_mimetype], decisive=False),
     _Entry(
         "text/xml",
         [b"<"],
-        [
-            _get_svg_mimetype,
-        ],
+        [_get_svg_mimetype, _get_markup_mimetype],
+        decisive=False,
     ),
     _Entry("image/x-icon", [b"\x00\x00\x01\x00"], []),
-    _Entry(
-        "image/webp",
-        [b"RIFF"],
-        [
-            _get_webp_mimetype,
-        ],
-    ),
+    _Entry("image/webp", [b"RIFF"], [_get_webp_mimetype], decisive=False),
     _Entry(
         "application/msword",
         [b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", b"\x0d\x44\x4f\x43"],
@@ -181,6 +203,7 @@ _mime_mappings = (
 def _guess_mimetype_by_signature(
     bin_data: bytes, default: str = UNKNOWN_MIMETYPE
 ) -> str:
+    bin_data = bin_data.removeprefix(codecs.BOM_UTF8)
     for entry in _mime_mappings:
         for signature in entry.signatures:
             if bin_data.startswith(signature):
@@ -189,6 +212,8 @@ def _guess_mimetype_by_signature(
                         guess = discriminant(bin_data)
                         if isinstance(guess, str):
                             return guess
+                    except zipfile.BadZipFile:
+                        continue
                     except Exception:
                         _logger_guess_mimetype.warning(
                             "Sub-checker '%s' of type '%s' failed",
@@ -196,14 +221,31 @@ def _guess_mimetype_by_signature(
                             entry.mimetype,
                             exc_info=True,
                         )
-                return entry.mimetype
-    try:
-        head = _utf8_incremental_decoder().decode(bin_data[:1024], final=False)
-    except ValueError:
+                if entry.decisive:
+                    return entry.mimetype
+    head = _text_head(bin_data)
+    if head is None:
         return default
     if head and all(c >= " " or c in "\t\n\r" for c in head):
         return "text/plain"
     return default
+
+
+def _text_head(data: bytes) -> str | None:
+    for bom, encoding in (
+        (codecs.BOM_UTF16_LE, "utf-16-le"),
+        (codecs.BOM_UTF16_BE, "utf-16-be"),
+    ):
+        if data.startswith(bom):
+            decoder = codecs.getincrementaldecoder(encoding)()
+            try:
+                return decoder.decode(data[len(bom) : 2048], final=False)
+            except ValueError:
+                return None
+    try:
+        return _utf8_incremental_decoder().decode(data[:1024], final=False)
+    except ValueError:
+        return None
 
 
 try:
