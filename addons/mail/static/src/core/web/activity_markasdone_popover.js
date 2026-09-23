@@ -1,10 +1,12 @@
 import { Component, onMounted, signal, t, useListener, useProps } from "@odoo/owl";
 
+import { PopoverCard } from "@mail/core/common/popover_card/popover_card";
 import { propSignal } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
 
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
+    static components = { PopoverCard };
 
     textArea = signal.ref();
 

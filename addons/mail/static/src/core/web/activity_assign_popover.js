@@ -1,3 +1,4 @@
+import { PopoverCard } from "@mail/core/common/popover_card/popover_card";
 import { propSignal } from "@mail/utils/common/hooks";
 
 import { imageUrl } from "@web/core/utils/urls";
@@ -8,7 +9,7 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 export class ActivityAssignPopover extends Component {
     static template = "mail.ActivityAssignPopover";
-    static components = { Many2XAutocomplete };
+    static components = { Many2XAutocomplete, PopoverCard };
 
     setup() {
         super.setup();

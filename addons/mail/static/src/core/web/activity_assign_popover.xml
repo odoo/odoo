@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityAssignPopover">
-        <div class="o-mail-ActivityAssignPopover o_popover_card card">
-            <div t-if="this.hasHeader" class="card-header bg-inherit pb-0">
+        <PopoverCard class="'o-mail-ActivityAssignPopover'" darkerInDarkTheme="true" hasHeader="this.hasHeader">
+            <t t-set-slot="header">
                 <h6>Assign</h6>
+            </t>
+            <div class="d-flex align-items-center">
+                <i class="oi oi-filled me-2" data-icon="person" role="img" aria-label="User"/>
+                <img t-if="this.userId()"
+                    t-att-src="this.getAvatarUrl(this.userId())"
+                    class="o-mail-Avatar o_avatar rounded me-2"
+                    alt="Avatar"
+                />
+                <Many2XAutocomplete
+                    resModel="'res.users'"
+                    value="this.userName()"
+                    getDomain.bind="this.getDomain"
+                    update.bind="this.onSelect"
+                    activeActions="{}"
+                    placeholder="this.responsibleLabel"
+                    fieldString="this.responsibleLabel"
+                >
+                    <t t-set-slot="option" t-slot-scope="scope">
+                        <div class="d-flex align-items-center">
+                            <img t-if="scope.data?.record?.id"
+                                t-att-src="this.getAvatarUrl(scope.data.record.id)"
+                                class="o-mail-Avatar o_avatar rounded me-2"
+                                alt="Avatar"
+                            />
+                            <span class="text-truncate" t-out="scope.label"/>
+                        </div>
+                    </t>
+                </Many2XAutocomplete>
             </div>
-            <div class="card-body bg-inherit">
-                <div class="d-flex align-items-center">
-                    <i class="oi oi-filled me-2" data-icon="person" role="img" aria-label="User"/>
-                    <img t-if="this.userId()"
-                        t-att-src="this.getAvatarUrl(this.userId())"
-                        class="o-mail-Avatar o_avatar rounded me-2"
-                        alt="Avatar"
-                    />
-                    <Many2XAutocomplete
-                        resModel="'res.users'"
-                        value="this.userName()"
-                        getDomain.bind="this.getDomain"
-                        update.bind="this.onSelect"
-                        activeActions="{}"
-                        placeholder="this.responsibleLabel"
-                        fieldString="this.responsibleLabel"
-                    >
-                        <t t-set-slot="option" t-slot-scope="scope">
-                            <div class="d-flex align-items-center">
-                                <img t-if="scope.data?.record?.id"
-                                    t-att-src="this.getAvatarUrl(scope.data.record.id)"
-                                    class="o-mail-Avatar o_avatar rounded me-2"
-                                    alt="Avatar"
-                                />
-                                <span class="text-truncate" t-out="scope.label"/>
-                            </div>
-                        </t>
-                    </Many2XAutocomplete>
-                </div>
-                <div class="mt-2">
-                    <button type="button" class="btn btn-sm btn-primary" aria-label="Assign" t-on-click="this.onClickAssign" t-att-disabled="this.disableAssignButton()">
-                        Assign
-                    </button>
-                    <button type="button" class="btn btn-sm btn-secondary mx-2" aria-label="Discard" t-on-click="this.close">
-                        Discard
-                    </button>
-                </div>
+            <div class="mt-2">
+                <button type="button" class="btn btn-sm btn-primary" aria-label="Assign" t-on-click="this.onClickAssign" t-att-disabled="this.disableAssignButton()">
+                    Assign
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary mx-2" aria-label="Discard" t-on-click="this.close">
+                    Discard
+                </button>
             </div>
-        </div>
+        </PopoverCard>
     </t>
 </templates>

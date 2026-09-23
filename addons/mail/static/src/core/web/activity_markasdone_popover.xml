@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityMarkAsDone">
-        <div class="o-mail-ActivityMarkAsDone card o_popover_card">
-            <div t-if="this.hasHeader" class="card-header bg-inherit pb-0">
+        <PopoverCard class="'o-mail-ActivityMarkAsDone'" darkerInDarkTheme="true" hasHeader="this.hasHeader">
+            <t t-set-slot="header">
                 <h6 class="fw-bolder">Mark Done</h6>
+            </t>
+            <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model.proxy="this.activity().feedback" t-ref="this.textArea"/>
+            <div class="mt-2">
+                <button type="button" class="btn btn-sm btn-primary" aria-label="Done and Schedule Next" t-on-click="this.onClickDoneAndScheduleNext">
+                    Done &amp; Schedule Next
+                </button>
+                <button type="button" class="btn btn-sm btn-primary mx-2" aria-label="Done" t-on-click="this.onClickDone" t-att-disabled="this.disableDoneButton()">
+                    Done
+                </button>
+                <button type="button" class="btn btn-sm btn-link" t-on-click="this.close">
+                    Discard
+                </button>
             </div>
-            <div class="card-body bg-inherit">
-                <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model.proxy="this.activity().feedback" t-ref="this.textArea"/>
-                <div class="mt-2">
-                    <button type="button" class="btn btn-sm btn-primary" aria-label="Done and Schedule Next" t-on-click="this.onClickDoneAndScheduleNext">
-                        Done &amp; Schedule Next
-                    </button>
-                    <button type="button" class="btn btn-sm btn-primary mx-2" aria-label="Done" t-on-click="this.onClickDone" t-att-disabled="this.disableDoneButton()">
-                        Done
-                    </button>
-                    <button type="button" class="btn btn-sm btn-link" t-on-click="this.close">
-                        Discard
-                    </button>
-                </div>
-            </div>
-        </div>
+        </PopoverCard>
     </t>
 </templates>

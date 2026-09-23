@@ -9,8 +9,8 @@ Object.assign(AvatarCard.components, { BadgeTag, TagsList });
 /** @type {AvatarCard} */
 export const avatarCardPatch = {
     /** @override */
-    get hasFooter() {
-        return this.skillTags.length > 0 || super.hasFooter;
+    get hasDetails() {
+        return this.skillTags.length > 0 || super.hasDetails;
     },
     get skillTags() {
         return (
