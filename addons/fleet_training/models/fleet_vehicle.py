@@ -22,6 +22,21 @@ class FleetVehicle(models.Model):
 
     age_years = fields.Integer(string="Fleet Age (years)", compute='_compute_age_years', store=True)
 
+    state = fields.Selection(
+        [
+            ('available', 'Available'),
+            ('assigned', 'Assigned'),
+            ('maintenance', 'In Maintenance'),
+        ],
+        string="Status", default='available', required=True,
+    )
+
+    def action_set_maintenance(self):
+        self.state = 'maintenance'
+
+    def action_set_available(self):
+        self.state = 'available'
+
     @api.depends('acquisition_date')
     def _compute_age_years(self):
         today = fields.Date.context_today(self)
