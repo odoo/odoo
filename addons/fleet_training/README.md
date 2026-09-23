@@ -707,3 +707,50 @@ fleet-wide.
 maintenance records with costs 1500/2500, confirm `maintenance_count == 2` and
 `maintenance_cost_total == 4000.0`; confirm the smart button's domain filters
 to that vehicle; confirm a negative `odometer` raises `ValidationError`.
+
+---
+
+## Chapter 17 — Wizards (`TransientModel`, beyond the tutorial)
+
+**Concept.** A **wizard** is a model declared with `models.TransientModel`
+instead of `models.Model`: its records live in a table that Odoo periodically
+garbage-collects (they're a multi-step *interaction*, not permanent business
+data). Opened with `target="new"` on its action, it renders as a dialog.
+
+**Why?** "Send to Maintenance" (Chapter 9) is a one-click status flip with no
+extra data. Logging a *real* maintenance event needs several fields at once
+(type, cost, odometer, notes) collected together and applied as one atomic
+action - exactly the shape a wizard is for, as opposed to either a bare button
+(too little data) or a whole new permanent record type just for user input.
+
+**Where?**
+- [`wizard/fleet_maintenance_wizard.py`](wizard/fleet_maintenance_wizard.py)
+- [`wizard/fleet_maintenance_wizard_views.xml`](wizard/fleet_maintenance_wizard_views.xml)
+- [`views/fleet_vehicle_views.xml`](views/fleet_vehicle_views.xml) — the header button that opens it
+
+**Code explanation.** `fleet_training.maintenance.wizard` mirrors the fields
+of `fleet_training.maintenance` but adds nothing to the database that
+survives past the interaction - its `action_confirm` method is what actually
+`create()`s the permanent `fleet_training.maintenance` record and calls
+`action_set_maintenance()` on the vehicle, then returns
+`{'type': 'ir.actions.act_window_close'}` to close the dialog. The header
+button uses `%(action_fleet_training_maintenance_wizard)d` (XML ID resolved to
+a numeric action ID at view-load time) with `type="action"` and
+`context="{'default_vehicle_id': id}"` so the wizard opens pre-filled with the
+vehicle being viewed.
+
+**Fleet functionality.** "Log Maintenance..." on a vehicle's header opens a
+dialog to record a full maintenance event (type, odometer, cost, notes) in one
+step, automatically flipping the vehicle to "In Maintenance" - a proper
+workflow next to the earlier bare status-only buttons.
+
+**What changed.** Added `wizard/fleet_maintenance_wizard.py`,
+`wizard/fleet_maintenance_wizard_views.xml`, `wizard/__init__.py`; updated
+`__init__.py`, `views/fleet_vehicle_views.xml`, `security/ir.access.csv`.
+
+**Testing.** Upgrade the module. In the shell: create a wizard record with
+`vehicle_id`, `cost=999`, `odometer=12345`, call `action_confirm()`, confirm
+it returns `ir.actions.act_window_close`, the vehicle's `state` became
+`'maintenance'`, and a matching `fleet_training.maintenance` record now exists
+under `vehicle.maintenance_ids`. In the UI: click "Log Maintenance..." on a
+vehicle form and confirm the dialog opens pre-filled with that vehicle.

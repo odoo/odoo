@@ -52,6 +52,8 @@
                 <header>
                     <button name="action_set_maintenance" type="object" string="Send to Maintenance"
                             class="btn-secondary" invisible="state == 'maintenance'"/>
+                    <button name="%(action_fleet_training_maintenance_wizard)d" type="action" string="Log Maintenance..."
+                            class="btn-secondary" context="{'default_vehicle_id': id}"/>
                     <button name="action_set_available" type="object" string="Mark Available"
                             class="btn-secondary" invisible="state != 'maintenance'"/>
                     <field name="state" widget="statusbar" statusbar_visible="available,assigned,maintenance"/>
