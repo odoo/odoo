@@ -165,3 +165,19 @@ class TestSqlToFlushComposes(unittest.TestCase):
         self.assertEqual(tuple(joined.to_flush), (self.a, self.a, self.a, self.b))
         with_params = SQL("%s", ", ", to_flush=self.b).join([self.inner()] * 3)
         self.assertEqual(tuple(with_params.to_flush), tuple(joined.to_flush))
+
+
+class TestSqlJoinReportsEveryItemsFields(unittest.TestCase):
+    a, b, s = object(), object(), object()
+
+    def test_a_field_inside_a_tuple_item_survives_either_branch(self):
+        items = [(SQL("x", to_flush=self.a),), SQL("y", to_flush=self.b)]
+        for separator in (SQL(" , ", to_flush=self.s), SQL(" %s ", 1, to_flush=self.s)):
+            with self.subTest(code=separator.code):
+                joined = separator.join(items)
+                self.assertEqual(tuple(joined.to_flush), (self.a, self.b, self.s))
+
+    def test_a_single_item_does_not_carry_the_unused_separator(self):
+        for separator in (SQL(" , ", to_flush=self.s), SQL(" %s ", 1, to_flush=self.s)):
+            with self.subTest(code=separator.code):
+                self.assertEqual(tuple(separator.join([1]).to_flush), ())

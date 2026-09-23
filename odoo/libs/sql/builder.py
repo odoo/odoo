@@ -191,20 +191,19 @@ class SQL:
             return SQL.EMPTY
         if len(items) == 1 and isinstance(items[0], SQL):
             return items[0]
+        separator_to_flush = self.__to_flush if len(items) > 1 else ()
         if not self.__params:
             return SQL(
                 self.__code.join("%s" for _ in items),
                 *items,
-                to_flush=self.__to_flush,
+                to_flush=separator_to_flush,
             )
         result = [self] * (len(items) * 2 - 1)
         for index, arg in enumerate(items):
             result[index * 2] = arg
+        items_to_flush = SQL("%s" * len(items), *items).__to_flush
         return SQL("%s" * len(result), *result).with_to_flush(
-            (
-                *(f for arg in items if isinstance(arg, SQL) for f in arg.__to_flush),
-                *self.__to_flush,
-            )
+            (*items_to_flush, *separator_to_flush)
         )
 
     EMPTY: SQL
