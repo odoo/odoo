@@ -10,7 +10,7 @@ patch(DiscussClientAction.prototype, {
         const url = new URL(location.href);
         url.searchParams.delete("email_token");
         browser.history.replaceState(browser.history.state, null, url.toString());
-        browser.addEventListener("popstate", () => this.restoreDiscussThread(this.props));
+        browser.addEventListener("popstate", () => this.restoreDiscussThread(this.action()));
     },
     /** @override */
     getActiveId() {
