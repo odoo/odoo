@@ -102,7 +102,7 @@ class PostgreSQLHandler(logging.Handler):
                         """
                         INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func, metadata)
                         VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """,
+                        """,
                         (*val, json_dumps(metadata)),
                     )
                     return
@@ -111,7 +111,7 @@ class PostgreSQLHandler(logging.Handler):
                 """
                 INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
-            """,
+                """,
                 val,
             )
 
@@ -486,9 +486,6 @@ def init_logger() -> None:
 
 
 ACCESS_LOGGER: Final[str] = "odoo.service.http.access"
-# The access logger sits under "odoo" but keeps werkzeug's standing: INFO unless a
-# preset or log_handler names it, so --log-level=debug does not print every static
-# request.
 DEFAULT_LOG_CONFIGURATION: Final[list[str]] = [
     f"{ACCESS_LOGGER}:INFO",
     "odoo.http.rpc.request:INFO",
