@@ -709,7 +709,7 @@ def _get_fetch_term(model: ModelLike, field: Field, query: Query) -> SQL:
         model._check_field_access(field, "read")
         return term
     column = model._field_to_sql(model._table, field.name, query)
-    sql = SQL("%s", column, to_flush=(f for f in column.to_flush if f != field))
+    sql = column.with_to_flush(f for f in column.to_flush if f != field)
     if (
         not sql.params
         and not sql.to_flush

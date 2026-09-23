@@ -135,3 +135,31 @@ class TestPgVarcharRejectsNonsense(unittest.TestCase):
         self.assertEqual(pg_varchar(), "VARCHAR")
         self.assertEqual(pg_varchar(0), "VARCHAR")
         self.assertEqual(pg_varchar(64), "VARCHAR(64)")
+
+
+class TestSqlToFlushComposes(unittest.TestCase):
+    a, b = object(), object()
+
+    def inner(self) -> Any:
+        return SQL('"t"."x"', to_flush=self.a)
+
+    def test_every_wrapping_spelling_adds_the_fields_it_names(self):
+        for sql in (
+            SQL("%s", self.inner(), to_flush=self.b),
+            SQL(self.inner(), to_flush=self.b),
+            SQL("(%s)", self.inner(), to_flush=self.b),
+            SQL("%s ", self.inner(), to_flush=self.b),
+        ):
+            with self.subTest(code=sql.code):
+                self.assertEqual(tuple(sql.to_flush), (self.a, self.b))
+
+    def test_with_to_flush_replaces(self):
+        sql = self.inner().with_to_flush([self.b])
+        self.assertEqual(tuple(sql.to_flush), (self.b,))
+        self.assertEqual(sql.code, '"t"."x"')
+        self.assertEqual(tuple(self.inner().with_to_flush(()).to_flush), ())
+
+    def test_join_names_the_separator_fields_once(self):
+        sep = SQL(", ", to_flush=self.b)
+        joined = sep.join([self.inner(), self.inner(), self.inner()])
+        self.assertEqual(tuple(joined.to_flush), (self.a, self.a, self.a, self.b))

@@ -103,10 +103,7 @@ class SQL:
             raise TypeError(msg)
         self.__code = source.__code
         self.__params = source.__params
-        if to_flush is None:
-            self.__to_flush = source.__to_flush
-        else:
-            self.__to_flush = self.__normalize_to_flush(to_flush)
+        self.__to_flush = source.__to_flush + self.__normalize_to_flush(to_flush)
 
     @staticmethod
     def __normalize_to_flush(
@@ -131,7 +128,9 @@ class SQL:
         return self.__to_flush
 
     def with_to_flush(self, to_flush: Iterable[Field]) -> SQL:
-        return SQL("%s", self, to_flush=to_flush)
+        sql = SQL(self)
+        sql.__to_flush = self.__normalize_to_flush(to_flush)
+        return sql
 
     def render(self) -> str:
         if not self.__params:
@@ -194,7 +193,7 @@ class SQL:
             return SQL(
                 self.__code.join("%s" for _ in items),
                 *items,
-                to_flush=self.__to_flush * (len(items) - 1) if items else (),
+                to_flush=self.__to_flush,
             )
         result = [self] * (len(items) * 2 - 1)
         for index, arg in enumerate(items):
