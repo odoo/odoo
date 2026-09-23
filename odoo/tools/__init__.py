@@ -105,7 +105,6 @@ from odoo.libs.sql import (
     get_index_name,
     pattern_to_translated_trigram_pattern,
     pg_varchar,
-    reverse_order,
     value_to_translated_trigram_pattern,
 )
 from .translate import LazyTranslate, _, html_translate, xml_translate
@@ -214,7 +213,6 @@ __all__ = [
     "replace_exceptions",
     "reset_cached_properties",
     "resolve_hash_signed",
-    "reverse_order",
     "single_email_re",
     "split_every",
     "str2bool",

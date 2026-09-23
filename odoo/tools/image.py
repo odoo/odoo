@@ -1,3 +1,5 @@
+from collections.abc import Iterator
+from contextlib import contextmanager
 from typing import Literal
 
 from PIL import Image
@@ -45,9 +47,7 @@ __all__ = [
     "ImageDecodeError",
     "ImageProcess",
     "ImageTooLargeError",
-    "LazyTranslate",
     "NotWebpError",
-    "UserError",
     "average_dominant_color",
     "base64_to_image",
     "binary_to_image",
@@ -64,21 +64,26 @@ __all__ = [
 _lt = LazyTranslate("base")
 
 
+@contextmanager
+def _decoded_as_user_error() -> Iterator[None]:
+    try:
+        yield
+    except ImageDecodeError as e:
+        raise UserError(_lt("This file could not be decoded as an image file.")) from e
+    except ImageTooLargeError as e:
+        raise UserError(
+            _lt(
+                "Too large image (above %sMpx), reduce the image size.",
+                str(IMAGE_MAX_RESOLUTION / 1e6),
+            )
+        ) from e
+
+
 class ImageProcess(_ImageProcessBase):
     def __init__(self, source: bytes | None, verify_resolution: bool = True) -> None:
         try:
-            super().__init__(source, verify_resolution)
-        except ImageDecodeError as e:
-            raise UserError(
-                _lt("This file could not be decoded as an image file.")
-            ) from e
-        except ImageTooLargeError as e:
-            raise UserError(
-                _lt(
-                    "Too large image (above %sMpx), reduce the image size.",
-                    str(IMAGE_MAX_RESOLUTION / 1e6),
-                )
-            ) from e
+            with _decoded_as_user_error():
+                super().__init__(source, verify_resolution)
         except ValueError as e:
             raise UserError(str(e)) from e
 
@@ -109,17 +114,13 @@ def image_process(
 
 
 def binary_to_image(source: bytes) -> Image.Image:
-    try:
+    with _decoded_as_user_error():
         return _binary_to_image_base(source)
-    except ImageDecodeError as e:
-        raise UserError(_lt("This file could not be decoded as an image file.")) from e
 
 
 def base64_to_image(base64_source: str | bytes) -> Image.Image:
-    try:
+    with _decoded_as_user_error():
         return _base64_to_image_base(base64_source)
-    except ImageDecodeError as e:
-        raise UserError(_lt("This file could not be decoded as an image file.")) from e
 
 
 def get_webp_size(source: bytes) -> tuple[int, int] | None:
