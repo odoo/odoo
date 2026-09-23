@@ -1101,14 +1101,6 @@ class IrActionsReport(models.Model):
         specific_paperformat_args: dict[str, str] | None = None,
     ) -> str:
         args = specific_paperformat_args or {}
-        for dead_attr in ("data-report-header-spacing", "data-report-dpi"):
-            if dead_attr in args:
-                _logger.warning(
-                    "_prepare_paperformat_css: %r is a wkhtmltopdf-specific attribute "
-                    "with no WeasyPrint equivalent and is silently ignored. "
-                    "Remove it from the report template to suppress this warning.",
-                    dead_attr,
-                )
         _force_landscape = args.get("data-report-landscape")
         if _force_landscape and _force_landscape not in ("False", "0", "false", ""):
             landscape = True

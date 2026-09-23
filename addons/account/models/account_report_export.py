@@ -205,8 +205,6 @@ class AccountReportExport(models.Model):
                     annotations_to_render.append(
                         {
                             "number": str(number),
-                            # wkhtmltopdf adds a <br> before tags such as p and div. This makes the first line of the body go down one line.
-                            # we are losing some formatting here, but annotations shouldn't have complicated tags in them.
                             "body": markupsafe.Markup("<br/>").join(
                                 html2plaintext(annotation["body"]).split("\n")
                             ),
