@@ -146,6 +146,80 @@ class _ShippedRows:
         return rows
 
 
+def _ensure_ir_access_table(cr) -> None:
+    # a database older than the ir.access model has no table yet: a pre-migrate
+    # runs before base's schema update, so create what this script writes, with
+    # the column types the ORM gives these fields, and let base's update add
+    # the rest (constraints, foreign keys, the other columns)
+    cr.execute("SELECT to_regclass('public.ir_access')")
+    if cr.fetchone()[0] is not None:
+        return
+    cr.execute(
+        """
+        CREATE TABLE ir_access (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR NOT NULL,
+            active BOOLEAN,
+            model_id INTEGER NOT NULL,
+            group_id INTEGER NOT NULL,
+            kind VARCHAR NOT NULL,
+            guard_scope VARCHAR,
+            operation VARCHAR NOT NULL,
+            domain VARCHAR,
+            for_read BOOLEAN,
+            for_write BOOLEAN,
+            for_create BOOLEAN,
+            for_unlink BOOLEAN,
+            create_uid INTEGER,
+            write_uid INTEGER,
+            create_date TIMESTAMP,
+            write_date TIMESTAMP
+        )
+        """
+    )
+    _logger.info("ir.access conversion: created the ir_access table")
+
+
+def _ensure_group_everyone(cr) -> None:
+    # every guard and every group-less access line converts to base.group_everyone,
+    # which a database older than the ir.access model does not have yet; create
+    # it as base_groups.xml declares it, implied by the three user types, and let
+    # base's data load update it
+    cr.execute(
+        "SELECT 1 FROM ir_model_data WHERE module = 'base' AND name = 'group_everyone'"
+    )
+    if cr.fetchone():
+        return
+    cr.execute(
+        """
+        INSERT INTO res_groups (name, comment, create_uid, write_uid, create_date,
+                                write_date)
+        VALUES ('{"en_US": "Role / Everyone"}'::jsonb,
+                '{"en_US": "Every user, internal, portal or public: an access given to it is given to all."}'::jsonb,
+                1, 1, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC')
+        RETURNING id
+        """
+    )
+    [everyone] = cr.fetchone()
+    cr.execute(
+        """
+        INSERT INTO ir_model_data (module, name, model, res_id, noupdate)
+        VALUES ('base', 'group_everyone', 'res.groups', %s, false)
+        """,
+        [everyone],
+    )
+    cr.execute(
+        """
+        INSERT INTO res_groups_implied_rel (gid, hid)
+        SELECT res_id, %s FROM ir_model_data
+         WHERE module = 'base'
+           AND name IN ('group_user', 'group_portal', 'group_public')
+        """,
+        [everyone],
+    )
+    _logger.info("ir.access conversion: created base.group_everyone")
+
+
 def migrate(cr, version):
     if not version:
         return
@@ -155,6 +229,8 @@ def migrate(cr, version):
     [rule_count] = cr.fetchone()
     if not (acl_count or rule_count):
         return
+    _ensure_ir_access_table(cr)
+    _ensure_group_everyone(cr)
     acl_lines, rules, implications, module_deps = read_database(cr)
     rows, report = convert(acl_lines, rules, implications, module_deps=module_deps)
     for row in rows:

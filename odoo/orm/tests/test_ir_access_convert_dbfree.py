@@ -1,3 +1,5 @@
+import ast
+
 from odoo.addons.base.models.ir_access_convert import (
     GROUP_EVERYONE,
     NOTHING,
@@ -498,6 +500,31 @@ def test_true_domains_normalize_to_empty():
     assert normalize_domain("[(1, '=', 1)]") == ""
     assert normalize_domain('[(1,"=",1)]') == ""
     assert normalize_domain("[(0, '=', 1)]") == "[(0, '=', 1)]"
+
+
+def test_a_commented_domain_normalizes_to_one_line_that_still_parses():
+    domain = """[("user_id.employee_id", "any", [
+        "|",
+        ("parent_id", "child_of", user.employee_id.id),      # direct manager
+        ("department_id.manager_id.user_id", "=", user.id),  # department manager
+    ])]"""
+    normalized = normalize_domain(domain)
+    assert "\\n" not in normalized
+    assert "#" not in normalized
+    assert ast.literal_eval(
+        normalized.replace("user.employee_id.id", "1").replace("user.id", "1")
+    ) == [
+        (
+            "user_id.employee_id",
+            "any",
+            [
+                "|",
+                ("parent_id", "child_of", 1),
+                ("department_id.manager_id.user_id", "=", 1),
+            ],
+        )
+    ]
+    assert normalize_domain("[('name', '=', 'a # b')]") == "[('name', '=', 'a # b')]"
 
 
 def test_exclusive_roles_are_never_combined():

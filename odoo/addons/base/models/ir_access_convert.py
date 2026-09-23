@@ -1,5 +1,7 @@
+import io
 import itertools
 import re
+import tokenize
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
@@ -102,7 +104,28 @@ class _Rule:
 def normalize_domain(domain: str | None) -> str:
     if not domain or _TRUE_DOMAIN_RE.match(domain):
         return TRUE
-    return domain.strip()
+    return _without_comments(domain).strip()
+
+
+def _without_comments(domain: str) -> str:
+    # a rule's domain is Python source and may carry `#` comments; a CSV cell
+    # keeps it on one line, where the first comment would swallow the rest
+    if "#" not in domain:
+        return domain
+    try:
+        comments = [
+            token.start
+            for token in tokenize.generate_tokens(io.StringIO(domain).readline)
+            if token.type == tokenize.COMMENT
+        ]
+    except tokenize.TokenError, SyntaxError:
+        return domain
+    if not comments:
+        return domain
+    lines = domain.splitlines()
+    for row, col in comments:
+        lines[row - 1] = lines[row - 1][:col]
+    return " ".join(" ".join(line.split()) for line in lines if line.strip())
 
 
 def operation_string(ops: Iterable[str]) -> str:
