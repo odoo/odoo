@@ -12,14 +12,12 @@ from rjsmin import jsmin as rjsmin
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import profiler
 from odoo.tools.assets.constants import DOTTED_ASSET_EXTENSIONS as EXTENSIONS
-from odoo.tools.assets.esbuild import (
-    has_nested_template_literal,
-    minify_js,
-)
+from odoo.tools.assets.esbuild import minify_js
 from odoo.tools.assets.esm_graph import (
     _parse_odoo_module_header,
     url_to_module_path,
 )
+from odoo.tools.assets.js_scan import has_nested_template_literal
 from odoo.tools.json import scriptsafe as json
 from odoo.tools.misc import file_open, file_path
 from odoo.tools.sass_embedded import (

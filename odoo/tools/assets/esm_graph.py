@@ -9,6 +9,7 @@ from pathlib import Path
 
 from odoo.libs.asset_log import get_asset_logger, log_event
 from odoo.libs.debug_log import DebugLog
+from odoo.tools.assets import js_scan
 from odoo.tools.assets.constants import DOTTED_ASSET_EXTENSIONS as EXTENSIONS
 from odoo.tools.assets.esm_lexer import lex_module
 from odoo.tools.files import file_open, file_path
@@ -90,11 +91,9 @@ _MODULE_SYNTAX_RE = re.compile(
     re.MULTILINE,
 )
 
-_JS_OPAQUE_RE = re.compile(r"/\*.*?\*/|`[^`]*`", re.DOTALL)
-
 
 def has_module_syntax(content: str) -> bool:
-    return bool(_MODULE_SYNTAX_RE.search(_JS_OPAQUE_RE.sub("", content)))
+    return bool(_MODULE_SYNTAX_RE.search(js_scan.scrub(content)))
 
 
 @functools.lru_cache(maxsize=16384)
@@ -121,6 +120,7 @@ _ESM_EXPORT_PATTERNS: tuple[tuple[str, str], ...] = (
         r"export\s+(?:const|let|var|function\*?|class|async\s+function\*?)\s+(\w+)",
     ),
     ("destructured", r"export\s+(?:const|let|var)\s*\{([^}]+)\}\s*="),
+    ("array_destructured", r"export\s+(?:const|let|var)\s*\[([^\]]+)\]\s*="),
     ("list_from", r'export\s*\{([^}]+)\}\s*from\s*["\']([^"\']+)["\']'),
     ("list", r"export\s*\{([^}]+)\}"),
     ("star_from", r'export\s*\*\s*from\s*["\']([^"\']+)["\']'),
@@ -165,7 +165,7 @@ def _get_import_specifiers(src: str) -> set[str]:
         specs.update(lexed.get("starFrom") or ())
         specs.update(lexed.get("reexportFrom") or ())
         return specs
-    scrubbed = _JS_OPAQUE_RE.sub("", src)
+    scrubbed = js_scan.scrub(src)
     specs = {
         match.group("spec") or match.group("side")
         for match in _TRANSITIVE_IMPORT_RE.finditer(scrubbed)
@@ -350,26 +350,34 @@ def _extract_esm_exports(
             expand_star(raw_target)
         return names, lexed["hasDefault"]
 
-    src = _JS_OPAQUE_RE.sub("", src)
+    src = js_scan.scrub(src)
+    has_default = bool(_ESM_EXPORT_DEFAULT_RE.search(src))
     for kind, pattern in _ESM_EXPORT_PATTERNS_COMPILED:
         for match in pattern.finditer(src):
             if kind == "decl":
                 names.add(match.group(1))
-            elif kind in ("list", "destructured", "list_from"):
+            elif kind in ("list", "destructured", "array_destructured", "list_from"):
                 for raw in match.group(1).split(","):
                     token = raw.strip().split(" as ")[-1]
                     if ":" in token:
                         token = token.rsplit(":", 1)[-1]
                     if "=" in token:
                         token = token.split("=", 1)[0]
-                    token = token.strip()
-                    if token and token != "default":
+                    token = token.strip().removeprefix("...").strip()
+                    if token == "default":
+                        has_default = True
+                    elif token:
                         names.add(token)
             elif kind == "ns_from":
                 names.add(match.group(1))
             elif kind == "star_from":
                 expand_star(match.group(1))
-    has_default = bool(_ESM_EXPORT_DEFAULT_RE.search(src))
+    _debug.logic(
+        "esm_graph.exports_by_regex",
+        source_bytes=len(src),
+        names=len(names),
+        default=has_default,
+    )
     return names, has_default
 
 

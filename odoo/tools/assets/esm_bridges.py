@@ -13,10 +13,10 @@ from odoo.libs.asset_log import get_asset_logger, log_event
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.hashing import cache_hash
 from odoo.tools import config
+from odoo.tools.assets import js_scan
 from odoo.tools.assets.constants import ESM_BRIDGE_REFRESH_DAYS
 from odoo.tools.assets.esm_graph import (
     _IMPORT_ANY_RE,
-    _JS_OPAQUE_RE,
     _bridge_shim_source,
     _BridgeExportResolver,
     _extract_esm_exports,
@@ -446,7 +446,7 @@ def _static_edges(src: str) -> list[tuple[str, str | None]]:
             if record["n"]
         ]
     edges: list[tuple[str, str | None]] = []
-    src = _JS_OPAQUE_RE.sub("", src)
+    src = js_scan.scrub(src)
     for match in _IMPORT_ANY_RE.finditer(src):
         specifier = match.group("spec") or match.group("side")
         if match.group("default") is not None or match.group("mixed") is not None:

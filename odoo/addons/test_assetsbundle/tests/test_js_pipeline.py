@@ -4,9 +4,9 @@ from unittest.mock import patch
 
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import config
-from odoo.tools.assets.esbuild import has_nested_template_literal
 from odoo.tools.assets.esm_graph import _MODULE_SYNTAX_RE
 from odoo.tools.assets.esm_registry import esm_registry
+from odoo.tools.assets.js_scan import has_nested_template_literal
 from odoo.tools.json import scriptsafe as json
 
 from .common import asset_file, make_bundle
@@ -262,13 +262,14 @@ class TestNestedTemplateLiteralDetection(BaseCase):
         ):
             self.assertFalse(has_nested_template_literal(source), source)
 
-    def test_a_backtick_in_a_comment_or_string_is_a_known_miss(self):
+    def test_a_backtick_in_a_comment_or_string_does_not_hide_nesting(self):
         for source in (
             "// don't use ` here\nconst a = `${`n  o`}`;",
             'const c = "a ` b";\nconst a = `${`n  o`}`;',
+            'const a = `${ "}" + `n  o` }`;',
         ):
             with self.subTest(source=source):
-                self.assertFalse(has_nested_template_literal(source))
+                self.assertTrue(has_nested_template_literal(source))
 
     def test_rjsmin_really_does_break_what_is_flagged(self):
         from rjsmin import jsmin

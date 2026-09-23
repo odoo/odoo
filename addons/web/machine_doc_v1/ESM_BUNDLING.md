@@ -405,9 +405,12 @@ Worker robustness contract (`esm_lexer.py`):
   the 10s budget on every module (which would be minutes across a big bundle).
 - **Discovery parity.** The regex fallback (`_IMPORT_ANY_RE`) covers named /
   default / namespace / mixed (`import D, { y } from …`) / bindingless
-  side-effect imports, matching the worker's specifier discovery. `has_default`
-  can differ cosmetically for `export { x as default }`, harmless because the
-  shim emits the default block unconditionally.
+  side-effect imports, matching the worker's specifier discovery. It reads the
+  source through `odoo/tools/assets/js_scan.py`, which blanks comments, template
+  literals, regex literals and every string that is not a specifier, so a
+  backtick in a comment or an import spelled inside a string moves nothing;
+  array-destructured exports and `export { x as default }` are read as the
+  worker reads them.
 
 ## Logger taxonomy (Python ↔ JS)
 

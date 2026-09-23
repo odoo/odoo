@@ -113,39 +113,6 @@ def _get_esbuild_path() -> str | None:
     return _ESBUILD_PATH
 
 
-_TEMPLATE_LITERAL_TOKENS = re.compile(r"\\.|`|\$\{|\{|\}", re.DOTALL)
-
-
-def has_nested_template_literal(source: str) -> bool:
-    if "`" not in source or "${" not in source:
-        return False
-    stack: list[str | int] = []
-    for match in _TEMPLATE_LITERAL_TOKENS.finditer(source):
-        token = match.group()
-        if token[0] == "\\":
-            continue
-        if token == "`":
-            if stack and stack[-1] == "tpl":
-                stack.pop()
-            elif any(entry != "tpl" for entry in stack):
-                return True
-            else:
-                stack.append("tpl")
-        elif token == "${":
-            if stack and stack[-1] == "tpl":
-                stack.append(0)
-        elif token == "{":
-            if stack and stack[-1] != "tpl":
-                stack[-1] = int(stack[-1]) + 1
-        elif stack and stack[-1] != "tpl":
-            depth = int(stack[-1])
-            if depth:
-                stack[-1] = depth - 1
-            else:
-                stack.pop()
-    return False
-
-
 def minify_js(
     source: str,
     *,
