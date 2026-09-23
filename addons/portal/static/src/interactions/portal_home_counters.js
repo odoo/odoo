@@ -36,7 +36,10 @@ export class PortalHomeCounters extends Interaction {
 
         const proms = range(Math.min(numberRpc, neededKeys.length)).map(async (i) => {
             const documentsCountersData = await rpc("/my/counters", {
-                counters: pick(needed, ...neededKeys.slice(i * counterByRpc, (i + 1) * counterByRpc)),
+                counters: pick(
+                    needed,
+                    ...neededKeys.slice(i * counterByRpc, (i + 1) * counterByRpc)
+                ),
             });
             Object.keys(documentsCountersData).forEach((counterName) => {
                 const documentsCounterEl = this.el.querySelector(
@@ -50,7 +53,6 @@ export class PortalHomeCounters extends Interaction {
                 ) {
                     const cardEl = documentsCounterEl.closest(".o_portal_index_card");
                     if (cardEl.dataset.showInPortal !== "false") {
-                        documentsCounterEl.classList.remove("d-none");
                         cardEl.classList.remove("d-none");
                     }
                 }
