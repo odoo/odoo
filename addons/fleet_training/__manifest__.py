@@ -27,6 +27,7 @@ on top of a realistic Fleet Management use case.
         'views/res_partner_views.xml',
         'reports/fleet_vehicle_report.xml',
         'views/fleet_vehicle_analysis_views.xml',
+        'data/ir_cron_data.xml',
     ],
     'application': True,
 }

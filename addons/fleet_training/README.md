@@ -754,3 +754,42 @@ it returns `ir.actions.act_window_close`, the vehicle's `state` became
 `'maintenance'`, and a matching `fleet_training.maintenance` record now exists
 under `vehicle.maintenance_ids`. In the UI: click "Log Maintenance..." on a
 vehicle form and confirm the dialog opens pre-filled with that vehicle.
+
+---
+
+## Chapter 18 — Scheduled Actions (`ir.cron`, beyond the tutorial)
+
+**Concept.** An `ir.cron` record runs a model method on a fixed schedule with
+no user involved - `state="code"` plus a `code` field (here,
+`model._cron_check_insurance_expiry()`) that the scheduler executes as
+`base.user_root` at the configured interval.
+
+**Why?** "Insurance is expiring soon" is not something a user should have to
+remember to go check - a document/reminder feature like this only works if
+something runs in the background and surfaces it proactively.
+
+**Where?**
+- [`models/fleet_vehicle.py`](models/fleet_vehicle.py) — `insurance_expiry_date`, `_cron_check_insurance_expiry`
+- [`data/ir_cron_data.xml`](data/ir_cron_data.xml)
+
+**Code explanation.** `_cron_check_insurance_expiry` is an `@api.model`
+method (it doesn't act on `self` as a recordset, it searches for the relevant
+vehicles itself) that finds vehicles whose `insurance_expiry_date` is within
+30 days, and calls `activity_schedule` (from `mail.activity.mixin`, Chapter
+13) to create a "To-Do" activity - reusing Chapter 13's mixin instead of
+inventing a new notification mechanism. It first checks for an existing
+identical activity so re-running the cron daily doesn't create duplicates.
+
+**Fleet functionality.** Vehicles with an insurance expiry date within 30 days
+now automatically get a "Renew vehicle insurance" to-do activity, checked once
+a day.
+
+**What changed.** Updated `models/fleet_vehicle.py` (field + cron method,
+`views/fleet_vehicle_views.xml`); added `data/ir_cron_data.xml`.
+
+**Testing.** Upgrade the module. In the shell: create one vehicle expiring in
+10 days and one in 90 days, run `_cron_check_insurance_expiry()`, confirm only
+the 10-day vehicle gets an activity; run it again and confirm the count stays
+at 1 (no duplicate). In the UI: Settings > Technical > Automation > Scheduled
+Actions shows "Fleet Training: Insurance Expiry Reminder" and can be triggered
+manually.
