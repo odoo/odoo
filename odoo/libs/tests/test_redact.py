@@ -322,3 +322,26 @@ class TestBoundedMaskText:
         token = "ghp_" + "a" * 36
         kept = redact.mask_text("x" * 20 + " " + token + " tail", 30)
         assert "aaaa" not in kept
+
+
+class TestCounters:
+    def test_a_counted_secret_keeps_its_number(self):
+        assert (
+            redact.mask_text("token_count=12 secret_length: 40")
+            == "token_count=12 secret_length: 40"
+        )
+        assert redact.mask_data({"token_count": 12, "tokens_total": "7"}) == {
+            "token_count": 12,
+            "tokens_total": "7",
+        }
+        assert redact.dump_masked({"token_count": 12}, 100) == '{"token_count": 12}'
+
+    @pytest.mark.parametrize(
+        "text",
+        ["token=12345", "password_count=x9", "secret_size=big", "token_count=abc1"],
+    )
+    def test_a_value_that_is_not_a_plain_count_is_masked(self, text):
+        assert redact.MASK in redact.mask_text(text)
+
+    def test_a_boolean_is_not_a_count(self):
+        assert redact.mask_data({"api_key_len": True}) == {"api_key_len": redact.MASK}

@@ -12,8 +12,6 @@ if typing.TYPE_CHECKING:
 __all__ = [
     "MASK",
     "REGISTERED_PATTERNS",
-    "SECRET_SHAPES",
-    "SENSITIVE_KEY_FRAGMENTS",
     "dump_masked",
     "find_secret_shapes",
     "is_sensitive_key",
@@ -27,7 +25,7 @@ _logger = logging.getLogger(__name__)
 
 MASK = "***REDACTED***"
 
-SENSITIVE_KEY_FRAGMENTS: tuple[str, ...] = (
+_SENSITIVE_KEY_FRAGMENTS: tuple[str, ...] = (
     "password",
     "passwd",
     "pwd",
@@ -75,7 +73,7 @@ _VALUE_SHAPES: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("bearer_token", re.compile(r"(?i:(?<=\bbearer\s))\s*[A-Za-z0-9._~+/-]{8,}=*")),
 )
 
-SECRET_SHAPES: tuple[tuple[str, re.Pattern[str]], ...] = (
+_SECRET_SHAPES: tuple[tuple[str, re.Pattern[str]], ...] = (
     *((name, re.compile(pattern, re.IGNORECASE)) for name, pattern in _LABEL_SHAPES),
     *_VALUE_SHAPES,
 )
@@ -90,7 +88,7 @@ _URL_IN_TEXT = re.compile(r"https?://[^\s'\"<>]+")
 _SENSITIVE_KEY = re.compile(
     "|".join(
         "auth(?!or)" if fragment == "auth" else re.escape(fragment)
-        for fragment in SENSITIVE_KEY_FRAGMENTS
+        for fragment in _SENSITIVE_KEY_FRAGMENTS
     )
 )
 
@@ -102,7 +100,7 @@ _SENSITIVE_KEY_TAIL = re.compile(
     "(?:"
     + "|".join(
         "auth(?!or)" if fragment == "auth" else re.escape(fragment)
-        for fragment in SENSITIVE_KEY_FRAGMENTS
+        for fragment in _SENSITIVE_KEY_FRAGMENTS
     )
     + ")(?=[_-]|$)"
 )
@@ -130,7 +128,7 @@ def is_sensitive_key(key: object) -> bool:
 def find_secret_shapes(text: str) -> list[str]:
     if not text:
         return []
-    return [name for name, pattern in SECRET_SHAPES if pattern.search(text)]
+    return [name for name, pattern in _SECRET_SHAPES if pattern.search(text)]
 
 
 def _apply_registered(value: str) -> str:
@@ -172,6 +170,27 @@ def mask_url(url: str) -> str:
     )
 
 
+# a sensitive word counting something (token_count, secret_length) whose value
+# is a plain number carries no secret
+_COUNTER_KEY = re.compile(r"(?:^|[_-])(?:count|total|length|len|size|limit|ttl)$")
+_DIGITS = re.compile(r"\d+")
+
+
+def _is_counter(key: object, value: typing.Any) -> bool:
+    if isinstance(value, bool):
+        return False
+    if isinstance(value, str):
+        if not _DIGITS.fullmatch(value):
+            return False
+    elif not isinstance(value, int):
+        return False
+    return _COUNTER_KEY.search(str(key).lower()) is not None
+
+
+def _masks(key: object, value: typing.Any) -> bool:
+    return is_sensitive_key(key) and not _is_counter(key, value)
+
+
 def _mask_key_values(text: str) -> str:
     parts: list[str] = []
     done = 0
@@ -179,7 +198,11 @@ def _mask_key_values(text: str) -> str:
         if key.start() < done or not _SENSITIVE_KEY_TAIL.search(key[0].lower()):
             continue
         value = _KEY_VALUE_AFTER.match(text, key.end())
-        if value is None:
+        if value is None or (
+            value["bare"] is not None
+            and value["scheme"] is None
+            and _is_counter(key[0], value["bare"])
+        ):
             continue
         parts.append(text[done : value.start()])
         parts.append(value["sep"])
@@ -298,7 +321,7 @@ def dump_masked(
                     write(", ")
                 write(json.dumps(_json_key(key)))
                 write(": ")
-                if is_sensitive_key(key) or (pair and key == "value"):
+                if _masks(key, item) or (pair and key == "value"):
                     write(json.dumps(MASK))
                 else:
                     emit(item, depth + 1)
@@ -347,9 +370,7 @@ def mask_data(data: typing.Any, *, max_depth: int = 50, _depth: int = 0) -> typi
         pair = _is_sensitive_pair(data)
         return {
             key: (
-                MASK
-                if is_sensitive_key(key) or (pair and key == "value")
-                else walk(value)
+                MASK if _masks(key, value) or (pair and key == "value") else walk(value)
             )
             for key, value in data.items()
         }
