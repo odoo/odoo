@@ -7,6 +7,7 @@ from operator import itemgetter
 import babel
 
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.locale import py_to_js_locale
 
 from .files import file_open
 
@@ -89,13 +90,11 @@ def get_lang(env: Environment, lang_code: str | None = None) -> LangData:
 def babel_locale_parse(lang_code: str | None) -> babel.Locale:
     if lang_code:
         try:
-            return babel.Locale.parse(lang_code)
-        except Exception:  # noqa: S110  an unknown lang_code falls through to Locale.default() below
-            pass
-    try:
-        locale = babel.Locale.default()
-        _debug.logic("locale.babel_defaulted", requested=lang_code, locale=str(locale))
-        return locale
-    except Exception:
-        _debug.logic("locale.babel_fallback_en_US", requested=lang_code)
-        return babel.Locale.parse("en_US")
+            return babel.Locale.parse(py_to_js_locale(lang_code), sep="-")
+        except (ValueError, TypeError, babel.UnknownLocaleError) as exc:
+            _debug.logic(
+                "locale.babel_fallback_en_US",
+                requested=lang_code,
+                error=type(exc).__name__,
+            )
+    return babel.Locale.parse("en_US")
