@@ -101,6 +101,19 @@ class TestPushRouteAdmission(DeviceHttpCase):
             "the retry replays the body as received, not the redacted log copy",
         )
 
+    def test_an_empty_size_limit_is_the_default_not_zero_bytes(self):
+        # a device that predates the column's default holds NULL there
+        self.env.cr.execute(
+            "UPDATE device_device SET max_payload_size = NULL WHERE id = %s",
+            [self.device.id],
+        )
+        self.device.invalidate_recordset(["max_payload_size"])
+
+        response = self._push(json.dumps({"reading": 1}).encode())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self._rows().state, "success")
+
     def test_a_wrong_token_leaves_no_row(self):
         response = self._push(token="not-the-token")
 

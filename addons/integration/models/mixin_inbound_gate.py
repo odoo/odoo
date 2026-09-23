@@ -25,6 +25,8 @@ _logger = logging.getLogger(__name__)
 
 _OMITTED_PAYLOAD_HEAD_CHARS = 512
 
+DEFAULT_MAX_PAYLOAD_SIZE = 1024 * 1024
+
 # (dbname, gate model, gate id, condition) -> when it was last reported
 _STANDING_CONDITIONS_REPORTED: dict[tuple, float] = {}
 
@@ -101,7 +103,7 @@ class MixinInboundGate(models.AbstractModel):
         "Leave empty to allow all IPs."
     )
     max_payload_size = fields.Integer(
-        default=1048576,
+        default=DEFAULT_MAX_PAYLOAD_SIZE,
         help="Maximum allowed payload size for DoS prevention. Default: 1MB",
     )
 
@@ -200,7 +202,8 @@ class MixinInboundGate(models.AbstractModel):
         httprequest = request.httprequest
         remote_addr = httprequest.remote_addr
         content_length = httprequest.content_length
-        if content_length and content_length > self.max_payload_size:
+        limit = self._inbound_max_payload_size()
+        if content_length and content_length > limit:
             self._record_inbound_verdict(
                 False,
                 413,
@@ -211,12 +214,12 @@ class MixinInboundGate(models.AbstractModel):
             )
             raise Refused(
                 413,
-                f"Request exceeds maximum size of {self.max_payload_size // 1024}KB",
+                f"Request exceeds maximum size of {limit // 1024}KB",
                 "payload_too_large",
-                detail={"limit_bytes": self.max_payload_size},
+                detail={"limit_bytes": limit},
             )
         # A body past the limit is refused while it is still being read.
-        httprequest.max_content_length = self.max_payload_size or None
+        httprequest.max_content_length = limit
         try:
             body = httprequest.get_data(cache=True)
         except RequestEntityTooLarge:
@@ -230,9 +233,9 @@ class MixinInboundGate(models.AbstractModel):
             )
             raise Refused(
                 413,
-                f"Request exceeds maximum size of {self.max_payload_size // 1024}KB",
+                f"Request exceeds maximum size of {limit // 1024}KB",
                 "payload_too_large",
-                detail={"limit_bytes": self.max_payload_size},
+                detail={"limit_bytes": limit},
             ) from None
         # The verdict is written on its own cursor: a refusal raises, the
         # request rolls back, and the refusal must outlive that.
@@ -450,11 +453,7 @@ class MixinInboundGate(models.AbstractModel):
                     "caller_limited" if status == 429 else "ip_not_allowed",
                 )
 
-        if (
-            body is not None
-            and self.max_payload_size
-            and len(body) > self.max_payload_size
-        ):
+        if body is not None and len(body) > self._inbound_max_payload_size():
             return (
                 False,
                 413,
@@ -767,6 +766,18 @@ class MixinInboundGate(models.AbstractModel):
             path=httprequest.path if httprequest else None,
             **collapse,
         )
+
+    def _inbound_max_payload_size(self) -> int:
+        """Return the largest body, in bytes, the gate admits.
+
+        :return: the gate's own limit, or the field default when it has none
+        :rtype: int
+        """
+        self.check_singleton()
+        # A row that predates the field's default holds NULL, which reads as
+        # 0. The limit exists against DoS and a receiver may not set it to 0,
+        # so an empty one is the default -- neither "no limit" nor "0 bytes".
+        return self.max_payload_size or DEFAULT_MAX_PAYLOAD_SIZE
 
     def _get_inbound_company_id(self):
         """Return the gate's company ID, or False when no company is bound."""

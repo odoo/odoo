@@ -130,9 +130,7 @@ class MixinInboundGate(models.AbstractModel):
 
     def _contract_limits(self) -> list[str]:
         self.check_singleton()
-        limits = []
-        if self.max_payload_size:
-            limits.append(f"Body at most {self.max_payload_size} bytes.")
+        limits = [f"Body at most {self._inbound_max_payload_size()} bytes."]
         if self.rate_limit_enabled and self.rate_limit_requests:
             window = self.rate_limit_window_seconds or 60
             limits.append(
