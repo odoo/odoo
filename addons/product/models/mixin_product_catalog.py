@@ -1,5 +1,6 @@
 from odoo import _, api, models
 from odoo.fields import Domain
+from odoo.tools.misc import clean_context
 
 
 class MixinProductCatalog(models.AbstractModel):
@@ -23,11 +24,7 @@ class MixinProductCatalog(models.AbstractModel):
         }
 
     def _prepare_catalog_action_context(self):
-        return {
-            key: value
-            for key, value in self.env.context.items()
-            if not key.startswith("default_")
-        }
+        return clean_context(self.env.context)
 
     def _get_order_line_values(self, child_field=False):
         return {

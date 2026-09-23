@@ -1,6 +1,7 @@
 from typing import Any, Self
 
 from odoo import Command, api, fields, models
+from odoo.tools.misc import clean_context
 
 from ..tools import debug_log as dbg
 
@@ -87,11 +88,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
             "views": [(view.id, "form")],
             "res_model": "project.template.create.wizard",
             "target": "new",
-            "context": {
-                key: value
-                for key, value in self.env.context.items()
-                if not key.startswith("default_")
-            },
+            "context": clean_context(self.env.context),
         }
 
 

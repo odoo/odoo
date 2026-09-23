@@ -12,7 +12,6 @@ from odoo.libs.collections import (
     ReadonlyDict,
     ReversedIterable,
     StackMap,
-    freehash,
     frozendict,
     submap,
 )
@@ -28,17 +27,13 @@ from odoo.libs.iteration import (
     topological_sort,
     unique,
 )
-from odoo.libs.locale import (
-    POSIX_TO_LDML,
-    posix_to_ldml,
-)
+from odoo.libs.locale import posix_to_ldml
 from odoo.libs.logging import (
     lower_logging,
     mute_logger,
     unquote,
 )
 from odoo.libs.text import (
-    ADDRESS_REGEX,
     get_flag,
     html_escape,
     human_size,
@@ -53,7 +48,6 @@ from odoo.libs.utils import (
     format_frame,
     has_list_types,
     is_list_of,
-    named_to_positional_printf,
     replace_exceptions,
 )
 
@@ -109,7 +103,6 @@ if typing.TYPE_CHECKING:
     from collections.abc import Callable
 
 __all__ = [
-    "ADDRESS_REGEX",
     "DATETIME_FORMATS_MAP",
     "DATE_LENGTH",
     "DEFAULT_SERVER_DATETIME_FORMAT",
@@ -118,7 +111,6 @@ __all__ = [
     "NEGATIVE_SIGN_JOINER",
     "NON_BREAKING_SPACE",
     "PENDING",
-    "POSIX_TO_LDML",
     "SENTINEL",
     "SKIPPED_ELEMENT_TYPES",
     "Callbacks",
@@ -134,7 +126,6 @@ __all__ = [
     "babel_locale_parse",
     "clean_context",
     "consteq",
-    "default_parser",
     "discardattr",
     "dumpstacks",
     "exec_pg_environ",
@@ -151,7 +142,6 @@ __all__ = [
     "format_duration",
     "format_frame",
     "format_time",
-    "freehash",
     "frozendict",
     "get_diff",
     "get_executable_path",
@@ -174,7 +164,6 @@ __all__ = [
     "merge_sequences",
     "mod10r",
     "mute_logger",
-    "named_to_positional_printf",
     "parse_date",
     "partition",
     "posix_to_ldml",
@@ -193,8 +182,6 @@ __all__ = [
 ]
 
 SKIPPED_ELEMENT_TYPES = _xml_lib.SKIPPED_ELEMENT_TYPES
-
-default_parser = _xml_lib.default_parser
 
 
 def clean_context(context: dict[str, typing.Any]) -> dict[str, typing.Any]:

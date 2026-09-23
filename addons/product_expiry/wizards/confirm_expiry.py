@@ -1,5 +1,6 @@
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
+from odoo.tools.misc import clean_context
 
 
 class ExpiryPickingConfirmation(models.TransientModel):
@@ -45,11 +46,7 @@ class ExpiryPickingConfirmation(models.TransientModel):
         )
 
     def _get_validation_context(self):
-        return {
-            key: value
-            for key, value in self.env.context.items()
-            if not key.startswith("default_")
-        } | {"skip_expired": True}
+        return clean_context(self.env.context) | {"skip_expired": True}
 
     def _check_confirm_access(self, group_xmlid):
         if not self.env.user.has_group(group_xmlid):

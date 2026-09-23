@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.date_utils import get_timedelta, time_unit_selection
+from odoo.tools.misc import clean_context
 
 FOLLOWER_STATES = frozenset({"followers", "remove_followers"})
 MAIL_STATES = frozenset({"mail_post", "next_activity"}) | FOLLOWER_STATES
@@ -282,9 +283,7 @@ class IrActionsServer(models.Model):
             elif not action._path_leads_to(
                 "followers_partner_field_name", "res.partner"
             ):
-                action.followers_partner_field_name = (
-                    action._get_partner_field_name()
-                )
+                action.followers_partner_field_name = action._get_partner_field_name()
 
     def _get_partner_field_name(self) -> str | Literal[False]:
         self.check_singleton()
@@ -573,11 +572,7 @@ class IrActionsServer(models.Model):
         return bool(self._get_recompute_pending(self._get_records_targeted()))
 
     def _get_run_context(self) -> dict:
-        return {
-            key: value
-            for key, value in self.env.context.items()
-            if not key.startswith("default_")
-        }
+        return clean_context(self.env.context)
 
     def _prepare_mail_post_context(self) -> dict:
         context = self._get_run_context()
