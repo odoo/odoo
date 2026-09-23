@@ -1,6 +1,7 @@
 import { x2ManyCommands } from "@web/core/orm_service";
 import { intersection } from "@web/core/utils/arrays";
 import { omit, pick } from "@web/core/utils/objects";
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { completeActiveFields, getFieldsSpec } from "@web/model/relational_model/utils";
 import { DataPoint } from "./datapoint";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
@@ -67,6 +68,12 @@ function copyRecordData(record, copyFields = []) {
                 break;
             case "one2many":
                 // Not supported => that field is left empty
+                break;
+            case "date":
+                data[name] = value ? serializeDate(value) : false;
+                break;
+            case "datetime":
+                data[name] = value ? serializeDateTime(value) : false;
                 break;
             default:
                 data[name] = value;
