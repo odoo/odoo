@@ -1,3 +1,4 @@
+import contextlib
 import hashlib
 import logging
 import os
@@ -13,6 +14,7 @@ from typing import NamedTuple
 import odoo
 from odoo.libs.asset_log import get_asset_logger, log_event
 from odoo.libs.debug_log import DebugLog
+from odoo.tools import config
 from odoo.tools.assets import esbuild_process, esbuild_stubs
 from odoo.tools.json import scriptsafe as json
 
@@ -30,6 +32,47 @@ def module_specifiers(asset) -> tuple[str, ...]:
     if header and header["alias"]:
         names.append(header["alias"])
     return tuple(names)
+
+
+def _write_resolution_root(root_dir: Path, roots: Mapping[str, Path]) -> Path:
+    root_dir.mkdir(mode=0o700)
+    for spec, path in roots.items():
+        (root_dir / spec).symlink_to(path, target_is_directory=True)
+    return root_dir
+
+
+def _holds_exactly(root_dir: Path, roots: Mapping[str, Path]) -> bool:
+    if root_dir.is_symlink() or not root_dir.is_dir():
+        return False
+    try:
+        entries = {entry.name: entry for entry in root_dir.iterdir()}
+        return entries.keys() == roots.keys() and all(
+            entry.is_symlink() and entry.readlink() == roots[name]
+            for name, entry in entries.items()
+        )
+    except OSError:
+        return False
+
+
+def _shared_resolution_root(base: Path, name: str, roots: Mapping[str, Path]) -> Path:
+    root_dir = base / name
+    if _holds_exactly(root_dir, roots):
+        return root_dir
+    staging = _write_resolution_root(
+        Path(tempfile.mkdtemp(prefix=f"{name}-", dir=base)) / "roots", roots
+    )
+    if root_dir.is_symlink() or root_dir.exists():
+        _debug.logic("esbuild.resolution_root_replaced", root=str(root_dir))
+        stale = Path(tempfile.mkdtemp(prefix=f"{name}-stale-", dir=base))
+        with contextlib.suppress(OSError):
+            root_dir.rename(stale / "roots")
+        shutil.rmtree(stale, ignore_errors=True)
+    with contextlib.suppress(OSError):
+        staging.rename(root_dir)
+    shutil.rmtree(staging.parent, ignore_errors=True)
+    if not _holds_exactly(root_dir, roots):
+        raise OSError(f"{root_dir} does not hold exactly the addon roots")
+    return root_dir
 
 
 class EsbuildResult(NamedTuple):
@@ -355,7 +398,7 @@ class EsbuildCompiler:
 
             self._mirror_roots = {}
             argv_aliases, node_path = self._addon_resolution_root(
-                alias_flags, odoo_root
+                alias_flags, odoo_root, tmp_dir
             )
             moved = set(alias_flags) - set(argv_aliases)
             if secondary_parent_stubs:
@@ -480,7 +523,7 @@ class EsbuildCompiler:
             self._mirror_roots = {}
             self._absolute_entry_paths = True
             argv_aliases, node_path = self._addon_resolution_root(
-                alias_flags, odoo_root
+                alias_flags, odoo_root, tmp_dir
             )
             moved = set(alias_flags) - set(argv_aliases)
             mirrored_flags, self._mirror_roots = esbuild_stubs.mirror_aliases(
@@ -741,7 +784,7 @@ class EsbuildCompiler:
         }
 
     def _addon_resolution_root(
-        self, alias_flags: list[str], odoo_root: Path
+        self, alias_flags: list[str], odoo_root: Path, private_dir: str
     ) -> tuple[list[str], str | None]:
         roots: dict[str, Path] = {}
         kept: list[str] = []
@@ -764,17 +807,18 @@ class EsbuildCompiler:
         digest = hashlib.sha1(
             "\n".join(f"{spec}={path}" for spec, path in sorted(roots.items())).encode()
         ).hexdigest()[:12]
-        root_dir = Path(tempfile.gettempdir()) / f"odoo-esbuild-roots-{digest}"
-        if not root_dir.is_dir():
-            staging = Path(
-                tempfile.mkdtemp(prefix=f"{root_dir.name}-", dir=root_dir.parent)
+        # under data_dir, never a shared temp dir: whoever can plant a
+        # directory under the predictable name decides what @web resolves to
+        base = Path(config["data_dir"]) / "esbuild-roots"
+        try:
+            base.mkdir(mode=0o700, parents=True, exist_ok=True)
+            root_dir = _shared_resolution_root(base, digest, roots)
+        except OSError as exc:
+            root_dir = _write_resolution_root(Path(private_dir) / "roots", roots)
+            _debug.logic(
+                "esbuild.resolution_root_private",
+                bundle=self.name,
+                base=str(base),
+                error=type(exc).__name__,
             )
-            for spec, path in roots.items():
-                (staging / spec).symlink_to(path, target_is_directory=True)
-            try:
-                staging.rename(root_dir)
-            except OSError:
-                shutil.rmtree(staging, ignore_errors=True)
-                if not root_dir.is_dir():
-                    raise
         return kept, str(root_dir)
