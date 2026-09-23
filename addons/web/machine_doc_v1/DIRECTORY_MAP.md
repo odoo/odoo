@@ -73,7 +73,7 @@
 | `core/position/` | shared | 2 | Hook and geometry utilities for repositioning a popper element against a target |
 | `core/py_js/` | shared | 17 | Python expression tokenizer, parser and interpreter used by `domain=` / `context=` evaluation |
 | `core/tree/` | shared | 17 | Data-only condition-tree primitives: AST, domain ↔ tree ↔ Python-expression conversions, virtual operators, and the `tree_processor` service |
-| `core/utils/` | shared | 28 | Cross-cutting utilities: reactivity (`SignalStore`, `effect`, `derived`), `patch`, concurrency, hooks, timing, IndexedDB, URLs, macros, PDF.js loader, render instrumentation |
+| `core/utils/` | shared | 29 | Cross-cutting utilities: reactivity (`SignalStore`, `effect`, `derived`), `patch`, concurrency, hooks, timing, IndexedDB, URLs, macros, PDF.js loader, render instrumentation |
 | `core/utils/collections/` | shared | 3 | Array/object helpers: groupBy, sortBy, unique, intersection, cartesian, zip |
 | `core/utils/dnd/` | shared | 11 | Drag-and-drop hook builders (`useDraggable`, `useSortable`, nested sortable) and the `sortable` service. The builder is split by what each part must know: `drag_session.js` holds the pointer state machine, `drag_geometry.js` the pure rect/pointer maths, `draggable_hook_params.js` parameter validation and context construction; only `draggable_hook_builder.js` touches OWL |
 | `core/utils/dom/` | shared | 10 | DOM helpers: autoresize, class names, click-away, viewport units, events, HTML/Markup sanitisation, scrolling, XML, and the layout read/write batch mount hooks measure through |
