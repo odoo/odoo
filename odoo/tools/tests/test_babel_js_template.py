@@ -28,6 +28,30 @@ class TestTemplateStringExtraction(unittest.TestCase):
         results = _extract(r"""const a = `${ _t("path\\") }`;""")
         self.assertEqual([r[2] for r in results], ["path\\"])
 
+    def test_term_after_class_object_key(self):
+        results = _extract('const b = { class: "fa", title: _t("Move down") };')
+        self.assertEqual([r[2] for r in results], ["Move down"])
+
+    def test_term_after_class_property_assignment(self):
+        results = _extract('info.class = "x"; info.message = _t("Moved");')
+        self.assertEqual([r[2] for r in results], ["Moved"])
+
+    def test_generator_function_definition_opens_no_call(self):
+        results = _extract('function* gen(a) { yield _t("Generated"); }')
+        self.assertEqual([r[2] for r in results], ["Generated"])
+
+    def test_term_in_template_after_return(self):
+        results = _extract('function f() { return `${a} ${_t("Offline")}`; }')
+        self.assertEqual([r[2] for r in results], ["Offline"])
+
+    def test_term_in_template_tagged_by_non_keyword(self):
+        results = _extract('const m = markup`<span>${_t("Share")}</span>`;')
+        self.assertEqual([r[2] for r in results], ["Share"])
+
+    def test_keyword_tagged_template_is_the_term(self):
+        results = _extract("const m = _t`Tagged`;")
+        self.assertEqual([(r[1], r[2]) for r in results], [("_t", "Tagged")])
+
 
 if __name__ == "__main__":
     unittest.main()

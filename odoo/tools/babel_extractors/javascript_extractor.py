@@ -171,6 +171,12 @@ def _is_bare_template_string(
     )
 
 
+def _continues_definition(token: Token) -> bool:
+    return token.type in ("name", "linecomment", "multilinecomment") or (
+        token.type == "operator" and token.value == "*"
+    )
+
+
 def extract_javascript(
     fileobj: _FileObj,
     keywords: Mapping[str, _Keyword],
@@ -189,12 +195,17 @@ def extract_javascript(
             in_def = True
             continue
 
-        elif in_def and token.type == "operator" and token.value in ("(", "{"):
-            in_def = False
-            continue
+        if in_def:
+            if token.type == "operator" and token.value in ("(", "{"):
+                in_def = False
+                continue
+            in_def = _continues_definition(token)
 
-        elif (
-            last_token and last_token.type == "name" and token.type == "template_string"
+        if (
+            last_token
+            and last_token.type == "name"
+            and last_token.value in keywords
+            and token.type == "template_string"
         ):
             translator_comments = open_call_frame(
                 function_stack,
@@ -203,8 +214,9 @@ def extract_javascript(
                 last_token,
                 function_lineno=last_token.lineno,
                 message_lineno=token.lineno,
-                messages=[unquote_string(token.value)],
+                messages=[],
             )
+            message_buffer.append(unquote_string(token.value))
             last_token = token
             token = Token("operator", ")", token.lineno)
 
