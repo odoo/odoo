@@ -163,6 +163,24 @@ class ThemeIrUiView(models.Model):
 
         return new_view
 
+    def _sorted_parents_first(self):
+        depths = {}
+
+        def depth(view):
+            if view._name == "ir.ui.view":
+                ancestors = 0
+                while view.inherit_id:
+                    ancestors += 1
+                    view = view.inherit_id
+                return ancestors
+            if view.id not in depths:
+                depths[view.id] = 1 + (
+                    depth(view.inherit_id) if view.inherit_id else -1
+                )
+            return depths[view.id]
+
+        return self.sorted(key=lambda view: (depth(view), view.priority))
+
 
 class ThemeIrAttachment(models.Model):
     _name = "theme.ir.attachment"

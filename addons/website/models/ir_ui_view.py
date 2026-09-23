@@ -457,16 +457,23 @@ class IrUiView(models.Model):
         )
         generic = SQL.identifier("generic")
         return SQL(
-            """(%s OR (%s.website_id IS NOT NULL AND EXISTS (
+            """(%s OR (%s.website_id IS NOT NULL AND (EXISTS (
                 SELECT 1 FROM ir_ui_view generic
                 WHERE generic.key = %s.key
                 AND generic.website_id IS NULL
                 AND %s
-            )))""",
+            ) OR EXISTS (
+                SELECT 1 FROM ir_model_data template
+                WHERE template.model = 'theme.ir.ui.view'
+                AND template.res_id = %s.theme_template_id
+                AND template.module = ANY(%s)
+            ))))""",
             loaded,
             view,
             view,
             super()._get_sql_view_loaded(generic, modules),
+            view,
+            modules,
         )
 
     @api.model

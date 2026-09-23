@@ -124,6 +124,8 @@ class IrModuleModule(models.Model):
         self.check_singleton()
 
         remaining = self._get_module_data(model_name)
+        if model_name == "ir.ui.view":
+            remaining = remaining._sorted_parents_first()
         last_len = -1
         while len(remaining) != last_len:
             last_len = len(remaining)
