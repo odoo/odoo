@@ -833,6 +833,11 @@ class lower_logging(logging.Handler):
 
 class MungedTracebackLogRecord(logging.LogRecord):
     def getMessage(self):
+        if self.exc_info:
+            self.exc_text = logging.Formatter.formatException(None, self.exc_info).replace(
+                'Traceback (most recent call last):',
+                '_Traceback_ (most recent call last):',
+            )
         return super().getMessage().replace(
             'Traceback (most recent call last):',
             '_Traceback_ (most recent call last):',
