@@ -460,3 +460,72 @@ a kanban grouped by status, with a vehicle in Maintenance showing the ribbon;
 archive a vehicle and open its form to see the "Archived" ribbon. Verified via
 shell that both the kanban and form `arch` parse and render for an
 active-test-disabled (archived) record.
+
+---
+
+## Chapter 12 — Inheritance
+
+**Concept.** `_inherit = 'existing.model'` (with no `_name`) **extends** an
+existing model in place — adding fields/methods to it, visible everywhere that
+model is already used — as opposed to `_inherit` *and* a new `_name` (extension
++ new model that copies the parent) or `_inherits` (delegation: "has-a" that
+behaves like "is-a" via automatic field proxying). This chapter uses classical
+extension, on a model this module doesn't own.
+
+**Why?** Odoo apps are meant to compose: `fleet_training` didn't write
+`res.partner`, but it can still teach that model something new (how many fleet
+drivers are linked to a contact) without forking or copy-pasting it — every
+other app that touches `res.partner` still works unchanged.
+
+**Where?**
+- [`models/res_partner.py`](models/res_partner.py) — `_inherit = 'res.partner'`
+- [`models/fleet_driver.py`](models/fleet_driver.py) — `partner_id`, the link this extension counts through
+
+**Code explanation.** `fleet_training.driver` gets an optional `partner_id`
+Many2one to `res.partner` (a driver may also be a company contact).
+`ResPartner._inherit = 'res.partner'` then adds `fleet_training_driver_count`,
+computed by grouping `fleet_training.driver` by `partner_id` — a cross-model
+count with no stored relation on the partner side, so (following core's own
+convention for this exact pattern, e.g. CRM's `opportunity_count` on
+`res.partner`) it's deliberately **not** `store=True` and has no
+`@api.depends`: cheap to compute fresh, no need to keep a synced column.
+
+**A security trap this pattern walks straight into, and how the code avoids
+it.** This field renders on *every* `res.partner` form in the system — not
+just partners linked to a driver. If the compute read `fleet_training.driver`
+unconditionally, a user with no Fleet Training access at all would get an
+`AccessError` the moment they opened *any* contact, anywhere, because Odoo
+computes every field declared in a view's arch, regardless of whether it ends
+up visible. That's exactly the trap: extending `res.partner` means your code
+now runs for every user of every app that touches contacts, not just your own
+app's users. The fix is the first two lines of the method: default the count
+to `0` and return immediately for anyone outside `group_fleet_user`, mirroring
+the same defensive check CRM's own `opportunity_count` uses. **The lesson:** a
+field added to a shared model can silently expose (or, as here, silently
+break access to) another model — always ask "who else renders this view, and
+do they have rights to what I'm computing?"
+
+**A second, subtler trap: caching across users.** Odoo's field cache lives at
+the transaction level, not per-user — so once *any* user's read computes and
+caches this field's value for a given partner, the ORM assumes that value is
+valid for everyone, and won't recompute it just because a different user asks
+next. Since this compute's result genuinely depends on `self.env.user` (via
+`has_group`), that stale value would leak across users: a plain employee
+reading `0` first would make a real Fleet Manager see `0` too, right after,
+for the same partner. `@api.depends_context('uid')` is what tells the ORM
+"this value depends on who's asking" — without it, any field whose logic
+branches on the current user needs this decorator, or it will silently share
+one user's answer with everyone else.
+
+**Fleet functionality.** A driver can now optionally be linked to a full
+contact record; the underlying mechanism is in place for a future "Fleet
+Drivers" smart button on the Contacts app (Chapter 13 wires up the view side).
+
+**What changed.** Added `models/res_partner.py`; updated `models/fleet_driver.py`
+(`partner_id`), `models/__init__.py`, `views/fleet_driver_views.xml`.
+
+**Testing.** Upgrade the module. In the shell: create a `res.partner`, create
+a driver with `partner_id` set to it, and confirm (as a Fleet user)
+`partner.fleet_training_driver_count == 1`. Then confirm the safety guard: as
+a plain internal user with no Fleet Training group, reading that same field on
+*any* partner returns `0` with no error — never an `AccessError`.

@@ -12,6 +12,10 @@ class FleetDriver(models.Model):
     email = fields.Char()
     hire_date = fields.Date()
     active = fields.Boolean(default=True)
+    partner_id = fields.Many2one(
+        'res.partner', string="Linked Contact",
+        help="Optional link to this driver's contact record (e.g. if they are also a company contact).",
+    )
 
     vehicle_ids = fields.One2many('fleet_training.vehicle', 'driver_id', string="Assigned Vehicles")
     vehicle_count = fields.Integer(string="# Vehicles", compute='_compute_vehicle_count')
