@@ -7,7 +7,6 @@ import {
     onMounted,
     onPatched,
     onWillDestroy,
-    onWillRender,
     onWillStart,
     onWillUnmount,
     reactive,
@@ -174,10 +173,6 @@ export class EmojiPicker extends Component {
     emojiByCodepoints;
     /** @type {Map<string, {name: string, displayName: string, sortId: number, title?: string}>} */
     categoryByName;
-    /** @type {Emoji[] | undefined} */
-    _recentEmojis;
-    /** @type {Emoji[] | undefined} */
-    _emojis;
     /** @type {string | undefined} */
     _emojisCacheKey;
     /** @type {Emoji[] | undefined} */
@@ -186,8 +181,6 @@ export class EmojiPicker extends Component {
     _recentEmojisCache;
     /** @type {string | undefined} */
     _recentEmojisCacheKey;
-    /** @type {Emoji[] | undefined} */
-    _emojisFromSearch;
     /** @type {Emoji | undefined} */
     hoveredEmoji;
     /** @type {{name: string, displayName: string, title: string, sortId: number}} */
@@ -248,15 +241,8 @@ export class EmojiPicker extends Component {
                 ? this.recentCategory.sortId
                 : (this.categories[0]?.sortId ?? null);
         });
-        onWillRender(() => {
-            const recentEmojis = this.computeRecentEmojis();
-            const emojis = this.computeEmojis(recentEmojis);
-            if (recentEmojis !== this._recentEmojis || emojis !== this._emojis) {
-                this._recentEmojis = recentEmojis;
-                this._emojis = emojis;
-                this._emojisFromSearch = [...recentEmojis, ...emojis];
-            }
-        });
+        /** @type {{ recent?: Emoji[], emojis?: Emoji[], all?: Emoji[] }} */
+        this.emojisFromSearchMemo = {};
         this.setupLayoutObservers();
         this.setupCategoryScrolling();
         this.setupKeyboardFollow();
@@ -301,7 +287,7 @@ export class EmojiPicker extends Component {
             () => {
                 this._emojiMatrix = null;
             },
-            () => [this.searchTerm, this._emojisFromSearch],
+            () => [this.searchTerm, this.getEmojisFromSearch()],
         );
     }
 
@@ -449,7 +435,7 @@ export class EmojiPicker extends Component {
     }
 
     get recentEmojis() {
-        return this._recentEmojis ?? this.computeRecentEmojis();
+        return this.computeRecentEmojis();
     }
 
     computeRecentEmojis() {
@@ -671,7 +657,7 @@ export class EmojiPicker extends Component {
     }
 
     getEmojis() {
-        return this._emojis ?? this.computeEmojis();
+        return this.computeEmojis();
     }
 
     computeEmojis(recentEmojis = this.recentEmojis) {
@@ -701,7 +687,13 @@ export class EmojiPicker extends Component {
     }
 
     getEmojisFromSearch() {
-        return this._emojisFromSearch ?? [...this.recentEmojis, ...this.getEmojis()];
+        const recent = this.computeRecentEmojis();
+        const emojis = this.computeEmojis(recent);
+        const memo = this.emojisFromSearchMemo;
+        if (memo.recent !== recent || memo.emojis !== emojis) {
+            Object.assign(memo, { recent, emojis, all: [...recent, ...emojis] });
+        }
+        return /** @type {Emoji[]} */ (memo.all);
     }
 
     selectCategory(categoryId) {

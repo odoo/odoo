@@ -4,7 +4,6 @@
 import {
     Component,
     onWillDestroy,
-    onWillRender,
     onWillUpdateProps,
     useEffect,
     useRef,
@@ -41,8 +40,6 @@ export class Notebook extends Component {
     activePane;
     /** @type {Array<[string, Object]>} */
     pages;
-    /** @type {Set<string>} */
-    invalidPages;
     /** @type {{ currentPage: string | null }} */
     state;
     /** @type {string[]} */
@@ -58,7 +55,6 @@ export class Notebook extends Component {
         this.activePane = useRef("activePane");
         this.readPages(this.props);
         /** @type {Set<string>} */
-        this.invalidPages = new Set();
         this.state = useState({ currentPage: null });
         this.selectActivePage(this.props.defaultPage, true);
         this.keepLastPageTransition = new KeepLast({ rejectSuperseded: true });
@@ -75,9 +71,6 @@ export class Notebook extends Component {
             },
             () => [this.activePane.el],
         );
-        onWillRender(() => {
-            this.computeInvalidPages();
-        });
         onWillUpdateProps((nextProps) => {
             const currentPage = this.state.currentPage;
             const activateDefault =
@@ -220,20 +213,18 @@ export class Notebook extends Component {
             current && pages.includes(current) ? current : pages[0];
     }
 
+    /** @returns {Set<string>} */
     computeInvalidPages() {
         const isFieldInvalid = this.props.isFieldInvalid;
-        if (!isFieldInvalid) {
-            if (this.invalidPages.size) {
-                this.invalidPages = new Set();
-            }
-            return;
-        }
         const invalidPages = new Set();
+        if (!isFieldInvalid) {
+            return invalidPages;
+        }
         for (const [id, page] of this.navItems) {
             if (page.fieldNames?.some((fieldName) => isFieldInvalid(fieldName))) {
                 invalidPages.add(id);
             }
         }
-        this.invalidPages = invalidPages;
+        return invalidPages;
     }
 }
