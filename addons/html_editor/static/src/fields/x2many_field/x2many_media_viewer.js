@@ -39,6 +39,8 @@ export class X2ManyMediaViewer extends X2ManyField {
             imageSave: this.onImageSave.bind(this),
             videoSave: this.onVideoSave.bind(this),
             document: window.document,
+            resModel: this.props.record.model.config.resModel,
+            resId: this.props.record.model.config.resId,
         };
     }
 

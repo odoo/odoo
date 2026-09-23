@@ -25,6 +25,8 @@ export class ImageFieldWithMediaDialog extends ImageField {
             imageSave: this.onImageSave.bind(this),
             imageUrl: this.imageUrl,
             document: window.document,
+            resModel: this.props.record.resModel,
+            resId: this.props.record.resId,
         };
     }
 

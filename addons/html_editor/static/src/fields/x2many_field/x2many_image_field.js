@@ -42,6 +42,8 @@ export class X2ManyImageField extends ImageField {
             imageSave: this.onImageSave.bind(this),
             videoSave: this.onVideoSave.bind(this),
             document: window.document,
+            resModel: this.props.record.model.config.resModel,
+            resId: this.props.record.model.config.resId,
         };
     }
 
