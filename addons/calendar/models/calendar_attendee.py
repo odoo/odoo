@@ -113,7 +113,7 @@ class CalendarAttendee(models.Model):
     # the legitimate readers (mail templates, token controllers) still work.
     access_token = fields.Char(
         string="Invitation Token",
-        default=_default_access_token,
+        default=lambda self: self._default_access_token(),
         groups="base.group_system",
     )
     mail_tz = fields.Selection(

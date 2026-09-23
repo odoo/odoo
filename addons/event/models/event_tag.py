@@ -18,7 +18,7 @@ class EventTagCategory(models.Model):
         translate=True,
         required=True,
     )
-    sequence = fields.Integer(default=_default_sequence)
+    sequence = fields.Integer(default=lambda self: self._default_sequence())
     tag_ids = fields.One2many(
         comodel_name="event.tag",
         inverse_name="category_id",

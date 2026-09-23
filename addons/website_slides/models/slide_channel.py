@@ -159,7 +159,7 @@ class SlideChannel(models.Model):
     )
     access_token = fields.Char(
         string="Security Token",
-        default=_default_access_token,
+        default=lambda self: self._default_access_token(),
         copy=False,
     )
     nbr_document = fields.Integer(
@@ -276,7 +276,7 @@ class SlideChannel(models.Model):
         string="Enroll Message",
         translate=tools.html_translate,
         sanitize_attributes=False,
-        default=_default_enroll_msg,
+        default=lambda self: self._default_enroll_msg(),
         help="Message explaining the enroll process",
     )
     enroll_group_ids = fields.Many2many(

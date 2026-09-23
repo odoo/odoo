@@ -29,7 +29,7 @@ class ChangePasswordWizard(models.TransientModel):
         comodel_name="change.password.user",
         inverse_name="wizard_id",
         string="Users",
-        default=_default_user_ids,
+        default=lambda self: self._default_user_ids(),
     )
 
     def change_password_button(self) -> dict[str, str]:

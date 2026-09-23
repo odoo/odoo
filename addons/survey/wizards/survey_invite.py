@@ -36,7 +36,7 @@ class SurveyInvite(models.TransientModel):
     )
     author_id = fields.Many2one(
         comodel_name="res.partner",
-        default=_default_author_id,
+        default=lambda self: self._default_author_id(),
         index=True,
         ondelete="set null",
     )

@@ -70,7 +70,7 @@ class WebsiteMenu(models.Model):
         ondelete="cascade",
     )
     new_window = fields.Boolean()
-    sequence = fields.Integer(default=_default_sequence)
+    sequence = fields.Integer(default=lambda self: self._default_sequence())
     website_id = fields.Many2one(
         comodel_name="website",
         ondelete="cascade",

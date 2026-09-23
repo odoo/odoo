@@ -43,13 +43,13 @@ class HrDepartureWizard(models.TransientModel):
     departure_description = fields.Html(string="Additional Information")
     departure_date = fields.Date(
         string="Contract End Date",
-        default=_default_departure_date,
+        default=lambda self: self._default_departure_date(),
         required=True,
     )
     employee_ids = fields.Many2many(
         comodel_name="hr.employee",
         string="Employees",
-        default=_default_employee_ids,
+        default=lambda self: self._default_employee_ids(),
         required=True,
         domain=_domain_employee_ids,
         context={"active_test": False},

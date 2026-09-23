@@ -27,7 +27,7 @@ class ProductPublicCategory(models.Model):
     )
     cover_image = fields.Image(help="Displayed only in the Category List Snippet.")
     sequence = fields.Integer(
-        default=_default_sequence,
+        default=lambda self: self._default_sequence(),
         index=True,
     )
 

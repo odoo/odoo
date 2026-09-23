@@ -31,7 +31,7 @@ class LunchProductCategory(models.Model):
         help="The number of products related to this category",
     )
     active = fields.Boolean(default=True)
-    image_1920 = fields.Image(default=_default_image_1920)
+    image_1920 = fields.Image(default=lambda self: self._default_image_1920())
 
     def _compute_product_count(self):
         product_data = self.env["lunch.product"]._read_group(

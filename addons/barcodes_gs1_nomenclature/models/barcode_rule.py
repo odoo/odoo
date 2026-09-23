@@ -12,7 +12,7 @@ class BarcodeRule(models.Model):
 
     encoding = fields.Selection(
         selection_add=[("gs1-128", "GS1-128")],
-        default=_default_encoding,
+        default=lambda self: self._default_encoding(),
         ondelete={"gs1-128": "set default"},
     )
     type = fields.Selection(

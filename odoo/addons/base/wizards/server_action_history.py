@@ -37,7 +37,7 @@ class ServerActionHistoryWizard(models.TransientModel):
     )
     revision = fields.Many2one(
         comodel_name="ir.actions.server.history",
-        default=_default_revision,
+        default=lambda self: self._default_revision(),
         required=True,
         domain="[('action_id', '=', action_id), ('code', '!=', current_code)]",
     )

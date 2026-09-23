@@ -55,7 +55,7 @@ class MixinHrIndividualSkill(models.AbstractModel):
     )
     skill_type_id = fields.Many2one(
         comodel_name="hr.skill.type",
-        default=_default_skill_type_id,
+        default=lambda self: self._default_skill_type_id(),
         required=True,
         ondelete="cascade",
     )

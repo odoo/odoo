@@ -37,26 +37,26 @@ class PosConfirmationWizard(models.TransientModel):
         )
 
     message = fields.Text(
-        default=_default_message,
+        default=lambda self: self._default_message(),
         readonly=True,
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Customer",
-        default=_default_partner_id,
+        default=lambda self: self._default_partner_id(),
         readonly=True,
     )
     order_ids = fields.Many2many(
         comodel_name="pos.order",
         string="Orders",
-        default=_get_selected_orders,
+        default=lambda self: self._get_selected_orders(),
         readonly=True,
     )
     unassigned_order_ids = fields.Many2many(
         comodel_name="pos.order",
         relation="pos_confirmation_wizard_unassigned_order_rel",
         string="Orders without a Customer",
-        default=_default_unassigned_order_ids,
+        default=lambda self: self._default_unassigned_order_ids(),
         readonly=True,
     )
 

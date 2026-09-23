@@ -57,7 +57,7 @@ class CardCampaign(models.Model):
     card_template_id = fields.Many2one(
         comodel_name="card.template",
         string="Design",
-        default=_default_card_template_id,
+        default=lambda self: self._default_card_template_id(),
         required=True,
     )
     image_preview = fields.Image(

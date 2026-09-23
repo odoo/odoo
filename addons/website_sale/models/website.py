@@ -66,7 +66,7 @@ class Website(models.Model):
     salesteam_id = fields.Many2one(
         comodel_name="team.team",
         string="Sales Team",
-        default=_default_salesteam_id,
+        default=lambda self: self._default_salesteam_id(),
         index="btree_not_null",
         domain=[("use_sale", "=", True)],
         ondelete="set null",
@@ -102,7 +102,7 @@ class Website(models.Model):
     cart_recovery_mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Cart Recovery Email",
-        default=_default_cart_recovery_mail_template_id,
+        default=lambda self: self._default_cart_recovery_mail_template_id(),
         domain=[("model", "=", "sale.order")],
     )
     contact_us_button_url = fields.Char(
@@ -284,7 +284,7 @@ class Website(models.Model):
     )
     confirmation_email_template_id = fields.Many2one(
         comodel_name="mail.template",
-        default=_default_confirmation_email_template_id,
+        default=lambda self: self._default_confirmation_email_template_id(),
         domain=[("model", "=", "sale.order")],
     )
 

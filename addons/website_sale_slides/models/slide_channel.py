@@ -16,7 +16,7 @@ class SlideChannel(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        default=_default_product_id,
+        default=lambda self: self._default_product_id(),
         index="btree_not_null",
         domain=[("service_tracking", "=", "course")],
     )

@@ -61,7 +61,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         check_company=True,
     )
     date = fields.Date(
-        default=_default_date,
+        default=lambda self: self._default_date(),
         required=True,
     )
     reversal_date = fields.Date(

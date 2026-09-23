@@ -72,7 +72,7 @@ class MrpWorkorder(models.Model):
         string="Work Order",
         required=True,
     )
-    sequence = fields.Integer(default=_default_sequence)
+    sequence = fields.Integer(default=lambda self: self._default_sequence())
     barcode = fields.Char(
         compute="_compute_barcode",
         store=True,

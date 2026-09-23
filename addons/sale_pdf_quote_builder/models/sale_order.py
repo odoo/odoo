@@ -29,7 +29,7 @@ class SaleOrder(models.Model):
     quotation_document_ids = fields.Many2many(
         comodel_name="quotation.document",
         string="Headers/Footers",
-        default=_default_quotation_document_ids,
+        default=lambda self: self._default_quotation_document_ids(),
         readonly=False,
         check_company=True,
     )

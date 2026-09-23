@@ -50,7 +50,7 @@ class AccountPaymentTerm(models.Model):
         comodel_name="account.payment.term.line",
         inverse_name="payment_id",
         string="Terms",
-        default=_default_line_ids,
+        default=lambda self: self._default_line_ids(),
         copy=True,
     )
     company_id = fields.Many2one(comodel_name="res.company")
@@ -69,20 +69,20 @@ class AccountPaymentTerm(models.Model):
     )
     example_amount = fields.Monetary(
         currency_field="currency_id",
-        default=_default_example_amount,
+        default=lambda self: self._default_example_amount(),
         store=False,
         readonly=True,
     )
     example_tax_amount = fields.Monetary(
         string="Tax in the example",
         currency_field="currency_id",
-        default=_default_example_tax_amount,
+        default=lambda self: self._default_example_tax_amount(),
         store=False,
         readonly=True,
     )
     example_date = fields.Date(
         string="Date example",
-        default=_default_example_date,
+        default=lambda self: self._default_example_date(),
         store=False,
     )
     example_preview = fields.Html(compute="_compute_example_previews")

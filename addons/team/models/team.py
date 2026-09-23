@@ -64,7 +64,7 @@ class Team(models.Model):
     )
     favorite_user_ids = fields.Many2many(
         string="Favorite Members",
-        default=_default_favorite_user_ids,
+        default=lambda self: self._default_favorite_user_ids(),
     )
     is_user_favorite = fields.Boolean(
         string="Show on dashboard",

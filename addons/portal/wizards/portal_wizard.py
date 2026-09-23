@@ -29,7 +29,7 @@ class PortalWizard(models.TransientModel):
     partner_ids = fields.Many2many(
         comodel_name="res.partner",
         string="Partners",
-        default=_default_partner_ids,
+        default=lambda self: self._default_partner_ids(),
     )
     user_ids = fields.One2many(
         comodel_name="portal.wizard.user",

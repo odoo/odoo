@@ -483,7 +483,7 @@ class ResUsers(models.Model):
 
     view_group_hierarchy = fields.Json(
         string="Technical field for user group setting",
-        default=_default_view_group_hierarchy,
+        default=lambda self: self._default_view_group_hierarchy(),
         store=False,
         copy=False,
     )

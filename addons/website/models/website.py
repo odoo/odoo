@@ -130,7 +130,7 @@ class Website(models.Model):
         column1="website_id",
         column2="lang_id",
         string="Languages",
-        default=_default_language_ids,
+        default=lambda self: self._default_language_ids(),
         required=True,
     )
     language_count = fields.Count(
@@ -140,7 +140,7 @@ class Website(models.Model):
     default_lang_id = fields.Many2one(
         comodel_name="res.lang",
         string="Default Language",
-        default=_default_default_lang_id,
+        default=lambda self: self._default_default_lang_id(),
         required=True,
     )
     auto_redirect_lang = fields.Boolean(
@@ -178,7 +178,7 @@ class Website(models.Model):
 
     logo = fields.Binary(
         string="Website Logo",
-        default=_default_logo,
+        default=lambda self: self._default_logo(),
         help="Display this logo on the website.",
     )
     social_twitter = fields.Char(
@@ -296,7 +296,7 @@ class Website(models.Model):
 
     favicon = fields.Binary(
         string="Website Favicon",
-        default=_default_favicon,
+        default=lambda self: self._default_favicon(),
         help="This field holds the image used to display a favicon on the website.",
     )
     theme_id = fields.Many2one(

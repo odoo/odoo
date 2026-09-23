@@ -22,7 +22,7 @@ class MailingSmsTest(models.TransientModel):
 
     numbers = fields.Text(
         string="Number(s)",
-        default=_default_numbers,
+        default=lambda self: self._default_numbers(),
         required=True,
         help="Carriage-return-separated list of phone numbers",
     )

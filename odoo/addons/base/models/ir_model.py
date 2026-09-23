@@ -81,7 +81,7 @@ class IrModel(models.Model):
         comodel_name="ir.model.fields",
         inverse_name="model_id",
         string="Fields",
-        default=_default_field_id,
+        default=lambda self: self._default_field_id(),
         copy=True,
         required=True,
     )

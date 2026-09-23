@@ -57,7 +57,7 @@ class HrJob(models.Model):
     address_id = fields.Many2one(
         comodel_name="res.partner",
         string="Job Location",
-        default=_default_address_id,
+        default=lambda self: self._default_address_id(),
         domain=lambda self: self._domain_address_id(),
         tracking=True,
         help="Select the location where the applicant will work. Addresses listed here are defined on the company's contact information.",
@@ -126,7 +126,7 @@ class HrJob(models.Model):
         relation="job_favorite_user_rel",
         column1="job_id",
         column2="user_id",
-        default=_default_favorite_user_ids,
+        default=lambda self: self._default_favorite_user_ids(),
     )
     interviewer_ids = fields.Many2many(
         comodel_name="res.users",

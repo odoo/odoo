@@ -27,7 +27,7 @@ class StockPickingType(models.Model):
     weight_uom_name = fields.Char(
         string="Weight unit of measure label",
         compute="_compute_weight_uom_name",
-        default=_default_weight_uom_name,
+        default=lambda self: self._default_weight_uom_name(),
         readonly=True,
     )
 

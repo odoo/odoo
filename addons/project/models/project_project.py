@@ -116,7 +116,7 @@ class ProjectProject(models.Model):
 
     phase_id = fields.Many2one(
         comodel_name="project.phase",
-        default=_default_phase_id,
+        default=lambda self: self._default_phase_id(),
         index=True,
         copy=False,
         group_expand="_read_group_expand_full",

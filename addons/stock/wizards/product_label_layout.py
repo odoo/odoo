@@ -39,7 +39,7 @@ class ProductLabelLayout(models.TransientModel):
     )
     zpl_preview = fields.Image(
         string="ZPL Preview",
-        default=_default_zpl_preview,
+        default=lambda self: self._default_zpl_preview(),
         readonly=True,
     )
 

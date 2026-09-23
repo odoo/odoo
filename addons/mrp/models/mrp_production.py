@@ -245,7 +245,7 @@ class MrpProduction(models.Model):
     )
     date_start = fields.Datetime(
         string="Start",
-        default=_default_date_start,
+        default=lambda self: self._default_date_start(),
         index=True,
         copy=False,
         required=True,
@@ -254,7 +254,7 @@ class MrpProduction(models.Model):
     date_end = fields.Datetime(
         string="End",
         compute="_compute_date_end",
-        default=_default_date_end,
+        default=lambda self: self._default_date_end(),
         store=True,
         copy=False,
         help="Date you expect to finish production or actual date you finished production.",
@@ -470,7 +470,7 @@ class MrpProduction(models.Model):
         string="Number of Unbuilds",
     )
     is_locked = fields.Boolean(
-        default=_default_is_locked,
+        default=lambda self: self._default_is_locked(),
         copy=False,
     )
     is_planned = fields.Boolean(

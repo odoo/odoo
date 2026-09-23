@@ -23,7 +23,7 @@ class CouponShare(models.TransientModel):
 
     website_id = fields.Many2one(
         comodel_name="website",
-        default=_default_website_id,
+        default=lambda self: self._default_website_id(),
         required=True,
     )
     coupon_id = fields.Many2one(

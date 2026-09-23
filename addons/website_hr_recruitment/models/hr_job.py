@@ -49,14 +49,14 @@ class HrJob(models.Model):
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
-        default=_default_website_description,
+        default=lambda self: self._default_website_description(),
         prefetch=False,
     )
     job_details = fields.Html(
         string="Process Details",
         translate=True,
         sanitize_attributes=False,
-        default=_default_job_details,
+        default=lambda self: self._default_job_details(),
         help="Complementary information that will appear on the job submission page",
     )
     published_date = fields.Date(

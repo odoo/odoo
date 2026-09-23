@@ -28,13 +28,13 @@ class ProductTag(models.Model):
         comodel_name="product.template",
         relation="product_tag_product_template_rel",
         string="Product Templates",
-        default=_default_product_template_ids,
+        default=lambda self: self._default_product_template_ids(),
     )
     product_product_ids = fields.Many2many(
         comodel_name="product.product",
         relation="product_tag_product_product_rel",
         string="Product Variants",
-        default=_default_product_product_ids,
+        default=lambda self: self._default_product_product_ids(),
         domain="[('attribute_line_ids', '!=', False), ('product_tmpl_id', 'not in', product_template_ids)]",
     )
     product_ids = fields.Many2many(

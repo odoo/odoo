@@ -25,7 +25,7 @@ class BaseLanguageInstall(models.TransientModel):
         column1="language_wizard_id",
         column2="lang_id",
         string="Languages",
-        default=_default_lang_ids,
+        default=lambda self: self._default_lang_ids(),
         required=True,
         context={"active_test": False},
     )

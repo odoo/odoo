@@ -170,7 +170,7 @@ class HrVersion(models.Model):
     address_id = fields.Many2one(
         comodel_name="res.partner",
         string="Work Address",
-        default=_default_address_id,
+        default=lambda self: self._default_address_id(),
         store=True,
         readonly=False,
         check_company=True,

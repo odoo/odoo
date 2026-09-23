@@ -162,7 +162,7 @@ class AppointmentType(models.Model):
     booked_mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Booking Email",
-        default=_default_booked_mail_template_id,
+        default=lambda self: self._default_booked_mail_template_id(),
         domain=[("model", "=", "calendar.attendee")],
         ondelete="restrict",
         help="If set an email will be sent to the customer when the appointment is booked.",
@@ -170,7 +170,7 @@ class AppointmentType(models.Model):
     canceled_mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Cancellation Email",
-        default=_default_canceled_mail_template_id,
+        default=lambda self: self._default_canceled_mail_template_id(),
         domain=[("model", "=", "calendar.event")],
         ondelete="restrict",
         help="If set an email will be sent to the customer when the appointment is cancelled.",
@@ -280,7 +280,7 @@ class AppointmentType(models.Model):
         column1="appointment_type_id",
         column2="survey_question_id",
         string="Questions",
-        default=_default_question_ids,
+        default=lambda self: self._default_question_ids(),
     )
     reminder_ids = fields.Many2many(
         comodel_name="calendar.alarm",

@@ -95,7 +95,7 @@ class EventEvent(models.Model):
         translate=html_translate,
         sanitize_attributes=False,
         sanitize_form=False,
-        default=_default_description,
+        default=lambda self: self._default_description(),
     )
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
@@ -160,7 +160,7 @@ class EventEvent(models.Model):
     )
     stage_id = fields.Many2one(
         comodel_name="event.stage",
-        default=_default_stage_id,
+        default=lambda self: self._default_stage_id(),
         copy=False,
         group_expand="_read_group_expand_full",
         ondelete="restrict",

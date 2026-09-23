@@ -65,7 +65,7 @@ class PosConfig(models.Model):
     self_ordering_available_language_ids = fields.Many2many(
         comodel_name="res.lang",
         string="Available Languages",
-        default=_self_order_kiosk_default_languages,
+        default=lambda self: self._self_order_kiosk_default_languages(),
         help="Languages available for the kiosk mode",
     )
     self_ordering_image_home_ids = fields.Many2many(
@@ -84,7 +84,7 @@ class PosConfig(models.Model):
     self_ordering_default_user_id = fields.Many2one(
         comodel_name="res.users",
         string="Default User",
-        default=_self_order_default_user,
+        default=lambda self: self._self_order_default_user(),
         help="Access rights of this user will be used when visiting self order website when no session is open.",
     )
     self_ordering_pay_after = fields.Selection(

@@ -27,12 +27,12 @@ class CrmLeadPlsUpdate(models.TransientModel):
             return None
 
     pls_start_date = fields.Date(
-        default=_default_pls_start_date,
+        default=lambda self: self._default_pls_start_date(),
         required=True,
     )
     pls_fields = fields.Many2many(
         comodel_name="crm.lead.scoring.frequency.field",
-        default=_default_pls_fields,
+        default=lambda self: self._default_pls_fields(),
     )
 
     def action_update_crm_lead_probabilities(self):

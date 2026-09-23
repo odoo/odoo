@@ -49,7 +49,7 @@ class HrExpensePostWizard(models.TransientModel):
     employee_journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Journal",
-        default=_default_employee_journal_id,
+        default=lambda self: self._default_employee_journal_id(),
         domain=[("type", "=", "purchase")],
         check_company=True,
         help="The journal used when the expense is paid by employee.",

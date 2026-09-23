@@ -18,7 +18,7 @@ class EventBoothCategory(models.Model):
 
     product_id = fields.Many2one(
         comodel_name="product.product",
-        default=_default_product_id,
+        default=lambda self: self._default_product_id(),
         required=True,
         domain=[("service_tracking", "=", "event_booth")],
         groups="event.group_event_registration_desk",

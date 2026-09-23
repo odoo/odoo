@@ -25,7 +25,7 @@ class EventTypeBooth(models.Model):
     )
     booth_category_id = fields.Many2one(
         comodel_name="event.booth.category",
-        default=_default_booth_category_id,
+        default=lambda self: self._default_booth_category_id(),
         index=True,
         required=True,
         ondelete="restrict",

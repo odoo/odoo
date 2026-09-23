@@ -23,7 +23,7 @@ class PurchaseRequisition(models.Model):
     picking_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
         string="Operation Type",
-        default=_default_picking_type_id,
+        default=lambda self: self._default_picking_type_id(),
         required=True,
         domain="['|',('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]",
     )

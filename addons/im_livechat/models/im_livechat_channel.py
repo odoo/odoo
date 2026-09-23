@@ -36,12 +36,12 @@ class Im_LivechatChannel(models.Model):
     button_text = fields.Char(
         string="Text of the Button",
         translate=True,
-        default=_default_button_text,
+        default=lambda self: self._default_button_text(),
     )
     default_message = fields.Char(
         string="Welcome Message",
         translate=True,
-        default=_default_default_message,
+        default=lambda self: self._default_default_message(),
         help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.",
     )
     header_background_color = fields.Char(
@@ -115,7 +115,7 @@ class Im_LivechatChannel(models.Model):
         column1="channel_id",
         column2="user_id",
         string="Agents",
-        default=_default_user_ids,
+        default=lambda self: self._default_user_ids(),
     )
     channel_ids = fields.One2many(
         comodel_name="discuss.channel",

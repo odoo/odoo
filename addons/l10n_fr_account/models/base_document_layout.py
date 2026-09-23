@@ -17,4 +17,4 @@ class BaseDocumentLayout(models.TransientModel):
             "SIRET: %s", self.env.company.company_registry
         )
 
-    report_footer = fields.Html(default=_default_report_footer)
+    report_footer = fields.Html(default=lambda self: self._default_report_footer())

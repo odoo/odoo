@@ -24,7 +24,7 @@ class ProjectMilestone(models.Model):
     sequence = fields.Integer(default=10)
     project_id = fields.Many2one(
         comodel_name="project.project",
-        default=_default_project_id,
+        default=lambda self: self._default_project_id(),
         index=True,
         required=True,
         domain=[("is_template", "=", False)],

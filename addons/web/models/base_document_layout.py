@@ -78,12 +78,12 @@ class BaseDocumentLayout(models.TransientModel):
     )
     report_footer = fields.Html(
         related="company_id.report_config_id.report_footer",
-        default=_default_report_footer,
+        default=lambda self: self._default_report_footer(),
         readonly=False,
     )
     company_details = fields.Html(
         related="company_id.report_config_id.company_details",
-        default=_default_company_details,
+        default=lambda self: self._default_company_details(),
         readonly=False,
     )
     is_company_details_empty = fields.Boolean(

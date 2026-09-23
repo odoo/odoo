@@ -36,7 +36,7 @@ class HrAttendance(models.Model):
 
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
-        default=_default_employee_id,
+        default=lambda self: self._default_employee_id(),
         index=True,
         required=True,
         group_expand="_read_group_employee_id",

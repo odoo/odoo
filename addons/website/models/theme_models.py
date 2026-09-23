@@ -94,7 +94,7 @@ class ThemeIrUiView(models.Model):
     )
     active = fields.Boolean(default=True)
     arch = fields.Text(translate=xml_translate)
-    arch_fs = fields.Char(default=_default_arch_fs)
+    arch_fs = fields.Char(default=lambda self: self._default_arch_fs())
     inherit_id = fields.Reference(
         selection=[
             ("ir.ui.view", "ir.ui.view"),

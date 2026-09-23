@@ -31,7 +31,7 @@ class MailingMailingTest(models.TransientModel):
 
     email_to = fields.Text(
         string="Recipients",
-        default=_default_email_to,
+        default=lambda self: self._default_email_to(),
         required=True,
         help="Carriage-return-separated list of email addresses.",
     )

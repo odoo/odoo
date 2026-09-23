@@ -130,7 +130,7 @@ class Test_Testing_UtilitiesF(models.Model):
 
     m2m = fields.Many2many(
         comodel_name="test_testing_utilities.sub2",
-        default=_default_m2m,
+        default=lambda self: self._default_m2m(),
     )
     m2o = fields.Many2one(comodel_name="test_testing_utilities.sub2")
 

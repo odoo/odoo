@@ -28,7 +28,7 @@ class BaseModuleUpgrade(models.TransientModel):
 
     module_info = fields.Text(
         string="Apps to Update",
-        default=_default_module_info,
+        default=lambda self: self._default_module_info(),
         readonly=True,
     )
 

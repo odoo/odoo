@@ -16,4 +16,4 @@ class BaseDocumentLayout(models.TransientModel):
             )
         return company_details
 
-    company_details = fields.Html(default=_default_company_details)
+    company_details = fields.Html(default=lambda self: self._default_company_details())

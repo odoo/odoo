@@ -83,7 +83,7 @@ class EventTrack(models.Model):
     )
     stage_id = fields.Many2one(
         comodel_name="event.track.stage",
-        default=_default_stage_id,
+        default=lambda self: self._default_stage_id(),
         index=True,
         copy=False,
         required=True,

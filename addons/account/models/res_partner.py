@@ -226,7 +226,7 @@ class ResPartner(models.Model):
         compute="_compute_available_invoice_template_pdf_report_ids",
     )
     display_invoice_template_pdf_report_id = fields.Boolean(
-        default=_default_display_invoice_template_pdf_report_id,
+        default=lambda self: self._default_display_invoice_template_pdf_report_id(),
         store=False,
     )
     supplier_rank = fields.Integer(

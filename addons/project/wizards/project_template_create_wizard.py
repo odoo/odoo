@@ -35,7 +35,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
     role_to_users_ids = fields.One2many(
         comodel_name="project.template.role.to.users.map",
         inverse_name="wizard_id",
-        default=_default_role_to_users_ids,
+        default=lambda self: self._default_role_to_users_ids(),
     )
 
     @api.depends("template_id")

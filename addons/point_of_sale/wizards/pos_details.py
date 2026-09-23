@@ -24,7 +24,7 @@ class PosDetailsWizard(models.TransientModel):
         )
 
     start_date = fields.Datetime(
-        default=_default_start_date,
+        default=lambda self: self._default_start_date(),
         required=True,
     )
     end_date = fields.Datetime(

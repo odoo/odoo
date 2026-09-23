@@ -18,7 +18,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
 
     refuse_reason_id = fields.Many2one(
         comodel_name="hr.applicant.refuse.reason",
-        default=_default_refuse_reason_id,
+        default=lambda self: self._default_refuse_reason_id(),
         required=True,
     )
     applicant_ids = fields.Many2many(comodel_name="hr.applicant")

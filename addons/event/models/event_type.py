@@ -88,7 +88,7 @@ class EventType(models.Model):
         comodel_name="event.type.mail",
         inverse_name="event_type_id",
         string="Mail Schedule",
-        default=_default_event_type_mail_ids,
+        default=lambda self: self._default_event_type_mail_ids(),
     )
     # ticket reports
     ticket_instructions = fields.Html(
@@ -98,7 +98,7 @@ class EventType(models.Model):
     question_ids = fields.Many2many(
         comodel_name="event.question",
         string="Questions",
-        default=_default_question_ids,
+        default=lambda self: self._default_question_ids(),
         copy=True,
     )
 

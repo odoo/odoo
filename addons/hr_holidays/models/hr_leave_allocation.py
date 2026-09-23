@@ -102,7 +102,7 @@ class HrLeaveAllocation(models.Model):
         comodel_name="hr.leave.type",
         string="Time Off Type",
         compute="_compute_holiday_status_id",
-        default=_default_holiday_status_id,
+        default=lambda self: self._default_holiday_status_id(),
         store=True,
         index="btree",
         readonly=False,

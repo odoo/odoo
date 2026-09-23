@@ -286,7 +286,7 @@ class AccountJournal(models.Model):
             ("number", "Numbers only (202400001)"),
         ],
         string="Communication Standard",
-        default=_default_invoice_reference_model,
+        default=lambda self: self._default_invoice_reference_model(),
         required=True,
         help="You can choose different models for each type of reference. The default one is the Odoo reference.",
     )
@@ -337,7 +337,7 @@ class AccountJournal(models.Model):
         compute="_compute_available_invoice_template_pdf_report_ids",
     )
     display_invoice_template_pdf_report_id = fields.Boolean(
-        default=_default_display_invoice_template_pdf_report_id,
+        default=lambda self: self._default_display_invoice_template_pdf_report_id(),
         store=False,
     )
     sequence_override_regex = fields.Text(

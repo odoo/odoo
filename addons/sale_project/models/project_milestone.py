@@ -42,7 +42,7 @@ class ProjectMilestone(models.Model):
     sale_line_id = fields.Many2one(
         comodel_name="sale.order.line",
         string="Sales Order Item",
-        default=_default_sale_line_id,
+        default=lambda self: self._default_sale_line_id(),
         index="btree_not_null",
         domain="[('partner_id', '=?', project_partner_id), ('qty_transferred_method', '=', 'milestones')]",
         help="Sales Order Item that will be updated once the milestone is reached.",

@@ -78,7 +78,7 @@ class WebsiteVisitor(models.Model):
         string="Name",
     )
     access_token = fields.Char(
-        default=_default_access_token,
+        default=lambda self: self._default_access_token(),
         copy=False,
         required=True,
     )

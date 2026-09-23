@@ -71,7 +71,7 @@ class CrmIapLeadMiningRequest(models.Model):
     lead_type = fields.Selection(
         selection=[("lead", "Leads"), ("opportunity", "Opportunities")],
         string="Type",
-        default=_default_lead_type,
+        default=lambda self: self._default_lead_type(),
         required=True,
     )
     team_id = fields.Many2one(
@@ -114,7 +114,7 @@ class CrmIapLeadMiningRequest(models.Model):
     country_ids = fields.Many2many(
         comodel_name="res.country",
         string="Countries",
-        default=_default_country_ids,
+        default=lambda self: self._default_country_ids(),
     )
     state_ids = fields.Many2many(
         comodel_name="res.country.state",

@@ -14,7 +14,7 @@ class EventSponsorType(models.Model):
         translate=True,
         required=True,
     )
-    sequence = fields.Integer(default=_default_sequence)
+    sequence = fields.Integer(default=lambda self: self._default_sequence())
     display_ribbon_style = fields.Selection(
         selection=[
             ("no_ribbon", "No Ribbon"),

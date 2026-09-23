@@ -84,7 +84,7 @@ class ForumForum(models.Model):
         translate=html_translate,
         sanitize_attributes=False,
         sanitize_form=False,
-        default=_default_welcome_message,
+        default=lambda self: self._default_welcome_message(),
     )
     default_order = fields.Selection(
         selection=[

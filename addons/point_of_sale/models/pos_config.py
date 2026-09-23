@@ -104,7 +104,7 @@ class PosConfig(models.Model):
     picking_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
         string="Operation Type",
-        default=_default_picking_type_id,
+        default=lambda self: self._default_picking_type_id(),
         required=True,
         domain=lambda self: [
             ("code", "=", "outgoing"),
@@ -115,7 +115,7 @@ class PosConfig(models.Model):
     journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Point of Sale Journal",
-        default=_default_journal_id,
+        default=lambda self: self._default_journal_id(),
         domain=[("type", "in", ("general", "sale"))],
         ondelete="restrict",
         check_company=True,
@@ -123,7 +123,7 @@ class PosConfig(models.Model):
     )
     invoice_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        default=_default_invoice_journal_id,
+        default=lambda self: self._default_invoice_journal_id(),
         domain=[("type", "=", "sale")],
         check_company=True,
         help="Accounting journal used to create invoices.",
@@ -284,19 +284,19 @@ class PosConfig(models.Model):
     group_pos_manager_id = fields.Many2one(
         comodel_name="res.groups",
         string="Point of Sale Manager Group",
-        default=_default_group_pos_manager_id,
+        default=lambda self: self._default_group_pos_manager_id(),
         help="This field is there to pass the id of the pos manager group to the point of sale client.",
     )
     group_pos_user_id = fields.Many2one(
         comodel_name="res.groups",
         string="Point of Sale User Group",
-        default=_default_group_pos_user_id,
+        default=lambda self: self._default_group_pos_user_id(),
         help="This field is there to pass the id of the pos user group to the point of sale client.",
     )
     iface_tipproduct = fields.Boolean(string="Product tips")
     tip_product_id = fields.Many2one(
         comodel_name="product.product",
-        default=_default_tip_product_id,
+        default=lambda self: self._default_tip_product_id(),
         check_company=True,
         help="This product is used as reference on customer receipts.",
     )
@@ -367,7 +367,7 @@ class PosConfig(models.Model):
     ship_later = fields.Boolean()
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        default=_default_warehouse_id,
+        default=lambda self: self._default_warehouse_id(),
         ondelete="restrict",
     )
     route_id = fields.Many2one(

@@ -27,7 +27,7 @@ class EventTypeTicket(models.Model):
     # product
     product_id = fields.Many2one(
         comodel_name="product.product",
-        default=_default_product_id,
+        default=lambda self: self._default_product_id(),
         index=True,
         required=True,
         domain=[("service_tracking", "=", "event")],

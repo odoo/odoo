@@ -117,7 +117,7 @@ class MailActivity(models.Model):
     )
     activity_type_id: MailActivityType = fields.Many2one(
         comodel_name="mail.activity.type",
-        default=_default_activity_type_id,
+        default=lambda self: self._default_activity_type_id(),
         domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
         ondelete="restrict",
     )
@@ -138,7 +138,7 @@ class MailActivity(models.Model):
     note = fields.Html(sanitize_style=True)
     date_deadline = fields.Date(
         string="Due Date",
-        default=_default_date_deadline,
+        default=lambda self: self._default_date_deadline(),
         index=True,
         required=True,
     )

@@ -298,7 +298,7 @@ class CalendarEvent(models.Model):
     )
     # timing
     start = fields.Datetime(
-        default=_default_start,
+        default=lambda self: self._default_start(),
         index=True,
         required=True,
         tracking=True,
@@ -306,7 +306,7 @@ class CalendarEvent(models.Model):
     )
     stop = fields.Datetime(
         compute="_compute_stop",
-        default=_default_stop,
+        default=lambda self: self._default_stop(),
         store=True,
         readonly=False,
         required=True,
@@ -392,7 +392,7 @@ class CalendarEvent(models.Model):
         comodel_name="res.partner",
         relation="calendar_event_res_partner_rel",
         string="Attendees",
-        default=_default_partner_ids,
+        default=lambda self: self._default_partner_ids(),
         context={"active_test": False},
     )
     invalid_email_partner_ids = fields.Many2many(

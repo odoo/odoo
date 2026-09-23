@@ -56,7 +56,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         readonly=False,
     )
     weight_uom_name = fields.Char(
-        default=_default_weight_uom_name,
+        default=lambda self: self._default_weight_uom_name(),
         readonly=True,
     )
 

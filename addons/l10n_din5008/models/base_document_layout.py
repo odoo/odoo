@@ -40,8 +40,8 @@ class BaseDocumentLayout(models.TransientModel):
             return re.sub(r"(( )*<br>( )*\n)+", r"<br>\n", default_company_details)
         return default_company_details
 
-    report_footer = fields.Html(default=_default_report_footer)
-    company_details = fields.Html(default=_default_company_details)
+    report_footer = fields.Html(default=lambda self: self._default_report_footer())
+    company_details = fields.Html(default=lambda self: self._default_company_details())
     street = fields.Char(
         related="company_id.street",
         readonly=True,

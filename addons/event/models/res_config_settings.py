@@ -46,7 +46,7 @@ class ResConfigSettings(models.TransientModel):
     module_event_booth = fields.Boolean(string="Booth Management")
     use_google_maps_static_api = fields.Boolean(
         string="Google Maps static API",
-        default=_default_use_google_maps_static_api,
+        default=lambda self: self._default_use_google_maps_static_api(),
     )
 
     @api.depends("use_google_maps_static_api")

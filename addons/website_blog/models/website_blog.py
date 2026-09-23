@@ -27,7 +27,7 @@ class BlogBlog(models.Model):
     def _default_sequence(self):
         return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
 
-    sequence = fields.Integer(default=_default_sequence)
+    sequence = fields.Integer(default=lambda self: self._default_sequence())
     name = fields.Char(
         string="Blog Name",
         translate=True,
@@ -265,7 +265,7 @@ class BlogPost(models.Model):
     content = fields.Html(
         translate=html_translate,
         sanitize=False,
-        default=_default_content,
+        default=lambda self: self._default_content(),
     )
     teaser = fields.Text(
         translate=True,

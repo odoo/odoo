@@ -286,7 +286,7 @@ class MailingMailing(models.Model):
     )
     mail_server_id = fields.Many2one(
         comodel_name="ir.mail_server",
-        default=_default_mail_server_id,
+        default=lambda self: self._default_mail_server_id(),
         index="btree_not_null",
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.",
     )

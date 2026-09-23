@@ -100,7 +100,7 @@ class ProductTemplate(models.Model):
         string="Ribbon",
     )
     website_sequence = fields.Integer(
-        default=_default_website_sequence,
+        default=lambda self: self._default_website_sequence(),
         index=True,
         copy=False,
         help="Determine the display order in the Website E-commerce",

@@ -127,7 +127,7 @@ class RatingRating(models.Model):
     )
     access_token = fields.Char(
         string="Security Token",
-        default=_default_access_token,
+        default=lambda self: self._default_access_token(),
         index=True,
     )
     consumed = fields.Boolean(string="Filled Rating")
