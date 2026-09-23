@@ -1,11 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
+import logging
 
 import requests
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import hmac
 from odoo.tools.urls import urljoin
+
+_logger = logging.getLogger(__name__)
 
 QRIS_TIMEOUT = 35  # They say that the time to get a response vary between 6 to 30s
 
@@ -30,6 +34,24 @@ class ResPartnerBank(models.Model):
 
     l10n_id_qris_api_key = fields.Char("QRIS API Key", groups="base.group_system", help="The authentication token connecting merchant systems to process Indonesian QR payments.")
     l10n_id_qris_mid = fields.Char("QRIS Merchant ID", groups="base.group_system", help="QRIS Merchant ID is the National Merchant ID obtained after successful QRIS registration.")
+    l10n_id_qris_webhook_url = fields.Char(
+        "QRIS Webhook URL",
+        compute='_compute_l10n_id_qris_webhook_url',
+        groups="base.group_system",
+        help="Register this URL as the webhook in your QRIS merchant portal to register the payments as soon as they are made.",
+    )
+
+    def _compute_l10n_id_qris_webhook_url(self):
+        for bank in self:
+            bank.l10n_id_qris_webhook_url = urljoin(
+                bank.get_base_url(),
+                f'/l10n_id/qris/webhook/{bank.id}/{bank._l10n_id_get_qris_webhook_token()}',
+            ) if bank.id else False
+
+    def _l10n_id_get_qris_webhook_token(self):
+        """ The secret part of the webhook URL, proving that a notification comes from QRIS """
+        self.ensure_one()
+        return hmac(self.env(su=True), 'l10n_id-qris-webhook', self.id)
 
     @api.model
     def _get_available_qr_methods(self):
@@ -149,3 +171,24 @@ class ResPartnerBank(models.Model):
             'trxvalue': qr_data['qris_amount'],
             'trxdate': qr_data['qris_creation_datetime'],
         })
+
+    def _l10n_id_qris_process_webhook(self, data):
+        """ Mark the QRIS transaction notified by the webhook as paid and register the payment of its invoice.
+
+        :param dict data: the payload sent by QRIS, containing the QRIS invoice id and the payment status
+        """
+        self.ensure_one()
+        if data.get('qris_status') != 'success' or not data.get('invoice'):
+            return
+
+        transaction = self.env['l10n_id.qris.transaction'].search([
+            ('bank_id', '=', self.id),
+            ('qris_invoice_id', '=', data.get('invoice')),
+        ], limit=1)
+        if not transaction:
+            _logger.warning("QRIS webhook received for an unknown transaction: %s", data.get('invoice'))
+            return
+
+        transaction.paid = True
+        if transaction.model == 'account.move' and (invoice := transaction._get_record()):
+            invoice.with_company(invoice.company_id)._l10n_id_process_invoices({invoice.id: {'paid': True, 'qr_statuses': [data]}})
