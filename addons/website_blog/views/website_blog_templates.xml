@@ -94,7 +94,7 @@ list of filtered posts (by date or tag).
 
         <t t-call="website_blog.blogs_nav"
             search="original_search or search"
-            additional_classes.f="mt-3 #{(opt_blog_fullwidth or opt_blog_split_grid_view) and 'container-fluid' or 'container'}"/>
+            additional_classes.f="#{(opt_blog_fullwidth or opt_blog_split_grid_view) and 'container-fluid' or 'container'}"/>
 
         <section id="o_wblog_index_content">
             <t t-if="opt_blog_simple_list_view and not opt_blog_sidebar_show" t-set="containerClass" t-value="'o_container_small'"/>
