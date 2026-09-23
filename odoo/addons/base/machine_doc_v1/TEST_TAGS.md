@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (4147 methods, 835 classes, 145 files)
+# All base tests (4153 methods, 835 classes, 145 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -150,10 +150,10 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_ir_model_data.py` | `post_install`, `-at_install` | 2 | 7 | TransactionCase |
 | `test_mixin_merge.py` | `post_install`, `-at_install` | 2 | 7 | TransactionCase |
 | `test_mixin_recurrence_rrule.py` | `post_install`, `-at_install` | 1 | 2 | TransactionCase |
-| `test_module_data_remove_xmlid_records.py` | `post_install`, `-at_install` | 1 | 7 | TransactionCase |
-| `test_module_data_rename_in_view_arches.py` | `post_install`, `-at_install` | 1 | 8 | TransactionCase |
-| `test_module_data_rename_model.py` | `post_install`, `-at_install` | 2 | 15 | TransactionCase |
-| `test_module_data_rename_module.py` | `post_install`, `-at_install` | 1 | 6 | TransactionCase |
+| `test_module_data_remove_xmlid_records.py` | `post_install`, `-at_install` | 1 | 8 | TransactionCase |
+| `test_module_data_rename_in_view_arches.py` | `post_install`, `-at_install` | 1 | 9 | TransactionCase |
+| `test_module_data_rename_model.py` | `post_install`, `-at_install` | 2 | 18 | TransactionCase |
+| `test_module_data_rename_module.py` | `post_install`, `-at_install` | 1 | 7 | TransactionCase |
 | `test_neutralize.py` | `post_install`, `-at_install`, `neutralize` | 2 | 2 | TransactionCase, BaseCase |
 | `test_nplusone.py` | `-standard`, `nplusone` | 3 | 12 | TransactionCase, TestNplusOneDetection |
 | `test_orm.py` | `post_install`, `-at_install` | 6 | 33 | TransactionCase |
@@ -263,7 +263,7 @@ These run in **both** at_install and post_install phases by default.
 |--------|-------|
 | Total test files | 145 |
 | Total test classes | 835 |
-| Total test methods | 4147 |
+| Total test methods | 4153 |
 | Files with @tagged | 84 (58%) |
 | Files without @tagged | 61 (42%) |
 | Classes using post_install | 282 |
