@@ -75,7 +75,9 @@ class _MetricsMixin:
         if hasattr(t, "query_count"):
             t.query_count += count
             t.query_time += delay
-        for hook in hooks or ():
+        # A hook may remove itself or another (a profiler reaching its entry
+        # limit ends and unhooks); iterating the live list would skip the next.
+        for hook in tuple(hooks) if hooks else ():
             hook(self, query, params, start, delay)
 
     def _record_sql_log(self, query_type: str, table: str | None, delay: float) -> None:

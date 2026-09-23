@@ -237,6 +237,18 @@ class TestMetricsMixin(unittest.TestCase):
         )
         self.assertEqual(seen, [(self.cur, "Q", (1,), 2.0, 0.5)])
 
+    def test_a_hook_removing_itself_does_not_skip_the_next(self):
+        seen = []
+        hooks = []
+
+        def leaving(*_args):
+            seen.append("leaving")
+            hooks.remove(leaving)
+
+        hooks.extend([leaving, lambda *_a: seen.append("next")])
+        self.cur._record_metrics(0.1, query="Q", hooks=hooks)
+        self.assertEqual(seen, ["leaving", "next"])
+
     def test_record_metrics_tolerates_a_thread_without_metric_attrs(self):
         self.cur._record_metrics(0.01)
 

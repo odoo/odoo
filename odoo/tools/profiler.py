@@ -1,6 +1,5 @@
 import json
 import logging
-import re
 import sys
 import threading
 import tracemalloc
@@ -35,8 +34,9 @@ def _format_stack(stack: list[tuple[str, int, str, str]]) -> list[list[Any]]:
 
 
 def get_current_frame(thread: threading.Thread | None = None) -> FrameType:
-    if thread and thread.ident is not None:
-        frame: FrameType | None = sys._current_frames()[thread.ident]
+    frame: FrameType | None
+    if thread and thread.ident is not None and thread.ident != threading.get_ident():
+        frame = sys._current_frames()[thread.ident]
     else:
         frame = sys._getframe()
     while frame is not None and frame.f_code.co_filename == __file__:
@@ -73,7 +73,7 @@ def get_session_name(name: str = "") -> str:
 
 def force_hook() -> None:
     thread = threading.current_thread()
-    for func in getattr(thread, "profile_hooks", ()):
+    for func in tuple(getattr(thread, "profile_hooks", ())):
         func()
 
 
@@ -86,7 +86,6 @@ class Collector:
     def __init_subclass__(cls):
         if cls.name:
             cls._registry[cls.name] = cls
-            cls._registry[cls.__name__] = cls
 
     @classmethod
     def prepare_collector(cls, name: str, *args: Any, **kwargs: Any) -> Collector:
@@ -229,10 +228,12 @@ class _BasePeriodicCollector(Collector):
 
     def __init__(self, interval: float | None = None) -> None:
         super().__init__()
-        self.active: bool = False
         self.frame_interval: float = interval or self._default_interval
-        self.__thread = threading.Thread(target=self.run)
+        self.__thread = threading.Thread(
+            target=self.run, name=f"odoo.profiler.{self.name}", daemon=True
+        )
         self.last_frame: FrameType | None = None
+        self._last_time: float = 0.0
         self._stop_event = threading.Event()
 
     def start(self) -> None:
@@ -254,18 +255,17 @@ class _BasePeriodicCollector(Collector):
         )
 
     def run(self) -> None:
-        self.active = True
         self._last_time = real_time()
-        while self.active:
+        while not self._stop_event.is_set():
             self.progress()
             self._stop_event.wait(self.frame_interval)
 
     def stop(self) -> None:
-        self.active = False
         self._stop_event.set()
-        self._entries.append({"stack": [], "start": real_time()})
         if self.__thread.is_alive() and self.__thread is not threading.current_thread():
             self.__thread.join()
+        self._entries.append({"stack": [], "start": real_time()})
+        self.last_frame = None
         self.profiler.init_thread.profile_hooks.remove(self.progress)
         _debug.lifecycle(
             "profiler.periodic_stopped", collector=self.name, entries=len(self._entries)
@@ -306,6 +306,7 @@ class MemoryCollector(_BasePeriodicCollector):
     _min_interval = 0.01
     _default_interval = 1
     _lock_acquired = False
+    _owns_tracing = False
 
     def start(self):
         self._lock_acquired = _lock.acquire(timeout=5)
@@ -316,14 +317,14 @@ class MemoryCollector(_BasePeriodicCollector):
             )
             _debug.logic("profiler.memory_collector_busy")
             return
-        started_tracing = False
+        self._owns_tracing = not tracemalloc.is_tracing()
+        _debug.logic("profiler.memory_tracing", owned=self._owns_tracing)
         try:
-            tracemalloc.start()
-            started_tracing = True
+            if self._owns_tracing:
+                tracemalloc.start()
             super().start()
         except BaseException:
-            if started_tracing:
-                tracemalloc.stop()
+            self._stop_owned_tracing()
             _lock.release()
             self._lock_acquired = False
             raise
@@ -342,9 +343,14 @@ class MemoryCollector(_BasePeriodicCollector):
         try:
             super().stop()
         finally:
-            tracemalloc.stop()
+            self._stop_owned_tracing()
             _lock.release()
             self._lock_acquired = False
+
+    def _stop_owned_tracing(self) -> None:
+        if self._owns_tracing:
+            tracemalloc.stop()
+            self._owns_tracing = False
 
     def post_process(self):
         for i, entry in enumerate(self._entries):
@@ -666,22 +672,10 @@ class Profiler:
 
     def __enter__(self) -> Self:
         self.init_thread = threading.current_thread()
-        try:
-            self.init_frame = get_current_frame(self.init_thread)
-            self.init_stack_trace = _get_stack_trace(self.init_frame)
-        except KeyError:
-            self.init_frame = None
-            self.init_stack_trace = None
-            self.collectors = []
-            self.db = None
-            self.params = {}
-            message = "Cannot start profiler, thread not found. Is the thread part of a thread pool?"
-            if not self.description:
-                self.description = message
-            _logger.warning(message)
-            _debug.logic("profiler.thread_not_found", session=self.profile_session)
+        self.init_frame = get_current_frame(self.init_thread)
+        self.init_stack_trace = _get_stack_trace(self.init_frame)
 
-        if self.description is None and self.init_frame is not None:
+        if self.description is None:
             frame = self.init_frame
             code = frame.f_code
             self.description = (
@@ -813,6 +807,7 @@ class Profiler:
                 error=type(exc).__name__,
             )
         finally:
+            self.init_frame = None
             self.exit_stack.close()
             if (
                 self.params
@@ -853,33 +848,11 @@ class Profiler:
     def entry_count(self) -> int:
         return sum(len(collector.entries) for collector in self.collectors)
 
-    def format_path(self, path: str) -> str:
-        return path.format(
-            time=real_datetime_now().strftime("%Y%m%d-%H%M%S"),
-            len=self.entry_count(),
-            desc=re.sub(r"[^0-9a-zA-Z-]+", "_", self.description or ""),
-        )
-
-    def json(self) -> str:
-        return json.dumps(
-            {
-                "name": self.description,
-                "session": self.profile_session,
-                "create_date": real_datetime_now().strftime("%Y%m%d-%H%M%S"),
-                "init_stack_trace": _format_stack(self.init_stack_trace or []),
-                "duration": self.duration,
-                "collectors": {
-                    collector.name: collector.entries for collector in self.collectors
-                },
-            },
-            indent=4,
-        )
-
     def summary(self) -> str:
         result = ""
         for profiler in [self, *self.sub_profilers]:
             for collector in profiler.collectors:
-                result += f"\n{self.description}\n{collector.summary()}"
+                result += f"\n{profiler.description}\n{collector.summary()}"
         return result
 
 
