@@ -329,8 +329,8 @@ export class Chatter extends Component {
     }
 
     async reloadParentView() {
-        await this.props.saveRecord?.();
-        if (this.props.webRecord) {
+        const saved = await this.props.saveRecord?.();
+        if (this.props.webRecord && saved) {
             await this.props.webRecord.load();
         }
     }
