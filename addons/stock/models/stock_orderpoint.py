@@ -136,41 +136,49 @@ class StockWarehouseOrderpoint(models.Model):
             return
 
         # We have to filter by company here in case of multi-company and because horizon_days is a company setting
+        company_data = []
+        move_in_domains = []
+        move_out_domains = []
         for company in orderpoints_to_compute.company_id:
             company_orderpoints = orderpoints_to_compute.filtered(lambda c: c.company_id == company)
             horizon_date = fields.Date.today() + relativedelta.relativedelta(days=company_orderpoints.get_horizon_days())
+            company_data.append((company_orderpoints, horizon_date))
             _, domain_move_in, domain_move_out = company_orderpoints.product_id._get_domain_locations()
-            domain_move_in = Domain.AND([
+            move_in_domains.append(Domain.AND([
                 [('product_id', 'in', company_orderpoints.product_id.ids)],
                 [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))],
                 domain_move_in,
                 [('date', '<=', horizon_date)],
-            ])
-            domain_move_out = Domain.AND([
-                [('product_id', '=', company_orderpoints.product_id.ids)],
+            ]))
+            move_out_domains.append(Domain.AND([
+                [('product_id', 'in', company_orderpoints.product_id.ids)],
                 [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))],
                 domain_move_out,
                 [('date', '<=', horizon_date)],
-            ])
+            ]))
 
-            Move = self.env['stock.move'].with_context(active_test=False)
-            incoming_moves_by_product_date = Move._read_group(domain_move_in, ['product_id', 'location_dest_id', 'date:day'], ['product_qty:sum'])
-            outgoing_moves_by_product_date = Move._read_group(domain_move_out, ['product_id', 'location_id', 'date:day'], ['product_qty:sum'])
+        # Run a single read_group per direction for all companies.
+        Move = self.env['stock.move'].with_context(active_test=False)
+        incoming_moves_by_product_date = Move._read_group(Domain.OR(move_in_domains), ['product_id', 'location_dest_id', 'date:day'], ['product_qty:sum'])
+        outgoing_moves_by_product_date = Move._read_group(Domain.OR(move_out_domains), ['product_id', 'location_id', 'date:day'], ['product_qty:sum'])
 
-            moves_by_product_dict = {}
-            for product, location, in_date, in_qty in incoming_moves_by_product_date:
-                if not moves_by_product_dict.get((product.id, location.id)):
-                    moves_by_product_dict[product.id, location.id] = defaultdict(float)
-                moves_by_product_dict[product.id, location.id][in_date.date()] += in_qty
-            for product, location, out_date, out_qty in outgoing_moves_by_product_date:
-                if not moves_by_product_dict.get((product.id, location.id)):
-                    moves_by_product_dict[product.id, location.id] = defaultdict(float)
-                moves_by_product_dict[product.id, location.id][out_date.date()] -= out_qty
+        moves_by_product_dict = {}
+        for product, location, in_date, in_qty in incoming_moves_by_product_date:
+            if not moves_by_product_dict.get((product.id, location.id)):
+                moves_by_product_dict[product.id, location.id] = defaultdict(float)
+            moves_by_product_dict[product.id, location.id][in_date.date()] += in_qty
+        for product, location, out_date, out_qty in outgoing_moves_by_product_date:
+            if not moves_by_product_dict.get((product.id, location.id)):
+                moves_by_product_dict[product.id, location.id] = defaultdict(float)
+            moves_by_product_dict[product.id, location.id][out_date.date()] -= out_qty
 
+        for company_orderpoints, horizon_date in company_data:
             for orderpoint in company_orderpoints:
                 qty_on_hand_at_date = orderpoint.qty_on_hand
                 tentative_deadline = horizon_date
                 for move_date, move_qty in sorted(moves_by_product_dict.get((orderpoint.product_id.id, orderpoint.location_id.id), {}).items()):
+                    if move_date > horizon_date:
+                        break
                     qty_on_hand_at_date += move_qty
                     if qty_on_hand_at_date < orderpoint.product_min_qty:
                         tentative_deadline = move_date - relativedelta.relativedelta(days=orderpoint.lead_days)
