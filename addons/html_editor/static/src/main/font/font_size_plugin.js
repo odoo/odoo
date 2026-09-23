@@ -80,7 +80,7 @@ export class FontSizePlugin extends Plugin {
                             });
                         } else {
                             this.dependencies.format.requestFormat("fontSize", {
-                                formatProps: { size: resolvedSize },
+                                formatProps: resolvedSize,
                                 applyStyle: true,
                             });
                         }
@@ -190,8 +190,21 @@ export class FontSizePlugin extends Plugin {
                     removeClass(node, ...FONT_SIZE_CLASSES, "o_rfs");
                     if (props.className) {
                         node.classList.add(props.className);
-                    } else if (props.size) {
-                        node.style["font-size"] = props.size;
+                    } else if (props.size || props.pixelSize) {
+                        // Replace font-size declarations to use both a fix pixel-based size and a
+                        // dynamic one. The dynamic one will override the fixed one in engines where
+                        // it is valid. Engines that don't support it will fallback to the fixed one.
+                        const cleaned = node.style.cssText
+                            .replace(/font-size\s*:[^;]+;?/g, "")
+                            .trim();
+                        let styleValue = cleaned ? cleaned + " " : "";
+                        if (props.pixelSize) {
+                            styleValue += `font-size: ${props.pixelSize}; `;
+                        }
+                        if (props.size) {
+                            styleValue += `font-size: ${props.size}; `;
+                        }
+                        node.setAttribute("style", styleValue.trim());
                         node.classList.toggle(
                             "o_rfs",
                             !!props.size && props.size.startsWith("clamp(")
@@ -295,7 +308,7 @@ export class FontSizePlugin extends Plugin {
             const maxPx = items[items.length - 1].name;
             if (desiredPx >= minPx && desiredPx <= maxPx) {
                 // Within the system-defined range: plain px is fine.
-                return `${desiredPx}px`;
+                return { size: `${desiredPx}px` };
             }
         }
         // Outside the system range => produce responsive value.
@@ -309,9 +322,16 @@ export class FontSizePlugin extends Plugin {
             // existing inline override.
             return null;
         }
-        return `clamp(8px, 1em + ${uiValue.toFixed(4)}vw, ${
+        const size = `clamp(8px, 1em + ${uiValue.toFixed(4)}vw, ${
             this.config.maxFontSize || MAX_FONT_SIZE
         }px)`;
+        if (this.config.responsiveFontSizeFallback ?? false) {
+            return { size };
+        }
+        return {
+            size,
+            pixelSize: `${desiredPx}px`,
+        };
     }
 
     updateFontSizeSelectorParams() {
