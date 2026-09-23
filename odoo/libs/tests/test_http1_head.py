@@ -54,6 +54,10 @@ def test_leading_double_slash_collapses_so_path_cannot_become_protocol_relative(
         (b"/%2Fevil.example/x", "/evil.example/x"),
         (b"/%2f%2fevil.example", "/evil.example"),
         (b"/%2F/%2Fevil.example", "/evil.example"),
+        (b"/%5Cevil.example/x", "/evil.example/x"),
+        (b"/%5c%5Cevil.example", "/evil.example"),
+        (b"/%5C%2Fevil.example", "/evil.example"),
+        (b"/%2F%5Cevil.example", "/evil.example"),
     ],
 )
 def test_an_encoded_double_slash_collapses_too(target, path):
@@ -258,3 +262,10 @@ def test_head_size_and_count_limits():
     with pytest.raises(ProtocolError) as info:
         parse_request_head(raw[:-4], small)
     assert info.value.status == HTTPStatus.REQUEST_HEADER_FIELDS_TOO_LARGE
+
+
+def test_a_backslash_past_the_leading_run_is_part_of_the_path():
+    assert (
+        parse(b"GET /web/content/7/a%5Cb.txt HTTP/1.1\r\nHost: x\r\n\r\n").path
+        == "/web/content/7/a\\b.txt"
+    )

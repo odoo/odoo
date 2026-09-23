@@ -231,8 +231,11 @@ def _decode_path(path: bytes) -> str:
     decoded = unquote_to_bytes(path)
     if b"\x00" in decoded:
         raise _bad("NUL in request path")
-    if decoded.startswith(b"//"):
-        decoded = b"/" + decoded.lstrip(b"/")
+    # a browser reads a leading "\" as "/", so "/\evil.example" echoed into a
+    # Location header is protocol-relative too; one further in is a filename
+    # character (/web/content/<id>/<filename>) and stays
+    if decoded[1:2] in (b"/", b"\\"):
+        decoded = b"/" + decoded.lstrip(b"/\\")
     return decoded.decode("latin-1")
 
 
