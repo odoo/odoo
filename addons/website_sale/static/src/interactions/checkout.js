@@ -1,9 +1,11 @@
+import { usePlugin, markup } from '@odoo/owl';
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
+import { redirect } from '@web/core/utils/urls';
 import { setElementContent } from '@web/core/utils/html';
-import { markup } from '@odoo/owl';
+import { BootstrapInstance } from '@web/core/utils/bootstrap_plugin';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export class Checkout extends Interaction {
@@ -11,11 +13,23 @@ export class Checkout extends Interaction {
     dynamicContent = {
         // Addresses
         '.card': { 't-on-click': this.changeAddress },
-        // Cancel the address change to allow the redirect to the edit page to take place.
-        '.js_edit_address': { 't-on-click.stop': () => {} },
+        // Open the edit dialog instead of letting the pencil link navigate away.
+        '.js_edit_address': { 't-on-click.stop': this.openEditAddressDialog },
+        '#o_wsale_edit_address_modal_save': { 't-on-click': this.saveEditAddressDialog },
         '#use_delivery_as_billing': { 't-on-change': this.toggleBillingAddressRow },
         // Delivery methods
         '[name="o_delivery_radio"]': { 't-on-click': this.selectDeliveryMethod },
+        // Address form (new customers filling in their details inline on this page): refresh the
+        // delivery methods as soon as enough of the address is known to compute them.
+        'form.address_autoformat select[name="country_id"]': {
+            't-on-change': this.debounced(this.updateDeliveryAddress, 500),
+        },
+        'form.address_autoformat select[name="state_id"]': {
+            't-on-change': this.updateDeliveryAddress,
+        },
+        'form.address_autoformat input[name="zip"]': {
+            't-on-input': this.debounced(this.updateDeliveryAddress, 500),
+        },
     };
 
     setup() {
@@ -27,6 +41,8 @@ export class Checkout extends Interaction {
         this.billingContainer = this.el.querySelector('#billing_container');
         this.vatDiv = this.el.querySelector(".o_address_card_vat");
         this.addBillingAddressBtn = this.el.querySelector('.o_add_billing_address_btn');
+        this.bootstrap = usePlugin(BootstrapInstance);
+        this.editAddressModalEl = this.el.querySelector('#o_wsale_edit_address_modal');
     }
 
     async willStart() {
@@ -152,6 +168,36 @@ export class Checkout extends Interaction {
         await this.waitFor(this._updateDeliveryMethod(checkedRadio));
 
         // Re-enable the main button after delivery rates have been fetched.
+        this._enableMainButton();
+    }
+
+    /**
+     * Push the partial address (country/state/zip) currently typed in the inline address form to
+     * the server, and refresh the delivery methods so that address-dependent carriers (e.g.
+     * country-restricted ones) unlock without waiting for the form to be submitted.
+     *
+     * @return {void}
+     */
+    async updateDeliveryAddress() {
+        const addressForm = this.el.querySelector('form.address_autoformat');
+        if (!addressForm) {
+            return; // No inline address form on this page (the address is already known).
+        }
+
+        this._disableMainButton();
+        const deliveryFormHtml = await this.waitFor(rpc('/shop/checkout/update_delivery_address', {
+            country_id: addressForm.country_id?.value,
+            state_id: addressForm.state_id?.value,
+            zip: addressForm.zip?.value,
+        }));
+        if (deliveryFormHtml) {
+            // The delivery methods are regenerated below, so we need to stop and start
+            // interactions to make sure the regenerated delivery methods are properly handled.
+            this.services['public.interactions'].stopInteractions(this.el);
+            document.getElementById('o_delivery_form').innerHTML = deliveryFormHtml;
+            this.services['public.interactions'].startInteractions(this.el);
+            await this.waitFor(this._prepareDeliveryMethods());
+        }
         this._enableMainButton();
     }
 
@@ -385,6 +431,66 @@ export class Checkout extends Interaction {
         });
     }
 
+    /**
+     * Open the address edit dialog, filled with the address of the clicked card.
+     *
+     * @param {Event} ev
+     * @return {void}
+     */
+    async openEditAddressDialog(ev) {
+        ev.preventDefault();
+        const card = ev.currentTarget.closest('[name="address_card"]');
+        const modalBodyEl = this.editAddressModalEl.querySelector('.modal-body');
+
+        // Stop any interaction (e.g. a previous dialog use) still running on the modal body
+        // before replacing its content, then (re)start them on the freshly injected form.
+        this.services['public.interactions'].stopInteractions(modalBodyEl);
+        const formHtml = await this.waitFor(rpc('/shop/address/dialog', {
+            partner_id: card.dataset.partnerId,
+            address_type: card.dataset.addressType,
+        }));
+        // The `.o_customer_address_fill` class is added here, on the wrapper we're about to fill,
+        // rather than kept statically on the empty modal body: `CustomerAddress` mounts on any
+        // match for that selector and assumes a form is already inside, which would crash on an
+        // empty container present in the DOM before the dialog is ever opened.
+        modalBodyEl.replaceChildren();
+        const formWrapperEl = document.createElement('div');
+        formWrapperEl.className = 'o_customer_address_fill';
+        formWrapperEl.innerHTML = formHtml;
+        modalBodyEl.appendChild(formWrapperEl);
+        this.services['public.interactions'].startInteractions(modalBodyEl);
+
+        this.bootstrap.getOrCreateInstance(window.Modal, this.editAddressModalEl).show();
+    }
+
+    /**
+     * Submit the address form displayed in the edit dialog.
+     *
+     * Not bound to the generic `website_sale_main_button` handler (`CustomerAddress.saveAddress`)
+     * on purpose: that name is also used by the page's own "Checkout" button, and binding both
+     * would submit the dialog's form when the customer only meant to move to the next step.
+     *
+     * @return {void}
+     */
+    async saveEditAddressDialog() {
+        const formEl = this.editAddressModalEl.querySelector('form.address_autoformat');
+        if (!formEl || !formEl.reportValidity()) {
+            return;
+        }
+
+        const result = await this.waitFor(
+            this.services['http'].post(formEl.dataset.submitUrl, new FormData(formEl))
+        );
+        if (result.redirectUrl) {
+            redirect(result.redirectUrl);
+            return;
+        }
+        formEl.querySelectorAll('.is-invalid').forEach((el) => el.classList.remove('is-invalid'));
+        (result.invalid_fields || []).forEach((fieldName) => {
+            formEl[fieldName]?.classList.add('is-invalid');
+        });
+    }
+
     // #=== DELIVERY FLOW ===#
 
     /**
@@ -468,6 +574,12 @@ export class Checkout extends Interaction {
      * @return {boolean} - Whether a billing address is selected.
      */
     _isBillingAddressSelected() {
+        const billingCards = this.el.querySelectorAll('.card[data-address-type="billing"]');
+        if (billingCards.length === 0) {
+            // No address list to pick from (e.g. the address form is being filled in): ignore
+            // the check.
+            return true;
+        }
         const billingAddressSelected = Boolean(
             this.el.querySelector('.card.bg-400[data-address-type="billing"]')
         );
