@@ -6,12 +6,16 @@ import pytest
 from odoo.libs import backoff
 
 
+def bounds(attempts, *, base, cap):
+    return [backoff.get_bound(n, base=base, cap=cap) for n in range(1, attempts + 1)]
+
+
 class TestBound:
     def test_first_attempt_is_the_base(self):
         assert backoff.get_bound(1, base=0.2, cap=2.0) == 0.2
 
     def test_the_ceiling_doubles_until_it_reaches_the_cap(self):
-        assert list(backoff.iter_bounds(5, base=0.2, cap=2.0)) == [
+        assert list(bounds(5, base=0.2, cap=2.0)) == [
             0.2,
             0.4,
             0.8,
@@ -20,7 +24,7 @@ class TestBound:
         ]
 
     def test_the_schedule_grows_strictly_until_capped(self):
-        seen = list(backoff.iter_bounds(6, base=0.2, cap=2.0))
+        seen = list(bounds(6, base=0.2, cap=2.0))
         growing = [b for b in seen if b < 2.0]
         assert growing == sorted(set(growing)), (
             f"schedule is not strictly growing: {seen}"
@@ -30,7 +34,7 @@ class TestBound:
         )
 
     def test_the_cap_is_never_exceeded(self):
-        assert all(b <= 2.0 for b in backoff.iter_bounds(20, base=0.2, cap=2.0))
+        assert all(b <= 2.0 for b in bounds(20, base=0.2, cap=2.0))
 
     def test_a_cap_below_the_base_is_rejected_rather_than_flattening_the_curve(self):
         with pytest.raises(ValueError, match="flattens the curve"):
@@ -45,7 +49,7 @@ class TestBound:
         assert backoff.get_bound(10_001, base=1.0, cap=60.0) == 60.0
 
     def test_the_cap_is_reached_by_the_doubling_it_is_due(self):
-        assert list(backoff.iter_bounds(7, base=2.0, cap=60.0)) == [
+        assert list(bounds(7, base=2.0, cap=60.0)) == [
             2,
             4,
             8,
@@ -119,7 +123,7 @@ class TestCallSitesAreNotFlat:
         )
 
         seen = list(
-            backoff.iter_bounds(
+            bounds(
                 MAX_TRIES_ON_CONCURRENCY_FAILURE,
                 base=BASE_CONCURRENCY_BACKOFF_SECONDS,
                 cap=MAX_CONCURRENCY_BACKOFF_SECONDS,
@@ -146,7 +150,7 @@ class TestCallSitesAreNotFlat:
             return float(match[1])
 
         seen = list(
-            backoff.iter_bounds(
+            bounds(
                 int(constant("CONCURRENCY_MAX_ATTEMPTS")),
                 base=constant("CONCURRENCY_BACKOFF_BASE_S"),
                 cap=constant("CONCURRENCY_BACKOFF_MAX_S"),

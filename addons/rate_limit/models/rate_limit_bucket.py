@@ -292,8 +292,6 @@ class RateLimitBucket(models.Model):
                 self.bucket_key,
                 elapsed_seconds,
             )
-            return current_tokens
-
         return token_bucket.refill(
             current_tokens,
             elapsed_seconds,

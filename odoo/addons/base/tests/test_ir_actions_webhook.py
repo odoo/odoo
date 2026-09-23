@@ -4,8 +4,8 @@ import requests
 
 from odoo.exceptions import ValidationError
 from odoo.libs.webhook import (
+    _scrub_url,
     get_log_target,
-    scrub_url,
 )
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
@@ -124,7 +124,7 @@ class TestWebhookLogTarget(TransactionCase):
 
     def test_the_scrubber_removes_the_full_url(self):
         message = f"404 Client Error: Not Found for url: {_URL}"
-        scrubbed = scrub_url(message, _URL, "hooks.slack.com")
+        scrubbed = _scrub_url(message, _URL, "hooks.slack.com")
         self.assertNotIn(_SECRET, scrubbed)
         self.assertIn("404 Client Error", scrubbed, "the useful half stays")
 
@@ -133,19 +133,19 @@ class TestWebhookLogTarget(TransactionCase):
             "HTTPSConnectionPool(host='hooks.slack.com', port=443): Max retries "
             f"exceeded with url: /services/{_SECRET} (Caused by NameResolutionError)"
         )
-        scrubbed = scrub_url(message, _URL, "hooks.slack.com")
+        scrubbed = _scrub_url(message, _URL, "hooks.slack.com")
         self.assertNotIn(_SECRET, scrubbed)
         self.assertIn("Max retries exceeded", scrubbed)
 
     def test_the_scrubber_removes_a_query_token(self):
         url = "https://example.com/hook?token=abcd1234"
-        scrubbed = scrub_url(f"failed for url: {url}", url, "example.com")
+        scrubbed = _scrub_url(f"failed for url: {url}", url, "example.com")
         self.assertNotIn("abcd1234", scrubbed)
 
     def test_a_root_path_is_not_substituted_into_the_sentence(self):
         url = "https://example.com/"
         message = "Max retries exceeded with url: / (Caused by x/y/z)"
-        self.assertEqual(scrub_url(message, url, "example.com"), message)
+        self.assertEqual(_scrub_url(message, url, "example.com"), message)
 
 
 @tagged("post_install", "-at_install")

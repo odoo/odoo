@@ -2,12 +2,8 @@ from __future__ import annotations
 
 import math
 import random
-import typing
 
-if typing.TYPE_CHECKING:
-    from collections.abc import Iterator
-
-__all__ = ["get_bound", "get_delay", "iter_bounds"]
+__all__ = ["get_bound", "get_delay"]
 
 
 def get_bound(attempt: int, *, base: float, cap: float) -> float:
@@ -26,11 +22,6 @@ def get_bound(attempt: int, *, base: float, cap: float) -> float:
         return min(math.ldexp(base, attempt - 1), cap)
     except OverflowError:
         return cap
-
-
-def iter_bounds(attempts: int, *, base: float, cap: float) -> Iterator[float]:
-    for attempt in range(1, attempts + 1):
-        yield get_bound(attempt, base=base, cap=cap)
 
 
 def get_delay(

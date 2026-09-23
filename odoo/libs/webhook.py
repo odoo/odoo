@@ -7,7 +7,7 @@ import requests
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.guarded_http import RefusedDestination
 
-__all__ = ["RESPONSE_MAX_BYTES", "deliver", "get_log_target", "scrub_url"]
+__all__ = ["RESPONSE_MAX_BYTES", "deliver", "get_log_target"]
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -22,7 +22,7 @@ def get_log_target(url: str) -> str:
         return "<malformed URL>"
 
 
-def scrub_url(message: str, url: str, target: str) -> str:
+def _scrub_url(message: str, url: str, target: str) -> str:
     parsed = urlparse(url)
     needles = [url]
     if parsed.query:
@@ -85,5 +85,5 @@ def deliver(
             "Webhook %s to %s failed and will NOT be retried: %s",
             action_label,
             target,
-            scrub_url(str(e), url, target),
+            _scrub_url(str(e), url, target),
         )
