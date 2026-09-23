@@ -1,13 +1,15 @@
 import contextlib
+import fcntl
 import hashlib
 import logging
 import os
 import re
 import shutil
+import stat
 import subprocess
 import tempfile
 import time
-from collections.abc import Callable, Collection, Mapping, Sequence
+from collections.abc import Callable, Collection, Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import NamedTuple
 
@@ -54,22 +56,60 @@ def _holds_exactly(root_dir: Path, roots: Mapping[str, Path]) -> bool:
         return False
 
 
+def _ensure_private_dir(base: Path) -> None:
+    base.mkdir(mode=0o700, parents=True, exist_ok=True)
+    info = base.lstat()
+    if (
+        not stat.S_ISDIR(info.st_mode)
+        or info.st_uid != os.getuid()
+        or info.st_mode & (stat.S_IWGRP | stat.S_IWOTH)
+    ):
+        raise PermissionError(f"{base} is not a directory only its owner can write")
+
+
+@contextlib.contextmanager
+def _root_lock(base: Path, name: str) -> Iterator[None]:
+    fd = os.open(
+        base / f"{name}.lock",
+        os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_CLOEXEC,
+        0o600,
+    )
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        yield
+    finally:
+        os.close(fd)
+
+
 def _shared_resolution_root(base: Path, name: str, roots: Mapping[str, Path]) -> Path:
     root_dir = base / name
     if _holds_exactly(root_dir, roots):
         return root_dir
-    staging = _write_resolution_root(
-        Path(tempfile.mkdtemp(prefix=f"{name}-", dir=base)) / "roots", roots
-    )
-    if root_dir.is_symlink() or root_dir.exists():
-        _debug.logic("esbuild.resolution_root_replaced", root=str(root_dir))
-        stale = Path(tempfile.mkdtemp(prefix=f"{name}-stale-", dir=base))
-        with contextlib.suppress(OSError):
-            root_dir.rename(stale / "roots")
-        shutil.rmtree(stale, ignore_errors=True)
-    with contextlib.suppress(OSError):
-        staging.rename(root_dir)
-    shutil.rmtree(staging.parent, ignore_errors=True)
+    # another compile may be resolving through the root this call would
+    # replace: only one caller rebuilds at a time, and a root that holds
+    # exactly the expected links is never moved aside
+    with _root_lock(base, name):
+        if _holds_exactly(root_dir, roots):
+            return root_dir
+        staging = _write_resolution_root(
+            Path(tempfile.mkdtemp(prefix=f"{name}-", dir=base)) / "roots", roots
+        )
+        try:
+            if _holds_exactly(root_dir, roots):
+                _debug.logic(
+                    "esbuild.resolution_root_published_meanwhile", root=str(root_dir)
+                )
+                return root_dir
+            if root_dir.is_symlink() or root_dir.exists():
+                _debug.logic("esbuild.resolution_root_replaced", root=str(root_dir))
+                stale = Path(tempfile.mkdtemp(prefix=f"{name}-stale-", dir=base))
+                with contextlib.suppress(OSError):
+                    root_dir.rename(stale / "roots")
+                shutil.rmtree(stale, ignore_errors=True)
+            with contextlib.suppress(OSError):
+                staging.rename(root_dir)
+        finally:
+            shutil.rmtree(staging.parent, ignore_errors=True)
     if not _holds_exactly(root_dir, roots):
         raise OSError(f"{root_dir} does not hold exactly the addon roots")
     return root_dir
@@ -813,7 +853,7 @@ class EsbuildCompiler:
         # directory under the predictable name decides what @web resolves to
         base = Path(config["data_dir"]) / "esbuild-roots"
         try:
-            base.mkdir(mode=0o700, parents=True, exist_ok=True)
+            _ensure_private_dir(base)
             root_dir = _shared_resolution_root(base, digest, roots)
         except OSError as exc:
             root_dir = _write_resolution_root(Path(private_dir) / "roots", roots)

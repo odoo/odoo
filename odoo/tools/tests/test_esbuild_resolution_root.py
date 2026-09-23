@@ -2,10 +2,14 @@ import os
 import shutil
 import stat
 import tempfile
+import threading
+import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from odoo.tools import config
+from odoo.tools.assets import esbuild
 from odoo.tools.assets.esbuild import EsbuildCompiler
 
 
@@ -73,6 +77,77 @@ class TestTheResolutionRootIsNotAPlantableTempDir(unittest.TestCase):
             node_path = self._node_path()
         self.assertTrue(node_path.is_relative_to(self.private))
         self.assertEqual(self._resolves_to(node_path), self.web_src.resolve())
+
+    def test_a_base_others_can_write_is_not_trusted(self):
+        base = self.data_dir / "esbuild-roots"
+        base.mkdir(parents=True)
+        base.chmod(0o777)
+        node_path = self._node_path()
+        self.assertTrue(node_path.is_relative_to(self.private))
+        self.assertEqual(self._resolves_to(node_path), self.web_src.resolve())
+
+    def test_a_base_owned_by_someone_else_is_not_trusted(self):
+        (self.data_dir / "esbuild-roots").mkdir(parents=True, mode=0o700)
+        with mock.patch.object(esbuild.os, "getuid", return_value=os.getuid() + 1):
+            node_path = self._node_path()
+        self.assertTrue(node_path.is_relative_to(self.private))
+
+
+class TestARootInUseIsNeverReplaced(unittest.TestCase):
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        target = self.tmp / "src"
+        target.mkdir()
+        self.roots = {f"@addon{i}": target for i in range(600)}
+        self.base = self.tmp / "esbuild-roots"
+        self.base.mkdir(mode=0o700)
+
+    def test_a_root_published_while_this_caller_staged_is_kept(self):
+        published = self.base / "digest"
+        write = esbuild._write_resolution_root
+        handed_out = []
+
+        def peer_publishes_first(root_dir, roots):
+            if root_dir != published and not handed_out:
+                handed_out.append(write(published, roots).stat().st_ino)
+            return write(root_dir, roots)
+
+        with mock.patch.object(esbuild, "_write_resolution_root", peer_publishes_first):
+            root = esbuild._shared_resolution_root(self.base, "digest", self.roots)
+        self.assertEqual(root.stat().st_ino, handed_out[0])
+
+    def test_concurrent_first_builds_share_one_root(self):
+        callers = 4
+        for stagger in (0.01, 0.0) * 3:
+            base = Path(tempfile.mkdtemp(dir=self.base))
+            barrier = threading.Barrier(callers)
+            outcomes = []
+
+            def compile_with(delay, base=base, barrier=barrier, outcomes=outcomes):
+                barrier.wait()
+                time.sleep(delay)
+                try:
+                    root = esbuild._shared_resolution_root(base, "digest", self.roots)
+                    inode = root.stat().st_ino
+                    time.sleep(0.05)
+                    still = root.stat().st_ino == inode
+                except OSError as exc:
+                    outcomes.append(type(exc).__name__)
+                    return
+                outcomes.append((inode, still))
+
+            threads = [
+                threading.Thread(target=compile_with, args=(k * stagger,))
+                for k in range(callers)
+            ]
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join()
+            with self.subTest(stagger=stagger):
+                self.assertEqual(len(set(outcomes)), 1, outcomes)
+                self.assertTrue(outcomes[0][1], "a caller's root vanished under it")
 
 
 if __name__ == "__main__":
