@@ -2864,3 +2864,25 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertRecordValues(sale_order.order_line, [
             {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3}
         ])
+
+    def test_reduce_qty_no_backorder_multistep(self):
+        "Reducing the SO to zero returns only the quantities moved at each step."
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_pack_ship'
+        self.env['stock.quant']._update_available_quantity(self.new_product, warehouse.lot_stock_id, 2)
+        order = self._get_new_sale_order(amount=2, product=self.new_product)
+        order.action_confirm()
+        pick = order.picking_ids
+        pick.button_validate()
+        pack = order.picking_ids[1]
+        pack.move_ids.quantity = 1
+        Form.from_action(self.env, pack.button_validate()).save().process_cancel_backorder()
+        delivery = order.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)
+        self.assertEqual(order.order_line.qty_delivered, 0)
+        order.order_line.product_uom_qty = 0
+        returns = order.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+        self.assertEqual(delivery.state, 'cancel')
+        self.assertRecordValues(returns.move_ids.sorted('id'), [
+            {'location_id': warehouse.wh_pack_stock_loc_id.id, 'location_dest_id': warehouse.lot_stock_id.id, 'product_uom_qty': 2},
+            {'location_id': warehouse.wh_output_stock_loc_id.id, 'location_dest_id': warehouse.wh_pack_stock_loc_id.id, 'product_uom_qty': 1},
+        ])

@@ -175,6 +175,24 @@ class StockMoveLine(models.Model):
 class StockRule(models.Model):
     _inherit = 'stock.rule'
 
+    def _push_prepare_move_copy_values(self, move_to_copy, new_date):
+        values = super()._push_prepare_move_copy_values(move_to_copy, new_date)
+        if not move_to_copy.sale_line_id or move_to_copy.product_uom.compare(move_to_copy.product_uom_qty, 0) >= 0:
+            return values
+        location = move_to_copy.location_dest_id
+        remaining_qty = 0
+        moves = (move_to_copy.sale_line_id.move_ids - move_to_copy).filtered(
+            lambda m: m.state != 'cancel' and m.product_id == move_to_copy.product_id)
+        for move in moves:
+            quantity = move.quantity if move.state == 'done' else move.product_uom_qty
+            quantity = move.product_uom._compute_quantity(quantity, move_to_copy.product_uom, round=False)
+            if move.location_dest_id == location:
+                remaining_qty += quantity
+            if move.location_id == location:
+                remaining_qty -= quantity
+        values['product_uom_qty'] = min(0, values['product_uom_qty'] + max(0, remaining_qty))
+        return values
+
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
         fields += ['sale_line_id', 'partner_id', 'sequence', 'to_refund']
