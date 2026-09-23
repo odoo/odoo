@@ -15,6 +15,8 @@ on top of a realistic Fleet Management use case.
     'author': "Odoo Training",
     'license': 'LGPL-3',
     'depends': ['base'],
-    'data': [],
+    'data': [
+        'security/ir.access.csv',
+    ],
     'application': True,
 }

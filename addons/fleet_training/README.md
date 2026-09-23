@@ -72,3 +72,51 @@ expected, and exactly what Chapter 5 fixes).
 ```
 ./odoo-bin -d fleet_training_demo -i fleet_training --addons-path=addons,odoo/addons --stop-after-init
 ```
+
+---
+
+## Chapter 3 — Models And Basic Fields
+
+**Concept.** A model is a Python class inheriting `models.Model`, declaring `_name`
+(its unique technical identifier) and `_description` (its human label). Fields are
+class attributes (`fields.Char`, `fields.Integer`, `fields.Date`, `fields.Boolean`,
+`fields.Text`, ...); the ORM turns them into a PostgreSQL table and columns
+automatically the moment the module is installed/upgraded.
+
+**Why?** This is Odoo's core promise: describe *what* data looks like in Python,
+and the framework generates the schema, the CRUD methods, and (later) the UI - no
+hand-written SQL migrations for a simple field addition.
+
+**Where?**
+- [`models/fleet_vehicle.py`](models/fleet_vehicle.py) — the `fleet_training.vehicle` model
+- [`models/__init__.py`](models/__init__.py), [`__init__.py`](__init__.py) — wiring so the model is actually imported
+- [`security/ir.access.csv`](security/ir.access.csv) — access so the model can be used at all
+
+**Code explanation.** `fleet_training.vehicle` uses a dotted `_name` (Odoo
+convention: `<module>.<model>`) so it can never collide with core Odoo's own
+`fleet.vehicle` model — this training app deliberately stays independent of the
+built-in Fleet app. `name` is `required=True` because every record needs an
+identifier; `active` (default `True`) is a magic field name the ORM automatically
+uses to support archiving records instead of deleting them.
+
+**Odoo 20 note.** Access control changed in 20.0: the old `ir.model.access.csv` /
+`ir.model.access` model is gone, replaced by a single unified `ir.access` model
+(file `ir.access.csv`). A row with a `group_id` is a **permission** (who may do
+what); a row with no group but a `domain` is a **restriction** (what records
+apply, regardless of group) — the very mechanism that used to be the separate
+`ir.rule`. Chapter 4 uses this to show both sides of the same model.
+
+**Fleet functionality.** A vehicle can now be created, read, updated, deleted (via
+the ORM/shell — there is still no menu, Chapter 5 adds that) with a name, plate,
+chassis number, color, model year, seat count, acquisition date and notes.
+
+**What changed.** Added `models/fleet_vehicle.py`, `models/__init__.py`; updated
+`__init__.py` to import `models`; added `security/ir.access.csv`; manifest now
+loads that access file.
+
+**Testing.** Upgrade the module, then use the Odoo shell to prove the model works
+end-to-end:
+```
+./odoo-bin shell -d fleet_training_demo --addons-path=addons,odoo/addons --no-http
+>>> env['fleet_training.vehicle'].create({'name': 'Fleet-001', 'license_plate': 'KA01AB1234', 'model_year': 2022})
+```
