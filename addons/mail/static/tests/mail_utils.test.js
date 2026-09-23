@@ -260,3 +260,11 @@ test("htmlToHtmlInline copies rel and target attributes from links", () => {
         '<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a>'
     );
 });
+
+test("htmlToHtmlInline keeps only the text of JS-handled links", () => {
+    expect(
+        htmlToHtmlInline(
+            markup`<a href="#" data-oe-type="highlight" data-oe-id="1">Pinned.</a> <a href="#" data-oe-type="pin-menu">See all.</a>`
+        ).toString()
+    ).toBe("Pinned. See all.");
+});
