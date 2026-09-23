@@ -568,7 +568,10 @@ class HrEmployee(models.Model):
                 # `employee_id` above is a list and only `onchange` reads it, so
                 # without this the New button falls back to the field default and
                 # prepares the request for whoever is looking at the form.
-                "default_employee_id": self.id,
+                # Sliced, not `self.id`: the action is called with a whole
+                # selection as well as with one record, and a default wants one
+                # employee -- asking a two-record set for its id only raised.
+                "default_employee_id": self[:1].id,
             },
         }
 
