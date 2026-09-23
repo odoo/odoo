@@ -181,3 +181,21 @@ class TestSqlJoinReportsEveryItemsFields(unittest.TestCase):
         for separator in (SQL(" , ", to_flush=self.s), SQL(" %s ", 1, to_flush=self.s)):
             with self.subTest(code=separator.code):
                 self.assertEqual(tuple(separator.join([1]).to_flush), ())
+
+
+class TestEmptyTupleAfterNotIn(unittest.TestCase):
+    def test_an_empty_tuple_after_not_in_is_refused(self):
+        for code, args, kwargs in (
+            ("x NOT IN %s", ((),), {}),
+            ("a = %s AND x not in  %s", (1, ()), {}),
+            ("x NOT IN %(ids)s", (), {"ids": ()}),
+        ):
+            with self.subTest(code=code), self.assertRaises(ValueError):
+                SQL(code, *args, **kwargs)
+
+    def test_an_empty_tuple_after_in_still_matches_nothing(self):
+        self.assertEqual(SQL("x IN %s", ()).code, "x IN (NULL)")
+        self.assertEqual(SQL("100%% NOT IN %s", (1,)).code, "100%% NOT IN (%s)")
+
+    def test_not_in_over_nothing_has_its_helper(self):
+        self.assertEqual(SQL.not_in(SQL("x"), []).code, "TRUE")

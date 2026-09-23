@@ -22,6 +22,15 @@ __all__ = ["SQL"]
 IDENT_RE = re.compile(r"^[a-z0-9_][a-z0-9_$\-]*\Z", re.IGNORECASE)
 
 _PRINTF_DIRECTIVE_RE = re.compile(r"%(.)", re.DOTALL)
+_NOT_IN_TAIL_RE = re.compile(r"\bNOT\s+IN\s*$", re.IGNORECASE)
+
+
+def _follows_not_in(code: str, index: int) -> bool:
+    placeholders = (m for m in _PRINTF_DIRECTIVE_RE.finditer(code) if m[1] == "s")
+    for position, match in enumerate(placeholders):
+        if position == index:
+            return bool(_NOT_IN_TAIL_RE.search(code, 0, match.start()))
+    return False
 
 
 class SQL:
@@ -63,7 +72,7 @@ class SQL:
         code_list: list[str] = []
         params_list: list = []
         to_flush_list: list = []
-        for arg in args:
+        for index, arg in enumerate(args):
             if isinstance(arg, SQL):
                 code_list.append(arg.__code)
                 params_list.extend(arg.__params)
@@ -81,6 +90,12 @@ class SQL:
                             params_list.append(element)
                     code_list.append("(%s)" % ", ".join(element_codes))
                 else:
+                    if _follows_not_in(code, index):
+                        msg = (
+                            "an empty tuple after NOT IN renders NOT IN (NULL), "
+                            "which matches no row; use SQL.not_in(lhs, values)"
+                        )
+                        raise ValueError(msg)
                     code_list.append("(NULL)")
             else:
                 code_list.append("%s")
