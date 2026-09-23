@@ -1232,6 +1232,155 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
 
         self.assertEqual(sale_order.amount_unpaid, 0.0)
 
+<<<<<<< 53b04123100626cd1cd4e3dc336c9ae699d92c45
+||||||| 9e578bcc868ce28e19eee83822a279c6e334e986
+    def test_settle_so_custom_attribute_value(self):
+        """When settling a sale order (e.g. from the website) in POS, free-text custom
+        attribute values must appear in the orderline's product name via
+        constructFullProductName, not just the placeholder (e.g. 'Custom').
+        Also verifies that no-variant attribute values are preserved on the POS order line.
+        """
+        attr = self.env['product.attribute'].create({
+            'name': 'Inscription',
+            'create_variant': 'no_variant',
+        })
+        attr_value = self.env['product.attribute.value'].create({
+            'name': 'Custom',
+            'attribute_id': attr.id,
+            'is_custom': True,
+        })
+        attr_addon = self.env['product.attribute'].create({'name': 'Addon', 'create_variant': 'no_variant'})
+        attr_addon_val = self.env['product.attribute.value'].create({'name': 'Gift Wrap', 'attribute_id': attr_addon.id})
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Custom Product',
+            'available_in_pos': True,
+            'type': 'service',
+            'list_price': 10.0,
+            'taxes_id': [],
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attr.id,
+                    'value_ids': [Command.link(attr_value.id)],
+                }),
+                Command.create({
+                    'attribute_id': attr_addon.id,
+                    'value_ids': [Command.set([attr_addon_val.id])]
+                }),
+            ],
+        })
+        ptav = product_tmpl.attribute_line_ids.filtered(
+            lambda l: l.attribute_id == attr
+        ).product_template_value_ids
+        addon_ptav = product_tmpl.attribute_line_ids.filtered(
+            lambda l: l.attribute_id == attr_addon
+        ).product_template_value_ids
+        product = product_tmpl.product_variant_ids[0]
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Website Customer'}).id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'price_unit': 10.0,
+                'product_no_variant_attribute_value_ids': [Command.set(addon_ptav.ids)],
+                'product_custom_attribute_value_ids': [Command.create({
+                    'custom_product_template_attribute_value_id': ptav.id,
+                    'custom_value': 'Value',
+                })],
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_settle_so_custom_attribute_value', login="accountman")
+
+=======
+    def test_settled_line_price_is_not_crossed_out(self):
+        """
+        The french module crosses out the price when the cashier changed it. The
+        price of a settled line comes from the sale order, so it must not be
+        crossed out.
+        """
+        if not self.env["ir.module.module"].search([("name", "=", "l10n_fr_pos_cert"), ("state", "=", "installed")]):
+            self.skipTest("l10n_fr_pos_cert module is required for this test")
+        self.main_pos_config.company_id.sudo().country_id = self.env.ref('base.fr')
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'lst_price': 100.0,
+            'taxes_id': False,
+        })
+        self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'price_unit': product.lst_price,
+            })],
+        })
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settled_line_price_is_not_crossed_out', login="accountman")
+
+    def test_settle_so_custom_attribute_value(self):
+        """When settling a sale order (e.g. from the website) in POS, free-text custom
+        attribute values must appear in the orderline's product name via
+        constructFullProductName, not just the placeholder (e.g. 'Custom').
+        Also verifies that no-variant attribute values are preserved on the POS order line.
+        """
+        attr = self.env['product.attribute'].create({
+            'name': 'Inscription',
+            'create_variant': 'no_variant',
+        })
+        attr_value = self.env['product.attribute.value'].create({
+            'name': 'Custom',
+            'attribute_id': attr.id,
+            'is_custom': True,
+        })
+        attr_addon = self.env['product.attribute'].create({'name': 'Addon', 'create_variant': 'no_variant'})
+        attr_addon_val = self.env['product.attribute.value'].create({'name': 'Gift Wrap', 'attribute_id': attr_addon.id})
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Custom Product',
+            'available_in_pos': True,
+            'type': 'service',
+            'list_price': 10.0,
+            'taxes_id': [],
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attr.id,
+                    'value_ids': [Command.link(attr_value.id)],
+                }),
+                Command.create({
+                    'attribute_id': attr_addon.id,
+                    'value_ids': [Command.set([attr_addon_val.id])]
+                }),
+            ],
+        })
+        ptav = product_tmpl.attribute_line_ids.filtered(
+            lambda l: l.attribute_id == attr
+        ).product_template_value_ids
+        addon_ptav = product_tmpl.attribute_line_ids.filtered(
+            lambda l: l.attribute_id == attr_addon
+        ).product_template_value_ids
+        product = product_tmpl.product_variant_ids[0]
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Website Customer'}).id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'price_unit': 10.0,
+                'product_no_variant_attribute_value_ids': [Command.set(addon_ptav.ids)],
+                'product_custom_attribute_value_ids': [Command.create({
+                    'custom_product_template_attribute_value_id': ptav.id,
+                    'custom_value': 'Value',
+                })],
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_settle_so_custom_attribute_value', login="accountman")
+
+>>>>>>> 3a4d55d3b5dfa0046b0d759c82190215729e6f98
     def test_advance_payment_with_extra_lines(self):
         so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
