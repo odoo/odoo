@@ -46,7 +46,7 @@ declare module "models" {
         is_welcome_page_displayed: boolean|undefined;
         isChannelTokenSecret: boolean|undefined;
         sortMembers: (m1: ChannelMember, m2: ChannelMember) => number;
-        startChat: (partnerIds: number[]) => Promise<void>;
+        startChat: (partnerIds: number[]) => Promise<Thread>;
         updateBusSubscription: (() => unknown) & { cancel: () => void };
     }
     export interface Thread {
