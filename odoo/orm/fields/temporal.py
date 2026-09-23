@@ -1,11 +1,10 @@
-import functools
 import typing
 import warnings
 from datetime import UTC, date, datetime, time, timedelta
 from typing import override
 
 from odoo.libs.collections import FrozenOrderedSet
-from odoo.libs.datetime import TIMEZONE_ALIASES, all_timezones, utc
+from odoo.libs.datetime import TIMEZONE_ALIASES, all_timezones, get_quarter_number, utc
 from odoo.libs.datetime import timezone as get_timezone
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
@@ -26,11 +25,6 @@ from ..primitives import COLLECTION_TYPES
 from .base import Field, _logger, _prepare_fast_get
 
 _debug = DebugLog(__name__)
-
-
-@functools.cache
-def _get_all_timezones_set() -> frozenset[str]:
-    return frozenset(all_timezones())
 
 
 def _resolve_sql_timezone_name(env: Environment, tz_name: str) -> str | None:
@@ -197,7 +191,7 @@ class BaseDate[T: date](Field[T | typing.Literal[False]]):
             case "year_number":
                 return lambda value: value.year
             case "quarter_number":
-                return lambda value: (value.month - 1) // 3 + 1
+                return get_quarter_number
             case "month_number":
                 return lambda value: value.month
             case "iso_week_number":
@@ -560,9 +554,7 @@ class Datetime(BaseDate[datetime]):
             dt = self.__get__(record)
             if not dt:
                 return False
-            if (
-                tz_name := record.env.context.get("tz")
-            ) and tz_name in _get_all_timezones_set():
+            if (tz_name := record.env.context.get("tz")) and tz_name in all_timezones():
                 dt = dt.replace(tzinfo=utc).astimezone(get_timezone(tz_name))
             return get_property(dt)
 

@@ -402,3 +402,19 @@ class TestLastDay:
         assert next_anchor(date(2025, 6, 1), "year", december) == date(2026, 1, 1)
         assert previous_anchor(date(2025, 12, 31), "year", december) == date(2025, 1, 1)
         assert anchor_day(date(2026, 1, 1), "year", december) == date(2025, 12, 31)
+
+
+@pytest.mark.parametrize(
+    "fields",
+    [
+        {"weekday": 7},
+        {"weekday": -1},
+        {"day": 0},
+        {"day": 32},
+        {"month": 13},
+        {"day": 5, "last_day": True},
+    ],
+)
+def test_an_anchor_outside_its_calendar_is_refused(fields):
+    with pytest.raises(ValueError):
+        Anchor(**fields)

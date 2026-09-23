@@ -24,6 +24,7 @@ from psycopg.errors import (
 
 from odoo.exceptions import LockError, UserError
 from odoo.libs.accel import fast_clone
+from odoo.libs.datetime import get_quarter_number
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import get_index_name
 from odoo.tools import SQL, OrderedSet, Query, get_lang, partition, unique
@@ -468,7 +469,7 @@ class _MultiValued(list):
 # answers it; its dow runs Sunday 0 .. Saturday 6 and its week is the ISO week
 _DATE_PART = {
     "year_number": lambda d: float(d.year),
-    "quarter_number": lambda d: float((d.month - 1) // 3 + 1),
+    "quarter_number": lambda d: float(get_quarter_number(d)),
     "month_number": lambda d: float(d.month),
     "iso_week_number": lambda d: float(d.isocalendar()[1]),
     "day_of_year": lambda d: float(d.timetuple().tm_yday),

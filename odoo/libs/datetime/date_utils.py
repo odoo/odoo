@@ -1,7 +1,9 @@
 __all__ = [
+    "TIME_UNIT_SELECTION",
     "WEEKDAY_NUMBER",
     "Anchor",
     "Granularity",
+    "TimeUnit",
     "add",
     "anchor_day",
     "date_range",
@@ -24,6 +26,7 @@ __all__ = [
     "real_time",
     "start_of",
     "subtract",
+    "time_unit_selection",
     "to_timezone",
     "weekend",
     "weeknumber",
@@ -515,6 +518,16 @@ class Anchor:
     month: int | None = None
     weekday: int | None = None
     last_day: bool = False
+
+    def __post_init__(self) -> None:
+        for name, low, high in (("day", 1, 31), ("month", 1, 12), ("weekday", 0, 6)):
+            value = getattr(self, name)
+            if value is not None and not low <= value <= high:
+                msg = f"anchor {name} must be in {low}..{high}, got {value!r}"
+                raise ValueError(msg)
+        if self.last_day and self.day is not None:
+            msg = "an anchor on the last day names no day of its own"
+            raise ValueError(msg)
 
 
 def _clamped(year: int, month: int, day: int) -> date:
