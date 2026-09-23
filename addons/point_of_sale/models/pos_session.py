@@ -5,11 +5,10 @@ from datetime import timedelta
 from itertools import batched, starmap
 
 from markupsafe import Markup
-from psycopg.errors import LockNotAvailable
 
 from odoo import _, api, fields, models
 from odoo.db.schema import create_index
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, LockError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.models import PREFETCH_MAX
 from odoo.tools import frozendict, plaintext2html
@@ -970,12 +969,8 @@ class PosSession(models.Model):
         """Serialize closing and cash mutations, keeping locks until transaction end."""
         self.check_access("write")
         try:
-            with self.env.cr.savepoint(flush=False):
-                self.env.cr.execute(
-                    "SELECT id FROM pos_session WHERE id = ANY(%s) ORDER BY id FOR UPDATE NOWAIT",
-                    (self.ids,),
-                )
-        except LockNotAvailable as error:
+            self.lock_for_update()
+        except LockError as error:
             dbg.logic.debug("Session mutation refused: %s is locked", dbg.rec(self))
             raise UserError(error_message) from error
 

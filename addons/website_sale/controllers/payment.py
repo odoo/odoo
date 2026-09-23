@@ -1,10 +1,13 @@
-from psycopg.errors import LockNotAvailable
-
 from odoo import _
-from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
+from odoo.exceptions import (
+    AccessError,
+    LockError,
+    MissingError,
+    UserError,
+    ValidationError,
+)
 from odoo.fields import Command
 from odoo.http import request, route
-from odoo.tools import SQL
 
 from odoo.addons.payment.controllers import portal as payment_portal
 
@@ -24,17 +27,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
             order_sudo = self._document_check_access(
                 "sale.order", order_id, access_token
             )
-            request.env.cr.execute(
-                SQL(
-                    "SELECT 1 FROM sale_order WHERE id = %s FOR NO KEY UPDATE NOWAIT",
-                    order_id,
-                )
-            )
+            order_sudo.lock_for_update(allow_referencing=True)
         except MissingError:
             raise
         except AccessError as e:
             raise ValidationError(_("The access token is invalid.")) from e
-        except LockNotAvailable as e:
+        except LockError as e:
             raise UserError(_("Payment is already being processed.")) from e
 
         if order_sudo.state == "cancel":

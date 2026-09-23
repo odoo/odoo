@@ -978,7 +978,9 @@ class IrModuleModule(models.Model):
             raise UserError(busy)
 
         try:
-            cr.execute("SELECT FROM ir_cron FOR UPDATE")
+            self.env["ir.cron"].sudo().with_context(active_test=False).search(
+                []
+            ).lock_for_update(wait=True)
         except psycopg.OperationalError:
             cr.rollback()
             _debug.logic("module_lock_busy", reason="cron_lock_timeout")

@@ -141,12 +141,10 @@ class TestPosSessionAudit(TestPoSCommon):
         execute = self.cr.execute
 
         def locked_execute(query, *args, **kwargs):
-            if isinstance(query, str) and query.startswith(
-                "SELECT id FROM pos_session"
-            ):
-                # A real PostgreSQL error aborts the transaction; a Python-only
-                # mock of LockNotAvailable would hide the broken recovery path.
-                return execute("DO $$ BEGIN RAISE lock_not_available; END $$")
+            code = getattr(query, "code", query)
+            if '"pos_session"' in code and "SKIP LOCKED" in code:
+                # another transaction holds the row: SKIP LOCKED returns nothing
+                return execute("SELECT id FROM pos_session WHERE false")
             return execute(query, *args, **kwargs)
 
         with self.cr.savepoint():
