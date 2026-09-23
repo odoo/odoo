@@ -5,9 +5,11 @@ import logging
 import re
 from collections import defaultdict
 from collections.abc import Iterable, Mapping
-from typing import TYPE_CHECKING, NamedTuple
+from graphlib import CycleError, TopologicalSorter
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 from lxml import etree
+from psycopg import errors
 from psycopg.types.json import Json
 
 from odoo.db.schema import (
@@ -21,7 +23,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import SQL
 
 if TYPE_CHECKING:
-    from typing import Any, Protocol
+    from typing import Protocol
 
     from odoo.db import BaseCursor
 
@@ -115,9 +117,10 @@ def adopt_xmlids(
     return moved
 
 
-# the models whose `_table` is not their name with dots for underscores; a
-# pre-migration of base runs before any registry holds them
+# the models whose `_table` is not their name with dots for underscores, for a
+# migration that runs before the registry holds them (a pre-migration of base)
 _MODEL_TABLES: Mapping[str, str] = {
+    "esg.metric.to.survey.question": "esg_metric_to_survey_question_rel",
     "ir.actions.actions": "ir_actions",
     "ir.actions.act_window": "ir_act_window",
     "ir.actions.act_window.view": "ir_act_window_view",
@@ -129,8 +132,18 @@ _MODEL_TABLES: Mapping[str, str] = {
 }
 
 
-def _table_of(model: str) -> str:
+def _table_of(model: str, cr: Any = None) -> str:
+    if (dbname := getattr(cr, "dbname", None)) is not None:
+        from odoo.modules.registry import Registry
+
+        registry = Registry.registries.get(dbname)
+        if registry is not None and model in registry:
+            if table := getattr(registry[model], "_table", None):
+                return table
     return _MODEL_TABLES.get(model) or model.replace(".", "_")
+
+
+_REFERENCED = (errors.ForeignKeyViolation, errors.RestrictViolation)
 
 
 def remove_xmlid_records(cr: BaseCursor, module: str, names: Iterable[str]) -> int:
@@ -138,7 +151,7 @@ def remove_xmlid_records(cr: BaseCursor, module: str, names: Iterable[str]) -> i
     cr.execute(
         SQL(
             """
-            SELECT d.id, d.model, d.res_id, EXISTS (
+            SELECT d.id, d.name, d.model, d.res_id, EXISTS (
                    SELECT 1 FROM ir_model_data other
                     WHERE other.model = d.model AND other.res_id = d.res_id
                       AND other.module != d.module)
@@ -152,60 +165,144 @@ def remove_xmlid_records(cr: BaseCursor, module: str, names: Iterable[str]) -> i
     # a record another module also names lives on under that name: only this
     # module's xml id goes
     released: list[int] = []
-    by_model: dict[str, dict[int, int]] = defaultdict(dict)
-    for data_id, model, res_id, shared in cr.fetchall():
+    by_model: dict[str, dict[int, tuple[int, str]]] = defaultdict(dict)
+    for data_id, name, model, res_id, shared in cr.fetchall():
         if shared:
             released.append(data_id)
         else:
-            by_model[model][res_id] = data_id
-    existing = set(get_tables_existing(cr, [_table_of(model) for model in by_model]))
-    deleted = 0
+            by_model[model][res_id] = (data_id, name)
+    tables = {model: _table_of(model, cr) for model in by_model}
+    existing = set(get_tables_existing(cr, tables.values()))
+    pending: dict[str, dict[int, tuple[int, str]]] = {}
     for model, records in by_model.items():
-        table = _table_of(model)
-        if table not in existing:
-            cr.execute(SQL("SELECT 1 FROM ir_model WHERE model = %s", model))
-            registered = bool(cr.fetchone())
-            _debug.logic(
-                "module_data.records_table_missing",
-                module=module,
-                model=model,
-                records=len(records),
-                registered=registered,
-            )
-            if registered:
-                # the model is live and its table is not where the name puts
-                # it: deleting the xml ids would orphan records nobody deleted
-                _logger.warning(
-                    "%s: kept %d xml id(s) of %s, whose records are not in a table "
-                    "named %s; they were not deleted",
-                    module,
-                    len(records),
-                    model,
-                    table,
-                )
-                continue
-            released.extend(records.values())
+        if tables[model] in existing:
+            pending[model] = records
             continue
-        cr.execute(
-            SQL(
-                "DELETE FROM %s WHERE id = ANY(%s)",
-                SQL.identifier(table),
-                list(records),
-            )
+        cr.execute(SQL("SELECT 1 FROM ir_model WHERE model = %s", model))
+        registered = bool(cr.fetchone())
+        _debug.logic(
+            "module_data.records_table_missing",
+            module=module,
+            model=model,
+            records=len(records),
+            registered=registered,
         )
-        deleted += cr.rowcount
-        # a DELETE either removes the row or raises: an id it did not remove
-        # was already gone, and its xml id dangles
-        released.extend(records.values())
+        if registered:
+            # the model is live and its table is not where the name puts
+            # it: deleting the xml ids would orphan records nobody deleted
+            _logger.warning(
+                "%s: kept %d xml id(s) of %s, whose records are not in a table "
+                "named %s; they were not deleted",
+                module,
+                len(records),
+                model,
+                tables[model],
+            )
+            continue
+        released.extend(data_id for data_id, _name in records.values())
+    deleted = 0
+    blocked: dict[str, dict[int, str]] = {}
+    # a pass deletes what nothing outside it still references; a row another
+    # pending row references is tried again once that row is gone
+    while pending:
+        progress = False
+        for model in _referencing_first(cr, {m: tables[m] for m in pending}):
+            records = pending[model]
+            removed, blocked[model] = _delete_unreferenced(
+                cr, tables[model], list(records)
+            )
+            deleted += removed
+            for res_id in list(records):
+                if res_id not in blocked[model]:
+                    # a DELETE either removes the row or raises: an id it did not
+                    # remove was already gone, and its xml id dangles
+                    released.append(records.pop(res_id)[0])
+                    progress = True
+            if not records:
+                del pending[model]
+        if not progress:
+            break
+    for model, records in pending.items():
+        _logger.warning(
+            "%s: kept %s of %s and their xml ids: still referenced (%s)",
+            module,
+            ", ".join(f"{module}.{name}" for _data_id, name in records.values()),
+            model,
+            ", ".join(sorted(set(blocked[model].values()))),
+        )
     cr.execute(SQL("DELETE FROM ir_model_data WHERE id = ANY(%s)", released))
     _debug.lifecycle(
         "module_data.xmlid_records_removed",
         module=module,
         models=sorted(by_model),
         deleted=deleted,
+        kept=sum(len(records) for records in pending.values()),
         xmlids=cr.rowcount,
     )
     return deleted
+
+
+def _referencing_first(cr: BaseCursor, tables: Mapping[str, str]) -> list[str]:
+    cr.execute(
+        SQL(
+            """
+            SELECT DISTINCT source.relname, target.relname
+              FROM pg_constraint con
+              JOIN pg_class source ON source.oid = con.conrelid
+              JOIN pg_class target ON target.oid = con.confrelid
+             WHERE con.contype = 'f' AND source.oid != target.oid
+               AND source.relnamespace = current_schema()::regnamespace
+               AND source.relname = ANY(%s) AND target.relname = ANY(%s)
+            """,
+            list(tables.values()),
+            list(tables.values()),
+        )
+    )
+    models_of: dict[str, list[str]] = defaultdict(list)
+    for model, table in tables.items():
+        models_of[table].append(model)
+    order = TopologicalSorter(dict.fromkeys(tables, ()))
+    for source, target in cr.fetchall():
+        for referenced in models_of[target]:
+            order.add(referenced, *models_of[source])
+    try:
+        return list(order.static_order())
+    except CycleError:
+        _debug.logic("module_data.reference_cycle", tables=sorted(models_of))
+        return list(tables)
+
+
+def _delete_unreferenced(
+    cr: BaseCursor, table: str, ids: list[int]
+) -> tuple[int, dict[int, str]]:
+    deleted = 0
+    blocked: dict[int, str] = {}
+    batches = [ids]
+    while batches:
+        batch = batches.pop()
+        try:
+            with cr.savepoint(flush=False):
+                cr.execute(
+                    SQL(
+                        "DELETE FROM %s WHERE id = ANY(%s)",
+                        SQL.identifier(table),
+                        batch,
+                    ),
+                    log_exceptions=False,
+                )
+                deleted += cr.rowcount
+        except _REFERENCED as exc:
+            if len(batch) > 1:
+                batches.extend([res_id] for res_id in batch)
+                continue
+            blocked[batch[0]] = exc.diag.constraint_name or type(exc).__name__
+            _debug.logic(
+                "module_data.record_referenced",
+                table=table,
+                res_id=batch[0],
+                constraint=blocked[batch[0]],
+            )
+    return deleted, blocked
 
 
 def retire_empty_module(cr: _SqlCursor, module: str) -> None:
@@ -1357,7 +1454,7 @@ def rename_field(
     # `mail.tracking.value`, export template and access record points at, so a
     # drop-and-add would delete that history with the old row. Its external id
     # and, for a Selection, the value rows and their external ids follow.
-    table = _table_of(model)
+    table = _table_of(model, cr)
     column_renamed = column_exists(cr, table, old) and not column_exists(cr, table, new)
     _debug.lifecycle(
         "module_data.rename_field",
@@ -1689,7 +1786,7 @@ def _rewrite_reference_values(cr: BaseCursor, old: str, new: str) -> None:
         "SELECT model, name FROM ir_model_fields WHERE ttype = 'reference' AND store"
     )
     for model, field in cr.fetchall():
-        table = _table_of(model)
+        table = _table_of(model, cr)
         if not column_exists(cr, table, field):
             continue
         cr.execute(

@@ -1,8 +1,14 @@
+import ast
 import unittest
+from pathlib import Path
+from types import SimpleNamespace
+from unittest import mock
 
+from odoo.modules.registry import Registry
 from odoo.tools.module_data import (
     CRON_ACTION_SUFFIX,
     READONLY_MERGED_MODULE,
+    _table_of,
     absorb_readonly_forerunners,
     adopt_xmlids,
     rehome_cron_xmlids,
@@ -311,3 +317,58 @@ class TestAdoptXmlidsOntoATakenName(BaseCase):
             ],
         )
         self.assertEqual({mod for mod, _name in cr.xmlids.values()}, {"new_mod"})
+
+
+def _workspace(checkout: Path) -> Path:
+    # a worktree's `.git` is a file naming <checkout>/.git/worktrees/<name>
+    git = checkout / ".git"
+    if git.is_file():
+        return Path(git.read_text().split(":", 1)[1].strip()).parents[2].parent
+    return checkout.parent
+
+
+def _declared_tables():
+    checkout = Path(__file__).resolve().parents[3]
+    workspace = _workspace(checkout)
+    trees = [checkout / "odoo" / "addons", checkout / "addons"] + [
+        workspace / repo for repo in ("enterprise", "agromarin", "design-themes")
+    ]
+    for tree in trees:
+        for path in tree.rglob("*.py") if tree.is_dir() else ():
+            source = path.read_text(errors="replace")
+            if "_table" not in source:
+                continue
+            for node in ast.walk(ast.parse(source)):
+                if not isinstance(node, ast.ClassDef):
+                    continue
+                assigned = {
+                    target.id: statement.value.value
+                    for statement in node.body
+                    if isinstance(statement, ast.Assign)
+                    and isinstance(statement.value, ast.Constant)
+                    and isinstance(statement.value.value, str)
+                    for target in statement.targets
+                    if isinstance(target, ast.Name)
+                }
+                if "_table" in assigned and "_name" in assigned:
+                    yield path, assigned["_name"], assigned["_table"]
+
+
+class TestTableOfAModel(BaseCase):
+    def test_every_table_a_model_declares_is_known_before_a_registry(self):
+        declared = list(_declared_tables())
+        self.assertIn("ir.actions.server", {name for _path, name, _t in declared})
+        wrong = {
+            name: (table, _table_of(name))
+            for _path, name, table in declared
+            if _table_of(name) != table
+        }
+        self.assertEqual(wrong, {})
+
+    def test_a_loaded_registry_answers_first(self):
+        registry = {"probe.model": SimpleNamespace(_table="probe_elsewhere")}
+        with mock.patch.object(Registry, "registries", {"probe_db": registry}):
+            cr = SimpleNamespace(dbname="probe_db")
+            self.assertEqual(_table_of("probe.model", cr), "probe_elsewhere")
+            self.assertEqual(_table_of("probe.other", cr), "probe_other")
+            self.assertEqual(_table_of("ir.actions.server", cr), "ir_act_server")
