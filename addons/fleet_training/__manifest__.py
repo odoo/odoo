@@ -16,6 +16,7 @@ on top of a realistic Fleet Management use case.
     'license': 'LGPL-3',
     'depends': ['base'],
     'data': [
+        'security/fleet_training_groups.xml',
         'security/ir.access.csv',
     ],
     'application': True,
