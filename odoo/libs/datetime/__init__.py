@@ -37,7 +37,6 @@ from .date_utils import (
 from .tz import (
     utc,
     timezone,
-    localize,
     localize_standard,
     all_timezones,
     country_timezones,
@@ -64,7 +63,6 @@ __all__ = [
     "get_quarter",
     "get_quarter_number",
     "get_timedelta",
-    "localize",
     "localize_standard",
     "localized",
     "next_after",

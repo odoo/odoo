@@ -3,7 +3,6 @@ from typing import Final
 __all__ = [
     "BLACK",
     "BLUE",
-    "BOLD_SEQ",
     "COLOR_PATTERN",
     "COLOR_SEQ",
     "CYAN",
@@ -21,7 +20,6 @@ BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range
 
 RESET_SEQ: Final[str] = "\033[0m"
 COLOR_SEQ: Final[str] = "\033[1;%dm"
-BOLD_SEQ: Final[str] = "\033[1m"
 COLOR_PATTERN: Final[str] = f"{COLOR_SEQ}{COLOR_SEQ}%s{RESET_SEQ}"
 
 

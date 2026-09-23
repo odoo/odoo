@@ -23,6 +23,17 @@ class TestFloatRound(unittest.TestCase):
         self.assertEqual(float_round(1.3, precision_rounding=0.5), 1.5)
         self.assertEqual(float_round(2.675, precision_digits=2), 2.68)
 
+    def test_a_step_without_an_exact_inverse_lands_on_its_multiples(self):
+        self.assertEqual(float_round(8.97, precision_rounding=0.03), 8.97)
+        for step in ("0.03", "0.07", "0.3", "0.15", "0.0003"):
+            for k in range(-600, 600):
+                expected = float(Decimal(step) * k)
+                for method in ("HALF-UP", "HALF-EVEN", "HALF-DOWN", "UP", "DOWN"):
+                    got = float_round(
+                        expected, precision_rounding=float(step), rounding_method=method
+                    )
+                    self.assertEqual(got, expected, (step, k, method))
+
     def test_returns_float_not_int(self):
         for method in ("HALF-UP", "HALF-EVEN", "HALF-DOWN", "UP", "DOWN"):
             r = float_round(2.5, precision_digits=0, rounding_method=method)

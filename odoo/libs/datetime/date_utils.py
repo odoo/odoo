@@ -100,7 +100,7 @@ def localized(dt: datetime) -> datetime:
 
 def to_timezone(tz: tzinfo | None) -> Callable[[datetime], datetime]:
     if tz is None:
-        return lambda dt: dt.astimezone(utc).replace(tzinfo=None)
+        return lambda dt: localized(dt).astimezone(utc).replace(tzinfo=None)
     return lambda dt: dt.astimezone(tz)
 
 
@@ -281,24 +281,74 @@ def subtract[D: (date, datetime)](value: D, *args: Any, **kwargs: Any) -> D:
     return value - relativedelta(*args, **kwargs)
 
 
+_UTC_KEYS = frozenset(
+    {
+        "UTC",
+        "Etc/UTC",
+        "Etc/UCT",
+        "UCT",
+        "Etc/Universal",
+        "Universal",
+        "Etc/Zulu",
+        "Zulu",
+    }
+)
+
+
+def _is_utc(tz: tzinfo | None) -> bool:
+    if tz is None:
+        return False
+    if tz is UTC:
+        return True
+    key = getattr(tz, "key", None) or getattr(tz, "zone", None)
+    return key in _UTC_KEYS
+
+
+def _zone_key(dt: datetime) -> object:
+    return getattr(dt.tzinfo, "key", None) or getattr(dt.tzinfo, "zone", None)
+
+
+def _sub_day_timedelta(step: relativedelta) -> timedelta | None:
+    if step.years or step.months or step.days or step.leapdays:
+        return None
+    if step.weekday is not None:
+        return None
+    if any(
+        getattr(step, name) is not None
+        for name in ("year", "month", "day", "hour", "minute", "second", "microsecond")
+    ):
+        return None
+    return timedelta(
+        hours=step.hours,
+        minutes=step.minutes,
+        seconds=step.seconds,
+        microseconds=step.microseconds,
+    )
+
+
 def date_range[D: (date, datetime)](
     start: D, end: D, step: relativedelta = relativedelta(months=1)
 ) -> Iterator[D]:
-    restore_tz: tzinfo | None = None
+    # Each value is start + k steps, never the previous value + one step, so a
+    # monthly range from the 31st lands on the 29th in February and back on the
+    # 31st in March. A step below a day on aware datetimes is exact elapsed time,
+    # stepped in UTC; any other step is local wall time.
+    if (
+        not isinstance(start, date)
+        or not isinstance(end, date)
+        or isinstance(start, datetime) != isinstance(end, datetime)
+    ):
+        msg = "start/end should be both date or both datetime type"
+        raise ValueError(msg)
 
     if isinstance(start, datetime) and isinstance(end, datetime):
-        are_naive = start.tzinfo is None and end.tzinfo is None
-        are_utc = start.tzinfo == utc and end.tzinfo == utc
-
-        are_others = start.tzinfo and end.tzinfo and not are_utc
-
-        if are_others:
-            start_key = getattr(start.tzinfo, "key", None) or getattr(
-                start.tzinfo, "zone", None
-            )
-            end_key = getattr(end.tzinfo, "key", None) or getattr(
-                end.tzinfo, "zone", None
-            )
+        if (start.tzinfo is None) != (end.tzinfo is None):
+            msg = "Timezones of start argument and end argument mismatch"
+            raise ValueError(msg)
+        if start.tzinfo is not None and not (
+            _is_utc(start.tzinfo) and _is_utc(end.tzinfo)
+        ):
+            start_key, end_key = _zone_key(start), _zone_key(end)
             if start_key is None and end_key is None:
                 mismatched = start.utcoffset() != end.utcoffset()
             else:
@@ -306,22 +356,8 @@ def date_range[D: (date, datetime)](
             if mismatched:
                 msg = "Timezones of start argument and end argument seem inconsistent"
                 raise ValueError(msg)
-
-        if not are_naive and not are_utc and not are_others:
-            msg = "Timezones of start argument and end argument mismatch"
-            raise ValueError(msg)
-
-        if not are_naive:
-            restore_tz = start.tzinfo
-            start = start.replace(tzinfo=None)
-            end = end.replace(tzinfo=None)
-
-    elif isinstance(start, date) and isinstance(end, date):
-        if type(start + step) is not type(start):
-            msg = "the step interval must add only entire days"
-            raise ValueError(msg)
-    else:
-        msg = "start/end should be both date or both datetime type"
+    elif type(start + step) is not type(start):
+        msg = "the step interval must add only entire days"
         raise ValueError(msg)
 
     if start > end:
@@ -332,12 +368,29 @@ def date_range[D: (date, datetime)](
         msg = "Looks like step is null or negative"
         raise ValueError(msg)
 
-    while start <= end:
-        if restore_tz is not None and isinstance(start, datetime):
-            yield start.replace(tzinfo=restore_tz)
-        else:
-            yield start
-        start += step
+    if isinstance(start, datetime) and start.tzinfo is not None:
+        tz = start.tzinfo
+        exact = _sub_day_timedelta(step)
+        if exact is not None:
+            utc_start = start.astimezone(UTC)
+            utc_end = end.astimezone(UTC)
+            k = 0
+            while (instant := utc_start + exact * k) <= utc_end:
+                yield instant.astimezone(tz)
+                k += 1
+            return
+        wall_start = start.replace(tzinfo=None)
+        wall_end = end.replace(tzinfo=None)
+        k = 0
+        while (wall := wall_start + step * k) <= wall_end:
+            yield wall.replace(tzinfo=tz)
+            k += 1
+        return
+
+    k = 0
+    while (value := start + step * k) <= end:
+        yield value
+        k += 1
 
 
 def get_intervals_hours(intervals: Iterable[tuple[datetime, datetime, Any]]) -> float:
@@ -346,11 +399,8 @@ def get_intervals_hours(intervals: Iterable[tuple[datetime, datetime, Any]]) -> 
     )
 
 
-def weeknumber(
-    locale: babel.Locale, date: date, first_week_day: int | None = None
-) -> tuple[int, int]:
-    if first_week_day is None:
-        first_week_day = locale.first_week_day
+def weeknumber(locale: babel.Locale, date: date) -> tuple[int, int]:
+    first_week_day = locale.first_week_day
     if first_week_day == 0 and locale.min_week_days == 4:
         return date.isocalendar()[:2]
 
@@ -416,6 +466,9 @@ def occurrences_after[D: (date, datetime)](
         msg = f"interval must be positive, got {interval}"
         raise ValueError(msg)
     if unit in _EXACT_UNITS:
+        if not isinstance(start, datetime) or not isinstance(after, datetime):
+            msg = f"a {unit} cadence needs datetimes, not dates"
+            raise TypeError(msg)
         step = timedelta(**{_EXACT_UNITS[unit]: interval})
         k = 0 if start > after else (after - start) // step + 1
         while True:

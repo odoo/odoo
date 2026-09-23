@@ -66,9 +66,10 @@ def _round_r(
     rounding_factor: float,
     rounding_method: RoundingMethod = "HALF-UP",
 ) -> float:
-    if rounding_factor == 0 or value == 0:
+    if value == 0:
         return 0.0
 
+    step = rounding_factor
     inverted = rounding_factor < 1
     if inverted:
         rounding_factor = float_invert(rounding_factor)
@@ -118,7 +119,13 @@ def _round_r(
         msg = f"unknown rounding method: {rounding_method}"
         raise ValueError(msg)
 
-    rounded = float(result / rounding_factor if inverted else result * rounding_factor)
+    if not inverted:
+        rounded = float(result * rounding_factor)
+    elif rounding_factor.is_integer():
+        rounded = result / rounding_factor
+    else:
+        # 1/0.03 is not a float, so dividing by it lands an ulp off the multiple
+        rounded = float(Decimal(result) * Decimal(repr(step)))
     return rounded or 0.0
 
 

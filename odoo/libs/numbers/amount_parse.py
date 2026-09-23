@@ -11,14 +11,24 @@ def _is_solitary_group(int_part: str, distance: int, has_grouping: bool) -> bool
     return (
         not has_grouping
         and distance == 3
-        and int_part.isdigit()
+        and int_part.isdecimal()
         and len(int_part) <= 3
         and int_part != "0"
     )
 
 
-def _split(amount_str: str) -> tuple[str, str] | None:
-    if not any(char.isdigit() for char in amount_str):
+def _well_grouped(int_part: str, tsep: str) -> bool:
+    first, *groups = int_part.split(tsep)
+    if not groups:
+        return True
+    if not 1 <= len(first) <= 3 or len(groups[-1]) != 3:
+        return False
+    middle = {len(group) for group in groups[:-1]}
+    return middle <= {3} or middle == {2}
+
+
+def _split(amount_str: str, *, strict: bool = False) -> tuple[str, str] | None:
+    if not any(char.isdecimal() for char in amount_str):
         return None
     has_grouping = bool(_GROUPINGS_RE.search(amount_str))
     amount_str = _GROUPINGS_RE.sub("", amount_str).strip()
@@ -58,13 +68,21 @@ def _split(amount_str: str) -> tuple[str, str] | None:
         case _:
             return None
 
+    if strict:
+        int_end = amount_str.rfind(dsep)
+        if int_end < 0:
+            int_end = len(amount_str)
+        if tsep in amount_str[int_end:] or not _well_grouped(
+            amount_str[:int_end], tsep
+        ):
+            return None
     parts = amount_str.replace(tsep, "").split(dsep)
     if len(parts) > 2:
         return None
     int_part, dec_part = (parts + ["0"])[:2]
     int_part = int_part or "0"
     dec_part = dec_part or "0"
-    if not int_part.isdigit() or not dec_part.isdigit():
+    if not int_part.isdecimal() or not dec_part.isdecimal():
         return None
     return (int_part, dec_part)
 
@@ -79,7 +97,7 @@ def parse_amount(amount_str: str | None) -> float | None:
     if not amount_str:
         return None
     sign, body = _SIGN_RE.match(amount_str).groups()  # type: ignore[union-attr]
-    parts = _split(body)
+    parts = _split(body, strict=True)
     if parts is None:
         return None
     value = float(f"{parts[0]}.{parts[1]}")

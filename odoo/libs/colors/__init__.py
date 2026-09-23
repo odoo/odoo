@@ -11,7 +11,6 @@ from .conversions import (
 from .terminal import (
     BLACK,
     BLUE,
-    BOLD_SEQ,
     COLOR_PATTERN,
     COLOR_SEQ,
     CYAN,
@@ -110,7 +109,6 @@ GEO_TRAIL_COLORS = (
 __all__ = [
     "BLACK",
     "BLUE",
-    "BOLD_SEQ",
     "COLOR_PATTERN",
     "COLOR_SEQ",
     "CYAN",

@@ -2,7 +2,6 @@ __all__ = [
     "TIMEZONE_ALIASES",
     "all_timezones",
     "country_timezones",
-    "localize",
     "localize_standard",
     "timezone",
     "utc",
@@ -166,12 +165,6 @@ def timezone(name: str) -> ZoneInfo:
 
     _timezone_cache[name] = tz
     return tz
-
-
-def localize(dt: datetime, tz: ZoneInfo | dt_timezone) -> datetime:
-    if dt.tzinfo is not None:
-        raise ValueError(f"Cannot localize a datetime that already has tzinfo: {dt}")
-    return dt.replace(tzinfo=tz)
 
 
 def localize_standard(dt: datetime, tz: ZoneInfo | dt_timezone) -> datetime:
