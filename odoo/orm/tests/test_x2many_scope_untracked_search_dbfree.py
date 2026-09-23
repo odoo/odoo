@@ -32,12 +32,8 @@ class Line(models.Model):
 
     def _search(self, domain, *args, bypass_access=False, **kwargs):
         if not (self.env.su or bypass_access):
-            blocked = [
-                block.line_id.id
-                for block in self.env["unt.block"]
-                .sudo()
-                .browse(self.env["unt.block"].sudo()._search([]))
-            ]
+            blocks = self.env["unt.block"].sudo().search([])
+            blocked = [line.id for line in blocks.mapped("line_id")]
             domain = Domain(domain) & Domain("id", "not in", blocked)
         return super()._search(domain, *args, bypass_access=bypass_access, **kwargs)
 

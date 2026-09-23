@@ -9,6 +9,7 @@ from odoo.libs.profiling import _OrmProfile
 from odoo.tools import ormcache
 
 from ... import decorators as api
+from ..._recordset import is_search_overridden
 from ..._typing import (
     DomainType,
     ValuesType,
@@ -20,6 +21,7 @@ from ._model_stubs import _ModelStubs
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from ..._typing import BaseModel
     from ...fields import Field
 
 _logger = logging.getLogger("odoo.models")
@@ -157,6 +159,8 @@ class SearchMixin(_ModelStubs):
         prof.mark("fields")
 
         result = self._fetch_query(query, fields_to_fetch)
+        if not is_search_overridden(typing.cast("type[BaseModel]", type(self))):
+            result._note_readable()
 
         if self.env.transaction.observers:
             self.env.transaction.observe_operation(

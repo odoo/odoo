@@ -117,19 +117,15 @@ def _collect_field(model: BaseModel, field: Field, facts: set, depth: int) -> bo
 
 
 def _relation_siblings(model: BaseModel, field: Field) -> Iterator[Fact]:
+    relation, column1, column2 = field.relation, field.column1, field.column2
+    if not (relation and column1 and column2):
+        return
     relations = model.pool.many2many_relations
-    for columns in (
-        (field.relation, field.column1, field.column2),
-        (field.relation, field.column2, field.column1),
-    ):
+    for columns in ((relation, column1, column2), (relation, column2, column1)):
         yield from relations.get(columns, ())
 
 
 class AccessMemo:
-    # what a transaction derived from the access rules: which x2many fields
-    # hold user slots that a write elsewhere may make stale. A cleared
-    # registry cache (a rule, an access right or a membership written)
-    # re-derives who watches what
     __slots__ = (
         "_epoch",
         "_everything",
@@ -138,6 +134,7 @@ class AccessMemo:
         "_observing",
         "_registered",
         "_rewatch",
+        "_verdicts",
         "_watchers",
     )
 
@@ -148,6 +145,7 @@ class AccessMemo:
 
     def clear(self) -> None:
         self._facts: dict[tuple, Facts] = {}
+        self._verdicts: dict[tuple, dict[typing.Any, bool]] = {}
         self._watchers: defaultdict[str, set] = defaultdict(set)
         self._everything: set = set()
         self._registered: dict[tuple, tuple[Environment, bool]] = {}
@@ -158,13 +156,12 @@ class AccessMemo:
         epoch = registry.cache_epoch
         if epoch == self._epoch:
             return
-        if self._epoch is not None and self._registered:
+        if self._epoch is not None and (self._verdicts or self._registered):
             _debug.lifecycle(
                 "access_memo.cache_epoch_changed",
+                verdicts=len(self._verdicts),
                 x2many=len(self._registered),
             )
-        # the slots already filled stay in the field cache: their fields are
-        # watched again under the rules as they now stand
         rewatch = self._rewatch + [
             (key[0], env, everything)
             for key, (env, everything) in self._registered.items()
@@ -199,6 +196,20 @@ class AccessMemo:
         for model_name in {model_name for model_name, _fname in facts} | set(models):
             self._watchers[model_name].add(entry)
 
+    def read_verdicts(self, env: Environment, model_name: str) -> dict:
+        self._sync(env.registry)
+        key = (env._read_access_key, model_name)
+        verdicts = self._verdicts.get(key)
+        if verdicts is None:
+            verdicts = self._verdicts[key] = {}
+            self._watch(key, self.read_facts(env, model_name), ())
+        return verdicts
+
+    def cached_verdicts(self, env: Environment, model_name: str) -> dict | None:
+        if self._epoch != env.registry.cache_epoch:
+            return None
+        return self._verdicts.get((env._read_access_key, model_name))
+
     def watch_x2many(self, env: Environment, field: Field, everything: bool) -> None:
         self._sync(env.registry)
         key = (field, env._read_access_key)
@@ -208,8 +219,6 @@ class AccessMemo:
         try:
             facts = None if everything else self.read_facts(env, field.comodel_name)
         except AccessError:
-            # the scope names a company its user no longer holds: its rules
-            # cannot be read, and watching every write is always safe
             facts = None
         self._watch(field, facts, self._observed_models(field.comodel_name))
 
@@ -221,8 +230,6 @@ class AccessMemo:
 
     @contextmanager
     def observing(self, model_name: str) -> Iterator[None]:
-        # the searches an overridden _search runs for a user and the fields
-        # their conditions read: what the override's visibility depends on
         seen: set[Fact] = set()
         self._observing.append((model_name, seen))
         try:
@@ -245,9 +252,62 @@ class AccessMemo:
         for sql in (query.from_clause, query.where_clause):
             seen.update((field.model_name, field.name) for field in sql.to_flush)
 
-    def written(self, env: Environment, model_name: str) -> list[Field]:
-        # the x2many fields whose user slots may read through the written model
+    def written(
+        self,
+        env: Environment,
+        model_name: str,
+        fnames: Collection[str] | None,
+        *,
+        created: bool = False,
+    ) -> list[Field]:
+        # drops the verdicts the write may have changed, and answers the
+        # x2many fields whose user slots may read through the written model
         self._sync(env.registry)
         if self._rewatch:
             self._flush_rewatch()
-        return list(self._watchers.get(model_name, set()) | self._everything)
+        entries = self._watchers.get(model_name, set()) | self._everything
+        if not entries:
+            return []
+        self._drop_verdicts(entries, model_name, fnames, created)
+        return [entry for entry in entries if not isinstance(entry, tuple)]
+
+    def forget(
+        self, env: Environment, model_name: str, fnames: Collection[str] | None
+    ) -> None:
+        # a cache invalidation says the rows may differ from what was read
+        if not self._verdicts or self._epoch != env.registry.cache_epoch:
+            return
+        if fnames is None:
+            for key in [key for key in self._verdicts if key[1] == model_name]:
+                del self._verdicts[key]
+        entries = self._watchers.get(model_name, set()) | self._everything
+        self._drop_verdicts(entries, model_name, fnames, False)
+
+    def _drop_verdicts(
+        self,
+        entries: Collection,
+        model_name: str,
+        fnames: Collection[str] | None,
+        created: bool,
+    ) -> None:
+        dropped = 0
+        for entry in entries:
+            if not isinstance(entry, tuple) or entry not in self._verdicts:
+                continue
+            if created and entry[1] == model_name:
+                continue
+            facts = self._facts.get(entry)
+            if (
+                facts is None
+                or fnames is None
+                or any((model_name, fname) in facts for fname in fnames)
+            ):
+                del self._verdicts[entry]
+                dropped += 1
+        if dropped and _debug.logic.enabled:
+            _debug.logic(
+                "access_memo.verdicts_dropped",
+                model=model_name,
+                fields=None if fnames is None else sorted(fnames),
+                dropped=dropped,
+            )

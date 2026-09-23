@@ -136,6 +136,63 @@ class TestRules(TransactionCase):
         with self.assertQueryCount(0):
             Model._filtered_access("read")
 
+    @contextlib.contextmanager
+    def _counting_rule_evaluations(self):
+        Model = type(self.env["test_access_right.some_obj"])
+        original = Model.filtered_domain
+        evaluated = []
+
+        def filtered_domain(records, domain):
+            evaluated.append(records.ids)
+            return original(records, domain)
+
+        with patch.object(Model, "filtered_domain", filtered_domain):
+            yield evaluated
+
+    def test_a_read_check_evaluates_the_rules_once_per_transaction(self):
+        env = self.env(user=self.env.ref("base.public_user"))
+        allowed = self.allowed.with_env(env)
+        forbidden = self.forbidden.with_env(env)
+        with self._counting_rule_evaluations() as evaluated:
+            for _repeat in range(3):
+                self.assertTrue(allowed.has_access("read"))
+                self.assertFalse(forbidden.has_access("read"))
+        self.assertEqual(evaluated, [allowed.ids, forbidden.ids])
+
+    def test_a_search_answers_the_read_check_of_what_it_returned(self):
+        env = self.env(user=self.env.ref("base.public_user"))
+        found = env["test_access_right.some_obj"].search(
+            [("id", "in", [self.allowed.id, self.forbidden.id])]
+        )
+        self.assertEqual(found, self.allowed.with_env(env))
+        with self._counting_rule_evaluations() as evaluated:
+            self.assertTrue(found.has_access("read"))
+        self.assertEqual(evaluated, [])
+
+    def test_a_read_verdict_follows_a_write_the_rule_reads(self):
+        env = self.env(user=self.env.ref("base.public_user"))
+        allowed = self.allowed.with_env(env)
+        self.assertTrue(allowed.has_access("read"))
+        self.allowed.val = -5
+        self.assertFalse(allowed.has_access("read"))
+        self.allowed.val = 5
+        self.assertTrue(allowed.has_access("read"))
+
+    def test_a_read_verdict_follows_a_rule_written_in_the_transaction(self):
+        env = self.env(user=self.env.ref("base.public_user"))
+        allowed = self.allowed.with_env(env)
+        self.assertTrue(allowed.has_access("read"))
+        self.env["ir.rule"].create(
+            {
+                "name": "Forbid small values",
+                "model_id": self.env.ref(
+                    "test_access_rights.model_test_access_right_some_obj"
+                ).id,
+                "domain_force": "[('val', '>', 5)]",
+            }
+        )
+        self.assertFalse(allowed.has_access("read"))
+
     @mute_logger("odoo.addons.base.models.ir_rule")
     def test_check_access_newid_bypasses_ir_rule(self):
         env = self.env(user=self.env.ref("base.public_user"))

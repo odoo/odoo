@@ -95,6 +95,39 @@ def test_partner_search_fetch(env, counter, check):
     check("partner_search_fetch_1000", readings)
 
 
+def test_partner_read_check_repeated(env, counter, check):
+    user = env["res.users"].create(
+        {
+            "name": "perf reader",
+            "login": "perf_reader",
+            "group_ids": [(6, 0, [env.ref("base.group_user").id])],
+        }
+    )
+    partner = env["res.partner"].create({"name": "read check"}).with_user(user)
+    env.flush_all()
+    Partner = type(partner)
+    original = Partner.filtered_domain
+    evaluations = [0]
+
+    def filtered_domain(records, domain):
+        evaluations[0] += 1
+        return original(records, domain)
+
+    def checks():
+        for _ in range(1000):
+            partner.has_access("read")
+
+    Partner.filtered_domain = filtered_domain
+    try:
+        readings = measure(checks, counter, repeat=1)
+    finally:
+        del Partner.filtered_domain
+    check(
+        "partner_read_check_repeated_1000",
+        {**readings, "calls_rule_evaluations": evaluations[0]},
+    )
+
+
 def test_registry_warm_load(base_db, check):
     seconds = []
     for _ in range(3):

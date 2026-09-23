@@ -118,6 +118,7 @@ class CacheMixin(_ModelStubs):
         env = self.env
         if not flush:
             self._check_no_pending_write(fields, ids)
+        env.transaction.access_memo.forget(env, self._name, fnames)
 
         field_inverses = self.pool.field_inverses
         inverses_invalidated = 0  # debuglog
@@ -151,15 +152,16 @@ class CacheMixin(_ModelStubs):
         self, fnames: Collection[str] | None, *, created: bool = False
     ) -> None:
         # `fnames` of these rows changed (None: every field, the rows were
-        # deleted): a user's x2many slots over this model, or over any model
-        # whose read rule reads through it, may no longer be what the user's
-        # search would return. A created row is in no slot of its own model yet
+        # deleted): a user's read verdicts and x2many slots over this model,
+        # or over any model whose read rule reads through it, may no longer be
+        # what the user's search would return. A created row is in no slot
+        # and no verdict of its own model yet
         env = self.env
         if not created:
             self._evict_x2many_scopes_reading_through(fnames)
         memo = env.transaction.access_memo
         core = env.core
-        for field in memo.written(env, self._name):
+        for field in memo.written(env, self._name, fnames, created=created):
             if field.comodel_name != self._name and core.has_any_context_cached(field):
                 field._evict_user_scopes_reading_through(env, fnames, self._name)
 

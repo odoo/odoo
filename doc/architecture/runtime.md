@@ -425,6 +425,23 @@ its invariant are surveyed in
 plan that weighed the alternative (one slot holding the truth, visibility applied
 on the way out) is no longer in the vault.
 
+**A read verdict holds for the transaction until something it read changes.**
+`AccessMixin._check_access("read")` answers from `Transaction.access_memo`, per
+access key (`Environment._read_access_key`: the uid, sudo, and the context values
+the record rules read) and model: the model's ACL verdict under `0`, each
+record's rule verdict under its id. A miss evaluates only the unknown ids; the
+rows a user's `search_fetch` or `fetch` returned are admitted without evaluation
+(not for a model whose `_search` is overridden, whose rows may not be the rule's).
+A verdict is dropped by a write, create or unlink of a field its rule reads (the
+facts the x2many slots follow), by `invalidate_model` / `invalidate_recordset` of
+the model or of what its rule reads, by `invalidate_all`, and wholesale when the
+registry clears a cache (`Registry.cache_epoch`: a rule, an access right, a group
+or a membership written). Only `read` is cached, and a model's own
+`_check_access` override still runs around it. `tests/perf`
+`partner_read_check_repeated_1000` counts the rule evaluations of a thousand
+checks of one record, and they are the first check's; before, every check
+evaluated the rule (160-199 µs each, 2026-09-22).
+
 **A many2many write reaches only the links its writer can read.** `Many2many.write_real`
 builds the old relation from the writer's own slot, and `_apply_relation_delta` deletes only
 pairs that were in it. So a restricted user's `Command.clear()` or `Command.set()` leaves in

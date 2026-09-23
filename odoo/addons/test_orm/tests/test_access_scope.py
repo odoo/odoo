@@ -82,3 +82,17 @@ class TestX2manyScopeFollowsWhatTheRulesRead(TransactionCase):
         self.shown.name = "renamed"
         with self.assertQueryCount(0):
             self.assertEqual(self.user_box.item_ids, self.item_shown)
+
+    def test_a_read_verdict_follows_a_write_at_the_end_of_the_rule_path(self):
+        item = self.item_shown.with_user(self.user)
+        self.assertTrue(item.has_access("read"))
+        self.shown.visible = False
+        self.assertFalse(item.has_access("read"))
+        self.shown.visible = True
+        self.assertTrue(item.has_access("read"))
+
+    def test_a_read_verdict_follows_the_deletion_of_the_row_the_rule_reads(self):
+        item = self.item_shown.with_user(self.user)
+        self.assertTrue(item.has_access("read"))
+        self.shown.unlink()
+        self.assertFalse(item.has_access("read"))

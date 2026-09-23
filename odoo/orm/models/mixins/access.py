@@ -190,48 +190,83 @@ class AccessMixin(_ModelStubs):
         return self.browse(id_ for id_ in self._ids if id_ in allowed_ids)
 
     def _check_access(self, operation: str) -> tuple[Self, Callable] | None:
-        policy = self.env.registry.access_policy
-        if not policy.model_allowed(self.env, self._name, operation):
+        env = self.env
+        policy = env.registry.access_policy
+        memo = env.transaction.access_memo
+        cache = operation == "read" and not env.su
+        verdicts = memo.cached_verdicts(env, self._name) if cache else None
+        if verdicts and verdicts.get(0):
+            if all(map(verdicts.get, filter(None, self._ids))):
+                return None
+        elif not policy.model_allowed(env, self._name, operation):
             _debug.logic(
                 "access.denied_by_acl",
                 model=self._name,
                 operation=operation,
-                uid=self.env.uid,
+                uid=env.uid,
                 records=len(self),
             )
             return self, functools.partial(
-                policy.model_denied_error, self.env, self._name, operation
+                policy.model_denied_error, env, self._name, operation
             )
+        elif cache:
+            verdicts = memo.read_verdicts(env, self._name)
+            verdicts[0] = True
 
         # keep the prefetch ids: the rules' Python evaluation on one record
         # of a batch would otherwise fetch that record's row alone
         real_ids = tuple(id_ for id_ in self._ids if id_)
-        real_self = (
-            self
-            if len(real_ids) == len(self._ids)
-            else self._spawn(self.env, real_ids, self._prefetch_ids)
-        )
-        if real_self:
-            domain = policy.record_domain(self.env, self._name, operation)
-            if domain and (
-                forbidden := real_self
-                - real_self.sudo()
-                .with_context(active_test=False)
-                .filtered_domain(domain)
-            ):
-                _debug.logic(
-                    "access.denied_by_rule",
-                    model=self._name,
-                    operation=operation,
-                    uid=self.env.uid,
-                    records=len(real_self),
-                    forbidden=len(forbidden),
+        if verdicts is not None:
+            unknown = tuple(id_ for id_ in real_ids if id_ not in verdicts)
+            refused = [id_ for id_ in real_ids if verdicts.get(id_) is False]
+        else:
+            unknown, refused = real_ids, []
+        if unknown:
+            unknown_self = (
+                self
+                if len(unknown) == len(self._ids)
+                else self._spawn(env, unknown, self._prefetch_ids)
+            )
+            domain = policy.record_domain(env, self._name, operation)
+            admitted: Collection = unknown
+            if domain:
+                admitted = set(
+                    unknown_self.sudo()
+                    .with_context(active_test=False)
+                    .filtered_domain(domain)
+                    ._ids
                 )
-                return forbidden, functools.partial(
-                    policy.record_denied_error, self.env, operation, forbidden
-                )
+                refused.extend(id_ for id_ in unknown if id_ not in admitted)
+            if verdicts is not None:
+                for id_ in unknown:
+                    verdicts[id_] = id_ in admitted
+        if refused:
+            refused_ids = set(refused)
+            forbidden = self.browse(
+                dict.fromkeys(id_ for id_ in real_ids if id_ in refused_ids)
+            )
+            _debug.logic(
+                "access.denied_by_rule",
+                model=self._name,
+                operation=operation,
+                uid=env.uid,
+                records=len(real_ids),
+                forbidden=len(forbidden),
+            )
+            return forbidden, functools.partial(
+                policy.record_denied_error, env, operation, forbidden
+            )
 
         return None
+
+    def _note_readable(self) -> None:
+        # the records a user's search or fetch returned passed the read rules
+        env = self.env
+        if env.su or not self._ids:
+            return
+        verdicts = env.transaction.access_memo.read_verdicts(env, self._name)
+        for id_ in self._ids:
+            verdicts[id_] = True
 
     def _check_company_domain(self, companies: typing.Any) -> Domain:
         if not companies:

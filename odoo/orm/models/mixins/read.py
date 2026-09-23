@@ -11,6 +11,7 @@ from odoo.tools import OrderedSet, frozendict, ormcache
 from odoo.tools.misc import PENDING, SENTINEL
 
 from ... import decorators as api
+from ..._recordset import is_search_overridden
 from ..._typing import ValuesType
 from ...fields._field_description import description_key
 from ...primitives import LOG_ACCESS_COLUMNS
@@ -20,6 +21,7 @@ from ._model_stubs import _ModelStubs
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Sequence
 
+    from ..._typing import BaseModel
     from ...fields.base import Field
     from ...tools import Query
 
@@ -385,7 +387,8 @@ class ReadMixin(_ModelStubs):
             self._name,
             self._ids,
         )
-        if any(field.column_type for field in fields_to_fetch):
+        rules_applied = any(field.column_type for field in fields_to_fetch)
+        if rules_applied:
             query = self._search([("id", "in", self.ids)], active_test=False)
         else:
             try:
@@ -433,6 +436,10 @@ class ReadMixin(_ModelStubs):
             to_fetch=len(fields_to_fetch),
         )
         fetched = self._fetch_query(query, fields_to_fetch)
+        if rules_applied and not is_search_overridden(
+            typing.cast("type[BaseModel]", type(self))
+        ):
+            fetched._note_readable()
 
         if self.env.transaction.observers:
             self.env.transaction.observe_operation(
