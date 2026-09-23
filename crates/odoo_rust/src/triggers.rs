@@ -297,7 +297,10 @@ mod tests {
         let meta = meta
             .into_iter()
             .enumerate()
-            .map(|(i, m)| FieldMeta { fact: if m.fact == u32::MAX { i as u32 } else { m.fact }, ..m })
+            .map(|(i, m)| FieldMeta {
+                fact: if m.fact == u32::MAX { i as u32 } else { m.fact },
+                ..m
+            })
             .collect();
         Graph { triggers, meta }
     }
@@ -313,16 +316,24 @@ mod tests {
         let n = 9u32;
         let mut meta: Vec<FieldMeta> = (0..n).map(|_| plain(false, false, 0, 0, 0, 0)).collect();
         meta.iter_mut().for_each(|m| m.fact = 0);
-        meta.extend((0..n).map(|i| FieldMeta { fact: 1, ..plain(true, false, 1, 0, i, i) }));
+        meta.extend((0..n).map(|i| FieldMeta {
+            fact: 1,
+            ..plain(true, false, 1, 0, i, i)
+        }));
         let edges: Vec<(u32, Vec<u32>, Vec<u32>)> = (0..n)
             .flat_map(|i| (0..n).map(move |j| (i, vec![n + j], vec![j])))
             .collect();
-        let borrowed: Vec<(u32, &[u32], &[u32])> =
-            edges.iter().map(|(d, p, t)| (*d, p.as_slice(), t.as_slice())).collect();
+        let borrowed: Vec<(u32, &[u32], &[u32])> = edges
+            .iter()
+            .map(|(d, p, t)| (*d, p.as_slice(), t.as_slice()))
+            .collect();
         let g = graph(&borrowed, meta);
         let tree = tree_of(&g, 0);
         assert_eq!(count(&tree), 1 + n as usize);
-        let listed: Vec<u32> = flat(&tree).into_iter().flat_map(|(_, roots)| roots).collect();
+        let listed: Vec<u32> = flat(&tree)
+            .into_iter()
+            .flat_map(|(_, roots)| roots)
+            .collect();
         assert_eq!(listed, (0..n).collect::<Vec<_>>());
     }
 
