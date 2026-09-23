@@ -1,3 +1,5 @@
+import random
+
 from odoo.tools.assets.esbuild_process import canonicalize_chunk_names
 
 
@@ -74,3 +76,83 @@ class TestCanonicalizeChunkNames:
         files = {"one.esm.js": "var a=1;"}
         assert canonicalize_chunk_names(files) == {}
         assert files == {"one.esm.js": "var a=1;"}
+
+
+class TestCanonicalNamesDoNotDependOnEsbuildsChoice:
+    # each shape is written with random esbuild names; every naming must give
+    # one and the same output
+
+    @staticmethod
+    def _names(count, rng):
+        return [
+            "chunk-"
+            + "".join(
+                rng.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") for _ in range(8)
+            )
+            + ".esm.js"
+            for _ in range(count)
+        ]
+
+    def _outputs(self, shape, count, trials=40):
+        rng = random.Random(7)
+        outputs = set()
+        for _ in range(trials):
+            files = shape(*self._names(count, rng))
+            canonicalize_chunk_names(files)
+            outputs.add(tuple(sorted(files.items())))
+        return outputs
+
+    def test_a_symmetric_cycle_an_entry_imports_twice(self):
+        def shape(a, b):
+            return {
+                "one.esm.js": f'import"./{a}";import"./{b}";',
+                a: f'import"./{b}";var x=1',
+                b: f'import"./{a}";var x=1',
+            }
+
+        assert len(self._outputs(shape, 2)) == 1
+
+    def test_two_identical_cycles_behind_two_entries(self):
+        def shape(a, b, c, d):
+            return {
+                "one.esm.js": f'import"./{a}";',
+                "two.esm.js": f'import"./{c}";',
+                a: f'import"./{b}";var x=1',
+                b: f'import"./{a}";var x=1',
+                c: f'import"./{d}";var x=1',
+                d: f'import"./{c}";var x=1',
+            }
+
+        assert len(self._outputs(shape, 4)) == 1
+
+    def test_a_two_cycle_beside_a_three_cycle(self):
+        def shape(a, b, c, d, e):
+            return {
+                "one.esm.js": f'import"./{a}";import"./{c}";',
+                a: f'import"./{b}";var x=1',
+                b: f'import"./{a}";var x=1',
+                c: f'import"./{d}";var x=1',
+                d: f'import"./{e}";var x=1',
+                e: f'import"./{c}";var x=1',
+            }
+
+        assert len(self._outputs(shape, 5)) == 1
+
+    def test_source_maps_follow_their_chunk_and_do_not_name_it(self):
+        def shape(a, b):
+            return {
+                "one.esm.js": f'import"./{a}";\n//# sourceMappingURL=one.esm.js.map',
+                a: f'import"./{b}";var x=1\n//# sourceMappingURL={a}.map',
+                b: f"var y=2\n//# sourceMappingURL={b}.map",
+                a + ".map": f'{{"file":"{a}"}}',
+                b + ".map": f'{{"file":"{b}"}}',
+                "one.esm.js.map": '{"file":"one.esm.js"}',
+            }
+
+        outputs = self._outputs(shape, 2)
+        assert len(outputs) == 1
+        files = dict(next(iter(outputs)))
+        for name, content in files.items():
+            if name.startswith("chunk-") and name.endswith(".esm.js"):
+                assert f"sourceMappingURL={name}.map" in content
+                assert name + ".map" in files

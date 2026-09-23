@@ -29,19 +29,38 @@ def _chunk_name(digest: str) -> str:
     return f"chunk-{digest[:8].upper()}.esm.js"
 
 
+_SELF = "chunk-SELF0000.esm.js"
+
+
+def _is_code(name: str) -> bool:
+    # a sourcemap names its chunk by the name esbuild chose; only code files
+    # say something about which chunk is which
+    return not name.endswith(".map")
+
+
 def _name_chunk_cycles(
     members: list[str], files: dict[str, str], named: dict[str, str]
 ) -> dict[str, str]:
     # A chunk in an import cycle cannot be named after its dependencies' final
     # names, so its name is a colour refined over the cycle: its own text with
     # the cycle's references masked, then, member by member, the colours of the
-    # chunks it references. Two members left with one colour are symmetric, and
-    # either assignment of their names yields the same files.
+    # chunks it references and of the files that reference it (an entry by its
+    # own, stable name). Members left with one colour are indistinguishable by
+    # everything the build says about them, and are ordered by it alone.
     cyclic = set(members)
     references = {
         name: [dep for dep in _CHUNK_NAME.findall(files[name]) if dep in cyclic]
         for name in members
     }
+    # who references a member, and where in its text: an entry that imports two
+    # members of identical text still imports one of them first
+    referrers: dict[str, list[tuple[str, int]]] = {name: [] for name in members}
+    for source, content in files.items():
+        if not _is_code(source):
+            continue
+        for position, dep in enumerate(_CHUNK_NAME.findall(content)):
+            if dep in cyclic and dep != source:
+                referrers[dep].append((source, position))
     colour = {
         name: cache_hash(
             _CHUNK_NAME.sub(
@@ -58,7 +77,16 @@ def _name_chunk_cycles(
         colour = {
             name: cache_hash(
                 "\0".join(
-                    [colour[name], *(colour[dep] for dep in references[name])]
+                    [
+                        colour[name],
+                        *(colour[dep] for dep in references[name]),
+                        "|",
+                        *sorted(
+                            (colour[source] if source in cyclic else "entry:" + source)
+                            + f"@{position}"
+                            for source, position in referrers[name]
+                        ),
+                    ]
                 ).encode("utf-8")
             )
             for name in members
@@ -87,18 +115,19 @@ def canonicalize_chunk_names(files: dict[str, str]) -> dict[str, str]:
     pending = set(chunks)
     while ready := sorted(name for name in pending if imports[name] <= renamed.keys()):
         for name in ready:
-            fresh = _chunk_name(
-                cache_hash(
-                    _rewrite_chunk_references(files[name], renamed).encode("utf-8")
-                )
-            )
-            renamed[name] = fresh
+            # the chunk's own name (in its sourceMappingURL) is esbuild's
+            # choice, so it is masked out of what names it
+            own = _rewrite_chunk_references(files[name], {**renamed, name: _SELF})
+            renamed[name] = _chunk_name(cache_hash(own.encode("utf-8")))
             pending.discard(name)
     cyclic = len(pending)
     if pending:
         renamed |= _name_chunk_cycles(sorted(pending), files, renamed)
+    maps = {old + ".map": new + ".map" for old, new in renamed.items()}
     rewritten = {
-        renamed.get(name, name): _rewrite_chunk_references(content, renamed)
+        renamed.get(name) or maps.get(name, name): _rewrite_chunk_references(
+            content, renamed
+        )
         for name, content in files.items()
     }
     files.clear()
@@ -313,9 +342,8 @@ def get_group_output(
         metafile = Path(metafile_path).read_text(encoding="utf-8")
     except OSError:
         metafile = None
-    for old, new in renamed.items():
-        if metafile and old != new:
-            metafile = metafile.replace(old, new)
+    if metafile:
+        metafile = _rewrite_chunk_references(metafile, renamed)
     log_event(
         _esbuild_log,
         logging.INFO,
