@@ -70,9 +70,10 @@ access control, and ORM extensions that those controllers depend on.
 odoo/addons/base/
 ├── __manifest__.py              # Module metadata + asset/data file declarations
 ├── __init__.py                  # Imports models, report, wizard + post_init hook
-├── models/                      # 111 Python model files (core ORM infrastructure)
+├── models/                      # 112 Python model files (core ORM infrastructure)
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
+│   ├── ir_access_convert.py         #   ir.model.access + ir.rule to ir.access rows, with the audit report (pure)
 │   ├── ir_actions_act_url.py        #   URL action
 │   ├── ir_actions_act_window.py     #   Window actions (open views on a model)
 │   ├── ir_actions_act_window_close.py #   Close-window action
@@ -282,7 +283,7 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 
 | Category | Count |
 |----------|-------|
-| Python (models) | 111 |
+| Python (models) | 112 |
 | Python (wizards) | 11 |
 | Python (tests) | 144 |
 | XML (views) | 38 |
