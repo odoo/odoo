@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from unittest.mock import patch
+from datetime import datetime, time, timedelta
 
 import pytest
 
+from . import _bench
 from ._bench import ServerClock, StatementCounter, measure
 
 
@@ -78,9 +79,8 @@ def test_sale_order_entry_as_salesman(env, counter, check):
     # and three lines, the save and the confirmation, as a salesman under access
     # rules. Measured 2026-09-22 through a real browser, onchange was 43 % of an
     # order entry's server time and nothing else held it to a number
-    from odoo import fields
     from odoo.tests import Form
-    from odoo.tests.common import new_test_user
+    from odoo.tests.common import freeze_time, new_test_user
 
     user = new_test_user(
         env,
@@ -100,7 +100,9 @@ def test_sale_order_entry_as_salesman(env, counter, check):
         for _ in range(3):
             with form.line_ids.new() as line:
                 line.product_id = product
-        form.save().action_confirm()
+        order = form.save()
+        frozen.tick(timedelta(seconds=1))
+        order.action_confirm()
         salesman_env.flush_all()
 
     clock = ServerClock()
@@ -113,12 +115,18 @@ def test_sale_order_entry_as_salesman(env, counter, check):
         "action_confirm",
     )
     clock.wrap(type(salesman_env["sale.order.line"]), "onchange")
-    # the confirmation rewrites date_order to now: whether that crosses a
-    # second from the create decides whether the flush groups one more UPDATE,
-    # so an unpinned clock reads 324 or 325 statements by chance
-    now = fields.Datetime.now()
+    # the confirmation rewrites date_order to now, and whether that differs
+    # from the create's decides whether one more UPDATE is flushed. Patching
+    # fields.Datetime.now does not reach date_order's default, which holds the
+    # function itself, so the create read the wall clock and the count was 314
+    # or 315 by whether the iteration fell in the pinned second. A frozen
+    # clock reaches both, and the tick makes every confirmation a second
+    # later than its order, as a user's is; the server clock reads real time
     try:
-        with patch.object(fields.Datetime, "now", staticmethod(lambda *a, **k: now)):
+        with freeze_time(
+            datetime.combine(datetime.now().date(), time(12)),
+            ignore=[_bench.__name__],
+        ) as frozen:
             readings = measure(entry, counter, repeat=2, clock=clock)
     finally:
         clock.unwrap()
