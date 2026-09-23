@@ -784,7 +784,7 @@ class TestEsbuildSourceMaps(TransactionCase):
         self.assertTrue(
             any(
                 "event=source_maps_unknown_mode" in r.getMessage()
-                and "mode=yes please" in r.getMessage()
+                and "mode='yes please'" in r.getMessage()
                 for r in captured.records
             ),
             msg="invalid source_maps mode must emit a structured warning",
