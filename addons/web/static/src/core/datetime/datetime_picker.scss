@@ -19,16 +19,16 @@
 
     // Day
     .o_selected {
-        color: $o-component-active-color;
-        background: $o-component-active-bg;
+        color: var(--DateTimePicker__day-selected-color, #{$o-component-active-color});
+        background: var(--DateTimePicker__day-selected-bg, #{$o-component-active-bg});
     }
 
     .o_select_start,
     .o_select_end {
-        --selected-day-color: #{mix(lighten($o-component-active-border, 10%), $o-component-active-bg, 15%)};
+        --selected-day-color: var(--DateTimePicker__day-range-bg, #{mix(lighten($o-component-active-border, 10%), $o-component-active-bg, 15%)});
         --percent: calc(100% / sqrt(2));
         background:
-            #{$o-component-active-bg}
+            var(--DateTimePicker__day-selected-bg, #{$o-component-active-bg})
             radial-gradient(
                 circle,
                 var(--selected-day-color) 0% var(--percent),
@@ -69,8 +69,8 @@
 
     .o_date_item_picker .o_datetime_button {
         &.o_selected:not(.o_select_start, .o_select_end) {
-            background: $o-component-active-bg;
-            color: $o-component-active-color;
+            background: var(--DateTimePicker__day-selected-bg, #{$o-component-active-bg});
+            color: var(--DateTimePicker__day-selected-color, #{$o-component-active-color});
         }
     }
 
@@ -84,7 +84,7 @@
         position: relative;
 
         &:hover, &:focus {
-            --DateTimePicker__date-cell-border-color-hover: #{$o-component-active-border};
+            --DateTimePicker__date-cell-border-color-hover: var(--DateTimePicker__date-cell-border-color-active, #{$o-component-active-border});
         }
 
         &:not([disabled])::before {
