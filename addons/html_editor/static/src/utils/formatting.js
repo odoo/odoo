@@ -115,8 +115,19 @@ export const formatsSpecs = {
         },
         hasStyle: (node) => node.style && node.style["font-size"],
         addStyle: (node, props) => {
-            node.style["font-size"] = props.size;
             removeClass(node, ...FONT_SIZE_CLASSES);
+            // Replace font-size declarations to use both a fix pixel-based size and a
+            // dynamic one. The dynamic one will override the fixed one in engines where
+            // it is valid. Engines that don't support it will fallback to the fixed one.
+            const cleaned = node.style.cssText.replace(/font-size\s*:[^;]+;?/g, "").trim();
+            let styleValue = cleaned ? cleaned + " " : "";
+            if (props.pixelSize) {
+                styleValue += `font-size: ${props.pixelSize}; `;
+            }
+            if (props.size) {
+                styleValue += `font-size: ${props.size}; `;
+            }
+            node.setAttribute("style", styleValue.trim());
             node.classList.toggle("o_rfs", props.size && props.size.startsWith("clamp("));
         },
         removeStyle: (node) => {
