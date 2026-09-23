@@ -36,6 +36,7 @@ class Scope(enum.Enum):
     SHARED = "shared"
     LOOPBACK = "loopback"
     LINK_LOCAL = "link_local"
+    METADATA = "metadata"
     MULTICAST = "multicast"
     UNSPECIFIED = "unspecified"
     RESERVED = "reserved"
@@ -63,6 +64,19 @@ _SHARED_NETWORK = ipaddress.ip_network("100.64.0.0/10")
 _SRV6_SIDS = ipaddress.ip_network("5f00::/16")
 _NAT64_WELL_KNOWN = ipaddress.ip_network("64:ff9b::/96")
 _IPV4_COMPATIBLE = ipaddress.ip_network("::/96")
+_IPV4_TRANSLATED = ipaddress.ip_network("::ffff:0:0:0/96")
+# Cloud instance-metadata services answer credentials to whoever asks from the
+# host, so no scope-wide policy reaches them: AWS/GCP/Azure/OCI/DigitalOcean
+# IMDS, the AWS ECS task endpoint, AWS IMDS over IPv6, Alibaba Cloud.
+_METADATA_ADDRESSES = frozenset(
+    ipaddress.ip_address(address)
+    for address in (
+        "169.254.169.254",
+        "169.254.170.2",
+        "fd00:ec2::254",
+        "100.100.100.200",
+    )
+)
 
 
 def _as_address(address: str | IPAddress) -> IPAddress:
@@ -87,6 +101,8 @@ def _unwrap(address: IPAddress) -> IPAddress:
 
 def classify(address: str | IPAddress) -> Scope:
     ip = _unwrap(_as_address(address))
+    if ip in _METADATA_ADDRESSES:
+        return Scope.METADATA
     if ip.is_unspecified:
         return Scope.UNSPECIFIED
     if ip.is_loopback:
@@ -99,7 +115,9 @@ def classify(address: str | IPAddress) -> Scope:
         return Scope.SHARED
     if any(ip in network for network in _PRIVATE_NETWORKS):
         return Scope.PRIVATE
-    if ip.version == 6 and (ip in _IPV4_COMPATIBLE or ip in _SRV6_SIDS):
+    if ip.version == 6 and (
+        ip in _IPV4_COMPATIBLE or ip in _IPV4_TRANSLATED or ip in _SRV6_SIDS
+    ):
         return Scope.RESERVED
     if ip.is_global:
         return Scope.PUBLIC

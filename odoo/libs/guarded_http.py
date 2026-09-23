@@ -310,15 +310,21 @@ class GuardedXmlRpcTransport(xmlrpc.client.Transport):
         verbose: bool = False,
     ) -> typing.Any:
         # `host` is the URL's netloc as ServerProxy parsed it; the base URL
-        # given at construction carries the scheme too, so it is the one used.
-        del host
+        # given at construction carries the scheme too, so it is the one used
+        # to send. The netloc still carries the URL's userinfo, which stdlib
+        # turns into a Basic Authorization header.
+        _, auth_headers, _ = self.get_host_info(host)
+        url = f"{self._base_url}{handler}"
         response = self._session.post(
-            f"{self._base_url}{handler}",
+            url,
             data=request_body,
-            headers={"Content-Type": "text/xml"},
+            headers={"Content-Type": "text/xml", **dict(auth_headers or ())},
             timeout=self._timeout,
         )
-        response.raise_for_status()
+        if not response.ok:
+            raise xmlrpc.client.ProtocolError(
+                url, response.status_code, response.reason, dict(response.headers)
+            )
         del verbose
         parser, unmarshaller = self.getparser()
         parser.feed(response.content)

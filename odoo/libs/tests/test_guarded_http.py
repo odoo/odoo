@@ -303,6 +303,40 @@ class TestXmlRpcProxy:
         assert result == {"method": "version", "params": [1, "two"]}
         assert server.seen == [("/xmlrpc/2/common", f"127.0.0.1:{server.server_port}")]
 
+    def test_url_credentials_are_sent_as_basic_auth(self, server):
+        import base64
+
+        seen = []
+
+        def echo_auth(handler):
+            seen.append(handler.headers.get("Authorization"))
+            _xmlrpc_echo(handler)
+
+        _Handler.routes["/xmlrpc/2/auth"] = echo_auth
+        proxy = guarded_http.xmlrpc_proxy(
+            session_for(),
+            f"http://user:s%40cret@127.0.0.1:{server.server_port}/xmlrpc/2/auth",
+        )
+        proxy.version()
+        assert seen == ["Basic " + base64.b64encode(b"user:s@cret").decode()]
+
+    def test_an_http_error_is_an_xmlrpc_protocol_error(self, server):
+        import xmlrpc.client
+
+        def fail(handler):
+            handler.send_response(503)
+            handler.send_header("Content-Length", "0")
+            handler.end_headers()
+
+        _Handler.routes["/xmlrpc/2/fail"] = fail
+        proxy = guarded_http.xmlrpc_proxy(
+            session_for(), f"http://127.0.0.1:{server.server_port}/xmlrpc/2/fail"
+        )
+        with pytest.raises(xmlrpc.client.ProtocolError) as info:
+            proxy.version()
+        assert info.value.errcode == 503
+        assert "user" not in info.value.url
+
     def test_a_refused_destination_never_reaches_the_server(self, server):
         session = session_for(resolver=resolver_for({"evil.test": ["10.0.0.9"]}))
         proxy = guarded_http.xmlrpc_proxy(session, "http://evil.test/xmlrpc/2/common")

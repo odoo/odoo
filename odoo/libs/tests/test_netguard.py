@@ -16,11 +16,11 @@ class TestClassify:
             ("2606:4700:4700::1111", Scope.PUBLIC),
             ("10.1.2.3", Scope.PRIVATE),
             ("192.168.0.10", Scope.PRIVATE),
-            ("fd00:ec2::254", Scope.PRIVATE),
+            ("fd00::1", Scope.PRIVATE),
             ("100.64.0.1", Scope.SHARED),
             ("127.0.0.1", Scope.LOOPBACK),
             ("::1", Scope.LOOPBACK),
-            ("169.254.169.254", Scope.LINK_LOCAL),
+            ("169.254.1.1", Scope.LINK_LOCAL),
             ("fe80::1", Scope.LINK_LOCAL),
             ("224.0.0.1", Scope.MULTICAST),
             ("ff02::1", Scope.MULTICAST),
@@ -47,6 +47,7 @@ class TestClassify:
             ("2001:0:4136:e378:8000:63bf:f5ff:fffe", Scope.PRIVATE),
             ("::7f00:1", Scope.RESERVED),
             ("::808:808", Scope.RESERVED),
+            ("::ffff:0:808:808", Scope.RESERVED),
         ],
     )
     def test_an_ipv6_wrapper_is_classified_by_the_ipv4_address_it_carries(
@@ -90,6 +91,28 @@ class TestPolicy:
             assert policy.permits(address)
         for address in ("224.0.0.1", "0.0.0.0", "240.0.0.1"):
             assert not policy.permits(address)
+
+    @pytest.mark.parametrize(
+        "address",
+        [
+            "169.254.169.254",
+            "169.254.170.2",
+            "fd00:ec2::254",
+            "100.100.100.200",
+            "::ffff:169.254.169.254",
+            "64:ff9b::a9fe:a9fe",
+            "2002:a9fe:a9fe::",
+        ],
+    )
+    def test_no_scope_policy_reaches_a_cloud_metadata_service(self, address):
+        assert netguard.classify(address) is Scope.METADATA
+        assert not netguard.PRIVATE_ALLOWED.permits(address)
+        assert not netguard.PUBLIC_ONLY.permits(address)
+
+    def test_only_a_named_network_reaches_a_metadata_service(self):
+        policy = netguard.PRIVATE_ALLOWED.with_networks("169.254.169.254/32")
+        assert policy.permits("169.254.169.254")
+        assert not policy.permits("fd00:ec2::254")
 
     def test_an_operator_network_widens_a_policy(self):
         policy = netguard.PUBLIC_ONLY.with_networks("10.20.0.0/16")
