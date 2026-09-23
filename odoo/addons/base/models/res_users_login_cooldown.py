@@ -56,7 +56,7 @@ class LoginCooldown:
             return row.failures, row.last_failure.replace(tzinfo=datetime.UTC)
 
     def record_failure(self, source: str, delay: datetime.timedelta) -> None:
-        now = datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
+        now = fields.Datetime.now()
         with self.registry.cursor() as cr:
             # a concurrent failure from the same source must be counted, not
             # lost to a snapshot taken before its row was committed

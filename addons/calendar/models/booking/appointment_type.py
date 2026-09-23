@@ -1207,7 +1207,7 @@ class AppointmentType(models.Model):
 
         if not self.active:
             return []
-        now = datetime.now(UTC).replace(tzinfo=None)
+        now = fields.Datetime.now()
         if not reference_date:
             reference_date = now
 

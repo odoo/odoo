@@ -1918,7 +1918,7 @@ class MixinMailGateway(models.AbstractModel):
                     message.get("Date"),
                     message_id,
                 )
-                stored_date = datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
+                stored_date = fields.Datetime.now()
             msg_dict["date"] = fields.Datetime.to_string(stored_date)
 
         msg_dict.update(
