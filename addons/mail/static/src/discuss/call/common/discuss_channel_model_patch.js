@@ -182,6 +182,20 @@ const DiscussChannelPatch = {
     unpin() {
         this.pinnedRtcSession = undefined;
     },
+    /** Drop the meeting view's focus: pin, else screenshare, else auto-focus, else tiles. */
+    resetCallFocus() {
+        if (this.pinnedRtcSession) {
+            this.activeRtcSession = this.pinnedRtcSession;
+            return;
+        }
+        const presenter = this.rtc_session_ids.find((s) => s.is_screen_sharing_on);
+        this.activeRtcSession = presenter;
+        if (presenter) {
+            presenter.mainVideoStreamType = "screen";
+            return;
+        }
+        this.focusAvailableVideo();
+    },
     focusAvailableVideo() {
         if (
             this.pinnedRtcSession ||
