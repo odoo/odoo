@@ -6,8 +6,8 @@ import { RpcEvent } from "@web/core/events";
 import { rpcBus } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 
-import { createSpreadsheetWithList } from "../helpers/list.js";
 import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data.js";
+import { createSpreadsheetWithList } from "../helpers/list.js";
 
 describe.current.tags("headless");
 

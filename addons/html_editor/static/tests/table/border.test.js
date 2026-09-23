@@ -1,5 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
+
 import { setupEditor } from "../_helpers/editor.js";
 import { expandToolbar } from "../_helpers/toolbar.js";
 
@@ -7,12 +8,15 @@ test("should apply border color", async () => {
     await setupEditor(
         `<table class="o_selected_table"><tbody><tr>
             <td class="o_selected_td">11[]</td>
-        </tr></tbody></table>`
+        </tr></tbody></table>`,
     );
     await expandToolbar();
     await contains(".btn:has(.fa-pencil)").click();
     await contains("[data-color='#F7C6CE']").click();
-    expect("td").toHaveStyle({ "border-color": "rgb(247, 198, 206)" }, { inline: true });
+    expect("td").toHaveStyle(
+        { "border-color": "rgb(247, 198, 206)" },
+        { inline: true },
+    );
 });
 
 test("should apply border width", async () => {
@@ -34,7 +38,7 @@ test("should apply border style", async () => {
     await expandToolbar();
     await contains(".btn[name='table_border_style']").click();
     await contains(
-        "button:has(.o-border-preview[style*='border-style: dotted'])"
+        "button:has(.o-border-preview[style*='border-style: dotted'])",
     ).click();
     expect("td").toHaveStyle({ "border-style": "dotted" }, { inline: true });
 });
@@ -53,6 +57,6 @@ test("should remove only border color on color delete", async () => {
             "border-width": "1px",
             "border-style": "solid",
         },
-        { inline: true }
+        { inline: true },
     );
 });

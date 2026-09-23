@@ -28,7 +28,9 @@ const defaultTestConfig = {
 // starts, which would move the goalposts under every colour assertion in this
 // suite. Tests that want it ask for it: `config: { Plugins: [...MAIN_PLUGINS] }`.
 export const PLUGINS_TO_EXCLUDE = ["contrast"];
-export const TEST_PLUGINS = MAIN_PLUGINS.filter((p) => !PLUGINS_TO_EXCLUDE.includes(p.id));
+export const TEST_PLUGINS = MAIN_PLUGINS.filter(
+    (p) => !PLUGINS_TO_EXCLUDE.includes(p.id),
+);
 
 export const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";

@@ -48,7 +48,10 @@ import { MediaDialog, TABS } from "./media_dialog/media_dialog.js";
  * @param {EditorSelection} selection
  */
 function isMediaSupported(selection) {
-    return isHtmlContentSupported(selection) && !closestElement(selection.anchorNode, "label");
+    return (
+        isHtmlContentSupported(selection) &&
+        !closestElement(selection.anchorNode, "label")
+    );
 }
 
 export class MediaPlugin extends Plugin {

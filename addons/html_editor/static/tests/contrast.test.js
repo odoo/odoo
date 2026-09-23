@@ -1,4 +1,4 @@
-import { adjustColorContrast, ContrastPlugin } from "@html_editor/main/font/contrast_plugin";
+import { adjustColorContrast } from "@html_editor/main/font/contrast_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { describe, expect, test } from "@odoo/hoot";
 
@@ -136,7 +136,8 @@ describe("Dark background", () => {
 describe("in the editor", () => {
     test("should not restore manually applied colors while restoring other original colors on save", async () => {
         await testEditor({
-            contentBefore: '<p>abc<font style="color: rgb(255, 255, 255)">d[e]f</font></p>',
+            contentBefore:
+                '<p>abc<font style="color: rgb(255, 255, 255)">d[e]f</font></p>',
             contentBeforeEdit:
                 '<p>abc<font style="color: rgb(183, 183, 183);" data-original-color="rgb(255, 255, 255)">d[e]f</font></p>',
             stepFunction: setColor("rgb(255, 255, 255)", "color"),

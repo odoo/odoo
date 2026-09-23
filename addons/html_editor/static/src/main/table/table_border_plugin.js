@@ -1,12 +1,13 @@
 /** @odoo-module native */
-import { reactive } from "@odoo/owl";
+import { ColorSelector } from "@html_editor/main/font/color_selector";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { withSequence } from "@html_editor/utils/resource";
+import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/translation";
 import { normalizeCSSColor } from "@web/core/utils/format/colors";
-import { ColorSelector } from "@html_editor/main/font/color_selector";
+
 import { TableBorderStyleSelector } from "./table_border_style_selector.js";
 import { TableBorderWidthSelector } from "./table_border_width_selector.js";
 
@@ -72,7 +73,8 @@ export class TableBorderPlugin extends Plugin {
                     colorPrefix: "--",
                     getSelectedColors: () => {
                         this.selectedBorderColors.color =
-                            this.getTableSelectedBorder("color", "default") || "transparent";
+                            this.getTableSelectedBorder("color", "default") ||
+                            "transparent";
                         if (this.selectedBorderColors.color === "default") {
                             // Do not specify selection and display solid tab.
                             this.selectedBorderColors.color = "";
@@ -80,7 +82,8 @@ export class TableBorderPlugin extends Plugin {
                         return this.selectedBorderColors;
                     },
                     applyColor: (color) => this.applyBorderCommit("color", color),
-                    applyColorPreview: (color) => this.applyBorderPreview("color", color),
+                    applyColorPreview: (color) =>
+                        this.applyBorderPreview("color", color),
                     applyColorResetPreview: this.applyBorderResetPreview.bind(this),
                     onClose: () => this.dependencies.selection.focusEditable(),
                     getTargetedElements: () => {
@@ -102,7 +105,8 @@ export class TableBorderPlugin extends Plugin {
                 props: {
                     getItems: () => borderWidthItems,
                     getDisplay: () => {
-                        this.selectedBorderWidth.displayName = this.getTableSelectedBorder("width");
+                        this.selectedBorderWidth.displayName =
+                            this.getTableSelectedBorder("width");
                         return this.selectedBorderWidth;
                     },
                     onSelected: (item) => {
@@ -123,7 +127,8 @@ export class TableBorderPlugin extends Plugin {
                 props: {
                     getItems: () => borderStyleItems,
                     getDisplay: () => {
-                        this.selectedBorderStyle.displayName = this.getTableSelectedBorder("style");
+                        this.selectedBorderStyle.displayName =
+                            this.getTableSelectedBorder("style");
                         return this.selectedBorderStyle;
                     },
                     onSelected: (item) => {
@@ -140,9 +145,10 @@ export class TableBorderPlugin extends Plugin {
         this.selectedBorderColors = reactive({ color: "", backgroundColor: "" });
         this.selectedBorderWidth = reactive({ displayName: "1px" });
         this.selectedBorderStyle = reactive({ displayName: "solid" });
-        this.previewableApplyBorder = this.dependencies.history.makePreviewableOperation(
-            (prop, value) => this.applyBorder(prop, value)
-        );
+        this.previewableApplyBorder =
+            this.dependencies.history.makePreviewableOperation((prop, value) =>
+                this.applyBorder(prop, value),
+            );
     }
 
     /**
@@ -212,7 +218,7 @@ export class TableBorderPlugin extends Plugin {
             this.dependencies.selection
                 .getTargetedNodes()
                 .map((node) => closestElement(node, "table"))
-                .filter((node) => node)
+                .filter((node) => node),
         );
         if (value === "") {
             for (const table of tables) {
@@ -232,7 +238,10 @@ export class TableBorderPlugin extends Plugin {
                 if (!cell.style.getPropertyValue(property)) {
                     // Copy defaults.
                     for (const prop of ["color", "width", "style"]) {
-                        cell.style.setProperty(`border-${prop}`, this.getCellBorder(cell, prop));
+                        cell.style.setProperty(
+                            `border-${prop}`,
+                            this.getCellBorder(cell, prop),
+                        );
                     }
                 }
                 cell.style.setProperty(property, value);

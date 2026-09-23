@@ -5,9 +5,9 @@ import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
 import { DateTimePickerPopover } from "@web/components/datetime/datetime_picker_popover";
+import { DateTime } from "@web/core/l10n/luxon";
 import { _t } from "@web/core/translation";
 import { renderToString } from "@web/core/utils/render";
-import { DateTime } from "@web/core/l10n/luxon";
 
 const EMBEDDED_DATE_SELECTOR = 'span[data-embedded="date"]';
 

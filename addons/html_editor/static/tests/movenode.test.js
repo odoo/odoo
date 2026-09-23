@@ -357,7 +357,8 @@ describe("drag", () => {
         );
     });
     describe("multiple blocks", () => {
-        const HELPER = "div[data-oe-local-overlay-id='oe-movenode-helper-container'] > div";
+        const HELPER =
+            "div[data-oe-local-overlay-id='oe-movenode-helper-container'] > div";
         test("should be able to drag and drop multiple selected blocks", async () => {
             const { el } = await setupEditor(`<p>[a</p><h1>b]</h1><p>c</p>`, {
                 styleContent: styles,

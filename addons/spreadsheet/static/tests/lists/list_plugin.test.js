@@ -240,7 +240,9 @@ test("a list column can be a single property of a properties field", async () =>
     ];
 
     const { model } = await createSpreadsheetWithList({
-        columns: Object.keys(propertyValues).map((name) => `partner_properties.${name}`),
+        columns: Object.keys(propertyValues).map(
+            (name) => `partner_properties.${name}`,
+        ),
     });
     await waitForDataLoaded(model);
 

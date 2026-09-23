@@ -386,7 +386,10 @@ export class ListDataSource extends OdooViewsDataSource {
                 return value.map(([, displayName]) => displayName).join(", ");
             case "tags":
                 return value
-                    .map((tagId) => property.tags.find(([id]) => id === tagId)?.[1] ?? "")
+                    .map(
+                        (tagId) =>
+                            property.tags.find(([id]) => id === tagId)?.[1] ?? "",
+                    )
                     .join(", ");
             case "selection":
                 return property.selection.find(([key]) => key === value)?.[1] ?? "";

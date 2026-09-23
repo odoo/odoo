@@ -43,13 +43,17 @@ export class ContrastPlugin extends Plugin {
         const adjustedColors = new Map();
         this.resolvedBackgrounds = new WeakMap();
 
-        const walker = this.document.createTreeWalker(this.editable, NodeFilter.SHOW_ELEMENT, {
-            acceptNode(node) {
-                return hasColor(node, "color") || hasColor(node, "backgroundColor")
-                    ? NodeFilter.FILTER_ACCEPT
-                    : NodeFilter.FILTER_SKIP;
+        const walker = this.document.createTreeWalker(
+            this.editable,
+            NodeFilter.SHOW_ELEMENT,
+            {
+                acceptNode(node) {
+                    return hasColor(node, "color") || hasColor(node, "backgroundColor")
+                        ? NodeFilter.FILTER_ACCEPT
+                        : NodeFilter.FILTER_SKIP;
+                },
             },
-        });
+        );
 
         while (walker.nextNode()) {
             const element = walker.currentNode;
@@ -95,7 +99,9 @@ export class ContrastPlugin extends Plugin {
      * @returns {string} background color as rgb() or hex string
      */
     getEffectiveBackground(element) {
-        const elWithBg = closestElement(element, (el) => hasColor(el, "backgroundColor"));
+        const elWithBg = closestElement(element, (el) =>
+            hasColor(el, "backgroundColor"),
+        );
         if (!elWithBg) {
             return this.defaultBg;
         }
@@ -107,7 +113,8 @@ export class ContrastPlugin extends Plugin {
         const baseBg = this.resolvedBackgrounds.get(parentBgEl) || this.defaultBg;
 
         return this.blendWithBackground(
-            elWithBg.style.backgroundColor || getComputedStyle(elWithBg).backgroundColor,
+            elWithBg.style.backgroundColor ||
+                getComputedStyle(elWithBg).backgroundColor,
             baseBg,
         );
     }
@@ -202,7 +209,8 @@ function toRgbColor(cssColor, doc) {
 const srgbToLin = (v) =>
     v / 255 <= 0.04045 ? v / 255 / 12.92 : Math.pow((v / 255 + 0.055) / 1.055, 2.4);
 
-const lum = ([r, g, b]) => 0.2126 * srgbToLin(r) + 0.7152 * srgbToLin(g) + 0.0722 * srgbToLin(b);
+const lum = ([r, g, b]) =>
+    0.2126 * srgbToLin(r) + 0.7152 * srgbToLin(g) + 0.0722 * srgbToLin(b);
 
 const contrast = (fg, bg) => {
     const hi = Math.max(lum(fg), lum(bg));

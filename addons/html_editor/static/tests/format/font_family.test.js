@@ -4,8 +4,8 @@ import { animationFrame } from "@odoo/hoot-mock";
 
 import { setupEditor, testEditor } from "../_helpers/editor.js";
 import { getContent } from "../_helpers/selection.js";
-import { expectElementCount } from "../_helpers/ui_expectations.js";
 import { expandToolbar } from "../_helpers/toolbar.js";
+import { expectElementCount } from "../_helpers/ui_expectations.js";
 import { redo, setFontFamily, undo } from "../_helpers/user_actions.js";
 import { execCommand } from "../_helpers/userCommands.js";
 

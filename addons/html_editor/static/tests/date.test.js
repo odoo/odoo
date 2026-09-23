@@ -10,15 +10,18 @@ import {
     press,
     test,
 } from "@odoo/hoot";
-import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    fields,
+    models,
+    mountView,
+} from "@web/../tests/web_test_helpers";
+import { DateTime } from "@web/core/l10n/luxon";
 
 import { setupEditor } from "./_helpers/editor.js";
 import { expectElementCount } from "./_helpers/ui_expectations.js";
-import {
-    insertText,
-    setColor,
-} from "./_helpers/user_actions.js";
-import { DateTime } from "@web/core/l10n/luxon";
+import { insertText, setColor } from "./_helpers/user_actions.js";
 
 const configWithEmbeddings = {
     Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
@@ -32,9 +35,14 @@ beforeEach(() => {
 
 describe("date command", () => {
     test('"/today" command inserts the current date', async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", { config: configWithEmbeddings });
+        const { editor } = await setupEditor("<p>[]<br></p>", {
+            config: configWithEmbeddings,
+        });
         await insertText(editor, "/today");
-        await expectElementCount(".o-we-powerbox .o-we-command-name:contains('Today')", 1);
+        await expectElementCount(
+            ".o-we-powerbox .o-we-command-name:contains('Today')",
+            1,
+        );
         await press("Enter");
         expect('[data-embedded="date"]').toHaveCount(1);
         await animationFrame();
@@ -42,9 +50,14 @@ describe("date command", () => {
     });
 
     test('"/hour" command inserts the current time', async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", { config: configWithEmbeddings });
+        const { editor } = await setupEditor("<p>[]<br></p>", {
+            config: configWithEmbeddings,
+        });
         await insertText(editor, "/hour");
-        await expectElementCount(".o-we-powerbox .o-we-command-name:contains('Hour')", 1);
+        await expectElementCount(
+            ".o-we-powerbox .o-we-command-name:contains('Hour')",
+            1,
+        );
         await press("Enter");
         expect('[data-embedded="date"]').toHaveCount(1);
         await animationFrame();
@@ -53,9 +66,14 @@ describe("date command", () => {
 
     test.tags("desktop");
     test('"/date" command opens a date picker, and the chip reopens it', async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", { config: configWithEmbeddings });
+        const { editor } = await setupEditor("<p>[]<br></p>", {
+            config: configWithEmbeddings,
+        });
         await insertText(editor, "/insertdate");
-        await expectElementCount(".o-we-powerbox .o-we-command-name:contains(/^Date$/)", 1);
+        await expectElementCount(
+            ".o-we-powerbox .o-we-command-name:contains(/^Date$/)",
+            1,
+        );
         await press("Enter");
         await expectElementCount(".o_datetime_picker", 1);
         await contains(".o_date_item_cell:contains('7')").click();
@@ -74,7 +92,9 @@ describe("date command", () => {
 
     test.tags("desktop");
     test('"/datetime" command opens a datetime picker', async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", { config: configWithEmbeddings });
+        const { editor } = await setupEditor("<p>[]<br></p>", {
+            config: configWithEmbeddings,
+        });
         await insertText(editor, "/datetime");
         await expectElementCount(
             ".o-we-powerbox .o-we-command-name:contains('Date and Time')",

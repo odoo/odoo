@@ -333,7 +333,9 @@ export class MoveNodePlugin extends Plugin {
                     if (targetedBlocks.includes(movableElement)) {
                         movableElements = targetedBlocks.filter(
                             (el, _, arr) =>
-                                !closestElement(el.parentElement, (n) => arr.includes(n)),
+                                !closestElement(el.parentElement, (n) =>
+                                    arr.includes(n),
+                                ),
                         );
                     }
                     const container = document.createElement("div");
@@ -350,7 +352,8 @@ export class MoveNodePlugin extends Plugin {
                             processedLists.add(parentList);
                             const selectedItems = movableElements.filter(
                                 (e) =>
-                                    e.tagName === "LI" && e.parentElement === parentList,
+                                    e.tagName === "LI" &&
+                                    e.parentElement === parentList,
                             );
                             const listClone = parentList.cloneNode(false);
                             if (parentList.tagName === "OL") {

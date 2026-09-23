@@ -87,7 +87,9 @@ export class ColorPlugin extends Plugin {
         can_remove_format_predicates: [
             (targetedNodes) => {
                 if (
-                    targetedNodes.some((node) => hasColor(closestElement(node), "color"))
+                    targetedNodes.some((node) =>
+                        hasColor(closestElement(node), "color"),
+                    )
                 ) {
                     return true;
                 }

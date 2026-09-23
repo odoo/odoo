@@ -67,7 +67,9 @@ function allowedToCreateLink(node) {
  * @param {EditorSelection} selection
  */
 export function isLinkSupported(selection) {
-    return isHtmlContentSupported(selection) && allowedToCreateLink(selection.anchorNode);
+    return (
+        isHtmlContentSupported(selection) && allowedToCreateLink(selection.anchorNode)
+    );
 }
 
 /**

@@ -6,10 +6,10 @@ import {
 } from "@html_editor/others/embedded_component_utils";
 import { useRef } from "@odoo/owl";
 import { DateTimePickerPopover } from "@web/components/datetime/datetime_picker_popover";
+import { DateTime } from "@web/core/l10n/luxon";
 import { usePopover } from "@web/ui/popover/popover_hook";
 
 import { ReadonlyEmbeddedDateComponent } from "../../core/date/readonly_date.js";
-import { DateTime } from "@web/core/l10n/luxon";
 
 export class EmbeddedDateComponent extends ReadonlyEmbeddedDateComponent {
     static template = "html_editor.EmbeddedDate";
