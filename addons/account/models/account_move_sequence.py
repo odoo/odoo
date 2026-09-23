@@ -1,6 +1,4 @@
-import calendar
 import re
-from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
@@ -184,18 +182,10 @@ class AccountMove(models.Model):
         last_month = int(self.company_id.account_config_id.fiscalyear_last_month)
         is_staggered_year = last_month != 12 or last_day != 31
         if is_staggered_year:
-            max_last_day = calendar.monthrange(move_date.year, last_month)[1]
-            last_day = min(last_day, max_last_day)
-            if move_date > date(move_date.year, last_month, last_day):
-                year_part = "%s-%s" % (
-                    move_date.strftime("%y"),
-                    (move_date + relativedelta(years=1)).strftime("%y"),
-                )
-            else:
-                year_part = "%s-%s" % (
-                    (move_date + relativedelta(years=-1)).strftime("%y"),
-                    move_date.strftime("%y"),
-                )
+            date_start, date_end = date_utils.get_fiscal_year(
+                move_date, day=last_day, month=last_month
+            )
+            year_part = f"{date_start:%y}-{date_end:%y}"
         if self.journal_id.type in ["sale", "bank", "cash", "credit"]:
             starting_sequence = "%s/%s/%s" % (
                 self.journal_id.code,
@@ -263,35 +253,31 @@ class AccountMove(models.Model):
             return (date_start, date_end) + (None, None)
 
         forced_year_range = (date_start.year, date_end.year)
-        month_range = date_utils.get_month(self.date)
-        fiscalyear_last_month_max_day = calendar.monthrange(
-            self.date.year, fiscalyear_last_month
-        )[1]
+        month_start, month_end = date_utils.get_month(self.date)
+        # the month is split only where a fiscal year ends strictly inside it,
+        # as get_fiscal_year says: a year ending on Feb 28 ends on the 29th in
+        # a leap year
+        boundary = next(
+            (
+                day
+                for day in (date_end, date_start - relativedelta(days=1))
+                if month_start <= day < month_end
+            ),
+            None,
+        )
         _debug.logic(
             "fiscal_month_split",
             seq_model=self._name,
             seq_id=self,
-            split=fiscalyear_last_day < fiscalyear_last_month_max_day
-            and fiscalyear_last_month == self.date.month,
+            split=boundary is not None,
             fiscalyear_last_day=fiscalyear_last_day,
             fiscalyear_last_month=fiscalyear_last_month,
         )
-        if (
-            fiscalyear_last_day < fiscalyear_last_month_max_day
-            and fiscalyear_last_month == self.date.month
-        ):
-            if self.date.day <= fiscalyear_last_day:
-                return (
-                    month_range[0],
-                    month_range[1].replace(day=fiscalyear_last_day),
-                ) + forced_year_range
-            else:
-                return (
-                    month_range[0].replace(day=fiscalyear_last_day + 1),
-                    month_range[1],
-                ) + forced_year_range
-        else:
-            return month_range + forced_year_range
+        if boundary is None:
+            return (month_start, month_end) + forced_year_range
+        if self.date <= boundary:
+            return (month_start, boundary) + forced_year_range
+        return (boundary + relativedelta(days=1), month_end) + forced_year_range
 
     def _get_invoice_reference_euro_invoice(self):
         self.check_singleton()

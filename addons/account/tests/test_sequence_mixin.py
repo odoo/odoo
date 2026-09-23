@@ -1,4 +1,5 @@
 import json
+from datetime import date
 from functools import reduce
 from unittest.mock import Mock, patch
 
@@ -725,6 +726,34 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         bill_copy_3 = bill.copy({"date": "2024-04-18", "invoice_date": "2024-04-18"})
         bill_copy_3.action_post()
         self.assertMoveName(bill_copy_3, "BILL/24-25/04/0001")
+
+    def test_sequence_fiscal_year_ending_february_28_keeps_the_leap_day(self):
+        self.env.company.account_config_id.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.account_config_id.fiscalyear_last_day = 28
+        self.env.company.account_config_id.fiscalyear_last_month = "2"
+
+        bill = self.env["account.move"].create(
+            {
+                "partner_id": 1,
+                "move_type": "in_invoice",
+                "date": "2024-02-29",
+                "line_ids": [
+                    Command.create(
+                        {
+                            "name": "line",
+                            "account_id": self.company_data[
+                                "default_account_revenue"
+                            ].id,
+                        }
+                    ),
+                ],
+            }
+        )
+        self.assertMoveName(bill, "BILL/23-24/02/0001")
+        self.assertEqual(
+            bill._get_sequence_date_range("year_range_month"),
+            (date(2024, 2, 1), date(2024, 2, 29), 2023, 2024),
+        )
 
     def test_sequence_get_more_specific(self):
         self.test_move.name = "MISC/00001"
