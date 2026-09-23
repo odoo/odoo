@@ -7,7 +7,6 @@ type RoundingMethod = Literal["UP", "DOWN", "HALF-UP", "HALF-DOWN", "HALF-EVEN"]
 __all__ = [
     "RoundingMethod",
     "float_compare",
-    "float_invert",
     "float_is_zero",
     "float_repr",
     "float_round",
@@ -74,7 +73,7 @@ def _round_r(
     step = rounding_factor
     inverted = rounding_factor < 1
     if inverted:
-        rounding_factor = float_invert(rounding_factor)
+        rounding_factor = _float_invert(rounding_factor)
         normalized_value = value * rounding_factor
     else:
         normalized_value = value / rounding_factor
@@ -226,7 +225,7 @@ _INVERTDICT = {
 }
 
 
-def float_invert(value: float) -> float:
+def _float_invert(value: float) -> float:
     if not value:
         raise ZeroDivisionError("cannot invert 0")
     result = _INVERTDICT.get(value)

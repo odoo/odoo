@@ -1,7 +1,7 @@
 import unittest
 from decimal import Decimal
 
-from odoo.libs.numbers.float_utils import _INVERTDICT, float_invert
+from odoo.libs.numbers.float_utils import _INVERTDICT, _float_invert
 
 
 def _decimal_intent(value: float) -> float:
@@ -10,15 +10,15 @@ def _decimal_intent(value: float) -> float:
 
 class TestFloatInvertRecoversDecimalIntent(unittest.TestCase):
     def test_one_over_ten_to_the_minus_eleven(self):
-        self.assertEqual(float_invert(1e-11), 1e11)
+        self.assertEqual(_float_invert(1e-11), 1e11)
 
     def test_decimal_factors_all_recover_their_intent(self):
         wrong = [
-            (value, float_invert(value), _decimal_intent(value))
+            (value, _float_invert(value), _decimal_intent(value))
             for digits in range(26)
             for coefficient in (1, 2, 5)
             if (value := float(f"{coefficient}e-{digits}"))
-            and float_invert(value) != _decimal_intent(value)
+            and _float_invert(value) != _decimal_intent(value)
         ]
         self.assertEqual(wrong, [])
 
@@ -34,17 +34,17 @@ class TestFloatInvertRecoversDecimalIntent(unittest.TestCase):
         self.assertEqual(disagreeing, {})
 
     def test_non_decimal_values_still_invert(self):
-        self.assertEqual(float_invert(0.25), 4.0)
-        self.assertEqual(float_invert(0.125), 8.0)
-        self.assertEqual(float_invert(2.0), 0.5)
+        self.assertEqual(_float_invert(0.25), 4.0)
+        self.assertEqual(_float_invert(0.125), 8.0)
+        self.assertEqual(_float_invert(2.0), 0.5)
 
     def test_negative_values_keep_their_sign(self):
-        self.assertEqual(float_invert(-0.01), -100.0)
-        self.assertEqual(float_invert(-0.25), -4.0)
+        self.assertEqual(_float_invert(-0.01), -100.0)
+        self.assertEqual(_float_invert(-0.25), -4.0)
 
     def test_zero_raises_a_named_error(self):
         with self.assertRaises(ZeroDivisionError):
-            float_invert(0.0)
+            _float_invert(0.0)
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ from odoo.libs.colors.conversions import (
     hex_to_rgb,
     rgb_to_hex,
 )
-from odoo.libs.colors.terminal import BLUE, RED, RESET_SEQ, colorize
+from odoo.libs.colors.terminal import BLUE, RED, colorize
 
 
 class TestGetSaturation(unittest.TestCase):
@@ -56,7 +56,7 @@ class TestHslFromSeed(unittest.TestCase):
 class TestColorize(unittest.TestCase):
     def test_wraps_with_reset(self):
         result = colorize("hi", fg=RED)
-        self.assertTrue(result.endswith(RESET_SEQ))
+        self.assertTrue(result.endswith("\033[0m"))
         self.assertIn("hi", result)
 
     def test_fg_and_bg_encoded(self):

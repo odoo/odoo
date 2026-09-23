@@ -42,7 +42,7 @@ from odoo.libs.json.orjson_wrapper import dumps as orjson_dumps
 from odoo.libs.locale.number_format import format_number
 from odoo.libs.logging import lower_logging, mute_logger
 from odoo.libs.lru import LRU
-from odoo.libs.numbers.float_utils import float_invert
+from odoo.libs.numbers.float_utils import _float_invert
 from odoo.libs.password import CryptContext
 from odoo.libs.sql.builder import SQL
 from odoo.libs.text.address import street_split
@@ -177,11 +177,11 @@ class TestHexToRgb:
 class TestFloatInvert:
     def test_zero_raises_a_named_error(self):
         with pytest.raises(ZeroDivisionError, match="cannot invert 0"):
-            float_invert(0.0)
+            _float_invert(0.0)
 
     def test_known_inversions(self):
-        assert float_invert(0.01) == 100.0
-        assert float_invert(0.05) == 20.0
+        assert _float_invert(0.01) == 100.0
+        assert _float_invert(0.05) == 20.0
 
 
 class TestStreetSplit:
