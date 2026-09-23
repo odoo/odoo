@@ -84,7 +84,7 @@ linter knows — SQL-injection shapes, gettext discipline, N+1 query shapes,
 manifest and XML conventions, record-field order, and `orm-import` (`E8508`):
 addon code outside tests must reach the ORM through `odoo.api` / `odoo.fields`
 / `odoo.models`, never `odoo.orm.*`. Its floors live in
-`odoo/addons/test_lint/tests/floors.json`, one integer per gate (13 entries);
+`odoo/addons/test_lint/tests/floors.json`, one integer per gate;
 a gate with no entry is a hard zero. `assert_ratchet` is exact: a count above
 the floor fails, and a count below it fails until the floor is lowered in the
 same change.
