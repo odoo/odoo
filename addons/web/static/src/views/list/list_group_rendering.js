@@ -87,7 +87,6 @@ export const listGroupRenderingMixin = {
             onUpdate: async ({ offset, limit }) => {
                 if (await this.props.list.leaveEditMode()) {
                     await list.load({ limit, offset });
-                    this.render();
                 }
             },
             withAccessKey: false,

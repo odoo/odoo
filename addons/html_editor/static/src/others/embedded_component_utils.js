@@ -6,7 +6,7 @@ import {
     onWillDestroy,
     reactive,
     toRaw,
-    useComponent,
+    useEnv,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -48,15 +48,13 @@ export function getEditableDescendants(host) {
  * @returns {EditableDescendants}
  */
 export function useEditableDescendants(host) {
-    const component = useComponent();
-    if (!component.env.getEditableDescendants) {
+    const env = useEnv();
+    if (!env.getEditableDescendants) {
         throw new Error(
             "Missing `getEditableDescendants` function in the `embedding` provided to the `EmbeddedComponentPlugin`.",
         );
     }
-    const editableDescendants = Object.freeze(
-        component.env.getEditableDescendants(host),
-    );
+    const editableDescendants = Object.freeze(env.getEditableDescendants(host));
     const refs = {};
     const renders = {};
     for (const name of Object.keys(editableDescendants)) {
@@ -70,10 +68,9 @@ export function useEditableDescendants(host) {
             _restoreSelection = undefined;
         }
     };
-    if (component.env.editorShared?.selection) {
+    if (env.editorShared?.selection) {
         onRendered(() => {
-            _restoreSelection =
-                component.env.editorShared.selection.preserveSelection().restore;
+            _restoreSelection = env.editorShared.selection.preserveSelection().restore;
         });
     }
     onMounted(() => {
@@ -448,13 +445,13 @@ export class StateChangeManager {
  * @returns {Proxy}
  */
 export function useEmbeddedState(host) {
-    const component = useComponent();
-    if (!component.env.getStateChangeManager) {
+    const env = useEnv();
+    if (!env.getStateChangeManager) {
         throw new Error(
             "Missing `getStateChangeManager` function in the `embedding` provided to the `EmbeddedComponentPlugin`.",
         );
     }
-    const stateChangeManager = component.env.getStateChangeManager(host);
+    const stateChangeManager = env.getStateChangeManager(host);
     onWillDestroy(() => stateChangeManager.setupUnmounted());
     const state = useState(stateChangeManager.getEmbeddedState());
     return stateChangeManager.constructEmbeddedState(state);

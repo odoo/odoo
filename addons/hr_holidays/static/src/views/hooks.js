@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { useComponent } from "@odoo/owl";
+import { useEnv } from "@odoo/owl";
 import { luxon } from "@web/core/l10n/luxon";
 import { _t } from "@web/core/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
@@ -49,7 +49,7 @@ export function useLeaveCancelWizard() {
 
 export function useNewAllocationRequest() {
     const addDialog = useOwnedDialogs();
-    const component = useComponent();
+    const env = useEnv();
     return async (employeeId, holidayStatusId) => {
         let size = "md";
         const context = {
@@ -70,7 +70,7 @@ export function useNewAllocationRequest() {
             context: context,
             size: size,
             onRecordSaved: () => {
-                component.env.timeOffBus.trigger("update_dashboard");
+                env.timeOffBus.trigger("update_dashboard");
             },
         });
     };

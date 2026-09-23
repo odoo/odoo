@@ -14,9 +14,9 @@ import { exprToBoolean } from "@web/core/utils/format/strings";
  * debugOpenView: boolean,
  * computeOptionalActiveFields: () => Record<string, boolean>,
  * saveOptionalActiveFields: () => void,
- * toggleOptionalField: (fieldName: string, render: () => void) => void,
- * toggleOptionalFieldGroup: (groupId: string, render: () => void) => void,
- * toggleDebugOpenView: (render: () => void) => void,
+ * toggleOptionalField: (fieldName: string) => void,
+ * toggleOptionalFieldGroup: (groupId: string) => void,
+ * toggleDebugOpenView: () => void,
  * }}
  */
 export function useListOptionalFields(keyOptionalFields, keyDebugOpenView, ctx) {
@@ -51,22 +51,15 @@ export function useListOptionalFields(keyOptionalFields, keyDebugOpenView, ctx) 
             browser.localStorage.setItem(keyOptionalFields, activeFieldNames.join(","));
         },
 
-        /**
-         * @param {string} fieldName
-         * @param {() => void} render
-         */
-        toggleOptionalField(fieldName, render) {
+        /** @param {string} fieldName */
+        toggleOptionalField(fieldName) {
             const optionalActiveFields = getOptionalActiveFields();
             optionalActiveFields[fieldName] = !optionalActiveFields[fieldName];
             onSave();
-            render();
         },
 
-        /**
-         * @param {string} groupId
-         * @param {() => void} render
-         */
-        toggleOptionalFieldGroup(groupId, render) {
+        /** @param {string} groupId */
+        toggleOptionalFieldGroup(groupId) {
             const optionalActiveFields = getOptionalActiveFields();
             const fieldNames = getAllColumns()
                 .filter(
@@ -83,17 +76,14 @@ export function useListOptionalFields(keyOptionalFields, keyDebugOpenView, ctx) 
                 optionalActiveFields[fieldName] = active;
             }
             onSave();
-            render();
         },
 
-        /** @param {() => void} render */
-        toggleDebugOpenView(render) {
-            self.debugOpenView = !self.debugOpenView;
+        toggleDebugOpenView() {
+            this.debugOpenView = !this.debugOpenView;
             browser.localStorage.setItem(
                 keyDebugOpenView,
-                /** @type {any} */ (self.debugOpenView),
+                /** @type {any} */ (this.debugOpenView),
             );
-            render();
         },
     };
 

@@ -22,12 +22,11 @@ import { useAction } from "@web/core/action_port";
 import { getActiveHotkey } from "@web/core/browser/hotkeys";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { useLifecycleLog } from "@web/core/debug/logger_hooks";
-import { AppEvent } from "@web/core/events";
 import { localization } from "@web/core/l10n/localization";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { _t } from "@web/core/translation";
 import { useSortable } from "@web/core/utils/dnd/sortable_owl";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { useRenderCounter } from "@web/core/utils/render_instrumentation";
 import { Field } from "@web/fields/field";
 import { getTooltipInfo } from "@web/fields/field_tooltip";
@@ -310,10 +309,12 @@ export class ListRenderer extends Component {
             );
             this.activeRowId = activeRow ? activeRow.dataset.id : null;
         });
-        this.opt = useListOptionalFields(
-            this.keyOptionalFields,
-            this.keyDebugOpenView,
-            this.gridContext,
+        this.opt = useState(
+            useListOptionalFields(
+                this.keyOptionalFields,
+                this.keyDebugOpenView,
+                this.gridContext,
+            ),
         );
         this.optionalActiveFields = useState(this.props.optionalActiveFields || {});
         /** @type {Column[]} */
@@ -351,13 +352,7 @@ export class ListRenderer extends Component {
 
         useBounceButton(this.rootRef, () => this.showNoContentHelper);
 
-        let isSmall = this.uiService.isSmall;
-        useBus(this.uiService.bus, AppEvent.RESIZE, () => {
-            if (isSmall !== this.uiService.isSmall) {
-                isSmall = this.uiService.isSmall;
-                this.render();
-            }
-        });
+        this.uiState = useState(this.uiService);
 
         this.columnWidths = useMagicColumnWidths(this.tableRef, () => ({
             columns: this.columns,
@@ -425,7 +420,7 @@ export class ListRenderer extends Component {
     }
 
     get hasSelectors() {
-        return this.props.allowSelectors && !this.env.isSmall;
+        return this.props.allowSelectors && !this.uiState.isSmall;
     }
 
     get hasOpenFormViewColumn() {
@@ -1195,17 +1190,16 @@ export class ListRenderer extends Component {
 
     /** @param {string} fieldName */
     toggleOptionalField(fieldName) {
-        this.opt.toggleOptionalField(fieldName, () => this.render());
+        this.opt.toggleOptionalField(fieldName);
     }
 
     /** @param {string} groupId */
     toggleOptionalFieldGroup(groupId) {
-        this.opt.toggleOptionalFieldGroup(groupId, () => this.render());
+        this.opt.toggleOptionalFieldGroup(groupId);
     }
 
     toggleDebugOpenView() {
-        this.opt.toggleDebugOpenView(() => this.render());
-        this.debugOpenView = this.opt.debugOpenView;
+        this.opt.toggleDebugOpenView();
     }
 
     /** @param {PointerEvent} ev */

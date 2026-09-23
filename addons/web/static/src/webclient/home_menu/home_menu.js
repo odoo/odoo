@@ -7,7 +7,6 @@ import {
     onWillRender,
     onWillUnmount,
     onWillUpdateProps,
-    reactive,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -171,7 +170,7 @@ export class HomeMenu extends Component {
 
     _setupLayout() {
         this.layout = new HomeMenuLayout({
-            config: useState(this.props.config ?? reactive(parseHomeMenuConfig(null))),
+            config: this.props.config ?? parseHomeMenuConfig(null),
             defaultConfig: this.props.defaultConfig ?? parseHomeMenuConfig(null),
             orm: useService("orm"),
             personal: this.props.personal,
@@ -230,7 +229,7 @@ export class HomeMenu extends Component {
                 this._loadBadges(nextProps.apps);
             }
             if (configChanged) {
-                this.layout.setConfig(reactive(nextProps.config, () => this.render()));
+                this.layout.setConfig(nextProps.config);
             }
             if (nextProps.defaultConfig) {
                 this.layout.defaultConfig = nextProps.defaultConfig;
@@ -319,7 +318,6 @@ export class HomeMenu extends Component {
 
     async _setCompanyDefault() {
         await this.layout.setCompanyDefault();
-        this.render();
     }
 
     _toggleEditing() {

@@ -3,6 +3,7 @@
 
 import {
     Component,
+    markRaw,
     onWillDestroy,
     useEffect,
     useExternalListener,
@@ -57,8 +58,6 @@ export class NavBar extends Component {
     };
     static props = {};
 
-    /** @type {any[]} */
-    currentAppSectionsExtra;
     /** @type {import("services").ServiceFactories["home_menu"]} */
     hm;
     /** @type {import("services").ServiceFactories["action"]} */
@@ -67,9 +66,7 @@ export class NavBar extends Component {
     menuService;
     /** @type {any} */
     pwa;
-    /** @type {Set<string>} */
-    failedSystrayKeys;
-    /** @type {{ isAppMenuSidebarOpened: boolean }} */
+    /** @type {{ isAppMenuSidebarOpened: boolean, appSectionsExtra: any[], failedSystrayKeys: Set<string>, menuRevision: number, systrayRevision: number }} */
     state;
     /** @type {SwipeTracker} */
     swipe;
@@ -87,8 +84,13 @@ export class NavBar extends Component {
 
     setup() {
         useLifecycleLog(log);
-        this.currentAppSectionsExtra = [];
-        this.failedSystrayKeys = new Set();
+        this.state = useState({
+            isAppMenuSidebarOpened: false,
+            appSectionsExtra: markRaw([]),
+            failedSystrayKeys: new Set(),
+            menuRevision: 0,
+            systrayRevision: 0,
+        });
         this.actionService = useService("action");
         this.menuService = useService("menu");
         this.hm = useState(useService("home_menu"));
@@ -108,20 +110,16 @@ export class NavBar extends Component {
         onWillDestroy(() => debouncedAdapt.cancel());
         useExternalListener(window, "resize", debouncedAdapt);
 
-        let adaptCounter = 0;
-        const renderAndAdapt = () => {
-            adaptCounter++;
-            this.render();
-        };
-
-        systrayRegistry.addEventListener("UPDATE", renderAndAdapt);
-        this.env.bus.addEventListener(AppEvent.MENUS_APP_CHANGED, renderAndAdapt);
+        const onSystrayUpdate = () => this.state.systrayRevision++;
+        const onMenusChanged = () => this.state.menuRevision++;
+        systrayRegistry.addEventListener("UPDATE", onSystrayUpdate);
+        this.env.bus.addEventListener(AppEvent.MENUS_APP_CHANGED, onMenusChanged);
 
         onWillDestroy(() => {
-            systrayRegistry.removeEventListener("UPDATE", renderAndAdapt);
+            systrayRegistry.removeEventListener("UPDATE", onSystrayUpdate);
             this.env.bus.removeEventListener(
                 AppEvent.MENUS_APP_CHANGED,
-                renderAndAdapt,
+                onMenusChanged,
             );
         });
 
@@ -129,12 +127,8 @@ export class NavBar extends Component {
             () => {
                 this.adapt();
             },
-            () => [adaptCounter],
+            () => [this.state.menuRevision, this.state.systrayRevision],
         );
-
-        this.state = useState({
-            isAppMenuSidebarOpened: false,
-        });
         this.swipe = new SwipeTracker(SWIPE_LEFT);
     }
 
@@ -143,15 +137,22 @@ export class NavBar extends Component {
      * @param {Object} item
      */
     handleItemError(error, item) {
-        this.failedSystrayKeys.add(item.key);
+        this.state.failedSystrayKeys.add(item.key);
         reportUncaught(error);
-        // Owl drops the render a child crashed in; the item is excluded only
-        // by the render that follows
-        this.render();
+    }
+
+    /** @returns {any[]} */
+    get currentAppSectionsExtra() {
+        return this.state.appSectionsExtra;
+    }
+
+    set currentAppSectionsExtra(sections) {
+        this.state.appSectionsExtra = markRaw(sections);
     }
 
     /** @returns {Object | undefined} */
     get currentApp() {
+        void this.state.menuRevision;
         return this.menuService.getCurrentApp();
     }
 
@@ -196,9 +197,10 @@ export class NavBar extends Component {
 
     /** @returns {Object[]} */
     get systrayItems() {
+        void this.state.systrayRevision;
         return systrayRegistry
             .getEntries()
-            .filter(([key]) => !this.failedSystrayKeys.has(key))
+            .filter(([key]) => !this.state.failedSystrayKeys.has(key))
             .map(([key, value]) => ({ key, ...value }))
             .filter((item) => {
                 if (typeof item.isDisplayed !== "function") {
@@ -246,7 +248,7 @@ export class NavBar extends Component {
         for (const section of sections) {
             section.classList.remove("d-none");
         }
-        this.currentAppSectionsExtra = [];
+        const appSectionsExtra = [];
 
         const sectionsAvailableWidth = getBoundingClientRect.call(sectionsMenu).width;
         const sectionWidths = sections.map((s) => getBoundingClientRect.call(s).width);
@@ -271,7 +273,7 @@ export class NavBar extends Component {
                             ? sectionsById.get(sectionId)
                             : undefined;
                         if (currentAppSection) {
-                            this.currentAppSectionsExtra.push(currentAppSection);
+                            appSectionsExtra.push(currentAppSection);
                         }
                     }
                     break;
@@ -281,14 +283,14 @@ export class NavBar extends Component {
         }
 
         if (
-            initialAppSectionsExtra.length === this.currentAppSectionsExtra.length &&
+            initialAppSectionsExtra.length === appSectionsExtra.length &&
             initialAppSectionsExtra.every(
-                (section, index) => section === this.currentAppSectionsExtra[index],
+                (section, index) => section === appSectionsExtra[index],
             )
         ) {
             return;
         }
-        return this.render();
+        this.currentAppSectionsExtra = appSectionsExtra;
     }
 
     /** @param {Object} menu */

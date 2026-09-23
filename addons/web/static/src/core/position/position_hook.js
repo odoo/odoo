@@ -5,8 +5,8 @@ import {
     EventBus,
     onWillDestroy,
     useChildSubEnv,
-    useComponent,
     useEffect,
+    useEnv,
     useRef,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
@@ -60,8 +60,8 @@ export function usePosition(refName, getTarget, options = {}) {
         return true;
     };
 
-    const component = useComponent();
-    const bus = /** @type {any} */ (component.env)[POSITION_BUS] || new EventBus();
+    const env = useEnv();
+    const bus = /** @type {any} */ (env)[POSITION_BUS] || new EventBus();
 
     let executingUpdate = false;
     let updateRequested = false;
@@ -89,7 +89,7 @@ export function usePosition(refName, getTarget, options = {}) {
     bus.addEventListener("update", batchedUpdate);
     onWillDestroy(() => bus.removeEventListener("update", batchedUpdate));
 
-    const isTopmost = !(POSITION_BUS in component.env);
+    const isTopmost = !(POSITION_BUS in env);
     if (isTopmost) {
         useChildSubEnv({ [POSITION_BUS]: bus });
     }

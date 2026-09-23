@@ -139,18 +139,18 @@ export function useBuilderComponent() {
     useSubEnv(newEnv);
 }
 export function useDependencyDefinition(id, item, { onReady } = {}) {
-    const comp = useComponent();
-    const ignore = comp.env.ignoreBuilderItem;
+    const env = useEnv();
+    const ignore = env.ignoreBuilderItem;
     if (onReady) {
         onReady.then(() => {
-            comp.env.dependencyManager.add(id, item, ignore);
+            env.dependencyManager.add(id, item, ignore);
         });
     } else {
-        comp.env.dependencyManager.add(id, item, ignore);
+        env.dependencyManager.add(id, item, ignore);
     }
 
     onWillDestroy(() => {
-        comp.env.dependencyManager.removeByValue(item);
+        env.dependencyManager.removeByValue(item);
     });
 }
 

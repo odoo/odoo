@@ -85,25 +85,22 @@ test("the arch's show/hide is the default; a stored list overrides it", () => {
     expect(opt.debugOpenView).toBe(false);
 });
 
-test("toggling a field or a property group saves and re-renders", () => {
+test("toggling a field or a property group saves it", () => {
     const storage = makeStorage();
     const { opt, active, savedCount } = setup(storage);
     Object.assign(active, opt.computeOptionalActiveFields());
-    let renders = 0;
-    const render = () => renders++;
-    opt.toggleOptionalField("b", render);
+    opt.toggleOptionalField("b");
     expect(active.b).toBe(true);
     opt.saveOptionalActiveFields();
     expect(storage.store["optional_fields,k"]).toBe("a,b");
-    opt.toggleOptionalFieldGroup("grp", render);
+    opt.toggleOptionalFieldGroup("grp");
     expect(active.p1).toBe(true);
     expect(active.p2).toBe(true);
-    opt.toggleOptionalFieldGroup("grp", render);
+    opt.toggleOptionalFieldGroup("grp");
     expect(active.p1).toBe(false);
     expect(active.p2).toBe(false);
     expect(savedCount()).toBe(3);
-    expect(renders).toBe(3);
-    opt.toggleDebugOpenView(render);
+    opt.toggleDebugOpenView();
     expect(opt.debugOpenView).toBe(true);
     expect(storage.store["debug_open_view,k"]).toBe("true");
 });

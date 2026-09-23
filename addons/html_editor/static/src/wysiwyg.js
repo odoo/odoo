@@ -83,14 +83,7 @@ export class Wysiwyg extends Component {
                 if (el.contentDocument.readyState === "complete") {
                     attachEditor();
                 } else {
-                    el.addEventListener(
-                        "load",
-                        () => {
-                            attachEditor();
-                            this.render();
-                        },
-                        { once: true },
-                    );
+                    el.addEventListener("load", attachEditor, { once: true });
                 }
             } else {
                 this.editor.attachTo(el);

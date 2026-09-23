@@ -102,8 +102,6 @@ export class HomeMenuLayout {
      * }} params
      */
     constructor({ config, defaultConfig, orm, personal, onSaved = () => {} }) {
-        this.config = config;
-        this.defaultConfig = defaultConfig;
         this.orm = orm;
         this.onSaved = onSaved;
         this.mutex = new Mutex();
@@ -111,11 +109,31 @@ export class HomeMenuLayout {
         this.pending = [];
         this.state = reactive({
             status: "saved",
+            config,
+            defaultConfig,
             personal:
                 personal ??
                 serializeHomeMenuConfig(config) !==
                     serializeHomeMenuConfig(defaultConfig),
         });
+    }
+
+    /** @returns {import("@web/webclient/menus/menu_utils").HomeMenuConfig} */
+    get config() {
+        return this.state.config;
+    }
+
+    set config(config) {
+        this.state.config = config;
+    }
+
+    /** @returns {import("@web/webclient/menus/menu_utils").HomeMenuConfig} */
+    get defaultConfig() {
+        return this.state.defaultConfig;
+    }
+
+    set defaultConfig(config) {
+        this.state.defaultConfig = config;
     }
 
     get unsaved() {

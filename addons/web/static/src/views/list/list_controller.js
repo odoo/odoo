@@ -263,7 +263,6 @@ export class ListController extends MultiRecordController {
                     await list.addNewRecord({ position });
                 }
             }
-            this.render();
         } else {
             await this.props.createRecord();
         }

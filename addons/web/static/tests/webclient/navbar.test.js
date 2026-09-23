@@ -350,11 +350,14 @@ test("'more' menu sections adaptations do not trigger render in some cases", asy
             await super.adapt();
             adaptRunning = false;
         }
-        async render() {
+        get currentAppSectionsExtra() {
+            return super.currentAppSectionsExtra;
+        }
+        set currentAppSectionsExtra(sections) {
             if (adaptRunning) {
                 adaptRenderCount++;
             }
-            await super.render(...arguments);
+            super.currentAppSectionsExtra = sections;
         }
     }
 
@@ -596,7 +599,6 @@ test("'more' menu keeps a valid access key with 9 visible sections", async () =>
         set currentAppSections(_) {}
         async adapt() {
             this.currentAppSectionsExtra = [this.currentAppSections.at(-1)];
-            return this.render();
         }
     }
 

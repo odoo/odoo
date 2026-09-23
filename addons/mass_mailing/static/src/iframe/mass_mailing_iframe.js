@@ -8,8 +8,8 @@ import {
     onWillDestroy,
     onWillUpdateProps,
     status,
-    useComponent,
     useEffect,
+    useEnv,
     useRef,
     useState,
     useSubEnv,
@@ -39,9 +39,9 @@ const MASS_MAILING_IFRAME_ASSETS = [
  * an iframe, in which the iframe effectively unloads.
  */
 export function useOverlayServiceOffset() {
-    const comp = useComponent();
-    const originalOverlay = comp.env.services.overlay;
-    const subServices = Object.create(comp.env.services);
+    const env = useEnv();
+    const originalOverlay = env.services.overlay;
+    const subServices = Object.create(env.services);
     subServices.overlay = Object.create(originalOverlay);
     subServices.overlay.add = (C, props, opts = {}) => {
         opts = {

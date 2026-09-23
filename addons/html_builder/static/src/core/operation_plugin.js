@@ -1,6 +1,6 @@
 /** @odoo-module native */
 import { Plugin } from "@html_editor/plugin";
-import { useComponent } from "@odoo/owl";
+import { useEnv } from "@odoo/owl";
 import { _t } from "@web/core/translation";
 
 import { Operation } from "./operation.js";
@@ -73,11 +73,11 @@ export class OperationPlugin extends Plugin {
 }
 
 export function useOperation() {
-    const comp = useComponent();
+    const env = useEnv();
     return (apply) => {
-        comp.env.editor.shared.operation.next(async () => {
+        env.editor.shared.operation.next(async () => {
             await apply();
-            comp.env.editor.shared.history.addStep();
+            env.editor.shared.history.addStep();
         });
     };
 }
