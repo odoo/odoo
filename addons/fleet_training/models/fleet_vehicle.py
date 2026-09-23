@@ -40,6 +40,30 @@ class FleetVehicle(models.Model):
         string="Status", default='available', required=True, tracking=True,
     )
 
+    maintenance_ids = fields.One2many('fleet_training.maintenance', 'vehicle_id', string="Maintenance Records")
+    maintenance_count = fields.Integer(compute='_compute_maintenance_count')
+    maintenance_cost_total = fields.Monetary(
+        string="Total Maintenance Cost", compute='_compute_maintenance_count', currency_field='currency_id',
+    )
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+
+    @api.depends('maintenance_ids.cost')
+    def _compute_maintenance_count(self):
+        for vehicle in self:
+            vehicle.maintenance_count = len(vehicle.maintenance_ids)
+            vehicle.maintenance_cost_total = sum(vehicle.maintenance_ids.mapped('cost'))
+
+    def action_view_maintenance(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Maintenance Records"),
+            'res_model': 'fleet_training.maintenance',
+            'view_mode': 'list,form',
+            'domain': [('vehicle_id', '=', self.id)],
+            'context': {'default_vehicle_id': self.id},
+        }
+
     @api.constrains('model_year')
     def _check_model_year(self):
         current_year = date.today().year

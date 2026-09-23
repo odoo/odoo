@@ -59,6 +59,11 @@
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/>  <!-- Needed for the Archived ribbon's invisible condition -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_maintenance" type="object" class="oe_stat_button" icon="build">
+                            <field name="maintenance_count" widget="statinfo" string="Maintenance"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. Fleet-001"/></h1>
@@ -77,6 +82,8 @@
                             <field name="acquisition_date"/>
                             <field name="age_years" readonly="1"/>
                             <field name="driver_id"/>
+                            <field name="maintenance_cost_total"/>
+                            <field name="currency_id" invisible="1"/>  <!-- Needed for maintenance_cost_total's Monetary widget -->
                         </group>
                     </group>
                     <group string="Notes">

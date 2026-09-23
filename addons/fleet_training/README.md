@@ -664,3 +664,46 @@ the pivot table and bar chart render with real data.
 below aren't in Server Framework 101, but were explicitly asked for to make
 this a genuinely usable app: more models (maintenance/fuel), a wizard
 (TransientModel), and a scheduled action (`ir.cron`).
+
+---
+
+## Chapter 16 — Maintenance Records (beyond the tutorial)
+
+**Concept.** Applying everything from Chapters 3–15 to grow the app with a new
+child model: `fleet_training.maintenance`, a One2many child of vehicle (same
+Many2one/One2many pairing as driver in Chapter 7), with its own constraint
+(Chapter 10's pattern) and a smart button + computed totals on the parent
+(Chapter 9/12's patterns).
+
+**Why?** A fleet app without a maintenance history isn't a fleet app - this is
+the first "beyond the tutorial" chapter, proving the concepts already taught
+are enough to keep building real features without learning anything new.
+
+**Where?**
+- [`models/fleet_maintenance.py`](models/fleet_maintenance.py)
+- [`models/fleet_vehicle.py`](models/fleet_vehicle.py) — `maintenance_ids`, `maintenance_count`, `maintenance_cost_total`, `action_view_maintenance`
+- [`views/fleet_maintenance_views.xml`](views/fleet_maintenance_views.xml), [`views/fleet_vehicle_views.xml`](views/fleet_vehicle_views.xml)
+
+**Code explanation.** `fleet_training.maintenance` records a date, type
+(service/repair/tires/other), odometer reading, cost (a `Monetary` field,
+which needs a paired `currency_id` field to know how to format/round) and free
+text. `maintenance_cost_total` and `maintenance_count` are computed together
+in one method (both derive from the same `maintenance_ids.cost` dependency, so
+one pass over the records is enough). The vehicle form's new smart button
+opens the maintenance records already filtered to that vehicle, the same
+"button that opens a filtered list" pattern as Chapter 13's partner button.
+
+**Fleet functionality.** Every vehicle can now log maintenance history with
+cost tracking; the form shows a running total and count via a smart button;
+there's also a standalone Maintenance menu for browsing/filtering all records
+fleet-wide.
+
+**What changed.** Added `models/fleet_maintenance.py`,
+`views/fleet_maintenance_views.xml`; updated `models/fleet_vehicle.py`,
+`models/__init__.py`, `views/fleet_vehicle_views.xml`,
+`security/ir.access.csv`.
+
+**Testing.** Upgrade the module. In the shell: create a vehicle, add two
+maintenance records with costs 1500/2500, confirm `maintenance_count == 2` and
+`maintenance_cost_total == 4000.0`; confirm the smart button's domain filters
+to that vehicle; confirm a negative `odometer` raises `ValidationError`.
