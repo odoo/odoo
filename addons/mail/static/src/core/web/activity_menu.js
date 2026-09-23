@@ -129,6 +129,12 @@ export class ActivityMenu extends Component {
     }
 }
 
-registry
-    .category("systray")
-    .add("mail.activity_menu", { Component: ActivityMenu }, { sequence: 20 });
+registry.category("systray").add(
+    "mail.activity_menu",
+    {
+        Component: ActivityMenu,
+        // Light users DO NOT have access to the activity menu.
+        isDisplayed: () => user.isRegularUser,
+    },
+    { sequence: 20 }
+);
