@@ -625,7 +625,7 @@
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>
                     <field name="show_hr_icon_display"/>
-                    <field name="image_128" />
+                    <field name="image_256" />
                     <field name="company_id"/>
                     <field name="work_phone_sanitized"/>
                     <field name="work_phone_formatted"/>
@@ -633,10 +633,10 @@
                         <t t-name="card" class="flex-row">
                             <aside class="o_card_aside_full">
                                 <t t-if="record.image_1024.raw_value">
-                                    <field name="image_1024" widget="background_image" options="{'zoom': true, 'zoom_delay': 1000, 'preview_image':'image_128'}" class="d-block position-relative"/>
+                                    <field name="image_1024" widget="background_image" options="{'zoom': true, 'zoom_delay': 1000, 'preview_image':'image_256'}" class="d-block position-relative"/>
                                 </t>
-                                <t t-elif="record.image_128.raw_value">
-                                    <field name="avatar_128" widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}" class="d-block position-relative"/>
+                                <t t-elif="record.image_256.raw_value">
+                                    <field name="avatar_256" widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}" class="d-block position-relative"/>
                                 </t>
                                 <div t-else="" class="d-flex align-items-center justify-content-center bg-100 bg-gradient">
                                     <svg class="w-75 h-75 opacity-50" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
