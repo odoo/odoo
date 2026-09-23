@@ -1262,9 +1262,18 @@ class IrUiView(models.Model):
         self.env.registry.clear_cache("templates")
         candidates = self._view_modes_without_default()
         _debug.lifecycle("unlink", count=len(self), view_modes=len(candidates))
-        res = super().unlink()
+        res = super(IrUiView, self._sorted_children_first()).unlink()
         self.env["ir.actions.act_window"]._remove_view_modes_without_views(candidates)
         return res
+
+    def _sorted_children_first(self) -> Self:
+        ordered = self.browse()
+        remaining = self
+        while remaining:
+            leaves = remaining - remaining.inherit_id
+            ordered += leaves
+            remaining -= leaves
+        return ordered
 
     def _view_modes_without_default(self) -> set[tuple[str, str]]:
         return {

@@ -158,3 +158,31 @@ class TestThemeLoadOrder(common.TransactionCase):
             View._get_loaded_view_ids(copy.ids, ["test_theme_order"]), set(copy.ids)
         )
         self.assertFalse(View._get_loaded_view_ids(copy.ids, ["website"]))
+
+
+@tagged("-at_install", "post_install")
+class TestWebsiteUnlink(common.TransactionCase):
+    def test_unlink_website_whose_inactive_view_inherits_another(self):
+        website = self.env["website"].create({"name": "to delete"})
+        View = self.env["ir.ui.view"]
+        parent = View.create(
+            {
+                "name": "parent",
+                "type": "qweb",
+                "website_id": website.id,
+                "arch": '<div><p class="a"/></div>',
+            }
+        )
+        child = View.create(
+            {
+                "name": "child",
+                "type": "qweb",
+                "active": False,
+                "website_id": website.id,
+                "inherit_id": parent.id,
+                "arch": '<xpath expr="//p" position="after"><p class="b"/></xpath>',
+            }
+        )
+        website.unlink()
+        self.assertFalse(website.exists())
+        self.assertFalse((parent | child).exists())

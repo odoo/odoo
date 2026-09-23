@@ -6060,6 +6060,36 @@ class TestViewCacheInvalidation(ViewCase):
         self.assertEqual(calls, [])
 
 
+class TestViewUnlink(ViewCase):
+    def _create_chain(self):
+        root = self.View.create(
+            {"name": "root", "type": "qweb", "arch": '<div><p class="a"/></div>'}
+        )
+        child = self.View.create(
+            {
+                "name": "child",
+                "type": "qweb",
+                "inherit_id": root.id,
+                "arch": '<xpath expr="//p" position="after"><p class="b"/></xpath>',
+            }
+        )
+        grandchild = self.View.create(
+            {
+                "name": "grandchild",
+                "type": "qweb",
+                "inherit_id": child.id,
+                "arch": '<xpath expr="//p[hasclass(\'b\')]" position="after"><p class="c"/></xpath>',
+            }
+        )
+        return root, child, grandchild
+
+    def test_unlink_a_chain_split_across_batches(self):
+        root, child, grandchild = self._create_chain()
+        with patch.object(type(self.env.cr), "BATCH_SIZE", 1):
+            (root | child | grandchild).unlink()
+        self.assertFalse((root | child | grandchild).exists())
+
+
 class TestValidationTools(common.BaseCase):
     def test_get_expression_identities(self):
         self.assertEqual(

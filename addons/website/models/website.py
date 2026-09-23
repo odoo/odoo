@@ -644,9 +644,10 @@ class Website(models.Model):
         _debug.lifecycle("unlink", websites=self, count=len(self))
         self._remove_attachments_on_website_unlink()
 
-        self.env["website.page"].search([("website_id", "in", self.ids)]).unlink()
-        self.env["ir.ui.view"].search([("website_id", "in", self.ids)]).unlink()
-        self.env["website.menu"].search([("website_id", "in", self.ids)]).unlink()
+        env = self.with_context(active_test=False).env
+        env["website.page"].search([("website_id", "in", self.ids)]).unlink()
+        env["ir.ui.view"].search([("website_id", "in", self.ids)]).unlink()
+        env["website.menu"].search([("website_id", "in", self.ids)]).unlink()
 
         companies = self.company_id
         res = super().unlink()
