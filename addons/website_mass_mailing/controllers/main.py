@@ -5,6 +5,7 @@ import werkzeug.exceptions
 
 from odoo import tools, _
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.http import route, request
 from odoo.addons.mass_mailing.controllers import main
 
@@ -105,6 +106,21 @@ class MassMailController(main.MassMailController):
         # add field to session
         request.session[f'mass_mailing_{fname}'] = input_value
 
+        # unmodular but we won't add a module for that
+        if mailing_list and 'marketing.campaign' in request.env:
+            CampaignSu = request.env["marketing.campaign"].sudo()
+            impacted_campaigns = CampaignSu.search(
+                CampaignSu._get_campaign_cron_alive_domain() &
+                Domain([
+                    ('enroll_type', '=', 'action'),
+                    ('enroll_action_type', '=', 'subscribe'),
+                    ('mailing_list_ids', 'in', mailing_list.id),
+                    ('model_id', '=', request.env['ir.model']._get_id('res.partner')),
+                ])
+            )
+        else:
+            impacted_campaigns = None
+
         # fetch contact information
         contact = Contacts.search(
             ['|', (fname, '=', value), (contact_fname_normalized, '=', value)],
@@ -114,6 +130,13 @@ class MassMailController(main.MassMailController):
             not request.env.user.is_public and
             request.env.user.partner_id[fname_normalized] == value
         ) else request.env['res.partner']
+        # create a partner, if impacted campaigns exist, to enable marketing automation followup
+        if not contact_partner and impacted_campaigns:
+            contact_partner = request.env['res.partner'].sudo().with_context(mail_create_source_doc=contact or mailing_list).create({
+                'name': name,
+                fname: input_value,
+                fname_normalized: value,
+            })
         if contact:
             if contact_partner and not contact.partner_id:
                 contact.partner_id = contact_partner.id
