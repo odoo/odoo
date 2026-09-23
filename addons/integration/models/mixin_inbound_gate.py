@@ -212,10 +212,13 @@ class MixinInboundGate(models.AbstractModel):
                 headers=dict(httprequest.headers),
                 remote_addr=remote_addr,
             )
+            # Committed, so the refusal row above is kept: nothing before
+            # it wrote on the request's cursor.
             raise Refused(
                 413,
                 f"Request exceeds maximum size of {limit // 1024}KB",
                 "payload_too_large",
+                commit=True,
                 detail={"limit_bytes": limit},
             )
         # A body past the limit is refused while it is still being read.
@@ -235,6 +238,7 @@ class MixinInboundGate(models.AbstractModel):
                 413,
                 f"Request exceeds maximum size of {limit // 1024}KB",
                 "payload_too_large",
+                commit=True,
                 detail={"limit_bytes": limit},
             ) from None
         # The verdict is written on its own cursor: a refusal raises, the

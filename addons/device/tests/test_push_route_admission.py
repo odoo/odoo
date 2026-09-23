@@ -114,6 +114,18 @@ class TestPushRouteAdmission(DeviceHttpCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self._rows().state, "success")
 
+    def test_a_push_over_the_size_limit_leaves_its_refusal_row(self):
+        self.device.max_payload_size = 16
+
+        response = self._push(json.dumps({"reading": "x" * 64}).encode())
+
+        self.assertEqual(response.status_code, 413)
+        row = self._rows()
+        self.assertEqual(
+            (row.state, row.refusal_reason, row.status_code),
+            ("refused", "payload_too_large", 413),
+        )
+
     def test_a_wrong_token_leaves_no_row(self):
         response = self._push(token="not-the-token")
 
