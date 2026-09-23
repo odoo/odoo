@@ -17,7 +17,7 @@ class AccountMoveReversal(models.TransientModel):
             # Match new invoices to old invoices based on (move_type, journal_id, partner_id, amount_total_in_currency_signed).
             for origin in self.move_ids.filtered(lambda m: m.l10n_hu_edi_state):
                 matched_new_move = self.new_move_ids.filtered(
-                    lambda m: (
+                    lambda m, origin=origin: (
                         (
                             m.move_type,
                             m.journal_id,

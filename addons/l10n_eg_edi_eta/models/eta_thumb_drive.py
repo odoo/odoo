@@ -55,7 +55,7 @@ class L10n_Eg_EdiThumbDrive(models.Model):
         self.check_singleton()
         sign_host = self._get_host()
 
-        to_sign_dict = dict()
+        to_sign_dict = {}
         for invoice_id in invoice_ids:
             eta_invoice = json.loads(
                 base64.b64decode(invoice_id.l10n_eg_eta_json_doc_file)

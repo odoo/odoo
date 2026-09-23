@@ -124,7 +124,7 @@ class TestBIR2307Generation(TestPhCommon):
         sheet = wb.active
         for row, values in expected_values.items():
             row_values = [self._cell_text(cell.value) for cell in sheet[row]]
-            for row_value, expected_value in zip(row_values, values):
+            for row_value, expected_value in zip(row_values, values, strict=True):
                 self.assertEqual(row_value, expected_value)
 
     def test_01_no_atc(self):
@@ -145,9 +145,10 @@ class TestBIR2307Generation(TestPhCommon):
         wb = openpyxl.load_workbook(io.BytesIO(base64.b64decode(wizard.xls_file)))
         sheet = wb.active
 
-        result = []
-        for row in sheet.iter_rows(min_row=2, values_only=True):
-            result.append([self._cell_text(value) for value in row])
+        result = [
+            [self._cell_text(value) for value in row]
+            for row in sheet.iter_rows(min_row=2, values_only=True)
+        ]
         self.assertEqual(result, [])
 
     def test_02_simple_atc(self):
@@ -170,9 +171,10 @@ class TestBIR2307Generation(TestPhCommon):
         wb = openpyxl.load_workbook(io.BytesIO(base64.b64decode(wizard.xls_file)))
         sheet = wb.active
 
-        result = []
-        for row in sheet.iter_rows(min_row=2, values_only=True):
-            result.append([self._cell_text(value) for value in row])
+        result = [
+            [self._cell_text(value) for value in row]
+            for row in sheet.iter_rows(min_row=2, values_only=True)
+        ]
         self.assertEqual(
             result,
             [
@@ -219,9 +221,10 @@ class TestBIR2307Generation(TestPhCommon):
         wb = openpyxl.load_workbook(io.BytesIO(base64.b64decode(wizard.xls_file)))
         sheet = wb.active
 
-        result = []
-        for row in sheet.iter_rows(min_row=2, values_only=True):
-            result.append([self._cell_text(value) for value in row])
+        result = [
+            [self._cell_text(value) for value in row]
+            for row in sheet.iter_rows(min_row=2, values_only=True)
+        ]
         self.assertEqual(
             result,
             [
@@ -265,9 +268,10 @@ class TestBIR2307Generation(TestPhCommon):
         wb = openpyxl.load_workbook(io.BytesIO(base64.b64decode(wizard.xls_file)))
         sheet = wb.active
 
-        result = []
-        for row in sheet.iter_rows(min_row=2, values_only=True):
-            result.append([self._cell_text(value) for value in row])
+        result = [
+            [self._cell_text(value) for value in row]
+            for row in sheet.iter_rows(min_row=2, values_only=True)
+        ]
         # We expect the values in company currency in the file.
         self.assertEqual(
             result,

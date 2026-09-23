@@ -621,7 +621,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         wizard = self._create_account_move_send_wizard_single(
             invoice, sending_methods=["manual"]
         )
-        wizard.mail_attachments_widget = wizard.mail_attachments_widget + [
+        wizard.mail_attachments_widget += [
             {
                 "id": attachment.id,
                 "name": attachment.name,

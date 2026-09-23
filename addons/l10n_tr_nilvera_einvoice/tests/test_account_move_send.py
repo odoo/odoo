@@ -1,4 +1,4 @@
-import xml.etree.ElementTree as ET
+from lxml import etree
 
 from odoo.tests import tagged
 
@@ -81,7 +81,7 @@ class TestTRAccountMoveSend(TestAccountMoveSendCommon, TestUBLTRCommon):
         xml_data = invoice.ubl_cii_xml_id.raw
         self.assertIsNotNone(xml_data, "XML data should exist")
 
-        xml_tree = ET.fromstring(xml_data.decode("utf-8"))
+        xml_tree = etree.fromstring(xml_data)
 
         ns = {
             "cac": "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"

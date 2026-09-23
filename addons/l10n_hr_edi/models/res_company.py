@@ -451,7 +451,7 @@ class ResCompany(models.Model):
                 _logger.error(
                     "Failed to archive signed XML for %s: %s",
                     move.l10n_hr_mer_document_eid,
-                    str(e),
+                    e,
                 )
                 if not from_cron:
                     raise

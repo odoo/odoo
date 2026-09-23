@@ -100,14 +100,16 @@ class MixinSequence(models.AbstractModel):
                 previous,
                 format_values.get("seq"),
             )
-            raise ValidationError(self.env._("Invalid sequence number format."))
+            raise ValidationError(
+                self.env._("Invalid sequence number format.")
+            ) from None
         try:
             format_values["year"] = int(format_values.get("year", "0"))
         except ValueError:
             _logger.error(
                 "Invalid year in '%s': year='%s'", previous, format_values.get("year")
             )
-            raise ValidationError(self.env._("Invalid year format."))
+            raise ValidationError(self.env._("Invalid year format.")) from None
 
         format_values["code"] = self.journal_id.code
         format_values["premises_label"] = premises_label

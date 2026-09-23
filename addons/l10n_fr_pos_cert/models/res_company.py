@@ -129,7 +129,7 @@ class ResCompany(models.Model):
                     "last_order_date": end_order_info[0],
                 }
             )
-            corrupted_orders = ", ".join([o for o in corrupted_orders])
+            corrupted_orders = ", ".join(corrupted_orders)
             return {
                 "result": report_dict or "None",
                 "msg_alert": msg_alert or "None",

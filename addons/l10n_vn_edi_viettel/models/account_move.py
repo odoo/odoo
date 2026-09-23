@@ -322,6 +322,7 @@ class AccountMove(models.Model):
                             "raw": inner_zip.read(file),
                             "res_field": "l10n_vn_edi_sinvoice_xml_file",
                         }, ""
+        return None
 
     def _l10n_vn_edi_download_invoice_pdf_file_data(self):
         """
@@ -585,6 +586,7 @@ class AccountMove(models.Model):
 
         if self._can_commit():
             self.env.cr.commit()
+        return None
 
     def _l10n_vn_edi_cancel_invoice(
         self, reason, agreement_document_name, agreement_document_date

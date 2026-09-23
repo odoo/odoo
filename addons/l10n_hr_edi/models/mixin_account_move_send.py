@@ -226,9 +226,9 @@ class MixinAccountMoveSend(models.AbstractModel):
             else:
                 if not response.get("ElectronicId"):
                     addendum.mer_document_status = "50"
-                    errors = []
-                    for key in response:
-                        errors.append(" ".join(response[key].get("Messages", [])))
+                    errors = [
+                        " ".join(response[key].get("Messages", [])) for key in response
+                    ]
                     invoice_data["error"] = {"error_title": "Error", "errors": errors}
                 else:
                     addendum.mer_document_eid = response["ElectronicId"]

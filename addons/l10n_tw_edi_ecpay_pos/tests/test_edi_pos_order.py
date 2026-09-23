@@ -177,7 +177,7 @@ class L10nTWITestEdiPosOrder(L10nTWITestEdi, TestPoSCommon):
                 "RandomNumber": "6868",
             }
         elif endpoint == "/GetIssue":
-            return_data = {
+            return {
                 "RtnCode": 1,
                 "RtnMsg": "Success",
                 "IIS_Sales_Amount": self.product_a.lst_price,
@@ -186,7 +186,6 @@ class L10nTWITestEdiPosOrder(L10nTWITestEdi, TestPoSCommon):
                 "IIS_Relate_Number": "20250106000000020",
                 "IIS_Remain_Allowance_Amt": 0,
             }
-            return return_data
         elif endpoint == "/Allowance":
             return {
                 "RtnCode": 1,

@@ -3,7 +3,6 @@ from pathlib import Path
 
 from reportlab.graphics.shapes import Drawing as ReportLabDrawing
 from reportlab.graphics.shapes import Image as ReportLabImage
-from reportlab.lib.units import mm
 
 from odoo import api, models
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter

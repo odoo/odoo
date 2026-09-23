@@ -83,8 +83,7 @@ class TestUBLRS(TestUBLCommon):
         with misc.file_open(
             f"{self.test_module}/tests/test_files/{file_name}.xml", "rb"
         ) as file:
-            xml_file = file.read()
-        return xml_file
+            return file.read()
 
     def test_export_invoice(self):
         invoice = self.create_invoice("out_invoice")

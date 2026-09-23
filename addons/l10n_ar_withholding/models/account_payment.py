@@ -17,11 +17,10 @@ class AccountPayment(models.Model):
             return None
         for pay in self:
             pay.move_id.line_ids.filtered(
-                lambda x: (
+                lambda x, pay=pay: (
                     x.account_id
                     == pay.company_id.l10n_ar_withholding_config_id.l10n_ar_tax_base_account_id
                     or x.tax_line_id.l10n_ar_withholding_payment_type
                 )
             ).unlink()
-        res = super()._sync_to_moves(changed_fields)
-        return res
+        return super()._sync_to_moves(changed_fields)

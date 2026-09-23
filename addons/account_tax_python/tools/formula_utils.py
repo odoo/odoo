@@ -152,7 +152,7 @@ def check_formula(env, formula: str) -> str:
     try:
         tree = ast.parse(formula, mode="eval")
     except SyntaxError, ValueError:
-        raise ValidationError(env._("Invalid formula"))
+        raise ValidationError(env._("Invalid formula")) from None
 
     # `env` is needed to generate localized error messages.
     # Odoo's `_()` translation looks for `env` in the caller's local scope and one frame above it,
@@ -174,7 +174,7 @@ def normalize_formula(env, formula: str, field_predicate=None) -> tuple[str, set
     try:
         tree = ast.parse(formula, mode="eval")
     except SyntaxError, ValueError:
-        raise ValidationError(env._("Invalid formula"))
+        raise ValidationError(env._("Invalid formula")) from None
 
     transformer = ProductUomFieldRewriter()
     transformed_tree = transformer.visit(tree)

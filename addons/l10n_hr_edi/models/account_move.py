@@ -223,8 +223,7 @@ class AccountMove(models.Model):
 
     def _get_domain_l10n_hr_fiscal_user_id(self):
         internal_users = self.env.ref("base.group_user")
-        domain = [("user_ids", "in", internal_users.user_ids.ids)]
-        return domain
+        return [("user_ids", "in", internal_users.user_ids.ids)]
 
     def _import_file_type_rules(self):
         # EXTENDS 'account'

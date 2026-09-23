@@ -91,7 +91,7 @@ class ResPartnerBankAccount(models.Model):
 
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         if qr_method == "emv_qr" and self.country_code == "TH":
-            if currency.name not in ["THB"]:
+            if currency.name != "THB":
                 return _(
                     "Can't generate a PayNow QR code with a currency other than THB."
                 )

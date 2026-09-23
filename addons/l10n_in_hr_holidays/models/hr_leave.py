@@ -362,7 +362,7 @@ class HrLeave(models.Model):
                 date_to, public_holiday_dates, self.resource_calendar_id
             )
         elif is_non_working_to:
-            total_leaves = total_leaves - self._l10n_in_count_adjacent_non_working(
+            total_leaves -= self._l10n_in_count_adjacent_non_working(
                 date_to,
                 public_holiday_dates,
                 self.resource_calendar_id,

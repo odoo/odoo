@@ -46,6 +46,7 @@ class PartnerIdTypeEc(enum.Enum):
                 return cls.OUT_CEDULA
             elif partner_id_type in ["foreign", "passport"]:
                 return cls.OUT_PASSPORT
+        return None
 
 
 class ResPartner(models.Model):
@@ -141,3 +142,4 @@ class ResPartner(models.Model):
 
         if self.l10n_latam_identification_type_id.country_id.code != "EC":
             return "foreign"
+        return None

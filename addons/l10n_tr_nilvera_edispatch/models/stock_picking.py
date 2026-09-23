@@ -251,6 +251,7 @@ class StockPicking(models.Model):
             }
         if self.state == "done":
             return self._l10n_tr_get_edispatch_errors_on_done()
+        return None
 
     def _l10n_tr_generate_edispatch_xml(self):
         _debug.pipeline("edi_delivery_send", regime="tr", pickings=self)
@@ -558,6 +559,7 @@ class StockPicking(models.Model):
                         "./cbc:ID", doc
                     ),
                 }
+        return None
 
     def _import_partners(self, tree):
         xpath_to_field = {

@@ -397,7 +397,7 @@ class TestItEdiExport(TestItEdi):
         self._assert_export_invoice(credit_note, "credit_note_refund_no_reconcile.xml")
 
     def test_invoice_negative_price(self):
-        tax_10 = self.env["account.tax"].create(
+        self.env["account.tax"].create(
             {
                 "name": "10% tax",
                 "amount": 10.0,

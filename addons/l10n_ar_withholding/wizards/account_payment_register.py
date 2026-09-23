@@ -139,7 +139,7 @@ class AccountPaymentRegister(models.TransientModel):
                         _("Please enter withholding number for tax %s")
                         % line.tax_id.name
                     )
-            dummy, account_id, tax_repartition_line_id = line._tax_compute_all_helper()
+            _dummy, account_id, tax_repartition_line_id = line._tax_compute_all_helper()
             balance = self.company_currency_id.round(line.amount * conversion_rate)
             # create withholding amount applied move line only if amount != 0
             payment_vals["write_off_line_vals"].append(
@@ -158,7 +158,7 @@ class AccountPaymentRegister(models.TransientModel):
             set(self.l10n_ar_withholding_ids.mapped("base_amount"))
         ):
             withholding_lines = self.l10n_ar_withholding_ids.filtered(
-                lambda x: x.base_amount == base_amount
+                lambda x, base_amount=base_amount: x.base_amount == base_amount
             )
             nice_base_label = ",".join(withholding_lines.mapped("name"))
             account_id = self.company_id.l10n_ar_withholding_config_id.l10n_ar_tax_base_account_id.id

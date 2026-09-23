@@ -208,3 +208,4 @@ class AccountMove(models.Model):
                 and self.journal_id.type == "purchase"
             )
         super()._skip_format_document_number()
+        return None

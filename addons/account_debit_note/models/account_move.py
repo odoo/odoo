@@ -43,10 +43,9 @@ class AccountMove(models.Model):
         }
 
     def action_debit_note(self):
-        action = self.env.ref(
+        return self.env.ref(
             "account_debit_note.action_view_account_move_debit"
         )._get_action_dict()
-        return action
 
     def _get_domain_last_sequence(self, relaxed=False):
         domain = super()._get_domain_last_sequence(relaxed)

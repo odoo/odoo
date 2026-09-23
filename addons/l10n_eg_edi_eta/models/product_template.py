@@ -30,7 +30,7 @@ class ProductTemplate(models.Model):
     def create(self, vals_list):
         templates = super().create(vals_list)
 
-        for template, vals in zip(templates, vals_list):
+        for template, vals in zip(templates, vals_list, strict=True):
             related_vals = {}
             if vals.get("l10n_eg_eta_code"):
                 related_vals["l10n_eg_eta_code"] = vals["l10n_eg_eta_code"]

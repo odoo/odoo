@@ -416,14 +416,14 @@ class AccountMove(models.Model):
         :return:
         """
         self.check_singleton()
-        tax = [
+        return [
             {
                 "tax_code": line.tax_line_id.l10n_cl_sii_code,
                 "tax_name": line.tax_line_id.name,
                 "tax_base": abs(
                     sum(
                         self.invoice_line_ids.filtered(
-                            lambda x: (
+                            lambda x, line=line: (
                                 line.tax_line_id.l10n_cl_sii_code
                                 in x.tax_ids.mapped("l10n_cl_sii_code")
                             )
@@ -452,7 +452,6 @@ class AccountMove(models.Model):
                 )
             )
         ]
-        return tax
 
     def _float_repr_float_round(self, value, decimal_places):
         return float_repr(float_round(value, decimal_places), decimal_places)

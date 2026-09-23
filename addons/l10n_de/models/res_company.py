@@ -44,14 +44,16 @@ class ResCompany(models.Model):
             except stdnum.exceptions.InvalidComponent:
                 raise ValidationError(
                     _("Your company's SteuerNummer is not compatible with your state")
-                )
+                ) from None
             except stdnum.exceptions.InvalidFormat:
                 if stdnum.de.stnr.is_valid(
                     self.l10n_de_config_id.l10n_de_stnr, self.state_id.name
                 ):
                     national_steuer_nummer = self.l10n_de_config_id.l10n_de_stnr
                 else:
-                    raise ValidationError(_("Your company's SteuerNummer is not valid"))
+                    raise ValidationError(
+                        _("Your company's SteuerNummer is not valid")
+                    ) from None
 
         elif self.l10n_de_config_id.l10n_de_stnr:
             national_steuer_nummer = self.l10n_de_config_id.l10n_de_stnr

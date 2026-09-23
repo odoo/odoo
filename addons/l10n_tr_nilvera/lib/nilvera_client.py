@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import UTC, datetime
 from json import JSONDecodeError
 
 import requests
@@ -44,7 +44,7 @@ class NilveraClient:
     def request(
         self, method, endpoint, params=None, json=None, files=None, handle_response=True
     ):
-        start = datetime.utcnow()
+        start = datetime.now(UTC)
         url = self.base_url + endpoint
 
         try:
@@ -62,9 +62,9 @@ class NilveraClient:
                 _(
                     "Network connectivity issue. Please check your internet connection and try again."
                 )
-            )
+            ) from e
 
-        end = datetime.utcnow()
+        end = datetime.now(UTC)
         duration = (end - start).total_seconds()
         self._log_request(method, duration, url, response.status_code)
 
@@ -103,4 +103,4 @@ class NilveraClient:
             return response.json()
         except JSONDecodeError:
             _logger.exception(_("Invalid JSON response: %s", response.text))
-            raise UserError(_("An error occurred. Try again later."))
+            raise UserError(_("An error occurred. Try again later.")) from None

@@ -82,14 +82,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     _(
                         "We could not find a user with this information on our server. Please check your information."
                     )
-                )
+                ) from e
 
             if e.code == "invalid_signature":
                 self._mark_connection_out_of_sync()
                 if not tools.config["test_enable"] and not modules.module.current_test:
                     self.env.cr.commit()
-                raise UserError(token_out_of_sync_error_message)
-            raise UserError(e.message)
+                raise UserError(token_out_of_sync_error_message) from e
+            raise UserError(e.message) from e
 
         if error_vals := response.get("error"):
             error_message = get_peppol_error_message(self.env, error_vals)
@@ -122,7 +122,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     _(
                         "This connection has been superseded by another database. Register again."
                     )
-                )
+                ) from e
             raise
 
     def _peppol_out_of_sync_reconnect_this_database(self):
@@ -640,10 +640,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     def _generate_webhook_token(self, company):
         expiration = 30 * 24  # in 30 days
         msg = [company.id, company._get_peppol_webhook_endpoint()]
-        payload = tools.hash_sign(
+        return tools.hash_sign(
             self.sudo().env, "account_peppol_webhook", msg, expiration_hours=expiration
         )
-        return payload
 
     @api.model
     def _get_proxy_user_from_webhook_token(self, token, url):

@@ -154,8 +154,7 @@ class ResConfigSettings(models.TransientModel):
         registration_wizard = self.env["peppol.registration"].create(
             {"company_id": self.company_id.id}
         )
-        registration_action = registration_wizard._action_view_peppol_form(reopen=False)
-        return registration_action
+        return registration_wizard._action_view_peppol_form(reopen=False)
 
     # Deprecated
     def button_open_peppol_config_wizard(self):

@@ -14,5 +14,4 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template("hu", "account.tax")
     def _get_hu_account_tax(self):
-        data = self._prepare_csv_vals("hu", "account.tax", module="l10n_hu_edi")
-        return data
+        return self._prepare_csv_vals("hu", "account.tax", module="l10n_hu_edi")

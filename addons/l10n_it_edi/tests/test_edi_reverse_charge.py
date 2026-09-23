@@ -1,5 +1,3 @@
-from collections import namedtuple
-
 from odoo import Command, fields
 from odoo.tests import tagged
 

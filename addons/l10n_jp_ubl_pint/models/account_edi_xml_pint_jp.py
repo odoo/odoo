@@ -29,6 +29,7 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
     def _get_customization_id(self, process_type="billing"):
         if process_type == "billing":
             return "urn:peppol:pint:billing-1@jp-1"
+        return None
 
     def _ubl_default_tax_subtotal_grouping_key(self, tax_category_grouping_key, vals):
         # EXTENDS account.edi.xml.ubl_bis3

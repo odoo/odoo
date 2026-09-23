@@ -26,6 +26,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
     def _get_customization_id(self, process_type="billing"):
         if process_type == "billing":
             return "urn:peppol:pint:billing-1@aunz-1"
+        return None
 
     # -------------------------------------------------------------------------
     # EXPORT: Templates

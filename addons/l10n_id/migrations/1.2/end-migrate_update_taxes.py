@@ -1,4 +1,5 @@
 from odoo import SUPERUSER_ID, api
+from odoo.tools import float_compare
 
 
 def migrate(cr, version):
@@ -48,7 +49,11 @@ def migrate(cr, version):
             continue
 
         for tax in [tax_ST1, tax_PT1]:
-            if tax and tax.amount == 11.0 and tax.tax_group_id == old_group:
+            if (
+                tax
+                and float_compare(tax.amount, 11.0, precision_digits=4) == 0
+                and tax.tax_group_id == old_group
+            ):
                 tax.write(
                     {
                         "tax_group_id": new_group.id,

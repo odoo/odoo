@@ -13,5 +13,5 @@ class StockPicking(models.Model):
     def _l10n_in_get_fiscal_position(self):
         self.check_singleton()
         if purchase_order := self.purchase_id:
-            purchase_order.fiscal_position_id
+            return purchase_order.fiscal_position_id
         return super()._l10n_in_get_fiscal_position()

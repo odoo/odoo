@@ -207,19 +207,18 @@ class AccountMove(models.Model):
 
     def _create_myinvois_document(self):
         """Helper which creates and link one MyInvois Document per invoice in self."""
-        myinvois_documents_vals = []
-        for move in self.filtered(lambda m: m.state == "posted"):
-            myinvois_documents_vals.append(
-                {
-                    "name": move.name,
-                    "company_id": move.company_id.id,
-                    "currency_id": move.currency_id.id,
-                    "myinvois_issuance_date": move.invoice_date,
-                    "invoice_ids": [Command.link(move.id)],
-                    "myinvois_exemption_reason": move.l10n_my_edi_exemption_reason,
-                    "myinvois_custom_form_reference": move.l10n_my_edi_custom_form_reference,
-                }
-            )
+        myinvois_documents_vals = [
+            {
+                "name": move.name,
+                "company_id": move.company_id.id,
+                "currency_id": move.currency_id.id,
+                "myinvois_issuance_date": move.invoice_date,
+                "invoice_ids": [Command.link(move.id)],
+                "myinvois_exemption_reason": move.l10n_my_edi_exemption_reason,
+                "myinvois_custom_form_reference": move.l10n_my_edi_custom_form_reference,
+            }
+            for move in self.filtered(lambda m: m.state == "posted")
+        ]
         return self.env["myinvois.document"].create(myinvois_documents_vals)
 
     def _l10n_my_edi_get_proxy_user(self):

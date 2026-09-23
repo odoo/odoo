@@ -27,6 +27,7 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
         """Mock _prepare_error_peppol_endpoint"""
         if eas == "0184" and endpoint != "12345674":
             return f"(0184, {endpoint}) is not a valid peppol couple."
+        return None
 
     @patch(
         "odoo.addons.account_edi_ubl_cii.models.res_partner.ResPartner._prepare_error_peppol_endpoint",

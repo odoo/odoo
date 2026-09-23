@@ -441,10 +441,10 @@ class MyInvoisDocument(models.Model):
             self._message_log_batch(bodies=bodies)
             if self.invoice_ids:
                 invoice_bodies = {}
-                for document_id, message in bodies.items():
+                for document_id, body in bodies.items():
                     invoice_bodies.update(
                         {
-                            invoice.id: message
+                            invoice.id: body
                             for invoice in documents_per_id[document_id].invoice_ids
                         }
                     )
@@ -589,7 +589,7 @@ class MyInvoisDocument(models.Model):
         except ValueError, AttributeError:
             raise werkzeug.exceptions.HTTPException(
                 description="Cannot convert into QR Code."
-            )
+            ) from None
 
         return image_data_uri(base64.b64encode(qr_code))
 
@@ -627,7 +627,7 @@ class MyInvoisDocument(models.Model):
                 "tax_amount",
             )
             consolidated_base_lines = []
-            for index, records in enumerate(grouped_records):
+            for records in grouped_records:
                 base_lines = []
                 for record in records:
                     base_lines += self._get_record_rounded_base_lines(record)
@@ -1001,7 +1001,7 @@ class MyInvoisDocument(models.Model):
         :param with_commit: If True, we will commit after retrieving the status if we can.
         """
         statuses = self._myinvois_get_submission_status()
-        for submission_uid, results in statuses.items():
+        for results in statuses.values():
             records = self.browse(list(results["statuses"].keys()))
 
             if results["error"]:
@@ -1330,7 +1330,7 @@ class MyInvoisDocument(models.Model):
         )  # Count the total amount of documents to process.
 
         processed_documents = 0
-        for index, (submission_uid, documents) in enumerate(grouped_documents):
+        for index, (_submission_uid, documents) in enumerate(grouped_documents):
             # Update the status for that one submission. In case of errors, we log it and continue.
             # Errors are quite unlikely in this flow.
             documents._myinvois_submission_statuses_update(

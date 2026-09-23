@@ -173,6 +173,7 @@ class AccountMove(models.Model):
             self.message_post(
                 body=_("The invoice has been successfully sent to Nilvera.")
             )
+        return None
 
     def _l10n_tr_nilvera_post_series(self, endpoint, client):
         """Post the series to Nilvera based on the endpoint."""

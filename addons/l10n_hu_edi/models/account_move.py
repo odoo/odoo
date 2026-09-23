@@ -10,6 +10,7 @@ from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.http import request
 from odoo.tools import (
     cleanup_xml_node,
+    float_compare,
     float_repr,
     float_round,
     formatLang,
@@ -487,7 +488,7 @@ class AccountMove(models.Model):
                         move._l10n_hu_get_chain_base()
                         ._l10n_hu_get_chain_invoices()
                         .filtered(
-                            lambda m: (
+                            lambda m, move=move: (
                                 m.id < move.id
                                 and m.l10n_hu_edi_state
                                 in [False, "rejected", "cancelled"]
@@ -719,6 +720,7 @@ class AccountMove(models.Model):
                 },
             }
         )
+        return None
 
     def _l10n_hu_edi_query_status(self, connection):
         """Check the NAV invoice status."""
@@ -778,7 +780,7 @@ class AccountMove(models.Model):
 
         for processing_result in results["processing_results"]:
             invoice = self.filtered(
-                lambda m: (
+                lambda m, processing_result=processing_result: (
                     str(m.l10n_hu_edi_batch_upload_index) == processing_result["index"]
                 )
             )
@@ -795,6 +797,7 @@ class AccountMove(models.Model):
             invoice._l10n_hu_edi_process_query_transaction_result(
                 processing_result, results["annulment_status"]
             )
+        return None
 
     def _l10n_hu_edi_process_query_transaction_result(
         self, processing_result, annulment_status
@@ -1070,6 +1073,7 @@ class AccountMove(models.Model):
                 },
             }
         )
+        return None
 
     # === EDI: XML generation === #
 
@@ -1224,7 +1228,7 @@ class AccountMove(models.Model):
                         line_values.update(
                             {
                                 "advanceOriginalInvoice": advance_invoices.filtered(
-                                    lambda m: (
+                                    lambda m, last_reconciled_payment=last_reconciled_payment: (
                                         last_reconciled_payment
                                         in m._get_reconciled_amls().move_id
                                     )
@@ -1237,7 +1241,10 @@ class AccountMove(models.Model):
             if line.display_type == "product":
                 vat_tax = line.tax_ids.filtered(lambda t: t.l10n_hu_tax_type)
 
-                if line.quantity == 0.0 or line.discount == 100.0:
+                if (
+                    line.product_uom_id.is_zero(line.quantity)
+                    or float_compare(line.discount, 100.0, precision_digits=2) == 0
+                ):
                     price_unit_signed = 0.0
                 else:
                     price_unit_signed = (

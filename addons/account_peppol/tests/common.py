@@ -200,6 +200,7 @@ class PeppolConnectorCommon(AccountTestInvoicingCommon):
                     mocked_request.json.return_value = results
                     return mocked_request
             self.assertFalse(url, "Missing mock!")
+            return None
 
         def mock_request_2(method, url, **kwargs):
             return mock_request(url, **kwargs)

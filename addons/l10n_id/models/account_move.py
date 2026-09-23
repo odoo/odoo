@@ -117,6 +117,7 @@ class AccountMove(models.Model):
                 .create({"group_payment": False})
                 .action_create_payments()
             )
+        return None
 
     def _compute_tax_totals(self):
         """OVERRIDE

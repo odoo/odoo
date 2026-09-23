@@ -7,7 +7,7 @@ import zeep
 
 from odoo import _, fields, models
 from odoo.libs.numbers import float_round
-from odoo.tools import html_escape
+from odoo.tools import float_compare, html_escape
 
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
 from odoo.addons.certificate.tools import CertificateAdapter
@@ -43,7 +43,8 @@ class AccountEdiFormat(models.Model):
             # For intra-community, we do not take into account the negative repartition line
             return (
                 not tax_data["is_reverse_charge"]
-                and tax_data["tax"].amount != -100.0
+                and float_compare(tax_data["tax"].amount, -100.0, precision_digits=4)
+                != 0
                 and tax_data["tax"].l10n_es_type != "ignore"
             )
 
@@ -293,7 +294,6 @@ class AccountEdiFormat(models.Model):
         return partner._l10n_es_edi_get_partner_info()
 
     def _l10n_es_edi_get_invoices_info(self, invoices):
-        eu_country_codes = set(self.env.ref("base.europe").country_ids.mapped("code"))
 
         info_list = []
         for invoice in invoices:
@@ -694,10 +694,18 @@ class AccountEdiFormat(models.Model):
 
             # Note: Invoices are batched per move_type.
             if invoices[0].is_sale_document():
-                inv = invoices.filtered(lambda x: x.name[:60] == invoice_number)
+                inv = invoices.filtered(
+                    lambda x, invoice_number=invoice_number: (
+                        x.name[:60] == invoice_number
+                    )
+                )
             else:
                 # 'ref' can be the same for different partners.
-                candidates = invoices.filtered(lambda x: x.ref[:60] == invoice_number)
+                candidates = invoices.filtered(
+                    lambda x, invoice_number=invoice_number: (
+                        x.ref[:60] == invoice_number
+                    )
+                )
                 if len(candidates) > 1:
                     respl_partner_info = respl.IDFactura.IDEmisorFactura
                     inv = None
@@ -795,6 +803,7 @@ class AccountEdiFormat(models.Model):
                 "edi_content": self._l10n_es_edi_sii_xml_invoice_content,
                 "cancel": self._l10n_es_edi_sii_cancel_invoices,
             }
+        return None
 
     def _is_web_service_required(self):
         # OVERRIDE

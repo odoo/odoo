@@ -133,6 +133,7 @@ class L10nInEwaybill(models.Model):
             )
         else:
             return super().action_reset_to_pending()
+        return None
 
     def action_set_to_challan(self):
         _debug.lifecycle("ewaybill_set_to_challan", ewaybills=self)

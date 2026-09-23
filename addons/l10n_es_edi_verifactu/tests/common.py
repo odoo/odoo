@@ -110,8 +110,7 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
     @classmethod
     def _read_file(cls, path, *args):
         with file_open(path, *args) as f:
-            content = f.read()
-        return content
+            return f.read()
 
     def _json_file_to_dict(self, json_file):
         json_string = self._read_file(json_file, "rb")

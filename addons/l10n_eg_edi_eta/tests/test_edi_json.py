@@ -57,7 +57,7 @@ def mocked_action_post_sign_invoices(self):
                 "res_model": invoice._name,
                 "res_field": "l10n_eg_eta_json_doc_file",
                 "type": "binary",
-                "raw": json.dumps(dict(request=eta_invoice)),
+                "raw": json.dumps({"request": eta_invoice}),
                 "mimetype": "application/json",
                 "description": (
                     "Egyptian Tax authority JSON invoice generated for %s.",

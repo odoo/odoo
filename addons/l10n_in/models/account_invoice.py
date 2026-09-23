@@ -1,5 +1,4 @@
 import base64
-import json
 import logging
 import re
 from contextlib import contextmanager
@@ -9,7 +8,7 @@ from markupsafe import Markup
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.libs.numbers import json_float_round
-from odoo.tools import SQL, float_compare
+from odoo.tools import SQL
 from odoo.tools.date_utils import get_month
 from odoo.tools.image import image_data_uri
 
@@ -288,9 +287,10 @@ class AccountMove(models.Model):
         indian_invoice = self.filtered(
             lambda m: m.country_code == "IN" and m.move_type != "entry"
         )
-        line_filter_func = lambda line: (
-            line.display_type == "product" and line.tax_ids and line._origin
-        )
+
+        def line_filter_func(line):
+            return line.display_type == "product" and line.tax_ids and line._origin
+
         _xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         for move in indian_invoice:
             warnings = {}
@@ -522,6 +522,7 @@ class AccountMove(models.Model):
                     ):
                         lines |= line._origin
             return lines
+        return None
 
     def _get_sections_aggregate_sum_by_pan(self, section_alert, commercial_partner_id):
         self.check_singleton()
@@ -673,6 +674,7 @@ class AccountMove(models.Model):
                 ):
                     warning.add(section_alert.id)
             return self.env["l10n_in.section.alert"].browse(warning)
+        return None
 
     def _get_tcs_applicable_lines(self, lines):
         tcs_applicable_lines = set()
@@ -696,12 +698,9 @@ class AccountMove(models.Model):
     def _post_entries(self):
         """Use journal type to define document type because not miss state in any entry including POS entry"""
         posted = super()._post_entries()
-        gst_treatment_name_mapping = {
-            k: v
-            for k, v in self._fields["l10n_in_gst_treatment"]._description_selection(
-                self.env
-            )
-        }
+        gst_treatment_name_mapping = dict(
+            self._fields["l10n_in_gst_treatment"]._description_selection(self.env)
+        )
         for move in posted.filtered(
             lambda m: (
                 m.country_code == "IN"
@@ -907,7 +906,7 @@ class AccountMove(models.Model):
 
     @contextmanager
     def _sync_l10n_in_gstr_section(self, update_containers):
-        yield
+        yield  # noqa: RUF075 - deliberate, as for account's sync steps: an exception inside the `with` aborts the transaction, so the section sync skipped here would only have written rows that are not kept
         # the containers are re-pointed while the sync runs, so they can only be read
         # here: on create they are still empty when the stack is built
         _tax_container, invoice_container, misc_container = update_containers()

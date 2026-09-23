@@ -37,7 +37,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         ) + cls.env.ref(
             "account.%s_cess_5_plus_1591_sale" % (cls.company_data["company"].id)
         )
-        product_with_cess = cls.env["product.product"].create(
+        cls.env["product.product"].create(
             {
                 "name": "product_with_cess",
                 "uom_id": cls.env.ref("uom.product_uom_unit").id,

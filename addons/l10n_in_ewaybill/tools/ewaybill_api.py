@@ -81,7 +81,7 @@ class EWayBillApi:
                         }
                     ]
                 }
-            )
+            ) from e
         return response
 
     def _ewaybill_check_authentication(self):
@@ -123,10 +123,7 @@ class EWayBillApi:
                 self._raise_ewaybill_no_config_error()
             params = {"json_payload": json_payload}
             url_path = f"/iap/l10n_in_edi_ewaybill/1/{operation_type}"
-            response = self._ewaybill_jsonrpc_to_server(
-                url_path=url_path, params=params
-            )
-            return response
+            return self._ewaybill_jsonrpc_to_server(url_path=url_path, params=params)
         except EWayBillError as e:
             if "no-credit" in e.error_codes:
                 e.error_json["odoo_warning"].append(
@@ -175,11 +172,10 @@ class EWayBillApi:
             if operation_type == "generate" and "604" in e.error_codes:
                 # Get E-waybill by details in case of E-waybill is already generated
                 # this happens when timeout from the Government portal but E-waybill is generated
-                response = self._ewaybill_get_by_consigner(
+                return self._ewaybill_get_by_consigner(
                     document_type=json_payload.get("docType"),
                     document_number=json_payload.get("docNo"),
                 )
-                return response
             raise
 
     def _ewaybill_generate(self, json_payload):

@@ -56,9 +56,7 @@ def migrate(cr, version):
         (vat_report_id, monthly_vat_report_id),
     )
     carryover_origin_info = cr.fetchall()
-    old2new_origin = {
-        old_origin: new_origin for old_origin, new_origin in carryover_origin_info
-    }
+    old2new_origin = dict(carryover_origin_info)
     data_to_insert = [
         (
             code2expression_id[report_line_code],

@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.tools import float_is_zero
 
 COUNTRY_CODE_MAP = {
     "BD": "BGD",
@@ -590,7 +591,7 @@ class AccountMove(models.Model):
             tax_groups = set(all_taxes.mapped("tax_group_id"))
 
             # Multiple tax groups check
-            if len([g for g in tax_groups if g not in {stlg_group}]) > 1:
+            if len([g for g in tax_groups if g != stlg_group]) > 1:
                 err_messages.append(
                     _(
                         "Invoice %s: can only have one tax group (excluding STLG).",
@@ -639,30 +640,33 @@ class AccountMove(models.Model):
                                     line=line.product_id.display_name or "",
                                 )
                             )
-                    for tax in line.tax_ids:
-                        if (hasattr(tax, "amount") and float(tax.amount) == 0.0) or (
-                            tax.tax_group_id in {zero_group, exempt_group}
-                        ):
-                            err_messages.append(
-                                _(
-                                    "Invoice %(inv)s: transaction code %(kode)s does not allow 0%% (Zero-rated or Exempt) taxes.",
-                                    inv=move.name or "",
-                                    kode=kode,
-                                )
-                            )
+                    err_messages.extend(
+                        _(
+                            "Invoice %(inv)s: transaction code %(kode)s does not allow 0%% (Zero-rated or Exempt) taxes.",
+                            inv=move.name or "",
+                            kode=kode,
+                        )
+                        for tax in line.tax_ids
+                        if (
+                            hasattr(tax, "amount")
+                            and float_is_zero(tax.amount, precision_digits=4)
+                        )
+                        or (tax.tax_group_id in {zero_group, exempt_group})
+                    )
 
             # Must-be-zero codes (07-08)
             elif kode in must_be_zero_codes:
                 for line in product_lines:
-                    for tax in line.tax_ids:
-                        if hasattr(tax, "amount") and float(tax.amount) != 0.0:
-                            err_messages.append(
-                                _(
-                                    "Invoice %(inv)s: transaction code %(kode)s must always have tax amount 0%%.",
-                                    inv=move.name or "",
-                                    kode=kode,
-                                )
-                            )
+                    err_messages.extend(
+                        _(
+                            "Invoice %(inv)s: transaction code %(kode)s must always have tax amount 0%%.",
+                            inv=move.name or "",
+                            kode=kode,
+                        )
+                        for tax in line.tax_ids
+                        if hasattr(tax, "amount")
+                        and not float_is_zero(tax.amount, precision_digits=4)
+                    )
         return err_messages
 
     def download_efaktur(self):
@@ -715,11 +719,11 @@ class AccountMove(models.Model):
         for record in self:
             if record.state == "draft":
                 err_messages.append(_("Invoice %s is in draft state", record.name))
-            if not record.country_code == "ID":
+            if record.country_code != "ID":
                 err_messages.append(
                     _("Invoice %s is not under Indonesian company", record.name)
                 )
-            if not record.move_type == "out_invoice":
+            if record.move_type != "out_invoice":
                 err_messages.append(_("Entry %s is not an invoice", record.name))
             if not record.line_ids.tax_ids:
                 err_messages.append(
@@ -856,7 +860,6 @@ class AccountMove(models.Model):
         """Get information required from invoice and lines to generate E-Faktur that will be used
         to load in the XML template later on"""
         invoice_vals = []
-        idr = self.env.ref("base.IDR")
 
         for move in self.filtered(lambda m: m.state == "posted"):
             vals = {}

@@ -1,6 +1,3 @@
-import io
-import zipfile
-
 from odoo import _, http
 from odoo.http import prepare_content_disposition_header, request
 

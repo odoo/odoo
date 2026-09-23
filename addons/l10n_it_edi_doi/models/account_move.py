@@ -102,7 +102,7 @@ class AccountMove(models.Model):
             declaration_lines = move.invoice_line_ids.filtered(
                 # The declaration tax cannot be used with other taxes on a single line
                 # (checked in `_post`)
-                lambda line: line.tax_ids.ids == tax.ids
+                lambda line, tax=tax: line.tax_ids.ids == tax.ids
             )
             move.l10n_it_edi_doi_amount = (
                 sum(declaration_lines.mapped("price_total")) * -move.direction_sign
@@ -187,7 +187,7 @@ class AccountMove(models.Model):
 
     def copy_data(self, default=None):
         data_list = super().copy_data(default)
-        for move, data in zip(self, data_list):
+        for move, data in zip(self, data_list, strict=True):
             date = fields.Date.context_today(self)
             validity_warnings = move.l10n_it_edi_doi_id._get_validity_warnings(
                 move.company_id,
@@ -233,7 +233,9 @@ class AccountMove(models.Model):
                 continue
 
             declaration_lines = move.invoice_line_ids.filtered(
-                lambda line: declaration_of_intent_tax in line.tax_ids
+                lambda line, declaration_of_intent_tax=declaration_of_intent_tax: (
+                    declaration_of_intent_tax in line.tax_ids
+                )
             )
             if declaration_lines and not declaration:
                 errors.append(

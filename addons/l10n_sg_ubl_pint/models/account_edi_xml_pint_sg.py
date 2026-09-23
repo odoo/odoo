@@ -57,6 +57,7 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
     def _get_customization_id(self, process_type="billing"):
         if process_type == "billing":
             return "urn:peppol:pint:billing-1@sg-1"
+        return None
 
     def _ubl_default_tax_category_grouping_key(
         self, base_line, tax_data, vals, currency

@@ -82,20 +82,20 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         # the API calls
         key_filename, cert_filename = "l10n_pl_edi_test.key", "l10n_pl_edi_test.pem"
         key = cls.env["certificate.key"].create(
-            dict(
-                company_id=cls.company.id,
-                name=key_filename,
-                content=read_certificate_file(key_filename, b64=True),
-                password="Qwertyuiop@12345",
-            )
+            {
+                "company_id": cls.company.id,
+                "name": key_filename,
+                "content": read_certificate_file(key_filename, b64=True),
+                "password": "Qwertyuiop@12345",
+            }
         )
         cert = cls.env["certificate.certificate"].create(
-            dict(
-                company_id=cls.company.id,
-                name=cert_filename,
-                content=read_certificate_file(cert_filename, b64=True),
-                private_key_id=key.id,
-            )
+            {
+                "company_id": cls.company.id,
+                "name": cert_filename,
+                "content": read_certificate_file(cert_filename, b64=True),
+                "private_key_id": key.id,
+            }
         )
         cls.company.sudo().write(
             {

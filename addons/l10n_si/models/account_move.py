@@ -47,7 +47,9 @@ class AccountMove(models.Model):
         # Calculate check digit
         digits = [int(d) for d in reference_base if d.isdigit()]
         weights = list(range(2, 14))[: len(digits)]
-        weighted_sum = sum(d * w for d, w in zip(reversed(digits), weights))
+        weighted_sum = sum(
+            d * w for d, w in zip(reversed(digits), weights, strict=False)
+        )
         check_digit = 11 - (weighted_sum % 11)
         check_digit = 0 if check_digit in (10, 11) else check_digit
         return f"SI01 {reference_base}{check_digit}"

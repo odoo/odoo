@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, models
 
 
 class ReportL10n_Fr_Pos_CertReport_Pos_Hash_Integrity(models.AbstractModel):

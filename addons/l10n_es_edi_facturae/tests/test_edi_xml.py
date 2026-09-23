@@ -123,7 +123,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 .id,
                 "email": "indigo.exterior@example.com",
                 "is_company": True,
-                "is_company": True,
             }
         )
 

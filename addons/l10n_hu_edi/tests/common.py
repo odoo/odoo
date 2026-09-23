@@ -342,9 +342,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             )
         )
         final_payment.create_invoices()
-        final_invoice = sale_order.invoice_ids - advance_invoice
-
-        return final_invoice
+        return sale_order.invoice_ids - advance_invoice
 
     def create_invoice_complex_huf(self):
         """Create a complex invoice in HUF, with cash rounding."""

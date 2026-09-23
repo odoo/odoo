@@ -154,6 +154,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         for move in moves:
             if move.peppol_move_state in ("ready", False):
                 move.peppol_move_state = "to_send"
+        return None
 
     def _is_applicable_to_company(self, method, company):
         # EXTENDS 'account'
@@ -305,7 +306,7 @@ class MixinAccountMoveSend(models.AbstractModel):
                     "Some attachments could not be sent with the XML:"
                 )
                 for message, (invoice, invoice_data) in zip(
-                    response["messages"], invoices_data_peppol.items()
+                    response["messages"], invoices_data_peppol.items(), strict=False
                 ):
                     invoice.peppol_message_uuid = message["message_uuid"]
                     invoice.peppol_move_state = "processing"

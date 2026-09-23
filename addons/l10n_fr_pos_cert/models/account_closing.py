@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
@@ -191,7 +191,7 @@ class AccountSaleClosing(models.Model):
             date_stop date to which the move lines are fetched, always now()
             the dates are in their Odoo Database string representation
         """
-        date_stop = datetime.utcnow()
+        date_stop = fields.Datetime.now()
         interval_from = None
         name_interval = ""
         if frequency == "daily":

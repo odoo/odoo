@@ -1,6 +1,6 @@
 from odoo import _, fields, models
 from odoo.db.schema import column_exists, create_column
-from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.tools import SQL
 
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME

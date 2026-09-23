@@ -636,7 +636,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "RandomNumber": "6868",
             }
         elif endpoint == "/GetIssue":
-            return_data = {
+            return {
                 "RtnCode": 1,
                 "RtnMsg": "Success",
                 "IIS_Sales_Amount": self.basic_invoice.amount_total,
@@ -647,7 +647,6 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "IIS_Relate_Number": "20250106000000020",
                 "IIS_Remain_Allowance_Amt": 0,
             }
-            return return_data
         elif endpoint == "/Invalid":
             return {"RtnCode": 1, "RtnMsg": "Success", "InvoiceNo": "AB11100099"}
         elif endpoint == "/GetCompanyNameByTaxID":
@@ -671,7 +670,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "RandomNumber": "6868",
             }
         elif endpoint == "/GetIssue":
-            return_data = {
+            return {
                 "RtnCode": 1,
                 "RtnMsg": "Success",
                 "IIS_Sales_Amount": self.basic_invoice.amount_total,
@@ -680,7 +679,6 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "IIS_Relate_Number": "20250106000000020",
                 "IIS_Remain_Allowance_Amt": 0,
             }
-            return return_data
         elif endpoint == "/Allowance":
             return {
                 "RtnCode": 1,
@@ -711,7 +709,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "RandomNumber": "6868",
             }
         elif endpoint == "/GetIssue":
-            return_data = {
+            return {
                 "RtnCode": 1,
                 "RtnMsg": "Success",
                 "IIS_Sales_Amount": self.basic_invoice.amount_total,
@@ -720,7 +718,6 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "IIS_Relate_Number": "20250106000000020",
                 "IIS_Remain_Allowance_Amt": 0,
             }
-            return return_data
         elif endpoint == "/AllowanceByCollegiate":
             return {
                 "RtnCode": 1,
@@ -751,7 +748,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "RandomNumber": "6868",
             }
         elif endpoint == "/GetIssue":
-            return_data = {
+            return {
                 "RtnCode": 1,
                 "RtnMsg": "Success",
                 "IIS_Sales_Amount": self.basic_invoice.amount_total,
@@ -760,7 +757,6 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "IIS_Relate_Number": "20250106000000020",
                 "IIS_Remain_Allowance_Amt": 0,
             }
-            return return_data
         elif endpoint == "/Allowance":
             return {
                 "RtnCode": 1,

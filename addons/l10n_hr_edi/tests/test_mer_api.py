@@ -5,6 +5,8 @@ Early inbox documents used for direct testing: 3084664, 3084663, 3084656, 308366
 # All five have scuffed company setup
 """
 
+import contextlib
+
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -317,10 +319,8 @@ class TestL10nHrEdiMerApi(TestL10nHrEdiCommon, TestAccountMoveSendCommon):
         )._create_payments()
         # We can't actually check anything other than the action failing in a predictable way
         # because test server responce for this API endpoint is random
-        try:
+        with contextlib.suppress(UserError):
             move.l10n_hr_edi_mer_action_report_paid()
-        except UserError:
-            pass
         self.env["account.payment.register"].with_context(
             active_model="account.move", active_ids=move.ids
         ).create(
@@ -329,7 +329,5 @@ class TestL10nHrEdiMerApi(TestL10nHrEdiCommon, TestAccountMoveSendCommon):
                 "payment_date": move.date,
             }
         )._create_payments()
-        try:
+        with contextlib.suppress(UserError):
             move.l10n_hr_edi_mer_action_report_paid()
-        except UserError:
-            pass

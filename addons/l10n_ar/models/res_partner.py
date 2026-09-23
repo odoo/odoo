@@ -129,6 +129,7 @@ class ResPartner(models.Model):
             return stdnum.ar.cuit
         elif self.l10n_latam_identification_type_id.l10n_ar_afip_code == "96":
             return stdnum.ar.dni
+        return None
 
     def _l10n_ar_identification_validation(self):
         for rec in self.filtered("vat"):
@@ -150,21 +151,21 @@ class ResPartner(models.Model):
                         'The validation digit is not valid for "%s"',
                         rec.l10n_latam_identification_type_id.name,
                     )
-                )
+                ) from None
             except module.InvalidLength:
                 raise ValidationError(
                     _(
                         'Invalid length for "%s"',
                         rec.l10n_latam_identification_type_id.name,
                     )
-                )
+                ) from None
             except module.InvalidFormat:
                 raise ValidationError(
                     _(
                         'Only numbers allowed for "%s"',
                         rec.l10n_latam_identification_type_id.name,
                     )
-                )
+                ) from None
             except module.InvalidComponent:
                 valid_cuit = (
                     "20",
@@ -183,9 +184,9 @@ class ResPartner(models.Model):
                         "CUIT number must be prefixed with one of the following: %s",
                         ", ".join(valid_cuit),
                     )
-                )
+                ) from None
             except Exception as error:
-                raise ValidationError(repr(error))
+                raise ValidationError(repr(error)) from error
 
     def _get_id_number_digits(self):
         """Sanitize the identification number. Return the digits/integer value of the identification number

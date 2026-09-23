@@ -112,11 +112,11 @@ class AccountTax(models.Model):
         )
 
         def get_base_line_grouping_key(base_line):
-            unique_taxes_data = set(
+            unique_taxes_data = {
                 tax_data["tax"]
                 for tax_data in base_line["tax_details"]["taxes_data"]
                 if tax_data["tax"]["l10n_in_gst_tax_type"] in ("igst", "cgst", "sgst")
-            )
+            }
             rate = sum(tax.amount for tax in unique_taxes_data)
 
             return {

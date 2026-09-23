@@ -128,5 +128,4 @@ class JoEdiCommon(AccountTestInvoicingCommon):
         with misc.file_open(
             f"l10n_jo_edi/tests/test_files/{file_name}.xml", "rb"
         ) as file:
-            result_file = file.read()
-        return result_file
+            return file.read()

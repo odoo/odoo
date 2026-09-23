@@ -67,12 +67,12 @@ class AccountEdiProxyClientUser(models.Model):
                 url=url_join(self._get_server_url(), endpoint),
                 params=params,
             )
-        except AccountEdiProxyError as _error:
+        except AccountEdiProxyError as error:
             # Request error while contacting the IAP server. We assume it is a temporary error.
             raise UserError(
                 self.env._(
                     "Failed to contact the E-Invoicing service. Please try again later."
                 )
-            )
+            ) from error
 
         return response

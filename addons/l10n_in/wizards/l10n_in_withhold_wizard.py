@@ -275,7 +275,7 @@ class L10n_InWithholdWizard(models.TransientModel):
                     )
                     if withhold_move_line:
                         tax = withhold_move_line.tax_ids.filtered(
-                            lambda t: t.l10n_in_section_id == section
+                            lambda t, section=section: t.l10n_in_section_id == section
                         )
                         break
                 if tax:
@@ -296,7 +296,7 @@ class L10n_InWithholdWizard(models.TransientModel):
                 sign = -1 if wizard.related_move_id.is_inbound() else 1
                 wizard.base = sign * sum(
                     wizard.related_move_id.line_ids.filtered(
-                        lambda l: (
+                        lambda l, wizard=wizard: (
                             l.account_id.l10n_in_tds_tcs_section_id
                             == wizard.tax_id.l10n_in_section_id
                         )
@@ -382,7 +382,7 @@ class L10n_InWithholdWizard(models.TransientModel):
 
     def _prepare_withhold_header(self):
         """Prepare the header for the withhold entry"""
-        vals = {
+        return {
             "date": self.date,
             "journal_id": self.journal_id.id,
             "partner_id": self.related_move_id.partner_id.id
@@ -394,7 +394,6 @@ class L10n_InWithholdWizard(models.TransientModel):
             or self.related_payment_id.move_id.id,
             "l10n_in_withholding_ref_payment_id": self.related_payment_id.id,
         }
-        return vals
 
     def _prepare_withhold_move_lines(self, withholding_account_id):
         """

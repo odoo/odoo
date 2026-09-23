@@ -158,8 +158,8 @@ class MixinAccountMoveSend(models.AbstractModel):
                 # the response only contains message uuids,
                 # so we have to rely on the order to connect nemhandel messages to account.move
                 invoices = self.env["account.move"]
-                for message, (invoice, invoice_data) in zip(
-                    response["messages"], invoices_data_nemhandel.items()
+                for message, invoice in zip(
+                    response["messages"], invoices_data_nemhandel, strict=False
                 ):
                     invoice.nemhandel_message_uuid = message["message_uuid"]
                     invoice.nemhandel_move_state = "processing"

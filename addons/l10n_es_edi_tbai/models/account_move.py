@@ -4,6 +4,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError
+from odoo.tools import float_compare
 
 TBAI_REFUND_REASONS = [
     ("R1", "R1: Art. 80.1, 80.2, 80.6 and rights founded error"),
@@ -180,6 +181,7 @@ class AccountMove(models.Model):
             return _(
                 "You need to fill in the Reference field as the invoice number from your vendor."
             )
+        return None
 
     def _l10n_es_tbai_get_attachment_name(self, cancel=False):
         return self.name + ("_post.xml" if not cancel else "_cancel.xml")
@@ -228,7 +230,7 @@ class AccountMove(models.Model):
         except LockError:
             raise UserError(
                 _("Cannot send this entry as it is already being processed.")
-            )
+            ) from None
 
     # -------------------------------------------------------------------------
     # WEB SERVICE CALLS
@@ -468,7 +470,12 @@ class AccountMove(models.Model):
             if (
                 (tax := line.tax_line_id)
                 and tax.l10n_es_type not in ("recargo", "retencion")
-                and line.tax_repartition_line_id.factor_percent != -100.0
+                and float_compare(
+                    line.tax_repartition_line_id.factor_percent,
+                    -100.0,
+                    precision_digits=4,
+                )
+                != 0
             ):
                 results[tax]["tax_amount"] += line.balance
         iva_values = []

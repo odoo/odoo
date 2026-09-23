@@ -68,7 +68,9 @@ class ResPartner(models.Model):
             for key, check in checks.items()
             if (
                 invalid_records := self.filtered(
-                    lambda record: any(not record[field] for field in check["fields"])
+                    lambda record, check=check: any(
+                        not record[field] for field in check["fields"]
+                    )
                 )
             )
         }

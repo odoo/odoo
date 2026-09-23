@@ -1,4 +1,5 @@
 from odoo import models
+from odoo.tools import float_is_zero
 
 
 class AccountEdiXmlUbl_Sg(models.AbstractModel):
@@ -24,6 +25,7 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
     def _get_customization_id(self, process_type="billing"):
         if process_type == "billing":
             return "urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0"
+        return None
 
     def _ubl_default_tax_category_grouping_key(
         self, base_line, tax_data, vals, currency
@@ -40,7 +42,7 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
         grouping_key["tax_exemption_reason_code"] = None
 
         # For reference: https://www.peppolguide.sg/billing/bis/#_gst_category_codes
-        if not tax_data or tax_data["tax"].amount == 0.0:
+        if not tax_data or float_is_zero(tax_data["tax"].amount, precision_digits=4):
             grouping_key["tax_category_code"] = "ZR"
         else:
             grouping_key["tax_category_code"] = "SR"

@@ -1,5 +1,4 @@
 import base64
-from os.path import join as opj
 
 from freezegun import freeze_time
 from lxml import etree
@@ -94,7 +93,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
                     **invoice_line_kwargs,
                 }
                 for line, invoice_line_kwargs in zip(
-                    invoice1.invoice_line_ids, invoice_line_kwargs_list
+                    invoice1.invoice_line_ids, invoice_line_kwargs_list, strict=True
                 )
             ],
         )
@@ -118,7 +117,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
 
     def _update_invoice_from_file(self, module_name, subfolder, filename, invoice):
         """Create an attachment from a file and post it on the invoice"""
-        file_path = opj(module_name, subfolder, filename)
+        file_path = f"{module_name}/{subfolder}/{filename}"
         with misc.file_open(file_path, "rb", filter_ext=(".xml",)) as file:
             attachment = self.env["ir.attachment"].create(
                 {

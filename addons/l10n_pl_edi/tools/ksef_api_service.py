@@ -90,7 +90,7 @@ class KsefApiService:
         except requests.exceptions.RequestException as e:
             error_text = e.response.text if e.response is not None else str(e)
             _logger.exception("KSeF API request failed: %s", error_text)
-            raise UserError(self.env._("KSeF API Error: %s", error_text))
+            raise UserError(self.env._("KSeF API Error: %s", error_text)) from e
 
     def _get_public_keys(self):
         """
@@ -143,7 +143,7 @@ class KsefApiService:
                     "Could not fetch KSeF public keys: %s",
                     e.response.text if e.response else e,
                 )
-            )
+            ) from e
 
     def open_ksef_session(self):
         """Builds the encrypted request and opens an interactive session, with one retry on token expiry."""
@@ -196,7 +196,7 @@ class KsefApiService:
                 }
             )
         except UserError as e:
-            raise UserError(self.env._("Failed to open KSeF session: %s", e))
+            raise UserError(self.env._("Failed to open KSeF session: %s", e)) from e
 
     def refresh_access_token(self):
         """Uses a refresh token to obtain a new access token and updates the service and company."""
@@ -232,7 +232,7 @@ class KsefApiService:
                     "Failed to refresh KSeF access token. You may need to re-authenticate manually. Error: %s",
                     error_text,
                 )
-            )
+            ) from e
 
     def send_invoice(self, xml_content_bytes):
         """Encrypts a single invoice and sends it within an open session."""
@@ -301,7 +301,7 @@ class KsefApiService:
             response = self._send_request("GET", endpoint)
             return response.json().get("status")
         except UserError as e:
-            raise UserError(self.env._("Failed to check KSeF session: %s", e))
+            raise UserError(self.env._("Failed to check KSeF session: %s", e)) from e
 
     def get_invoices_status(self, page_size=100, page_offset=0):
         """
@@ -357,7 +357,7 @@ class KsefApiService:
                     "Failed to get challenge code: %s",
                     e.response.text if e.response else e,
                 )
-            )
+            ) from e
 
     def authenticate_xades(self, signed_xml):
         """Sends a XAdES signed challenge to authenticate."""
@@ -379,7 +379,7 @@ class KsefApiService:
                     "Failed to authenticate with XAdES: %s",
                     e.response.text if e.response else e,
                 )
-            )
+            ) from e
 
     def authenticate_token(self, nip, challenge, encrypted_token_b64):
         """Starts authentication using a KSeF token."""
@@ -399,7 +399,7 @@ class KsefApiService:
                     "Failed to start token authentication: %s",
                     e.response.text if e.response else e,
                 )
-            )
+            ) from e
 
     def check_auth_status(self, ref_number, temp_token):
         """Checks auth status with a retry loop for pending statuses."""
@@ -435,7 +435,7 @@ class KsefApiService:
                         "Failed to check KSeF auth status: %s",
                         e.response.text if e.response else e,
                     )
-                )
+                ) from e
 
         raise UserError(
             self.env._("KSeF Authentication timed out. Please try again in a moment.")
@@ -457,7 +457,7 @@ class KsefApiService:
                 self.env._(
                     "Failed to redeem token: %s", e.response.text if e.response else e
                 )
-            )
+            ) from e
 
     def query_invoice_metadata(self, query_criteria, page_size=100, page_offset=0):
         endpoint = f"{self.api_url}/invoices/query/metadata"

@@ -381,11 +381,10 @@ class TestJoEdiTypes(JoEdiCommon):
         refund = self._l10n_jo_create_refund(invoice_vals, "change price", refund_vals)
         xml_string = self.env["account.edi.xml.ubl_21.jo"]._export_invoice(refund)[0]
         xml_tree = self.get_xml_tree_from_string(xml_string)
-        for xml_line, expected_line_id in zip(
-            xml_tree.findall("./{*}InvoiceLine"), [4, 1, 2]
-        ):
-            self.assertEqual(int(xml_line.findtext("{*}ID")), expected_line_id)
-
-        self.assertGreater(
-            int(xml_tree.findall("./{*}InvoiceLine")[-1].findtext("{*}ID")), 4
-        )
+        line_ids = [
+            int(xml_line.findtext("{*}ID"))
+            for xml_line in xml_tree.findall("./{*}InvoiceLine")
+        ]
+        self.assertEqual(len(line_ids), 4)
+        self.assertEqual(line_ids[:3], [4, 1, 2])
+        self.assertGreater(line_ids[3], 4)

@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models
+from odoo.tools import float_compare
 
 
 class AccountTax(models.Model):
@@ -113,7 +114,8 @@ class AccountTax(models.Model):
             return (
                 tax_data
                 and not tax_data["is_reverse_charge"]
-                and tax_data["tax"].amount != -100.0
+                and float_compare(tax_data["tax"].amount, -100.0, precision_digits=4)
+                != 0
                 and tax_data["tax"].l10n_es_type not in ("ignore", "retencion")
             )
 
@@ -137,7 +139,7 @@ class AccountTax(models.Model):
                     lambda t: t.l10n_es_type == "recargo"
                 )
 
-            grouping_key = {
+            return {
                 "amount": tax.amount,
                 "recargo_taxes": recargo_taxes,
                 "l10n_es_bien_inversion": tax.l10n_es_bien_inversion,
@@ -145,7 +147,6 @@ class AccountTax(models.Model):
                 "l10n_es_type": tax.l10n_es_type,
                 "l10n_es_applicability": tax._l10n_es_edi_verifactu_get_applicability(),
             }
-            return grouping_key
 
         return {
             "base_line_filter": base_line_filter,

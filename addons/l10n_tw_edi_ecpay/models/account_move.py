@@ -154,9 +154,11 @@ class AccountMove(models.Model):
             ),
             (
                 "75",
-                "75: No.5 International transportation. However, foreign transport undertakings operating "
-                "international transport business in Taiwan shall be limited to those whose countries shall give equal "
-                "treatment to Taiwan's international transport undertakings or be exempt from similar taxes",
+                (
+                    "75: No.5 International transportation. However, foreign transport undertakings operating "
+                    "international transport business in Taiwan shall be limited to those whose countries shall give equal "
+                    "treatment to Taiwan's international transport undertakings or be exempt from similar taxes"
+                ),
             ),
             (
                 "76",
@@ -164,18 +166,24 @@ class AccountMove(models.Model):
             ),
             (
                 "77",
-                "77: No.7 Goods or repair services used by ships, aircraft and distant-water fishing vessels for "
-                "sale and international transport",
+                (
+                    "77: No.7 Goods or repair services used by ships, aircraft and distant-water fishing vessels for "
+                    "sale and international transport"
+                ),
             ),
             (
                 "78",
-                "78: No.8 The bonded area operator sells goods that are not directly exported by the taxable "
-                "area operator and the taxable area operator is not exported to the taxation area",
+                (
+                    "78: No.8 The bonded area operator sells goods that are not directly exported by the taxable "
+                    "area operator and the taxable area operator is not exported to the taxation area"
+                ),
             ),
             (
                 "79",
-                "79: No.9 The bonded area operator sells the goods that the taxable area operator deposits into the "
-                "bonded warehouse or logistics center managed by the free port area or customs administration for export",
+                (
+                    "79: No.9 The bonded area operator sells the goods that the taxable area operator deposits into the "
+                    "bonded warehouse or logistics center managed by the free port area or customs administration for export"
+                ),
             ),
         ],
         string="Zero Tax Rate Reason",
@@ -542,8 +550,7 @@ class AccountMove(models.Model):
             else:
                 cleaned_number = "0" + phone[1:]
         # Remove spaces, dashes, parentheses, etc.
-        cleaned_number = re.sub(r"[^\d+]", "", cleaned_number)
-        return cleaned_number
+        return re.sub(r"[^\d+]", "", cleaned_number)
 
     def _l10n_tw_edi_check_before_generate_invoice_json(self):
         self.check_singleton()
@@ -777,9 +784,7 @@ class AccountMove(models.Model):
                 self.reversed_entry_id.invoice_currency_rate
                 > self.invoice_currency_rate
             ):
-                exchange_difference = (
-                    exchange_difference * -1
-                )  # Convert to negative if the exchange rate is lower than the original invoice rate
+                exchange_difference *= -1  # Convert to negative if the exchange rate is lower than the original invoice rate
             item_list[-1]["ItemAmount"] += exchange_difference
             item_list[-1]["ItemAmount"] = float_round(
                 item_list[-1]["ItemAmount"], precision_rounding=0.01
@@ -1025,6 +1030,7 @@ class AccountMove(models.Model):
                 invoice_number=invoice_number,
             )
         )
+        return None
 
     def _l10n_tw_edi_update_ecpay_invoice_info(self):
         """
@@ -1070,6 +1076,7 @@ class AccountMove(models.Model):
             else int(response_data.get("IIS_Invalid_Status"))
         )
         self.l10n_tw_edi_state = "valid" if invalid_status == 0 else "invalid"
+        return None
 
     def _l10n_tw_edi_run_invoice_invalid(self):
         """

@@ -23,9 +23,7 @@ class AccountMoveReversal(models.TransientModel):
     @api.depends("move_ids")
     def _compute_l10n_es_tbai_is_required(self):
         for wizard in self:
-            moves_tbai_required = set(
-                m.l10n_es_tbai_is_required for m in wizard.move_ids
-            )
+            moves_tbai_required = {m.l10n_es_tbai_is_required for m in wizard.move_ids}
             if len(moves_tbai_required) > 1:
                 raise UserError(
                     self.env._(

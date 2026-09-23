@@ -1,6 +1,7 @@
 import base64
 from datetime import date, datetime, timedelta
-from xml.etree import ElementTree as et
+
+from lxml import etree
 
 from odoo import fields
 from odoo.tests import tagged
@@ -21,7 +22,7 @@ class TestAutoPostBills(AccountTestInvoicingCommon):
             filter_ext=(".xml",),
         ) as file:
             file_read = file.read()
-            tree = et.ElementTree(et.fromstring(file_read.decode()))
+            tree = etree.fromstring(file_read)
             if ref:
                 tree.find("./{*}ExchangedDocument/{*}ID").text = ref
             if date:
@@ -31,7 +32,7 @@ class TestAutoPostBills(AccountTestInvoicingCommon):
             attachment = self.env["ir.attachment"].create(
                 {
                     "name": "test_file.xml",
-                    "datas": base64.encodebytes(et.tostring(tree.getroot())),
+                    "datas": base64.encodebytes(etree.tostring(tree)),
                 }
             )
             return (

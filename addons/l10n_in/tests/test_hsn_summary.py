@@ -76,7 +76,7 @@ class TestL10nInHSNSummary(TestTaxCommon):
         )
         self.assertEqual(len(results["hsn"]["items"]), len(expected_values["items"]))
         for item, expected_item in zip(
-            results["hsn"]["items"], expected_values["items"]
+            results["hsn"]["items"], expected_values["items"], strict=True
         ):
             self.assertDictEqual(item, expected_item)
 

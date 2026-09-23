@@ -10,13 +10,13 @@ from odoo.addons.l10n_es_edi_tbai_pos.tests.common import CommonPosEsEdiTest
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
     @classmethod
-    def pay_pos_order(self, pos_order, with_error=False):
+    def pay_pos_order(cls, pos_order, with_error=False):
         context_make_payment = {
             "active_ids": pos_order.ids,
             "active_id": pos_order.id,
         }
         pos_make_payment = (
-            self.env["pos.make.payment"]
+            cls.env["pos.make.payment"]
             .with_context(context_make_payment)
             .create(
                 {
@@ -26,10 +26,8 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         )
         with patch(
             "requests.Session.request",
-            return_value=None
-            if with_error
-            else self.mock_response_post_invoice_success,
-            side_effect=self.mock_request_error if with_error else None,
+            return_value=None if with_error else cls.mock_response_post_invoice_success,
+            side_effect=cls.mock_request_error if with_error else None,
         ):
             pos_make_payment.with_context(context_make_payment).action_make_payment()
 

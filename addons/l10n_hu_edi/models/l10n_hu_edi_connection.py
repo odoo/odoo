@@ -11,7 +11,7 @@ from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from lxml import etree
 
-from odoo import _, release
+from odoo import _, fields, release
 from odoo.tools import cleanup_xml_node
 
 _logger = logging.getLogger(__name__)
@@ -39,11 +39,10 @@ def decrypt_aes128(key, encrypted_token):
     :param encrypted_token bytes: the bytes to decrypt
     :return: the decrypted bytes
     """
-    decryptor = Cipher(algorithms.AES(key), modes.ECB()).decryptor()
+    decryptor = Cipher(algorithms.AES(key), modes.ECB()).decryptor()  # noqa: S305 - the NAV Online Invoice API encrypts the exchange token with AES-128-ECB; the mode is the counterparty's, not a choice made here
     decrypted_token = decryptor.update(encrypted_token) + decryptor.finalize()
     unpadder = padding.PKCS7(128).unpadder()
-    unpadded_token = unpadder.update(decrypted_token) + unpadder.finalize()
-    return unpadded_token
+    return unpadder.update(decrypted_token) + unpadder.finalize()
 
 
 class L10nHuEdiConnectionError(Exception):
@@ -90,7 +89,7 @@ class L10nHuEdiConnection:
         if credentials["mode"] == "demo":
             return {
                 "token": "token",
-                "token_validity_to": datetime.utcnow() + timedelta(minutes=5),
+                "token_validity_to": fields.Datetime.now() + timedelta(minutes=5),
             }
 
         template_values = self._get_header_values(credentials)
@@ -123,7 +122,7 @@ class L10nHuEdiConnection:
             )
         except ValueError:
             _logger.warning("Could not parse token validity end timestamp!")
-            token_validity_to = datetime.utcnow() + timedelta(minutes=5)
+            token_validity_to = fields.Datetime.now() + timedelta(minutes=5)
 
         if not encrypted_token:
             raise L10nHuEdiConnectionError(_("Missing token in response from NAV."))
@@ -447,7 +446,7 @@ class L10nHuEdiConnection:
         annulment_hashes = []
         for annulment_operation in annulment_operations:
             annulment_operation["annulmentTimestamp"] = format_timestamp(
-                datetime.utcnow()
+                datetime.now(UTC)
             )
             annulment_data = self.env["ir.qweb"]._render(
                 "l10n_hu_edi.invoice_annulment", annulment_operation
@@ -495,7 +494,7 @@ class L10nHuEdiConnection:
     # === Helpers: XML generation === #
 
     def _get_header_values(self, credentials, invoice_hashs=None):
-        timestamp = datetime.utcnow()
+        timestamp = datetime.now(UTC)
         request_id = "ODOO" + secrets.token_hex(13)
         request_signature = self._get_request_signature(
             credentials["signature_key"],

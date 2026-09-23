@@ -422,12 +422,10 @@ class AccountMoveLine(models.Model):
         if not indian_sale_moves_lines and not indian_moves_purchase_lines:
             return {}
 
-        move_lines_by_gstr_section = {
+        return {
             **indian_sale_moves_lines.grouped(get_sales_section),
             **indian_moves_purchase_lines.grouped(get_purchase_section),
         }
-
-        return move_lines_by_gstr_section
 
     def _set_l10n_in_gstr_section(self, tax_tags_dict):
         move_lines_by_gstr_section = self._get_l10n_in_gstr_section(tax_tags_dict)

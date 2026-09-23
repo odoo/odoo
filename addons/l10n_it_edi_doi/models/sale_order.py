@@ -193,7 +193,7 @@ class SaleOrder(models.Model):
 
     def copy_data(self, default=None):
         data_list = super().copy_data(default)
-        for order, data in zip(self, data_list):
+        for order, data in zip(self, data_list, strict=True):
             partner = order.partner_id.commercial_partner_id
             date = fields.Date.context_today(self)
             if order.l10n_it_edi_doi_id._get_validity_warnings(
@@ -227,7 +227,9 @@ class SaleOrder(models.Model):
             if not declaration_of_intent_tax:
                 continue
             declaration_tax_lines = order.line_ids.filtered(
-                lambda line: declaration_of_intent_tax in line.tax_ids
+                lambda line, declaration_of_intent_tax=declaration_of_intent_tax: (
+                    declaration_of_intent_tax in line.tax_ids
+                )
             )
             if declaration_tax_lines and not order.l10n_it_edi_doi_id:
                 errors.append(

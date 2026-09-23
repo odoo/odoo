@@ -190,8 +190,7 @@ class TestL10nArWithholdingArRi(TestAr):
                 ),
             ],
         }
-        third_party_check_journal = self.env["account.journal"].create(journal_vals)
-        return third_party_check_journal
+        return self.env["account.journal"].create(journal_vals)
 
     def in_third_party_check(self, journal):
         in_third_party_check = self.env["account.payment"].create(

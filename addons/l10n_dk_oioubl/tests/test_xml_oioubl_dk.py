@@ -300,8 +300,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
                 }
             )
         purchase_journal = self.company_data["default_journal_purchase"]
-        invoice = purchase_journal._create_document_from_attachment(xml_attachment.id)
-        return invoice
+        return purchase_journal._create_document_from_attachment(xml_attachment.id)
 
     @freeze_time("2017-01-01")
     def test_oioubl_import_exemple_file_1(self):

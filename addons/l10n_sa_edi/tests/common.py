@@ -281,11 +281,14 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         invoice_date="2025-01-01",
         invoice_date_due="2025-01-01",
         currency_id=None,
-        invoice_line_ids=[],
+        invoice_line_ids=None,
     ):
         """
         Create a draft invoice with the given parameters.
         """
+
+        if invoice_line_ids is None:
+            invoice_line_ids = []
 
         def _create_invoice_line(line):
             vals = {
@@ -322,13 +325,15 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         invoice_date="2025-01-01",
         invoice_date_due="2025-01-01",
         currency_id=None,
-        invoice_line_ids=[],
+        invoice_line_ids=None,
         reason="BR-KSA-17-reason-5",
     ):
         """
         Create a draft debit note from the given invoice values.
         """
         # Create and post the original invoice
+        if invoice_line_ids is None:
+            invoice_line_ids = []
         invoice = self._create_test_invoice(
             name=name,
             move_type=move_type,
@@ -370,13 +375,15 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         invoice_date="2025-01-01",
         invoice_date_due="2025-01-01",
         currency_id=None,
-        invoice_line_ids=[],
+        invoice_line_ids=None,
         reason="BR-KSA-17-reason-5",
     ):
         """
         Create a draft credit note from the given invoice values.
         """
         # Create and post the original invoice
+        if invoice_line_ids is None:
+            invoice_line_ids = []
         invoice = self._create_test_invoice(
             name=name,
             move_type=move_type,

@@ -134,13 +134,13 @@ class AccountMove(models.Model):
         invoice_lines = self.invoice_line_ids.filtered(
             lambda x: x.display_type not in NON_ACCOUNTABLE_DISPLAY_TYPES
         )
-        product_types = set([x.product_id.type for x in invoice_lines if x.product_id])
+        product_types = {x.product_id.type for x in invoice_lines if x.product_id}
         consumable = {"consu"}
-        service = set(["service"])
+        service = {"service"}
         # on expo invoice you can mix services and products
         expo_invoice = self.l10n_latam_document_type_id.code in ["19", "20", "21"]
 
-        # WSFEX 1668 - If Expo invoice and we have a "IVA Liberado – Ley Nº 19.640" (Zona Franca) partner
+        # WSFEX 1668 - If Expo invoice and we have a "IVA Liberado - Ley Nº 19.640" (Zona Franca) partner
         # then ARCA concept to use should be type "Others (4)"
         is_zona_franca = (
             self.partner_id.l10n_ar_afip_responsibility_type_id
@@ -283,6 +283,7 @@ class AccountMove(models.Model):
                     ),
                 }
             }
+        return None
 
     @api.onchange("partner_id")
     def _onchange_partner_journal(self):
@@ -608,8 +609,8 @@ class AccountMove(models.Model):
         for tax_group in vat_taxable.mapped("tax_group_id"):
             base_imp = sum(
                 self.invoice_line_ids.filtered(
-                    lambda x: x.tax_ids.filtered(
-                        lambda y: (
+                    lambda x, tax_group=tax_group: x.tax_ids.filtered(
+                        lambda y, tax_group=tax_group: (
                             y.tax_group_id.l10n_ar_vat_afip_code
                             == tax_group.l10n_ar_vat_afip_code
                         )
@@ -619,7 +620,7 @@ class AccountMove(models.Model):
             imp = abs(
                 sum(
                     vat_taxable.filtered(
-                        lambda x: (
+                        lambda x, tax_group=tax_group: (
                             x.tax_group_id.l10n_ar_vat_afip_code
                             == tax_group.l10n_ar_vat_afip_code
                         )

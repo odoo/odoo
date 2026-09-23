@@ -135,9 +135,9 @@ def remove_signature_fallback(content):
             break
 
     if not header_found:
-        raise Exception("ASN1 Header not found")
+        raise ValueError("ASN1 Header not found")
     if not data_found:
-        raise Exception("ASN1 Content not found")
+        raise ValueError("ASN1 Content not found")
     return result
 
 
@@ -342,8 +342,6 @@ class Reader:
                 <= self.offset
             ):
                 yield self.finalize_last_open_node()
-
-        return self.root
 
     def consume(self, _format, stream, offset):
         """Read from a bytes stream to get data out"""

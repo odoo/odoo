@@ -65,9 +65,9 @@ def _export_bir_2307(sheet_title, moves):
                 "zip": partner.zip or "",
             }
             aggregated_taxes = move._prepare_invoice_aggregated_taxes()
-            for invoice_line, tax_details_for_line in aggregated_taxes[
+            for tax_details_for_line in aggregated_taxes[
                 "tax_details_per_record"
-            ].items():
+            ].values():
                 for tax, tax_detail in tax_details_for_line["tax_details"].items():
                     if not tax.l10n_ph_atc:
                         continue

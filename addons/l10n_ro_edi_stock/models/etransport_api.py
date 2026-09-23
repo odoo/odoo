@@ -18,6 +18,7 @@ def _cleanup_errors(errors: list[str]) -> list[str]:
             key, value = part.split("=", maxsplit=1)
             if key == "textEroare":
                 return value.strip()
+        return None
 
     return [
         _cleanup_schematron_error(err)

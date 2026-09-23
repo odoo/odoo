@@ -1,5 +1,3 @@
-from freezegun import freeze_time
-
 from odoo.tests import tagged
 
 from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon

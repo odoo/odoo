@@ -199,7 +199,7 @@ class AccountMove(models.Model):
         )
         invoice_elements = [
             b"1",  # Reserved - 1 symbol with value '1'
-            b"     0",  # Reserved - 6 symbols with value ‘     0’
+            b"     0",  # Reserved - 6 symbols with value '     0'
             b"0",  # Reserved - 1 symbol with value '0'
             b"1"
             if self.move_type == "out_invoice"
@@ -447,7 +447,7 @@ class AccountMove(models.Model):
         """
         for response in responses:
             move = self.browse(int(response["move_id"]))
-            replies = [msg for msg in response["replies"]]
+            replies = list(response["replies"])
             move.update(
                 {
                     "l10n_ke_cu_serial_number": response["serial_number"],

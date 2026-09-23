@@ -285,7 +285,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         super()._link_invoice_documents(invoices_data)
         # The move needs to be put as sent only if sent by Nilvera
-        for invoice, invoice_data in invoices_data.items():
+        for invoice in invoices_data:
             if invoice.company_id.country_code == "TR":
                 invoice.is_move_sent = invoice.l10n_tr_nilvera_send_status == "sent"
 

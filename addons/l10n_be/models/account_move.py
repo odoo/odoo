@@ -1,10 +1,8 @@
 # Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
 
-import random
 import re
 
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo import models
 
 """
 account.move object: add support for Belgian structured communication
@@ -30,8 +28,7 @@ class AccountMove(models.Model):
         )[-10:].rjust(10, "0")
         base = int(bbacomm)
         mod = base % 97 or 97
-        reference = "+++%s/%s/%s%02d+++" % (bbacomm[:3], bbacomm[3:7], bbacomm[7:], mod)
-        return reference
+        return "+++%s/%s/%s%02d+++" % (bbacomm[:3], bbacomm[3:7], bbacomm[7:], mod)
 
     def _get_invoice_reference_be_invoice(self):
         """This computes the reference based on the belgian national standard
@@ -45,5 +42,4 @@ class AccountMove(models.Model):
         bbacomm = str(base).rjust(10, "0")
         base = int(bbacomm)
         mod = base % 97 or 97
-        reference = "+++%s/%s/%s%02d+++" % (bbacomm[:3], bbacomm[3:7], bbacomm[7:], mod)
-        return reference
+        return "+++%s/%s/%s%02d+++" % (bbacomm[:3], bbacomm[3:7], bbacomm[7:], mod)

@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import models
 
 
 class ResCompany(models.Model):

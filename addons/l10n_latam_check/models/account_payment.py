@@ -303,7 +303,9 @@ class AccountPayment(models.Model):
             move_id = self.env["account.move"].create(vals)
             move_id.action_post()
             split_move_counterpart_line = move_id.line_ids.filtered(
-                lambda x: x.amount_currency == -payment_liquidity_line.amount_currency
+                lambda x, payment_liquidity_line=payment_liquidity_line: (
+                    x.amount_currency == -payment_liquidity_line.amount_currency
+                )
             )
             (split_move_counterpart_line + payment_liquidity_line).reconcile()
 

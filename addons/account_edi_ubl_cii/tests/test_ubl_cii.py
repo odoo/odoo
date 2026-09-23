@@ -1186,7 +1186,9 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             xml = self.env["account.edi.xml.ubl_bis3"]._export_invoice(invoice)[0]
             root = etree.fromstring(xml)
             for tax, node in zip(
-                taxes, root.findall(".//{*}TaxTotal/{*}TaxSubtotal/{*}TaxCategory")
+                taxes,
+                root.findall(".//{*}TaxTotal/{*}TaxSubtotal/{*}TaxCategory"),
+                strict=True,
             ):
                 self.assertEqual(
                     node.findtext(".//{*}ID") or False, tax.ubl_cii_tax_category_code

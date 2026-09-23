@@ -13,7 +13,7 @@ from odoo.exceptions import UserError
 from odoo.libs.datetime import timezone
 from odoo.libs.numbers import float_repr, float_round
 from odoo.libs.xml import canonicalize_signed_info, update_reference_digests
-from odoo.tools import get_lang
+from odoo.tools import float_compare, get_lang
 from odoo.tools.xml_utils import cleanup_xml_node
 
 from odoo.addons.certificate.tools import CertificateAdapter
@@ -427,6 +427,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                     return _(
                         "Refund reason cannot be R5 for non-simplified invoices (TicketBAI)"
                     )
+        return None
 
     # -------------------------------------------------------------------------
     # WEB SERVICE CALLS
@@ -462,6 +463,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         else:
             self.sudo().state = "rejected"
             self.sudo().chain_index = 0
+        return None
 
     def _post_to_agency(self, env, is_sale):
 
@@ -509,6 +511,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             success, errors_add = self._process_post_response_xml_bi(env, response_xml)
             errors += errors_add
             return success, errors
+        return None
 
     def _prepare_post_params_ar_gi(self):
         """Web service parameters for Araba and Gipuzkoa."""
@@ -607,9 +610,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         lroe_str = self.env["ir.qweb"]._render(
             "l10n_es_edi_tbai.template_LROE_240_main", lroe_values
         )
-        lroe_xml = cleanup_xml_node(lroe_str)
-
-        return lroe_xml
+        return cleanup_xml_node(lroe_str)
 
     @api.model
     def _process_post_response_xml_bi(self, env, response_xml):
@@ -817,7 +818,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 if tax_data["tax"].l10n_es_type == "retencion":
                     base_line["price_total"] -= tax_data["tax_amount"]
 
-            if discount == 100.0:
+            if float_compare(discount, 100.0, precision_digits=2) == 0:
                 gross_price_subtotal_before_discount = price_unit * quantity
             else:
                 gross_price_subtotal_before_discount = price_subtotal / (
@@ -1098,7 +1099,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 _(
                     "No valid certificate found for this company, TicketBAI file will not be signed.\n"
                 )
-            )
+            ) from None
 
         return xml_doc
 
@@ -1188,9 +1189,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         lroe_str = self.env["ir.qweb"]._render(
             "l10n_es_edi_tbai.template_LROE_240_main_recibidas", lroe_values
         )
-        lroe_xml = cleanup_xml_node(lroe_str)
-
-        return lroe_xml
+        return cleanup_xml_node(lroe_str)
 
     # -------------------------------------------------------------------------
     # SIGNATURE AND QR CODE
@@ -1321,8 +1320,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 ]
             )
         )
-        qr_url = tbai_qr_no_crc + "&cr=" + self._get_crc8(tbai_qr_no_crc)
-        return qr_url
+        return tbai_qr_no_crc + "&cr=" + self._get_crc8(tbai_qr_no_crc)
 
     def _get_crc8(self, data):
         crc = 0x0

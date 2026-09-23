@@ -53,6 +53,7 @@ class TestStringToHash(TestPoSCommon):
                 indent=None,
                 separators=(",", ":"),
             )
+        return None
 
     def _create_and_pay_pos_order(self, line_data_list, payments):
         currency = self.company_data["company"].currency_id

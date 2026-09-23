@@ -84,6 +84,7 @@ class AccountChartTemplate(models.AbstractModel):
                     ],
                 },
             }
+        return None
 
     @template(model="account.account")
     def _get_latam_check_outstanding_account_account(self, template_code):
@@ -105,3 +106,4 @@ class AccountChartTemplate(models.AbstractModel):
                     "account_type": "asset_current",
                 },
             }
+        return None

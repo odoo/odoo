@@ -28,7 +28,7 @@ class ResConfigSettings(models.TransientModel):
         try:
             ewaybill_api._ewaybill_authenticate()
         except EWayBillError as e:
-            raise UserError(e.get_all_error_message())
+            raise UserError(e.get_all_error_message()) from e
         if not self.company_id.sudo()._l10n_in_ewaybill_token_is_valid():
             raise UserError(
                 _(

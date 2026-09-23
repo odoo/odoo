@@ -556,15 +556,14 @@ class AccountMove(models.Model):
                 "logical_operational_point": ac.l10n_es_edi_facturae_ac_logical_operational_point,
             }
             # An administrative center can have multiple roles, each of which should be reported separately.
-            for role in ac.l10n_es_edi_facturae_ac_role_type_ids or [
-                self.env["l10n_es_edi_facturae.ac_role_type"]
-            ]:
-                administrative_centers.append(
-                    {
-                        **ac_template,
-                        "role_type_code": role.code,
-                    }
-                )
+            administrative_centers.extend(
+                {
+                    **ac_template,
+                    "role_type_code": role.code,
+                }
+                for role in ac.l10n_es_edi_facturae_ac_role_type_ids
+                or [self.env["l10n_es_edi_facturae.ac_role_type"]]
+            )
         return administrative_centers
 
     def _l10n_es_edi_facturae_get_tax_node_from_tax_data(self, values, round=False):
@@ -601,20 +600,20 @@ class AccountMove(models.Model):
         self.check_singleton()
         installments = []
         if self.is_inbound() and self.bank_account_id:
-            for payment_term in self.line_ids.filtered(
-                lambda l: l.display_type == "payment_term"
-            ).sorted("date_maturity"):
-                installments.append(
-                    {
-                        "InstallmentDueDate": payment_term.date_maturity,
-                        "InstallmentAmount": payment_term.amount_residual_currency,
-                        "PaymentMeans": self.l10n_es_payment_means or "04",
-                        "AccountToBeCredited": {
-                            "IBAN": self.bank_account_id.sanitized_acc_number,
-                            "BIC": self.bank_account_id.bank_bic,
-                        },
-                    }
-                )
+            installments.extend(
+                {
+                    "InstallmentDueDate": payment_term.date_maturity,
+                    "InstallmentAmount": payment_term.amount_residual_currency,
+                    "PaymentMeans": self.l10n_es_payment_means or "04",
+                    "AccountToBeCredited": {
+                        "IBAN": self.bank_account_id.sanitized_acc_number,
+                        "BIC": self.bank_account_id.bank_bic,
+                    },
+                }
+                for payment_term in self.line_ids.filtered(
+                    lambda l: l.display_type == "payment_term"
+                ).sorted("date_maturity")
+            )
         return installments
 
     def _l10n_es_edi_facturae_prepare_inv_line(self, base_line, aggregated_values):
@@ -650,7 +649,7 @@ class AccountMove(models.Model):
             ),
         }
 
-        if line.discount == 100.0:
+        if float_compare(line.discount, 100.0, precision_digits=2) == 0:
             raw_total_cost = line.price_unit * line.quantity
         else:
             raw_total_cost = tax_details["raw_total_excluded_currency"] / (
@@ -903,7 +902,6 @@ class AccountMove(models.Model):
         :rtype:  str
         """
         self.check_singleton()
-        company = self.company_id
         template_values, signature_values = self._l10n_es_edi_facturae_export_facturae()
         xml_content = cleanup_xml_node(
             self.env["ir.qweb"]._render(
@@ -1220,7 +1218,7 @@ class AccountMove(models.Model):
     def _search_tax_for_import(
         self, company, amount, is_fixed, is_withheld, is_purchase, price_included
     ):
-        taxes = self.env["account.tax"].search(
+        return self.env["account.tax"].search(
             [
                 ("company_ids", "in", [company.id]),
                 ("amount", "=", -1.0 * amount if is_withheld else amount),
@@ -1231,16 +1229,13 @@ class AccountMove(models.Model):
             limit=1,
         )
 
-        return taxes
-
     def _search_product_for_import(self, item_description):
         # Exported Odoo XML will have item_description = "[default_code] name".
         # We can check if it follows the same format and search for the product with the default code and the name.
         code_and_name = re.match(
             r"(\[(?P<default_code>.*?)\]\s)?(?P<name>.*)", item_description
         ).groupdict()
-        product = self.env["product.product"]._get_imported_product(**code_and_name)
-        return product
+        return self.env["product.product"]._get_imported_product(**code_and_name)
 
     # -------------------------------------------------------------------------
     # ACTION METHODS

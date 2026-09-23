@@ -1,4 +1,5 @@
 from odoo import models
+from odoo.tools import float_compare
 
 
 class AccountMoveLine(models.Model):
@@ -28,7 +29,7 @@ class AccountMoveLine(models.Model):
         else:
             raw_total = tax_details["raw_total_excluded_currency"]
 
-        if discount == 100.0:
+        if float_compare(discount, 100.0, precision_digits=2) == 0:
             price_subtotal_before_discount = price_unit * quantity
         else:
             price_subtotal_before_discount = raw_total / (1 - discount / 100.0)

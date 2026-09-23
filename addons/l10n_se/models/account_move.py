@@ -1,6 +1,6 @@
 from stdnum import luhn
 
-from odoo import _, api, fields, models
+from odoo import _, api, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -13,7 +13,7 @@ class AccountMove(models.Model):
 
     def _get_invoice_reference_se_ocr3(self, reference):
         self.check_singleton()
-        reference = reference + str(len(reference) + 2)[:1]
+        reference += str(len(reference) + 2)[:1]
         return reference + luhn.calc_check_digit(reference)
 
     def _get_invoice_reference_se_ocr4(self, reference):
@@ -96,4 +96,4 @@ class AccountMove(models.Model):
                         _(
                             "Vendor require OCR Number as payment reference. Payment reference isn't a valid OCR Number."
                         )
-                    )
+                    ) from None

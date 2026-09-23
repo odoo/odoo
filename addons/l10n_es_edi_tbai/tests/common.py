@@ -166,12 +166,11 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
 
     @classmethod
     def _get_invoice_send_wizard(cls, invoice):
-        out_invoice_send_wizard = (
+        return (
             cls.env["account.move.send.wizard"]
             .with_context(active_model="account.move", active_ids=invoice.ids)
             .create({"sending_methods": []})
         )
-        return out_invoice_send_wizard
 
     @classmethod
     def _create_posted_bill(cls):
@@ -206,16 +205,14 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
         with file_open(
             f"l10n_es_edi_tbai/tests/document_xmls/{filename}", "rb"
         ) as file:
-            content = file.read()
-        return content
+            return file.read()
 
     @classmethod
     def _get_response_xml(cls, filename):
         with file_open(
             f"l10n_es_edi_tbai/tests/response_xmls/{filename}", "rb"
         ) as file:
-            content = file.read()
-        return content
+            return file.read()
 
 
 def create_mock_response(content, headers=None):

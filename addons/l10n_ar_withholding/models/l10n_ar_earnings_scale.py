@@ -62,6 +62,6 @@ class L10n_ArEarningsScaleLine(models.Model):
         for line in self:
             line.from_amount = (
                 line.scale_id.line_ids.sorted(reverse=True)
-                .filtered(lambda l: l.to_amount < line.to_amount)[:1]
+                .filtered(lambda l, line=line: l.to_amount < line.to_amount)[:1]
                 .to_amount
             )

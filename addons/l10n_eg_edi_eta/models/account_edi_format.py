@@ -9,6 +9,7 @@ import requests
 
 from odoo import _, api, models
 from odoo.libs.numbers import json_float_round
+from odoo.tools import float_compare
 
 from odoo.addons.account.tools import LegacyHTTPAdapter
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
@@ -471,12 +472,13 @@ class AccountEdiFormat(models.Model):
                 self._l10n_eg_edi_round(
                     abs((line.balance / line.quantity) / (1 - (line.discount / 100.0)))
                 )
-                if line.quantity and line.discount != 100.0
+                if line.quantity
+                and float_compare(line.discount, 100.0, precision_digits=2) != 0
                 else line.price_unit
             )
             price_subtotal_before_discount = (
                 self._l10n_eg_edi_round(abs(line.balance / (1 - (line.discount / 100))))
-                if line.discount != 100.0
+                if float_compare(line.discount, 100.0, precision_digits=2) != 0
                 else self._l10n_eg_edi_round(price_unit * line.quantity)
             )
             discount_amount = self._l10n_eg_edi_round(
@@ -590,6 +592,7 @@ class AccountEdiFormat(models.Model):
                 "cancel": self._l10n_eg_edi_cancel_invoice,
                 "edi_content": self._l10n_eg_edi_xml_invoice_content,
             }
+        return None
 
     def _check_move_configuration(self, invoice):
         errors = super()._check_move_configuration(invoice)

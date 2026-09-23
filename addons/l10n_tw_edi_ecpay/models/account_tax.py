@@ -29,24 +29,32 @@ class AccountTax(models.Model):
             ),
             (
                 "3",
-                "Banking businesses, insurance businesses, trust investment businesses, securities businesses, "
-                "futures businesses, commercial paper businesses and pawn-broking businesses: Tax rate is 2%",
+                (
+                    "Banking businesses, insurance businesses, trust investment businesses, securities businesses, "
+                    "futures businesses, commercial paper businesses and pawn-broking businesses: Tax rate is 2%"
+                ),
             ),
             ("4", "The sales amounts from reinsurance premiums shall be taxed at 1%"),
             (
                 "5",
-                "Banking businesses, insurance businesses, trust investment businesses, securities businesses, "
-                "futures businesses, commercial paper businesses and pawn-broking businesses: Tax rate is 5%",
+                (
+                    "Banking businesses, insurance businesses, trust investment businesses, securities businesses, "
+                    "futures businesses, commercial paper businesses and pawn-broking businesses: Tax rate is 5%"
+                ),
             ),
             (
                 "6",
-                "Core business revenues from the banking and insurance business of the banking and insurance "
-                "industries (Applicable to sales after July 2014): Tax rate is 5%",
+                (
+                    "Core business revenues from the banking and insurance business of the banking and insurance "
+                    "industries (Applicable to sales after July 2014): Tax rate is 5%"
+                ),
             ),
             (
                 "7",
-                "Core business revenues from the banking and insurance business of the banking and insurance "
-                "industries (Applicable to sales after June 2014): Tax rate is 5%",
+                (
+                    "Core business revenues from the banking and insurance business of the banking and insurance "
+                    "industries (Applicable to sales after June 2014): Tax rate is 5%"
+                ),
             ),
             ("8", "Duty free or non-output data"),
         ],

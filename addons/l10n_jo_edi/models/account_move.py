@@ -276,8 +276,7 @@ class AccountMove(models.Model):
                     "Access forbidden. Please verify your JoFotara credentials."
                 )
             return {"error": _("Request failed: %s", content)}
-        dict_response = response.json()
-        return dict_response
+        return response.json()
 
     def _submit_to_jofotara(self):
         self.check_singleton()
@@ -298,6 +297,7 @@ class AccountMove(models.Model):
                 "raw": xml_invoice,
             }
         )
+        return None
 
     def _l10n_jo_edi_get_xml_attachment_name(self):
         return f"{self.name.replace('/', '_')}_edi.xml"
@@ -320,6 +320,7 @@ class AccountMove(models.Model):
                 "%s \nTo set: Configuration > Settings > Electronic Invoicing (Jordan)",
                 "\n".join(error_msgs),
             )
+        return None
 
     def _l10n_jo_get_field_errors(self):
         def has_non_digit_vat(partner, partner_type, error_msgs):
@@ -443,3 +444,4 @@ class AccountMove(models.Model):
                 body=_("E-invoice (JoFotara) submitted successfully."),
                 attachment_ids=self.l10n_jo_edi_xml_attachment_id.ids,
             )
+        return None

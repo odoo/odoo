@@ -212,7 +212,7 @@ class ResPartner(models.Model):
                 "l10n_in.endpoint",
             )
         except AccessError:
-            raise UserError(_("Unable to connect with GST network"))
+            raise UserError(_("Unable to connect with GST network")) from None
         if response.get("error") and any(
             e.get("code") == "no-credit" for e in response["error"]
         ):

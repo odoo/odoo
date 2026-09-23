@@ -40,8 +40,7 @@ class ComplianceLetter(models.TransientModel):
         day_suffix = (
             "th" if 11 <= day <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
         )
-        formatted_date = date_obj.strftime(f"%B {day}{day_suffix}, %Y")
-        return formatted_date
+        return date_obj.strftime(f"%B {day}{day_suffix}, %Y")
 
     def _get_odoo_version(self):
         return release.major_version

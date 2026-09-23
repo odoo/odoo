@@ -309,7 +309,7 @@ class ResPartner(models.Model):
             country_code = partner._deduce_country_code()
             if country_code in EAS_MAPPING:
                 eas_to_field = EAS_MAPPING[country_code]
-                if partner.peppol_eas not in eas_to_field.keys():
+                if partner.peppol_eas not in eas_to_field:
                     new_eas = next(iter(EAS_MAPPING[country_code].keys()))
                     # Iterate on the possible EAS until a valid one is found
                     for eas, field in eas_to_field.items():
@@ -354,6 +354,7 @@ class ResPartner(models.Model):
                 "The Peppol endpoint (%s) is not valid. It should contain only letters and digit.",
                 endpoint,
             )
+        return None
 
     @api.model
     def _get_edi_builder(self, invoice_edi_format):
@@ -369,3 +370,4 @@ class ResPartner(models.Model):
             return self.env["account.edi.xml.ubl_bis3"]
         if invoice_edi_format == "ubl_sg":
             return self.env["account.edi.xml.ubl_sg"]
+        return None

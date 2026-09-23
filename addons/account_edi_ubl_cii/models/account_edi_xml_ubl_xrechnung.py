@@ -39,6 +39,7 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
             return (
                 "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"
             )
+        return None
 
     def _ubl_add_values_tax_currency_code(self, vals):
         # OVERRIDE account.edi.xml.ubl_bis3

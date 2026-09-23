@@ -58,7 +58,7 @@ class AccountEdiProxyClientUser(models.Model):
                 params=params,
             )
         except AccountEdiProxyError as e:
-            raise UserError(e.message)
+            raise UserError(e.message) from e
 
         if "error" in response:
             error_code = response["error"].get("code")
@@ -184,7 +184,7 @@ class AccountEdiProxyClientUser(models.Model):
                     },
                 )
             except AccountEdiProxyError as e:
-                raise UserError(e.message)
+                raise UserError(e.message) from e
 
         return self.create(
             {
@@ -542,13 +542,12 @@ class AccountEdiProxyClientUser(models.Model):
         self.check_singleton()
         expiration = 30 * 24  # in 30 days
         msg = [self.id, self.company_id._get_nemhandel_webhook_endpoint()]
-        payload = tools.hash_sign(
+        return tools.hash_sign(
             self.sudo().env,
             "account_nemhandel_webhook",
             msg,
             expiration_hours=expiration,
         )
-        return payload
 
     @api.model
     def _get_proxy_user_from_webhook_token(self, token, url):

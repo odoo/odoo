@@ -607,7 +607,7 @@ class TestJoEdiPrecision(JoEdiCommon):
         invoice_file = self.env["account.edi.xml.ubl_21.jo"]._export_invoice(invoice)[0]
         refund_file = self.env["account.edi.xml.ubl_21.jo"]._export_invoice(refund)[0]
         for invoice_price_unit, refund_price_unit in zip(
-            get_price_units(invoice_file), get_price_units(refund_file)
+            get_price_units(invoice_file), get_price_units(refund_file), strict=True
         ):
             self.assertEqual(invoice_price_unit, refund_price_unit)
 

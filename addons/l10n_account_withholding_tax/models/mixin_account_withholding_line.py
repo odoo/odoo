@@ -425,17 +425,16 @@ class MixinAccountWithholdingLine(models.AbstractModel):
         tax_results = AccountTax._prepare_tax_lines(base_lines, company)
 
         # Add the tax lines.
-        aml_create_values_list = []
-        for tax_line_vals in tax_results["tax_lines_to_add"]:
-            aml_create_values_list.append(
-                {
-                    **tax_line_vals,
-                    "name": self.env._("WH Tax: %(name)s", name=tax_line_vals["name"]),
-                    "amount_currency": -tax_line_vals["amount_currency"],
-                    "balance": -tax_line_vals["balance"],
-                    "partner_id": self._get_comodel_partner().id,
-                }
-            )
+        aml_create_values_list = [
+            {
+                **tax_line_vals,
+                "name": self.env._("WH Tax: %(name)s", name=tax_line_vals["name"]),
+                "amount_currency": -tax_line_vals["amount_currency"],
+                "balance": -tax_line_vals["balance"],
+                "partner_id": self._get_comodel_partner().id,
+            }
+            for tax_line_vals in tax_results["tax_lines_to_add"]
+        ]
 
         # Aggregate the base lines.
         aggregated_base_lines = defaultdict(
@@ -538,16 +537,15 @@ class MixinAccountWithholdingLine(models.AbstractModel):
 
         # The base lines completely ignore the withholding taxes.
         # Now, it's time to compute them.
-        new_base_lines = []
-        for base_line in base_lines:
-            new_base_lines.append(
-                AccountTax._prepare_base_line_for_taxes_computation(
-                    base_line,
-                    calculate_withholding_taxes=True,
-                    manual_tax_line_name=base_line.get("manual_tax_line_name"),
-                    filter_tax_function=None,
-                )
+        new_base_lines = [
+            AccountTax._prepare_base_line_for_taxes_computation(
+                base_line,
+                calculate_withholding_taxes=True,
+                manual_tax_line_name=base_line.get("manual_tax_line_name"),
+                filter_tax_function=None,
             )
+            for base_line in base_lines
+        ]
 
         AccountTax._add_tax_details_in_base_lines(new_base_lines, company)
         AccountTax._round_base_lines_tax_details(new_base_lines, company)
@@ -590,8 +588,9 @@ class MixinAccountWithholdingLine(models.AbstractModel):
 
             # If we have more than one existing line matching the grouping key, we will create a new one instead.
             if existing_line and len(existing_line) > 1:
-                for line in existing_line[1:]:
-                    withholding_line_commands.append(Command.delete(line.id))
+                withholding_line_commands.extend(
+                    Command.delete(line.id) for line in existing_line[1:]
+                )
                 existing_line = existing_line[:1]
 
             if existing_line:
@@ -640,8 +639,9 @@ class MixinAccountWithholdingLine(models.AbstractModel):
             existing_withholding_line_map.keys() - values_per_grouping_key.keys()
         )
         for key in keys_to_remove:
-            for line in existing_withholding_line_map[key]:
-                withholding_line_commands.append(Command.delete(line.id))
+            withholding_line_commands.extend(
+                Command.delete(line.id) for line in existing_withholding_line_map[key]
+            )
 
         return withholding_line_commands
 

@@ -14,3 +14,4 @@ class AccountChartTemplate(models.AbstractModel):
                 "sale": {"l10n_latam_use_documents": True},
                 "purchase": {"l10n_latam_use_documents": True},
             }
+        return None

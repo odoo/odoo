@@ -78,6 +78,7 @@ class AccountMove(models.Model):
                 .create({"move_ids": nemhandel_moves.ids})
                 .id,
             }
+        return None
 
     def action_view_nemhandel_reponses(self):
         return {

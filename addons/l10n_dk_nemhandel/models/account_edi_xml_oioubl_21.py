@@ -58,6 +58,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
     def _get_customization_id(self, process_type="billing"):
         if process_type == "billing":
             return "OIOUBL-2.1"
+        return None
 
     def _export_invoice_constraints(self, invoice, vals):
         # EXTENDS account.edi.xml.ubl_20

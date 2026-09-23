@@ -108,10 +108,12 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
     # Test conditions that dont allow efaktur generation
     # =================================================
 
-    def _verify_error_message(self, ex, err_count, messages=[]):
+    def _verify_error_message(self, ex, err_count, messages=None):
         """Verify that there are `err_count` number of errors and that all snippets of messages
         exist in the error message
         """
+        if messages is None:
+            messages = []
         exception_msg = str(ex.exception)
         actual_count = (
             len(exception_msg.split("\n")) - 1

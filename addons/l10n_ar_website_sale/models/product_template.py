@@ -25,7 +25,7 @@ class ProductTemplate(models.Model):
             and website.l10n_ar_website_sale_show_both_prices
             and website.show_line_subtotals_tax_selection == "tax_included"
         ):
-            for template_id, template_val in res.items():
+            for template_id in res:
                 # Get applicable taxes for the product and map them using the website's FPOS
                 template = self.env["product.template"].browse(template_id)
                 product_taxes = template.sudo().taxes_id._filter_taxes_by_company(
@@ -83,7 +83,7 @@ class ProductTemplate(models.Model):
                 discount_percent = (
                     combination_info["list_price"] - combination_info["price"]
                 ) / combination_info["list_price"]
-                total_excluded_value = total_excluded_value * (1 - discount_percent)
+                total_excluded_value *= 1 - discount_percent
 
             # Store the tax-excluded price in the res for use in showing both prices
             combination_info["l10n_ar_price_tax_excluded"] = total_excluded_value

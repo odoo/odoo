@@ -3,12 +3,12 @@ from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 class CommonPosEsEdiTest(CommonPosTest):
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         super().setUpClass()
 
-        self.env.user.group_ids += self.env.ref("account.group_account_manager")
-        self.es_edi_edit_partner(self)
-        self.es_edi_edit_product_templates(self)
+        cls.env.user.group_ids += cls.env.ref("account.group_account_manager")
+        cls.es_edi_edit_partner(cls)
+        cls.es_edi_edit_product_templates(cls)
 
     def es_edi_edit_partner(self):
         self.partner_lowe.write(

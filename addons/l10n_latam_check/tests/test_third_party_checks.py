@@ -4,7 +4,7 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo import Command, fields
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
 
 from odoo.addons.l10n_latam_check.tests.common import L10nLatamCheckTest
@@ -12,9 +12,9 @@ from odoo.addons.l10n_latam_check.tests.common import L10nLatamCheckTest
 
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestThirdChecks(L10nLatamCheckTest):
-    def create_third_party_check(
-        self, journal=False, check_numbers=["00000001", "00000002"]
-    ):
+    def create_third_party_check(self, journal=False, check_numbers=None):
+        if check_numbers is None:
+            check_numbers = ["00000001", "00000002"]
         if not journal:
             journal = self.third_party_check_journal
         vals = {

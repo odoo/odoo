@@ -39,7 +39,7 @@ class ReportAccount_TestReport_Accounttest(models.AbstractModel):
             "reconciled_inv": reconciled_inv,  # specific function used in different tests
             "result": None,  # used to store the result of the test
             "column_order": None,  # used to choose the display order of columns (in case you are returning a list of dict)
-            "_": lambda *a, **kw: self.env._(*a, **kw),  # pylint: disable=E8502,
+            "_": self.env._,  # pylint: disable=E8502,
         }
         safe_eval(code_exec, context, mode="exec")
         result = context["result"]

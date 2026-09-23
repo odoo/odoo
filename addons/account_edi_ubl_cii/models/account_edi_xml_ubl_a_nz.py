@@ -24,6 +24,7 @@ class AccountEdiXmlUbl_A_Nz(models.AbstractModel):
     def _get_customization_id(self, process_type="billing"):
         if process_type == "billing":
             return "urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0"
+        return None
 
     def _ubl_default_tax_category_grouping_key(
         self, base_line, tax_data, vals, currency

@@ -4,7 +4,7 @@ import json
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
-from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
+from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillError
 
 
 class L10nInEwaybill(models.Model):
@@ -119,6 +119,7 @@ class L10nInEwaybill(models.Model):
             }
         )
         self.env.cr.commit()
+        return None
 
     def _get_edi_irn_number(self):
         self.check_singleton()

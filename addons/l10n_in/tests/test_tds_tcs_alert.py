@@ -107,11 +107,17 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         partner=None,
         invoice_date=None,
         amounts=None,
-        taxes=[],
+        taxes=None,
         company=None,
-        accounts=[],
-        quantities=[],
+        accounts=None,
+        quantities=None,
     ):
+        if quantities is None:
+            quantities = []
+        if accounts is None:
+            accounts = []
+        if taxes is None:
+            taxes = []
         invoice = self.init_invoice(
             move_type=move_type or "in_invoice",
             partner=partner,

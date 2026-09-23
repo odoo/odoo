@@ -267,7 +267,7 @@ class AccountMove(models.Model):
                             decoded_response = json.loads(decoded_response["data"])
                     except (json.JSONDecodeError, jwt.exceptions.DecodeError) as e:
                         _logger.warning(
-                            "Failed to decode SignedInvoice JWT payload: %s", str(e)
+                            "Failed to decode SignedInvoice JWT payload: %s", e
                         )
                 if decoded_response:
                     received_gstin = decoded_response["BuyerDtls"]["Gstin"]
@@ -356,15 +356,16 @@ class AccountMove(models.Model):
             }
         )
         self.l10n_in_edi_status = "sent"
-        message = []
-        for partner in partners:
-            if partner_validation := self._l10n_in_edi_optional_field_validation(
-                partner
-            ):
-                message.append(
-                    Markup("<strong><em>%s</em></strong><br>%s")
-                    % (partner.name, Markup("<br>").join(partner_validation))
+        message = [
+            Markup("<strong><em>%s</em></strong><br>%s")
+            % (partner.name, Markup("<br>").join(partner_validation))
+            for partner in partners
+            if (
+                partner_validation := self._l10n_in_edi_optional_field_validation(
+                    partner
                 )
+            )
+        ]
         message.append(self.env._("E-invoice submitted successfully."))
         if message:
             self.message_post(
@@ -372,6 +373,7 @@ class AccountMove(models.Model):
                 body=Markup("<strong>%s</strong><br>%s")
                 % (_("Following:"), Markup("<br>").join(message)),
             )
+        return None
 
     def _l10n_in_edi_cancel_invoice(self):
         if self.l10n_in_edi_error:
@@ -392,8 +394,11 @@ class AccountMove(models.Model):
         response = self._l10n_in_edi_connect_to_server(
             url_end_point="cancel", json_payload=cancel_json
         )
-        # Creating a lambda function so it fetches the odoobot id only when needed
-        _get_odoobot_id = lambda self: self.env.ref("base.partner_root").id
+
+        # A local function so the odoobot id is fetched only when needed
+        def _get_odoobot_id(self):
+            return self.env.ref("base.partner_root").id
+
         if error := response.get("error"):
             error_codes = [e.get("code") for e in error]
             if "9999" in error_codes:
@@ -533,7 +538,9 @@ class AccountMove(models.Model):
             line_tax_details["tax_details"]
         )
         quantity = line.quantity
-        if line.discount == 100.00 or float_is_zero(quantity, 3):
+        if float_compare(
+            line.discount, 100.0, precision_digits=2
+        ) == 0 or float_is_zero(quantity, 3):
             # Full discount or zero quantity
             unit_price_in_inr = line.currency_id._convert(
                 line.price_unit,
@@ -713,8 +720,6 @@ class AccountMove(models.Model):
         )
         is_intra_state = self.l10n_in_state_id == self.company_id.state_id
         is_overseas = self.l10n_in_gst_treatment == "overseas"
-        line_ids = []
-        global_discount_line_ids = []
         grouping_lines = self.invoice_line_ids.grouped(
             lambda l: (
                 l.display_type == "product"

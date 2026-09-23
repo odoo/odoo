@@ -1,7 +1,5 @@
 import base64
 
-from lxml import etree
-
 from odoo import Command
 from odoo.tests import tagged
 

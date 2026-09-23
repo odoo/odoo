@@ -60,7 +60,7 @@ class AccountEdiProxyClientUser(models.Model):
                             "move_id": move.id,
                         }
                         for message, move in zip(
-                            response.get("messages"), reference_moves
+                            response.get("messages"), reference_moves, strict=False
                         )
                     ]
                 )

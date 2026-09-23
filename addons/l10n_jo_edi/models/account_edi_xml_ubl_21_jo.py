@@ -91,7 +91,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         # However, taxes need to be calculated with `round_per_line` so that _round_base_lines_tax_details does not
         # end up generating lines taxes using unrounded base amounts
         new_base_lines = [base_line.copy() for base_line in base_lines]
-        for base_line, new_base_line in zip(base_lines, new_base_lines):
+        for base_line, new_base_line in zip(base_lines, new_base_lines, strict=True):
             AccountTax._add_tax_details_in_base_line(
                 new_base_line, new_base_line["record"].company_id, "round_globally"
             )
@@ -232,7 +232,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         partner = vals["partner"]
         role = vals["role"]
 
-        party_node = {
+        return {
             "cac:PartyIdentification": {
                 "cbc:ID": {
                     "_text": partner.vat if partner.vat and partner.vat != "/" else "",
@@ -248,7 +248,6 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             },
             "cac:PartyLegalEntity": {"cbc:RegistrationName": {"_text": partner.name}},
         }
-        return party_node
 
     def _get_address_node(self, vals):
         partner = vals["partner"]
@@ -449,7 +448,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
         # OVERRIDE account_edi_xml_ubl_20.py
         discount_factor = 1 - (base_line["discount"] / 100.0)
-        if discount_factor != 0.0:
+        if not float_is_zero(discount_factor, precision_digits=4):
             gross_subtotal_currency = (
                 base_line["tax_details"]["raw_total_excluded_currency"]
                 / discount_factor
@@ -573,7 +572,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     def _get_line_discount_allowance_charge_node(self, vals):
         # OVERRIDE account_edi_xml_ubl_20.py
         base_line = vals["base_line"]
-        if base_line["discount"] == 0.0:
+        if float_is_zero(base_line["discount"], precision_digits=2):
             return None
 
         return {

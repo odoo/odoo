@@ -44,9 +44,13 @@ class PeppolIAPConnector:
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             if response_vals and "code" in response_vals:
-                raise UserError(get_peppol_error_message(self.env, response_vals))
+                raise UserError(
+                    get_peppol_error_message(self.env, response_vals)
+                ) from e
             _logger.debug("Failed to connect to Odoo Peppol Proxy %s, %s", endpoint, e)
-            raise UserError(self.env._("Failed to connect to Odoo Peppol Proxy."))
+            raise UserError(
+                self.env._("Failed to connect to Odoo Peppol Proxy.")
+            ) from e
         return response_vals
 
     def can_connect(self, *, peppol_identifier, db_uuid, callback_url, connect_token):
@@ -77,7 +81,4 @@ class PeppolIAPConnector:
             "auth_token": auth_token,
             **company_details,
         }
-        response = self.request_public_http(
-            "POST", "/api/peppol/2/connect", data=params
-        )
-        return response
+        return self.request_public_http("POST", "/api/peppol/2/connect", data=params)

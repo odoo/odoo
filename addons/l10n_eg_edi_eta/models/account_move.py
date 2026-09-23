@@ -1,7 +1,6 @@
 import base64
 import json
 import logging
-from datetime import datetime
 
 from odoo import _, api, fields, models
 from odoo.db.schema import column_exists, create_column
@@ -143,7 +142,7 @@ class AccountMove(models.Model):
                 _("Please setup the certificate on the thumb drive menu")
             )
 
-        invoices.write({"l10n_eg_signing_time": datetime.utcnow()})
+        invoices.write({"l10n_eg_signing_time": fields.Datetime.now()})
 
         for invoice in invoices:
             eta_invoice = self.env[
@@ -156,7 +155,7 @@ class AccountMove(models.Model):
                     "res_model": invoice._name,
                     "res_field": "l10n_eg_eta_json_doc_file",
                     "type": "binary",
-                    "raw": json.dumps(dict(request=eta_invoice)),
+                    "raw": json.dumps({"request": eta_invoice}),
                     "mimetype": "application/json",
                     "description": _(
                         "Egyptian Tax authority JSON invoice generated for %s.",

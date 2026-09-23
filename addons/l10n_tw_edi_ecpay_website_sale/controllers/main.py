@@ -194,7 +194,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
                 self, "sale.order", sale_order_id, kwargs.get("access_token")
             )
         except AccessError, MissingError:
-            raise werkzeug.exceptions.NotFound
+            raise werkzeug.exceptions.NotFound from None
 
         return self._is_valid_mobile_barcode(kwargs.get("carrier_number", False), order)
 
@@ -209,7 +209,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
                 self, "sale.order", sale_order_id, kwargs.get("access_token")
             )
         except AccessError, MissingError:
-            raise werkzeug.exceptions.NotFound
+            raise werkzeug.exceptions.NotFound from None
         return self._is_valid_love_code(kwargs.get("love_code", False), order)
 
     def _prepare_address_form_values(

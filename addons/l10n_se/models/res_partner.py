@@ -1,4 +1,5 @@
 from stdnum import luhn
+from stdnum.exceptions import ValidationError as StdnumValidationError
 
 from odoo import _, api, fields, models
 
@@ -18,13 +19,13 @@ class ResPartner(models.Model):
     @api.onchange("l10n_se_default_vendor_payment_ref")
     def onchange_l10n_se_default_vendor_payment_ref(self):
         if (
-            not self.l10n_se_default_vendor_payment_ref == ""
+            self.l10n_se_default_vendor_payment_ref != ""
             and self.l10n_se_check_vendor_ocr
         ):
             reference = self.l10n_se_default_vendor_payment_ref
             try:
                 luhn.validate(reference)
-            except:
+            except StdnumValidationError:
                 return {
                     "warning": {
                         "title": _("Warning"),
@@ -33,3 +34,4 @@ class ResPartner(models.Model):
                         ),
                     }
                 }
+        return None

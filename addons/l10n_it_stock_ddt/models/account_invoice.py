@@ -49,12 +49,13 @@ class AccountMove(models.Model):
         # We don't consider returns/credit notes as we suppose they will lead to more deliveries/invoices as well
         if self.move_type != "out_invoice" or self.state != "posted":
             return {}
-        line_count = 0
         invoice_line_pickings = {}
-        for line in self.invoice_line_ids.filtered(
-            lambda l: l.display_type not in NON_ACCOUNTABLE_DISPLAY_TYPES
+        for line_count, line in enumerate(
+            self.invoice_line_ids.filtered(
+                lambda l: l.display_type not in NON_ACCOUNTABLE_DISPLAY_TYPES
+            ),
+            start=1,
         ):
-            line_count += 1
             done_moves_related = line.sale_line_ids.mapped("move_ids").filtered(
                 lambda m: (
                     m.state == "done"

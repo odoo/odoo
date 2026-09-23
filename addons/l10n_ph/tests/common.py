@@ -96,5 +96,5 @@ class TestPhCommon(AccountTestInvoicingCommon):
 
         for row, values in expected_values.items():
             row_values = [v if v is not None else "" for v in sheet_values[row]]
-            for row_value, expected_value in zip(row_values, values):
+            for row_value, expected_value in zip(row_values, values, strict=True):
                 self.assertEqual(row_value, expected_value)

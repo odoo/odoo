@@ -139,7 +139,7 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
             except UserError:
                 pass  # We expect a user error to be raised here.
             else:
-                assert False, "The expected user error did not raise."
+                raise AssertionError("The expected user error did not raise.")
 
         # When such error occurs, we expect the hash and retry time to be set, has we need to avoid allowing a user to
         # resend an invoice right away without any changes.
@@ -237,7 +237,7 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
             except UserError:
                 pass  # We expect a user error to be raised here.
             else:
-                assert False, "The expected user error did not raise."
+                raise AssertionError("The expected user error did not raise.")
 
             # Invalid invoices are cancelled automatically.
             self.assertEqual(self.basic_invoice.state, "cancel")
@@ -314,26 +314,23 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
         """This test will ensure that invoices are split as expected if there are more than SUBMISSION_MAX_SIZE at once."""
         # For performance purposes we will not create 100 invoices here, but instead patch SUBMISSION_MAX_SIZE to make batches of two invoices.
         self.submission_count = 0
-        invoice_vals = []
-        for i in range(1, 10):
-            invoice_vals.append(
-                {
-                    "move_type": "out_invoice",
-                    "partner_id": self.partner_a.id,
-                    "invoice_line_ids": [
-                        Command.create(
-                            {
-                                "product_id": self.product_a.id,
-                                "tax_ids": [
-                                    Command.set(
-                                        self.company_data["default_tax_sale"].ids
-                                    )
-                                ],
-                            }
-                        ),
-                    ],
-                }
-            )
+        invoice_vals = [
+            {
+                "move_type": "out_invoice",
+                "partner_id": self.partner_a.id,
+                "invoice_line_ids": [
+                    Command.create(
+                        {
+                            "product_id": self.product_a.id,
+                            "tax_ids": [
+                                Command.set(self.company_data["default_tax_sale"].ids)
+                            ],
+                        }
+                    ),
+                ],
+            }
+            for i in range(1, 10)
+        ]
 
         self.submission_invoice = self.env["account.move"].create(invoice_vals)
         self.submission_invoice.action_post()
@@ -417,26 +414,23 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
     def test_12_multiple_moves_with_one_failed_submission(self):
         """Test that an error happening in the middle of multiple submissions is correctly handled."""
         self.submission_count = 0
-        invoice_vals = []
-        for i in range(1, 5):
-            invoice_vals.append(
-                {
-                    "move_type": "out_invoice",
-                    "partner_id": self.partner_a.id,
-                    "invoice_line_ids": [
-                        Command.create(
-                            {
-                                "product_id": self.product_a.id,
-                                "tax_ids": [
-                                    Command.set(
-                                        self.company_data["default_tax_sale"].ids
-                                    )
-                                ],
-                            }
-                        ),
-                    ],
-                }
-            )
+        invoice_vals = [
+            {
+                "move_type": "out_invoice",
+                "partner_id": self.partner_a.id,
+                "invoice_line_ids": [
+                    Command.create(
+                        {
+                            "product_id": self.product_a.id,
+                            "tax_ids": [
+                                Command.set(self.company_data["default_tax_sale"].ids)
+                            ],
+                        }
+                    ),
+                ],
+            }
+            for i in range(1, 5)
+        ]
 
         self.submission_invoice = self.env["account.move"].create(invoice_vals)
         self.submission_invoice.action_post()
@@ -473,7 +467,7 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
         # First submission of 5 invoices
         with patch(CONTACT_PROXY_METHOD, new=self._test_13_mock_first_submission):
             first_batch = self.env["account.move"]
-            for i in range(5):
+            for _i in range(5):
                 first_batch |= self.init_invoice(
                     "out_invoice",
                     taxes=self.company_data["default_tax_sale"],
@@ -489,7 +483,7 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
         self.submission_status_count = 0
         with patch(CONTACT_PROXY_METHOD, new=self._test_13_mock):
             second_batch = self.basic_invoice
-            for i in range(4):
+            for _i in range(4):
                 second_batch |= self.init_invoice(
                     "out_invoice",
                     taxes=self.company_data["default_tax_sale"],

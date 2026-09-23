@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, models
 
 
 class AccountJournal(models.Model):

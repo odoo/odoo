@@ -1,5 +1,6 @@
 from odoo import models
 from odoo.libs.numbers import float_repr
+from odoo.tools import float_compare
 
 
 class AccountMoveLine(models.Model):
@@ -107,7 +108,10 @@ class AccountMoveLine(models.Model):
                 else 1
             )
         price_subtotal = abs(self[main_currency_field]) * line_sign
-        if self.quantity and self.discount != 100.0:
+        if (
+            self.quantity
+            and float_compare(self.discount, 100.0, precision_digits=2) != 0
+        ):
             price_unit = (price_subtotal / abs(self.quantity)) / (
                 1 - self.discount / 100
             )
@@ -140,7 +144,10 @@ class AccountMoveLine(models.Model):
         }
         if domestic_invoice_other_currency or export:
             price_subtotal_second = abs(self[second_currency_field]) * line_sign
-            if self.quantity and self.discount != 100.0:
+            if (
+                self.quantity
+                and float_compare(self.discount, 100.0, precision_digits=2) != 0
+            ):
                 price_unit_second = (price_subtotal_second / abs(self.quantity)) / (
                     1 - self.discount / 100
                 )

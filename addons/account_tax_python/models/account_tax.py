@@ -117,7 +117,7 @@ class AccountTax(models.Model):
         except TypeError:
             raise ValidationError(
                 _("Only primitive types are allowed in python tax formula context.")
-            )
+            ) from None
         try:
             return safe_eval(normalized_formula, formula_context)
         except ZeroDivisionError:

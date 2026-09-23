@@ -147,6 +147,7 @@ class ResPartner(models.Model):
                 return codicefiscale.compact(l10n_it_codice_fiscale)
             # Company codice
             return iva.compact(l10n_it_codice_fiscale)
+        return None
 
     @api.onchange("vat", "country_id")
     def _l10n_it_onchange_vat(self):
@@ -212,7 +213,9 @@ class ResPartner(models.Model):
         for key, check in selected_checks.items():
             for fields_tuple in check["fields"]:
                 if invalid_records := self.filtered(
-                    lambda record: not any(record[field] for field in fields_tuple)
+                    lambda record, fields_tuple=fields_tuple: (
+                        not any(record[field] for field in fields_tuple)
+                    )
                 ):
                     views = single_views if len(invalid_records) == 1 else multi_views
                     errors[f"l10n_it_edi_{key}"] = {

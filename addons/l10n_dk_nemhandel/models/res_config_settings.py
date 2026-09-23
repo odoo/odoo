@@ -56,10 +56,7 @@ class ResConfigSettings(models.TransientModel):
         registration_wizard = self.env["nemhandel.registration"].create(
             {"company_id": self.company_id.id}
         )
-        registration_action = registration_wizard._action_view_nemhandel_form(
-            reopen=False
-        )
-        return registration_action
+        return registration_wizard._action_view_nemhandel_form(reopen=False)
 
     @handle_demo
     def button_update_nemhandel_user_data(self):

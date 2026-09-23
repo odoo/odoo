@@ -199,6 +199,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
                 }
             elif endpoint == "checkpaid_qris.php":
                 return {"status": "failed", "data": {"qris_status": "unpaid"}}
+            return None
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         with patch(
@@ -235,6 +236,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
                     },
                     "qris_api_version_code": "2206091709",
                 }
+            return None
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         with patch(
@@ -273,6 +275,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
                     },
                     "qris_api_version_code": "2206091709",
                 }
+            return None
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         with patch(
@@ -302,6 +305,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
                         "qris_nmid": "ID1020021181745",
                     },
                 }
+            return None
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.main_pos_config.current_session_id.set_opening_control(0, "notes")
