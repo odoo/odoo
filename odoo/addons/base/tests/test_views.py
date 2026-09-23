@@ -19,7 +19,7 @@ from odoo.exceptions import AccessError, MissingError, UserError, ValidationErro
 from odoo.fields import Domain
 from odoo.tests import common, tagged
 from odoo.tests.common import get_cache_key_counter
-from odoo.tools import mute_logger, safe_eval, view_validation
+from odoo.tools import file_open, mute_logger, safe_eval, view_validation
 
 from odoo.addons.base.models import ir_ui_view, ir_ui_view_arch
 from odoo.addons.base.models.ir_ui_view_arch import ELEMENT_HANDLERS
@@ -120,6 +120,24 @@ class TestNodeLocator(common.TransactionCase):
                 self.env["ir.ui.view"].locate_node(
                     E.root(E.foo(name="a")), E.xpath(expr=expr)
                 )
+
+    def test_a_locator_failure_speaks_a_translated_message(self):
+        with file_open("base/i18n/es.po") as po:
+            msgids = po.read()
+        for expr, template in (
+            ("", "Missing 'expr' attribute in xpath specification"),
+            ("//foo[", "Invalid Expression while parsing xpath “%s”"),
+        ):
+            with self.subTest(expr=expr):
+                with self.assertRaises(ValidationError) as caught:
+                    self.env["ir.ui.view"].locate_node(
+                        E.root(E.foo()), E.xpath(expr=expr)
+                    )
+                self.assertEqual(
+                    str(caught.exception.args[0]),
+                    template.replace("%s", expr) if "%s" in template else template,
+                )
+                self.assertIn(f'msgid "{template}"', msgids)
 
     def test_match_xpath(self):
         bar = E.bar()

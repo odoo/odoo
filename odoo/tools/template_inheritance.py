@@ -9,9 +9,11 @@ from odoo.libs.xml import (
 from odoo.libs.xml import (
     locate_node as _locate_node_base,
 )
+from odoo.tools.translate import LazyTranslate
 
 __all__ = ["apply_inheritance_specs", "locate_node"]
 
+_lt = LazyTranslate("base")
 _debug = DebugLog(__name__)
 
 
@@ -19,8 +21,16 @@ def locate_node(arch: etree._Element, spec: etree._Element) -> etree._Element | 
     try:
         return _locate_node_base(arch, spec)
     except XPathExpressionError as e:
-        _debug.logic("template_inheritance.locate_failed", expr=spec.get("expr"))
-        raise ValidationError(str(e)) from e
+        expr = spec.get("expr")
+        _debug.logic("template_inheritance.locate_failed", expr=expr)
+        if not expr:
+            message = _lt("Missing 'expr' attribute in xpath specification")
+        elif isinstance(e.__cause__, etree.XPathSyntaxError):
+            # the msgid the translations carry, curly quotes included
+            message = _lt("Invalid Expression while parsing xpath “%s”", expr)
+        else:
+            message = _lt("The xpath “%s” must select elements, not a value", expr)
+        raise ValidationError(message) from e
 
 
 def apply_inheritance_specs(
