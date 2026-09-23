@@ -156,6 +156,27 @@ class TestConnectionGate(TransactionCase):
         self.env.cr.precommit.run()
         self.assertEqual(self.connection.circuit_state, "open")
 
+    def test_an_attempt_of_a_replaced_breaker_does_not_settle_the_new_one(self):
+        from odoo.addons.integration.tools.connection_gate import breaker_for
+
+        def probing(breaker):
+            breaker.record_failure(breaker.acquire_attempt())
+            breaker.record_failure(breaker.acquire_attempt())
+            breaker._opened_at -= breaker._cooldown + 1
+            return breaker.acquire_attempt()
+
+        old_probe = probing(breaker_for(self.env, self.connection))
+        self.connection.breaker_max_cooldown = 120
+        new = breaker_for(self.env, self.connection)
+        new_probe = probing(new)
+        self.assertEqual(old_probe.generation, new_probe.generation)
+
+        self.connection._settle_call(
+            response=MagicMock(status_code=200), attempt=old_probe
+        )
+
+        self.assertFalse(new.closed, "the old breaker's probe closed the new one")
+
     def test_a_probe_refused_by_the_budget_does_not_hold_the_probe_slot(self):
         breaker = self.env.registry._integration_connection_breakers.get(
             self.connection.id, 2, 60, 60

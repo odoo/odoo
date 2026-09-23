@@ -300,7 +300,7 @@ class TestUnsettledAttempts(unittest.TestCase):
     def test_releasing_a_stale_or_ordinary_attempt_changes_nothing(self):
         breaker, probe = self._probing()
         breaker.release(None)
-        stale = type(probe)(probe.generation - 1, probe=True)
+        stale = type(probe)(probe.generation - 1, probe=True, breaker=probe.breaker)
         breaker.release(stale)
         self.assertIsNone(breaker.acquire_attempt())
 
@@ -319,3 +319,20 @@ class TestUnsettledAttempts(unittest.TestCase):
         breaker.record_success(early)
         self.assertEqual(len(breaker._recent_failures), 1)
         self.assertEqual(breaker.failures, 1)
+
+    def test_an_attempt_of_another_breaker_is_stale(self):
+        old = CircuitBreaker(max_cooldown=1200, initial_cooldown=60)
+        new = CircuitBreaker(max_cooldown=1200, initial_cooldown=60)
+        foreign = old.acquire_attempt()
+        new.record_failure(new.acquire_attempt())
+        self.assertEqual(new.acquire_attempt(), None)
+        new._opened_at -= 61
+        probe = new.acquire_attempt()
+        forged = type(probe)(probe.generation, probe=True, breaker=old._id)
+        new.release(forged)
+        self.assertIsNone(new.acquire_attempt(), "a foreign release freed the slot")
+        new.record_success(foreign)
+        new.record_success(forged)
+        self.assertFalse(new.closed)
+        new.record_success(probe)
+        self.assertTrue(new.closed)

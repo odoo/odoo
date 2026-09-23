@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 import threading
 from collections import deque
 from dataclasses import dataclass
@@ -14,17 +15,21 @@ _debug = DebugLog(__name__)
 
 _PROBE_ABANDON_AFTER = 60.0
 
+_BREAKER_IDS = itertools.count(1)
+
 
 @dataclass(frozen=True, slots=True)
 class Attempt:
     generation: int
     probe: bool
+    breaker: int = 0
 
 
 class CircuitBreaker:
     __slots__ = (
         "_cooldown",
         "_generation",
+        "_id",
         "_lock",
         "_open",
         "_opened_at",
@@ -72,6 +77,8 @@ class CircuitBreaker:
         self._opened_at = 0.0
         self._probing_since = 0.0
         self._generation = 0
+        # a registry may replace a breaker; an attempt of the old one is stale here
+        self._id = next(_BREAKER_IDS)
         self.failures = 0
         self.trips = 0
         _debug.lifecycle(
@@ -99,7 +106,7 @@ class CircuitBreaker:
     def acquire_attempt(self) -> Attempt | None:
         with self._lock:
             if not self._open:
-                return Attempt(self._generation, probe=False)
+                return Attempt(self._generation, probe=False, breaker=self._id)
             now = monotonic()
             if now - self._opened_at < self._cooldown:
                 _debug.logic(
@@ -120,10 +127,12 @@ class CircuitBreaker:
             _debug.logic(
                 "breaker.probe", cooldown=self._cooldown, failures=self.failures
             )
-            return Attempt(self._generation, probe=True)
+            return Attempt(self._generation, probe=True, breaker=self._id)
 
     def _is_stale_locked(self, attempt: Attempt | None, outcome: str) -> bool:
-        if attempt is None or attempt.generation == self._generation:
+        if attempt is None or (
+            attempt.breaker == self._id and attempt.generation == self._generation
+        ):
             return False
         _debug.logic(
             "breaker.stale_outcome",
@@ -141,6 +150,7 @@ class CircuitBreaker:
             if (
                 attempt is not None
                 and attempt.probe
+                and attempt.breaker == self._id
                 and attempt.generation == self._generation
                 and self._probing_since
             ):
