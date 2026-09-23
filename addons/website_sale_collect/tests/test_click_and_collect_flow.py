@@ -58,7 +58,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         carrier = self.env["delivery.carrier"].create({
             "name": "Test Carrier",
             "allow_cash_on_delivery": True,
-            "delivery_type": "fixed",
+            "delivery_type": "in_house",
             "product_id": self.storable_product.id,
         })
         carrier.delivery_type = "in_store"
