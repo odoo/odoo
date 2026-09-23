@@ -22,3 +22,14 @@ class ResPartner(models.Model):
         counts = {partner.id: count for partner, count in driver_data}
         for partner in self:
             partner.fleet_training_driver_count = counts.get(partner.id, 0)
+
+    def action_view_fleet_training_drivers(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Fleet Drivers"),
+            'res_model': 'fleet_training.driver',
+            'view_mode': 'list,form',
+            'domain': [('partner_id', '=', self.id)],
+            'context': {'default_partner_id': self.id},
+        }

@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 class FleetVehicle(models.Model):
     _name = 'fleet_training.vehicle'
     _description = 'Fleet Vehicle'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'name'
 
     _license_plate_unique = models.Constraint(
@@ -24,7 +25,7 @@ class FleetVehicle(models.Model):
     active = fields.Boolean(default=True)
     notes = fields.Text()
 
-    driver_id = fields.Many2one('fleet_training.driver', string="Assigned Driver")
+    driver_id = fields.Many2one('fleet_training.driver', string="Assigned Driver", tracking=True)
     category_id = fields.Many2one('fleet_training.category', string="Category")
     tag_ids = fields.Many2many('fleet_training.tag', string="Tags")
 
@@ -36,7 +37,7 @@ class FleetVehicle(models.Model):
             ('assigned', 'Assigned'),
             ('maintenance', 'In Maintenance'),
         ],
-        string="Status", default='available', required=True,
+        string="Status", default='available', required=True, tracking=True,
     )
 
     @api.constrains('model_year')
