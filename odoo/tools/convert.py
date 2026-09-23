@@ -840,7 +840,10 @@ class xml_import:
     ) -> int | Literal[False]:
         id_str = self.normalize_xml_id(id_str)
         if id_str in self.idref:
-            return self.idref[id_str]
+            res_id = self.idref[id_str]
+            if res_id:
+                self.env.registry.record_xmlid_resolved(id_str, res_id)
+            return res_id
         _debug.perf.count("convert.idref_miss", module=self.module, xml_id=id_str)
         return self.model_id_get(id_str, raise_if_not_found)[1]
 
@@ -848,9 +851,12 @@ class xml_import:
         self, id_str: str, raise_if_not_found: bool = True
     ) -> tuple[str, int | Literal[False]]:
         id_str = self.normalize_xml_id(id_str)
-        return self.env["ir.model.data"]._xmlid_to_res_model_res_id(
+        model, res_id = self.env["ir.model.data"]._xmlid_to_res_model_res_id(
             id_str, raise_if_not_found=raise_if_not_found
         )
+        if res_id:
+            self.env.registry.record_xmlid_resolved(id_str, res_id)
+        return model, res_id
 
     def _tag_root(self, el: etree._Element) -> None:
         env = self.get_env(el)

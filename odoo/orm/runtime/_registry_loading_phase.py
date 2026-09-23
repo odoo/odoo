@@ -57,3 +57,8 @@ class _RegistryLoadingPhaseMixin(_RegistryStubs):
         phase = self._loading
         if phase is not None and phase.xmlid_recorder is not None:
             phase.xmlid_recorder.update(xml_ids)
+
+    def record_xmlid_resolved(self, xml_id: str, res_id: int) -> None:
+        phase = self._loading
+        if phase is not None and phase.ref_recorder is not None:
+            phase.ref_recorder[xml_id] = res_id

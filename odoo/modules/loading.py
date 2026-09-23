@@ -49,7 +49,7 @@ _GC_YOUNG_BACKLOG_LIMIT = 100_000
 _GC_FULL_CYCLE_EVERY = 16
 
 
-_DATA_FILE_CHECKSUM_VERSION = 2
+_DATA_FILE_CHECKSUM_VERSION = 3
 
 _DYNAMIC_XML_MARKERS = (b"<function", b"<delete")
 
@@ -160,6 +160,48 @@ def _files_missing_records(cr: BaseCursor, stored_files: dict) -> set[str]:
     return stale
 
 
+def _files_with_moved_refs(cr: BaseCursor, stored_files: dict) -> set[str]:
+    files_by_ref: dict[tuple[str, int], list[str]] = {}
+    for filename, entry in stored_files.items():
+        refs = entry.get("refs") if isinstance(entry, dict) else None
+        if isinstance(refs, dict):
+            for xmlid, res_id in refs.items():
+                if isinstance(res_id, int):
+                    files_by_ref.setdefault((xmlid, res_id), []).append(filename)
+    if not files_by_ref:
+        return set()
+    with _debug.perf(
+        "modules.checksums.moved_ref_scan",
+        cr=cr,
+        files=len(stored_files),
+        refs=len(files_by_ref),
+    ) as span:
+        cr.execute(
+            """
+            SELECT x.xmlid, x.res_id
+            FROM unnest(%s::text[], %s::int[]) AS x(xmlid, res_id)
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM ir_model_data d
+                WHERE d.module = split_part(x.xmlid, '.', 1)
+                    AND d.name = substr(x.xmlid, strpos(x.xmlid, '.') + 1)
+                    AND d.res_id = x.res_id
+             )
+            """,
+            [
+                [xmlid for xmlid, _res_id in files_by_ref],
+                [res_id for _xmlid, res_id in files_by_ref],
+            ],
+        )
+        moved: set[str] = set()
+        count = 0  # debuglog
+        for xmlid, res_id in cr.fetchall():
+            count += 1  # debuglog
+            moved.update(files_by_ref[xmlid, res_id])
+        span.set(moved_refs=count, stale=len(moved))
+    return moved
+
+
 def _convert_and_record(
     env: Environment,
     package: ModuleNode,
@@ -167,11 +209,14 @@ def _convert_and_record(
     idref: IdRef,
     mode: LoadMode,
     kind: LoadKind,
-) -> set[str]:
+) -> tuple[set[str], dict[str, int]]:
     registry = env.registry
     recorder: set[str] = set()
+    refs: dict[str, int] = {}
     previous_recorder = registry.loading.xmlid_recorder
+    previous_refs = registry.loading.ref_recorder
     registry.loading.xmlid_recorder = recorder
+    registry.loading.ref_recorder = refs
     try:
         with _debug.perf(
             "modules.convert_file",
@@ -192,8 +237,9 @@ def _convert_and_record(
             span.set(xmlids=len(recorder))
     finally:
         registry.loading.xmlid_recorder = previous_recorder
+        registry.loading.ref_recorder = previous_refs
     registry.loading.xmlids_written.update(recorder)
-    return recorder
+    return recorder, refs
 
 
 def _load_tracked_file(
@@ -205,6 +251,7 @@ def _load_tracked_file(
     kind: LoadKind,
     stored_files: dict,
     stale_files: set[str],
+    moved_files: set[str],
 ) -> dict:
     with tools.file_open(f"{package.name}/{filename}", "rb") as fp:
         content = fp.read()
@@ -219,6 +266,14 @@ def _load_tracked_file(
             _logger.info(
                 "re-applying unchanged %s/%s: records it declares are gone from "
                 "the database, so its digest no longer witnesses their presence",
+                package.name,
+                filename,
+            )
+        elif filename in moved_files:
+            reason = "moved_refs"  # debuglog
+            _logger.info(
+                "re-applying unchanged %s/%s: a record it references is no "
+                "longer the one it resolved to when it was last applied",
                 package.name,
                 filename,
             )
@@ -262,7 +317,7 @@ def _load_tracked_file(
         dynamic=dynamic,
     )
     _logger.info("loading %s/%s", package.name, filename)
-    recorder = _convert_and_record(env, package, filename, idref, mode, kind)
+    recorder, refs = _convert_and_record(env, package, filename, idref, mode, kind)
     _debug.perf.count(
         "modules.data_file_loaded",
         module=package.name,
@@ -271,7 +326,12 @@ def _load_tracked_file(
         dynamic=dynamic,
         reused=False,
     )
-    return {"sha": digest, "xmlids": sorted(recorder), "dyn": dynamic}
+    return {
+        "sha": digest,
+        "xmlids": sorted(recorder),
+        "refs": dict(sorted(refs.items())),
+        "dyn": dynamic,
+    }
 
 
 def load_data(
@@ -293,6 +353,9 @@ def load_data(
     stale_files = (
         _files_missing_records(env.cr, stored_files) if stored_files else set()
     )
+    moved_files = (
+        _files_with_moved_refs(env.cr, stored_files) if stored_files else set()
+    )
     new_files: dict = {}
     _debug.pipeline(
         "modules.load_data",
@@ -302,6 +365,7 @@ def load_data(
         tracked=track,
         stored=len(stored_files),
         stale=len(stale_files),
+        moved=len(moved_files),
     )
 
     files: set[str] = set()
@@ -352,6 +416,7 @@ def load_data(
                     kind,
                     stored_files,
                     stale_files,
+                    moved_files,
                 )
         span.set(files=len(files), idrefs=len(idref))
 

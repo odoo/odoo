@@ -85,3 +85,61 @@ class TestFilesMissingRecordsAgainstPostgres:
             "mymod_extra.a is a different record from mymod.a; matching on the "
             "module prefix rather than the whole component would hide it"
         )
+
+
+@pytest.fixture
+def imd_ids(scratch_cursor):
+    scratch_cursor.execute(
+        """
+        CREATE TEMP TABLE ir_model_data (
+            module text NOT NULL,
+            name text NOT NULL,
+            res_id integer,
+            PRIMARY KEY (module, name)
+        ) ON COMMIT DROP
+        """
+    )
+    return scratch_cursor
+
+
+def _resolving(cr, xmlid, res_id):
+    module, _, name = xmlid.partition(".")
+    cr.execute(
+        "INSERT INTO ir_model_data (module, name, res_id) VALUES (%s, %s, %s)",
+        (module, name, res_id),
+    )
+
+
+def _referencing(**refs):
+    return {"sha": "irrelevant", "xmlids": [], "refs": refs, "dyn": False}
+
+
+@requires_pg
+class TestFilesWithMovedRefsAgainstPostgres:
+    def test_the_two_arrays_bind_and_a_held_reference_names_nothing(self, imd_ids):
+        _resolving(imd_ids, "website.configurator_s_cover", 1079)
+        assert (
+            loading._files_with_moved_refs(
+                imd_ids,
+                {"views/x.xml": _referencing(**{"website.configurator_s_cover": 1079})},
+            )
+            == set()
+        )
+
+    def test_a_recreated_record_names_the_file_that_referenced_it(self, imd_ids):
+        _resolving(imd_ids, "website.configurator_s_cover", 4042)
+        _resolving(imd_ids, "website.layout", 12)
+        stale = loading._files_with_moved_refs(
+            imd_ids,
+            {
+                "views/x.xml": _referencing(**{"website.configurator_s_cover": 1079}),
+                "views/y.xml": _referencing(**{"website.layout": 12}),
+            },
+        )
+        assert stale == {"views/x.xml"}
+
+    def test_a_reference_gone_altogether_names_the_file(self, imd_ids):
+        stale = loading._files_with_moved_refs(
+            imd_ids, {"views/x.xml": _referencing(**{"website.gone": 5})}
+        )
+        assert stale == {"views/x.xml"}

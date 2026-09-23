@@ -439,6 +439,9 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
     def record_xmlids_written(self, xml_ids: Iterable[str]) -> None:
         self.loaded_xmlids.update(xml_ids)
 
+    def record_xmlid_resolved(self, xml_id: str, res_id: int) -> None:
+        pass
+
     def post_init(self, func: Callable, *args: Any, **kwargs: Any) -> None:
         pass
 

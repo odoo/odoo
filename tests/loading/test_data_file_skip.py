@@ -77,6 +77,8 @@ def loader(tmp_path):
         kind="data",
         written=(),
         missing=(),
+        moved=(),
+        resolved=None,
     ):
         converted, recorded_xmlids = [], {"mymod.a", "mymod.b"}
 
@@ -84,10 +86,20 @@ def loader(tmp_path):
             converted.append(fname)
             if env.registry.loading.xmlid_recorder is not None:
                 env.registry.loading.xmlid_recorder.update(recorded_xmlids)
+            if env.registry.loading.ref_recorder is not None:
+                env.registry.loading.ref_recorder.update(resolved or {})
 
         env = MagicMock()
         env.cr.fetchone.return_value = (stored,)
-        env.cr.fetchall.return_value = [[xmlid] for xmlid in missing]
+        last_query = []
+        env.cr.execute.side_effect = lambda query, *args: last_query.append(query)
+
+        def fetchall():
+            if "d.res_id = x.res_id" in last_query[-1]:
+                return [list(pair) for pair in moved]
+            return [[xmlid] for xmlid in missing]
+
+        env.cr.fetchall.side_effect = fetchall
         registry = env.registry
         registry.loaded_xmlids = set()
         registry.loading = LoadingPhase(xmlids_written=set(written))
@@ -225,6 +237,18 @@ class TestWhatGetsRecorded:
         assert entry["sha"] == _digest()
         assert entry["xmlids"] == ["mymod.a", "mymod.b"], "sorted, so it is stable"
         assert entry["dyn"] is False
+
+    def test_a_freshly_applied_file_records_what_its_references_resolved_to(
+        self, loader
+    ):
+        _, _, written = loader(
+            stored=self._stored({}),
+            resolved={"other.parent": 1469, "mymod.a": 7},
+        )
+        assert written["files"]["data/x.xml"]["refs"] == {
+            "mymod.a": 7,
+            "other.parent": 1469,
+        }
 
     def test_a_dynamic_file_records_that_it_was_dynamic(self, loader):
         content = b'<odoo><delete model="x"/></odoo>'
@@ -471,3 +495,88 @@ class TestARecordGoneFromTheDatabase:
         entry = stored_json["files"]["data/x.xml"]
         assert entry["sha"] == _digest()
         assert entry["xmlids"] == ["mymod.a", "mymod.b"]
+
+
+class _PairCursor:
+    def __init__(self, moved):
+        self.moved = set(moved)
+        self.queries = []
+        self._rows = []
+
+    def execute(self, query, params=None):
+        self.queries.append(query)
+        xmlids, res_ids = params
+        self._rows = [
+            [xmlid, res_id]
+            for xmlid, res_id in zip(xmlids, res_ids, strict=True)
+            if (xmlid, res_id) in self.moved
+        ]
+
+    def fetchall(self):
+        return self._rows
+
+
+class TestFilesWithMovedRefs:
+    def test_a_file_whose_references_still_resolve_is_not_named(self):
+        cr = _PairCursor(moved=[])
+        entry = _entry(_digest(), refs={"other.parent": 1469})
+        assert loading._files_with_moved_refs(cr, {"data/x.xml": entry}) == set()
+        assert len(cr.queries) == 1
+
+    def test_a_reference_now_resolving_elsewhere_names_the_file(self):
+        cr = _PairCursor(moved=[("other.parent", 1469)])
+        stale = loading._files_with_moved_refs(
+            cr,
+            {
+                "data/x.xml": _entry(_digest(), refs={"other.parent": 1469}),
+                "data/y.xml": _entry(_digest(), refs={"other.kept": 12}),
+            },
+        )
+        assert stale == {"data/x.xml"}
+
+    def test_entries_without_references_ask_the_database_nothing(self):
+        cr = _PairCursor(moved=[])
+        assert (
+            loading._files_with_moved_refs(
+                cr, {"data/x.xml": _entry(_digest()), "data/y.xml": "not-a-dict"}
+            )
+            == set()
+        )
+        assert cr.queries == []
+
+
+class TestAReferencedRecordRecreated:
+    def _stored(self, files):
+        return {"v": loading._DATA_FILE_CHECKSUM_VERSION, "files": files}
+
+    def test_an_unchanged_file_is_re_applied_when_a_reference_moved(self, loader):
+        converted, _, _ = loader(
+            stored=self._stored(
+                {"data/x.xml": _entry(_digest(), refs={"other.parent": 1469})}
+            ),
+            moved=[("other.parent", 1469)],
+        )
+        assert converted == ["data/x.xml"], (
+            "the file's records hold the ids its refs resolved to; once the "
+            "referenced record is deleted and recreated under the same xmlid, "
+            "skipping leaves them pointing at the old id -- a theme view's "
+            "inherit_id at a configurator view the website upgrade rebuilt"
+        )
+
+    def test_an_unchanged_file_whose_references_hold_is_still_skipped(self, loader):
+        converted, _, _ = loader(
+            stored=self._stored(
+                {"data/x.xml": _entry(_digest(), refs={"other.parent": 1469})}
+            ),
+        )
+        assert converted == []
+
+    def test_re_application_records_the_new_resolution(self, loader):
+        _, _, stored_json = loader(
+            stored=self._stored(
+                {"data/x.xml": _entry(_digest(), refs={"other.parent": 1469})}
+            ),
+            moved=[("other.parent", 1469)],
+            resolved={"other.parent": 4042},
+        )
+        assert stored_json["files"]["data/x.xml"]["refs"] == {"other.parent": 4042}

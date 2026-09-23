@@ -12,6 +12,7 @@ class LoadingPhase:
     reinit_modules: set[str] = field(default_factory=set)
     xmlids_written: set[str] = field(default_factory=set)
     xmlid_recorder: set[str] | None = None
+    ref_recorder: dict[str, int] | None = None
     load_language_done: bool = False
     addon_state: dict[str, Any] = field(default_factory=dict)
 
