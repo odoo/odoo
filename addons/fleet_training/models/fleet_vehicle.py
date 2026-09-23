@@ -1,10 +1,18 @@
+from datetime import date
+
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class FleetVehicle(models.Model):
     _name = 'fleet_training.vehicle'
     _description = 'Fleet Vehicle'
     _order = 'name'
+
+    _license_plate_unique = models.Constraint(
+        'unique(license_plate)',
+        "This license plate is already registered to another vehicle.",
+    )
 
     name = fields.Char(required=True, help="Internal fleet reference, e.g. 'Fleet-001'.")
     license_plate = fields.Char()
@@ -30,6 +38,24 @@ class FleetVehicle(models.Model):
         ],
         string="Status", default='available', required=True,
     )
+
+    @api.constrains('model_year')
+    def _check_model_year(self):
+        current_year = date.today().year
+        for vehicle in self:
+            if vehicle.model_year and not (1980 <= vehicle.model_year <= current_year + 1):
+                raise ValidationError(
+                    self.env._(
+                        "Model year %(year)s is not valid: it must be between 1980 and %(max_year)s.",
+                        year=vehicle.model_year, max_year=current_year + 1,
+                    )
+                )
+
+    @api.constrains('seats')
+    def _check_seats(self):
+        for vehicle in self:
+            if vehicle.seats <= 0:
+                raise ValidationError(self.env._("A vehicle must have at least one seat."))
 
     def action_set_maintenance(self):
         self.state = 'maintenance'
