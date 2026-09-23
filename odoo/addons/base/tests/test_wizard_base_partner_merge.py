@@ -1,4 +1,4 @@
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import tagged, TransactionCase, new_test_user
 from odoo.exceptions import AccessError, UserError
 from odoo import Command
 
@@ -47,6 +47,47 @@ class TestMergePartner(TransactionCase):
             'res_model': 'res.partner.bank',
             'res_id': self.bank3.id,
         })
+
+    def test_merge_portal_users_other_company(self):
+        company_a = self.env.company
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+
+        user = new_test_user(
+            self.env, login='contact_merger',
+            groups='base.group_user,base.group_partner_manager',
+            company_id=company_a.id,
+            company_ids=[Command.set((company_a + company_b).ids)],
+        )
+
+        partners = self.partner1 + self.partner2
+        partners.write({'email': 'merge@example.com', 'company_id': False})
+        portal_users = self.env['res.users'].create([
+            {
+                'login': partner.name,
+                'partner_id': partner.id,
+                'group_ids': [Command.set([self.env.ref('base.group_portal').id])],
+                'company_id': company_a.id,
+                'company_ids': [Command.set(company_a.ids)],
+            }
+            for partner in partners
+        ])
+        self.assertFalse(partners.company_id)
+
+        for company in (company_a, company_b):
+            with self.subTest(company=company.name), self.cr.savepoint():
+                # Cached user relations can hide the effect of company record rules.
+                self.env.invalidate_all()
+
+                wizard = self.env['base.partner.merge.automatic.wizard'].with_user(user).with_context(
+                    allowed_company_ids=company.ids,
+                    active_model='res.partner', active_ids=partners.ids,
+                ).create({'dst_partner_id': partners[1].id})
+
+                with self.assertRaisesRegex(UserError, 'You cannot merge contacts linked to more than one user'):
+                    wizard.action_merge()
+
+                self.assertEqual(partners.exists(), partners)
+                self.assertEqual(portal_users.mapped('partner_id'), partners)
 
     def test_merge_partners_without_bank_accounts(self):
         """ Test merging partners without any bank accounts """
