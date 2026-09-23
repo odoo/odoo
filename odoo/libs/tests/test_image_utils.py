@@ -287,3 +287,14 @@ class TestIsImageSizeAbove(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestHighBitDepthImages(unittest.TestCase):
+    def test_a_16_bit_grayscale_png_resizes_to_any_target(self):
+        for mode in ("I;16", "I"):
+            for size in ((300, 200), (3, 900), (900, 3)):
+                source = io.BytesIO()
+                Image.new(mode, size).save(source, "PNG")
+                for target in ((128, 128), (0, 64), (64, 0)):
+                    with self.subTest(mode=mode, size=size, target=target):
+                        self.assertTrue(image_process(source.getvalue(), size=target))

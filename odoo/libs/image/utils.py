@@ -94,6 +94,9 @@ def image_data_uri(base64_source: bytes) -> str:
     return f"data:image/{filetype};base64,{base64_source.decode()}"
 
 
+_UNREDUCIBLE_MODES = frozenset({"I", "I;16", "I;16L", "I;16B", "I;16N"})
+
+
 class ImageProcess:
     image: PILImage | Literal[False]
     source: bytes | Literal[False]
@@ -277,7 +280,12 @@ class ImageProcess:
                 self.operations_count += 1
                 return self
             if asked_width != w or asked_height != h:
-                self.image.thumbnail((asked_width, asked_height), Resampling.LANCZOS)
+                self.image.thumbnail(
+                    (asked_width, asked_height),
+                    Resampling.LANCZOS,
+                    # Pillow's reduce() pre-step refuses the integer modes
+                    reducing_gap=None if self.image.mode in _UNREDUCIBLE_MODES else 2.0,
+                )
                 if self.image.width != w or self.image.height != h:
                     self.operations_count += 1
         return self
