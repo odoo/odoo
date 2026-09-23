@@ -1,10 +1,12 @@
 import argparse
-import sys
+import logging
 from collections import Counter
 from io import BytesIO
 from pathlib import Path
 
 from lxml import etree
+
+_logger = logging.getLogger(__name__)
 
 try:
     from ._xml_identity import preserves_content
@@ -560,7 +562,7 @@ def sort_xml_file(
     try:
         tree = etree.parse(BytesIO(source), _PARSER)
     except etree.XMLSyntaxError as exc:
-        print(f"  SKIP  {path}: {exc}", file=sys.stderr)
+        _logger.warning("  SKIP  %s: %s", path, exc)
         return None
 
     root = tree.getroot()
@@ -606,9 +608,8 @@ def sort_xml_file(
         new_content += b"\n"
 
     if not preserves_content(source, new_content):
-        print(
-            f"  SKIP  {path}: the sorted output would not say the same thing",
-            file=sys.stderr,
+        _logger.warning(
+            "  SKIP  %s: the sorted output would not say the same thing", path
         )
         return None
 
@@ -674,13 +675,13 @@ def main(argv: list[str] | None = None) -> None:
             skipped += 1
         elif result:
             label = "would sort" if args.dry_run else "sorted   "
-            print(f"  {label}  {xml_file}")
+            print(f"  {label}  {xml_file}")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
             changed += 1
         else:
             unchanged += 1
 
     verb = "would change" if args.dry_run else "sorted"
-    print(f"\nDone: {changed} {verb}, {unchanged} unchanged, {skipped} skipped")
+    print(f"\nDone: {changed} {verb}, {unchanged} unchanged, {skipped} skipped")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
 
 
 if __name__ == "__main__":

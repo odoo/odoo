@@ -1,4 +1,5 @@
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from .common import PurchaseTestCommon
@@ -143,5 +144,5 @@ class TestReceiptLineMatch(PurchaseTestCommon):
         po = self._create_purchase(self.product, quantity=5.0)
         self._unlink_moves(po)
         move_rows = self._match_rows().filtered("move_id")
-        with self.assertRaises(Exception):
+        with self.assertRaises(UserError):
             move_rows.action_match_lines()

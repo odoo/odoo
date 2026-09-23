@@ -13,10 +13,13 @@ comment inside the parentheses, a `*args` or `**kwargs` -- is reported.
 import argparse
 import ast
 import io
+import logging
 import subprocess
 import sys
 import tokenize
 from pathlib import Path
+
+_logger = logging.getLogger(__name__)
 
 if __package__:
     from ._checker_field_declaration import (
@@ -233,8 +236,8 @@ def main() -> int:
     if args.ruff and changed and not args.dry_run:
         subprocess.run([args.ruff, "format", "--quiet", *changed], check=True)
     for line in declined:
-        print(line, file=sys.stderr)
-    print(
+        _logger.warning("%s", line)
+    print(  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
         f"{total} declaration(s) in {len(changed)} file(s), {len(declined)} declined"
         f"{' (dry run)' if args.dry_run else ''}"
     )

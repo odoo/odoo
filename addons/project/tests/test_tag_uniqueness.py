@@ -1,3 +1,5 @@
+from psycopg.errors import UniqueViolation
+
 from odoo.tests import tagged
 
 from .test_project_base import TestProjectCommon
@@ -11,7 +13,7 @@ class TestTagNameUniqueness(TestProjectCommon):
         tag.with_context(lang="fr_FR").name = "Unicite"
         self.env.flush_all()
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             self.env["project.tags"].create({"name": "Uniqueness"})
             self.env.flush_all()
 

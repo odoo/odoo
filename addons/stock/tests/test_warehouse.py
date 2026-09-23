@@ -1,6 +1,8 @@
 from contextlib import contextmanager
 from unittest.mock import patch
 
+from psycopg.errors import UniqueViolation
+
 from odoo import Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form
@@ -996,7 +998,7 @@ class TestWarehouse(TestStockCommon):
     def test_warehouse_code_is_stored_canonical(self):
         first = self.env["stock.warehouse"].create({"name": "Spaced", "code": "wh a"})
         self.assertEqual(first.code, "WHA")
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             with self.env.cr.savepoint():
                 self.env["stock.warehouse"].create({"name": "Tight", "code": "WHA"})
 

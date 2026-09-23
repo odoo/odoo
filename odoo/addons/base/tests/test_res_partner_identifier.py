@@ -1,5 +1,7 @@
 from unittest.mock import patch
 
+from psycopg.errors import UniqueViolation
+
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -180,7 +182,7 @@ class TestPartnerIdentifier(TransactionCase):
         self.assertEqual(len(created), 2)
 
     def test_two_types_cannot_share_a_code(self):
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             with self.cr.savepoint():
                 self.Type.create({"name": "Kernel Test RFC Twin", "code": "TEST_RFC"})
 

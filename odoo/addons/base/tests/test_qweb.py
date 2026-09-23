@@ -1100,7 +1100,7 @@ class TestQWebBasic(TransactionCase):
             }
         )
         values = {"other": "any value"}
-        with self.assertRaises(Exception):
+        with self.assertRaises(QWebError):
             self.env["ir.qweb"]._render(t.id, values)
 
     def test_compile_expr_forbidden(self):
@@ -1117,7 +1117,7 @@ class TestQWebBasic(TransactionCase):
             "__import__('os').system('echo pwned')",
         ]
         for expr in forbidden:
-            with self.assertRaises(Exception, msg="compile should reject: %s" % expr):
+            with self.assertRaises(SyntaxError, msg="compile should reject: %s" % expr):
                 IrQweb._compile_expr(expr)
 
             view = self.env["ir.ui.view"].create(
@@ -1128,7 +1128,7 @@ class TestQWebBasic(TransactionCase):
                     % misc.html_escape(expr),
                 }
             )
-            with self.assertRaises(Exception, msg="render should reject: %s" % expr):
+            with self.assertRaises(QWebError, msg="render should reject: %s" % expr):
                 IrQweb._render(view.id)
 
     def test_post_processing_att_malicious_scheme(self):

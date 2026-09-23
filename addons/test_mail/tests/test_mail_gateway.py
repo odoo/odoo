@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from unittest.mock import DEFAULT, patch
 
 from markupsafe import Markup
+from psycopg.errors import ForeignKeyViolation
 
 from odoo import Command, exceptions
 from odoo.db import Cursor
@@ -903,8 +904,12 @@ class TestMailgateway(MailGatewayCommon):
                     ],
                 )
                 # never notify the author of the incoming message
-                with self.assertRaises(Exception):
-                    self.assertNotified(new_messages, [{"partner": author_partner}])
+                notified = new_messages.notification_ids.res_partner_id
+                self.assertNotIn(new_messages.author_id, notified)
+                self.assertNotIn(
+                    email_normalize(self.email_from),
+                    notified.mapped("email_normalized"),
+                )
 
             messages = test_record.message_ids
 
@@ -1068,7 +1073,7 @@ class TestMailgateway(MailGatewayCommon):
         # Test with a dangling reference that must trigger bounce emails and set the alias status to invalid.
         container_custom.unlink()
         with (
-            self.assertRaises(Exception),
+            self.assertRaises(ForeignKeyViolation),
             patch(
                 "odoo.addons.mail.models.mixin_mail_gateway.MixinMailGateway._routing_bounce_alias",
                 autospec=True,

@@ -1,3 +1,5 @@
+from psycopg.errors import UniqueViolation
+
 from odoo.db import schema as sql
 from odoo.orm.models.table_objects import Constraint, UniqueIndex
 from odoo.tests import TransactionCase, tagged
@@ -90,13 +92,13 @@ class TestTableObjectConversion(TransactionCase):
     def test_the_rule_each_kind_enforces_actually_applies(self):
         self._named(UniqueIndex("(lower(name))")).apply_to_database(self.model)
         self.env.cr.execute(f"INSERT INTO {_TABLE} (name) VALUES ('Casing')")
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             with self.env.cr.savepoint():
                 self.env.cr.execute(f"INSERT INTO {_TABLE} (name) VALUES ('casing')")
 
         self._named(Constraint("UNIQUE(name)")).apply_to_database(self.model)
         self.env.cr.execute(f"INSERT INTO {_TABLE} (name) VALUES ('casing')")
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             with self.env.cr.savepoint():
                 self.env.cr.execute(f"INSERT INTO {_TABLE} (name) VALUES ('casing')")
 

@@ -915,7 +915,7 @@ class TestMiscToken(TransactionCase):
         self.assertEqual(misc.resolve_hash_signed(self.env, "test", token), payload)
 
     def test_None_payload(self):
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValueError):
             misc.hash_sign(self.env, "test", None, expiration_hours=24)
 
     def test_list_payload(self):

@@ -1,3 +1,5 @@
+from psycopg.errors import UniqueViolation
+
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import HttpCase, tagged
 
@@ -48,7 +50,7 @@ class TestSurveyAccessSurface(common.TestSurveyCommon, HttpCase):
         self.assertIn(self.public_survey.access_token, response.headers["Location"])
 
     def test_slug_is_unique(self):
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             with self.env.cr.savepoint():
                 self.env["survey.survey"].create(
                     {"title": "Clash", "slug": "public-slug"}

@@ -1,3 +1,5 @@
+from psycopg.errors import NotNullViolation
+
 from odoo import Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged, warmup
@@ -816,7 +818,7 @@ class TestAccountReport(AccountTestInvoicingCommon):
         )
 
     def test_a_report_column_cannot_be_orphaned(self):
-        with self.assertRaises(Exception):
+        with self.assertRaises(NotNullViolation):
             self.env["report.formula.column"].create(
                 {"name": "orphan", "expression_label": "balance"}
             )

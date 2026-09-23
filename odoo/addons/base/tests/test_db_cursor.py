@@ -16,6 +16,7 @@ from unittest.mock import MagicMock, patch
 
 import psycopg
 from psycopg import IsolationLevel
+from psycopg.errors import InvalidTextRepresentation
 from psycopg.postgres import types as _pg_types
 from psycopg.pq import TransactionStatus as _TxStatus
 from psycopg_pool import PoolTimeout
@@ -5078,7 +5079,7 @@ class TestFailedStatementsAreCounted(BaseCase):
         try:
             with (
                 self.assertLogs("odoo.db.cursor", level="ERROR") as cm,
-                self.assertRaises(Exception),
+                self.assertRaises(InvalidTextRepresentation),
                 cr.copy("COPY _test_count (a) FROM STDIN") as cp,
             ):
                 cp.write("not-an-integer\n")

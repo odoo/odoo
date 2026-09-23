@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
+from psycopg.errors import CheckViolation, UniqueViolation
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
@@ -513,7 +514,7 @@ class TestPickingTypeSequenceOwnership(TestStockCommon):
             with (
                 self.subTest(blank=blank),
                 mute_logger("odoo.db.cursor"),
-                self.assertRaises(Exception),
+                self.assertRaises(CheckViolation),
                 self.env.cr.savepoint(),
             ):
                 self._create_picking_type("Blank", blank)
@@ -843,7 +844,7 @@ class TestPickingTypeBarcode(TestStockCommon):
             dict(common, name="First", sequence_code="BC1")
         )
         self.env.flush_all()
-        with mute_logger("odoo.db.cursor"), self.assertRaises(Exception):
+        with mute_logger("odoo.db.cursor"), self.assertRaises(UniqueViolation):
             self.env["stock.picking.type"].create(
                 dict(common, name="Second", sequence_code="BC2")
             )

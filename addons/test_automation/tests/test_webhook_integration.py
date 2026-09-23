@@ -486,7 +486,7 @@ record.write({'state': next_states.get(current, 'cancel')})
         )
 
         # Should raise error
-        with self.assertRaises(Exception):
+        with self.assertRaises(SyntaxError):
             automation._execute_webhook({})
 
     def test_webhook_record_getter_returns_no_record(self):
@@ -575,7 +575,7 @@ record.write({'state': next_states.get(current, 'cancel')})
         )
 
         # Should raise exception
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(ValueError) as context:
             automation._execute_webhook({})
 
         self.assertIn("Action failed!", str(context.exception))

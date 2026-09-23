@@ -1,6 +1,7 @@
 from ast import literal_eval
 
 from odoo import Command, exceptions
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger
@@ -461,7 +462,7 @@ class TestMassSMSTest(TestMassSMSCommon):
         )
 
         with self.with_user("user_marketing"):
-            with self.mock_mail_gateway(), self.assertRaises(Exception):
+            with self.mock_mail_gateway(), self.assertRaises(UserError):
                 mailing_test.action_send_sms()
 
 

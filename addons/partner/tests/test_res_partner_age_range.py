@@ -1,5 +1,7 @@
 from unittest.mock import patch
 
+from psycopg.errors import UniqueViolation
+
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -267,7 +269,7 @@ class TestPartnerAgeRange(TransactionCase):
         unupgradable afterwards.
         """
         self.AgeRange.create({"min_value": 1400, "max_value": 1410, "name": "Casing"})
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             with self.env.cr.savepoint():
                 self.AgeRange.create(
                     {"min_value": 1410, "max_value": 1420, "name": "casing"}

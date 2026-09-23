@@ -1,3 +1,5 @@
+from psycopg.errors import UniqueViolation
+
 from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, new_test_user, tagged
 
@@ -131,7 +133,10 @@ class TestResourceAssetStock(TransactionCase):
         )
         from odoo.tools import mute_logger
 
-        with self.assertRaises(Exception), mute_logger("odoo.sql_db", "odoo.db.cursor"):
+        with (
+            self.assertRaises(UniqueViolation),
+            mute_logger("odoo.sql_db", "odoo.db.cursor"),
+        ):
             with self.env.cr.savepoint():
                 other.asset_id = lot.asset_id
                 other.flush_recordset()

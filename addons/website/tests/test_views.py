@@ -1,5 +1,4 @@
 import json
-import unittest
 from hashlib import sha256
 from itertools import zip_longest
 from unittest.mock import patch
@@ -361,20 +360,6 @@ class TestViewSaving(TestViewSavingCommon):
 
         company = self.env["res.company"].browse(1)
         self.assertEqual(company.website, "+00 00 000 00 0 000")
-
-    @unittest.skip(
-        "save conflict for embedded (saved by third party or previous version in "
-        "page) not implemented - tracked in task 32036"
-    )
-    def test_embedded_conflict(self):
-        e1 = h.SPAN("My Company", attrs(model="res.company", id=1, field="name"))
-        e2 = h.SPAN("Leeroy Jenkins", attrs(model="res.company", id=1, field="name"))
-
-        View = self.env["ir.ui.view"]
-
-        View.save_embedded_field(e1)
-        with self.assertRaises(Exception):
-            View.save_embedded_field(e2)
 
     def test_embedded_to_field_ref(self):
         View = self.env["ir.ui.view"]

@@ -501,7 +501,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
 
     def test_constraints(self):
         def assertStatementLineConstraint(statement_line_vals):
-            with self.assertRaises(Exception):
+            with self.assertRaises(ValidationError):
                 self.env["account.bank.statement.line"].create(statement_line_vals)
 
         statement_line_vals = {

@@ -1,3 +1,5 @@
+from psycopg.errors import CheckViolation, UniqueViolation
+
 from odoo.exceptions import AccessError, ValidationError
 from odoo.libs.documents import Cue
 from odoo.tests import tagged
@@ -29,7 +31,7 @@ class TestMediaSegment(SpeechCase):
 
     def test_a_segment_must_end_after_it_starts(self):
         recording = self._recording()
-        with self.assertRaises(Exception):
+        with self.assertRaises(CheckViolation):
             recording._add_media_segment(self._audio(), 2000, 2000)
 
     def test_deleting_a_segment_deletes_its_media(self):
@@ -51,7 +53,7 @@ class TestMediaSegment(SpeechCase):
         second = self._recording("second")
         attachment = self._audio()
         first._add_media_segment(attachment, 0, 1000)
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             second._add_media_segment(attachment, 0, 1000)
 
     def test_a_segment_knows_its_owner(self):

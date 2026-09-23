@@ -1,4 +1,4 @@
-from psycopg.errors import CheckViolation
+from psycopg.errors import CheckViolation, UndefinedColumn
 
 from odoo.db import schema as sql
 from odoo.tests.common import BaseCase, TransactionCase
@@ -290,7 +290,7 @@ class TestEnvExecuteQuery(TransactionCase):
 
     def test_a_real_sql_error_is_not_swallowed(self):
         with (
-            self.assertRaises(Exception),
+            self.assertRaises(UndefinedColumn),
             mute_logger("odoo.db"),
             self.env.cr.savepoint(),
         ):

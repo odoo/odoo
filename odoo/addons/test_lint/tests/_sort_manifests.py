@@ -1,8 +1,11 @@
 import argparse
 import ast
 import json
+import logging
 import sys
 from pathlib import Path
+
+_logger = logging.getLogger(__name__)
 
 MANIFEST_KEY_ORDER: list[str] = [
     "name",
@@ -226,22 +229,22 @@ def sort_manifest(path: Path, *, dry_run: bool = False) -> bool | None:
     try:
         tree = ast.parse(source)
     except SyntaxError as exc:
-        print(f"  SKIP  {path}: syntax error — {exc}", file=sys.stderr)
+        _logger.warning("  SKIP  %s: syntax error — %s", path, exc)
         return None
 
     dict_node = _dict_literal(tree)
     if dict_node is None:
-        print(f"  SKIP  {path}: no top-level dict literal found", file=sys.stderr)
+        _logger.warning("  SKIP  %s: no top-level dict literal found", path)
         return None
 
     try:
         data = ast.literal_eval(dict_node)
     except (ValueError, TypeError) as exc:
-        print(f"  SKIP  {path}: cannot evaluate dict — {exc}", file=sys.stderr)
+        _logger.warning("  SKIP  %s: cannot evaluate dict — %s", path, exc)
         return None
 
     if not isinstance(data, dict):
-        print(f"  SKIP  {path}: top-level literal is not a dict", file=sys.stderr)
+        _logger.warning("  SKIP  %s: top-level literal is not a dict", path)
         return None
 
     expected = normalize(path.parent.name, data)
@@ -262,9 +265,8 @@ def sort_manifest(path: Path, *, dry_run: bool = False) -> bool | None:
         return False
 
     if not _is_faithful(new_source, expected):
-        print(
-            f"  SKIP  {path}: the rewritten manifest would not say the same thing",
-            file=sys.stderr,
+        _logger.warning(
+            "  SKIP  %s: the rewritten manifest would not say the same thing", path
         )
         return None
 
@@ -330,13 +332,13 @@ def main(argv: list[str] | None = None) -> int:
             skipped += 1
         elif result:
             label = "would rewrite" if args.dry_run else "rewrote      "
-            print(f"  {label}  {manifest}")
+            print(f"  {label}  {manifest}")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
             changed += 1
         else:
             unchanged += 1
 
     verb = "would change" if args.dry_run else "rewrote"
-    print(f"\nDone: {changed} {verb}, {unchanged} unchanged, {skipped} skipped")
+    print(f"\nDone: {changed} {verb}, {unchanged} unchanged, {skipped} skipped")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
     return 1 if skipped or (args.dry_run and changed) else 0
 
 

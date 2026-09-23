@@ -1,3 +1,5 @@
+import psycopg.errors
+
 from odoo.libs.sql import SQL
 from odoo.tests.common import TransactionCase
 
@@ -174,7 +176,7 @@ class TestFromEntryShapes(TransactionCase):
         self.assertEqual(entry.code, "LEFT JOIN (SELECT 1) x ON x.c = 1")
 
         # what rendering both would have produced, and why it is not rendered
-        with self.assertRaises(Exception):  # psycopg SyntaxError
+        with self.assertRaises(psycopg.errors.SyntaxError):
             with self.env.cr.savepoint():
                 self.env.cr.execute(
                     SQL("SELECT * FROM (SELECT 1 AS c) x a"), log_exceptions=False

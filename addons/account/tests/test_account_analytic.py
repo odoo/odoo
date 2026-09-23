@@ -1,5 +1,5 @@
 from odoo import Command
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tests import Form, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -437,7 +437,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         )
         for invoices in [invoice1, invoice1 | invoice2]:
             with self.subTest(invoices=invoices):
-                with self.assertRaises(Exception):
+                with self.assertRaises(RedirectWarning):
                     vam.action_post_moves()
                 self.assertTrue("posted" not in invoices.mapped("state"))
 

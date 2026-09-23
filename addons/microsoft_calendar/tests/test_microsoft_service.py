@@ -19,6 +19,10 @@ from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 DEFAULT_TIMEOUT = 20
 
 
+class _UnexpectedError(Exception):
+    pass
+
+
 class TestMicrosoftService(TransactionCase):
     def _do_request_result(self, data):
         """_do_request returns a tuple (status, data, time) but only the data part is used"""
@@ -72,9 +76,9 @@ class TestMicrosoftService(TransactionCase):
         """
         When an unexpected exception is raised, just propagate it.
         """
-        mock_do_request.side_effect = Exception()
+        mock_do_request.side_effect = _UnexpectedError()
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(_UnexpectedError):
             self.service._get_events_delta(
                 token=self.fake_token, timeout=DEFAULT_TIMEOUT
             )

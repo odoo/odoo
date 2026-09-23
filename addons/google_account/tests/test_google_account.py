@@ -54,7 +54,7 @@ class TestGoogleService(TransactionCase):
 
     def test_do_request_rejects_unknown_method(self):
         """An unsupported HTTP method is rejected before any request is made."""
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValueError):
             self.service._do_request("/drive/v3/files", method="FETCH")
 
     def test_do_request_post_returns_status_and_json(self):

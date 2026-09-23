@@ -1,6 +1,8 @@
 from contextlib import contextmanager
 from unittest.mock import patch
 
+from psycopg.errors import CheckViolation
+
 from odoo import Command, models
 from odoo.exceptions import (
     AccessError,
@@ -792,10 +794,10 @@ class TestPartnerValuePropagationRules(TransactionCase):
 class TestPartnerNameConstraint(TransactionCase):
     def test_a_contact_without_a_name_is_refused_whatever_the_type_column_holds(self):
         Partner = self.env["res.partner"]
-        with self.assertRaises(Exception):
+        with self.assertRaises(CheckViolation):
             with self.cr.savepoint():
                 Partner.create({"type": "contact"})
-        with self.assertRaises(Exception):
+        with self.assertRaises(CheckViolation):
             with self.cr.savepoint():
                 Partner.create({"type": False})
         Partner.create({"type": "invoice"})

@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from psycopg.errors import CheckViolation, RestrictViolation
+
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import TransactionCase, tagged
 
@@ -341,7 +343,10 @@ class TestResourceAssignment(TransactionCase):
     def test_end_before_start_is_rejected(self):
         from odoo.tools import mute_logger
 
-        with self.assertRaises(Exception), mute_logger("odoo.sql_db", "odoo.db.cursor"):
+        with (
+            self.assertRaises(CheckViolation),
+            mute_logger("odoo.sql_db", "odoo.db.cursor"),
+        ):
             with self.env.cr.savepoint():
                 self._assign(date_end=self.now - timedelta(days=2))
 
@@ -359,7 +364,7 @@ class TestResourceAssignment(TransactionCase):
 
         self._assign(date_end=self.now + timedelta(days=3))
         with (
-            self.assertRaises(Exception),
+            self.assertRaises(RestrictViolation),
             mute_logger("odoo.sql_db", "odoo.db.cursor"),
             self.env.cr.savepoint(),
         ):

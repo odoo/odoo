@@ -1,9 +1,11 @@
 import argparse
-import sys
+import logging
 from io import BytesIO
 from pathlib import Path
 
 from lxml import etree
+
+_logger = logging.getLogger(__name__)
 
 try:
     from . import _pretty_xml
@@ -59,7 +61,7 @@ def modernize_xml_file(path: Path, *, dry_run: bool = False) -> bool | None:
     try:
         tree = etree.parse(BytesIO(source), _PARSER)
     except etree.XMLSyntaxError as exc:
-        print(f"  SKIP  {path}: {exc}", file=sys.stderr)
+        _logger.warning("  SKIP  %s: %s", path, exc)
         return None
 
     changed = False
@@ -78,9 +80,8 @@ def modernize_xml_file(path: Path, *, dry_run: bool = False) -> bool | None:
         new_content += b"\n"
 
     if not is_rename_only(source, new_content):
-        print(
-            f"  SKIP  {path}: the rewrite changes more than the directive names",
-            file=sys.stderr,
+        _logger.warning(
+            "  SKIP  %s: the rewrite changes more than the directive names", path
         )
         return None
 
@@ -129,12 +130,12 @@ def main(argv: list[str] | None = None) -> None:
             skipped += 1
         elif result:
             label = "would rename" if args.dry_run else "renamed     "
-            print(f"  {label}  {xml_file}")
+            print(f"  {label}  {xml_file}")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
             changed += 1
         else:
             unchanged += 1
     verb = "would change" if args.dry_run else "renamed"
-    print(f"\nDone: {changed} {verb}, {unchanged} unchanged, {skipped} skipped")
+    print(f"\nDone: {changed} {verb}, {unchanged} unchanged, {skipped} skipped")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
 
 
 if __name__ == "__main__":

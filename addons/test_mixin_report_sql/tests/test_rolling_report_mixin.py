@@ -1,6 +1,8 @@
 import datetime as dt
 from unittest.mock import patch
 
+from psycopg.errors import UndefinedColumn
+
 from odoo.libs.sql import SQL
 from odoo.tests.common import TransactionCase
 
@@ -170,7 +172,7 @@ class TestSelfHealing(RollingCase):
         self.env.cr.execute(
             SQL("ALTER TABLE %s DROP COLUMN total", SQL.identifier(self.table))
         )
-        with self.assertRaises(Exception):
+        with self.assertRaises(UndefinedColumn):
             self.report.refresh()
         self.env["ir.config_parameter"].sudo().set_param("mixin_report_sql.roll", "1")
         self.env.flush_all()

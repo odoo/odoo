@@ -1,5 +1,7 @@
 from unittest.mock import patch
 
+from psycopg.errors import UniqueViolation
+
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import common
 
@@ -172,7 +174,7 @@ class TestQuest(common.TransactionCase):
                 "user_id": self.user.id,
             }
         )
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             self.env["gamification.quest.enrollment"].create(
                 {
                     "quest_id": self.quest.id,

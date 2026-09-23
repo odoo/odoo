@@ -707,7 +707,7 @@ record.write({
         )
         automation.write({"action_server_ids": [Command.link(action.id)]})
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValueError):
             self.env["res.partner"].create({"name": "Test"})
 
     def test_invalid_code_in_action(self):

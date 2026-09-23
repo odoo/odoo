@@ -1,3 +1,5 @@
+from psycopg.errors import CheckViolation
+
 from odoo import Command, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import freeze_time, tagged
@@ -339,7 +341,7 @@ class TestDependencyStoresAgree(TestProjectCommon):
             Dependency.create({"task_id": self.a.id, "depends_on_id": self.b.id})
 
     def test_self_dependency_is_a_cycle(self) -> None:
-        with self.assertRaises(Exception):
+        with self.assertRaises(CheckViolation):
             self.env["project.task.dependency"].create(
                 {"task_id": self.a.id, "depends_on_id": self.a.id}
             )

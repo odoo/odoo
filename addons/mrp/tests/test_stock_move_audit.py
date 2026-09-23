@@ -1,3 +1,5 @@
+from psycopg.errors import CheckViolation
+
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
@@ -62,7 +64,7 @@ class TestStockMoveAudit(TestMrpCommon):
         self.assertEqual(raw_move._get_production(), production)
 
         with self.assertRaises(
-            Exception,
+            CheckViolation,
             msg="a move that is a component of one order and an output of another "
             "has no single answer to `_get_production`, and every call site that "
             "spells the choice as an `or` would disagree with the ones that spell "

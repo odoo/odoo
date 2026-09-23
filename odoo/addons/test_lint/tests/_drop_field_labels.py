@@ -10,6 +10,7 @@ import argparse
 import ast
 import inspect
 import json
+import logging
 import subprocess
 import sys
 from collections import defaultdict
@@ -34,6 +35,8 @@ from odoo.orm.models.metaclass import MetaModel  # noqa: E402  the path is fixed
 from odoo.addons.test_lint.tests._checker_field_declaration import (  # noqa: E402  the path is fixed above
     bound_names,
 )
+
+_logger = logging.getLogger(__name__)
 
 
 def auto_label(name: str) -> str:
@@ -178,7 +181,7 @@ def main() -> int:
     for path, wanted in sorted(by_file.items()):
         before, after, count = rewrite(path, wanted)
         if count != len(wanted):
-            print(f"{path}: {len(wanted)} redundant, {count} located", file=sys.stderr)
+            _logger.warning("%s: %s redundant, %s located", path, len(wanted), count)
         ast.parse(after, path)
         total += count
         if after != before:
@@ -192,7 +195,7 @@ def main() -> int:
             json.dumps({p: sorted(map(list, w)) for p, w in by_file.items()}, indent=1),
             encoding="utf-8",
         )
-    print(
+    print(  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
         f"{total} label(s) in {len(by_file)} file(s){' (dry run)' if args.dry_run else ''}"
     )
     return 0

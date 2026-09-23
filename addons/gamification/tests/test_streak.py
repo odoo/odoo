@@ -2,6 +2,7 @@ from datetime import date, timedelta
 from unittest.mock import patch
 
 from freezegun import freeze_time
+from psycopg.errors import UniqueViolation
 
 from odoo import fields
 from odoo.exceptions import UserError
@@ -379,7 +380,7 @@ class TestStreak(TestStreakCommon):
                 "freeze_remaining": self.streak_type.freeze_allowance,
             }
         )
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             self.env["gamification.streak"].create(
                 {
                     "user_id": self.test_user.id,

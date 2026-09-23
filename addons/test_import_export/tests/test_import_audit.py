@@ -15,6 +15,7 @@ import io
 import unittest
 from unittest.mock import patch
 
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, can_import, new_test_user
 
 from odoo.addons.base_import.models.base_import import (
@@ -84,7 +85,7 @@ class TestReaderDispatch(ImportAuditCommon):
                 file=b"\x00\x01junk", file_name=name, file_type="application/x-thing"
             )
             calls.clear()
-            with self.assertRaises(Exception):
+            with self.assertRaises(UserError):
                 wizard._read_file({"quoting": '"'})
             self.assertEqual(len(calls), 1, f"{name} re-entered _read_file")
 

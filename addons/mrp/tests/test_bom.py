@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+from psycopg.errors import CheckViolation
+
 from odoo import exceptions, fields
 from odoo.exceptions import UserError
 from odoo.fields import Command
@@ -4529,7 +4531,7 @@ class TestBoMAuditFixes(TestMrpCommon):
 
     def test_a_byproduct_quantity_cannot_be_negative(self):
         finished = self._product("NEG-F")
-        with self.assertRaises(Exception):
+        with self.assertRaises(CheckViolation):
             self.env["mrp.bom"].create(
                 {
                     "product_tmpl_id": finished.product_tmpl_id.id,

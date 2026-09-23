@@ -75,7 +75,7 @@ class TestHeaderMisc(BaseOrderTestCase):
         self.assertEqual(not_late, on_time + undated + draft_past)
 
     def test_is_late_search_rejects_bad_operator(self):
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValueError):
             self.env["base.order.test"].search([("is_late", ">", True)])
 
     def test_is_late_field_agrees_with_its_own_filter(self):

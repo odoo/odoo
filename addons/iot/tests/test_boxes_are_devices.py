@@ -1,3 +1,5 @@
+from psycopg.errors import NotNullViolation
+
 from odoo.tests import TransactionCase, tagged
 
 
@@ -123,7 +125,7 @@ class TestBoxesAreDevices(TransactionCase):
     def test_the_registry_refuses_a_peripheral_it_cannot_name(self):
         # Identity is what a registry is for: the box reports an identifier
         # with every device it finds, and one that carries none is not a row.
-        with self.assertRaises(Exception):
+        with self.assertRaises(NotNullViolation):
             with self.env.cr.savepoint():
                 self.env["iot.device"].create(
                     {"name": "Nameless", "iot_id": self.box.id, "type": "scale"}

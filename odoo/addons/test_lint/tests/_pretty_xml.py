@@ -1,10 +1,12 @@
 import argparse
+import logging
 import re
-import sys
 from io import BytesIO
 from pathlib import Path
 
 from lxml import etree
+
+_logger = logging.getLogger(__name__)
 
 try:
     from ._xml_identity import PARSER as _PARSER
@@ -409,7 +411,7 @@ def format_xml_file(
     try:
         tree = etree.parse(BytesIO(source), _PARSER)
     except etree.XMLSyntaxError as exc:
-        print(f"  SKIP  {path}: {exc}", file=sys.stderr)
+        _logger.warning("  SKIP  %s: %s", path, exc)
         return None
 
     root = tree.getroot()
@@ -429,7 +431,7 @@ def format_xml_file(
     try:
         out.extend(_format_element(root, depth=0))
     except UnrenderableName as exc:
-        print(f"  SKIP  {path}: cannot render the name {exc}", file=sys.stderr)
+        _logger.warning("  SKIP  %s: cannot render the name %s", path, exc)
         return None
 
     new_content = "\n".join(out) + "\n"
@@ -439,9 +441,8 @@ def format_xml_file(
         return False
 
     if not is_faithful(source, new_bytes):
-        print(
-            f"  SKIP  {path}: the formatted output would not say the same thing",
-            file=sys.stderr,
+        _logger.warning(
+            "  SKIP  %s: the formatted output would not say the same thing", path
         )
         return None
 
@@ -503,16 +504,16 @@ def main(argv: list[str] | None = None) -> None:
         elif result:
             if not args.count:
                 label = "would format" if dry_run else "formatted  "
-                print(f"  {label}  {xml_file}")
+                print(f"  {label}  {xml_file}")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
             changed += 1
         else:
             unchanged += 1
 
     if args.count:
-        print(changed)
+        print(changed)  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
         return
     verb = "would change" if dry_run else "formatted"
-    print(f"\nDone: {changed} {verb}, {unchanged} unchanged, {skipped} skipped")
+    print(f"\nDone: {changed} {verb}, {unchanged} unchanged, {skipped} skipped")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
 
 
 if __name__ == "__main__":

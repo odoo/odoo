@@ -1,3 +1,5 @@
+from psycopg.errors import UniqueViolation
+
 from odoo.tests.common import TransactionCase
 
 
@@ -34,7 +36,7 @@ class TestAssetDocuments(TransactionCase):
         self.assertFalse(other._check_create_documents())
 
     def test_one_row_per_kind_and_company(self):
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             with self.env.cr.savepoint():
                 self.env["resource.asset.kind.document"].create(
                     {"kind_id": self.kind.id, "company_id": self.env.company.id}

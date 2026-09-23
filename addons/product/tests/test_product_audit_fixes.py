@@ -1,6 +1,7 @@
 from types import SimpleNamespace
 
 import psycopg
+from psycopg.errors import UniqueViolation
 
 from odoo import Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -282,7 +283,7 @@ class TestProductAuditFixes(ProductCommon):
             }
         )
         self.env.flush_all()
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             self.env["product.uom"].create(
                 {
                     "product_id": template.product_variant_id.id,

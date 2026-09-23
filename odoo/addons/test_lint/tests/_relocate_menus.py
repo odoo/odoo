@@ -1,11 +1,13 @@
 import argparse
 import ast
+import logging
 import re
-import sys
 from io import BytesIO
 from pathlib import Path
 
 from lxml import etree
+
+_logger = logging.getLogger(__name__)
 
 try:
     from . import _pretty_xml
@@ -316,16 +318,16 @@ def main(argv: list[str] | None = None) -> None:
                 python_refs_verified=module.name in args.python_refs_verified,
             )
             if why:
-                print(f"  SKIP  {why}", file=sys.stderr)
+                _logger.warning("  SKIP  %s", why)
                 skipped += 1
             elif result:
                 label = "would move" if args.dry_run else "moved     "
-                print(f"  {label}  {module.name}")
+                print(f"  {label}  {module.name}")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
                 changed += 1
             else:
                 unchanged += 1
     verb = "would change" if args.dry_run else "changed"
-    print(f"\nDone: {changed} {verb}, {unchanged} unchanged, {skipped} skipped")
+    print(f"\nDone: {changed} {verb}, {unchanged} unchanged, {skipped} skipped")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
 
 
 if __name__ == "__main__":

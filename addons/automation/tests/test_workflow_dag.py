@@ -1,6 +1,7 @@
 import logging
 
 from dateutil.relativedelta import relativedelta
+from psycopg.errors import UniqueViolation
 
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
@@ -593,7 +594,7 @@ class TestWorkflowEdgeConditions(TransactionCase):
         first, second = self._action("first"), self._action("second")
         link(self.env, first, second)
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(UniqueViolation):
             link(self.env, first, second, condition="always")
 
     def test_an_edge_across_two_automations_is_refused(self):

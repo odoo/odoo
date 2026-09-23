@@ -3,6 +3,7 @@ from ast import literal_eval
 from datetime import UTC, datetime, timedelta
 
 from lxml import etree
+from psycopg.errors import UniqueViolation
 
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import Form, TransactionCase, new_test_user, tagged
@@ -272,7 +273,10 @@ class TestResourceAsset(TransactionCase):
         self.env["resource.asset.identifier"].create(
             {"asset_id": truck.id, "type_id": self.plate.id, "value": "A"}
         )
-        with self.assertRaises(Exception), mute_logger("odoo.sql_db", "odoo.db.cursor"):
+        with (
+            self.assertRaises(UniqueViolation),
+            mute_logger("odoo.sql_db", "odoo.db.cursor"),
+        ):
             with self.env.cr.savepoint():
                 self.env["resource.asset.identifier"].create(
                     {"asset_id": truck.id, "type_id": self.plate.id, "value": "B"}
@@ -463,7 +467,10 @@ class TestResourceAsset(TransactionCase):
 
     def test_a_resource_is_one_asset_at_most(self):
         truck = self._truck()
-        with self.assertRaises(Exception), mute_logger("odoo.sql_db", "odoo.db.cursor"):
+        with (
+            self.assertRaises(UniqueViolation),
+            mute_logger("odoo.sql_db", "odoo.db.cursor"),
+        ):
             with self.env.cr.savepoint():
                 self.Asset.create(
                     {

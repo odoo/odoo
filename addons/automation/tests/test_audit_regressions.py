@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 from odoo import Command
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import TransactionCase, tagged
 
 
@@ -105,7 +106,7 @@ class TestDagIntegrity(AutomationAuditCommon):
         foreign = self._action(other, "foreign")
         mine = self._automation("mine")
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             self._action(mine, "dependent", predecessors=[foreign])
 
     def test_run_that_cannot_advance_is_marked_failed(self):
@@ -132,7 +133,7 @@ class TestDagIntegrity(AutomationAuditCommon):
         automation = self._automation("cyclic")
         a = self._action(automation, "a")
         b = self._action(automation, "b", predecessors=[a])
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             self._link(b, a)
 
 
@@ -418,11 +419,11 @@ class TestRuntimeCreatePrivileges(AutomationAuditCommon):
         automation = self._automation("acl")
         Runtime = self.Runtime.with_user(employee)
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(AccessError):
             Runtime.create({"automation_id": automation.id})
 
         with self.assertRaises(
-            Exception,
+            AccessError,
             msg="company_id must not grant a create the user lacks",
         ):
             Runtime.create(

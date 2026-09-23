@@ -1,4 +1,4 @@
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -284,6 +284,6 @@ class TestTemplateBarcodeCheckBatching(ProductCommon):
             }
         )
         self.assertTrue(first and second, "cross-company reuse must stay allowed")
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             second.write({"company_id": self.env.company.id})
             self.env.flush_all()

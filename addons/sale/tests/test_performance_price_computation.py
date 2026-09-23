@@ -1,7 +1,10 @@
+import logging
 import time
 from contextlib import contextmanager
 
 from odoo.tests import TransactionCase, tagged
+
+_logger = logging.getLogger(__name__)
 
 
 @contextmanager
@@ -9,7 +12,7 @@ def timing(description=""):
     start = time.perf_counter()
     yield
     elapsed = time.perf_counter() - start
-    print(f"{description}: {elapsed:.4f}s")
+    _logger.info("%s: %.4fs", description, elapsed)
 
 
 class PriceComputationPerformanceBase(TransactionCase):
@@ -181,8 +184,10 @@ class TestPriceComputationPerformance(PriceComputationPerformanceBase):
             f"_get_pricelist_price called {call_count} times for {num_regular_lines} lines. "
             f"Expected at most {num_regular_lines} calls (once per line).",
         )
-        print(
-            f"_get_pricelist_price calls: {call_count} for {num_regular_lines} regular lines"
+        _logger.info(
+            "_get_pricelist_price calls: %s for %s regular lines",
+            call_count,
+            num_regular_lines,
         )
 
     def test_06_discount_computation_reuses_prices(self):
@@ -219,8 +224,10 @@ class TestPriceComputationPerformance(PriceComputationPerformanceBase):
             num_regular_lines,
             f"_get_pricelist_price_before_discount called {call_count} times for {num_regular_lines} lines.",
         )
-        print(
-            f"_get_pricelist_price_before_discount calls: {call_count} for {num_regular_lines} regular lines"
+        _logger.info(
+            "_get_pricelist_price_before_discount calls: %s for %s regular lines",
+            call_count,
+            num_regular_lines,
         )
 
     def test_07_full_order_creation_performance(self):
@@ -278,7 +285,9 @@ class TestPriceComputationPerformance(PriceComputationPerformanceBase):
             type(order.line_ids)._get_pricelist_price = original_method
 
         num_lines = len(order.line_ids)
-        print(f"With {num_lines} lines (10 manual): {call_count} pricelist calls")
+        _logger.info(
+            "With %s lines (10 manual): %s pricelist calls", num_lines, call_count
+        )
 
         for line in order.line_ids[:10]:
             self.assertEqual(

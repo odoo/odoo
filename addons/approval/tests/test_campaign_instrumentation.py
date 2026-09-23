@@ -26,6 +26,7 @@ import re
 from pathlib import Path
 from unittest.mock import patch
 
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from .common import ApprovalCommon
@@ -86,7 +87,7 @@ class TestCampaignRefusalCensus(ApprovalCommon):
         category = self._make_category(name="Census Red", approvers=[self.approver_1])
         request = self._prepare_request(category)
         with self.assertLogs("odoo.approval.refusal", level="DEBUG") as captured:
-            with self.assertRaises(Exception):
+            with self.assertRaises(UserError):
                 request.action_confirm()
         self.assertTrue(
             any("confirm_not_draft" in line for line in captured.output),

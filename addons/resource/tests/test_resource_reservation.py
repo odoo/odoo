@@ -1,5 +1,7 @@
 from datetime import UTC, datetime
 
+from psycopg.errors import CheckViolation
+
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -755,7 +757,10 @@ class TestResourceCapacity(TransactionCase):
     def test_capacity_must_be_positive(self):
         from odoo.tools import mute_logger
 
-        with self.assertRaises(Exception), mute_logger("odoo.sql_db", "odoo.db.cursor"):
+        with (
+            self.assertRaises(CheckViolation),
+            mute_logger("odoo.sql_db", "odoo.db.cursor"),
+        ):
             with self.env.cr.savepoint():
                 self.env["resource.resource"].create(
                     {

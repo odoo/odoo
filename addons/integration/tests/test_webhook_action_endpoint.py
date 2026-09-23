@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from odoo.exceptions import ValidationError
 from odoo.libs import netguard
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
@@ -134,12 +135,12 @@ class TestWebhookActionEndpoint(TransactionCase):
                 "retry_enabled": True,
             }
         )
-        with self.assertRaises(Exception) as caught:
+        with self.assertRaises(ValidationError) as caught:
             self._action(webhook_endpoint_id=retrying.id)
         self.assertIn("retry", str(caught.exception).lower())
 
     def test_a_non_webhook_action_cannot_carry_an_endpoint(self):
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             self.env["ir.actions.server"].create(
                 {
                     "name": "code action",

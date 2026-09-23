@@ -1,5 +1,6 @@
 import time
 
+from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase, tagged
 
 
@@ -26,17 +27,17 @@ class TestHrAttendance(TransactionCase):
         )
 
     def test_attendance_in_before_out(self):
-        with self.assertRaises(Exception):
-            self.my_attend = self.attendance.create(
+        with self.assertRaises(ValidationError):
+            self.attendance.create(
                 {
-                    "employee_id": self.test_employee.id,
+                    "employee_id": self.other_employee.id,
                     "check_in": time.strftime("%Y-%m-10 12:00"),
                     "check_out": time.strftime("%Y-%m-10 11:00"),
                 }
             )
 
     def test_attendance_no_check_out(self):
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             self.attendance.create(
                 {
                     "employee_id": self.test_employee.id,
@@ -52,7 +53,7 @@ class TestHrAttendance(TransactionCase):
                 "check_out": time.strftime("%Y-%m-10 09:00"),
             }
         )
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             self.attendance.create(
                 {
                     "employee_id": self.test_employee.id,
@@ -68,7 +69,7 @@ class TestHrAttendance(TransactionCase):
         finished. Accepting it stores a state that only fails later, when the
         open attendance is finally checked out and overlaps it.
         """
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             self.attendance.create(
                 {
                     "employee_id": self.test_employee.id,
@@ -93,7 +94,7 @@ class TestHrAttendance(TransactionCase):
                 "check_out": time.strftime("%Y-%m-10 12:00"),
             }
         )
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             first.write({"check_out": time.strftime("%Y-%m-10 11:30")})
 
     def test_reopening_an_attendance_that_has_a_successor_is_refused(self):
@@ -113,7 +114,7 @@ class TestHrAttendance(TransactionCase):
                 "check_out": time.strftime("%Y-%m-10 12:00"),
             }
         )
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             first.write({"check_out": False})
 
     def test_time_format_attendance(self):

@@ -87,7 +87,9 @@ class TestPingenSend(HttpCase):
             ),
         }
 
-        response = requests.post(self.pingen_url, data=self.data, files=files)
+        response = requests.post(
+            self.pingen_url, data=self.data, files=files, timeout=30
+        )
         if 400 <= response.status_code <= 599 or response.json()["error"]:
             msg = "%(code)s %(side)s Error: %(reason)s for url: %(url)s\n%(body)s" % {
                 "code": response.status_code,

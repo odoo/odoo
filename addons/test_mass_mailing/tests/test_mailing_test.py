@@ -1,5 +1,6 @@
 import lxml.html
 
+from odoo.exceptions import UserError
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
@@ -73,7 +74,7 @@ class TestMailingTest(TestMassMailCommon):
 
         # Test if bad inline_template in the subject raises an error
         mailing.write({"subject": "Subject {{ object.name_id.id }}"})
-        with self.mock_mail_gateway(), self.assertRaises(Exception):
+        with self.mock_mail_gateway(), self.assertRaises(UserError):
             mailing_test.send_mail_test()
 
         # Test if bad inline_template in the body raises an error
@@ -83,7 +84,7 @@ class TestMailingTest(TestMassMailCommon):
                 "body_html": '<p>Hello <t t-out="object.name_id.id"/></p>',
             }
         )
-        with self.mock_mail_gateway(), self.assertRaises(Exception):
+        with self.mock_mail_gateway(), self.assertRaises(UserError):
             mailing_test.send_mail_test()
 
         # Test if bad inline_template in the preview raises an error
@@ -93,7 +94,7 @@ class TestMailingTest(TestMassMailCommon):
                 "preview": "Preview {{ object.name_id.id }}",
             }
         )
-        with self.mock_mail_gateway(), self.assertRaises(Exception):
+        with self.mock_mail_gateway(), self.assertRaises(UserError):
             mailing_test.send_mail_test()
 
     @users("user_marketing")

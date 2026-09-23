@@ -211,11 +211,11 @@ def main(argv=None):
             total += done
             if not args.dry_run:
                 path.write_text(new)
-    print(f"{total} route(s) declared in {touched} file(s)")
+    print(f"{total} route(s) declared in {touched} file(s)")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
     if left:
-        print(f"{len(left)} route(s) name a parameter the rule does not:")
+        print(f"{len(left)} route(s) name a parameter the rule does not:")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
         for entry in left:
-            print(f"  {entry}")
+            print(f"  {entry}")  # noqa: T201, RUF100 CLI entry point: stdout is the fixer's report
     return 0
 
 
