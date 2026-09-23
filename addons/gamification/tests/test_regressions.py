@@ -1681,9 +1681,12 @@ class TestXpProgressBatchesRankLookup(common.TransactionCase):
         def cost(count, tag):
             users = self._users(count, tag)
             self.env.invalidate_all()
-            before = self.env.cr.sql_log_count
+            # sql_log_count is incremented per ROW, so a batched read of ten
+            # users scores ten even when it issues one statement. The claim
+            # here is about round trips.
+            before = self.env.cr.sql_statement_count
             users.mapped("xp_progress_percent")
-            return self.env.cr.sql_log_count - before
+            return self.env.cr.sql_statement_count - before
 
         few = cost(2, "few")
         many = cost(10, "many")

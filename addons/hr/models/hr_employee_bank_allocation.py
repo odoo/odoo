@@ -13,23 +13,23 @@ class HrEmployeeBankAllocation(models.Model):
 
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
     bank_account_id = fields.Many2one(
         comodel_name="res.partner.bank.account",
         string="Bank Account",
         required=True,
-        ondelete="cascade",
         domain="[('partner_id', '=', partner_id),"
         " '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        ondelete="cascade",
     )
     partner_id = fields.Many2one(
         related="employee_id.partner_id",
         string="Account Holder",
     )
-    company_id = fields.Many2one(
+    company_id = fields.Many2one(  # noqa: E8529  hr_employee_bank_allocation_comp_rule filters every read by this column
         related="employee_id.company_id",
         store=True,
         index=True,
