@@ -3,6 +3,7 @@
 {
     "name": "Click & Collect",
     "category": "Website/Website",
+    "sequence": 2,  # Second in the shipping providers kanban.
     "description": """
 Allows customers to check in-store stock, pay on site, and pick up their orders at the shop.
 """,

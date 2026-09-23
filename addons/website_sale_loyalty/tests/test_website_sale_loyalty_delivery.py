@@ -134,14 +134,14 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
             {
                 "name": "delivery1",
                 "fixed_price": 5,
-                "delivery_type": "fixed",
+                "delivery_type": "in_house",
                 "website_published": True,
                 "product_id": delivery_product1.id,
             },
             {
                 "name": "delivery2",
                 "fixed_price": 10,
-                "delivery_type": "fixed",
+                "delivery_type": "in_house",
                 "website_published": True,
                 "product_id": delivery_product2.id,
             },
