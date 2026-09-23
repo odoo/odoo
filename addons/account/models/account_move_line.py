@@ -2382,6 +2382,8 @@ class AccountMoveLine(models.Model):
     @api.model_create_multi
     @_debug.perf.timed
     def create(self, vals_list):
+        if not vals_list:
+            return self.browse()
         if _debug.lifecycle.enabled:
             _debug.lifecycle(
                 "create",
