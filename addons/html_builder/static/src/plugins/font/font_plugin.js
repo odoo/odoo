@@ -80,9 +80,9 @@ export class BuilderFontPlugin extends Plugin {
             ? googleLocalFontsProperty.slice(1, -1).split(/\s*,\s*/g)
             : [];
         const uploadedLocalFontsProperty = getCSSVariableValue("uploaded-local-fonts", style);
-        const uploadedLocalFonts = uploadedLocalFontsProperty
-            ? uploadedLocalFontsProperty.slice(1, -1).split(/\s*,\s*/g)
-            : [];
+        // Uploaded font names may contain commas, so match the "'name': id"
+        // pairs instead of splitting the map on commas.
+        const uploadedLocalFonts = uploadedLocalFontsProperty.match(/'[^']*'\s*:\s*\d+/g) || [];
         // If a same font exists both remotely and locally, we remove the remote
         // font to prioritize the local font. The remote one will never be
         // displayed or loaded as long as the local one exists.
