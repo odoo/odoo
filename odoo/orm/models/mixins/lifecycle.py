@@ -2,7 +2,6 @@ import typing
 
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools.translate import _
 
 from ... import decorators as api
 from ..._typing import IdType
@@ -138,7 +137,7 @@ class LifecycleMixin(_ModelStubs):
             if res.get("warning"):
                 result["warnings"].add(
                     (
-                        res["warning"].get("title") or _("Warning"),
+                        res["warning"].get("title") or self.env._("Warning"),
                         res["warning"].get("message") or "",
                         res["warning"].get("type") or "",
                     )

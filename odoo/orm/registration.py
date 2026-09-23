@@ -4,10 +4,9 @@ from collections import defaultdict
 from types import MappingProxyType
 
 from odoo.db import schema as sql
-from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import LastOrderedSet, OrderedSet, discardattr, frozendict
-from odoo.tools.translate import FIELD_TRANSLATE, _
+from odoo.tools.translate import FIELD_TRANSLATE
 
 from . import (
     fields,
@@ -675,18 +674,14 @@ def add_field(model_cls: type[BaseModel], name: str, field: Field) -> None:
         + [get_registry_of_model(model_cls)[inherit] for inherit in model_cls._inherits]
     )
     if not (is_class_field or is_manual_name(name)):
-        raise ValidationError(
-            _(
-                "The field `%(field)s` is not defined in the `%(model)s` Python "
-                "class and does not start with 'x_'",
-                field=name,
-                model=model_cls._name,
-            )
+        raise ValueError(
+            f"The field `{name}` is not defined in the `{model_cls._name}` Python "
+            "class and does not start with 'x_'"
         )
 
     if not isinstance(field, fields.Field):
-        raise ValidationError(
-            _("You can only add `fields.Field` objects to a model fields")
+        raise TypeError(
+            f"You can only add `fields.Field` objects to a model, not {field!r}"
         )
 
     if not isinstance(getattr(model_cls, name, field), fields.Field):

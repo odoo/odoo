@@ -508,21 +508,7 @@ class Environment(Mapping[str, "BaseModel"]):
             raise TypeError(f"Cannot translate {source!r}")
         if lang == "en_US":
             return get_translation("base", "en_US", source, format_args)
-        try:
-            module = get_translated_module(2)
-            return get_translation(module, lang, source, format_args)
-        except Exception as exc:
-            _debug.logic(
-                "environment.translation_failed",
-                lang=lang,
-                error=type(exc).__name__,
-            )
-            _logger.debug(
-                'translation went wrong for "%r", skipped',
-                source,
-                exc_info=True,
-            )
-        return source
+        return get_translation(get_translated_module(2), lang, source, format_args)
 
     def clear(self) -> None:
         _debug.lifecycle("environment.clear", uid=self.uid)

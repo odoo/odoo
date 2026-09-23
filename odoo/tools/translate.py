@@ -466,7 +466,7 @@ def parse_html(text: str) -> etree._Element:
     try:
         parse = html.fragment_fromstring(text, parser=_HTML_PARSER)
     except (etree.ParserError, TypeError) as e:
-        raise UserError(_("Error while parsing view:\n\n%s") % e) from e
+        raise UserError(_lt("Error while parsing view:\n\n%s", e)) from e
     return parse
 
 
@@ -867,6 +867,10 @@ class LazyGettext:
             2, self._module, lang, default_lang=self._default_lang
         )
         return get_translation(module, lang, self._source, self._args)
+
+    def translate(self, lang: str) -> str:
+        assert lang, "translate() needs a language; str() infers one from the stack"
+        return self._translate(lang)
 
     def __repr__(self) -> str:
         args = {

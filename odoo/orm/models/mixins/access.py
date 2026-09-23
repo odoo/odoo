@@ -9,7 +9,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import ormcache
 from odoo.tools.misc import unquote
-from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.translate import LazyTranslate
 
 from ... import decorators as api
 from ...domain import Domain, DomainCondition, OptimizationLevel
@@ -91,7 +91,7 @@ class AccessMixin(_ModelStubs):
             self.env, self._name
         )
 
-        error_msg = _(
+        error_msg = self.env._(
             'You do not have enough rights to access the field "%(field)s"'
             " on %(document_kind)s (%(document_model)s). "
             "Please contact your system administrator."
@@ -103,7 +103,7 @@ class AccessMixin(_ModelStubs):
         )
 
         if self.env.user._has_group("base.group_no_one"):
-            error_msg += _(
+            error_msg += self.env._(
                 "\nUser: %(user)s\nGroups: %(allowed_groups_msg)s",
                 user=self.env.uid,
                 allowed_groups_msg=self._get_field_access_message(field, operation),
@@ -116,25 +116,25 @@ class AccessMixin(_ModelStubs):
         self, field: Field, operation: typing.Literal["read", "write"]
     ) -> str:
         if field.groups == NO_ACCESS:
-            return _("always forbidden")
+            return self.env._("always forbidden")
 
         messages = []
         if field.groups:
             messages.append(self._get_group_spec_message(field.groups))
         if operation == "write" and field.write_groups:
             if field.write_groups == NO_ACCESS:
-                messages.append(_("write always forbidden"))
+                messages.append(self.env._("write always forbidden"))
             elif callable(field.write_groups):
-                messages.append(_("write gated by a field predicate"))
+                messages.append(self.env._("write gated by a field predicate"))
             else:
                 messages.append(
-                    _(
+                    self.env._(
                         "write %(spec)s",
                         spec=self._get_group_spec_message(field.write_groups),
                     )
                 )
         if not messages:
-            return _("custom field access rules")
+            return self.env._("custom field access rules")
         return ", ".join(messages)
 
     @api.model
@@ -155,7 +155,7 @@ class AccessMixin(_ModelStubs):
                 spec=group_spec,
                 missing=missing_xmlids,
             )
-        return _(
+        return self.env._(
             "allowed for groups %s",
             ", ".join([repr(g.display_name) for g in groups] + missing_xmlids),
         )
@@ -463,7 +463,7 @@ class AccessMixin(_ModelStubs):
                 violations=len(inconsistencies),
                 fields=sorted({name for _record, name, _co in inconsistencies}),
             )
-            lines = [_("Uh-oh! You've got some company inconsistencies here:")]
+            lines = [self.env._("Uh-oh! You've got some company inconsistencies here:")]
             company_msg = _lt(
                 "- Record is company \u201c%(company)s\u201d while \u201c%(field)s\u201d (%(fname)s: %(values)s) belongs to another company."
             )
@@ -502,5 +502,7 @@ class AccessMixin(_ModelStubs):
                         ),
                     }
                 )
-            lines.append(_("To avoid a mess, no company crossover is allowed!"))
+            lines.append(
+                self.env._("To avoid a mess, no company crossover is allowed!")
+            )
             raise UserError("\n".join(lines))

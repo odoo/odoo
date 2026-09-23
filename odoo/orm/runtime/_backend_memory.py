@@ -28,7 +28,6 @@ from odoo.libs.datetime import get_quarter_number
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import get_index_name
 from odoo.tools import SQL, OrderedSet, Query, get_lang, partition, unique
-from odoo.tools.translate import _
 
 from ..components.storage import NamedSequence
 from ..domain import Domain
@@ -659,7 +658,9 @@ class _InMemoryReadGroup:
         definition = model.get_property_definition(f"{field.name}.{property_name}")
         property_type = definition.get("type")
         if property_type == "html":
-            raise UserError(_("Grouping by HTML properties is not supported."))
+            raise UserError(
+                model.env._("Grouping by HTML properties is not supported.")
+            )
         options = {option[0] for option in definition.get("selection") or ()}
         tags = {tag[0] for tag in definition.get("tags") or ()}
         comodel = None
@@ -1837,7 +1838,7 @@ class InMemoryBackend:
                     continue
                 if field.ondelete == "restrict" and not uninstalling:
                     raise UserError(
-                        _(
+                        env._(
                             "You cannot delete %(to_delete_record)s, as it is used by %(on_restrict_record)s",
                             to_delete_record=model.browse(values[next(iter(hit))]),
                             on_restrict_record=referrer.browse(row_id),

@@ -7,7 +7,6 @@ from typing import Self
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import groupby, unique
-from odoo.tools.translate import _
 
 from ..._recordset import is_recordset
 from ...fields.temporal import Datetime
@@ -337,7 +336,7 @@ class ExportMixin(_ModelStubs):
                 records=len(self),
             )
             raise UserError(
-                _(
+                self.env._(
                     "You don't have the rights to export data. Please contact an Administrator."
                 )
             )

@@ -6,7 +6,6 @@ from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
 from odoo.tools.cache import TransactionMemo
-from odoo.tools.translate import _
 
 from ..._typing import ValuesType
 from ._crud_common import (
@@ -156,7 +155,7 @@ class WriteMixin(_ModelStubs):
                         self.env, self._name
                     )
                     raise AccessError(
-                        _(
+                        self.env._(
                             "%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).",
                             previous_message=e.args[0],
                             document_kind=description,
@@ -407,7 +406,7 @@ class WriteMixin(_ModelStubs):
                         parent=parent.id,
                         records=len(records),
                     )
-                    raise UserError(_("Recursion Detected."))
+                    raise UserError(self.env._("Recursion Detected."))
 
             updated = self.env.backend.move_parent_paths(self, records.ids, prefix)
 

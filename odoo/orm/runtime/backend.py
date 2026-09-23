@@ -23,7 +23,6 @@ from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
 from odoo.libs.sql import pg_size_pretty
 from odoo.tools import SQL, OrderedSet, Query, partition
-from odoo.tools.translate import _
 
 from ..primitives import (
     MODULE_UNINSTALL_FLAG,
@@ -1449,7 +1448,7 @@ class PostgresBackend:
             record=record.id,
         )
         raise UserError(
-            _(
+            model.env._(
                 "Unable to delete %(record)s because it is used as the default value of %(field)s",
                 record=record,
                 field=field,
@@ -1487,7 +1486,7 @@ class PostgresBackend:
                 record=to_delete_id,
             )
             raise UserError(
-                _(
+                model.env._(
                     "You cannot delete %(to_delete_record)s, as it is used by %(on_restrict_record)s",
                     to_delete_record=to_delete_record,
                     on_restrict_record=on_restrict_record,

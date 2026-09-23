@@ -6,7 +6,6 @@ from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
 from odoo.tools import SQL, Query, ormcache, partition
-from odoo.tools.translate import _
 
 from ... import decorators as api
 from ..._typing import DomainType
@@ -31,7 +30,7 @@ class _QueryMixin(_ModelStubs):
     def _check_qorder(self, word: str) -> None:
         if not regex_order.match(word):
             raise UserError(
-                _(
+                self.env._(
                     'Invalid "order" specified (%s).'
                     ' A valid "order" specification is a comma-separated list of valid field names'
                     " (optionally followed by asc/desc for the direction)",

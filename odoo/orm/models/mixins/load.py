@@ -12,7 +12,6 @@ from odoo.db import schema as sql
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.lru import LRU
-from odoo.tools.translate import _
 
 from ... import decorators as api
 from ..._typing import ValuesType
@@ -86,7 +85,7 @@ class LoadMixin(_ModelStubs):
                     dict(
                         data_list[0]["info"],
                         type="error",
-                        message=_("Unknown database error: '%s'", e),
+                        message=self.env._("Unknown database error: '%s'", e),
                     )
                 )
             return
@@ -133,7 +132,7 @@ class LoadMixin(_ModelStubs):
                 messages.append(
                     {
                         "type": "warning",
-                        "message": _(
+                        "message": self.env._(
                             "Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors."
                         ),
                     }
@@ -175,12 +174,12 @@ class LoadMixin(_ModelStubs):
         return dict(
             info,
             type="error",
-            message=_(
+            message=self.env._(
                 "Unknown error during import: %(error_type)s: %(error_message)s",
                 error_type=exc.__class__,
                 error_message=exc,
             ),
-            moreinfo=_("Resolve other errors first"),
+            moreinfo=self.env._("Resolve other errors first"),
         )
 
     @api.model
@@ -309,7 +308,7 @@ class LoadMixin(_ModelStubs):
                             "record": 0,
                             "field": field_path[0],
                             "field_path": list(field_path),
-                            "message": _(
+                            "message": self.env._(
                                 "Column %(path)s cannot be imported: %(field)s is not a "
                                 "relation on model %(model)s, so it has no sub-fields.",
                                 path="/".join(map(str, field_path)),
@@ -603,7 +602,9 @@ class LoadMixin(_ModelStubs):
                             type="error",
                             record=stream_index,
                             field=".id",
-                            message=_("Unknown database identifier '%s'", dbid),
+                            message=self.env._(
+                                "Unknown database identifier '%s'", dbid
+                            ),
                         )
                     )
                     dbid = False
@@ -666,7 +667,9 @@ class LoadMixin(_ModelStubs):
                     to_create.append(data)
                 else:
                     raise ValidationError(
-                        _("Cannot update a record without specifying its id or xml_id")
+                        self.env._(
+                            "Cannot update a record without specifying its id or xml_id"
+                        )
                     )
                 continue
             row = existing.get(xml_id)
@@ -676,7 +679,7 @@ class LoadMixin(_ModelStubs):
             d_id, _d_module, _d_name, d_model, d_res_id, d_noupdate, r_id = row
             if self._name != d_model:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "For external id %(xml_id)s when trying to create/update a "
                         "record of model %(model)s found record of different model "
                         "%(found_model)s (%(found_id)s)",
@@ -791,7 +794,7 @@ class LoadMixin(_ModelStubs):
             module_name, _sep, record_id = xml_id.partition(".")
             if module_name in existing_modules:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The record %(xml_id)s has the module prefix %(module_name)s. This is the part before the '.' in the external id. Because the prefix refers to an existing module, the record would be deleted when the module is upgraded. Use either no prefix and no dot or a prefix that isn't an existing module. For example, __import__, resulting in the external id __import__.%(record_id)s.",
                         xml_id=xml_id,
                         module_name=module_name,

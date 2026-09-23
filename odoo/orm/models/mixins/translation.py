@@ -2,7 +2,6 @@ import typing
 
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools.translate import _
 
 from ._model_stubs import _ModelStubs
 
@@ -36,7 +35,7 @@ class TranslationMixin(_ModelStubs):
                 installed=len(valid_langs),
             )
             raise UserError(
-                _(
+                self.env._(
                     "The following languages are not activated: %(missing_names)s",
                     missing_names=", ".join(missing_langs),
                 )
@@ -48,7 +47,7 @@ class TranslationMixin(_ModelStubs):
             for translation in translations.values()
         ):
             raise UserError(
-                _(
+                self.env._(
                     "Translations for model translated fields only accept falsy values and str"
                 )
             )

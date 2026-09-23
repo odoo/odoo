@@ -3,7 +3,6 @@ import typing
 from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query, get_lang, ormcache
-from odoo.tools.translate import _
 
 from .... import decorators as api
 from ....constants import (
@@ -584,7 +583,7 @@ class _ReadGroupSQLMixin(_ModelStubs):
         comodel = self.env.get(typing.cast("str", definition.get("comodel")))
         if comodel is None or comodel._transient or comodel._abstract:
             raise UserError(
-                _(
+                self.env._(
                     'You cannot use "%(property_name)s" because the linked "%(model_name)s" model doesn\'t exist or is invalid',
                     property_name=definition.get("string", property_name),
                     model_name=definition.get("comodel"),
@@ -727,6 +726,6 @@ class _ReadGroupSQLMixin(_ModelStubs):
             )
 
         elif property_type == "html":
-            raise UserError(_("Grouping by HTML properties is not supported."))
+            raise UserError(self.env._("Grouping by HTML properties is not supported."))
 
         return SQL("COALESCE(%s, 'false')", sql_property)
