@@ -18,7 +18,7 @@ class TestHttpSecurity(TestHttpBase):
         self.assertNotIn("werkzeug.socket", result)
         self.assertNotIn("socket", result)
 
-    def test_nul_byte_in_path_is_404_not_500(self):
+    def test_nul_byte_in_path_is_refused_as_malformed_not_500(self):
         for path in (
             "/test_http/greeting%00",
             "/web/static/src/img/x%00.png",
@@ -26,7 +26,7 @@ class TestHttpSecurity(TestHttpBase):
         ):
             with self.subTest(path=path):
                 res = self.db_url_open(path)
-                self.assertEqual(res.status_code, 404, res.text[:200])
+                self.assertEqual(res.status_code, 400, res.text[:200])
 
     def test_nul_byte_in_query_string_is_harmless(self):
         res = self.db_url_open("/test_http/echo-http-get?x=%00")
