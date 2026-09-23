@@ -1230,8 +1230,8 @@ scope already owns** ``[review]``. ``check_connectable`` (decision) and
 
 **An exported wire name does not license the Python verb** ``[review]``. Rename
 the Python half, keep the exported key, and name the half left in the commit
-(``PoolStats.pools_evicted_stale`` misuses ``_evict_``;
-``odoo_pool_evicted_stale_total`` stays).
+(``PoolStats.pools_evicted_stale`` → ``pools_discarded_stale``, a staleness drop
+that wore capacity eviction's verb; ``odoo_pool_evicted_stale_total`` stays).
 
 **Compare bodies, not only names** ``[review]``. Two definitions with identical
 bodies are one definition. Siblings differing only in a namespace token
