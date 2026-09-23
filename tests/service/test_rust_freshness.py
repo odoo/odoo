@@ -38,7 +38,9 @@ def test_every_native_crate_is_covered_by_a_freshness_check():
         )
 
 
-def test_assert_fresh_raises_on_a_mismatch_and_passes_on_a_match(tmp_path):
+def test_assert_fresh_raises_on_a_mismatch_and_passes_on_a_match(tmp_path, monkeypatch):
+    monkeypatch.delenv("ODOO_SKIP_RUST_FRESHNESS_CHECK", raising=False)
+
     class Module:
         __name__ = "pretend_ext"
         __source_crc__ = "deadbeef"
@@ -100,6 +102,43 @@ def test_the_fingerprint_covers_the_resolved_dependency_versions(tmp_path):
     lock.write_text('[[package]]\nname = "pyo3"\nversion = "0.29.3"\n')
     assert source_crc(crate) != with_lock, (
         "a resolved dependency version change does not move the fingerprint"
+    )
+
+
+def test_the_fingerprint_covers_the_workspace_manifest(tmp_path):
+    workspace = tmp_path / "crates"
+    crate = workspace / "odoo_rust"
+    (crate / "src").mkdir(parents=True)
+    (crate / "Cargo.toml").write_text("[package]\nedition.workspace = true\n")
+    (crate / "src" / "lib.rs").write_text("// lib\n")
+
+    without_manifest = source_crc(crate)
+
+    manifest = workspace / "Cargo.toml"
+    manifest.write_text('[workspace.package]\nedition = "2021"\n')
+    with_manifest = source_crc(crate)
+    assert with_manifest != without_manifest, "the workspace manifest is not hashed"
+
+    manifest.write_text('[workspace.package]\nedition = "2024"\n')
+    assert source_crc(crate) != with_manifest, (
+        "an inherited edition change does not move the fingerprint"
+    )
+
+
+def test_the_fingerprint_follows_a_symlinked_source_directory(tmp_path):
+    crate = tmp_path / "crate"
+    (crate / "src").mkdir(parents=True)
+    (crate / "Cargo.toml").write_text("[package]\n")
+    (crate / "src" / "lib.rs").write_text("// lib\n")
+    shared = tmp_path / "shared"
+    shared.mkdir()
+    (shared / "helpers.rs").write_text("// v1\n")
+    (crate / "src" / "shared").symlink_to(shared, target_is_directory=True)
+
+    before = source_crc(crate)
+    (shared / "helpers.rs").write_text("// v2\n")
+    assert source_crc(crate) != before, (
+        "cargo compiles through the link, so the fingerprint must read it too"
     )
 
 

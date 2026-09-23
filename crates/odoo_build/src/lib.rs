@@ -1,6 +1,8 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
+const WORKSPACE_INPUTS: [&str; 2] = ["Cargo.lock", "Cargo.toml"];
+
 fn crc32(data: &[u8]) -> u32 {
     let mut table = [0u32; 256];
     for (i, entry) in table.iter_mut().enumerate() {
@@ -38,26 +40,30 @@ pub fn stamp_build_identity(prefix: &str) {
     let root = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR"));
 
     let mut sources = vec![root.join("Cargo.toml")];
-    if root.join("../Cargo.lock").is_file() {
-        sources.push(root.join("../Cargo.lock"));
-    }
     collect_rust_sources(&root.join("src"), &mut sources);
 
     let mut inputs: Vec<(String, PathBuf)> = sources
         .into_iter()
         .map(|path| {
-            let rel = match path.strip_prefix(&root) {
-                Ok(under) => under.to_string_lossy().replace('\\', "/"),
-                Err(_) => "../Cargo.lock".to_owned(),
-            };
+            let rel = path
+                .strip_prefix(&root)
+                .expect("a crate source lives under the crate")
+                .to_string_lossy()
+                .replace('\\', "/");
             (rel, path)
         })
         .collect();
+    for name in WORKSPACE_INPUTS {
+        let path = root.join("..").join(name);
+        println!("cargo:rerun-if-changed=../{name}");
+        if path.is_file() {
+            inputs.push((format!("../{name}"), path));
+        }
+    }
     inputs.sort_by(|a, b| a.0.cmp(&b.0));
 
     println!("cargo:rerun-if-changed=src");
     println!("cargo:rerun-if-changed=Cargo.toml");
-    println!("cargo:rerun-if-changed=../Cargo.lock");
 
     let mut blob: Vec<u8> = Vec::new();
     for (rel, path) in &inputs {

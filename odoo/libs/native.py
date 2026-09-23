@@ -10,14 +10,21 @@ SKIP_ENV = "ODOO_SKIP_RUST_FRESHNESS_CHECK"
 ALLOW_DEBUG_ENV = "ODOO_ALLOW_DEBUG_RUST"
 
 
+WORKSPACE_INPUTS = ("Cargo.lock", "Cargo.toml")
+
+
 def source_crc(crate: Path) -> str:
-    lock = crate.parent / "Cargo.lock"
+    sources = (crate / "src").rglob("*.rs", recurse_symlinks=True)
     inputs = sorted(
         [
             (path.relative_to(crate).as_posix(), path)
-            for path in (crate / "Cargo.toml", *(crate / "src").rglob("*.rs"))
+            for path in (crate / "Cargo.toml", *sources)
         ]
-        + ([("../Cargo.lock", lock)] if lock.is_file() else []),
+        + [
+            (f"../{name}", crate.parent / name)
+            for name in WORKSPACE_INPUTS
+            if (crate.parent / name).is_file()
+        ],
         key=lambda pair: pair[0],
     )
     blob = b"".join(
