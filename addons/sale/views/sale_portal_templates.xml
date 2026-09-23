@@ -835,7 +835,7 @@
                                                 class="text-nowrap"/>
                                         </div>
                                         <div class="d-flex flex-wrap align-items-center gap-2 mt-1 small text-muted">
-                                            <span t-field="line.section_qty"/>
+                                            <span t-field="line.section_qty" t-options="{'min_precision': 0}"/>
                                             <span t-field="line.section_uom_id"/>
                                             <span>×</span>
                                             <span t-out="section_line['price_subtotal']/line.section_qty"
@@ -1186,7 +1186,7 @@
                                             </span>
                                         </td>
                                         <td name="td_section_group_quantity" class="text-end text-nowrap">
-                                            <span t-field="line.section_qty"/>
+                                            <span t-field="line.section_qty" t-options="{'min_precision': 0}"/>
                                             <span t-field="line.section_uom_id"/>
                                         </td>
                                         <td t-if="display_discount" name="td_section_group_discount" class="d-none d-sm-table-cell"/>
