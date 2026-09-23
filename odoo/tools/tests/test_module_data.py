@@ -13,8 +13,9 @@ BaseCase = unittest.TestCase
 
 
 class _Cursor:
-    def __init__(self, xmlids, installed=()):
+    def __init__(self, xmlids, installed=(), records=None):
         self.xmlids = dict(xmlids)
+        self.records = records or {rid: ("res.partner", rid) for rid in self.xmlids}
         self.modules = dict.fromkeys(installed, "installed")
         self.statements = []
         self._result = []
@@ -39,13 +40,24 @@ class _Cursor:
             if rid in self.xmlids:
                 self.xmlids[rid] = (to_module, new_name)
                 self.rowcount = 1
+        elif code.startswith("SELECT source.id, source.name, target.name"):
+            olds, news, from_module, to_module = params
+            for old, new in zip(olds, news, strict=True):
+                source = self._find(from_module, old)
+                target = self._find(to_module, new)
+                if source is not None and target is not None and source != target:
+                    same = self.records.get(source) == self.records.get(target)
+                    self._result.append((source, old, new, same))
+        elif code.startswith("DELETE FROM ir_model_data WHERE id = ANY(%s)"):
+            for rid in params[0]:
+                self.rowcount += self.xmlids.pop(rid, None) is not None
         elif code.startswith(
-            "UPDATE ir_model_data SET module = %s, name = %s WHERE module = %s AND name = %s"
+            "UPDATE ir_model_data data SET module = %s, name = pair.new"
         ):
-            to_module, new_name, from_module, old_name = params
-            for rid, (mod, name) in self.xmlids.items():
-                if (mod, name) == (from_module, old_name):
-                    self.xmlids[rid] = (to_module, new_name)
+            to_module, olds, news, from_module = params
+            for old, new in zip(olds, news, strict=True):
+                if (rid := self._find(from_module, old)) is not None:
+                    self.xmlids[rid] = (to_module, new)
                     self.rowcount += 1
         elif code.startswith("SELECT 1 FROM ir_model_data WHERE module = %s"):
             self._result = (
@@ -64,6 +76,11 @@ class _Cursor:
             pass
         else:
             raise AssertionError(f"unexpected statement: {code}")
+
+    def _find(self, module, name):
+        return next(
+            (rid for rid, key in self.xmlids.items() if key == (module, name)), None
+        )
 
     def fetchall(self):
         return list(self._result)
@@ -260,3 +277,37 @@ class TestRepairOrphanedCronActions(BaseCase):
         )
         self.assertEqual(repair_orphaned_cron_actions(cr), 0)
         self.assertEqual(cr.renamed, [])
+
+
+class TestAdoptXmlidsOntoATakenName(BaseCase):
+    def test_a_name_already_on_the_same_record_drops_the_duplicate(self):
+        cr = _Cursor(
+            {1: ("old_mod", "rec"), 2: ("new_mod", "rec")},
+            records={1: ("res.partner", 7), 2: ("res.partner", 7)},
+        )
+        self.assertEqual(adopt_xmlids(cr, "old_mod", "new_mod", ("rec",)), 1)
+        self.assertEqual(cr.xmlids, {2: ("new_mod", "rec")})
+
+    def test_a_name_on_another_record_stops_the_upgrade_by_name(self):
+        cr = _Cursor(
+            {1: ("old_mod", "rec"), 2: ("new_mod", "rec")},
+            records={1: ("res.partner", 7), 2: ("res.partner", 8)},
+        )
+        with self.assertRaisesRegex(ValueError, r"\['rec -> rec'\]"):
+            adopt_xmlids(cr, "old_mod", "new_mod", ("rec",))
+        self.assertEqual(cr.xmlids, {1: ("old_mod", "rec"), 2: ("new_mod", "rec")})
+
+    def test_every_name_moves_in_one_statement(self):
+        cr = _Cursor({rid: ("old_mod", f"rec_{rid}") for rid in range(1, 6)})
+        adopt_xmlids(cr, "old_mod", "new_mod", [f"rec_{rid}" for rid in range(1, 6)])
+        self.assertEqual(
+            [code for code, _params in cr.statements if code.startswith("UPDATE")],
+            [
+                (
+                    "UPDATE ir_model_data data SET module = %s, name = pair.new "
+                    "FROM unnest(%s::varchar[], %s::varchar[]) AS pair(old, new) "
+                    "WHERE data.module = %s AND data.name = pair.old"
+                )
+            ],
+        )
+        self.assertEqual({mod for mod, _name in cr.xmlids.values()}, {"new_mod"})

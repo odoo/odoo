@@ -86,6 +86,14 @@ class TestRenameModel(TransactionCase):
                 </search>""",
             }
         )
+        cls.qweb = cls.env["ir.ui.view"].create(
+            {
+                "name": "probe",
+                "type": "qweb",
+                "arch": '<t t-name="probe.quoted"><div data-oe-model="probe.thing"/>'
+                '<div data-oe-model="probe.thing.member"/></t>',
+            }
+        )
         cls.env.flush_all()
         cls.relations = rename_model(cr, "probe.thing", "team.probe")
 
@@ -219,6 +227,13 @@ class TestRenameModel(TransactionCase):
         self.assertIn("'probe.thing.member'", arch)
         self.assertNotIn("'probe.thing'", arch)
 
+    def test_a_double_quoted_model_name_in_an_arch_follows(self):
+        self.qweb.invalidate_recordset(["arch_db"])
+        arch = self.qweb.arch_db
+        self.assertIn('data-oe-model="team.probe"', arch)
+        self.assertIn('data-oe-model="probe.thing.member"', arch)
+        self.assertNotIn('"probe.thing"', arch)
+
     def test_renaming_again_changes_nothing(self):
         self.assertEqual(rename_model(self.env.cr, "probe.thing", "team.probe"), {})
         self.assertTrue(table_exists(self.env.cr, "team_probe"))
@@ -271,3 +286,55 @@ class TestRenameInStoredExpressions(TransactionCase):
 
         self.assertEqual(self._domain(partner_rule), "[('probe_flag', '=', True)]")
         self.assertEqual(self._domain(user_rule), "[('probe_new_flag', '=', True)]")
+
+    def test_a_path_segment_of_another_model_keeps_its_name(self):
+        rule_id = self._rule(
+            "res.partner",
+            "[('probe_flag', '=', True), ('parent_id.probe_flag', '=', True), "
+            "('user_id.probe_flag', '=', user.probe_flag)]",
+        )
+        rename_in_stored_expressions(
+            self.env.cr, "probe_flag", "probe_new_flag", model="res.partner"
+        )
+        self.assertEqual(
+            self._domain(rule_id),
+            "[('probe_new_flag', '=', True), ('parent_id.probe_new_flag', '=', True), "
+            "('user_id.probe_flag', '=', user.probe_flag)]",
+        )
+
+    def test_another_models_rule_reaching_the_field_through_a_path_follows(self):
+        rule_id = self._rule("res.users", "[('partner_id.probe_flag', '=', True)]")
+        rename_in_stored_expressions(
+            self.env.cr, "probe_flag", "probe_new_flag", model="res.partner"
+        )
+        self.assertEqual(
+            self._domain(rule_id), "[('partner_id.probe_new_flag', '=', True)]"
+        )
+
+    def test_an_embedded_action_follows(self):
+        action = self.env.ref("base.action_partner_form")
+        self.env.cr.execute(
+            "INSERT INTO ir_embedded_actions "
+            "(name, parent_action_id, parent_res_model, python_method, domain, context) "
+            "VALUES (%s, %s, 'res.partner', 'probe_method', %s, '{}') RETURNING id",
+            ('{"en_US": "probe"}', action.id, "[('probe_flag', '=', True)]"),
+        )
+        embedded_id = self.env.cr.fetchone()[0]
+        rename_in_stored_expressions(
+            self.env.cr, "probe_flag", "probe_new_flag", model="res.partner"
+        )
+        rename_in_stored_expressions(
+            self.env.cr, "probe_method", "probe_new_method", model="res.partner"
+        )
+        self.env.cr.execute(
+            "SELECT domain, python_method FROM ir_embedded_actions WHERE id = %s",
+            (embedded_id,),
+        )
+        self.assertEqual(
+            self.env.cr.fetchone(),
+            ("[('probe_new_flag', '=', True)]", "probe_new_method"),
+        )
+
+    def test_a_module_prefix_is_refused(self):
+        with self.assertRaisesRegex(ValueError, "module prefix"):
+            rename_in_stored_expressions(self.env.cr, "iot.", "iot_core.")

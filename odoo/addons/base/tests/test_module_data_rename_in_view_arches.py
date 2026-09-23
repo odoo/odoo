@@ -91,3 +91,25 @@ class TestRenameInViewArches(TransactionCase):
         self.assertIn('t-foreach="partner.notes"', arch)
         self.assertIn('t-elif="partner.notes"', arch)
         self.assertEqual(arch.count("comment"), 0)
+
+    def test_a_field_placed_after_a_relational_field_is_the_view_models(self):
+        view = self._view(
+            "res.company",
+            "<data><field name='user_ids' position='after'>"
+            "<field name='name'/></field></data>",
+        )
+        rename_in_stored_expressions(self.env.cr, "name", "label", model="res.company")
+        self.assertIn('name="label"', self._arch(view))
+
+    def test_a_path_segment_after_a_dot_is_the_comodels(self):
+        view = self._view(
+            "res.partner",
+            "<form><field name='user_id' invisible='not user_id.comment'/>"
+            "<field name='comment'/></form>",
+        )
+        rename_in_stored_expressions(
+            self.env.cr, "comment", "notes", model="res.partner"
+        )
+        arch = self._arch(view)
+        self.assertIn("not user_id.comment", arch)
+        self.assertIn('name="notes"', arch)

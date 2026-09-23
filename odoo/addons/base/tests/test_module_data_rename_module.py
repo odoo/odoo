@@ -48,6 +48,34 @@ class TestRenameModule(TransactionCase):
                 "arch": "<t t-name='probe'><t t-call='probe_old.probe_template'/></t>",
             }
         )
+        self.action = self.env["ir.actions.server"].create(
+            {
+                "name": "probe",
+                "model_id": self.env.ref("base.model_res_partner").id,
+                "state": "code",
+                "code": "tpl = env.ref('probe_old.probe_template')\n"
+                "boxes = env['probe_old.box']",
+            }
+        )
+        self.env.cr.execute(
+            "INSERT INTO ir_ui_view (name, model, type, arch_db, active, priority, mode) "
+            "VALUES ('probe', 'res.partner', 'form', jsonb_build_object('en_US', %s::text), "
+            "true, 16, 'primary') RETURNING id",
+            [
+                (
+                    '<form><field name="name" '
+                    'groups="base.group_user,probe_old.group_probe"/></form>'
+                )
+            ],
+        )
+        self.form = self.env["ir.ui.view"].browse(self.env.cr.fetchone()[0])
+        self.bundle = self.env["ir.asset"].create(
+            {
+                "name": "probe",
+                "bundle": "probe_old.assets_probe",
+                "path": "web/static/src/probe.js",
+            }
+        )
         self.asset = self.env["ir.asset"].create(
             {
                 "name": "probe",
@@ -96,6 +124,37 @@ class TestRenameModule(TransactionCase):
         self.assertEqual(
             self._read("SELECT path FROM ir_asset WHERE id = %s", [self.asset.id]),
             [("probe_new/static/src/probe.js",)],
+        )
+
+    def test_an_xml_id_is_renamed_where_it_stands_and_a_model_name_is_not(self):
+        self.env.flush_all()
+        rename_module(self.env.cr, "probe_old", "probe_new")
+        self.assertEqual(
+            self._read(
+                "SELECT code FROM ir_act_server WHERE id = %s", [self.action.id]
+            ),
+            [
+                (
+                    (
+                        "tpl = env.ref('probe_new.probe_template')\n"
+                        "boxes = env['probe_old.box']"
+                    ),
+                )
+            ],
+        )
+        arches = dict(
+            self._read(
+                "SELECT id, arch_db->>'en_US' FROM ir_ui_view WHERE id = ANY(%s)",
+                [[self.view.id, self.form.id]],
+            )
+        )
+        self.assertIn('t-call="probe_new.probe_template"', arches[self.view.id])
+        self.assertIn(
+            'groups="base.group_user,probe_new.group_probe"', arches[self.form.id]
+        )
+        self.assertEqual(
+            self._read("SELECT bundle FROM ir_asset WHERE id = %s", [self.bundle.id]),
+            [("probe_new.assets_probe",)],
         )
 
     def test_a_database_without_the_module_is_left_alone(self):

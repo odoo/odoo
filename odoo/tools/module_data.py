@@ -1,16 +1,18 @@
 from __future__ import annotations
 
+import ast
 import logging
 import re
 from collections import defaultdict
 from collections.abc import Iterable, Mapping
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NamedTuple
 
 from lxml import etree
 from psycopg.types.json import Json
 
 from odoo.db.schema import (
     column_exists,
+    get_table_columns,
     get_tables_existing,
     rename_column,
     table_exists,
@@ -49,73 +51,153 @@ def adopt_xmlids(
     names: Iterable[str],
     renamed: Mapping[str, str] | None = None,
 ) -> int:
-    moved = 0
-    targets = {**dict.fromkeys(names), **(renamed or {})}
-    for old, new in targets.items():
-        cr.execute(
-            SQL(
-                "UPDATE ir_model_data SET module = %s, name = %s "
-                "WHERE module = %s AND name = %s",
-                to_module,
-                new or old,
-                from_module,
-                old,
-            )
+    pairs = {
+        old: new or old
+        for old, new in {**dict.fromkeys(names), **(renamed or {})}.items()
+    }
+    if not pairs:
+        return 0
+    olds, news = list(pairs), list(pairs.values())
+    cr.execute(
+        SQL(
+            """
+            SELECT source.id, source.name, target.name,
+                   source.model = target.model AND source.res_id = target.res_id
+              FROM unnest(%s::varchar[], %s::varchar[]) AS pair(old, new)
+              JOIN ir_model_data source
+                ON source.module = %s AND source.name = pair.old
+              JOIN ir_model_data target
+                ON target.module = %s AND target.name = pair.new
+             WHERE source.id != target.id
+            """,
+            olds,
+            news,
+            from_module,
+            to_module,
         )
-        moved += cr.rowcount
+    )
+    clashes = cr.fetchall()
+    if conflicting := sorted(
+        f"{old} -> {new}" for _id, old, new, same in clashes if not same
+    ):
+        raise ValueError(
+            f"{to_module} already names other records {conflicting}; "
+            f"{from_module}'s xml ids cannot take those names"
+        )
+    # the name is already the record's under the adopting module: the old
+    # xml id is a duplicate, and dropping it is the adoption
+    if duplicates := [row_id for row_id, *_names, _same in clashes]:
+        cr.execute(SQL("DELETE FROM ir_model_data WHERE id = ANY(%s)", duplicates))
+    cr.execute(
+        SQL(
+            """
+            UPDATE ir_model_data data SET module = %s, name = pair.new
+              FROM unnest(%s::varchar[], %s::varchar[]) AS pair(old, new)
+             WHERE data.module = %s AND data.name = pair.old
+            """,
+            to_module,
+            olds,
+            news,
+            from_module,
+        )
+    )
+    moved = cr.rowcount + len(duplicates)
     _debug.lifecycle(
         "module_data.xmlids_adopted",
         from_module=from_module,
         to_module=to_module,
-        requested=len(targets),
+        requested=len(pairs),
         moved=moved,
+        duplicates=len(duplicates),
     )
     if moved:
         _logger.info("%s adopted %d record(s) from %s", to_module, moved, from_module)
     return moved
 
 
+# the models whose `_table` is not their name with dots for underscores; a
+# pre-migration of base runs before any registry holds them
+_MODEL_TABLES: Mapping[str, str] = {
+    "ir.actions.actions": "ir_actions",
+    "ir.actions.act_window": "ir_act_window",
+    "ir.actions.act_window.view": "ir_act_window_view",
+    "ir.actions.act_window_close": "ir_act_window_close",
+    "ir.actions.act_url": "ir_act_url",
+    "ir.actions.server": "ir_act_server",
+    "ir.actions.client": "ir_act_client",
+    "ir.actions.report": "ir_act_report_xml",
+}
+
+
+def _table_of(model: str) -> str:
+    return _MODEL_TABLES.get(model) or model.replace(".", "_")
+
+
 def remove_xmlid_records(cr: BaseCursor, module: str, names: Iterable[str]) -> int:
+    names = list(names)
     cr.execute(
         SQL(
             """
-            SELECT d.model, d.res_id FROM ir_model_data d
-             WHERE d.module = %s AND d.name = ANY(%s)
-               AND NOT EXISTS (
+            SELECT d.id, d.model, d.res_id, EXISTS (
                    SELECT 1 FROM ir_model_data other
                     WHERE other.model = d.model AND other.res_id = d.res_id
                       AND other.module != d.module)
+              FROM ir_model_data d
+             WHERE d.module = %s AND d.name = ANY(%s)
             """,
             module,
-            list(names),
+            names,
         )
     )
-    by_model: dict[str, list[int]] = defaultdict(list)
-    for model, res_id in cr.fetchall():
-        by_model[model].append(res_id)
-    tables = {model: model.replace(".", "_") for model in by_model}
-    existing = set(get_tables_existing(cr, tables.values()))
+    # a record another module also names lives on under that name: only this
+    # module's xml id goes
+    released: list[int] = []
+    by_model: dict[str, dict[int, int]] = defaultdict(dict)
+    for data_id, model, res_id, shared in cr.fetchall():
+        if shared:
+            released.append(data_id)
+        else:
+            by_model[model][res_id] = data_id
+    existing = set(get_tables_existing(cr, [_table_of(model) for model in by_model]))
     deleted = 0
-    for model, ids in by_model.items():
-        if tables[model] not in existing:
+    for model, records in by_model.items():
+        table = _table_of(model)
+        if table not in existing:
+            cr.execute(SQL("SELECT 1 FROM ir_model WHERE model = %s", model))
+            registered = bool(cr.fetchone())
             _debug.logic(
                 "module_data.records_table_missing",
                 module=module,
                 model=model,
-                records=len(ids),
+                records=len(records),
+                registered=registered,
             )
+            if registered:
+                # the model is live and its table is not where the name puts
+                # it: deleting the xml ids would orphan records nobody deleted
+                _logger.warning(
+                    "%s: kept %d xml id(s) of %s, whose records are not in a table "
+                    "named %s; they were not deleted",
+                    module,
+                    len(records),
+                    model,
+                    table,
+                )
+                continue
+            released.extend(records.values())
             continue
         cr.execute(
-            SQL("DELETE FROM %s WHERE id = ANY(%s)", SQL.identifier(tables[model]), ids)
+            SQL(
+                "DELETE FROM %s WHERE id = ANY(%s)",
+                SQL.identifier(table),
+                list(records),
+            )
         )
         deleted += cr.rowcount
-    cr.execute(
-        SQL(
-            "DELETE FROM ir_model_data WHERE module = %s AND name = ANY(%s)",
-            module,
-            list(names),
-        )
-    )
+        # a DELETE either removes the row or raises: an id it did not remove
+        # was already gone, and its xml id dangles
+        released.extend(records.values())
+    cr.execute(SQL("DELETE FROM ir_model_data WHERE id = ANY(%s)", released))
     _debug.lifecycle(
         "module_data.xmlid_records_removed",
         module=module,
@@ -215,7 +297,7 @@ def rename_module(cr: BaseCursor, old: str, new: str) -> bool:
             like=_like_prefix(f"{old}."),
         )
     )
-    rename_in_stored_expressions(cr, f"{old}.", f"{new}.")
+    _rename_module_references(cr, old, new)
     cr.execute(
         SQL(
             "UPDATE ir_ui_view SET key = %s || substring(key from %s) WHERE key LIKE %s",
@@ -224,13 +306,32 @@ def rename_module(cr: BaseCursor, old: str, new: str) -> bool:
             _like_prefix(f"{old}."),
         )
     )
-    if column_exists(cr, "ir_asset", "path"):
+    for table, column in (
+        ("ir_asset", "path"),
+        ("ir_asset", "target"),
+        ("ir_ui_view", "arch_fs"),
+    ):
+        if column_exists(cr, table, column):
+            cr.execute(
+                SQL(
+                    "UPDATE %s SET %s = regexp_replace(%s, %s, %s) WHERE %s ~ %s",
+                    SQL.identifier(table),
+                    SQL.identifier(column),
+                    SQL.identifier(column),
+                    f"^(/?){old}/",
+                    rf"\1{new}/",
+                    SQL.identifier(column),
+                    f"^/?{old}/",
+                )
+            )
+    if column_exists(cr, "ir_asset", "bundle"):
         cr.execute(
             SQL(
-                "UPDATE ir_asset SET path = regexp_replace(path, %s, %s) WHERE path ~ %s",
-                f"^(/?){old}/",
-                rf"\1{new}/",
-                f"^/?{old}/",
+                "UPDATE ir_asset SET bundle = %s || substring(bundle from %s) "
+                "WHERE bundle LIKE %s",
+                f"{new}.",
+                len(old) + 2,
+                _like_prefix(f"{old}."),
             )
         )
     _debug.lifecycle("module_data.module_renamed", old=old, new=new, xmlids=moved)
@@ -338,11 +439,171 @@ def absorb_readonly_forerunners(cr: _SqlCursor) -> int:
     return moved
 
 
+_XMLID_CALL = (
+    r"\b(?:ref|_xmlid_to_res_id|_xmlid_to_res_model_res_id|_xmlid_lookup)\(\s*"
+)
+_XMLID_ATTRIBUTES = frozenset({"t-call", "t-call-assets", "t-snippet"})
+
+
+class _ModuleRename:
+    # A module's name as it stands in stored data: the prefix of an xml id in
+    # the positions that hold one, and nowhere else, since `sale_team.` also
+    # opens model names (`env['iot.box']`) that no module rename touches.
+    def __init__(self, old: str, new: str) -> None:
+        self.old = old
+        self.new = new
+        module = re.escape(old)
+        self.text = re.compile(
+            rf"(?P<lead>{_XMLID_CALL}['\"]|%\(|\bt-call(?:-assets)?\s*=\s*['\"])"
+            rf"{module}\.(?=\w)"
+        )
+        self.lead = re.compile(rf"^(?P<lead>\s*){module}\.(?=\w)")
+        self.items = re.compile(rf"(?P<lead>(?:^|,)\s*!?\s*){module}\.(?=\w)")
+        self.action = re.compile(rf"{module}\.\w[\w.]*")
+
+    def in_text(self, value: str) -> str:
+        return self.text.sub(lambda m: f"{m['lead']}{self.new}.", value)
+
+    def in_attribute(self, element, attribute: str, value: str) -> str:
+        if attribute == "groups":
+            return self.items.sub(lambda m: f"{m['lead']}{self.new}.", value)
+        if attribute in _XMLID_ATTRIBUTES:
+            return self.lead.sub(lambda m: f"{m['lead']}{self.new}.", value)
+        if attribute == "t-install":
+            return self.new if value.strip() == self.old else value
+        if (
+            element.tag == "button"
+            and attribute == "name"
+            and element.get("type") == "action"
+            and self.action.fullmatch(value)
+        ):
+            return f"{self.new}{value[len(self.old) :]}"
+        return self.in_text(value)
+
+    def in_arch(self, value: str) -> str:
+        if not value or self.old not in value:
+            return value
+        try:
+            root = etree.fromstring(value.encode())
+        except etree.XMLSyntaxError:
+            _debug.logic("module_data.arch_unparsed", old=self.old, model=None)
+            return value
+        renamed = False
+        for element in root.iter():
+            if not isinstance(element.tag, str):
+                continue
+            for attribute, text in element.attrib.items():
+                target = attribute
+                if element.tag == "attribute" and attribute in ("add", "remove"):
+                    target = element.get("name") or ""
+                rewritten = self.in_attribute(element, target, text)
+                if rewritten != text:
+                    element.set(attribute, rewritten)
+                    renamed = True
+            if element.tag == "attribute" and element.text:
+                rewritten = self.in_attribute(
+                    element, element.get("name") or "", element.text
+                )
+                if rewritten != element.text:
+                    element.text = rewritten
+                    renamed = True
+        return etree.tostring(root, encoding="unicode") if renamed else value
+
+
+def _rename_module_references(cr: BaseCursor, old: str, new: str) -> int:
+    rename = _ModuleRename(old, new)
+    needle = f"{old}."
+    rewritten = 0
+    if table_exists(cr, "ir_ui_view"):
+        cr.execute(
+            SQL(
+                "SELECT id, arch_db FROM ir_ui_view WHERE position(%s in arch_db::text) > 0",
+                old,
+            )
+        )
+        for view_id, arch in cr.fetchall():
+            translations = {
+                lang: rename.in_arch(value) for lang, value in (arch or {}).items()
+            }
+            if translations != (arch or {}):
+                cr.execute(
+                    SQL(
+                        "UPDATE ir_ui_view SET arch_db = %s WHERE id = %s",
+                        Json(translations),
+                        view_id,
+                    )
+                )
+                rewritten += 1
+    tables = set(
+        get_tables_existing(cr, [source.table for source in _EXPRESSION_SOURCES])
+    )
+    for source in _EXPRESSION_SOURCES:
+        if source.table not in tables:
+            continue
+        columns = _existing_columns(cr, source.table, source.columns)
+        if not columns:
+            continue
+        cr.execute(
+            SQL(
+                "SELECT id, %s FROM %s WHERE %s",
+                SQL(", ").join(SQL.identifier(column) for column in columns),
+                SQL.identifier(source.table),
+                SQL(" OR ").join(
+                    SQL("position(%s in %s::text) > 0", needle, SQL.identifier(column))
+                    for column in columns
+                ),
+            )
+        )
+        for row_id, *values in cr.fetchall():
+            changes = {}
+            for column, value in zip(columns, values, strict=True):
+                if isinstance(value, dict):
+                    renamed = {
+                        lang: rename.in_text(text) if text else text
+                        for lang, text in value.items()
+                    }
+                    if renamed != value:
+                        changes[column] = Json(renamed)
+                elif value and (renamed := rename.in_text(value)) != value:
+                    changes[column] = renamed
+            if not changes:
+                continue
+            cr.execute(
+                SQL(
+                    "UPDATE %s SET %s WHERE id = %s",
+                    SQL.identifier(source.table),
+                    SQL(", ").join(
+                        SQL("%s = %s", SQL.identifier(column), value)
+                        for column, value in changes.items()
+                    ),
+                    row_id,
+                )
+            )
+            rewritten += 1
+    _debug.perf.count(
+        "module_data.module_references_rewritten", old=old, new=new, rows=rewritten
+    )
+    return rewritten
+
+
+class _Source(NamedTuple):
+    table: str
+    columns: tuple[str, ...]
+    scope_column: str
+    scope_is_id: bool
+    jsonb: frozenset[str] = frozenset()
+    # columns holding domains and field paths read from the row's model, where
+    # a name after a dot is a field of another model; the rest is Python over
+    # variables (`record.x`, `object.x`) whose model nothing states
+    paths: frozenset[str] = frozenset()
+
+
 _EXPRESSION_SOURCES = (
-    (
+    _Source(
         "mail_template",
-        ("body_html", "subject"),
         (
+            "body_html",
+            "subject",
             "email_from",
             "email_to",
             "email_cc",
@@ -352,12 +613,44 @@ _EXPRESSION_SOURCES = (
         ),
         "model_id",
         True,
+        jsonb=frozenset({"body_html", "subject"}),
     ),
-    ("ir_act_server", (), ("code",), "model_id", True),
-    ("ir_filters", (), ("domain", "context", "sort"), "model_id", False),
-    ("ir_act_window", (), ("domain", "context"), "res_model", False),
-    ("ir_rule", (), ("domain_force",), "model_id", True),
-    ("base_automation", (), ("filter_domain", "filter_pre_domain"), "model_id", True),
+    _Source("ir_act_server", ("code",), "model_id", True),
+    _Source(
+        "ir_filters",
+        ("domain", "context", "sort"),
+        "model_id",
+        False,
+        paths=frozenset({"domain", "context", "sort"}),
+    ),
+    _Source(
+        "ir_act_window",
+        ("domain", "context"),
+        "res_model",
+        False,
+        paths=frozenset({"domain", "context"}),
+    ),
+    _Source(
+        "ir_rule",
+        ("domain_force",),
+        "model_id",
+        True,
+        paths=frozenset({"domain_force"}),
+    ),
+    _Source(
+        "base_automation",
+        ("filter_domain", "filter_pre_domain"),
+        "model_id",
+        True,
+        paths=frozenset({"filter_domain", "filter_pre_domain"}),
+    ),
+    _Source(
+        "ir_embedded_actions",
+        ("domain", "context", "python_method"),
+        "parent_res_model",
+        False,
+        paths=frozenset({"domain", "context"}),
+    ),
 )
 
 _EXPRESSION_ATTRIBUTES = frozenset(
@@ -381,7 +674,184 @@ _EXPRESSION_ATTRIBUTES = frozenset(
         "t-value",
     }
 )
+_DOMAIN_ATTRIBUTES = frozenset({"attrs", "domain", "filter_domain"})
 _UNKNOWN_MODEL = object()
+
+
+def _existing_columns(cr: BaseCursor, table: str, columns: Iterable[str]) -> list[str]:
+    return [column for column in columns if column_exists(cr, table, column)]
+
+
+class _FieldRename:
+    # One field renamed on one model (`model` None: wherever the name is read),
+    # with the relational graph a pre-migration reads from ir_model_fields.
+    def __init__(
+        self,
+        old: str,
+        new: str,
+        model: str | None,
+        comodels: Mapping[tuple[str, str], str],
+    ) -> None:
+        self.old = old
+        self.new = new
+        self.model = model
+        self.comodels = comodels
+        self.word = re.compile(r"\b%s\b" % re.escape(old))
+        self.first = re.compile(r"(?<![\w.])%s\b" % re.escape(old))
+        # a field of one model, spelled bare: every read of it is resolved to
+        # a model before it is renamed; anything else keeps the word rewrite
+        self.precise = model is not None and "." not in old
+
+    def comodel(self, model: Any, name: str | None) -> Any:
+        if model is _UNKNOWN_MODEL or not name:
+            return _UNKNOWN_MODEL
+        found = self.comodels.get((model, name))
+        # the field row may already carry either spelling, depending on whether
+        # rename_field ran first
+        if found is None and name in (self.old, self.new):
+            other = self.new if name == self.old else self.old
+            found = self.comodels.get((model, other))
+        return _UNKNOWN_MODEL if found is None else found
+
+    def is_target(self, model: Any) -> bool:
+        return self.model is None or model == self.model
+
+    def rename_path(self, path: str, root: Any, separator: str = ".") -> str:
+        current = root
+        segments = []
+        for segment in path.split(separator):
+            segments.append(
+                self.new if segment == self.old and current == self.model else segment
+            )
+            current = self.comodel(current, segment)
+        return separator.join(segments)
+
+    def expression(
+        self,
+        source: str,
+        *,
+        names: Any,
+        strings: Any,
+        parent: Any = _UNKNOWN_MODEL,
+        leaves: Any = None,
+    ) -> str:
+        if self.old not in source:
+            return source
+        edits = _ExpressionEdits(self, names, strings, parent, leaves).run(source)
+        if edits is None:
+            _debug.logic("module_data.expression_unparsed", old=self.old)
+            return self.first.sub(self.new, source) if strings == self.model else source
+        return edits
+
+
+class _ExpressionEdits:
+    # Rewrites one Python expression by the spans its AST gives, so a name is
+    # renamed only where it reads a field of the renamed model: a bare name
+    # reads `names`, `parent.x` reads `parent`, `a.b` reads b on a's comodel, a
+    # domain leaf's path walks from `leaves`, and a string elsewhere
+    # (`'group_by': 'user_id'`) names a field of `strings` by its first segment.
+    def __init__(
+        self, rename: _FieldRename, names: Any, strings: Any, parent: Any, leaves: Any
+    ) -> None:
+        self.rename = rename
+        self.names = names
+        self.strings = strings
+        self.parent = parent
+        self.leaves = leaves
+        self.edits: list[tuple[int, int, bytes]] = []
+        self.source = b""
+        self.starts: list[int] = []
+
+    def run(self, source: str) -> str | None:
+        # parenthesised, an expression may start indented or span lines
+        wrapped = f"({source}\n)"
+        try:
+            tree = ast.parse(wrapped, mode="eval")
+        except SyntaxError, ValueError:
+            return None
+        self.source = wrapped.encode()
+        self.starts = [0]
+        for line in self.source.splitlines(keepends=True):
+            self.starts.append(self.starts[-1] + len(line))
+        self.visit(tree.body)
+        if not self.edits:
+            return source
+        out = self.source
+        for start, end, text in sorted(self.edits, reverse=True):
+            out = out[:start] + text + out[end:]
+        return out.decode()[1:-2]
+
+    def span(self, node: ast.expr) -> tuple[int, int]:
+        assert node.end_lineno is not None and node.end_col_offset is not None
+        return (
+            self.starts[node.lineno - 1] + node.col_offset,
+            self.starts[node.end_lineno - 1] + node.end_col_offset,
+        )
+
+    def visit(self, node: ast.AST) -> None:
+        rename = self.rename
+        if isinstance(node, ast.Name):
+            if node.id == rename.old and self.names == rename.model:
+                start, end = self.span(node)
+                self.edits.append((start, end, rename.new.encode()))
+        elif isinstance(node, ast.Attribute):
+            self.visit_attribute(node)
+        elif self.leaves is not None and _is_leaf(node):
+            assert isinstance(node, (ast.List, ast.Tuple))
+            path = node.elts[0]
+            assert isinstance(path, ast.Constant)
+            self.literal(path, rename.rename_path(path.value, self.leaves))
+            for value in node.elts[1:]:
+                if not isinstance(value, ast.Constant):
+                    self.visit(value)
+        elif isinstance(node, ast.Constant):
+            if isinstance(node.value, str) and self.strings == rename.model:
+                self.literal(node, rename.first.sub(rename.new, node.value))
+        else:
+            for child in ast.iter_child_nodes(node):
+                self.visit(child)
+
+    def visit_attribute(self, node: ast.Attribute) -> None:
+        rename = self.rename
+        chain = []
+        base: ast.expr = node
+        while isinstance(base, ast.Attribute):
+            chain.append(base)
+            base = base.value
+        if not isinstance(base, ast.Name):
+            self.visit(base)
+            return
+        if base.id == "parent":
+            current = self.parent
+        else:
+            self.visit(base)
+            current = rename.comodel(self.names, base.id)
+        for link in reversed(chain):
+            if link.attr == rename.old and current == rename.model:
+                _start, end = self.span(link)
+                self.edits.append((end - len(link.attr), end, rename.new.encode()))
+            current = rename.comodel(current, link.attr)
+
+    def literal(self, node: ast.Constant, value: str) -> None:
+        if value == node.value:
+            return
+        start, end = self.span(node)
+        raw = self.source[start:end].decode()
+        quote = raw[:1]
+        # a prefixed, escaped or triple-quoted literal is not rebuilt by hand
+        if quote not in ("'", '"') or raw != f"{quote}{node.value}{quote}":
+            _debug.logic("module_data.literal_kept", literal=raw)
+            return
+        self.edits.append((start, end, f"{quote}{value}{quote}".encode()))
+
+
+def _is_leaf(node: ast.AST) -> bool:
+    return (
+        isinstance(node, (ast.List, ast.Tuple))
+        and len(node.elts) == 3
+        and isinstance(node.elts[0], ast.Constant)
+        and isinstance(node.elts[0].value, str)
+    )
 
 
 def rename_in_view_arches(
@@ -392,22 +862,30 @@ def rename_in_view_arches(
     # and misses the subview nodes that do belong to `model`.
     if not table_exists(cr, "ir_ui_view"):
         return 0
-    pattern = r"\y%s\y" % old.replace(".", r"\.")
+    cr.execute(
+        SQL(
+            "SELECT 1 FROM ir_ui_view WHERE arch_db::text ~ %s LIMIT 1",
+            r"\y%s\y" % old.replace(".", r"\."),
+        )
+    )
+    if not cr.fetchone():
+        return 0
+    return _rename_in_views(cr, _FieldRename(old, new, model, _relational_comodels(cr)))
+
+
+def _rename_in_views(cr: BaseCursor, rename: _FieldRename) -> int:
+    if not table_exists(cr, "ir_ui_view"):
+        return 0
     cr.execute(
         SQL(
             "SELECT id, model, arch_db FROM ir_ui_view WHERE arch_db::text ~ %s",
-            pattern,
+            r"\y%s\y" % rename.old.replace(".", r"\."),
         )
     )
-    rows = cr.fetchall()
-    if not rows:
-        return 0
-    comodels = _relational_comodels(cr)
-    word = re.compile(r"\b%s\b" % re.escape(old))
     rewritten = 0
-    for view_id, view_model, arch in rows:
+    for view_id, view_model, arch in cr.fetchall():
         translations = {
-            lang: _rename_in_arch(value, view_model, old, new, model, comodels, word)
+            lang: _rename_in_arch(value, view_model, rename)
             for lang, value in (arch or {}).items()
         }
         if translations == (arch or {}):
@@ -422,9 +900,9 @@ def rename_in_view_arches(
         rewritten += 1
     _debug.perf.count(
         "module_data.view_arches_rewritten",
-        old=old,
-        new=new,
-        model=model,
+        old=rename.old,
+        new=rename.new,
+        model=rename.model,
         rows=rewritten,
     )
     return rewritten
@@ -440,107 +918,134 @@ def _relational_comodels(cr: BaseCursor) -> dict[tuple[str, str], str]:
     return {(model, name): relation for model, name, relation in cr.fetchall()}
 
 
-def _rename_in_arch(value, view_model, old, new, model, comodels, word):
-    if not value or old not in value:
+def _rename_in_arch(value: str, view_model: Any, rename: _FieldRename) -> str:
+    if not value or rename.old not in value:
         return value
     try:
         root = etree.fromstring(value.encode())
     except etree.XMLSyntaxError:
-        _debug.logic("module_data.arch_unparsed", old=old, model=model)
+        _debug.logic("module_data.arch_unparsed", old=rename.old, model=rename.model)
         return value
-    if not _rename_in_node(root, view_model, old, new, model, comodels, word):
+    if not _rename_in_node(root, _Scope(view_model), rename):
         return value
     return etree.tostring(root, encoding="unicode")
 
 
-def _rename_in_node(node, node_model, old, new, model, comodels, word):
+class _Scope(NamedTuple):
+    # the model a node's field names read, the model `parent.` reads there, and,
+    # for the <attribute> children of a `position="attributes"` locator, the
+    # comodel of the field it locates (a domain set there is that comodel's)
+    model: Any
+    parent: Any = _UNKNOWN_MODEL
+    located: Any = _UNKNOWN_MODEL
+
+
+def _rename_in_node(node, scope: _Scope, rename: _FieldRename) -> bool:
     renamed = False
-    in_scope = model is None or node_model == model
+    in_scope = rename.is_target(scope.model)
     for attribute, value in node.attrib.items():
-        if not value or old not in value:
+        if not value or rename.old not in value:
             continue
         if attribute == "expr":
-            rewritten, _around, _inside = _rename_in_xpath(
-                value, node_model, old, new, model, comodels
-            )
-            if rewritten != value:
-                node.set(attribute, rewritten)
-                renamed = True
+            rewritten = _rename_in_xpath(value, scope, rename)[0]
+        elif attribute in ("name", "for") and node.tag in ("field", "label"):
+            rewritten = rename.new if in_scope and value == rename.old else value
+        elif attribute in _EXPRESSION_ATTRIBUTES or attribute.startswith("decoration-"):
+            rewritten = _rename_in_attribute(node, attribute, value, scope, rename)
+        else:
             continue
-        if not in_scope:
-            continue
-        if attribute in ("name", "for") and node.tag in ("field", "label", "attribute"):
-            if node.tag == "attribute":
-                continue
-            if value == old:
-                node.set(attribute, new)
-                renamed = True
-            continue
-        if attribute in _EXPRESSION_ATTRIBUTES or attribute.startswith("decoration-"):
-            rewritten = word.sub(new, value)
-            if rewritten != value:
-                node.set(attribute, rewritten)
-                renamed = True
-    if in_scope and node.tag == "attribute" and node.text and old in node.text:
-        if node.get("name") in _EXPRESSION_ATTRIBUTES or (
-            node.get("name") or ""
-        ).startswith("decoration-"):
-            rewritten = word.sub(new, node.text)
-            if rewritten != node.text:
-                node.text = rewritten
-                renamed = True
+        if rewritten != value:
+            node.set(attribute, rewritten)
+            renamed = True
+    name = node.get("name") or ""
+    if (
+        node.tag == "attribute"
+        and node.text
+        and rename.old in node.text
+        and (name in _EXPRESSION_ATTRIBUTES or name.startswith("decoration-"))
+    ):
+        rewritten = _rename_in_attribute(node, name, node.text, scope, rename)
+        if rewritten != node.text:
+            node.text = rewritten
+            renamed = True
     for child in node:
-        renamed |= _rename_in_node(
-            child,
-            _child_model(node, child, node_model, comodels),
-            old,
-            new,
-            model,
-            comodels,
-            word,
-        )
+        renamed |= _rename_in_node(child, _child_scope(node, scope, rename), rename)
     return renamed
 
 
-def _child_model(node, child, node_model, comodels):
+def _rename_in_attribute(node, attribute, value, scope: _Scope, rename: _FieldRename):
+    if not rename.precise or attribute.startswith("t-") or attribute == "eval":
+        # a QWeb expression reads variables (`partner.comment`) whose model no
+        # attribute states: the word rewrite, on the nodes of the model
+        if not rename.is_target(scope.model):
+            return value
+        return rename.word.sub(rename.new, value)
+    leaves = None
+    if attribute in _DOMAIN_ATTRIBUTES:
+        leaves = scope.model
+        if attribute == "domain":
+            if node.tag == "field":
+                leaves = rename.comodel(scope.model, node.get("name"))
+            elif node.tag == "attribute":
+                leaves = scope.located
+    return rename.expression(
+        value,
+        names=scope.model,
+        strings=scope.model,
+        parent=scope.parent,
+        leaves=leaves,
+    )
+
+
+def _child_scope(node, scope: _Scope, rename: _FieldRename) -> _Scope:
+    position = node.get("position") or "inside"
+    inner = position == "inside" or (
+        position == "replace" and node.get("mode") == "inner"
+    )
     if node.tag == "xpath":
         _expr, around, inside = _rename_in_xpath(
-            node.get("expr") or "", node_model, None, None, None, comodels
+            node.get("expr") or "", scope, rename, rewrite=False
         )
-        return inside if node.get("position") == "inside" else around
+        if inner:
+            return inside
+        if position == "attributes":
+            return around._replace(located=inside.model)
+        return around
     if node.tag == "field" and len(node):
-        return _comodel(node_model, node.get("name"), comodels)
-    return node_model
-
-
-def _comodel(node_model, name, comodels):
-    if node_model is _UNKNOWN_MODEL or not name:
-        return _UNKNOWN_MODEL
-    return comodels.get((node_model, name), _UNKNOWN_MODEL)
+        # a locator placing nodes beside the field, or setting its attributes,
+        # stays in the model the field sits in; its content is the comodel's
+        comodel = rename.comodel(scope.model, node.get("name"))
+        if inner:
+            return _Scope(comodel, scope.model)
+        if position == "attributes":
+            return _Scope(scope.model, scope.parent, comodel)
+    return _Scope(scope.model, scope.parent)
 
 
 _XPATH_NAME = re.compile(r"@name\s*=\s*'([^']*)'|@name\s*=\s*\"([^\"]*)\"")
 
 
-def _rename_in_xpath(expr, node_model, old, new, model, comodels):
+def _rename_in_xpath(
+    expr: str, scope: _Scope, rename: _FieldRename, *, rewrite: bool = True
+) -> tuple[str, _Scope, _Scope]:
     # `//field[@name='invoice_line_ids']//field[@name='account_id']` walks into the
     # subview: each component naming a relational field of the model reached so far
     # moves the scope to its comodel. A node placed before, after or in place of the
     # anchor is a sibling, so it belongs to the model the anchor itself sits in.
-    around = current = node_model
+    around = current = _Scope(scope.model, scope.parent)
     pieces = []
     last = 0
     for match in _XPATH_NAME.finditer(expr):
         name = match.group(1) if match.group(1) is not None else match.group(2)
         start, end = match.span(1) if match.group(1) is not None else match.span(2)
-        if old is not None and name == old and (model is None or current == model):
+        if rewrite and name == rename.old and rename.is_target(current.model):
             pieces.append(expr[last:start])
-            pieces.append(new)
+            pieces.append(rename.new)
             last = end
         around = current
-        nested = _comodel(current, name, comodels)
+        nested = rename.comodel(current.model, name)
         if nested is not _UNKNOWN_MODEL:
-            current = nested
+            current = _Scope(nested, current.model)
     pieces.append(expr[last:])
     return "".join(pieces), around, current
 
@@ -562,66 +1067,41 @@ def rename_in_stored_expressions(
     # `unique` asserts no other model has a field of that name.
     if not _RENAMEABLE.match(old) or not _REPLACEMENT.match(new):
         raise ValueError(f"cannot rewrite {old!r} to {new!r}: unsupported characters")
+    if old.endswith("."):
+        raise ValueError(
+            f"{old!r} is a module prefix: a word rewrite of it renames model names "
+            "too, and rename_module rewrites the xml ids that carry it"
+        )
     if model is None and "." not in old and not unique:
         raise ValueError(f"{old!r} is a bare field name and needs model= to scope it")
 
-    pattern = r"\y%s\y" % old.replace(".", r"\.")
-    tables = set(get_tables_existing(cr, [name for name, *_ in _EXPRESSION_SOURCES]))
-    rewritten = rename_in_view_arches(cr, old, new, model=model)
-    for (
-        table,
-        jsonb_columns,
-        text_columns,
-        scope_column,
-        scope_is_id,
-    ) in _EXPRESSION_SOURCES:
-        if table not in tables:
+    rename = _FieldRename(old, new, model, _relational_comodels(cr))
+    rewritten = _rename_in_views(cr, rename)
+    tables = set(
+        get_tables_existing(cr, [source.table for source in _EXPRESSION_SOURCES])
+    )
+    for source in _EXPRESSION_SOURCES:
+        if source.table not in tables:
             continue
-        scope = SQL("")
-        if model is not None:
-            scope = SQL(
-                " AND %s = (SELECT id FROM ir_model WHERE model = %s)"
-                if scope_is_id
-                else " AND %s = %s",
-                SQL.identifier(scope_column),
-                model,
-            )
-        assignments = SQL(", ").join(
-            SQL(
-                "%s = regexp_replace(%s::text, %s, %s, 'g')%s",
-                SQL.identifier(column),
-                SQL.identifier(column),
-                pattern,
-                new,
-                SQL("::jsonb") if is_jsonb else SQL(""),
-            )
-            for column, is_jsonb in (
-                *((name, True) for name in jsonb_columns),
-                *((name, False) for name in text_columns),
-            )
-        )
-        guard = SQL(" OR ").join(
-            SQL("%s::text ~ %s", SQL.identifier(column), pattern)
-            for column in (*jsonb_columns, *text_columns)
-        )
-        cr.execute(
-            SQL(
-                "UPDATE %s SET %s WHERE (%s)%s",
-                SQL.identifier(table),
-                assignments,
-                guard,
-                scope,
-            )
-        )
-        rewritten += cr.rowcount
+        columns = _existing_columns(cr, source.table, source.columns)
+        paths = [c for c in columns if c in source.paths] if rename.precise else []
+        words = [c for c in columns if c not in paths]
+        count = 0
+        if words:
+            count += _rename_words(cr, source, words, rename)
+        if paths:
+            count += _rename_paths(cr, source, paths, rename)
+        rewritten += count
         _debug.perf.count(
             "module_data.expressions_rewritten",
-            table=table,
+            table=source.table,
             old=old,
             new=new,
             model=model,
-            rows=cr.rowcount,
+            rows=count,
         )
+    if rename.precise or unique:
+        rewritten += _rename_in_export_lines(cr, rename)
     if rewritten:
         _logger.info(
             "renamed %s to %s in %d stored expression(s)%s",
@@ -630,6 +1110,128 @@ def rename_in_stored_expressions(
             rewritten,
             f" of {model}" if model else "",
         )
+    return rewritten
+
+
+def _rename_words(
+    cr: BaseCursor, source: _Source, columns: list[str], rename: _FieldRename
+) -> int:
+    pattern = r"\y%s\y" % rename.old.replace(".", r"\.")
+    scope = SQL("")
+    if rename.model is not None:
+        scope = SQL(
+            " AND %s = (SELECT id FROM ir_model WHERE model = %s)"
+            if source.scope_is_id
+            else " AND %s = %s",
+            SQL.identifier(source.scope_column),
+            rename.model,
+        )
+    assignments = SQL(", ").join(
+        SQL(
+            "%s = regexp_replace(%s::text, %s, %s, 'g')%s",
+            SQL.identifier(column),
+            SQL.identifier(column),
+            pattern,
+            rename.new,
+            SQL("::jsonb") if column in source.jsonb else SQL(""),
+        )
+        for column in columns
+    )
+    guard = SQL(" OR ").join(
+        SQL("%s::text ~ %s", SQL.identifier(column), pattern) for column in columns
+    )
+    cr.execute(
+        SQL(
+            "UPDATE %s SET %s WHERE (%s)%s",
+            SQL.identifier(source.table),
+            assignments,
+            guard,
+            scope,
+        )
+    )
+    return cr.rowcount
+
+
+def _rename_paths(
+    cr: BaseCursor, source: _Source, columns: list[str], rename: _FieldRename
+) -> int:
+    # Every row that spells the name, whatever its model: a domain on another
+    # model reaches the renamed field through a path, and each path is walked
+    # from the row's own model to tell whose field a segment is.
+    pattern = r"\y%s\y" % rename.old
+    row_model = (
+        SQL(
+            "(SELECT model FROM ir_model WHERE id = %s)",
+            SQL.identifier(source.scope_column),
+        )
+        if source.scope_is_id
+        else SQL.identifier(source.scope_column)
+    )
+    cr.execute(
+        SQL(
+            "SELECT id, %s, %s FROM %s WHERE %s",
+            row_model,
+            SQL(", ").join(SQL.identifier(column) for column in columns),
+            SQL.identifier(source.table),
+            SQL(" OR ").join(
+                SQL("%s ~ %s", SQL.identifier(column), pattern) for column in columns
+            ),
+        )
+    )
+    rewritten = 0
+    for row_id, model, *values in cr.fetchall():
+        changes = {}
+        for column, value in zip(columns, values, strict=True):
+            if not value:
+                continue
+            renamed = rename.expression(value, names=None, strings=model, leaves=model)
+            if renamed != value:
+                changes[column] = renamed
+        if not changes:
+            continue
+        cr.execute(
+            SQL(
+                "UPDATE %s SET %s WHERE id = %s",
+                SQL.identifier(source.table),
+                SQL(", ").join(
+                    SQL("%s = %s", SQL.identifier(column), value)
+                    for column, value in changes.items()
+                ),
+                row_id,
+            )
+        )
+        rewritten += 1
+    return rewritten
+
+
+def _rename_in_export_lines(cr: BaseCursor, rename: _FieldRename) -> int:
+    # An export template's line is a `/` path read from the template's model.
+    if "." in rename.old or not table_exists(cr, "ir_exports_line"):
+        return 0
+    cr.execute(
+        SQL(
+            "SELECT line.id, export.resource, line.name FROM ir_exports_line line "
+            "JOIN ir_exports export ON export.id = line.export_id "
+            "WHERE line.name ~ %s",
+            r"(^|/)%s(/|$)" % rename.old,
+        )
+    )
+    rewritten = 0
+    for line_id, model, path in cr.fetchall():
+        renamed = (
+            rename.rename_path(path, model, "/")
+            if rename.precise
+            else "/".join(
+                rename.new if segment == rename.old else segment
+                for segment in path.split("/")
+            )
+        )
+        if renamed == path:
+            continue
+        cr.execute(
+            SQL("UPDATE ir_exports_line SET name = %s WHERE id = %s", renamed, line_id)
+        )
+        rewritten += 1
     return rewritten
 
 
@@ -749,7 +1351,7 @@ def rename_field(
     # `mail.tracking.value`, export template and access record points at, so a
     # drop-and-add would delete that history with the old row. Its external id
     # and, for a Selection, the value rows and their external ids follow.
-    table = model.replace(".", "_")
+    table = _table_of(model)
     column_renamed = column_exists(cr, table, old) and not column_exists(cr, table, new)
     _debug.lifecycle(
         "module_data.rename_field",
@@ -804,7 +1406,7 @@ def rename_field(
         )
         return
     cr.execute(SQL("UPDATE ir_model_fields SET name = %s WHERE id = %s", new, field_id))
-    xmlid_model = table
+    xmlid_model = model.replace(".", "_")
     cr.execute(
         SQL(
             "UPDATE ir_model_data SET name = %s "
@@ -1081,7 +1683,7 @@ def _rewrite_reference_values(cr: BaseCursor, old: str, new: str) -> None:
         "SELECT model, name FROM ir_model_fields WHERE ttype = 'reference' AND store"
     )
     for model, field in cr.fetchall():
-        table = model.replace(".", "_")
+        table = _table_of(model)
         if not column_exists(cr, table, field):
             continue
         cr.execute(
@@ -1103,25 +1705,41 @@ def rewrite_quoted_model_names(cr: BaseCursor, old: str, new: str) -> None:
     for table, columns in _MODEL_EXPRESSION_COLUMNS:
         if table not in existing:
             continue
+        types = get_table_columns(cr, table)
         for column in columns:
-            if not column_exists(cr, table, column):
+            if column not in types:
                 continue
             for quote in ("'", '"'):
                 needle, replacement = f"{quote}{old}{quote}", f"{quote}{new}{quote}"
-                rewritten = SQL(
-                    "replace(%s::text, %s, %s)",
-                    SQL.identifier(column),
-                    needle,
-                    replacement,
-                )
+                if types[column]["udt_name"] == "jsonb":
+                    # jsonb::text escapes a double quote, so each value is
+                    # rewritten as the text it is, not as the document's text
+                    cr.execute(
+                        SQL(
+                            """
+                            UPDATE %(table)s SET %(column)s = (
+                                   SELECT jsonb_object_agg(key, replace(value, %(needle)s, %(new)s))
+                                     FROM jsonb_each_text(%(column)s))
+                             WHERE EXISTS (
+                                   SELECT 1 FROM jsonb_each_text(%(column)s)
+                                    WHERE position(%(needle)s in value) > 0)
+                            """,
+                            table=SQL.identifier(table),
+                            column=SQL.identifier(column),
+                            needle=needle,
+                            new=replacement,
+                        )
+                    )
+                    continue
                 cr.execute(
                     SQL(
-                        "UPDATE %s SET %s = %s WHERE position(%s in %s::text) > 0",
+                        "UPDATE %s SET %s = replace(%s, %s, %s) "
+                        "WHERE position(%s in %s) > 0",
                         SQL.identifier(table),
                         SQL.identifier(column),
-                        SQL("%s::jsonb", rewritten)
-                        if column == "arch_db"
-                        else rewritten,
+                        SQL.identifier(column),
+                        needle,
+                        replacement,
                         needle,
                         SQL.identifier(column),
                     )
