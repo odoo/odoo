@@ -36,3 +36,25 @@ registry.category("web_tour.tours").add("shop_attribute_filters_remain_when_chan
         },
     ],
 });
+
+registry.category("web_tour.tours").add("shop_attribute_value_grouping", {
+    steps: () => [
+        {
+            content: "Check that the parent value is displayed",
+            trigger: '.products_attributes_filters label:contains("Black")',
+        },
+        {
+            content: "Select the parent value",
+            trigger: '.products_attributes_filters label:contains("Black")',
+            run: "click",
+        },
+        {
+            content: "Check that products matching the Grey child are displayed",
+            trigger: '.oe_product:has(.o_wsale_products_item_title:contains("Grouped Grey Product")',
+        },
+        {
+            content: "Check that unrelated products are not displayed",
+            trigger: '#o_wsale_products_grid:not(:has(article[aria-label="Standalone Red Product"]))',
+        },
+    ],
+});
