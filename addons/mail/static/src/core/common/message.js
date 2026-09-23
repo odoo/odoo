@@ -449,6 +449,15 @@ export class Message extends Component {
         return true;
     }
 
+    get hasActions() {
+        return (
+            this.props.hasActions &&
+            this.message.hasActions &&
+            !this.isEditing &&
+            !this.env.inChatter?.disabled
+        );
+    }
+
     async onClickAttachmentUnlink(attachment) {
         await toRaw(attachment).remove();
     }
@@ -486,9 +495,8 @@ export class Message extends Component {
             return;
         }
         if (
+            !this.hasActions ||
             ev.composedPath()[0].closest("a") ||
-            !this.props.hasActions ||
-            this.isEditing ||
             this.rightClickDropdownState.isOpen ||
             this.isRightClickDropdownOngoingClose
         ) {
