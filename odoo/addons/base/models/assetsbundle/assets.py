@@ -443,11 +443,9 @@ class ScssStylesheetAsset(PreprocessedCSS):
         except (SassProtocolError, OSError) as exc:
             # a transport failure of the embedded protocol; anything else is a
             # bug in this code and must surface, not run the slow path forever
+            # compile_string has already closed the process it failed on
             self._warn_embedded_fallback(exc)
             _debug.logic("sass_fallback_cli", error=type(exc).__name__)
-            from odoo.tools.sass_embedded import close_sass_compiler
-
-            close_sass_compiler()
 
         with _debug.perf("sass_cli", chars=len(source), style=self.output_style):
             return super().compile(source)

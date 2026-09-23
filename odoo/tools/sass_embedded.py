@@ -2,6 +2,7 @@ import atexit
 import collections
 import contextlib
 import logging
+import os
 import re
 import shutil
 import subprocess
@@ -9,6 +10,8 @@ import threading
 from pathlib import Path
 from subprocess import PIPE, Popen
 from typing import IO, Self
+from urllib.parse import unquote, urlparse
+from urllib.request import url2pathname
 
 from google.protobuf.message import DecodeError
 
@@ -107,7 +110,19 @@ def _supports_embedded(sass_path: str) -> bool:
     return b"unavailable" not in out and b"pure js" not in out
 
 
+_sass_path: str | None = None
+
+
 def get_sass_path() -> str | None:
+    # each call probes every candidate with a subprocess (~240 ms); an absent
+    # binary is not memoised, so an `npm install` is picked up without a restart
+    global _sass_path  # noqa: PLW0603  process-wide memo of a filesystem probe
+    if _sass_path is None:
+        _sass_path = _find_sass_path()
+    return _sass_path
+
+
+def _find_sass_path() -> str | None:
     node_modules = Path(odoo.__path__[0]).parent / "node_modules"
     candidates: list[str] = []
     system_sass = shutil.which("sass")
@@ -244,6 +259,16 @@ class SassEmbeddedCompiler:
                 killed=killed,
                 compilations=self._compilation_id,
             )
+
+    def _forget_after_fork(self) -> None:
+        proc, self._process = self._process, None
+        self._started = False
+        self._lock = threading.Lock()
+        if proc is not None:
+            for pipe in (proc.stdin, proc.stdout):
+                if pipe is not None:
+                    with contextlib.suppress(OSError):
+                        pipe.close()
 
     def __enter__(self) -> Self:
         return self
@@ -541,6 +566,18 @@ def _get_sass_path_candidates(base: str) -> list[str]:
     return candidates
 
 
+def _file_url_to_path(url: str) -> Path:
+    return Path(url2pathname(urlparse(url).path))
+
+
+def _first_stylesheet(base: Path) -> str | None:
+    for candidate in _get_sass_path_candidates(str(base)):
+        candidate_path = Path(candidate)
+        if candidate_path.is_file():
+            return candidate_path.resolve().as_uri()
+    return None
+
+
 class OdooSassImporter(SassImporter):
     def __init__(self, bootstrap_path: str) -> None:
         self.bootstrap_path = bootstrap_path
@@ -548,7 +585,14 @@ class OdooSassImporter(SassImporter):
     def canonicalize(self, url: str, from_import: bool) -> str | None:
         from odoo.tools.files import file_path
 
-        *parent_parts, filename = url.replace("\\", "/").split("/")
+        if url.startswith("file:"):
+            # a relative load: sass has already resolved it against the
+            # stylesheet that asked, and it must be found there or nowhere --
+            # answering None sends sass on to the bare name, which the load
+            # paths then find in Bootstrap first
+            return _first_stylesheet(_file_url_to_path(url))
+
+        *parent_parts, filename = unquote(url).replace("\\", "/").split("/")
         parent_path_str = str(Path(*parent_parts)) if parent_parts else ""
 
         search_dirs = []
@@ -563,16 +607,12 @@ class OdooSassImporter(SassImporter):
             )
 
         for search_dir in search_dirs:
-            base = str(Path(search_dir) / filename)
-            for candidate in _get_sass_path_candidates(base):
-                candidate_path = Path(candidate)
-                if candidate_path.is_file():
-                    return f"file://{candidate_path.resolve()}"
-
+            if found := _first_stylesheet(Path(search_dir) / filename):
+                return found
         return None
 
     def load(self, canonical_url: str) -> tuple[str, str] | None:
-        file = Path(canonical_url.removeprefix("file://"))
+        file = _file_url_to_path(canonical_url)
         if not file.is_file():
             return None
         contents = file.read_text(encoding="utf-8")
@@ -582,28 +622,31 @@ class OdooSassImporter(SassImporter):
 
 _sass_compiler: SassEmbeddedCompiler | None = None
 _sass_lock = threading.Lock()
-_on_stop_registered = False
+_exit_hooks_registered = False
+
+
+def _register_exit_hooks() -> None:
+    global _exit_hooks_registered  # noqa: PLW0603  the hooks close a process singleton and are registered once
+    if _exit_hooks_registered:
+        return
+    _exit_hooks_registered = True
+    atexit.register(close_sass_compiler)
+    try:
+        from odoo.service.server import CommonServer
+
+        CommonServer.register_on_stop_hook(close_sass_compiler)
+    except Exception:
+        _logger.debug("Could not register sass close on server stop", exc_info=True)
 
 
 def get_sass_compiler() -> SassEmbeddedCompiler:
-    global _sass_compiler, _on_stop_registered  # noqa: PLW0603  the dart-sass subprocess is a process singleton
+    global _sass_compiler  # noqa: PLW0603  the dart-sass subprocess is a process singleton
     if _sass_compiler is None:
         with _sass_lock:
             if _sass_compiler is None:
                 _sass_compiler = SassEmbeddedCompiler()
-                atexit.register(close_sass_compiler)
+                _register_exit_hooks()
                 _debug.lifecycle("sass.compiler_created")
-                if not _on_stop_registered:
-                    try:
-                        from odoo.service.server import CommonServer
-
-                        CommonServer.register_on_stop_hook(close_sass_compiler)
-                        _on_stop_registered = True
-                    except Exception:
-                        _logger.debug(
-                            "Could not register sass close on server stop",
-                            exc_info=True,
-                        )
     return _sass_compiler
 
 
@@ -611,6 +654,20 @@ def close_sass_compiler() -> None:
     global _sass_compiler  # noqa: PLW0603  the dart-sass subprocess is a process singleton
     with _sass_lock:
         if _sass_compiler is not None:
-            _sass_compiler.close()
+            # a compile running on another thread owns the process until it
+            # returns; closing under it would abort that thread's stylesheet
+            with _sass_compiler._lock:
+                _sass_compiler.close()
             _sass_compiler = None
             _debug.lifecycle("sass.compiler_closed")
+
+
+def _reset_after_fork() -> None:
+    global _sass_compiler, _sass_lock  # noqa: PLW0603  a forked child must not drive the parent's dart-sass
+    compiler, _sass_compiler = _sass_compiler, None
+    _sass_lock = threading.Lock()
+    if compiler is not None:
+        compiler._forget_after_fork()
+
+
+os.register_at_fork(after_in_child=_reset_after_fork)
