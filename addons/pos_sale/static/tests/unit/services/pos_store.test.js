@@ -275,4 +275,41 @@ describe("onClickSaleOrder", () => {
         expect(downPaymentLine.prices.total_included).toBe(downPaymentAmount);
     });
 
+    test("second percentage down payment subtracts the exact amount of the first one", async () => {
+        const store = await setupPosEnv();
+        const saleOrder = createSaleOrderWithFixedTax(store);
+
+        const firstPosDownPaymentOrder = store.addNewOrder();
+        await store.addDownPaymentProductOrderlineToOrder(saleOrder, 50, true);
+        await waitUntil(() => firstPosDownPaymentOrder.lines.length === 1);
+        const firstDownPaymentLine = firstPosDownPaymentOrder.lines[0];
+        expect(firstDownPaymentLine.product_id.id).toBe(store.config.down_payment_product_id.id);
+        saleOrder.update({
+            order_line: [
+                [
+                    "create",
+                    {
+                        is_downpayment: true,
+                        product_id: firstDownPaymentLine.product_id,
+                        product_uom_qty: 0,
+                        price_unit: firstDownPaymentLine.price_unit,
+                        tax_ids: [["link", ...firstDownPaymentLine.tax_ids]],
+                        extra_tax_data: firstDownPaymentLine.extra_tax_data,
+                    },
+                ],
+            ],
+        });
+
+        const secondPosDownPaymentOrder = store.addNewOrder();
+        await store.addDownPaymentProductOrderlineToOrder(saleOrder, 50, true);
+        await waitUntil(() => secondPosDownPaymentOrder.lines.length === 1);
+        const secondDownPaymentLine = secondPosDownPaymentOrder.lines[0];
+        expect(secondDownPaymentLine.product_id.id).toBe(store.config.down_payment_product_id.id);
+
+        // 50% of (99.00 (the order without its 1.00 fixed tax) - 49.50 (the first down payment))
+        const secondDownPaymentAmount = 24.75;
+        expect(secondDownPaymentLine.prices.total_included).toBeCloseTo(secondDownPaymentAmount, {
+            margin: 0.001,
+        });
+    });
 });
