@@ -105,7 +105,15 @@ floors** with a 25 % tolerance
 (`ODOO_PERF_TOLERANCE`), plus the in-memory tier's cost per create and per
 stored compute. The floors are `tests/perf/floors.json`, one machine's,
 moved in the same change that moves the count; a reading below a time floor
-passes and is the cue to lower it. Attribute *where* time goes with a
+passes and is the cue to lower it. **A time floor is judged only on a machine
+running at the speed it was set on**: every check first times a fixed
+interpreter-bound loop (`_bench.calibration_ms`), and above the file's
+`calibration_ms` reference plus the tolerance the time floors print "not
+judged" instead of failing; statement counts stay exact either way. The same
+code read 51 and 127 ms an hour apart as this machine throttled, and dividing
+by the calibration over-corrected (the loop slowed 3× where the ORM slowed
+1.9×), which is why it gates rather than scales. Re-read the reference, on a
+calm machine, whenever the floors are re-read. Attribute *where* time goes with a
 signal-based sampler on the main thread, never cProfile shares or a sampling
 thread: `agromarin-knowledge/research/2026-09-22-orm-best-in-class.md` §6).
 

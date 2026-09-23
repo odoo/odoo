@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from .._pg import dropdb_path, pg_reachable, repo_root
+from ._bench import calibration_ms
 
 REPO_ROOT = repo_root()
 FLOORS = Path(__file__).with_name("floors.json")
@@ -20,6 +21,13 @@ ADDONS_PATH = f"{REPO_ROOT / 'odoo' / 'addons'},{REPO_ROOT / 'addons'}"
 # a time floor is one machine's; the tolerance absorbs a busy neighbour, a
 # regression of a fifth does not hide under it
 TIME_TOLERANCE = float(os.environ.get("ODOO_PERF_TOLERANCE", "0.25"))
+
+# a time floor is judged only on a machine running at the speed it was set on:
+# measured 2026-09-22, the same code read 51 ms and 127 ms an hour apart as the
+# CPUs throttled under other work, and dividing by a calibration loop
+# over-corrected (the loop slowed 3x where the ORM slowed 1.9x), so a slower
+# machine is reported as not judged rather than red
+CALIBRATION_KEY = "calibration_ms"
 
 _READINGS = pytest.StashKey[list[dict]]()
 _DATABASES = pytest.StashKey[list[dict]]()
@@ -75,13 +83,30 @@ def load_floors() -> dict:
     return json.loads(FLOORS.read_text())
 
 
-def _check(scenario: str, readings: dict[str, float], *, counts_only: bool) -> None:
-    floors = load_floors().get(scenario)
+def _check(
+    scenario: str,
+    readings: dict[str, float],
+    *,
+    counts_only: bool,
+    calibration: float | None = None,
+    floors_data: dict | None = None,
+) -> bool:
+    floors_data = load_floors() if floors_data is None else floors_data
+    floors = floors_data.get(scenario)
     line = " ".join(f"{k}={v}" for k, v in readings.items())
     print(f"\n[perf] {scenario}: {line}")
     assert floors is not None, (
         f"{scenario} has no floor in {FLOORS.name}; add {json.dumps(readings)}"
     )
+    reference = floors_data.get(CALIBRATION_KEY)
+    time_judged = not counts_only
+    if time_judged and reference and calibration is not None:
+        time_judged = calibration <= reference * (1 + TIME_TOLERANCE)
+        if not time_judged:
+            print(
+                f"[perf] {scenario}: time floors not judged -- calibration reads "
+                f"{calibration} ms against {reference} ms when the floors were set"
+            )
     for key, floor in floors.items():
         assert key in readings, f"{scenario}.{key} was not measured"
         value = readings[key]
@@ -98,21 +123,23 @@ def _check(scenario: str, readings: dict[str, float], *, counts_only: bool) -> N
                     f"{readings['statements_min']} and {readings['statements_max']}; "
                     f"expected {floor} for every operation"
                 )
-        elif not counts_only:
+        elif time_judged:
             assert value <= floor * (1 + TIME_TOLERANCE), (
                 f"{scenario}.{key} reads {value}, floor {floor} "
                 f"(+{TIME_TOLERANCE:.0%} allowed)"
             )
+    return time_judged
 
 
 @pytest.fixture
 def check(request):
     def checked(scenario, readings):
-        request.config.stash[_READINGS].append({"scenario": scenario, **readings})
-        _check(
-            scenario,
-            readings,
-            counts_only=request.config.getoption("--perf-counts-only"),
+        counts_only = request.config.getoption("--perf-counts-only")
+        calibration = None if counts_only else calibration_ms()
+        reading = {"scenario": scenario, **readings, CALIBRATION_KEY: calibration}
+        request.config.stash[_READINGS].append(reading)
+        reading["time_judged"] = _check(
+            scenario, readings, counts_only=counts_only, calibration=calibration
         )
 
     return checked

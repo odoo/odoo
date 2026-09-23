@@ -83,3 +83,37 @@ def measure(
         "statements_min": min(statements),
         "statements_max": max(statements),
     }
+
+
+class _Rec:
+    __slots__ = ("key", "parent", "value")
+
+    def __init__(self, key: str, value: int, parent: _Rec | None) -> None:
+        self.key = key
+        self.value = value
+        self.parent = parent
+
+
+def _calibration_workload() -> int:
+    index: dict[str, list[_Rec]] = {}
+    parent = None
+    for i in range(60000):
+        rec = _Rec(f"k{i % 997}", i, parent)
+        index.setdefault(rec.key, []).append(rec)
+        parent = rec if i % 7 else None
+    total = 0
+    for recs in index.values():
+        for rec in recs:
+            total += rec.value + (rec.parent.value if rec.parent else 0)
+    return total + len(sorted(index, key=lambda key: (len(index[key]), key)))
+
+
+def calibration_ms(runs: int = 15) -> float:
+    # how fast this machine runs interpreter-bound code right now: the fastest
+    # of several runs, so a preempted run does not count
+    best = float("inf")
+    for _ in range(runs):
+        start = time.perf_counter()
+        _calibration_workload()
+        best = min(best, time.perf_counter() - start)
+    return round(best * 1000, 3)
