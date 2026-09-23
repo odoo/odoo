@@ -12,8 +12,6 @@ export class CoverPropertiesOptionPlugin extends Plugin {
             SetCoverBackgroundAction,
             MarkCoverPropertiesToBeSavedAction,
         },
-        savable_selectors: "#wrapwrap .o_record_cover_container[data-res-model]",
-        content_not_editable_selectors: ".o_savable.o_record_cover_container[data-res-model]",
         on_will_save_handlers: this.savePendingBackgroundImage.bind(this),
         on_ready_to_save_document_handlers: this.saveAllCoverProperties.bind(this),
     };
