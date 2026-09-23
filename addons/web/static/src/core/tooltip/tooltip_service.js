@@ -100,6 +100,11 @@ export const tooltipService = {
                 parent && parent !== document.documentElement;
                 parent = parent.parentElement
             ) {
+                if (!isOverflowing(parent)) {
+                    continue; // nothing sticks out of that ancestor, nor does el
+                }
+                // that check is only done on the few ancestors having an
+                // overflowing content, as "getComputedStyle" isn't free
                 const { overflowX, overflowY } = getComputedStyle(parent);
                 if (overflowX === "visible" && overflowY === "visible") {
                     continue; // that ancestor doesn't clip its content
@@ -115,6 +120,41 @@ export const tooltipService = {
                 }
             }
             return false;
+        }
+
+        /**
+         * Detect if the text displayed by the element is entirely visible, i.e.
+         * if it is neither truncated by an overflow (on the element itself or
+         * on one of its descendants, e.g. an inner ".text-truncate"), nor
+         * clipped by one of its ancestors.
+         *
+         * @param {HTMLElement} el
+         * @return {boolean}
+         */
+        function isTextEntirelyVisible(el) {
+            // Only the elements containing text can hide a part of it, so we
+            // collect the ancestors of the text nodes instead of walking the
+            // whole subtree, which may contain many elements displaying no text
+            // at all (e.g. icons). Marking the ancestors stops as soon as one of
+            // them is already marked, so each element is visited at most once.
+            const textElements = new Set([el]);
+            const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+            while (walker.nextNode()) {
+                if (!walker.currentNode.nodeValue.trim()) {
+                    continue;
+                }
+                let parent = walker.currentNode.parentElement;
+                while (parent && parent !== el && !textElements.has(parent)) {
+                    textElements.add(parent);
+                    parent = parent.parentElement;
+                }
+            }
+            for (const textElement of textElements) {
+                if (isOverflowing(textElement)) {
+                    return false;
+                }
+            }
+            return !isClippedByAncestor(el);
         }
 
         /**
@@ -139,17 +179,7 @@ export const tooltipService = {
             if (normalize(el.innerText) !== normalize(tooltip)) {
                 return false;
             }
-            // The text isn't entirely displayed as soon as the element or one
-            // of its descendants overflows (e.g. an inner ".text-truncate"), or
-            // as soon as the element is clipped by one of its ancestors.
-            // Descendants without text content are ignored, as they can't hide
-            // any part of the text (e.g. a button displaying only an icon).
-            // Note that we only get here if the tooltip is the text displayed
-            // by the element, so that subtree is necessarily small.
-            const textDescendants = [...el.querySelectorAll("*")].filter((descendant) =>
-                descendant.textContent.trim()
-            );
-            return ![el, ...textDescendants].some(isOverflowing) && !isClippedByAncestor(el);
+            return isTextEntirelyVisible(el);
         }
 
         /**
