@@ -150,7 +150,14 @@ class Inotify:
         if wd < 0:
             raise _errno_error(f"inotify_add_watch({path!r})")
         # The kernel hands the same descriptor back for a path already
-        # watched, so a re-add is a no-op on both sides.
+        # watched, so a re-add is a no-op on both sides. A path whose
+        # directory was replaced gets a new descriptor while the old one's
+        # IN_IGNORED may still be queued: it moves off the old one.
+        previous = self._wd_by_path.get(path)
+        if previous is not None and previous != wd:
+            stale = self._paths_by_wd.get(previous, [])
+            if path in stale:
+                stale.remove(path)
         self._wd_by_path[path] = wd
         aliases = self._paths_by_wd.setdefault(wd, [])
         if path not in aliases:
@@ -223,7 +230,8 @@ class Inotify:
             aliases = self._paths_by_wd.get(wd)
             if mask & IN_IGNORED:
                 for alias in self._paths_by_wd.pop(wd, ()):
-                    self._wd_by_path.pop(alias, None)
+                    if self._wd_by_path.get(alias) == wd:
+                        del self._wd_by_path[alias]
                 continue
             if not aliases:
                 continue

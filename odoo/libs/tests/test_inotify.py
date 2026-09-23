@@ -101,6 +101,20 @@ class TestAgainstTheKernel:
             assert ino.remove_watch(plain) is True
             assert ino.watched == frozenset()
 
+    def test_a_replaced_directory_keeps_its_new_watch(self, tmp_path):
+        sub = tmp_path / "sub"
+        sub.mkdir()
+        with inotify.Inotify() as ino:
+            old = ino.add_watch(sub, inotify.IN_CREATE)
+            sub.rmdir()
+            sub.mkdir()
+            assert ino.add_watch(sub, inotify.IN_CREATE) != old
+            ino.read(2.0)
+            assert ino.watched == {str(sub)}
+            (sub / "f").touch()
+            assert [e.name for e in ino.read(2.0)] == ["f"]
+            assert ino.remove_watch(sub) is True
+
     def test_an_ignored_watch_forgets_every_alias(self, tmp_path):
         sub = tmp_path / "sub"
         sub.mkdir()
