@@ -4,7 +4,7 @@ from typing import Literal
 
 from PIL import Image
 
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError as _UserError
 from odoo.libs.colors import hex_to_rgb
 from odoo.libs.image import (
     EXIF_TAG_ORIENTATION,
@@ -38,7 +38,7 @@ from odoo.libs.image import (
 from odoo.libs.image import (
     is_image_size_above as _is_image_size_above_base,
 )
-from odoo.tools.translate import LazyTranslate
+from odoo.tools.translate import LazyTranslate as _LazyTranslate
 
 __all__ = [
     "EXIF_TAG_ORIENTATION",
@@ -61,7 +61,7 @@ __all__ = [
     "image_to_base64",
     "is_image_size_above",
 ]
-_lt = LazyTranslate("base")
+_lt = _LazyTranslate("base")
 
 
 @contextmanager
@@ -69,9 +69,9 @@ def _decoded_as_user_error() -> Iterator[None]:
     try:
         yield
     except ImageDecodeError as e:
-        raise UserError(_lt("This file could not be decoded as an image file.")) from e
+        raise _UserError(_lt("This file could not be decoded as an image file.")) from e
     except ImageTooLargeError as e:
-        raise UserError(
+        raise _UserError(
             _lt(
                 "Too large image (above %sMpx), reduce the image size.",
                 str(IMAGE_MAX_RESOLUTION / 1e6),
@@ -85,7 +85,7 @@ class ImageProcess(_ImageProcessBase):
             with _decoded_as_user_error():
                 super().__init__(source, verify_resolution)
         except ValueError as e:
-            raise UserError(str(e)) from e
+            raise _UserError(str(e)) from e
 
 
 def image_process(
@@ -127,7 +127,7 @@ def get_webp_size(source: bytes) -> tuple[int, int] | None:
     try:
         return _get_webp_size_base(source)
     except NotWebpError as e:
-        raise UserError(_lt("This file is not a webp file.")) from e
+        raise _UserError(_lt("This file is not a webp file.")) from e
 
 
 def is_image_size_above(
@@ -136,4 +136,4 @@ def is_image_size_above(
     try:
         return _is_image_size_above_base(base64_source_1, base64_source_2)
     except ValueError as e:
-        raise UserError(_lt("This file could not be decoded as an image file.")) from e
+        raise _UserError(_lt("This file could not be decoded as an image file.")) from e
