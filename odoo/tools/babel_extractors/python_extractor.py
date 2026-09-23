@@ -108,6 +108,8 @@ def _after_token(
         last_name = value
         if function_stack and not function_stack[-1]["message_lineno"]:
             function_stack[-1]["message_lineno"] = lineno
+    else:
+        last_name = None
     if current_fstring_start is not None and token not in {
         FSTRING_START,
         FSTRING_MIDDLE,
