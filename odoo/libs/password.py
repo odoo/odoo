@@ -34,9 +34,23 @@ def _pbkdf2_sha512(password: str, salt: bytes, rounds: int) -> bytes:
     )
 
 
-def _check_rounds(rounds: int) -> None:
+def _check_rounds(rounds: object) -> int:
+    # bool is an int, and True would mean a single round
+    if not isinstance(rounds, int) or isinstance(rounds, bool):
+        raise TypeError(f"pbkdf2_sha512__rounds must be an int, got {rounds!r}")
     if not 0 < rounds <= _MAX_ROUNDS:
         raise ValueError(f"pbkdf2_sha512__rounds must be in (0, {_MAX_ROUNDS}]")
+    return rounds
+
+
+def _scheme_names(value: object, what: str) -> list[str]:
+    if isinstance(value, str):
+        return [value]
+    if not isinstance(value, list | tuple | set) or not all(
+        isinstance(name, str) for name in value
+    ):
+        raise TypeError(f"{what} must be a sequence of scheme names, got {value!r}")
+    return list(value)
 
 
 def _format_hash(rounds: int, salt: bytes, checksum: bytes) -> str:
@@ -71,14 +85,15 @@ class CryptContext:
         deprecated: list[str] | None = None,
         **kwargs: object,
     ) -> None:
-        if isinstance(schemes, str):
-            schemes = [schemes]
-        self._schemes = list(schemes) if schemes else ["pbkdf2_sha512"]
-        self._deprecated = set(deprecated) if deprecated else set()
-        rounds = kwargs.get("pbkdf2_sha512__rounds", _DEFAULT_ROUNDS)
-        assert isinstance(rounds, int), "pbkdf2_sha512__rounds must be an int"
-        _check_rounds(rounds)
-        self._rounds = rounds
+        self._schemes = (
+            _scheme_names(schemes, "schemes") if schemes else ["pbkdf2_sha512"]
+        )
+        self._deprecated = (
+            set(_scheme_names(deprecated, "deprecated")) if deprecated else set()
+        )
+        self._rounds = _check_rounds(
+            kwargs.get("pbkdf2_sha512__rounds", _DEFAULT_ROUNDS)
+        )
 
     def hash(self, password: str) -> str:
         return pbkdf2_sha512_hash(password, self._rounds)
@@ -143,23 +158,12 @@ class CryptContext:
 
     def update(self, **kwargs: object) -> None:
         if "schemes" in kwargs:
-            schemes = kwargs["schemes"]
-            if isinstance(schemes, str):
-                schemes = [schemes]
-            assert isinstance(schemes, list | tuple | set), "schemes must be a sequence"
-            assert all(isinstance(s, str) for s in schemes)
-            self._schemes = list(schemes)
+            self._schemes = _scheme_names(kwargs["schemes"], "schemes")
         if "deprecated" in kwargs:
             dep = kwargs["deprecated"]
-            assert dep is None or isinstance(dep, list | tuple | set), (
-                "deprecated must be a sequence"
-            )
-            self._deprecated = set(dep) if dep else set()
+            self._deprecated = set(_scheme_names(dep, "deprecated")) if dep else set()
         if "pbkdf2_sha512__rounds" in kwargs:
-            new_rounds = kwargs["pbkdf2_sha512__rounds"]
-            assert isinstance(new_rounds, int), "pbkdf2_sha512__rounds must be an int"
-            _check_rounds(new_rounds)
-            self._rounds = new_rounds
+            self._rounds = _check_rounds(kwargs["pbkdf2_sha512__rounds"])
         _debug.lifecycle(
             "password.context_updated",
             schemes=",".join(self._schemes),

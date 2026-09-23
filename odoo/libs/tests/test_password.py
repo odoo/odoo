@@ -69,3 +69,21 @@ class TestCryptContextRoundsBoundEnforcement(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestContextArgumentsAreChecked(unittest.TestCase):
+    def test_a_bool_is_not_a_round_count(self):
+        with self.assertRaises(TypeError):
+            CryptContext(pbkdf2_sha512__rounds=True)
+        with self.assertRaises(TypeError):
+            CryptContext().update(pbkdf2_sha512__rounds=False)
+
+    def test_a_non_int_round_count_is_refused_even_under_optimisation(self):
+        with self.assertRaises(TypeError):
+            CryptContext(pbkdf2_sha512__rounds="600000")
+
+    def test_schemes_must_be_names(self):
+        with self.assertRaises(TypeError):
+            CryptContext().update(schemes=[1])
+        with self.assertRaises(TypeError):
+            CryptContext(deprecated=42)
