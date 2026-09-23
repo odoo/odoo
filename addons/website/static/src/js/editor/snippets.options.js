@@ -213,8 +213,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         this.googleLocalFonts = googleLocalFontsProperty ?
             googleLocalFontsProperty.slice(1, -1).split(/\s*,\s*/g) : [];
         const uploadedLocalFontsProperty = weUtils.getCSSVariableValue('uploaded-local-fonts', style);
-        this.uploadedLocalFonts = uploadedLocalFontsProperty ?
-            uploadedLocalFontsProperty.slice(1, -1).split(/\s*,\s*/g) : [];
+        this.uploadedLocalFonts = uploadedLocalFontsProperty.match(/'[^']*'\s*:\s*\d+/g) || [];
         // If a same font exists both remotely and locally, we remove the remote
         // font to prioritize the local font. The remote one will never be
         // displayed or loaded as long as the local one exists.
