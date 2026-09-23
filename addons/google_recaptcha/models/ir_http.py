@@ -114,8 +114,17 @@ class IrHttp(models.AbstractModel):
                 "Trial captcha verification timeout for ip address %s", ip_addr
             )
             return "timeout"
-        except Exception:
-            logger.error("Trial captcha verification bad request response")
+        except Exception as e:
+            # The class, not the message: the message is the one thing here
+            # that could in principle echo back something we sent. It cannot
+            # carry the secret -- that travels in the POST body, never a URL --
+            # but the class alone already separates a TLS error from a JSON
+            # parse error from the KeyError this same clause catches when
+            # Google's response changes shape.
+            logger.error(
+                "Trial captcha verification bad request response (%s)",
+                type(e).__name__,
+            )
             return "bad_request"
 
         if res_success:

@@ -335,3 +335,26 @@ class TestGoogleRecaptcha(TransactionCase):
             "is_bot",
             "an explicit score of 0 is still a real score",
         )
+
+    def test_bad_request_log_names_the_exception(self):
+        """The catch-all must say what actually failed (R03).
+
+        It logged a fixed string, so a TLS error, a JSON parse error and the
+        KeyError this same clause catches when Google's response changes shape
+        were all indistinguishable in the log.
+        """
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
+        self.icp.set_param("enable_recaptcha", "True")
+        with (
+            self._mocked_verify(
+                post_side_effect=ValueError("simulated upstream problem")
+            ),
+            self.assertLogs(MODULE, level="ERROR") as captured,
+        ):
+            verdict = self.env["ir.http"]._get_recaptcha_verdict(
+                "10.0.0.1", "a-token", action="login"
+            )
+        self.assertEqual(verdict, "bad_request")
+        self.assertIn("ValueError", "".join(captured.output))
