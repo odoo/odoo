@@ -65,16 +65,22 @@ _SRV6_SIDS = ipaddress.ip_network("5f00::/16")
 _NAT64_WELL_KNOWN = ipaddress.ip_network("64:ff9b::/96")
 _IPV4_COMPATIBLE = ipaddress.ip_network("::/96")
 _IPV4_TRANSLATED = ipaddress.ip_network("::ffff:0:0:0/96")
+_NAT64_LOCAL_USE = ipaddress.ip_network("64:ff9b:1::/48")
 # Cloud instance-metadata services answer credentials to whoever asks from the
 # host, so no scope-wide policy reaches them: AWS/GCP/Azure/OCI/DigitalOcean
-# IMDS, the AWS ECS task endpoint, AWS IMDS over IPv6, Alibaba Cloud.
+# IMDS, the AWS ECS task endpoint, AWS IMDS over IPv6, EKS Pod Identity (both
+# families), Alibaba Cloud, Tencent Cloud, and the Azure WireServer.
 _METADATA_ADDRESSES = frozenset(
     ipaddress.ip_address(address)
     for address in (
         "169.254.169.254",
         "169.254.170.2",
+        "169.254.170.23",
         "fd00:ec2::254",
+        "fd00:ec2::23",
         "100.100.100.200",
+        "169.254.0.23",
+        "168.63.129.16",
     )
 )
 
@@ -88,6 +94,10 @@ def _as_address(address: str | IPAddress) -> IPAddress:
 def _unwrap(address: IPAddress) -> IPAddress:
     if isinstance(address, ipaddress.IPv4Address):
         return address
+    if address.scope_id is not None:
+        # a zone index names an interface, not another address: fd00:ec2::254%1
+        # is fd00:ec2::254, but it compares unequal to it
+        address = ipaddress.IPv6Address(address.packed)
     if address.ipv4_mapped is not None:
         return address.ipv4_mapped
     if address in _NAT64_WELL_KNOWN:
@@ -101,7 +111,10 @@ def _unwrap(address: IPAddress) -> IPAddress:
 
 def classify(address: str | IPAddress) -> Scope:
     ip = _unwrap(_as_address(address))
-    if ip in _METADATA_ADDRESSES:
+    if ip in _METADATA_ADDRESSES or (
+        ip in _NAT64_LOCAL_USE
+        and ipaddress.IPv4Address(int(ip) & 0xFFFFFFFF) in _METADATA_ADDRESSES
+    ):
         return Scope.METADATA
     if ip.is_unspecified:
         return Scope.UNSPECIFIED

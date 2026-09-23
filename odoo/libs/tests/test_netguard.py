@@ -102,12 +102,23 @@ class TestPolicy:
             "::ffff:169.254.169.254",
             "64:ff9b::a9fe:a9fe",
             "2002:a9fe:a9fe::",
+            "fd00:ec2::254%1",
+            "fd00:ec2::254%eth0",
+            "64:ff9b:1::a9fe:a9fe",
+            "169.254.170.23",
+            "fd00:ec2::23",
+            "169.254.0.23",
+            "168.63.129.16",
         ],
     )
     def test_no_scope_policy_reaches_a_cloud_metadata_service(self, address):
         assert netguard.classify(address) is Scope.METADATA
         assert not netguard.PRIVATE_ALLOWED.permits(address)
         assert not netguard.PUBLIC_ONLY.permits(address)
+
+    def test_a_zone_index_does_not_change_the_scope(self):
+        assert netguard.classify("fe80::1%eth0") is Scope.LINK_LOCAL
+        assert netguard.classify("fd12::1%2") is Scope.PRIVATE
 
     def test_only_a_named_network_reaches_a_metadata_service(self):
         policy = netguard.PRIVATE_ALLOWED.with_networks("169.254.169.254/32")
