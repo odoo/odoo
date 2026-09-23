@@ -14,6 +14,23 @@ var ListRenderer = require('web.ListRenderer');
 
 var SectionAndNoteListRenderer = ListRenderer.extend({
     /**
+     * Remember when the optional name column is hidden.  It is a product
+     * description on regular rows, but the only visible cell on section and
+     * note rows.
+     *
+     * @override
+     */
+    _processColumns: function () {
+        this._super.apply(this, arguments);
+
+        this._hiddenNameColumn = _.find(this.optionalColumns, function (column) {
+            return column.attrs.name === 'name' &&
+                column.attrs.widget === 'section_and_note_text';
+        });
+        this._isNameColumnHidden = this._hiddenNameColumn &&
+            !_.contains(this.optionalColumnsEnabled, this._hiddenNameColumn.attrs.name);
+    },
+    /**
      * We want section and note to take the whole line (except handle and trash)
      * to look better and to hide the unnecessary fields.
      *
@@ -30,6 +47,9 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
                 return $cell;
             } else if (node.attrs.name === "name") {
                 var nbrColumns = this._getNumberOfCols();
+                if (this._isNameColumnHidden) {
+                    nbrColumns++;
+                }
                 if (this.handleField) {
                     nbrColumns--;
                 }
@@ -52,6 +72,25 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
      */
     _renderRow: function (record, index) {
         var $row = this._super.apply(this, arguments);
+
+        if (this._isNameColumnHidden && record.data.display_type) {
+            var nameCell = this._renderBodyCell(record, this._hiddenNameColumn, 0, {
+                mode: 'readonly',
+            });
+            var handleIndex = _.findIndex(this.columns, function (column) {
+                return column.attrs.widget === 'handle';
+            });
+            var insertIndex = handleIndex === -1 ? 0 : handleIndex + 1;
+            if (this.hasSelectors) {
+                insertIndex++;
+            }
+            var $nextCell = $row.children().eq(insertIndex);
+            if ($nextCell.length) {
+                nameCell.insertBefore($nextCell);
+            } else {
+                $row.append(nameCell);
+            }
+        }
 
         if (record.data.display_type) {
             $row.addClass('o_is_' + record.data.display_type);

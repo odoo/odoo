@@ -37,6 +37,10 @@ QUnit.module('section_and_note', {
                         string: "Name",
                         type: 'text'
                     },
+                    foo: {
+                        string: "Foo",
+                        type: 'char'
+                    },
                 },
                 records: [
                     {id: 1, display_type: false, invoice_id: 1, name: 'product\n2 lines'},
@@ -91,6 +95,51 @@ QUnit.module('section_and_note', {
         await testUtils.dom.click($tr1.find('td.o_data_cell'));
         assert.containsOnce($tr1, 'td.o_data_cell input[name="name"]',
             "editing section should be input");
+
+        form.destroy();
+    });
+
+    QUnit.test('hiding the description keeps notes visible', async function (assert) {
+        assert.expect(5);
+
+        this.data.invoice_line.records = [
+            {id: 1, display_type: false, invoice_id: 1, name: 'product description', foo: 'foo'},
+            {id: 2, display_type: 'line_note', invoice_id: 1, name: 'note content', foo: 'foo'},
+        ];
+
+        var form = await createView({
+            View: FormView,
+            model: 'invoice',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="invoice_line_ids" widget="section_and_note_one2many"/>' +
+                '</form>',
+            archs: {
+                'invoice_line,false,list': '<tree editable="bottom">' +
+                    '<field name="display_type" invisible="1"/>' +
+                    '<field name="name" widget="section_and_note_text" optional="show"/>' +
+                    '<field name="foo"/>' +
+                '</tree>',
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('tr.o_data_row').eq(0)
+            .find('td.o_section_and_note_text_cell').text().trim(), 'product description');
+        assert.strictEqual(form.$('tr.o_data_row').eq(1)
+            .find('td.o_section_and_note_text_cell').text().trim(), 'note content');
+
+        await testUtils.dom.click(form.$('.o_optional_columns_dropdown_toggle'));
+        await testUtils.dom.click(form.$('.o_optional_columns input[name="name"]'));
+
+        assert.notOk(form.$('.o_optional_columns input[name="name"]').is(':checked'),
+            'the description column should be disabled');
+        assert.notOk(form.$('tr.o_data_row').eq(0)
+            .find('td.o_section_and_note_text_cell').is(':visible'),
+            'the product description should be hidden');
+        assert.ok(form.$('tr.o_data_row').eq(1)
+            .find('td.o_section_and_note_text_cell').is(':visible'),
+            'the note should remain visible');
 
         form.destroy();
     });
