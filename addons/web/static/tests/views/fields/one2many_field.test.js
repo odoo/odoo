@@ -10,7 +10,7 @@ import {
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 
-import { onWillDestroy, onWillStart, reactive, useState } from "@odoo/owl";
+import { onWillDestroy, onWillStart, reactive, useState, xml } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
@@ -33,6 +33,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { x2ManyCommands } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { Record } from "@web/model/relational_model/record";
@@ -13776,4 +13777,107 @@ test("one2many list with monetary aggregates and different currencies", async ()
     await contains("tfoot span sup").hover();
     expect(".o_multi_currency_popover").toHaveCount(1);
     expect(".o_multi_currency_popover").toHaveText("500.00 € at $ 0.50");
+});
+
+test.tags("desktop");
+test("duplicate records of a one2many (serializes date and datetime values)", async () => {
+    // No standard field widget of web uses StaticList.duplicateRecords, so we define one here, in
+    // the spirit of the section and note widget of account (which allows to duplicate a section).
+    class DuplicateX2ManyField extends X2ManyField {
+        static template = xml`
+            <div>
+                <button class="o_duplicate_all" t-on-click="() => this.list.duplicateRecords(this.list.records)">
+                    Duplicate all
+                </button>
+                <t t-call="web.X2ManyField"/>
+            </div>`;
+    }
+    registry.category("fields").add("duplicate_all", {
+        ...x2ManyField,
+        component: DuplicateX2ManyField,
+    });
+
+    mockTimeZone(+2);
+    Turtle._fields.turtle_date = fields.Date();
+    Turtle._fields.turtle_datetime = fields.Datetime();
+    Turtle._records = [
+        { id: 1, name: "leonardo" },
+        {
+            id: 2,
+            name: "donatello",
+            turtle_date: "2017-01-25",
+            turtle_datetime: "2016-12-12 10:55:05",
+        },
+    ];
+    Partner._records[0].turtles = [1, 2];
+
+    onRpc("onchange_batch", ({ args }) => {
+        const [valuesList] = args;
+        // date and datetime values must have been serialized by copyRecordData, otherwise the
+        // server can't read them (they are Luxon objects client side)
+        expect(valuesList.map((values) => values.turtle_date)).toEqual([false, "2017-01-25"]);
+        expect(valuesList.map((values) => values.turtle_datetime)).toEqual([
+            false,
+            "2016-12-12 10:55:05",
+        ]);
+        expect.step("onchange_batch");
+    });
+    onRpc("web_save", ({ args }) => {
+        const createCommands = args[1].turtles.filter((c) => c[0] === x2ManyCommands.CREATE);
+        expect(createCommands.map((c) => c[2].name)).toEqual(["leonardo", "donatello"]);
+        expect(createCommands.map((c) => c[2].turtle_date)).toEqual([false, "2017-01-25"]);
+        expect(createCommands.map((c) => c[2].turtle_datetime)).toEqual([
+            false,
+            "2016-12-12 10:55:05",
+        ]);
+        expect.step("web_save");
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="turtles" widget="duplicate_all">
+                    <list editable="bottom">
+                        <field name="name"/>
+                        <field name="turtle_date"/>
+                        <field name="turtle_datetime"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+    expect(queryAllTexts(".o_data_row [name=name]")).toEqual(["leonardo", "donatello"]);
+    expect(queryAllTexts(".o_data_row [name=turtle_date]")).toEqual(["", "Jan 25, 2017"]);
+    expect(queryAllTexts(".o_data_row [name=turtle_datetime]")).toEqual([
+        "",
+        "Dec 12, 2016, 12:55 PM",
+    ]);
+
+    await contains(".o_duplicate_all").click();
+    expect.verifySteps(["onchange_batch"]);
+
+    expect(queryAllTexts(".o_data_row [name=name]")).toEqual([
+        "leonardo",
+        "donatello",
+        "leonardo",
+        "donatello",
+    ]);
+    expect(queryAllTexts(".o_data_row [name=turtle_date]")).toEqual([
+        "",
+        "Jan 25, 2017",
+        "",
+        "Jan 25, 2017",
+    ]);
+    expect(queryAllTexts(".o_data_row [name=turtle_datetime]")).toEqual([
+        "",
+        "Dec 12, 2016, 12:55 PM",
+        "",
+        "Dec 12, 2016, 12:55 PM",
+    ]);
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
 });
