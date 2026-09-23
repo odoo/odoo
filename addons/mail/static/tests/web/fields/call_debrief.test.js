@@ -2,7 +2,7 @@
 
 import { expect, describe, test } from "@odoo/hoot";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { click, queryOne } from "@odoo/hoot-dom";
+import { click, freezeTime, queryOne } from "@odoo/hoot-dom";
 import { contains, startServer, start, openFormView, mailModels } from "@mail/../tests/mail_test_helpers";
 import { defineModels, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { CallDebrief } from "@mail/views/fields/call_debrief/call_debrief";
@@ -78,7 +78,6 @@ test("CallDebrief: basic render without artifacts", async () => {
 });
 
 test("CallDebrief: active call uses the current time", async () => {
-    mockDate("2023-01-01 10:02:00", 0);
     _setupCallDebriefPatch();
     const pyEnv = await startServer();
     const artifactId = _createRecording(pyEnv, { start: 60 });
@@ -88,6 +87,8 @@ test("CallDebrief: active call uses the current time", async () => {
     });
 
     await start();
+    mockDate("2023-01-01 10:02:00", 0);
+    freezeTime();
     await _openDebriefView(pyEnv, discussCallHistoryId);
 
     await contains(".o-CallDebriefTimeline-media-segment");
