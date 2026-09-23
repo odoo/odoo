@@ -344,11 +344,14 @@ export class TourInteractive {
                     target: element,
                 });
             } else {
-                consumeEvents.push({
-                    name: "input",
-                    target: element,
-                });
-                if (element.classList.contains("o-autocomplete--input")) {
+                const isAutocompleteInput = element.classList.contains("o-autocomplete--input");
+                if (!isAutocompleteInput || this.config.robot) {
+                    consumeEvents.push({
+                        name: "input",
+                        target: element,
+                    });
+                }
+                if (isAutocompleteInput) {
                     consumeEvents.push({
                         name: "keydown",
                         target: element,
