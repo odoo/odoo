@@ -149,6 +149,7 @@ class kioskAttendanceApp extends Component{
         if (!navigator.geolocation) {
             return rpc(route, {...params})
         }
+        this.ui.block();
         return new Promise((resolve) => {
             navigator.geolocation.getCurrentPosition(
                 async ({ coords: { latitude, longitude } }) => {
@@ -158,12 +159,14 @@ class kioskAttendanceApp extends Component{
                         longitude,
                     });
                     resolve(result);
+                    this.ui.unblock();
                 },
                 async (err) => {
                     const result = await rpc(route, {
                         ...params
                     });
                     resolve(result);
+                    this.ui.unblock();
                 },
                 { enableHighAccuracy: true }
             );

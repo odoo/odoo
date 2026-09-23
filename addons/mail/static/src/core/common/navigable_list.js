@@ -35,6 +35,7 @@ export class NavigableList extends Component {
         autoSelectFirst: { type: Boolean, optional: true },
         class: { type: String, optional: true },
         hint: { type: String, optional: true },
+        onClose: { type: Function, optional: true },
         onSelect: { type: Function },
         options: { type: Array },
         optionTemplate: { type: String, optional: true },
@@ -109,6 +110,7 @@ export class NavigableList extends Component {
     close() {
         this.state.open = false;
         this.state.activeIndex = null;
+        this.props.onClose?.();
     }
 
     /**

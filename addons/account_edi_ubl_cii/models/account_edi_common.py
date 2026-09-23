@@ -1334,9 +1334,6 @@ class AccountEdiCommon(models.AbstractModel):
                 for tax_values in line_collected_values['taxes_values']:
                     tax_values['account'] = account
             tax_values_list += line_collected_values['taxes_values']
-            for charge in line_collected_values['charges']:
-                if tax_values := charge.get('attempt_tax_values'):
-                    tax_values_list.append(tax_values)
         for allowance_charge_value in collected_values['allowances'] + collected_values['charges']:
             if tax_values := allowance_charge_value.get('taxes_values'):
                 tax_values_list.append(tax_values)
