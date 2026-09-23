@@ -27,12 +27,17 @@ class ResUsersApikeysScope(models.Model):
         string="Models",
         help="The models this scope reaches, with what may be done on each. "
         "Empty: every model the key's user may reach, every operation, "
-        "nothing hidden.",
+        "nothing hidden -- unless the scope is closed when empty.",
     )
     door_only = fields.Boolean(
         help="A key of this scope opens its door and nothing else: at the "
         "universal RPC doors it reaches no model at all. For a door whose "
         "calls are not model calls -- a DAV client, a device protocol.",
+    )
+    closed_when_empty = fields.Boolean(
+        help="With no model line, a key of this scope reaches no model rather "
+        "than every model. For a door whose module mints its keys: they reach "
+        "what an operator names, and nothing before.",
     )
     max_depth = fields.Integer(
         default=8,
@@ -86,7 +91,11 @@ class ResUsersApikeysScope(models.Model):
             )
         lines = self.sudo().line_ids
         if not lines:
-            return api_scope.ScopeRules(key=self.key, max_depth=self.max_depth)
+            return api_scope.ScopeRules(
+                key=self.key,
+                models={} if self.closed_when_empty else None,
+                max_depth=self.max_depth,
+            )
         return api_scope.ScopeRules(
             key=self.key,
             models={

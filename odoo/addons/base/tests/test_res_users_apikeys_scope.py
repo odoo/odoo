@@ -82,6 +82,29 @@ class TestScopeReach(ScopeCase):
         )
         self.assertEqual(rows[0]["login"], "scope_probe")
 
+    def test_a_scope_closed_when_empty_reaches_nothing_until_a_line_names_a_model(
+        self,
+    ):
+        closed = self.env["res.users.apikeys.scope"].create(
+            {"name": "Closed", "key": "probe_closed", "closed_when_empty": True}
+        )
+        records = (
+            self.env["res.users"]
+            .with_user(self.user)
+            .with_context(api_scope_id=closed.id)
+        )
+        self.assertEqual(closed._rules().models, {})
+        with self.assertRaisesRegex(AccessError, "does not reach 'res.users'"):
+            call_kw(records, "search_read", [[]], {"fields": ["login"]})
+
+        closed.line_ids = [
+            (0, 0, {"model_id": self.env["ir.model"]._get_id("res.users")})
+        ]
+        rows = call_kw(
+            records, "search_read", [[("id", "=", self.user.id)]], {"fields": ["login"]}
+        )
+        self.assertEqual(rows[0]["login"], "scope_probe")
+
     def test_no_scope_leaves_call_kw_untouched(self):
         rows = call_kw(
             self.env["res.partner"].with_user(self.user),
