@@ -1585,6 +1585,11 @@ class TestContextualEmployee(TestHrHolidaysCommon):
             "the action hands its whole selection to the dashboard, which reads "
             "a balance and so needs one employee: %s" % context,
         )
+        self.assertEqual(
+            context["default_employee_id"],
+            self.employee_emp_id,
+            "a request created from the dashboard is for the employee it shows",
+        )
 
     def test_either_shape_names_the_same_employee(self):
         Employee = self.env["hr.employee"]
