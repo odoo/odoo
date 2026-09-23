@@ -31,7 +31,7 @@ Diverged from upstream past the point where merging or cherry-picking between th
 | PostgreSQL | 18. |
 | psycopg 3 | `psycopg[binary]>=3.3.4` with `psycopg-pool>=3.3.1` — the only driver `odoo/db/` uses. Never add a `psycopg2` import. |
 | Requirements | `pip install -r requirements.txt -r requirements-addons.txt` for runtime; `requirements-dev.txt` for the gates. The two runtime files split on ownership: `requirements.txt` is what a server process imports whatever is installed, `requirements-addons.txt` is what individual bundled addons own and declare in `external_dependencies`. A development checkout wants both; only a deployment that knows which modules it loads wants the first alone. `requirements-test.txt` pulls in both, so every test run is unaffected. |
-| `crates/odoo_rust` | Build it into the environment, with a Rust toolchain on `PATH`. With `CI=true` or `ODOO_REQUIRE_NATIVE=1` its absence is an `ImportError` at `odoo/init.py`. Elsewhere its absence is a `RuntimeWarning` and the process runs on the pure-Python twins behind `odoo/libs/accel.py` — slower, not wrong. A *stale* build is still fatal (`assert_fresh`). |
+| `crates/odoo_rust` | Build it into the environment, with a Rust toolchain on `PATH`. With `CI=true` or `ODOO_REQUIRE_NATIVE=1` its absence is an `ImportError` at `odoo/init.py`. Elsewhere its absence is a `RuntimeWarning` and the process runs on the pure-Python twins behind `odoo/libs/accel.py` — slower, not wrong. A *stale* build is fatal (`assert_fresh`). |
 
 ```bash
 cd crates/odoo_rust && maturin develop --release
@@ -51,7 +51,7 @@ The profile is stamped beside the source fingerprint; `odoo/libs/native.py` refu
 
 ### A stale build is worse than a missing one
 
-The pure-Python twins step in only when the extension is *absent*; a stale `.so` is imported and used. Before the freshness check, a stale build segfaulted on a cyclic `fast_clone` and silently mis-ordered timezone-aware columns; neither failure names its cause. A fresh build never sees it, so it is a long-lived-virtualenv problem only.
+The pure-Python twins step in only when the extension is *absent*; a stale `.so` is imported and used. A stale build can segfault on a cyclic `fast_clone` or silently mis-order timezone-aware columns, and neither failure names its cause. A fresh build never sees it, so it is a long-lived-virtualenv problem only.
 
 Each crate's `build.rs` stamps a CRC of its sources into the binary (`crates/odoo_build`); `odoo/libs/native.py` refuses to proceed when it disagrees with the crate on disk, naming the rebuild command. Rebuild after any `git pull` that touched `crates/`. Escape hatch: `ODOO_SKIP_RUST_FRESHNESS_CHECK=1`.
 
@@ -60,12 +60,12 @@ Each crate's `build.rs` stamps a CRC of its sources into the binary (`crates/odo
 | Crate | Role |
 |---|---|
 | `odoo_rust` | The runtime extension above. |
-| `odoo_lint` | Parallel source scanner behind five `test_lint` gates. **Not** a runtime dependency — build only to run those gates: `cd crates/odoo_lint && maturin develop --release`. Separate wheel because it is test-only and dominated the runtime one: 1156 KB / 35 crates with it, 266 KB / 15 without. |
+| `odoo_lint` | Parallel source scanner behind five `test_lint` gates. **Not** a runtime dependency — build only to run those gates: `cd crates/odoo_lint && maturin develop --release`. Separate wheel because it is test-only and would dominate the runtime one: 1156 KB / 35 crates with it, 266 KB / 15 without. |
 | `odoo_build` | Shared build-script support, so the fingerprint algorithm that must match `odoo/libs/native.py` exists once. |
 
 Run `cargo fmt --all`, `cargo clippy --workspace`, `cargo test --workspace` from `crates/`, not from a member.
 
-The crate checks are `cargo fmt --all --check`, `cargo clippy --workspace -D warnings`, `cargo test --workspace`, both maturin builds, and the exported symbols — including that `odoo_rust` has **not** regained the scanner.
+The crate checks are `cargo fmt --all --check`, `cargo clippy --workspace -D warnings`, `cargo test --workspace`, both maturin builds, and the exported symbols — including that `odoo_rust` does **not** carry the scanner.
 
 ## Pre-Work Check
 
@@ -90,14 +90,14 @@ Run the module's harness after changing its docs, and before believing them:
 bash addons/<module>/machine_doc_v1/factcheck.sh
 ```
 
-**And after changing its `tests/`.** A gated figure is derived from the tree, so a page counting test classes and methods is a function of `tests/`, and any commit adding or removing a test invalidates it — while every suite of the changed module still passes, because the page is checked by its harness and not by the tests. Adding four tests to `addons/base` took this harness to 716/1 with `/base` green at 3,721. **A file you did not edit can be invalidated by the one you did, and no run of the changed file will say so**; the harness is blocking and unratcheted, so the cost is a red gate nobody owns.
+**And after changing its `tests/`.** A gated figure is derived from the tree, so a page counting test classes and methods is a function of `tests/`, and any commit adding or removing a test invalidates it — while every suite of the changed module still passes, because the page is checked by its harness and not by the tests. **A file you did not edit can be invalidated by the one you did, and no run of the changed file will say so**; the harness is blocking and unratcheted, so the cost is a red gate nobody owns.
 
 ### The machine_doc harnesses
 
 Every `factcheck.sh` under `odoo` and `addons` blocks.
 
-- Discovery must walk the whole repo. A root list of `odoo/addons addons` missed `odoo/tests/machine_doc_v1`, which shipped and was read as authoritative while nothing could see it.
-- A machine_doc with no harness is the standing list of what is ungated. **That list is empty**: every machine doc in this repository is gated and blocking as of 2026-08-27. `base` was the last, and closing it turned up a Model Index giving `ir.mail_server` as `ir.mail.server` (no such model; the lookup raises), a BLAKE3 pointer still at `odoo/tools/hashing.py` after the libs/tools split moved it, and a TEST_TAGS.md claiming 85 test files against 126. An empty warning list is the thing to keep true, not permission to skip checking.
+- Discovery must walk the whole repo: `odoo/tests/machine_doc_v1` lies outside both `odoo/addons` and `addons`.
+- A machine_doc with no harness is the standing list of what is ungated. **That list is empty**: every machine doc in this repository is gated and blocking. An empty warning list is the thing to keep true, not permission to skip checking.
 
 ## Tests
 
@@ -154,7 +154,7 @@ Run **both presets** — desktop (`WebSuite`) and mobile (`MobileWebSuite`) sele
 
 Each rule names the gate that catches it — `[ruff CODE]`, `[test_lint CODE]`, `[fixer NAME]` or `[review]`; see *How rules are enforced* at the top of the guide.
 
-**A marker is not evidence the gate exists.** §2.4 (method naming) carries 31 `[ratchet …]` / `[gate …]` markers and 30 of them name a tool deleted with `tooling/` in `7b0f58cb517f` — `naming_vocabulary.py`, `naming_core_vocabulary.py`, `field_hook_naming.py`, `collection_head_order`, `py_function_length.py`, `ratchet.py`, `doc_restated_counts.py`. The survivor is `[ruff RUF022]`. `doc/architecture/gates.md` is the list of what still runs and no entry of it reads a method name; `test_lint`'s `test_naming.py` checks one property, that no public method takes `ids` or `context`. Read §2.4's naming markers as `[review]`, and **re-derive any figure there before relying on it** — measured 2026-09-15, 10 of its 59 census rows were still true, and 7 can no longer be re-derived by anyone, their population having lived inside the deleted classifier rather than in the prose.
+**A marker is not evidence the gate exists.** Of §2.4's (method naming) `[ratchet …]` / `[gate …]` markers, only `[ruff RUF022]` names a tool that exists. `doc/architecture/gates.md` is the list of what runs and no entry of it reads a method name; `test_lint`'s `test_naming.py` checks one property, that no public method takes `ids` or `context`. Read §2.4's naming markers as `[review]`, and **re-derive any figure there before relying on it** — most of its census rows are false, and some cannot be re-derived at all.
 
 Sections: 1. Module Structure · 2. Python · 3. XML · 4. JavaScript (OWL) · 5. CSS/SCSS · 6. Tests · 7. Git (commits, branch naming, task IDs, PRs) · 8. Translations · 9. Code Review Checklist · 10. Security · 11. Performance · 12. Migration Scripts · Appendices A–D (fork field renames, references, retired patterns, document history).
 
@@ -163,7 +163,7 @@ Sections: 1. Module Structure · 2. Python · 3. XML · 4. JavaScript (OWL) · 5
 Linter and formatter config, with the rationale for every suppression.
 
 - `ruff check odoo/` (the core package) and `ruff check tests/` are hard zeros. `addons/` carries findings; do not add to them.
-- The ratchet floors that used to sit under `tooling/ratchet/baselines/` are gone with `tooling/` (2026-09-11). `ruff`, `mypy`, `tsc`, `eslint` and `prettier` are run by hand on their pinned versions (`requirements-dev.txt`, `package.json`).
+- `ruff`, `mypy`, `tsc`, `eslint` and `prettier` run on their pinned versions (`requirements-dev.txt`, `package.json`).
 
 ### `odoo/addons/test_lint/`
 
@@ -191,7 +191,7 @@ Gates that read the *installed registry* rather than the tree cannot be graded a
 
 ### Other gates
 
-`./gates.sh` from the repo root runs every database-free gate — ruff's hard zeros, both pytest tiers, bare-env mypy, `doc/architecture/factcheck.sh` — with one exit code; `--fast` skips mypy and the figures, `--rust`/`--js` add the cargo and JS toolchains, `--ref <rev>` runs on a detached worktree. `.github/workflows/gates.yml` runs the same script on a runner. The Rust checks are the crate workspace's own `cargo` commands. There is no other gate tree: `tooling/` was removed on 2026-09-11.
+`./gates.sh` from the repo root runs every database-free gate — ruff's hard zeros, both pytest tiers, bare-env mypy, `doc/architecture/factcheck.sh` — with one exit code; `--fast` skips mypy and the figures, `--rust`/`--js` add the cargo and JS toolchains, `--ref <rev>` runs on a detached worktree. `.github/workflows/gates.yml` runs the same script on a runner. The Rust checks are the crate workspace's own `cargo` commands. There is no other gate tree.
 
 ### Changing the guidelines
 
