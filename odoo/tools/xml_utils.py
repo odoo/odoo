@@ -28,8 +28,6 @@ __all__ = [
 ]
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable
-
     from odoo.api import Environment
     from odoo.orm._typing import BaseModel
 
@@ -37,6 +35,14 @@ type XmlSource = etree._Element | str | bytes
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
+
+
+def _find_xsd_attachment(env: Environment, name: str) -> Any:
+    # a schema is stored beside no record; an attachment of a record that
+    # merely shares its file name is somebody's document, not a schema
+    return env["ir.attachment"].search(
+        [("name", "=", name), ("res_model", "=", False)], limit=1
+    )
 
 
 class odoo_resolver(etree.Resolver):
@@ -47,9 +53,7 @@ class odoo_resolver(etree.Resolver):
 
     def resolve(self, url: str, id: object, context: object) -> object:
         attachment_name = f"{self.prefix}.{url}" if self.prefix else url
-        attachment = self.env["ir.attachment"].search(
-            [("name", "=", attachment_name)], limit=1
-        )
+        attachment = _find_xsd_attachment(self.env, attachment_name)
         _debug.logic(
             "xml_utils.xsd_import_resolved",
             url=url,
@@ -133,7 +137,7 @@ def _check_with_xsd(
     if env:
         parser.resolvers.add(odoo_resolver(env, prefix))
         if isinstance(stream, str) and stream.endswith(".xsd"):
-            attachment = env["ir.attachment"].search([("name", "=", stream)], limit=1)
+            attachment = _find_xsd_attachment(env, stream)
             if not attachment:
                 raise FileNotFoundError
             stream = BytesIO(attachment.raw)
@@ -201,7 +205,7 @@ def cleanup_xml_node(
 
 
 def _upsert_xsd_attachment(env: Environment, name: str, content: bytes) -> Any:
-    fetched_attachment = env["ir.attachment"].search([("name", "=", name)], limit=1)
+    fetched_attachment = _find_xsd_attachment(env, name)
     _debug.lifecycle(
         "xml_utils.xsd_attachment_upserted",
         name=name,
@@ -217,13 +221,16 @@ def _upsert_xsd_attachment(env: Environment, name: str, content: bytes) -> Any:
     return env["ir.attachment"].create({"name": name, "raw": content, "public": True})
 
 
-def _get_xsd_content(url: str, request_max_timeout: int) -> bytes | None:
+_XSD_REQUEST_TIMEOUT = 10
+
+
+def _get_xsd_content(url: str) -> bytes | None:
     try:
         _logger.info("Fetching file/archive from given URL: %s", url)
         with _debug.perf(
-            "xml_utils.xsd_fetched", url=url, timeout=request_max_timeout
+            "xml_utils.xsd_fetched", url=url, timeout=_XSD_REQUEST_TIMEOUT
         ) as span:
-            response = requests.get(url, timeout=request_max_timeout)
+            response = requests.get(url, timeout=_XSD_REQUEST_TIMEOUT)
             span.set(
                 status=getattr(response, "status_code", None),
                 size=len(response.content),
@@ -241,24 +248,12 @@ def _get_xsd_content(url: str, request_max_timeout: int) -> bytes | None:
     return response.content
 
 
-def _load_xsd_archive(
-    env: Environment,
-    archive: zipfile.ZipFile,
-    xsd_name_prefix: str,
-    xsd_names_filter: list[str] | None,
-    modify_xsd_content: Callable[[bytes], bytes] | None,
-) -> BaseModel:
+def _load_xsd_archive(env: Environment, archive: zipfile.ZipFile) -> BaseModel:
     saved_attachments: Any = env["ir.attachment"]
     for file_path in archive.namelist():
         if not file_path.endswith(".xsd"):
             continue
-
         file_name = file_path.rsplit("/", 1)[-1]
-        if xsd_names_filter and file_name not in xsd_names_filter:
-            _logger.info("Skipping file with name %s in ZIP archive", file_name)
-            _debug.logic("xml_utils.xsd_archive_member_skipped", file=file_name)
-            continue
-
         try:
             content = archive.read(file_path)
         except KeyError:
@@ -266,34 +261,18 @@ def _load_xsd_archive(
                 "Failed to retrieve XSD file with name %s from ZIP archive", file_name
             )
             continue
-        if modify_xsd_content:
-            content = modify_xsd_content(content)
-
-        prefixed_xsd_name = (
-            f"{xsd_name_prefix}.{file_name}" if xsd_name_prefix else file_name
-        )
-        saved_attachments |= _upsert_xsd_attachment(env, prefixed_xsd_name, content)
+        saved_attachments |= _upsert_xsd_attachment(env, file_name, content)
 
     _debug.pipeline(
         "xml_utils.xsd_archive_loaded",
-        prefix=xsd_name_prefix or None,
         members=len(archive.namelist()),
         saved=len(saved_attachments),
-        filtered=len(xsd_names_filter or ()),
     )
     return saved_attachments
 
 
-def load_xsd_files_from_url(
-    env: Environment,
-    url: str,
-    file_name: str | None = None,
-    request_max_timeout: int = 10,
-    xsd_name_prefix: str = "",
-    xsd_names_filter: list[str] | None = None,
-    modify_xsd_content: Callable[[bytes], bytes] | None = None,
-) -> BaseModel | Literal[False]:
-    content = _get_xsd_content(url, request_max_timeout)
+def load_xsd_files_from_url(env: Environment, url: str) -> BaseModel | Literal[False]:
+    content = _get_xsd_content(url)
     if content is None:
         return False
 
@@ -302,27 +281,11 @@ def load_xsd_files_from_url(
         archive = zipfile.ZipFile(BytesIO(content))
 
     _debug.logic(
-        "xml_utils.xsd_source",
-        url=url,
-        archive=archive is not None,
-        size=len(content),
-        modified=modify_xsd_content is not None,
+        "xml_utils.xsd_source", url=url, archive=archive is not None, size=len(content)
     )
     if archive is not None:
-        return _load_xsd_archive(
-            env, archive, xsd_name_prefix, xsd_names_filter, modify_xsd_content
-        )
-
-    if modify_xsd_content:
-        content = modify_xsd_content(content)
-    if not file_name:
-        file_name = f"{url.rsplit('/', maxsplit=1)[-1]}"
-        _logger.info("XSD name not provided, defaulting to %s", file_name)
-
-    prefixed_xsd_name = (
-        f"{xsd_name_prefix}.{file_name}" if xsd_name_prefix else file_name
-    )
-    return _upsert_xsd_attachment(env, prefixed_xsd_name, content)
+        return _load_xsd_archive(env, archive)
+    return _upsert_xsd_attachment(env, url.rsplit("/", maxsplit=1)[-1], content)
 
 
 def check_xml_from_attachment(

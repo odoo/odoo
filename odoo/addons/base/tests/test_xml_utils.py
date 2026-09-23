@@ -90,3 +90,37 @@ class TestCheckXml(TransactionCase):
             pre_existing.exists(),
             "_check_xml deleted an attachment it merely found",
         )
+
+    def test_a_record_attachment_sharing_the_name_is_not_overwritten(self):
+        self._serve(_zip("only.xsd"))
+        partner = self.env["res.partner"].create({"name": "probe"})
+        document = self.env["ir.attachment"].create(
+            {
+                "name": "only.xsd",
+                "raw": b"somebody's document",
+                "res_model": "res.partner",
+                "res_id": partner.id,
+            }
+        )
+        xml_utils._check_xml(self.env, "http://example/s.zip", None, "<a>x</a>")
+        self.assertEqual(document.raw, b"somebody's document")
+
+    def test_a_record_attachment_sharing_the_name_is_not_a_schema(self):
+        partner = self.env["res.partner"].create({"name": "probe"})
+        self.env["ir.attachment"].create(
+            {
+                "name": "shadow.xsd",
+                "raw": _SCHEMA,
+                "res_model": "res.partner",
+                "res_id": partner.id,
+            }
+        )
+        with self.assertRaises(FileNotFoundError):
+            xml_utils.check_xml_from_attachment(self.env, "<a>x</a>", "shadow.xsd")
+
+    def test_the_loader_takes_only_what_a_caller_passes(self):
+        code = xml_utils.load_xsd_files_from_url.__code__
+        self.assertEqual(
+            code.co_varnames[: code.co_argcount + code.co_kwonlyargcount],
+            ("env", "url"),
+        )
