@@ -258,3 +258,16 @@ class TestIsHtmlEmptyReadsEveryAttributeForm(unittest.TestCase):
         ):
             with self.subTest(html=html):
                 self.assertFalse(is_html_empty(html))
+
+
+class TestReplaceLocalLinksReadsTheStyleAttribute(unittest.TestCase):
+    def test_an_attribute_ending_in_style_does_not_hide_the_style(self):
+        from odoo.libs.text.html import replace_local_links
+
+        self.assertEqual(
+            replace_local_links(
+                '<td style="background:url(/i/1)" data-oe-style="color:red">',
+                lambda: "https://h.com",
+            ),
+            '<td style="background:url(https://h.com/i/1)" data-oe-style="color:red">',
+        )

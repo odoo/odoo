@@ -81,3 +81,8 @@ class TestNonTextContent(unittest.TestCase):
 
     def test_non_ascii_text_survives_the_byte_parse(self):
         self.assertEqual(html2plaintext("<p>café \U0001f600</p>"), "café \U0001f600")
+
+
+class TestLoneSurrogate(unittest.TestCase):
+    def test_a_lone_surrogate_does_not_raise(self):
+        self.assertIn("x", html2plaintext("a\ud800b<p>x</p>"))

@@ -56,3 +56,25 @@ class TestQuoteSweep(unittest.TestCase):
             '<div><div class="gmail_extra">q</div><!-- c --><p>x</p></div>'
         )
         self.assertIn('<p data-o-mail-quote="1">x</p>', out)
+
+
+class TestQuoteMarkersNextToNonElements(unittest.TestCase):
+    def test_a_comment_after_an_outlook_reply_marker_does_not_lose_the_body(self):
+        out = str(html_sanitize('<div id="divRplyFwdMsg">x</div><!-- c --><p>old</p>'))
+        self.assertNotIn("Unknown error", out)
+        self.assertIn(">old</p>", out)
+
+    def test_an_empty_quote_attribute_still_quotes_what_follows(self):
+        out = html_normalize(
+            '<div data-o-mail-quote-container="1">'
+            '<p data-o-mail-quote="">a</p><p>b</p></div>'
+        )
+        self.assertIn('<p data-o-mail-quote="1">b</p>', out)
+
+
+class TestRepeatedSchemes(unittest.TestCase):
+    def test_a_run_of_repeated_schemes_is_linear(self):
+        start = time.perf_counter()
+        html_keep_url("http://" * 24000 + '"')
+        html_keep_url("http://a.b/c" * 20000 + '"')
+        self.assertLess(time.perf_counter() - start, 1.0)

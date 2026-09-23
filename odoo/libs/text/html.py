@@ -22,7 +22,7 @@ from markupsafe import Markup, escape_silent
 from odoo.libs.web.urls import urljoin
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterator
 
 __all__ = [
     "HTML_NEWLINES_REGEX",
@@ -348,6 +348,13 @@ def _previous_element(el: etree._Element) -> etree._Element | None:
     return previous
 
 
+def _next_element(el: etree._Element) -> etree._Element | None:
+    following = el.getnext()
+    while following is not None and not isinstance(following.tag, str):
+        following = following.getnext()
+    return following
+
+
 def _quote_client_markers(el: etree._Element, el_class: str, el_id: str) -> None:
     if "gmail_extra" in el_class or "SkyDrivePlaceholder" in el_class:
         _mark_quote(el, container_on_parent=True)
@@ -375,7 +382,7 @@ def _quote_client_markers(el: etree._Element, el_class: str, el_id: str) -> None
         hr = el.getprevious()
         if hr is not None and hr.tag == "hr":
             hr.set(_QUOTE, "1")
-        if (reply_quote := el.getnext()) is not None:
+        if (reply_quote := _next_element(el)) is not None:
             reply_quote.set(_QUOTE_CONTAINER, "1")
             reply_quote.set(_QUOTE, "1")
 
@@ -394,7 +401,7 @@ def _quote_inherited_from_parent(el: etree._Element) -> None:
     if not parent.get(_QUOTE_CONTAINER):
         return
     previous = _previous_element(el)
-    if previous is not None and previous.get(_QUOTE):
+    if previous is not None and previous.get(_QUOTE) is not None:
         el.set(_QUOTE, "1")
 
 
@@ -718,10 +725,28 @@ def is_html_empty(
     return not bool(text_content.strip()) and not _ICON_RE.search(html_content)
 
 
+_URL_RUN_RE = re.compile(r"""[^\s<"']+""")
+_URL_SCHEME_RE = re.compile(r"(?:ftp|https?)://")
+
+
+def _iter_links(text: str) -> Iterator[re.Match[str]]:
+    # A link's host takes the rest of its run of non-space characters, so the
+    # trailing lookahead of _LINK_TAGS_RE decides once for the whole run:
+    # asked of every scheme in a run, it made "http://" * n quadratic.
+    for run in _URL_RUN_RE.finditer(text):
+        end = run.end()
+        if text[end : end + 1] in ("'", '"') or text.startswith("</a>", end):
+            continue
+        for scheme in _URL_SCHEME_RE.finditer(text, run.start(), end):
+            if link := _LINK_TAGS_RE.match(text, scheme.start()):
+                yield link
+                break
+
+
 def html_keep_url(text: str | Markup) -> Markup:
     idx = 0
     parts: list[Markup] = []
-    for item in _LINK_TAGS_RE.finditer(text):
+    for item in _iter_links(text):
         parts.append(escape_silent(text[idx : item.start()]))
         url = text[item.start() : item.end()]
         parts.append(create_link(url, url))
@@ -824,7 +849,8 @@ def html2plaintext(
         )
 
     tree = etree.fromstring(
-        html_content.encode(), parser=etree.HTMLParser(encoding="utf-8")
+        html_content.encode("utf-8", "replace"),
+        parser=etree.HTMLParser(encoding="utf-8"),
     )
     if tree is None:
         return ""
@@ -930,7 +956,7 @@ LOCAL_LINK_PATTERNS = tuple(
 )
 
 _STYLE_ATTRIBUTE = re.compile(
-    r"""(?P<head><[^<>]+\bstyle=(?P<quote>["']))(?P<style>(?:(?!(?P=quote))[^<>])*)"""
+    r"""(?P<head><[^<>]*?\sstyle=(?P<quote>["']))(?P<style>(?:(?!(?P=quote))[^<>])*)"""
 )
 
 _STYLE_URL = re.compile(
