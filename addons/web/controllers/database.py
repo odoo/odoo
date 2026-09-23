@@ -26,7 +26,6 @@ from odoo.libs import netguard
 from odoo.service import db
 from odoo.service.db import DBNAME_PATTERN
 from odoo.tools.misc import file_open, str2bool
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from odoo.addons.base.models.ir_qweb import render as qweb_render
@@ -62,10 +61,8 @@ def _renders_failure(operation: str):
 def _check_db_name(name: str) -> None:
     if not re.match(DBNAME_PATTERN, name):
         dbg.logic.debug("[db:%s] name rejected by pattern", name)
-        raise UserError(
-            _(
-                "Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden."
-            )
+        raise UserError(  # noqa: E8505 the database manager runs without a database, so without a language
+            "Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden."
         )
 
 
@@ -424,12 +421,10 @@ class Database(http.Controller):
                     "while the default password is still in place.",
                     remote_addr,
                 )
-                raise UserError(
-                    _(
-                        "For security, the master password can only be changed "
-                        "from localhost while it is still the default. Set "
-                        "'admin_passwd' in the configuration file instead."
-                    )
+                raise UserError(  # noqa: E8505 the database manager runs without a database, so without a language
+                    "For security, the master password can only be changed "
+                    "from localhost while it is still the default. Set "
+                    "'admin_passwd' in the configuration file instead."
                 )
         dispatch_rpc("db", "change_admin_password", [master_pwd, master_pwd_new])
         dbg.pipeline.debug("[dbmanager] change_password: changed")

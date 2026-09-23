@@ -12,7 +12,7 @@ from lxml import etree, html
 from markupsafe import Markup, escape_silent
 from PIL import Image as I
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.datetime import timezone
 from odoo.tools import posix_to_ldml
@@ -400,7 +400,7 @@ class IrQwebFieldDatetime(models.AbstractModel):
             dt = datetime.strptime(value, datetime_format)
         except ValueError as err:
             raise ValidationError(
-                _(
+                self.env._(
                     "The datetime %(value)s does not match the format %(format)s",
                     value=value,
                     format=datetime_format,

@@ -10,7 +10,7 @@ from odoo.service import security
 from odoo.tools import config
 from odoo.tools.json import orjson_default
 from odoo.tools.misc import hmac
-from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.translate import LazyTranslate
 
 from ..tools import debug_log as dbg
 from .utils import (
@@ -250,13 +250,13 @@ class Home(http.Controller):
             except AccessDenied as e:
                 if e.args == AccessDenied().args:
                     dbg.logic.debug("[login] denied: wrong login/password")
-                    values["error"] = _("Wrong login/password")
+                    values["error"] = request.env._("Wrong login/password")
                 else:
                     dbg.logic.debug("[login] denied with reason: %s", e.args[0])
                     values["error"] = e.args[0]
         elif "error" in request.params and request.params.get("error") == "access":
             dbg.logic.debug("[login] GET with error=access (non-employee)")
-            values["error"] = _(
+            values["error"] = request.env._(
                 "Only employees can access this database. Please contact the administrator."
             )
 

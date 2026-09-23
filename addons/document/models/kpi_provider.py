@@ -1,10 +1,13 @@
 from typing import Any
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL
+from odoo.tools import SQL, LazyTranslate
 
 _debug = DebugLog(__name__)
+_lt = LazyTranslate(__name__)
+
+INBOX_KPI_LABEL = _lt("Inbox")
 
 
 class KpiProvider(models.AbstractModel):
@@ -109,15 +112,13 @@ def get_kpi_summary(cr: Any, uid: int) -> list[dict]:
         )
     )
     row = cr.fetchone()
-    context = {  # noqa: F841 "unused" `context` is actually used by `_` frame inspection
-        "lang": row[0] if row else "en_US",
-    }
+    lang = (row[0] if row else None) or "en_US"
 
     _debug.perf.count("kpi_inbox_counted", count=count)
     return [
         {
             "id": "document.inbox",
-            "name": _("Inbox"),
+            "name": INBOX_KPI_LABEL.translate(lang),
             "type": "integer",
             "value": count,
         }

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class SmsTemplate(models.Model):
@@ -85,7 +85,7 @@ class SmsTemplate(models.Model):
         view = self.env.ref("sms.sms_composer_view_form")
 
         for template in self:
-            button_name = _("Send SMS (%s)", template.name)
+            button_name = self.env._("Send SMS (%s)", template.name)
             action = ActWindow.create(
                 {
                     "name": button_name,

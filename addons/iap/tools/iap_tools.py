@@ -3,7 +3,7 @@ import uuid
 
 import requests
 
-from odoo import _, exceptions, modules
+from odoo import exceptions, modules
 from odoo.tools import email_normalize
 
 _logger = logging.getLogger(__name__)
@@ -346,7 +346,7 @@ def iap_jsonrpc(url, method="call", params=None, timeout=15, *, env, purpose=Non
     except requests.exceptions.Timeout as err:
         _logger.warning("iap jsonrpc %s timed out", url)
         raise exceptions.AccessError(
-            _(
+            env._(
                 "The request to the service timed out. Please contact the author of the app. The URL it tried to contact was %s",
                 url,
             )
@@ -354,7 +354,7 @@ def iap_jsonrpc(url, method="call", params=None, timeout=15, *, env, purpose=Non
     except (requests.exceptions.RequestException, IAPServerError) as e:
         _logger.warning("iap jsonrpc %s failed, %s: %s", url, e.__class__.__name__, e)
         raise exceptions.AccessError(
-            _(
+            env._(
                 "An error occurred while reaching %s. Please contact Odoo support if this error persists.",
                 url,
             )

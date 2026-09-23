@@ -8,7 +8,6 @@ from odoo.api import ValuesType
 from odoo.exceptions import AccessError
 from odoo.libs.debug_log import DebugLog
 from odoo.models import GC_UNLINK_LIMIT
-from odoo.tools.translate import _
 
 from odoo.addons.mail.tools.discuss import Store, StoreFieldsInput
 from odoo.addons.mail.tools.failure_type import DELIVERY_FAILURE_TYPES
@@ -131,7 +130,7 @@ class MailNotification(models.Model):
             "mail_message_id" in vals or "res_partner_id" in vals
         ) and not self.env.is_admin():
             raise AccessError(
-                _("Can not update the message or recipient of a notification.")
+                self.env._("Can not update the message or recipient of a notification.")
             )
         if vals.get("is_read"):
             vals["read_date"] = fields.Datetime.now()
@@ -175,11 +174,11 @@ class MailNotification(models.Model):
         if self.failure_type != "unknown":
             return dict(
                 self._fields["failure_type"]._description_selection(self.env)
-            ).get(self.failure_type, _("No Error"))
+            ).get(self.failure_type, self.env._("No Error"))
         else:
             if self.failure_reason:
-                return _("Unknown error: %(error)s", error=self.failure_reason)
-            return _("Unknown error")
+                return self.env._("Unknown error: %(error)s", error=self.failure_reason)
+            return self.env._("Unknown error")
 
     def _filtered_for_web_client(self) -> Self:
         def _is_relevant_for_web_client(notif: MailNotification) -> bool:

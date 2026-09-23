@@ -1,5 +1,5 @@
 from odoo import fields, models
-from odoo.tools.translate import LazyTranslate, _, xml_translate
+from odoo.tools.translate import LazyTranslate, xml_translate
 
 _lt = LazyTranslate(__name__)
 
@@ -31,17 +31,17 @@ class TestTranslationImportModel1(models.Model):
     )
 
     def get_code_translation(self):
-        _("slot")
-        return _("Code, English")
+        self.env._("slot")
+        return self.env._("Code, English")
 
     def get_code_lazy_translation(self):
         return _lt("Code Lazy, English")
 
     def get_code_placeholder_translation(self, *args, **kwargs):
-        return _("Code, %s, English", *args, **kwargs)
+        return self.env._("Code, %s, English", *args, **kwargs)
 
     def get_code_named_placeholder_translation(self, *args, **kwargs):
-        return _("Code, %(num)s, %(symbol)s, English", *args, **kwargs)
+        return self.env._("Code, %(num)s, %(symbol)s, English", *args, **kwargs)
 
     def test_deeply_nested_translations(self):
         def dummy_function(term):
@@ -55,50 +55,59 @@ class TestTranslationImportModel1(models.Model):
         terms = ["a", "b", "c"]
         term = "term"
 
-        _("PY Export 01 %s", "NO - PY Export 01")
-        _("PY Export 02 %(named)s", named="NO - PY Export 02")
+        self.env._("PY Export 01 %s", "NO - PY Export 01")
+        self.env._("PY Export 02 %(named)s", named="NO - PY Export 02")
 
-        _("PY Export 03 %s", _("PY Export 04 (Nested)"))
-        _("PY Export 05 %(named)s", named=_("PY Export 06 (Nested Named)"))
+        self.env._("PY Export 03 %s", self.env._("PY Export 04 (Nested)"))
+        self.env._(
+            "PY Export 05 %(named)s", named=self.env._("PY Export 06 (Nested Named)")
+        )
 
-        _("PY Export 07 %s", dummy_function(_("PY Export 08 (Double Nested)")))
-        _(
+        self.env._(
+            "PY Export 07 %s",
+            dummy_function(self.env._("PY Export 08 (Double Nested)")),
+        )
+        self.env._(
             "PY Export 09 %(named)s",
-            named=dummy_function(_("PY Export 10 (Double Nested Named)")),
+            named=dummy_function(self.env._("PY Export 10 (Double Nested Named)")),
         )
 
-        _(
+        self.env._(
             "PY Export 11 %s",
-            dummy.dummy_function(_("PY Export 12 (Double Nested)")),
+            dummy.dummy_function(self.env._("PY Export 12 (Double Nested)")),
         )
-        _(
+        self.env._(
             "PY Export 13 %(named)s",
-            named=dummy.dummy_function(_("PY Export 14 (Double Nested Named)")),
+            named=dummy.dummy_function(
+                self.env._("PY Export 14 (Double Nested Named)")
+            ),
         )
 
-        _(
+        self.env._(
             "PY Export 15 %s",
-            dummy_dict["a_function"](_("PY Export 16 (Double Nested)")),
+            dummy_dict["a_function"](self.env._("PY Export 16 (Double Nested)")),
         )
-        _(
+        self.env._(
             "PY Export 17 %(named)s",
-            named=dummy_dict["a_function"](_("PY Export 18 (Double Nested Named)")),
+            named=dummy_dict["a_function"](
+                self.env._("PY Export 18 (Double Nested Named)")
+            ),
         )
 
-        dummy_function(_("PY Export 19 (Base Nested)"))
-        dummy.dummy_function(_("PY Export 20 (Base Nested)"))
-        dummy_dict["a_function"](_("PY Export 21 (Base Nested)"))
+        dummy_function(self.env._("PY Export 19 (Base Nested)"))
+        dummy.dummy_function(self.env._("PY Export 20 (Base Nested)"))
+        dummy_dict["a_function"](self.env._("PY Export 21 (Base Nested)"))
 
-        _("PY Export 22 %s", "NO - PY Export 03" + _("PY Export 23"))
-        _("PY Export 24 %s", _("PY Export 25") + "NO - PY Export 04")
+        self.env._("PY Export 22 %s", "NO - PY Export 03" + self.env._("PY Export 23"))
+        self.env._("PY Export 24 %s", self.env._("PY Export 25") + "NO - PY Export 04")
 
-        _("PY Export 26 %s", "NO - PY Export 05" + "".join(terms))
-        _("PY Export 27 %s", "".join(terms) + "NO - PY Export 06")
+        self.env._("PY Export 26 %s", "NO - PY Export 05" + "".join(terms))
+        self.env._("PY Export 27 %s", "".join(terms) + "NO - PY Export 06")
 
-        _(f"PY Export 28")  # noqa: F541, INT001  see comment above
-        _(f"NO - PY Export 07 {term}")  # noqa: INT001  see comment above
+        self.env._(f"PY Export 28")  # noqa: F541  see comment above
+        self.env._(f"NO - PY Export 07 {term}")
 
-        _(dummy_function("NO - PY Export 08"))
+        self.env._(dummy_function("NO - PY Export 08"))
 
 
 class TestTranslationImportModel2(models.Model):

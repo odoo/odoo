@@ -1,6 +1,6 @@
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
 
@@ -375,7 +375,9 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
                 ("partner_id", "child_of", self.partner_id.commercial_partner_id.ids)
             )
         action["domain"] = domain
-        action["display_name"] = _("Price History for %s", self.product_id.display_name)
+        action["display_name"] = self.env._(
+            "Price History for %s", self.product_id.display_name
+        )
         return action
 
 

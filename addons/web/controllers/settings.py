@@ -1,6 +1,6 @@
 from typing import Any
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
 
@@ -13,7 +13,7 @@ class BaseSetup(http.Controller):
         dbg.lifecycle.debug("[base_setup] data: %s ignored=%s", dbg.req(), dbg.keys(kw))
         if not request.env.user.has_group("base.group_erp_manager"):
             dbg.logic.debug("[base_setup] data: not erp manager, refused")
-            raise AccessError(_("Access Denied"))
+            raise AccessError(request.env._("Access Denied"))
 
         Users = request.env["res.users"]
         internal = [("share", "=", False)]

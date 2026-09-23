@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -20,5 +20,5 @@ class MixinHierarchy(models.AbstractModel):
             _debug.logic("hierarchy_cycle", model=self._name, count=len(self))
             raise ValidationError(
                 self._hierarchy_cycle_message
-                or _("A record cannot be its own ancestor.")
+                or self.env._("A record cannot be its own ancestor.")
             )

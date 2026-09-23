@@ -25,7 +25,7 @@ from weasyprint.document import Document as WeasyDocument
 from weasyprint.text.fonts import FontConfiguration
 from weasyprint.urls import URLFetcher, URLFetcherResponse
 
-from odoo import _, api, models, modules, tools
+from odoo import api, models, modules, tools
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.http import request, root
 from odoo.libs import guarded_http, netguard
@@ -740,11 +740,13 @@ class OdooURLFetcher(URLFetcher):
 class WeasyPrintEngine:
     def __init__(
         self,
+        env: api.Environment,
         fetcher_factory: Callable[[], OdooURLFetcher],
         merge_pdfs: Callable[[list[io.BytesIO]], io.BytesIO],
         native_merge_max: int = _NATIVE_MERGE_MAX,
         dbname: str = "",
     ) -> None:
+        self.env = env
         self._fetcher_factory = fetcher_factory
         self._merge_pdfs = merge_pdfs
         self._native_merge_max = native_merge_max
@@ -764,7 +766,7 @@ class WeasyPrintEngine:
         pdf_options: dict[str, Any] | None = None,
     ) -> bytes | list[bytes]:
         if not bodies:
-            raise UserError(_("No content to render as PDF."))
+            raise UserError(self.env._("No content to render as PDF."))
 
         db_state = self._database_state()
         image_cache: dict[str, Any] = {}
@@ -1066,13 +1068,13 @@ class WeasyPrintEngine:
             return self._serialize_documents(documents, pdf_options=pdf_options)
 
     def _prepare_pdf_render_error(self, detail: str) -> UserError:
-        message = _(
+        message = self.env._(
             "PDF rendering failed. Please check the report template.\n\nDetails: %s",
             detail,
         )
         warnings = list(self.warnings)
         if warnings:
-            message += _("\n\nRenderer warnings (last %s):\n", len(warnings))
+            message += self.env._("\n\nRenderer warnings (last %s):\n", len(warnings))
             message += "\n".join(warnings)
         return UserError(message)
 
@@ -1192,6 +1194,7 @@ class IrActionsReport(models.Model):
     def _prepare_weasyprint_engine(self) -> WeasyPrintEngine:
         report_model = self.env["ir.actions.report"]
         return WeasyPrintEngine(
+            env=self.env,
             fetcher_factory=report_model._prepare_url_fetcher,
             merge_pdfs=report_model._merge_pdfs,
             native_merge_max=report_model._get_native_merge_max(),
@@ -1204,7 +1207,7 @@ class IrActionsReport(models.Model):
         layout = self._get_layout()
         if not layout:
             raise UserError(
-                _(
+                self.env._(
                     "The report layout web.minimal_layout is missing, so no PDF "
                     "body can be built. Update or reinstall the web module."
                 )
@@ -1237,7 +1240,9 @@ class IrActionsReport(models.Model):
         main_nodes = _xpath_main(html_root)
         if not main_nodes:
             raise UserError(
-                _("Report HTML has no <main> element. Check the report template.")
+                self.env._(
+                    "Report HTML has no <main> element. Check the report template."
+                )
             )
         body_parent = main_nodes[0]
         body_html = "".join(
@@ -1424,7 +1429,7 @@ class IrActionsReport(models.Model):
         jpeg_quality: int | None = None,
     ) -> bytes | list[bytes]:
         if not bodies:
-            raise UserError(_("No content to render as PDF."))
+            raise UserError(self.env._("No content to render as PDF."))
 
         report = self._get_report(report_ref) if report_ref else None
         paperformat = report.get_paperformat() if report else self.get_paperformat()
@@ -1737,7 +1742,7 @@ class IrActionsReport(models.Model):
                 html_ids=len(html_ids),
             )
             raise UserError(
-                _(
+                report_sudo.env._(
                     "Report template \u201c%s\u201d has an issue, please contact your administrator. \n\n"
                     "Cannot separate file to save as attachment because the report\u2019s template does not contain the"
                     " attributes 'data-oe-model' and 'data-oe-id' as part of the div with 'article' classname.",
@@ -1877,7 +1882,7 @@ class IrActionsReport(models.Model):
             return self._prepare_merge_pdfs_error()
         action = {
             "type": "ir.actions.act_window",
-            "name": _("Problematic record(s)"),
+            "name": self.env._("Problematic record(s)"),
             "res_model": report.model,
             "domain": [("id", "in", record_ids)],
             "views": [(False, "list"), (False, "form")],
@@ -1886,13 +1891,13 @@ class IrActionsReport(models.Model):
         if num_errors == 1:
             action.update({"views": [(False, "form")], "res_id": record_ids[0]})
         return RedirectWarning(
-            message=_(
+            message=self.env._(
                 "Odoo is unable to merge the generated PDFs because of "
                 "%(num_errors)s corrupted file(s)",
                 num_errors=num_errors,
             ),
             action=action,
-            button_text=_("View Problematic Record(s)"),
+            button_text=self.env._("View Problematic Record(s)"),
         )
 
     @api.model

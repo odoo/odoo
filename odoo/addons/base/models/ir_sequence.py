@@ -4,7 +4,7 @@ from collections.abc import Collection
 from datetime import datetime, timedelta
 from typing import Any, Literal, Self
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.db import get_or_create_row
 from odoo.exceptions import UserError, ValidationError
@@ -451,7 +451,7 @@ class IrSequence(models.Model):
                 "prefix_suffix_rejected", sequence=self.id, error=type(exc).__name__
             )
             raise UserError(
-                _("Invalid prefix or suffix for sequence '%s'", self.name)
+                self.env._("Invalid prefix or suffix for sequence '%s'", self.name)
             ) from None
         return interpolated_prefix, interpolated_suffix
 
@@ -562,7 +562,7 @@ class IrSequence(models.Model):
         if date_from > date_to:
             _debug.logic("date_range_refused", sequence=self.id, reason="no_room")
             raise UserError(
-                _(
+                self.env._(
                     "Cannot create a sequence date range for %(date)s on "
                     "sequence '%(seq)s': the neighbouring ranges leave no room "
                     "between %(date_from)s and %(date_to)s.",
@@ -827,7 +827,7 @@ class IrSequenceDate_Range(models.Model):
             if rng.date_from > rng.date_to:
                 _debug.logic("date_range_rejected", range=rng.id, reason="inverted")
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The date range %(date_from)s - %(date_to)s of sequence "
                         "'%(seq)s' ends before it starts.",
                         date_from=rng.date_from,
@@ -853,7 +853,7 @@ class IrSequenceDate_Range(models.Model):
                     other=overlapping.id,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The date range %(date_from)s - %(date_to)s of sequence "
                         "'%(seq)s' overlaps %(other_from)s - %(other_to)s.",
                         date_from=rng.date_from,

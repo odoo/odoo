@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any, Self
 from lxml import etree
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.api import SUPERUSER_ID, DomainType, ValuesType
 from odoo.db import schema as sql
 from odoo.exceptions import (
@@ -73,7 +73,7 @@ def check_identity(
     @wraps(fn)
     def wrapped(self: ResUsers, *args: Any, **kwargs: Any) -> dict[str, Any]:
         if not request:
-            raise UserError(_("This method can only be accessed over HTTP"))
+            raise UserError(self.env._("This method can only be accessed over HTTP"))
 
         if request.session.get("identity-check-last", 0) > time.time() - 10 * 60:
             _debug.logic("identity_check_recent", uid=self.env.uid, method=fn.__name__)
@@ -106,7 +106,7 @@ def check_identity(
             "type": "ir.actions.act_window",
             "res_model": "res.users.identitycheck",
             "res_id": w.id,
-            "name": _("Access Control"),
+            "name": self.env._("Access Control"),
             "target": "new",
             "views": [(False, "form")],
             "context": {"dialog_size": "medium"},
@@ -526,7 +526,7 @@ class ResUsers(models.Model):
                     "company_not_allowed", user=user.id, company=user.company_id.id
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Company %(company_name)s is not in the allowed companies for user %(user_name)s (%(company_allowed)s).",
                         company_name=user.company_id.name,
                         user_name=user.name,
@@ -544,7 +544,9 @@ class ResUsers(models.Model):
         ):
             _debug.logic("home_action_refused", users=self.ids, reason="app_launcher")
             raise ValidationError(
-                _('The "App Launcher" action cannot be selected as home action.')
+                self.env._(
+                    'The "App Launcher" action cannot be selected as home action.'
+                )
             )
         users_sudo = self.sudo()
         client_ids = []
@@ -562,7 +564,7 @@ class ResUsers(models.Model):
                         "home_action_refused", action=action.id, reason="reload_tag"
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             'The "%s" action cannot be selected as home action.',
                             action.name,
                         )
@@ -576,7 +578,7 @@ class ResUsers(models.Model):
                         reason="needs_active_id",
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             'The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.',
                             action.name,
                         )
@@ -592,7 +594,7 @@ class ResUsers(models.Model):
                     "disjoint_groups_violated", user=user.id, groups=disjoint_groups.ids
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "User %(user)s cannot be at the same time in exclusive groups %(groups)s.",
                         user=repr(user.name),
                         groups=", ".join(repr(g.display_name) for g in disjoint_groups),
@@ -617,7 +619,9 @@ class ResUsers(models.Model):
         )
         if not has_admin:
             _debug.logic("last_administrator_refused", users=self.ids)
-            raise ValidationError(_("You must have at least an administrator user."))
+            raise ValidationError(
+                self.env._("You must have at least an administrator user.")
+            )
 
     def _inverse_password(self) -> None:
         ctx = self._get_crypt_context()
@@ -739,9 +743,9 @@ class ResUsers(models.Model):
     def _compute_email_domain_placeholder(self) -> None:
         domain = email_domain_extract(self.env.user.email)
         self.email_domain_placeholder = (
-            _("e.g. %(placeholder)s", placeholder=f"email@{domain}")
+            self.env._("e.g. %(placeholder)s", placeholder=f"email@{domain}")
             if domain
-            else _("Email")
+            else self.env._("Email")
         )
 
     def _compute_passwords(self) -> None:
@@ -756,7 +760,7 @@ class ResUsers(models.Model):
             if user == self.env.user:
                 _debug.logic("new_password_refused", uid=user.id, reason="own_user")
                 raise UserError(
-                    _(
+                    self.env._(
                         "Please use the change password wizard (in User Preferences or User menu) to change your own password."
                     )
                 )
@@ -1055,11 +1059,13 @@ class ResUsers(models.Model):
     def write(self, vals: dict[str, Any]) -> bool:
         if vals.get("active") and SUPERUSER_ID in self._ids:
             _debug.logic("write_refused", users=self.ids, reason="activate_superuser")
-            raise UserError(_("You cannot activate the superuser."))
+            raise UserError(self.env._("You cannot activate the superuser."))
         if vals.get("active") is False and self.env.uid in self._ids:
             _debug.logic("write_refused", users=self.ids, reason="deactivate_self")
             raise UserError(
-                _("You cannot deactivate the user you're currently logged in as.")
+                self.env._(
+                    "You cannot deactivate the user you're currently logged in as."
+                )
             )
 
         if vals.get("active"):
@@ -1105,7 +1111,7 @@ class ResUsers(models.Model):
         if SUPERUSER_ID in self.ids:
             _debug.logic("unlink_refused", users=self.ids, reason="superuser")
             raise UserError(
-                _(
+                self.env._(
                     "You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)"
                 )
             )
@@ -1113,7 +1119,7 @@ class ResUsers(models.Model):
         if user_admin and user_admin in self:
             _debug.logic("unlink_refused", users=self.ids, reason="admin")
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete the admin user because it is utilized in various places (such as security configurations,...). Instead, archive it."
                 )
             )
@@ -1122,14 +1128,14 @@ class ResUsers(models.Model):
         if portal_user_template and portal_user_template in self:
             _debug.logic("unlink_refused", users=self.ids, reason="portal_template")
             raise UserError(
-                _(
+                self.env._(
                     "Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities."
                 )
             )
         if public_user and public_user in self:
             _debug.logic("unlink_refused", users=self.ids, reason="public_user")
             raise UserError(
-                _(
+                self.env._(
                     "Deleting the public user is not allowed. Deleting this profile will compromise critical functionalities."
                 )
             )
@@ -1173,9 +1179,9 @@ class ResUsers(models.Model):
         vals_list = super().copy_data(default=default)
         for user, vals in zip(self, vals_list, strict=True):
             if ("name" not in default) and ("partner_id" not in default):
-                vals["name"] = _("%s (copy)", user.name)
+                vals["name"] = self.env._("%s (copy)", user.name)
             if "login" not in default:
-                vals["login"] = _("%s (copy)", user.login)
+                vals["login"] = self.env._("%s (copy)", user.login)
         return vals_list
 
     @api.model
@@ -1354,7 +1360,9 @@ class ResUsers(models.Model):
         if not new_passwd.strip():
             _debug.logic("change_password_refused", uid=self.id, reason="empty")
             raise UserError(
-                _("Setting empty passwords is not allowed for security reasons!")
+                self.env._(
+                    "Setting empty passwords is not allowed for security reasons!"
+                )
             )
 
         ip = request.httprequest.environ["REMOTE_ADDR"] if request else "n/a"
@@ -1375,7 +1383,7 @@ class ResUsers(models.Model):
         if non_portal_users:
             _debug.logic("portal_deactivation_refused", users=non_portal_users.ids)
             raise AccessDenied(
-                _(
+                self.env._(
                     "Only the portal users can delete their accounts. The user(s) %s can not be deleted.",
                     ", ".join(non_portal_users.mapped("name")),
                 )
@@ -1476,7 +1484,7 @@ class ResUsers(models.Model):
         ):
             _debug.logic("group_query_refused", uid=self.env.uid, target=self.id)
             raise AccessError(
-                _(
+                self.env._(
                     "Reading another user's groups requires an internal user; %(login)s is not one.",
                     login=self.env.user.login,
                 )
@@ -1572,7 +1580,7 @@ class ResUsers(models.Model):
         if len(self) > 1:
             action.update(
                 {
-                    "name": _("Users"),
+                    "name": self.env._("Users"),
                     "view_mode": "list,form",
                     "views": [[None, "list"], [view_id, "form"]],
                     "domain": [("id", "in", self.ids)],
@@ -1591,7 +1599,7 @@ class ResUsers(models.Model):
     def action_show_groups(self) -> dict[str, Any]:
         self.check_singleton()
         return {
-            "name": _("Groups"),
+            "name": self.env._("Groups"),
             "view_mode": "list,form",
             "res_model": "res.groups",
             "type": "ir.actions.act_window",
@@ -1603,7 +1611,7 @@ class ResUsers(models.Model):
     def action_show_accesses(self) -> dict[str, Any]:
         self.check_singleton()
         return {
-            "name": _("Access Rights"),
+            "name": self.env._("Access Rights"),
             "view_mode": "list,form",
             "res_model": "ir.model.access",
             "type": "ir.actions.act_window",
@@ -1615,7 +1623,7 @@ class ResUsers(models.Model):
     def action_show_rules(self) -> dict[str, Any]:
         self.check_singleton()
         return {
-            "name": _("Record Rules"),
+            "name": self.env._("Record Rules"),
             "view_mode": "list,form",
             "res_model": "ir.rule",
             "type": "ir.actions.act_window",
@@ -1699,7 +1707,9 @@ class ResUsers(models.Model):
                     source,
                 )
             raise AccessDenied(
-                _("Too many login failures, please wait a bit before trying again.")
+                self.env._(
+                    "Too many login failures, please wait a bit before trying again."
+                )
             )
 
         try:

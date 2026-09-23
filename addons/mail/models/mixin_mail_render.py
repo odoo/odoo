@@ -9,7 +9,7 @@ import babel
 from lxml import etree, html
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.db.errors import PG_RECOVERABLE_EXCEPTIONS
 from odoo.exceptions import AccessError, MissingError, UserError
@@ -453,7 +453,7 @@ class MixinMailRender(models.AbstractModel):
 
     def _prepare_template_editor_error(self) -> str:
         group = self.env.ref("mail.group_mail_template_editor")
-        return _(
+        return self.env._(
             "Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders",
             group_name=group.name,
         )
@@ -584,7 +584,7 @@ class MixinMailRender(models.AbstractModel):
         template_label = self._get_render_error_label()
         truncated_src = self._truncate_render_error_source(template_src)
         lang_context = self.env.context.get(
-            "lang", _("No language detected in context")
+            "lang", self.env._("No language detected in context")
         )
 
         _debug.logic(
@@ -612,7 +612,7 @@ class MixinMailRender(models.AbstractModel):
         )
 
         raise UserError(
-            _(
+            self.env._(
                 "Failed to render %(engine)s template for %(template_label)s\n"
                 "Target Model: %(model_name)s\n"
                 "Language context: %(lang_context)s\n"
@@ -641,7 +641,7 @@ class MixinMailRender(models.AbstractModel):
         )
 
     def _get_render_error_label(self) -> str:
-        return _("Template name not identified")
+        return self.env._("Template name not identified")
 
     @api.model
     def _is_static_expression(self, expression: str, model: str) -> bool:
@@ -973,7 +973,7 @@ class MixinMailRender(models.AbstractModel):
             )
         if model not in self.env:
             raise UserError(
-                _(
+                self.env._(
                     "Cannot render %(template_label)s: %(model_name)s is not a model.",
                     template_label=self._get_render_error_label(),
                     model_name=repr(model),

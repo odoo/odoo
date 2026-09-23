@@ -1,4 +1,4 @@
-from odoo import SUPERUSER_ID, _
+from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.libs import netguard
 
@@ -27,7 +27,7 @@ def _admin_password_warn(uid):
         "simple_notification",
         {
             "type": "danger",
-            "message": _(
+            "message": request.env._(
                 "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
             ),
             "sticky": True,

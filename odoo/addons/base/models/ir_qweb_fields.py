@@ -25,7 +25,6 @@ from odoo.tools import (
 )
 from odoo.tools.mail import safe_attrs
 from odoo.tools.misc import babel_locale_parse, get_lang
-from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -818,7 +817,7 @@ class IrQwebFieldBarcode(models.AbstractModel):
             if k.startswith("img_") and attribute in safe_attrs:
                 img_element.set(attribute, v if isinstance(v, str) else str(v))
         if not img_element.get("alt"):
-            img_element.set("alt", _("Barcode %s", value))
+            img_element.set("alt", self.env._("Barcode %s", value))
         img_element.set(
             "src", f"data:image/png;base64,{base64.b64encode(barcode).decode()}"
         )
@@ -893,7 +892,7 @@ class IrQwebFieldContact(models.AbstractModel):
             "website": value.website,
             "email": value.email,
             "vat": value.vat,
-            "vat_label": value.country_id.vat_label or _("VAT"),
+            "vat_label": value.country_id.vat_label or self.env._("VAT"),
             "fields": field_names,
             "object": value,
             "options": options,

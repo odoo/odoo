@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Any
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -22,7 +22,9 @@ class DocumentsDocument(models.Model):
 
     @api.model
     def _raise_company_folder_manager_only(self) -> None:
-        raise AccessError(_("Only Documents Managers can create in company folder."))
+        raise AccessError(
+            self.env._("Only Documents Managers can create in company folder.")
+        )
 
     def _check_access_or_raise(self, operation: str, message: str) -> None:
         try:
@@ -417,7 +419,7 @@ class DocumentsDocument(models.Model):
         ):
             _debug.logic("access_update_refused", reason="share_user", documents=self)
             raise AccessError(
-                _("Only internal users can change who can access documents.")
+                self.env._("Only internal users can change who can access documents.")
             )
         own_change = next(
             (
@@ -442,7 +444,9 @@ class DocumentsDocument(models.Model):
                 "access_update_refused", reason="own_membership", documents=self
             )
             raise AccessError(
-                _("You cannot change your own access to documents you do not own.")
+                self.env._(
+                    "You cannot change your own access to documents you do not own."
+                )
             )
 
     def _update_access_rights(
@@ -463,7 +467,7 @@ class DocumentsDocument(models.Model):
         if self.shortcut_document_id:
             _debug.logic("access_update_refused", reason="shortcut", documents=self)
             raise UserError(
-                _(
+                self.env._(
                     "You can not update the access of a shortcut, update its target instead."
                 )
             )
@@ -511,7 +515,7 @@ class DocumentsDocument(models.Model):
                 for name, options in incorrect_fields_to_options.items()
             )
             raise UserError(
-                _(
+                self.env._(
                     "Incorrect values. Use one of the following for the following fields: %(hints)s.)",
                     hints=hints,
                 )
@@ -741,7 +745,7 @@ class DocumentsDocument(models.Model):
                 continue
             _debug.logic("access_command_refused", code=code)
             raise UserError(
-                _(
+                self.env._(
                     "Document access can only be granted at creation "
                     "(Command.create) or cleared; got command %s.",
                     code,
@@ -766,7 +770,9 @@ class DocumentsDocument(models.Model):
 
     @api.model
     def _archive_denied_message(self) -> str:
-        return _("You do not have sufficient access rights to delete these documents.")
+        return self.env._(
+            "You do not have sufficient access rights to delete these documents."
+        )
 
     def _raise_if_unauthorized_archive(self) -> None:
         if self.env.su:

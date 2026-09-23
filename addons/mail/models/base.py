@@ -9,7 +9,7 @@ from lxml import etree
 from lxml.builder import E
 from markupsafe import Markup
 
-from odoo import _, api, exceptions, fields, models, tools
+from odoo import api, exceptions, fields, models, tools
 from odoo.db.schema import column_exists
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import parse_contact_from_email
@@ -1282,22 +1282,25 @@ class Base(models.AbstractModel):
             if not self.ids:
                 return AliasError(
                     "config_follower_no_record",
-                    _("incorrectly configured alias (unknown reference record)"),
+                    self.env._(
+                        "incorrectly configured alias (unknown reference record)"
+                    ),
                     is_config_error=True,
                 )
             if "message_partner_ids" not in self._fields:
                 return AliasError(
                     "config_follower_no_partners",
-                    _("incorrectly configured alias"),
+                    self.env._("incorrectly configured alias"),
                     is_config_error=True,
                 )
             if not author or author not in self.message_partner_ids:
                 return AliasError(
-                    "error_follower_not_following", _("restricted to followers")
+                    "error_follower_not_following",
+                    self.env._("restricted to followers"),
                 )
         elif alias.alias_contact == "partners" and not author:
             return AliasError(
-                "error_partners_no_partner", _("restricted to known authors")
+                "error_partners_no_partner", self.env._("restricted to known authors")
             )
         return False
 
@@ -1359,7 +1362,7 @@ class Base(models.AbstractModel):
             raise
         except (KeyError, AttributeError) as err:
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "%(model_name)s.%(field_path)s does not seem to be a valid field path",
                     model_name=self._name,
                     field_path=field_path,
@@ -1370,7 +1373,7 @@ class Base(models.AbstractModel):
                 "Could not read field path %s.%s", self._name, field_path, exc_info=True
             )
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "We were not able to fetch value of field '%(field)s'",
                     field=field_path,
                 )
@@ -1406,7 +1409,7 @@ class Base(models.AbstractModel):
             digits = field.get_digits(self.env)
             return tools.formatLang(self.env, value, digits=digits[1] if digits else 2)
         if field.type == "boolean":
-            return _("Yes") if value else _("No")
+            return self.env._("Yes") if value else self.env._("No")
         return str(value)
 
     def _mail_get_timezone(self) -> str | None:

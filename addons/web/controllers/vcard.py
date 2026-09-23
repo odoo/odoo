@@ -2,7 +2,7 @@ import importlib.util
 import io
 import zipfile
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import prepare_content_disposition_header, request
 from odoo.libs.filesystem import osutil
@@ -33,7 +33,7 @@ class Partner(http.Controller):
         )
         if importlib.util.find_spec("vobject") is None:
             dbg.logic.debug("[vcard] download: vobject missing")
-            raise UserError(_("vobject library is not installed"))
+            raise UserError(request.env._("vobject library is not installed"))
 
         partners = request.env["res.partner"]
         if partner_ids:

@@ -1,6 +1,5 @@
 from collections import OrderedDict
 
-from odoo import _
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
 
@@ -21,10 +20,13 @@ class OrderPortalMixin:
 
     def _order_portal_default_sortings(self):
         return {
-            "date": {"label": _("Newest"), "order": "create_date desc, id desc"},
-            "name": {"label": _("Name"), "order": "name asc, id asc"},
+            "date": {
+                "label": request.env._("Newest"),
+                "order": "create_date desc, id desc",
+            },
+            "name": {"label": request.env._("Name"), "order": "name asc, id asc"},
             "amount_total": {
-                "label": _("Total"),
+                "label": request.env._("Total"),
                 "order": "amount_total desc, id desc",
             },
         }

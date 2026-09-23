@@ -6,7 +6,7 @@ import typing
 from collections.abc import Collection
 from typing import Any, Literal
 
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -59,7 +59,7 @@ SENT_EMAILS_MAPPING_CONTEXT_KEY = "mail_composer_sent_emails_mapping"
 def _reopen(self, res_id: int, model: str, context: dict | None = None) -> dict:
     context = dict(context or {}, default_model=model)
     return {
-        "name": _("Compose Email"),
+        "name": self.env._("Compose Email"),
         "type": "ir.actions.act_window",
         "view_mode": "form",
         "res_id": res_id,
@@ -836,13 +836,17 @@ class MailComposeMessage(models.TransientModel):
             wizard.composition_mode != "comment" or wizard.composition_batch
             for wizard in self
         ):
-            raise UserError(_("A message can only be scheduled in monocomment mode"))
+            raise UserError(
+                self.env._("A message can only be scheduled in monocomment mode")
+            )
         create_values = []
         for wizard in self:
             wizard = wizard.with_context(clean_context(wizard.env.context))
             res_ids = wizard._evaluate_res_ids()
             if not res_ids:
-                raise UserError(_("A scheduled message needs a target record."))
+                raise UserError(
+                    self.env._("A scheduled message needs a target record.")
+                )
             res_id = res_ids[0]
             post_values = wizard._manage_mail_values(
                 wizard._prepare_mail_values([res_id])
@@ -850,7 +854,9 @@ class MailComposeMessage(models.TransientModel):
             if not post_values:
                 continue
             if not post_values["scheduled_date"]:
-                raise UserError(_("A scheduled date is needed to schedule a message"))
+                raise UserError(
+                    self.env._("A scheduled date is needed to schedule a message")
+                )
             create_values.append(
                 wizard._prepare_schedule_message_post_values(post_values)
             )
@@ -933,7 +939,7 @@ class MailComposeMessage(models.TransientModel):
                     post_values["res_id"] = res_id
                 message = ActiveModel.message_notify(**post_values)
                 if not message:
-                    raise UserError(_("No recipient found."))
+                    raise UserError(self.env._("No recipient found."))
                 messages += message
             return messages
         return ActiveModel._message_post_values_all(post_values_all)
@@ -1051,7 +1057,7 @@ class MailComposeMessage(models.TransientModel):
             "view_id": self.env.ref(
                 "mail.mail_compose_message_view_form_template_save"
             ).id,
-            "name": _("Create a Mail Template"),
+            "name": self.env._("Create a Mail Template"),
             "res_model": "mail.compose.message",
             "context": {"dialog_size": "medium"},
             "target": "new",
@@ -1062,7 +1068,7 @@ class MailComposeMessage(models.TransientModel):
         self.check_singleton()
         if not self.model or self.model not in self.env:
             raise UserError(
-                _("Template creation from composer requires a valid model.")
+                self.env._("Template creation from composer requires a valid model.")
             )
         model_id = self.env["ir.model"]._get_id(self.model)
         values = {
@@ -1696,7 +1702,7 @@ class MailComposeMessage(models.TransientModel):
             domain.check(self.env[self.model])
         except (ValueError, SyntaxError) as e:
             raise ValidationError(
-                _(
+                self.env._(
                     "Invalid domain “%(domain)s” (type “%(domain_type)s”)",
                     domain=self.res_domain,
                     domain_type=type(self.res_domain),

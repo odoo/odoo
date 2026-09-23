@@ -2,7 +2,7 @@ import typing
 from types import NotImplementedType
 from typing import Any
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -100,12 +100,16 @@ class MixinMailThreadBlacklist(models.AbstractModel):
         if not hasattr(self, "_primary_email") or not isinstance(
             self._primary_email, str
         ):
-            raise UserError(_("Invalid primary email field on model %s", self._name))
+            raise UserError(
+                self.env._("Invalid primary email field on model %s", self._name)
+            )
         if (
             self._primary_email not in self._fields
             or self._fields[self._primary_email].type != "char"
         ):
-            raise UserError(_("Invalid primary email field on model %s", self._name))
+            raise UserError(
+                self.env._("Invalid primary email field on model %s", self._name)
+            )
 
     def _message_receive_bounce(self, email: str, partner: ResPartner) -> None:
         super()._message_receive_bounce(email, partner)
@@ -126,7 +130,9 @@ class MixinMailThreadBlacklist(models.AbstractModel):
         can_access = self.env["mail.blacklist"].has_access("write")
         if can_access:
             return {
-                "name": _("Are you sure you want to unblacklist this Email Address?"),
+                "name": self.env._(
+                    "Are you sure you want to unblacklist this Email Address?"
+                ),
                 "type": "ir.actions.act_window",
                 "view_mode": "form",
                 "res_model": "mail.blacklist.remove",
@@ -134,7 +140,7 @@ class MixinMailThreadBlacklist(models.AbstractModel):
             }
         else:
             raise AccessError(
-                _(
+                self.env._(
                     "You do not have the access right to unblacklist emails. Please contact your administrator."
                 )
             )

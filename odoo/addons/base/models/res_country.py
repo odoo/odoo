@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import frozendict
-from odoo.tools.translate import _
 
 from odoo.addons.base.models.mixin_catalog import name_uniq_index
 
@@ -225,7 +224,7 @@ class ResCountry(models.Model):
                 except ValueError, KeyError, TypeError:
                     _debug.logic("address_format_rejected", country=record.code)
                     raise UserError(
-                        _("The layout contains an invalid format key")
+                        self.env._("The layout contains an invalid format key")
                     ) from None
 
     @api.depends("country_group_ids")

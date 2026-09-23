@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -93,7 +93,7 @@ class MailActivity(models.Model):
         if refused:
             _debug.logic("upload_request_refused", folders=refused)
             raise AccessError(
-                _(
+                self.env._(
                     "This activity type files the requested document in a folder "
                     "you cannot edit."
                 )
@@ -182,7 +182,7 @@ class MailActivity(models.Model):
                 [("request_activity_id", "=", self.id)], limit=1
             )
             if "summary" not in vals:
-                vals["summary"] = self.summary or _("Upload file request")
+                vals["summary"] = self.summary or self.env._("Upload file request")
             new_doc_request = self.env["document.document"].create(
                 {
                     "owner_id": existing_document.owner_id.id,
@@ -217,7 +217,7 @@ class MailActivity(models.Model):
         )
         document_without_attachment = documents.filtered(lambda d: not d.attachment_id)
         if document_without_attachment and not feedback:
-            feedback = _(
+            feedback = self.env._(
                 "Document Request: %(name)s Uploaded by: %(user)s",
                 name=document_without_attachment[0].name,
                 user=self.env.user.name,

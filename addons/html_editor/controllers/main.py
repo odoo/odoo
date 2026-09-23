@@ -11,7 +11,7 @@ import requests
 import werkzeug.exceptions
 from lxml import etree, html
 
-from odoo import SUPERUSER_ID, _, http, tools
+from odoo import SUPERUSER_ID, http, tools
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -278,7 +278,9 @@ class HTML_Editor(http.Controller):
                 requests.exceptions.InvalidURL,
             ):
                 _debug.logic("media_url_refused", reason="unfetchable", url=url)
-                raise UserError(_("The provided URL cannot be fetched.")) from None
+                raise UserError(
+                    request.env._("The provided URL cannot be fetched.")
+                ) from None
             except requests.RequestException:
                 _debug.logic("media_url_probe_failed", url=url)
                 response = None
@@ -289,7 +291,9 @@ class HTML_Editor(http.Controller):
         else:
             _debug.logic("attachment_create_refused", reason="no_data_or_url")
             raise UserError(
-                _("You need to specify either data or url to create an attachment.")
+                request.env._(
+                    "You need to specify either data or url to create an attachment."
+                )
             )
 
         if (
@@ -364,7 +368,7 @@ class HTML_Editor(http.Controller):
         hide_dm_share=False,
         start_from=False,
     ):
-        return get_video_url_data(
+        data = get_video_url_data(
             video_url,
             autoplay=autoplay,
             loop=loop,
@@ -374,6 +378,9 @@ class HTML_Editor(http.Controller):
             hide_dm_share=hide_dm_share,
             start_from=start_from,
         )
+        if data.get("error"):
+            data["message"] = request.env._("The provided url is invalid")
+        return data
 
     @http.route(
         ["/web_editor/attachment/add_data", "/html_editor/attachment/add_data"],
@@ -396,7 +403,7 @@ class HTML_Editor(http.Controller):
     ):
         data = b64decode(data)
         if is_image:
-            format_error_msg = _(
+            format_error_msg = request.env._(
                 "Uploaded image's format is not supported. Try with: %s",
                 ", ".join(f".{extension}" for extension in SUPPORTED_IMAGE_EXTENSIONS),
             )
@@ -569,7 +576,9 @@ class HTML_Editor(http.Controller):
             f"{library_endpoint}/media-library/1/download_urls", data=params, timeout=15
         )
         if response.status_code != requests.codes.ok:
-            raise UserError(_("Could not get download URLs from the media library."))
+            raise UserError(
+                request.env._("Could not get download URLs from the media library.")
+            )
 
         slug = request.env["ir.http"]._slug
         for media_id, url in response.json().items():
@@ -747,22 +756,26 @@ class HTML_Editor(http.Controller):
                 return response["content"]
             elif response["status"] == "error_prompt_too_long":
                 raise UserError(
-                    _("Sorry, your prompt is too long. Try to say it in fewer words.")
+                    request.env._(
+                        "Sorry, your prompt is too long. Try to say it in fewer words."
+                    )
                 )
             elif response["status"] == "limit_call_reached":
                 raise UserError(
-                    _(
+                    request.env._(
                         "You have reached the maximum number of requests for this service. Try again later."
                     )
                 )
             else:
                 raise UserError(
-                    _(
+                    request.env._(
                         "Sorry, we could not generate a response. Please try again later."
                     )
                 )
         except AccessError:
-            raise AccessError(_("Oops, it looks like our AI is unreachable!")) from None
+            raise AccessError(
+                request.env._("Oops, it looks like our AI is unreachable!")
+            ) from None
 
     @http.route(
         ["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"],
@@ -862,14 +875,14 @@ class HTML_Editor(http.Controller):
                 action_sudo = Actions._get_action_by_path(action_name).sudo()
                 if not action_sudo:
                     return {
-                        "error_msg": _(
+                        "error_msg": request.env._(
                             "Action %s not found, link preview is not available, please check your url is correct",
                             action_name,
                         )
                     }
                 if action_sudo._name != "ir.actions.act_window":
                     return {
-                        "other_error_msg": _(
+                        "other_error_msg": request.env._(
                             "Action %s is not a window action, link preview is not available",
                             action_name,
                         )
@@ -895,7 +908,7 @@ class HTML_Editor(http.Controller):
             return result
         except MissingError as e:
             return {
-                "error_msg": _(
+                "error_msg": request.env._(
                     "Link preview is not available because %s, please check if your url is correct",
                     str(e),
                 )

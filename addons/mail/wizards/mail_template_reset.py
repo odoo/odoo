@@ -1,7 +1,7 @@
 import typing
 from typing import Literal
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
 
 if typing.TYPE_CHECKING:
@@ -32,7 +32,7 @@ class MailTemplateReset(models.TransientModel):
             "tag": "display_notification",
             "params": {
                 "type": "success",
-                "message": _(
+                "message": self.env._(
                     "The email template(s) have been restored to their original settings."
                 ),
                 "next": next_action,

@@ -13,7 +13,7 @@ from typing import Any, Literal, Self
 
 from lxml import etree
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.db.errors import PG_RECOVERABLE_EXCEPTIONS
 from odoo.exceptions import UserError, ValidationError
@@ -454,9 +454,9 @@ class MailTemplate(models.Model):
     def _get_render_error_label(self) -> str:
         if not self.id:
             return super()._get_render_error_label()
-        return _(
+        return self.env._(
             "Mail Template: '%(name)s' (ID: %(record_id)s)",
-            name=self.name or _("Unnamed Mail Template"),
+            name=self.name or self.env._("Unnamed Mail Template"),
             record_id=self.id,
         )
 
@@ -601,7 +601,7 @@ class MailTemplate(models.Model):
     ) -> str | None:
         for name in names:
             if not hasattr(type(model), name):
-                return _(
+                return self.env._(
                     "%(model)s has no field or attribute '%(name)s'",
                     model=model._name,
                     name=name,
@@ -679,7 +679,7 @@ class MailTemplate(models.Model):
             exc_info=error,
         )
         return ValidationError(
-            _(
+            self.env._(
                 "Oops! We couldn't save your template due to an issue.\n\n"
                 "Field: %(field_name)s\n"
                 "Error: %(error_details)s\n\n"
@@ -694,7 +694,9 @@ class MailTemplate(models.Model):
         for model in set(self.mapped("model_id.model")):
             if model in self.env and self.env[model]._abstract:
                 raise ValidationError(
-                    _("You may not define a template on an abstract model: %s", model)
+                    self.env._(
+                        "You may not define a template on an abstract model: %s", model
+                    )
                 )
 
     @api.model_create_multi
@@ -762,7 +764,9 @@ class MailTemplate(models.Model):
         actions = self.env["ir.actions.act_window"].create(
             [
                 {
-                    "name": _("Send Mail (%s)", template.name or template.display_name),
+                    "name": self.env._(
+                        "Send Mail (%s)", template.name or template.display_name
+                    ),
                     "type": "ir.actions.act_window",
                     "res_model": "mail.compose.message",
                     "context": repr(
@@ -790,7 +794,7 @@ class MailTemplate(models.Model):
         action = self.env.ref("mail.mail_template_preview_action")._get_action_dict()
         action.update(
             {
-                "name": _(
+                "name": self.env._(
                     'Template Preview: "%(template_name)s"', template_name=self.name
                 )
             }
@@ -826,7 +830,7 @@ class MailTemplate(models.Model):
             render_res = IrActionsReport._render(report, [res_id])
             if not render_res:
                 raise UserError(
-                    _("Unsupported report type %s found.", report.report_type)
+                    self.env._("Unsupported report type %s found.", report.report_type)
                 )
             rendered[res_id] = render_res
         return rendered
@@ -917,7 +921,9 @@ class MailTemplate(models.Model):
         name = ""
         if report.print_report_name:
             name = safe_eval(report.print_report_name, {"object": record, "time": time})
-        name = str(name or "") or _("Report - %(report_name)s", report_name=report.name)
+        name = str(name or "") or self.env._(
+            "Report - %(report_name)s", report_name=report.name
+        )
         extension = "." + report_format
         return name if name.endswith(extension) else name + extension
 
@@ -1214,7 +1220,7 @@ class MailTemplate(models.Model):
     def _check_has_model(self) -> None:
         if not self.model:
             raise UserError(
-                _(
+                self.env._(
                     "Mail template %(template_name)s has no target model, so it cannot "
                     "be rendered or sent.",
                     template_name=self.display_name,

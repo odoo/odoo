@@ -5,7 +5,7 @@ import socket
 from datetime import timedelta
 from urllib.parse import urlsplit
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs import backoff, redact
 from odoo.modules.registry import Registry
@@ -290,7 +290,7 @@ class IntegrationStream(models.Model):
             key = certificate.private_key_id
             if not certificate.pem_certificate or not key:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Certificate %s carries no certificate or no private key.",
                         certificate.display_name,
                     )
@@ -300,7 +300,9 @@ class IntegrationStream(models.Model):
         if authority:
             if not authority.pem_certificate:
                 raise UserError(
-                    _("Certificate %s carries no certificate.", authority.display_name)
+                    self.env._(
+                        "Certificate %s carries no certificate.", authority.display_name
+                    )
                 )
             material["ca"] = self._pem_text(authority)
         return TlsMaterial(**material)

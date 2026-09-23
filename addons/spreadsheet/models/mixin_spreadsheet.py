@@ -5,7 +5,7 @@ import re
 import zipfile
 from collections import defaultdict
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import MissingError, ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -48,7 +48,9 @@ class MixinSpreadsheet(models.AbstractModel):
                     error=type(e).__name__,
                 )
                 raise ValidationError(
-                    _("Uh-oh! Looks like the spreadsheet file contains invalid data.")
+                    self.env._(
+                        "Uh-oh! Looks like the spreadsheet file contains invalid data."
+                    )
                 ) from e
             if not (tools.config["test_enable"] or tools.config["test_file"]):
                 _debug.logic(
@@ -117,7 +119,7 @@ class MixinSpreadsheet(models.AbstractModel):
                     errors=len(errors),
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Uh-oh! Looks like the spreadsheet file contains invalid data.\n\n%(errors)s",
                         errors="\n".join(errors),
                     ),
@@ -210,7 +212,7 @@ class MixinSpreadsheet(models.AbstractModel):
             "sheets": [
                 {
                     "id": "sheet1",
-                    "name": _("Sheet1"),
+                    "name": self.env._("Sheet1"),
                 }
             ],
             "settings": {
@@ -255,7 +257,7 @@ class MixinSpreadsheet(models.AbstractModel):
                 path=file_path,
             )
             raise ValidationError(
-                _("Invalid image path: %(file_path)s", file_path=file_path)
+                self.env._("Invalid image path: %(file_path)s", file_path=file_path)
             )
         _debug.logic(
             "spreadsheet_file_content_source",

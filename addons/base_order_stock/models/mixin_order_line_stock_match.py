@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_compare, float_is_zero
@@ -158,10 +158,12 @@ class MixinOrderLineStockMatch(models.AbstractModel):
         }
 
     def _get_no_order_line_message(self):
-        return _("You must select at least one order line to match or transfer.")
+        return self.env._(
+            "You must select at least one order line to match or transfer."
+        )
 
     def _get_no_move_message(self):
-        return _("You must select at least one stock move to match.")
+        return self.env._("You must select at least one stock move to match.")
 
     def _action_create_moves_from_order_lines(self, order_lines):
         _debug.pipeline("moves_from_order_lines", lines=order_lines)
@@ -282,7 +284,7 @@ class MixinOrderLineStockMatch(models.AbstractModel):
     def _warn_over_transferred(self, over_transferred):
         _debug.logic("over_transferred_warning", records=self)
         details = "\n".join(
-            _(
+            self.env._(
                 "%(product)s: %(move)s exceeds %(line)s by %(excess)s",
                 product=order_line.product_id.display_name,
                 move=move.display_name,
@@ -296,7 +298,7 @@ class MixinOrderLineStockMatch(models.AbstractModel):
             "simple_notification",
             {
                 "type": "warning",
-                "title": _("Over-transferred lines"),
+                "title": self.env._("Over-transferred lines"),
                 "message": details,
             },
         )

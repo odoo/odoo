@@ -1,7 +1,9 @@
 import zipfile
 
-from odoo import _
 from odoo.exceptions import UserError
+from odoo.tools import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 # `.ods`/`.xlsx` are both zip archives, and their parsing libraries (odfpy,
 # openpyxl) read some members fully into memory -- `content.xml`, embedded
@@ -40,7 +42,7 @@ def check_zip_member_sizes(file):
         for info in archive.infolist():
             if info.file_size > MAX_UNCOMPRESSED_MEMBER_SIZE:
                 raise UserError(
-                    _(
+                    _lt(
                         "Import file %(member)s would expand to more than "
                         "%(cap)s MiB, which is not supported.",
                         member=info.filename,

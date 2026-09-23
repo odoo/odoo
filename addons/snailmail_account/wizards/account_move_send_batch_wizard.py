@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class AccountMoveSendBatchWizard(models.TransientModel):
@@ -20,5 +20,5 @@ class AccountMoveSendBatchWizard(models.TransientModel):
         for wizard in self:
             if wizard.summary_data and "snailmail" in wizard.summary_data:
                 wizard.summary_data["snailmail"].update(
-                    {"extra": _("(Stamps: %s)", wizard.send_by_post_stamps)}
+                    {"extra": self.env._("(Stamps: %s)", wizard.send_by_post_stamps)}
                 )

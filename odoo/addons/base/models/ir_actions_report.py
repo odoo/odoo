@@ -6,7 +6,7 @@ from typing import Any, Self
 
 import requests
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.barcode import (
@@ -444,7 +444,7 @@ class IrActionsReport(models.Model):
     ) -> UserError:
         if error is not None:
             _logger.warning("Unmergeable PDF stream: %s", error, exc_info=error)
-        return UserError(_("Odoo is unable to merge the generated PDFs."))
+        return UserError(self.env._("Odoo is unable to merge the generated PDFs."))
 
     @api.model
     def _merge_pdfs(
@@ -573,7 +573,7 @@ class IrActionsReport(models.Model):
         if not render_func:
             _debug.logic("render_refused", report=report.report_name, type=report_type)
             raise UserError(
-                _(
+                self.env._(
                     "Unknown report type %(type)s for report %(report)s.",
                     type=report.report_type,
                     report=report.report_name,

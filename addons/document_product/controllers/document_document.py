@@ -1,7 +1,6 @@
 import json
 import logging
 
-from odoo import _
 from odoo.http import Controller, request, route
 from odoo.libs.debug_log import DebugLog
 
@@ -15,21 +14,21 @@ class ProductDocumentsController(Controller):
         if not self.is_model_valid(res_model):
             _debug.logic("upload_refused", reason="bad_model", res_model=res_model)
             return self._error_response(
-                _("Documents cannot be attached to this model.")
+                request.env._("Documents cannot be attached to this model.")
             )
 
         try:
             res_id = int(res_id)
         except ValueError, TypeError:
             _debug.logic("upload_refused", reason="bad_res_id")
-            return self._error_response(_("Invalid record id."))
+            return self._error_response(request.env._("Invalid record id."))
 
         record = request.env[res_model].browse(res_id).exists()
 
         if not record or not record.has_access("write"):
             _debug.logic("upload_refused", reason="no_write_access", record=record)
             return self._error_response(
-                _("You are not allowed to attach documents to this record.")
+                request.env._("You are not allowed to attach documents to this record.")
             )
 
         files = request.httprequest.files.getlist("ufile")
@@ -52,16 +51,20 @@ class ProductDocumentsController(Controller):
             except Exception:
                 _debug.logic("product_upload_failed", record=record)
                 logger.exception("Failed to upload document %s", file.filename)
-                failed.append(file.filename or _("unnamed file"))
+                failed.append(file.filename or request.env._("unnamed file"))
 
         if failed:
             _debug.logic("product_upload_partial", failed=len(failed), files=len(files))
             if len(failed) == len(files):
-                message = _("No file could be uploaded.")
+                message = request.env._("No file could be uploaded.")
             else:
-                message = _("Some files could not be uploaded: %s", ", ".join(failed))
+                message = request.env._(
+                    "Some files could not be uploaded: %s", ", ".join(failed)
+                )
             return request.prepare_json_response(self._error_result(message))
-        return request.prepare_json_response({"success": _("All files uploaded")})
+        return request.prepare_json_response(
+            {"success": request.env._("All files uploaded")}
+        )
 
     @staticmethod
     def _error_result(message):

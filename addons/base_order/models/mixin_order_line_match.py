@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -198,14 +198,18 @@ class MixinOrderLineMatch(models.AbstractModel):
         return move._get_records_action()
 
     def _get_no_order_line_message(self):
-        return _("You must select at least one order line to match or create invoice.")
+        return self.env._(
+            "You must select at least one order line to match or create invoice."
+        )
 
     def _get_add_to_order_messages(self):
         return {
-            "no_invoice_line": _("Select invoice lines to add to an order"),
-            "multi_partner": _("Please select invoice lines with the same partner."),
-            "multi_order": _("Invoice lines can only be added to one order."),
-            "action_name": _("Add to Order"),
+            "no_invoice_line": self.env._("Select invoice lines to add to an order"),
+            "multi_partner": self.env._(
+                "Please select invoice lines with the same partner."
+            ),
+            "multi_order": self.env._("Invoice lines can only be added to one order."),
+            "action_name": self.env._("Add to Order"),
         }
 
     def _action_add_to_order(self):

@@ -1,6 +1,6 @@
 import json
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import AccessDenied
 from odoo.tools import SQL
 
@@ -23,7 +23,7 @@ class ResUsers(models.Model):
     @check_identity
     def action_create_passkey(self):
         return {
-            "name": _("Create Passkey"),
+            "name": self.env._("Create Passkey"),
             "type": "ir.actions.act_window",
             "res_model": "auth.passkey.key.create",
             "view_mode": "form",
@@ -50,7 +50,7 @@ class ResUsers(models.Model):
             )
             res = self.env.cr.fetchone()
             if not res:
-                raise AccessDenied(_("Unknown passkey"))
+                raise AccessDenied(self.env._("Unknown passkey"))
             credential["login"] = res[0]
         return super()._login(credential, user_agent_env=user_agent_env)
 
@@ -68,7 +68,7 @@ class ResUsers(models.Model):
                 )
             )
             if not passkey:
-                raise AccessDenied(_("Unknown passkey"))
+                raise AccessDenied(self.env._("Unknown passkey"))
             try:
                 new_sign_count = self.env["auth.passkey.key"]._get_new_sign_count(
                     webauthn,

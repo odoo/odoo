@@ -16,7 +16,6 @@ from odoo.http import (
 )
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, OrderedSet, unique
-from odoo.tools.translate import _
 
 from .res_users import check_identity
 
@@ -89,8 +88,8 @@ class ResDeviceLog(models.Model):
     @api.depends("platform", "browser")
     def _compute_display_name(self) -> None:
         for device in self:
-            platform = device.platform or _("Unknown")
-            browser = device.browser or _("Unknown")
+            platform = device.platform or self.env._("Unknown")
+            browser = device.browser or self.env._("Unknown")
             device.display_name = f"{platform.capitalize()} {browser.capitalize()}"
 
     @api.depends("session_identifier")
@@ -299,7 +298,7 @@ class ResDevice(models.Model):
             return
         if not self.env.is_system() and self.mapped("user_id") != self.env.user:
             _debug.logic("revoke_refused", uid=self.env.uid, devices=self.ids)
-            raise AccessError(_("You can only revoke your own devices."))
+            raise AccessError(self.env._("You can only revoke your own devices."))
         ResDeviceLog = self.env["res.device.log"]
         session_identifiers = list(unique(device.session_identifier for device in self))
         root.session_store.remove_sessions_for_identifiers(session_identifiers)

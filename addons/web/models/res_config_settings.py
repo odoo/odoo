@@ -1,6 +1,6 @@
 from typing import Any
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -109,7 +109,7 @@ class ResConfigSettings(models.TransientModel):
                 .sudo()
                 .create(
                     {
-                        "name": _("Default access for new users"),
+                        "name": self.env._("Default access for new users"),
                     }
                 )
             )
@@ -124,7 +124,7 @@ class ResConfigSettings(models.TransientModel):
             )
         return {
             "type": "ir.actions.act_window",
-            "name": _("Edit new user default group"),
+            "name": self.env._("Edit new user default group"),
             "view_mode": "form",
             "res_model": "res.groups",
             "res_id": default_group.id,
@@ -187,7 +187,7 @@ class ResConfigSettings(models.TransientModel):
             if c.country_id:
                 parts.append(c.country_id.display_name)
             if c.vat:
-                vat_label = c.country_id.vat_label or _("VAT")
+                vat_label = c.country_id.vat_label or self.env._("VAT")
                 parts.append(f"\n{vat_label}: {c.vat}")
             record.company_informations = "".join(parts)
 

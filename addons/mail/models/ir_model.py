@@ -1,6 +1,6 @@
 from typing import Any, Literal
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
@@ -110,22 +110,24 @@ class IrModel(models.Model):
             or "is_mail_blacklist" in vals
         ):
             if any(rec.state != "manual" for rec in self):
-                raise UserError(_("Only custom models can be modified."))
+                raise UserError(self.env._("Only custom models can be modified."))
             if "is_mail_thread" in vals and any(
                 rec.is_mail_thread > vals["is_mail_thread"] for rec in self
             ):
-                raise UserError(_('Field "Mail Thread" cannot be changed to "False".'))
+                raise UserError(
+                    self.env._('Field "Mail Thread" cannot be changed to "False".')
+                )
             if "is_mail_activity" in vals and any(
                 rec.is_mail_activity > vals["is_mail_activity"] for rec in self
             ):
                 raise UserError(
-                    _('Field "Mail Activity" cannot be changed to "False".')
+                    self.env._('Field "Mail Activity" cannot be changed to "False".')
                 )
             if "is_mail_blacklist" in vals and any(
                 rec.is_mail_blacklist > vals["is_mail_blacklist"] for rec in self
             ):
                 raise UserError(
-                    _('Field "Mail Blacklist" cannot be changed to "False".')
+                    self.env._('Field "Mail Blacklist" cannot be changed to "False".')
                 )
             res = super().write(vals)
             self.env.flush_all()

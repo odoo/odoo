@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -29,7 +29,7 @@ class ResUsers(models.Model):
                 continue
             if len(password) < minlength:
                 failures.append(
-                    _(
+                    self.env._(
                         "Your password must contain at least %(minimal_length)d characters and only has %(current_count)d.",
                         minimal_length=minlength,
                         current_count=len(password),

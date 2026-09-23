@@ -1,6 +1,5 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import _
 
 
 class PhoneBlacklist(models.Model):
@@ -44,14 +43,16 @@ class PhoneBlacklist(models.Model):
                 # given; self here is env.user, so a falsy number must be
                 # rejected before delegating, or it silently resolves to
                 # the acting user's own phone/mobile.
-                raise UserError(_("A phone number is required."))
+                raise UserError(self.env._("A phone number is required."))
             try:
                 sanitized_value = self.env.user._phone_format(
                     number=value["number"], raise_exception=True
                 )
             except UserError as err:
                 raise UserError(
-                    _("%(error)s Please correct the number and try again.", error=err)
+                    self.env._(
+                        "%(error)s Please correct the number and try again.", error=err
+                    )
                 ) from err
             if sanitized_value in done:
                 continue
@@ -87,14 +88,14 @@ class PhoneBlacklist(models.Model):
     def write(self, vals):
         if "number" in vals:
             if not vals["number"]:
-                raise UserError(_("A phone number is required."))
+                raise UserError(self.env._("A phone number is required."))
             try:
                 sanitized = self.env.user._phone_format(
                     number=vals["number"], raise_exception=True
                 )
             except UserError as err:
                 raise UserError(
-                    _(
+                    self.env._(
                         "%(error)s Please correct the number and try again.",
                         error=str(err),
                     )
@@ -110,17 +111,17 @@ class PhoneBlacklist(models.Model):
         sanitize = self.env.user._phone_format
         if operator in ("in", "not in"):
             if not all(value):
-                raise UserError(_("A phone number is required."))
+                raise UserError(self.env._("A phone number is required."))
             value = [sanitize(number=number) or number for number in value]
         else:
             if not value:
-                raise UserError(_("A phone number is required."))
+                raise UserError(self.env._("A phone number is required."))
             value = sanitize(number=value) or value
         return [("number", operator, value)]
 
     def add(self, number, message=None):
         if not number:
-            raise UserError(_("A phone number is required."))
+            raise UserError(self.env._("A phone number is required."))
         sanitized = self.env.user._phone_format(number=number)
         return self._add([sanitized], message=message)
 
@@ -152,7 +153,7 @@ class PhoneBlacklist(models.Model):
 
     def remove(self, number, message=None):
         if not number:
-            raise UserError(_("A phone number is required."))
+            raise UserError(self.env._("A phone number is required."))
         sanitized = self.env.user._phone_format(number=number)
         return self._remove([sanitized], message=message)
 
@@ -185,7 +186,9 @@ class PhoneBlacklist(models.Model):
 
     def phone_action_blacklist_remove(self):
         return {
-            "name": _("Are you sure you want to unblacklist this phone number?"),
+            "name": self.env._(
+                "Are you sure you want to unblacklist this phone number?"
+            ),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "phone.blacklist.remove",

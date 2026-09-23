@@ -29,7 +29,7 @@ from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.text import split_refs
 from odoo.modules.module import get_resource_from_path
-from odoo.tools import SQL, _, config, frozendict, partition, unique
+from odoo.tools import SQL, config, frozendict, partition, unique
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import ConstantMapping, file_path
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
@@ -752,7 +752,7 @@ class IrUiView(models.Model):
                     error=type(e).__name__,
                 )
                 err = ValidationError(
-                    _(
+                    self.env._(
                         "Error while parsing or validating view (%(view)s):\n\n%(error)s",
                         error=e,
                         view=view.key or view.id,
@@ -781,7 +781,7 @@ class IrUiView(models.Model):
         if _xpath_attrs(combined_arch) or _xpath_states(combined_arch):
             _debug.logic("check_xml.failed", view=self.id, stage="legacy_attrs")
             err = ValidationError(
-                _(
+                self.env._(
                     'Since 17.0, the "attrs" and "states" attributes are no longer used.\nView: %(name)s in %(file)s',
                     name=self._view_display_name(),
                     file=self.arch_fs,
@@ -803,7 +803,7 @@ class IrUiView(models.Model):
             if not valid_view(view_arch, env=self.env, model=self.model):
                 _debug.logic("check_xml.failed", view=self.id, stage="schema")
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invalid view %(name)s definition in %(file)s",
                         name=self._view_display_name(),
                         file=self.arch_fs,
@@ -827,7 +827,7 @@ class IrUiView(models.Model):
             line = error.context["line"] or 1
             fivelines = "".join(lines[max(0, line - 3) : line + 2])
             err = ValidationError(
-                _(
+                self.env._(
                     "Error while validating view near:\n\n%(fivelines)s\n%(error)s",
                     fivelines=fivelines,
                     error=error,
@@ -837,7 +837,7 @@ class IrUiView(models.Model):
             raise err.with_traceback(error.__traceback__) from None
         if error.__context__:
             err = ValidationError(
-                _(
+                self.env._(
                     "Error while validating view (%(view)s):\n\n%(error)s",
                     view=view.key or view.id,
                     error=error.__context__,
@@ -846,7 +846,7 @@ class IrUiView(models.Model):
             err.context = {"name": "invalid view"}
             raise err.with_traceback(error.__context__.__traceback__) from None
         raise ValidationError(
-            _(
+            self.env._(
                 "Error while validating view (%(view)s):\n\n%(error)s",
                 view=view.key or view.id,
                 error=error,
@@ -898,7 +898,7 @@ class IrUiView(models.Model):
             if view.group_ids and view.inherit_id and view.mode != "primary":
                 _debug.logic("groups_on_extension_refused", view=view.id)
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Inherited view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"
                     )
                 )
@@ -907,7 +907,9 @@ class IrUiView(models.Model):
     def _check_000_inheritance(self) -> None:
         if self._has_cycle("inherit_id"):
             _debug.logic("inheritance_cycle", views=self.ids)
-            raise ValidationError(_("You cannot create recursive inherited views."))
+            raise ValidationError(
+                self.env._("You cannot create recursive inherited views.")
+            )
 
     _inheritance_mode = models.Constraint(
         "CHECK (mode != 'extension' OR inherit_id IS NOT NULL)",
@@ -975,7 +977,7 @@ class IrUiView(models.Model):
         if isinstance(text, str) and _XML_ENCODING_DECL_RE.search(text):
             _debug.logic("xml_encoding_refused", views=len(self))
             raise UserError(
-                _(
+                self.env._(
                     "Unicode strings with encoding declaration are not supported in XML.\n"
                     "Remove the encoding declaration."
                 )
@@ -1035,7 +1037,7 @@ class IrUiView(models.Model):
             _debug.logic("create.key_generated", model=values.get("model"))
         if not values.get("name"):
             known = [part for part in (values.get("model"), values.get("type")) if part]
-            values["name"] = " ".join(known) or _("Unnamed view")
+            values["name"] = " ".join(known) or self.env._("Unnamed view")
         values["arch_prev"] = self._first_arch(values, ("arch_base", "arch_db", "arch"))
         if "arch" in values:
             values["arch_db"] = values.pop("arch")
@@ -1068,7 +1070,7 @@ class IrUiView(models.Model):
         arch = self._first_arch(values, ("arch", "arch_base", "arch_db"))
         if arch is None:
             _debug.logic("create.type_refused", reason="no_arch")
-            raise ValidationError(_("Missing view architecture."))
+            raise ValidationError(self.env._("Missing view architecture."))
         try:
             view_type = etree.fromstring(arch).tag
         except etree.ParseError, ValueError, TypeError:
@@ -1077,7 +1079,7 @@ class IrUiView(models.Model):
         if view_type not in valid_types:
             _debug.logic("create.type_refused", type=view_type, reason="invalid_type")
             raise ValidationError(
-                _(
+                self.env._(
                     "Invalid view type: '%(view_type)s'.\n"
                     "You might have used an invalid starting tag in the architecture.\n"
                     "Allowed types are: %(valid_types)s",
@@ -1463,13 +1465,15 @@ class IrUiView(models.Model):
             groups=self.group_ids.ids,
         )
         if self.group_ids:
-            error = _(
+            error = self.env._(
                 "View '%(name)s' accessible only to groups %(groups)s ",
                 name=self._view_display_name(),
                 groups=", ".join([g.name for g in self.group_ids]),
             )
         else:
-            error = _("View '%(name)s' is private", name=self._view_display_name())
+            error = self.env._(
+                "View '%(name)s' is private", name=self._view_display_name()
+            )
         raise AccessError(error)
 
     def _view_display_name(self) -> str:
@@ -2143,7 +2147,7 @@ class IrUiView(models.Model):
                     "access_rights.root_refused", view=self.id, uid=self.env.uid
                 )
                 raise AccessError(
-                    _(
+                    self.env._(
                         "View '%(name)s' is restricted to groups the user does not belong to.",
                         name=self._view_display_name() if self else tree.tag,
                     )
@@ -2261,7 +2265,7 @@ class IrUiView(models.Model):
         if model_name not in self.env:
             _debug.logic("view_processing_refused", view=self.id, model=model_name)
             raise self._prepare_view_error(
-                _("Model not found: %(model)s", model=model_name), node
+                self.env._("Model not found: %(model)s", model=model_name), node
             )
 
         group_definitions = self.env["res.groups"]._get_group_definitions()
@@ -2619,7 +2623,7 @@ class IrUiView(models.Model):
         if not view_type:
             _debug.logic("check_view.refused", view=self.id, reason="no_view_type")
             raise self._prepare_view_error(
-                _(
+                self.env._(
                     "The view type could not be determined from its architecture. "
                     "Check that the architecture is well-formed XML, or set the "
                     "view's type explicitly."
@@ -2635,7 +2639,7 @@ class IrUiView(models.Model):
                 reason="root_tag_mismatch",
             )
             raise self._prepare_view_error(
-                _(
+                self.env._(
                     "The root node of a %(view_type)s view should be a <%(view_type)s>, not a <%(tag)s>",
                     view_type=view_type,
                     tag=node.tag,
@@ -2645,7 +2649,7 @@ class IrUiView(models.Model):
         if node_info is None and node.get("groups"):
             _debug.logic("check_view.refused", view=self.id, reason="groups_on_root")
             raise self._prepare_view_error(
-                _(
+                self.env._(
                     "The root node of a view cannot carry a 'groups' attribute: "
                     "restricting it would leave nothing to display. Use the view's "
                     "'Groups' field (group_ids) to restrict the whole view, or move "
@@ -2705,7 +2709,8 @@ class IrUiView(models.Model):
                 tag=subview.tag,
             )
             raise self._prepare_view_error(
-                _("Invalid <%(tag)s> subview definition", tag=subview.tag), subview
+                self.env._("Invalid <%(tag)s> subview definition", tag=subview.tag),
+                subview,
             )
 
     def _get_client_button_types(self, view_type: str) -> set[str]:
@@ -2775,7 +2780,8 @@ class IrUiView(models.Model):
                 view_type=view_type,
             )
             raise self._prepare_view_error(
-                _("Forbidden owl directive used in arch (%s).", directive), node
+                self.env._("Forbidden owl directive used in arch (%s).", directive),
+                node,
             )
 
     def _check_expression(
@@ -2797,7 +2803,7 @@ class IrUiView(models.Model):
                 attribute=attr,
                 error=type(e).__name__,
             )
-            msg = _(
+            msg = self.env._(
                 "Invalid %(use)s: “%(expr)s”\n%(error)s",
                 use=f"modifier {attr!r}",
                 expr=py_expression,
@@ -2824,7 +2830,7 @@ class IrUiView(models.Model):
                 model=target_model,
                 error=type(e).__name__,
             )
-            msg = _(
+            msg = self.env._(
                 "Invalid %(use)s: “%(expr)s”\n%(error)s",
                 use=use,
                 expr=domain,
@@ -2852,7 +2858,7 @@ class IrUiView(models.Model):
                         path=field_path,
                         reason="non_relational",
                     )
-                    msg = _(
+                    msg = self.env._(
                         "Non-relational field “%(field)s” in path “%(field_path)s” in %(use)s)",
                         field=names[index - 1],
                         field_path=field_path,
@@ -2869,7 +2875,7 @@ class IrUiView(models.Model):
                         path=field_path,
                         reason="unknown_field",
                     )
-                    msg = _(
+                    msg = self.env._(
                         'Unknown field "%(model)s.%(field)s" in %(use)s)',
                         model=Model._name,
                         field=name,
@@ -2884,7 +2890,7 @@ class IrUiView(models.Model):
                         path=field_path,
                         reason="unsearchable",
                     )
-                    msg = _(
+                    msg = self.env._(
                         "Unsearchable field “%(field)s” in path “%(field_path)s” in %(use)s)",
                         field=name,
                         field_path=field_path,

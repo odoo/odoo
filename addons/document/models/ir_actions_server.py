@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -28,7 +28,7 @@ class IrActionsServer(models.Model):
                 "default_update_path": "tag_ids",
                 "default_usage": "documents_embedded",
             },
-            "display_name": _("Server Actions"),
+            "display_name": self.env._("Server Actions"),
             "domain": [
                 ("model_name", "=", "document.document"),
                 ("parent_id", "=", False),
@@ -39,7 +39,7 @@ class IrActionsServer(models.Model):
                     <img class="w-100 w-md-75" src="/document/static/img/document_server_action.svg"/>
                 </div>
             """
-            % _("No server actions found for Documents!"),
+            % self.env._("No server actions found for Documents!"),
             "res_model": "ir.actions.server",
             "target": "current",
             "type": "ir.actions.act_window",
@@ -96,7 +96,7 @@ class IrActionsServer(models.Model):
                         records=folder_records,
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             "This action was not made available on the containing folder."
                         )
                     )

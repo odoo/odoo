@@ -12,7 +12,7 @@ import lxml.html
 import psycopg
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import api, fields, models, modules, tools
 from odoo.api import ValuesType
 from odoo.db.schema import column_exists
 from odoo.exceptions import AccessDenied, UserError, ValidationError
@@ -174,7 +174,9 @@ class IrModuleCategory(models.Model):
     def _check_parent_not_circular(self) -> None:
         if self._has_cycle():
             _debug.logic("category.cycle_rejected", categories=self.ids)
-            raise ValidationError(_("Error ! You cannot create recursive categories."))
+            raise ValidationError(
+                self.env._("Error ! You cannot create recursive categories.")
+            )
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
@@ -548,7 +550,7 @@ class IrModuleModule(models.Model):
                     reason="installed_or_pending",
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "You are trying to remove a module that is installed or will be installed."
                     )
                 )
@@ -584,19 +586,19 @@ class IrModuleModule(models.Model):
             manifest.check_manifest_dependencies()
         except MissingDependencyError as e:
             msg = {
-                "to install": _(
+                "to install": self.env._(
                     'Unable to install module "%(module)s" because an external dependency is not met: %(dependency)s',
                     module=module_name,
                     dependency=e.dependency,
                 ),
-                "to upgrade": _(
+                "to upgrade": self.env._(
                     'Unable to upgrade module "%(module)s" because an external dependency is not met: %(dependency)s',
                     module=module_name,
                     dependency=e.dependency,
                 ),
             }.get(
                 newstate,
-                _(
+                self.env._(
                     'Unable to process module "%(module)s" because an external dependency is not met: %(dependency)s',
                     module=module_name,
                     dependency=e.dependency,
@@ -619,7 +621,7 @@ class IrModuleModule(models.Model):
                         install_package = f"apt install {package}"
 
             if install_package:
-                msg += _("\nIt can be installed running: %s", install_package)
+                msg += self.env._("\nIt can be installed running: %s", install_package)
 
             _debug.logic(
                 "external_dependency.missing",
@@ -638,7 +640,7 @@ class IrModuleModule(models.Model):
                 "module_state.recursion_exhausted", modules=self.mapped("name")
             )
             raise UserError(
-                _(
+                self.env._(
                     "Recursion error in modules dependencies (while processing: %s)!",
                     ", ".join(self.mapped("name")) or "?",
                 )
@@ -681,12 +683,12 @@ class IrModuleModule(models.Model):
 
     def _get_unsatisfiable_dependency_error(self, module: Self, dep: Any) -> str:
         if dep.state == "unknown":
-            return _(
+            return self.env._(
                 'You try to install module "%(module)s" that depends on module "%(dependency)s".\nBut the latter module is not available in your system.',
                 module=module.name,
                 dependency=dep.name,
             )
-        return _(
+        return self.env._(
             'You try to install module "%(module)s" that depends on module "%(dependency)s".\nBut the latter module cannot be installed.',
             module=module.name,
             dependency=dep.name,
@@ -765,7 +767,7 @@ class IrModuleModule(models.Model):
                         reason="exclusion",
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             'Modules "%(module)s" and "%(incompatible_module)s" are incompatible.',
                             module=module.shortdesc,
                             incompatible_module=exclusion.linked_id.shortdesc,
@@ -791,7 +793,7 @@ class IrModuleModule(models.Model):
                     reason="exclusive_category",
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         'You are trying to install incompatible modules in category "%(category)s":%(module_list)s',
                         category=category.name,
                         module_list="".join(
@@ -801,7 +803,7 @@ class IrModuleModule(models.Model):
                     )
                 )
 
-        return dict(ACTION_DICT, name=_("Install"))
+        return dict(ACTION_DICT, name=self.env._("Install"))
 
     @assert_log_admin_access
     def button_immediate_install(self) -> dict[str, Any]:
@@ -960,7 +962,7 @@ class IrModuleModule(models.Model):
             return pending
 
     def _lock_against_concurrent_module_operations(self) -> None:
-        busy = _(
+        busy = self.env._(
             "Odoo is currently processing another module operation.\n"
             "Please try again later or contact your system administrator."
         )
@@ -985,7 +987,7 @@ class IrModuleModule(models.Model):
             cr.rollback()
             _debug.logic("module_lock_busy", reason="cron_lock_timeout")
             raise UserError(
-                _(
+                self.env._(
                     "Odoo is currently processing a scheduled action.\n"
                     "Module operations are not possible at this time, "
                     "please try again later or contact your system administrator."
@@ -1000,7 +1002,7 @@ class IrModuleModule(models.Model):
         if not self.env.registry.ready:
             _debug.logic("immediate_function.rejected", reason="registry_not_ready")
             raise UserError(
-                _(
+                self.env._(
                     "Immediate module operations cannot be performed on an init or non-loaded registry. Please use button_install instead."
                 )
             )
@@ -1077,7 +1079,7 @@ class IrModuleModule(models.Model):
                 reason="server_wide",
             )
             raise UserError(
-                _(
+                self.env._(
                     "Those modules cannot be uninstalled: %s",
                     ", ".join(un_installable_modules),
                 )
@@ -1091,7 +1093,7 @@ class IrModuleModule(models.Model):
                 reason="not_installed",
             )
             raise UserError(
-                _(
+                self.env._(
                     "One or more of the selected modules have already been uninstalled, if you "
                     "believe this to be an error, you may try again later or contact support."
                 )
@@ -1103,14 +1105,14 @@ class IrModuleModule(models.Model):
             dependents=deps.mapped("name"),
         )
         (self + deps).write({"state": "to remove"})
-        return dict(ACTION_DICT, name=_("Uninstall"))
+        return dict(ACTION_DICT, name=self.env._("Uninstall"))
 
     @assert_log_admin_access
     def button_uninstall_wizard(self) -> dict[str, Any]:
         return {
             "type": "ir.actions.act_window",
             "target": "new",
-            "name": _("Uninstall module"),
+            "name": self.env._("Uninstall module"),
             "view_mode": "form",
             "res_model": "base.module.uninstall",
             "context": {"default_module_ids": self.ids},
@@ -1154,7 +1156,7 @@ class IrModuleModule(models.Model):
                     reason="not_installed",
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot upgrade module “%s”. It is not installed.",
                         module.name,
                     )
@@ -1263,7 +1265,7 @@ class IrModuleModule(models.Model):
                         reason="unknown_dependency",
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             "You try to upgrade the module %(module)s that depends on the module: %(dependency)s.\nBut this module is not available in your system.",
                             module=module.name,
                             dependency=dep.name,
@@ -1291,7 +1293,7 @@ class IrModuleModule(models.Model):
                 "upgrade.installing_dependencies", modules=uninstalled_dep_names
             )
             self.search([("name", "in", uninstalled_dep_names)]).button_install()
-        return dict(ACTION_DICT, name=_("Apply Schedule Upgrade"))
+        return dict(ACTION_DICT, name=self.env._("Apply Schedule Upgrade"))
 
     @staticmethod
     def get_values_from_terp(terp: dict[str, Any] | Manifest) -> dict[str, Any]:

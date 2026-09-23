@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -11,7 +11,8 @@ class DocumentsDocument(models.Model):
     def action_delete_from_history(self, attachment_id: int) -> None:
         self.check_singleton()
         self._check_access_or_raise(
-            "write", _("You are not allowed to delete a version of this document.")
+            "write",
+            self.env._("You are not allowed to delete a version of this document."),
         )
         attachment = self.env["ir.attachment"].browse(attachment_id)
 
@@ -21,7 +22,7 @@ class DocumentsDocument(models.Model):
             _debug.logic(
                 "version_delete_refused", document=self, attachment=attachment_id
             )
-            raise UserError(_("You cannot delete this attachment."))
+            raise UserError(self.env._("You cannot delete this attachment."))
 
         deleted_name = attachment.name
         _debug.lifecycle(
@@ -36,7 +37,7 @@ class DocumentsDocument(models.Model):
             )
             self.attachment_id = promoted
             self.message_post(
-                body=_(
+                body=self.env._(
                     "Version deleted: “%(deleted)s” removed, “%(promoted)s” is now "
                     "the current version.",
                     deleted=deleted_name,
@@ -45,7 +46,7 @@ class DocumentsDocument(models.Model):
             )
         else:
             self.message_post(
-                body=_("Version deleted from the history: “%s”.", deleted_name)
+                body=self.env._("Version deleted from the history: “%s”.", deleted_name)
             )
 
         attachment.unlink()
@@ -53,7 +54,8 @@ class DocumentsDocument(models.Model):
     def action_restore_version(self, attachment_id: int) -> None:
         self.check_singleton()
         self._check_access_or_raise(
-            "write", _("You are not allowed to restore a version of this document.")
+            "write",
+            self.env._("You are not allowed to restore a version of this document."),
         )
 
         attachment = self.env["ir.attachment"].browse(attachment_id).exists()
@@ -61,7 +63,9 @@ class DocumentsDocument(models.Model):
             _debug.logic(
                 "version_restore_refused", document=self, attachment=attachment_id
             )
-            raise UserError(_("This version does not belong to this document."))
+            raise UserError(
+                self.env._("This version does not belong to this document.")
+            )
 
         replaced = self.attachment_id
         _debug.lifecycle(
@@ -72,7 +76,7 @@ class DocumentsDocument(models.Model):
         )
         self.write({"attachment_id": attachment.id})
         self.message_post(
-            body=_(
+            body=self.env._(
                 "Version restored: “%(restored)s” replaces “%(replaced)s”.",
                 restored=attachment.name,
                 replaced=replaced.name,

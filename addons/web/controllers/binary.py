@@ -10,7 +10,7 @@ from typing import Any
 from werkzeug.utils import send_file
 
 import odoo
-from odoo import _, api, http
+from odoo import api, http
 from odoo.exceptions import AccessError, UserError
 from odoo.http import Response, request
 from odoo.libs.filesystem import guess_mimetype
@@ -571,13 +571,17 @@ class Binary(http.Controller):
             except AccessError:
                 dbg.logic.debug("[upload:%s/%s] %r: access denied", model, id, filename)
                 results.append(
-                    {"error": _("You are not allowed to upload an attachment here.")}
+                    {
+                        "error": request.env._(
+                            "You are not allowed to upload an attachment here."
+                        )
+                    }
                 )
             except Exception:
                 dbg.logic.debug(
                     "[upload:%s/%s] %r: unexpected failure", model, id, filename
                 )
-                results.append({"error": _("Something horrible happened")})
+                results.append({"error": request.env._("Something horrible happened")})
                 _logger.exception(
                     "Fail to upload attachment %s", uploaded_file.filename
                 )

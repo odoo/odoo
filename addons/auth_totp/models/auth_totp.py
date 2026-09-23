@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import AccessError
 
 from odoo.addons.auth_totp.controllers.home import TRUSTED_DEVICE_AGE_DAYS
@@ -42,7 +42,7 @@ class Auth_TotpDevice(models.Model):
         """
         if self.env.user._is_public():
             raise AccessError(
-                _("Only an authenticated user can register a trusted device")
+                self.env._("Only an authenticated user can register a trusted device")
             )
 
     def _check_credentials_for_uid(self, *, scope, key, uid):

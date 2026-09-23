@@ -1,6 +1,6 @@
 import typing
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 
 if typing.TYPE_CHECKING:
@@ -76,5 +76,5 @@ class MailActivityPlan(models.Model):
         vals_list = super().copy_data(default=default)
         if "name" not in default:
             for plan, vals in zip(self, vals_list, strict=False):
-                vals["name"] = _("%s (copy)", plan.name)
+                vals["name"] = self.env._("%s (copy)", plan.name)
         return vals_list

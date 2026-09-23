@@ -1,6 +1,6 @@
 from typing import Any
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -84,7 +84,9 @@ class ChangePasswordOwn(models.TransientModel):
         for record in self:
             if record.confirm_password != record.new_password:
                 raise ValidationError(
-                    _("The new password and its confirmation must be identical.")
+                    self.env._(
+                        "The new password and its confirmation must be identical."
+                    )
                 )
 
     @check_identity

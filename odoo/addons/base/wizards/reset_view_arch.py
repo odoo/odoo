@@ -4,7 +4,6 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import _
 from odoo.tools.misc import get_diff
 
 _debug = DebugLog(__name__)
@@ -51,7 +50,7 @@ class ResetViewArchWizard(models.TransientModel):
             and self.env.context.get("active_ids")
         ) or []
         if len(view_ids) > 2:
-            raise ValidationError(_("Can't compare more than two views."))
+            raise ValidationError(self.env._("Can't compare more than two views."))
 
         result = super().default_get(fields)
         result["view_id"] = view_ids and view_ids[0]
@@ -75,7 +74,7 @@ class ResetViewArchWizard(models.TransientModel):
             diff_to_name = False
             if view.reset_mode == "soft":
                 diff_to = view.view_id.arch_prev
-                diff_to_name = _("Previous Arch")
+                diff_to_name = self.env._("Previous Arch")
             elif view.reset_mode == "other_view":
                 diff_to = view.compare_view_id.with_context(lang=None).arch
                 diff_to_name = get_table_name(view.compare_view_id)
@@ -83,7 +82,7 @@ class ResetViewArchWizard(models.TransientModel):
                 diff_to = view.view_id.with_context(
                     read_arch_from_file=True, lang=None
                 ).arch
-                diff_to_name = _("File Arch")
+                diff_to_name = self.env._("File Arch")
 
             view.arch_to_compare = diff_to
             _debug.logic(
@@ -104,7 +103,7 @@ class ResetViewArchWizard(models.TransientModel):
                         (
                             get_table_name(view.view_id)
                             if view.reset_mode == "other_view"
-                            else _("Current Arch")
+                            else self.env._("Current Arch")
                         ),
                     ),
                     (diff_to, diff_to_name),

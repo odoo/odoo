@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class MixinAccountMoveSend(models.AbstractModel):
@@ -20,14 +20,14 @@ class MixinAccountMoveSend(models.AbstractModel):
                 "level": "danger"
                 if len(snailmail_moves_without_valid_address) == 1
                 else "warning",
-                "message": _(
+                "message": self.env._(
                     "The partners on the following invoices have no valid address, "
                     "so those invoices will not be sent: %s",
                     ", ".join(snailmail_moves_without_valid_address.mapped("name")),
                 ),
-                "action_text": _("View Invoice(s)"),
+                "action_text": self.env._("View Invoice(s)"),
                 "action": snailmail_moves_without_valid_address._get_records_action(
-                    name=_("Check Invoice(s)")
+                    name=self.env._("Check Invoice(s)")
                 ),
             }
         return alerts

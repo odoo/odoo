@@ -25,7 +25,7 @@ from OpenSSL.SSL import Error as SSLError
 from urllib3.contrib.pyopenssl import PyOpenSSLContext, get_subj_alt_name
 from urllib3.util.ssl_match_hostname import CertificateError, match_hostname
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.email import extract_rfc2822_addresses
@@ -57,16 +57,16 @@ DOMAIN_PATTERN = re.compile(
 )
 
 CONNECTION_TEST_ERRORS = (
-    (UnicodeError, lambda e: _("Invalid server name!\n %s", e)),
+    (UnicodeError, lambda env, e: env._("Invalid server name!\n %s", e)),
     (
         (TimeoutError, gaierror),
-        lambda e: _(
+        lambda env, e: env._(
             "No response received. Check server address and port number.\n %s", e
         ),
     ),
     (
         ConnectionError,
-        lambda e: _(
+        lambda env, e: env._(
             "Could not establish a connection. Check the port number, and that the "
             "server is reachable and accepts connections from this machine.\n %s",
             e,
@@ -74,42 +74,42 @@ CONNECTION_TEST_ERRORS = (
     ),
     (
         smtplib.SMTPServerDisconnected,
-        lambda e: _(
+        lambda env, e: env._(
             "The server has closed the connection unexpectedly. Check configuration served on this port number.\n %s",
             e,
         ),
     ),
     (
         smtplib.SMTPResponseException,
-        lambda e: _("Server replied with following exception:\n %s", e),
+        lambda env, e: env._("Server replied with following exception:\n %s", e),
     ),
     (
         smtplib.SMTPNotSupportedError,
-        lambda e: _("An option is not supported by the server:\n %s", e),
+        lambda env, e: env._("An option is not supported by the server:\n %s", e),
     ),
     (
         smtplib.SMTPException,
-        lambda e: _(
+        lambda env, e: env._(
             "An SMTP exception occurred. Check port number and connection security type.\n %s",
             e,
         ),
     ),
     (
         CertificateError,
-        lambda e: _(
+        lambda env, e: env._(
             "An SSL exception occurred. Check connection security type.\n CertificateError: %s",
             e,
         ),
     ),
     (
         (ssl.SSLError, SSLError),
-        lambda e: _(
+        lambda env, e: env._(
             "An SSL exception occurred. Check connection security type.\n %s", e
         ),
     ),
     (
         OSError,
-        lambda e: _(
+        lambda env, e: env._(
             "The connection to the server failed. Check the server address, the port "
             "number and your network.\n %s",
             e,
@@ -355,16 +355,16 @@ class IrMail_Server(models.Model):
     @api.depends("smtp_authentication")
     def _compute_smtp_authentication_info(self) -> None:
         info_by_type = {
-            "login": _(
+            "login": self.env._(
                 "Connect to your server through your usual username and password. \n"
                 "This is the most basic SMTP authentication process and "
                 "may not be accepted by all providers. \n"
             ),
-            "certificate": _(
+            "certificate": self.env._(
                 "Authenticate by using SSL certificates, belonging to your domain name. \n"
                 "SSL certificates allow you to authenticate your mail server for the entire domain name."
             ),
-            "cli": _(
+            "cli": self.env._(
                 'Use the SMTP configuration set in the "Command Line Interface" arguments.'
             ),
         }
@@ -383,11 +383,11 @@ class IrMail_Server(models.Model):
                 continue
             if not mail_server.smtp_ssl_private_key:
                 raise ValidationError(
-                    _("SSL private key is missing for %s.", mail_server.name)
+                    self.env._("SSL private key is missing for %s.", mail_server.name)
                 )
             if not mail_server.smtp_ssl_certificate:
                 raise ValidationError(
-                    _("SSL certificate is missing for %s.", mail_server.name)
+                    self.env._("SSL certificate is missing for %s.", mail_server.name)
                 )
             try:
                 mail_server._read_certificate_material()
@@ -399,7 +399,7 @@ class IrMail_Server(models.Model):
         for mail_server in self:
             if junk := self._from_filter_index(mail_server.from_filter).unparsed:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "%(entries)s is not a valid entry for the FROM filtering of "
                         "%(server)s. Give a comma-separated list of email addresses "
                         "(joe@example.com) or of domains (example.com).",
@@ -438,7 +438,7 @@ class IrMail_Server(models.Model):
         for server in servers:
             if is_multiple_server_usage:
                 usage_details.append(
-                    _(
+                    self.env._(
                         "%s (Dedicated Outgoing Mail Server):",
                         server.display_name,
                     )
@@ -450,22 +450,22 @@ class IrMail_Server(models.Model):
             "usage_details": "\n".join(usage_details),
         }
         if deleting and is_multiple_server_usage:
-            message = _(
+            message = self.env._(
                 "You cannot delete these Outgoing Mail Servers (%(server_usage)s) because they are still used in the following case(s):\n%(usage_details)s",
                 **details,
             )
         elif deleting:
-            message = _(
+            message = self.env._(
                 "You cannot delete this Outgoing Mail Server (%(server_usage)s) because it is still used in the following case(s):\n%(usage_details)s",
                 **details,
             )
         elif is_multiple_server_usage:
-            message = _(
+            message = self.env._(
                 "You cannot archive these Outgoing Mail Servers (%(server_usage)s) because they are still used in the following case(s):\n%(usage_details)s",
                 **details,
             )
         else:
-            message = _(
+            message = self.env._(
                 "You cannot archive this Outgoing Mail Server (%(server_usage)s) because it is still used in the following case(s):\n%(usage_details)s",
                 **details,
             )
@@ -476,9 +476,9 @@ class IrMail_Server(models.Model):
         servers = self.with_context(active_test=False)
         for record in servers.filtered("mail_template_ids"):
             usages.setdefault(record.id, []).extend(
-                _("%s (Email Template)", template.display_name)
+                self.env._("%s (Email Template)", template.display_name)
                 if template.active
-                else _("%s (archived Email Template)", template.display_name)
+                else self.env._("%s (archived Email Template)", template.display_name)
                 for template in record.mail_template_ids
             )
         return usages
@@ -532,7 +532,7 @@ class IrMail_Server(models.Model):
             email_from = self.env.user.email
         if not email_from or "@" not in email_from:
             raise UserError(
-                _(
+                self.env._(
                     "Please configure an email on the current user to simulate "
                     "sending an email message via this outgoing server"
                 )
@@ -545,20 +545,20 @@ class IrMail_Server(models.Model):
     @api.model
     def _get_outgoing_email_message(self, code: str) -> str:
         messages = {
-            self.NO_VALID_RECIPIENT: _(
+            self.NO_VALID_RECIPIENT: self.env._(
                 "At least one valid recipient address should be specified for "
                 "outgoing emails (To/Cc/Bcc)"
             ),
-            self.NO_FOUND_FROM: _(
+            self.NO_FOUND_FROM: self.env._(
                 "You must either provide a sender address explicitly or configure "
                 "using the combination of `mail.catchall.domain` and "
                 "`mail.default.from` ICPs, in the server configuration file or with "
                 "the --email-from startup parameter."
             ),
-            self.NO_FOUND_SMTP_FROM: _(
+            self.NO_FOUND_SMTP_FROM: self.env._(
                 "The Return-Path or From header is required for any outbound email"
             ),
-            self.NO_VALID_FROM: _(
+            self.NO_VALID_FROM: self.env._(
                 "Malformed 'Return-Path' or 'From' address. It should contain one "
                 "valid plain ASCII email"
             ),
@@ -567,14 +567,16 @@ class IrMail_Server(models.Model):
 
     def test_smtp_connection(self) -> dict[str, Any]:
         self._probe_smtp_connections()
-        return self._get_connection_test_notification(_("Connection Test Successful!"))
+        return self._get_connection_test_notification(
+            self.env._("Connection Test Successful!")
+        )
 
     def action_update_max_email_size(self) -> dict[str, Any]:
         self.check_singleton()
         for server, advertised in self._probe_smtp_connections().items():
             if not advertised:
                 raise UserError(
-                    _(
+                    self.env._(
                         'The server "%(server_name)s" doesn\'t return the maximum '
                         "email size.",
                         server_name=server.name,
@@ -582,7 +584,7 @@ class IrMail_Server(models.Model):
                 )
             server.max_email_size = advertised
         return self._get_connection_test_notification(
-            _(
+            self.env._(
                 "Email maximum size updated (%(details)s).",
                 details=", ".join(
                     f"{server.name}: {human_size(server.max_email_size * 1024**2)}"
@@ -596,7 +598,7 @@ class IrMail_Server(models.Model):
         if self._disable_send():
             _debug.logic("probe_refused", servers=self.ids, reason="send_disabled")
             raise UserError(
-                _(
+                self.env._(
                     "Testing the SMTP connection is not possible because "
                     "outgoing emails are disabled (test mode or registry "
                     "initialization)."
@@ -618,7 +620,7 @@ class IrMail_Server(models.Model):
             code, repl = smtp.mail(email_from)
             if code != 250:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The server refused the sender address (%(email_from)s) with error %(repl)s",
                         email_from=email_from,
                         repl=repl,
@@ -627,7 +629,7 @@ class IrMail_Server(models.Model):
             code, repl = smtp.rcpt(email_to)
             if code not in (250, 251):
                 raise UserError(
-                    _(
+                    self.env._(
                         "The server refused the test recipient (%(email_to)s) with error %(repl)s",
                         email_to=email_to,
                         repl=repl,
@@ -638,7 +640,7 @@ class IrMail_Server(models.Model):
             code, repl = smtp.getreply()
             if code != 354:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The server refused the test connection with error %(repl)s",
                         repl=repl,
                     )
@@ -674,7 +676,7 @@ class IrMail_Server(models.Model):
     def _prepare_connection_test_error(self, exc: Exception, server: Self) -> UserError:
         for exc_types, make_message in CONNECTION_TEST_ERRORS:
             if isinstance(exc, exc_types):
-                return UserError(make_message(exc))
+                return UserError(make_message(self.env, exc))
 
         _logger.warning(
             "Connection test on %s failed with a generic error.",
@@ -682,7 +684,7 @@ class IrMail_Server(models.Model):
             exc_info=exc,
         )
         return UserError(
-            _("Connection Test Failed! Here is what we got instead:\n %s", exc)
+            self.env._("Connection Test Failed! Here is what we got instead:\n %s", exc)
         )
 
     @classmethod
@@ -816,7 +818,7 @@ class IrMail_Server(models.Model):
     ) -> smtplib.SMTP | smtplib.SMTP_SSL:
         if not transport.server:
             raise UserError(
-                _(
+                self.env._(
                     "Missing SMTP Server\n"
                     "Please define at least one outgoing mail server, or set "
                     "--smtp-server in the command-line configuration.",
@@ -914,17 +916,16 @@ class IrMail_Server(models.Model):
             )
             return _SmtpSessionContext()
 
-    @staticmethod
-    def _prepare_ssl_load_error(exc: Exception) -> UserError:
+    def _prepare_ssl_load_error(self, exc: Exception) -> UserError:
         if isinstance(exc, (SSLCryptoError, ssl.SSLError, ValueError)):
             return UserError(
-                _(
+                self.env._(
                     "The private key or the certificate is not a valid file. \n%s",
                     str(exc),
                 )
             )
         return UserError(
-            _("Could not load your certificate / private key. \n%s", str(exc))
+            self.env._("Could not load your certificate / private key. \n%s", str(exc))
         )
 
     @staticmethod
@@ -958,7 +959,7 @@ class IrMail_Server(models.Model):
             raise self._prepare_ssl_load_error(e) from None
         if chain[0].public_key() != private_key.public_key():
             raise UserError(
-                _(
+                self.env._(
                     "The SSL certificate of %s does not match its private key.",
                     self.display_name,
                 )
@@ -1012,7 +1013,7 @@ class IrMail_Server(models.Model):
         if not allow_archived and not self.active:
             _debug.logic("forced_server_archived", server=self.id)
             raise UserError(
-                _(
+                self.env._(
                     'The server "%s" cannot be used because it is archived.',
                     self.display_name,
                 )
@@ -1028,21 +1029,21 @@ class IrMail_Server(models.Model):
         )
         if email_normalize(smtp_from) != email_normalize(self.from_filter):
             raise UserError(
-                _(
+                self.env._(
                     'The server "%s" cannot be forced as it belongs to a user.',
                     self.display_name,
                 )
             )
         if not self.active:
             raise UserError(
-                _(
+                self.env._(
                     'The server "%s" cannot be forced as it belongs to a user and is archived.',
                     self.display_name,
                 )
             )
         if self.owner_user_id.outgoing_mail_server_id != self:
             raise UserError(
-                _(
+                self.env._(
                     'The server "%s" cannot be forced as the owner does not use it anymore.',
                     self.display_name,
                 )
@@ -1243,7 +1244,7 @@ class IrMail_Server(models.Model):
         envelope_sender = self._get_envelope_sender(smtp_from)
         if not envelope_sender:
             raise OutgoingEmailError(
-                _(
+                self.env._(
                     "Malformed 'Return-Path' or 'From' address: %s - It should "
                     "contain one valid plain ASCII email",
                     smtp_from,
@@ -1272,7 +1273,7 @@ class IrMail_Server(models.Model):
         if not smtp_from.isascii():
             _debug.logic("envelope_not_ascii", part="from")
             raise OutgoingEmailError(
-                _(
+                self.env._(
                     "Malformed 'Return-Path' or 'From' address: %s - It should "
                     "contain one valid plain ASCII email (this server does not "
                     "support SMTPUTF8)",
@@ -1283,7 +1284,7 @@ class IrMail_Server(models.Model):
         if non_ascii := [address for address in smtp_to_list if not address.isascii()]:
             _debug.logic("envelope_not_ascii", part="to", count=len(non_ascii))
             raise OutgoingEmailError(
-                _(
+                self.env._(
                     "Recipient address requires SMTPUTF8, which this server does "
                     "not support: %s",
                     ", ".join(non_ascii),
@@ -1391,14 +1392,14 @@ class IrMail_Server(models.Model):
             except smtplib.SMTPServerDisconnected:
                 raise
             except Exception as e:
-                msg = _(
+                msg = self.env._(
                     "Mail delivery failed via SMTP server '%(server)s'.\n%(exception_name)s: %(message)s",
                     server=getattr(smtp, "_host", None) or "unknown",
                     exception_name=e.__class__.__name__,
                     message=e,
                 )
                 _logger.warning(msg, exc_info=True)
-                raise MailDeliveryError(_("Mail Delivery Failed"), msg) from e
+                raise MailDeliveryError(self.env._("Mail Delivery Failed"), msg) from e
             return message_id
         finally:
             if owns_connection and smtp is not None:

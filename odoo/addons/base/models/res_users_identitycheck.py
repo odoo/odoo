@@ -1,7 +1,7 @@
 import time
 from typing import Any
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -40,7 +40,7 @@ class ResUsersIdentitycheck(models.TransientModel):
         except AccessDenied:
             _debug.logic("identity_check_failed", uid=self.env.uid)
             raise UserError(
-                _(
+                self.env._(
                     "Incorrect Password, try again or click on Forgot Password to reset your password."
                 )
             ) from None
@@ -48,12 +48,14 @@ class ResUsersIdentitycheck(models.TransientModel):
     def run_check(self) -> Any:
         if not request:
             _debug.logic("identity_check_refused", reason="no_request")
-            raise UserError(_("This method can only be accessed over HTTP."))
+            raise UserError(self.env._("This method can only be accessed over HTTP."))
         self._check_identity()
 
         if not self.sudo().request:
             _debug.logic("identity_check_refused", reason="no_pending_method")
-            raise UserError(_("There is no method to run after the identity check."))
+            raise UserError(
+                self.env._("There is no method to run after the identity check.")
+            )
         ctx, model, ids, method_name, args, kwargs = json_loads(self.sudo().request)
         _debug.logic(
             "identity_check_passed", uid=self.env.uid, model=model, method=method_name
@@ -64,7 +66,7 @@ class ResUsersIdentitycheck(models.TransientModel):
                 "identity_check_refused", reason="unmarked_method", method=method_name
             )
             raise UserError(
-                _("This method is not allowed for identity-checked execution.")
+                self.env._("This method is not allowed for identity-checked execution.")
             )
         request.session["identity-check-last"] = time.time()
         return method(*args, **kwargs)

@@ -8,7 +8,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 from werkzeug.exceptions import NotFound
 
 import odoo
-from odoo import _, http
+from odoo import http
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ class Authenticate(http.Controller):
             return request.render(
                 "mail_plugin.app_error",
                 {
-                    "error": _(
+                    "error": request.env._(
                         "Access Error: Only Internal Users can link their inboxes to this database."
                     )
                 },

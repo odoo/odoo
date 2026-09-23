@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Literal, Self
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.http import Request, request
 from odoo.libs.datetime import all_timezones
@@ -126,9 +126,9 @@ class MailGuest(models.Model):
         self.check_singleton()
         name = name.strip()
         if len(name) < 1:
-            raise UserError(_("Guest's name cannot be empty."))
+            raise UserError(self.env._("Guest's name cannot be empty."))
         if len(name) > 512:
-            raise UserError(_("Guest's name is too long."))
+            raise UserError(self.env._("Guest's name is too long."))
         self.name = name
         _debug.lifecycle("guest_renamed", guest=self.id, channels=len(self.channel_ids))
         payload = Store(bus_channel=self).add(self, ["avatar_128", "name"]).get_result()

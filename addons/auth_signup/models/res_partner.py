@@ -3,7 +3,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
-from odoo import _, api, exceptions, fields, models, tools
+from odoo import api, exceptions, fields, models, tools
 
 
 class SignupError(Exception):
@@ -140,7 +140,7 @@ class ResPartner(models.Model):
         partner = self._get_partner_from_token(token)
         if not partner:
             raise exceptions.UserError(
-                _("Signup token '%s' is not valid or expired", token)
+                self.env._("Signup token '%s' is not valid or expired", token)
             )
         return partner
 

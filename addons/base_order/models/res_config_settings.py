@@ -1,6 +1,5 @@
 from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -31,8 +30,8 @@ class ResConfigSettings(models.TransientModel):
         _debug.logic("validity_days_clamped", field=field_name, value=self[field_name])
         return {
             "warning": {
-                "title": _("Warning"),
-                "message": _(
+                "title": self.env._("Warning"),
+                "message": self.env._(
                     "%(label)s is required and must be greater or equal to 0.",
                     label=label,
                 ),

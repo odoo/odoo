@@ -13,7 +13,7 @@ import lxml
 import requests
 from babel.messages import extract
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -176,13 +176,15 @@ class IrModuleModule(models.Model):
         unmet_dependencies = set(terp.get("depends", [])).difference(installed_mods)
         if not unmet_dependencies:
             if "web_studio" not in installed_mods and _is_studio_custom(path):
-                raise UserError(_("Studio customizations require the Odoo Studio app."))
+                raise UserError(
+                    self.env._("Studio customizations require the Odoo Studio app.")
+                )
             return
 
         wrong_dependencies = unmet_dependencies.difference(known_mods.mapped("name"))
         if wrong_dependencies:
             raise UserError(
-                _("Unknown module dependencies:")
+                self.env._("Unknown module dependencies:")
                 + "\n - "
                 + "\n - ".join(wrong_dependencies)
             )
@@ -417,7 +419,7 @@ class IrModuleModule(models.Model):
                 directive, target, path = IrAsset._parse_manifest_command(command)
                 if is_wildcard_glob(path):
                     raise UserError(
-                        _(
+                        self.env._(
                             "The assets path in the manifest of imported module "
                             "'%(module_name)s' cannot contain glob wildcards "
                             "(e.g., *, **).",
@@ -526,11 +528,13 @@ class IrModuleModule(models.Model):
     def _check_zip_upload(self, module_file):
         """Refuse an upload that is not an admin-sent zip archive."""
         if not self.env.is_admin():
-            raise AccessError(_("Only administrators can install data modules."))
+            raise AccessError(
+                self.env._("Only administrators can install data modules.")
+            )
         if not module_file:
-            raise UserError(_("No file sent."))
+            raise UserError(self.env._("No file sent."))
         if not zipfile.is_zipfile(module_file):
-            raise UserError(_("Only zip files are supported."))
+            raise UserError(self.env._("Only zip files are supported."))
 
     def _read_zip_manifests(self, z, extract, module_dir, with_demo):
         """Extract each module's manifest and read what it declares.
@@ -582,7 +586,7 @@ class IrModuleModule(models.Model):
         sorted_dirs = topological_sort(dependencies)
         if wrong_modules := dirs.difference(sorted_dirs):
             raise UserError(
-                _(
+                self.env._(
                     "No manifest found in '%(modules)s'. Can't import the zip file.",
                     modules=", ".join(wrong_modules),
                 )
@@ -632,7 +636,7 @@ class IrModuleModule(models.Model):
                 # t27114) hard-commits before this loop even gets here.
                 _logger.exception("Error while importing module %r from zip", mod_name)
                 raise UserError(
-                    _(
+                    self.env._(
                         "Error while importing module '%(module)s'.\n\n%(error_message)s",
                         module=mod_name,
                         error_message=e,
@@ -649,7 +653,9 @@ class IrModuleModule(models.Model):
             for zf in z.infolist():
                 if zf.file_size > MAX_FILE_SIZE:
                     raise UserError(
-                        _("File '%s' exceed maximum allowed file size", zf.filename)
+                        self.env._(
+                            "File '%s' exceed maximum allowed file size", zf.filename
+                        )
                     )
 
             with file_open_temporary_directory() as module_dir:
@@ -661,7 +667,9 @@ class IrModuleModule(models.Model):
                     extracted_total_size += Path(path).stat().st_size
                     if extracted_total_size > MAX_TOTAL_EXTRACTED_SIZE:
                         raise UserError(
-                            _("The module archive is too large once extracted.")
+                            self.env._(
+                                "The module archive is too large once extracted."
+                            )
                         )
                     return path
 
@@ -719,7 +727,7 @@ class IrModuleModule(models.Model):
 
     def more_info(self):
         return {
-            "name": _("Apps"),
+            "name": self.env._("Apps"),
             "type": "ir.actions.act_window",
             "res_model": "ir.module.module",
             "view_mode": "form",
@@ -818,13 +826,13 @@ class IrModuleModule(models.Model):
             return modules_list
         except requests.exceptions.HTTPError:
             raise UserError(
-                _(
+                self.env._(
                     "The list of industry applications cannot be fetched. Please try again later"
                 )
             ) from None
         except requests.exceptions.ConnectionError:
             raise UserError(
-                _(
+                self.env._(
                     "Connection to %s failed The list of industry modules cannot be fetched"
                 )
                 % APPS_URL
@@ -894,7 +902,7 @@ class IrModuleModule(models.Model):
                 }
             )
             return {
-                "name": _("Install an Industry"),
+                "name": self.env._("Install an Industry"),
                 "view_mode": "form",
                 "target": "new",
                 "res_id": import_module.id,
@@ -904,11 +912,11 @@ class IrModuleModule(models.Model):
             }
         except requests.exceptions.HTTPError:
             raise UserError(
-                _("The module %s cannot be downloaded") % module_name
+                self.env._("The module %s cannot be downloaded") % module_name
             ) from None
         except requests.exceptions.ConnectionError:
             raise UserError(
-                _(
+                self.env._(
                     "Connection to %(url)s failed, the module %(module)s cannot be downloaded.",
                     url=APPS_URL,
                     module=module_name,
@@ -920,19 +928,19 @@ class IrModuleModule(models.Model):
         _modules, unavailable_modules = self._get_missing_dependencies_modules(zip_data)
         description = ""
         if unavailable_modules:
-            description = _(
+            description = self.env._(
                 "The installation of the data module would fail as the following dependencies can't"
                 " be found in the addons-path:\n"
             )
             for module in unavailable_modules:
                 description += "- " + module + "\n"
-            description += _(
+            description += self.env._(
                 "\nYou may need the Enterprise version to install the data module. Please visit "
                 "https://www.odoo.com/pricing-plan for more information.\n"
                 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
             )
         else:
-            description = _(
+            description = self.env._(
                 "Load demo data to test the industry's features with sample records. "
                 "Do not load them if this is your production database.",
             )
@@ -956,7 +964,7 @@ class IrModuleModule(models.Model):
             for manifest_file in manifest_files:
                 if manifest_file.file_size > MAX_FILE_SIZE:
                     raise UserError(
-                        _(
+                        self.env._(
                             "File '%s' exceed maximum allowed file size",
                             manifest_file.filename,
                         )

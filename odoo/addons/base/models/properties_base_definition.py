@@ -1,6 +1,6 @@
 from typing import Any, Self
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import ormcache
@@ -32,7 +32,7 @@ class PropertiesBaseDefinition(models.Model):
                 definition.display_name = False
                 continue
 
-            definition.display_name = _(
+            definition.display_name = self.env._(
                 "%s Properties",
                 self.env[definition.properties_field_id.model]._description,
             )
@@ -46,7 +46,7 @@ class PropertiesBaseDefinition(models.Model):
                 "definition_field_rejected", fields=invalid_fields.mapped("name")
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "The definition needs to be linked to a properties field. Those fields are not: %s.",
                     ", ".join(invalid_fields.mapped("name")),
                 )
@@ -55,7 +55,9 @@ class PropertiesBaseDefinition(models.Model):
     def write(self, vals: dict[str, Any]) -> bool:
         if "properties_field_id" in vals:
             _debug.logic("write_field_refused", definitions=self.ids)
-            raise AccessError(_("You can not change the field of a base definition"))
+            raise AccessError(
+                self.env._("You can not change the field of a base definition")
+            )
         return super().write(vals)
 
     def unlink(self) -> bool:

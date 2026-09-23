@@ -6,7 +6,7 @@ import requests
 from markupsafe import Markup
 from werkzeug.exceptions import Forbidden
 
-from odoo import Command, _, http, tools
+from odoo import Command, http, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 
@@ -42,15 +42,19 @@ class MailPluginController(http.Controller):
         partner = request.env["res.partner"].browse(partner_id).exists()
 
         if not partner:
-            return {"error": _("This partner does not exist")}
+            return {"error": request.env._("This partner does not exist")}
 
         if partner.parent_id:
-            return {"error": _("The partner already has a company related to him")}
+            return {
+                "error": request.env._(
+                    "The partner already has a company related to him"
+                )
+            }
 
         normalized_email = partner.email_normalized
         if not normalized_email:
             return {
-                "error": _(
+                "error": request.env._(
                     "The email of this contact is not valid and we can not enrich it"
                 )
             }
@@ -77,7 +81,7 @@ class MailPluginController(http.Controller):
         partner = request.env["res.partner"].browse(partner_id).exists()
 
         if not partner:
-            return {"error": _("This partner does not exist")}
+            return {"error": request.env._("This partner does not exist")}
 
         if not partner.is_company:
             return {"error": "Contact must be a company"}
@@ -177,7 +181,7 @@ class MailPluginController(http.Controller):
 
         if not (partner_id or (name and email)):
             return {
-                "error": _(
+                "error": request.env._(
                     "You need to specify at least the partner_id or the name and the email"
                 )
             }
@@ -188,7 +192,7 @@ class MailPluginController(http.Controller):
 
         normalized_email = tools.email_normalize(email)
         if not normalized_email:
-            return {"error": _("Bad Email.")}
+            return {"error": request.env._("Bad Email.")}
 
         notification_emails = (
             request.env["mail.alias.domain"]
@@ -199,11 +203,11 @@ class MailPluginController(http.Controller):
         if normalized_email in notification_emails:
             return {
                 "partner": {
-                    "name": _("Notification"),
+                    "name": request.env._("Notification"),
                     "email": normalized_email,
                     "enrichment_info": {
                         "type": "odoo_custom_error",
-                        "info": _(
+                        "info": request.env._(
                             "This is your notification address. Search the Contact manually to link this email to a record."
                         ),
                     },
@@ -382,7 +386,7 @@ class MailPluginController(http.Controller):
         try:
             company.check_access("read")
         except AccessError:
-            return {"id": company.id, "name": _("No Access")}
+            return {"id": company.id, "name": request.env._("No Access")}
 
         fields_list = ["id", "name", "email", "website"]
 

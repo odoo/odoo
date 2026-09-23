@@ -8,7 +8,7 @@ from socket import gaierror
 from ssl import SSLCertVerificationError, SSLError
 from typing import Any, Literal, Self
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import UserError
 from odoo.fields import Domain
@@ -69,17 +69,17 @@ class _MessageOutcome(enum.Enum):
 
 
 CONNECTION_ERROR_MESSAGES = (
-    (UnicodeError, lambda e: _("Invalid server name!\n %s", e)),
+    (UnicodeError, lambda env, e: env._("Invalid server name!\n %s", e)),
     (
         (TimeoutError, gaierror),
-        lambda e: _(
+        lambda env, e: env._(
             "No response received. Check the server address and port number.\n %s",
             e,
         ),
     ),
     (
         SSLCertVerificationError,
-        lambda e: _(
+        lambda env, e: env._(
             "The server's certificate could not be validated. Check the "
             "server name, or lower Connection Encryption to "
             '"encryption only" if this server has no valid certificate.\n %s',
@@ -88,7 +88,7 @@ CONNECTION_ERROR_MESSAGES = (
     ),
     (
         SSLError,
-        lambda e: _(
+        lambda env, e: env._(
             "An SSL exception occurred. Check the Connection Encryption "
             "setting against the port number.\n %s",
             e,
@@ -96,7 +96,7 @@ CONNECTION_ERROR_MESSAGES = (
     ),
     (
         ConnectionError,
-        lambda e: _(
+        lambda env, e: env._(
             "Could not establish a connection. Check the port number, and "
             "that the server is reachable and accepts connections from this "
             "machine.\n %s",
@@ -105,15 +105,15 @@ CONNECTION_ERROR_MESSAGES = (
     ),
     (
         (OdooIMAP4.abort, OdooIMAP4.error),
-        lambda e: _("The IMAP server replied with an error:\n %s", e),
+        lambda env, e: env._("The IMAP server replied with an error:\n %s", e),
     ),
     (
         poplib.error_proto,
-        lambda e: _("The POP server replied with an error:\n %s", e),
+        lambda env, e: env._("The POP server replied with an error:\n %s", e),
     ),
     (
         OSError,
-        lambda e: _(
+        lambda env, e: env._(
             "The connection to the server failed. Check the server address, "
             "the port number and your network.\n %s",
             e,
@@ -262,7 +262,7 @@ class FetchmailServer(models.Model):
     def _compute_server_type_info(self) -> None:
         for server in self:
             if server.server_type == "local":
-                server.server_type_info = _(
+                server.server_type_info = self.env._(
                     "Use a local script to fetch your emails and create new records."
                 )
             else:
@@ -352,7 +352,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u {uid} --password-
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "message": _("Connection Test Successful!"),
+                "message": self.env._("Connection Test Successful!"),
                 "type": "success",
                 "sticky": False,
                 "next": {"type": "ir.actions.act_window_close"},
@@ -363,7 +363,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u {uid} --password-
         self.check_singleton().check_access("write")
         if not self.filtered_domain(MAIL_SERVER_DOMAIN):
             raise UserError(
-                _(
+                self.env._(
                     'Server "%s" cannot be polled: only a confirmed IMAP or POP '
                     "server fetches mail.",
                     self.display_name,
@@ -381,7 +381,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u {uid} --password-
         self.check_singleton()
         if not allow_archived and not self.active:
             raise UserError(
-                _(
+                self.env._(
                     'The server "%s" cannot be used because it is archived.',
                     self.display_name,
                 )
@@ -389,7 +389,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u {uid} --password-
         connection_type = self._get_connection_type()
         if connection_type not in MAILBOX_PROTOCOLS:
             raise UserError(
-                _(
+                self.env._(
                     'Server "%(name)s" is a %(kind)s server: it does not connect to a '
                     "mailbox.",
                     name=self.display_name,
@@ -404,7 +404,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u {uid} --password-
             ]
         ):
             raise UserError(
-                _(
+                self.env._(
                     'Server "%(name)s" cannot be reached: %(fields)s is not set.',
                     name=self.display_name,
                     fields=", ".join(missing),
@@ -442,7 +442,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u {uid} --password-
                     server=self.id,
                     error=type(exc).__name__,
                 )
-                return UserError(make_message(exc))
+                return UserError(make_message(self.env, exc))
         _debug.logic(
             "connection_error_unclassified", server=self.id, error=type(exc).__name__
         )
@@ -453,7 +453,9 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u {uid} --password-
             exc_info=exc,
         )
         return UserError(
-            _("Connection Test Failed! Check the server log for the full error.")
+            self.env._(
+                "Connection Test Failed! Check the server log for the full error."
+            )
         )
 
     def _prepare_cleared_error_vals(self) -> ValuesType:

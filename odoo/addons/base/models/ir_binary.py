@@ -6,7 +6,7 @@ from typing import Any
 
 import werkzeug.http
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import MissingError, UserError
 from odoo.http import Stream, request
 from odoo.libs.debug_log import DebugLog
@@ -50,7 +50,7 @@ class IrBinary(models.AbstractModel):
                 field=field_name,
             )
             raise MissingError(
-                _(
+                self.env._(
                     "No record found for xmlid=%(xmlid)s, res_model=%(model)s, "
                     "id=%(res_id)s",
                     xmlid=xmlid,
@@ -124,7 +124,7 @@ class IrBinary(models.AbstractModel):
     ) -> Stream:
         with replace_exceptions(
             ValueError,
-            by=UserError(_("Expected singleton: %(record)s", record=record)),
+            by=UserError(self.env._("Expected singleton: %(record)s", record=record)),
         ):
             record.check_singleton()
 
@@ -138,7 +138,9 @@ class IrBinary(models.AbstractModel):
                 reason="no_field",
             )
             raise UserError(
-                _('Record has no field "%(field_name)s".', field_name=field_name)
+                self.env._(
+                    'Record has no field "%(field_name)s".', field_name=field_name
+                )
             ) from None
         if field.type != "binary":
             _debug.logic(
@@ -149,7 +151,7 @@ class IrBinary(models.AbstractModel):
                 type=field.type,
             )
             raise UserError(
-                _(
+                self.env._(
                     'Field "%(field)s" is type "%(type)s" but it is only possible '
                     "to stream Binary or Image fields.",
                     field=field,

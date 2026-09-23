@@ -2,7 +2,7 @@ import base64
 
 from lxml.etree import ParserError
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -27,7 +27,7 @@ class IrActionsReport(models.Model):
         device_ids = self.env["iot.device"].browse(device_id_list)
         if len(device_id_list) != len(device_ids.exists()):
             raise UserError(
-                _(
+                self.env._(
                     "One of the printer used to print the document has been removed.\n"
                     'To reset printers, go to the IoT App, Configuration tab, "Reset Linked Printers" and retry the operation.'
                 )
@@ -74,7 +74,7 @@ class IrActionsReport(models.Model):
             [{"display_device_ids": self.device_ids, "device_ids": selected_device_ids}]
         )
         return {
-            "name": _("Select Printers for %s", self.name),
+            "name": self.env._("Select Printers for %s", self.name),
             "res_id": wizard.id,
             "type": "ir.actions.act_window",
             "res_model": "select.printers.wizard",
@@ -96,7 +96,7 @@ class IrActionsReport(models.Model):
             return super()._render_qweb_pdf(report_ref, *args, **kwargs)
         except ParserError:
             raise UserError(
-                _(
+                self.env._(
                     "The report you are trying to print requires an IoT Box to be printed.\n"
                     "Make sure you linked the report '%s' to the corresponding IoT printer device.",
                     report_ref,

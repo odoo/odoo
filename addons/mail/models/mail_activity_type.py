@@ -2,7 +2,7 @@ import typing
 from datetime import date
 from typing import Literal
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
@@ -185,7 +185,7 @@ class MailActivityType(models.Model):
                     "write_refused", types=modified.ids, reason="res_model_protected"
                 )
                 raise exceptions.UserError(
-                    _(
+                    self.env._(
                         "You cannot modify %(activities_names)s target model as they are are required in various apps.",
                         activities_names=", ".join(act.name for act in modified),
                     )
@@ -205,7 +205,7 @@ class MailActivityType(models.Model):
                 master_data += activity_type
         if master_data:
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "You cannot delete %(activity_names)s as it is required in various apps.",
                     activity_names=", ".join(act.name for act in master_data),
                 )
@@ -214,7 +214,7 @@ class MailActivityType(models.Model):
     def action_archive(self) -> bool:
         if self.env.ref("mail.mail_activity_data_todo") in self:
             raise UserError(
-                _(
+                self.env._(
                     "The 'To-Do' activity type is used to create reminders from the top bar menu and the command palette. Consequently, it cannot be archived or deleted."
                 )
             )

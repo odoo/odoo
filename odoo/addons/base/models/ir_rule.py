@@ -1,7 +1,7 @@
 import logging
 from typing import Any, Self
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
@@ -88,7 +88,7 @@ class IrRule(models.Model):
         if any(rule.model_id.model == self._name for rule in self):
             _debug.logic("rule_on_rules_refused", rules=self.ids)
             raise ValidationError(
-                _("Rules can not be applied on the Record Rules model.")
+                self.env._("Rules can not be applied on the Record Rules model.")
             )
 
     @api.constrains("active", "domain_force", "model_id")
@@ -114,7 +114,7 @@ class IrRule(models.Model):
                         model=rule.model_id.model,
                         error=type(e).__name__,
                     )
-                    raise ValidationError(_("Invalid domain: %s", e)) from None
+                    raise ValidationError(self.env._("Invalid domain: %s", e)) from None
 
     def _get_context_keys_in_domains(self) -> list[str]:
         return ["allowed_company_ids"]
@@ -248,7 +248,7 @@ class IrRule(models.Model):
         if not vals_list:
             return self.browse()
         raise UserError(
-            _(
+            self.env._(
                 "Record rules are ir.access rows now: create a permission or a "
                 "guard row of ir.access (a module ships it in "
                 "security/ir.access.csv) instead of an ir.rule."
@@ -278,7 +278,7 @@ class IrRule(models.Model):
             and suggested_companies in self.env.user.company_ids,
         )
         if suggested_companies and len(suggested_companies) != 1:
-            resolution_info += _(
+            resolution_info += self.env._(
                 "\n\nNote: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!"
             )
         elif suggested_companies and suggested_companies in self.env.user.company_ids:
@@ -288,12 +288,12 @@ class IrRule(models.Model):
                     "display_name": suggested_companies.display_name,
                 }
             }
-            resolution_info += _(
+            resolution_info += self.env._(
                 "\n\nThis seems to be a multi-company issue, you might be able to access the record by switching to the company: %s.",
                 suggested_companies.display_name,
             )
         elif suggested_companies:
-            resolution_info += _(
+            resolution_info += self.env._(
                 "\n\nThis seems to be a multi-company issue, but you do not have access to the proper company to access the record anyhow."
             )
         return resolution_info, context

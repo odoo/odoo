@@ -1,7 +1,7 @@
 import re
 from datetime import datetime, timedelta
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessDenied
 from odoo.http import request
 
@@ -59,7 +59,7 @@ class Home(web_home.Home):
             except AccessDenied as e:
                 error = str(e)
             except ValueError:
-                error = _("Invalid authentication code format.")
+                error = request.env._("Invalid authentication code format.")
             else:
                 request.session.finalize_login(request.env)
                 request.update_env(user=request.session.uid)
@@ -77,17 +77,17 @@ class Home(web_home.Home):
                     # browser), which is the same client the two workarounds
                     # further down this method exist for.
                     user_agent = request.httprequest.user_agent
-                    name = _(
+                    name = request.env._(
                         "%(browser)s on %(platform)s",
                         browser=(
                             user_agent.browser.capitalize()
                             if user_agent.browser
-                            else _("Unknown browser")
+                            else request.env._("Unknown browser")
                         ),
                         platform=(
                             user_agent.platform.capitalize()
                             if user_agent.platform
-                            else _("Unknown platform")
+                            else request.env._("Unknown platform")
                         ),
                     )
 

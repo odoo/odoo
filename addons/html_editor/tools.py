@@ -6,7 +6,6 @@ from urllib.parse import parse_qs, urlencode, urlparse
 import requests
 from markupsafe import Markup
 
-from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.libs import guarded_http, netguard
@@ -116,7 +115,7 @@ def get_video_url_data(
 ):
     source = get_video_source_data(video_url)
     if source is None:
-        return {"error": True, "message": _("The provided url is invalid")}
+        return {"error": True}
 
     embed_url = video_url
     platform, video_id, platform_match = source
@@ -281,7 +280,7 @@ def handle_history_divergence(record, html_field_name, vals):
                     record.id,
                 )
                 raise ValidationError(
-                    _(
+                    record.env._(
                         'The document was already saved from someone with a different history for model "%(model)s", field "%(field)s" with id "%(id)d".',
                         model=record._name,
                         field=html_field_name,

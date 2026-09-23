@@ -4,7 +4,7 @@ from urllib.parse import quote_plus, unquote_plus, urlencode, urlsplit
 
 from werkzeug.exceptions import BadRequest
 
-from odoo import SUPERUSER_ID, _, api, http
+from odoo import SUPERUSER_ID, api, http
 from odoo.exceptions import AccessDenied
 from odoo.http import fragment_to_query_string, request
 from odoo.modules.registry import Registry
@@ -79,11 +79,11 @@ class OAuthLogin(Home):
         if response.is_qweb:
             error = request.params.get("oauth_error")
             if error == "1":
-                error = _("Sign up is not allowed on this database.")
+                error = request.env._("Sign up is not allowed on this database.")
             elif error == "2":
-                error = _("Access Denied")
+                error = request.env._("Access Denied")
             elif error == "3":
-                error = _(
+                error = request.env._(
                     "You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."
                 )
             else:

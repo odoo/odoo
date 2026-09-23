@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -115,10 +115,10 @@ class DocumentsSharing(models.TransientModel):
     def _selection_access_roles(self) -> list:
         return self._add_write_options(
             [
-                ("view", _("Viewer")),
-                ("edit", _("Editor")),
-                ("none", _("None")),
-                ("mixed", _("Mixed rights")),
+                ("view", self.env._("Viewer")),
+                ("edit", self.env._("Editor")),
+                ("none", self.env._("None")),
+                ("mixed", self.env._("Mixed rights")),
             ]
         )
 
@@ -126,9 +126,9 @@ class DocumentsSharing(models.TransientModel):
     def _selection_access_via_link_mode(self) -> list:
         return self._add_write_options(
             [
-                ("mixed", _("Mixed values")),
-                ("link_required", _("No")),
-                ("discoverable", _("Yes")),
+                ("mixed", self.env._("Mixed values")),
+                ("link_required", self.env._("No")),
+                ("discoverable", self.env._("Yes")),
             ]
         )
 
@@ -136,9 +136,9 @@ class DocumentsSharing(models.TransientModel):
     def _selection_viewer_download_mode(self) -> list:
         return self._add_write_options(
             [
-                ("mixed", _("Mixed values")),
-                ("blocked", _("No")),
-                ("allowed", _("Yes")),
+                ("mixed", self.env._("Mixed values")),
+                ("blocked", self.env._("No")),
+                ("allowed", self.env._("Yes")),
             ]
         )
 
@@ -193,7 +193,7 @@ class DocumentsSharing(models.TransientModel):
                 "tag": "display_notification",
                 "params": {
                     "type": "success",
-                    "message": _("Access rights updated."),
+                    "message": self.env._("Access rights updated."),
                     "next": {"type": "ir.actions.act_window_close"},
                 },
             }
@@ -205,15 +205,15 @@ class DocumentsSharing(models.TransientModel):
         if not self.invite_partner_ids:
             _debug.logic("invite_refused", reason="no_partners")
             params = {
-                "title": _("No partners"),
+                "title": self.env._("No partners"),
                 "message": "",
                 "type": "warning",
             }
         elif self.invite_partner_ids.filtered(lambda p: not p.email):
             _debug.logic("invite_refused", reason="missing_email")
             params = {
-                "title": _("Some emails are missing"),
-                "message": _("Please fill in the missing email addresses."),
+                "title": self.env._("Some emails are missing"),
+                "message": self.env._("Please fill in the missing email addresses."),
                 "type": "warning",
             }
         else:
@@ -259,11 +259,11 @@ class DocumentsSharing(models.TransientModel):
                     ).send_mail_batch(self.invite_partner_ids.ids)
 
             params = {
-                "title": _("Successfully Shared"),
+                "title": self.env._("Successfully Shared"),
                 "message": (
-                    _("%s members added.", len(self.invite_partner_ids))
+                    self.env._("%s members added.", len(self.invite_partner_ids))
                     if len(self.invite_partner_ids) > 1
-                    else _("Member added.")
+                    else self.env._("Member added.")
                 ),
                 "type": "success",
                 "next": self.action_open(self.document_ids.ids),
@@ -382,9 +382,9 @@ class DocumentsSharing(models.TransientModel):
         )
 
         if len(documents) == 1:
-            name = _("Share: %(documentName)s", documentName=documents.name)
+            name = self.env._("Share: %(documentName)s", documentName=documents.name)
         else:
-            name = _(
+            name = self.env._(
                 "Share: %(numberOfDocuments)s files", numberOfDocuments=len(documents)
             )
         return {

@@ -15,7 +15,7 @@ from xmlrpc import client as xmlrpclib
 import dateutil
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import escape_psql
@@ -388,18 +388,24 @@ class MixinMailGateway(models.AbstractModel):
 
         if not model:
             self._routing_warn(
-                _("target model unspecified"), message_id, route, raise_exception
+                self.env._("target model unspecified"),
+                message_id,
+                route,
+                raise_exception,
             )
             return None
         if model not in self.env:
             self._routing_warn(
-                _("unknown target model %s", model), message_id, route, raise_exception
+                self.env._("unknown target model %s", model),
+                message_id,
+                route,
+                raise_exception,
             )
             return None
         record_set = self.env[model].browse(thread_id) if thread_id else self.env[model]
         if record_set._abstract or record_set._transient:
             self._routing_warn(
-                _("target model %s stores no document", model),
+                self.env._("target model %s stores no document", model),
                 message_id,
                 route,
                 raise_exception,
@@ -409,7 +415,7 @@ class MixinMailGateway(models.AbstractModel):
         if thread_id:
             if not record_set.exists():
                 self._routing_warn(
-                    _(
+                    self.env._(
                         "reply to missing document (%(model)s,%(thread)s), fall back on document creation",
                         model=model,
                         thread=thread_id,
@@ -421,7 +427,7 @@ class MixinMailGateway(models.AbstractModel):
                 thread_id = None
             elif not self._mail_is_gateway_target(record_set):
                 self._routing_warn(
-                    _(
+                    self.env._(
                         "reply to model %s that does not accept document update, fall back on document creation",
                         model,
                     ),
@@ -433,7 +439,7 @@ class MixinMailGateway(models.AbstractModel):
 
         if not thread_id and model and not self._mail_is_gateway_target(record_set):
             self._routing_warn(
-                _("model %s does not accept document creation", model),
+                self.env._("model %s does not accept document creation", model),
                 message_id,
                 route,
                 raise_exception,
@@ -473,10 +479,10 @@ class MixinMailGateway(models.AbstractModel):
                 config_error=error.is_config_error,
             )
             self._routing_warn(
-                _(
+                self.env._(
                     "alias %(name)s: %(error)s",
                     name=alias.alias_name,
-                    error=error.message or _("unknown error"),
+                    error=error.message or self.env._("unknown error"),
                 ),
                 message_id,
                 route,

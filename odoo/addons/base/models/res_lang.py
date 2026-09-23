@@ -3,7 +3,7 @@ import logging
 import threading
 from typing import Any, Literal, Self
 
-from odoo import _, _lt, api, fields, models, tools
+from odoo import _lt, api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
@@ -176,7 +176,7 @@ class ResLang(models.Model):
             [("active", "=", True)], limit=1
         ):
             _debug.logic("active_check_refused", langs=self.mapped("code"))
-            raise ValidationError(_("At least one language must be active."))
+            raise ValidationError(self.env._("At least one language must be active."))
 
     @api.constrains("time_format", "date_format")
     def _check_format(self) -> None:
@@ -187,7 +187,7 @@ class ResLang(models.Model):
                 ):
                     _debug.logic("format_rejected", lang=lang.code, pattern=pattern)
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Invalid date/time format directive specified. "
                             "Please refer to the list of allowed directives, "
                             "displayed when you edit a language."
@@ -198,8 +198,10 @@ class ResLang(models.Model):
     def _onchange_format(self) -> dict[str, Any] | None:
         warning = {
             "warning": {
-                "title": _("Using 24-hour clock format with AM/PM can cause issues."),
-                "message": _("Changing to 12-hour clock format instead."),
+                "title": self.env._(
+                    "Using 24-hour clock format with AM/PM can cause issues."
+                ),
+                "message": self.env._("Changing to 12-hour clock format instead."),
                 "type": "notification",
             }
         }
@@ -364,7 +366,7 @@ class ResLang(models.Model):
     def _get_active_by_field(self, field_name: str) -> LangDataDict:
         if field_name not in self.CACHED_FIELDS:
             _debug.logic("active_by_field_refused", field=field_name)
-            raise UserError(_('Field "%s" is not cached', field_name))
+            raise UserError(self.env._('Field "%s" is not cached', field_name))
         if field_name == "code":
             langs = (
                 self.sudo()
@@ -423,7 +425,7 @@ class ResLang(models.Model):
         _debug.lifecycle("write", codes=lang_codes, fields=list(vals))
         if "code" in vals and any(code != vals["code"] for code in lang_codes):
             _debug.logic("write_refused", codes=lang_codes, reason="code_change")
-            raise UserError(_("Language code cannot be modified."))
+            raise UserError(self.env._("Language code cannot be modified."))
         if "active" in vals and not vals["active"]:
             self._check_deactivation_allowed(lang_codes)
             _debug.lifecycle("partner_lang_defaults_discarded", codes=lang_codes)
@@ -528,21 +530,21 @@ class ResLang(models.Model):
         for language in self:
             if language.code == "en_US":
                 _debug.logic("unlink_refused", lang=language.code, reason="base")
-                raise UserError(_("Base Language 'en_US' can not be deleted."))
+                raise UserError(self.env._("Base Language 'en_US' can not be deleted."))
             ctx_lang = self.env.context.get("lang")
             if ctx_lang and (language.code == ctx_lang):
                 _debug.logic(
                     "unlink_refused", lang=language.code, reason="user_preferred"
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot delete the language which is the user's preferred language."
                     )
                 )
             if language.active:
                 _debug.logic("unlink_refused", lang=language.code, reason="active")
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot delete the language which is Active!\nPlease de-activate the language first."
                     )
                 )
@@ -558,7 +560,7 @@ class ResLang(models.Model):
         vals_list = super().copy_data(default=default)
         for record, vals in zip(self, vals_list, strict=True):
             if "name" not in default:
-                vals["name"] = _("%s (copy)", record.name)
+                vals["name"] = self.env._("%s (copy)", record.name)
             if "code" not in default:
                 vals["code"] = self._get_unique_copy_value("code", record.code)
             if "url_code" not in default:
@@ -584,12 +586,12 @@ class ResLang(models.Model):
         data = self._get_data(id=self.id)
         if not data:
             _debug.logic("format_refused", lang=self.code, reason="not_installed")
-            raise UserError(_("The language %s is not installed.", self.name))
+            raise UserError(self.env._("The language %s is not installed.", self.name))
         return format_number(percent, value, data, grouping=grouping)
 
     def action_activate_langs(self) -> dict[str, Any]:
         self.action_unarchive()
-        message = _(
+        message = self.env._(
             "The languages that you selected have been successfully installed. Users can choose their favorite language in their preferences."
         )
         return {

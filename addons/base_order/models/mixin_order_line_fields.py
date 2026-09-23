@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare
@@ -318,7 +318,7 @@ class MixinOrderLineFields(models.AbstractModel):
     def _get_line_description(self):
         self.check_singleton()
         if self._is_down_payment_section():
-            return _("Down Payments")
+            return self.env._("Down Payments")
         return self._get_default_line_description()
 
     def _is_down_payment_section(self):
@@ -427,7 +427,7 @@ class MixinOrderLineFields(models.AbstractModel):
         )
         if len(lines) == 1:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot change the type of %(line_type)s '%(line_id)s'. "
                     "Instead, delete the current line and create a new line of the proper type.",
                     line_type=self._description.lower(),
@@ -437,9 +437,9 @@ class MixinOrderLineFields(models.AbstractModel):
         line_ids = [self._get_line_identifier(l) for l in lines[:5]]
         error_msg = ", ".join(line_ids)
         if len(lines) > 5:
-            error_msg += _(" and %s more", len(lines) - 5)
+            error_msg += self.env._(" and %s more", len(lines) - 5)
         raise UserError(
-            _(
+            self.env._(
                 "You cannot change the type of %(count)s %(line_type)s lines (%(lines)s). "
                 "Instead, delete these lines and create new lines of the proper type.",
                 count=len(lines),
@@ -484,7 +484,7 @@ class MixinOrderLineFields(models.AbstractModel):
                 fields=",".join(sorted(protected_fields_modified)),
             )
             raise UserError(
-                _(
+                self.env._(
                     "It is forbidden to modify the following fields in a locked order:\n%s",
                     "\n".join(fields_info.mapped("field_description")),
                 ),
@@ -509,7 +509,7 @@ class MixinOrderLineFields(models.AbstractModel):
             name = line.name.split("\n")[0]
             return name[:50] + "..." if len(name) > 50 else name
         else:
-            return _("Line #%s", line.sequence or line.id)
+            return self.env._("Line #%s", line.sequence or line.id)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
@@ -524,7 +524,7 @@ class MixinOrderLineFields(models.AbstractModel):
             )
             _debug.logic("line_unlink_refused", lines=lines_to_block, state=state_label)
             raise UserError(
-                _(
+                self.env._(
                     "Cannot delete a %(line_type)s which is in state '%(state)s'.\n"
                     "Once an order is confirmed, you can't remove lines that have "
                     "been invoiced or %(verb)s (we need to track if something "
@@ -633,7 +633,7 @@ class MixinOrderLineFields(models.AbstractModel):
                     uom=line.product_uom_id,
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot invoice “%(line)s”: its transferred "
                         "(delivered/received) quantity relies on a unit of "
                         "measure conversion that is not possible, so the line "
@@ -682,7 +682,9 @@ class MixinOrderLineFields(models.AbstractModel):
         for order, order_lines in lines_by_order.items():
             count = len(order_lines)
             if count == 1:
-                msg = _("Extra line with %s", order_lines.product_id.display_name)
+                msg = self.env._(
+                    "Extra line with %s", order_lines.product_id.display_name
+                )
             elif count <= CHATTER_PRODUCT_LIST_THRESHOLD:
                 product_list = (
                     "<ul>"
@@ -692,13 +694,13 @@ class MixinOrderLineFields(models.AbstractModel):
                     )
                     + "</ul>"
                 )
-                msg = _(
+                msg = self.env._(
                     "Added %(count)s extra lines: %(products)s",
                     count=count,
                     products=product_list,
                 )
             else:
-                msg = _(
+                msg = self.env._(
                     "Added %(count)s extra lines to this %(order_type)s",
                     count=count,
                     order_type=order._description.lower(),

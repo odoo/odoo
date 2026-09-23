@@ -7,7 +7,7 @@ from typing import Literal, Self
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -217,7 +217,7 @@ class MailAlias(models.Model):
         }
         if kind == "owner":
             return ValidationError(
-                _(
+                self.env._(
                     "We could not create alias %(alias_name)s because domain "
                     "%(alias_domain_name)s belongs to company %(alias_company_names)s "
                     "while the owner document belongs to company %(company_name)s.",
@@ -225,7 +225,7 @@ class MailAlias(models.Model):
                 )
             )
         return ValidationError(
-            _(
+            self.env._(
                 "We could not create alias %(alias_name)s because domain "
                 "%(alias_domain_name)s belongs to company %(alias_company_names)s "
                 "while the target document belongs to company %(company_name)s.",
@@ -242,7 +242,7 @@ class MailAlias(models.Model):
         for alias in self.filtered("alias_name"):
             if not self._alias_name_is_valid(alias.alias_name):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot use anything else than unaccented lowercase latin characters in the alias address %(alias_name)s.",
                         alias_name=alias.alias_name,
                     )
@@ -260,7 +260,7 @@ class MailAlias(models.Model):
                 continue
             if not self._alias_model_accepts_mail(self.env[model]):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "An alias can only target a model that accepts incoming "
                         "mail, and %(model_name)s does not.",
                         model_name=alias.alias_model_id.display_name or model,
@@ -274,7 +274,7 @@ class MailAlias(models.Model):
                 defaults = alias._prepare_alias_defaults()
             except Exception as e:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invalid expression, it must be a literal python dictionary definition e.g. \"{'field': 'value'}\""
                     )
                 ) from e
@@ -285,7 +285,7 @@ class MailAlias(models.Model):
             unknown = sorted(set(defaults) - set(fields_))
             if unknown:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Default values %(field_names)s are not fields of %(model_name)s.",
                         field_names=", ".join(unknown),
                         model_name=alias.alias_model_id.display_name,
@@ -301,7 +301,7 @@ class MailAlias(models.Model):
             )
             if dropped:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Default values %(field_names)s cannot be set on "
                         "%(model_name)s: they are computed fields.",
                         field_names=", ".join(dropped),
@@ -338,7 +338,7 @@ class MailAlias(models.Model):
             failing |= local.filtered(lambda alias: alias.alias_name in reserved)
         if failing:
             raise ValidationError(
-                _(
+                self.env._(
                     "Aliases %(alias_names)s are already used as bounce or catchall address. Please choose another alias.",
                     alias_names=", ".join(failing.mapped("display_name")),
                 )
@@ -359,7 +359,7 @@ class MailAlias(models.Model):
     @api.depends("alias_full_name")
     def _compute_display_name(self) -> None:
         for record in self:
-            record.display_name = record.alias_full_name or _("Inactive Alias")
+            record.display_name = record.alias_full_name or self.env._("Inactive Alias")
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
@@ -508,7 +508,7 @@ class MailAlias(models.Model):
                 vals["alias_domain_id"] = found[domain_name]
             elif "." in domain_name:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "There is no alias domain %(domain_name)s. Create it first, or "
                         "enter %(alias_name)s alone and pick a domain.",
                         alias_name=vals["alias_name"],
@@ -525,7 +525,7 @@ class MailAlias(models.Model):
                 continue
             if alias_name in domain_to_names[alias_domain]:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Email aliases %(alias_name)s cannot be used on several records at the same time. Please update records one by one.",
                         alias_name=alias_name,
                     )
@@ -558,7 +558,7 @@ class MailAlias(models.Model):
         }
         if parent := existing._alias_get_document("owner"):
             raise UserError(
-                _(
+                self.env._(
                     "The address %(address)s is already taken by alias %(matching_id)s, "
                     "which targets %(alias_model_name)s and belongs to the "
                     "%(parent_model_name)s %(parent_name)s. Choose another address, or "
@@ -569,7 +569,7 @@ class MailAlias(models.Model):
                 )
             )
         raise UserError(
-            _(
+            self.env._(
                 "The address %(address)s is already taken by alias %(matching_id)s, "
                 "which targets %(alias_model_name)s. Choose another address, or change "
                 "it on that document.",
@@ -673,8 +673,8 @@ class MailAlias(models.Model):
             "<p>%(header)s,<br /><br />%(content)s<br /><br />%(regards)s</p>"
         ) % {
             "content": content,
-            "header": _("Dear Sender"),
-            "regards": _("Kind Regards"),
+            "header": self.env._("Dear Sender"),
+            "regards": self.env._("Kind Regards"),
         }
 
     def _alias_bounce_render(self, body: Markup, message_dict: dict) -> Markup:
@@ -706,7 +706,7 @@ class MailAlias(models.Model):
             else company.name
         )
         return Markup(
-            _(
+            self.env._(
                 "The message below could not be accepted by the address "
                 "%(alias_display_name)s. Only %(contact_description)s are allowed to "
                 "contact it.<br /><br />Please make sure you are using the correct "
@@ -720,16 +720,16 @@ class MailAlias(models.Model):
 
     def _get_alias_contact_description(self) -> str:
         if self.alias_contact == "partners":
-            return _("addresses linked to registered partners")
+            return self.env._("addresses linked to registered partners")
         if self.alias_contact == "followers":
-            return _("followers of the related document")
-        return _("some specific addresses")
+            return self.env._("followers of the related document")
+        return self.env._("some specific addresses")
 
     def _get_alias_invalid_body(self, message_dict: dict) -> Markup:
         self.check_singleton()
         self = self._alias_with_author_lang(message_dict)
         content = Markup(
-            _(
+            self.env._(
                 "The message below could not be accepted by the address "
                 "%(alias_display_name)s. Please try again later or contact "
                 "%(company_name)s instead."

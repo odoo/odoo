@@ -1,7 +1,6 @@
 import logging
 import re
 
-from odoo import _
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
 
@@ -60,4 +59,4 @@ class SmsController(Controller):
                 "Received ill-formatted SMS delivery report event: \n%s",
                 message_statuses,
             )
-            raise UserError(_("Bad parameters"))
+            raise UserError(request.env._("Bad parameters"))

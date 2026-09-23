@@ -3,7 +3,7 @@ from typing import Any
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -281,9 +281,11 @@ class DocumentsDocument(models.Model):
                     | values
                     for values in [
                         {
-                            "display_name": _("Company"),
+                            "display_name": self.env._("Company"),
                             "id": UserFolder.COMPANY,
-                            "description": _("Common roots for all company users."),
+                            "description": self.env._(
+                                "Common roots for all company users."
+                            ),
                             "user_permission": "edit"
                             if self.env.user.has_group(
                                 "document.group_documents_manager"
@@ -291,31 +293,31 @@ class DocumentsDocument(models.Model):
                             else "view",
                         },
                         {
-                            "display_name": _("My Drive"),
+                            "display_name": self.env._("My Drive"),
                             "id": UserFolder.MY,
                             "user_permission": "edit",
-                            "description": _("Your individual space."),
+                            "description": self.env._("Your individual space."),
                         },
                         {
-                            "display_name": _("Shared with me"),
+                            "display_name": self.env._("Shared with me"),
                             "id": UserFolder.SHARED,
-                            "description": _(
+                            "description": self.env._(
                                 "Additional documents you have access to."
                             ),
                         },
                         {
-                            "display_name": _("Recent"),
+                            "display_name": self.env._("Recent"),
                             "id": UserFolder.RECENT,
-                            "description": _("Recently accessed documents."),
+                            "description": self.env._("Recently accessed documents."),
                         },
                     ]
                 ]
                 if not self.env.context.get("documents_search_panel_no_trash"):
                     special_roots.append(
                         {
-                            "display_name": _("Trash"),
+                            "display_name": self.env._("Trash"),
                             "id": UserFolder.TRASH,
-                            "description": _(
+                            "description": self.env._(
                                 "Items in trash will be deleted forever after %s days.",
                                 self.get_deletion_delay(),
                             ),

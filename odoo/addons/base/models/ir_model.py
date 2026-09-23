@@ -11,7 +11,6 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, OrderedSet, remove_accents, unique
-from odoo.tools.translate import _
 
 from .ir_model_common import (
     MODULE_UNINSTALL_FLAG,
@@ -231,7 +230,7 @@ class IrModel(models.Model):
                     "constraint.rejected", model=model.model, reason="invalid_name"
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The model name can only contain lowercase characters, digits, underscores and dots."
                     )
                 )
@@ -267,7 +266,7 @@ class IrModel(models.Model):
                         reason="order_field_not_stored",
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Unable to order by %s: fields used for ordering must be present on the model and stored.",
                             field,
                         )
@@ -284,7 +283,9 @@ class IrModel(models.Model):
                     reason="fold_field_unknown",
                 )
                 raise ValidationError(
-                    _("The value of 'Fold Field' should be a field name of the model.")
+                    self.env._(
+                        "The value of 'Fold Field' should be a field name of the model."
+                    )
                 )
 
     _model_uniq = models.Constraint(
@@ -348,7 +349,7 @@ class IrModel(models.Model):
             if model.state != "manual":
                 _debug.logic("unlink.rejected", model=model.model, reason="base_model")
                 raise UserError(
-                    _(
+                    self.env._(
                         "Model “%s” contains module data and cannot be removed.",
                         model.name,
                     )
@@ -413,7 +414,7 @@ class IrModel(models.Model):
                     reason="unmodifiable",
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Field %s cannot be modified on models.",
                         self._fields[unmodifiable_field]._description_string(self.env),
                     )
@@ -594,7 +595,7 @@ class IrModel(models.Model):
     def _check_manual_name(self, name: str) -> None:
         if not self._is_manual_name(name):
             _debug.logic("constraint.rejected", model=name, reason="not_manual_name")
-            raise ValidationError(_("The model name must start with 'x_'."))
+            raise ValidationError(self.env._("The model name must start with 'x_'."))
 
 
 class IrModelInherit(models.Model):

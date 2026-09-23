@@ -1,6 +1,5 @@
 from odoo.exceptions import AccessError
 from odoo.http import Controller, request, route
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 
@@ -20,7 +19,7 @@ class View(Controller):
                 request.env.uid,
             )
             raise AccessError(
-                _(
+                request.env._(
                     "Custom view %(view)s does not belong to user %(user)s",
                     view=custom_id,
                     user=request.env.user.login,

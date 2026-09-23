@@ -1,7 +1,7 @@
 import datetime
 import typing
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 if typing.TYPE_CHECKING:
@@ -98,10 +98,10 @@ class ResConfigSettings(models.TransientModel):
     def open_email_layout(self) -> dict:
         layout = self.env.ref("mail.mail_notification_layout", raise_if_not_found=False)
         if not layout:
-            raise UserError(_("This layout seems to no longer exist."))
+            raise UserError(self.env._("This layout seems to no longer exist."))
         return {
             "type": "ir.actions.act_window",
-            "name": _("Mail Layout"),
+            "name": self.env._("Mail Layout"),
             "view_mode": "form",
             "res_id": layout.id,
             "res_model": "ir.ui.view",

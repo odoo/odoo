@@ -4,7 +4,6 @@ from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import _
 
 from .ir_actions_actions import WINDOW_TARGETS
 
@@ -107,7 +106,7 @@ class IrActionsAct_Window(models.Model):
             if action.res_model not in self.env:
                 _debug.logic("model_unknown", action=action.id, model=action.res_model)
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invalid model name “%s” in action definition.",
                         action.res_model,
                     )
@@ -120,19 +119,21 @@ class IrActionsAct_Window(models.Model):
             if not all(modes):
                 _debug.logic("view_mode_refused", action=rec.id, reason="empty_mode")
                 raise ValidationError(
-                    _("Empty view mode in view_mode: “%s”", rec.view_mode)
+                    self.env._("Empty view mode in view_mode: “%s”", rec.view_mode)
                 )
             if len(modes) != len(set(modes)):
                 _debug.logic("view_mode_refused", action=rec.id, reason="duplicate")
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The modes in view_mode must not be duplicated: %s",
                         modes,
                     )
                 )
             if any(" " in mode for mode in modes):
                 _debug.logic("view_mode_refused", action=rec.id, reason="spaces")
-                raise ValidationError(_("No spaces allowed in view_mode: “%s”", modes))
+                raise ValidationError(
+                    self.env._("No spaces allowed in view_mode: “%s”", modes)
+                )
         self._check_view_type_vocabulary("view_mode")
         self._check_view_type_vocabulary("mobile_view_mode")
 

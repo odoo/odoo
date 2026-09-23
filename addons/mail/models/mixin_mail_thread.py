@@ -17,7 +17,7 @@ from lxml import etree, html
 from markupsafe import Markup, escape
 from werkzeug.exceptions import NotFound
 
-from odoo import Command, _, api, exceptions, fields, models, tools
+from odoo import Command, api, exceptions, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
@@ -652,7 +652,7 @@ class MixinMailThread(models.AbstractModel):
         model = self.env.context.get("empty_list_help_model")
         res_id = self.env.context.get("empty_list_help_id")
         document_name = self.env.context.get(
-            "empty_list_help_document_name", _("document")
+            "empty_list_help_document_name", self.env._("document")
         )
         nothing_here = is_html_empty(help_message)
         alias = None
@@ -691,7 +691,7 @@ class MixinMailThread(models.AbstractModel):
                 alias.display_name,
             )
             if nothing_here:
-                dyn_help = _(
+                dyn_help = self.env._(
                     "Add a new %(document)s or send an email to %(email_link)s",
                     document=html_escape(document_name),
                     email_link=email_link,
@@ -700,7 +700,7 @@ class MixinMailThread(models.AbstractModel):
                     f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>"
                 )
             if "oe_view_nocontent_alias" not in help_message:
-                dyn_help = _(
+                dyn_help = self.env._(
                     "Create new %(document)s by sending an email to %(email_link)s",
                     document=html_escape(document_name),
                     email_link=email_link,
@@ -710,7 +710,9 @@ class MixinMailThread(models.AbstractModel):
                 )
 
         if nothing_here:
-            dyn_help = _("Create new %(document)s", document=html_escape(document_name))
+            dyn_help = self.env._(
+                "Create new %(document)s", document=html_escape(document_name)
+            )
             return super().get_empty_list_help(
                 f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>"
             )
@@ -759,7 +761,7 @@ class MixinMailThread(models.AbstractModel):
     def _creation_message(self) -> str:
         self.check_singleton()
         doc_name = self.env["ir.model"]._get(self._name).name
-        return _("%s created", doc_name)
+        return self.env._("%s created", doc_name)
 
     def _is_valid_field_parameter(self, field: fields.Field, name: str) -> bool:
         return name == "tracking" or super()._is_valid_field_parameter(field, name)
@@ -772,11 +774,11 @@ class MixinMailThread(models.AbstractModel):
     def _check_can_update_message_content(self, messages: MailMessage) -> None:
         if messages.tracking_value_ids:
             raise exceptions.UserError(
-                _("Messages with tracking values cannot be modified")
+                self.env._("Messages with tracking values cannot be modified")
             )
         if any(message.message_type != "comment" for message in messages):
             raise exceptions.UserError(
-                _("Only messages type comment can have their content updated")
+                self.env._("Only messages type comment can have their content updated")
             )
 
     def _track_prepare(self, fields_iter: Iterable[str]) -> None:
@@ -3116,7 +3118,7 @@ class MixinMailThread(models.AbstractModel):
     @api.model
     def notify_cancel_by_type(self, notification_type: str) -> bool:
         if not self.env.user._is_internal():
-            raise exceptions.AccessError(_("Access Denied"))
+            raise exceptions.AccessError(self.env._("Access Denied"))
         self.browse().check_access("read")
 
         if notification_type == "email":
@@ -4408,9 +4410,9 @@ class MixinMailThread(models.AbstractModel):
         access_link = self._notify_get_action_link("view", **(msg_vals or {}))
 
         if model_description:
-            view_title = _("View %s", model_description)
+            view_title = self.env._("View %s", model_description)
         else:
-            view_title = _("View")
+            view_title = self.env._("View")
 
         is_thread_message = self.env["mail.message"]._is_thread_message(
             vals=msg_vals, thread=self
@@ -4614,7 +4616,7 @@ class MixinMailThread(models.AbstractModel):
                 outgoing_email_to=email_to,
                 partner_ids=recipient.ids,
                 is_internal=trigger_is_internal,
-                subject=_(
+                subject=self.env._(
                     "Auto: %(subject)s", subject=(original_subject or self.display_name)
                 ),
                 subtype_id=self.env.ref(
@@ -5056,7 +5058,9 @@ class MixinMailThread(models.AbstractModel):
             }
             assignation_msg = IrQweb._render(template, values, minimal_qcontext=True)
             bodies[record.id] = RenderMixin._replace_local_links(assignation_msg)
-            subjects[record.id] = _("You have been assigned to %s", record.display_name)
+            subjects[record.id] = self.env._(
+                "You have been assigned to %s", record.display_name
+            )
         self._message_notify_batch(
             bodies,
             subjects=subjects,

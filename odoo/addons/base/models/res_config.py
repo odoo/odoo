@@ -3,7 +3,7 @@ import re
 from ast import literal_eval
 from typing import Any, Self
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.libs.debug_log import DebugLog
@@ -60,7 +60,7 @@ class ResConfigSettings(models.TransientModel):
 
     def copy(self, default: ValuesType | None = None) -> Self:
         _debug.logic("settings_copy_refused", model=self._name)
-        raise UserError(_("Cannot duplicate configuration!"))
+        raise UserError(self.env._("Cannot duplicate configuration!"))
 
     @api.model
     def _install_modules(self, modules: Any) -> Any:
@@ -329,7 +329,7 @@ class ResConfigSettings(models.TransientModel):
         self.check_singleton()
         if not self.env.is_admin():
             _debug.logic("execute_refused", model=self._name, uid=self.env.uid)
-            raise AccessError(_("Only administrators can change the settings"))
+            raise AccessError(self.env._("Only administrators can change the settings"))
 
         self = self.with_context(active_test=False)
         classified = self._get_fields_classified()
@@ -370,7 +370,7 @@ class ResConfigSettings(models.TransientModel):
             return {
                 "type": "ir.actions.act_window",
                 "target": "new",
-                "name": _("Uninstall modules"),
+                "name": self.env._("Uninstall modules"),
                 "view_mode": "form",
                 "res_model": "base.module.uninstall",
                 "context": {
@@ -426,7 +426,7 @@ class ResConfigSettings(models.TransientModel):
         )
         if action_id:
             return RedirectWarning(
-                msg % values, action_id, _("Go to the configuration panel")
+                msg % values, action_id, self.env._("Go to the configuration panel")
             )
         return UserError(msg % values)
 
@@ -476,7 +476,9 @@ class ResConfigSettings(models.TransientModel):
         template_user = self.env["res.users"].browse(template_user_id)
         if not template_user.exists():
             _debug.logic("template_user_missing", user=template_user_id)
-            raise UserError(_("Invalid template user. It seems it has been deleted."))
+            raise UserError(
+                self.env._("Invalid template user. It seems it has been deleted.")
+            )
         action["res_id"] = template_user_id
         action["views"] = [[self.env.ref("base.view_users_form").id, "form"]]
         return action

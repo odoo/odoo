@@ -1,6 +1,6 @@
 import json
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import file_open
 
@@ -108,7 +108,7 @@ class SpreadsheetDashboard(models.Model):
         vals_list = super().copy_data(default=default)
         if "name" not in default:
             for dashboard, vals in zip(self, vals_list, strict=True):
-                vals["name"] = _("%s (copy)", dashboard.name)
+                vals["name"] = self.env._("%s (copy)", dashboard.name)
         return vals_list
 
     def copy_translations(self, new, excluded=()):

@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class DocumentsSharing(models.TransientModel):
@@ -12,26 +12,28 @@ class DocumentsSharing(models.TransientModel):
         for record in self:
             if record.access_internal.endswith("view"):
                 if record.is_folder_only:
-                    record.access_internal_help = _(
+                    record.access_internal_help = self.env._(
                         "Can only view contents. Cannot add, modify, or delete items."
                     )
                 else:
-                    record.access_internal_help = _(
+                    record.access_internal_help = self.env._(
                         "Can only view. Cannot rename, move, or delete."
                     )
             elif record.access_internal.endswith("edit"):
                 if record.is_folder_only:
-                    record.access_internal_help = _(
+                    record.access_internal_help = self.env._(
                         "Can add, modify, and delete files within this folder."
                     )
                 else:
-                    record.access_internal_help = _("Can modify, delete, and rename.")
+                    record.access_internal_help = self.env._(
+                        "Can modify, delete, and rename."
+                    )
             elif record.access_internal == "mixed":
-                record.access_internal_help = _(
+                record.access_internal_help = self.env._(
                     "Keep the values as is (multiple values)"
                 )
             else:  # None
-                record.access_internal_help = _(
+                record.access_internal_help = self.env._(
                     "Only people with access can open with the link"
                 )
 
@@ -40,26 +42,30 @@ class DocumentsSharing(models.TransientModel):
         for record in self:
             if record.access_via_link.endswith("view"):
                 if record.is_folder_only:
-                    record.access_via_link_help = _(
+                    record.access_via_link_help = self.env._(
                         "Can only view contents. Cannot add, modify, or delete items."
                     )
                 else:
-                    record.access_via_link_help = _(
+                    record.access_via_link_help = self.env._(
                         "Can only view. Cannot rename, move, or delete."
                     )
             elif record.access_via_link.endswith("edit"):
                 if record.is_folder_only:
-                    record.access_via_link_help = _(
+                    record.access_via_link_help = self.env._(
                         "Can add, modify, and delete files within this folder."
                     )
                 else:
-                    record.access_via_link_help = _("Can modify, delete, and rename.")
+                    record.access_via_link_help = self.env._(
+                        "Can modify, delete, and rename."
+                    )
             elif record.access_via_link == "mixed":
-                record.access_via_link_help = _(
+                record.access_via_link_help = self.env._(
                     "Keep the values as is (multiple values)"
                 )
             else:  # None
-                record.access_via_link_help = _("No one on the internet can access")
+                record.access_via_link_help = self.env._(
+                    "No one on the internet can access"
+                )
 
     @api.depends(
         "access_internal",

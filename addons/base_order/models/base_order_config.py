@@ -2,7 +2,6 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.date_utils import time_unit_selection
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -36,7 +35,7 @@ class BaseOrderConfig(models.Model):
                     count=company.order_cycle_count,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The order cycle of %(company)s must be zero or more.",
                         company=company.company_id.display_name,
                     ),

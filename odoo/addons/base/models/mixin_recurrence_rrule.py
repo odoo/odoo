@@ -4,7 +4,7 @@ from datetime import UTC, datetime, time
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.datetime import localize_standard, timezone
 from odoo.libs.debug_log import DebugLog
@@ -148,18 +148,18 @@ class MixinRecurrenceRrule(models.AbstractModel):
 
     def _get_daily_recurrence_name(self):
         if self.repeat_type == "count":
-            return _(
+            return self.env._(
                 "Every %(interval)s Days for %(count)s events",
                 interval=self.repeat_interval,
                 count=self.repeat_number,
             )
         if self.repeat_type == "until":
-            return _(
+            return self.env._(
                 "Every %(interval)s Days until %(until)s",
                 interval=self.repeat_interval,
                 until=self.repeat_until,
             )
-        return _("Every %(interval)s Days", interval=self.repeat_interval)
+        return self.env._("Every %(interval)s Days", interval=self.repeat_interval)
 
     def _get_weekly_recurrence_name(self):
         weekday_selection = dict(
@@ -174,20 +174,20 @@ class MixinRecurrenceRrule(models.AbstractModel):
         days = ", ".join(day_strings)
 
         if self.repeat_type == "count":
-            return _(
+            return self.env._(
                 "Every %(interval)s Weeks on %(days)s for %(count)s events",
                 interval=self.repeat_interval,
                 days=days,
                 count=self.repeat_number,
             )
         if self.repeat_type == "until":
-            return _(
+            return self.env._(
                 "Every %(interval)s Weeks on %(days)s until %(until)s",
                 interval=self.repeat_interval,
                 days=days,
                 until=self.repeat_until,
             )
-        return _(
+        return self.env._(
             "Every %(interval)s Weeks on %(days)s",
             interval=self.repeat_interval,
             days=days,
@@ -205,7 +205,7 @@ class MixinRecurrenceRrule(models.AbstractModel):
             weekday_label = weekday_selection[self.weekday]
 
             if self.repeat_type == "count":
-                return _(
+                return self.env._(
                     "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s events",
                     interval=self.repeat_interval,
                     position=position_label,
@@ -213,14 +213,14 @@ class MixinRecurrenceRrule(models.AbstractModel):
                     count=self.repeat_number,
                 )
             if self.repeat_type == "until":
-                return _(
+                return self.env._(
                     "Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s",
                     interval=self.repeat_interval,
                     position=position_label,
                     weekday=weekday_label,
                     until=self.repeat_until,
                 )
-            return _(
+            return self.env._(
                 "Every %(interval)s Months on the %(position)s %(weekday)s",
                 interval=self.repeat_interval,
                 position=position_label,
@@ -228,20 +228,20 @@ class MixinRecurrenceRrule(models.AbstractModel):
             )
         else:
             if self.repeat_type == "count":
-                return _(
+                return self.env._(
                     "Every %(interval)s Months day %(day)s for %(count)s events",
                     interval=self.repeat_interval,
                     day=self.day,
                     count=self.repeat_number,
                 )
             if self.repeat_type == "until":
-                return _(
+                return self.env._(
                     "Every %(interval)s Months day %(day)s until %(until)s",
                     interval=self.repeat_interval,
                     day=self.day,
                     until=self.repeat_until,
                 )
-            return _(
+            return self.env._(
                 "Every %(interval)s Months day %(day)s",
                 interval=self.repeat_interval,
                 day=self.day,
@@ -249,18 +249,18 @@ class MixinRecurrenceRrule(models.AbstractModel):
 
     def _get_yearly_recurrence_name(self):
         if self.repeat_type == "count":
-            return _(
+            return self.env._(
                 "Every %(interval)s Years for %(count)s events",
                 interval=self.repeat_interval,
                 count=self.repeat_number,
             )
         if self.repeat_type == "until":
-            return _(
+            return self.env._(
                 "Every %(interval)s Years until %(until)s",
                 interval=self.repeat_interval,
                 until=self.repeat_until,
             )
-        return _("Every %(interval)s Years", interval=self.repeat_interval)
+        return self.env._("Every %(interval)s Years", interval=self.repeat_interval)
 
     def get_recurrence_name(self):
         _debug.logic(
@@ -340,14 +340,14 @@ class MixinRecurrenceRrule(models.AbstractModel):
                 record=self.id,
                 reason="interval_not_positive",
             )
-            raise UserError(_("The interval cannot be negative."))
+            raise UserError(self.env._("The interval cannot be negative."))
         if self.repeat_type == "count" and self.repeat_number <= 0:
             _debug.logic(
                 "recurrence.serialize_rejected",
                 record=self.id,
                 reason="count_not_positive",
             )
-            raise UserError(_("The number of repetitions cannot be negative."))
+            raise UserError(self.env._("The number of repetitions cannot be negative."))
         if (
             self.repeat_type == "count"
             and self.repeat_number > MAX_RECURRENT_OCCURRENCES
@@ -360,7 +360,7 @@ class MixinRecurrenceRrule(models.AbstractModel):
                 maximum=MAX_RECURRENT_OCCURRENCES,
             )
             raise UserError(
-                _(
+                self.env._(
                     "A recurrence cannot repeat more than %(maximum)s times.",
                     maximum=MAX_RECURRENT_OCCURRENCES,
                 )
@@ -373,7 +373,7 @@ class MixinRecurrenceRrule(models.AbstractModel):
                 reason="until_without_date",
             )
             raise UserError(
-                _("A recurrence that repeats until a date needs that date.")
+                self.env._("A recurrence that repeats until a date needs that date.")
             )
 
         if not self.repeat_unit:
@@ -589,7 +589,9 @@ class MixinRecurrenceRrule(models.AbstractModel):
                 _debug.logic(
                     "recurrence.rrule_rejected", record=self.id, reason="no_weekday"
                 )
-                raise UserError(_("You have to choose at least one day in the week"))
+                raise UserError(
+                    self.env._("You have to choose at least one day in the week")
+                )
             rrule_params["byweekday"] = weekdays
             rrule_params["wkst"] = self._get_lang_week_start()
 

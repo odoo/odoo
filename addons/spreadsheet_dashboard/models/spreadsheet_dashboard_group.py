@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -29,7 +29,7 @@ class SpreadsheetDashboardGroup(models.Model):
             external_id = external_ids[group.id]
             if external_id and not external_id.startswith("__export__"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot delete %s as it is used in another module.",
                         group.name,
                     )

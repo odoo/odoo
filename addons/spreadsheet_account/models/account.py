@@ -3,7 +3,7 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
@@ -156,7 +156,7 @@ class AccountAccount(models.Model):
             "views": [[False, "list"]],
             "target": "current",
             "domain": domain,
-            "name": _("Cell Audit"),
+            "name": self.env._("Cell Audit"),
         }
 
     @api.readonly

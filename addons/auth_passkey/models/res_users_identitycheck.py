@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessDenied, UserError
 
 
@@ -24,7 +24,7 @@ class ResUsersIdentitycheck(models.TransientModel):
                 self.create_uid._check_credentials(credential, {"interactive": True})
             except AccessDenied:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Incorrect Passkey. Please provide a valid passkey or use a different authentication method."
                     )
                 ) from None
@@ -39,7 +39,7 @@ class ResUsersIdentitycheck(models.TransientModel):
             "type": "ir.actions.act_window",
             "res_model": "res.users.identitycheck",
             "res_id": self.id,
-            "name": _("Security Control"),
+            "name": self.env._("Security Control"),
             "target": "new",
             "views": [(False, "form")],
         }

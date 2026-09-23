@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class ResUsers(models.Model):
@@ -23,7 +23,7 @@ class ResUsers(models.Model):
             for blacklist in blacklists:
                 user = numbers_to_blacklist[blacklist.number]
                 blacklist._message_log(
-                    body=_(
+                    body=self.env._(
                         "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)",
                         user_name=current_user.name,
                         user_id=current_user.id,

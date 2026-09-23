@@ -3,7 +3,7 @@ import babel
 from odoo import api, fields, models
 from odoo.libs.datetime import utc
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import _, get_lang
+from odoo.tools import get_lang
 
 _debug = DebugLog(__name__)
 
@@ -36,7 +36,7 @@ class IrActionsServerHistory(models.Model):
                 tzinfo=tzinfo,
                 locale=locale,
             )
-            history.display_name = _(
+            history.display_name = self.env._(
                 "%(date_label)s - %(author)s",
                 date_label=date_label,
                 author=history.create_uid.name,

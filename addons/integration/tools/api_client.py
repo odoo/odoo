@@ -13,7 +13,7 @@ from requests.auth import HTTPDigestAuth
 from urllib3.exceptions import ReadTimeoutError
 from urllib3.util.retry import Retry
 
-from odoo import _, fields
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.libs import netguard, redact
 from odoo.libs.guarded_http import DEFAULT_MAX_BYTES, GuardedSession
@@ -196,7 +196,7 @@ class OutboundAPIClient:
 
         if not self.service:
             raise CommError(
-                _("API service '%s' not found or inactive") % endpoint_code,
+                self.env._("API service '%s' not found or inactive") % endpoint_code,
             )
 
         connections = env["integration.connection"]
@@ -208,7 +208,7 @@ class OutboundAPIClient:
                 or self.connection.service_id != self.service
             ):
                 raise CommError(
-                    _(
+                    self.env._(
                         "Connection %(connection)s is not an active connection of "
                         "service '%(service)s'",
                         connection=connection_id,
@@ -217,11 +217,11 @@ class OutboundAPIClient:
                 )
             self.credential = self.connection.credential_id
             if self.credential and not self.credential.active:
-                raise CommError(_("Invalid or inactive credential"))
+                raise CommError(self.env._("Invalid or inactive credential"))
         elif credential_id:
             self.credential = env["credential.credential"].sudo().browse(credential_id)
             if not self.credential.exists() or not self.credential.active:
-                raise CommError(_("Invalid or inactive credential"))
+                raise CommError(self.env._("Invalid or inactive credential"))
             self.connection = connections._for_credential(self.service, self.credential)
         else:
             self.connection = connections._resolve(
@@ -232,14 +232,14 @@ class OutboundAPIClient:
         if not self.credential and self.service.auth_type != "none":
             if self.service.per_record_connections and not self.connection:
                 raise CommError(
-                    _(
+                    self.env._(
                         "Service '%s' connects each record on its own connection; "
                         "the call must name one",
                         endpoint_code,
                     ),
                 )
             raise CommError(
-                _(
+                self.env._(
                     "No active credentials for service '%(service)s' and company ID "
                     "%(company)s in its %(environment)s environment",
                     service=endpoint_code,
@@ -250,7 +250,8 @@ class OutboundAPIClient:
 
         if self.credential.is_expired:
             raise CommError(
-                _("Credentials have expired on %s") % self.credential.date_expiration,
+                self.env._("Credentials have expired on %s")
+                % self.credential.date_expiration,
             )
 
         if not self.connection:
@@ -400,7 +401,7 @@ class OutboundAPIClient:
                 method, url, kwargs, trace_id, skip_logging, error, "timeout"
             )
             raise CommTimeoutError(
-                _("Request timed out: %s") % redact.mask_url(url)
+                self.env._("Request timed out: %s") % redact.mask_url(url)
             ) from _masked_cause(e)
 
         except requests.exceptions.HTTPError as e:
@@ -429,7 +430,9 @@ class OutboundAPIClient:
             self._record_failure(
                 method, url, kwargs, trace_id, skip_logging, error, "server"
             )
-            raise ServerError(_("Server error: %s") % error) from _masked_cause(e)
+            raise ServerError(
+                self.env._("Server error: %s") % error
+            ) from _masked_cause(e)
 
         except requests.exceptions.RequestException as e:
             error = redact.mask_text(str(e))
@@ -439,13 +442,15 @@ class OutboundAPIClient:
                     method, url, kwargs, trace_id, skip_logging, error, "timeout"
                 )
                 raise CommTimeoutError(
-                    _("Request timed out: %s") % redact.mask_url(url)
+                    self.env._("Request timed out: %s") % redact.mask_url(url)
                 ) from _masked_cause(e)
             _logger.error("API Request Error: %s - %s", redact.mask_url(url), error)
             self._record_failure(
                 method, url, kwargs, trace_id, skip_logging, error, "network"
             )
-            raise CommError(_("Request failed: %s") % error) from _masked_cause(e)
+            raise CommError(
+                self.env._("Request failed: %s") % error
+            ) from _masked_cause(e)
 
         except Exception as e:
             error = redact.mask_text(str(e))
@@ -453,7 +458,9 @@ class OutboundAPIClient:
             self._record_failure(
                 method, url, kwargs, trace_id, skip_logging, error, "other"
             )
-            raise CommError(_("Unexpected error: %s") % error) from _masked_cause(e)
+            raise CommError(
+                self.env._("Unexpected error: %s") % error
+            ) from _masked_cause(e)
 
     def _update_request_kwargs(self, url, kwargs):
         kwargs["headers"] = self._get_headers(kwargs.pop("headers", {}))
@@ -590,17 +597,18 @@ class OutboundAPIClient:
                 error_type=error_type,
             )
 
-    @staticmethod
-    def _prepare_http_error(status_code, error):
+    def _prepare_http_error(self, status_code, error):
         if status_code == 401:
             return AuthenticationError(
-                _("Authentication failed: %s") % error, status_code
+                self.env._("Authentication failed: %s", error), status_code
             )
         if status_code == 429:
-            return RateLimitError(_("Rate limit exceeded: %s") % error, status_code)
+            return RateLimitError(
+                self.env._("Rate limit exceeded: %s", error), status_code
+            )
         if 400 <= status_code < 500:
-            return ClientError(_("Client error: %s") % error, status_code)
-        return ServerError(_("Server error: %s") % error, status_code)
+            return ClientError(self.env._("Client error: %s", error), status_code)
+        return ServerError(self.env._("Server error: %s", error), status_code)
 
     def get(self, endpoint, **kwargs):
         return self.request("GET", endpoint, **kwargs)
@@ -728,7 +736,7 @@ class OutboundAPIClient:
             host,
         )
         raise HostNotAllowedError(
-            _(
+            self.env._(
                 "Refusing to send the credential of service '%(service)s' to "
                 "'%(host)s'. Add the host to the endpoint's Allowed Hosts if it "
                 "is meant to receive it.",
@@ -777,7 +785,7 @@ class OutboundAPIClient:
         host = urlparse(url).hostname or ""
         if not is_private_host(host):
             raise UserError(
-                _(
+                self.env._(
                     "Refusing to call '%(host)s' with TLS verification disabled: "
                     "it is not a private-network host, so the credential for "
                     "service '%(service)s' would be exposed to whoever answers.",
@@ -1113,7 +1121,7 @@ def get_api_client(
     )
 
     if not service:
-        raise UserError(_("API service '%s' not found or inactive") % endpoint_code)
+        raise UserError(env._("API service '%s' not found or inactive", endpoint_code))
 
     return OutboundAPIClient(
         env,

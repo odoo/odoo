@@ -7,7 +7,7 @@ from lxml import etree
 from markupsafe import Markup
 
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import _, frozendict
+from odoo.tools import frozendict
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -160,7 +160,7 @@ class NameManager:
                 and name not in self.model._fields
                 and name not in self.field_info
             ):
-                msg = _(
+                msg = self.env._(
                     "Name or id \u201c%(name_or_id)s\u201d in %(use)s does not exist.",
                     name_or_id=name,
                     use=use,
@@ -170,7 +170,7 @@ class NameManager:
                 )
                 raise view._prepare_view_error(msg)
             if name not in self.available_actions and name not in self.available_names:
-                msg = _(
+                msg = self.env._(
                     "Name or id \u201c%(name_or_id)s\u201d in %(use)s must be present in view but is missing.",
                     name_or_id=name,
                     use=use,
@@ -183,7 +183,7 @@ class NameManager:
     def _check_available_fields(self, view: Any) -> None:
         for name in self.available_fields:
             if name not in self.model._fields and name not in self.field_info:
-                message = _("Field `%(name)s` does not exist", name=name)
+                message = self.env._("Field `%(name)s` does not exist", name=name)
                 _debug.logic(
                     "name_check_failed", view=view.id, name=name, reason="no_field"
                 )
@@ -200,7 +200,7 @@ class NameManager:
                     name, raise_if_not_found=False
                 )
                 if not action_id:
-                    msg = _(
+                    msg = self.env._(
                         "Invalid xmlid %(xmlid)s for button of type action.",
                         xmlid=name,
                     )
@@ -219,7 +219,7 @@ class NameManager:
                         model=model,
                         reason="not_an_action",
                     )
-                    msg = _(
+                    msg = self.env._(
                         "%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions.actions",
                         xmlid=name,
                         xmlid_model=model,
@@ -242,7 +242,7 @@ class NameManager:
         )
         for name, (action_id, node) in resolved.items():
             if action_id not in existing:
-                msg = _(
+                msg = self.env._(
                     "Action %(action_reference)s (id: %(action_id)s) does not exist for button of type action.",
                     action_reference=name,
                     action_id=action_id,
@@ -255,7 +255,7 @@ class NameManager:
     def _check_required_groups(self, view: Any) -> None:
         for name, node in self.required_groups.items():
             if self.group_definitions.get_id(name) is None:
-                msg = _(
+                msg = self.env._(
                     "The group \u201c%(name)s\u201d defined in view does not exist!",
                     name=name,
                 )
@@ -272,7 +272,7 @@ class NameManager:
                     field=name,
                     reason="composed",
                 )
-                msg = _(
+                msg = self.env._(
                     "Invalid composed field %(definition)s in %(use)s",
                     definition=name,
                     use=self._describe_use(use),
@@ -328,8 +328,8 @@ class NameManager:
         debug = self._prepare_inconsistency_debug(name, does_not_exist, reasons)
 
         message = Markup("<b>{header}</b><br/>{body}<br/>{footer}<br/>{debug}").format(
-            header=_("Access Rights Inconsistency"),
-            body=_(
+            header=self.env._("Access Rights Inconsistency"),
+            body=self.env._(
                 "This view may not work for all users: some users may have a "
                 "combination of groups where the elements %(elements)s are displayed, "
                 "but they depend on the field %(field)s that is not accessible. "
@@ -345,7 +345,7 @@ class NameManager:
                 groups=Markup("<i>groups</i>"),
                 invisible=Markup("<i>invisible</i>"),
             ),
-            footer=_("Debugging information:"),
+            footer=self.env._("Debugging information:"),
             debug=Markup("<br/>").join(debug),
         )
 
@@ -357,7 +357,7 @@ class NameManager:
         debug = []
         if does_not_exist:
             debug.append(
-                _(
+                self.env._(
                     "- field \u201c%(name)s\u201d does not exist in model \u201c%(model)s\u201d.",
                     name=name,
                     model=self.model._name,
@@ -366,11 +366,11 @@ class NameManager:
         else:
             field_groups = self._get_field_groups(name)
             debug.append(
-                _(
+                self.env._(
                     "- field \u201c%(name)s\u201d is accessible for groups: %(field_groups)s",
                     name=name,
                     field_groups=(
-                        _("Only super user has access")
+                        self.env._("Only super user has access")
                         if field_groups.is_empty()
                         else field_groups
                     ),
@@ -382,14 +382,14 @@ class NameManager:
             clone.attrib.pop("__validate__", None)
             clone.attrib.pop("__groups_key__", None)
             debug.append(
-                _(
+                self.env._(
                     "- element \u201c%(node)s\u201d is shown in the view for groups: %(groups)s",
                     node=etree.tostring(clone, encoding="unicode"),
                     groups=(
-                        _("Free access")
+                        self.env._("Free access")
                         if item_groups.is_universal()
                         else (
-                            _("Accessible only for the super user")
+                            self.env._("Accessible only for the super user")
                             if item_groups.is_empty()
                             else item_groups
                         )

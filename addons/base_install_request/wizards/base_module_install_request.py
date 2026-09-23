@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -42,7 +42,7 @@ class BaseModuleInstallRequest(models.Model):
             "tag": "display_notification",
             "params": {
                 "type": "success",
-                "message": _("Your request has been successfully sent"),
+                "message": self.env._("Your request has been successfully sent"),
                 "next": {"type": "ir.actions.act_window_close"},
             },
         }
@@ -100,9 +100,9 @@ class BaseModuleInstallReview(models.TransientModel):
     @api.model
     def _get_depending_apps(self, module):
         if not module:
-            raise UserError(_("No module selected."))
+            raise UserError(self.env._("No module selected."))
         if module.state == "installed":
-            raise UserError(_("The module is already installed."))
+            raise UserError(self.env._("The module is already installed."))
         deps = module.upstream_dependencies()
         apps = module | deps.filtered(lambda d: d.application)
         for dep in deps:

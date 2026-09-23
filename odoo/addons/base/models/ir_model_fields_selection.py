@@ -4,7 +4,7 @@ from typing import Any, Self
 import psycopg
 from psycopg.types.json import Json
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
@@ -87,7 +87,7 @@ class IrModelFieldsSelection(models.Model):
                 reason="non_str_value_label",
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "Fields %s contain a non-str value/label in selection",
                     ", ".join(
                         f"{field.model_name}.{field.name}" for field in invalid_fields
@@ -220,7 +220,7 @@ class IrModelFieldsSelection(models.Model):
 
     def _prepare_base_field_error(self) -> UserError:
         return UserError(
-            _(
+            self.env._(
                 "Properties of base fields cannot be altered in this manner! "
                 "Please modify them through Python code, "
                 "preferably through a custom addon!"
@@ -349,7 +349,7 @@ class IrModelFieldsSelection(models.Model):
                     reason="duplicate_value_per_field",
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot set the same value on several selection options "
                         "of one field; selection values must be unique per field."
                     )

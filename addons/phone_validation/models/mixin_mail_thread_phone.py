@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
 
 
@@ -91,7 +91,9 @@ class MixinMailThreadPhone(models.AbstractModel):
 
     def _assert_phone_field(self):
         if not self._get_phone_number_fields():
-            raise UserError(_("Invalid primary phone field on model %s", self._name))
+            raise UserError(
+                self.env._("Invalid primary phone field on model %s", self._name)
+            )
 
     def _phone_get_sanitize_triggers(self):
         return [

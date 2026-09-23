@@ -5,7 +5,7 @@ from urllib.parse import urlencode as url_encode
 
 import requests
 
-from odoo import _, fields, models, release
+from odoo import fields, models, release
 from odoo.exceptions import AccessError, UserError
 from odoo.libs.web import urljoin as url_join
 from odoo.tools import email_normalize, hmac
@@ -71,7 +71,7 @@ class MixinOauth2MailProvider(models.AbstractModel):
             .sudo()
             .create(
                 {
-                    "name": _(
+                    "name": self.env._(
                         "%(model)s: %(record)s",
                         model=self._description,
                         record=self.display_name,
@@ -146,14 +146,14 @@ class MixinOauth2MailProvider(models.AbstractModel):
 
         if not self.env.is_admin():
             raise AccessError(
-                _(
+                self.env._(
                     "Only the administrator can link a mail server to %s.",
                     provider.label,
                 )
             )
 
         if not email_normalize(self[self._email_field]):
-            raise UserError(_("Please enter a valid email address."))
+            raise UserError(self.env._("Please enter a valid email address."))
 
         client_id, client_secret = self._oauth2_credentials(provider)
         if client_id and client_secret:
@@ -162,7 +162,9 @@ class MixinOauth2MailProvider(models.AbstractModel):
             uri = self._oauth2_iap_authorize_uri(provider)
 
         if not uri:
-            raise UserError(_("Please configure your %s credentials.", provider.label))
+            raise UserError(
+                self.env._("Please configure your %s credentials.", provider.label)
+            )
 
         return {
             "type": "ir.actions.act_url",
@@ -172,7 +174,9 @@ class MixinOauth2MailProvider(models.AbstractModel):
 
     def _oauth2_iap_authorize_uri(self, provider):
         if release.version_info[-1] != "e":
-            raise UserError(_("Please configure your %s credentials.", provider.label))
+            raise UserError(
+                self.env._("Please configure your %s credentials.", provider.label)
+            )
 
         db_uuid = self.env["ir.config_parameter"].sudo().get_param("database.uuid")
         callback_params = url_encode(
@@ -202,7 +206,9 @@ class MixinOauth2MailProvider(models.AbstractModel):
         except requests.exceptions.RequestException as e:
             _logger.error("Can not contact IAP: %s.", e)
             raise UserError(
-                _("Oops, we could not authenticate you. Please try again later.")
+                self.env._(
+                    "Oops, we could not authenticate you. Please try again later."
+                )
             ) from e
 
         response = response.json()
@@ -272,12 +278,14 @@ class MixinOauth2MailProvider(models.AbstractModel):
 
     def _oauth2_token_error(self, provider, response):
         if not provider.token_error_detail:
-            return _("An error occurred when fetching the access token.")
+            return self.env._("An error occurred when fetching the access token.")
         try:
             detail = response.json()["error_description"]
         except ValueError, KeyError, TypeError:
-            detail = _("Unknown error.")
-        return _("An error occurred when fetching the access token. %s", detail)
+            detail = self.env._("Unknown error.")
+        return self.env._(
+            "An error occurred when fetching the access token. %s", detail
+        )
 
     def _oauth2_get_access_token_iap(self, provider, refresh_token):
         db_uuid = self.env["ir.config_parameter"].sudo().get_param("database.uuid")
@@ -297,7 +305,9 @@ class MixinOauth2MailProvider(models.AbstractModel):
         if not response.ok:
             _logger.error("Can not contact IAP: %s.", response.text)
             raise UserError(
-                _("Oops, we could not authenticate you. Please try again later.")
+                self.env._(
+                    "Oops, we could not authenticate you. Please try again later."
+                )
             )
 
         response = response.json()

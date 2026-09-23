@@ -14,7 +14,6 @@ from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.models import add_field
 from odoo.tools import SQL, groupby, reset_cached_properties, unique
-from odoo.tools.translate import _
 
 from .ir_model_common import MODULE_UNINSTALL_FLAG
 
@@ -322,7 +321,7 @@ class IrModelData(models.Model):
                 "uninstall_module_data.rejected", uid=self.env.uid, reason="not_system"
             )
             raise AccessError(
-                _("Administrator access is required to uninstall a module")
+                self.env._("Administrator access is required to uninstall a module")
             )
 
         self = self.with_context(

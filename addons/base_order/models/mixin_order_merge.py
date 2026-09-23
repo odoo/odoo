@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -52,21 +52,21 @@ class MixinOrderMerge(models.AbstractModel):
         if len(orders) < 2:
             _debug.logic("merge_refused", orders=orders, reason="fewer_than_two")
             raise UserError(
-                _("Please select at least two orders to merge."),
+                self.env._("Please select at least two orders to merge."),
             )
 
     def _merge_check_groups(self, groups):
         if not groups:
             _debug.logic("merge_refused", orders=self, reason="no_compatible_group")
             raise UserError(
-                _(
+                self.env._(
                     "No compatible orders to merge. Orders must have the same:\n%s",
                     self._get_merge_group_description(),
                 ),
             )
 
     def _get_merge_group_description(self):
-        return _("- Partner\n- Currency")
+        return self.env._("- Partner\n- Currency")
 
     def _merge_group_orders(self, orders):
         groups = defaultdict(lambda: self.env[self._name])
@@ -204,12 +204,12 @@ class MixinOrderMerge(models.AbstractModel):
     def _merge_post_messages(self, target, sources):
         source_names = ", ".join(sources.mapped("name"))
         target.message_post(
-            body=_("Merged with: %(sources)s", sources=source_names),
+            body=self.env._("Merged with: %(sources)s", sources=source_names),
         )
         target_link = target._get_html_link()
         for source in sources:
             source.message_post(
-                body=_("Merged into %s", target_link),
+                body=self.env._("Merged into %s", target_link),
             )
 
     def _merge_finalize(self, target, sources):
@@ -231,4 +231,4 @@ class MixinOrderMerge(models.AbstractModel):
         return action
 
     def _get_merge_result_name(self):
-        return _("Merged Orders")
+        return self.env._("Merged Orders")

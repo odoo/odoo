@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import consteq
@@ -53,7 +53,7 @@ class DocumentsAccess(models.Model):
         for access in self:
             if access.role and access.partner_id == public_partner:
                 _debug.logic("member_refused", reason="public_partner", access=access)
-                raise ValidationError(_("This user can not be member."))
+                raise ValidationError(self.env._("This user can not be member."))
 
     def _prepare_create_values(self, vals_list: list[dict]) -> list[dict]:
         vals_list = super()._prepare_create_values(vals_list)
@@ -67,7 +67,9 @@ class DocumentsAccess(models.Model):
     def write(self, vals: dict) -> bool:
         if "partner_id" in vals or "document_id" in vals:
             _debug.logic("access_write_refused", reason="identity_change")
-            raise AccessError(_("Access documents and partners cannot be changed."))
+            raise AccessError(
+                self.env._("Access documents and partners cannot be changed.")
+            )
 
         self.document_id.check_access("write")
         self._check_membership_write(vals)
@@ -81,7 +83,7 @@ class DocumentsAccess(models.Model):
         if user.share:
             _debug.logic("access_write_refused", reason="share_user")
             raise AccessError(
-                _("Only internal users can change who can access documents.")
+                self.env._("Only internal users can change who can access documents.")
             )
         if (
             {"role", "expiration_date"} & set(vals)
@@ -94,7 +96,9 @@ class DocumentsAccess(models.Model):
         ):
             _debug.logic("access_write_refused", reason="own_membership")
             raise AccessError(
-                _("You cannot change your own access to documents you do not own.")
+                self.env._(
+                    "You cannot change your own access to documents you do not own."
+                )
             )
 
     @api.autovacuum
@@ -165,7 +169,7 @@ class DocumentsAccess(models.Model):
         self.check_singleton()
         if not self._is_signup_available():
             _debug.logic("member_invite_refused", access=self)
-            raise UserError(_("Cannot invite this member."))
+            raise UserError(self.env._("Cannot invite this member."))
 
         return tools.hmac(
             self.env(su=True),

@@ -5,7 +5,7 @@ import os
 from hashlib import sha256
 from typing import Any, Self
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
@@ -119,7 +119,7 @@ class ResUsersApikeys(models.Model):
             owners=self.mapped("user_id").ids,
         )
         raise AccessError(
-            _(
+            self.env._(
                 "You can not remove API keys unless they're yours or you are a system user"
             )
         )
@@ -222,7 +222,9 @@ class ResUsersApikeys(models.Model):
             return
         if not date:
             _debug.logic("apikey_expiration_rejected", uid=self.env.uid, reason="unset")
-            raise ValidationError(_("The API key must have an expiration date"))
+            raise ValidationError(
+                self.env._("The API key must have an expiration date")
+            )
         max_duration = self._get_max_duration()
         if date > fields.Datetime.now() + datetime.timedelta(days=max_duration):
             _debug.logic(
@@ -232,13 +234,15 @@ class ResUsersApikeys(models.Model):
                 max_days=max_duration,
             )
             raise ValidationError(
-                _("You cannot exceed %(duration)s days.", duration=max_duration)
+                self.env._(
+                    "You cannot exceed %(duration)s days.", duration=max_duration
+                )
             )
 
     def _check_generate_access(self) -> None:
         if not self.env.user._is_internal():
             _debug.logic("apikey_generate_refused", uid=self.env.uid)
-            raise AccessError(_("Only internal users can create API keys"))
+            raise AccessError(self.env._("Only internal users can create API keys"))
 
     def _generate(
         self,
@@ -381,7 +385,7 @@ class ResUsersApikeysDescription(models.TransientModel):
             _debug.logic("apikey_expiration_onchange_warned", uid=self.env.uid)
             warning = {
                 "type": "notification",
-                "title": _("The API key duration is not correct."),
+                "title": self.env._("The API key duration is not correct."),
                 "message": error.args[0],
             }
             return {"warning": warning}
@@ -409,7 +413,7 @@ class ResUsersApikeysDescription(models.TransientModel):
         return {
             "type": "ir.actions.act_window",
             "res_model": "res.users.apikeys.show",
-            "name": _("API Key Ready"),
+            "name": self.env._("API Key Ready"),
             "views": [(False, "form")],
             "target": "new",
             "context": {

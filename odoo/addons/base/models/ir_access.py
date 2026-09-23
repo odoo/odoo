@@ -6,7 +6,7 @@ from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping
 from typing import Any, Self
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain, DomainCondition
@@ -376,7 +376,7 @@ class IrAccess(models.Model):
             access.model_id.model == self._name and access.domain for access in self
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "Accesses with a domain can not be applied on the model Access itself."
                 )
             )
@@ -389,7 +389,7 @@ class IrAccess(models.Model):
                 continue
             if tests := domain_group_tests(access.domain):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The domain of %(access)s tests the user's groups (%(tests)s). "
                         "Group membership is what the access's group states: a domain "
                         "that reads it lets a group take records away. Put the rows on "
@@ -411,7 +411,7 @@ class IrAccess(models.Model):
                     error=type(e).__name__,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invalid domain %(domain)s: %(error)s",
                         domain=access.domain,
                         error=e,
@@ -429,9 +429,8 @@ class IrAccess(models.Model):
         if cycle:
             raise ValidationError(self._access_cycle_message(cycle))
 
-    @staticmethod
-    def _access_cycle_message(cycle: list[tuple[str, str]]) -> str:
-        return _(
+    def _access_cycle_message(self, cycle: list[tuple[str, str]]) -> str:
+        return self.env._(
             "The 'access' conditions of the accesses form a cycle: %(cycle)s. "
             "A record's access cannot depend on itself; break the cycle with a "
             "domain that does not go through the 'access' operator.",
@@ -515,7 +514,7 @@ class IrAccess(models.Model):
             .search([("model", "in", ("ir.model.access", "ir.rule"))], limit=1)
         ):
             raise UserError(
-                _(
+                self.env._(
                     "This database still holds access lines and record rules "
                     "(%(xmlid)s among them), which base's 1.97 migration converts "
                     "into ir.access rows. Upgrade base first (-u base), then the "
@@ -677,21 +676,21 @@ class IrAccess(models.Model):
         model_name = records._name
         description = self.env["ir.model"]._get(model_name).name or model_name
         operation_names = {
-            "read": _("read"),
-            "write": _("write"),
-            "create": _("create"),
-            "unlink": _("unlink"),
+            "read": self.env._("read"),
+            "write": self.env._("write"),
+            "create": self.env._("create"),
+            "unlink": self.env._("unlink"),
         }
-        operation_error = _(
+        operation_error = self.env._(
             "Uh-oh! Looks like you have stumbled upon some top-secret records.\n\n"
             "Sorry, %(user)s doesn't have '%(operation)s' access to:",
             user=f"{self.env.user.name} (id={self.env.uid})",
             operation=operation_names.get(operation, operation),
         )
-        failing_model = _(
+        failing_model = self.env._(
             "- %(description)s (%(model)s)", description=description, model=model_name
         )
-        resolution_info = _(
+        resolution_info = self.env._(
             "If you really, really need access, perhaps you can win over your "
             "friendly administrator with a batch of freshly baked cookies."
         )
@@ -740,7 +739,7 @@ class IrAccess(models.Model):
             {row.id: row for row in failing}.values(), key=lambda row: row.id
         )
         return [
-            _(
+            self.env._(
                 "Blame the following accesses:\n%s",
                 "\n".join(f"- {row.name}" for row in accesses),
             )

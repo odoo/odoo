@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -238,7 +238,7 @@ class MixinOrderLineInvoice(models.AbstractModel):
                         target=target_uom,
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             "Cannot invoice “%(line)s”: its already-invoiced "
                             "quantity is recorded in %(source)s, which cannot "
                             "be converted into %(target)s. Align the units of "

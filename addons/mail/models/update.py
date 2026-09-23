@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.models import AbstractModel
 from odoo.tools import cloc, config
-from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -134,7 +133,9 @@ class Publisher_WarrantyContract(AbstractModel):
                     return False
                 _logger.debug("Exception while sending a get logs messages", exc_info=1)
                 raise UserError(
-                    _("Error during communication with the publisher warranty server.")
+                    self.env._(
+                        "Error during communication with the publisher warranty server."
+                    )
                 ) from None
             user = self.env["res.users"].sudo().browse(SUPERUSER_ID)
             poster = self.sudo().env.ref(

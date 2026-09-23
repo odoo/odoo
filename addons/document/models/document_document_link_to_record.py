@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -29,7 +29,7 @@ class DocumentDocument(models.Model):
                 "tag": "display_notification",
                 "params": {
                     "type": "warning",
-                    "message": _(
+                    "message": self.env._(
                         "Already linked Documents: %s",
                         ", ".join(documents_link_record.mapped("name")),
                     ),
@@ -44,12 +44,14 @@ class DocumentDocument(models.Model):
             if not first_valid_id:
                 _debug.logic("link_refused", reason="no_target_record", model=model)
                 raise UserError(
-                    _("There are no records to link this document. Create one first.")
+                    self.env._(
+                        "There are no records to link this document. Create one first."
+                    )
                 )
             context["default_resource_ref"] = f"{model},{first_valid_id}"
 
         return {
-            "name": _("Choose a record to link"),
+            "name": self.env._("Choose a record to link"),
             "type": "ir.actions.act_window",
             "res_model": "document.link_to_record_wizard",
             "view_mode": "form",

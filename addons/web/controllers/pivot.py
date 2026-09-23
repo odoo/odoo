@@ -4,7 +4,7 @@ from collections import deque
 import xlsxwriter
 from werkzeug.datastructures import FileStorage
 
-from odoo import _, http
+from odoo import http
 from odoo.http import (
     Response,
     UnprocessableEntity,
@@ -14,9 +14,12 @@ from odoo.http import (
 from odoo.libs.documents import extension_for
 from odoo.libs.filesystem import osutil
 from odoo.libs.json import loads as json_loads
+from odoo.tools import LazyTranslate
 
 from ..tools import debug_log as dbg
 from .export_writers import XLSX_MIMETYPE
+
+_lt = LazyTranslate(__name__)
 
 MAX_EXPORT_CELLS = 1_000_000
 
@@ -53,7 +56,7 @@ class _CappedWorksheet:
                 self._cap,
             )
             raise UnprocessableEntity(
-                _(
+                _lt(
                     "This pivot is too large to export (over %s cells). "
                     "Narrow the grouping or add filters and try again.",
                     self._cap,
@@ -74,7 +77,7 @@ class TableExporter(http.Controller):
         )
         if not jdata:
             dbg.logic.debug("[pivot] export_xlsx: empty payload, refused")
-            raise UnprocessableEntity(_("No data to export"))
+            raise UnprocessableEntity(request.env._("No data to export"))
         dbg.performance.debug(
             "[pivot:%s] export_xlsx: %d header rows, %d measures, %d rows",
             jdata.get("title"),
@@ -122,7 +125,7 @@ class TableExporter(http.Controller):
             "[pivot:%s] export_xlsx: %d bytes", jdata.get("title"), len(xlsx_data)
         )
         filename = osutil.clean_filename(
-            _(
+            request.env._(
                 "Pivot %(title)s (%(model_name)s)",
                 title=jdata["title"],
                 model_name=jdata["model"],

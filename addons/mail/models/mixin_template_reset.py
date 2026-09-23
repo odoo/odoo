@@ -3,7 +3,7 @@ from typing import Self
 
 from lxml import etree
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
@@ -93,7 +93,7 @@ class MixinTemplateReset(models.AbstractModel):
                 templates_with_missing_source.append(template.display_name)
         if templates_with_missing_source:
             raise UserError(
-                _(
+                self.env._(
                     "The following email templates could not be reset because their related source files could not be found:\n- %s",
                     "\n- ".join(templates_with_missing_source),
                 )

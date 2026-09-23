@@ -12,7 +12,7 @@ from odoo.fields import Command
 from odoo.libs.datetime import timezone
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_compare
-from odoo.tools import SQL, _, frozendict
+from odoo.tools import SQL, frozendict
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -272,7 +272,7 @@ class IrActionsActions(models.Model):
                 raise ValidationError(self._get_type_mismatch_message(action.type))
 
     def _get_type_mismatch_message(self, action_type: str) -> str:
-        return _(
+        return self.env._(
             "Action type “%(type)s” does not match the model this action "
             "is stored in (“%(model)s”).",
             type=action_type,
@@ -286,7 +286,7 @@ class IrActionsActions(models.Model):
             if model and model not in self.env:
                 _debug.logic("binding_model_unknown", action=action.id, model=model)
                 raise ValidationError(
-                    _("Invalid model name “%s” in action definition.", model)
+                    self.env._("Invalid model name “%s” in action definition.", model)
                 )
 
     @api.constrains("path")
@@ -299,7 +299,7 @@ class IrActionsActions(models.Model):
                     "path_rejected", action=action.id, path=action.path, reason="syntax"
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The path should contain only lowercase alphanumeric characters, underscore, and dash, and it should start with a letter."
                     )
                 )
@@ -311,7 +311,9 @@ class IrActionsActions(models.Model):
                         path=action.path,
                         reason="reserved_prefix",
                     )
-                    raise ValidationError(_("'%s' is a reserved prefix.", prefix))
+                    raise ValidationError(
+                        self.env._("'%s' is a reserved prefix.", prefix)
+                    )
             if action.path in self._RESERVED_PATHS:
                 _debug.logic(
                     "path_rejected",
@@ -320,7 +322,9 @@ class IrActionsActions(models.Model):
                     reason="reserved",
                 )
                 raise ValidationError(
-                    _("'%s' is reserved, and can not be used as path.", action.path)
+                    self.env._(
+                        "'%s' is reserved, and can not be used as path.", action.path
+                    )
                 )
 
     @api.constrains("binding_view_types")
@@ -628,7 +632,9 @@ class IrActionsActions(models.Model):
             self.env.uid,
             reason,
         )
-        raise AccessError(_("You don't have enough access rights to open this action."))
+        raise AccessError(
+            self.env._("You don't have enough access rights to open this action.")
+        )
 
     @api.model
     def _get_action_dict_by_xml_id(self, full_xml_id: str) -> dict[str, Any]:
@@ -711,13 +717,15 @@ class IrActionsActions(models.Model):
         self.check_access("write")
         target_field = self._get_field_target_model()
         if not target_field:
-            raise UserError(_("%s cannot be bound to a model.", self._description))
+            raise UserError(
+                self.env._("%s cannot be bound to a model.", self._description)
+            )
         _debug.lifecycle("bindings_created", model=self._name, actions=self.ids)
         IrModel = self.env["ir.model"]
         for model_name, actions in self.grouped(target_field).items():
             if not model_name:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Choose the model to bind %s to.",
                         ", ".join(actions.mapped("name")),
                     )
@@ -784,7 +792,7 @@ class IrActionsActions(models.Model):
                     unknown=unknown,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Unknown view type(s) %(unknown)s in %(field)s. Allowed: %(allowed)s",
                         unknown=", ".join(unknown),
                         field=field_name,

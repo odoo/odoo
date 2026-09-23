@@ -3,7 +3,6 @@ from typing import Self
 from odoo import api, fields, models
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import _
 from odoo.tools.misc import get_diff
 
 _debug = DebugLog(__name__)
@@ -50,8 +49,8 @@ class ServerActionHistoryWizard(models.TransientModel):
             has_diff = actual_code != rev_code
             wizard.code_diff = (
                 get_diff(
-                    (actual_code or "", _("Actual Code")),
-                    (rev_code or "", _("Revision Code")),
+                    (actual_code or "", self.env._("Actual Code")),
+                    (rev_code or "", self.env._("Revision Code")),
                     dark_color_scheme=request
                     and request.cookies.get("color_scheme") == "dark",
                 )

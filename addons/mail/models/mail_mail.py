@@ -15,7 +15,7 @@ from typing import Any, Literal, Self
 import psycopg
 from dateutil.parser import parse
 
-from odoo import SUPERUSER_ID, _, api, fields, models, modules, tools
+from odoo import SUPERUSER_ID, api, fields, models, modules, tools
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
@@ -261,7 +261,9 @@ class MailMail(models.Model):
                     "mail_server_refused", mail=mail.id, server=mail.mail_server_id.id
                 )
                 raise ValidationError(
-                    _("You may not create a message using another user's mail server.")
+                    self.env._(
+                        "You may not create a message using another user's mail server."
+                    )
                 )
 
     @api.depends("body_html")
@@ -623,7 +625,7 @@ class MailMail(models.Model):
                 {
                     "notification_status": "exception",
                     "failure_type": "mail_email_invalid",
-                    "failure_reason": _(
+                    "failure_reason": self.env._(
                         "This address could not be used as a recipient and was "
                         "left out of the message that was sent."
                     ),
@@ -641,7 +643,7 @@ class MailMail(models.Model):
                 {
                     "notification_status": "exception",
                     "failure_type": "unknown",
-                    "failure_reason": _(
+                    "failure_reason": self.env._(
                         "This recipient is not listed on the message that was "
                         "sent, so nothing was delivered to them."
                     ),
@@ -1440,7 +1442,7 @@ class MailMail(models.Model):
                 )
                 if raise_exception:
                     raise MailDeliveryError(
-                        _("Unable to connect to SMTP Server"), exc
+                        self.env._("Unable to connect to SMTP Server"), exc
                     ) from exc
                 self.browse(batch_ids)._record_connect_failure(
                     exc, mail_server, quota_charged
@@ -1526,7 +1528,7 @@ class MailMail(models.Model):
         self.filtered("scheduled_date").write({"scheduled_date": False})
         self.send()
         return {
-            "name": _("Emails"),
+            "name": self.env._("Emails"),
             "res_model": "mail.mail",
             "view_mode": "list",
             "views": [[False, "list"], [False, "form"]],
@@ -1561,7 +1563,7 @@ class MailMail(models.Model):
                 )
                 if raise_exception:
                     raise UserError(
-                        _("Unauthorized server for some of the sending mails.")
+                        self.env._("Unauthorized server for some of the sending mails.")
                     )
                 to_send = self - unauthorized
                 unauthorized._record_unauthorized_server(mail_server)
@@ -1591,7 +1593,7 @@ class MailMail(models.Model):
         return True
 
     def _record_unauthorized_server(self, mail_server: IrMail_Server) -> None:
-        failure_reason = _(
+        failure_reason = self.env._(
             "The outgoing mail server %(server)s is not available to this email.",
             server=mail_server.sudo().display_name,
         )
@@ -1879,7 +1881,7 @@ class MailMail(models.Model):
             no_recipients=no_recipients,
             pending=len(pending_notification_ids or ()),
         )
-        placeholder = _(
+        placeholder = self.env._(
             "Placeholder recorded before sending. Still present means the send "
             "was interrupted before it could record an outcome; see the server log."
         )

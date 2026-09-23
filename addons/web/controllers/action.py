@@ -1,6 +1,5 @@
 from typing import Any
 
-from odoo import _
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import BadRequest, Controller, request, route
 
@@ -57,13 +56,15 @@ class Action(Controller):
                     "[action:%s] load: unresolved (%s)", action_id, type(exc).__name__
                 )
                 raise MissingActionError(
-                    _("The action '%s' does not exist.", action_id)
+                    request.env._("The action '%s' does not exist.", action_id)
                 ) from exc
 
         action = Actions.sudo().browse(action_id)._get_concrete()
         if action._name == Actions._name or not action.exists():
             dbg.logic.debug("[action:%s] load: no concrete action row", action_id)
-            raise MissingActionError(_("The action '%s' does not exist", action_id))
+            raise MissingActionError(
+                request.env._("The action '%s' does not exist", action_id)
+            )
         action_type = action._name
         if action_type == "ir.actions.report":
             dbg.logic.debug("[action:%s] load: report -> bin_size", action_id)
@@ -75,7 +76,7 @@ class Action(Controller):
                 "[action:%s] load: refused to uid %s", action_id, request.env.uid
             )
             raise MissingActionError(
-                _("The action '%s' does not exist", action_id)
+                request.env._("The action '%s' does not exist", action_id)
             ) from exc
         action = request.env[action_type].sudo().browse([action_id])
         with dbg.timer(
@@ -161,7 +162,7 @@ class Action(Controller):
                 msg = "Actions with a model should also have a resId"
                 raise BadRequest(msg)
             if record_id == "new":
-                return {"display_name": _("New")}
+                return {"display_name": request.env._("New")}
             return {"display_name": Model.browse(record_id).display_name}
         dbg.logic.debug("[breadcrumbs] #%d: neither action nor model", idx)
         msg = "Actions should have either an action (id or path) or a model"
@@ -204,7 +205,7 @@ class Action(Controller):
 
         if record_id:
             if record_id == "new":
-                return {"display_name": _("New")}
+                return {"display_name": request.env._("New")}
             if act.get("res_model"):
                 dbg.logic.debug(
                     "[breadcrumbs] #%d: record name %s/%s",

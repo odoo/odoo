@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -105,7 +105,7 @@ class AddIotBox(models.TransientModel):
             "type": "ir.actions.act_window",
             "res_model": "add.iot.box",
             "res_id": self.id,
-            "name": _("Several IoT's detected"),
+            "name": self.env._("Several IoT's detected"),
             "views": [[self.env.ref("iot.view_select_box_to_connect").id, "form"]],
             "target": "new",
         }
@@ -116,7 +116,7 @@ class AddIotBox(models.TransientModel):
             "type": "ir.actions.act_window",
             "res_model": "add.iot.box",
             "res_id": self.id,
-            "name": _("Searching for an IoT Box..."),
+            "name": self.env._("Searching for an IoT Box..."),
             "views": [[self.env.ref("iot.view_enter_pairing_code").id, "form"]],
             "target": "new",
         }
@@ -127,7 +127,7 @@ class AddIotBox(models.TransientModel):
             "type": "ir.actions.act_window",
             "res_model": "add.iot.box",
             "res_id": self.id,
-            "name": _("Searching for an IoT Box..."),
+            "name": self.env._("Searching for an IoT Box..."),
             "views": [[self.env.ref("iot.view_no_iot_box_found").id, "form"]],
             "target": "new",
             "no_iot_found_found": True,
@@ -135,9 +135,9 @@ class AddIotBox(models.TransientModel):
 
     def _open_connecting_action(self):
         if self.serial_number:
-            name = _("IoT Box %s found. Connecting...", self.serial_number)
+            name = self.env._("IoT Box %s found. Connecting...", self.serial_number)
         else:
-            name = _("IoT Box found. Connecting...")
+            name = self.env._("IoT Box found. Connecting...")
 
         return {
             "type": "ir.actions.act_window",
@@ -205,7 +205,7 @@ class AddIotBox(models.TransientModel):
             "type": "ir.actions.act_window",
             "res_model": "add.iot.box",
             "res_id": self.id,
-            "name": _("Pair an IoT Box offline"),
+            "name": self.env._("Pair an IoT Box offline"),
             "views": [[self.env.ref("iot.view_pair_offline").id, "form"]],
             "target": "new",
         }

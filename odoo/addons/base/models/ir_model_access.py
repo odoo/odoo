@@ -1,7 +1,7 @@
 import logging
 from typing import Any, Self
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
@@ -161,7 +161,7 @@ class IrModelAccess(models.Model):
         if not vals_list:
             return self.browse()
         raise UserError(
-            _(
+            self.env._(
                 "Access lines are ir.access rows now: create a permission row of "
                 "ir.access (a module ships it in security/ir.access.csv) instead of "
                 "an ir.model.access line."

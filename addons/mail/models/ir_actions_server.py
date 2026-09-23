@@ -5,7 +5,7 @@ from typing import Literal, Self
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.date_utils import get_timedelta, time_unit_selection
 from odoo.tools.misc import clean_context
@@ -182,9 +182,11 @@ class IrActionsServer(models.Model):
     def _prepare_automated_name(self) -> str:
         self.check_singleton()
         if self.state == "mail_post" and self.template_id:
-            return _("Send %(template_name)s", template_name=self.template_id.name)
+            return self.env._(
+                "Send %(template_name)s", template_name=self.template_id.name
+            )
         if self.state == "next_activity" and self.activity_type_id:
-            return _(
+            return self.env._(
                 "Create %(activity_name)s", activity_name=self.activity_type_id.name
             )
         return super()._prepare_automated_name()
@@ -383,10 +385,10 @@ class IrActionsServer(models.Model):
         warnings = super()._get_warning_messages()
 
         if self.state == "mail_post" and not self.template_id:
-            warnings.append(_("Select the email template to send."))
+            warnings.append(self.env._("Select the email template to send."))
 
         if self.state == "next_activity" and not self.activity_type_id:
-            warnings.append(_("Select the type of activity to schedule."))
+            warnings.append(self.env._("Select the type of activity to schedule."))
 
         if (
             self.state == "mail_post"
@@ -394,26 +396,28 @@ class IrActionsServer(models.Model):
             and self.template_id.model_id != self.model_id
         ):
             warnings.append(
-                _(
+                self.env._(
                     "Mail template model of %(action_name)s does not match action model.",
                     action_name=self.name,
                 )
             )
 
         if self.state in MAIL_STATES and self.model_id.transient:
-            warnings.append(_("This action cannot be done on transient models."))
+            warnings.append(
+                self.env._("This action cannot be done on transient models.")
+            )
 
         flag = self._get_mail_model_flag()
         if flag and not self.model_id[flag]:
             if flag == "is_mail_activity":
                 warnings.append(
-                    _(
+                    self.env._(
                         "A next activity can only be planned on models that use activities."
                     )
                 )
             else:
                 warnings.append(
-                    _("This action can only be done on a mail thread models")
+                    self.env._("This action can only be done on a mail thread models")
                 )
 
         if (
@@ -421,14 +425,14 @@ class IrActionsServer(models.Model):
             and self.followers_type == "specific"
             and not self.partner_ids
         ):
-            warnings.append(_("Select the contacts to add or remove."))
+            warnings.append(self.env._("Select the contacts to add or remove."))
 
         if self.state in FOLLOWER_STATES and self.followers_type == "generic":
             warnings += self._get_path_warnings(
                 "followers_partner_field_name",
                 "res.partner",
-                lambda: _("Select the field holding the contacts to follow."),
-                lambda path: _(
+                lambda: self.env._("Select the field holding the contacts to follow."),
+                lambda path: self.env._(
                     "The field '%(field_chain_str)s' is not a partner field.",
                     field_chain_str=path,
                 ),
@@ -438,8 +442,8 @@ class IrActionsServer(models.Model):
             warnings += self._get_path_warnings(
                 "activity_user_field_name",
                 "res.users",
-                lambda: _("Select the field holding the user to assign."),
-                lambda path: _(
+                lambda: self.env._("Select the field holding the user to assign."),
+                lambda path: self.env._(
                     "The field '%(field_chain_str)s' is not a user field.",
                     field_chain_str=path,
                 ),
@@ -460,7 +464,7 @@ class IrActionsServer(models.Model):
         field_chain = self._get_relation_chain(field_name)
         if not field_chain:
             return [
-                _(
+                self.env._(
                     "The field '%(path)s' does not exist on %(model)s.",
                     path=self[field_name],
                     model=self.model_id.display_name,

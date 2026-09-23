@@ -4,7 +4,7 @@ from collections import defaultdict
 from datetime import timedelta
 from typing import Literal, Self
 
-from odoo import Command, _, api, fields, models, modules, tools
+from odoo import Command, api, fields, models, modules, tools
 from odoo.api import ValuesType
 from odoo.exceptions import UserError
 from odoo.http import request
@@ -223,7 +223,7 @@ class ResUsers(models.Model):
         current_user = self.env.user
         for user in self:
             user.partner_id._message_log(
-                body=_(
+                body=self.env._(
                     "Archived because %(user_name)s (#%(user_id)s) deleted the portal account",
                     user_name=current_user.name,
                     user_id=current_user.id,
@@ -251,7 +251,7 @@ class ResUsers(models.Model):
         for user, user_email in users_to_blacklist:
             self.env["mail.blacklist"]._add(
                 user_email,
-                message=_(
+                message=self.env._(
                     "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)",
                     user_name=current_user.name,
                     user_id=current_user.id,
@@ -353,7 +353,7 @@ class ResUsers(models.Model):
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
-                    "message": _("Switching back to the default server."),
+                    "message": self.env._("Switching back to the default server."),
                     "type": "warning",
                 },
             }
@@ -380,13 +380,13 @@ class ResUsers(models.Model):
         self._check_personal_mail_server_access(user)
         server_sudo = user.outgoing_mail_server_id.sudo()
         if not server_sudo:
-            raise UserError(_("No mail server configured"))
+            raise UserError(self.env._("No mail server configured"))
         server_sudo.test_smtp_connection()
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "message": _("Connection Test Successful!"),
+                "message": self.env._("Connection Test Successful!"),
                 "type": "success",
             },
         }
@@ -408,21 +408,21 @@ class ResUsers(models.Model):
             )
         if "login" in vals:
             self._notify_security_setting_update(
-                _("Security Update: Login Changed"),
-                _("Your account login has been updated"),
+                self.env._("Security Update: Login Changed"),
+                self.env._("Your account login has been updated"),
             )
         if "password" in vals:
             self._notify_security_setting_update(
-                _("Security Update: Password Changed"),
-                _("Your account password has been updated"),
+                self.env._("Security Update: Password Changed"),
+                self.env._("Your account password has been updated"),
             )
         for user, previous_email in previous_email_by_user.items():
             user._notify_security_setting_update(
-                _("Security Update: Email Changed"),
-                _(
+                self.env._("Security Update: Email Changed"),
+                self.env._(
                     "Your account email has been changed from %(old_email)s to %(new_email)s.",
                     old_email=previous_email,
-                    new_email=user.email or _("no address"),
+                    new_email=user.email or self.env._("no address"),
                 ),
                 mail_values={"email_to": previous_email},
                 suggest_password_reset=False,
@@ -479,7 +479,7 @@ class ResUsers(models.Model):
         body_html = Render._render_encapsulate(
             "mail.mail_notification_light",
             body_html,
-            add_context={"model_description": _("Account")},
+            add_context={"model_description": self.env._("Account")},
             context_record=user,
         )
         return {
@@ -527,18 +527,20 @@ class ResUsers(models.Model):
         country = geoip.country_name or False
         if country:
             if region and city:
-                values["location_address"] = _(
+                values["location_address"] = self.env._(
                     "Near %(city)s, %(region)s, %(country)s",
                     city=city,
                     region=region,
                     country=country,
                 )
             elif region:
-                values["location_address"] = _(
+                values["location_address"] = self.env._(
                     "Near %(region)s, %(country)s", region=region, country=country
                 )
             else:
-                values["location_address"] = _("In %(country)s", country=country)
+                values["location_address"] = self.env._(
+                    "In %(country)s", country=country
+                )
         values["ip_address"] = request.httprequest.remote_addr or False
         if request.httprequest.user_agent:
             if request.httprequest.user_agent.browser:
@@ -797,7 +799,9 @@ class ResUsers(models.Model):
             is_orphan_bucket = model_name == ORPHAN_BUCKET
             group = {
                 "id": model.id,
-                "name": _("Other activities") if is_orphan_bucket else model.name,
+                "name": self.env._("Other activities")
+                if is_orphan_bucket
+                else model.name,
                 "model": model_name,
                 "subkey": subkey,
                 "type": "activity",
@@ -834,7 +838,9 @@ class ResUsers(models.Model):
 
     def _get_portal_access_update_body(self, access_granted: bool) -> str:
         body = (
-            _("Portal Access Granted") if access_granted else _("Portal Access Revoked")
+            self.env._("Portal Access Granted")
+            if access_granted
+            else self.env._("Portal Access Revoked")
         )
         if self.partner_id.email:
             return "%s (%s)" % (body, self.partner_id.email)
@@ -863,10 +869,12 @@ class ResUsers(models.Model):
     @api.model
     def _check_personal_mail_server_access(self, user: Self) -> None:
         if not user.has_external_mail_server:
-            raise UserError(_("You are not allowed to create a personal mail server."))
+            raise UserError(
+                self.env._("You are not allowed to create a personal mail server.")
+            )
         if not user._is_internal():
             raise UserError(
-                _("Only internal users can configure a personal mail server.")
+                self.env._("Only internal users can configure a personal mail server.")
             )
 
     @api.model
@@ -876,7 +884,7 @@ class ResUsers(models.Model):
         )
         if server_type not in dict(selection):
             raise UserError(
-                _(
+                self.env._(
                     "Unknown outgoing mail server type %(server_type)s.",
                     server_type=server_type,
                 )
@@ -886,7 +894,7 @@ class ResUsers(models.Model):
     def _check_personal_mail_server_address(self, user: Self) -> None:
         if not user.email:
             raise UserError(
-                _("Please set your email before connecting your mail server.")
+                self.env._("Please set your email before connecting your mail server.")
             )
         address = user.email_normalized
         if (
@@ -894,7 +902,7 @@ class ResUsers(models.Model):
             or address.startswith("@")
             or self.env["ir.mail_server"]._parse_from_filter(address) != [address]
         ):
-            raise UserError(_("Wrong email address %s.", user.email))
+            raise UserError(self.env._("Wrong email address %s.", user.email))
 
         alias_domains = self.env["mail.alias.domain"].sudo().search([])
         match_from_filter = self.env["ir.mail_server"]._match_from_filter
@@ -904,7 +912,7 @@ class ResUsers(models.Model):
             for default_from in alias_domains.mapped("default_from_email")
         ) or (cli_default_from and match_from_filter(cli_default_from, address)):
             raise UserError(
-                _(
+                self.env._(
                     "Your email address is used by an alias domain, and so you can not create a mail server for it."
                 )
             )
@@ -913,7 +921,7 @@ class ResUsers(models.Model):
     def _prepare_personal_mail_server_vals(self, user: Self, server_type: str) -> dict:
         return {
             "active": False,
-            "name": _("%s's outgoing email", user.name),
+            "name": self.env._("%s's outgoing email", user.name),
             "smtp_user": user.email_normalized,
             "smtp_pass": False,
             "from_filter": user.email_normalized,

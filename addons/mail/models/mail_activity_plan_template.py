@@ -2,7 +2,7 @@ import typing
 from datetime import date
 from typing import Literal
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -99,7 +99,7 @@ class MailActivityPlanTemplate(models.Model):
         for template in self.filtered(lambda tpl: tpl.activity_type_id.res_model):
             if template.activity_type_id.res_model != template.plan_id.res_model:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'The activity type "%(activity_type_name)s" is not compatible with the plan "%(plan_name)s"'
                         ' because it is limited to the model "%(activity_type_model)s".',
                         activity_type_name=template.activity_type_id.name,
@@ -113,7 +113,7 @@ class MailActivityPlanTemplate(models.Model):
         for template in self:
             if template.responsible_type == "other" and not template.responsible_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'When selecting "Default user" assignment, you must specify a responsible.'
                     )
                 )
@@ -173,7 +173,7 @@ class MailActivityPlanTemplate(models.Model):
         elif self.responsible_type == "on_demand":
             responsible = on_demand_responsible
             if not responsible:
-                error = _(
+                error = self.env._(
                     "No responsible specified for %(activity_type_name)s: %(activity_summary)s.",
                     activity_type_name=self.activity_type_id.name,
                     activity_summary=self.summary or "-",

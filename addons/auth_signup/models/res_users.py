@@ -4,7 +4,7 @@ from ast import literal_eval
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -106,12 +106,16 @@ class ResUsers(models.Model):
         # check that uninvited users may sign up
         if "partner_id" not in values:
             if self._get_signup_invitation_scope() != "b2c":
-                raise SignupError(_("Signup is not allowed for uninvited users"))
+                raise SignupError(
+                    self.env._("Signup is not allowed for uninvited users")
+                )
         if values.get("email") and self.with_context(active_test=False).search_count(
             self._get_domain_email(values["email"]), limit=1
         ):
             raise UserError(
-                _("Another user is already registered using this email address.")
+                self.env._(
+                    "Another user is already registered using this email address."
+                )
             )
         return self._create_user_from_template(values)
 
@@ -131,12 +135,14 @@ class ResUsers(models.Model):
         )
         template_user = self.browse(template_user_id)
         if not template_user.exists():
-            raise SignupError(_("Signup: invalid template user"))
+            raise SignupError(self.env._("Signup: invalid template user"))
 
         if not values.get("login"):
-            raise SignupError(_("Signup: no login given for new user"))
+            raise SignupError(self.env._("Signup: no login given for new user"))
         if not values.get("partner_id") and not values.get("name"):
-            raise SignupError(_("Signup: no name or partner given for new user"))
+            raise SignupError(
+                self.env._("Signup: no name or partner given for new user")
+            )
 
         # create a copy of the template user (attached to a specific partner_id if given)
         values["active"] = True
@@ -155,9 +161,9 @@ class ResUsers(models.Model):
         if not users:
             users = self.search(self._get_domain_email(login))
         if not users:
-            raise UserError(_("No account found for this login"))
+            raise UserError(self.env._("No account found for this login"))
         if len(users) > 1:
-            raise UserError(_("Multiple accounts found for this login"))
+            raise UserError(self.env._("Multiple accounts found for this login"))
         return users.action_reset_password()
 
     def action_reset_password(self):
@@ -169,12 +175,12 @@ class ResUsers(models.Model):
         except MailDeliveryError as mde:
             if len(mde.args) == 2 and isinstance(mde.args[1], ConnectionRefusedError):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Could not contact the mail server, please check your outgoing email server configuration"
                     )
                 ) from mde
             raise UserError(
-                _(
+                self.env._(
                     "There was an error when trying to deliver your Email, please check your configuration"
                 )
             ) from mde
@@ -184,7 +190,9 @@ class ResUsers(models.Model):
         if self.env.context.get("install_mode") or self.env.context.get("import_file"):
             return None
         if self.filtered(lambda user: not user.active):
-            raise UserError(_("You cannot perform this action on an archived user."))
+            raise UserError(
+                self.env._("You cannot perform this action on an archived user.")
+            )
         # prepare reset password signup
         create_mode = bool(self.env.context.get("create_user"))
 
@@ -234,7 +242,9 @@ class ResUsers(models.Model):
         for user in self:
             if not user.email:
                 raise UserError(
-                    _("Cannot send email: user %s has no email address.", user.name)
+                    self.env._(
+                        "Cannot send email: user %s has no email address.", user.name
+                    )
                 )
             email_values["email_to"] = user.email
             with contextlib.closing(self.env.cr.savepoint()):
@@ -286,12 +296,12 @@ class ResUsers(models.Model):
                     user.login,
                     user.email,
                 )
-                message = _("A reset password link was sent by email")
+                message = self.env._("A reset password link was sent by email")
             else:
                 _logger.info(
                     "Signup email sent for user <%s> to <%s>", user.login, user.email
                 )
-                message = _("A signup link was sent by email")
+                message = self.env._("A signup link was sent by email")
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",

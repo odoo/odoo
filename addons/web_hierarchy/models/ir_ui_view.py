@@ -4,7 +4,7 @@ import typing
 
 from lxml import etree
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 from odoo.addons.base.models.ir_ui_view_arch import ElementHandler, register
 
@@ -50,7 +50,7 @@ class IrUiView(models.Model):
                 continue
             field = model._fields.get(field_name)
             if field is None:
-                msg = _(
+                msg = self.env._(
                     "Invalid %(attribute)s: %(field_name)s does not exist on %(model)s",
                     attribute=attribute,
                     field_name=field_name,
@@ -58,7 +58,7 @@ class IrUiView(models.Model):
                 )
                 raise self._prepare_view_error(msg, node)
             if field.type != expected_type:
-                msg = _(
+                msg = self.env._(
                     "Invalid %(attribute)s: %(field_name)s is a %(actual_type)s, expected a %(expected_type)s",
                     attribute=attribute,
                     field_name=field_name,
@@ -67,7 +67,7 @@ class IrUiView(models.Model):
                 )
                 raise self._prepare_view_error(msg, node)
             if field.comodel_name != model._name:
-                msg = _(
+                msg = self.env._(
                     "Invalid %(attribute)s: %(field_name)s points at %(comodel)s, expected %(model)s",
                     attribute=attribute,
                     field_name=field_name,
@@ -100,18 +100,20 @@ class HierarchyHandler(ElementHandler):
         for child in node.iterchildren(tag=etree.Element):
             if child.tag == "templates":
                 if seen_templates:
-                    msg = _("Hierarchy view can contain only one templates tag")
+                    msg = view.env._(
+                        "Hierarchy view can contain only one templates tag"
+                    )
                     raise view._prepare_view_error(msg, child)
                 seen_templates = True
             elif child.tag != "field":
-                msg = _(
+                msg = view.env._(
                     "Hierarchy child can only be field or template, got %s", child.tag
                 )
                 raise view._prepare_view_error(msg, child)
 
         remaining = set(node.attrib) - HIERARCHY_VALID_ATTRIBUTES
         if remaining:
-            msg = _(
+            msg = view.env._(
                 "Invalid attributes (%(invalid_attributes)s) in hierarchy view. Attributes must be in (%(valid_attributes)s)",
                 invalid_attributes=remaining,
                 valid_attributes=HIERARCHY_VALID_ATTRIBUTES,
@@ -119,7 +121,7 @@ class HierarchyHandler(ElementHandler):
             raise view._prepare_view_error(msg, node)
 
         if not node.xpath(f".//*[@t-name='{CARD_TEMPLATE_NAME}']"):
-            msg = _(
+            msg = view.env._(
                 "Hierarchy view must define a 'hierarchy-box' template to render its cards"
             )
             raise view._prepare_view_error(msg, node)

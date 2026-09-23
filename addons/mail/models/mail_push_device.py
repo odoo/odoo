@@ -4,7 +4,7 @@ import typing
 from datetime import UTC, datetime
 from typing import Literal
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -87,7 +87,7 @@ class MailPushDevice(models.Model):
             decode_browser_keys(browser_keys)
         except ValueError as error:
             raise UserError(
-                _("Invalid push subscription keys: %(reason)s", reason=error)
+                self.env._("Invalid push subscription keys: %(reason)s", reason=error)
             ) from error
         expiration_time = self._parse_expiration_time(
             kw.get("expirationTime", kw.get("expiration_time"))
@@ -170,7 +170,7 @@ class MailPushDevice(models.Model):
                 return datetime.fromtimestamp(value / 1000, tz=UTC).replace(tzinfo=None)
             except (OverflowError, OSError, ValueError) as error:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Invalid push subscription expiration time %(value)s",
                         value=value,
                     )

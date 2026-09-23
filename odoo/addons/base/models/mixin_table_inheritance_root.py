@@ -12,7 +12,7 @@ from odoo.db.schema import (
 )
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, _, frozendict
+from odoo.tools import SQL, frozendict
 
 from .ir_model_common import MODULE_UNINSTALL_FLAG
 
@@ -445,10 +445,10 @@ class MixinTableInheritanceRoot(models.AbstractModel):
                 referrers=[model_name for model_name, __, __ in restricted],
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "Cannot delete this record: %s",
                     ", ".join(
-                        _(
+                        self.env._(
                             "%(count)s %(model)s record(s) still reference it",
                             count=len(references),
                             model=self.env[model_name]._description,

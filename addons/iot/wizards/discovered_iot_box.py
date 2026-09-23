@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class DiscoveredIotBox(models.TransientModel):
@@ -12,7 +12,7 @@ class DiscoveredIotBox(models.TransientModel):
 
     def _compute_name(self):
         for box in self:
-            box.name = _(
+            box.name = self.env._(
                 "IoT Box %(serial_n)s %(pairing_code)s",
                 serial_n=box.serial_number or "",
                 pairing_code=box.pairing_code,

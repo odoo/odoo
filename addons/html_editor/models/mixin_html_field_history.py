@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -129,7 +129,7 @@ class MixinHtmlFieldHistory(models.AbstractModel):
         if field_name not in self._get_fields_versioned():
             _debug.logic("history_field_refused", model=self._name, field=field_name)
             raise UserError(
-                _(
+                self.env._(
                     'Field "%(field)s" is not versioned on model "%(model)s".',
                     field=field_name,
                     model=self._name,
@@ -142,7 +142,7 @@ class MixinHtmlFieldHistory(models.AbstractModel):
                 "history_revision_refused", reason="not_an_int", model=self._name
             )
             raise UserError(
-                _(
+                self.env._(
                     'Invalid revision id "%(revision)s": expected an integer.',
                     revision=revision_id,
                 )

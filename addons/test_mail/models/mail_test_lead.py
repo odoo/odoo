@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.tools.mail import parse_contact_from_email
 
 
@@ -32,9 +32,9 @@ class MailTestTLead(models.Model):
 
     def _creation_message(self):
         self.check_singleton()
-        return _(
+        return self.env._(
             "A new lead has been created and is assigned to %(user_name)s.",
-            user_name=self.user_id.name or _("nobody"),
+            user_name=self.user_id.name or self.env._("nobody"),
         )
 
     def _mail_get_customer_information(self):

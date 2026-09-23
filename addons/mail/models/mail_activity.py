@@ -9,7 +9,7 @@ from typing import Literal, Self
 
 from dateutil.relativedelta import MO, relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import DomainType, ValuesType
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.fields import Domain
@@ -1044,7 +1044,7 @@ class MailActivity(models.Model):
         if next_activities:
             return False
         return {
-            "name": _("Schedule an Activity"),
+            "name": self.env._("Schedule an Activity"),
             "context": ctx,
             "view_mode": "form",
             "res_model": "mail.activity",

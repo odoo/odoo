@@ -11,7 +11,6 @@ from lxml.builder import E
 from lxml.etree import _Element
 
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import _
 from odoo.tools.view_validation import (
     att_names,
     get_dict_asts,
@@ -164,7 +163,7 @@ class FieldHandler(ElementHandler):
         if not name:
             _debug.logic("field.refused", view=view.id, reason="no_name")
             raise view._prepare_view_error(
-                _('Field tag must have a "name" attribute defined'), node
+                view.env._('Field tag must have a "name" attribute defined'), node
             )
 
         field = name_manager.model._fields.get(name)
@@ -197,7 +196,7 @@ class FieldHandler(ElementHandler):
                     field=name,
                     reason="domain_on_non_relational",
                 )
-                msg = _(
+                msg = view.env._(
                     'Domain on non-relational field "%(name)s" makes no sense (domain:%(domain)s)',
                     name=name,
                     domain=node.get("domain"),
@@ -240,7 +239,7 @@ class FieldHandler(ElementHandler):
                 model=name_manager.model._name,
                 reason="unknown_field",
             )
-            msg = _(
+            msg = view.env._(
                 'Field "%(field_name)s" does not exist in model "%(model_name)s"',
                 field_name=name,
                 model_name=name_manager.model._name,
@@ -371,7 +370,7 @@ class GroupbyHandler(ElementHandler):
                         type=field.type,
                         reason="not_many2one",
                     )
-                    msg = _(
+                    msg = view.env._(
                         "Field '%(name)s' found in 'groupby' node can only be of type many2one, found %(type)s",
                         name=field.name,
                         type=field.type,
@@ -418,7 +417,7 @@ class GroupbyHandler(ElementHandler):
                 model=name_manager.model._name,
                 reason="unknown_field",
             )
-            msg = _(
+            msg = view.env._(
                 "Field '%(field)s' found in 'groupby' node does not exist in model %(model)s",
                 field=name,
                 model=name_manager.model._name,
@@ -470,7 +469,7 @@ class LabelHandler(ElementHandler):
         for_ = node.get("for")
         if not for_:
             _debug.logic("label.refused", view=view.id, reason="no_for")
-            msg = _(
+            msg = view.env._(
                 'Label tag must contain a "for". To match label style '
                 "without corresponding field or button, use 'class=\"o_form_label\"'."
             )
@@ -512,7 +511,7 @@ class SearchHandler(ElementHandler):
                     reason="multiple_searchpanels",
                 )
                 raise view._prepare_view_error(
-                    _("Search tag can only contain one search panel"), node
+                    view.env._("Search tag can only contain one search panel"), node
                 )
             node_info["children"] = [
                 child for child in node if child.tag != "searchpanel"
@@ -582,7 +581,7 @@ class ListHandler(ElementHandler):
                 editable=editable_attr,
                 reason="bad_editable",
             )
-            msg = _(
+            msg = view.env._(
                 'The "editable" attribute of list views must be "top" or "bottom", received %(value)s',
                 value=editable_attr,
             )
@@ -603,7 +602,7 @@ class ListHandler(ElementHandler):
                     tag=child.tag,
                     reason="bad_child_tag",
                 )
-                msg = _(
+                msg = view.env._(
                     "List child can only have one of %(tags)s tag (not %(wrong_tag)s)",
                     tags=", ".join(allowed_tags),
                     wrong_tag=child.tag,
@@ -646,7 +645,7 @@ class GraphHandler(ElementHandler):
                     tag=child.tag,
                     reason="bad_child_tag",
                 )
-                msg = _(
+                msg = view.env._(
                     "A <graph> can only contains <field> nodes, found a <%s>",
                     child.tag,
                 )
@@ -701,7 +700,7 @@ class FilterHandler(ElementHandler):
                         default_period=default_period,
                         reason="bad_default_period",
                     )
-                    msg = _(
+                    msg = view.env._(
                         "Invalid default period %(default_period)s for date filter",
                         default_period=default_period,
                     )
@@ -733,7 +732,7 @@ class ButtonHandler(ElementHandler):
                     reason="bad_special",
                 )
                 raise view._prepare_view_error(
-                    _("Invalid special '%(value)s' in button", value=special),
+                    view.env._("Invalid special '%(value)s' in button", value=special),
                     node,
                 )
         elif type_ == "object":
@@ -747,7 +746,7 @@ class ButtonHandler(ElementHandler):
                         model=name_manager.model._name,
                         reason="not_callable",
                     )
-                    msg = _(
+                    msg = view.env._(
                         "%(action_name)s is not a valid action on %(model_name)s",
                         action_name=name,
                         model_name=name_manager.model._name,
@@ -761,7 +760,7 @@ class ButtonHandler(ElementHandler):
                         model=name_manager.model._name,
                         reason="private_method",
                     )
-                    msg = _(
+                    msg = view.env._(
                         "%(method)s on %(model)s is private and cannot be called from a button",
                         method=name,
                         model=name_manager.model._name,
@@ -823,7 +822,7 @@ class SearchpanelHandler(ElementHandler):
                     field=child.get("name"),
                     reason="domain_without_multi",
                 )
-                msg = _(
+                msg = view.env._(
                     "Searchpanel items with a domain attribute must have select='multi'."
                 )
                 raise view._prepare_view_error(msg, child)
@@ -845,7 +844,7 @@ class PageHandler(ElementHandler):
         if node.getparent() is None or node.getparent().tag != "notebook":
             _debug.logic("page.refused", view=view.id, reason="parent_not_notebook")
             raise view._prepare_view_error(
-                _("Page direct ancestor must be notebook"), node
+                view.env._("Page direct ancestor must be notebook"), node
             )
 
 
@@ -949,7 +948,7 @@ class ContextAttributeCheck(AttributeCheck):
             vnames = get_expression_field_names(expr)
         except SyntaxError as e:
             _debug.logic("context.refused", view=view.id, reason="syntax_error")
-            message = _(
+            message = view.env._(
                 "Invalid context: \u201c%(expr)s\u201d is not a valid Python expression \n\n %(error)s",
                 expr=expr,
                 error=e,
@@ -969,7 +968,7 @@ class ContextAttributeCheck(AttributeCheck):
                     attribute=attr,
                     reason="group_by_not_string",
                 )
-                msg = _(
+                msg = view.env._(
                     '"group_by" value must be a string %(attribute)s=\u201c%(value)s\u201d',
                     attribute=attr,
                     value=expr,
@@ -984,7 +983,7 @@ class ContextAttributeCheck(AttributeCheck):
                     field=fname,
                     reason="group_by_unknown_field",
                 )
-                msg = _(
+                msg = view.env._(
                     'Unknown field \u201c%(field)s\u201d in "group_by" value in %(attribute)s=\u201c%(value)s\u201d',
                     field=fname,
                     attribute=attr,
@@ -1011,7 +1010,7 @@ class IntegerAttributeCheck(AttributeCheck):
                 "attribute.refused", view=view.id, attribute=attr, reason="not_integer"
             )
             raise view._prepare_view_error(
-                _(
+                view.env._(
                     "\u201c%(attribute)s\u201d value must be an integer (%(value)s)",
                     attribute=attr,
                     value=expr,
@@ -1129,7 +1128,7 @@ class TooltipAttributeCheck(AttributeCheck):
             "attribute.refused", view=view.id, attribute=attr, reason="tooltip"
         )
         raise view._prepare_view_error(
-            _("Forbidden attribute used in arch (%s).", attr), node
+            view.env._("Forbidden attribute used in arch (%s).", attr), node
         )
 
 
@@ -1152,5 +1151,5 @@ class QwebAttributeCheck(AttributeCheck):
                 "attribute.refused", view=view.id, attribute=attr, reason="comp"
             )
             raise view._prepare_view_error(
-                _("Forbidden use of `__comp__` in arch."), node
+                view.env._("Forbidden use of `__comp__` in arch."), node
             )

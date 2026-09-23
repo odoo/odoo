@@ -12,7 +12,7 @@ from urllib.parse import quote, urlparse
 
 from werkzeug.exceptions import BadRequest, Forbidden, RequestEntityTooLarge
 
-from odoo import SUPERUSER_ID, Command, _, fields, http
+from odoo import SUPERUSER_ID, Command, fields, http
 from odoo.exceptions import MissingError
 from odoo.fields import Domain
 from odoo.http import prepare_content_disposition_header, request
@@ -1194,7 +1194,9 @@ class ShareRoute(http.Controller):
         _debug.lifecycle("uploaded", document=document_sudo, fields=sorted(vals))
         if any(field_name in vals for field_name in ["raw", "datas", "attachment_id"]):
             document_sudo.message_post(
-                body=_("Document uploaded by %(user)s", user=request.env.user.name)
+                body=request.env._(
+                    "Document uploaded by %(user)s", user=request.env.user.name
+                )
             )
 
     def _documents_upload_create_write(self, document_sudo: Any, vals: dict) -> Any:

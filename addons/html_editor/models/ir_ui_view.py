@@ -4,7 +4,7 @@ import uuid
 
 from lxml import etree, html
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -73,7 +73,7 @@ class IrUiView(models.Model):
         except (ValueError, TypeError) as err:
             _debug.logic("snippet_save_refused", reason="bad_values", view=self.id)
             raise ValidationError(
-                _(
+                self.env._(
                     "Invalid field value for %(field_name)s: %(value)s",
                     field_name=Model._fields[field].string,
                     value=el.text_content().strip(),
@@ -248,7 +248,7 @@ class IrUiView(models.Model):
             matches = arch.xpath(section_xpath)
             if len(matches) != 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Could not find a unique section to update (the page may have "
                         "changed since you started editing it, please reload)."
                     )

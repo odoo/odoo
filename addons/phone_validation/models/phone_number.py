@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.db.schema import create_index
 from odoo.exceptions import UserError
 from odoo.fields import Domain
@@ -130,7 +130,9 @@ class PhoneNumber(models.Model):
             return []
         if self._phone_search_min_length and len(value) < self._phone_search_min_length:
             raise UserError(
-                _("Please enter at least 3 characters when searching a Phone number.")
+                self.env._(
+                    "Please enter at least 3 characters when searching a Phone number."
+                )
             )
         if value.startswith(("+", "00")):
             term = PHONE_NOISE_PATTERN.sub(
@@ -184,7 +186,7 @@ class PhoneNumber(models.Model):
         if isinstance(value, str):
             value = value.strip()
         if not fnames:
-            raise UserError(_("Missing definition of phone fields."))
+            raise UserError(self.env._("Missing definition of phone fields."))
         if operator in ("in", "not in"):
             values = [v.strip() if isinstance(v, str) else v for v in value]
             if any(v is True or not v for v in values):

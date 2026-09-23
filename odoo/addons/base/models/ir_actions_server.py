@@ -13,7 +13,6 @@ from odoo.libs.debug_log import DebugLog
 from odoo.libs.json import OPT_INDENT_2, OPT_SORT_KEYS
 from odoo.libs.json import dumps as json_dumps
 from odoo.libs.netguard import DestinationRefused
-from odoo.tools import _
 from odoo.tools.misc import unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.server_action_tools import ServerActionTools
@@ -358,7 +357,7 @@ class IrActionsServer(models.Model):
                     ceiling=self._WEBHOOK_TIMEOUT_CEILING,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Webhook timeout must be between 1 and %(ceiling)s "
                         "seconds. The call is made after the transaction "
                         "commits, so this is time a worker spends waiting; a "
@@ -390,7 +389,7 @@ class IrActionsServer(models.Model):
     def _check_children(self) -> None:
         if self._has_cycle():
             _debug.logic("children_refused", actions=self.ids, reason="cycle")
-            raise ValidationError(_("Recursion found in child server actions"))
+            raise ValidationError(self.env._("Recursion found in child server actions"))
 
         if children_with_warnings := self.child_ids.filtered("warning"):
             _debug.logic(
@@ -400,7 +399,7 @@ class IrActionsServer(models.Model):
                 children=children_with_warnings.ids,
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "Following child actions have warnings: %(children)s",
                     children=", ".join(children_with_warnings.mapped("name")),
                 )
@@ -487,7 +486,7 @@ class IrActionsServer(models.Model):
         vals_list = super().copy_data(default=default)
         for vals in vals_list:
             if not default.get("name"):
-                vals["name"] = _("%s (copy)", vals.get("name", ""))
+                vals["name"] = self.env._("%s (copy)", vals.get("name", ""))
             vals["name_is_custom"] = True
         return vals_list
 
@@ -710,7 +709,7 @@ class IrActionsServer(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Code History"),
+            "name": self.env._("Code History"),
             "target": "new",
             "views": [(False, "form")],
             "res_model": "server.action.history.wizard",
@@ -732,7 +731,7 @@ class IrActionsServer(models.Model):
         if not self.ir_cron_ids:
             _debug.logic("scheduled_action_missing", action=self.id)
             raise UserError(
-                _("No scheduled action is associated with this server action.")
+                self.env._("No scheduled action is associated with this server action.")
             )
         return {
             "type": "ir.actions.act_window",
@@ -829,7 +828,7 @@ class IrActionsServer(models.Model):
         if not self.update_path:
             _debug.logic("update_path_refused", action=self.id, reason="no_path")
             raise UserError(
-                _(
+                self.env._(
                     "The 'Update Record' action '%(name)s' has no field to update. "
                     "Please set an update path.",
                     name=self.name,
@@ -847,7 +846,7 @@ class IrActionsServer(models.Model):
             )
             if len(path) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The 'Update Record' action '%(name)s' updates "
                         "'%(path)s', which lives on another record. An "
                         "on-change action may only touch the record being "
@@ -879,7 +878,7 @@ class IrActionsServer(models.Model):
         if not url:
             _debug.logic("webhook_skipped", action=self.id, reason="no_url")
             raise UserError(
-                _(
+                self.env._(
                     "The webhook action '%(name)s' has no URL to send the request "
                     "to. Please set a Webhook URL.",
                     name=self.name,
@@ -899,7 +898,7 @@ class IrActionsServer(models.Model):
         )
         if blocked:
             raise UserError(
-                _(
+                self.env._(
                     "The webhook action '%(name)s' targets a forbidden address "
                     "(%(reason)s). Webhooks may only call public hosts.",
                     name=self.name,
@@ -964,7 +963,7 @@ class IrActionsServer(models.Model):
     ) -> None:
         if not self.resource_ref:
             _debug.logic("copy_refused", action=self.id, reason="no_resource_ref")
-            raise UserError(_("No record selected to duplicate."))
+            raise UserError(self.env._("No record selected to duplicate."))
         with _debug.perf(
             "action_copy", cr=self.env.cr, action=self.id, source=self.resource_ref
         ) as span:
@@ -1149,7 +1148,7 @@ class IrActionsServer(models.Model):
         if self.warning:
             _debug.logic("run_refused", action=self.id, reason="warnings")
             raise ServerActionWithWarningsError(
-                _(
+                self.env._(
                     "Server action %(action_name)s has one or more warnings, address them first.",
                     action_name=self.name,
                 )
@@ -1215,7 +1214,9 @@ class IrActionsServer(models.Model):
                     "run_denied", action=self.id, uid=self.env.uid, by="groups"
                 )
                 raise AccessError(
-                    _("You don't have enough access rights to run this action.")
+                    self.env._(
+                        "You don't have enough access rights to run this action."
+                    )
                 )
         else:
             self._check_access_to_model_and_records(records)
@@ -1398,7 +1399,7 @@ class IrActionsServer(models.Model):
 
         if children_wrong_model:
             warnings.append(
-                _(
+                self.env._(
                     "Following child actions should have the same model (%(model)s): %(children)s",
                     model=self.model_id.name,
                     children=", ".join(children_wrong_model.mapped("name")),
@@ -1407,7 +1408,7 @@ class IrActionsServer(models.Model):
 
         if children_wrong_groups:
             warnings.append(
-                _(
+                self.env._(
                     "Following child actions should have the same groups (%(groups)s): %(children)s",
                     groups=", ".join(self.group_ids.mapped("name")),
                     children=", ".join(children_wrong_groups.mapped("name")),
@@ -1416,7 +1417,7 @@ class IrActionsServer(models.Model):
 
         if children_with_warnings:
             warnings.append(
-                _(
+                self.env._(
                     "Following child actions have warnings: %(children)s",
                     children=", ".join(children_with_warnings.mapped("name")),
                 )
@@ -1434,7 +1435,7 @@ class IrActionsServer(models.Model):
         )
         if relation_chain and isinstance(relation_chain[-1], fields.Json):
             warnings.append(
-                _(
+                self.env._(
                     "JSON fields (such as '%s') are not supported.",
                     relation_chain[-1].string,
                 )
@@ -1443,7 +1444,7 @@ class IrActionsServer(models.Model):
         if self.usage == "ir_cron" and self._is_live_record_required():
             _debug.logic("cron_needs_record", action=self.id, state=self.state)
             warnings.append(
-                _(
+                self.env._(
                     "A scheduled action runs on no record, and this one needs "
                     "one to act on. It would do nothing, every time it ran."
                 )
@@ -1455,11 +1456,13 @@ class IrActionsServer(models.Model):
                 "text",
             ):
                 warnings.append(
-                    _("A sequence must only be used with character fields.")
+                    self.env._("A sequence must only be used with character fields.")
                 )
             if not self.sequence_id:
                 _debug.logic("sequence_missing", action=self.id)
-                warnings.append(_("Choose the sequence the value is drawn from."))
+                warnings.append(
+                    self.env._("Choose the sequence the value is drawn from.")
+                )
 
         if self.state == "webhook" and self.model_id:
             restricted_fields = []
@@ -1476,7 +1479,7 @@ class IrActionsServer(models.Model):
                     total=len(self.webhook_field_ids),
                 )
                 warnings.append(
-                    _(
+                    self.env._(
                         "Group-restricted fields cannot be included in "
                         "webhook payloads, as it could allow any user to "
                         "accidentally leak sensitive information. You will "
@@ -1500,13 +1503,19 @@ class IrActionsServer(models.Model):
     def _prepare_automated_name(self) -> str:
         self.check_singleton()
         if self.state == "object_create":
-            return _("Create %(model_name)s", model_name=self.crud_model_id.name)
+            return self.env._(
+                "Create %(model_name)s", model_name=self.crud_model_id.name
+            )
         if self.state == "object_write":
-            return _("Update %(model_name)s", model_name=self.crud_model_id.name)
+            return self.env._(
+                "Update %(model_name)s", model_name=self.crud_model_id.name
+            )
         if self.state == "object_copy":
             if not self.resource_ref:
-                return _("Duplicate ...")
-            return _("Duplicate %(record)s", record=self.resource_ref.display_name)
+                return self.env._("Duplicate ...")
+            return self.env._(
+                "Duplicate %(record)s", record=self.resource_ref.display_name
+            )
         return dict(self._fields["state"]._description_selection(self.env)).get(
             self.state, ""
         )
@@ -1569,7 +1578,7 @@ class IrActionsServer(models.Model):
                 )
                 if raise_on_error:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The path '%(path)s' contains an empty segment. "
                             "Remove the extra '.'.",
                             path=self[searched_field_name],
@@ -1587,7 +1596,7 @@ class IrActionsServer(models.Model):
                 )
                 if raise_on_error:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Unknown field '%(field_name)s' on model '%(model_name)s'.",
                             field_name=field_name,
                             model_name=model._name,
@@ -1611,7 +1620,7 @@ class IrActionsServer(models.Model):
                             searched_field_name
                         ].get_description(self.env)["string"]
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "The path in field '%(searched_field)s' contains a non-relational field (%(current_field)s) that is not the last segment. Only the last field in a path may be non-relational.",
                                 searched_field=searched_field,
                                 current_field=current_field,
@@ -1667,7 +1676,7 @@ class IrActionsServer(models.Model):
                 field=self.update_field_id.name,
             )
             raise UserError(
-                _(
+                self.env._(
                     "The value '%(value)s' configured on action '%(action)s' is not a "
                     "valid number for field '%(field)s'.",
                     value=self.value,
@@ -1686,7 +1695,7 @@ class IrActionsServer(models.Model):
                 if not action.sequence_id:
                     _debug.logic("sequence_missing", action=action.id)
                     raise UserError(
-                        _(
+                        self.env._(
                             "The 'Update Record' action '%(name)s' draws its value "
                             "from a sequence, and none is chosen.",
                             name=action.name,

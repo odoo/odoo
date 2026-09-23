@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 
@@ -57,7 +57,7 @@ class ProductTemplate(models.Model):
     def action_view_documents(self):
         self.check_singleton()
         return {
-            "name": _("Documents"),
+            "name": self.env._("Documents"),
             "type": "ir.actions.act_window",
             "res_model": "document.document",
             "view_mode": "kanban,list,form",
@@ -107,11 +107,11 @@ class ProductTemplate(models.Model):
                 </p>
             """
             % (
-                _("Upload files to your product"),
-                _(
+                self.env._("Upload files to your product"),
+                self.env._(
                     "Use this feature to store any files you would like to share with your customers"
                 ),
-                _("(e.g: product description, ebook, legal notice, ...)."),
-                _("Download examples"),
+                self.env._("(e.g: product description, ebook, legal notice, ...)."),
+                self.env._("Download examples"),
             ),
         }

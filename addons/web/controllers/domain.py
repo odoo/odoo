@@ -1,4 +1,4 @@
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessError, ValidationError
 from odoo.http import Controller, request
 from odoo.tools import SQL
@@ -16,11 +16,13 @@ class Domain(Controller):
         )
         if not is_user_internal(request.session.uid):
             dbg.logic.debug("[domain:%s] validate: not internal, refused", model)
-            raise AccessError(_("This endpoint is reserved to internal users."))
+            raise AccessError(
+                request.env._("This endpoint is reserved to internal users.")
+            )
         Model = request.env.get(model)
         if Model is None:
             dbg.logic.debug("[domain:%s] validate: unknown model", model)
-            raise ValidationError(_("Invalid model: %s", model))
+            raise ValidationError(request.env._("Invalid model: %s", model))
         try:
             with (
                 dbg.timer(request.env, "[domain:%s] validate: search + EXPLAIN", model),

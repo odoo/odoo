@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class PhoneBlacklistRemove(models.TransientModel):
@@ -16,7 +16,7 @@ class PhoneBlacklistRemove(models.TransientModel):
 
     def action_unblacklist_apply(self):
         if self.reason:
-            message = Markup("<p>%s</p>") % _(
+            message = Markup("<p>%s</p>") % self.env._(
                 "Unblock Reason: %(reason)s", reason=self.reason
             )
         else:

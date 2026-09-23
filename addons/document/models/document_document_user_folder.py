@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -50,7 +50,7 @@ class DocumentsDocument(models.Model):
         if len(values) > 1:
             _debug.logic("folder_search_refused", reason="many_child_of")
             raise UserError(
-                _("Only one value can be searched for child of `folder_id`.")
+                self.env._("Only one value can be searched for child of `folder_id`.")
             )
         value = values.pop()
         return self._get_domain_child_of_documents(
@@ -63,7 +63,7 @@ class DocumentsDocument(models.Model):
         values = {operand} if isinstance(operand, str) else set(operand)
         if UserFolder.TRASH in values:
             _debug.logic("user_folder_search_refused", reason="trash")
-            raise UserError(_("Searching on TRASH is not supported."))
+            raise UserError(self.env._("Searching on TRASH is not supported."))
         domain_parts = []
         folder_ids = []
         for value in values:
@@ -107,7 +107,9 @@ class DocumentsDocument(models.Model):
                     reason="unsupported_kind",
                     kind=user_folder.kind,
                 )
-                raise UserError(_("Searching on %s is not supported.", user_folder))
+                raise UserError(
+                    self.env._("Searching on %s is not supported.", user_folder)
+                )
 
         if folder_ids:
             domain_parts.append(
@@ -127,7 +129,9 @@ class DocumentsDocument(models.Model):
             if len(values) > 1:
                 _debug.logic("user_folder_search_refused", reason="many_child_of")
                 raise UserError(
-                    _("Only one value can be searched for children of `user_folder_id`")
+                    self.env._(
+                        "Only one value can be searched for children of `user_folder_id`"
+                    )
                 )
             return self._get_domain_child_of_documents(domain, values.pop())
         return domain
@@ -138,7 +142,9 @@ class DocumentsDocument(models.Model):
             return UserFolder.parse(value)
         except ValueError as error:
             _debug.logic("user_folder_parse_refused", value=value)
-            raise UserError(_("Unexpected user_folder_id value %s", value)) from error
+            raise UserError(
+                self.env._("Unexpected user_folder_id value %s", value)
+            ) from error
 
     @api.model
     def _clean_vals_for_user_folder_id(
@@ -167,23 +173,29 @@ class DocumentsDocument(models.Model):
         elif user_folder.kind == UserFolder.MY:
             if not self.env.user.active:
                 _debug.logic("user_folder_refused", reason="inactive_user", kind="MY")
-                raise UserError(_("Inactive user cannot create/move in 'My Drive'."))
+                raise UserError(
+                    self.env._("Inactive user cannot create/move in 'My Drive'.")
+                )
             new_vals = {"owner_id": self.env.user.id, "folder_id": False}
         elif user_folder.kind == UserFolder.RECENT:
             _debug.logic("user_folder_refused", reason="virtual", kind="RECENT")
-            raise UserError(_("Documents cannot be created or moved in 'Recent'."))
+            raise UserError(
+                self.env._("Documents cannot be created or moved in 'Recent'.")
+            )
         elif user_folder.kind == UserFolder.SHARED:
             _debug.logic("user_folder_refused", reason="virtual", kind="SHARED")
             raise UserError(
-                _("Documents cannot be created or moved in 'Shared With Me'.")
+                self.env._("Documents cannot be created or moved in 'Shared With Me'.")
             )
         elif user_folder.kind == UserFolder.TRASH:
             _debug.logic("user_folder_refused", reason="virtual", kind="TRASH")
-            raise UserError(_("Documents cannot be created or moved in the trash."))
+            raise UserError(
+                self.env._("Documents cannot be created or moved in the trash.")
+            )
         else:
             new_vals = {"folder_id": user_folder.folder_id}
 
-        message = _("Conflicting values passed with user_folder_id.")
+        message = self.env._("Conflicting values passed with user_folder_id.")
         if (folder_id := vals.get("folder_id")) and folder_id != new_vals["folder_id"]:
             _debug.logic(
                 "user_folder_conflict", field="folder_id", kind=user_folder.kind
@@ -209,7 +221,7 @@ class DocumentsDocument(models.Model):
     ) -> Domain:
         if not isinstance(value, str | int):
             raise UserError(
-                _(
+                self.env._(
                     "Only one string or number value can be searched for documents `child_of`."
                 )
             )

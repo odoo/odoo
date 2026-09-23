@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.phone_validation.tools import phone_validation
@@ -57,7 +57,7 @@ class SmsTwilioAccountManage(models.TransientModel):
             _logger.warning("Twilio SMS API error: %s", e)
             return self._display_notification(
                 notif_type="danger",
-                message=_("An error occurred while fetching the numbers."),
+                message=self.env._("An error occurred while fetching the numbers."),
             )
 
         json_response = response.json()
@@ -65,7 +65,7 @@ class SmsTwilioAccountManage(models.TransientModel):
             _logger.warning("Twilio SMS API error: %s", json_response.get("code"))
             return self._display_notification(
                 notif_type="danger",
-                message=_("Error: %s", json_response.get("message")),
+                message=self.env._("Error: %s", json_response.get("message")),
             )
 
         self.sms_twilio_number_ids.unlink()
@@ -92,7 +92,7 @@ class SmsTwilioAccountManage(models.TransientModel):
                     }
                 )
         return {
-            "name": _("Manage Twilio SMS"),
+            "name": self.env._("Manage Twilio SMS"),
             "res_model": self._name,
             "res_id": self.id,
             "context": self.env.context,
@@ -105,11 +105,13 @@ class SmsTwilioAccountManage(models.TransientModel):
     def action_send_test(self):
         if not self.test_number:
             raise UserError(
-                _("Please set the number to which you want to send a test SMS.")
+                self.env._(
+                    "Please set the number to which you want to send a test SMS."
+                )
             )
         composer = self.env["sms.composer"].create(
             {
-                "body": _("This is a test SMS from Odoo"),
+                "body": self.env._("This is a test SMS from Odoo"),
                 "composition_mode": "numbers",
                 "numbers": self.test_number,
             }
@@ -118,7 +120,7 @@ class SmsTwilioAccountManage(models.TransientModel):
 
         has_error = bool(sms_su.failure_type)
         if not has_error:
-            message = _(
+            message = self.env._(
                 "The SMS has been sent from %s",
                 get_twilio_from_number(
                     self.company_id.sudo(), self.test_number
@@ -131,7 +133,7 @@ class SmsTwilioAccountManage(models.TransientModel):
                 ._fields["failure_type"]
                 .get_description(self.env)["selection"]
             ).get(sms_su.failure_type, sms_su.failure_type)
-            message = _(
+            message = self.env._(
                 "%(failure_type)s: %(failure_reason)s",
                 failure_type=failure_type,
                 failure_reason=sms_api._get_sms_api_error_messages().get(
@@ -139,7 +141,7 @@ class SmsTwilioAccountManage(models.TransientModel):
                 ),
             )
         else:
-            message = _("Error: %s", sms_su.failure_type)
+            message = self.env._("Error: %s", sms_su.failure_type)
         return self._display_notification(
             notif_type="danger" if has_error else "success",
             message=message,
@@ -153,7 +155,7 @@ class SmsTwilioAccountManage(models.TransientModel):
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "title": _("Twilio SMS"),
+                "title": self.env._("Twilio SMS"),
                 "message": message,
                 "type": notif_type,
                 "sticky": False,

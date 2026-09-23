@@ -1,7 +1,7 @@
 from ast import literal_eval
 from typing import Any
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.date_utils import get_timedelta
@@ -22,7 +22,7 @@ class DocumentsDocument(models.Model):
                 "alias_refused", reason="not_a_plain_folder", documents=wrong_records
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "The following documents can't have alias: \n- %(records)s",
                     records="\n-".join(wrong_records.mapped("name")),
                 )
@@ -84,7 +84,7 @@ class DocumentsDocument(models.Model):
 
         folder = self.env["document.document"].browse(custom_values.get("folder_id"))
 
-        custom_values["name"] = _("Mail: %s", msg_dict.get("subject"))
+        custom_values["name"] = self.env._("Mail: %s", msg_dict.get("subject"))
         if "company_id" not in custom_values:
             custom_values["company_id"] = folder.company_id.id
 
@@ -190,7 +190,7 @@ class DocumentsDocument(models.Model):
             attachment = self.env["ir.attachment"].create(
                 {
                     "name": msg_vals.get("subject")
-                    or msg_vals.get("email_from", _("email")),
+                    or msg_vals.get("email_from", self.env._("email")),
                     "type": "binary",
                     "raw": message.body,
                     "mimetype": "application/documents-email",

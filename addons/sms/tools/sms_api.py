@@ -1,5 +1,5 @@
 from odoo import exceptions
-from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.iap.tools import iap_tools
 
@@ -143,7 +143,7 @@ class SmsApi(
             self.env["iap.account"].sudo().get_credits_url(service_name="sms")
         )
         buy_credits = '<a href="{}" target="_blank">{}</a>'.format(
-            buy_credits_url, _("Buy credits.")
+            buy_credits_url, self.env._("Buy credits.")
         )
 
         sms_endpoint = (
@@ -154,31 +154,38 @@ class SmsApi(
         sms_account_token = (
             self.env["iap.account"].sudo().get("sms").sudo().account_token
         )
-        register_label = _("Register now.")
+        register_label = self.env._("Register now.")
         register_now = f'<a href="{sms_endpoint}/1/account?account_token={sms_account_token}" target="_blank">{register_label}</a>'
 
         error_dict = super()._get_sms_api_error_messages()
         error_dict.update(
             {
-                "unregistered": _("You don't have an eligible IAP account."),
+                "unregistered": self.env._("You don't have an eligible IAP account."),
                 "insufficient_credit": " ".join(
                     [
-                        _("You don't have enough credits on your IAP account."),
+                        self.env._(
+                            "You don't have enough credits on your IAP account."
+                        ),
                         buy_credits,
                     ]
                 ),
-                "wrong_number_format": _(
+                "wrong_number_format": self.env._(
                     "The number you're trying to reach is not correctly formatted."
                 ),
-                "duplicate_message": _(
+                "duplicate_message": self.env._(
                     "This SMS has been removed as the number was already used."
                 ),
-                "country_not_supported": _("The destination country is not supported."),
-                "incompatible_content": _(
+                "country_not_supported": self.env._(
+                    "The destination country is not supported."
+                ),
+                "incompatible_content": self.env._(
                     "The content of the message violates rules applied by our providers."
                 ),
                 "registration_needed": " ".join(
-                    [_("Country-specific registration required."), register_now]
+                    [
+                        self.env._("Country-specific registration required."),
+                        register_now,
+                    ]
                 ),
             }
         )

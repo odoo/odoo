@@ -3,7 +3,7 @@ import base64
 import io
 from typing import Any
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import trans_export, trans_export_records
@@ -90,15 +90,17 @@ class BaseLanguageExport(models.TransientModel):
         with io.BytesIO() as buf:
             if self.export_type == "model":
                 if not self.model_name:
-                    raise UserError(_("Please select a model to export."))
+                    raise UserError(self.env._("Please select a model to export."))
                 try:
                     domain = ast.literal_eval(self.domain or "[]")
                 except ValueError, SyntaxError, TypeError:
                     raise UserError(
-                        _("Invalid domain filter: %s", self.domain)
+                        self.env._("Invalid domain filter: %s", self.domain)
                     ) from None
                 if not isinstance(domain, list):
-                    raise UserError(_("Invalid domain filter: %s", self.domain))
+                    raise UserError(
+                        self.env._("Invalid domain filter: %s", self.domain)
+                    )
                 ids = self.env[self.model_name].search(domain).ids
                 _debug.logic(
                     "export_records_selected", model=self.model_name, records=len(ids)

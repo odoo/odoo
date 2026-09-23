@@ -3,7 +3,7 @@ import json
 import logging
 from urllib.parse import urlsplit, urlunsplit
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.db import schema as sql
 from odoo.exceptions import AccessDenied
 from odoo.http import request
@@ -187,7 +187,7 @@ class AuthPasskeyKey(models.Model):
 
     def action_rename_passkey(self):
         return {
-            "name": _("Rename Passkey"),
+            "name": self.env._("Rename Passkey"),
             "type": "ir.actions.act_window",
             "res_model": "auth.passkey.key",
             "view_id": self.env.ref("auth_passkey.auth_passkey_key_rename").id,

@@ -5,7 +5,7 @@ import os
 import re
 from datetime import datetime, timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.db import schema as sql
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
@@ -96,13 +96,17 @@ class ResUsers(models.Model):
             if match is None:
                 _logger.info("2FA check: FAIL for %s %r", self, sudo.login)
                 raise AccessDenied(
-                    _("Verification failed, please double-check the 6-digit code")
+                    self.env._(
+                        "Verification failed, please double-check the 6-digit code"
+                    )
                 )
 
             if sudo.totp_last_counter and match <= sudo.totp_last_counter:
                 _logger.warning("2FA check: REUSE for %s %r", self, sudo.login)
                 raise AccessDenied(
-                    _("Verification failed, please use the latest 6-digit code")
+                    self.env._(
+                        "Verification failed, please use the latest 6-digit code"
+                    )
                 )
 
             sudo.totp_last_counter = match
@@ -155,10 +159,10 @@ class ResUsers(models.Model):
         count = RateLimitLog.search_count(domain)
         if count >= limit:
             descriptions = {
-                "send_email": _(
+                "send_email": self.env._(
                     "You reached the limit of authentication mails sent for your account, please try again later."
                 ),
-                "code_check": _(
+                "code_check": self.env._(
                     "You reached the limit of code verifications for your account, please try again later."
                 ),
             }
@@ -216,7 +220,7 @@ class ResUsers(models.Model):
             "tag": "display_notification",
             "params": {
                 "type": "warning",
-                "message": _(
+                "message": self.env._(
                     "Two-factor authentication disabled for the following user(s): %s",
                     ", ".join(self.mapped("name")),
                 ),
@@ -228,11 +232,11 @@ class ResUsers(models.Model):
     def action_totp_enable_wizard(self):
         if self.env.user != self:
             raise UserError(
-                _("Two-factor authentication can only be enabled for yourself")
+                self.env._("Two-factor authentication can only be enabled for yourself")
             )
 
         if self.totp_enabled:
-            raise UserError(_("Two-factor authentication already enabled"))
+            raise UserError(self.env._("Two-factor authentication already enabled"))
 
         secret_bytes_count = TOTP_SECRET_SIZE // 8
         secret = base64.b32encode(os.urandom(secret_bytes_count)).decode()
@@ -247,7 +251,7 @@ class ResUsers(models.Model):
             "type": "ir.actions.act_window",
             "target": "new",
             "res_model": "auth_totp.wizard",
-            "name": _("Two-Factor Authentication Activation"),
+            "name": self.env._("Two-Factor Authentication Activation"),
             "res_id": w.id,
             "views": [(False, "form")],
             "context": self.env.context | {"dialog_size": "medium"},

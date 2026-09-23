@@ -5,7 +5,7 @@ from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import _, clean_context
+from odoo.tools import clean_context
 
 _debug = DebugLog(__name__)
 
@@ -25,7 +25,7 @@ class ResPartnerBankAccount(models.Model):
 
     @api.model
     def _get_account_types_supported(self) -> list[tuple[str, str]]:
-        return [("bank", _("Normal"))]
+        return [("bank", self.env._("Normal"))]
 
     active = fields.Boolean(default=True)
     acc_type = fields.Selection(
@@ -214,7 +214,7 @@ class ResPartnerBankAccount(models.Model):
                     reason="company_partner",
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Please add your own bank account manually: %(account_number)s (%(partner)s)",
                         account_number=account_number,
                         partner=partner.display_name,

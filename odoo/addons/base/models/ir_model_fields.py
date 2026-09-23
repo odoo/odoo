@@ -15,7 +15,7 @@ from odoo.libs.sql import get_index_name
 from odoo.models import pop_field
 from odoo.tools import SQL, OrderedSet, frozendict, unique
 from odoo.tools.safe_eval import safe_eval
-from odoo.tools.translate import FIELD_TRANSLATE, _
+from odoo.tools.translate import FIELD_TRANSLATE
 
 from .ir_model_common import (
     MODULE_UNINSTALL_FLAG,
@@ -41,10 +41,10 @@ def _selection_field_types(_model) -> list[tuple[str, str]]:
     return [(key, key) for key in sorted(fields.Field._by_type__)]
 
 
-def _check_translate_value(vals: dict[str, Any]) -> None:
+def _check_translate_value(env: api.Environment, vals: dict[str, Any]) -> None:
     if vals.get("translate") and not isinstance(vals["translate"], str):
         raise ValidationError(
-            _(
+            env._(
                 "The translation mode is a selection since Odoo 19: pass "
                 "'standard', 'html_translate' or 'xml_translate' instead of "
                 "%(value)s.",
@@ -326,7 +326,7 @@ class IrModelFields(models.Model):
                     reason="domain_unparseable",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "An error occurred while evaluating the domain:\n%(error)s",
                         error=e,
                     )
@@ -345,7 +345,7 @@ class IrModelFields(models.Model):
                     reason="invalid_name",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Field names can only contain characters, digits and underscores (up to 63)."
                     )
                 ) from e
@@ -375,7 +375,7 @@ class IrModelFields(models.Model):
                     reason="unknown_field",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Unknown field name "%(field_name)s" in related field "%(related_field)s"',
                         field_name=name,
                         related_field=self.related,
@@ -390,7 +390,7 @@ class IrModelFields(models.Model):
                     reason="non_relational",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Non-relational field name "%(field_name)s" in related field "%(related_field)s"',
                         field_name=name,
                         related_field=self.related,
@@ -404,7 +404,7 @@ class IrModelFields(models.Model):
                     reason="not_stored",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Field "%(field_name)s" in related path "%(related_field)s" is not '
                         "stored. Non-stored fields cannot be used in related fields.",
                         field_name=name,
@@ -423,7 +423,7 @@ class IrModelFields(models.Model):
                         "related.rejected", related=rec.related, reason="type_mismatch"
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             'Related field "%(related_field)s" does not have type "%(type)s"',
                             related_field=rec.related,
                             type=rec.ttype,
@@ -436,7 +436,7 @@ class IrModelFields(models.Model):
                         reason="comodel_mismatch",
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             'Related field "%(related_field)s" does not have comodel "%(comodel)s"',
                             related_field=rec.related,
                             comodel=rec.relation,
@@ -450,7 +450,7 @@ class IrModelFields(models.Model):
                 field = self._get_related_target_field()
             except ValidationError as e:
                 _debug.logic("onchange_related.warning", related=self.related)
-                return {"warning": {"title": _("Warning"), "message": e}}
+                return {"warning": {"title": self.env._("Warning"), "message": e}}
             _debug.logic(
                 "onchange_related.applied",
                 related=self.related,
@@ -469,7 +469,7 @@ class IrModelFields(models.Model):
         except ValidationError as e:
             return {
                 "warning": {
-                    "title": _("Model %s does not exist", self.relation),
+                    "title": self.env._("Model %s does not exist", self.relation),
                     "message": e,
                 }
             }
@@ -489,7 +489,7 @@ class IrModelFields(models.Model):
                     reason="unknown_relation",
                 )
                 raise ValidationError(
-                    _("Unknown model name '%s' in Related Model", rec.relation)
+                    self.env._("Unknown model name '%s' in Related Model", rec.relation)
                 )
 
     @api.constrains("ttype", "relation", "relation_field", "store")
@@ -505,7 +505,7 @@ class IrModelFields(models.Model):
                     reason="relation_missing",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The %(type)s field \u201c%(field)s\u201d has no Related "
                         "Model. A relational field cannot be built without one.",
                         type=rec.ttype,
@@ -519,7 +519,7 @@ class IrModelFields(models.Model):
                     reason="relation_field_missing",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The stored one2many field \u201c%(field)s\u201d has no "
                         "Relation Field. Name the many2one on %(comodel)s that "
                         "points back to %(model)s, or clear Stored.",
@@ -537,7 +537,7 @@ class IrModelFields(models.Model):
             if record.state == "manual" and not record.compute:
                 _debug.logic("depends.rejected", field=record.name, reason="no_compute")
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Dependencies are only read for a computed field, so "
                         "\u201c%(dependency)s\u201d on \u201c%(field)s\u201d would "
                         "never be applied. Give the field a compute method or "
@@ -555,7 +555,7 @@ class IrModelFields(models.Model):
                     reason="model_not_in_registry",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Cannot check the dependencies of \u201c%(field)s\u201d: "
                         "its model %(model)s is not in the registry.",
                         field=record.name,
@@ -566,7 +566,7 @@ class IrModelFields(models.Model):
                 seq = raw_seq.strip()
                 if not seq:
                     raise ValidationError(
-                        _("Empty dependency in \u201c%s\u201d", record.depends)
+                        self.env._("Empty dependency in \u201c%s\u201d", record.depends)
                     )
                 model = base_model
                 names = seq.split(".")
@@ -574,7 +574,7 @@ class IrModelFields(models.Model):
                 for index, name in enumerate(names):
                     if name == "id":
                         raise ValidationError(
-                            _("Compute method cannot depend on field 'id'")
+                            self.env._("Compute method cannot depend on field 'id'")
                         )
                     field = model._fields.get(name)
                     if field is None:
@@ -586,7 +586,7 @@ class IrModelFields(models.Model):
                             reason="unknown_field",
                         )
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "Unknown field \u201c%(field)s\u201d in dependency \u201c%(dependency)s\u201d",
                                 field=name,
                                 dependency=seq,
@@ -603,7 +603,7 @@ class IrModelFields(models.Model):
                             reason="non_relational",
                         )
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "Non-relational field \u201c%(field)s\u201d in dependency \u201c%(dependency)s\u201d",
                                 field=name,
                                 dependency=seq,
@@ -624,7 +624,7 @@ class IrModelFields(models.Model):
                     models.check_pg_name(rec.relation_table)
                 except ValidationError as e:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Relation table names can only contain characters, digits and underscores (up to 63)."
                         )
                     ) from e
@@ -645,7 +645,7 @@ class IrModelFields(models.Model):
                             reason="no_fallback",
                         )
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "Currency field is empty and there is no fallback field in the model"
                             )
                         )
@@ -660,7 +660,7 @@ class IrModelFields(models.Model):
                             reason="unknown",
                         )
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "Unknown field specified \u201c%s\u201d in currency_field",
                                 rec.currency_field,
                             )
@@ -674,7 +674,7 @@ class IrModelFields(models.Model):
                         reason="not_many2one",
                     )
                     raise ValidationError(
-                        _("Currency field does not have type many2one")
+                        self.env._("Currency field does not have type many2one")
                     )
                 if currency_field.relation != "res.currency":
                     _debug.logic(
@@ -684,7 +684,7 @@ class IrModelFields(models.Model):
                         reason="not_res_currency",
                     )
                     raise ValidationError(
-                        _("Currency field should have a res.currency relation")
+                        self.env._("Currency field should have a res.currency relation")
                     )
 
     @api.model
@@ -751,8 +751,8 @@ class IrModelFields(models.Model):
                 )
                 return {
                     "warning": {
-                        "title": _("Warning"),
-                        "message": _(
+                        "title": self.env._("Warning"),
+                        "message": self.env._(
                             "The table \u201c%s\u201d is used by another, possibly incompatible field(s).",
                             self.relation_table,
                         ),
@@ -768,7 +768,7 @@ class IrModelFields(models.Model):
                     "constraint.rejected", field=rec.name, reason="required_set_null"
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The m2o field %s is required but declares its ondelete policy "
                         "as being 'set null'. Only 'restrict' and 'cascade' make sense.",
                         rec.name,
@@ -910,7 +910,7 @@ class IrModelFields(models.Model):
         ):
             _debug.logic("prepare_update.rejected", reason="base_field")
             raise UserError(
-                _("This column contains module data and cannot be removed!")
+                self.env._("This column contains module data and cannot be removed!")
             )
 
         records, failed_dependencies = self._get_dependent_fields_and_failures()
@@ -933,7 +933,7 @@ class IrModelFields(models.Model):
                     reason="manual_dependent",
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "The field '%(field)s' cannot be removed because the field '%(other_field)s' depends on it.",
                         field=field,
                         other_field=dep,
@@ -978,7 +978,7 @@ class IrModelFields(models.Model):
             if not uninstalling:
                 self.pool.setup_models(self.env.cr, OrderedSet(records.mapped("model")))
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot rename/delete fields that are still present in views:\nFields: %(fields)s\nView: %(view)s",
                         fields=fields_,
                         view=view.name,
@@ -1135,7 +1135,7 @@ class IrModelFields(models.Model):
         inverses_wanted = OrderedSet()
         inverses_in_batch = set()
         for vals in vals_list:
-            _check_translate_value(vals)
+            _check_translate_value(self.env, vals)
             if "model_id" in vals:
                 vals["model"] = model_by_id.get(vals["model_id"], False)
             if vals.get("ttype") == "many2one" and vals.get("name"):
@@ -1149,7 +1149,7 @@ class IrModelFields(models.Model):
                     relation=relation,
                     reason="unknown_relation",
                 )
-                raise UserError(_("Model %s does not exist!", relation))
+                raise UserError(self.env._("Model %s does not exist!", relation))
             if (
                 vals.get("ttype") == "one2many"
                 and vals.get("store", True)
@@ -1203,7 +1203,7 @@ class IrModelFields(models.Model):
                     reason="inverse_missing",
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Many2one %(field)s on model %(model)s does not exist!",
                         field=name,
                         model=model_name,
@@ -1225,7 +1225,7 @@ class IrModelFields(models.Model):
                 reason="base_field",
             )
             raise UserError(
-                _(
+                self.env._(
                     "Properties of base fields cannot be altered in this manner! "
                     "Please modify them through Python code, "
                     "preferably through a custom addon!"
@@ -1241,7 +1241,7 @@ class IrModelFields(models.Model):
                 field=item.name,
                 reason="model_change",
             )
-            raise UserError(_("Changing the model of a field is forbidden!"))
+            raise UserError(self.env._("Changing the model of a field is forbidden!"))
         if vals.get("ttype", item.ttype) != item.ttype:
             _debug.logic(
                 "write.rejected",
@@ -1250,7 +1250,7 @@ class IrModelFields(models.Model):
                 reason="ttype_change",
             )
             raise UserError(
-                _(
+                self.env._(
                     "Changing the type of a field is not yet supported. "
                     "Please drop it and create it again!"
                 )
@@ -1275,7 +1275,9 @@ class IrModelFields(models.Model):
                             field=item.name,
                             reason="multiple_renames",
                         )
-                        raise UserError(_("Can only rename one field at a time!"))
+                        raise UserError(
+                            self.env._("Can only rename one field at a time!")
+                        )
                     if model_cls is None:
                         _debug.logic(
                             "write.rejected",
@@ -1284,7 +1286,7 @@ class IrModelFields(models.Model):
                             reason="model_not_in_registry",
                         )
                         raise UserError(
-                            _(
+                            self.env._(
                                 "Cannot rename field \u201c%(field)s\u201d: its model "
                                 "\u201c%(model)s\u201d is not in the registry.",
                                 field=item.name,
@@ -1394,7 +1396,7 @@ class IrModelFields(models.Model):
             if key not in ("model_id", "model", "state")
         }
 
-        _check_translate_value(vals)
+        _check_translate_value(self.env, vals)
 
         old_names = {record.id: record.name for record in renamed}
 

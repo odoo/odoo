@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import Environment
 from odoo.exceptions import ValidationError
 from odoo.libs import netguard
@@ -31,7 +31,7 @@ class IrActionsServer(models.Model):
         for action in self:
             if action.webhook_endpoint_id and action.state != "webhook":
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "'%(name)s' is not a webhook action, so it has nothing "
                         "to send through an endpoint.",
                         name=action.name,
@@ -43,7 +43,7 @@ class IrActionsServer(models.Model):
         for action in self.filtered("webhook_endpoint_id"):
             if action.webhook_endpoint_id.retry_enabled:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Endpoint '%(endpoint)s' has retry enabled, which would "
                         "hold a worker through the backoff after the transaction "
                         "has already committed. Turn retry off on the endpoint, "

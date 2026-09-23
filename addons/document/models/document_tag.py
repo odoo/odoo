@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -21,4 +21,6 @@ class DocumentsTag(models.Model):
         if resource_refs and self.env["ir.actions.server"].search_count(
             [("resource_ref", "in", resource_refs)], limit=1
         ):
-            raise UserError(_("You cannot delete tags used in server actions."))
+            raise UserError(
+                self.env._("You cannot delete tags used in server actions.")
+            )

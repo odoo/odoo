@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 import werkzeug
 from markupsafe import Markup
 
-from odoo import _, http, tools
+from odoo import http, tools
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools.translate import LazyTranslate
@@ -95,13 +95,15 @@ class AuthSignupHome(Home):
                         User._get_domain_login(qcontext.get("login")), limit=1
                     )
                 ):
-                    qcontext["error"] = _(
+                    qcontext["error"] = request.env._(
                         "Another user is already registered using this email address."
                     )
                 else:
                     _logger.warning("%s", e)
                     qcontext["error"] = (
-                        _("Could not create a new account.") + Markup("<br/>") + str(e)
+                        request.env._("Could not create a new account.")
+                        + Markup("<br/>")
+                        + str(e)
                     )
 
         elif "signup_email" in qcontext:
@@ -147,12 +149,12 @@ class AuthSignupHome(Home):
                 if qcontext.get("token"):
                     self.do_signup(qcontext, do_login=False)
                     request.update_context(skip_captcha_login=SKIP_CAPTCHA_LOGIN)
-                    qcontext["message"] = _(
+                    qcontext["message"] = request.env._(
                         "Your password has been reset successfully."
                     )
                 else:
                     login = qcontext.get("login")
-                    assert login, _("No login provided.")
+                    assert login, request.env._("No login provided.")
                     _logger.info(
                         "Password reset attempt for <%s> by user <%s> from %s",
                         login,
@@ -174,19 +176,19 @@ class AuthSignupHome(Home):
                             login,
                             exc_info=True,
                         )
-                    qcontext["message"] = _(
+                    qcontext["message"] = request.env._(
                         "Password reset instructions sent to your email address."
                     )
             except UserError as e:
                 qcontext["error"] = e.args[0]
             except SignupError:
-                qcontext["error"] = _("Could not reset your password")
+                qcontext["error"] = request.env._("Could not reset your password")
                 _logger.exception("error when resetting password")
             except AssertionError as e:
                 qcontext["error"] = str(e)
             except Exception:
                 _logger.exception("error when resetting password")
-                qcontext["error"] = _("Could not reset your password")
+                qcontext["error"] = request.env._("Could not reset your password")
 
         elif "signup_email" in qcontext:
             user = (
@@ -244,16 +246,18 @@ class AuthSignupHome(Home):
                 for k, v in token_infos.items():
                     qcontext.setdefault(k, v)
             except AttributeError:
-                qcontext["error"] = _("Invalid signup token")
+                qcontext["error"] = request.env._("Invalid signup token")
                 qcontext["invalid_token"] = True
         return qcontext
 
     def _prepare_signup_values(self, qcontext):
         values = {key: qcontext.get(key) for key in ("login", "name", "password")}
         if not values.get("login") or not values.get("name"):
-            raise UserError(_("The form was not properly filled in."))
+            raise UserError(request.env._("The form was not properly filled in."))
         if values.get("password") != qcontext.get("confirm_password"):
-            raise UserError(_("Passwords do not match; please retype them."))
+            raise UserError(
+                request.env._("Passwords do not match; please retype them.")
+            )
         supported_lang_codes = [
             code for code, _ in request.env["res.lang"].get_installed()
         ]

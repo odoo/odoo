@@ -13,7 +13,7 @@ from itertools import batched
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Self
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import (
     AccessError,
@@ -235,7 +235,7 @@ class IrAttachment(models.Model):
     def _check_res_field_valid(self, res_model: str, res_field: str) -> None:
         if not res_model:
             raise ValidationError(
-                _(
+                self.env._(
                     "An attachment standing for the field %(field)s must name "
                     "the model the field belongs to.",
                     field=res_field,
@@ -252,7 +252,7 @@ class IrAttachment(models.Model):
             reason="not_binary",
         )
         raise ValidationError(
-            _(
+            self.env._(
                 "%(field)s of %(model)s cannot be backed by an attachment: "
                 "res_field must name a binary field.",
                 field=res_field,
@@ -276,7 +276,9 @@ class IrAttachment(models.Model):
                 uid=self.env.uid,
                 reason="missing" if field is None else "no_write_access",
             )
-            raise AccessError(_("Sorry, you are not allowed to access this document."))
+            raise AccessError(
+                self.env._("Sorry, you are not allowed to access this document.")
+            )
 
     def _get_res_field_targets(self, vals: dict[str, Any]) -> OrderedSet:
         has_model, has_field = "res_model" in vals, "res_field" in vals
@@ -295,7 +297,7 @@ class IrAttachment(models.Model):
             return base64.b64decode(datas or b"")
         except ValueError as exc:
             _debug.logic("datas_decode_refused", reason="not_base64")
-            raise UserError(_("Attachment is not encoded in base64.")) from exc
+            raise UserError(self.env._("Attachment is not encoded in base64.")) from exc
 
     def _normalize_content_vals(
         self, vals: dict[str, Any]
@@ -337,7 +339,9 @@ class IrAttachment(models.Model):
                 models=[m for m in model_and_ids if m],
                 reason="comodel_inaccessible",
             )
-            raise AccessError(_("Sorry, you are not allowed to access this document."))
+            raise AccessError(
+                self.env._("Sorry, you are not allowed to access this document.")
+            )
 
         backend = self._get_storage_backend()
         verify_collision = self._is_content_collision_check_enabled()
@@ -397,7 +401,7 @@ class IrAttachment(models.Model):
                     reason="comodel_inaccessible",
                 )
                 raise AccessError(
-                    _("Sorry, you are not allowed to access this document.")
+                    self.env._("Sorry, you are not allowed to access this document.")
                 )
         for res_model, res_field in self._get_res_field_targets(vals):
             self._check_res_field_access(res_model, res_field)
@@ -707,7 +711,9 @@ class IrAttachment(models.Model):
     def _check_admin_access(self) -> None:
         if not self.env.is_admin():
             _debug.logic("admin_access_refused", uid=self.env.uid)
-            raise AccessError(_("Only administrators can execute this action."))
+            raise AccessError(
+                self.env._("Only administrators can execute this action.")
+            )
 
     @api.model
     def _get_full_path(self, path: str) -> str:
@@ -776,7 +782,9 @@ class IrAttachment(models.Model):
                 span.set(same=same)
             if not same:
                 _debug.logic("content_collision_refused", fname=fname)
-                raise UserError(_("The attachment collides with an existing file."))
+                raise UserError(
+                    self.env._("The attachment collides with an existing file.")
+                )
         return fname, str(full_path)
 
     def _get_pdf_raw(self) -> bytes | None:
@@ -1488,7 +1496,7 @@ class IrAttachment(models.Model):
         for values in values_list:
             if "mimetype" not in values:
                 _debug.logic("create_unique_refused", reason="missing_mimetype")
-                raise UserError(_("Attachment is missing its mimetype."))
+                raise UserError(self.env._("Attachment is missing its mimetype."))
             vals, has_content = self._normalize_content_vals(dict(values))
             vals = self._prepare_contents(vals)
             model_and_ids[self._coerce_model_name(vals.get("res_model"))].add(
@@ -1513,7 +1521,9 @@ class IrAttachment(models.Model):
                 uid=self.env.uid,
                 reason="comodel_inaccessible",
             )
-            raise AccessError(_("Sorry, you are not allowed to access this document."))
+            raise AccessError(
+                self.env._("Sorry, you are not allowed to access this document.")
+            )
 
         all_checksums = list({key[0] for _vals, key in entries if key})
         _debug.pipeline(
@@ -2172,7 +2182,7 @@ class IrAttachment(models.Model):
             if record.res_model == "ir.attachment" and record.id == record.res_id:
                 _debug.logic("circular_attachment_refused", attachment=record.id)
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot attach an attachment to itself.\n"
                         "Attachment %(record)s cannot have res_id: %(res_id)s",
                         record=record.display_name,
@@ -2208,7 +2218,7 @@ class IrAttachment(models.Model):
                 "serving_write_refused", uid=self.env.uid, attachments=served.ids
             )
             raise ValidationError(
-                _("Sorry, you are not allowed to write on this document")
+                self.env._("Sorry, you are not allowed to write on this document")
             )
 
     @api.model

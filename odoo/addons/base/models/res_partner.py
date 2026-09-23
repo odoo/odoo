@@ -7,7 +7,7 @@ from collections import defaultdict
 from typing import Any, Literal, Self
 from urllib.parse import urlsplit, urlunsplit
 
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.db import FunctionStatus
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
@@ -472,7 +472,9 @@ class ResPartner(models.Model):
     def _check_parent_id(self) -> None:
         if self._has_cycle():
             _debug.logic("parent_cycle_refused", partners=self.ids)
-            raise ValidationError(_("You cannot create recursive Partner hierarchies."))
+            raise ValidationError(
+                self.env._("You cannot create recursive Partner hierarchies.")
+            )
 
     @api.constrains("name")
     def _check_company_party_name_unique(self) -> None:
@@ -496,13 +498,13 @@ class ResPartner(models.Model):
         names = parties.mapped("name")
         if len(names) != len(set(names)):
             _debug.logic("company_name_duplicate", partners=parties.ids)
-            raise ValidationError(_("The company name must be unique!"))
+            raise ValidationError(self.env._("The company name must be unique!"))
         for party in parties:
             if party.name in taken:
                 _debug.logic(
                     "company_name_duplicate", partner=party.id, name=party.name
                 )
-                raise ValidationError(_("The company name must be unique!"))
+                raise ValidationError(self.env._("The company name must be unique!"))
 
     def _compute_is_bank(self) -> None:
         bank_partner_ids = self.env["res.bank"]._get_bank_partner_ids()
@@ -533,7 +535,7 @@ class ResPartner(models.Model):
                     assigned=company.partner_id.company_id.id,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The company assigned to this partner does not match the company this partner represents."
                     )
                 )
@@ -552,7 +554,7 @@ class ResPartner(models.Model):
                     reason="not_linked",
                 )
                 raise ValidationError(
-                    _("The preferred phone must belong to this contact.")
+                    self.env._("The preferred phone must belong to this contact.")
                 )
 
     @api.constrains("barcode")
@@ -579,7 +581,9 @@ class ResPartner(models.Model):
         )
         if self.env.cr.fetchone():
             _debug.logic("barcode_duplicate", company=cid, partners=self.ids)
-            raise ValidationError(_("Another partner already has this barcode"))
+            raise ValidationError(
+                self.env._("Another partner already has this barcode")
+            )
 
     @api.model
     def default_get(self, fields: list[str]) -> dict[str, Any]:
@@ -968,21 +972,21 @@ class ResPartner(models.Model):
 
     @api.depends_context("company")
     def _compute_vat_label(self) -> None:
-        self.vat_label = self.env.company.country_id.vat_label or _("Tax ID")
+        self.vat_label = self.env.company.country_id.vat_label or self.env._("Tax ID")
 
     @api.depends("parent_id", "type")
     def _compute_type_address_label(self) -> None:
         for partner in self:
             if partner.type == "invoice":
-                partner.type_address_label = _("Invoice Address")
+                partner.type_address_label = self.env._("Invoice Address")
             elif partner.type == "delivery":
-                partner.type_address_label = _("Delivery Address")
+                partner.type_address_label = self.env._("Delivery Address")
             elif partner.type == "private":
-                partner.type_address_label = _("Private Address")
+                partner.type_address_label = self.env._("Private Address")
             elif partner.type == "contact" and partner.parent_id:
-                partner.type_address_label = _("Company Address")
+                partner.type_address_label = self.env._("Company Address")
             else:
-                partner.type_address_label = _("Address")
+                partner.type_address_label = self.env._("Address")
 
     @api.depends(
         lambda self: [*self._display_address_depends(), "commercial_company_name"]
@@ -1015,7 +1019,7 @@ class ResPartner(models.Model):
         for partner in self:
             country_code = partner.country_id.code
             partner.company_registry_label = label_by_country.get(
-                country_code, _("Company ID")
+                country_code, self.env._("Company ID")
             )
 
     @api.depends("name", "email")
@@ -1137,7 +1141,7 @@ class ResPartner(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("%s and its possible duplicates", self.display_name),
+            "name": self.env._("%s and its possible duplicates", self.display_name),
             "res_model": "res.partner",
             "view_mode": "list,kanban,form",
             "domain": [("id", "in", (self | self.duplicate_ids).ids)],
@@ -1457,7 +1461,7 @@ class ResPartner(models.Model):
     def get_import_templates(self) -> list[dict[str, str]]:
         return [
             {
-                "label": _("Import Template for Contacts"),
+                "label": self.env._("Import Template for Contacts"),
                 "template": "/base/static/xls/contacts_import_template.xlsx",
             }
         ]
@@ -1537,26 +1541,28 @@ class ResPartner(models.Model):
     def _prepare_linked_user_error(self, users: ResUsers, operation: str) -> UserError:
         names = ", ".join(users.mapped("display_name"))
         if operation == "archive":
-            lead = _("You cannot archive contacts linked to an active user.")
-            remedy_self = _("You first need to archive their associated user.")
+            lead = self.env._("You cannot archive contacts linked to an active user.")
+            remedy_self = self.env._("You first need to archive their associated user.")
         else:
-            lead = _("You cannot delete contacts linked to an active user.")
-            remedy_self = _(
+            lead = self.env._("You cannot delete contacts linked to an active user.")
+            remedy_self = self.env._(
                 "You should rather archive them after archiving their associated user."
             )
         if self.env["res.users"].sudo(False).has_access("write"):
-            error_msg = _(
+            error_msg = self.env._(
                 "%(lead)s\n%(remedy)s\n\nLinked active users : %(names)s",
                 lead=lead,
                 remedy=remedy_self,
                 names=names,
             )
-            return RedirectWarning(error_msg, users._action_show(), _("Go to users"))
+            return RedirectWarning(
+                error_msg, users._action_show(), self.env._("Go to users")
+            )
         return ValidationError(
-            _(
+            self.env._(
                 "%(lead)s\n%(remedy)s\n\nLinked active users :\n%(names)s",
                 lead=lead,
-                remedy=_(
+                remedy=self.env._(
                     "Ask an administrator to archive their associated user first."
                 ),
                 names=names,
@@ -2054,7 +2060,9 @@ class ResPartner(models.Model):
         name, email_normalized = tools.parse_contact_from_email(name)
         if self.env.context.get("force_email") and not email_normalized:
             _debug.logic("name_create_refused", reason="no_email")
-            raise ValidationError(_("Couldn't create contact without email address!"))
+            raise ValidationError(
+                self.env._("Couldn't create contact without email address!")
+            )
 
         partner = self.create(self._prepare_vals_from_email(name, email_normalized))
         return partner.id, partner.display_name

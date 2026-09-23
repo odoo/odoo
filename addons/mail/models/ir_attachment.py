@@ -1,7 +1,7 @@
 import contextlib
 import typing
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import (
@@ -33,7 +33,9 @@ class IrAttachment(models.Model):
     ) -> bool:
         attachment_tokens = attachment_tokens or ([None] * len(self))
         if len(attachment_tokens) != len(self):
-            raise UserError(_("An access token must be provided for each attachment."))
+            raise UserError(
+                self.env._("An access token must be provided for each attachment.")
+            )
 
         def is_owned(attachment: IrAttachment, token: str) -> bool:
             if not attachment.exists():

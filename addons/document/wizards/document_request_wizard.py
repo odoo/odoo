@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.date_utils import get_timedelta, time_unit_selection
@@ -74,7 +74,7 @@ class DocumentsRequest_Wizard(models.TransientModel):
                 _debug.logic(
                     "request_refused", reason="unknown_model", model=self.res_model
                 )
-                raise UserError(_("Invalid model %s.", self.res_model))
+                raise UserError(self.env._("Invalid model %s.", self.res_model))
             self.env[self.res_model].browse(self.res_id).check_access("write")
         document = self.env["document.document"].create(
             {

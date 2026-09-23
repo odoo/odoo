@@ -1,6 +1,6 @@
 from itertools import groupby
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
@@ -468,4 +468,4 @@ class MixinOrderInvoice(models.AbstractModel):
         return moves
 
     def _get_nothing_to_invoice_error_message(self):
-        return _("There is nothing to invoice for this order.")
+        return self.env._("There is nothing to invoice for this order.")

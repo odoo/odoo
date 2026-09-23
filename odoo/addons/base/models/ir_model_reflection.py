@@ -11,7 +11,6 @@ from odoo.exceptions import AccessError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import normalize_identifier
 from odoo.tools import SQL, OrderedSet
-from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -396,7 +395,7 @@ class IrModelRelation(models.Model):
                 "uninstall_relations.rejected", uid=self.env.uid, reason="not_system"
             )
             raise AccessError(
-                _("Administrator access is required to uninstall a module")
+                self.env._("Administrator access is required to uninstall a module")
             )
 
         owners = _get_owner_ids_by_name(self)

@@ -1,6 +1,6 @@
 from typing import Any
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -33,7 +33,9 @@ class DocumentsDocument(models.Model):
             and not self.env.su
         ):
             _debug.logic("embed_refused", reason="not_a_documents_user")
-            raise AccessError(_("You are not allowed to pin/unpin embedded Actions."))
+            raise AccessError(
+                self.env._("You are not allowed to pin/unpin embedded Actions.")
+            )
         embeddable_domain = self._get_domain_embeddable_server_action()
         action = (
             self.env["ir.actions.server"]
@@ -42,14 +44,14 @@ class DocumentsDocument(models.Model):
         )
         if not action:
             _debug.logic("embed_refused", reason="unknown_action")
-            raise UserError(_("This action does not exist."))
+            raise UserError(self.env._("This action does not exist."))
         if action.type != "ir.actions.server":
             _debug.logic("embed_refused", reason="bad_action_type")
-            raise UserError(_("You cannot pin that type of action."))
+            raise UserError(self.env._("You cannot pin that type of action."))
         folder = self.env["document.document"].browse(folder_id).sudo().exists()
         if not folder or folder.type != "folder":
             _debug.logic("embed_refused", reason="not_a_folder")
-            raise UserError(_("You cannot pin an action on that document."))
+            raise UserError(self.env._("You cannot pin an action on that document."))
         if folder.shortcut_document_id:
             return self.action_folder_embed_action(
                 folder.shortcut_document_id.id, action_id
@@ -60,7 +62,7 @@ class DocumentsDocument(models.Model):
         ):
             _debug.logic("embed_refused", reason="folder_not_editable", folder=folder)
             raise AccessError(
-                _("You are not allowed to pin/unpin actions on this folder.")
+                self.env._("You are not allowed to pin/unpin actions on this folder.")
             )
 
         all_embedded_actions_sudo = (
@@ -112,10 +114,12 @@ class DocumentsDocument(models.Model):
     def action_execute_embedded_action(self, action_id: int) -> Any:
         if self.env.user.share:
             _debug.logic("embed_run_refused", reason="share_user")
-            raise AccessError(_("You are not allowed to execute embedded actions."))
+            raise AccessError(
+                self.env._("You are not allowed to execute embedded actions.")
+            )
         if self.env.context.get("active_model") != "document.document":
             _debug.logic("embed_run_refused", reason="wrong_active_model")
-            raise UserError(_("Unavailable action."))
+            raise UserError(self.env._("Unavailable action."))
         ids = self.env.context.get(
             "active_ids",
             [self.env.context["active_id"]]
@@ -124,7 +128,7 @@ class DocumentsDocument(models.Model):
         )
         if not ids:
             _debug.logic("embed_run_refused", reason="no_active_ids")
-            raise UserError(_("Missing documents reference."))
+            raise UserError(self.env._("Missing documents reference."))
 
         embedded_action = self.env["ir.embedded.actions"].browse([action_id])
         if all(
@@ -142,7 +146,7 @@ class DocumentsDocument(models.Model):
                 )
 
         _debug.logic("embed_run_refused", reason="not_available_on_documents")
-        raise UserError(_("Unavailable action."))
+        raise UserError(self.env._("Unavailable action."))
 
     @api.model
     def _data_embed_if_records_exist(
@@ -199,7 +203,9 @@ class DocumentsDocument(models.Model):
             raise ValueError("Invalid folder_id")
         folder = self.env["document.document"].search([("id", "=", folder_id)])
         if not folder:
-            raise UserError(_("This folder does not exist or is not accessible."))
+            raise UserError(
+                self.env._("This folder does not exist or is not accessible.")
+            )
 
         embedded_actions = self._get_folder_embedded_actions(folder.ids)
         embedded_actions = (

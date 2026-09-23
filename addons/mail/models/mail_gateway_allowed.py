@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -34,7 +34,9 @@ class MailGatewayAllowed(models.Model):
                 _debug.logic(
                     "email_rejected", record=record.id, reason="not_normalizable"
                 )
-                raise ValidationError(_("Invalid email address “%s”", record.email))
+                raise ValidationError(
+                    self.env._("Invalid email address “%s”", record.email)
+                )
 
     @api.model
     def get_empty_list_help(self, help_message: str) -> str:
@@ -43,7 +45,7 @@ class MailGatewayAllowed(models.Model):
         LOOP_THRESHOLD = icp._get_int_param("mail.gateway.loop.threshold", 20)
 
         return Markup(
-            _("""
+            self.env._("""
             <p class="o_view_nocontent_smiling_face">
                 Add addresses to the Allowed List
             </p><p>

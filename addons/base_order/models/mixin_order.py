@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
@@ -86,7 +86,7 @@ class MixinOrder(models.AbstractModel):
 
     name = fields.Char(
         string="Order Reference",
-        default=lambda self: _("New"),
+        default=lambda self: self.env._("New"),
         index="trigram",
         copy=False,
         readonly=False,
@@ -325,7 +325,9 @@ class MixinOrder(models.AbstractModel):
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             self._price_history_action,
         )
-        action["display_name"] = _("Price Comparison for %s", self.display_name)
+        action["display_name"] = self.env._(
+            "Price Comparison for %s", self.display_name
+        )
         action["domain"] = [
             ("state", "=", "done"),
             ("product_id", "in", self.line_ids.product_id.ids),
@@ -364,7 +366,7 @@ class MixinOrder(models.AbstractModel):
                     default_company_id = self.default_get(["company_id"])["company_id"]
                 company_id = default_company_id
             self_comp = self.with_company(company_id)
-            if vals.get("name", _("New")) == _("New"):
+            if vals.get("name", self.env._("New")) == self.env._("New"):
                 if "date_order" in vals:
                     date_order = vals["date_order"]
                 else:
@@ -439,7 +441,7 @@ class MixinOrder(models.AbstractModel):
                     companies=invalid_companies,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Your %(desc)s contains products from company %(product_company)s "
                         "whereas your %(desc)s belongs to company %(quote_company)s.\n\n"
                         "Please change the company of your %(desc)s or remove the products "
@@ -604,11 +606,11 @@ class MixinOrder(models.AbstractModel):
         return domain if positive else ~domain
 
     def _get_draft_type_name(self):
-        return _("Quotation")
+        return self.env._("Quotation")
 
     def _get_confirmed_type_name(self):
         order_type = self._get_order_type()
-        return _("%(type)s Order", type=order_type.title())
+        return self.env._("%(type)s Order", type=order_type.title())
 
     def _get_validity_days(self):
         self.check_singleton()
@@ -675,7 +677,7 @@ class MixinOrder(models.AbstractModel):
                 "confirm_refused", orders=orders_without_lines, reason="no_lines"
             )
             raise UserError(
-                _(
+                self.env._(
                     "Cannot confirm %(desc)s without lines: %(orders)s\n\n"
                     "Please add at least one product line before confirming.",
                     desc=self._description,
@@ -710,14 +712,14 @@ class MixinOrder(models.AbstractModel):
                 ),
             )
             error_details.append(
-                _(
+                self.env._(
                     "• %(order)s has %(count)d line(s) without products",
                     order=order.display_name,
                     count=len(missing_product_lines),
                 ),
             )
         raise UserError(
-            _(
+            self.env._(
                 "Cannot confirm %(desc)s with lines missing products:\n\n%(details)s\n\n"
                 "Please assign a product to all order lines before confirming.",
                 desc=self._description,
@@ -743,7 +745,7 @@ class MixinOrder(models.AbstractModel):
     def action_view_business_doc(self):
         self.check_singleton()
         return {
-            "name": _("Order"),
+            "name": self.env._("Order"),
             "type": "ir.actions.act_window",
             "res_model": self._name,
             "res_id": self.id,
@@ -784,7 +786,7 @@ class MixinOrder(models.AbstractModel):
             "write_refused", orders=self, reason="reassign_without_all_documents_group"
         )
         raise AccessError(
-            _(
+            self.env._(
                 "You are limited to your own documents, so you may only make "
                 "yourself responsible for an order. Ask someone with access to "
                 "all documents to reassign it.",
@@ -935,7 +937,7 @@ class MixinOrder(models.AbstractModel):
         return {}
 
     def _get_mail_composer_action_name(self):
-        return _("Send")
+        return self.env._("Send")
 
     def _prepare_mail_composer_context(self):
         ctx = {
@@ -1192,9 +1194,9 @@ class MixinOrder(models.AbstractModel):
     def create_document_from_attachment(self, attachment_ids):
         attachments = self.env["ir.attachment"].browse(attachment_ids)
         if not attachments:
-            raise UserError(_("No attachment was provided."))
+            raise UserError(self.env._("No attachment was provided."))
 
         orders = self.with_context(
             default_partner_id=self.env.user.partner_id.id,
         )._create_records_from_attachments(attachments)
-        return orders._get_records_action(name=_("Generated Orders"))
+        return orders._get_records_action(name=self.env._("Generated Orders"))

@@ -12,7 +12,7 @@ from typing import Any, Literal, Self
 from lxml import html
 from psycopg.errors import UniqueViolation
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.api import DomainType, ValuesType
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.fields import Command, Domain
@@ -818,7 +818,7 @@ class MailMessage(models.Model):
         if not self.env.su and self.env.user.share:
             if forbidden := self._get_forbidden_access("read"):
                 raise AccessError(
-                    _(
+                    self.env._(
                         "You cannot read the following messages: %(ids)s",
                         ids=", ".join(str(mid) for mid in forbidden.ids),
                     )
@@ -836,7 +836,9 @@ class MailMessage(models.Model):
         if record_changed and not self.env.is_system():
             _debug.logic("write_refused", messages=self.ids, reason="record_change")
             raise AccessError(
-                _("Only administrators can modify 'model' and 'res_id' fields.")
+                self.env._(
+                    "Only administrators can modify 'model' and 'res_id' fields."
+                )
             )
         if vals.get("parent_id") and not self.env.is_system():
             self._check_parent_on_same_document(vals["parent_id"])
@@ -857,7 +859,9 @@ class MailMessage(models.Model):
         for message in self.sudo():
             if (parent.model, parent.res_id) != (message.model, message.res_id):
                 raise AccessError(
-                    _("A message can only reply to a message of the same document.")
+                    self.env._(
+                        "A message can only reply to a message of the same document."
+                    )
                 )
 
     def unlink(self) -> Literal[True]:
@@ -888,7 +892,7 @@ class MailMessage(models.Model):
     def export_data(self, fields_to_export: list[str]) -> dict:
         if not self.env.is_admin():
             raise AccessError(
-                _("Only administrators are allowed to export mail message")
+                self.env._("Only administrators are allowed to export mail message")
             )
 
         return super().export_data(fields_to_export)

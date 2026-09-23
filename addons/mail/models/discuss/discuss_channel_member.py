@@ -11,7 +11,7 @@ from typing import Any, Literal, Self
 import requests
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
@@ -172,7 +172,9 @@ class DiscussChannelMember(models.Model):
     def _contrains_no_public_member(self) -> None:
         for member in self:
             if any(user._is_public() for user in member.partner_id.user_ids):
-                raise ValidationError(_("Channel members cannot include public users."))
+                raise ValidationError(
+                    self.env._("Channel members cannot include public users.")
+                )
 
     @api.depends_context("uid", "guest")
     def _compute_is_self(self) -> None:
@@ -268,7 +270,7 @@ class DiscussChannelMember(models.Model):
     @api.depends("partner_id.name", "guest_id.name", "channel_id.display_name")
     def _compute_display_name(self) -> None:
         for member in self:
-            member.display_name = _(
+            member.display_name = self.env._(
                 "“%(member_name)s” in “%(channel_name)s”",
                 member_name=member.partner_id.name or member.guest_id.name,
                 channel_name=member.channel_id.display_name,
@@ -309,7 +311,7 @@ class DiscussChannelMember(models.Model):
             self = self.sudo()
         if any("channel_id" not in vals for vals in vals_list):
             raise UserError(
-                _(
+                self.env._(
                     "It appears you're trying to create a channel member, but it seems like you forgot to specify the related channel. "
                     "To move forward, please make sure to provide the necessary channel information."
                 )
@@ -356,7 +358,10 @@ class DiscussChannelMember(models.Model):
                     and vals[field_name] != channel_member[field_name].id
                 ):
                     raise AccessError(
-                        _("You can not write on %(field_name)s.", field_name=field_name)
+                        self.env._(
+                            "You can not write on %(field_name)s.",
+                            field_name=field_name,
+                        )
                     )
 
         sync_field_names, old_vals = self._prepare_sync_snapshot(vals)

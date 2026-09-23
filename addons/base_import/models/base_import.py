@@ -39,7 +39,7 @@ from odoo.tools import (
     DEFAULT_SERVER_DATETIME_FORMAT,
     config,
 )
-from odoo.tools.translate import _
+from odoo.tools.translate import LazyGettext, LazyTranslate
 
 FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
@@ -49,6 +49,7 @@ DEFAULT_CHUNK_SIZE = 32768
 # the shape of a file is decided by its first lines, so cap the work.
 SEPARATOR_SNIFF_ROWS = 100
 _logger = logging.getLogger(__name__)
+_lt = LazyTranslate(__name__)
 MIMETYPE_TO_READER = {
     mimetype_for(extension): extension for extension in ("csv", "xls", "xlsx", "ods")
 }
@@ -238,12 +239,12 @@ def read_xls_rows(data, options):
                 values.append("True" if cell.value else "False")
             elif cell.ctype is xlrd.XL_CELL_ERROR:
                 raise ImportValidationError(
-                    _(
+                    _lt(
                         "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s",
                         row=rowx,
                         col=colx,
                         cell_value=xlrd.error_text_from_code.get(
-                            cell.value, _("unknown error code %s", cell.value)
+                            cell.value, _lt("unknown error code %s", cell.value)
                         ),
                     )
                 )
@@ -273,7 +274,7 @@ def read_xlsx_rows(data, options):
             for colx, cell in enumerate(row, 1):
                 if cell.data_type == types.TYPE_ERROR:
                     raise ImportValidationError(
-                        _(
+                        _lt(
                             "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s",
                             row=rowx,
                             col=colx,
@@ -296,7 +297,7 @@ def read_xlsx_rows(data, options):
                         values.append(cell.value.date())
                     else:
                         raise ImportValidationError(
-                            _(
+                            _lt(
                                 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with format: %(cell_format)s, as (%(format_type)s) formats are not supported.",
                                 row=rowx,
                                 col=colx,
@@ -354,7 +355,7 @@ def read_ods_rows(data, options):
     doc = odf_ods_reader.ODSReader(file=io.BytesIO(data))
     sheets = options["sheets"] = list(doc.sheets)
     if not sheets:
-        raise ImportValidationError(_("Import file has no content or is corrupt"))
+        raise ImportValidationError(_lt("Import file has no content or is corrupt"))
     # A stale/hand-crafted `sheet` option must not IndexError or KeyError
     # its way out of the reader; fall back to the first sheet.
     sheet = options.get("sheet")
@@ -541,9 +542,9 @@ class Base_ImportImport(models.TransientModel):
         """
         if not model or model not in self.env:
             raise UserError(
-                _(
+                self.env._(
                     "Cannot import into %(model)s: no such model.",
-                    model=model or _("(none)"),
+                    model=model or self.env._("(none)"),
                 )
             )
 
@@ -597,7 +598,7 @@ class Base_ImportImport(models.TransientModel):
                     id_field = f"{name}.{definition['name']}"
                     model_fields[id_field] = {
                         "type": definition_type,
-                        "string": _(
+                        "string": self.env._(
                             "%(property_string)s (%(parent_name)s)",
                             property_string=definition["string"],
                             parent_name=record.display_name,
@@ -641,14 +642,14 @@ class Base_ImportImport(models.TransientModel):
                     field_value,
                     model_name=field["relation"],
                     name="id",
-                    string=_("External ID"),
+                    string=self.env._("External ID"),
                     type="id",
                 ),
                 dict(
                     field_value,
                     model_name=field["relation"],
                     name=".id",
-                    string=_("Database ID"),
+                    string=self.env._("Database ID"),
                     type="id",
                 ),
             ]
@@ -664,7 +665,7 @@ class Base_ImportImport(models.TransientModel):
                         model_name=field["relation"],
                         fields=[],
                         name=".id",
-                        string=_("Database ID"),
+                        string=self.env._("Database ID"),
                         type="id",
                     )
                 )
@@ -681,7 +682,7 @@ class Base_ImportImport(models.TransientModel):
             {
                 "id": "id",
                 "name": "id",
-                "string": _("External ID"),
+                "string": self.env._("External ID"),
                 "required": False,
                 "fields": [],
                 "type": "id",
@@ -826,8 +827,11 @@ class Base_ImportImport(models.TransientModel):
 
     @api.model
     def _bad_row_window_message(self, name, value):
-        labels = {"skip": _("Start at line"), "limit": _("Batch limit")}
-        return _(
+        labels = {
+            "skip": self.env._("Start at line"),
+            "limit": self.env._("Batch limit"),
+        }
+        return self.env._(
             "%(option)s must be a whole number of rows, not %(value)s.",
             option=labels[name],
             value=value,
@@ -943,14 +947,14 @@ class Base_ImportImport(models.TransientModel):
 
         if requires:
             raise UserError(
-                _(
+                self.env._(
                     'Unable to load "%(extension)s" file: requires Python module "%(modname)s"',
                     extension=requires_extension,
                     modname=requires,
                 )
             )
         raise UserError(
-            _(
+            self.env._(
                 'Unsupported file format "%(file_type)s", import only supports %(supported)s',
                 file_type=self.file_type or (self.file_name or ""),
                 supported=", ".join(sorted(EXTENSION_TO_READER)),
@@ -961,7 +965,7 @@ class Base_ImportImport(models.TransientModel):
         quoting = options.setdefault("quoting", '"')
         if not isinstance(quoting, str) or len(quoting) != 1:
             raise ImportValidationError(
-                _(
+                self.env._(
                     "Error while importing records: Text Delimiter should be a single character."
                 )
             )
@@ -974,7 +978,7 @@ class Base_ImportImport(models.TransientModel):
             encoding = guess_encoding(csv_data)
             if not encoding:
                 raise ImportValidationError(
-                    _(
+                    self.env._(
                         "Could not detect the file's encoding, please select it manually."
                     )
                 )
@@ -984,12 +988,12 @@ class Base_ImportImport(models.TransientModel):
             return decode(csv_data, encoding)
         except UnicodeDecodeError as exc:
             if encoding_guessed:
-                msg = _(
+                msg = self.env._(
                     "There was an issue decoding the file using encoding “%s”.\nThis encoding was automatically detected.",
                     encoding,
                 )
             else:
-                msg = _(
+                msg = self.env._(
                     "There was an issue decoding the file using encoding “%s”.\nThis encoding was manually selected.",
                     encoding,
                 )
@@ -1354,16 +1358,22 @@ class Base_ImportImport(models.TransientModel):
         )
         return has_relational_header or has_relational_match
 
+    def _prepare_error_message(self, error):
+        message = error.args[0] if error.args else ""
+        if isinstance(message, LazyGettext):
+            return self.env._(message)  # noqa: E8502  a LazyGettext, extracted where _lt declares it
+        return str(error)
+
     def _get_preview_error(self, error):
         if isinstance(
             error, ImportValidationError | UserError | ValueError | csv.Error
         ):
-            message = str(error)
+            message = self._prepare_error_message(error)
         else:
             _logger.error(
                 "Unexpected error while parsing the import preview", exc_info=error
             )
-            message = _(
+            message = self.env._(
                 "The file could not be read. Please check the format options, or contact your administrator if the problem persists."
             )
         preview = None
@@ -1378,7 +1388,9 @@ class Base_ImportImport(models.TransientModel):
         self._normalize_row_window_options(options)
         data_rows = self._read_file(options)
         if not data_rows:
-            raise ImportValidationError(_("Import file has no content or is corrupt"))
+            raise ImportValidationError(
+                self.env._("Import file has no content or is corrupt")
+            )
 
         preview = data_rows[:count]
 
@@ -1448,7 +1460,7 @@ class Base_ImportImport(models.TransientModel):
         for position, field in enumerate(fields, start=1):
             if field and not isinstance(field, str):
                 raise ImportValidationError(
-                    _(
+                    self.env._(
                         "Column %(column)s is not mapped to a field name.",
                         column=position,
                     )
@@ -1463,7 +1475,7 @@ class Base_ImportImport(models.TransientModel):
         ):
             if len(row) <= max_index:
                 raise ImportValidationError(
-                    _(
+                    self.env._(
                         "Error while importing records: all rows should be of the same size, "
                         "but the title row has %(title_row_entries)d entries while row "
                         "%(row_number)d has %(row_entries)d. You may need to change the "
@@ -1490,7 +1502,7 @@ class Base_ImportImport(models.TransientModel):
         indices = [index for index, field in enumerate(fields) if field]
         if not indices:
             raise ImportValidationError(
-                _("You must configure at least one field to import")
+                self.env._("You must configure at least one field to import")
             )
         if len(indices) == 1:
 
@@ -1502,10 +1514,12 @@ class Base_ImportImport(models.TransientModel):
 
         rows_to_import = self._read_file(options)
         if not rows_to_import:
-            raise ImportValidationError(_("Import file has no content or is corrupt"))
+            raise ImportValidationError(
+                self.env._("Import file has no content or is corrupt")
+            )
         if len(rows_to_import[0]) != len(fields):
             raise ImportValidationError(
-                _(
+                self.env._(
                     "Error while importing records: all rows should be of the same size, but the title row has %(title_row_entries)d entries while the first row has %(first_row_entries)d. You may need to change the separator character.",
                     title_row_entries=len(fields),
                     first_row_entries=len(rows_to_import[0]),
@@ -1602,7 +1616,7 @@ class Base_ImportImport(models.TransientModel):
             line[index] = self._remove_currency_symbol(line[index], currency_symbols)
             if line[index] is False:
                 raise ImportValidationError(
-                    _(
+                    self.env._(
                         "Column %(column)s contains incorrect values (value: %(value)s)",
                         column=name,
                         value=old_value,
@@ -1667,7 +1681,7 @@ class Base_ImportImport(models.TransientModel):
             path_models[path] = model
             if model is None:
                 raise ImportValidationError(
-                    _(
+                    self.env._(
                         "Column %(column)s cannot be imported: %(path)s is not a "
                         "relation on model %(model)s, so it has no sub-fields.",
                         column=path,
@@ -1692,7 +1706,7 @@ class Base_ImportImport(models.TransientModel):
                 if re.match(config.get("import_url_regex"), line[index]):
                     if not self.env.user._can_import_remote_urls():
                         raise ImportValidationError(
-                            _(
+                            self.env._(
                                 "You can not import file via URL, check with your administrator or support for the reason."
                             ),
                             field=name,
@@ -1708,7 +1722,7 @@ class Base_ImportImport(models.TransientModel):
                         base64.b64decode(line[index], validate=True)
                     except ValueError as e:
                         raise ImportValidationError(
-                            _(
+                            self.env._(
                                 "Found invalid image data, images should be imported as either URLs or base64-encoded data."
                             ),
                             field=name,
@@ -1738,7 +1752,7 @@ class Base_ImportImport(models.TransientModel):
                 line[index] = fmt(dt.strptime(v, d_fmt))
             except ValueError as e:
                 raise ImportValidationError(
-                    _(
+                    self.env._(
                         "Column %(column)s contains incorrect values. Error in line %(line)d: %(error)s",
                         column=name,
                         line=num + 1,
@@ -1749,7 +1763,7 @@ class Base_ImportImport(models.TransientModel):
                 ) from e
             except Exception as e:
                 raise ImportValidationError(
-                    _(
+                    self.env._(
                         "Error Parsing Date [%(field)s:L%(line)d]: %(error)s",
                         field=name,
                         line=num + 1,
@@ -1777,7 +1791,9 @@ class Base_ImportImport(models.TransientModel):
                 and int(response.headers["Content-Length"]) > maxsize
             ):
                 raise ImportValidationError(
-                    _("File size exceeds configured maximum (%s bytes)", maxsize),
+                    self.env._(
+                        "File size exceeds configured maximum (%s bytes)", maxsize
+                    ),
                     field=field,
                 )
 
@@ -1786,7 +1802,9 @@ class Base_ImportImport(models.TransientModel):
                 content += chunk
                 if len(content) > maxsize:
                     raise ImportValidationError(
-                        _("File size exceeds configured maximum (%s bytes)", maxsize),
+                        self.env._(
+                            "File size exceeds configured maximum (%s bytes)", maxsize
+                        ),
                         field=field,
                     )
 
@@ -1797,7 +1815,7 @@ class Base_ImportImport(models.TransientModel):
             w, h = image.size
             if w * h > 42e6:  # Nokia Lumia 1020 photo resolution
                 raise ImportValidationError(
-                    _(
+                    self.env._(
                         "Image size excessive, imported images must be smaller than 42 million pixel"
                     ),
                     field=field,
@@ -1814,7 +1832,7 @@ class Base_ImportImport(models.TransientModel):
         except Exception as e:
             _logger.warning(e, exc_info=True)
             raise ImportValidationError(
-                _(
+                self.env._(
                     "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
                 )
                 % {
@@ -1950,6 +1968,7 @@ class Base_ImportImport(models.TransientModel):
                     fields, options
                 )
             except ImportValidationError as error:
+                error.message = self._prepare_error_message(error)
                 return {"messages": [error.__dict__]}
             import_limit = options.get("limit")
 

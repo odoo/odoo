@@ -3,7 +3,7 @@ import typing
 from collections.abc import Iterable
 from typing import Literal, NamedTuple, Self
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.api import ValuesType
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -162,14 +162,14 @@ class MailAliasDomain(models.Model):
             document_name = document.display_name if document else False
             if document_name:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Bounce/Catchall '%(matching_alias_name)s' is already used by %(document_name)s. Choose another alias or change it on the other document.",
                         matching_alias_name=existing.display_name,
                         document_name=document_name,
                     )
                 )
             raise exceptions.ValidationError(
-                _(
+                self.env._(
                     "Bounce/Catchall '%(matching_alias_name)s' is already used. Choose another alias or change it on the linked model.",
                     matching_alias_name=existing.display_name,
                 )
@@ -216,7 +216,7 @@ class MailAliasDomain(models.Model):
             for address in addresses(domain):
                 if address and len(by_name.get(address, ())) > 1:
                     raise exceptions.ValidationError(
-                        _(
+                        self.env._(
                             "%(address)s is already reserved as a bounce or catchall "
                             "address. Every bounce and catchall address must be "
                             "distinct, including from each other.",
@@ -226,7 +226,7 @@ class MailAliasDomain(models.Model):
             bounce, catchall = addresses(domain)
             if bounce and bounce == catchall:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Bounce and catchall cannot both be %(address)s: a message to "
                         "it would only ever be treated as a bounce.",
                         address=domain.bounce_email,
@@ -251,7 +251,7 @@ class MailAliasDomain(models.Model):
                     != value
                 ):
                     raise exceptions.ValidationError(
-                        _(
+                        self.env._(
                             "%(field_label)s %(value)s is not a valid email local "
                             "part. Use unaccented lowercase latin characters, "
                             "without leading, trailing or repeated dots.",
@@ -267,13 +267,13 @@ class MailAliasDomain(models.Model):
         for domain in self:
             if not domain.name:
                 raise exceptions.ValidationError(
-                    _("You cannot assign an empty domain name.")
+                    self.env._("You cannot assign an empty domain name.")
                 )
             if self.env["mail.alias"]._normalize_alias_domain_name(domain.name) != (
                 domain.name
             ):
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "%(domain_name)s is not a usable domain name. Use unaccented "
                         "lowercase latin letters, digits and hyphens, with no leading, "
                         "trailing or repeated dot or hyphen.",
@@ -412,7 +412,7 @@ class MailAliasDomain(models.Model):
             for address in addresses:
                 if from_filter.matches(address):
                     raise exceptions.ValidationError(
-                        _(
+                        self.env._(
                             "%(address)s is the sending address of %(user_name)s's "
                             "personal mail server. Choose another default from, or "
                             "remove that server first.",
@@ -442,7 +442,7 @@ class MailAliasDomain(models.Model):
             domain = Alias._normalize_alias_domain_name(candidate)
             if not domain:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "%(domain)s is not a valid domain name for "
                         "`mail.catchall.domain.allowed`.",
                         domain=candidate.strip(),
@@ -453,7 +453,7 @@ class MailAliasDomain(models.Model):
                 value.append(domain)
         if not value:
             raise exceptions.ValidationError(
-                _(
+                self.env._(
                     "Value %(allowed_domains)s for `mail.catchall.domain.allowed` cannot be validated.\n"
                     "It should be a comma separated list of domains e.g. example.com,example.org.",
                     allowed_domains=allowed_domains,

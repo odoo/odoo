@@ -7,7 +7,7 @@ from lxml.builder import E
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import TransactionMemo, _, config, frozendict
+from odoo.tools import TransactionMemo, config, frozendict
 from odoo.tools.view_ir import from_arch, from_string
 
 from .ir_ui_view import _xpath_descendant_field
@@ -185,7 +185,7 @@ class Base(models.AbstractModel):
             _debug.logic(
                 "default_calendar_refused", model=self._name, missing="date_start"
             )
-            raise UserError(_("Insufficient fields for Calendar View!"))
+            raise UserError(self.env._("Insufficient fields for Calendar View!"))
 
         set_first_of(
             ["user_id", "partner_id", "x_user_id", "x_partner_id"],
@@ -212,7 +212,7 @@ class Base(models.AbstractModel):
                     "default_calendar_refused", model=self._name, missing="date_stop"
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay",
                         self._name,
                     )
@@ -409,7 +409,9 @@ class Base(models.AbstractModel):
                     "default_view_refused", model=self._name, view_type=view_type
                 )
                 raise UserError(
-                    _("No default view of type '%s' could be found!", view_type)
+                    self.env._(
+                        "No default view of type '%s' could be found!", view_type
+                    )
                 )
             arch = method()
         return arch, view

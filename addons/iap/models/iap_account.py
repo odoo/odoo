@@ -4,7 +4,7 @@ import secrets
 import uuid
 from urllib.parse import urlencode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.libs.web import urljoin as url_join
 from odoo.modules import module
@@ -104,19 +104,23 @@ class IapAccount(models.Model):
     def check_warning_alerts(self):
         for account in self:
             if account.warning_threshold < 0:
-                raise UserError(_("Please set a positive email alert threshold."))
+                raise UserError(
+                    self.env._("Please set a positive email alert threshold.")
+                )
             if (
                 account.warning_threshold > 0
                 and not account.warning_user_ids
                 and not self.env.context.get("disable_iap_update")
             ):
-                raise UserError(_("Please set at least one email alert recipient."))
+                raise UserError(
+                    self.env._("Please set at least one email alert recipient.")
+                )
             users_with_no_email = [
                 user.name for user in account.warning_user_ids if not user.email
             ]
             if users_with_no_email:
                 raise UserError(
-                    _(
+                    self.env._(
                         "One of the email alert recipients doesn't have an email address set. Users: %s",
                         ",".join(users_with_no_email),
                     )
@@ -137,7 +141,9 @@ class IapAccount(models.Model):
             account.service_locked and account.service_id.id != vals["service_id"]
             for account in self
         ):
-            raise UserError(_("You cannot change the service of a locked IAP account."))
+            raise UserError(
+                self.env._("You cannot change the service of a locked IAP account.")
+            )
         res = super().write(vals)
         if not self.env.context.get("disable_iap_update") and any(
             warning_attribute in vals
@@ -331,7 +337,7 @@ class IapAccount(models.Model):
         # disregard possible suffix
         key = (key or "").split("+")[0]
         if not key:
-            raise UserError(_("The IAP token provided is invalid or empty."))
+            raise UserError(self.env._("The IAP token provided is invalid or empty."))
         return hashlib.sha1(key.encode("utf-8")).hexdigest()
 
     def action_buy_credits(self):

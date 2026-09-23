@@ -3,7 +3,7 @@ import uuid
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import consteq
 
@@ -72,4 +72,4 @@ class SpreadsheetDashboardShare(models.Model):
                 token_valid=token_access,
                 creator_can_read=user_access,
             )
-            raise Forbidden(_("You don't have access to this dashboard. "))
+            raise Forbidden(self.env._("You don't have access to this dashboard. "))
