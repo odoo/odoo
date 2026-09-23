@@ -1,3 +1,4 @@
+from odoo.addons.base.tests.common import converted_reach
 from odoo.addons.document_compliance.tests.common import ComplianceCase
 
 
@@ -88,8 +89,41 @@ class TestComplianceReportEmployeeRows(ComplianceCase):
         )
         return set(rows.mapped("entity_type"))
 
+    def _converted_entities(self, user):
+        self._publish()
+        rows = converted_reach(self.env, "document.compliance.report", user)
+        return set(
+            rows.filtered(
+                lambda row: (
+                    (row.entity_type, row.entity_id)
+                    in {
+                        ("hr.employee", self.employee.id),
+                        ("res.partner", self.partner.id),
+                    }
+                )
+            ).mapped("entity_type")
+        )
+
     def test_employee_rows_are_for_hr_officers_only(self):
         self.assertEqual(self._entities(self.documents_manager), {"res.partner"})
         self.assertEqual(
             self._entities(self.hr_documents_manager), {"res.partner", "hr.employee"}
+        )
+
+    def test_an_hr_officer_reads_the_employee_rows(self):
+        officer = self.env["res.users"].create(
+            {
+                "name": "HR Officer",
+                "login": "rows_hr_officer",
+                "group_ids": [(6, 0, self.env.ref("hr.group_hr_user").ids)],
+            }
+        )
+        self.assertEqual(self._entities(officer), {"hr.employee"})
+        self.assertEqual(self._converted_entities(officer), {"hr.employee"})
+        self.assertEqual(
+            self._converted_entities(self.documents_manager), {"res.partner"}
+        )
+        self.assertEqual(
+            self._converted_entities(self.hr_documents_manager),
+            {"res.partner", "hr.employee"},
         )

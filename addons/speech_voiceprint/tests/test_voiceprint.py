@@ -16,6 +16,7 @@ from odoo.libs.documents import (
 from odoo.tests import HttpCase, TransactionCase, tagged
 
 from ..tools import embedder
+from odoo.addons.base.tests.common import converted_reach
 from odoo.addons.speech_voiceprint.models import speech_voiceprint
 
 MODEL = "odoo.addons.speech_voiceprint.models.speech_voiceprint.SpeechVoiceprint"
@@ -271,6 +272,24 @@ class TestVoiceprint(TransactionCase):
         )
         with self.assertRaises(AccessError):
             print_.with_user(officer).read(["embedding"])
+
+    def test_an_hr_officer_deletes_a_voiceprint_of_their_company(self):
+        officer = self.env["res.users"].create(
+            {
+                "name": "Deleting Officer",
+                "login": "vp_deleting_officer",
+                "group_ids": [(6, 0, self.env.ref("hr.group_hr_user").ids)],
+            }
+        )
+        print_ = self.env["speech.voiceprint"].search(
+            [("employee_id", "=", self.aaron.id)]
+        )
+        self.assertEqual(
+            converted_reach(self.env, "speech.voiceprint", officer, "unlink") & print_,
+            print_,
+        )
+        print_.with_user(officer).unlink()
+        self.assertFalse(print_.exists())
 
 
 @tagged("post_install", "-at_install")

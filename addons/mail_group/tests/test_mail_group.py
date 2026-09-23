@@ -3,6 +3,7 @@ from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 from odoo.tools.mail import add_html_content
 
+from odoo.addons.base.tests.common import converted_reach
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail_group.tests.common import TestMailListCommon
 
@@ -334,3 +335,27 @@ class TestMailGroup(TestMailListCommon):
             AccessError, msg="Non moderators should not have access to member"
         ):
             member.with_user(self.user_portal).check_access("read")
+
+
+@tagged("mail_group")
+class TestMailGroupAdministrator(TestMailListCommon):
+    def test_an_administrator_manages_groups_they_do_not_moderate(self):
+        administrator = mail_new_test_user(
+            self.env,
+            login="mail_group_administrator",
+            groups="base.group_user,mail_group.group_mail_group_manager",
+        )
+        records = (
+            self.test_group,
+            self.test_group_member_1,
+            self.test_group_msg_1_pending,
+            self.moderation,
+        )
+        for record in records:
+            with self.subTest(model=record._name):
+                record.with_user(administrator).check_access("write")
+                self.assertEqual(
+                    converted_reach(self.env, record._name, administrator, "write")
+                    & record,
+                    record,
+                )
