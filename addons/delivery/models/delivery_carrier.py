@@ -93,11 +93,11 @@ class DeliveryCarrier(models.Model):
     invoice_policy = fields.Selection(
         selection=[("estimated", "Estimated cost")],
         string="Invoicing Policy",
-        default="estimated",
-        required=True,
         compute="_compute_invoice_policy",
+        default="estimated",
         store=True,
         readonly=False,
+        required=True,
         help="Estimated Cost: the customer will be invoiced the estimated cost of the shipping.",
     )
 

@@ -235,8 +235,8 @@ class IrMail_Server(models.Model):
     )
     smtp_port = fields.Integer(
         string="SMTP Port",
-        default=25,
         compute="_compute_smtp_port",
+        default=25,
         store=True,
         readonly=False,
         help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.",

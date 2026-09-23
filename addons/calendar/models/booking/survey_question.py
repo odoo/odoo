@@ -23,7 +23,10 @@ class SurveyQuestion(models.Model):
         column2="appointment_type_id",
         string="Appointment Types",
     )
-    appointment_count = fields.Count("appointment_type_ids", string="# Appointments")
+    appointment_count = fields.Count(
+        count_of="appointment_type_ids",
+        string="# Appointments",
+    )
     is_default = fields.Boolean(
         string="Default question",
         help="Include by default in new appointment types.",

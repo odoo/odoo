@@ -26,8 +26,8 @@ class AccountAccount(models.Model):
     can_create_asset = fields.Boolean(compute="_compute_can_create_asset")
     multiple_assets_per_line = fields.Boolean(
         string="Multiple Assets per Line",
-        default=False,
         compute="_compute_multiple_assets_per_line",
+        default=False,
         store=True,
         readonly=False,
         tracking=True,

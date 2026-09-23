@@ -204,10 +204,7 @@ class MicrosoftService(models.AbstractModel):
                 )
             else:
                 raise ValueError(
-                    _(
-                        "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!",
-                        method,
-                    )
+                    f"Method not supported [{method}] not in [GET, POST, PUT, PATCH or DELETE]!"
                 )
             res.raise_for_status()
             status = res.status_code

@@ -30,7 +30,7 @@ class HrSkillType(models.Model):
     )
     color = fields.Integer(default=lambda self: self._default_color())
     levels_count = fields.Count(
-        "skill_level_ids",
+        count_of="skill_level_ids",
         store=True,
         help="Number of levels linked to this skill type",
     )

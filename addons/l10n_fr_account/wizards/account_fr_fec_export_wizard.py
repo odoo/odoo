@@ -32,11 +32,11 @@ class L10n_FrFecExportWizard(models.TransientModel):
             ("official", "Official FEC report (posted entries only)"),
             ("nonofficial", "Non-official FEC report (posted and unposted entries)"),
         ],
-        default="official",
-        required=True,
         compute="_compute_export_type",
+        default="official",
         store=True,
         readonly=False,
+        required=True,
     )
     excluded_journal_ids = fields.Many2many(
         comodel_name="account.journal",

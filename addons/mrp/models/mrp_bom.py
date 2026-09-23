@@ -94,7 +94,10 @@ class MrpBom(models.Model):
         string="Operations",
         copy=True,
     )
-    operation_count = fields.Count("operation_ids", string="Operations Count")
+    operation_count = fields.Count(
+        count_of="operation_ids",
+        string="Operations Count",
+    )
     show_copy_operations_button = fields.Boolean(
         compute="_compute_show_copy_operations_button",
         help="Technical field used to control the visibility of the 'Copy Existing Operations' button.",
