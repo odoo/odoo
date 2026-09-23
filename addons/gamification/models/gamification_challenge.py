@@ -7,7 +7,7 @@ from typing import Any, Literal
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import Command, _, api, exceptions, fields, models
+from odoo import Command, api, exceptions, fields, models
 from odoo.fields import Domain
 from odoo.http import SESSION_LIFETIME
 from odoo.models import ValuesType
@@ -304,7 +304,7 @@ class GamificationChallenge(models.Model):
                 limit=1,
             ):
                 raise exceptions.UserError(
-                    _("You can not reset a challenge with unfinished goals.")
+                    self.env._("You can not reset a challenge with unfinished goals.")
                 )
 
         write_res = super().write(vals)
@@ -679,7 +679,7 @@ class GamificationChallenge(models.Model):
         if self.visibility_mode == "personal":
             if not user:
                 raise exceptions.UserError(
-                    _(
+                    self.env._(
                         "Retrieving progress for personal challenge without user information"
                     )
                 )
@@ -894,7 +894,7 @@ class GamificationChallenge(models.Model):
     def accept_challenge(self) -> bool:
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has joined the challenge", user.name))
+        sudoed.message_post(body=self.env._("%s has joined the challenge", user.name))
         sudoed.write(
             {
                 "invited_user_ids": [Command.unlink(user.id)],
@@ -907,7 +907,7 @@ class GamificationChallenge(models.Model):
         """The user discard the suggested challenge"""
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has refused the challenge", user.name))
+        sudoed.message_post(body=self.env._("%s has refused the challenge", user.name))
         return sudoed.write({"invited_user_ids": [Command.unlink(user.id)]})
 
     def _check_challenge_reward(self, force: bool = False) -> bool:
@@ -965,16 +965,18 @@ class GamificationChallenge(models.Model):
 
             if challenge_ended:
                 # open chatter message
-                message_body = _("The challenge %s is finished.", challenge.name)
+                message_body = self.env._(
+                    "The challenge %s is finished.", challenge.name
+                )
 
                 if rewarded_users:
-                    message_body += Markup("<br/>") + _(
+                    message_body += Markup("<br/>") + self.env._(
                         "Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s.",
                         badge_name=challenge.reward_id.name,
                         users=", ".join(rewarded_users.mapped("display_name")),
                     )
                 else:
-                    message_body += Markup("<br/>") + _(
+                    message_body += Markup("<br/>") + self.env._(
                         "Nobody has succeeded to reach every goal, no badge is rewarded for this challenge."
                     )
 
@@ -988,7 +990,7 @@ class GamificationChallenge(models.Model):
                     )
                     if first_user:
                         challenge._reward_user(first_user, challenge.reward_first_id)
-                        message_body += Markup("<br/>") + _(
+                        message_body += Markup("<br/>") + self.env._(
                             "Special rewards were sent to the top competing users. The ranking for this challenge is:"
                         )
                         message_body += reward_message % {
@@ -997,7 +999,7 @@ class GamificationChallenge(models.Model):
                             "reward_name": challenge.reward_first_id.name,
                         }
                     else:
-                        message_body += _(
+                        message_body += self.env._(
                             "Nobody reached the required conditions to receive special badges."
                         )
 
@@ -1021,7 +1023,7 @@ class GamificationChallenge(models.Model):
                     # configured team-vs-team, its participants folded in from
                     # the teams, and the result never reported anywhere.
                     rankings = challenge._get_team_rankings()
-                    message_body += Markup("<br/>") + _("Team ranking:")
+                    message_body += Markup("<br/>") + self.env._("Team ranking:")
                     for position, entry in enumerate(rankings, start=1):
                         message_body += Markup(
                             "<br/> %(rank)d. %(team)s — %(score).1f%%"

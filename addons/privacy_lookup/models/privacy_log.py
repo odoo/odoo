@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -55,6 +55,6 @@ class PrivacyLog(models.Model):
             )
 
         if not label or "@" not in label:
-            return UserError(_("This email address is not valid (%s)", label))
+            return UserError(self.env._("This email address is not valid (%s)", label))
         user, domain = label.split("@")
         return f"{_anonymize_user(user)}@{_anonymize_domain(domain)}"

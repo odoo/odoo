@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -119,7 +119,7 @@ class HrApplicant(models.Model):
                 extract_state=self.extract_state,
             )
             raise UserError(
-                _(
+                self.env._(
                     "A CV is read while the applicant is still in the first stage. "
                     "Past it somebody has been through this record, and a reading "
                     "would be correcting a person from a document they have read."
@@ -138,11 +138,11 @@ class HrApplicant(models.Model):
             missing=len(result.missing),
         )
         if result.satisfied:
-            message = _("The CV was read in full.")
+            message = self.env._("The CV was read in full.")
         else:
-            message = _(
+            message = self.env._(
                 "The CV was read in part. Still missing: %(fields)s",
-                fields=", ".join(result.missing) or _("nothing required"),
+                fields=", ".join(result.missing) or self.env._("nothing required"),
             )
         return {
             "type": "ir.actions.client",

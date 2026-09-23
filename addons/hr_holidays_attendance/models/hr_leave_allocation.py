@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -60,7 +60,7 @@ class HrLeaveAllocation(models.Model):
                         balance=deductible[allocation.employee_id],
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The employee does not have enough overtime hours to request this leave."
                         )
                     )
@@ -77,7 +77,7 @@ class HrLeaveAllocation(models.Model):
                 "duration_edit_refused", reason="not_officer", allocations=self
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "Only an Officer or Administrator is allowed to edit the allocation duration in this status."
                 )
             )
@@ -91,7 +91,7 @@ class HrLeaveAllocation(models.Model):
                     balance=deductible[allocation.employee_id],
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The employee does not have enough overtime hours to request this leave."
                     )
                 )

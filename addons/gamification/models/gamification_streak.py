@@ -4,7 +4,7 @@ from typing import Self
 
 from psycopg import IntegrityError
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.libs.datetime import timezone
 from odoo.tools.safe_eval import safe_eval
 
@@ -301,7 +301,7 @@ class GamificationStreak(models.Model):
         # future caller can't silently reintroduce the collision.
         if len(due) != len(due.user_id):
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "_record_activity() received more than one streak for the"
                     " same user in a single call; karma attribution would be"
                     " ambiguous."
@@ -326,7 +326,7 @@ class GamificationStreak(models.Model):
                 {
                     "gain": 0,
                     "source": streak,
-                    "reason": _(
+                    "reason": self.env._(
                         "Streak day %(day)s: %(streak)s",
                         day=streak.current_count,
                         streak=streak.streak_type_id.name,
@@ -340,8 +340,8 @@ class GamificationStreak(models.Model):
                 streak.user_id._send_gamification_notification(
                     "streak",
                     {
-                        "title": _("Streak Milestone!"),
-                        "message": _(
+                        "title": self.env._("Streak Milestone!"),
+                        "message": self.env._(
                             "%(streak)s — %(days)s days!",
                             streak=streak.streak_type_id.name,
                             days=streak.current_count,

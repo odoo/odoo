@@ -5,7 +5,7 @@ from unittest.mock import patch
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
-from odoo import _, exceptions, fields
+from odoo import exceptions, fields
 from odoo.tests import common
 
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -323,10 +323,10 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         )
         self.assertEqual(len(trackings), 2)  # create + add_karma
         self.assertEqual(trackings[0].origin_ref, self.test_user)
-        self.assertIn(_("User Creation"), trackings[0].reason)
+        self.assertIn(self.env._("User Creation"), trackings[0].reason)
         self.assertIn(str(self.test_user.id), trackings[0].reason)
         self.assertEqual(trackings[1].origin_ref, self.test_user_2)
-        self.assertIn(_("Add Manually"), trackings[1].reason)
+        self.assertIn(self.env._("Add Manually"), trackings[1].reason)
         self.assertIn(self.test_user_2.display_name, trackings[1].reason)
         self.assertIn(str(self.test_user_2.id), trackings[1].reason)
 
@@ -362,15 +362,17 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         latest = user.karma_tracking_ids.sorted("id")[1]
         self.assertEqual(latest.old_value, 32)
         self.assertEqual(latest.new_value, 70)
-        self.assertIn(_("Add Manually"), latest.reason)
+        self.assertIn(self.env._("Add Manually"), latest.reason)
         self.assertIn(self.test_user.display_name, latest.reason)
         self.assertIn(str(self.test_user.id), latest.reason)
         self.assertEqual(user.karma_tracking_ids.sorted("id")[0].old_value, 0)
         self.assertEqual(user.karma_tracking_ids.sorted("id")[0].new_value, 32)
 
-        user._add_karma(69, user, _("Test Reason"))
+        user._add_karma(69, user, self.env._("Test Reason"))
         self.assertEqual(len(user.karma_tracking_ids), 3)
-        self.assertIn(_("Test Reason"), user.karma_tracking_ids.sorted("id")[2].reason)
+        self.assertIn(
+            self.env._("Test Reason"), user.karma_tracking_ids.sorted("id")[2].reason
+        )
         self.assertEqual(user.karma, 139)
 
         # add manually karma to a user (e.g. from the technical view)
@@ -405,13 +407,13 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertEqual(tracking_1.new_value, 100)
         self.assertEqual(tracking_1.old_value, 150)
         self.assertEqual(tracking_1.gain, -50)
-        self.assertIn(_("Add Manually"), tracking_1.reason)
+        self.assertIn(self.env._("Add Manually"), tracking_1.reason)
         self.assertIn(str(self.test_user.id), tracking_1.reason)
         self.assertEqual(tracking_1.origin_ref, self.test_user)
         self.assertEqual(tracking_2.new_value, 100)
         self.assertEqual(tracking_2.old_value, 0)
         self.assertEqual(tracking_2.gain, 100)
-        self.assertIn(_("Add Manually"), tracking_2.reason)
+        self.assertIn(self.env._("Add Manually"), tracking_2.reason)
         self.assertIn(str(self.test_user.id), tracking_2.reason)
         self.assertEqual(tracking_2.origin_ref, self.test_user)
         self.assertEqual(

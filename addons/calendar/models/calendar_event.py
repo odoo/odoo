@@ -17,7 +17,6 @@ from odoo.libs.datetime import timezone
 from odoo.libs.intervals import intervals_overlap
 from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
 from odoo.tools.misc import get_lang
-from odoo.tools.translate import _
 
 from odoo.addons.base.models.mixin_recurrence_rrule import (
     BYDAY_SELECTION,
@@ -780,7 +779,7 @@ class CalendarEvent(models.Model):
                 and meeting.stop < meeting.start
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The ending date and time cannot be earlier than the starting date and time.\n"
                         "Meeting “%(name)s” starts at %(start_time)s and ends at %(end_time)s",
                         name=meeting.name,
@@ -795,7 +794,7 @@ class CalendarEvent(models.Model):
                 and meeting.stop_date < meeting.start_date
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The ending date cannot be earlier than the starting date.\n"
                         "Meeting “%(name)s” starts on %(start_date)s and ends on %(end_date)s",
                         name=meeting.name,
@@ -1326,7 +1325,8 @@ class CalendarEvent(models.Model):
         private_fields.append(self._fields["partner_ids"])
         for field in private_fields:
             replacement = field.convert_to_cache(
-                _("Busy") if field.name == "name" else False, others_private_events
+                self.env._("Busy") if field.name == "name" else False,
+                others_private_events,
             )
             self.env.cache.update(others_private_events, field, repeat(replacement))
 
@@ -1461,7 +1461,9 @@ class CalendarEvent(models.Model):
         if any(fname in self._get_fields_recurrent() for fname in values) and not (
             update or values.get("recurrency")
         ):
-            raise UserError(_('Unable to save the recurrence with "This Event"'))
+            raise UserError(
+                self.env._('Unable to save the recurrence with "This Event"')
+            )
         return RecurrencePolicy(
             setting=setting,
             update=update,
@@ -1778,7 +1780,7 @@ class CalendarEvent(models.Model):
     def _compute_display_name(self):
         """Hide private events' name for events which don't belong to the current user."""
         hidden = self.filtered(lambda event: event._check_private_event_conditions())
-        hidden.display_name = _("Busy")
+        hidden.display_name = self.env._("Busy")
         super(CalendarEvent, self - hidden)._compute_display_name()
 
     def _privacy_restricted_fnames(self, fnames):
@@ -2002,7 +2004,7 @@ class CalendarEvent(models.Model):
                 "model_description": self.with_context(lang=lang),
             }
             return {
-                "name": _("Delete Event"),
+                "name": self.env._("Delete Event"),
                 "res_model": "calendar.popover.delete.wizard",
                 "view_id": self.env.ref("calendar.view_event_delete_wizard_form").id,
                 "type": "ir.actions.act_window",
@@ -2196,7 +2198,7 @@ class CalendarEvent(models.Model):
 
     def action_view_composer(self):
         if not self.partner_ids:
-            raise UserError(_("There are no attendees on these events"))
+            raise UserError(self.env._("There are no attendees on these events"))
         template_id = self.env["ir.model.data"]._xmlid_to_res_id(
             "calendar.calendar_template_meeting_update", raise_if_not_found=False
         )
@@ -2215,7 +2217,7 @@ class CalendarEvent(models.Model):
         }
         return {
             "type": "ir.actions.act_window",
-            "name": _("Contact Attendees"),
+            "name": self.env._("Contact Attendees"),
             "view_mode": "form",
             "res_model": "mail.compose.message",
             "views": [(False, "form")],
@@ -2291,7 +2293,7 @@ class CalendarEvent(models.Model):
             # `_unlink_by_recurrence_policy`, pre-filters 'this' before
             # reaching here, but nothing enforces that for a future caller.
             raise UserError(
-                _(
+                self.env._(
                     "Unknown recurrence update setting: %s",
                     recurrence_update_setting,
                 )
@@ -2537,7 +2539,9 @@ class CalendarEvent(models.Model):
     def _get_time_update_dict(self, base_event, time_values):
         """Return the update dictionary for shifting the base_event's time to the new date."""
         if not base_event:
-            raise UserError(_("You can't update a recurrence without base event."))
+            raise UserError(
+                self.env._("You can't update a recurrence without base event.")
+            )
         [base_time_values] = base_event.read(["start", "stop", "allday"])
         update_dict = {}
         start_update = fields.Datetime.to_datetime(time_values.get("start"))
@@ -2843,7 +2847,7 @@ class CalendarEvent(models.Model):
 
             if not meeting.start or not meeting.stop:
                 raise UserError(
-                    _("First you have to specify the date of the invitation.")
+                    self.env._("First you have to specify the date of the invitation.")
                 )
             event.add("created").value = ics_datetime(fields.Datetime.now())
             if meeting.allday:
@@ -2968,7 +2972,7 @@ class CalendarEvent(models.Model):
         if organizer and organizer != odoobot:
             contact_description.extend(
                 self._prepare_partner_contact_details_html(
-                    _("Organized by"), organizer.partner_id
+                    self.env._("Organized by"), organizer.partner_id
                 )
             )
         # First contact partner
@@ -2982,7 +2986,7 @@ class CalendarEvent(models.Model):
                 )  # To add a blank line between the organizer and partner details
             contact_description.extend(
                 self._prepare_partner_contact_details_html(
-                    _("Contact Details"), first_partner
+                    self.env._("Contact Details"), first_partner
                 )
             )
         return Markup("<br/>").join(contact_description)
@@ -3050,11 +3054,11 @@ class CalendarEvent(models.Model):
         time_str = date.strftime(format_time)
 
         if zallday:
-            display_time = _("All Day, %(day)s", day=date_str)
+            display_time = self.env._("All Day, %(day)s", day=date_str)
         elif zduration < 24:
             duration = date + timedelta(minutes=round(zduration * 60))
             duration_time = duration.strftime(format_time)
-            display_time = _(
+            display_time = self.env._(
                 "%(day)s at (%(start)s To %(end)s) (%(timezone)s)",
                 day=date_str,
                 start=time_str,
@@ -3064,7 +3068,7 @@ class CalendarEvent(models.Model):
         else:
             dd_date = date_deadline.strftime(format_date)
             dd_time = date_deadline.strftime(format_time)
-            display_time = _(
+            display_time = self.env._(
                 "%(date_start)s at %(time_start)s To\n %(date_end)s at %(time_end)s (%(timezone)s)",
                 date_start=date_str,
                 time_start=time_str,

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class FleetVehicleSendMail(models.TransientModel):
@@ -49,7 +49,7 @@ class FleetVehicleSendMail(models.TransientModel):
                 "tag": "display_notification",
                 "params": {
                     "type": "danger",
-                    "message": _(
+                    "message": self.env._(
                         "The following vehicle drivers are missing an email address: %s.",
                         ", ".join(without_emails.mapped("name")),
                     ),
@@ -79,7 +79,7 @@ class FleetVehicleSendMail(models.TransientModel):
 
     def action_save_as_template(self):
         model = self.env["ir.model"]._get("resource.asset")
-        template_name = _("Vehicle: Mass mail drivers")
+        template_name = self.env._("Vehicle: Mass mail drivers")
         template = self.env["mail.template"].create(
             {
                 "name": template_name,

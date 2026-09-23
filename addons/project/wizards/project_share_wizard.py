@@ -1,7 +1,7 @@
 import operator
 from typing import Any
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 
 from ..tools import debug_log as dbg
 
@@ -147,7 +147,7 @@ class ProjectShareWizard(models.TransientModel):
         if not new_portal_user:
             return self.action_send_mail()
         return {
-            "name": _("Confirmation"),
+            "name": self.env._("Confirmation"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "views": [
@@ -173,7 +173,7 @@ class ProjectShareWizard(models.TransientModel):
             "tag": "display_notification",
             "params": {
                 "type": "success",
-                "message": _("Project shared with your collaborators."),
+                "message": self.env._("Project shared with your collaborators."),
                 "next": {"type": "ir.actions.act_window_close"},
             },
         }

@@ -2,7 +2,7 @@ import logging
 
 from requests.exceptions import HTTPError
 
-from odoo import _, api, exceptions, models, release
+from odoo import api, exceptions, models, release
 
 from odoo.addons.iap.tools import iap_tools
 
@@ -26,7 +26,7 @@ class IapAutocompleteApi(models.AbstractModel):
         self.env["res.partner"].browse().check_access("write")
         account = self.env["iap.account"].get("partner_autocomplete")
         if not account.sudo().account_token:
-            raise MissingIAPAccountTokenError(_("No account token"))
+            raise MissingIAPAccountTokenError(self.env._("No account token"))
         params.update(
             {
                 "db_uuid": self.env["ir.config_parameter"]

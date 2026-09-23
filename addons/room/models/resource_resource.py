@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 from .resource_asset_room import ROOM_KIND
@@ -166,7 +166,7 @@ class ResourceResource(models.Model):
             ).id,
             "default_resource_ids": self.ids if len(self) == 1 else [],
         }
-        action["name"] = _("Bookings")
+        action["name"] = self.env._("Bookings")
         return action
 
     def _notify_booking_view(self, method, events=False):

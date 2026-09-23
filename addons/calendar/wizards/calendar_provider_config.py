@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.tools import str2bool
 
@@ -82,7 +82,7 @@ class CalendarProviderConfig(models.TransientModel):
         )
         if not calendar_module:
             raise UserError(
-                _(
+                self.env._(
                     "No module found to configure the %(provider)s calendar.",
                     provider=self.external_calendar_provider,
                 )

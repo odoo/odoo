@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 # Aggregates all notable gamification events into a single, time-ordered
@@ -171,17 +171,17 @@ class GamificationActivity(models.Model):
         if kind == "badge":
             badge = self.env["gamification.badge"].browse(vals["badge_id"])
             if target:
-                return _(
+                return self.env._(
                     "%(sender)s awarded %(badge)s to %(user)s",
                     sender=target.name,
                     badge=badge.name,
                     user=user.name,
                 )
-            return _(
+            return self.env._(
                 "%(user)s earned the %(badge)s badge", user=user.name, badge=badge.name
             )
         if kind == "kudos":
-            return _(
+            return self.env._(
                 "%(sender)s recognized %(recipient)s for %(category)s",
                 sender=user.name,
                 recipient=target.name,
@@ -189,41 +189,43 @@ class GamificationActivity(models.Model):
             )
         if kind == "achievement":
             ach = self.env["gamification.achievement"].browse(vals["achievement_id"])
-            return _(
+            return self.env._(
                 "%(user)s unlocked '%(achievement)s' (%(rarity)s)",
                 user=user.name,
                 achievement=ach.name,
                 rarity=ach.rarity,
             )
         if kind == "streak_milestone":
-            return _(
+            return self.env._(
                 "%(user)s reached %(days)s days on %(streak)s!",
                 user=user.name,
                 days=args["days"],
                 streak=args["streak"],
             )
         if kind == "level_up":
-            return _("%(user)s reached %(rank)s!", user=user.name, rank=args["rank"])
+            return self.env._(
+                "%(user)s reached %(rank)s!", user=user.name, rank=args["rank"]
+            )
         if kind == "challenge_completed":
             challenge = self.env["gamification.challenge"].browse(vals["challenge_id"])
-            return _(
+            return self.env._(
                 "%(user)s completed the '%(challenge)s' challenge",
                 user=user.name,
                 challenge=challenge.name,
             )
         if kind == "quest_completed":
-            return _(
+            return self.env._(
                 "%(user)s completed the '%(quest)s' quest!",
                 user=user.name,
                 quest=args["quest"],
             )
         if kind == "skill_unlocked":
-            return _(
+            return self.env._(
                 "%(user)s unlocked skill '%(skill)s'",
                 user=user.name,
                 skill=args["skill"],
             )
-        return _("%(user)s earned an achievement", user=user.name)
+        return self.env._("%(user)s earned an achievement", user=user.name)
 
     # -- named wrappers, kept so source models read as prose ---------------
 

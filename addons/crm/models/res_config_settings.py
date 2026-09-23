@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.tools import format_list
 from odoo.tools.date_utils import get_timedelta, time_unit_selection
 
@@ -123,10 +123,12 @@ class ResConfigSettings(models.TransientModel):
     )
     def _onchange_crm_auto_assignment_run_datetime(self):
         if self.crm_auto_assignment_repeat_interval <= 0:
-            raise exceptions.UserError(_("Repeat frequency should be positive."))
+            raise exceptions.UserError(
+                self.env._("Repeat frequency should be positive.")
+            )
         if self.crm_auto_assignment_repeat_interval >= 100:
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "Invalid repeat frequency. Consider changing frequency type instead of using large numbers."
                 )
             )
@@ -190,14 +192,14 @@ class ResConfigSettings(models.TransientModel):
     def _compute_predictive_lead_scoring_field_labels(self):
         for setting in self:
             if setting.predictive_lead_scoring_fields:
-                field_names = [_("Stage")] + [
+                field_names = [self.env._("Stage")] + [
                     field.name for field in setting.predictive_lead_scoring_fields
                 ]
                 setting.predictive_lead_scoring_field_labels = format_list(
                     self.env, field_names
                 )
             else:
-                setting.predictive_lead_scoring_field_labels = _("Stage")
+                setting.predictive_lead_scoring_field_labels = self.env._("Stage")
 
     def set_values(self):
         group_use_lead_id = self.env["ir.model.data"]._xmlid_to_res_id(

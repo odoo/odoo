@@ -1,6 +1,6 @@
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_duration
 
@@ -177,7 +177,7 @@ class AppointmentSlot(models.Model):
                 > slot._convert_end_hour_24_format()
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "At least one slot duration is shorter than the meeting duration (%s hours)",
                         format_duration(slot.appointment_type_id.appointment_duration),
                     )
@@ -194,7 +194,7 @@ class AppointmentSlot(models.Model):
             )
         ):
             raise ValidationError(
-                _("An unique type slot should have a start and end datetime")
+                self.env._("An unique type slot should have a start and end datetime")
             )
 
     def _convert_end_hour_24_format(self):

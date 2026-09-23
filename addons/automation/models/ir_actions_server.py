@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.fields import Domain
 from odoo.tools.date_utils import get_timedelta, time_unit_selection
 from odoo.tools.json import scriptsafe as json_scriptsafe
@@ -125,7 +125,7 @@ class IrActionsServer(models.Model):
             target = action.subflow_automation_id
             if not target:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Step '%(action)s' is a sub-workflow but names no "
                         "automation to run.",
                         action=action.name,
@@ -137,7 +137,7 @@ class IrActionsServer(models.Model):
             while frontier:
                 if frontier & owner:
                     raise exceptions.ValidationError(
-                        _(
+                        self.env._(
                             "Step '%(action)s' would run automation '%(target)s', "
                             "which reaches back to '%(owner)s' -- a sub-workflow "
                             "cannot contain the workflow that runs it.",
@@ -154,7 +154,7 @@ class IrActionsServer(models.Model):
         for action in self:
             if action.node_type == "approval" and not action.approval_user_ids:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Step '%(action)s' asks for approval but names nobody to "
                         "give it, so the workflow would wait forever.",
                         action=action.name,
@@ -170,7 +170,7 @@ class IrActionsServer(models.Model):
                     continue
                 if not NODE_SIZE_MIN[axis] <= value <= NODE_SIZE_MAX[axis]:
                     raise exceptions.ValidationError(
-                        _(
+                        self.env._(
                             "The canvas %(axis)s of step '%(step)s' is %(value)s, "
                             "outside the %(minimum)s-%(maximum)s the canvas draws.\n\n"
                             "Use 0 to leave the step at the default size.",
@@ -187,7 +187,7 @@ class IrActionsServer(models.Model):
         for action in self:
             if action.node_type == "wait" and action.wait_delay <= 0:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Step '%(action)s' waits for %(delay)s %(unit)s, which is "
                         "not a wait. Give it a positive duration.",
                         action=action.name,
@@ -201,14 +201,14 @@ class IrActionsServer(models.Model):
         for action in self:
             if action.start_delay < 0:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Step '%(action)s' has a negative start delay.",
                         action=action.name,
                     ),
                 )
             if action.validity_delay < 0:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Step '%(action)s' has a negative validity.",
                         action=action.name,
                     ),
@@ -309,7 +309,7 @@ class IrActionsServer(models.Model):
             and self.model_id != self.automation_rule_id.model_id
         ):
             warnings.append(
-                _(
+                self.env._(
                     "Model of action %(action_name)s should match the one from automated rule %(rule_name)s.",
                     action_name=self.name,
                     rule_name=self.automation_rule_id.name,

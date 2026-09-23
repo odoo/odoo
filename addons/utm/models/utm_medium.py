@@ -2,7 +2,7 @@ import re
 
 from psycopg import IntegrityError
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -49,7 +49,7 @@ class UtmMedium(models.Model):
             utm_medium = self.env.ref(medium, raise_if_not_found=False)
             if utm_medium and utm_medium in self:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Oops, you can't delete the Medium '%s'.\n"
                         "Doing so would be like tearing down a load-bearing wall \u2014 not the best idea.",
                         utm_medium.name,

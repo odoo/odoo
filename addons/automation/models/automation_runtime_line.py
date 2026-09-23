@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from .workflow_edge import EVENT_CONDITIONS, SETTLED_STATES
@@ -316,7 +316,9 @@ class AutomationRuntimeLine(models.Model):
         record = self.runtime_id._get_target_record()
         if not record:
             self.action_mark_error(
-                _("Approval cannot be requested: this run has no target record."),
+                self.env._(
+                    "Approval cannot be requested: this run has no target record."
+                ),
             )
             self.runtime_id.action_error()
             return False
@@ -367,7 +369,7 @@ class AutomationRuntimeLine(models.Model):
             runtime = line.runtime_id
             if runtime.state == "waiting_resume":
                 runtime.state = "in_progress"
-            line.action_mark_error(reason or _("Approval was refused."))
+            line.action_mark_error(reason or self.env._("Approval was refused."))
             activities.unlink()
             if line._contains_its_error():
                 runtime._advance()
@@ -386,7 +388,9 @@ class AutomationRuntimeLine(models.Model):
             if runtime.state == "waiting_resume":
                 runtime.state = "in_progress"
             line.action_mark_error(
-                _("The approval activity was removed before anyone acted on it."),
+                self.env._(
+                    "The approval activity was removed before anyone acted on it."
+                ),
             )
             if line._contains_its_error():
                 runtime._advance()
@@ -440,7 +444,7 @@ class AutomationRuntimeLine(models.Model):
         self.check_singleton()
 
         if self.state not in ("ready", "in_progress"):
-            raise UserError(_("Action is not ready to execute"))
+            raise UserError(self.env._("Action is not ready to execute"))
 
         if self._is_expired():
             action = self.action_id
@@ -449,7 +453,7 @@ class AutomationRuntimeLine(models.Model):
             )
             self._skip(
                 reason="expired",
-                message=_(
+                message=self.env._(
                     "Skipped: it became ready at %(ready)s, and its validity of "
                     "%(delay)s %(unit)s had passed when it came to run.",
                     ready=self.date_ready,
@@ -528,10 +532,10 @@ class AutomationRuntimeLine(models.Model):
         self.check_singleton()
 
         if not self.created_record_ref:
-            raise UserError(_("No document created by this action"))
+            raise UserError(self.env._("No document created by this action"))
 
         return {
-            "name": _("Created Record"),
+            "name": self.env._("Created Record"),
             "type": "ir.actions.act_window",
             "res_model": self.created_record_ref._name,
             "view_mode": "form",

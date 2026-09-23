@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -193,7 +193,7 @@ class Team(models.Model):
         ]
         if refused:
             raise AccessError(
-                _(
+                self.env._(
                     "Only an administrator of %(usages)s can add or remove that usage on a team.",
                     usages=", ".join(sorted(refused)),
                 )
@@ -208,7 +208,7 @@ class Team(models.Model):
             for key in team._get_team_usage_keys():
                 if not self.env.user.has_group(usages[key].manager_group):
                     raise AccessError(
-                        _(
+                        self.env._(
                             'Team "%(team)s" is also used in %(usage)s: only a Teams Administrator can delete it.',
                             team=team.name,
                             usage=str(usages[key].label),
@@ -309,7 +309,7 @@ class Team(models.Model):
     @api.model
     def _get_usage(self, key):
         if key not in (usages := self._get_usages()):
-            raise UserError(_("Unknown team usage: %(usage)s", usage=key))
+            raise UserError(self.env._("Unknown team usage: %(usage)s", usage=key))
         return usages[key]
 
     @api.model
@@ -383,7 +383,7 @@ class Team(models.Model):
         ]
         if refused:
             raise AccessError(
-                _(
+                self.env._(
                     "Only an administrator of %(usages)s can allow multiple team memberships there.",
                     usages=", ".join(sorted(refused)),
                 )

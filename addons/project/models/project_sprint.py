@@ -1,6 +1,5 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from .project_task import CLOSED_STATES
@@ -175,7 +174,7 @@ class ProjectSprint(models.Model):
         )
         if active_sprints:
             raise ValidationError(
-                _(
+                self.env._(
                     "Project '%(project)s' already has an active sprint: %(sprint)s",
                     project=self.project_id.name,
                     sprint=active_sprints[0].name,

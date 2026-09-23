@@ -1,6 +1,6 @@
 from typing import Any
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 
 
 # Creates a structured relationship where experienced users guide
@@ -111,7 +111,7 @@ class GamificationMentorship(models.Model):
     @api.depends("mentor_id", "mentee_id")
     def _compute_display_name(self):
         for rec in self:
-            rec.display_name = _(
+            rec.display_name = self.env._(
                 "%(mentor)s mentoring %(mentee)s",
                 mentor=rec.mentor_id.name or "",
                 mentee=rec.mentee_id.name or "",
@@ -130,7 +130,9 @@ class GamificationMentorship(models.Model):
         """
         for rec in self:
             if rec.mentor_id == rec.mentee_id:
-                raise exceptions.ValidationError(_("A user cannot mentor themselves."))
+                raise exceptions.ValidationError(
+                    self.env._("A user cannot mentor themselves.")
+                )
 
         live = self.filtered(lambda r: r.state in ("pending", "active"))
         if not live:
@@ -151,7 +153,7 @@ class GamificationMentorship(models.Model):
         for rec in live:
             if (rec.mentee_id.id, rec.mentor_id.id) in reciprocals:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "%(a)s and %(b)s cannot mentor each other: a reciprocal "
                         "pairing pays both sides for the same progression.",
                         a=rec.mentor_id.name,
@@ -165,7 +167,7 @@ class GamificationMentorship(models.Model):
         for rec in self.sudo():
             if rec.mentor_karma_per_milestone < 0 or rec.mentor_karma_on_completion < 0:
                 raise exceptions.ValidationError(
-                    _("Mentorship karma rewards cannot be negative.")
+                    self.env._("Mentorship karma rewards cannot be negative.")
                 )
 
     def write(self, vals: Any) -> bool:
@@ -194,7 +196,7 @@ class GamificationMentorship(models.Model):
             and any(self.env.user in (rec.mentor_id, rec.mentee_id) for rec in self)
         ):
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "Use Accept/Decline/Complete/Cancel instead of changing"
                     " the status directly."
                 )
@@ -219,7 +221,7 @@ class GamificationMentorship(models.Model):
             counterparty = rec.mentor_id if proposer == rec.mentee_id else rec.mentee_id
             if counterparty != self.env.user:
                 raise exceptions.AccessError(
-                    _(
+                    self.env._(
                         "Only %(who)s or a gamification manager can confirm this "
                         "mentorship. The person who proposed it cannot also "
                         "accept it.",
@@ -259,7 +261,7 @@ class GamificationMentorship(models.Model):
         for rec in self:
             if rec.mentee_id != self.env.user:
                 raise exceptions.AccessError(
-                    _(
+                    self.env._(
                         "Only %(mentee)s or a gamification manager can complete "
                         "this mentorship. A mentor cannot award their own "
                         "completion rewards.",
@@ -286,7 +288,9 @@ class GamificationMentorship(models.Model):
                 rec_sudo.mentor_id._add_karma(
                     rec_sudo.mentor_karma_on_completion,
                     source=rec,
-                    reason=_("Mentorship completed with %s", rec_sudo.mentee_id.name),
+                    reason=self.env._(
+                        "Mentorship completed with %s", rec_sudo.mentee_id.name
+                    ),
                 )
                 rec_sudo.total_mentor_karma += rec_sudo.mentor_karma_on_completion
 
@@ -350,7 +354,7 @@ class GamificationMentorship(models.Model):
                 {
                     "gain": 0,
                     "source": rec,
-                    "reason": _(
+                    "reason": self.env._(
                         "Mentee %(mentee)s reached %(rank)s",
                         mentee=mentee.name,
                         rank=mentee.rank_id.name or "a new rank",

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -33,7 +33,7 @@ class ProductProduct(models.Model):
                         and rounded_price not in unit_amounts_no_warning
                     )
                 ):
-                    product.standard_price_update_warning = _(
+                    product.standard_price_update_warning = self.env._(
                         "There are unsubmitted expenses linked to this category. Updating the category cost will change expense amounts. "
                         "Make sure it is what you want to do."
                     )

@@ -8,7 +8,6 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import clean_context
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -438,7 +437,7 @@ class HrApplicant(models.Model):
             if email_normalized and not applicant.partner_id:
                 if not applicant.partner_name:
                     raise UserError(
-                        _("You must define a Contact Name for this applicant.")
+                        self.env._("You must define a Contact Name for this applicant.")
                     )
                 applicant.partner_id = (
                     applicant._partner_get_or_create_from_emails_single(
@@ -569,7 +568,10 @@ class HrApplicant(models.Model):
     def _compute_meeting_display(self):
         applicant_with_meetings = self.filtered("meeting_ids")
         (self - applicant_with_meetings).update(
-            {"meeting_display_text": _("No Meeting"), "meeting_display_date": ""}
+            {
+                "meeting_display_text": self.env._("No Meeting"),
+                "meeting_display_date": "",
+            }
         )
         today = fields.Date.today()
         for applicant in applicant_with_meetings:
@@ -581,11 +583,11 @@ class HrApplicant(models.Model):
             else:
                 applicant.meeting_display_date = max_date
             if count == 1:
-                applicant.meeting_display_text = _("1 Meeting")
+                applicant.meeting_display_text = self.env._("1 Meeting")
             elif applicant.meeting_display_date >= today:
-                applicant.meeting_display_text = _("Next Meeting")
+                applicant.meeting_display_text = self.env._("Next Meeting")
             else:
-                applicant.meeting_display_text = _("Last Meeting")
+                applicant.meeting_display_text = self.env._("Last Meeting")
 
     @api.depends("refuse_reason_id", "date_closed", "active")
     def _compute_application_status(self):
@@ -723,10 +725,10 @@ class HrApplicant(models.Model):
             partner_ids=partners.ids,
             author_id=self.env.user.partner_id.id,
             email_from=self.env.user.email_formatted,
-            subject=_(
+            subject=self.env._(
                 "You have been assigned as an interviewer for %s", self.display_name
             ),
-            body=_(
+            body=self.env._(
                 "You have been assigned as an interviewer for the Applicant %s",
                 self.partner_name,
             ),
@@ -825,14 +827,14 @@ class HrApplicant(models.Model):
         nocontent_body = Markup("""
 <p class="o_view_nocontent_smiling_face">%(help_title)s</p>
 """) % {
-            "help_title": _("No applications found."),
+            "help_title": self.env._("No applications found."),
         }
 
         if hr_job.alias_email:
             nocontent_body += Markup(
                 '<p class="o_copy_paste_email oe_view_nocontent_alias">%(helper_email)s <a href="mailto:%(email)s">%(email)s</a></p>'
             ) % {
-                "helper_email": _("Send applications to"),
+                "helper_email": self.env._("Send applications to"),
                 "email": hr_job.alias_email,
             }
 
@@ -852,7 +854,9 @@ class HrApplicant(models.Model):
             return self.partner_id
         if not self.partner_name:
             _debug.logic("partner_refused", reason="no_contact_name", applicant=self)
-            raise UserError(_("You must define a Contact Name for this applicant."))
+            raise UserError(
+                self.env._("You must define a Contact Name for this applicant.")
+            )
         _debug.lifecycle("partner_created_for_applicant", applicant=self)
         self.partner_id = self.env["res.partner"].create(
             {
@@ -888,7 +892,7 @@ class HrApplicant(models.Model):
         return {
             "type": "ir.actions.act_window",
             "res_model": "ir.attachment",
-            "name": _("Documents"),
+            "name": self.env._("Documents"),
             "context": {
                 "default_res_model": "hr.applicant",
                 "default_res_id": self.ids[0],
@@ -916,7 +920,7 @@ class HrApplicant(models.Model):
     def action_view_employee(self):
         self.check_singleton()
         return {
-            "name": _("Employee"),
+            "name": self.env._("Employee"),
             "type": "ir.actions.act_window",
             "res_model": "hr.employee",
             "view_mode": "form",
@@ -933,7 +937,7 @@ class HrApplicant(models.Model):
             )
         )
         return {
-            "name": _("Applications"),
+            "name": self.env._("Applications"),
             "type": "ir.actions.act_window",
             "res_model": "hr.applicant",
             "view_mode": "list,form",
@@ -968,7 +972,7 @@ class HrApplicant(models.Model):
 
     def action_talent_pool_add_applicants(self):
         return {
-            "name": _("Add applicant(s) to the pool"),
+            "name": self.env._("Add applicant(s) to the pool"),
             "type": "ir.actions.act_window",
             "res_model": "talent.pool.add.applicants",
             "target": "new",
@@ -986,7 +990,7 @@ class HrApplicant(models.Model):
 
     def action_job_add_applicants(self):
         return {
-            "name": _("Create Applications"),
+            "name": self.env._("Create Applications"),
             "type": "ir.actions.act_window",
             "res_model": "job.add.applicants",
             "target": "new",
@@ -1209,12 +1213,12 @@ class HrApplicant(models.Model):
 
     def _check_interviewer_access(self):
         if self.env.user._is_recruitment_interviewer_only():
-            raise UserError(_("You are not allowed to perform this action."))
+            raise UserError(self.env._("You are not allowed to perform this action."))
 
     def archive_applicant(self):
         return {
             "type": "ir.actions.act_window",
-            "name": _("Refuse Reason"),
+            "name": self.env._("Refuse Reason"),
             "res_model": "applicant.get.refuse.reason",
             "view_mode": "form",
             "target": "new",
@@ -1258,7 +1262,7 @@ class HrApplicant(models.Model):
 
     def action_send_email(self):
         return {
-            "name": _("Send Email"),
+            "name": self.env._("Send Email"),
             "type": "ir.actions.act_window",
             "target": "new",
             "view_mode": "form",

@@ -1,7 +1,7 @@
 from collections import defaultdict
 from uuid import uuid4
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import format_amount
 
@@ -78,7 +78,9 @@ class LoyaltyCard(models.Model):
             [("mode", "=", "with_code"), ("code", "in", self.mapped("code"))], limit=1
         ):
             raise ValidationError(
-                _("A trigger with the same code as one of your coupon already exists.")
+                self.env._(
+                    "A trigger with the same code as one of your coupon already exists."
+                )
             )
 
     @api.constrains("expiration_date", "program_id")
@@ -88,7 +90,7 @@ class LoyaltyCard(models.Model):
         for card in self:
             if card.program_type == "loyalty" and card.expiration_date:
                 raise ValidationError(
-                    _("Expiration date cannot be set on a loyalty card.")
+                    self.env._("Expiration date cannot be set on a loyalty card.")
                 )
 
     @api.depends("points", "point_name")
@@ -150,7 +152,7 @@ class LoyaltyCard(models.Model):
             "force_email": True,
         }
         return {
-            "name": _("Compose Email"),
+            "name": self.env._("Compose Email"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "mail.compose.message",
@@ -312,7 +314,7 @@ class LoyaltyCard(models.Model):
 
     def action_loyalty_update_balance(self):
         return {
-            "name": _("Update Balance"),
+            "name": self.env._("Update Balance"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "loyalty.card.update.balance",

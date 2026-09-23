@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -24,7 +24,7 @@ class HrWorkLocation(models.Model):
                 "work_location.unlink_refused", requested=self, blocked=blocked
             )
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete a work location that is a weekly work "
                     "location for an employee: %(locations)s",
                     locations=", ".join(blocked.mapped("name")),

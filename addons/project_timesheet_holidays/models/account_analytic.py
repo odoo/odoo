@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -34,7 +34,7 @@ class AccountAnalyticLine(models.Model):
     def _get_redirect_action(self):
         leave_form_view_id = self.env.ref("hr_holidays.hr_leave_view_form").id
         action_data = {
-            "name": _("Time Off"),
+            "name": self.env._("Time Off"),
             "type": "ir.actions.act_window",
             "res_model": "hr.leave",
             "views": [
@@ -57,10 +57,12 @@ class AccountAnalyticLine(models.Model):
                 lines=self,
             )
             raise UserError(
-                _("You cannot delete timesheets that are linked to global time off.")
+                self.env._(
+                    "You cannot delete timesheets that are linked to global time off."
+                )
             )
         if any(line.holiday_id for line in self):
-            error_message = _(
+            error_message = self.env._(
                 "You cannot delete timesheets that are linked to time off requests. Please cancel your time off request from the Time Off application instead."
             )
             if (
@@ -83,7 +85,7 @@ class AccountAnalyticLine(models.Model):
                 leaves=self.holiday_id,
                 user=self.env.user,
             )
-            raise RedirectWarning(error_message, action, _("View Time Off"))
+            raise RedirectWarning(error_message, action, self.env._("View Time Off"))
 
     def _check_can_write(self, values):
         if not self.env.su and self.holiday_id:
@@ -95,7 +97,7 @@ class AccountAnalyticLine(models.Model):
                 fields=len(values),
             )
             raise UserError(
-                _(
+                self.env._(
                     "You cannot modify timesheets that are linked to time off requests. Please use the Time Off application to modify your time off requests instead."
                 )
             )
@@ -109,7 +111,7 @@ class AccountAnalyticLine(models.Model):
                 tasks=self.task_id,
             )
             raise UserError(
-                _(
+                self.env._(
                     "You cannot create timesheets for a task that is linked to a time off type. Please use the Time Off application to request new time off instead."
                 )
             )

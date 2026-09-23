@@ -1,4 +1,4 @@
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 
 
 # Unlike challenges (which are flat lists of independent goals), quests
@@ -184,7 +184,7 @@ class GamificationQuestStep(models.Model):
         for step in self:
             if step in step.prerequisite_ids:
                 raise exceptions.ValidationError(
-                    _("A step cannot be its own prerequisite.")
+                    self.env._("A step cannot be its own prerequisite.")
                 )
 
 
@@ -264,7 +264,9 @@ class GamificationQuestEnrollment(models.Model):
             and any(enrollment.user_id == self.env.user for enrollment in self)
         ):
             raise exceptions.UserError(
-                _("Complete the quest's steps instead of changing the status directly.")
+                self.env._(
+                    "Complete the quest's steps instead of changing the status directly."
+                )
             )
         return super().write(vals)
 
@@ -295,7 +297,7 @@ class GamificationQuestEnrollment(models.Model):
         # quest never actually done.
         if step.quest_id != self.quest_id:
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "'%(step)s' belongs to quest '%(other_quest)s', not '%(quest)s'.",
                     step=step.name,
                     other_quest=step.quest_id.name,
@@ -312,7 +314,7 @@ class GamificationQuestEnrollment(models.Model):
         for prereq in step.prerequisite_ids:
             if prereq.id not in completed_step_ids:
                 raise exceptions.UserError(
-                    _(
+                    self.env._(
                         "Cannot complete '%(step)s': prerequisite '%(prereq)s' not yet done.",
                         step=step.name,
                         prereq=prereq.name,
@@ -341,7 +343,7 @@ class GamificationQuestEnrollment(models.Model):
             user.sudo()._add_karma(
                 step.karma_reward,
                 source=self,
-                reason=_("Quest step: %s", step.name),
+                reason=self.env._("Quest step: %s", step.name),
             )
         if step.badge_id:
             self.env["gamification.badge.user"].sudo().create(
@@ -371,7 +373,7 @@ class GamificationQuestEnrollment(models.Model):
             user.sudo()._add_karma(
                 quest.reward_karma,
                 source=self,
-                reason=_("Quest completed: %s", quest.name),
+                reason=self.env._("Quest completed: %s", quest.name),
             )
         if quest.reward_badge_id:
             self.env["gamification.badge.user"].sudo().create(

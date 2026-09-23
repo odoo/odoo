@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -52,7 +52,7 @@ class AccountPayment(models.Model):
                 fields=sorted(set(vals) & trigger_fields),
             )
             raise UserError(
-                _(
+                self.env._(
                     "You cannot do this modification since the payment is linked to an expense."
                 )
             )
@@ -72,7 +72,7 @@ class AccountPayment(models.Model):
     def _creation_message(self):
         self.check_singleton()
         if self.move_id.expense_ids:
-            return _(
+            return self.env._(
                 "Payment created for: %s", self.move_id.expense_ids._get_html_link()
             )
         return super()._creation_message()

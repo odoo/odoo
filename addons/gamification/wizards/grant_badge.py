@@ -1,4 +1,4 @@
-from odoo import _, exceptions, fields, models
+from odoo import exceptions, fields, models
 
 
 class GamificationBadgeUserWizard(models.TransientModel):
@@ -30,7 +30,9 @@ class GamificationBadgeUserWizard(models.TransientModel):
         uid = self.env.uid
         for wiz in self:
             if uid == wiz.user_id.id:
-                raise exceptions.UserError(_("You can not grant a badge to yourself."))
+                raise exceptions.UserError(
+                    self.env._("You can not grant a badge to yourself.")
+                )
             BadgeUser.create(
                 {
                     "user_id": wiz.user_id.id,

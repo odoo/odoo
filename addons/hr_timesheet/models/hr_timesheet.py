@@ -6,7 +6,6 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
-from odoo.tools.translate import _
 from odoo.tools.view_ir import Node
 
 _debug = DebugLog(__name__)
@@ -324,7 +323,9 @@ class AccountAnalyticLine(models.Model):
                 user=self.env.user,
                 lines=self,
             )
-            raise AccessError(_("You cannot access timesheets that are not yours."))
+            raise AccessError(
+                self.env._("You cannot access timesheets that are not yours.")
+            )
 
     def _check_can_create(self):
         pass
@@ -368,7 +369,7 @@ class AccountAnalyticLine(models.Model):
                 if not task.project_id:
                     _debug.logic("create_refused", reason="private_task", task=task)
                     raise ValidationError(
-                        _("Timesheets cannot be created on a private task.")
+                        self.env._("Timesheets cannot be created on a private task.")
                     )
                 if not project:
                     vals["project_id"] = task.project_id.id
@@ -428,7 +429,7 @@ class AccountAnalyticLine(models.Model):
                     employee.company_id.id
                 ] = employee.id
 
-        error_msg = _(
+        error_msg = self.env._(
             "Timesheets must be created with an active employee in the selected companies."
         )
         for vals in vals_list:
@@ -530,7 +531,9 @@ class AccountAnalyticLine(models.Model):
         project = self.env["project.project"].sudo().browse(values.get("project_id"))
         if task and not task.project_id:
             _debug.logic("write_refused", reason="private_task", task=task)
-            raise ValidationError(_("Timesheets cannot be created on a private task."))
+            raise ValidationError(
+                self.env._("Timesheets cannot be created on a private task.")
+            )
         if project or task:
             values["company_id"] = task.company_id.id or project.company_id.id
         values.update(
@@ -550,7 +553,9 @@ class AccountAnalyticLine(models.Model):
                     "write_refused", reason="archived_employee", employee=employee
                 )
                 raise UserError(
-                    _("You cannot set an archived employee on existing timesheets.")
+                    self.env._(
+                        "You cannot set an archived employee on existing timesheets."
+                    )
                 )
         if "name" in values and not values.get("name"):
             values["name"] = "/"
@@ -622,7 +627,7 @@ class AccountAnalyticLine(models.Model):
                 plans=",".join(missing_plan_names),
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "'%(missing_plan_names)s' analytic plan(s) required on the project '%(project_name)s' linked to the timesheet.",
                     missing_plan_names=missing_plan_names,
                     project_name=project.name,
@@ -657,7 +662,7 @@ class AccountAnalyticLine(models.Model):
                         "account.analytic.plan"
                     ]._get_all_plans()
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Timesheets must be created with at least an active analytic account defined in the plan '%(plan_name)s'.",
                             plan_name=project_plan.name,
                         )
@@ -671,7 +676,7 @@ class AccountAnalyticLine(models.Model):
                 )
                 if len(companies) > 1:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The project, the task and the analytic accounts of the timesheet must belong to the same company."
                         )
                     )
@@ -719,8 +724,8 @@ class AccountAnalyticLine(models.Model):
     def _get_report_base_filename(self):
         task_ids = self.task_id
         if len(task_ids) == 1:
-            return _("Timesheets - %s", task_ids.name)
-        return _("Timesheets")
+            return self.env._("Timesheets - %s", task_ids.name)
+        return self.env._("Timesheets")
 
     def _get_default_user_id(self):
         return self.env.context.get("user_id", self.env.user.id)
@@ -774,7 +779,7 @@ class AccountAnalyticLine(models.Model):
         if self.env.context.get("is_timesheet"):
             return [
                 {
-                    "label": _("Import Template for Timesheets"),
+                    "label": self.env._("Import Template for Timesheets"),
                     "template": "/hr_timesheet/static/xls/timesheets_import_template.xlsx",
                 }
             ]

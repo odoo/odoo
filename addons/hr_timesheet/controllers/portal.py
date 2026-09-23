@@ -2,7 +2,7 @@ from operator import itemgetter
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, fields, http
+from odoo import fields, http
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -31,27 +31,27 @@ class TimesheetCustomerPortal(CustomerPortal):
         return {
             "name": {
                 "input": "name",
-                "label": _("Search in Description"),
+                "label": request.env._("Search in Description"),
                 "sequence": 10,
             },
             "employee_id": {
                 "input": "employee_id",
-                "label": _("Search in Employee"),
+                "label": request.env._("Search in Employee"),
                 "sequence": 20,
             },
             "project_id": {
                 "input": "project_id",
-                "label": _("Search in Project"),
+                "label": request.env._("Search in Project"),
                 "sequence": 30,
             },
             "task_id": {
                 "input": "task_id",
-                "label": _("Search in Task"),
+                "label": request.env._("Search in Task"),
                 "sequence": 40,
             },
             "parent_task_id": {
                 "input": "parent_task_id",
-                "label": _("Search in Parent Task"),
+                "label": request.env._("Search in Parent Task"),
                 "sequence": 70,
             },
         }
@@ -59,7 +59,7 @@ class TimesheetCustomerPortal(CustomerPortal):
     def _task_get_searchbar_sortings(self, milestones_allowed, project=False):
         return super()._task_get_searchbar_sortings(milestones_allowed, project) | {
             "progress asc": {
-                "label": _("Progress"),
+                "label": request.env._("Progress"),
                 "order": "progress asc",
                 "sequence": 100,
             },
@@ -67,12 +67,12 @@ class TimesheetCustomerPortal(CustomerPortal):
 
     def _get_searchbar_groupby(self):
         return {
-            "none": {"label": _("None"), "sequence": 10},
-            "date": {"label": _("Date"), "sequence": 20},
-            "project_id": {"label": _("Project"), "sequence": 30},
-            "parent_task_id": {"label": _("Parent Task"), "sequence": 40},
-            "task_id": {"label": _("Task"), "sequence": 50},
-            "employee_id": {"label": _("Employee"), "sequence": 70},
+            "none": {"label": request.env._("None"), "sequence": 10},
+            "date": {"label": request.env._("Date"), "sequence": 20},
+            "project_id": {"label": request.env._("Project"), "sequence": 30},
+            "parent_task_id": {"label": request.env._("Parent Task"), "sequence": 40},
+            "task_id": {"label": request.env._("Task"), "sequence": 50},
+            "employee_id": {"label": request.env._("Employee"), "sequence": 70},
         }
 
     def _get_domain_search(self, search_in, search):
@@ -83,11 +83,11 @@ class TimesheetCustomerPortal(CustomerPortal):
 
     def _get_searchbar_sortings(self):
         return {
-            "date desc": {"label": _("Newest")},
-            "employee_id": {"label": _("Employee")},
-            "project_id": {"label": _("Project")},
-            "task_id": {"label": _("Task")},
-            "name": {"label": _("Description")},
+            "date desc": {"label": request.env._("Newest")},
+            "employee_id": {"label": request.env._("Employee")},
+            "project_id": {"label": request.env._("Project")},
+            "task_id": {"label": request.env._("Task")},
+            "name": {"label": request.env._("Description")},
         }
 
     def _project_get_page_view_values(
@@ -168,56 +168,59 @@ class TimesheetCustomerPortal(CustomerPortal):
         last_year = today + relativedelta(years=-1)
 
         searchbar_filters = {
-            "all": {"label": _("All"), "domain": []},
+            "all": {"label": request.env._("All"), "domain": []},
             "last_year": {
-                "label": _("Last Year"),
+                "label": request.env._("Last Year"),
                 "domain": [
                     ("date", ">=", date_utils.start_of(last_year, "year")),
                     ("date", "<=", date_utils.end_of(last_year, "year")),
                 ],
             },
             "last_quarter": {
-                "label": _("Last Quarter"),
+                "label": request.env._("Last Quarter"),
                 "domain": [
                     ("date", ">=", last_quarter_start),
                     ("date", "<=", last_quarter_end),
                 ],
             },
             "last_month": {
-                "label": _("Last Month"),
+                "label": request.env._("Last Month"),
                 "domain": [
                     ("date", ">=", date_utils.start_of(last_month, "month")),
                     ("date", "<=", date_utils.end_of(last_month, "month")),
                 ],
             },
             "last_week": {
-                "label": _("Last Week"),
+                "label": request.env._("Last Week"),
                 "domain": [
                     ("date", ">=", date_utils.start_of(last_week, "week")),
                     ("date", "<=", date_utils.end_of(last_week, "week")),
                 ],
             },
-            "today": {"label": _("Today"), "domain": [("date", "=", today)]},
+            "today": {
+                "label": request.env._("Today"),
+                "domain": [("date", "=", today)],
+            },
             "week": {
-                "label": _("This Week"),
+                "label": request.env._("This Week"),
                 "domain": [
                     ("date", ">=", date_utils.start_of(today, "week")),
                     ("date", "<=", date_utils.end_of(today, "week")),
                 ],
             },
             "month": {
-                "label": _("This Month"),
+                "label": request.env._("This Month"),
                 "domain": [
                     ("date", ">=", date_utils.start_of(today, "month")),
                     ("date", "<=", date_utils.end_of(today, "month")),
                 ],
             },
             "quarter": {
-                "label": _("This Quarter"),
+                "label": request.env._("This Quarter"),
                 "domain": [("date", ">=", quarter_start), ("date", "<=", quarter_end)],
             },
             "year": {
-                "label": _("This Year"),
+                "label": request.env._("This Year"),
                 "domain": [
                     ("date", ">=", date_utils.start_of(today, "year")),
                     ("date", "<=", date_utils.end_of(today, "year")),

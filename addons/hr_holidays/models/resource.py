@@ -1,6 +1,6 @@
 from datetime import UTC
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
@@ -61,7 +61,7 @@ class ResourceScheduleException(models.Model):
                     )
                 if existing_leaves:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Two public holidays cannot overlap each other for the same working hours."
                         )
                     )
@@ -111,14 +111,14 @@ class ResourceScheduleException(models.Model):
             duration_difference = previous_duration - leave.number_of_days
             message = False
             if duration_difference > 0 and leave.holiday_status_id.requires_allocation:
-                message = _(
+                message = self.env._(
                     "Due to a change in global time offs, you have been granted %s day(s) back.",
                     duration_difference,
                 )
             if leave.number_of_days > previous_duration and (
                 not sick_time_status or leave.holiday_status_id not in sick_time_status
             ):
-                message = _(
+                message = self.env._(
                     "Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.",
                     -1 * duration_difference,
                 )
@@ -129,7 +129,7 @@ class ResourceScheduleException(models.Model):
                     leaves_to_recreate |= leave
             except ValidationError:
                 leave.action_refuse()
-                message = _(
+                message = self.env._(
                     "Due to a change in global time offs, this leave no longer has the required amount of available allocation and has been set to refused. Please review this leave."
                 )
             if message:
@@ -154,7 +154,7 @@ class ResourceScheduleException(models.Model):
     def load_public_holidays(self):
         return {
             "type": "ir.actions.act_window",
-            "name": _("Load Public Holidays"),
+            "name": self.env._("Load Public Holidays"),
             "res_model": "load.public.holiday.wizard",
             "view_mode": "form",
             "target": "new",

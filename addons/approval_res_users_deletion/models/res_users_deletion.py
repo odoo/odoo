@@ -1,6 +1,6 @@
 from typing import Any
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 
 
 class ResUsersDeletion(models.Model):
@@ -39,10 +39,12 @@ class ResUsersDeletion(models.Model):
         return ["user_id"]
 
     def _get_approval_request_name(self) -> str:
-        return _("Account deletion of %s", self.user_id.name or self.user_id_int)
+        return self.env._(
+            "Account deletion of %s", self.user_id.name or self.user_id_int
+        )
 
     def _get_approval_reason_html(self) -> str:
-        return _(
+        return self.env._(
             "Portal user %(name)s (#%(id)s) asked for their account and its "
             "personal data to be deleted.",
             name=self.user_id.name or "",

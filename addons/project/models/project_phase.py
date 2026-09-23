@@ -1,6 +1,6 @@
 from typing import Any
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from ..tools import debug_log as dbg
@@ -44,7 +44,7 @@ class ProjectPhase(models.Model):
             template = phase.mail_template_id
             if template and template.model != "project.project":
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The email template %(template)s is defined on %(model)s, but a "
                         "phase email is sent about a project. Choose a template whose "
                         "model is Project.",
@@ -62,7 +62,7 @@ class ProjectPhase(models.Model):
         wizard = self.env["project.phase.delete.wizard"].create({"phase_ids": self.ids})
         context = dict(self.env.context, stage_view=stage_view)
         return {
-            "name": _("Delete Phase"),
+            "name": self.env._("Delete Phase"),
             "view_mode": "form",
             "res_model": "project.phase.delete.wizard",
             "views": [
@@ -94,11 +94,12 @@ class ProjectPhase(models.Model):
             if project:
                 company = self.env["res.company"].browse(vals["company_id"])
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot switch this phase to %(company_name)s because it "
                         "currently includes projects linked to %(project_company_name)s.",
                         company_name=company.name,
-                        project_company_name=project.company_id.name or _("no company"),
+                        project_company_name=project.company_id.name
+                        or self.env._("no company"),
                     )
                 )
         if "active" in vals and not vals["active"]:

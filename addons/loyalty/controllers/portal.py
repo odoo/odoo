@@ -1,4 +1,4 @@
-from odoo import _, fields
+from odoo import fields
 from odoo.http import request, route
 
 from odoo.addons.portal.controllers.portal import CustomerPortal
@@ -48,10 +48,13 @@ class CustomerPortalLoyalty(CustomerPortal):
 
     def _get_loyalty_searchbar_sortings(self):
         return {
-            "date": {"label": _("Date"), "order": "create_date desc"},
-            "used": {"label": _("Used"), "order": "used desc"},
-            "description": {"label": _("Description"), "order": "description desc"},
-            "issued": {"label": _("Issued"), "order": "issued desc"},
+            "date": {"label": request.env._("Date"), "order": "create_date desc"},
+            "used": {"label": request.env._("Used"), "order": "used desc"},
+            "description": {
+                "label": request.env._("Description"),
+                "order": "description desc",
+            },
+            "issued": {"label": request.env._("Issued"), "order": "issued desc"},
         }
 
     @route(

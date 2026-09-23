@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -23,7 +23,7 @@ class GamificationBadgeUserWizard(models.TransientModel):
     def action_grant_badge(self):
         if self.env.uid == self.user_id.id:
             _debug.logic("badge_refused", reason="self_grant", user=self.user_id)
-            raise UserError(_("You can not send a badge to yourself."))
+            raise UserError(self.env._("You can not send a badge to yourself."))
         values = {
             "user_id": self.user_id.id,
             "sender_id": self.env.uid,

@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import ValidationError
 
 
@@ -33,7 +33,7 @@ class StockMove(models.Model):
             ]
             if missing_plan_names:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "'%(missing_plan_names)s' analytic plan(s) required on the project '%(project_name)s' linked to the manufacturing order.",
                         missing_plan_names=missing_plan_names,
                         project_name=project.name,

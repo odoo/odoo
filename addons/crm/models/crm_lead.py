@@ -16,7 +16,6 @@ from odoo.tools import (
     parse_contact_from_email,
 )
 from odoo.tools.misc import get_lang
-from odoo.tools.translate import _
 
 from . import crm_stage
 from odoo.addons.iap.tools import iap_tools
@@ -479,7 +478,7 @@ class CrmLead(models.Model):
         for lead in self:
             if lead.stage_id.is_won and lead.probability != 100:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "%(lead_name)s is in the won stage %(stage_name)s, which implies a "
                         "100%% probability, but its probability is %(probability)s%%. "
                         "Move it to another stage first.",
@@ -657,7 +656,7 @@ class CrmLead(models.Model):
     def _compute_name(self):
         for lead in self:
             if not lead.name and lead.partner_id and lead.partner_id.name:
-                lead.name = _("%s's opportunity") % lead.partner_id.name
+                lead.name = self.env._("%s's opportunity") % lead.partner_id.name
 
     @api.depends("partner_id", "partner_name")
     def _compute_commercial_partner_id(self):
@@ -705,7 +704,9 @@ class CrmLead(models.Model):
                 )
                 lead.commercial_partner_id = commercial_partner
             if not lead.name and lead.commercial_partner_id:
-                lead.name = _("%s's opportunity", lead.commercial_partner_id.name)
+                lead.name = self.env._(
+                    "%s's opportunity", lead.commercial_partner_id.name
+                )
 
     @api.depends("partner_id")
     def _compute_contact_name(self):
@@ -888,13 +889,13 @@ class CrmLead(models.Model):
             lead_meeting_info = mapped_data.get(lead)
             if not lead_meeting_info:
                 lead.meeting_display_date = False
-                lead.meeting_display_label = _("No Meeting")
+                lead.meeting_display_label = self.env._("No Meeting")
             elif lead_meeting_info["next_meeting_date"]:
                 lead.meeting_display_date = lead_meeting_info["next_meeting_date"]
-                lead.meeting_display_label = _("Next Meeting")
+                lead.meeting_display_label = self.env._("Next Meeting")
             else:
                 lead.meeting_display_date = lead_meeting_info["last_meeting_date"]
-                lead.meeting_display_label = _("Last Meeting")
+                lead.meeting_display_label = self.env._("Last Meeting")
 
     @api.depends("active", "probability", "stage_id")
     def _compute_won_status(self):
@@ -1222,7 +1223,9 @@ class CrmLead(models.Model):
             )
             if new_status["is_lost"] and new_status["is_won"]:
                 raise ValidationError(
-                    _("The lead %s cannot be won and lost at the same time.", lead)
+                    self.env._(
+                        "The lead %s cannot be won and lost at the same time.", lead
+                    )
                 )
 
             if new_status["is_lost"] and not old_status["is_lost"]:
@@ -1402,7 +1405,9 @@ class CrmLead(models.Model):
         self.flush_model()
 
         if len(self.message_ids) >= 25:
-            return _("Phew, that took some effort — but you nailed it. Good job!")
+            return self.env._(
+                "Phew, that took some effort — but you nailed it. Good job!"
+            )
 
         tz_midnight = (
             fields.Datetime.now()
@@ -1465,41 +1470,45 @@ class CrmLead(models.Model):
         query_result = self.env.cr.dictfetchone()
 
         if query_result["count_user_closed_year"] == 1:
-            return _("Go, go, go! Congrats for your first deal.")
+            return self.env._("Go, go, go! Congrats for your first deal.")
         elif (
             self.expected_revenue
             and query_result["max_team_31"] < self.expected_revenue
         ):
-            return _("Boom! Team record for the past 30 days.")
+            return self.env._("Boom! Team record for the past 30 days.")
         elif (
             self.expected_revenue and query_result["max_team_7"] < self.expected_revenue
         ):
-            return _("Yeah! Best deal out of the last 7 days for the team.")
+            return self.env._("Yeah! Best deal out of the last 7 days for the team.")
         elif (
             self.expected_revenue
             and query_result["max_user_31"] < self.expected_revenue
         ):
-            return _("You just beat your personal record for the past 30 days.")
+            return self.env._(
+                "You just beat your personal record for the past 30 days."
+            )
         elif (
             self.expected_revenue and query_result["max_user_7"] < self.expected_revenue
         ):
-            return _("You just beat your personal record for the past 7 days.")
+            return self.env._("You just beat your personal record for the past 7 days.")
         elif query_result["count_user_closed_today"] == 5:
-            return _("You're on fire! Fifth deal won today 🔥")
+            return self.env._("You're on fire! Fifth deal won today 🔥")
         elif (
             query_result["count_user_closed_today"] == 1
             and query_result["count_user_closed_yesterday"]
             and query_result["count_user_closed_minus2day"]
             and not query_result["count_user_closed_minus3day"]
         ):
-            return _("You're on a winning streak. 3 deals in 3 days, congrats!")
+            return self.env._(
+                "You're on a winning streak. 3 deals in 3 days, congrats!"
+            )
         elif (
             query_result["min_day_close_31"] == self.day_close
             and self.day_close < 31
             and self.date_closed
             and (self.date_closed - self.create_date).total_seconds() > 60
         ):
-            return _("Wow, that was fast. That deal didn’t stand a chance!")
+            return self.env._("Wow, that was fast. That deal didn’t stand a chance!")
         elif (
             len(
                 stage_ids := [
@@ -1520,17 +1529,17 @@ class CrmLead(models.Model):
                 limit=1,
             )
             if first_stage.id == stage_ids[0]:
-                return _(
+                return self.env._(
                     "No detours, no delays - from %(stage_name)s straight to the win! 🚀",
                     stage_name=first_stage.name,
                 )
         if query_result["count_country_closed_year"] == 1 and self.country_id:
-            return _(
+            return self.env._(
                 "You just expanded the map! First win in %(country)s.",
                 country=self.country_id.name,
             )
         elif query_result["count_source_closed_year"] == 1 and self.source_id:
-            return _(
+            return self.env._(
                 "Yay, your first win from %(utm_source_name)s!",
                 utm_source_name=self.source_id.name,
             )
@@ -1652,7 +1661,7 @@ class CrmLead(models.Model):
     def redirect_lead_opportunity_view(self):
         self.check_singleton()
         return {
-            "name": _("Lead or Opportunity"),
+            "name": self.env._("Lead or Opportunity"),
             "view_mode": "form",
             "res_model": "crm.lead",
             "domain": [("type", "=", self.type)],
@@ -1669,9 +1678,11 @@ class CrmLead(models.Model):
 
         help_title, sub_title = "", ""
         if self.env.context.get("default_type") == "lead":
-            help_title = _("Create a new lead")
+            help_title = self.env._("Create a new lead")
         else:
-            help_title = _("Create an opportunity to start playing with your pipeline.")
+            help_title = self.env._(
+                "Create an opportunity to start playing with your pipeline."
+            )
         alias_domain = [
             ("company_id", "in", [self.env.company.id, False]),
             ("lead_alias_id.alias_name", "!=", False),
@@ -1691,7 +1702,7 @@ class CrmLead(models.Model):
             and alias_record.lead_alias_name
         ):
             sub_title = Markup(
-                _(
+                self.env._(
                     "Use the <i>New</i> button, or send an email to %(email_link)s to test the email gateway."
                 )
             ) % {
@@ -1709,7 +1720,7 @@ class CrmLead(models.Model):
             ):
                 if team_id.user_id:
                     leads.user_id = team_id.user_id
-                    message = _(
+                    message = self.env._(
                         "This new lead created by %(creation_source)s was automatically assigned to team leader %(user_name)s",
                         user_name=team_id.user_id.name,
                         creation_source=creation_source,
@@ -1720,7 +1731,7 @@ class CrmLead(models.Model):
 
     def log_meeting(self, meeting):
         if not meeting.duration:
-            duration = _("unknown")
+            duration = self.env._("unknown")
         else:
             duration = self.env["ir.qweb.field.duration"].value_to_html(
                 meeting.duration, {"unit": "hour"}
@@ -1737,10 +1748,10 @@ class CrmLead(models.Model):
         message = Markup(
             "<p>%(meeting)s<br/>%(subject_string)s %(subject_link)s<br/>%(duration)s<p>"
         ) % {
-            "meeting": _("Meeting scheduled at %s", meeting_time),
-            "subject_string": _("Subject: "),
+            "meeting": self.env._("Meeting scheduled at %s", meeting_time),
+            "subject_string": self.env._("Subject: "),
             "subject_link": meeting._get_html_link(),
-            "duration": _("Duration: %s", duration),
+            "duration": self.env._("Duration: %s", duration),
         }
         return self.message_post(body=message)
 
@@ -1790,14 +1801,14 @@ class CrmLead(models.Model):
     ):
         if len(self.ids) <= 1:
             raise UserError(
-                _(
+                self.env._(
                     "Select at least two Leads/Opportunities from the list to merge them."
                 )
             )
 
         if max_length and len(self.ids) > max_length and not self.env.is_superuser():
             raise UserError(
-                _(
+                self.env._(
                     "To prevent data loss, Leads and Opportunities can only be merged by groups of %(max_length)s.",
                     max_length=max_length,
                 )
@@ -1909,13 +1920,15 @@ class CrmLead(models.Model):
         for opportunity_su in opportunities.sudo():
             for message_su in opportunity_su.message_ids:
                 if message_su.subject:
-                    subject = _(
+                    subject = self.env._(
                         "From %(source_name)s: %(source_subject)s",
                         source_name=opportunity_su.name,
                         source_subject=message_su.subject,
                     )
                 else:
-                    subject = _("From %(source_name)s", source_name=opportunity_su.name)
+                    subject = self.env._(
+                        "From %(source_name)s", source_name=opportunity_su.name
+                    )
                 messages_by_subject[subject] = (
                     messages_by_subject.get(subject, message_su.browse()) + message_su
                 )
@@ -1944,7 +1957,7 @@ class CrmLead(models.Model):
                 attachment.write(
                     {
                         "res_id": self.id,
-                        "name": _(
+                        "name": self.env._(
                             "%(attach_name)s (from %(lead_name)s)",
                             attach_name=attachment.name,
                             lead_name=opportunity.name[:20],
@@ -2029,7 +2042,9 @@ class CrmLead(models.Model):
 
             property_dict = {"label": label}
             if property_type == "boolean":
-                property_dict["value"] = _("Yes") if value else _("No")
+                property_dict["value"] = (
+                    self.env._("Yes") if value else self.env._("No")
+                )
             elif value and property_type == "many2one":
                 property_dict["value"] = value[1]
             elif value and property_type == "many2many":
@@ -2311,11 +2326,13 @@ class CrmLead(models.Model):
     def _creation_message(self):
         self.check_singleton()
         if self.team_id:
-            return _(
+            return self.env._(
                 'A new lead has been created for the team "%(team_name)s".',
                 team_name=self.team_id.display_name,
             )
-        return _("A new lead has been created and is not assigned to any team.")
+        return self.env._(
+            "A new lead has been created and is not assigned to any team."
+        )
 
     def _track_subtype(self, init_values):
         self.check_singleton()
@@ -2352,7 +2369,7 @@ class CrmLead(models.Model):
         )
         if self.date_deadline:
             render_context["subtitles"].append(
-                _(
+                self.env._(
                     "Deadline: %s",
                     self.date_deadline.strftime(get_lang(self.env).date_format),
                 )
@@ -2378,7 +2395,7 @@ class CrmLead(models.Model):
         if custom_values is None:
             custom_values = {}
         defaults = {
-            "name": msg_dict.get("subject") or _("No Subject"),
+            "name": msg_dict.get("subject") or self.env._("No Subject"),
             "email_from": msg_dict.get("from"),
             "partner_id": msg_dict.get("author_id", False),
         }
@@ -2387,7 +2404,7 @@ class CrmLead(models.Model):
         defaults.update(custom_values)
 
         new_lead = super().message_new(msg_dict, custom_values=defaults)
-        new_lead._update_userless_leads_with_team_leader(_("incoming email"))
+        new_lead._update_userless_leads_with_team_leader(self.env._("incoming email"))
         return new_lead
 
     def _message_post_after_hook(self, message, msg_vals):
@@ -2423,7 +2440,7 @@ class CrmLead(models.Model):
     def get_import_templates(self):
         return [
             {
-                "label": _("Import Template for Leads & Opportunities"),
+                "label": self.env._("Import Template for Leads & Opportunities"),
                 "template": "/crm/static/xls/crm_lead.xls",
             }
         ]

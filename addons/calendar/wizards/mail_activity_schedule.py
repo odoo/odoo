@@ -1,6 +1,5 @@
 from odoo import models
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
 
 
 class MailActivitySchedule(models.TransientModel):
@@ -10,7 +9,7 @@ class MailActivitySchedule(models.TransientModel):
         self.check_singleton()
         if self.is_batch_mode:
             raise UserError(
-                _(
+                self.env._(
                     "Scheduling an activity using the calendar is not possible on more than one record."
                 )
             )
@@ -18,7 +17,9 @@ class MailActivitySchedule(models.TransientModel):
             return self._action_schedule_activities_personal().action_create_calendar_event()
         res_ids = self._evaluate_res_ids()
         if not res_ids:
-            raise UserError(_("There is no record to schedule this activity on."))
+            raise UserError(
+                self.env._("There is no record to schedule this activity on.")
+            )
         return (
             self.with_context(
                 {

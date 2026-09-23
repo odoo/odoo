@@ -1,7 +1,6 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tools.translate import _
 
 
 def get_employee_from_context(values, context, user_employee_id):
@@ -73,7 +72,7 @@ class MixinHrLeaveApproval(models.AbstractModel):
     def _get_approval_update_error(self, state, next_states):
         self.check_singleton()
         if self.state == state:
-            return _("You can't do the same action twice.")
+            return self.env._("You can't do the same action twice.")
         if error := self._get_approval_precheck_error(state):
             return error
         if state not in next_states.get(self.state, ()):

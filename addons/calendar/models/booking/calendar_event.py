@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from markupsafe import Markup
 
-from odoo import SUPERUSER_ID, _, api, fields, models, tools
+from odoo import SUPERUSER_ID, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.intervals import intervals_overlap
@@ -243,7 +243,7 @@ class CalendarEvent(models.Model):
         for event in self:
             if event.booked_resource_ids and not event.appointment_type_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The event %s cannot book resources without an appointment type.",
                         event.name,
                     )
@@ -254,7 +254,7 @@ class CalendarEvent(models.Model):
         for event in self:
             if event.appointment_status and not event.appointment_type_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The event %s cannot have an appointment status without being linked to an appointment type.",
                         event.name,
                     )
@@ -665,7 +665,7 @@ class CalendarEvent(models.Model):
                     capacity_to_reserve = max(0, capacity_to_reserve)
                 if event.appointment_type_manage_capacity and capacity_to_reserve:
                     raise UserError(
-                        _(
+                        self.env._(
                             "%(capacity)d seats are missing to be able to book the %(appointment_name)s: %(event_name)s (%(event_id)s)",
                             capacity=capacity_to_reserve,
                             appointment_name=event.appointment_type_id.name,
@@ -690,7 +690,7 @@ class CalendarEvent(models.Model):
                     and max_user_capacity < capacity_to_reserve
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "%(capacity)d seats are missing to be able to book the %(appointment_name)s: %(event_name)s (%(event_id)s)",
                             capacity=capacity_to_reserve
                             - event.appointment_type_id.user_capacity,
@@ -767,9 +767,9 @@ class CalendarEvent(models.Model):
     def _track_get_default_log_message(self, tracked_fields):
         if self.appointment_type_id and "active" in tracked_fields:
             if self.active:
-                return _("Appointment re-booked")
+                return self.env._("Appointment re-booked")
             else:
-                return _("Appointment cancelled")
+                return self.env._("Appointment cancelled")
         return super()._track_get_default_log_message(tracked_fields)
 
     def action_cancel_meeting(self, partner_ids):
@@ -778,7 +778,7 @@ class CalendarEvent(models.Model):
         :param list partner_ids: ids of the partners who requested the cancellation
         """
         self.check_singleton()
-        message_body = _("Appointment cancelled")
+        message_body = self.env._("Appointment cancelled")
         if partner_ids:
             attendees = self.env["calendar.attendee"].search(
                 [("event_id", "=", self.id), ("partner_id", "in", partner_ids)]
@@ -787,7 +787,7 @@ class CalendarEvent(models.Model):
                 cancelling_attendees = ", ".join(
                     [attendee.display_name for attendee in attendees]
                 )
-                message_body = _(
+                message_body = self.env._(
                     "Appointment cancelled by: %(partners)s",
                     partners=cancelling_attendees,
                 )
@@ -836,7 +836,7 @@ class CalendarEvent(models.Model):
         # explicitly instead.
         if limit and len(valid_normalized) > limit:
             raise UserError(
-                _(
+                self.env._(
                     "Guest usage is limited to %(limit)s customers for performance reason.",
                     limit=limit,
                 )
@@ -933,10 +933,10 @@ class CalendarEvent(models.Model):
             and self.appointment_type_id.schedule_based_on == "users"
             and self.partner_id
         ):
-            return _(
+            return self.env._(
                 "%(appointment_name)s with %(partner_name)s",
                 appointment_name=self.appointment_type_id.name,
-                partner_name=self.partner_id.name or _("somebody"),
+                partner_name=self.partner_id.name or self.env._("somebody"),
             )
         return super()._get_customer_summary()
 

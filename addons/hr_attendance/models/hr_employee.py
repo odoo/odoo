@@ -4,7 +4,7 @@ from datetime import UTC
 
 from dateutil.relativedelta import MO, SU, relativedelta
 
-from odoo import Command, _, api, exceptions, fields, models
+from odoo import Command, api, exceptions, fields, models
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
 from odoo.libs.intervals import Intervals
@@ -382,7 +382,7 @@ class HrEmployee(models.Model):
         )
         if not attendance:
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "Cannot perform check out on %(empl_name)s, could not find corresponding check in. "
                     "Your attendances have probably been modified manually by human resources.",
                     empl_name=employee.name,
@@ -447,7 +447,7 @@ class HrEmployee(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Attendances This Month"),
+            "name": self.env._("Attendances This Month"),
             "res_model": "hr.attendance",
             "views": [
                 [

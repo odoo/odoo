@@ -1,6 +1,6 @@
 from typing import Any
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 
@@ -281,7 +281,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
 
         if not date_in_groupby or not is_closed_or_step_in_groupby:
             raise UserError(
-                _(
+                self.env._(
                     "The view must be grouped by date and by Workflow Step - Burndown chart or Is Closed - Burnup chart"
                 )
             )

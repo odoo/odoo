@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 
 
@@ -57,7 +57,7 @@ class SurveyQuestion(models.Model):
         )
         if incomplete_questions:
             raise ValidationError(
-                _(
+                self.env._(
                     "The following question(s) do not have any selectable answers : %s",
                     ", ".join(incomplete_questions.mapped("title")),
                 )

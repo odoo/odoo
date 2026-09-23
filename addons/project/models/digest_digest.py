@@ -1,6 +1,6 @@
 from typing import Any
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError
 
 from ..tools import debug_log as dbg
@@ -25,7 +25,7 @@ class DigestDigest(models.Model):
                 self.env.uid,
             )
             raise AccessError(
-                _("Do not have access, skip this data for user's digest email")
+                self.env._("Do not have access, skip this data for user's digest email")
             )
 
         self._update_company_based_kpi(

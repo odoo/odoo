@@ -1,4 +1,4 @@
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.tools.date_utils import time_unit_selection
 
 CONDITION_SELECTION = [
@@ -91,7 +91,7 @@ class WorkflowEdge(models.Model):
             target_rule = edge.target_node_id.automation_rule_id
             if source_rule != target_rule:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Step '%(target)s' cannot depend on '%(source)s': they "
                         "belong to different automations.\n\n"
                         "Dependencies only order the steps of one automation, so "
@@ -107,7 +107,7 @@ class WorkflowEdge(models.Model):
         for edge in self:
             if edge.source_node_id == edge.target_node_id:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Action '%(action)s' cannot depend on itself.",
                         action=edge.target_node_id.name,
                     )
@@ -118,7 +118,7 @@ class WorkflowEdge(models.Model):
             while frontier:
                 if target.id in frontier.ids:
                     raise exceptions.ValidationError(
-                        _(
+                        self.env._(
                             "Circular dependency detected: action '%(action)s' "
                             "would create a cycle in the workflow DAG.",
                             action=target.name,
@@ -137,7 +137,7 @@ class WorkflowEdge(models.Model):
                 continue
             if not rule._is_runtime_backed():
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "'%(source)s' -> '%(target)s' is conditional, but "
                         "automation '%(name)s' does not record its runs, so the "
                         "condition would be ignored.\n\n"
@@ -157,7 +157,7 @@ class WorkflowEdge(models.Model):
                 and not (edge.condition_expr or "").strip()
             ):
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Edge '%(source)s' -> '%(target)s' is conditional on an "
                         "expression but carries none, so the target could never "
                         "become ready.",
@@ -171,7 +171,7 @@ class WorkflowEdge(models.Model):
         for edge in self:
             if edge.delay < 0:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Edge '%(source)s' -> '%(target)s' has a negative delay.",
                         source=edge.source_node_id.name,
                         target=edge.target_node_id.name,
@@ -182,7 +182,7 @@ class WorkflowEdge(models.Model):
                 and not (edge.event_code or "").strip()
             ):
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Edge '%(source)s' -> '%(target)s' depends on an event but "
                         "names none, so no event could ever settle it.",
                         source=edge.source_node_id.name,

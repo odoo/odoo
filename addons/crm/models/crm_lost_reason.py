@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class CrmLostReason(models.Model):
@@ -29,7 +29,7 @@ class CrmLostReason(models.Model):
 
     def action_lost_leads(self):
         return {
-            "name": _("Leads"),
+            "name": self.env._("Leads"),
             "view_mode": "list,form",
             "domain": [("lost_reason_id", "in", self.ids)],
             "res_model": "crm.lead",

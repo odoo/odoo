@@ -5,7 +5,7 @@ from cryptography import x509
 from cryptography.hazmat.primitives import constant_time, serialization
 from cryptography.hazmat.primitives.serialization import Encoding, pkcs12
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from .certificate_key import STR_TO_HASH, _get_formatted_bytes
@@ -188,7 +188,9 @@ class CertificateCertificate(models.Model):
                         pkey_public_key_bytes, cert_public_key_bytes
                     ):
                         raise UserError(
-                            _("The certificate and private key are not compatible.")
+                            self.env._(
+                                "The certificate and private key are not compatible."
+                            )
                         )
 
                 if certificate.public_key_id:
@@ -201,7 +203,9 @@ class CertificateCertificate(models.Model):
                         pkey_public_key_bytes, cert_public_key_bytes
                     ):
                         raise UserError(
-                            _("The certificate and public key are not compatible.")
+                            self.env._(
+                                "The certificate and public key are not compatible."
+                            )
                         )
 
     @api.model_create_multi
@@ -330,7 +334,7 @@ class CertificateCertificate(models.Model):
                     certificate.date_start = None
                     certificate.date_end = None
                     certificate.serial_number = None
-                    certificate.loading_error = _(
+                    certificate.loading_error = self.env._(
                         "This certificate could not be loaded. Either the content or the password is erroneous."
                     )
                     continue
@@ -470,7 +474,7 @@ class CertificateCertificate(models.Model):
             public_key = self._get_parsed_certificate().public_key()
         except ValueError as e:
             raise UserError(
-                _("The public key from the certificate could not be loaded.")
+                self.env._("The public key from the certificate could not be loaded.")
             ) from e
 
         encoding = (
@@ -492,11 +496,13 @@ class CertificateCertificate(models.Model):
         if not self.is_valid:
             raise UserError(
                 self.loading_error
-                or _("This certificate is not valid, its validity has expired.")
+                or self.env._(
+                    "This certificate is not valid, its validity has expired."
+                )
             )
         if not self.private_key_id:
             raise UserError(
-                _(
+                self.env._(
                     "No private key linked to the certificate, it is required to sign documents."
                 )
             )

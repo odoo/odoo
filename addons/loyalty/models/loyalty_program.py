@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 
@@ -212,7 +212,7 @@ class LoyaltyProgram(models.Model):
             for pricelist in program.pricelist_ids
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "The loyalty program's currency must be the same as all its pricelists' ones."
                 )
             )
@@ -221,7 +221,7 @@ class LoyaltyProgram(models.Model):
     def _check_date_from_date_to(self):
         if any(p.date_to and p.date_from and p.date_from > p.date_to for p in self):
             raise ValidationError(
-                _(
+                self.env._(
                     "The validity period's start date must be anterior or equal to its end date."
                 )
             )
@@ -231,7 +231,9 @@ class LoyaltyProgram(models.Model):
         if self.env.context.get("loyalty_skip_reward_check"):
             return
         if any(not program.reward_ids for program in self):
-            raise ValidationError(_("A program must have at least one reward."))
+            raise ValidationError(
+                self.env._("A program must have at least one reward.")
+            )
 
     def _compute_total_order_count(self):
         """Count the orders this program has been used on. Zero without a channel.
@@ -355,14 +357,14 @@ class LoyaltyProgram(models.Model):
     @api.model
     def _program_items_name(self):
         return {
-            "coupons": _("Coupons"),
-            "promotion": _("Promos"),
-            "gift_card": _("Gift Cards"),
-            "loyalty": _("Loyalty Cards"),
-            "ewallet": _("eWallets"),
-            "promo_code": _("Discounts"),
-            "buy_x_get_y": _("Promos"),
-            "next_order_coupons": _("Coupons"),
+            "coupons": self.env._("Coupons"),
+            "promotion": self.env._("Promos"),
+            "gift_card": self.env._("Gift Cards"),
+            "loyalty": self.env._("Loyalty Cards"),
+            "ewallet": self.env._("eWallets"),
+            "promo_code": self.env._("Discounts"),
+            "buy_x_get_y": self.env._("Promos"),
+            "next_order_coupons": self.env._("Coupons"),
         }
 
     @api.model
@@ -406,7 +408,7 @@ class LoyaltyProgram(models.Model):
             "applies_on": "current",
             "trigger": "with_code",
             "portal_visible": False,
-            "portal_point_name": _("Coupon point(s)"),
+            "portal_point_name": self.env._("Coupon point(s)"),
             "rule_ids": [Command.clear()],
             "reward_ids": [
                 Command.clear(),
@@ -441,7 +443,7 @@ class LoyaltyProgram(models.Model):
             "applies_on": "current",
             "trigger": "auto",
             "portal_visible": False,
-            "portal_point_name": _("Promo point(s)"),
+            "portal_point_name": self.env._("Promo point(s)"),
             "rule_ids": [
                 Command.clear(),
                 Command.create(
@@ -496,7 +498,7 @@ class LoyaltyProgram(models.Model):
                         "discount": 1,
                         "discount_applicability": "order",
                         "required_points": 1,
-                        "description": _("Gift Card"),
+                        "description": self.env._("Gift Card"),
                     }
                 ),
             ],
@@ -524,7 +526,7 @@ class LoyaltyProgram(models.Model):
             "applies_on": "both",
             "trigger": "auto",
             "portal_visible": True,
-            "portal_point_name": _("Loyalty point(s)"),
+            "portal_point_name": self.env._("Loyalty point(s)"),
             "rule_ids": [
                 Command.clear(),
                 Command.create(
@@ -575,7 +577,7 @@ class LoyaltyProgram(models.Model):
                         "discount": 1,
                         "discount_applicability": "order",
                         "required_points": 1,
-                        "description": _("eWallet"),
+                        "description": self.env._("eWallet"),
                     }
                 ),
             ],
@@ -589,7 +591,7 @@ class LoyaltyProgram(models.Model):
             "applies_on": "current",
             "trigger": "with_code",
             "portal_visible": False,
-            "portal_point_name": _("Discount point(s)"),
+            "portal_point_name": self.env._("Discount point(s)"),
             # No `code`: it is per program, so `loyalty.rule` generates it.
             "rule_ids": [
                 Command.clear(),
@@ -616,7 +618,7 @@ class LoyaltyProgram(models.Model):
             "applies_on": "current",
             "trigger": "auto",
             "portal_visible": False,
-            "portal_point_name": _("Credit(s)"),
+            "portal_point_name": self.env._("Credit(s)"),
             "rule_ids": [
                 Command.clear(),
                 Command.create(
@@ -647,7 +649,7 @@ class LoyaltyProgram(models.Model):
             "applies_on": "future",
             "trigger": "auto",
             "portal_visible": True,
-            "portal_point_name": _("Coupon point(s)"),
+            "portal_point_name": self.env._("Coupon point(s)"),
             "rule_ids": [
                 Command.clear(),
                 Command.create(
@@ -763,7 +765,9 @@ class LoyaltyProgram(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active(self):
         if any(program.active for program in self):
-            raise UserError(_("You can not delete a program in an active state"))
+            raise UserError(
+                self.env._("You can not delete a program in an active state")
+            )
 
     @staticmethod
     def _commands_leave_a_reward(commands):
@@ -856,56 +860,66 @@ class LoyaltyProgram(models.Model):
         if ctx_menu_type == "gift_ewallet":
             return {
                 "gift_card": {
-                    "title": _("Gift Card"),
-                    "description": _(
+                    "title": self.env._("Gift Card"),
+                    "description": self.env._(
                         "Sell Gift Cards, that allows to purchase products"
                     ),
                     "icon": "gift_card",
                 },
                 "ewallet": {
-                    "title": _("eWallet"),
-                    "description": _("Fill in your eWallet, to pay future orders"),
+                    "title": self.env._("eWallet"),
+                    "description": self.env._(
+                        "Fill in your eWallet, to pay future orders"
+                    ),
                     "icon": "ewallet",
                 },
             }
         return {
             "promotion": {
-                "title": _("Promotional Program"),
-                "description": _("Automatic promo: 10% off on orders higher than $50"),
+                "title": self.env._("Promotional Program"),
+                "description": self.env._(
+                    "Automatic promo: 10% off on orders higher than $50"
+                ),
                 "icon": "promotional_program",
             },
             "promo_code": {
-                "title": _("Promo Code"),
-                "description": _("Get 10% off on some products, with a code"),
+                "title": self.env._("Promo Code"),
+                "description": self.env._("Get 10% off on some products, with a code"),
                 "icon": "promo_code",
             },
             "buy_x_get_y": {
-                "title": _("Buy X Get Y"),
-                "description": _("Buy 2 products and get a third one for free"),
+                "title": self.env._("Buy X Get Y"),
+                "description": self.env._(
+                    "Buy 2 products and get a third one for free"
+                ),
                 "icon": "2_plus_1",
             },
             "next_order_coupons": {
-                "title": _("Next Order Coupon"),
-                "description": _(
+                "title": self.env._("Next Order Coupon"),
+                "description": self.env._(
                     "Send a coupon after an order, valid for next purchase"
                 ),
                 "icon": "coupons",
             },
             "loyalty": {
-                "title": _("Loyalty Card"),
-                "description": _("Win points with each purchase, and claim gifts"),
+                "title": self.env._("Loyalty Card"),
+                "description": self.env._(
+                    "Win points with each purchase, and claim gifts"
+                ),
                 "icon": "loyalty_cards",
             },
             "coupons": {
-                "title": _("Coupon"),
-                "description": _(
+                "title": self.env._("Coupon"),
+                "description": self.env._(
                     "Generate and share unique coupons with your customers"
                 ),
                 "icon": "coupons",
             },
             "fidelity": {
-                "title": _("Fidelity Card"),
-                "description": _("Buy 10 products to get 10$ off on the 11th one"),
+                "title": self.env._("Fidelity Card"),
+                "description": self.env._(
+                    "Buy 10 products to get 10$ off on the 11th one"
+                ),
                 "icon": "fidelity_cards",
             },
         }
@@ -944,47 +958,47 @@ class LoyaltyProgram(models.Model):
         product = self.env["product.product"].search([("sale_ok", "=", True)], limit=1)
         return {
             "gift_card": {
-                "name": _("Gift Card"),
+                "name": self.env._("Gift Card"),
                 "program_type": "gift_card",
                 **program_type_defaults["gift_card"],
             },
             "ewallet": {
-                "name": _("eWallet"),
+                "name": self.env._("eWallet"),
                 "program_type": "ewallet",
                 **program_type_defaults["ewallet"],
             },
             "loyalty": {
-                "name": _("Loyalty Cards"),
+                "name": self.env._("Loyalty Cards"),
                 "program_type": "loyalty",
                 **program_type_defaults["loyalty"],
             },
             "coupons": {
-                "name": _("Coupons"),
+                "name": self.env._("Coupons"),
                 "program_type": "coupons",
                 **program_type_defaults["coupons"],
             },
             "promotion": {
-                "name": _("Promotional Program"),
+                "name": self.env._("Promotional Program"),
                 "program_type": "promotion",
                 **program_type_defaults["promotion"],
             },
             "promo_code": {
-                "name": _("Discount code"),
+                "name": self.env._("Discount code"),
                 "program_type": "promo_code",
                 **program_type_defaults["promo_code"],
             },
             "buy_x_get_y": {
-                "name": _("2+1 Free"),
+                "name": self.env._("2+1 Free"),
                 "program_type": "buy_x_get_y",
                 **program_type_defaults["buy_x_get_y"],
             },
             "next_order_coupons": {
-                "name": _("Next Order Coupons"),
+                "name": self.env._("Next Order Coupons"),
                 "program_type": "next_order_coupons",
                 **program_type_defaults["next_order_coupons"],
             },
             "fidelity": {
-                "name": _("Fidelity Cards"),
+                "name": self.env._("Fidelity Cards"),
                 "program_type": "loyalty",
                 "applies_on": "both",
                 "trigger": "auto",

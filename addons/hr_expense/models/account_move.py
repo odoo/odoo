@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import frozendict
@@ -51,7 +51,7 @@ class AccountMove(models.Model):
                     expenses=move.expense_ids,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Each expense paid by the company must have a distinct and dedicated journal entry."
                     )
                 )
@@ -61,7 +61,7 @@ class AccountMove(models.Model):
         linked_expenses = self.expense_ids
         if len(linked_expenses) > 1:
             return {
-                "name": _("Expenses"),
+                "name": self.env._("Expenses"),
                 "type": "ir.actions.act_window",
                 "view_mode": "list,form",
                 "views": [(False, "list"), (False, "form")],
@@ -85,14 +85,14 @@ class AccountMove(models.Model):
     def _creation_message(self):
         if self.expense_ids:
             if len(self.expense_ids) == 1:
-                return _(
+                return self.env._(
                     "Journal entry created from this expense: %(link)s",
                     link=self.expense_ids._get_html_link(),
                 )
             links = self.expense_ids[0]._get_html_link()
             for additional_expense in self.expense_ids[1:]:
                 links += ", " + additional_expense._get_html_link()
-            return _(
+            return self.env._(
                 "Journal entry created from these expenses: %(links)s", links=links
             )
         return super()._creation_message()

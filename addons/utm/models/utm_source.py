@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -24,7 +24,7 @@ class UtmSource(models.Model):
         for record in self:
             if record == utm_source_referral:
                 raise ValidationError(
-                    _("You cannot delete the 'Referral' UTM source record.")
+                    self.env._("You cannot delete the 'Referral' UTM source record.")
                 )
 
     @api.model_create_multi
@@ -47,7 +47,7 @@ class UtmSource(models.Model):
 
         create_date = record.create_date or fields.Datetime.today()
         model_description = self.env["ir.model"]._get(record._name).name
-        return _(
+        return self.env._(
             "%(content)s (%(model_description)s created on %(create_date)s)",
             content=content,
             model_description=model_description,

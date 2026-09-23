@@ -3,7 +3,7 @@ import logging
 
 import psycopg
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.libs.sql import SQL
 
@@ -513,7 +513,7 @@ class MixinMaterializedView(models.AbstractModel):
         if not self._table_query:
             return
         raise UserError(
-            _(
+            self.env._(
                 "Model '%(model)s' sets _table_query, so the ORM inlines its "
                 "query as a subquery and would never read the %(kind)s this "
                 "mixin builds at '%(table)s'. Override _query() instead, or "
@@ -595,7 +595,7 @@ class MixinMaterializedView(models.AbstractModel):
         droppable = {"v", "m", self._relation_kind}
         if kind not in droppable:
             raise UserError(
-                _(
+                self.env._(
                     "Cannot (re)create '%(table)s': the name is taken by a "
                     "relation of kind '%(kind)s', which this model does not own "
                     "(it owns '%(owned)s'). Drop or rename it manually before "

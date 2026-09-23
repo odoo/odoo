@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.http import request
 
@@ -76,7 +76,9 @@ class Geocoder(models.AbstractModel):
         service = self._get_geo_services().get(provider)
         if not service:
             raise UserError(
-                _("Provider %s is not implemented for geolocation service.", provider)
+                self.env._(
+                    "Provider %s is not implemented for geolocation service.", provider
+                )
             )
         try:
             result = service(addr, **kw)
@@ -147,7 +149,9 @@ class Geocoder(models.AbstractModel):
             _logger.info("invalid latitude or longitude given")
             return None
         if tools.config["test_enable"] or modules.module.current_test:
-            raise UserError(_("OpenStreetMap calls disabled in testing environment."))
+            raise UserError(
+                self.env._("OpenStreetMap calls disabled in testing environment.")
+            )
         try:
             headers = {"User-Agent": "Odoo (http://www.odoo.com/contactus)"}
             response = self.env["ir.egress"].request(
@@ -181,7 +185,7 @@ class Geocoder(models.AbstractModel):
         )
         if not apikey:
             raise UserError(
-                _(
+                self.env._(
                     "API key for GeoCoding (Places) required.\n"
                     "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
                 )
@@ -219,7 +223,7 @@ class Geocoder(models.AbstractModel):
                     result["status"],
                     result.get("error_message", ""),
                 )
-                error_msg = _(
+                error_msg = self.env._(
                     "Unable to geolocate, received the error:\n%s"
                     "\n\nGoogle made this a paid feature.\n"
                     "You should first enable billing on your Google account.\n"
@@ -257,7 +261,7 @@ class Geocoder(models.AbstractModel):
         )
 
     def _raise_query_error(self, error):
-        raise UserError(_("Error with geolocation server: %s", error))
+        raise UserError(self.env._("Error with geolocation server: %s", error))
 
     def _get_localisation(self, latitude, longitude):
         """Return a human-readable "[postcode] city, country" string for the given coordinates.
@@ -301,4 +305,4 @@ class Geocoder(models.AbstractModel):
         if country:
             res += f", {country.name}" if res else country.name
 
-        return res or _("Unknown")
+        return res or self.env._("Unknown")

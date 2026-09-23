@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -37,7 +37,7 @@ class ResCompany(models.Model):
                     .sudo()
                     .create(
                         {
-                            "name": _("Time Off"),
+                            "name": self.env._("Time Off"),
                             "project_id": company.hr_timesheet_config_id.internal_project_id.id,
                             "active": True,
                             "company_id": company.id,

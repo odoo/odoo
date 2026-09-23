@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from werkzeug.exceptions import BadRequest, Forbidden, NotFound
 
-from odoo import _, fields, http
+from odoo import fields, http
 from odoo.fields import Command, Domain
 from odoo.http import request, route
 from odoo.libs.datetime import timezone as get_timezone
@@ -1202,7 +1202,7 @@ class AppointmentController(http.Controller):
 
         description = Markup("<br/>").join(
             request.env["calendar.event"]._prepare_partner_contact_details_html(
-                _("Contact Details"), customer
+                request.env._("Contact Details"), customer
             )
         )
         if question_description:

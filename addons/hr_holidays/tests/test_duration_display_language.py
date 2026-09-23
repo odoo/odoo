@@ -33,6 +33,7 @@ class TestDurationDisplayLanguage(TestHrHolidaysCommon):
         return (
             self.env["hr.leave"]
             .with_user(self.user_employee)
+            .with_context(lang=self.user_employee.lang)
             .create(
                 {
                     "name": "Baja",

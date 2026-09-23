@@ -4,7 +4,7 @@ import traceback
 from datetime import timedelta
 from uuid import uuid4
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.http import request
 from odoo.tools import safe_eval
 
@@ -105,7 +105,7 @@ class AutomationRule(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Webhook Calls"),
+            "name": self.env._("Webhook Calls"),
             "res_model": "integration.exchange",
             "view_mode": "list,form",
             "domain": [("channel_id", "=", f"{self._name},{self.id}")],
@@ -234,7 +234,7 @@ class AutomationRule(models.Model):
                 self.trigger,
             )
             raise exceptions.ValidationError(
-                _("This automation rule is not a webhook."),
+                self.env._("This automation rule is not a webhook."),
             )
 
         _logger.debug("Webhook #%s triggered with payload %s", self.id, payload)
@@ -262,7 +262,7 @@ class AutomationRule(models.Model):
                 self.id,
             )
             raise exceptions.ValidationError(
-                _("No record to run the automation on was found."),
+                self.env._("No record to run the automation on was found."),
             )
 
         try:

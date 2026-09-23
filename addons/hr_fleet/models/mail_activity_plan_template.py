@@ -1,4 +1,4 @@
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 
 
 class MailActivityPlanTemplate(models.Model):
@@ -16,7 +16,7 @@ class MailActivityPlanTemplate(models.Model):
         ):
             if template.responsible_type == "fleet_manager":
                 raise exceptions.ValidationError(
-                    _("Fleet Manager is limited to Employee plans.")
+                    self.env._("Fleet Manager is limited to Employee plans.")
                 )
 
     def _get_responsible_and_complaints(self, on_demand_responsible, employee):
@@ -29,10 +29,12 @@ class MailActivityPlanTemplate(models.Model):
             error = False
             warning = False
             if not vehicle:
-                error = _("Employee %s is not linked to a vehicle.", employee_id.name)
+                error = self.env._(
+                    "Employee %s is not linked to a vehicle.", employee_id.name
+                )
             manager = vehicle._get_manager_user()
             if vehicle and not manager:
-                warning = _(
+                warning = self.env._(
                     "The vehicle of employee %(employee)s is not linked to a fleet manager, assigning to you.",
                     employee=employee_id.name,
                 )

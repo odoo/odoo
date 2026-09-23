@@ -2,7 +2,7 @@ from typing import Any, Literal, Self
 
 from markupsafe import Markup, escape
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.models import ValuesType
 
 
@@ -127,7 +127,7 @@ class GamificationKudos(models.Model):
     def _compute_summary(self) -> None:
         """Generate a one-line summary for display."""
         for kudos in self:
-            kudos.summary = _(
+            kudos.summary = self.env._(
                 "%(sender)s recognized %(recipient)s for %(category)s",
                 sender=kudos.sender_id.name or "",
                 recipient=kudos.recipient_id.name or "",
@@ -156,7 +156,7 @@ class GamificationKudos(models.Model):
             and any(kudos.sender_id == self.env.user for kudos in self)
         ):
             raise exceptions.UserError(
-                _("A sent kudos cannot be edited; send a new one instead.")
+                self.env._("A sent kudos cannot be edited; send a new one instead.")
             )
         return super().write(vals)
 
@@ -175,11 +175,13 @@ class GamificationKudos(models.Model):
                 sender_id = vals.get("sender_id")
                 if sender_id and sender_id != self.env.uid:
                     raise exceptions.UserError(
-                        _("Kudos can only be sent in your own name.")
+                        self.env._("Kudos can only be sent in your own name.")
                     )
                 vals["sender_id"] = self.env.uid
             if vals.get("sender_id", self.env.uid) == vals.get("recipient_id"):
-                raise exceptions.UserError(_("You cannot send kudos to yourself."))
+                raise exceptions.UserError(
+                    self.env._("You cannot send kudos to yourself.")
+                )
 
         records = super().create(vals_list)
 
@@ -196,7 +198,7 @@ class GamificationKudos(models.Model):
                 {
                     "gain": 0,
                     "source": kudos.sender_id,
-                    "reason": _("Kudos: %s", kudos.category_id.name),
+                    "reason": self.env._("Kudos: %s", kudos.category_id.name),
                 },
             )
             entry["gain"] += karma

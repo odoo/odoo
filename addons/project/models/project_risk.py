@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from ..tools import debug_log as dbg
@@ -117,7 +117,7 @@ class ProjectRisk(models.Model):
         for risk in self:
             if risk.state == "resolved" and not risk.date_resolved:
                 raise ValidationError(
-                    _("A resolved risk must have its resolution date set.")
+                    self.env._("A resolved risk must have its resolution date set.")
                 )
 
     @api.depends("probability", "impact")

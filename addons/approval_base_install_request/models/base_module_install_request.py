@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -22,7 +22,9 @@ class BaseModuleInstallRequest(models.Model):
         """
         self.check_singleton()
         if self.approval_state != "approved":
-            raise UserError(_("This activation request has not been approved."))
+            raise UserError(
+                self.env._("This activation request has not been approved.")
+            )
         return {
             **self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
                 "base_install_request.action_base_module_install_review"
@@ -41,7 +43,7 @@ class BaseModuleInstallRequest(models.Model):
         return ["module_id", "body_html"]
 
     def _get_approval_request_name(self):
-        return _('Activation of "%s"', self.module_id.shortdesc)
+        return self.env._('Activation of "%s"', self.module_id.shortdesc)
 
     def _get_approval_reason_html(self):
         return self.body_html or ""
@@ -50,7 +52,7 @@ class BaseModuleInstallRequest(models.Model):
         super()._on_approval_approved()
         for request in self:
             request.message_post(
-                body=_(
+                body=self.env._(
                     "Activation of %(module)s was approved. An administrator "
                     "installs it from this request.",
                     module=request.module_id.shortdesc,

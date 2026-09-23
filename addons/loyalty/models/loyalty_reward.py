@@ -1,7 +1,7 @@
 import ast
 import json
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools.misc import str2bool
@@ -43,7 +43,7 @@ class LoyaltyReward(models.Model):
         return [
             ("percent", "%"),
             ("per_order", symbol),
-            ("per_point", _("%s per point", symbol)),
+            ("per_point", self.env._("%s per point", symbol)),
         ]
 
     @api.depends("program_id", "description")
@@ -416,22 +416,22 @@ class LoyaltyReward(models.Model):
         for reward in self:
             reward_string = ""
             if reward.program_type == "gift_card":
-                reward_string = _("Gift Card")
+                reward_string = self.env._("Gift Card")
             elif reward.program_type == "ewallet":
-                reward_string = _("eWallet")
+                reward_string = self.env._("eWallet")
             elif reward.reward_type == "product":
                 products = reward.reward_product_ids
                 if len(products) == 0:
-                    reward_string = _("Free Product")
+                    reward_string = self.env._("Free Product")
                 elif len(products) == 1:
-                    reward_string = _(
+                    reward_string = self.env._(
                         "Free Product - %s",
                         reward.reward_product_id.with_context(
                             display_default_code=False
                         ).display_name,
                     )
                 else:
-                    reward_string = _(
+                    reward_string = self.env._(
                         "Free Product - [%s]",
                         ", ".join(
                             products.with_context(display_default_code=False).mapped(
@@ -448,15 +448,15 @@ class LoyaltyReward(models.Model):
                     "symbol": reward.currency_id.symbol,
                 }
                 if reward.discount_mode == "percent":
-                    reward_string = _("%g%% on ", reward.discount)
+                    reward_string = self.env._("%g%% on ", reward.discount)
                 elif reward.discount_mode == "per_point":
-                    reward_string = _("%s per point on ", formatted_amount)
+                    reward_string = self.env._("%s per point on ", formatted_amount)
                 elif reward.discount_mode == "per_order":
-                    reward_string = _("%s on ", formatted_amount)
+                    reward_string = self.env._("%s on ", formatted_amount)
                 if reward.discount_applicability == "order":
-                    reward_string += _("your order")
+                    reward_string += self.env._("your order")
                 elif reward.discount_applicability == "cheapest":
-                    reward_string += _("the cheapest product")
+                    reward_string += self.env._("the cheapest product")
                 elif reward.discount_applicability == "specific":
                     product_available = products_per_reward.get(
                         reward, self.env["product.product"]
@@ -466,7 +466,7 @@ class LoyaltyReward(models.Model):
                             display_default_code=False
                         ).display_name
                     else:
-                        reward_string += _("specific products")
+                        reward_string += self.env._("specific products")
                 if reward.discount_max_amount:
                     format_string = "%(amount)g %(symbol)s"
                     if reward.currency_id.position == "before":
@@ -475,7 +475,7 @@ class LoyaltyReward(models.Model):
                         "amount": reward.discount_max_amount,
                         "symbol": reward.currency_id.symbol,
                     }
-                    reward_string += _(" (Max %s)", formatted_amount)
+                    reward_string += self.env._(" (Max %s)", formatted_amount)
             descriptions.append(reward_string)
         return descriptions
 
@@ -497,7 +497,9 @@ class LoyaltyReward(models.Model):
     @api.constrains("reward_product_id")
     def _check_reward_product_id_no_combo(self):
         if any(reward.reward_product_id.type == "combo" for reward in self):
-            raise ValidationError(_('A reward product can\'t be of type "combo".'))
+            raise ValidationError(
+                self.env._('A reward product can\'t be of type "combo".')
+            )
 
     def _create_missing_discount_line_products(self):
         rewards = self.filtered(lambda r: not r.discount_line_product_id)

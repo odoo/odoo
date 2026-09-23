@@ -1,4 +1,4 @@
-from odoo import Command, _, api, models
+from odoo import Command, api, models
 
 
 class AppointmentType(models.Model):
@@ -25,34 +25,34 @@ class AppointmentType(models.Model):
         """
         return {
             "meeting": {
-                "description": _("Let others book a meeting in your calendar"),
+                "description": self.env._("Let others book a meeting in your calendar"),
                 "icon": "/calendar/static/src/booking/img/guy.svg",
                 "template_key": "meeting",
-                "title": _("Meeting"),
+                "title": self.env._("Meeting"),
             },
             "video_call": {
-                "description": _(
+                "description": self.env._(
                     "Schedule a video meeting in a virtual room with one or more participants"
                 ),
                 "icon": "/calendar/static/src/booking/img/headset.svg",
                 "template_key": "video_call",
-                "title": _("Video Call"),
+                "title": self.env._("Video Call"),
             },
             "table_booking": {
-                "description": _(
+                "description": self.env._(
                     "Let customers book a table in your restaurant or bar"
                 ),
                 "icon": "/calendar/static/src/booking/img/foods.svg",
                 "template_key": "table_booking",
-                "title": _("Table Booking"),
+                "title": self.env._("Table Booking"),
             },
             "book_resource": {
-                "description": _(
+                "description": self.env._(
                     "Let customers book a resource such as a room, a tennis court, etc."
                 ),
                 "icon": "/calendar/static/src/booking/img/clock.svg",
                 "template_key": "book_resource",
-                "title": _("Book a Resource"),
+                "title": self.env._("Book a Resource"),
             },
         }
 
@@ -70,7 +70,7 @@ class AppointmentType(models.Model):
     @api.model
     def _prepare_meeting_template_values(self):
         return {
-            "name": _("Meeting"),
+            "name": self.env._("Meeting"),
             "appointment_duration": 1.0,
             "is_auto_assign": False,
             "is_date_first": False,
@@ -88,11 +88,11 @@ class AppointmentType(models.Model):
             "is_auto_assign": False,
             "is_date_first": False,
             "location_id": False,
-            "name": _("Video Call"),
+            "name": self.env._("Video Call"),
             "question_ids": [
                 Command.create(
                     {
-                        "title": _("Describe what you need"),
+                        "title": self.env._("Describe what you need"),
                         "question_type": "text_box",
                     }
                 )
@@ -112,14 +112,14 @@ class AppointmentType(models.Model):
             "min_cancellation_hours": 1,
             "max_schedule_days": 45,
             "min_schedule_hours": 1.0,
-            "name": _("Table"),
+            "name": self.env._("Table"),
             "question_ids": [
                 Command.create(
                     {
-                        "title": _(
+                        "title": self.env._(
                             "Do you have any dietary preferences or restrictions ?"
                         ),
-                        "question_placeholder": _(
+                        "question_placeholder": self.env._(
                             "e.g. Vegetarian, Lactose Intolerant, ..."
                         ),
                         "question_type": "text_box",
@@ -129,7 +129,7 @@ class AppointmentType(models.Model):
             "resource_ids": [
                 Command.create(
                     {
-                        "name": _("Table %s", number),
+                        "name": self.env._("Table %s", number),
                         "capacity": capacity,
                     }
                 )
@@ -163,11 +163,11 @@ class AppointmentType(models.Model):
             "min_cancellation_hours": 1,
             "max_schedule_days": 45,
             "min_schedule_hours": 1.0,
-            "name": _("Book a Resource"),
+            "name": self.env._("Book a Resource"),
             "resource_ids": [
                 Command.create(
                     {
-                        "name": _("Resource %s", number),
+                        "name": self.env._("Resource %s", number),
                     }
                 )
                 for number in range(1, 5)

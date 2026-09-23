@@ -8,7 +8,7 @@ from typing import Any, Self
 from dateutil.relativedelta import relativedelta
 from lxml import html
 
-from odoo import SUPERUSER_ID, _, api, fields, models, tools
+from odoo import SUPERUSER_ID, api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Date, Domain
@@ -927,7 +927,7 @@ class ProjectTask(models.Model):
                 and task.company_id != task.partner_id.company_id
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The task and the associated partner must be linked to the same company."
                     )
                 )
@@ -937,7 +937,7 @@ class ProjectTask(models.Model):
         for task in self:
             if not task.project_id and task.subtask_count:
                 raise ValidationError(
-                    _("This task has sub-tasks, so it can't be private.")
+                    self.env._("This task has sub-tasks, so it can't be private.")
                 )
 
     @property
@@ -1126,43 +1126,43 @@ class ProjectTask(models.Model):
         return [
             {
                 "sequence": 1,
-                "name": _("Inbox"),
+                "name": self.env._("Inbox"),
                 "user_id": user_id,
                 "fold": False,
             },
             {
                 "sequence": 2,
-                "name": _("Today"),
+                "name": self.env._("Today"),
                 "user_id": user_id,
                 "fold": False,
             },
             {
                 "sequence": 3,
-                "name": _("This Week"),
+                "name": self.env._("This Week"),
                 "user_id": user_id,
                 "fold": False,
             },
             {
                 "sequence": 4,
-                "name": _("This Month"),
+                "name": self.env._("This Month"),
                 "user_id": user_id,
                 "fold": False,
             },
             {
                 "sequence": 5,
-                "name": _("Later"),
+                "name": self.env._("Later"),
                 "user_id": user_id,
                 "fold": False,
             },
             {
                 "sequence": 6,
-                "name": _("Done"),
+                "name": self.env._("Done"),
                 "user_id": user_id,
                 "fold": True,
             },
             {
                 "sequence": 7,
-                "name": _("Cancelled"),
+                "name": self.env._("Cancelled"),
                 "user_id": user_id,
                 "fold": True,
             },
@@ -1288,7 +1288,7 @@ class ProjectTask(models.Model):
     @api.constrains("predecessor_ids")
     def _check_no_cyclic_dependencies(self) -> None:
         if self._has_cycle("predecessor_ids"):
-            raise ValidationError(_("Two tasks cannot depend on each other."))
+            raise ValidationError(self.env._("Two tasks cannot depend on each other."))
 
     @dbg.timed
     def _sync_dependency_rows(self) -> None:
@@ -1428,7 +1428,7 @@ class ProjectTask(models.Model):
     def _check_parent_id(self) -> None:
         if self._has_cycle():
             raise ValidationError(
-                _("Error! You cannot create a recursive hierarchy of tasks.")
+                self.env._("Error! You cannot create a recursive hierarchy of tasks.")
             )
 
     def _get_domain_attachments(self) -> list:
@@ -1650,7 +1650,7 @@ class ProjectTask(models.Model):
             return
         overridden._message_log_batch(
             bodies={
-                task.id: _(
+                task.id: self.env._(
                     "Planned Hours manually overridden to %(value).2f h "
                     "(formula override).",
                     value=task.planned_hours,
@@ -1995,7 +1995,7 @@ class ProjectTask(models.Model):
                     task.name
                     if self.env.context.get("copy_project")
                     or self.env.context.get("copy_from_template")
-                    else _("%s (copy)", task.name)
+                    else self.env._("%s (copy)", task.name)
                 )
             if task.recurrence_id and not default.get("recurrence_id"):
                 vals["recurrence_id"] = task.recurrence_id.copy().id
@@ -2162,7 +2162,7 @@ class ProjectTask(models.Model):
 
         self._update_copied_dependencies(copied_tasks)
         if not self.env.context.get("copy_from_template"):
-            log_message = _("Task Created")
+            log_message = self.env._("Task Created")
             copied_tasks._message_log_batch(
                 bodies={task.id: log_message for task in copied_tasks}
             )
@@ -2171,7 +2171,7 @@ class ProjectTask(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message: str) -> str:
-        tname = _("task")
+        tname = self.env._("task")
         project_id = self.env.context.get("default_project_id", False)
         if project_id:
             name = self.env["project.project"].browse(project_id).label_tasks
@@ -2670,7 +2670,9 @@ class ProjectTask(models.Model):
         self._write_propagate_milestone(vals)
 
         if vals.get("parent_id") in self.ids:
-            raise UserError(_("Sorry. You can't set a task as its parent task."))
+            raise UserError(
+                self.env._("Sorry. You can't set a task as its parent task.")
+            )
 
         now = fields.Datetime.now()
         state_changed = (
@@ -2903,7 +2905,7 @@ class ProjectTask(models.Model):
                 and self.filtered(lambda t: not t.project_id)
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "A private task has no workflow step — steps belong to a "
                         "project's board. Move the task into a project first, or "
                         "use a personal triage bucket to organise it."
@@ -2941,7 +2943,9 @@ class ProjectTask(models.Model):
             field = self._fields["recurrence_update"]
             if not self._has_field_access(field, "write"):
                 raise AccessError(
-                    _("You are not allowed to update all tasks of a recurrence.")
+                    self.env._(
+                        "You are not allowed to update all tasks of a recurrence."
+                    )
                 )
 
         scope = vals.pop("recurrence_update", "this")
@@ -2952,7 +2956,7 @@ class ProjectTask(models.Model):
         rule_fields = vals.keys() & set(self._get_fields_recurrence())
         if rule_fields and scope != "all":
             raise UserError(
-                _(
+                self.env._(
                     "Changing how often a task repeats applies to the whole "
                     "recurrence. Select 'All tasks' to confirm."
                 )
@@ -3210,7 +3214,7 @@ class ProjectTask(models.Model):
         for task in self:
             project_link = project_link_per_task_id.get(task.id)
             if project_link:
-                body = _(
+                body = self.env._(
                     "Task Transferred from Project %(source_project)s to %(destination_project)s",
                     source_project=project_link,
                     destination_project=task.project_id._get_html_link(
@@ -3218,7 +3222,7 @@ class ProjectTask(models.Model):
                     ),
                 )
             else:
-                body = _("Task Converted from To-Do")
+                body = self.env._("Task Converted from To-Do")
             task.message_notify(
                 body=body,
                 partner_ids=partner_ids,
@@ -3311,7 +3315,7 @@ class ProjectTask(models.Model):
     def _get_planned_dates(self, date_start, date_stop, user_id=None, calendar=None):
         if not (date_start and date_stop):
             raise UserError(
-                _(
+                self.env._(
                     "One parameter is missing to use this method. "
                     "You should give a start and end dates."
                 )
@@ -3563,15 +3567,17 @@ class ProjectTask(models.Model):
         stage_name = self.step_id.name
         subtitles = ""
         if project_name and stage_name:
-            subtitles = _(
+            subtitles = self.env._(
                 "Project: %(project_name)s, Stage: %(stage_name)s",
                 project_name=project_name,
                 stage_name=stage_name,
             )
         elif project_name:
-            subtitles = _("Project: %(project_name)s", project_name=project_name)
+            subtitles = self.env._(
+                "Project: %(project_name)s", project_name=project_name
+            )
         elif stage_name:
-            subtitles = _("Stage: %(stage_name)s", stage_name=stage_name)
+            subtitles = self.env._("Stage: %(stage_name)s", stage_name=stage_name)
         if subtitles:
             render_context["subtitles"].append(subtitles)
         return render_context
@@ -3600,7 +3606,9 @@ class ProjectTask(models.Model):
                 minimal_qcontext=True,
             )
             self.message_notify(
-                subject=_("You have been invited to follow %s", self.display_name),
+                subject=self.env._(
+                    "You have been invited to follow %s", self.display_name
+                ),
                 body=assignation_msg,
                 partner_ids=partner.ids,
                 email_layout_xmlid="mail.mail_notification_layout",
@@ -3645,7 +3653,9 @@ class ProjectTask(models.Model):
                     assignation_msg
                 )
                 task.message_notify(
-                    subject=_("You have been assigned to %s", task.display_name),
+                    subject=self.env._(
+                        "You have been assigned to %s", task.display_name
+                    ),
                     body=assignation_msg,
                     partner_ids=user.partner_id.ids,
                     email_layout_xmlid="mail.mail_notification_layout",
@@ -3706,11 +3716,11 @@ class ProjectTask(models.Model):
     def _creation_message(self) -> str:
         self.check_singleton()
         if self.project_id:
-            return _(
+            return self.env._(
                 'A new task has been created in the "%(project_name)s" project.',
                 project_name=self.project_id.display_name,
             )
-        return _("A new task has been created and is not part of any project.")
+        return self.env._("A new task has been created and is not part of any project.")
 
     def _track_subtype(self, init_values: dict[str, Any]) -> Self:
         self.check_singleton()
@@ -3871,7 +3881,7 @@ class ProjectTask(models.Model):
             msg_dict["author_id"] = author.id
 
         defaults = {
-            "name": msg_dict.get("subject") or _("No Subject"),
+            "name": msg_dict.get("subject") or self.env._("No Subject"),
             "partner_id": msg_dict.get("author_id"),
             "email_cc": (
                 ", ".join(self._mail_cc_sanitized_raw_dict(msg_dict.get("cc")).values())
@@ -4048,7 +4058,7 @@ class ProjectTask(models.Model):
 
     def action_view_parent_task(self) -> dict:
         return {
-            "name": _("Parent Task"),
+            "name": self.env._("Parent Task"),
             "view_mode": "form",
             "res_model": "project.task",
             "res_id": self.parent_id.id,
@@ -4162,13 +4172,13 @@ class ProjectTask(models.Model):
                 "search_default_open_tasks": True,
             },
             "domain": [("predecessor_ids", "=", self.id)],
-            "name": _("Dependent Tasks"),
+            "name": self.env._("Dependent Tasks"),
             "view_mode": "list,form,kanban,calendar,pivot,graph,activity",
         }
 
     def action_recurring_tasks(self) -> dict:
         return {
-            "name": _("Tasks in Recurrence"),
+            "name": self.env._("Tasks in Recurrence"),
             "type": "ir.actions.act_window",
             "res_model": "project.task",
             "view_mode": "list,form,kanban,calendar,pivot,graph,activity",
@@ -4233,7 +4243,7 @@ class ProjectTask(models.Model):
         self.check_singleton()
         if self.project_id:
             return {
-                "name": _("Convert to Task/Sub-Task"),
+                "name": self.env._("Convert to Task/Sub-Task"),
                 "type": "ir.actions.act_window",
                 "res_model": "project.task",
                 "res_id": self.id,
@@ -4253,7 +4263,7 @@ class ProjectTask(models.Model):
             "tag": "display_notification",
             "params": {
                 "type": "danger",
-                "message": _(
+                "message": self.env._(
                     "Private tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature."
                 ),
             },
@@ -4267,7 +4277,9 @@ class ProjectTask(models.Model):
                 "tag": "display_notification",
                 "params": {
                     "type": "danger",
-                    "message": _("Private tasks cannot be converted into templates"),
+                    "message": self.env._(
+                        "Private tasks cannot be converted into templates"
+                    ),
                 },
             }
         if self.is_template:
@@ -4281,7 +4293,7 @@ class ProjectTask(models.Model):
         dbg.lifecycle.debug("project.task.action_convert_to_template %s", dbg.rec(self))
         self.is_template = True
         self.role_ids = False
-        self.message_post(body=_("Task converted to template"))
+        self.message_post(body=self.env._("Task converted to template"))
         return {
             "type": "ir.actions.client",
             "tag": "project_show_template_notification",
@@ -4300,13 +4312,13 @@ class ProjectTask(models.Model):
             "project.task.action_undo_convert_to_template %s", dbg.rec(self)
         )
         self.is_template = False
-        self.message_post(body=_("Template converted back to regular task"))
+        self.message_post(body=self.env._("Template converted back to regular task"))
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
                 "type": "success",
-                "message": _("Template converted back to regular task"),
+                "message": self.env._("Template converted back to regular task"),
                 "next": {
                     "type": "ir.actions.client",
                     "tag": "soft_reload",
@@ -4666,7 +4678,7 @@ class ProjectTask(models.Model):
     def get_import_templates(self) -> list[dict]:
         return [
             {
-                "label": _("Import Template for Tasks"),
+                "label": self.env._("Import Template for Tasks"),
                 "template": "/project/static/xls/tasks_import_template.xlsx",
             }
         ]
@@ -4873,7 +4885,7 @@ class ProjectTask(models.Model):
 
                 if task_mapping["sum_allocated_hours"] > work_hours:
                     overlap_messages.append(
-                        _(
+                        self.env._(
                             "%(partner)s has %(amount)s tasks at the same time.",
                             partner=task_mapping["partner_name"],
                             amount=len(task_mapping["overlapping_tasks_ids"]),
@@ -4977,7 +4989,7 @@ class ProjectTask(models.Model):
         )
         for task in tasks_with_task_dependencies:
             depends_on_names = depends_on_names_for_id.get(task.id)
-            task.dependency_warning = depends_on_names and _(
+            task.dependency_warning = depends_on_names and self.env._(
                 "This task cannot be planned before the following tasks on which it depends: %(task_list)s",
                 task_list=depends_on_names,
             )
@@ -5188,7 +5200,7 @@ class ProjectTask(models.Model):
                     user_ids,
                 )
                 if "no_intervals" not in warnings:
-                    warnings["no_intervals"] = _(
+                    warnings["no_intervals"] = self.env._(
                         "Some tasks weren't planned because the closest available starting date was too far ahead in the future"
                     )
                 continue
@@ -5289,7 +5301,7 @@ class ProjectTask(models.Model):
                     )
                 else:
                     if "no_intervals" not in warnings:
-                        warnings["no_intervals"] = _(
+                        warnings["no_intervals"] = self.env._(
                             "Some tasks weren't planned because the closest available starting date was too far ahead in the future"
                         )
                     break
@@ -5648,7 +5660,7 @@ class ProjectTask(models.Model):
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "project.action_view_all_task"
         )
-        name = _("Tasks in Conflict")
+        name = self.env._("Tasks in Conflict")
         action.update(
             {
                 "display_name": name,

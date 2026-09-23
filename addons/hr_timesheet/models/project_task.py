@@ -1,7 +1,7 @@
 import re
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -123,7 +123,7 @@ class ProjectTask(models.Model):
                 "private_task_refused", reason="has_timesheets", tasks=private_tasks
             )
             raise UserError(
-                _(
+                self.env._(
                     "This task cannot be private because there are some timesheets linked to it."
                 )
             )
@@ -311,7 +311,7 @@ class ProjectTask(models.Model):
 
         action.update(
             {
-                "display_name": _("Timesheets"),
+                "display_name": self.env._("Timesheets"),
                 "context": {"default_project_id": self.project_id.id},
                 "domain": [("project_id", "!=", False), ("task_id", "in", task_ids)],
                 "views": new_views,
@@ -348,7 +348,7 @@ class ProjectTask(models.Model):
                     and task.allocated_hours > 0
                     and task.encode_uom_in_days
                 ):
-                    days_left = _(
+                    days_left = self.env._(
                         "(%s days remaining)",
                         task._convert_hours_to_days(task.remaining_hours),
                     )
@@ -358,7 +358,7 @@ class ProjectTask(models.Model):
                         str(int(duration)).rjust(2, "0")
                         for duration in divmod(abs(task.remaining_hours) * 60, 60)
                     )
-                    hours_left = _(
+                    hours_left = self.env._(
                         "(%(sign)s%(hours)s:%(minutes)s remaining)",
                         sign="-" if task.remaining_hours < 0 else "",
                         hours=hours,
@@ -391,17 +391,17 @@ class ProjectTask(models.Model):
                 tasks=len(inaccessible_task_ids),
             )
             raise UserError(
-                _(
+                self.env._(
                     "This task can’t be deleted because it’s linked to timesheets. Please contact someone with higher access to remove the timesheets first, "
                     "and then you’ll be able to delete the task."
                 )
             )
         if len(task_with_timesheets_ids) > 1:
-            warning_msg = _(
+            warning_msg = self.env._(
                 "Some timesheet entries are weighing down these tasks! Remove them first, then you’ll be able to delete the tasks!"
             )
         else:
-            warning_msg = _(
+            warning_msg = self.env._(
                 "Some timesheet entries are weighing down these tasks! Remove them first, then you’ll be able to delete the tasks!"
             )
         _debug.logic(
@@ -412,7 +412,7 @@ class ProjectTask(models.Model):
         raise RedirectWarning(
             warning_msg,
             self.env.ref("hr_timesheet.timesheet_action_task").id,
-            _("See timesheet entries"),
+            self.env._("See timesheet entries"),
             {"active_ids": task_with_timesheets_ids},
         )
 

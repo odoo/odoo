@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, fields, models, release
+from odoo import api, fields, models, release
 from odoo.exceptions import UserError
 from odoo.tools import is_html_empty
 
@@ -33,7 +33,7 @@ class CrmIapLeadMiningRequest(models.Model):
 
     name = fields.Char(
         string="Request Number",
-        default=lambda self: _("New"),
+        default=lambda self: self.env._("New"),
         copy=False,
         readonly=True,
         required=True,
@@ -164,17 +164,17 @@ class CrmIapLeadMiningRequest(models.Model):
             company_credits = CREDIT_PER_COMPANY * record.lead_number
             contact_credits = CREDIT_PER_CONTACT * record.contact_number
             total_contact_credits = contact_credits * record.lead_number
-            record.lead_contacts_credits = _(
+            record.lead_contacts_credits = self.env._(
                 "Up to %(credit_count)d additional credits will be consumed to identify %(contact_count)d contacts per company.",
                 credit_count=contact_credits * company_credits,
                 contact_count=record.contact_number,
             )
-            record.lead_credits = _(
+            record.lead_credits = self.env._(
                 "%(credit_count)d credits will be consumed to find %(company_count)d companies.",
                 credit_count=company_credits,
                 company_count=record.lead_number,
             )
-            record.lead_total_credits = _(
+            record.lead_total_credits = self.env._(
                 "This makes a total of %d credits for this request.",
                 total_contact_credits + company_credits,
             )
@@ -267,8 +267,10 @@ class CrmIapLeadMiningRequest(models.Model):
         if not is_html_empty(help_message):
             return help_message
 
-        help_title = _("Create a Lead Mining Request")
-        sub_title = _("Generate new leads based on their country, industry, size, etc.")
+        help_title = self.env._("Create a Lead Mining Request")
+        sub_title = self.env._(
+            "Generate new leads based on their country, industry, size, etc."
+        )
         return super().get_empty_list_help(
             f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
         )
@@ -353,7 +355,9 @@ class CrmIapLeadMiningRequest(models.Model):
             self.state = "error"
             return False
         except UserError as e:
-            raise UserError(_("Your request could not be executed: %s", e)) from e
+            raise UserError(
+                self.env._("Your request could not be executed: %s", e)
+            ) from e
 
     def _iap_contact_mining(self, params, timeout=300):
         endpoint = (
@@ -379,7 +383,9 @@ class CrmIapLeadMiningRequest(models.Model):
             template_values = data
             template_values.update(
                 {
-                    "flavor_text": _("Opportunity created by Odoo Lead Generation"),
+                    "flavor_text": self.env._(
+                        "Opportunity created by Odoo Lead Generation"
+                    ),
                     "people_data": data.get("people_data"),
                     "country": country.name,
                     "zip_code": data.get("zip"),
@@ -414,15 +420,15 @@ class CrmIapLeadMiningRequest(models.Model):
 
     def action_draft(self):
         self.check_singleton()
-        self.name = _("New")
+        self.name = self.env._("New")
         self.state = "draft"
 
     def action_submit(self):
         self.check_singleton()
-        if self.name == _("New"):
+        if self.name == self.env._("New"):
             self.name = self.env["ir.sequence"].next_by_code(
                 "crm.iap.lead.mining.request"
-            ) or _("New")
+            ) or self.env._("New")
         results = self._perform_request()
 
         if results:
@@ -434,7 +440,7 @@ class CrmIapLeadMiningRequest(models.Model):
                 return self.action_get_opportunity_action()
         elif self.env.context.get("is_modal"):
             return {
-                "name": _("Generate Leads"),
+                "name": self.env._("Generate Leads"),
                 "res_model": "crm.iap.lead.mining.request",
                 "views": [[False, "form"]],
                 "target": "new",

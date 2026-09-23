@@ -3,7 +3,7 @@ from typing import Literal, Self
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.models import ValuesType
 from odoo.tools import date_utils
 
@@ -25,13 +25,13 @@ class GamificationKarmaTracking(models.Model):
 
     def _selection_origin_models(self) -> list[tuple[str, str]]:
         return [
-            ("res.users", _("User")),
-            ("gamification.streak", _("Streak")),
-            ("gamification.kudos", _("Kudos")),
-            ("gamification.achievement.unlock", _("Achievement")),
-            ("gamification.quest.enrollment", _("Quest")),
-            ("gamification.skill.node.unlock", _("Skill")),
-            ("gamification.mentorship", _("Mentorship")),
+            ("res.users", self.env._("User")),
+            ("gamification.streak", self.env._("Streak")),
+            ("gamification.kudos", self.env._("Kudos")),
+            ("gamification.achievement.unlock", self.env._("Achievement")),
+            ("gamification.quest.enrollment", self.env._("Quest")),
+            ("gamification.skill.node.unlock", self.env._("Skill")),
+            ("gamification.mentorship", self.env._("Mentorship")),
         ]
 
     user_id = fields.Many2one(
@@ -61,7 +61,7 @@ class GamificationKarmaTracking(models.Model):
     )
     reason = fields.Text(
         string="Description",
-        default=lambda self: _("Add Manually"),
+        default=lambda self: self.env._("Add Manually"),
     )
     origin_ref = fields.Reference(
         selection=lambda self: self._selection_origin_models(),
@@ -238,7 +238,7 @@ class GamificationKarmaTracking(models.Model):
                 "from_date": from_date,
                 "end_date": end_date,
                 "origin_ref": f"res.users,{self.env.user.id}",
-                "reason": _(
+                "reason": self.env._(
                     "Consolidation from %(from_date)s to %(end_date)s",
                     from_date=from_date.date(),
                     end_date=end_date.date(),

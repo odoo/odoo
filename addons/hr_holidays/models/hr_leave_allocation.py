@@ -3,7 +3,7 @@ from datetime import date, datetime, time
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -255,7 +255,7 @@ class HrLeaveAllocation(models.Model):
             for allocation in self
         ):
             raise UserError(
-                _(
+                self.env._(
                     "The Start Date of the Validity Period must be anterior to the End Date."
                 )
             )
@@ -267,15 +267,15 @@ class HrLeaveAllocation(models.Model):
     def _get_title(self):
         self.check_singleton()
         if not self.holiday_status_id:
-            return _("Allocation Request")
+            return self.env._("Allocation Request")
         if self.type_request_unit == "hour":
-            return _(
+            return self.env._(
                 "%(name)s (%(duration)s hour(s))",
                 name=self.holiday_status_id.name,
                 duration=self.number_of_days
                 * self.employee_id._get_hours_per_day(self.date_from),
             )
-        return _(
+        return self.env._(
             "%(name)s (%(duration)s day(s))",
             name=self.holiday_status_id.name,
             duration=float_round(self.number_of_days, precision_digits=2),
@@ -390,7 +390,9 @@ class HrLeaveAllocation(models.Model):
                         allocation.number_of_days_display, precision_digits=2
                     )
                 ),
-                _("hours") if allocation.type_request_unit == "hour" else _("days"),
+                self.env._("hours")
+                if allocation.type_request_unit == "hour"
+                else self.env._("days"),
             )
 
     @api.depends("employee_id")
@@ -688,7 +690,7 @@ class HrLeaveAllocation(models.Model):
             self.nextcall = min(second_level_start_date, self.nextcall)
         if log:
             self._message_log(
-                body=_(
+                body=self.env._(
                     """This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one."""
                 )
             )
@@ -1093,15 +1095,15 @@ class HrLeaveAllocation(models.Model):
     )
     def _compute_display_name(self):
         for allocation in self:
-            allocation.display_name = _(
+            allocation.display_name = self.env._(
                 "Allocation of %(leave_type)s: %(amount).2f %(unit)s to %(target)s",
                 leave_type=allocation.holiday_status_id.sudo().name,
                 amount=allocation.number_of_hours_display
                 if allocation.type_request_unit == "hour"
                 else allocation.number_of_days,
-                unit=_("hours")
+                unit=self.env._("hours")
                 if allocation.type_request_unit == "hour"
-                else _("days"),
+                else self.env._("days"),
                 target=allocation.employee_id.name,
             )
 
@@ -1151,7 +1153,7 @@ class HrLeaveAllocation(models.Model):
                 _debug.logic(
                     "create_refused", reason="bad_state", state=values["state"]
                 )
-                raise UserError(_("Incorrect state for new allocation"))
+                raise UserError(self.env._("Incorrect state for new allocation"))
         allocations = super(
             HrLeaveAllocation, self.with_context(mail_create_nosubscribe=True)
         ).create(vals_list)
@@ -1245,7 +1247,7 @@ class HrLeaveAllocation(models.Model):
                 allows_negative=leave_type.allows_negative,
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "You cannot reduce the duration below the duration of leaves already taken by the employee."
                 )
             )
@@ -1259,7 +1261,7 @@ class HrLeaveAllocation(models.Model):
             lambda allocation: allocation.state not in ["confirm", "refuse"]
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete an allocation request which is in %s state.",
                     state_description_values.get(allocation.state),
                 )
@@ -1273,7 +1275,7 @@ class HrLeaveAllocation(models.Model):
             for allocation in self
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete an allocation request which has some validated leaves."
                 )
             )
@@ -1292,7 +1294,9 @@ class HrLeaveAllocation(models.Model):
                     "approve_refused", allocation=allocation, state=allocation.state
                 )
                 raise UserError(
-                    _('Allocation must be "To Approve" in order to approve it.')
+                    self.env._(
+                        'Allocation must be "To Approve" in order to approve it.'
+                    )
                 )
 
         _debug.lifecycle(
@@ -1343,7 +1347,7 @@ class HrLeaveAllocation(models.Model):
         ):
             _debug.logic("refuse_refused", allocations=self)
             raise UserError(
-                _(
+                self.env._(
                     "Allocation request must be confirmed, second approval or validated in order to refuse it."
                 )
             )
@@ -1361,32 +1365,38 @@ class HrLeaveAllocation(models.Model):
             and self.holiday_status_id.allocation_validation_type != "no_validation"
             and not self.env.user.has_group("hr_holidays.group_hr_holidays_manager")
         ):
-            return _(
+            return self.env._(
                 "Only a time off Administrator can approve/refuse their own requests."
             )
         return ""
 
     def _get_approval_transition_error(self, state, is_time_off_manager):
         if state == "confirm":
-            return _(
+            return self.env._(
                 "You can't reset an allocation. Cancel/delete this one and create an other"
             )
         if state == "validate1":
             if not is_time_off_manager:
-                return _("Only a Time Off Officer/Manager can approve an allocation.")
-            return _("You can't approve a validated allocation.")
+                return self.env._(
+                    "Only a Time Off Officer/Manager can approve an allocation."
+                )
+            return self.env._("You can't approve a validated allocation.")
         if state == "validate":
             if not is_time_off_manager:
-                return _("Only a Time Off Officer/Manager can validate an allocation.")
+                return self.env._(
+                    "Only a Time Off Officer/Manager can validate an allocation."
+                )
             if self.state == "refuse":
-                return _("You can't approve this refused allocation.")
-            return _(
+                return self.env._("You can't approve this refused allocation.")
+            return self.env._(
                 "You can only validate an allocation with validation by Time Off Manager."
             )
         if state == "refuse":
             if not is_time_off_manager:
-                return _("Only a Time Off Officer/Manager can refuse an allocation.")
-            return _(
+                return self.env._(
+                    "Only a Time Off Officer/Manager can refuse an allocation."
+                )
+            return self.env._(
                 "You can't refuse an allocation with validation by Time Off Officer."
             )
         return ""
@@ -1432,13 +1442,13 @@ class HrLeaveAllocation(models.Model):
 
     def _get_approval_activity_note(self):
         if self.state == "confirm":
-            return _(
+            return self.env._(
                 "New Allocation Request created by %(user)s: %(count)s Days of %(allocation_type)s",
                 user=self.create_uid.name,
                 count=float_round(self.number_of_days, precision_digits=2),
                 allocation_type=self.holiday_status_id.name,
             )
-        return _(
+        return self.env._(
             "Second approval request for %(allocation_type)s",
             allocation_type=self.holiday_status_id.name,
         )
@@ -1464,7 +1474,7 @@ class HrLeaveAllocation(models.Model):
             view_name = "hr_holidays.hr_leave_allocation_view_tree_my"
             domain = [("employee_id", "=", employee.id)]
         return {
-            "name": _("Allocation Requests"),
+            "name": self.env._("Allocation Requests"),
             "type": "ir.actions.act_window",
             "res_model": "hr.leave.allocation",
             "views": [[self.env.ref(view_name).id, "list"]],

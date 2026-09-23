@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ResPartner(models.Model):
@@ -53,7 +53,7 @@ class ResPartner(models.Model):
                 {
                     "iconClass": "fa-solid fa-star",
                     "value": partner.opportunity_count,
-                    "label": _("Opportunities"),
+                    "label": self.env._("Opportunities"),
                     "tagClass": "o_tag_color_8",
                 }
             )

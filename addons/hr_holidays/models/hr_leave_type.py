@@ -10,7 +10,6 @@ from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_round
 from odoo.tools import DOMAIN_PREDICATES, SET_DOMAIN_OPERATORS, format_date
-from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -355,7 +354,7 @@ class HrLeaveType(models.Model):
         )
         if overlaps:
             raise ValidationError(
-                _(
+                self.env._(
                     "You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
                         time off type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."
                 )
@@ -436,7 +435,7 @@ class HrLeaveType(models.Model):
             "hr.leave"
         ].search_count([("holiday_status_id", "in", self.ids)], limit=1):
             raise UserError(
-                _(
+                self.env._(
                     "The allocation requirement of a time off type cannot be changed once leaves of that type have been taken. You should create a new time off type instead."
                 )
             )
@@ -594,14 +593,14 @@ class HrLeaveType(models.Model):
                 maximum = float_round(record.max_leaves, precision_digits=2) or 0.0
 
                 if record.request_unit == "hour":
-                    name = _(
+                    name = self.env._(
                         "%(name)s (%(time)g remaining out of %(maximum)g hours)",
                         name=record.name,
                         time=remaining_time,
                         maximum=maximum,
                     )
                 else:
-                    name = _(
+                    name = self.env._(
                         "%(name)s (%(time)g remaining out of %(maximum)g days)",
                         name=record.name,
                         time=remaining_time,

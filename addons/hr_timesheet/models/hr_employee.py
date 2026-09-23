@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -77,10 +77,12 @@ class HrEmployee(models.Model):
             _debug.logic(
                 "employee_delete_refused", reason="has_timesheets", employees=self
             )
-            raise UserError(_("You cannot delete employees who have timesheets."))
+            raise UserError(
+                self.env._("You cannot delete employees who have timesheets.")
+            )
 
         return {
-            "name": _("Confirmation"),
+            "name": self.env._("Confirmation"),
             "view_mode": "form",
             "res_model": "hr.employee.delete.wizard",
             "views": [

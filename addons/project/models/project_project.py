@@ -12,7 +12,6 @@ from odoo.tools import SQL, LazyTranslate, formatLang, get_lang
 from odoo.tools.cache_version import versioned_envelope
 from odoo.tools.date_utils import localized
 from odoo.tools.misc import unquote
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from .project_task import CLOSED_STATES, DELIVERED_STATES
@@ -1388,7 +1387,7 @@ class ProjectProject(models.Model):
                 and project.company_id != project.partner_id.company_id
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "The project and the associated partner must be linked to the same company."
                     )
                 )
@@ -1408,7 +1407,7 @@ class ProjectProject(models.Model):
                 account.project_count > 1 or account.line_ids
             ) and project.company_id != account.company_id:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The project's company cannot be changed if its analytic account has analytic lines or if more than one project is linked to it."
                     )
                 )
@@ -1897,7 +1896,7 @@ class ProjectProject(models.Model):
         )
         self.env["project.workflow.step"].sudo().create(
             [
-                {"name": _("New"), "project_ids": [Command.link(project.id)]}
+                {"name": self.env._("New"), "project_ids": [Command.link(project.id)]}
                 for project in stepless
             ]
         )
@@ -1913,7 +1912,7 @@ class ProjectProject(models.Model):
         )
         self = self.with_context(mail_create_nosubscribe=True)
         if any("label_tasks" in vals and not vals["label_tasks"] for vals in vals_list):
-            task_label = _("Tasks")
+            task_label = self.env._("Tasks")
             for vals in vals_list:
                 if "label_tasks" in vals and not vals["label_tasks"]:
                     vals["label_tasks"] = task_label
@@ -2030,7 +2029,7 @@ class ProjectProject(models.Model):
                     default_project_id=project.id
                 ).create(
                     {
-                        "name": _(
+                        "name": self.env._(
                             "Status Update - %(date)s",
                             date=fields.Date.today().strftime(
                                 get_lang(self.env).date_format
@@ -2258,7 +2257,7 @@ class ProjectProject(models.Model):
                 and project.phase_id.company_id != project.company_id
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "This project is associated with %(project_company)s, whereas the selected stage belongs to %(stage_company)s. "
                         "There are a couple of options to consider: either remove the company designation "
                         "from the project or from the stage. Alternatively, you can update the company "
@@ -2267,7 +2266,7 @@ class ProjectProject(models.Model):
                         stage_company=project.phase_id.company_id.name,
                     )
                     if project.company_id
-                    else _(
+                    else self.env._(
                         "This project is not associated with any company, while the stage is associated with %s. "
                         "There are a couple of options to consider: either change the project's company "
                         "to align with the stage's company or remove the company designation from the stage",
@@ -2396,7 +2395,7 @@ class ProjectProject(models.Model):
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "project.action_project_task_burndown_chart_report"
         )
-        action["display_name"] = _("%(name)s's Burndown Chart", name=self.name)
+        action["display_name"] = self.env._("%(name)s's Burndown Chart", name=self.name)
         context = action["context"].replace("active_id", str(self.id))
         context = self.env["ir.actions.actions"]._eval_action_context(context)
         context.update(
@@ -2414,7 +2413,9 @@ class ProjectProject(models.Model):
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "project.action_project_task_scatter"
         )
-        action["display_name"] = _("%(name)s's Cycle Time Scatter", name=self.name)
+        action["display_name"] = self.env._(
+            "%(name)s's Cycle Time Scatter", name=self.name
+        )
         return action
 
     def action_find_similar_projects(self) -> dict:
@@ -2439,7 +2440,9 @@ class ProjectProject(models.Model):
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "project.action_project_history"
         )
-        action["display_name"] = _("Similar Projects to %(name)s", name=self.name)
+        action["display_name"] = self.env._(
+            "Similar Projects to %(name)s", name=self.name
+        )
         action["domain"] = domain
         return action
 
@@ -2447,7 +2450,7 @@ class ProjectProject(models.Model):
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "project.project_update_all_action"
         )
-        action["display_name"] = _("%(name)s Dashboard", name=self.name)
+        action["display_name"] = self.env._("%(name)s Dashboard", name=self.name)
         return action
 
     def action_view_share_project_wizard(self) -> dict:
@@ -2465,7 +2468,7 @@ class ProjectProject(models.Model):
             "project.project_share_wizard_action"
         )
         if self.env.context.get("default_access_mode"):
-            action["name"] = _("Share Project")
+            action["name"] = self.env._("Share Project")
         action["context"] = local_context
         return action
 
@@ -2503,7 +2506,7 @@ class ProjectProject(models.Model):
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "project.rating_rating_action_view_project_rating"
         )
-        action["display_name"] = _("%(name)s's Rating", name=self.name)
+        action["display_name"] = self.env._("%(name)s's Rating", name=self.name)
         action_context = (
             self.env["ir.actions.actions"]._eval_action_context(action["context"])
             if action["context"]
@@ -2537,7 +2540,7 @@ class ProjectProject(models.Model):
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "project.action_project_task_user_tree"
         )
-        action["display_name"] = _("%(name)s's Tasks Analysis", name=self.name)
+        action["display_name"] = self.env._("%(name)s's Tasks Analysis", name=self.name)
         action_context = (
             self.env["ir.actions.actions"]._eval_action_context(action["context"])
             if action["context"]
@@ -2552,7 +2555,9 @@ class ProjectProject(models.Model):
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "project.action_project_task_assigned_resources"
         )
-        action["display_name"] = _("%(name)s's Assigned Resources", name=self.name)
+        action["display_name"] = self.env._(
+            "%(name)s's Assigned Resources", name=self.name
+        )
         action["domain"] = [
             ("res_model", "=", "project.task"),
             ("res_id", "in", task_ids),
@@ -2563,14 +2568,14 @@ class ProjectProject(models.Model):
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "project.project_milestone_action"
         )
-        action["display_name"] = _("%(name)s's Milestones", name=self.name)
+        action["display_name"] = self.env._("%(name)s's Milestones", name=self.name)
         return action
 
     def action_view_tasks_from_project_milestone(self) -> dict:
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "project.project_milestone_action_view_tasks"
         )
-        action["display_name"] = _("Tasks")
+        action["display_name"] = self.env._("Tasks")
         action["domain"] = [("milestone_id", "in", self.milestone_ids.ids)]
         return action
 
@@ -2588,7 +2593,7 @@ class ProjectProject(models.Model):
             self._fields["last_update_status"]._description_selection(self.env)
         )
         return {
-            "status": labels.get(self.last_update_status, _("Set Status")),
+            "status": labels.get(self.last_update_status, self.env._("Set Status")),
             "color": self.last_update_color,
         }
 

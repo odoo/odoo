@@ -1,7 +1,7 @@
 import logging
 from datetime import date
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
@@ -246,14 +246,20 @@ class GamificationBadge(models.Model):
         if status_code == self.CAN_GRANT:
             return True
         elif status_code == self.NOBODY_CAN_GRANT:
-            raise exceptions.UserError(_("This badge can not be sent by users."))
+            raise exceptions.UserError(
+                self.env._("This badge can not be sent by users.")
+            )
         elif status_code == self.USER_NOT_VIP:
-            raise exceptions.UserError(_("You are not in the user allowed list."))
+            raise exceptions.UserError(
+                self.env._("You are not in the user allowed list.")
+            )
         elif status_code == self.BADGE_REQUIRED:
-            raise exceptions.UserError(_("You do not have the required badges."))
+            raise exceptions.UserError(
+                self.env._("You do not have the required badges.")
+            )
         elif status_code == self.TOO_MANY:
             raise exceptions.UserError(
-                _("You have already sent this badge too many time this month.")
+                self.env._("You have already sent this badge too many time this month.")
             )
         else:
             _logger.error("Unknown badge status code: %s", status_code)

@@ -1,7 +1,7 @@
 import logging
 from typing import Any, Self
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.models import ValuesType
 
 _logger = logging.getLogger(__name__)
@@ -73,7 +73,7 @@ class GamificationBadgeUser(models.Model):
                 res_id=badge_user.id,
                 body=rendered[badge_user.id],
                 partner_ids=[badge_user.user_partner_id.id],
-                subject=_(
+                subject=self.env._(
                     "You've earned the %(badge)s badge!", badge=badge_user.badge_name
                 ),
                 subtype_xmlid="mail.mt_comment",
@@ -83,7 +83,7 @@ class GamificationBadgeUser(models.Model):
             badge_user.user_id._send_gamification_notification(
                 "badge",
                 {
-                    "title": _("Badge Earned!"),
+                    "title": self.env._("Badge Earned!"),
                     "message": badge_user.badge_name,
                 },
             )
@@ -119,7 +119,7 @@ class GamificationBadgeUser(models.Model):
             for vals in vals_list:
                 if vals.get("user_id") == uid:
                     raise exceptions.UserError(
-                        _("You can not grant a badge to yourself.")
+                        self.env._("You can not grant a badge to yourself.")
                     )
                 grants_per_badge[vals["badge_id"]] = (
                     grants_per_badge.get(vals["badge_id"], 0) + 1
@@ -136,7 +136,7 @@ class GamificationBadgeUser(models.Model):
                         > badge.rule_max_number
                     ):
                         raise exceptions.UserError(
-                            _(
+                            self.env._(
                                 "You have already sent this badge too many time"
                                 " this month."
                             )

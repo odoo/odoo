@@ -2,7 +2,7 @@ from datetime import UTC
 
 from requests.exceptions import RequestException
 
-from odoo import _, fields, http
+from odoo import fields, http
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -142,7 +142,7 @@ class HrAttendance(http.Controller):
             dbg.logic.debug(
                 "_get_geoip_response: no place name for %s,%s", latitude, longitude
             )
-            location = _("Unknown")
+            location = request.env._("Unknown")
         response.update(
             {
                 "location": location,
@@ -189,7 +189,7 @@ class HrAttendance(http.Controller):
         except AccessError:
             # The route is `auth="public"` and the listing is deliberately NOT
             # sudo: only the signed-in setup session may see who has no badge.
-            return self._refuse(_("You are not allowed to list employees."))
+            return self._refuse(request.env._("You are not allowed to list employees."))
         return {"status": "success", "employees": employee_list}
 
     @http.route("/hr_attendance/set_badge", type="jsonrpc", auth="public")
@@ -198,11 +198,11 @@ class HrAttendance(http.Controller):
         if not employee:
             return self._refuse()
         if employee.barcode:
-            return self._refuse(_("This employee already has a badge."))
+            return self._refuse(request.env._("This employee already has a badge."))
         try:
             request.env["hr.employee"].browse(employee.id).barcode = badge
         except AccessError:
-            return self._refuse(_("You are not allowed to assign badges."))
+            return self._refuse(request.env._("You are not allowed to assign badges."))
         return {"status": "success"}
 
     @http.route("/hr_attendance/create_employee", type="jsonrpc", auth="public")
@@ -218,7 +218,9 @@ class HrAttendance(http.Controller):
                 }
             )
         except AccessError:
-            return self._refuse(_("You are not allowed to create employees."))
+            return self._refuse(
+                request.env._("You are not allowed to create employees.")
+            )
         return {"status": "success"}
 
     @http.route("/hr_attendance/kiosk_keepalive", auth="user", type="jsonrpc")
@@ -356,7 +358,7 @@ class HrAttendance(http.Controller):
                 or condition[1] not in ("=", "ilike")
             ):
                 raise UserError(
-                    _(
+                    request.env._(
                         "Invalid domain, use 'name' and/or 'department_id' fields "
                         "with '=' and/or 'ilike' operators.",
                     )
@@ -437,11 +439,13 @@ class HrAttendance(http.Controller):
             .selection
         )
         if mode not in modes:
-            return self._refuse(_("Unknown kiosk mode."))
+            return self._refuse(request.env._("Unknown kiosk mode."))
         try:
             request.env["res.company"].browse(
                 company.id
             ).hr_attendance_config_id.attendance_kiosk_mode = mode
         except AccessError:
-            return self._refuse(_("You are not allowed to change the kiosk settings."))
+            return self._refuse(
+                request.env._("You are not allowed to change the kiosk settings.")
+            )
         return {"status": "success"}

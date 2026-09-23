@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -95,7 +95,7 @@ class GamificationSeason(models.Model):
         """Navigate to challenges linked to this season."""
         self.check_singleton()
         return {
-            "name": _("Season Challenges"),
+            "name": self.env._("Season Challenges"),
             "type": "ir.actions.act_window",
             "res_model": "gamification.challenge",
             "view_mode": "list,form",

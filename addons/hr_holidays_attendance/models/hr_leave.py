@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -72,10 +72,12 @@ class HrLeave(models.Model):
                 )
                 if leave.employee_id.user_id == self.env.user:
                     raise ValidationError(
-                        _("You do not have enough extra hours to request this leave")
+                        self.env._(
+                            "You do not have enough extra hours to request this leave"
+                        )
                     )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The employee does not have enough extra hours to request this leave."
                     )
                 )

@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class CrmLead(models.Model):
@@ -14,7 +14,7 @@ class CrmLead(models.Model):
 
     def action_generate_leads(self):
         return {
-            "name": _("Need help reaching your target?"),
+            "name": self.env._("Need help reaching your target?"),
             "type": "ir.actions.act_window",
             "res_model": "crm.iap.lead.mining.request",
             "target": "new",

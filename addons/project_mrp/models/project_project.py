@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ProjectProject(models.Model):
@@ -45,8 +45,8 @@ class ProjectProject(models.Model):
             "context": {"default_project_id": self.id},
             "help": "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>"
             % (
-                _("No bill of materials found. Let's create one."),
-                _(
+                self.env._("No bill of materials found. Let's create one."),
+                self.env._(
                     "Bills of materials allow you to define the list of required raw materials used to make a finished "
                     "product; through a manufacturing order or a pack of products."
                 ),

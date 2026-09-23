@@ -5,7 +5,7 @@ from urllib.parse import urlencode as url_encode
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.web import urljoin as url_join
@@ -235,7 +235,7 @@ class AppointmentInvite(models.Model):
         )
         if invalid_invite:
             raise ValidationError(
-                _(
+                self.env._(
                     "Only letters, numbers, underscores and dashes are allowed in your links. You need to adapt %s.",
                     invalid_invite.short_code,
                 )
@@ -267,12 +267,12 @@ class AppointmentInvite(models.Model):
             )
             appointment_type_info_msg = Markup()
             if appt_without_staff_user and invite.appointment_type_count > 1:
-                appointment_type_info_msg += _(
+                appointment_type_info_msg += self.env._(
                     "The following appointment type(s) have no staff assigned: %s.",
                     ", ".join(appt_without_staff_user.mapped("name")),
                 ) + Markup("<br/>")
             if appt_without_resource and invite.appointment_type_count > 1:
-                appointment_type_info_msg += _(
+                appointment_type_info_msg += self.env._(
                     "The following appointment type(s) have no resource assigned: %s.",
                     ", ".join(appt_without_resource.mapped("name")),
                 )

@@ -14,7 +14,6 @@ from odoo.libs.intervals import Intervals
 from odoo.libs.numbers import float_compare, float_round
 from odoo.tools.date_utils import float_to_time
 from odoo.tools.misc import clean_context, format_date
-from odoo.tools.translate import _
 
 from odoo.addons.base.models.ir_model_common import MODULE_UNINSTALL_FLAG
 from odoo.addons.base.models.res_partner import _selection_timezones
@@ -584,7 +583,7 @@ Versions:
 %(versions)s""",
                         time_off=holiday.display_name,
                         versions="\n".join(
-                            _(
+                            self.env._(
                                 "- '%(version)s' from %(start_date)s to %(end_date)s",
                                 version=version.name or version.employee_id.name,
                                 start_date=format_date(self.env, version.date_start),
@@ -1060,7 +1059,7 @@ Versions:
     def _compute_duration_display(self):
         for leave in self:
             duration = leave.number_of_days
-            unit = _("days")
+            unit = self.env._("days")
             display = "%g %s" % (float_round(duration, precision_digits=2), unit)
             if leave.leave_type_request_unit == "hour":
                 hours, minutes = divmod(abs(leave.number_of_hours) * 60, 60)
@@ -1069,7 +1068,7 @@ Versions:
                     minutes = 0
                     hours += 1
                 duration = "%d:%02d" % (hours, minutes)
-                unit = _("hours")
+                unit = self.env._("hours")
                 display = f"{duration} {unit}"
             leave.duration_display = display
 
@@ -1150,7 +1149,7 @@ Versions:
             return
         for holiday in self:
             if holiday.state in ["validate1", "validate"]:
-                message = _(
+                message = self.env._(
                     "Approved time off cannot be modified (%(employee)s: %(date_from)s to %(date_to)s).",
                     employee=holiday.employee_id.name,
                     date_from=format_date(self.env, holiday.date_from),
@@ -1159,7 +1158,7 @@ Versions:
                 raise ValidationError(message)
 
     def _missing_allocation_message(self):
-        return _(
+        return self.env._(
             "You do not have any allocation for this time off type.\n"
             "Please request an allocation before submitting your time off request."
         )
@@ -1194,7 +1193,9 @@ Versions:
 
         if any(not leave.date_from or not leave.date_to for leave in self):
             raise ValidationError(
-                _("A time off request needs both a start date and an end date.")
+                self.env._(
+                    "A time off request needs both a start date and an end date."
+                )
             )
         sorted_leaves = defaultdict(lambda: self.env["hr.leave"])
         for leave in self:
@@ -1219,7 +1220,7 @@ Versions:
                     ):
                         reject(
                             employee,
-                            _(
+                            self.env._(
                                 "%(employee)s has no valid allocation of %(leave_type)s to cover that request.",
                                 employee=employee.name,
                                 leave_type=leave_type.name,
@@ -1249,7 +1250,7 @@ Versions:
                 ):
                     reject(
                         employee,
-                        _(
+                        self.env._(
                             "%(employee)s has no valid allocation of %(leave_type)s to cover that request.",
                             employee=employee.name,
                             leave_type=leave_type.name,
@@ -1258,7 +1259,7 @@ Versions:
         is_leave_user = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
         if not is_leave_user and any(leave.has_mandatory_day for leave in self):
             raise ValidationError(
-                _("You are not allowed to request time off on a Mandatory Day")
+                self.env._("You are not allowed to request time off on a Mandatory Day")
             )
 
         return uncovered
@@ -1284,8 +1285,10 @@ Versions:
             date_to_utc = leave.date_to and leave.date_to.astimezone(user_tz).date()
             time_off_type_display = leave.holiday_status_id.name
             if self.env.context.get("short_name"):
-                short_leave_name = leave.name or time_off_type_display or _("Time Off")
-                leave.display_name = _(
+                short_leave_name = (
+                    leave.name or time_off_type_display or self.env._("Time Off")
+                )
+                leave.display_name = self.env._(
                     "%(name)s: %(duration)s",
                     name=short_leave_name,
                     duration=leave.duration_display,
@@ -1294,7 +1297,7 @@ Versions:
                 target = leave.employee_id.name or ""
                 display_date = format_date(self.env, date_from_utc) or ""
                 if leave.number_of_days > 1 and date_from_utc and date_to_utc:
-                    display_date += _(
+                    display_date += self.env._(
                         " to %(date_to_utc)s",
                         date_to_utc=format_date(self.env, date_to_utc) or "",
                     )
@@ -1302,21 +1305,21 @@ Versions:
                     self.env.context.get("hide_employee_name")
                     and "employee_id" in self.env.context.get("group_by", [])
                 ):
-                    leave.display_name = _(
+                    leave.display_name = self.env._(
                         "%(leave_type)s: %(duration)s (%(start)s)",
                         leave_type=time_off_type_display,
                         duration=leave.duration_display,
                         start=display_date,
                     )
                 elif not time_off_type_display:
-                    leave.display_name = _(
+                    leave.display_name = self.env._(
                         "%(person)s: %(duration)s (%(start)s)",
                         person=target,
                         duration=leave.duration_display,
                         start=display_date,
                     )
                 else:
-                    leave.display_name = _(
+                    leave.display_name = self.env._(
                         "%(person)s on %(leave_type)s: %(duration)s (%(start)s)",
                         person=target,
                         leave_type=time_off_type_display,
@@ -1335,14 +1338,14 @@ Versions:
             )
             if employees and not is_leave_user:
                 raise AccessError(
-                    _(
+                    self.env._(
                         "You cannot first approve a time off for %s, because you are not his time off manager",
                         employees[0].name,
                     )
                 )
         elif state == "validate" and not is_leave_user:
             raise AccessError(
-                _(
+                self.env._(
                     "You don't have the rights to apply second approval on a time off request"
                 )
             )
@@ -1361,7 +1364,7 @@ Versions:
         if any(not vals.get("employee_id") for vals in vals_list):
             _debug.logic("create_refused", reason="no_employee", rows=len(vals_list))
             raise UserError(
-                _(
+                self.env._(
                     "There is no employee set on the time off. Please make sure you're logged in the correct company."
                 )
             )
@@ -1415,7 +1418,7 @@ Versions:
         automatic.action_approve()
         for leave in automatic:
             leave.message_post(
-                body=_("The time off has been automatically approved"),
+                body=self.env._("The time off has been automatically approved"),
                 subtype_xmlid="mail.mt_comment",
             )
         if not self.env.context.get("import_file"):
@@ -1442,12 +1445,14 @@ Versions:
             ):
                 _debug.logic("write_refused", reason="already_begun", leaves=self)
                 raise UserError(
-                    _(
+                    self.env._(
                         "You must have manager rights to modify/validate a time off that already begun"
                     )
                 )
             if any(leave.state == "cancel" for leave in self):
-                raise UserError(_("Only a manager can modify a canceled leave."))
+                raise UserError(
+                    self.env._("Only a manager can modify a canceled leave.")
+                )
 
         if "state" in values and values["state"] != "validate":
             validated_leaves = self.filtered(lambda l: l.state == "validate")
@@ -1502,7 +1507,9 @@ Versions:
                     )
                 if hol.date_from and hol.date_from.date() < today:
                     raise UserError(
-                        _("You can't delete a time off request that is in the past.")
+                        self.env._(
+                            "You can't delete a time off request that is in the past."
+                        )
                     )
         elif not self.env.user.has_group("hr_holidays.group_hr_holidays_manager"):
             for holiday in self.filtered(
@@ -1525,12 +1532,12 @@ Versions:
             return vals_list
         if all(leave.state in ["cancel", "refuse"] for leave in self):
             return vals_list
-        raise UserError(_("A time off cannot be duplicated."))
+        raise UserError(self.env._("A time off cannot be duplicated."))
 
     def _prepare_resource_leave_vals(self):
         self.check_singleton()
         return {
-            "name": _("%s: Time Off", self.employee_id.name),
+            "name": self.env._("%s: Time Off", self.employee_id.name),
             "date_from": self.date_from,
             "holiday_id": self.id,
             "date_to": self.date_to,
@@ -1608,7 +1615,7 @@ Versions:
             )
             notify_partner_ids = holiday.employee_id.user_id.partner_id.ids
             holiday.message_post(
-                body=_(
+                body=self.env._(
                     "Your %(leave_type)s planned on %(date)s has been accepted",
                     leave_type=holiday.holiday_status_id.display_name,
                     date=date_from_local,
@@ -1620,7 +1627,7 @@ Versions:
         result = defaultdict(list)
         for holiday in self:
             user = holiday.user_id
-            meeting_name = _(
+            meeting_name = self.env._(
                 "%(employee)s on Time Off : %(duration)s",
                 employee=holiday.employee_id.name,
                 duration=holiday.duration_display,
@@ -1674,7 +1681,7 @@ Versions:
         self.check_singleton()
 
         return {
-            "name": _("Cancel Time Off"),
+            "name": self.env._("Cancel Time Off"),
             "type": "ir.actions.act_window",
             "target": "new",
             "res_model": "hr.holidays.cancel.leave",
@@ -1795,11 +1802,11 @@ Versions:
         leaves = self._filtered_on_public_holiday()
         if check_state and any(not holiday.can_validate for holiday in self):
             _debug.logic("validate_refused", reason="cannot_validate", leaves=self)
-            raise UserError(_("You can't validate this leave."))
+            raise UserError(self.env._("You can't validate this leave."))
         if leaves:
             _debug.logic("validate_refused", reason="public_holiday", leaves=leaves)
             raise ValidationError(
-                _(
+                self.env._(
                     "The following employees are not supposed to work during that period:\n %s"
                 )
                 % ",".join(leaves.mapped("employee_id.name"))
@@ -1838,7 +1845,7 @@ Versions:
         ):
             _debug.logic("refuse_refused", leaves=self)
             raise UserError(
-                _(
+                self.env._(
                     "Time off request must be confirmed or validated in order to refuse it."
                 )
             )
@@ -1856,7 +1863,7 @@ Versions:
         for holiday in self:
             if holiday.employee_id.user_id:
                 holiday.message_post(
-                    body=_(
+                    body=self.env._(
                         "Your %(leave_type)s planned on %(date)s has been refused",
                         leave_type=holiday.holiday_status_id.display_name,
                         date=holiday.date_from,
@@ -1884,8 +1891,8 @@ Versions:
                 holiday.sudo().message_notify(
                     partner_ids=responsible,
                     model_description=model_description,
-                    subject=_("Refused Time Off"),
-                    body=_(
+                    subject=self.env._("Refused Time Off"),
+                    body=self.env._(
                         "%(holiday_name)s has been refused.",
                         holiday_name=holiday.display_name,
                     ),
@@ -1896,7 +1903,7 @@ Versions:
     def _action_user_cancel(self, reason=None):
         self.check_singleton()
         if not self.can_cancel:
-            raise ValidationError(_("This time off cannot be cancelled."))
+            raise ValidationError(self.env._("This time off cannot be cancelled."))
 
         self._force_cancel(reason, "mail.mt_note")
 
@@ -1965,7 +1972,7 @@ Versions:
     def action_documents(self):
         domain = [("id", "in", self.attachment_ids.ids)]
         return {
-            "name": _("Supporting Documents"),
+            "name": self.env._("Supporting Documents"),
             "type": "ir.actions.act_window",
             "res_model": "ir.attachment",
             "context": {"create": False},
@@ -2114,12 +2121,12 @@ is approved, validated or refused."
 
     def _get_approval_activity_note(self):
         if self.state == "confirm":
-            return _(
+            return self.env._(
                 "New %(leave_type)s Request created by %(user)s",
                 leave_type=self.holiday_status_id.name,
                 user=self.create_uid.name,
             )
-        return _(
+        return self.env._(
             "Second approval request for %(leave_type)s",
             leave_type=self.holiday_status_id.name,
         )
@@ -2152,7 +2159,7 @@ is approved, validated or refused."
                 self.env["mixin.mail.thread"].sudo().message_notify(
                     body=message,
                     partner_ids=[recipient],
-                    subject=_("Your Time Off"),
+                    subject=self.env._("Your Time Off"),
                 )
 
     def _notify_time_off_officers(self):
@@ -2178,20 +2185,20 @@ is approved, validated or refused."
                 "<li><strong>%(duration_label)s:</strong> %(duration)s</li>"
                 "</ul>"
             ) % {
-                "intro": _("A new time off request has been submitted."),
-                "employee_label": _("Employee"),
+                "intro": self.env._("A new time off request has been submitted."),
+                "employee_label": self.env._("Employee"),
                 "employee": leave.employee_id.name,
-                "type_label": _("Type"),
+                "type_label": self.env._("Type"),
                 "type": leave.holiday_status_id.name,
-                "period_label": _("Period"),
+                "period_label": self.env._("Period"),
                 "date_from": format_date(self.env, leave.request_date_from),
                 "date_to": format_date(self.env, leave.request_date_to),
-                "duration_label": _("Duration"),
+                "duration_label": self.env._("Duration"),
                 "duration": leave.duration_display or "",
             }
             leave.message_notify(
                 partner_ids=recipients.partner_id.ids,
-                subject=_(
+                subject=self.env._(
                     "New Time Off Request: %(leave_type)s",
                     leave_type=leave.holiday_status_id.name,
                 ),
@@ -2293,7 +2300,7 @@ is approved, validated or refused."
                 leave.holiday_status_id in accrual_allocations.holiday_status_id
             )
         )
-        reason = _("the accrued amount is insufficient for that duration.")
+        reason = self.env._("the accrued amount is insufficient for that duration.")
         leaves_by_type_and_date = defaultdict(lambda: self.env["hr.leave"])
         for leave in concerned_leaves:
             leaves_by_type_and_date[

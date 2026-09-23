@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 from typing import Any, Literal, Self
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.models import ValuesType
 from odoo.tools import SQL
 
@@ -267,7 +267,7 @@ class ResUsers(models.Model):
                 user: {
                     "gain": int(vals["karma"]),
                     "old_value": 0,
-                    "reason": _("User Creation"),
+                    "reason": self.env._("User Creation"),
                 }
                 for user, vals in zip(res, vals_list, strict=True)
                 if vals.get("karma")
@@ -310,7 +310,7 @@ class ResUsers(models.Model):
         create_values = []
         for user, values in values_per_user.items():
             origin = values.get("source") or self.env.user
-            reason = values.get("reason") or _("Add Manually")
+            reason = values.get("reason") or self.env._("Add Manually")
             origin_description = f"{origin.display_name} #{origin.id}"
             old_value = values.get("old_value", user.karma)
 
@@ -489,8 +489,8 @@ WHERE sub.user_id = ANY(%s)""",
             user._send_gamification_notification(
                 "level_up",
                 {
-                    "title": _("Level Up!"),
-                    "message": _("You reached %s!", user.rank_id.name),
+                    "title": self.env._("Level Up!"),
+                    "message": self.env._("You reached %s!", user.rank_id.name),
                 },
             )
 
@@ -619,7 +619,7 @@ WHERE sub.user_id = ANY(%s)""",
         """Open the karma tracking history for this user."""
         self.check_singleton()
         return {
-            "name": _("Karma Updates"),
+            "name": self.env._("Karma Updates"),
             "res_model": "gamification.karma.tracking",
             "target": "current",
             "type": "ir.actions.act_window",
@@ -660,7 +660,7 @@ WHERE sub.user_id = ANY(%s)""",
         profile = {
             "user_name": user.name,
             "karma": user.karma,
-            "rank_name": user.rank_id.name or _("Unranked"),
+            "rank_name": user.rank_id.name or self.env._("Unranked"),
             "rank_image": user.rank_id.image_128 if user.rank_id else False,
             "next_rank_name": next_rank.name if next_rank else False,
             "xp_progress_percent": user.xp_progress_percent,
@@ -689,7 +689,7 @@ WHERE sub.user_id = ANY(%s)""",
         goals = [
             {
                 "id": g.id,
-                "challenge_name": g.challenge_id.name or _("Personal Goal"),
+                "challenge_name": g.challenge_id.name or self.env._("Personal Goal"),
                 "definition_name": g.definition_id.name,
                 "current": g.current,
                 "target": g.target_goal,
@@ -872,8 +872,8 @@ WHERE sub.user_id = ANY(%s)""",
             streak.user_id._send_gamification_notification(
                 "streak",
                 {
-                    "title": _("Streak at Risk!"),
-                    "message": _(
+                    "title": self.env._("Streak at Risk!"),
+                    "message": self.env._(
                         "Your %(streak)s streak (%(days)s days) has no freeze days left!",
                         streak=streak.streak_type_id.name,
                         days=streak.current_count,
@@ -907,8 +907,8 @@ WHERE sub.user_id = ANY(%s)""",
             user._send_gamification_notification(
                 "level_up",
                 {
-                    "title": _("Almost There!"),
-                    "message": _(
+                    "title": self.env._("Almost There!"),
+                    "message": self.env._(
                         "Only %(xp)s XP to reach %(rank)s!",
                         xp=distance,
                         rank=user.next_rank_id.name,
@@ -941,8 +941,8 @@ WHERE sub.user_id = ANY(%s)""",
             goal.user_id._send_gamification_notification(
                 "badge",
                 {
-                    "title": _("So Close!"),
-                    "message": _(
+                    "title": self.env._("So Close!"),
+                    "message": self.env._(
                         "%(goal)s is %(pct)s%% complete!",
                         goal=goal.definition_id.name,
                         pct=round(goal.completeness),
@@ -983,8 +983,8 @@ WHERE sub.user_id = ANY(%s)""",
             user._send_gamification_notification(
                 "badge",
                 {
-                    "title": _("We Miss You!"),
-                    "message": _(
+                    "title": self.env._("We Miss You!"),
+                    "message": self.env._(
                         "Your team is earning karma — come back and join the action!"
                     ),
                 },

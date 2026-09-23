@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -38,7 +38,7 @@ class ResCompany(models.Model):
             company = company.with_company(company)
             results += [
                 {
-                    "name": _("Internal"),
+                    "name": self.env._("Internal"),
                     "allow_timesheets": True,
                     "company_id": company.id,
                     "workflow_step_ids": step_ids,
@@ -49,7 +49,7 @@ class ResCompany(models.Model):
                                 "company_id": company.id,
                             }
                         )
-                        for name in [_("Training"), _("Meeting")]
+                        for name in [self.env._("Training"), self.env._("Meeting")]
                     ],
                 }
             ]

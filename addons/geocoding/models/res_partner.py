@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models, modules
+from odoo import api, fields, models, modules
 
 
 class ResPartner(models.Model):
@@ -53,8 +53,8 @@ class ResPartner(models.Model):
                 "simple_notification",
                 {
                     "type": "danger",
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "No match found for %(partner_names)s address(es).",
                         partner_names=", ".join(
                             partners_not_geo_localized.mapped("display_name")

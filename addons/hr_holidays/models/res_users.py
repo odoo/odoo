@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.tools import format_date
 
 
@@ -89,7 +89,7 @@ class ResUsers(models.Model):
             if user.env.context.get("formatted_display_name") and user.leave_date_to:
                 name = "%s \t ✈ --%s %s--" % (
                     user.display_name or user.name,
-                    _("Back on"),
+                    self.env._("Back on"),
                     format_date(
                         self.env, user.leave_date_to, self.env.user.lang, "medium"
                     ),

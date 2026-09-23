@@ -1,6 +1,5 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
 
 
 class CrmLead2opportunityPartner(models.TransientModel):
@@ -21,7 +20,9 @@ class CrmLead2opportunityPartner(models.TransientModel):
         if result.get("lead_id"):
             if self.env["crm.lead"].browse(result["lead_id"]).probability == 100:
                 raise UserError(
-                    _("Closed/Dead leads cannot be converted into opportunities.")
+                    self.env._(
+                        "Closed/Dead leads cannot be converted into opportunities."
+                    )
                 )
 
         return result

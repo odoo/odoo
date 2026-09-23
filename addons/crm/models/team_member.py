@@ -1,7 +1,7 @@
 import datetime
 from ast import literal_eval
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.tools import float_round
 
 
@@ -81,7 +81,7 @@ class TeamMember(models.Model):
                     self.env["crm.lead"].search(domain, limit=1)  # noqa: E8507 - validates each member's own domain
             except SyntaxError, TypeError, ValueError:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Member assignment domain for user %(user)s and team %(team)s is incorrectly formatted",
                         user=member.user_id.name,
                         team=member.team_id.name,
@@ -97,7 +97,7 @@ class TeamMember(models.Model):
                     self.env["crm.lead"].search(domain, limit=1)  # noqa: E8507 - validates each member's own domain
             except SyntaxError, TypeError, ValueError:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Member preferred assignment domain for user %(user)s and team %(team)s is incorrectly formatted",
                         user=member.user_id.name,
                         team=member.team_id.name,

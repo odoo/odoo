@@ -8,7 +8,6 @@ import psycopg
 from odoo import fields, models, modules, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import SQL
-from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -201,7 +200,7 @@ class CrmLead(models.Model):
             self.browse().check_access("unlink")
         except AccessError:
             raise UserError(
-                _("You don't have the access needed to run this cron.")
+                self.env._("You don't have the access needed to run this cron.")
             ) from None
         else:
             self.env.cr.execute("TRUNCATE TABLE crm_lead_scoring_frequency")
@@ -631,11 +630,11 @@ class CrmLead(models.Model):
         if tools.float_is_zero(tooltip_data["probability"], 2):
             sorted_scores_with_name = [
                 (0.1, "email_state", False, False),
-                (0.2, "tag_id", _("Exploration"), 4),
-                (0.3, "stage_id", _("New"), False),
+                (0.2, "tag_id", self.env._("Exploration"), 4),
+                (0.3, "stage_id", self.env._("New"), False),
                 (0.7, "phone_state", "correct", False),
-                (0.8, "country_id", _("Belgium"), False),
-                (0.9, "tag_id", _("Consulting"), 3),
+                (0.8, "country_id", self.env._("Belgium"), False),
+                (0.9, "tag_id", self.env._("Consulting"), 3),
             ]
 
         return {

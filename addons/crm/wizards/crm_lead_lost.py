@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.tools.mail import is_html_empty
 
 
@@ -24,6 +24,6 @@ class CrmLeadLost(models.TransientModel):
         if not is_html_empty(self.lost_feedback):
             self.lead_ids._track_set_log_message(
                 Markup('<div style="margin-bottom: 4px;"><p>%s:</p>%s<br /></div>')
-                % (_("Lost Comment"), self.lost_feedback)
+                % (self.env._("Lost Comment"), self.lost_feedback)
             )
         return self.lead_ids.action_set_lost(lost_reason_id=self.lost_reason_id.id)

@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.convert import convert_file
 
@@ -482,7 +482,7 @@ class HrJob(models.Model):
         return {
             "type": "ir.actions.act_window",
             "res_model": "ir.attachment",
-            "name": _("Documents"),
+            "name": self.env._("Documents"),
             "context": {
                 "default_res_model": self._name,
                 "default_res_id": self.ids[0],
@@ -556,7 +556,7 @@ class HrJob(models.Model):
     def action_view_employees(self):
         self.check_singleton()
         return {
-            "name": _("Related Employees"),
+            "name": self.env._("Related Employees"),
             "type": "ir.actions.act_window",
             "res_model": "hr.employee",
             "view_mode": "list,kanban,form",

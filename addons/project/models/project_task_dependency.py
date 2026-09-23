@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import ValidationError
 from odoo.tools import SQL
@@ -103,7 +103,7 @@ class ProjectTaskDependency(models.Model):
         )
         if self.env.cr.fetchone():
             raise ValidationError(
-                _("Adding this dependency would create a circular reference.")
+                self.env._("Adding this dependency would create a circular reference.")
             )
 
     @dbg.timed

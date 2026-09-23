@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -60,7 +60,7 @@ class MixinUtmSource(models.AbstractModel):
     def write(self, vals):
         if (vals.get(self._rec_name) or vals.get("name")) and len(self) > 1:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot update multiple records with the same name. The name should be unique!"
                 )
             )

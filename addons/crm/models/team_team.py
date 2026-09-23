@@ -6,7 +6,7 @@ from ast import literal_eval
 
 from markupsafe import Markup
 
-from odoo import _, api, exceptions, fields, models, modules
+from odoo import api, exceptions, fields, models, modules
 from odoo.fields import Domain
 from odoo.tools import float_compare, float_round
 from odoo.tools.safe_eval import safe_eval
@@ -174,7 +174,7 @@ class TeamTeam(models.Model):
                     self.env["crm.lead"].search(domain, limit=1)  # noqa: E8507 - validates each team's own domain
             except SyntaxError, TypeError, ValueError:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Assignment domain for team %(team)s is incorrectly formatted",
                         team=team.name,
                     )
@@ -303,7 +303,7 @@ class TeamTeam(models.Model):
         html_message = Markup("<br />").join(logs)
         notif_message = " ".join(logs)
 
-        log_action = _(
+        log_action = self.env._(
             "Lead Assignment requested by %(user_name)s", user_name=self.env.user.name
         )
         log_message = Markup("<p>%s<br /><br />%s</p>") % (log_action, html_message)
@@ -314,7 +314,7 @@ class TeamTeam(models.Model):
             "tag": "display_notification",
             "params": {
                 "type": "success",
-                "title": _("Leads Assigned"),
+                "title": self.env._("Leads Assigned"),
                 "message": notif_message,
                 "next": {"type": "ir.actions.act_window_close"},
             },
@@ -325,7 +325,7 @@ class TeamTeam(models.Model):
             self.env.user.has_group("sale.group_sale_manager") or self.env.is_system()
         ):
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "Lead/Opportunities automatic assignment is limited to managers or administrators"
                 )
             )
@@ -356,7 +356,7 @@ class TeamTeam(models.Model):
         message_parts = []
         if duplicates:
             message_parts.append(
-                _(
+                self.env._(
                     "%(duplicates)s duplicates leads have been merged.",
                     duplicates=duplicates,
                 )
@@ -366,21 +366,21 @@ class TeamTeam(models.Model):
             if len(self) == 1:
                 if not self.lead_assignment_max:
                     message_parts.append(
-                        _(
+                        self.env._(
                             "No allocated leads to %(team_name)s team because it has no capacity. Add capacity to its salespersons.",
                             team_name=self.name,
                         )
                     )
                 else:
                     message_parts.append(
-                        _(
+                        self.env._(
                             "No allocated leads to %(team_name)s team and its salespersons because no unassigned lead matches its domain.",
                             team_name=self.name,
                         )
                     )
             else:
                 message_parts.append(
-                    _(
+                    self.env._(
                         "No allocated leads to any team or salesperson. Check your Sales Teams and Salespersons configuration as well as unassigned leads."
                     )
                 )
@@ -388,21 +388,21 @@ class TeamTeam(models.Model):
         if not assigned and members_assigned:
             if len(self) == 1:
                 message_parts.append(
-                    _(
+                    self.env._(
                         "No new lead allocated to %(team_name)s team because no unassigned lead matches its domain.",
                         team_name=self.name,
                     )
                 )
             else:
                 message_parts.append(
-                    _(
+                    self.env._(
                         "No new lead allocated to the teams because no lead match their domains."
                     )
                 )
         elif assigned:
             if len(self) == 1:
                 message_parts.append(
-                    _(
+                    self.env._(
                         "%(assigned)s leads allocated to %(team_name)s team.",
                         assigned=assigned,
                         team_name=self.name,
@@ -410,7 +410,7 @@ class TeamTeam(models.Model):
                 )
             else:
                 message_parts.append(
-                    _(
+                    self.env._(
                         "%(assigned)s leads allocated among %(team_count)s teams.",
                         assigned=assigned,
                         team_count=len(self),
@@ -419,13 +419,13 @@ class TeamTeam(models.Model):
 
         if not members_assigned and assigned:
             message_parts.append(
-                _(
+                self.env._(
                     "No lead assigned to salespersons because no unassigned lead matches their domains."
                 )
             )
         elif members_assigned:
             message_parts.append(
-                _(
+                self.env._(
                     "%(members_assigned)s leads assigned among %(member_count)s salespersons.",
                     members_assigned=members_assigned,
                     member_count=members,
@@ -825,12 +825,13 @@ class TeamTeam(models.Model):
         user_team_id = self.env.user.sale_team_id.id
         if not user_team_id:
             user_team_id = self.search([("use_sale", "=", True)], limit=1).id
-            action["help"] = "<p class='o_view_nocontent_smiling_face'>%s</p><p>" % _(
-                "Create an Opportunity"
+            action["help"] = (
+                "<p class='o_view_nocontent_smiling_face'>%s</p><p>"
+                % self.env._("Create an Opportunity")
             )
             if user_team_id:
                 if self.env.user.has_group("sale.group_sale_manager"):
-                    action["help"] += "<p>%s</p>" % _(
+                    action["help"] += "<p>%s</p>" % self.env._(
                         """As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>
                                         To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a team.</a>""",
                         self.env.ref("sale_team.team_action_config").id,
@@ -838,7 +839,7 @@ class TeamTeam(models.Model):
                 else:
                     action["help"] += (
                         "<p>%s</p>"
-                        % _("""As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>
+                        % self.env._("""As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>
                                         To work with the CRM, you should join a team.""")
                     )
         try:
@@ -852,7 +853,7 @@ class TeamTeam(models.Model):
     def _compute_dashboard_button_name(self):
         super()._compute_dashboard_button_name()
         team_with_pipelines = self.filtered(lambda el: el.use_opportunities)
-        team_with_pipelines.update({"dashboard_button_name": _("Pipeline")})
+        team_with_pipelines.update({"dashboard_button_name": self.env._("Pipeline")})
 
     def action_primary_channel_button(self):
         self.check_singleton()

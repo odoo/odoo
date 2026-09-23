@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -126,4 +126,6 @@ class HrExpenseSplitWizard(models.TransientModel):
             related=all_related_expenses,
         )
 
-        return all_related_expenses._get_records_action(name=_("Split Expenses"))
+        return all_related_expenses._get_records_action(
+            name=self.env._("Split Expenses")
+        )

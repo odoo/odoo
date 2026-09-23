@@ -2,7 +2,7 @@ import base64
 import logging
 from itertools import batched, zip_longest
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools.misc import clean_context
@@ -201,7 +201,7 @@ class CalendarAttendee(models.Model):
         return result
 
     def copy(self, default=None):
-        raise UserError(_("You cannot duplicate a calendar attendee."))
+        raise UserError(self.env._("You cannot duplicate a calendar attendee."))
 
     def _unsubscribe_partner(self):
         for event in self.event_id:
@@ -452,12 +452,12 @@ class CalendarAttendee(models.Model):
 
     def do_accept(self):
         """Marks event invitation as Accepted."""
-        self._log_answer(_("%s has accepted the invitation"))
+        self._log_answer(self.env._("%s has accepted the invitation"))
         return self.write({"state": "accepted"})
 
     def do_decline(self):
         """Marks event invitation as Declined."""
-        self._log_answer(_("%s has declined the invitation"))
+        self._log_answer(self.env._("%s has declined the invitation"))
         return self.write({"state": "declined"})
 
     def _log_answer(self, body_format):

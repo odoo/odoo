@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -72,7 +72,7 @@ class AppointmentBookingLine(models.Model):
                 and not line.resource_id
             ):
                 raise ValidationError(
-                    _("Booking line must have a user or resource set.")
+                    self.env._("Booking line must have a user or resource set.")
                 )
 
     @api.constrains("resource_id", "appointment_type_id", "appointment_user_id")
@@ -91,7 +91,7 @@ class AppointmentBookingLine(models.Model):
 
             if non_compatible_users_and_resource:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         '"%(name_list)s" cannot be used for "%(appointment_type_name)s"',
                         appointment_type_name=appointment_type.name,
                         name_list=", ".join(

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.db.schema import drop_view_if_exists
 
 
@@ -167,7 +167,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
             ]
 
         return {
-            "name": _("Balance"),
+            "name": self.env._("Balance"),
             "type": "ir.actions.act_window",
             "res_model": "hr.leave.employee.type.report",
             "view_mode": "pivot",
@@ -177,7 +177,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                 ).id
             ],
             "domain": domain,
-            "help": _(
+            "help": self.env._(
                 """
                 <p class="o_view_nocontent_empty_folder">
                     No Balance yet!

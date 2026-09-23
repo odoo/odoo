@@ -1,4 +1,4 @@
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.db import get_or_create_row
 
 from ._canvas import SCALE_MAX, SCALE_MIN
@@ -46,7 +46,7 @@ class AutomationCanvasViewport(models.Model):
         for viewport in self:
             if not SCALE_MIN <= viewport.scale <= SCALE_MAX:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "A canvas zoom of %(scale)s is outside the "
                         "%(minimum)s-%(maximum)s the canvas can draw.",
                         scale=viewport.scale,

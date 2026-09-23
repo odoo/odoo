@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 
@@ -11,15 +11,15 @@ class ProjectProject(models.Model):
 
     def action_view_deliveries(self):
         self.check_singleton()
-        return self._get_picking_action(_("From WH"), "outgoing")
+        return self._get_picking_action(self.env._("From WH"), "outgoing")
 
     def action_view_receipts(self):
         self.check_singleton()
-        return self._get_picking_action(_("To WH"), "incoming")
+        return self._get_picking_action(self.env._("To WH"), "incoming")
 
     def action_view_all_pickings(self):
         self.check_singleton()
-        return self._get_picking_action(_("Stock Moves"))
+        return self._get_picking_action(self.env._("Stock Moves"))
 
     def _get_picking_action(self, action_name, picking_type=None):
         _debug.logic("project_picking_action", projects=self, action=action_name)

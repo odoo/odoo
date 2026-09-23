@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.onboarding.models.onboarding_progress import ONBOARDING_PROGRESS_STATES
@@ -100,7 +100,7 @@ class OnboardingOnboardingStep(models.Model):
             lambda step: step.onboarding_ids and not step.panel_step_open_action_name
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     'An "Opening Action" is required for the following steps to be '
                     "linked to an onboarding panel: %(step_titles)s",
                     step_titles=steps_without_action.mapped("title"),

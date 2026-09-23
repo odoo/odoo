@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -84,7 +84,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
             )
             if applicants:
                 wizard.applicant_without_email = "%s\n%s" % (
-                    _(
+                    self.env._(
                         "You can't select Send email option.\nThe email will not be sent to the following applicant(s) as they don't have an email address:"
                     ),
                     ", ".join(
@@ -151,7 +151,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
                     "refuse_refused", reason="no_sender_email", user=self.env.user
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Unable to post message, please configure the sender's email address."
                     )
                 )
@@ -165,7 +165,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
                     applicants=self.applicant_ids,
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "At least one applicant doesn't have a email; you can't use send email option."
                     )
                 )
@@ -211,12 +211,12 @@ class ApplicantGetRefuseReason(models.TransientModel):
 
     def _duplicate_refusal_body(self, original):
         if original:
-            return _(
+            return self.env._(
                 "Refused automatically because this application has been identified"
                 " as a duplicate of %(link)s",
                 link=original._get_html_link(),
             )
-        return _(
+        return self.env._(
             "Refused automatically because this application has been identified"
             " as a duplicate of another refused application."
         )

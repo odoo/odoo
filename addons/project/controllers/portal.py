@@ -5,7 +5,7 @@ from typing import Any
 
 from markupsafe import Markup
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.fields import Domain
 from odoo.http import Response, request
@@ -111,8 +111,8 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _prepare_searchbar_sortings(self) -> dict[str, dict[str, str]]:
         return {
-            "date": {"label": _("Newest"), "order": "create_date desc"},
-            "name": {"label": _("Name"), "order": "name"},
+            "date": {"label": request.env._("Newest"), "order": "create_date desc"},
+            "name": {"label": request.env._("Name"), "order": "name"},
         }
 
     @http.route(
@@ -613,47 +613,51 @@ class ProjectCustomerPortal(CustomerPortal):
     ) -> dict[str, dict[str, Any]]:
         values = {
             "id desc": {
-                "label": _("Newest"),
+                "label": request.env._("Newest"),
                 "order": "id desc",
                 "sequence": 10,
             },
-            "name": {"label": _("Title"), "order": "name", "sequence": 20},
+            "name": {"label": request.env._("Title"), "order": "name", "sequence": 20},
             "step_id, project_id": {
-                "label": _("Workflow Step"),
+                "label": request.env._("Workflow Step"),
                 "order": "step_id, project_id",
                 "sequence": 50,
             },
-            "state": {"label": _("Status"), "order": "state", "sequence": 60},
+            "state": {
+                "label": request.env._("Status"),
+                "order": "state",
+                "sequence": 60,
+            },
             "priority desc": {
-                "label": _("Priority"),
+                "label": request.env._("Priority"),
                 "order": "priority desc",
                 "sequence": 80,
             },
             "date_start asc": {
-                "label": _("Planned Date"),
+                "label": request.env._("Planned Date"),
                 "order": "date_start asc",
                 "sequence": 75,
             },
             "date_end asc": {
-                "label": _("Deadline"),
+                "label": request.env._("Deadline"),
                 "order": "date_end asc",
                 "sequence": 90,
             },
             "date_last_status_change desc": {
-                "label": _("Last Status Change"),
+                "label": request.env._("Last Status Change"),
                 "order": "date_last_status_change desc",
                 "sequence": 110,
             },
         }
         if not project:
             values["project_id, step_id"] = {
-                "label": _("Project"),
+                "label": request.env._("Project"),
                 "order": "project_id, step_id",
                 "sequence": 30,
             }
         if milestones_allowed:
             values["milestone_id"] = {
-                "label": _("Milestone"),
+                "label": request.env._("Milestone"),
                 "order": "milestone_id",
                 "sequence": 70,
             }
@@ -663,16 +667,19 @@ class ProjectCustomerPortal(CustomerPortal):
         self, milestones_allowed: bool, project: Any = False
     ) -> dict[str, dict[str, Any]]:
         values = {
-            "none": {"label": _("None"), "sequence": 10},
-            "step_id": {"label": _("Workflow Step"), "sequence": 20},
-            "state": {"label": _("Status"), "sequence": 40},
-            "priority": {"label": _("Priority"), "sequence": 60},
-            "partner_id": {"label": _("Customer"), "sequence": 70},
+            "none": {"label": request.env._("None"), "sequence": 10},
+            "step_id": {"label": request.env._("Workflow Step"), "sequence": 20},
+            "state": {"label": request.env._("Status"), "sequence": 40},
+            "priority": {"label": request.env._("Priority"), "sequence": 60},
+            "partner_id": {"label": request.env._("Customer"), "sequence": 70},
         }
         if not project:
-            values["project_id"] = {"label": _("Project"), "sequence": 30}
+            values["project_id"] = {"label": request.env._("Project"), "sequence": 30}
         if milestones_allowed:
-            values["milestone_id"] = {"label": _("Milestone"), "sequence": 50}
+            values["milestone_id"] = {
+                "label": request.env._("Milestone"),
+                "sequence": 50,
+            }
         return values
 
     def _task_get_searchbar_inputs(
@@ -681,7 +688,7 @@ class ProjectCustomerPortal(CustomerPortal):
         values = {
             "name": {
                 "input": "name",
-                "label": _(
+                "label": request.env._(
                     "Search%(left)s Tasks%(right)s",
                     left=Markup('<span class="nolabel">'),
                     right=Markup("</span>"),
@@ -690,40 +697,40 @@ class ProjectCustomerPortal(CustomerPortal):
             },
             "user_ids": {
                 "input": "user_ids",
-                "label": _("Search in Assignees"),
+                "label": request.env._("Search in Assignees"),
                 "sequence": 20,
             },
             "step_id": {
                 "input": "step_id",
-                "label": _("Search in Workflow Steps"),
+                "label": request.env._("Search in Workflow Steps"),
                 "sequence": 30,
             },
             "status": {
                 "input": "status",
-                "label": _("Search in Status"),
+                "label": request.env._("Search in Status"),
                 "sequence": 40,
             },
             "priority": {
                 "input": "priority",
-                "label": _("Search in Priority"),
+                "label": request.env._("Search in Priority"),
                 "sequence": 60,
             },
             "partner_id": {
                 "input": "partner_id",
-                "label": _("Search in Customer"),
+                "label": request.env._("Search in Customer"),
                 "sequence": 80,
             },
         }
         if not project:
             values["project_id"] = {
                 "input": "project_id",
-                "label": _("Search in Project"),
+                "label": request.env._("Search in Project"),
                 "sequence": 50,
             }
         if milestones_allowed:
             values["milestone_id"] = {
                 "input": "milestone_id",
-                "label": _("Search in Milestone"),
+                "label": request.env._("Search in Milestone"),
                 "sequence": 70,
             }
 
@@ -989,7 +996,7 @@ class ProjectCustomerPortal(CustomerPortal):
     ) -> dict[str, dict[str, Any]]:
         searchbar_filters = {
             "all": {
-                "label": _("All"),
+                "label": request.env._("All"),
                 "domain": self._get_domain_task(),
             },
         }
@@ -1096,7 +1103,7 @@ class ProjectCustomerPortal(CustomerPortal):
     def _show_task_report(
         self, task_sudo: Any, report_type: str, download: bool | None
     ) -> Response:
-        raise MissingError(_("There is nothing to report."))
+        raise MissingError(request.env._("There is nothing to report."))
 
     @http.route(["/my/tasks/<int:task_id>"], type="http", auth="public", website=True)
     def portal_my_task(
@@ -1175,7 +1182,7 @@ class ProjectCustomerPortal(CustomerPortal):
                 return request.prepare_not_found_error()
         except AccessError, MissingError:
             raise UserError(
-                _(
+                request.env._(
                     "The document does not exist or you do not have the rights to access it."
                 )
             ) from None
@@ -1211,7 +1218,7 @@ class ProjectCustomerPortal(CustomerPortal):
             return request.prepare_response(
                 data=json.dumps(
                     {
-                        "error": _(
+                        "error": request.env._(
                             "Only jpeg, png, bmp and tiff images are allowed as attachments."
                         )
                     }

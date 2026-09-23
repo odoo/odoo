@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -16,7 +16,7 @@ class SurveyUser_Input(models.Model):
         odoobot = self.env.ref("base.partner_root")
         for user_input in self:
             if user_input.applicant_id:
-                body = _(
+                body = self.env._(
                     'The applicant "%s" has finished the survey.',
                     user_input.applicant_id.partner_name,
                 )

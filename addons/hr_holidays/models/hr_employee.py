@@ -3,7 +3,7 @@ from datetime import UTC, date, datetime, time, timedelta
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
@@ -500,7 +500,7 @@ class HrEmployee(models.Model):
                 )._apply_leave_request()
             except ValidationError as e:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Changing this working schedule results in the affected employee(s) not having enough "
                         "leaves allocated to accomodate for their leaves already taken in the future. Please "
                         "review this employee's leaves and adjust their allocation accordingly."
@@ -548,7 +548,7 @@ class HrEmployee(models.Model):
 
     def action_time_off_dashboard(self):
         return {
-            "name": _("Time Off Dashboard"),
+            "name": self.env._("Time Off Dashboard"),
             "type": "ir.actions.act_window",
             "res_model": "hr.leave",
             "view_mode": "calendar,list,form",

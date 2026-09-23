@@ -1,6 +1,6 @@
 from psycopg.errors import UniqueViolation
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 
 
 # Each tree contains nodes arranged with prerequisite edges.  Users
@@ -215,7 +215,7 @@ class GamificationSkillNode(models.Model):
             user.sudo()._add_karma(
                 self.karma_reward,
                 source=unlock,
-                reason=_("Skill unlocked: %s", self.name),
+                reason=self.env._("Skill unlocked: %s", self.name),
             )
         if self.badge_id:
             self.env["gamification.badge.user"].sudo().create(
@@ -314,7 +314,7 @@ class GamificationSkillNode(models.Model):
             while frontier:
                 if node in frontier:
                     raise exceptions.ValidationError(
-                        _(
+                        self.env._(
                             "Skill node %s cannot be a prerequisite of itself "
                             "(directly or transitively).",
                             node.name,

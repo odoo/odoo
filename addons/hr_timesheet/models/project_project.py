@@ -4,7 +4,6 @@ from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_round
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -180,7 +179,7 @@ class ProjectProject(models.Model):
                     plan=project_plan,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "To use the timesheets feature, you need an analytic account for your project. Please set one up in the plan '%(plan_name)s' or turn off the timesheets feature.",
                         plan_name=project_plan.name,
                     )
@@ -275,11 +274,11 @@ class ProjectProject(models.Model):
         projects_with_timesheets = self.filtered(lambda p: p.timesheet_ids)
         if projects_with_timesheets:
             if len(projects_with_timesheets) > 1:
-                warning_msg = _(
+                warning_msg = self.env._(
                     "These projects have some timesheet entries referencing them. Before removing these projects, you have to remove these timesheet entries."
                 )
             else:
-                warning_msg = _(
+                warning_msg = self.env._(
                     "This project has some timesheet entries referencing it. Before removing this project, you have to remove these timesheet entries."
                 )
             _debug.logic(
@@ -290,7 +289,7 @@ class ProjectProject(models.Model):
             raise RedirectWarning(
                 warning_msg,
                 self.env.ref("hr_timesheet.timesheet_action_project").id,
-                _("See timesheet entries"),
+                self.env._("See timesheet entries"),
                 {"active_ids": projects_with_timesheets.ids},
             )
 
@@ -310,7 +309,7 @@ class ProjectProject(models.Model):
             "hr_timesheet.act_hr_timesheet_line_by_project"
         )
         if not self.env.context.get("from_embedded_action"):
-            action["display_name"] = _("%(name)s's Timesheets", name=self.name)
+            action["display_name"] = self.env._("%(name)s's Timesheets", name=self.name)
         return action
 
     def _get_stat_buttons(self):

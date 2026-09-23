@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class HrRecruitmentStage(models.Model):
@@ -39,25 +39,25 @@ class HrRecruitmentStage(models.Model):
     legend_blocked = fields.Char(
         string="Red Kanban Label",
         translate=True,
-        default=lambda self: _("Blocked"),
+        default=lambda self: self.env._("Blocked"),
         required=True,
     )
     legend_waiting = fields.Char(
         string="Orange Kanban Label",
         translate=True,
-        default=lambda self: _("Waiting"),
+        default=lambda self: self.env._("Waiting"),
         required=True,
     )
     legend_done = fields.Char(
         string="Green Kanban Label",
         translate=True,
-        default=lambda self: _("Ready for Next Stage"),
+        default=lambda self: self.env._("Ready for Next Stage"),
         required=True,
     )
     legend_normal = fields.Char(
         string="Grey Kanban Label",
         translate=True,
-        default=lambda self: _("In Progress"),
+        default=lambda self: self.env._("In Progress"),
         required=True,
     )
     is_warning_visible = fields.Boolean(compute="_compute_is_warning_visible")

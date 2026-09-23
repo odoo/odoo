@@ -1,7 +1,7 @@
 from datetime import datetime
 from operator import itemgetter
 
-from odoo import _, http
+from odoo import http
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import groupby as groupbyelem
@@ -71,35 +71,41 @@ class AppointmentPortal(portal.CustomerPortal):
         domain = self._get_domain_portal_default()
 
         searchbar_sortings = {
-            "date": {"label": _("Date"), "order": "start"},
-            "name": {"label": _("Name"), "order": "name"},
+            "date": {"label": request.env._("Date"), "order": "start"},
+            "name": {"label": request.env._("Name"), "order": "name"},
         }
 
         searchbar_inputs = {
-            "all": {"label": _("Search in All"), "input": "all"},
-            "name": {"label": _("Search in Name"), "input": "name"},
+            "all": {"label": request.env._("Search in All"), "input": "all"},
+            "name": {"label": request.env._("Search in Name"), "input": "name"},
             "responsible": {
-                "label": _("Search in Responsible"),
+                "label": request.env._("Search in Responsible"),
                 "input": "responsible",
             },
             "description": {
-                "label": _("Search in Description"),
+                "label": request.env._("Search in Description"),
                 "input": "description",
             },
         }
 
         searchbar_groupby = {
-            "none": {"label": _("None"), "input": "none"},
-            "responsible": {"label": _("Responsible"), "input": "responsible"},
+            "none": {"label": request.env._("None"), "input": "none"},
+            "responsible": {
+                "label": request.env._("Responsible"),
+                "input": "responsible",
+            },
         }
 
         searchbar_filters = {
             "upcoming": {
-                "label": _("Upcoming"),
+                "label": request.env._("Upcoming"),
                 "domain": [("start", ">=", datetime.today())],
             },
-            "past": {"label": _("Past"), "domain": [("start", "<", datetime.today())]},
-            "all": {"label": _("All"), "domain": []},
+            "past": {
+                "label": request.env._("Past"),
+                "domain": [("start", "<", datetime.today())],
+            },
+            "all": {"label": request.env._("All"), "domain": []},
         }
 
         # Clamp to the declared vocabulary: `sortby` comes straight off the query

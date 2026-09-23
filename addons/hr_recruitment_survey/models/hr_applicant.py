@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from odoo import Command, _, fields, models
+from odoo import Command, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -50,7 +50,7 @@ class HrApplicant(models.Model):
         if not self.partner_id:
             if not self.partner_name:
                 _debug.logic("send_survey_refused", reason="no_name", applicant=self)
-                raise UserError(_("Please provide an applicant name."))
+                raise UserError(self.env._("Please provide an applicant name."))
             _debug.lifecycle("partner_created_for_survey", applicant=self)
             self.partner_id = (
                 self.env["res.partner"]
@@ -88,7 +88,7 @@ class HrApplicant(models.Model):
         )
         return {
             "type": "ir.actions.act_window",
-            "name": _("Send an interview"),
+            "name": self.env._("Send an interview"),
             "view_mode": "form",
             "res_model": "survey.invite",
             "target": "new",

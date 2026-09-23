@@ -1,7 +1,7 @@
 import datetime
 from datetime import UTC
 
-from odoo import _, api, fields, models, modules
+from odoo import api, fields, models, modules
 from odoo.exceptions import AccessError
 from odoo.libs.datetime import timezone
 from odoo.tools import SQL
@@ -103,7 +103,7 @@ class ResUsers(models.Model):
         privacy_update = "calendar_default_privacy" in vals
         if privacy_update and self != self.env.user:
             raise AccessError(
-                _(
+                self.env._(
                     "You are not allowed to change the calendar default privacy of another user due to privacy constraints."
                 )
             )
@@ -194,7 +194,7 @@ class ResUsers(models.Model):
             order="start",
         )
         if meetings_lines:
-            meeting_label = _("Today's Meetings")
+            meeting_label = self.env._("Today's Meetings")
             meetings_systray = {
                 "id": self.env["ir.model"]._get("calendar.event").id,
                 "type": "meeting",

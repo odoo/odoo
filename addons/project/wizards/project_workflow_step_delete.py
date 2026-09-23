@@ -1,6 +1,6 @@
 from typing import Any
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from ..tools import debug_log as dbg
 
@@ -65,7 +65,7 @@ class ProjectWorkflowStepDeleteWizard(models.TransientModel):
             return self.action_confirm()
 
         return {
-            "name": _("Confirmation"),
+            "name": self.env._("Confirmation"),
             "view_mode": "form",
             "res_model": "project.workflow.step.delete.wizard",
             "views": [

@@ -9,7 +9,7 @@ from babel.dates import format_datetime, format_time
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.datetime import timezone as get_timezone
@@ -52,7 +52,7 @@ class AppointmentType(models.Model):
         result = super().default_get(fields)
         if "category" not in fields or result.get("category") == "custom":
             if "name" in fields and not result.get("name"):
-                result["name"] = _("%s - Let's meet", self.env.user.name)
+                result["name"] = self.env._("%s - Let's meet", self.env.user.name)
             if "staff_user_ids" in fields and not result.get("staff_user_ids"):
                 result["staff_user_ids"] = [Command.set(self.env.user.ids)]
         if "event_videocall_source" in fields and not result.get(
@@ -664,7 +664,7 @@ class AppointmentType(models.Model):
                 appointment_type.start_datetime and appointment_type.end_datetime
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A punctual appointment type should be limited between a start and end datetime."
                     )
                 )
@@ -672,7 +672,7 @@ class AppointmentType(models.Model):
                 appointment_type.start_datetime or appointment_type.end_datetime
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A %s appointment type shouldn't be limited by datetimes.",
                         appointment_type.category,
                     )
@@ -682,14 +682,16 @@ class AppointmentType(models.Model):
                 and appointment_type.end_datetime
                 and appointment_type.start_datetime > appointment_type.end_datetime
             ):
-                raise ValidationError(_("Start date should precede the end date."))
+                raise ValidationError(
+                    self.env._("Start date should precede the end date.")
+                )
 
     @api.constrains("appointment_duration")
     def _check_appointment_duration(self):
         for record in self:
             if not record.appointment_duration > 0.0:
                 raise ValidationError(
-                    _("Appointment Duration should be higher than 0.00.")
+                    self.env._("Appointment Duration should be higher than 0.00.")
                 )
 
     @api.constrains("category", "staff_user_ids", "schedule_based_on")
@@ -707,7 +709,7 @@ class AppointmentType(models.Model):
             )
             if appointment_type.ids != duplicate.ids:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Only one anytime appointment type is allowed for a specific user."
                     )
                 )
@@ -809,7 +811,7 @@ class AppointmentType(models.Model):
 
     def action_share_invite(self):
         return {
-            "name": _("Create a Share Link"),
+            "name": self.env._("Create a Share Link"),
             "type": "ir.actions.act_window",
             "res_model": "appointment.invite",
             "view_mode": "form",
@@ -1417,7 +1419,7 @@ class AppointmentType(models.Model):
                                             f"{slot_end_formatted} - {end_hour}"
                                         )
                                 elif is_allday:
-                                    slot_start_formatted = _("All day")
+                                    slot_start_formatted = self.env._("All day")
                                     slot_end_formatted = False
                                 else:
                                     slot_start_formatted = start_hour
@@ -1659,7 +1661,7 @@ class AppointmentType(models.Model):
             "description": description,
             "duration": duration,
             "location": self.location,
-            "name": _(
+            "name": self.env._(
                 "%(attendee_name)s - %(appointment_name)s Booking",
                 attendee_name=name,
                 appointment_name=self.name,

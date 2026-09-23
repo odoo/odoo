@@ -1,6 +1,6 @@
 from typing import Literal, Self
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.models import ValuesType
 from odoo.tools.safe_eval import safe_eval
 
@@ -144,7 +144,7 @@ class GamificationGoalDefinition(models.Model):
                 # produced a traceback instead of the message this method exists
                 # to produce.
                 raise exceptions.UserError(
-                    _(
+                    self.env._(
                         "The definition %(definition)s counts records, so it "
                         "needs a model to count them on.",
                         definition=definition.name,
@@ -160,7 +160,7 @@ class GamificationGoalDefinition(models.Model):
                 if isinstance(e, SyntaxError):
                     msg = e.msg + "\n" + e.text
                 raise exceptions.UserError(
-                    _(
+                    self.env._(
                         "The domain for the definition %(definition)s seems incorrect, please check it.\n\n%(error_message)s",
                         definition=definition.name,
                         error_message=msg,
@@ -179,7 +179,7 @@ class GamificationGoalDefinition(models.Model):
                 field = Model._fields.get(definition.field_id.name)
                 if not (field and field.store):
                     raise exceptions.UserError(
-                        _(
+                        self.env._(
                             "The model configuration for the definition %(name)s seems incorrect, please check it.\n\n%(field_name)s not stored",
                             name=definition.name,
                             field_name=definition.field_id.name,
@@ -187,7 +187,7 @@ class GamificationGoalDefinition(models.Model):
                     )
             except KeyError as e:
                 raise exceptions.UserError(
-                    _(
+                    self.env._(
                         "The model configuration for the definition %(name)s seems incorrect, please check it.\n\n%(error)s not found",
                         name=definition.name,
                         error=e,

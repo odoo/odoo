@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Any
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import ValidationError
 
@@ -155,7 +155,7 @@ class ProjectWorkflowStep(models.Model):
         )
         context = dict(self.env.context, stage_view=stage_view)
         return {
-            "name": _("Delete Workflow Step"),
+            "name": self.env._("Delete Workflow Step"),
             "view_mode": "form",
             "res_model": "project.workflow.step.delete.wizard",
             "views": [

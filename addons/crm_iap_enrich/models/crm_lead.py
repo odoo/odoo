@@ -1,7 +1,7 @@
 import datetime
 import logging
 
-from odoo import Command, _, api, fields, models, modules, tools
+from odoo import Command, api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.tools import OrderedSet
 
@@ -106,20 +106,20 @@ class CrmLead(models.Model):
                 if send_notification:
                     self.env["iap.account"]._send_no_credit_notification(
                         service_name="reveal",
-                        title=_("Not enough credits for Lead Enrichment"),
+                        title=self.env._("Not enough credits for Lead Enrichment"),
                     )
                 raise
             except UserError as e:
                 if send_notification:
                     self.env["iap.account"]._send_error_notification(
-                        message=_("An error occurred during lead enrichment")
+                        message=self.env._("An error occurred during lead enrichment")
                     )
                 _logger.info("An error occurred during lead enrichment: %s", e)
                 return
             else:
                 if send_notification:
                     self.env["iap.account"]._send_success_notification(
-                        message=_(
+                        message=self.env._(
                             "The leads/opportunities have successfully been enriched"
                         )
                     )
@@ -223,7 +223,9 @@ class CrmLead(models.Model):
             lead.write(values)
 
             template_values = iap_data
-            template_values["flavor_text"] = _("Lead enriched based on email address")
+            template_values["flavor_text"] = self.env._(
+                "Lead enriched based on email address"
+            )
             lead.message_post_with_source(
                 "iap_mail.enrich_company",
                 render_values=template_values,

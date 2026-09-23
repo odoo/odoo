@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import AccessError
 
 
@@ -13,7 +13,7 @@ class DigestDigest(models.Model):
     def _compute_kpi_hr_recruitment_new_colleagues_value(self):
         if not self.env.user.has_group("hr_recruitment.group_hr_recruitment_user"):
             raise AccessError(
-                _("Do not have access, skip this data for user's digest email")
+                self.env._("Do not have access, skip this data for user's digest email")
             )
 
         self._update_company_based_kpi(

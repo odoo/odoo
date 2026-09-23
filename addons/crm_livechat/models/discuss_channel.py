@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import html2plaintext
 
 from odoo.addons.mail.tools.discuss import Store
@@ -31,7 +31,7 @@ class DiscussChannel(models.Model):
         key = kwargs["body"]
         lead_command = "/lead"
         if key.strip() == lead_command:
-            msg = _(
+            msg = self.env._(
                 "Create a new lead with: "
                 "%(pre_start)s%(lead_command)s %(i_start)slead title%(i_end)s%(pre_end)s",
                 lead_command=lead_command,
@@ -42,7 +42,7 @@ class DiscussChannel(models.Model):
             )
         else:
             lead = self._convert_visitor_to_lead(self.env.user.partner_id, key)
-            msg = _("Created a new lead: %s", lead._get_html_link())
+            msg = self.env._("Created a new lead: %s", lead._get_html_link())
         self.env.user._bus_send_transient_message(self, msg)
 
     def _convert_visitor_to_lead(self, partner, key):

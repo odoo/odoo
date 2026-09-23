@@ -1,7 +1,7 @@
 import ast
 from uuid import uuid4
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -29,9 +29,9 @@ class LoyaltyRule(models.Model):
             "currency_symbol", self.env.company.currency_id.symbol
         )
         return [
-            ("order", _("per order")),
-            ("money", _("per %s spent", symbol)),
-            ("unit", _("per unit paid")),
+            ("order", self.env._("per order")),
+            ("money", self.env._("per %s spent", symbol)),
+            ("unit", self.env._("per unit paid")),
         ]
 
     active = fields.Boolean(default=True)
@@ -127,7 +127,9 @@ class LoyaltyRule(models.Model):
                 or rule.program_id.program_type == "ewallet"
             ):
                 raise ValidationError(
-                    _("Split per unit is not allowed for Loyalty and eWallet programs.")
+                    self.env._(
+                        "Split per unit is not allowed for Loyalty and eWallet programs."
+                    )
                 )
 
     @api.constrains("code", "active")
@@ -145,12 +147,12 @@ class LoyaltyRule(models.Model):
             ],
             limit=1,
         ):
-            raise ValidationError(_("The promo code must be unique."))
+            raise ValidationError(self.env._("The promo code must be unique."))
         # Prevent coupons and programs from sharing a code
         if self.env["loyalty.card"].search_count(
             [("code", "in", mapped_codes), ("active", "=", True)], limit=1
         ):
-            raise ValidationError(_("A coupon with the same code was found."))
+            raise ValidationError(self.env._("A coupon with the same code was found."))
 
     @api.model
     def _generate_code(self):

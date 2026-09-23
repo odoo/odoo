@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -35,5 +35,5 @@ class HrExpenseApproveDuplicate(models.TransientModel):
         _debug.pipeline("duplicate_wizard", outcome="refuse", expenses=self.expense_ids)
         self.expense_ids.filtered(
             lambda expense: expense.state == "submitted"
-        )._do_refuse(_("Duplicate Expense"))
+        )._do_refuse(self.env._("Duplicate Expense"))
         return {"type": "ir.actions.act_window_close"}

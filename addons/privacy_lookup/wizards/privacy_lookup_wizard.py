@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import SQL
 
@@ -31,7 +31,7 @@ class PrivacyLookupWizard(models.TransientModel):
     line_count = fields.Count(count_of="line_ids")
 
     def _compute_display_name(self):
-        self.display_name = _("Privacy Lookup")
+        self.display_name = self.env._("Privacy Lookup")
 
     def _get_query_models_blacklist(self):
         return [
@@ -48,7 +48,7 @@ class PrivacyLookupWizard(models.TransientModel):
         email = f"%{self.email.strip()}%"
         email_normalized = tools.email_normalize(self.email.strip())
         if not email_normalized:
-            raise UserError(_("Invalid email address “%s”", self.email))
+            raise UserError(self.env._("Invalid email address “%s”", self.email))
 
         query = SQL(
             """
@@ -337,7 +337,9 @@ class PrivacyLookupWizardLine(models.TransientModel):
         for line in self:
             if not line.res_model_id or not line.res_id:
                 continue
-            action = _("Unarchived") if line.is_active else _("Archived")
+            action = (
+                self.env._("Unarchived") if line.is_active else self.env._("Archived")
+            )
             line.execution_details = "%s %s #%s" % (
                 action,
                 line.res_model_id.name,
@@ -350,10 +352,10 @@ class PrivacyLookupWizardLine(models.TransientModel):
     def action_unlink(self):
         self.check_singleton()
         if self.is_unlinked:
-            raise UserError(_("The record is already unlinked."))
+            raise UserError(self.env._("The record is already unlinked."))
         self.env[self.res_model].sudo().browse(self.res_id).unlink()
         self.execution_details = "%s %s #%s" % (
-            _("Deleted"),
+            self.env._("Deleted"),
             self.res_model_id.name,
             self.res_id,
         )

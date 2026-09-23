@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import (
@@ -367,7 +367,9 @@ class HrExpense(models.Model):
                     company_zero=total_amount_is_zero,
                     currency_zero=total_amount_currency_is_zero,
                 )
-                raise ValidationError(_("Only draft expenses can have a total of 0."))
+                raise ValidationError(
+                    self.env._("Only draft expenses can have a total of 0.")
+                )
 
     @api.constrains("account_move_id")
     def _check_o2o_payment(self):
@@ -380,7 +382,7 @@ class HrExpense(models.Model):
                     sharing=expense.account_move_id.origin_payment_id.expense_ids,
                 )
                 raise ValidationError(
-                    _("Only one expense can be linked to a particular payment")
+                    self.env._("Only one expense can be linked to a particular payment")
                 )
 
     @api.depends("product_has_cost")
@@ -507,7 +509,7 @@ class HrExpense(models.Model):
             company_currency = (
                 expense.company_currency_id or expense.env.company.currency_id
             )
-            expense.label_currency_rate = _(
+            expense.label_currency_rate = self.env._(
                 "1 %(exp_cur)s = %(rate)s %(comp_cur)s",
                 exp_cur=(expense.currency_id or company_currency).name,
                 rate=float_repr(expense.currency_rate, 6),
@@ -601,7 +603,7 @@ class HrExpense(models.Model):
         for expense in self:
             if not expense.is_editable:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Uh-oh! You can’t edit this expense.\n\n"
                         "Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
                     )
@@ -809,7 +811,9 @@ class HrExpense(models.Model):
                 "hr_expense.group_hr_expense_team_approver"
             ):
                 raise ValidationError(
-                    _("The current user has no related employee. Please, create one.")
+                    self.env._(
+                        "The current user has no related employee. Please, create one."
+                    )
                 )
             expense.employee_id = employee
 
@@ -982,14 +986,16 @@ class HrExpense(models.Model):
         for expense in self:
             if expense.state in {"approved", "posted", "in_payment", "paid"}:
                 _debug.logic("unlink_refused", expense=expense, state=expense.state)
-                raise UserError(_("You cannot delete a posted or approved expense."))
+                raise UserError(
+                    self.env._("You cannot delete a posted or approved expense.")
+                )
 
     def write(self, vals):
         _debug.lifecycle("write", expenses=self, fields=list(vals))
         if any(field in vals for field in ("is_editable", "can_approve", "can_refuse")):
             _debug.logic("write_refused", reason="security_field", fields=list(vals))
             raise UserError(
-                _("You cannot edit the security fields of an expense manually")
+                self.env._("You cannot edit the security fields of an expense manually")
             )
 
         if any(
@@ -1004,7 +1010,7 @@ class HrExpense(models.Model):
             if any((not expense.is_editable and not self.env.su) for expense in self):
                 _debug.logic("write_refused", reason="not_editable", fields=list(vals))
                 raise UserError(
-                    _(
+                    self.env._(
                         "Uh-oh! You can’t edit this expense.\n\n"
                         "Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
                     )
@@ -1182,15 +1188,15 @@ class HrExpense(models.Model):
             else False
         )
         if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
-            params = urlencode({"subject": _("Lunch with customer $12.32")}).replace(
-                "+", "%20"
-            )
+            params = urlencode(
+                {"subject": self.env._("Lunch with customer $12.32")}
+            ).replace("+", "%20")
             return Markup(
                 """<div class="text-muted mt-4">%(send_string)s <a class="text-body" href="mailto:%(alias_email)s?%(params)s">%(alias_email)s</a></div>"""
             ) % {
                 "alias_email": expense_alias.display_name,
                 "params": params,
-                "send_string": _("Tip: try sending receipts by email"),
+                "send_string": self.env._("Tip: try sending receipts by email"),
             }
         return ""
 
@@ -1261,7 +1267,7 @@ class HrExpense(models.Model):
             if self._get_duplicate_expenses_to_review():
                 _debug.logic("approval_sync_refused", reason="duplicates", expense=self)
                 raise UserError(
-                    _(
+                    self.env._(
                         "%(expense)s may duplicate another expense. Approve it from "
                         "the expense, where its duplicates can be reviewed.",
                         expense=self.name,
@@ -1281,9 +1287,9 @@ class HrExpense(models.Model):
         self._do_refuse(
             self.sudo().approval_request_id.refusal_note
             or (
-                _("Refused through its approval request.")
+                self.env._("Refused through its approval request.")
                 if kind == "refused"
-                else _("Cancelled through its approval request.")
+                else self.env._("Cancelled through its approval request.")
             )
         )
 
@@ -1357,7 +1363,7 @@ class HrExpense(models.Model):
 
             if not mail_from:
                 _logger.warning(
-                    _(
+                    self.env._(
                         "Failed to send mails for submitted expenses. No valid email was found for the company"
                     )
                 )
@@ -1388,7 +1394,7 @@ class HrExpense(models.Model):
                         "body_html": body,
                         "email_from": mail_from,
                         "email_to": manager.employee_id.work_email or manager.email,
-                        "subject": _("New expenses waiting for your approval"),
+                        "subject": self.env._("New expenses waiting for your approval"),
                     }
                 )
             if new_mails:
@@ -1469,7 +1475,7 @@ class HrExpense(models.Model):
         split_expense_ids = self.search(
             [("split_expense_origin_id", "=", self.split_expense_origin_id.id)]
         )
-        return split_expense_ids._get_records_action(name=_("Split Expenses"))
+        return split_expense_ids._get_records_action(name=self.env._("Split Expenses"))
 
     def action_submit(self):
         user = self.env.user
@@ -1482,10 +1488,14 @@ class HrExpense(models.Model):
                     user=user,
                 )
                 raise UserError(
-                    _("You do not have the required permission to submit this expense.")
+                    self.env._(
+                        "You do not have the required permission to submit this expense."
+                    )
                 )
             if not expense.product_id:
-                raise UserError(_("You can not submit an expense without a category."))
+                raise UserError(
+                    self.env._("You can not submit an expense without a category.")
+                )
             if not expense.manager_id:
                 expense.sudo().manager_id = (
                     expense._get_default_responsible_for_approval()
@@ -1562,7 +1572,7 @@ class HrExpense(models.Model):
                 companies=employee_expenses.company_id,
             )
             raise UserError(
-                _(
+                self.env._(
                     "You can't post simultaneously employee-paid expenses belonging to different companies"
                 )
             )
@@ -1618,12 +1628,12 @@ class HrExpense(models.Model):
 
     @api.model
     def _get_untitled_expense_name(self, *args):
-        return _("Untitled Expense %s", *args)
+        return self.env._("Untitled Expense %s", *args)
 
     @api.model
     def create_expense_from_attachments(self, attachment_ids=None, view_type="list"):
         if not attachment_ids:
-            raise UserError(_("No attachment was provided"))
+            raise UserError(self.env._("No attachment was provided"))
         attachments = self.env["ir.attachment"].browse(attachment_ids)
         expenses = self.env["hr.expense"]
 
@@ -1631,7 +1641,7 @@ class HrExpense(models.Model):
             attachment.res_id or attachment.res_model != "hr.expense"
             for attachment in attachments
         ):
-            raise UserError(_("Invalid attachments!"))
+            raise UserError(self.env._("Invalid attachments!"))
 
         product = self.env["product.product"].search([("can_be_expensed", "=", True)])
         if product:
@@ -1642,7 +1652,7 @@ class HrExpense(models.Model):
         else:
             _debug.logic("no_expensable_product", attachments=attachments)
             raise UserError(
-                _(
+                self.env._(
                     "You need to have at least one category that can be expensed in your database to proceed!"
                 )
             )
@@ -1673,7 +1683,7 @@ class HrExpense(models.Model):
     def action_show_same_receipt_expense_ids(self):
         self.check_singleton()
         return self.same_receipt_expense_ids._get_records_action(
-            name=_(
+            name=self.env._(
                 "Expenses with a similar receipt to %(other_expense_name)s",
                 other_expense_name=self.name,
             ),
@@ -1683,17 +1693,17 @@ class HrExpense(models.Model):
     def get_expense_dashboard(self):
         expense_state = {
             "draft": {
-                "description": _("To Submit"),
+                "description": self.env._("To Submit"),
                 "amount": 0.0,
                 "currency": self.env.company.currency_id.id,
             },
             "submitted": {
-                "description": _("Waiting Approval"),
+                "description": self.env._("Waiting Approval"),
                 "amount": 0.0,
                 "currency": self.env.company.currency_id.id,
             },
             "approved": {
-                "description": _("Waiting Reimbursement"),
+                "description": self.env._("Waiting Reimbursement"),
                 "amount": 0.0,
                 "currency": self.env.company.currency_id.id,
             },
@@ -1721,7 +1731,7 @@ class HrExpense(models.Model):
         root = self.env["ir.model.data"]._xmlid_to_res_id("base.partner_root")
         for expense in self.duplicate_expense_ids:
             expense.message_post(
-                body=_(
+                body=self.env._(
                     "%(user)s confirms this expense is not a duplicate with similar expense.",
                     user=self.env.user.name,
                 ),
@@ -1733,9 +1743,13 @@ class HrExpense(models.Model):
         if self.filtered(
             lambda expense: expense.state in {"posted", "paid", "in_payment"}
         ):
-            raise UserError(_("You cannot split an expense that is already posted."))
+            raise UserError(
+                self.env._("You cannot split an expense that is already posted.")
+            )
         if not self.is_editable:
-            raise UserError(_("You do not have the rights to edit this expense."))
+            raise UserError(
+                self.env._("You do not have the rights to edit this expense.")
+            )
 
         splits = self.env["hr.expense.split"].create(self._prepare_split_vals())
 
@@ -1748,7 +1762,7 @@ class HrExpense(models.Model):
             ]
         )
         return {
-            "name": _("Expense split"),
+            "name": self.env._("Expense split"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "views": [[False, "form"]],
@@ -1784,7 +1798,7 @@ class HrExpense(models.Model):
                 for reason in self._get_cannot_approve_reason().values()
                 if reason
             )
-            reasons = _(
+            reasons = self.env._(
                 "You cannot approve:\n %(reasons)s", reasons="\n".join(reasons_list)
             )
             raise UserError(reasons)
@@ -1825,13 +1839,13 @@ class HrExpense(models.Model):
                 or (expense_employee.expense_manager_id == user)
             )
             if expense.company_id.id not in valid_company_ids:
-                reason = _(
+                reason = self.env._(
                     "%(expense_name)s: Your are neither a Manager nor a HR Officer of this expense's company",
                     expense_name=expense.name,
                 )
 
             elif not is_expense_team_approver:
-                reason = _(
+                reason = self.env._(
                     "%(expense_name)s: You are neither a Manager nor a HR Officer",
                     expense_name=expense.name,
                 )
@@ -1848,13 +1862,13 @@ class HrExpense(models.Model):
                     current_managers |= user
 
                 if expense_employee.user_id == user:
-                    reason = _(
+                    reason = self.env._(
                         "%(expense_name)s: It is your own expense",
                         expense_name=expense.name,
                     )
 
                 elif user not in current_managers and not is_approver:
-                    reason = _(
+                    reason = self.env._(
                         "%(expense_name)s: It is not from your department",
                         expense_name=expense.name,
                     )
@@ -1864,7 +1878,7 @@ class HrExpense(models.Model):
     def _check_can_refuse(self):
         if not all(self.mapped("can_approve")):
             _debug.logic("refuse_refused", expenses=self)
-            reasons = _(
+            reasons = self.env._(
                 "You cannot refuse:\n %(reasons)s",
                 reasons="\n".join(self._get_cannot_approve_reason().values()),
             )
@@ -1874,7 +1888,7 @@ class HrExpense(models.Model):
         if not all(self.mapped("can_reset")):
             _debug.logic("reset_refused", reason="cannot_reset", expenses=self)
             raise UserError(
-                _(
+                self.env._(
                     "Only HR Officers, accountants, or the concerned employee can reset to draft."
                 )
             )
@@ -1886,7 +1900,7 @@ class HrExpense(models.Model):
                 "reset_refused", reason="posted_move", moves=self.account_move_id
             )
             raise UserError(
-                _(
+                self.env._(
                     "You cannot reset to draft an expense linked to a posted journal entry."
                 )
             )
@@ -1895,13 +1909,15 @@ class HrExpense(models.Model):
         if any(expense.state != "approved" for expense in self):
             _debug.logic("create_move_refused", reason="not_approved", expenses=self)
             raise UserError(
-                _("You can only generate an accounting entry for approved expense(s).")
+                self.env._(
+                    "You can only generate an accounting entry for approved expense(s)."
+                )
             )
 
         if False in self.mapped("payment_mode"):
             _debug.logic("create_move_refused", reason="no_payment_mode", expenses=self)
             raise UserError(
-                _(
+                self.env._(
                     "Please specify if the expenses were paid by the company, or the employee."
                 )
             )
@@ -1940,7 +1956,9 @@ class HrExpense(models.Model):
                 moves=self.sudo().account_move_id - draft_moves_sudo,
             )
             raise UserError(
-                _("You cannot cancel an expense linked to a posted journal entry")
+                self.env._(
+                    "You cannot cancel an expense linked to a posted journal entry"
+                )
             )
 
         if draft_moves_sudo:
@@ -2031,13 +2049,15 @@ class HrExpense(models.Model):
     def _post_wizard(self):
         if "company_account" in set(self.mapped("payment_mode")):
             raise UserError(
-                _("Only expense paid by the employee can be posted with the wizard")
+                self.env._(
+                    "Only expense paid by the employee can be posted with the wizard"
+                )
             )
 
         wizard_name = (
-            _("Post expenses paid by the employee")
+            self.env._("Post expenses paid by the employee")
             if self.env.context.get("company_paid_move_ids")
-            else _("Post expenses")
+            else self.env._("Post expenses")
         )
         return {
             "type": "ir.actions.act_window",
@@ -2140,7 +2160,7 @@ class HrExpense(models.Model):
 
         return_vals = []
         for employee_sudo, expenses_sudo in self.sudo().grouped("employee_id").items():
-            multiple_expenses_name = _(
+            multiple_expenses_name = self.env._(
                 "Expenses of %(employee)s", employee=employee_sudo.name
             )
             move_ref = (
@@ -2173,7 +2193,7 @@ class HrExpense(models.Model):
         payment_channel = self.payment_channel_id
         if not payment_channel:
             raise UserError(
-                _(
+                self.env._(
                     "You need to add a manual payment method on the journal (%s)",
                     journal.name,
                 )
@@ -2308,7 +2328,7 @@ class HrExpense(models.Model):
     def _get_move_line_name(self):
         self.check_singleton()
         expense_name = self.name.split("\n")[0][:64]
-        return _(
+        return self.env._(
             "%(employee_name)s: %(expense_name)s",
             employee_name=self.employee_id.name,
             expense_name=expense_name,
@@ -2417,17 +2437,17 @@ class HrExpense(models.Model):
             )
         if not outstanding_account.active:
             raise RedirectWarning(
-                message=_(
+                message=self.env._(
                     "The account %(name)s (%(code)s) is archived. Activate it to continue",
                     name=outstanding_account.name,
                     code=outstanding_account.code,
                 ),
                 action=outstanding_account._get_records_action(),
-                button_text=_("Go to Account"),
+                button_text=self.env._("Go to Account"),
             )
         return outstanding_account
 
     def _creation_message(self):
         if self.env.context.get("from_split_wizard"):
-            return _("Expense created from a split.")
+            return self.env._("Expense created from a split.")
         return super()._creation_message()

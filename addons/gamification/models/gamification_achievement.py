@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -276,7 +276,7 @@ class GamificationAchievementUnlock(models.Model):
                         unlock.user_id: {
                             "gain": achievement.karma_reward,
                             "source": unlock,
-                            "reason": _("Achievement: %s", achievement.name),
+                            "reason": self.env._("Achievement: %s", achievement.name),
                         }
                         for unlock in unlocks
                     }
@@ -294,7 +294,7 @@ class GamificationAchievementUnlock(models.Model):
                 unlock.user_id._send_gamification_notification(
                     "achievement",
                     {
-                        "title": _("Achievement Unlocked!"),
+                        "title": self.env._("Achievement Unlocked!"),
                         "message": achievement.name,
                         "rarity": achievement.rarity,
                     },

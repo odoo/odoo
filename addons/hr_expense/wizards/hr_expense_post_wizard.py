@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -60,7 +60,7 @@ class HrExpensePostWizard(models.TransientModel):
         if not self.env["account.move"].has_access("create"):
             _debug.logic("post_entry_refused", reason="no_move_create_access")
             raise UserError(
-                _("You don't have the rights to create accounting entries.")
+                self.env._("You don't have the rights to create accounting entries.")
             )
         expense_receipt_vals_list = [
             {
@@ -114,7 +114,7 @@ class HrExpensePostWizard(models.TransientModel):
             )
             action.update(
                 {
-                    "name": _("New expense entries"),
+                    "name": self.env._("New expense entries"),
                     "view_mode": "list,form",
                     "views": [(list_view and list_view.id, "list"), (False, "form")],
                     "domain": [("id", "in", moves_ids)],

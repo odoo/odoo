@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -48,7 +48,7 @@ class HrEmployeeDeleteWizard(models.TransientModel):
         self.check_singleton()
         _debug.pipeline("employee_delete_to_departure", employees=self.employee_ids)
         return {
-            "name": _("Employee Termination"),
+            "name": self.env._("Employee Termination"),
             "type": "ir.actions.act_window",
             "res_model": "hr.departure.wizard",
             "views": [[False, "form"]],
@@ -72,7 +72,7 @@ class HrEmployeeDeleteWizard(models.TransientModel):
         self.check_singleton()
         employees = self.with_context(active_test=False).employee_ids
         action = {
-            "name": _("Employees' Timesheets"),
+            "name": self.env._("Employees' Timesheets"),
             "type": "ir.actions.act_window",
             "res_model": "account.analytic.line",
             "view_mode": "list,form",
@@ -83,5 +83,5 @@ class HrEmployeeDeleteWizard(models.TransientModel):
             ],
         }
         if len(employees) == 1:
-            action["name"] = _("Timesheets of %(name)s", name=employees.name)
+            action["name"] = self.env._("Timesheets of %(name)s", name=employees.name)
         return action

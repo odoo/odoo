@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
@@ -75,7 +75,7 @@ class ProjectTriage(models.Model):
             )
             if not user_remaining:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Each user must have at least one triage bucket. "
                         "Create a replacement bucket before deleting the selected ones."
                     )

@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from .ir_websocket import SUBCHANNEL as BUS_SUBCHANNEL
@@ -69,7 +69,7 @@ class AutomationRuntime(models.Model):
     )
     name = fields.Char(
         string="Operation",
-        default=lambda self: _("New"),
+        default=lambda self: self.env._("New"),
         index="trigram",
         copy=False,
         readonly=True,
@@ -153,9 +153,12 @@ class AutomationRuntime(models.Model):
                 seq_env = seq_env.with_company(vals["company_id"])
 
             rule = self.env["automation.rule"].browse(vals.get("automation_id"))
-            if vals.get("name", _("New")) == _("New") and rule.run_mode == "queued":
+            if (
+                vals.get("name", self.env._("New")) == self.env._("New")
+                and rule.run_mode == "queued"
+            ):
                 vals["name"] = rule.sudo().name
-            elif vals.get("name", _("New")) == _("New"):
+            elif vals.get("name", self.env._("New")) == self.env._("New"):
                 seq_date = (
                     fields.Datetime.context_timestamp(
                         seq_env,
@@ -167,7 +170,7 @@ class AutomationRuntime(models.Model):
                 vals["name"] = seq_env.env["ir.sequence"].next_by_code(
                     "automation.runtime",
                     sequence_date=seq_date,
-                ) or _("New")
+                ) or self.env._("New")
 
         return super().create(vals_list)
 
@@ -208,8 +211,8 @@ class AutomationRuntime(models.Model):
         self.state = "in_progress"
 
         self._log_run_message(
-            body=_("Workflow started with %d steps", len(self.line_ids)),
-            subject=_("Workflow Started"),
+            body=self.env._("Workflow started with %d steps", len(self.line_ids)),
+            subject=self.env._("Workflow Started"),
         )
         self._notify_workflow_change()
 
@@ -266,7 +269,9 @@ class AutomationRuntime(models.Model):
                 ", ".join(blocked.mapped("name")),
             )
             blocked.action_mark_error(
-                _("Step never became ready: its dependencies cannot complete."),
+                self.env._(
+                    "Step never became ready: its dependencies cannot complete."
+                ),
             )
             self.action_error()
 
@@ -293,7 +298,9 @@ class AutomationRuntime(models.Model):
             actions = rule.action_server_ids.sorted("sequence")
             if not actions:
                 raise UserError(
-                    _("Automation '%s' has no server actions configured", rule.name),
+                    self.env._(
+                        "Automation '%s' has no server actions configured", rule.name
+                    ),
                 )
             runtimes.state = "in_progress"
             lines = runtimes._materialize(actions)
@@ -351,7 +358,8 @@ class AutomationRuntime(models.Model):
         ).action_cancel()
         for run in runs:
             run._log_run_message(
-                body=_("Workflow cancelled"), subject=_("Workflow Cancelled")
+                body=self.env._("Workflow cancelled"),
+                subject=self.env._("Workflow Cancelled"),
             )
 
     def _release_parent_line(self):
@@ -366,7 +374,9 @@ class AutomationRuntime(models.Model):
                 line.action_resume()
             else:
                 line.action_mark_error(
-                    _("Sub-workflow '%(name)s' did not complete.", name=runtime.name),
+                    self.env._(
+                        "Sub-workflow '%(name)s' did not complete.", name=runtime.name
+                    ),
                 )
                 if not line._contains_its_error():
                     parent.action_error()
@@ -479,8 +489,8 @@ class AutomationRuntime(models.Model):
 
         self.state = "done"
         self._log_run_message(
-            body=_("Workflow completed successfully"),
-            subject=_("Workflow Completed"),
+            body=self.env._("Workflow completed successfully"),
+            subject=self.env._("Workflow Completed"),
         )
         self._release_parent_line()
 
@@ -497,23 +507,25 @@ class AutomationRuntime(models.Model):
                 "state": "error",
                 "date_resume": False,
                 "date_settled": self.env.cr.now(),
-                "error_message": _("Step never ran: the workflow already failed."),
+                "error_message": self.env._(
+                    "Step never ran: the workflow already failed."
+                ),
             }
         )
         self._release_parent_line()
         self._log_run_message(
-            body=_(
+            body=self.env._(
                 "Workflow failed at: %(steps)s",
-                steps=", ".join(failed.mapped("name")) or _("unknown step"),
+                steps=", ".join(failed.mapped("name")) or self.env._("unknown step"),
             ),
-            subject=_("Workflow Failed"),
+            subject=self.env._("Workflow Failed"),
         )
 
     def action_next_step(self):
         self.check_singleton()
 
         if self.state != "in_progress":
-            raise UserError(_("Workflow is not in progress"))
+            raise UserError(self.env._("Workflow is not in progress"))
 
         ready_lines = self.line_ids.filtered(lambda l: l.state == "ready")
 
@@ -527,13 +539,15 @@ class AutomationRuntime(models.Model):
                     "type": "ir.actions.client",
                     "tag": "display_notification",
                     "params": {
-                        "title": _("Workflow Complete"),
-                        "message": _("All workflow steps completed successfully!"),
+                        "title": self.env._("Workflow Complete"),
+                        "message": self.env._(
+                            "All workflow steps completed successfully!"
+                        ),
                         "type": "success",
                     },
                 }
             raise UserError(
-                _("No actions are ready to execute. Check dependencies."),
+                self.env._("No actions are ready to execute. Check dependencies."),
             )
 
         next_line = ready_lines[0]
@@ -552,7 +566,7 @@ class AutomationRuntime(models.Model):
         actions = self.automation_id.action_server_ids.sorted("sequence")
         if not actions:
             raise UserError(
-                _(
+                self.env._(
                     "Automation '%s' has no server actions configured",
                     self.automation_id.name,
                 ),
@@ -694,7 +708,7 @@ class AutomationRuntime(models.Model):
     def action_view_automation(self):
         self.check_singleton()
         return {
-            "name": _("Automation Workflow"),
+            "name": self.env._("Automation Workflow"),
             "type": "ir.actions.act_window",
             "res_model": "automation.rule",
             "view_mode": "form",

@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import html2plaintext
 
@@ -85,7 +85,7 @@ class SlideChannelPartner(models.Model):
         super()._send_completed_mail()
         for membership in self:
             membership.channel_id._message_employee_chatter(
-                _(
+                self.env._(
                     "The employee has completed the course %s",
                     Markup('<a href="%(link)s">%(course)s</a>')
                     % {
@@ -111,7 +111,7 @@ class SlideChannel(models.Model):
         if member_status == "joined":
             for channel in self:
                 channel._message_employee_chatter(
-                    _(
+                    self.env._(
                         "The employee subscribed to the course %s",
                         Markup('<a href="%(link)s">%(course)s</a>')
                         % {
@@ -130,7 +130,7 @@ class SlideChannel(models.Model):
 
         for channel in self:
             channel._message_employee_chatter(
-                _(
+                self.env._(
                     "The employee left the course %s",
                     Markup('<a href="%(link)s">%(course)s</a>')
                     % {

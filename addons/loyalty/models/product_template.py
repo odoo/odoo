@@ -1,6 +1,6 @@
 import base64
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.tools import file_open
 
@@ -26,7 +26,7 @@ class ProductTemplate(models.Model):
         ]
         for product in self.filtered(lambda p: p.product_variant_id in product_data):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'."
                     " Please archive it instead.",
                     name=product.with_context(display_default_code=False).display_name,

@@ -1,6 +1,6 @@
 from datetime import UTC
 
-from odoo import Command, _, fields, models, tools
+from odoo import Command, fields, models, tools
 from odoo.libs.datetime import timezone
 from odoo.tools import is_html_empty
 
@@ -73,7 +73,9 @@ class MailActivity(models.Model):
         if feedback:
             for event in self.calendar_event_id:
                 notes = event.notes if not tools.is_html_empty(event.notes) else ""
-                notes_feedback = _("Feedback: %s", tools.plaintext2html(feedback))
+                notes_feedback = self.env._(
+                    "Feedback: %s", tools.plaintext2html(feedback)
+                )
                 notes = f"{notes}<br />{notes_feedback}"
                 event.write({"notes": notes})
         return super()._action_done(feedback=feedback, attachment_ids=attachment_ids)

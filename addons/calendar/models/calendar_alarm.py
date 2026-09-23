@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -59,7 +59,9 @@ class CalendarAlarm(models.Model):
     def _check_duration(self):
         for alarm in self:
             if alarm.duration < 0:
-                raise ValidationError(_("The reminder delay cannot be negative."))
+                raise ValidationError(
+                    self.env._("The reminder delay cannot be negative.")
+                )
 
     @api.depends("alarm_type")
     def _compute_notify_responsible_available(self):
@@ -139,4 +141,4 @@ class CalendarAlarm(models.Model):
         ).get(self.alarm_type, "")
         self.name = "%s - %s %s" % (display_alarm_type, self.duration, display_interval)
         if self.notify_responsible:
-            self.name += " - " + _("Notify Responsible")
+            self.name += " - " + self.env._("Notify Responsible")

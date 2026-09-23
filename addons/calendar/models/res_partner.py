@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import UTC, datetime, timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import SQL
 
@@ -113,7 +113,7 @@ class ResPartner(models.Model):
             stat_info = {
                 "iconClass": "fa-solid fa-calendar",
                 "value": partner.meeting_count,
-                "label": _("Meetings"),
+                "label": self.env._("Meetings"),
                 "tagClass": "o_tag_color_3",
             }
             data_list[partner.id].append(stat_info)

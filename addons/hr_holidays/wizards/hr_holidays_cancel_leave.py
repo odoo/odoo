@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class HrHolidaysCancelLeave(models.TransientModel):
@@ -22,7 +22,7 @@ class HrHolidaysCancelLeave(models.TransientModel):
             "tag": "display_notification",
             "params": {
                 "type": "success",
-                "message": _("Your time off has been cancelled."),
+                "message": self.env._("Your time off has been cancelled."),
                 "next": {"type": "ir.actions.act_window_close"},
             },
         }

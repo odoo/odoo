@@ -1,6 +1,6 @@
 from datetime import UTC, timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
@@ -523,7 +523,7 @@ class MaintenanceOrder(models.Model):
     def _get_activity_note(self):
         self.check_singleton()
         if self.asset_ids:
-            return _(
+            return self.env._(
                 "Order planned for %s",
                 ", ".join(asset._get_html_link() for asset in self.asset_ids),
             )

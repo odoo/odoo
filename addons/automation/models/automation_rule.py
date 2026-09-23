@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, exceptions, fields, models, tools
+from odoo import api, exceptions, fields, models, tools
 from odoo.exceptions import LockError, MissingError
 from odoo.fields import Domain
 from odoo.tools import safe_eval
@@ -372,7 +372,7 @@ class AutomationRule(models.Model):
             )
             if failing_actions:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Automation '%(automation)s': The following actions target different models: %(action_names)s.\n\n"
                         "Expected model: %(expected_model)s\n"
                         "Action models: %(action_models)s\n\n"
@@ -394,7 +394,7 @@ class AutomationRule(models.Model):
                 and not automation.model_id.is_mail_thread
             ):
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Automation '%(automation)s': Mail event trigger '%(trigger)s' cannot be used on model '%(model)s'.\n\n"
                         "Mail triggers (%(mail_triggers)s) require the model to inherit from 'mixin.mail.thread'.\n\n"
                         "Solution: Either change the trigger type or select a model that has the discussion feature enabled.",
@@ -410,7 +410,7 @@ class AutomationRule(models.Model):
         for automation in self:
             if automation.trigger in TIME_TRIGGERS and automation.trg_date_range < 0:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Automation '%(automation)s': Delay value must be positive (currently: %(delay)s).\n\n"
                         "To trigger before a date, use a positive delay and set 'Delay mode' to 'Before'.\n"
                         "To trigger after a date, use a positive delay and set 'Delay mode' to 'After'.\n\n"
@@ -434,7 +434,7 @@ class AutomationRule(models.Model):
                     ]
                 )
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Automation '%(automation)s': The following actions have configuration issues:\n\n"
                         "%(warning_details)s\n\n"
                         "Please fix these warnings before saving the automation.",
@@ -448,7 +448,7 @@ class AutomationRule(models.Model):
             if automation.trigger == "on_change" and no_code_actions:
                 invalid_action_types = ", ".join(set(no_code_actions.mapped("state")))
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Automation '%(automation)s': 'On live update' trigger can only use 'Execute Python Code' actions.\n\n"
                         "Invalid actions: %(actions)s (types: %(types)s)\n\n"
                         "Reason: On-change automations execute in the browser during form editing, "
@@ -465,7 +465,7 @@ class AutomationRule(models.Model):
             )
             if automation.trigger == "on_unlink" and mail_actions:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Automation '%(automation)s': Mail actions cannot be used with 'On Deletion' trigger.\n\n"
                         "Invalid actions: %(actions)s\n\n"
                         "Reason: Records are deleted before actions execute, so there's no record "
@@ -538,7 +538,7 @@ class AutomationRule(models.Model):
             )
             if conditional:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Automation '%(name)s' has conditional connections "
                         "(%(edges)s) but does not record its runs, so those "
                         "conditions would be ignored.\n\n"
@@ -860,8 +860,8 @@ class AutomationRule(models.Model):
             )
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         'The "%(trigger_value)s" %(trigger_label)s can only be '
                         'used with the "%(state_value)s" action type',
                         trigger_value=dict(
@@ -884,8 +884,8 @@ class AutomationRule(models.Model):
             )
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "A rule that runs on deletion runs once the record is "
                         "already gone, and these actions each need it to still "
                         "be there:\n%(actions)s\n\nThey would do nothing, "
@@ -924,7 +924,7 @@ class AutomationRule(models.Model):
             raise_if_not_found=False,
         )
         if not cron:
-            message = _(
+            message = self.env._(
                 "The scheduled action for Automation Rules cannot be found.\n\n"
                 "This scheduled action (external ID: automation.ir_cron_data_automation_check) "
                 "is required for time-based automations to work.\n\n"
@@ -937,7 +937,7 @@ class AutomationRule(models.Model):
             raise exceptions.MissingError(message)
         return {
             "type": "ir.actions.act_window",
-            "name": _("Scheduled Action"),
+            "name": self.env._("Scheduled Action"),
             "view_mode": "form",
             "res_model": "ir.cron",
             "res_id": cron.id,
@@ -948,7 +948,7 @@ class AutomationRule(models.Model):
 
         if self.trigger != "on_hand":
             raise exceptions.ValidationError(
-                _(
+                self.env._(
                     "Automation '%(automation)s' cannot be triggered manually.\n\n"
                     "Current trigger: %(current_trigger)s\n"
                     "Required trigger: on_hand (Manual trigger)\n\n"
@@ -971,15 +971,17 @@ class AutomationRule(models.Model):
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
-                    "title": _("No Records Selected"),
-                    "message": _("Please select one or more records to process."),
+                    "title": self.env._("No Records Selected"),
+                    "message": self.env._(
+                        "Please select one or more records to process."
+                    ),
                     "type": "warning",
                 },
             }
 
         if active_model != self.model_name:
             raise exceptions.ValidationError(
-                _(
+                self.env._(
                     "Automation '%(automation)s': Model mismatch.\n\n"
                     "This automation is configured for: %(expected)s\n"
                     "You are trying to use it on: %(actual)s\n\n"
@@ -999,8 +1001,8 @@ class AutomationRule(models.Model):
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
-                    "title": _("No Matching Records"),
-                    "message": _(
+                    "title": self.env._("No Matching Records"),
+                    "message": self.env._(
                         "None of the selected records match the automation filter conditions.",
                     ),
                     "type": "warning",
@@ -1034,8 +1036,8 @@ class AutomationRule(models.Model):
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
-                    "title": _("Automation Executed"),
-                    "message": _(
+                    "title": self.env._("Automation Executed"),
+                    "message": self.env._(
                         "Successfully processed %(processed)d of %(total)d selected record(s).",
                         processed=len(filtered_records),
                         total=len(records),
@@ -1265,7 +1267,7 @@ class AutomationRule(models.Model):
     def _prepare_logging_values(self, **values):
         self.check_singleton()
         defaults = {
-            "name": _("Webhook Log"),
+            "name": self.env._("Webhook Log"),
             "type": "server",
             "dbname": self.env.cr.dbname,
             "level": "INFO",

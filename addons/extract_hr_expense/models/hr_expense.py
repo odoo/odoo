@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -148,7 +148,9 @@ class HrExpense(models.Model):
                 state=self.state,
                 extract_state=self.extract_state,
             )
-            raise UserError(_("A receipt is read while the expense is still a draft."))
+            raise UserError(
+                self.env._("A receipt is read while the expense is still a draft.")
+            )
         result = self._extract_document()
         if result is None:
             _debug.logic(
@@ -162,11 +164,11 @@ class HrExpense(models.Model):
             missing=len(result.missing),
         )
         if result.satisfied:
-            message = _("The receipt was read in full.")
+            message = self.env._("The receipt was read in full.")
         else:
-            message = _(
+            message = self.env._(
                 "The receipt was read in part. Still missing: %(fields)s",
-                fields=", ".join(result.missing) or _("nothing required"),
+                fields=", ".join(result.missing) or self.env._("nothing required"),
             )
         return {
             "type": "ir.actions.client",

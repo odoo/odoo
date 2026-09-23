@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -82,7 +82,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
             program_desc = dict(
                 wizard._fields["program_type"]._description_selection(wizard.env)
             )
-            wizard.confirmation_message = _(
+            wizard.confirmation_message = self.env._(
                 "You're about to generate %(program_type)s with a value of %(value)s for %(customer_number)i customers",
                 program_type=program_desc[wizard.program_type],
                 value=wizard.points_granted,
@@ -119,9 +119,11 @@ class LoyaltyGenerateWizard(models.TransientModel):
     def generate_coupons(self):
         """Issue this wizard's coupons and record what each one was granted."""
         if any(not wizard.program_id for wizard in self):
-            raise ValidationError(_("Can not generate coupon, no program is set."))
+            raise ValidationError(
+                self.env._("Can not generate coupon, no program is set.")
+            )
         if any(wizard.coupon_qty <= 0 for wizard in self):
-            raise ValidationError(_("Invalid quantity."))
+            raise ValidationError(self.env._("Invalid quantity."))
         coupon_create_vals = []
         issuers = []  # the wizard each coupon came from, to describe its history line
         for wizard in self:
@@ -141,7 +143,8 @@ class LoyaltyGenerateWizard(models.TransientModel):
         self.env["loyalty.history"].create(
             [
                 {
-                    "description": wizard.description or _("Gift For Customer"),
+                    "description": wizard.description
+                    or self.env._("Gift For Customer"),
                     "card_id": coupon.id,
                     "issued": wizard.points_granted,
                 }

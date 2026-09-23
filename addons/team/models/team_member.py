@@ -1,4 +1,4 @@
-from odoo import Command, _, api, exceptions, fields, models
+from odoo import Command, api, exceptions, fields, models
 from odoo.fields import NEGATIVE_CONDITION_OPERATORS, Domain
 from odoo.libs.debug_log import DebugLog
 
@@ -92,7 +92,7 @@ class TeamMember(models.Model):
 
         if duplicates:
             raise exceptions.ValidationError(
-                _(
+                self.env._(
                     "You are trying to create duplicate membership(s). We found that %(duplicates)s already exist(s).",
                     duplicates=", ".join(
                         "%s (%s)" % (m.user_id.name, m.team_id.name) for m in duplicates
@@ -109,14 +109,14 @@ class TeamMember(models.Model):
         for membership in self.filtered("active"):
             if not membership.team_id.active:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "Team '%(team)s' is archived and cannot take new members.",
                         team=membership.team_id.name,
                     )
                 )
             if not membership.user_id.active:
                 raise exceptions.ValidationError(
-                    _(
+                    self.env._(
                         "User '%(user)s' is archived and cannot join a team.",
                         user=membership.user_id.name,
                     )
@@ -210,7 +210,7 @@ class TeamMember(models.Model):
 
     @api.model
     def _get_membership_warning(self, user_names, teams):
-        return _(
+        return self.env._(
             "%(user_names)s already in other teams (%(team_names)s).",
             user_names=", ".join(user_names),
             team_names=", ".join(teams.mapped("name")),
@@ -228,7 +228,7 @@ class TeamMember(models.Model):
             return
         team = foreign.team_id[:1]
         raise exceptions.ValidationError(
-            _(
+            self.env._(
                 "The following team members are not allowed in company '%(company)s' of the team '%(team)s': %(users)s",
                 company=team.company_id.display_name,
                 team=team.name,

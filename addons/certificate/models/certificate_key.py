@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, ed25519, padding, rsa
 from cryptography.hazmat.primitives.serialization import Encoding
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 STR_TO_HASH = {
@@ -181,7 +181,9 @@ class CertificateKey(models.Model):
         self.check_singleton()
 
         if self.public:
-            raise UserError(_("Make sure to use a private key to sign documents."))
+            raise UserError(
+                self.env._("Make sure to use a private key to sign documents.")
+            )
 
         pem_key = self.with_context(bin_size=False).pem_key
         if self.loading_error:
@@ -209,7 +211,9 @@ class CertificateKey(models.Model):
 
         if not self.public:
             raise UserError(
-                _("Make sure to use a public key to verify the signature of documents.")
+                self.env._(
+                    "Make sure to use a public key to verify the signature of documents."
+                )
             )
 
         pem_key = self.with_context(bin_size=False).pem_key
@@ -264,7 +268,7 @@ class CertificateKey(models.Model):
         self.check_singleton()
 
         if self.public:
-            raise UserError(_("A private key is required."))
+            raise UserError(self.env._("A private key is required."))
         if self.loading_error:
             raise UserError(self.name + " - " + self.loading_error)
 
@@ -322,7 +326,7 @@ class CertificateKey(models.Model):
             return (
                 None,
                 None,
-                _(
+                self.env._(
                     "This key could not be loaded. Either its content or its password is erroneous."
                 ),
             )
@@ -357,7 +361,7 @@ class CertificateKey(models.Model):
             message = message.encode("utf-8")
 
         if self.public:
-            raise UserError(_("A private key is required to decrypt data."))
+            raise UserError(self.env._("A private key is required to decrypt data."))
         if hashing_algorithm not in STR_TO_HASH:
             raise UserError(  # pylint: disable=missing-gettext
                 f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256."
@@ -369,10 +373,10 @@ class CertificateKey(models.Model):
                 base64.b64decode(self.with_context(bin_size=False).pem_key), password
             )
         except (ValueError, TypeError) as exc:
-            raise UserError(_("The private key could not be loaded.")) from exc
+            raise UserError(self.env._("The private key could not be loaded.")) from exc
         if not isinstance(private_key, rsa.RSAPrivateKey):
             raise UserError(
-                _(
+                self.env._(
                     "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for decryption: RSA.",
                     type(private_key),
                 )
@@ -413,7 +417,7 @@ class CertificateKey(models.Model):
                 base64.b64decode(pem_key), pwd or None
             )
         except ValueError as exc:
-            raise UserError(_("The private key could not be loaded.")) from exc
+            raise UserError(self.env._("The private key could not be loaded.")) from exc
 
         match private_key:
             case ec.EllipticCurvePrivateKey():
@@ -428,7 +432,7 @@ class CertificateKey(models.Model):
                 signature = private_key.sign(message)
             case _:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for signature: ED25519, EC and RSA.",
                         type(private_key),
                     )
@@ -463,7 +467,7 @@ class CertificateKey(models.Model):
         try:
             public_key = serialization.load_pem_public_key(base64.b64decode(pem_key))
         except ValueError as exc:
-            raise UserError(_("The public key could not be loaded.")) from exc
+            raise UserError(self.env._("The public key could not be loaded.")) from exc
 
         match public_key:
             case ec.EllipticCurvePublicKey():
@@ -500,7 +504,7 @@ class CertificateKey(models.Model):
                     return False
             case _:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for signature: EC and RSA.",
                         repr(public_key),
                     )
@@ -521,7 +525,7 @@ class CertificateKey(models.Model):
         try:
             public_key = serialization.load_pem_public_key(base64.b64decode(pem_key))
         except ValueError as exc:
-            raise UserError(_("The public key could not be loaded.")) from exc
+            raise UserError(self.env._("The public key could not be loaded.")) from exc
 
         if isinstance(public_key, ec.EllipticCurvePublicKey):
             # EC keys have no modulus/exponent; this carries the curve
@@ -533,7 +537,7 @@ class CertificateKey(models.Model):
             second = public_key.public_numbers().n
         else:
             raise UserError(
-                _(
+                self.env._(
                     "Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC, RSA.",
                     type(public_key),
                 )
@@ -588,10 +592,12 @@ class CertificateKey(models.Model):
     ):
         if public_exponent not in [65537, 3]:
             raise UserError(
-                _("The public exponent should be 65537 (or 3 for legacy purposes).")
+                self.env._(
+                    "The public exponent should be 65537 (or 3 for legacy purposes)."
+                )
             )
         if key_size < 512:
-            raise UserError(_("The key size should be at least 512 bytes."))
+            raise UserError(self.env._("The key size should be at least 512 bytes."))
 
         private_key = rsa.generate_private_key(
             public_exponent=public_exponent, key_size=key_size

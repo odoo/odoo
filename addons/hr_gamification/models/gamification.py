@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -22,7 +22,9 @@ class GamificationBadgeUser(models.Model):
                 ).employee_ids
             ):
                 raise ValidationError(
-                    _("The selected employee does not correspond to the selected user.")
+                    self.env._(
+                        "The selected employee does not correspond to the selected user."
+                    )
                 )
 
     def _compute_has_edit_delete_access(self):
@@ -35,7 +37,7 @@ class GamificationBadgeUser(models.Model):
     def action_view_badge(self):
         self.check_singleton()
         return {
-            "name": _("Received Badge"),
+            "name": self.env._("Received Badge"),
             "type": "ir.actions.act_window",
             "res_model": "gamification.badge.user",
             "res_id": self.id,
@@ -58,7 +60,7 @@ class GamificationBadgeUser(models.Model):
 
                     group[2]["button_access"] = {
                         "url": employee_form_url,
-                        "title": _("View Your Badge"),
+                        "title": self.env._("View Your Badge"),
                     }
                     group[2]["has_button_access"] = True
                 else:

@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -13,7 +13,7 @@ class ProductPricelist(models.Model):
         )
         if loyalty_programs:
             raise UserError(
-                _(
+                self.env._(
                     "This pricelist may not be archived. "
                     "It is being used for active promotion programs: %s",
                     ", ".join(loyalty_programs.mapped("name")),

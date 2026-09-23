@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class BasePartnerMergeAutomaticWizard(models.TransientModel):
@@ -58,7 +58,9 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             history_vals.extend(
                 {
                     "card_id": card.id,
-                    "description": _("Merged into %s", dst_partner.display_name),
+                    "description": self.env._(
+                        "Merged into %s", dst_partner.display_name
+                    ),
                     "used": card.points,
                 }
                 for card in drained
@@ -68,7 +70,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 history_vals.append(
                     {
                         "card_id": survivor.id,
-                        "description": _(
+                        "description": self.env._(
                             "Merged from %s",
                             ", ".join(drained.partner_id.mapped("display_name")),
                         ),

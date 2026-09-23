@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class HrEmployee(models.Model):
@@ -29,7 +29,7 @@ class HrEmployee(models.Model):
                 employee.partner_id.slide_channel_completed_ids
             )
             total = len(employee.subscribed_courses)
-            employee.courses_completion_text = _(
+            employee.courses_completion_text = self.env._(
                 "%(completed)s / %(total)s",
                 completed=total_completed_courses,
                 total=total,

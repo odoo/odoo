@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -22,7 +22,7 @@ class HrJob(models.Model):
         self.check_singleton()
         survey = self.env["survey.survey"].create(
             {
-                "title": _("Interview Form: %s", self.name),
+                "title": self.env._("Interview Form: %s", self.name),
                 "survey_type": "recruitment",
             }
         )
@@ -30,7 +30,7 @@ class HrJob(models.Model):
         self.write({"survey_id": survey.id})
 
         return {
-            "name": _("Survey"),
+            "name": self.env._("Survey"),
             "view_mode": "form,list",
             "res_model": "survey.survey",
             "type": "ir.actions.act_window",

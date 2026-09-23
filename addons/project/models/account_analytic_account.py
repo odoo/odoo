@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
@@ -44,7 +44,7 @@ class AccountAnalyticAccount(models.Model):
         )
         if has_tasks:
             raise UserError(
-                _(
+                self.env._(
                     "Before we can bid farewell to these accounts, you need to tidy up the projects linked to them by removing their existing tasks!"
                 )
             )
@@ -57,7 +57,7 @@ class AccountAnalyticAccount(models.Model):
             "views": [[kanban_view_id, "kanban"], [False, "form"]],
             "domain": [["account_id", "=", self.id]],
             "context": {"create": False},
-            "name": _("Projects"),
+            "name": self.env._("Projects"),
         }
         if len(self.project_ids) == 1:
             result["views"] = [(False, "form")]

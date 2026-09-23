@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
 from odoo.libs.debug_log import DebugLog
@@ -140,7 +140,7 @@ class HrLeave(models.Model):
     ):
         self.check_singleton()
         return {
-            "name": _(
+            "name": self.env._(
                 "Time Off (%(index)s/%(total)s)",
                 index=index + 1,
                 total=len(work_hours_data),

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -47,5 +47,7 @@ class HrTimesheetConfig(models.Model):
         ):
             _debug.logic("internal_project_company_mismatch", configs=self)
             raise ValidationError(
-                _("The Internal Project of a company should be in that company.")
+                self.env._(
+                    "The Internal Project of a company should be in that company."
+                )
             )

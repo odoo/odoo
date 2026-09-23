@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ApplicantSendMail(models.TransientModel):
@@ -41,7 +41,7 @@ class ApplicantSendMail(models.TransientModel):
                 "tag": "display_notification",
                 "params": {
                     "type": "danger",
-                    "message": _(
+                    "message": self.env._(
                         "The following applicants are missing an email address: %s.",
                         ", ".join(
                             without_emails.mapped(

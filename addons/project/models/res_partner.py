@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
@@ -34,7 +34,7 @@ class ResPartner(models.Model):
                 and partner.project_ids.company_id != partner.company_id
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Partner company cannot be different from its assigned projects' company"
                     )
                 )
@@ -48,7 +48,7 @@ class ResPartner(models.Model):
                 and partner.task_ids.company_id != partner.company_id
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Partner company cannot be different from its assigned tasks' company"
                     )
                 )
@@ -79,7 +79,9 @@ class ResPartner(models.Model):
             **self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
                 "project.project_task_action_from_partner"
             ),
-            "display_name": _("%(partner_name)s's Tasks", partner_name=self.name),
+            "display_name": self.env._(
+                "%(partner_name)s's Tasks", partner_name=self.name
+            ),
             "context": {
                 "default_partner_id": self.id,
             },

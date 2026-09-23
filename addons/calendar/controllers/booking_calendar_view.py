@@ -1,6 +1,6 @@
 from werkzeug.exceptions import Forbidden
 
-from odoo import Command, _, fields, http
+from odoo import Command, fields, http
 from odoo.exceptions import ValidationError
 from odoo.http import request, route
 
@@ -39,7 +39,7 @@ class AppointmentCalendarView(http.Controller):
         """
         if not slots:
             raise ValidationError(
-                _(
+                request.env._(
                     "A list of slots information is needed to create a custom appointment type"
                 )
             )
@@ -53,7 +53,9 @@ class AppointmentCalendarView(http.Controller):
             AppointmentType._prepare_clean_appointment_context()
         ).create(
             {
-                "name": _("%(name)s - My availabilities", name=request.env.user.name),
+                "name": request.env._(
+                    "%(name)s - My availabilities", name=request.env.user.name
+                ),
                 "category": "custom",
                 "slot_ids": [
                     Command.create(
@@ -86,7 +88,7 @@ class AppointmentCalendarView(http.Controller):
             raise Forbidden
         if not slots:
             raise ValidationError(
-                _(
+                request.env._(
                     "A list of slots information is needed to update this custom appointment type"
                 )
             )
@@ -134,7 +136,9 @@ class AppointmentCalendarView(http.Controller):
             request.env["appointment.type"].browse(int(appointment_type_id)).exists()
         )
         if not appointment_type:
-            raise ValidationError(_("An appointment type is needed to get the link."))
+            raise ValidationError(
+                request.env._("An appointment type is needed to get the link.")
+            )
         return self._get_staff_user_appointment_invite_info(appointment_type)
 
     @route(
@@ -195,7 +199,7 @@ class AppointmentCalendarView(http.Controller):
     @classmethod
     def _prepare_appointment_type_anytime_values(cls, user):
         return {
-            "name": _("Meeting with %(name)s", name=user.name),
+            "name": request.env._("Meeting with %(name)s", name=user.name),
             "max_schedule_days": 15,
             "category": "anytime",
             "staff_user_ids": [user.id],

@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -12,7 +12,7 @@ class UtmCampaign(models.Model):
         )
         if utm_campaign_job and utm_campaign_job in self:
             raise UserError(
-                _(
+                self.env._(
                     "The UTM campaign '%s' cannot be deleted as it is used in the recruitment process.",
                     utm_campaign_job.name,
                 )
