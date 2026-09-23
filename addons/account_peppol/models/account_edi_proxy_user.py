@@ -77,7 +77,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 )
                 # commit the above changes before raising below
                 if not modules.module.current_test:
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
                 raise UserError(
                     _(
                         "We could not find a user with this information on our server. Please check your information."
@@ -87,7 +87,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if e.code == "invalid_signature":
                 self._mark_connection_out_of_sync()
                 if not tools.config["test_enable"] and not modules.module.current_test:
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
                 raise UserError(token_out_of_sync_error_message) from e
             raise UserError(e.message) from e
 
@@ -117,7 +117,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if e.code == "connection_superseded":
                 self._peppol_out_of_sync_disconnect_this_database()
                 if not tools.config["test_enable"] and not modules.module.current_test:
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
                 raise UserError(
                     _(
                         "This connection has been superseded by another database. Register again."
@@ -138,7 +138,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if response["error"].get("code") == "connection_superseded":
                 self._peppol_out_of_sync_disconnect_this_database()
                 if not tools.config["test_enable"] and not modules.module.current_test:
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
             raise AccountEdiProxyError(
                 response["error"].get("code", "unknown_error"),
                 response["error"].get(
@@ -388,7 +388,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     uuids_to_ack.append(uuid_to_ack)
 
             if not (modules.module.current_test or tools.config["test_enable"]):
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
             if uuids_to_ack:
                 edi_user._call_peppol_proxy(
                     "/api/peppol/1/ack",
@@ -597,7 +597,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             self._cron_peppol_get_message_status()
             self._cron_peppol_get_new_documents()
             if not modules.module.current_test:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
             self._call_peppol_proxy(endpoint="/api/peppol/1/cancel_peppol_registration")
 
@@ -616,7 +616,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             self._cron_peppol_get_message_status()
             self._cron_peppol_get_new_documents()
             if not modules.module.current_test:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
         self._call_peppol_proxy(endpoint="/api/peppol/1/unregister_to_sender")
         self.company_id.account_peppol_config_id.account_peppol_proxy_state = "sender"

@@ -492,7 +492,7 @@ class PeppolRegistration(models.TransientModel):
             "peppol_state"
         ]
         if self.env["account.move"]._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
         if company.account_peppol_config_id.account_peppol_proxy_state == "sender":
             company._account_peppol_send_welcome_email()
         return edi_user

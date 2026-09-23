@@ -255,7 +255,7 @@ class AccountMove(models.Model):
             invoice.message_post(body=formatted_message)
 
         if self.env["mixin.account.move.send"]._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
 
         # If blocking errors, raise UserError, or log if we are in a cron.
         for invoice in invoices_to_query:

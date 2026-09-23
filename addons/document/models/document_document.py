@@ -1611,7 +1611,7 @@ class DocumentsDocument(models.Model):
                     vals["url_preview_image"] = preview["og_image"]
             document.write(vals)
             if not modules.module.current_test:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
         if len(documents) == limit:
             _debug.pipeline("url_preview_requeued", documents=len(documents))

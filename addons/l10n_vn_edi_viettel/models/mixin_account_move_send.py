@@ -153,7 +153,7 @@ class MixinAccountMoveSend(models.AbstractModel):
                     }
 
                 if self._can_commit():
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
 
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
@@ -240,4 +240,4 @@ class MixinAccountMoveSend(models.AbstractModel):
                 )
 
             if self._can_commit():
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()

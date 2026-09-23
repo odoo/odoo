@@ -163,7 +163,7 @@ class AccountMove(models.Model):
             )
 
         if self._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
         return None
 
     def _l10n_ro_edi_update_invoice_sent_documents(self):
@@ -263,7 +263,7 @@ class AccountMove(models.Model):
         self.env["l10n_ro_edi.document"].sudo().browse(document_ids_to_delete).unlink()
         self.env["l10n_ro_edi.document"].sudo().create(documents_to_create)
         if self._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
 
     @api.model
     def _l10n_ro_edi_import_invoices(self):
@@ -323,7 +323,7 @@ class AccountMove(models.Model):
         self.env["l10n_ro_edi.document"].sudo().browse(document_ids_to_delete).unlink()
 
         if self._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
 
     @api.model
     def _l10n_ro_edi_process_invoice_accepted_messages(

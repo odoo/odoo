@@ -69,4 +69,4 @@ class MixinAccountMoveSend(models.AbstractModel):
                 elif invoice.invoice_pdf_report_id:
                     invoice.write({"invoice_pdf_report_file": False})
                 if self._can_commit():
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()

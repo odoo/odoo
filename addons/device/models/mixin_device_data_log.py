@@ -142,7 +142,7 @@ class MixinRemoteDataLog(models.AbstractModel):
                 deleted,
             )
             if not self._is_test_mode():
-                self.env.cr.commit()  # pylint: disable=invalid-commit
+                self.env["ir.cron"]._commit_progress(count)
             if count < self._GC_BATCH_SIZE:
                 break
         return deleted
@@ -205,7 +205,7 @@ class MixinRemoteDataLog(models.AbstractModel):
                 break
             cleared += written
             if not self._is_test_mode():
-                self.env.cr.commit()  # pylint: disable=invalid-commit
+                self.env["ir.cron"]._commit_progress()
 
         if cleared:
             self.invalidate_model(["raw_payload"])

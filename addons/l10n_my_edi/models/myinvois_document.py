@@ -902,7 +902,7 @@ class MyInvoisDocument(models.Model):
                         record.write(updated_values)
 
                 if self._can_commit():
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
 
         if success_messages:
             successful_records = self.browse(list(success_messages.keys()))
@@ -1018,7 +1018,7 @@ class MyInvoisDocument(models.Model):
                     bodies={document.id: message for document in self}
                 )
                 if with_commit and self._can_commit():
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
                 continue
 
             for record, status in results["statuses"].items():
@@ -1031,7 +1031,7 @@ class MyInvoisDocument(models.Model):
                 # If the status did not change, we do not need to do anything more.
                 if record.myinvois_state == status["status"]:
                     if with_commit and self._can_commit():
-                        self.env.cr.commit()
+                        self.env["ir.cron"]._commit_progress()
                     continue
 
                 # Invalid documents may not all have a reason, but we still want to log something.
@@ -1054,7 +1054,7 @@ class MyInvoisDocument(models.Model):
                 record._myinvois_set_validation_fields(status)
 
             if with_commit and self._can_commit():
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
     def _check_taxes(self):
         """Makes use of account.edi.xml.ubl_myinvois_my to validate the taxes for the records in self."""
@@ -1115,7 +1115,8 @@ class MyInvoisDocument(models.Model):
         # When sending an individual document, we can raise once we are sure we logged the errors.
         if len(self) == 1 and errors:
             if self._can_commit():
-                self.env.cr.commit()  # Save the error logged in the chatter.
+                # Save the error logged in the chatter.
+                self.env["ir.cron"]._commit_progress()
             raise UserError(errors[self.id]["plain_text_error"])
 
         # Try and get the status, up to three time, stopping if all documents have a status already.
@@ -1219,7 +1220,7 @@ class MyInvoisDocument(models.Model):
             )
 
         if self._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
 
     def _myinvois_set_state(self, state, message=None):
         """

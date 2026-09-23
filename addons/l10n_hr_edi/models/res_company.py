@@ -328,7 +328,7 @@ class ResCompany(models.Model):
                     # Only acknowledge on successful import
                     proxy_acks.append(document["mer_document_eid"])
                 if not tools.config["test_enable"]:
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
                     _mer_api_notify_import(company, document["mer_document_eid"])
 
             imported_documents.update({company.id: proxy_acks})

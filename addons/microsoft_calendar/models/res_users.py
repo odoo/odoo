@@ -85,7 +85,7 @@ class ResUsers(models.Model):
                 self.res_users_settings_id.sudo().write(
                     {"microsoft_calendar_sync_token": False}
                 )
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
             error_key = error.response.json().get("error", "nc")
             error_msg = _(
                 "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. "
@@ -177,7 +177,7 @@ class ResUsers(models.Model):
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
                 user.with_user(user).sudo()._sync_microsoft_calendar()
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress(1)
             except Exception:
                 _logger.exception("[%s] Calendar Synchro failed", user)
                 self.env.cr.rollback()

@@ -263,7 +263,7 @@ class CrmLead(models.Model):
                         update_sql, (probability, probability, list(lead_ids_current))
                     )
                     if auto_commit:
-                        self.env.cr.commit()
+                        self.env["ir.cron"]._commit_progress()
                 except psycopg.Error as e:
                     _logger.warning(
                         "Predictive Lead Scoring : update transaction failed. Error: %s",

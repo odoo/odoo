@@ -78,7 +78,7 @@ class MailMessageSchedule(models.Model):
             try:
                 schedule._send_notifications()
                 if auto_commit:
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
             except Exception as error:
                 if auto_commit:
                     self.env.cr.rollback()
@@ -112,7 +112,7 @@ class MailMessageSchedule(models.Model):
                     if auto_commit:
                         self.env.cr.rollback()
                 if auto_commit:
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
         if has_more:
             self.env["ir.cron"]._trigger_ref("mail.ir_cron_send_scheduled_message")
 

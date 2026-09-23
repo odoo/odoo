@@ -141,7 +141,7 @@ class AccountBankStatementLine(models.Model):
                         return
 
             if can_commit:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
         _debug.logic(
             "cron_time_budget_exhausted",

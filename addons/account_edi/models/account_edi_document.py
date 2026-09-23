@@ -289,7 +289,7 @@ class AccountEdiDocument(models.Model):
                 continue
             self._process_job(job)
             if with_commit and len(jobs_to_process) > 1:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
         return len(all_jobs) - len(jobs_to_process)
 

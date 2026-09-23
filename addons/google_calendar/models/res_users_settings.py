@@ -185,7 +185,7 @@ class ResUsersSettings(models.Model):
                 # Delete refresh token and make sure it's commited
                 self.env.cr.rollback()
                 self.sudo()._set_google_auth_tokens(False, False, 0)
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
             error_key = error.response.json().get("error", "nc")
             error_msg = _(
                 "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. "

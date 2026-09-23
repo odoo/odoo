@@ -273,7 +273,7 @@ class CrmRevealRule(models.Model):
             server_payload = self._prepare_iap_payload(dict(reveal_views))
             enough_credit = self._perform_reveal_service(server_payload)
             if autocommit:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
             if enough_credit:
                 reveal_views = self._get_reveal_views_to_process()
             else:

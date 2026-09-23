@@ -594,7 +594,7 @@ class GamificationChallenge(models.Model):
             to_update.update_goal()
 
             if self.env.context.get("commit_gamification"):
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
         return True
 

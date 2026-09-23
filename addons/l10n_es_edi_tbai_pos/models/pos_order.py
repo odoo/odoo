@@ -128,7 +128,7 @@ class PosOrder(models.Model):
                 ):
                     chain_head_order._l10n_es_tbai_post()
                     if self.env["mixin.account.move.send"]._can_commit():
-                        self.env.cr.commit()
+                        self.env["ir.cron"]._commit_progress()
                     self._l10n_es_tbai_post()
 
         return res

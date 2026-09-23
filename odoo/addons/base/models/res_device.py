@@ -277,7 +277,7 @@ class ResDeviceLog(models.Model):
                     )
                 )
                 to_revoke.write({"revoked": True})
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress(len(to_revoke))
                 offset -= len(to_revoke)
                 _debug.lifecycle("device_logs_revoked", count=len(to_revoke), by="gc")
 

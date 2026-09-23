@@ -109,7 +109,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         with L10nHuEdiConnection(self.env) as connection:
             invoices_to_upload._l10n_hu_edi_upload(connection)
             if self._can_commit():
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
             if any(m.l10n_hu_edi_state == "sent" for m in invoices_hu):
                 # If any invoices were just sent, wait so that NAV has enough time to process them
@@ -143,4 +143,4 @@ class MixinAccountMoveSend(models.AbstractModel):
                 invoices_data[invoice]["error"] = invoice.l10n_hu_edi_messages
 
         if self._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()

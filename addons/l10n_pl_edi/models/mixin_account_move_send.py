@@ -132,7 +132,7 @@ class AccountMoveSend(models.AbstractModel):
                     set_error(move, str(errors))
 
             if self._can_commit():
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
         # Check the status already
         if moves_by_company:

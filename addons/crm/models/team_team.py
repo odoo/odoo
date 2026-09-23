@@ -488,7 +488,7 @@ class TeamTeam(models.Model):
             weights.append(team.lead_assignment_max)
 
         if auto_commit:
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
 
         global_data = {"assigned": set(), "merged": set(), "duplicates": set()}
         lead_unlink_ids = set()
@@ -507,12 +507,12 @@ class TeamTeam(models.Model):
                 if auto_commit:
                     self.env["crm.lead"].browse(lead_unlink_ids).unlink()
                     lead_unlink_ids = set()
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
 
         self.env["crm.lead"].browse(lead_unlink_ids).unlink()
 
         if auto_commit:
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
 
         _logger.info(
             "## Assigned %s leads",
@@ -751,10 +751,10 @@ class TeamTeam(models.Model):
                         mail_auto_subscribe_no_notify=True
                     ).convert_opportunity(None, user_ids=member.user_id.ids)
                     if auto_commit:
-                        self.env.cr.commit()
+                        self.env["ir.cron"]._commit_progress()
 
             if auto_commit:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
             self.env.invalidate_all()
             _logger.info(
                 "Team %s: Assigned %s leads based on preference, on a potential of %s (limited by quota)",

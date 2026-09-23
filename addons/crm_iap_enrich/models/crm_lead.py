@@ -169,7 +169,7 @@ class CrmLead(models.Model):
                             process_leads(leads)
                     else:
                         process_leads(leads)
-                        self.env.cr.commit()
+                        self.env["ir.cron"]._commit_progress()
                 except iap_tools.InsufficientCreditError:
                     break
                 except Exception:

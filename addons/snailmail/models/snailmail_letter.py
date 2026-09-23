@@ -468,7 +468,7 @@ class SnailmailLetter(models.Model):
         if valid_address_letters and immediate:
             for letter in valid_address_letters:
                 letter._snailmail_print_valid_address()
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
     def _snailmail_print_invalid_address(self):
         error = "MISSING_REQUIRED_FIELDS"
@@ -619,7 +619,7 @@ class SnailmailLetter(models.Model):
                 break  # avoid spam
             # Commit after every letter sent to avoid to send it again in case of a rollback
             if autocommit:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
     @api.model
     def _is_valid_address(self, record):

@@ -221,7 +221,7 @@ class ProjectWorkflowStep(models.Model):
             )
             tasks._send_task_rating_mail()
             step.date_rating_request = step._get_next_rating_deadline()
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress(1)
         dbg.lifecycle.debug("project.workflow.step._send_rating_all: cron end")
 
     def _get_rating_tasks(self):

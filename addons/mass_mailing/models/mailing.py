@@ -1583,7 +1583,7 @@ class MailingMailing(models.Model):
 
             # ensure mailing state update after auto-commit
             if auto_commit is True:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
         return True
 

@@ -238,4 +238,4 @@ class MixinAccountMoveSend(models.AbstractModel):
                     )
                     invoice._message_log(body=log_message)
             if self._can_commit():
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()

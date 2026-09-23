@@ -1415,4 +1415,4 @@ class SurveyUser_Input(models.Model):
             )
             expired.sudo().unlink()
             if auto_commit:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress(len(expired))

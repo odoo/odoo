@@ -264,7 +264,7 @@ class GamificationGoal(models.Model):
                 continue
             self._write_goal_values(handler(definition, goals))
             if self.env.context.get("commit_gamification"):
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
         return True
 
     def _write_goal_values(self, goals_to_write: dict) -> None:

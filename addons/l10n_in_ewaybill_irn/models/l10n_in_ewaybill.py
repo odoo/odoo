@@ -118,7 +118,7 @@ class L10nInEwaybill(models.Model):
                 ),
             }
         )
-        self.env.cr.commit()
+        self.env["ir.cron"]._commit_progress()
         return None
 
     def _get_edi_irn_number(self):

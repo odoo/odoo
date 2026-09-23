@@ -730,7 +730,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 _debug.logic("automatic_merge_group_refused", line=line.id)
                 continue
             line.unlink()
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
 
         self.write({"state": "finished"})
         return {

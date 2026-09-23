@@ -107,7 +107,7 @@ class MailPresence(models.Model):
         try:
             with tools.mute_logger("odoo.db"):
                 self._update_presence(user_or_guest, inactivity_period)
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
         except PG_CONCURRENCY_EXCEPTIONS_TO_RETRY:
             _debug.logic(
                 "presence_update_lost",

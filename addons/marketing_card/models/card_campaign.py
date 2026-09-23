@@ -521,7 +521,7 @@ class CardCampaign(models.Model):
         ):
             # no need to autocommit if it can be done in one batch
             if auto_commit and updated_cards:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
                 # avoid keeping hundreds of jpegs in memory
                 self.env["card.card"].invalidate_model(["image"])
             TargetModelPrefetch = TargetModel.with_prefetch(cards.mapped("res_id"))

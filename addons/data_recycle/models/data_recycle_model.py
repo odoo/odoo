@@ -259,7 +259,7 @@ class Data_RecycleModel(models.Model):
                 # A stale-only pass never enters the batch loop below, so its
                 # drop needs its own commit here or a later rule's crash rolls
                 # it back along with that rule's own, unrelated failure.
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
             new_res_ids = [
                 res_id for res_id in candidate_ids if res_id not in queued_res_ids
@@ -280,7 +280,7 @@ class Data_RecycleModel(models.Model):
                 if commit:
                     # Commit after each batch to avoid a complete rollback on timeout,
                     # as a run can create a lot of records.
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
 
     def _get_count_pending(self):
         self.check_singleton()

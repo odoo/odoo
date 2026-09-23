@@ -175,4 +175,4 @@ class MixinAccountMoveSend(models.AbstractModel):
                 )._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
 
         if self._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()

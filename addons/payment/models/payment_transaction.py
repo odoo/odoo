@@ -1327,7 +1327,7 @@ class PaymentTransaction(models.Model):
         for tx in txs_to_post_process:
             try:
                 tx._post_process()
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress(1)
             except psycopg.OperationalError:
                 self.env.cr.rollback()  # Rollback and try later.
             except Exception:

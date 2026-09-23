@@ -193,7 +193,7 @@ class EventMail(models.Model):
 
             self._refresh_mail_count_done(mail_slot=mail_slot)
             if auto_commit:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
                 # invalidate cache, no need to keep previous content in memory
                 self.env.invalidate_all()
 
@@ -365,7 +365,7 @@ class EventMail(models.Model):
             valid_chunk._execute_on_registrations()
             self._refresh_mail_count_done()
             if auto_commit:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
                 # invalidate cache, no need to keep previous content in memory
                 self.env.invalidate_all()
 
@@ -627,5 +627,5 @@ class EventMail(models.Model):
                 scheduler._warn_error(e)
             else:
                 if autocommit and not modules.module.current_test:
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
         return True

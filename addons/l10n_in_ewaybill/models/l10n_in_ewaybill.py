@@ -639,7 +639,7 @@ class L10nInEwaybill(models.Model):
             ewb_name=self.name, response=response, is_cancel=True
         )
         self._write_successfully_response({"state": "cancel"})
-        self.env.cr.commit()
+        self.env["ir.cron"]._commit_progress()
         return None
 
     def _log_retry_message_on_generate(self):
@@ -677,7 +677,7 @@ class L10nInEwaybill(models.Model):
                 ),
             }
         )
-        self.env.cr.commit()
+        self.env["ir.cron"]._commit_progress()
         return None
 
     @api.model

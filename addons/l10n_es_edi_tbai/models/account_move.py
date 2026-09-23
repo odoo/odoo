@@ -256,7 +256,7 @@ class AccountMove(models.Model):
         for bill in self:
             error = bill._l10n_es_tbai_post()
             if self.env["mixin.account.move.send"]._can_commit():
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
             if error:
                 raise UserError(error)
 
@@ -290,7 +290,7 @@ class AccountMove(models.Model):
                 )
 
             if self.env["mixin.account.move.send"]._can_commit():
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
             if edi_document.state != "accepted":
                 raise UserError(edi_document.response_message)

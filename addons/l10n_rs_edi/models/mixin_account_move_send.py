@@ -74,7 +74,7 @@ class MixinAccountMoveSend(models.AbstractModel):
             )
 
             if self._can_commit():
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
     @api.model
     def _link_invoice_documents(self, invoices_data):

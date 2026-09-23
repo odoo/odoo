@@ -111,4 +111,4 @@ class MixinAccountMoveSend(models.AbstractModel):
                     }
 
                 if self._can_commit():
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()

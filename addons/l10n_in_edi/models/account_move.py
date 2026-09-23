@@ -467,7 +467,7 @@ class AccountMove(models.Model):
             self.l10n_in_edi_status = "cancelled"
             self.action_cancel()
         if self._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
         return True
 
     @api.model

@@ -249,7 +249,7 @@ class MailScheduledMessage(models.Model):
                 )
                 scheduled_message.unlink()
                 if auto_commit:
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
             except Exception as error:
                 _debug.logic(
                     "post_failed",
@@ -286,7 +286,7 @@ class MailScheduledMessage(models.Model):
                         self.env.cr.rollback()
                 scheduled_message.unlink()
                 if auto_commit:
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
 
     @api.model
     def _check_create_values(self, values: ValuesType) -> None:

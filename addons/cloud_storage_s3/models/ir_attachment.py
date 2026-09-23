@@ -150,7 +150,7 @@ class IrAttachment(models.Model):
             batch.s3_mirror_pending = True
             batch._s3_mirror_to_cloud()
             if commit_each_batch:
-                self.env.cr.commit()  # pylint: disable=invalid-commit
+                self.env["ir.cron"]._commit_progress(len(batch))
             total += len(batch)
             _logger.info("S3 backfill: processed %s attachments so far.", total)
         _logger.info("S3 backfill finished: %s attachments processed.", total)

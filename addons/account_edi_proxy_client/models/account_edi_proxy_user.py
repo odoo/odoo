@@ -179,7 +179,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             error_code = proxy_error["code"]
             if error_code == "refresh_token_expired":
                 self._renew_token()
-                self.env.cr.commit()  # We do not want to lose it if in the _prepare_request below something goes wrong
+                self.env[
+                    "ir.cron"
+                ]._commit_progress()  # We do not want to lose it if in the _prepare_request below something goes wrong
                 return self._prepare_request(url, params, auth_type="hmac")
             if error_code == "no_such_user":
                 # This error is also raised if the user didn't exchange data and someone else claimed the edi_identificaiton.

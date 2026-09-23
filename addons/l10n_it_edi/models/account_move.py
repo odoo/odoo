@@ -3038,7 +3038,7 @@ class AccountMove(models.Model):
         if new_state == "rejected":
             self.l10n_it_edi_attachment_file = False
 
-        self.env.cr.commit()
+        self.env["ir.cron"]._commit_progress()
 
     def _l10n_it_edi_get_message(self, transformed_notification):
         """The status change will be notified in the chatter of the move.

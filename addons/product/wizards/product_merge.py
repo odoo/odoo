@@ -587,6 +587,6 @@ class ProductMergeWizard(models.TransientModel):
                 continue
             line.unlink()
             if _can_commit():
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
         return self._action_next_screen()

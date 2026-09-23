@@ -431,7 +431,7 @@ class AccountMove(models.Model):
             invoice.l10n_vn_edi_invoice_state = "sent"
 
             if self._can_commit():
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
     def _l10n_vn_need_cancel_request(self):
         return (
@@ -594,7 +594,7 @@ class AccountMove(models.Model):
         )
 
         if self._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
         return None
 
     def _l10n_vn_edi_cancel_invoice(
@@ -661,7 +661,7 @@ class AccountMove(models.Model):
             )
 
         if self._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
 
     def action_draft(self):
         # EXTEND account

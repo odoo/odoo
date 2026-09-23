@@ -60,7 +60,7 @@ class EventLeadRequest(models.Model):
                 ].id
 
             if auto_commit:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
         if generate_requests - fulfilled_requests:
             self.env["ir.cron"]._trigger_ref("event_crm.ir_cron_generate_leads")

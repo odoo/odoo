@@ -205,7 +205,7 @@ class NemhandelRegistration(models.TransientModel):
             # but remains on the proxy side.
             # it is important to keep these two in sync, so commit before activating.
             if not modules.module.current_test:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
         self.edi_user_id._check_user_on_alternative_service()
 

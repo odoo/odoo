@@ -255,7 +255,7 @@ class ResUsers(models.Model):
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
                 user.with_user(user).sudo()._sync_google_calendar(google)
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress(1)
             except Exception:
                 _logger.exception("[%s] Calendar Synchro - Exception!", user)
                 self.env.cr.rollback()

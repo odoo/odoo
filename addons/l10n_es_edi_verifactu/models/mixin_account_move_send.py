@@ -152,7 +152,7 @@ class MixinAccountMoveSend(models.AbstractModel):
                 }
 
         if created_document and self._can_commit():
-            self.env.cr.commit()
+            self.env["ir.cron"]._commit_progress()
 
     def _hook_if_errors(self, moves_data, allow_raising=True):
         # EXTENDS 'account'

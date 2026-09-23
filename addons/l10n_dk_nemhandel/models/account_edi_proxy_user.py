@@ -292,7 +292,7 @@ class AccountEdiProxyClientUser(models.Model):
             )
 
             if not (modules.module.current_test or tools.config["test_enable"]):
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
             if processed_uuids:
                 edi_user._call_nemhandel_proxy(
                     "/api/nemhandel/1/ack",
@@ -519,7 +519,7 @@ class AccountEdiProxyClientUser(models.Model):
             self._cron_nemhandel_get_message_status()
             self._cron_nemhandel_get_new_documents()
             if not tools.config["test_enable"] and not modules.module.current_test:
-                self.env.cr.commit()
+                self.env["ir.cron"]._commit_progress()
 
         if (
             self.company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state

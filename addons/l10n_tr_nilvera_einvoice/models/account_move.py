@@ -334,7 +334,7 @@ class AccountMove(models.Model):
                     self.env["ir.config_parameter"].sudo().set_param(
                         date_param_key, created_date
                     )
-                    self.env.cr.commit()
+                    self.env["ir.cron"]._commit_progress()
                 page += 1
             journal._notify_einvoices_received(moves)
 
