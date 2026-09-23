@@ -15,3 +15,7 @@ class FleetVehicle(models.Model):
     acquisition_date = fields.Date()
     active = fields.Boolean(default=True)
     notes = fields.Text()
+
+    driver_id = fields.Many2one('fleet_training.driver', string="Assigned Driver")
+    category_id = fields.Many2one('fleet_training.category', string="Category")
+    tag_ids = fields.Many2many('fleet_training.tag', string="Tags")

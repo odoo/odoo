@@ -243,3 +243,49 @@ here keeps the module's data files in a natural reading order).
 **Testing.** Upgrade the module, open Fleet Training > Vehicles: confirm the
 list shows the 5 chosen columns, the form shows the two-column layout, and the
 search bar's filter dropdown offers "Archived" and "Model Year" group-by.
+
+---
+
+## Chapter 7 — Relations Between Models
+
+**Concept.** The three relational field types: **Many2one** (this record points
+to one record of another model), **One2many** (the reverse side — all records
+of another model pointing back here; always paired with a Many2one), and
+**Many2many** (both sides can relate to several of each other, via a hidden
+join table).
+
+**Why?** Real data is relational. A vehicle has one driver at a time but a
+driver may have several vehicles over time (Many2one/One2many pair); a vehicle
+can carry several free-form tags and a tag can apply to many vehicles
+(Many2many) — no single field type covers both shapes.
+
+**Where?**
+- [`models/fleet_driver.py`](models/fleet_driver.py) — new `fleet_training.driver` model
+- [`models/fleet_category.py`](models/fleet_category.py) — new `fleet_training.category` and `fleet_training.tag` models
+- [`models/fleet_vehicle.py`](models/fleet_vehicle.py) — `driver_id`, `category_id`, `tag_ids`
+- [`views/fleet_driver_views.xml`](views/fleet_driver_views.xml), [`views/fleet_category_views.xml`](views/fleet_category_views.xml), [`views/fleet_vehicle_views.xml`](views/fleet_vehicle_views.xml)
+
+**Code explanation.** `vehicle.driver_id = fields.Many2one('fleet_training.driver')`
+is the owning side. `driver.vehicle_ids = fields.One2many('fleet_training.vehicle', 'driver_id')`
+is purely a UI/ORM convenience — it stores nothing on the driver's table, it is
+computed on the fly from the matching `driver_id` column on vehicles (the second
+argument is the name of *that* Many2one field). `vehicle.tag_ids = fields.Many2many('fleet_training.tag')`
+needs no such pairing — the ORM auto-creates a `fleet_training_vehicle_fleet_training_tag_rel`
+join table under the hood.
+
+**Fleet functionality.** Vehicles can now be assigned a driver, classified by
+category, and labelled with colored tags; a driver's form shows all vehicles
+currently assigned to them in an embedded list; the vehicle search view can
+filter "Unassigned" vehicles and group by driver/category.
+
+**What changed.** Added `models/fleet_driver.py`, `models/fleet_category.py`,
+`views/fleet_driver_views.xml`, `views/fleet_category_views.xml`; updated
+`models/fleet_vehicle.py` (3 new fields), `models/__init__.py`,
+`views/fleet_vehicle_views.xml` (list/form/search updated), `security/ir.access.csv`
+(rows for the 2 new models).
+
+**Testing.** Upgrade the module; in the UI, create a driver and a category,
+then create a vehicle and assign both plus a tag — the tag appears as a colored
+pill, and the driver's form now lists that vehicle under "Assigned Vehicles".
+Verified the same round-trip via the Odoo shell (`driver.vehicle_ids`,
+`vehicle.driver_id`, `vehicle.tag_ids` all resolve correctly).

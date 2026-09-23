@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_training_driver_view_list" model="ir.ui.view">
+        <field name="name">fleet_training.driver.list</field>
+        <field name="model">fleet_training.driver</field>
+        <field name="arch" type="xml">
+            <list string="Drivers">
+                <field name="name"/>
+                <field name="license_number"/>
+                <field name="phone"/>
+                <field name="hire_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="fleet_training_driver_view_form" model="ir.ui.view">
+        <field name="name">fleet_training.driver.form</field>
+        <field name="model">fleet_training.driver</field>
+        <field name="arch" type="xml">
+            <form string="Driver">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. John Doe"/></h1>
+                    </div>
+                    <group>
+                        <group string="License">
+                            <field name="license_number"/>
+                            <field name="hire_date"/>
+                        </group>
+                        <group string="Contact">
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Assigned Vehicles" name="vehicles">
+                            <field name="vehicle_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="license_plate"/>
+                                    <field name="model_year"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="fleet_training_driver_view_search" model="ir.ui.view">
+        <field name="name">fleet_training.driver.search</field>
+        <field name="model">fleet_training.driver</field>
+        <field name="arch" type="xml">
+            <search string="Search Drivers">
+                <field name="name"/>
+                <field name="license_number"/>
+                <filter name="filter_inactive" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fleet_training_driver" model="ir.actions.act_window">
+        <field name="name">Drivers</field>
+        <field name="res_model">fleet_training.driver</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_fleet_training_drivers"
+              name="Drivers"
+              parent="menu_fleet_training_root"
+              action="action_fleet_training_driver"
+              sequence="20"/>
+</odoo>

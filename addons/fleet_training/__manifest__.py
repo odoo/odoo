@@ -20,6 +20,8 @@ on top of a realistic Fleet Management use case.
         'security/ir.access.csv',
         'views/fleet_vehicle_views.xml',
         'views/fleet_vehicle_menus.xml',
+        'views/fleet_driver_views.xml',
+        'views/fleet_category_views.xml',
     ],
     'application': True,
 }
