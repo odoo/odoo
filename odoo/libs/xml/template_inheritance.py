@@ -1,3 +1,4 @@
+import collections
 import copy
 import functools
 import itertools
@@ -5,11 +6,11 @@ import logging
 import re
 from typing import TYPE_CHECKING
 
+import markupsafe
 from lxml import etree
 from lxml.builder import E
 
 from odoo.libs.debug_log import DebugLog
-from odoo.libs.text.html import html_escape
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -20,11 +21,9 @@ class XPathExpressionError(ValueError):
 
 
 __all__ = [
-    "PYTHON_ATTRIBUTES",
     "SKIPPED_ELEMENT_TYPES",
     "XPathExpressionError",
     "add_stripped_items_before",
-    "add_text_before",
     "apply_inheritance_specs",
     "locate_node",
     "merge_attribute_value",
@@ -47,7 +46,7 @@ SKIPPED_ELEMENT_TYPES = (
     etree._Entity,
 )
 
-PYTHON_ATTRIBUTES = {
+_PYTHON_ATTRIBUTES = {
     "readonly",
     "required",
     "invisible",
@@ -100,7 +99,7 @@ def add_stripped_items_before(
         node.addprevious(child)
 
 
-def add_text_before(node: etree._Element, text: str | None) -> None:
+def _add_text_before(node: etree._Element, text: str | None) -> None:
     if text is None:
         return
     prev = node.getprevious()
@@ -112,7 +111,7 @@ def add_text_before(node: etree._Element, text: str | None) -> None:
 
 
 def remove_element(node: etree._Element) -> None:
-    add_text_before(node, node.tail)
+    _add_text_before(node, node.tail)
     node.tail = None
     node.getparent().remove(node)
 
@@ -300,7 +299,7 @@ def merge_attribute_value(
     ``current`` — a python expression joined by ``and``/``or`` for the
     modifier and ``decoration-*`` attributes, a separated list otherwise.
     One definition for the XML specs and the IR patches."""
-    if attribute in PYTHON_ATTRIBUTES or attribute.startswith("decoration-"):
+    if attribute in _PYTHON_ATTRIBUTES or attribute.startswith("decoration-"):
         return _prepare_python_attribute_value(
             attribute, current, add, remove, separator
         )
@@ -364,7 +363,7 @@ def _apply_around(
 
 def _prepare_unlocatable_error(spec: etree._Element) -> ValueError:
     attrs = "".join(
-        f' {attr}="{html_escape(spec.get(attr))}"'
+        f' {attr}="{markupsafe.escape(spec.get(attr))}"'
         for attr in spec.attrib
         if attr != "position"
     )
@@ -376,7 +375,9 @@ def apply_inheritance_specs(
     specs_tree: etree._Element | list[etree._Element],
     inherit_branding: bool = False,
 ) -> etree._Element:
-    specs = list(specs_tree) if isinstance(specs_tree, list) else [specs_tree]
+    specs = collections.deque(
+        specs_tree if isinstance(specs_tree, list) else [specs_tree]
+    )
 
     def extract(spec: etree._Element) -> etree._Element:
         if len(spec):
@@ -396,11 +397,12 @@ def apply_inheritance_specs(
     applied = 0  # debuglog
     with _debug.perf("template_inheritance.specs", specs=len(specs)) as span:
         while specs:
-            spec = specs.pop(0)
+            spec = specs.popleft()
             if isinstance(spec, SKIPPED_ELEMENT_TYPES):
                 continue
             if spec.tag == "data":
-                specs += list(spec)
+                # a nested <data> applies where it stands, before its siblings
+                specs.extendleft(reversed(spec))
                 continue
             applied += 1  # debuglog
 

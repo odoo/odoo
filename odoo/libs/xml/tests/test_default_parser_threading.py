@@ -4,7 +4,7 @@ import threading
 import pytest
 from lxml import etree, objectify
 
-from odoo.libs.xml.parsers import fromstring, strict_parser
+from odoo.libs.xml.parsers import _strict_parser, fromstring
 
 _EXTERNAL_ENTITY = (
     b'<?xml version="1.0"?>'
@@ -135,7 +135,7 @@ def test_gzip_decompression_is_not_something_this_parser_prevents(tmp_path):
     path = tmp_path / "doc.xml.gz"
     path.write_bytes(gzip.compress(b"<r>" + b"<a/>" * 1000 + b"</r>"))
     assert path.stat().st_size < 1000
-    assert len(etree.parse(str(path), parser=strict_parser).getroot()) == 1000
+    assert len(etree.parse(str(path), parser=_strict_parser).getroot()) == 1000
 
 
 if __name__ == "__main__":

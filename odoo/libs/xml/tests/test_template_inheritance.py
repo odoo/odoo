@@ -146,3 +146,15 @@ class TestAttributeRemoveKeepsTermBoundaries:
     )
     def test_only_a_whole_term_is_removed(self, original, remove, separator, expected):
         assert _apply(original, remove=remove, separator=separator) == expected
+
+
+class TestNestedDataOrder:
+    def test_a_nested_data_applies_where_it_stands(self):
+        arch = etree.fromstring("<form><a/></form>")
+        specs = etree.fromstring(
+            '<data><a position="after"><b/></a>'
+            '<data><a position="after"><c/></a></data>'
+            '<a position="after"><d/></a></data>'
+        )
+        result = apply_inheritance_specs(arch, specs)
+        assert [child.tag for child in result] == ["a", "d", "c", "b"]

@@ -633,7 +633,7 @@ class IrUiView(models.Model):
             if isinstance(spec, etree._Comment):
                 continue
             if spec.tag == "data":
-                specs.extend(spec)
+                specs.extendleft(reversed(spec))
                 continue
             if invalid := unlocated(spec):
                 yield invalid

@@ -9,20 +9,18 @@ from odoo.libs.debug_log import DebugLog
 from .parsers import fromstring
 
 __all__ = [
-    "DS_NS",
     "EXC_C14N_ALGORITHM",
     "XmlSigError",
     "canonicalize",
     "canonicalize_signed_info",
-    "resolve_reference",
     "update_reference_digests",
 ]
 
 
-DS_NS = "http://www.w3.org/2000/09/xmldsig#"
+_DS_NS = "http://www.w3.org/2000/09/xmldsig#"
 EXC_C14N_ALGORITHM = "http://www.w3.org/2001/10/xml-exc-c14n#"
 
-_NSMAP = {"ds": DS_NS}
+_NSMAP = {"ds": _DS_NS}
 _debug = DebugLog(__name__)
 
 
@@ -63,14 +61,14 @@ def _get_c14n_params_from_transforms(
     prefix_list = []
     inclusive_ns = exclusive.find(".//{*}InclusiveNamespaces")
     if inclusive_ns is not None and inclusive_ns.get("PrefixList"):
-        prefix_list = inclusive_ns.get("PrefixList").split(" ")
+        prefix_list = inclusive_ns.get("PrefixList").split()
     return True, prefix_list
 
 
 def _get_enveloping_signatures(
     reference: etree._Element, copied_root: etree._Element
 ) -> list[etree._Element]:
-    tag = f"{{{DS_NS}}}Signature"
+    tag = f"{{{_DS_NS}}}Signature"
     own = next(reference.iterancestors(tag), None)
     if own is None:
         return list(copied_root.iter(tag))
@@ -88,11 +86,13 @@ def _get_enveloping_signatures(
     return [copies[index]]
 
 
-def resolve_reference(uri: str, reference: etree._Element, base_uri: str = "") -> bytes:
+def _resolve_reference(uri: str, reference: etree._Element) -> bytes:
     exclusive, prefix_list = _get_c14n_params_from_transforms(reference)
-    node = deepcopy(reference.getroottree().getroot())
+    root = reference.getroottree().getroot()
 
-    if uri == base_uri:
+    if not uri:
+        # the enveloped signature is removed from a copy, never from the document
+        node = deepcopy(root)
         _debug.logic(
             "dsig.reference",
             kind="enveloped",
@@ -112,7 +112,7 @@ def resolve_reference(uri: str, reference: etree._Element, base_uri: str = "") -
         )
 
     if uri.startswith("#"):
-        results = node.xpath('//*[@*[local-name() = "Id"]=$uri]', uri=uri.lstrip("#"))
+        results = root.xpath('//*[@*[local-name() = "Id"]=$uri]', uri=uri.lstrip("#"))
         _debug.logic(
             "dsig.reference",
             kind="id",
@@ -140,17 +140,14 @@ def canonicalize_signed_info(signed_info: etree._Element) -> bytes:
     if exclusive:
         inclusive_ns = method.find(".//{*}InclusiveNamespaces")
         if inclusive_ns is not None and inclusive_ns.get("PrefixList"):
-            prefix_list = inclusive_ns.get("PrefixList").split(" ")
+            prefix_list = inclusive_ns.get("PrefixList").split()
     return canonicalize(
         signed_info, exclusive=exclusive, inclusive_ns_prefixes=prefix_list
     )
 
 
 def update_reference_digests(
-    signed_info: etree._Element,
-    base_uri: str = "",
-    *,
-    algorithm: str = "sha256",
+    signed_info: etree._Element, *, algorithm: str = "sha256"
 ) -> None:
     for reference in signed_info.findall("ds:Reference", namespaces=_NSMAP):
         digest_value = reference.find("ds:DigestValue", namespaces=_NSMAP)
@@ -160,7 +157,7 @@ def update_reference_digests(
                 f"to fill in"
             )
         with _debug.perf("dsig.digest", algorithm=algorithm) as span:
-            octets = resolve_reference(reference.get("URI", ""), reference, base_uri)
+            octets = _resolve_reference(reference.get("URI", ""), reference)
             span.set(octets=len(octets))
             digest = hashlib.new(algorithm, octets).digest()
         digest_value.text = b64encode(digest).decode("ascii")
