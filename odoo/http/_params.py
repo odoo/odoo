@@ -92,7 +92,8 @@ def _split_annotated(
     discriminator = None
     for marker in metadata:
         if isinstance(marker, Range):
-            ge, le = marker.ge, marker.le
+            ge = marker.ge if marker.ge is not None else ge
+            le = marker.le if marker.le is not None else le
         elif isinstance(marker, Pattern):
             re.compile(marker.regex)
             pattern = marker.regex
@@ -156,6 +157,9 @@ def _get_object_members(cls: Any) -> list[tuple[str, Any, bool]] | None:
         _debug.logic("http.params.object_unresolved", cls=cls.__qualname__)
         return None
     if dataclasses.is_dataclass(cls):
+        if any(isinstance(hint, dataclasses.InitVar) for hint in hints.values()):
+            _debug.logic("http.params.object_unresolved", cls=cls.__qualname__)
+            return None
         return [
             (
                 field.name,
@@ -168,8 +172,20 @@ def _get_object_members(cls: Any) -> list[tuple[str, Any, bool]] | None:
         ]
     if typing.is_typeddict(cls):
         required_keys: frozenset[str] = getattr(cls, "__required_keys__", frozenset())
-        return [(name, hint, name in required_keys) for name, hint in hints.items()]
+        return [
+            (name, _strip_typeddict_qualifiers(hint), name in required_keys)
+            for name, hint in hints.items()
+        ]
     return None
+
+
+_TYPEDDICT_QUALIFIERS = (typing.Required, typing.NotRequired, typing.ReadOnly)
+
+
+def _strip_typeddict_qualifiers(hint: Any) -> Any:
+    while typing.get_origin(hint) in _TYPEDDICT_QUALIFIERS:
+        (hint,) = typing.get_args(hint)
+    return hint
 
 
 def _get_dataclass_fields(
@@ -195,8 +211,8 @@ def _get_dataclass_fields(
 def _get_spec(
     annotation: Any, required: bool, seen: frozenset[type] = frozenset()
 ) -> ParamSpec | None:
-    inner, optional = _unwrap_optional(annotation)
-    inner, constraints, discriminator = _split_annotated(inner)
+    unwrapped, optional = _unwrap_optional(annotation)
+    inner, constraints, discriminator = _split_annotated(unwrapped)
     if discriminator is not None:
         union = _get_union_spec(inner, discriminator, required, seen)
         return (
@@ -204,12 +220,19 @@ def _get_spec(
             if union is None
             else union._replace(allow_none=union.allow_none or optional)
         )
-    if optional or constraints is not None:
+    if optional or inner is not unwrapped:
         base = _get_spec(inner, required, seen)
         if base is None:
             return None
         if constraints is not None and (base.fields is not None or base.target is list):
+            _debug.logic(
+                "http.params.constraints_declined",
+                target=getattr(base.target, "__qualname__", str(base.target)),
+            )
             return None
+        if constraints is not None and not _is_orderable(base, constraints):
+            target = getattr(base.target, "__qualname__", str(base.target))
+            raise TypeError(f"Range bounds a number, not {target}")
         merged = constraints
         if base.constraints is not None:
             merged = Constraints(
@@ -226,8 +249,10 @@ def _get_spec(
     if target is list and item is None:
         inner, _ = _unwrap_optional(annotation)
         args = typing.get_args(inner)
-        item_fields = _get_dataclass_fields(args[0], seen) if args else None
-        if item_fields is not None:
+        if args and _get_object_members(args[0]) is not None:
+            item_fields = _get_dataclass_fields(args[0], seen)
+            if item_fields is None:
+                return None
             return ParamSpec(list, args[0], allow_none, required, None, item_fields)
     if target is not None:
         return ParamSpec(target, item, allow_none, required)
@@ -236,6 +261,16 @@ def _get_spec(
     if fields is None:
         return None
     return ParamSpec(inner, None, allow_none, required, fields, None)
+
+
+def _is_orderable(base: ParamSpec, constraints: Constraints) -> bool:
+    if constraints.ge is None and constraints.le is None:
+        return True
+    values = (base.constraints.choices if base.constraints else None) or ()
+    return base.target in (int, float) or (
+        bool(values)
+        and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in values)
+    )
 
 
 def _get_param_spec_fields(
@@ -409,7 +444,10 @@ def _coerce_object(name: str, value: Any, spec: ParamSpec) -> Any:
         coerced[field_name] = _coerce_value(
             f"{name}.{field_name}", value[field_name], field_spec
         )
-    return spec.target(**coerced)
+    try:
+        return spec.target(**coerced)
+    except (TypeError, ValueError) as exc:
+        raise ParameterError(f"parameter {name!r} is invalid: {exc}") from exc
 
 
 def _check_constraints(name: str, value: Any, constraints: Constraints) -> None:
@@ -451,7 +489,7 @@ def _coerce_union(name: str, value: Any, spec: ParamSpec) -> Any:
             f"of {sorted(map(str, variants))} it is"
         )
     tag = value[spec.discriminator]
-    variant = variants.get(tag)
+    variant = variants.get(tag) if type(tag) in (str, int, float) else None
     if variant is None:
         raise ParameterError(
             f"parameter {name!r}: {spec.discriminator!r} must be one of "

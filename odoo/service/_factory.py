@@ -45,7 +45,7 @@ def _wrap_app_in_debugger(app: Any, settings: ServerSettings) -> Any:
 
     from werkzeug.debug import DebuggedApplication
 
-    import odoo.http.application
+    import odoo.http.dispatcher
 
     if settings.workers:
         _logger.warning(
@@ -57,7 +57,7 @@ def _wrap_app_in_debugger(app: Any, settings: ServerSettings) -> Any:
         "--dev=werkzeug is on: unhandled errors render an interactive "
         "traceback with a code console. Never expose this port."
     )
-    odoo.http.application.debugger_attached = True
+    odoo.http.dispatcher.debugger_attached = True
     _debug.lifecycle("server.debugger_attached", workers=settings.workers)
     return DebuggedApplication(app, evalex=True)
 

@@ -76,10 +76,10 @@ def stage_cors_headers(
     request: RequestState,
     routing: Mapping[str, Any],
     dispatcher_methods: Collection[str] | None,
-) -> list[str]:
+) -> tuple[list[str], bool]:
     cors = routing.get("cors")
     if not cors:
-        return []
+        return [], False
 
     set_header = request.future_response.headers.set
     vary: list[str] = []
@@ -122,7 +122,7 @@ def stage_cors_headers(
         credentials=bool(routing.get("cors_credentials")),
         vary=len(vary),
     )
-    return vary
+    return vary, bool(allow_origin)
 
 
 def stage_preflight_headers(

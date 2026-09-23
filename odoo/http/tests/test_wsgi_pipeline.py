@@ -1,4 +1,5 @@
 import json
+import sys
 
 import pytest
 
@@ -14,6 +15,14 @@ import psycopg.errors
 
 from odoo.exceptions import UserError
 from odoo.http import Controller, Response, request, route
+
+
+ARGUMENTS_SEEN = []
+POSTCOMMIT_RAN = []
+
+
+def refuse_origin(request):
+    return None
 
 
 @dataclasses.dataclass
@@ -81,6 +90,40 @@ class Probe(Controller):
                 "cannot execute UPDATE in a read-only transaction"
             )
         return f"promoted attempts={request.session['attempts']}"
+
+    @route("/probe/rpc-mutates", type="jsonrpc", auth="none", methods=["POST"])
+    def rpc_mutates(self, vals):
+        ARGUMENTS_SEEN.append(dict(vals))
+        vals["attempt"] = len(ARGUMENTS_SEEN)
+        if len(ARGUMENTS_SEEN) == 1:
+            raise psycopg.errors.SerializationFailure("could not serialize access")
+        return vals
+
+    @route(
+        "/probe/json2-mutates-readonly",
+        type="json2",
+        auth="public",
+        methods=["POST"],
+        readonly=True,
+    )
+    def json2_mutates_readonly(self, vals):
+        ARGUMENTS_SEEN.append(dict(vals))
+        vals["attempt"] = len(ARGUMENTS_SEEN)
+        if request.env.cr.readonly:
+            raise psycopg.errors.ReadOnlySqlTransaction(
+                "cannot execute INSERT in a read-only transaction"
+            )
+        return vals
+
+    @route("/probe/cors-refused", type="json2", auth="none", cors=refuse_origin)
+    def cors_refused(self):
+        return {}
+
+    @route("/probe/postcommit", auth="public", methods=["GET"])
+    def postcommit(self):
+        request.session["touched"] = 1
+        request.env.cr.postcommit.add(lambda: POSTCOMMIT_RAN.append(True))
+        return "committed"
 
     @route("/probe/boom", auth="public", methods=["GET"])
     def boom(self):
@@ -297,6 +340,51 @@ def test_without_a_replica_a_readonly_route_runs_read_write_at_once(harness):
     assert [cr.readonly for cr in harness.registry.cursors] == [False]
 
 
+@pytest.fixture
+def arguments_seen(addon):
+    seen = sys.modules[f"odoo.addons.{addon}"].ARGUMENTS_SEEN
+    seen.clear()
+    yield seen
+    seen.clear()
+
+
+def test_a_retried_jsonrpc_call_replays_the_body_the_client_sent(
+    harness, arguments_seen
+):
+    served = harness.serve(
+        environ(
+            "/probe/rpc-mutates",
+            "POST",
+            body=json.dumps(
+                {"jsonrpc": "2.0", "id": 1, "params": {"vals": {"qty": 1}}}
+            ).encode(),
+            content_type="application/json",
+        )
+    )
+    assert served.status_code == 200, served.body
+    assert arguments_seen == [{"qty": 1}, {"qty": 1}], (
+        "the serialization retry must not see what the failed attempt wrote "
+        "into its arguments"
+    )
+    assert json.loads(served.body)["result"] == {"qty": 1, "attempt": 2}
+
+
+def test_a_promoted_json2_call_replays_the_body_the_client_sent(
+    replica_harness, arguments_seen
+):
+    served = replica_harness.serve(
+        environ(
+            "/probe/json2-mutates-readonly",
+            "POST",
+            body=json.dumps({"vals": {"qty": 1}}).encode(),
+            content_type="application/json",
+        )
+    )
+    assert served.status_code == 200, served.body
+    assert arguments_seen == [{"qty": 1}, {"qty": 1}]
+    assert [cr.readonly for cr in replica_harness.registry.cursors] == [True, False]
+
+
 def test_a_controller_bug_is_a_500_built_by_ir_http(harness):
     served = harness.serve(environ("/probe/boom"))
     assert served.status_code == 500
@@ -357,3 +445,46 @@ def test_the_header_database_conflicting_with_the_session_is_forbidden(harness):
         )
     )
     assert served.status_code == 403
+
+
+def test_a_preflight_from_a_refused_origin_grants_no_headers(harness):
+    served = harness.serve(
+        environ(
+            "/probe/cors-refused",
+            "OPTIONS",
+            headers={
+                "Origin": "https://elsewhere.example",
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "X-Evil, Authorization",
+            },
+        )
+    )
+    assert served.status_code == 204
+    assert served.header("Access-Control-Allow-Origin") is None
+    assert served.header("Access-Control-Allow-Headers") is None
+    assert served.header("Access-Control-Max-Age") is None
+    assert served.header("Vary") == "Origin"
+
+
+def test_a_session_store_outage_after_commit_spares_the_response_and_later_hooks(
+    harness,
+):
+    from unittest import mock
+
+    import odoo.db
+    from odoo.http._session_store import PostgresSessionStore
+    from odoo.http.session import Session
+
+    ran = sys.modules[f"odoo.addons.{ADDON}"].POSTCOMMIT_RAN
+    ran.clear()
+    harness.app.__dict__["session_store"] = PostgresSessionStore("unreachable", Session)
+
+    def refuse(dbname):
+        raise odoo.db.PoolError("session database unreachable")
+
+    with mock.patch.object(odoo.db, "db_connect", refuse):
+        served = harness.serve(environ("/probe/postcommit"))
+
+    assert served.status_code == 200, served.body
+    assert served.body == b"committed"
+    assert ran == [True], "a hook registered after the session's must still run"

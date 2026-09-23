@@ -31,7 +31,7 @@ from .constants import (
     SAFE_HTTP_METHODS,
     prepare_allow_header,
 )
-from .exceptions import ParameterError, SessionExpiredException
+from .exceptions import ParameterError, SessionExpiredException, is_http_answer
 from .wrappers import Response, prepare_no_content_response
 
 if TYPE_CHECKING:
@@ -43,6 +43,16 @@ _debug = DebugLog(__name__)
 _dispatchers: dict[str, type[Dispatcher]] = {}
 
 PROBLEM_JSON_MIMETYPE = "application/problem+json; charset=utf-8"
+
+debugger_attached = False
+
+
+def is_debugger_handover_required(
+    dispatcher: Dispatcher | None, exc: BaseException
+) -> bool:
+    if not debugger_attached or is_http_answer(exc):
+        return False
+    return dispatcher is None or not dispatcher.serializes_errors_in_dev_mode
 
 
 def _prepare_problem_details(
@@ -123,8 +133,10 @@ class Dispatcher(ABC):
         self.request.session.can_save &= routing.get("save_session", True)
 
         is_preflight = is_cors_preflight(self.request, rule.endpoint)
-        vary = stage_cors_headers(self.request, routing, self.cors_allowed_methods)
-        if is_preflight:
+        vary, origin_allowed = stage_cors_headers(
+            self.request, routing, self.cors_allowed_methods
+        )
+        if is_preflight and origin_allowed:
             vary += stage_preflight_headers(self.request, routing)
         if vary:
             self.request.future_response.headers.set("Vary", ", ".join(vary))

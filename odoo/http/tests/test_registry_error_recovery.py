@@ -125,13 +125,3 @@ def test_an_existing_error_response_is_left_alone():
 
     assert get_error_response(exc) is exc
     request.dispatcher.prepare_error_response.assert_not_called()
-
-
-def test_finalize_without_an_error_response_does_not_post_dispatch():
-    app = application.Application()
-    request: Any = mock.Mock()
-    request._post_init_done = True
-
-    app._finalize_error_response(ValueError("no response attached"), request, None)
-
-    request.dispatcher.post_dispatch.assert_not_called()

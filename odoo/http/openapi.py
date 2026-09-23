@@ -87,9 +87,12 @@ def _get_route_param_specs(route: RouteInfo) -> dict[str, ParamSpec]:
 
 def _prepare_schema_nullable(schema: dict[str, Any]) -> dict[str, Any]:
     kind = schema.get("type")
-    if isinstance(kind, str):
-        return {**schema, "type": [kind, "null"]}
-    return schema
+    if not isinstance(kind, str):
+        return schema
+    nullable = {**schema, "type": [kind, "null"]}
+    if "enum" in schema and None not in schema["enum"]:
+        nullable["enum"] = [*schema["enum"], None]
+    return nullable
 
 
 def _prepare_object_schema(fields: dict[str, ParamSpec]) -> dict[str, Any]:
@@ -116,7 +119,8 @@ def _apply_constraints(schema: dict[str, Any], spec: ParamSpec) -> dict[str, Any
     if constraints.le is not None:
         schema["maximum"] = constraints.le
     if constraints.pattern is not None:
-        schema["pattern"] = constraints.pattern
+        # JSON Schema searches; the server's check is re.fullmatch.
+        schema["pattern"] = f"^(?:{constraints.pattern})$"
     return schema
 
 

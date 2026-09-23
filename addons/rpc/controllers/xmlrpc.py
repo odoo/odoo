@@ -1,5 +1,4 @@
 import logging
-import traceback
 import xmlrpc.client
 from collections import defaultdict
 from datetime import date, datetime
@@ -8,7 +7,15 @@ from markupsafe import Markup
 
 import odoo.exceptions
 from odoo.fields import Command, Date, Datetime
-from odoo.http import Controller, Response, dispatch_rpc, request, route
+from odoo.http import (
+    Controller,
+    Response,
+    dispatch_rpc,
+    request,
+    route,
+    serialize_exception,
+    set_error_response,
+)
 from odoo.tools import lazy
 from odoo.tools.misc import ReadonlyDict, frozendict
 
@@ -24,8 +31,9 @@ RPC_FAULT_CODE_ACCESS_ERROR = 4
 CONTROL_CHARACTERS = dict.fromkeys(set(range(32)) - {9, 10, 13})
 
 
-def _format_traceback(e: BaseException) -> str:
-    return "".join(traceback.format_exception(type(e), e, e.__traceback__))
+def _describe_unexpected_error(e: BaseException) -> tuple[str, str]:
+    data = serialize_exception(e)
+    return data["message"], data["debug"]
 
 
 def xmlrpc_handle_exception_int(e):
@@ -38,8 +46,9 @@ def xmlrpc_handle_exception_int(e):
     elif isinstance(e, odoo.exceptions.UserError):
         fault = xmlrpc.client.Fault(RPC_FAULT_CODE_WARNING, str(e))
     else:
+        message, debug = _describe_unexpected_error(e)
         fault = xmlrpc.client.Fault(
-            RPC_FAULT_CODE_APPLICATION_ERROR, _format_traceback(e)
+            RPC_FAULT_CODE_APPLICATION_ERROR, f"{message}\n\n{debug}"
         )
 
     return dumps(fault)
@@ -57,7 +66,7 @@ def xmlrpc_handle_exception_string(e):
     elif isinstance(e, odoo.exceptions.UserError):
         fault = xmlrpc.client.Fault(f"warning -- UserError\n\n{e}", "")
     else:
-        fault = xmlrpc.client.Fault(str(e), _format_traceback(e))
+        fault = xmlrpc.client.Fault(*_describe_unexpected_error(e))
 
     return dumps(fault)
 
@@ -138,9 +147,12 @@ class XMLRPC(Controller):
         try:
             response = self._xmlrpc(service)
         except Exception as error:
-            error.error_response = Response(
-                response=xmlrpc_handle_exception_string(error),
-                mimetype="text/xml",
+            set_error_response(
+                error,
+                Response(
+                    response=xmlrpc_handle_exception_string(error),
+                    mimetype="text/xml",
+                ),
             )
             raise
         return Response(response=response, mimetype="text/xml")
@@ -158,9 +170,12 @@ class XMLRPC(Controller):
         try:
             response = self._xmlrpc(service)
         except Exception as error:
-            error.error_response = Response(
-                response=xmlrpc_handle_exception_int(error),
-                mimetype="text/xml",
+            set_error_response(
+                error,
+                Response(
+                    response=xmlrpc_handle_exception_int(error),
+                    mimetype="text/xml",
+                ),
             )
             raise
         return Response(response=response, mimetype="text/xml")

@@ -366,3 +366,108 @@ def test_an_undecorated_override_of_a_route_is_refused_once(caplog):
         rules = dict(_generate_routing_rules(["ma", "mb"], False))
     assert rules == {}
     assert caplog.text.count("overrides a route without @route()") == 1
+
+
+def _siblings_of(broken_route):
+    class Healthy(Controller):
+        @route("/healthy", auth="public")
+        def healthy(self):
+            return "ok"
+
+    Healthy.__module__ = "odoo.addons.ma.controllers"
+    broken_route.__module__ = "odoo.addons.mb.controllers"
+    return _merge(("ma", Healthy), ("mb", broken_route))
+
+
+def test_a_credentials_conflict_found_at_merge_skips_only_its_route():
+    class Parent(Controller):
+        @route("/cors", type="json2", auth="none", cors="*")
+        def x(self):
+            return {}
+
+    class Child(Parent):
+        @route(cors_credentials=True)
+        def x(self):
+            return super().x()
+
+    Parent.__module__ = "odoo.addons.mb.controllers"
+    served = _siblings_of(Child)
+    assert "/healthy" in served
+    assert "/cors" not in served
+
+
+def test_an_uncompilable_typed_pattern_skips_only_its_route():
+    namespace: dict[str, Any] = {}
+    exec(  # noqa: S102  a controller whose annotation must reach get_param_specs unevaluated
+        "from typing import Annotated\n"
+        "from odoo.http import Pattern\n"
+        "from odoo.http.controller import Controller\n"
+        "from odoo.http.routing import route\n"
+        "class Broken(Controller):\n"
+        "    @route('/pattern', auth='public', typed=True)\n"
+        "    def x(self, code: Annotated[str, Pattern('(')]):\n"
+        "        return code\n",
+        namespace,
+    )
+    served = _siblings_of(namespace["Broken"])
+    assert "/healthy" in served
+    assert "/pattern" not in served
+
+
+def test_a_rule_werkzeug_refuses_is_skipped_not_fatal(caplog):
+    from odoo.http.routing import _generate_routing_rules, prepare_routing_map
+
+    class Healthy(Controller):
+        @route("/healthy", auth="public")
+        def healthy(self):
+            return "ok"
+
+    class Broken(Controller):
+        @route("/broken/<nosuchconverter:x>", auth="public")
+        def broken(self, x):
+            return x
+
+    Healthy.__module__ = "odoo.addons.ma.controllers"
+    Broken.__module__ = "odoo.addons.mb.controllers"
+    Controller.children_classes.clear()
+    Controller.children_classes["ma"].append(Healthy)
+    Controller.children_classes["mb"].append(Broken)
+    with caplog.at_level(logging.ERROR, logger="odoo.http.routing"):
+        routing_map = prepare_routing_map(_generate_routing_rules(["ma", "mb"], False))
+    assert [rule.rule for rule in routing_map.iter_rules()] == ["/healthy"]
+    assert "not served" in caplog.text
+
+
+def test_a_plain_base_method_a_subclass_exposes_is_served(caplog):
+    class Base(Controller):
+        def helper(self):
+            return "base"
+
+    class Child(Base):
+        @route("/helper", auth="public")
+        def helper(self):
+            return super().helper()
+
+    Base.__module__ = Child.__module__ = "odoo.addons.ma.controllers"
+    with caplog.at_level(logging.ERROR):
+        served = _merge(("ma", Child))
+    assert "/helper" in served
+    assert "without @route()" not in caplog.text
+
+
+def test_a_range_on_a_string_refuses_only_its_route():
+    namespace: dict[str, Any] = {}
+    exec(  # noqa: S102  a controller whose annotation must reach get_param_specs unevaluated
+        "from typing import Annotated\n"
+        "from odoo.http import Range\n"
+        "from odoo.http.controller import Controller\n"
+        "from odoo.http.routing import route\n"
+        "class Broken(Controller):\n"
+        "    @route('/ranged', auth='public', typed=True)\n"
+        "    def x(self, code: Annotated[str, Range(ge=1)]):\n"
+        "        return code\n",
+        namespace,
+    )
+    served = _siblings_of(namespace["Broken"])
+    assert "/healthy" in served
+    assert "/ranged" not in served

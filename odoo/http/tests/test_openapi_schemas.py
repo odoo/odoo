@@ -112,4 +112,16 @@ def test_choices_ranges_and_patterns_are_documented():
     assert by_name["order"] == {"type": "string", "enum": ["asc", "desc"]}
     assert by_name["color"] == {"type": "string", "enum": ["red", "blue"]}
     assert by_name["n"] == {"type": "integer", "minimum": 1, "maximum": 10}
-    assert by_name["code"] == {"type": "string", "pattern": "[A-Z]{3}"}
+    assert by_name["code"] == {"type": "string", "pattern": "^(?:[A-Z]{3})$"}
+
+
+def test_a_nullable_choice_documents_null_among_its_values():
+    from typing import Literal
+
+    from odoo.http._params import get_param_specs
+    from odoo.http.openapi import param_spec_to_schema
+
+    def handler(self, mode: Literal["a", "b"] | None = None): ...
+
+    schema = param_spec_to_schema(get_param_specs(handler)["mode"])
+    assert schema == {"type": ["string", "null"], "enum": ["a", "b", None]}

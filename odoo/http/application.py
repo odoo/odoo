@@ -40,11 +40,11 @@ from .constants import (
     prepare_allow_header,
 )
 from .core import _request_stack, request
+from .dispatcher import is_debugger_handover_required
 from .exceptions import (
     RegistryError,
     SessionExpiredException,
     get_error_response,
-    is_http_answer,
     set_error_response,
 )
 from .geoip import geoip2, maxminddb
@@ -75,17 +75,6 @@ def _prepare_proxy_fix(hops: int) -> ProxyFix_:
         x_proto=hops,
         x_host=hops,
     )
-
-
-debugger_attached = False
-
-
-def _is_debugger_handover_required(request: Request | None, exc: BaseException) -> bool:
-    if not debugger_attached or is_http_answer(exc):
-        return False
-    if request is None:
-        return True
-    return not request.dispatcher.serializes_errors_in_dev_mode
 
 
 _UNSET = object()
@@ -375,7 +364,7 @@ class Application:
             exc.suppress_traceback()
         via = "no_request"  # debuglog
         if request is None:
-            response: Any = InternalServerError(str(exc) or None)
+            response: Any = InternalServerError()
         else:
             try:
                 response = request.dispatcher.prepare_error_response(exc)
@@ -396,12 +385,8 @@ class Application:
     def _finalize_error_response(
         self, exc: Exception, request: Request | None, response: Any
     ) -> Any:
-        if request is None or response is None:
-            _debug.logic(
-                "http.error_response.unfinalized",
-                error=type(exc).__name__,
-                has_request=request is not None,
-            )
+        if request is None:
+            _debug.logic("http.error_response.unfinalized", error=type(exc).__name__)
             return response
         try:
             if isinstance(response, HTTPException):
@@ -465,24 +450,23 @@ class Application:
                     _debug.logic("http.request.path_rejected", reason="nul_byte")
                     raise NotFound
 
-                request._post_init()
-                _debug.pipeline(
-                    "http.request.begin",
-                    request_id=request.id,
-                    method=httprequest.method,
-                    path=httprequest.path,
-                    db=request.db,
-                    uid=request.session.uid,
-                    session_new=request.session.is_new,
-                )
-
-                static_file = self.get_static_file_path(httprequest.path)
                 with _debug.perf(
-                    "http.request",
-                    method=httprequest.method,
-                    path=httprequest.path,
-                    kind="static" if static_file else "db" if request.db else "nodb",
+                    "http.request", method=httprequest.method, path=httprequest.path
                 ) as span:
+                    request._post_init()
+                    _debug.pipeline(
+                        "http.request.begin",
+                        request_id=request.id,
+                        method=httprequest.method,
+                        path=httprequest.path,
+                        db=request.db,
+                        uid=request.session.uid,
+                        session_new=request.session.is_new,
+                    )
+                    static_file = self.get_static_file_path(httprequest.path)
+                    span.set(
+                        kind="static" if static_file else "db" if request.db else "nodb"
+                    )
                     if static_file:
                         response = self._serve_static_file(request, static_file)
                     elif request.db:
@@ -513,7 +497,9 @@ class Application:
                     error=type(exc).__name__,
                     status=getattr(exc, "code", None),
                 )
-                if _is_debugger_handover_required(request, exc):
+                if is_debugger_handover_required(
+                    None if request is None else request.dispatcher, exc
+                ):
                     _debug.logic(
                         "http.request.debugger_handover", error=type(exc).__name__
                     )
@@ -521,8 +507,6 @@ class Application:
                 error_response = self._finalize_error_response(
                     exc, request, self._get_or_create_error_response(exc, request)
                 )
-                if error_response is None:
-                    error_response = InternalServerError(str(exc) or None)
                 iterable = error_response(environ, start_response)
                 request_guard.pop_all()
                 return ClosingIterator(iterable, httprequest.close)

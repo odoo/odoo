@@ -48,12 +48,8 @@ class RequestRetryParticipant:
     def on_retry(self, exc: BaseException) -> None:
         request = self._request
         rewind_uploaded_files(request.httprequest, cause=exc)
-        reset = getattr(request, "_reset_for_replay", None)
-        _debug.lifecycle(
-            "http.retry.replay", error=type(exc).__name__, reset=reset is not None
-        )
-        if reset is not None:
-            reset()
+        _debug.lifecycle("http.retry.replay", error=type(exc).__name__)
+        request._reset_for_replay()
 
     def is_uncommitted_warning_suppressed(self) -> bool:
         return bool(getattr(self._request, "database_detached", False))

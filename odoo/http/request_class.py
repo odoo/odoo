@@ -93,7 +93,8 @@ class Request(
     def _post_init(self) -> None:
         if self._post_init_done:
             return
-        self.session, self.db = self._select_session_and_dbname()
+        self.session = self._load_session()
+        self.db = self._select_dbname(self.session)
         self._post_init_done = True
 
     @property
@@ -265,6 +266,7 @@ class Request(
         self.future_response = FutureResponse()
         self.params = {}
         self._cookies_memo = None
+        self._json_memo = None
         self.__dict__.pop("_response_version", None)
         if cr is None and self.env is not None:
             cr = self.env.cr

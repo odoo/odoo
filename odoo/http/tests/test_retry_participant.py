@@ -49,12 +49,6 @@ class TestOnRetry:
         RequestRetryParticipant(request).on_retry(Exception("boom"))
         request._reset_for_replay.assert_called_once_with()
 
-    def test_a_request_without_the_replay_hook_does_not_crash(self):
-        request = MagicMock(spec=["_load_session", "httprequest", "session"])
-        request.httprequest.files.items.return_value = []
-        assert not hasattr(request, "_reset_for_replay")
-        RequestRetryParticipant(request).on_retry(Exception("boom"))
-
 
 class TestUncommittedWarningSuppression:
     def test_a_detached_database_suppresses_the_warning(self):

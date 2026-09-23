@@ -20,6 +20,14 @@ from .wrappers import Response, _Response
 
 _debug = DebugLog(__name__)
 
+_HEADER_UNSAFE = dict.fromkeys([*range(32), 127], "_")
+
+
+def _sanitize_download_name(name: str | None) -> str | None:
+    if name is None:
+        return None
+    return name.translate(_HEADER_UNSAFE)
+
 
 class Stream:
     _ALLOWED_KWARGS: ClassVar[frozenset[str]]
@@ -68,17 +76,18 @@ class Stream:
                 raise IsADirectoryError(msg)
             raise OSError(msg)
         check = adler32(path.encode())
+        mimetype = mimetypes.guess_type(path)[0]
         _debug.lifecycle(
             "http.stream.from_path",
             name=p.name,
             size=st.st_size,
-            mimetype=mimetypes.guess_type(path)[0],
+            mimetype=mimetype,
             public=public,
         )
         return cls(
             type="path",
             path=path,
-            mimetype=mimetypes.guess_type(path)[0],
+            mimetype=mimetype,
             download_name=p.name,
             etag=f"{st.st_mtime_ns}-{st.st_size}-{check}",
             last_modified=st.st_mtime,
@@ -199,7 +208,7 @@ class Stream:
         send_file_kwargs = {
             "mimetype": self.mimetype,
             "as_attachment": as_attachment,
-            "download_name": self.download_name,
+            "download_name": _sanitize_download_name(self.download_name),
             "conditional": self.conditional,
             "etag": self.etag,
             "last_modified": self.last_modified,

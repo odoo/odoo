@@ -43,7 +43,9 @@ from .exceptions import (
     UnprocessableEntity,
     UnsupportedMediaType,
     abort,
+    get_error_response,
     is_http_answer,
+    set_error_response,
 )
 
 from ._params import (
@@ -219,6 +221,7 @@ __all__ = [
     "filter_dbs_served",
     "fragment_to_query_string",
     "get_dbs_served",
+    "get_error_response",
     "get_param_specs",
     "get_response_schema",
     "get_session_max_inactivity",
@@ -244,4 +247,5 @@ __all__ = [
     "root",
     "route",
     "serialize_exception",
+    "set_error_response",
 ]

@@ -811,14 +811,7 @@ class TimeoutManager:
 
 
 def _follow_session_chain(initial_session):
-    session = root.session_store.get(initial_session.sid)
-    for _ in range(10):
-        if not session:
-            raise SessionExpiredException
-        if "next_sid" not in session:
-            return session
-        session = root.session_store.get(session["next_sid"])
-    raise SessionExpiredException
+    return root.session_store.get_live(initial_session.sid)
 
 
 _wsrequest_stack = LocalStack()

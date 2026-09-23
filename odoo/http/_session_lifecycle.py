@@ -78,12 +78,6 @@ def _union_header_tokens(values: Iterable[str]) -> str:
 
 
 class _RequestSessionMixin(RequestState):
-    def _select_session_and_dbname(
-        self, sid: str | None = None
-    ) -> tuple[Session, str | None]:
-        session = self._load_session(sid)
-        return session, self._select_dbname(session)
-
     def _load_session(self, sid: str | None = None) -> Session:
         root = self.app
 
@@ -104,7 +98,11 @@ class _RequestSessionMixin(RequestState):
             session.context["lang"] = self.get_default_lang()
         if session.pop("_rotate_pending", None):
             session.should_rotate = True
-        session.mark_clean()
+        # A stored session keeps the baseline get() read, so a default added
+        # here is a change to persist; a baseline that already held it would
+        # make a merging save drop it as though a peer had deleted it.
+        if session.is_new:
+            session.mark_clean()
         return session
 
     def _select_dbname(self, session: Session) -> str | None:
@@ -158,7 +156,8 @@ class _RequestSessionMixin(RequestState):
                 )
                 session.logout(keep_db=False)
             session.db = dbname
-            session.mark_clean()
+            if session.is_new:
+                session.mark_clean()
 
         _debug.logic(
             "http.session.selected",
@@ -320,8 +319,14 @@ class _RequestSessionMixin(RequestState):
             _debug.logic("http.session.save_skipped", reason="cannot_save")
             return
 
-        max_age = self._get_session_max_age(env) if sess.uid else SESSION_LIFETIME
-        stale = sess.mtime is not None and time.time() - sess.mtime > max_age / 2
+        budget = self._get_session_max_age(env)
+        max_age = budget if sess.uid else SESSION_LIFETIME
+        # The vacuum reaps every session idle past `budget`, an anonymous one
+        # included, so liveness is judged against the tighter of the two.
+        stale = (
+            sess.mtime is not None
+            and time.time() - sess.mtime > min(max_age, budget) / 2
+        )
         content_changed = sess.has_content_changed()
         modified = sess.is_dirty or content_changed or stale
 

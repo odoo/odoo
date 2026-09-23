@@ -57,7 +57,9 @@ def _prepare_set_cookie_args(
     samesite: str | None,
 ) -> tuple[datetime | int | None, int | None, bool, str | None]:
     if expires == -1:
-        expires = datetime.now(tz=UTC) + timedelta(days=365)
+        expires = (
+            None if max_age is not None else datetime.now(tz=UTC) + timedelta(days=365)
+        )
 
     if (
         request

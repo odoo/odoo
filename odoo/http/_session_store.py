@@ -15,6 +15,8 @@ from pathlib import Path
 from stat import S_ISREG
 from typing import Any
 
+import psycopg
+
 import odoo.db
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.json import dumps_bytes as _dumps_bytes
@@ -26,6 +28,11 @@ from .session import Session
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
+
+
+class SessionStorageError(OSError):
+    pass
+
 
 _SESSION_KEY_LENGTH = 84
 assert STORED_SESSION_BYTES < _SESSION_KEY_LENGTH, (
@@ -188,10 +195,10 @@ class SessionStore(ABC):
             identifiers=len(identifiers),
             excluding=exclude_sid is not None,
         )
+        if not all(_session_identifier_re.fullmatch(i) for i in identifiers):
+            msg = "Identifier format incorrect, did you pass in a string instead of a list?"
+            raise ValueError(msg)
         for identifier in identifiers:
-            if not _session_identifier_re.fullmatch(identifier):
-                msg = "Identifier format incorrect, did you pass in a string instead of a list?"
-                raise ValueError(msg)
             with self._lock(identifier.ljust(_SESSION_KEY_LENGTH, "_")):
                 for sid in self._sids_in_family(identifier):
                     if exclude_sid is not None and sid == exclude_sid:
@@ -220,6 +227,13 @@ class SessionStore(ABC):
             )
             self._save_unlocked(session)
 
+    def get_live(self, sid: str) -> Session:
+        session = self.get(sid)
+        if session.is_new:
+            _debug.logic("http.session.live_missing", sid=sid[:8])
+            raise SessionExpiredException("Session was revoked")
+        return self._get_live_session(session)
+
     def _get_live_session(self, session: Session) -> Session:
         family = session.sid[:STORED_SESSION_BYTES]
         seen = {session.sid}
@@ -242,15 +256,34 @@ class SessionStore(ABC):
         return session
 
     def remove_old_sessions(self, session: Session) -> None:
-        if "gc_previous_sessions" in session:
-            if session["create_time"] + SESSION_DELETION_TIMER < time.time():
-                self.remove_sessions_for_identifiers(
-                    [session.sid[:STORED_SESSION_BYTES]],
-                    exclude_sid=session.sid,
+        if "gc_previous_sessions" not in session:
+            return
+        if session["create_time"] + SESSION_DELETION_TIMER >= time.time():
+            return
+        # Every sid of a family shares its lock stripe. The stored copy decides:
+        # a request that loaded this session before a peer rotated it holds a
+        # stale flag, and collecting on its word would delete the successor.
+        with self._lock(session.sid):
+            current = self.get(session.sid)
+            if (
+                current.is_new
+                or "next_sid" in current
+                or "gc_previous_sessions" not in current
+            ):
+                _debug.logic(
+                    "http.session.family_collect_skipped",
+                    sid=session.sid[:8],
+                    revoked=current.is_new,
+                    rotated="next_sid" in current,
                 )
-                del session["gc_previous_sessions"]
-                _debug.lifecycle("http.session.family_collected", sid=session.sid[:8])
-                self.save(session)
+                return
+            self.remove_sessions_for_identifiers(
+                [session.sid[:STORED_SESSION_BYTES]],
+                exclude_sid=session.sid,
+            )
+            del session["gc_previous_sessions"]
+            _debug.lifecycle("http.session.family_collected", sid=session.sid[:8])
+            self.save(session)
 
     def stage_rotation(self, session: Session, env: Any, soft: bool = False) -> None:
         _debug.lifecycle(
@@ -344,7 +377,8 @@ class SessionStore(ABC):
                             merged_uid=session.uid,
                             staged_uid=uid,
                         )
-                self.save(session)
+                with self._durably():
+                    self.save(session)
                 if soft:
                     current["next_sid"] = session.sid
                     current["deletion_time"] = time.time() + SESSION_DELETION_TIMER
@@ -459,7 +493,10 @@ class FilesystemSessionStore(SessionStore):
     def _read(self, sid: str) -> tuple[dict[str, Any], float | None] | None:
         path = Path(self.get_session_filename(sid))
         try:
-            data = _loads(path.read_bytes())
+            with path.open("rb") as handle:
+                payload = handle.read()
+                mtime = os.fstat(handle.fileno()).st_mtime
+            data = _loads(payload)
             if not isinstance(data, dict):
                 raise TypeError(f"session payload is {type(data).__name__}, not dict")
         except OSError:
@@ -475,9 +512,6 @@ class FilesystemSessionStore(SessionStore):
             with contextlib.suppress(OSError):
                 path.unlink()
             return None
-        mtime: float | None = None
-        with contextlib.suppress(OSError):
-            mtime = path.stat().st_mtime
         return data, mtime
 
     def _write(self, session: Session, durable: bool) -> None:
@@ -611,7 +645,8 @@ class MemorySessionStore(SessionStore):
         return True
 
     def _sids_in_family(self, identifier: str) -> list[str]:
-        return [sid for sid in self._entries if sid.startswith(identifier)]
+        with self._guard:
+            return [sid for sid in self._entries if sid.startswith(identifier)]
 
     def vacuum(self, max_lifetime: int = SESSION_LIFETIME) -> None:
         threshold = time.time() - max_lifetime
@@ -672,29 +707,46 @@ class PostgresSessionStore(SessionStore):
         if held is not None:
             yield held
             return
-        cr = odoo.db.db_connect(self.dbname).cursor()
+        with self._storage_errors():
+            cr = odoo.db.db_connect(self.dbname).cursor()
+            try:
+                # The pool runs REPEATABLE READ, whose snapshot is taken at the
+                # first statement -- the lock wait -- so a writer that queued
+                # behind another would read the row as it was before the other
+                # committed and fail to serialize its own update. The advisory
+                # lock is this store's serialization; READ COMMITTED lets the
+                # locked section see what the previous holder wrote.
+                cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
+                schema_created = self._ensure_schema(cr)
+                yield cr
+                cr.commit()
+                if schema_created:
+                    # Only remember the schema once its DDL is committed: a
+                    # rollback of this first transaction undoes CREATE TABLE,
+                    # and a flag set before the commit would suppress every
+                    # retry.
+                    self._schema_ready = True
+                    _debug.lifecycle("http.session.pg_schema_ready", db=self.dbname)
+            except BaseException:
+                with contextlib.suppress(psycopg.Error):
+                    cr.rollback()
+                raise
+            finally:
+                cr.close()
+
+    @contextlib.contextmanager
+    def _storage_errors(self) -> Iterator[None]:
         try:
-            # The pool runs REPEATABLE READ, whose snapshot is taken at the
-            # first statement -- the lock wait -- so a writer that queued
-            # behind another would read the row as it was before the other
-            # committed and fail to serialize its own update. The advisory
-            # lock is this store's serialization; READ COMMITTED lets the
-            # locked section see what the previous holder wrote.
-            cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
-            schema_created = self._ensure_schema(cr)
-            yield cr
-            cr.commit()
-            if schema_created:
-                # Only remember the schema once its DDL is committed: a
-                # rollback of this first transaction undoes CREATE TABLE, and
-                # a flag set before the commit would suppress every retry.
-                self._schema_ready = True
-                _debug.lifecycle("http.session.pg_schema_ready", db=self.dbname)
-        except BaseException:
-            cr.rollback()
-            raise
-        finally:
-            cr.close()
+            yield
+        except (psycopg.Error, odoo.db.PoolError) as exc:
+            _debug.logic(
+                "http.session.pg_storage_failed",
+                db=self.dbname,
+                error=type(exc).__name__,
+            )
+            raise SessionStorageError(
+                f"session storage in database {self.dbname!r} failed: {exc}"
+            ) from exc
 
     @contextlib.contextmanager
     def _lock(self, sid: str) -> Iterator[None]:

@@ -4,6 +4,7 @@ import annotationlib
 import functools
 import inspect
 import logging
+import re
 import warnings
 from collections.abc import Callable, Generator, Iterable
 from types import MappingProxyType
@@ -118,9 +119,22 @@ def prepare_routing_map(
     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
     with _debug.perf("http.routing_map.prepare") as span:
         for url, endpoint in rules:
-            rule = FasterRule(url, endpoint=endpoint, **prepare_rule_kwargs(endpoint))
-            rule.merge_slashes = False
-            routing_map.add(rule)
+            try:
+                rule = FasterRule(
+                    url, endpoint=endpoint, **prepare_rule_kwargs(endpoint)
+                )
+                rule.merge_slashes = False
+                routing_map.add(rule)
+            except (ValueError, LookupError) as exc:
+                _logger.error(
+                    "%s: route %r cannot be added to the routing map (%s: %s). "
+                    "The route is not served.",
+                    getattr(endpoint, "__qualname__", endpoint),
+                    url,
+                    type(exc).__name__,
+                    exc,
+                )
+                _debug.logic("http.route.skipped", reason="rule_refused", url=url)
         span.set(rules=len(routing_map._rules))
     return routing_map
 
@@ -173,7 +187,7 @@ def _check_cors_credentials(who: str, routing: Any) -> None:
             "allowed origin explicitly, or pass a resolver callable such as "
             "odoo.http.resolve_cors_same_host."
         )
-        raise ValueError(e)
+        raise RouteDefinitionError(e)
 
 
 def _get_route_type_effective(declared_routing: dict[str, Any]) -> str:
@@ -307,39 +321,46 @@ class _ResolvedRoute(NamedTuple):
 def _resolve_route(ctrl: Controller, method_name: str) -> _ResolvedRoute | None:
     definitions = [
         (cls, getattr(cls, method_name))
-        for cls in reversed(type(ctrl).mro())
+        for cls in reversed(type(ctrl).__mro__)
         if cls is not Controller and cls is not object and method_name in cls.__dict__
     ]
     if not any(hasattr(submethod, "original_routing") for _, submethod in definitions):
         return None
+    try:
+        return _merge_route(ctrl, method_name, definitions)
+    except RouteDefinitionError as exc:
+        _logger.error("%s The route is not served.", exc)
+        _debug.logic(
+            "http.route.skipped", reason="definition_error", method=method_name
+        )
+        return None
 
+
+def _merge_route(
+    ctrl: Controller, method_name: str, definitions: list[tuple[type, Any]]
+) -> _ResolvedRoute | None:
     merged_routing: dict[str, Any] = {"auth": "user", "methods": None, "routes": []}
     decorated: list[tuple[type, Any]] = []
     for cls, submethod in definitions:
-        try:
-            if not hasattr(submethod, "original_routing"):
-                _debug.logic(
-                    "http.route.override_unrouted",
-                    controller=cls.__qualname__,
-                    method=method_name,
-                )
-                e = (
-                    f"{cls.__module__}.{cls.__name__}.{method_name} overrides a "
-                    f"route without @route(). An undecorated override cannot be "
-                    f"served: the URL would answer with whichever body the "
-                    f"framework picked, not the one you wrote. Decorate it "
-                    f"(@route() with no arguments inherits the parent's routing)."
-                )
-                raise RouteDefinitionError(e)
-            fragment = _prepare_route_fragment(cls, submethod, merged_routing)
-        except RouteDefinitionError as exc:
-            _logger.error("%s The route is not served.", exc)
+        if not hasattr(submethod, "original_routing"):
+            if not decorated:
+                # A plain method a subclass later exposes: nothing to override.
+                continue
             _debug.logic(
-                "http.route.skipped", reason="definition_error", method=method_name
+                "http.route.override_unrouted",
+                controller=cls.__qualname__,
+                method=method_name,
             )
-            return None
+            e = (
+                f"{cls.__module__}.{cls.__name__}.{method_name} overrides a "
+                f"route without @route(). An undecorated override cannot be "
+                f"served: the URL would answer with whichever body the "
+                f"framework picked, not the one you wrote. Decorate it "
+                f"(@route() with no arguments inherits the parent's routing)."
+            )
+            raise RouteDefinitionError(e)
+        merged_routing.update(_prepare_route_fragment(cls, submethod, merged_routing))
         decorated.append((cls, submethod))
-        merged_routing.update(fragment)
 
     owner, implementation = decorated[-1]
     if not merged_routing["routes"]:
@@ -356,8 +377,15 @@ def _resolve_route(ctrl: Controller, method_name: str) -> _ResolvedRoute | None:
     specs: dict[str, ParamSpec] | None = None
     if merged_routing.get("typed"):
         specs = {}
-        for _cls, submethod in decorated:
-            specs = get_param_specs(submethod.original_endpoint, specs)
+        try:
+            for _cls, submethod in decorated:
+                specs = get_param_specs(submethod.original_endpoint, specs)
+        except (re.error, TypeError, ValueError) as exc:
+            e = (
+                f"{owner.__module__}.{owner.__name__}.{method_name}: its typed "
+                f"parameters cannot be built ({type(exc).__name__}: {exc})."
+            )
+            raise RouteDefinitionError(e) from exc
     return _ResolvedRoute(
         merged_routing, implementation.__get__(ctrl, type(ctrl)), specs
     )

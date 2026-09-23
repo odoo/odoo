@@ -1,8 +1,13 @@
 import xmlrpc.client
+from contextlib import contextmanager
+from types import SimpleNamespace
 
+import psycopg
 from markupsafe import Markup
 
 from odoo import exceptions
+from odoo.http import _request_stack
+from odoo.http import settings as http_settings
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import lazy
 
@@ -93,6 +98,43 @@ class TestFaultCarriesItsOwnException(TransactionCase):
             fault = self._fault_from(xmlrpc_handle_exception_int(error))
         self.assertIn("raised for real", fault.faultString)
         self.assertIn("Traceback (most recent call last)", fault.faultString)
+
+
+@tagged("post_install", "-at_install")
+class TestFaultHidesTheServerOutsideDevMode(TransactionCase):
+    def _fault_from(self, payload):
+        with self.assertRaises(xmlrpc.client.Fault) as capture:
+            xmlrpc.client.loads(payload)
+        return capture.exception
+
+    @contextmanager
+    def _serving_a_client(self):
+        _request_stack.push(SimpleNamespace())
+        try:
+            with http_settings.override(dev_mode=()):
+                yield
+        finally:
+            _request_stack.pop()
+
+    def test_an_unexpected_error_carries_no_traceback_to_the_client(self):
+        try:
+            raise KeyError("nosuch")
+        except KeyError as error:
+            with self._serving_a_client():
+                int_fault = self._fault_from(xmlrpc_handle_exception_int(error))
+                str_fault = self._fault_from(xmlrpc_handle_exception_string(error))
+        for fault in (int_fault, str_fault):
+            rendered = f"{fault.faultCode}{fault.faultString}"
+            self.assertNotIn("Traceback (most recent call last)", rendered)
+            self.assertNotIn(".py", rendered)
+            self.assertIn("nosuch", rendered)
+
+    def test_an_infrastructure_error_is_masked(self):
+        error = psycopg.OperationalError("UPDATE res_users SET password=...")
+        with self._serving_a_client():
+            fault = self._fault_from(xmlrpc_handle_exception_string(error))
+        self.assertEqual(fault.faultCode, "Internal Server Error")
+        self.assertNotIn("res_users", fault.faultString)
 
 
 @tagged("post_install", "-at_install")

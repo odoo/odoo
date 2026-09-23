@@ -54,6 +54,10 @@ else:
 
 
 class HTTPRequest(_HTTPRequestProxied):
+    # A name missing from HTTPREQUEST_ATTRIBUTES must fail loudly: set on the
+    # facade it would shadow nothing and werkzeug would never see it.
+    __slots__ = ("__environ", "__wrapped", "environ")
+
     def __init__(self, environ: dict[str, Any]) -> None:
         httprequest = werkzeug.wrappers.Request(environ)
         httprequest.user_agent_class = UserAgent
@@ -158,6 +162,8 @@ HTTPREQUEST_ATTRIBUTES = [
     "is_secure",
     "json",
     "max_content_length",
+    "max_form_memory_size",
+    "max_form_parts",
     "method",
     "mimetype",
     "mimetype_params",

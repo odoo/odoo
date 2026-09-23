@@ -18,6 +18,7 @@ from odoo.http.constants import prepare_default_session
 from odoo.http.exceptions import SessionExpiredException
 from odoo.http.request_class import Request
 from odoo.http.session import Session
+from odoo.http.tests._wsgi import FakeConfigParameter
 from odoo.http.wrappers import HTTPRequest, Response
 from odoo.libs.func import Callbacks
 
@@ -202,9 +203,15 @@ def transaction_request(store):
     cursor = SimpleNamespace(
         closed=False, postcommit=Callbacks(), postrollback=Callbacks()
     )
-    req.env = SimpleNamespace(cr=cursor)
+    req.env = _Env(cr=cursor)
     req._bind_session_transaction(cursor)
     return req, cursor
+
+
+class _Env(SimpleNamespace):
+    def __getitem__(self, model: str) -> FakeConfigParameter:
+        assert model == "ir.config_parameter", model
+        return FakeConfigParameter({})
 
 
 def test_session_changes_are_published_only_after_commit(store):
@@ -310,7 +317,7 @@ def test_a_rotation_persisted_through_an_explicit_env_survives_the_rollback(stor
     req, cursor = transaction_request(store)
     req.session["login"] = "alice"
     cookie_sid = req.session.sid
-    foreign_env = SimpleNamespace(cr=SimpleNamespace(closed=False))
+    foreign_env = _Env(cr=SimpleNamespace(closed=False))
 
     req.session.should_rotate = True
     req._save_session(foreign_env)
@@ -361,3 +368,26 @@ def test_a_disk_reload_on_rollback_does_not_reselect_the_database(store):
     assert req.session.db == "served_db"
     assert filtered.call_count == 0, "the restore consulted the dbfilter"
     assert listed.call_count == 0
+
+
+def test_an_active_anonymous_session_is_kept_alive_inside_the_vacuum_budget(
+    store, monkeypatch
+):
+    req, _cursor = transaction_request(store)
+    budget = 8 * 3600
+    monkeypatch.setattr(
+        _Env,
+        "__getitem__",
+        lambda self, model: FakeConfigParameter(
+            {"sessions.max_inactivity_seconds": budget}
+        ),
+    )
+    assert req.session.uid is None
+    req.session.mtime = time.time() - budget * 0.75
+
+    req._persist_session(req.env)
+
+    assert req.session.mtime > time.time() - 60, (
+        "the vacuum reaps an anonymous session idle past the inactivity budget, "
+        "so a request three quarters of the way there must renew it"
+    )

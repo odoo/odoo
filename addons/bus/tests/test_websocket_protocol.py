@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch
 from werkzeug.exceptions import BadRequest, ServiceUnavailable
 
 from odoo.db import PoolError
-from odoo.http import SessionExpiredException
+from odoo.http import MemorySessionStore, Session, SessionExpiredException
 from odoo.tests.common import BaseCase, tagged
 
 try:
@@ -245,57 +245,50 @@ class TestFrameClasses(BaseCase):
 
 @tagged("-at_install", "post_install")
 class TestFollowSessionChain(BaseCase):
-    def _make_session(self, sid, next_sid=None):
-        session = {"sid": sid}
-        if next_sid is not None:
-            session["next_sid"] = next_sid
+    def setUp(self):
+        super().setUp()
+        self.store = MemorySessionStore(Session)
+        patcher = patch.object(websocket_module.root, "session_store", self.store)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def _stored(self):
+        session = self.store.new()
+        session["uid"] = None
+        self.store.save(session)
         return session
 
-    def _make_store(self, sessions):
-        store = MagicMock()
-        store.get = MagicMock(side_effect=sessions.get)
-        return store
-
     def test_direct_session_no_chain(self):
-        session = self._make_session("abc")
-        sessions = {"abc": session}
-        initial = MagicMock()
-        initial.sid = "abc"
-        with patch("odoo.addons.bus.websocket.root") as mock_root:
-            mock_root.session_store = self._make_store(sessions)
-            result = _follow_session_chain(initial)
-        self.assertEqual(result["sid"], "abc")
+        session = self._stored()
+        self.assertEqual(_follow_session_chain(session).sid, session.sid)
 
-    def test_one_hop_chain(self):
-        old = self._make_session("old", next_sid="new")
-        new = self._make_session("new")
-        sessions = {"old": old, "new": new}
-        initial = MagicMock()
-        initial.sid = "old"
-        with patch("odoo.addons.bus.websocket.root") as mock_root:
-            mock_root.session_store = self._make_store(sessions)
-            result = _follow_session_chain(initial)
-        self.assertEqual(result["sid"], "new")
+    def test_soft_rotations_are_followed_to_the_live_successor(self):
+        session = self._stored()
+        initial_sid = session.sid
+        self.store.rotate(session, env=None, soft=True)
+        self.store.rotate(session, env=None, soft=True)
+        initial = self.store.get(initial_sid)
+        self.assertEqual(_follow_session_chain(initial).sid, session.sid)
 
     def test_missing_session_raises(self):
-        initial = MagicMock()
-        initial.sid = "gone"
-        with patch("odoo.addons.bus.websocket.root") as mock_root:
-            mock_root.session_store = self._make_store({})
-            with self.assertRaises(SessionExpiredException):
-                _follow_session_chain(initial)
+        with self.assertRaises(SessionExpiredException):
+            _follow_session_chain(self.store.new())
 
-    def test_chain_exceeds_limit_raises(self):
-        sessions = {}
-        for i in range(15):
-            sessions[f"s{i}"] = self._make_session(f"s{i}", next_sid=f"s{i + 1}")
-        sessions["s15"] = self._make_session("s15")
-        initial = MagicMock()
-        initial.sid = "s0"
-        with patch("odoo.addons.bus.websocket.root") as mock_root:
-            mock_root.session_store = self._make_store(sessions)
-            with self.assertRaises(SessionExpiredException):
-                _follow_session_chain(initial)
+    def test_a_revoked_successor_raises(self):
+        session = self._stored()
+        initial_sid = session.sid
+        self.store.rotate(session, env=None, soft=True)
+        self.store.delete(session)
+        with self.assertRaises(SessionExpiredException):
+            _follow_session_chain(self.store.get(initial_sid))
+
+    def test_a_successor_outside_the_family_raises(self):
+        session = self._stored()
+        stranger = self._stored()
+        session["next_sid"] = stranger.sid
+        self.store.save(session)
+        with self.assertRaises(SessionExpiredException):
+            _follow_session_chain(session)
 
 
 @tagged("-at_install", "post_install")

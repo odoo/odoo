@@ -2,14 +2,23 @@ import os
 import pathlib
 import time
 from types import SimpleNamespace
-from typing import Any
+from typing import Any, cast
+from unittest import mock
 
+import psycopg
 import pytest
 
-from odoo.http._session_store import FilesystemSessionStore
+import odoo.db
+from odoo.http._session_store import (
+    FilesystemSessionStore,
+    MemorySessionStore,
+    PostgresSessionStore,
+    SessionStorageError,
+)
 from odoo.http.constants import STORED_SESSION_BYTES, prepare_default_session
 from odoo.http.request_class import Request
 from odoo.http.session import Session, _coerce_session_value
+from odoo.http.wrappers import HTTPRequest
 
 
 @pytest.fixture
@@ -277,21 +286,6 @@ def test_pending_rotation_survives_a_request_with_no_live_env(store):
     assert store.get(original_sid)["_rotate_pending"] is True
 
 
-def test_pending_rotation_rearms_on_the_next_load(store):
-    s = store.new()
-    s["uid"] = 7
-    s["_rotate_pending"] = True
-    store.save(s)
-
-    reloaded = store.get(s.sid)
-    assert reloaded.should_rotate is False
-    if reloaded.pop("_rotate_pending", None):
-        reloaded.should_rotate = True
-
-    assert reloaded.should_rotate is True
-    assert "_rotate_pending" not in reloaded
-
-
 def test_pending_rotation_is_not_parked_when_it_can_run(store):
     s = _anon(store)
     s.should_rotate = True
@@ -419,3 +413,135 @@ def test_a_save_after_following_a_rotation_does_not_log_the_owner_out(store):
     on_disk = store.get(follower.sid)
     assert on_disk["session_token"] == _token_for(follower.sid)
     assert on_disk["uid"] == 7
+
+
+def _aged_soft_successor(store):
+    s = _anon(store)
+    store.rotate(s, env=None, soft=True)
+    s["create_time"] = time.time() - 4 * 3600
+    store.save(s)
+    return store.get(s.sid)
+
+
+@pytest.mark.parametrize("backend", ["filesystem", "memory"])
+def test_a_stale_copy_does_not_collect_the_successor_a_peer_rotated_to(
+    tmp_path, backend
+):
+    store = (
+        FilesystemSessionStore(str(tmp_path), session_class=Session)
+        if backend == "filesystem"
+        else MemorySessionStore(Session)
+    )
+    loaded = _aged_soft_successor(store)
+    first, second = store.get(loaded.sid), store.get(loaded.sid)
+
+    store.remove_old_sessions(first)
+    store.rotate(first, env=None, soft=True)
+    successor = first.sid
+
+    store.remove_old_sessions(second)
+
+    assert not store.get(successor).is_new, (
+        "the peer's live successor must survive a collection decided on a copy "
+        "read before the rotation"
+    )
+
+
+def test_a_collection_a_peer_already_ran_is_not_repeated(store):
+    loaded = _aged_soft_successor(store)
+    first, second = store.get(loaded.sid), store.get(loaded.sid)
+    store.remove_old_sessions(first)
+    sibling = (
+        loaded.sid[:STORED_SESSION_BYTES] + store.generate_key()[STORED_SESSION_BYTES:]
+    )
+    late = store.session_class({"uid": None}, sibling, True)
+    store.save(late)
+
+    store.remove_old_sessions(second)
+
+    assert not store.get(sibling).is_new
+
+
+class _LoadingRequest(Request):
+    def __init__(self, store, sid):
+        self.app = SimpleNamespace(session_store=store)
+        self.httprequest = cast("HTTPRequest", SimpleNamespace(session_id=sid))
+
+    def get_default_lang(self):
+        return "en_US"
+
+
+def test_defaults_a_stored_session_lacks_survive_a_merging_save(store):
+    bare = store.new()
+    bare["uid"] = 1
+    bare["db"] = "x"
+    store.save(bare)
+
+    session = _LoadingRequest(store, bare.sid)._load_session()
+    session["touched"] = True
+    store.save(session)
+
+    assert session["_trace"] == []
+    assert session.context == {"lang": "en_US"}
+    stored = store.get(bare.sid)
+    assert stored["_trace"] == [] and stored["context"] == {"lang": "en_US"}
+
+
+def test_a_pending_rotation_is_consumed_by_the_load(store):
+    s = store.new()
+    s.update(prepare_default_session())
+    s["_rotate_pending"] = True
+    store.save(s)
+
+    session = _LoadingRequest(store, s.sid)._load_session()
+
+    assert session.should_rotate is True
+    assert "_rotate_pending" not in session
+    assert session.has_content_changed(), "the consumed marker is a change to persist"
+
+
+def test_a_new_session_with_defaults_is_not_a_change():
+    store = MemorySessionStore(Session)
+    session = _LoadingRequest(store, None)._load_session()
+    assert session.is_new and not session.is_dirty
+    assert not session.has_content_changed()
+
+
+def test_memory_family_lookup_holds_the_guard():
+    store = MemorySessionStore(Session)
+    entered = []
+
+    class _Guard:
+        def __enter__(self):
+            entered.append(True)
+
+        def __exit__(self, *exc):
+            return False
+
+    with mock.patch.object(store, "_guard", _Guard()):
+        store._sids_in_family("A" * STORED_SESSION_BYTES)
+    assert entered == [True]
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        pytest.param(lambda: odoo.db.PoolError("pool exhausted"), id="pool"),
+        pytest.param(lambda: psycopg.OperationalError("server gone"), id="psycopg"),
+    ],
+)
+def test_a_postgres_storage_failure_is_the_storage_error_every_backend_raises(
+    failure,
+):
+    store = PostgresSessionStore("http_session_unreachable", Session)
+    session = store.new()
+
+    def refuse(dbname):
+        raise failure()
+
+    with (
+        mock.patch.object(odoo.db, "db_connect", refuse),
+        pytest.raises(SessionStorageError) as caught,
+    ):
+        store.save(session)
+    assert isinstance(caught.value, OSError), "_persist_session catches OSError"

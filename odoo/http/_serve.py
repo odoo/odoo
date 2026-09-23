@@ -27,14 +27,16 @@ from ._protocols import RequestState, get_ir_http
 from ._retry import RequestRetryParticipant, rewind_uploaded_files
 from .constants import NOT_FOUND_NODB, NOT_FOUND_NODB_TEXT, STATIC_CACHE
 from .core import borrow_request
-from .dispatcher import _dispatchers, get_dispatcher_for_unmatched_route
+from .dispatcher import (
+    _dispatchers,
+    get_dispatcher_for_unmatched_route,
+    is_debugger_handover_required,
+)
 from .exceptions import (
     RegistryError,
     get_error_response,
-    is_http_answer,
     set_error_response,
 )
-from .settings import current as current_settings
 from .stream import Stream
 from .wrappers import Response, prepare_exception_response
 
@@ -459,11 +461,7 @@ class _RequestServeMixin(RequestState):
                 explicit_response=exc.response is not None,
             )
             return
-        if (
-            "werkzeug" in current_settings().dev_mode
-            and not self.dispatcher.serializes_errors_in_dev_mode
-            and not is_http_answer(exc)
-        ):
+        if is_debugger_handover_required(self.dispatcher, exc):
             _debug.logic(
                 "http.serve.error_left_to_debugger",
                 error=type(exc).__name__,
