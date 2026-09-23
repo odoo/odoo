@@ -33,6 +33,7 @@ One check-in/check-out span. `_order = "check_in desc"`, and it carries
 | `check_in` | Datetime | required, tracked |
 | `check_out` | Datetime | tracked; empty means still there |
 | `date` | Date | stored, **the employee's local day**, from `_schedule_tz()` |
+| `day_of_date` | Selection | stored weekday of `date`, `"0"` Monday to `"6"` Sunday -- the keys and labels `resource.calendar.attendance.dayofweek` uses, so an attendance filters and groups by weekday against its schedule |
 | `worked_hours` | Float | stored; the span minus the schedule's breaks |
 | `expected_hours` | Float | stored; `worked_hours` minus what the RULES computed, not minus a manager's correction |
 | `overtime_hours` | Float | stored; sums `manual_duration`, so a correction moves it |
@@ -130,8 +131,10 @@ its own reads.
 | `attendance_kiosk_use_pin` | Boolean | whether the kiosk asks for a PIN |
 | `attendance_from_systray` | Boolean | the other entry point |
 | `attendance_device_tracking` | Boolean | what that entry point records |
-| `auto_check_out` | Boolean | with `auto_check_out_tolerance`, drives the closing cron |
-| `auto_check_out_tolerance` | Float | |
+| `auto_check_out` | Boolean | drives the closing cron, in the way `auto_check_out_mode` picks |
+| `auto_check_out_mode` | Selection | `tolerance` (default): close an attendance once the day's worked hours pass the scheduled hours plus `auto_check_out_tolerance`, so flexible and calendar-less employees are never reached; `specific_time`: close every open attendance at the local `auto_check_out_specific_time`, rolled to the next day when the check-in is already past it |
+| `auto_check_out_tolerance` | Float | worked hours over the schedule, default 2 |
+| `auto_check_out_specific_time` | Float | hour of the day in the schedule's timezone, default 20.0; `_auto_check_out_specific_time_in_day` holds it in [0, 24) when the mode is `specific_time` |
 | `absence_management` | Boolean | drives the absence cron |
 | `attendance_overtime_validation` | Selection | the approval flow |
 | `hr_attendance_display_overtime` | Boolean | whether extra hours are shown |

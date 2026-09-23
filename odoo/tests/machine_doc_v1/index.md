@@ -23,6 +23,7 @@ package live in `odoo/addons/base/tests/` (see Conventions).
 | `tag_selector.py` | `TagsSelector`: parses `--test-tags` specs, filters tests |
 | `common.py` | The public façade: decorators (`tagged`, `users`, `warmup`, `no_retry`, `freeze_time`, `standalone`), `new_test_user`, `test_xsd`, and the re-exports `__all__` names |
 | `transaction_case.py` | `BaseCase`/`TransactionCase`/`SingleTransactionCase`, their assertions, and the registry-lock, statement-recorder and stranded-cursor machinery they own |
+| `in_memory_case.py` | `InMemoryCase`: hosts a module's own `TransactionCase` class on the DB-free tier -- a `model_test_env` for the class with `hosts_modules`' data files loaded, `allow_inherited_tests_method` so the hosted methods are collected, and the per-test snapshot plus the cache clears a dict rollback does not cover |
 | `matchers.py` | `Like`, `Approx`, `WhitespaceInsensitive`, `RecordCapturer` and the XML normaliser — value comparison, no dependency on the case hierarchy |
 | `http.py` | `HttpCase`/`Opener`/`Transport`/`JsonRpcException` (extracted from common; still re-exported there) |
 | `browser.py` | `ChromeBrowser` CDP client, `Screencaster`, Chrome discovery |
