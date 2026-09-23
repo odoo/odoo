@@ -10,12 +10,17 @@ from odoo.tools.convert import _eval_xml, xml_import
 
 
 class _Records(list):
+    rows: dict = {}
+
     @property
     def ids(self):
         return list(self)
 
     def mapped(self, _name):
         return list(self)
+
+    def read(self, fields):
+        return [{name: self.rows[rid][name] for name in fields} for rid in self]
 
 
 class _Model:
@@ -37,9 +42,11 @@ class _Model:
 class _Env(dict):
     context: dict = {}
 
-    def __init__(self, found=None, fields=None, installed=()):
+    def __init__(self, found=None, fields=None, installed=(), rows=None):
         super().__init__()
         self.found = {model: _Records(ids) for model, ids in (found or {}).items()}
+        for records in self.found.values():
+            records.rows = rows or {}
         self.searches = []
         self.installed = list(installed)
         self.fields = fields or {}
@@ -64,7 +71,7 @@ class TestOneSearchForFieldsAndValues(unittest.TestCase):
             fields={"res.users": [("group_ids", "many2many")]},
         )
         value = _importer(env)._eval_field_search(
-            env, "res.users", "group_ids", "res.groups", "[('id', '>', 3)]"
+            env, "res.users", "group_ids", "res.groups", "[('id', '>', 3)]", "id"
         )
         self.assertEqual(value, [(6, 0, [4, 5])])
 
@@ -74,7 +81,7 @@ class TestOneSearchForFieldsAndValues(unittest.TestCase):
             fields={"res.users": [("partner_id", "many2one")]},
         )
         value = _importer(env)._eval_field_search(
-            env, "res.users", "partner_id", "res.partner", "[]"
+            env, "res.users", "partner_id", "res.partner", "[]", "id"
         )
         self.assertEqual(value, 7)
 
@@ -95,9 +102,46 @@ class TestOneSearchForFieldsAndValues(unittest.TestCase):
         node = etree.fromstring('<value model="res.groups" search="[]"/>')
         self.assertIs(_eval_xml(_importer(env), node, env), False)
 
-    def test_use_is_no_longer_part_of_the_grammar(self):
-        grammar = Path(convert.__file__).parent.parent / "import_xml.rng"
-        self.assertNotIn('name="use"', grammar.read_text())
+    def test_a_value_with_use_stands_for_that_column_of_its_match(self):
+        env = _Env(found={"link.tracker.code": [3]}, rows={3: {"code": "a1b2"}})
+        node = etree.fromstring(
+            '<value model="link.tracker.code" search="[]" use="code"/>'
+        )
+        self.assertEqual(_eval_xml(_importer(env), node, env), "a1b2")
+
+    def test_a_field_with_use_reads_that_column_of_every_match(self):
+        env = _Env(
+            found={"res.users": [2, 6]},
+            fields={"res.groups": [("user_ids", "many2many")]},
+            rows={2: {"partner_id": (12, "A")}, 6: {"partner_id": (16, "B")}},
+        )
+        value = _importer(env)._eval_field_search(
+            env, "res.groups", "user_ids", "res.users", "[]", "partner_id"
+        )
+        self.assertEqual(value, [(6, 0, [12, 16])])
+
+    def test_the_grammar_accepts_use_on_a_searched_value_and_field(self):
+        grammar = etree.RelaxNG(
+            etree.parse(str(Path(convert.__file__).parent.parent / "import_xml.rng"))
+        )
+        doc = etree.fromstring(
+            '<odoo><function model="link.tracker.click" name="add_click">'
+            '<value model="link.tracker.code" search="[]" use="code"/>'
+            '</function><record id="x" model="res.groups">'
+            '<field name="user_ids" model="res.users" search="[]" use="id"/>'
+            "</record></odoo>"
+        )
+        self.assertTrue(grammar.validate(doc), grammar.error_log)
+
+    def test_the_mass_mailing_demo_traces_fit_the_grammar(self):
+        root = Path(convert.__file__).parents[2]
+        grammar = etree.RelaxNG(etree.parse(str(root / "odoo" / "import_xml.rng")))
+        for module in ("mass_mailing", "mass_mailing_sms"):
+            with self.subTest(module=module):
+                trace = root / "addons" / module / "demo" / "mailing_trace.xml"
+                self.assertTrue(
+                    grammar.validate(etree.parse(str(trace))), grammar.error_log
+                )
 
 
 class TestXmlIdReferences(unittest.TestCase):

@@ -103,32 +103,44 @@ def _substitute_xml_ids(self: Any, s: str) -> str:
     return re.sub(r"%%|%\((.*?)\)[ds]", repl, s)
 
 
-def _search_ids(
-    self: Any, env: Environment, f_model: str | None, f_search: str
-) -> list[int]:
+def _search_values(
+    self: Any, env: Environment, f_model: str | None, f_search: str, f_use: str
+) -> list[Any]:
     f_model = _check_model_name(f_model)
     context = _prepare_eval_context(self, env, f_model)
-    ids = env[f_model].search(safe_eval(f_search, context)).ids
-    _debug.logic(
-        "convert.value.search", module=self.module, model=f_model, matches=len(ids)
+    records = env[f_model].search(safe_eval(f_search, context))
+    values = (
+        records.ids
+        if f_use == "id"
+        else [
+            value[0] if isinstance(value, tuple) else value
+            for value in (row[f_use] for row in records.read([f_use]))
+        ]
     )
-    return ids
+    _debug.logic(
+        "convert.value.search",
+        module=self.module,
+        model=f_model,
+        use=f_use,
+        matches=len(values),
+    )
+    return values
 
 
 def _eval_xml_search(
-    self: Any, env: Environment, f_model: str | None, f_search: str
+    self: Any, env: Environment, f_model: str | None, f_search: str, f_use: str
 ) -> Any:
-    ids = _search_ids(self, env, f_model, f_search)
-    if len(ids) > 1:
+    values = _search_values(self, env, f_model, f_search, f_use)
+    if len(values) > 1:
         _logger.warning(
             "%s: <value model=%r search=%r> matches %d records and stands for the "
             "first one only",
             self.module,
             f_model,
             f_search,
-            len(ids),
+            len(values),
         )
-    return ids[0] if ids else False
+    return values[0] if values else False
 
 
 def _eval_xml_markup(self: Any, node: etree._Element, t: str) -> str:
@@ -186,7 +198,7 @@ def _eval_xml_field(self: Any, node: etree._Element, env: Environment) -> Any:
     t = node.get("type", "char")
     f_model = node.get("model")
     if f_search := node.get("search"):
-        return _eval_xml_search(self, env, f_model, f_search)
+        return _eval_xml_search(self, env, f_model, f_search, node.get("use") or "id")
 
     if a_eval := node.get("eval"):
         context = _prepare_eval_context(self, env, f_model)
@@ -483,14 +495,15 @@ class xml_import:
         f_name: str,
         f_model: str | None,
         f_search: str,
+        f_use: str,
     ) -> Any:
         from odoo.fields import Command
 
-        ids = _search_ids(self, env, f_model, f_search)
+        values = _search_values(self, env, f_model, f_search, f_use)
         field = env[rec_model]._fields.get(f_name)
         if field is not None and field.type == "many2many":
-            return [Command.set(ids)]
-        return ids[0] if ids else False
+            return [Command.set(values)]
+        return values[0] if values else False
 
     def _eval_field_ref(
         self,
@@ -584,7 +597,7 @@ class xml_import:
 
             if f_search := field.get("search"):
                 f_val = self._eval_field_search(
-                    env, rec_model, f_name, f_model, f_search
+                    env, rec_model, f_name, f_model, f_search, field.get("use") or "id"
                 )
             elif f_ref := field.get("ref"):
                 f_val = self._eval_field_ref(rec, model, f_name, f_ref, xid)
