@@ -1,14 +1,18 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 import {
     defineWebsiteModels,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { CarouselOptionPlugin } from "@website/builder/plugins/carousel_option_plugin";
 
 defineWebsiteModels();
 
 test("Test Carousel Option (s_carousel)", async () => {
-    const { getEditableContent } = await setupWebsiteBuilderWithSnippet("s_carousel");
+    const { getEditableContent } = await setupWebsiteBuilderWithSnippet("s_carousel", {
+        loadIframeBundles: true,
+    });
     const carouselEl = getEditableContent().querySelector(".carousel");
     await contains(":iframe .carousel").click();
 
@@ -64,8 +68,28 @@ test("Test Carousel Option (s_carousel)", async () => {
     expect(carouselEl).toHaveAttribute("data-bs-interval", "1000");
 });
 
+test("Test Carousel Option buttons get disabled until action finished", async () => {
+    patchWithCleanup(CarouselOptionPlugin.prototype, {
+        async addSlide(carouselEl) {
+            await animationFrame();
+            const backwardButton = document.querySelector("button.o_slide_move_backward");
+            expect(backwardButton).toHaveClass("disabled", {
+                message: "Add Slide button should be disabled during transition",
+            });
+        },
+    });
+    const { getEditableContent } = await setupWebsiteBuilderWithSnippet("s_carousel", {
+        loadIframeBundles: true,
+    });
+    getEditableContent().querySelector(".carousel");
+    await contains(":iframe .carousel .carousel-item").click();
+    await contains(".options-container button.o_slide_add").click();
+});
+
 test("Test Carousel Option (s_image_gallery)", async () => {
-    const { getEditableContent } = await setupWebsiteBuilderWithSnippet("s_image_gallery");
+    const { getEditableContent } = await setupWebsiteBuilderWithSnippet("s_image_gallery", {
+        loadIframeBundles: true,
+    });
     const carouselEl = getEditableContent().querySelector(".carousel");
     await contains(":iframe .carousel").click();
 

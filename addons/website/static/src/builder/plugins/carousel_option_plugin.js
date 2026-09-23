@@ -59,6 +59,7 @@ export class CarouselOptionPlugin extends Plugin {
             CarouselBottomControllersOption,
             withSequence(CAROUSEL_CARDS_SEQUENCE, CarouselCardsOption),
         ],
+        // TODO: MSH: Create a plugin in test case with builder_header_middle_buttons resource and check when addSlide and other events are called we have disabled button available. This will ensure that the buttons are disabled during transition and we don't have to check for transitionState in the template.
         builder_header_middle_buttons: {
             Component: CarouselItemHeaderMiddleButtons,
             selector: carouselItemOptionSelector,
