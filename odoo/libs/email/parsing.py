@@ -215,7 +215,7 @@ def formataddr(pair: tuple[str, str], charset: str = "utf-8") -> str:
     try:
         domain.encode(charset)
     except UnicodeEncodeError:
-        domain = idna.encode(domain).decode("ascii")
+        domain = idna.encode(domain, uts46=True).decode("ascii")
 
     if name:
         try:

@@ -26,3 +26,10 @@ class TestFormataddr(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_an_uppercase_international_domain_is_encoded_not_refused():
+    from odoo.libs.email.parsing import extract_rfc2822_addresses, formataddr
+
+    assert formataddr(("", "x@EXÄMPLE.com"), "ascii") == "x@xn--exmple-cua.com"
+    assert extract_rfc2822_addresses("x@EXÄMPLE.com") == ["x@xn--exmple-cua.com"]
