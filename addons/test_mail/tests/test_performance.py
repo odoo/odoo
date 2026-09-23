@@ -2864,7 +2864,7 @@ class TestPerformance(BaseMailPostPerformance):
         self.flush_tracking()
 
         # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
-        with self.assertQueryCount(employee=51):
+        with self.assertQueryCount(employee=52):
             ticket.message_post(
                 attachments=attachments_vals,
                 attachment_ids=attachments.ids,
@@ -2930,7 +2930,7 @@ class TestPerformance(BaseMailPostPerformance):
         self.flush_tracking()
 
         # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
-        with self.assertQueryCount(employee=375):
+        with self.assertQueryCount(employee=376):
             for ticket, attachments in zip(tickets, attachments_all, strict=True):
                 ticket.message_post(
                     attachments=attachments_vals,
