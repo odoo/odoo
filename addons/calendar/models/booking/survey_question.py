@@ -23,10 +23,7 @@ class SurveyQuestion(models.Model):
         column2="appointment_type_id",
         string="Appointment Types",
     )
-    appointment_count = fields.Integer(
-        string="# Appointments",
-        compute="_compute_appointment_count",
-    )
+    appointment_count = fields.Count("appointment_type_ids", string="# Appointments")
     is_default = fields.Boolean(
         string="Default question",
         help="Include by default in new appointment types.",
@@ -93,21 +90,6 @@ class SurveyQuestion(models.Model):
                             "Appointments require standalone text or choice questions."
                         )
                     )
-
-    @api.depends("appointment_type_ids")
-    def _compute_appointment_count(self):
-        appointment_data = self.env["appointment.type"]._read_group(
-            [("question_ids", "in", self.ids)], ["question_ids"], ["__count"]
-        )
-        mapped_data = {
-            appointment_question.id: count
-            for appointment_question, count in appointment_data
-        }
-        for question in self:
-            if not question.id:  # new record
-                question.appointment_count = len(question.appointment_type_ids)
-            else:
-                question.appointment_count = mapped_data.get(question.id, 0)
 
     @api.depends("is_default")
     def _compute_is_reusable(self):

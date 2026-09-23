@@ -94,10 +94,7 @@ class MrpBom(models.Model):
         string="Operations",
         copy=True,
     )
-    operation_count = fields.Integer(
-        string="Operations Count",
-        compute="_compute_operation_count",
-    )
+    operation_count = fields.Count("operation_ids", string="Operations Count")
     show_copy_operations_button = fields.Boolean(
         compute="_compute_show_copy_operations_button",
         help="Technical field used to control the visibility of the 'Copy Existing Operations' button.",
@@ -554,11 +551,6 @@ class MrpBom(models.Model):
             ):
                 display_name += f" ({bom.product_qty} {bom.product_uom_id.name})"
             bom.display_name = display_name
-
-    @api.depends("operation_ids")
-    def _compute_operation_count(self):
-        for bom in self:
-            bom.operation_count = len(bom.operation_ids)
 
     def _compute_show_copy_operations_button(self):
         exist_operation = bool(

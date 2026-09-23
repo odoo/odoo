@@ -29,8 +29,8 @@ class HrSkillType(models.Model):
         copy=True,
     )
     color = fields.Integer(default=lambda self: self._default_color())
-    levels_count = fields.Integer(
-        compute="_compute_levels_count",
+    levels_count = fields.Count(
+        "skill_level_ids",
         store=True,
         help="Number of levels linked to this skill type",
     )
@@ -65,11 +65,6 @@ class HrSkillType(models.Model):
                 skill_type.display_name = skill_type.name + "\U0001f396"
             else:
                 skill_type.display_name = skill_type.name
-
-    @api.depends("skill_level_ids")
-    def _compute_levels_count(self):
-        for skill_type in self:
-            skill_type.levels_count = len(skill_type.skill_level_ids)
 
     @api.onchange("skill_level_ids")
     def _onchange_skill_level_ids(self):
