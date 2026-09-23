@@ -52,7 +52,7 @@ class ResPartner(models.Model):
         for rec in recs_ar_vat:
             try:
                 rec.l10n_ar_formatted_vat = stdnum.ar.cuit.format(rec.l10n_ar_vat)
-            except Exception as error:
+            except (ValueError, TypeError, AttributeError) as error:
                 rec.l10n_ar_formatted_vat = rec.l10n_ar_vat
                 _logger.runbot("Argentinean VAT was not formatted: %s", repr(error))
         remaining = self - recs_ar_vat
@@ -135,7 +135,7 @@ class ResPartner(models.Model):
         for rec in self.filtered("vat"):
             try:
                 module = rec._get_validation_module()
-            except Exception as error:
+            except ValueError as error:
                 module = False
                 _logger.runbot(
                     "Argentinean document was not validated: %s", repr(error)
@@ -185,7 +185,7 @@ class ResPartner(models.Model):
                         ", ".join(valid_cuit),
                     )
                 ) from None
-            except Exception as error:
+            except ValueError as error:
                 raise ValidationError(repr(error)) from error
 
     def _get_id_number_digits(self):

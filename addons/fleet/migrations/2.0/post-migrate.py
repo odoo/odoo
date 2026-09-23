@@ -379,6 +379,7 @@ def _migrate_vehicles(env, products):
                     row[field_name],
                     asset.id,
                     error,
+                    exc_info=True,
                 )
                 asset.invalidate_recordset()
         if not row.get("active", True):
@@ -522,7 +523,9 @@ def _migrate_drivers(env, vehicles):
                     }
                 )
         except Exception as error:
-            _logger.warning("Driver log %s not migrated: %s", log["id"], error)
+            _logger.warning(
+                "Driver log %s not migrated: %s", log["id"], error, exc_info=True
+            )
     for vehicle_id, asset_id in vehicles.items():
         vehicle = rows[vehicle_id]
         asset = env["resource.asset"].browse(asset_id)

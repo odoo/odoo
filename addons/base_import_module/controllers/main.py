@@ -1,6 +1,10 @@
+import logging
+
 from odoo import _
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.http import Controller, Response, request, route
+
+_logger = logging.getLogger(__name__)
 
 
 class ImportModule(Controller):
@@ -30,4 +34,5 @@ class ImportModule(Controller):
         except UserError as e:
             return Response(response=str(e), status=400)
         except Exception as e:
+            _logger.exception("Module upload failed")
             return Response(response=str(e), status=500)

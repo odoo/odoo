@@ -7252,6 +7252,10 @@ class AccountMove(models.Model):
         except PG_RETRY_EXCEPTIONS:
             raise
         except Exception:
+            _logger.debug(
+                "Auto-post cron: batch failed, posting one move at a time",
+                exc_info=True,
+            )
             _debug.logic(
                 "cron_autopost_batch_failed_one_by_one",
                 error=repr(sys.exc_info()[1]),

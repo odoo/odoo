@@ -97,7 +97,13 @@ class IrActionsClient(models.Model):
             source = source.decode()
         try:
             return safe_eval(source, {"uid": self.env.uid})
-        except Exception as exc:
+        except (
+            SyntaxError,
+            TypeError,
+            ValueError,
+            NameError,
+            ZeroDivisionError,
+        ) as exc:
             _debug.logic("params_kept_as_source", error=type(exc).__name__)
             return source
 

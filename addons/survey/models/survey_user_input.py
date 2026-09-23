@@ -765,7 +765,7 @@ class SurveyUser_Input(models.Model):
 
                 try:
                     result = float(safe_eval(expr, local_vars))
-                except Exception:
+                except SyntaxError, TypeError, ValueError, NameError, ZeroDivisionError:
                     _logger.warning(
                         "Failed to evaluate calculated field %s (expression: %s)",
                         question.id,

@@ -388,21 +388,19 @@ class RateLimitBucket(models.Model):
             # way.
             raise
 
-        except Exception as e:
+        except Exception:
             self.env.cr.execute(f"ROLLBACK TO SAVEPOINT {savepoint_name}")
 
             if strict:
-                _logger.error(
-                    "Error consuming token from bucket %s: %s. Denying request (strict mode).",
+                _logger.exception(
+                    "Error consuming token from bucket %s. Denying request (strict mode).",
                     self.bucket_key,
-                    e,
                 )
                 return False
 
-            _logger.error(
-                "Error consuming token from bucket %s: %s. Allowing request to prevent user-facing errors.",
+            _logger.exception(
+                "Error consuming token from bucket %s. Allowing request to prevent user-facing errors.",
                 self.bucket_key,
-                e,
             )
             return True
 

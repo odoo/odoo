@@ -1,7 +1,7 @@
 from urllib.parse import urlencode as url_encode
 
 from odoo import _, http
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.http import request
 
 from odoo.addons.payment.controllers import portal as payment_portal
@@ -13,7 +13,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             order_sudo = self._document_check_access(
                 "pos.order", pos_order_id, access_token
             )
-        except Exception:
+        except AccessError, MissingError:
             raise AccessError(
                 _("The provided order or access token is invalid.")
             ) from None

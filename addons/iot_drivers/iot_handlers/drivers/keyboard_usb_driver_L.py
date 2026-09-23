@@ -178,7 +178,7 @@ class KeyboardUSBDriver(Driver):
                             self.key_input(data.scancode)
 
         except Exception as err:
-            _logger.warning(err)
+            _logger.warning(err, exc_info=True)
 
     def _change_keyboard_layout(self, new_layout):
         """Change the layout of the current device to what is specified in

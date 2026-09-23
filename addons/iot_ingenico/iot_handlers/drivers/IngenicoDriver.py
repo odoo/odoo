@@ -4,7 +4,6 @@ import logging
 import socket
 from binascii import unhexlify
 from time import sleep
-from traceback import format_exc
 from zlib import crc32
 
 from odoo.addons.iot_drivers.driver import Driver
@@ -786,7 +785,7 @@ class IngenicoDriver(Driver):
                 return True
             return False
         except Exception:
-            _logger.error(format_exc())
+            _logger.exception("Ingenico message exchange failed")
             return False
 
     def disconnect(self):
@@ -923,6 +922,5 @@ class IngenicoDriver(Driver):
                     self.disconnect()
                     break
         except Exception:
-            _logger.info("Terminating due to an exception")
+            _logger.exception("Terminating due to an exception")
             self.disconnect()
-            _logger.error(format_exc())

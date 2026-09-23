@@ -146,6 +146,7 @@ class MixinCredentialStore(models.AbstractModel):
                         "Credential %s: failed to write audit log for read: %s",
                         record.id,
                         e,
+                        exc_info=True,
                     )
 
     @api.depends("cached_plaintext", "storage_method")

@@ -40,7 +40,7 @@ class MicrosoftOutlookController(http.Controller):
             model_name = state["model"]
             rec_id = state["id"]
             csrf_token = state["csrf_token"]
-        except Exception:
+        except ValueError, KeyError, TypeError:
             _logger.error("Microsoft Outlook: Wrong state value %r.", state)
             raise Forbidden from None
 

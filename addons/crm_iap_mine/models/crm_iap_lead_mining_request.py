@@ -352,7 +352,7 @@ class CrmIapLeadMiningRequest(models.Model):
             self.error_type = "credits"
             self.state = "error"
             return False
-        except Exception as e:
+        except UserError as e:
             raise UserError(_("Your request could not be executed: %s", e)) from e
 
     def _iap_contact_mining(self, params, timeout=300):

@@ -2,6 +2,7 @@ import math
 from operator import itemgetter
 from urllib.parse import urlsplit
 
+import psycopg
 import werkzeug.exceptions
 from dateutil.relativedelta import relativedelta
 
@@ -24,7 +25,7 @@ class WebsiteProfile(http.Controller):
     def _check_avatar_access(self, user_id, **post):
         try:
             user = request.env["res.users"].sudo().browse(user_id).exists()
-        except Exception:
+        except ValueError, TypeError, psycopg.DataError:
             return False
         if user:
             return user.website_published and user.karma > 0

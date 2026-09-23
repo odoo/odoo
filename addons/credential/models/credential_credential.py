@@ -616,11 +616,10 @@ class CredentialCredential(models.Model):
         if vals_list:
             try:
                 self.env["credential.access.log"].sudo().create(vals_list)
-            except Exception as e:
-                _logger.error(
-                    "Failed to write delete audit log for credentials %s: %s",
+            except Exception:
+                _logger.exception(
+                    "Failed to write delete audit log for credentials %s",
                     [vals.get("credential_name") for vals in vals_list],
-                    e,
                 )
 
         return result
@@ -878,7 +877,7 @@ class CredentialCredential(models.Model):
                     stats["failed"] += 1
                     error_msg = f"{model_name} (ID: {record.id}): {e!s}"
                     totals["errors"].append(error_msg)
-                    _logger.error("Failed to migrate record: %s", error_msg)
+                    _logger.exception("Failed to migrate record: %s", error_msg)
                 else:
                     stats["migrated"] += bool(migrated)
 
@@ -980,9 +979,9 @@ class CredentialCredential(models.Model):
                         },
                     )
 
-            except Exception as e:
+            except Exception:
                 results["failed"] += 1
-                _logger.error("Test failed for credential %s: %s", cred.name, e)
+                _logger.exception("Test failed for credential %s", cred.name)
 
         return results
 
@@ -1066,12 +1065,11 @@ class CredentialCredential(models.Model):
                     healthy += 1
                 else:
                     errors += 1
-            except Exception as e:
+            except Exception:
                 errors += 1
-                _logger.error(
-                    "Automated health check failed for credential %s: %s",
+                _logger.exception(
+                    "Automated health check failed for credential %s",
                     cred.name,
-                    e,
                 )
 
         _logger.info(
@@ -1436,22 +1434,20 @@ class CredentialCredential(models.Model):
             with self.env.registry.cursor() as cr:
                 env = self.env(cr=cr)
                 env["credential.access.log"].sudo().create(vals_list)
-        except Exception as e:
-            _logger.error(
-                "Out-of-band audit log failed for credentials %s op=%s: %s. "
+        except Exception:
+            _logger.exception(
+                "Out-of-band audit log failed for credentials %s op=%s. "
                 "Falling back to rollback-coupled write.",
                 records.ids,
                 operation,
-                e,
             )
             for record in records:
                 try:
                     record._log_access(operation)
-                except Exception as inner:
-                    _logger.error(
-                        "Fallback audit log ALSO failed for credential %s: %s",
+                except Exception:
+                    _logger.exception(
+                        "Fallback audit log ALSO failed for credential %s",
                         record.id,
-                        inner,
                     )
 
     def mark_as_used(self):

@@ -335,7 +335,9 @@ class IntegrationStream(models.Model):
                 ),
             )
         except Exception as error:
-            _logger.warning("Stream %s (%s) did not open: %s", name, stream_id, error)
+            _logger.warning(
+                "Stream %s (%s) did not open: %s", name, stream_id, error, exc_info=True
+            )
             self._schedule_redial(f"{type(error).__name__}: {error}")
             return None
         open_stream = stream_runtime.OpenStream(
@@ -398,6 +400,9 @@ class IntegrationStream(models.Model):
                     open_stream.handle, row.payload.encode("utf-8"), row.meta or {}
                 )
             except Exception as error:
+                _logger.warning(
+                    "Stream %s: sending an outbox row failed", self.name, exc_info=True
+                )
                 row.write(
                     {
                         "state": "failed",
@@ -463,7 +468,10 @@ class IntegrationStream(models.Model):
                 handler(self, payload, meta)
         except Exception as error:
             _logger.warning(
-                "Stream %s: the subject refused a frame: %s", self.name, error
+                "Stream %s: the subject refused a frame: %s",
+                self.name,
+                error,
+                exc_info=True,
             )
             exchange.mark_failed(
                 redact.mask_text(f"{type(error).__name__}: {error}"),

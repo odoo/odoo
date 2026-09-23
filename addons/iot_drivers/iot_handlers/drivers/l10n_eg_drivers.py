@@ -132,7 +132,7 @@ class EtaUsbController(http.Controller):
                 slots[0], PyKCS11.CKF_SERIAL_SESSION | PyKCS11.CKF_RW_SESSION
             )
             session.login(pin)
-        except Exception as ex:
+        except PyKCS11.PyKCS11Error as ex:
             error = self._get_error_template(str(ex))
         return session, error
 

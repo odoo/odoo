@@ -724,7 +724,7 @@ class WebsiteEventController(http.Controller):
         EventTag = request.env["event.tag"]
         try:
             tag_ids = literal_eval(search_tags or "")
-        except Exception:
+        except SyntaxError, ValueError, TypeError, MemoryError, RecursionError:
             return EventTag
 
         return EventTag.search([("id", "in", tag_ids)]) if tag_ids else EventTag
@@ -741,7 +741,7 @@ class WebsiteEventController(http.Controller):
                     ],
                 )
             )
-        except Exception:
+        except ValueError, TypeError:
             return EventTag
 
         return EventTag.search([("id", "in", tag_ids)]) if tag_ids else EventTag

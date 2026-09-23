@@ -85,12 +85,11 @@ class ResUsersDeletion(models.Model):
                 commit_progress(1)
             except Exception as e:
                 self.env.cr.rollback()
-                _logger.error(
-                    "User #%i %r could not be deleted. Original request from %r. Related error: %s",
+                _logger.exception(
+                    "User #%i %r could not be deleted. Original request from %r.",
                     user.id,
                     user_name,
                     requester_name,
-                    e,
                 )
                 _debug.lifecycle(
                     "user_deletion_failed",
@@ -133,6 +132,7 @@ class ResUsersDeletion(models.Model):
                     user_name,
                     requester_name,
                     e,
+                    exc_info=True,
                 )
                 _debug.lifecycle(
                     "partner_deletion_failed",

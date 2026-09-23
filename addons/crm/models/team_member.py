@@ -79,7 +79,7 @@ class TeamMember(models.Model):
                 domain = literal_eval(member.lead_assignment_domain or "[]")
                 if domain:
                     self.env["crm.lead"].search(domain, limit=1)  # noqa: E8507 - validates each member's own domain
-            except Exception:
+            except SyntaxError, TypeError, ValueError:
                 raise exceptions.ValidationError(
                     _(
                         "Member assignment domain for user %(user)s and team %(team)s is incorrectly formatted",
@@ -95,7 +95,7 @@ class TeamMember(models.Model):
                 domain = literal_eval(member.lead_assignment_domain_preferred or "[]")
                 if domain:
                     self.env["crm.lead"].search(domain, limit=1)  # noqa: E8507 - validates each member's own domain
-            except Exception:
+            except SyntaxError, TypeError, ValueError:
                 raise exceptions.ValidationError(
                     _(
                         "Member preferred assignment domain for user %(user)s and team %(team)s is incorrectly formatted",

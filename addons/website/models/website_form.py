@@ -168,8 +168,8 @@ class IrModel(models.Model):
                                     property_definition["domain"] = list(
                                         Domain(property_definition["domain"])
                                     )
-                                except Exception:  # noqa: S112  a malformed property domain is skipped, not fatal
-                                    continue
+                                except ValueError, TypeError:
+                                    continue  # a malformed property domain is skipped, not fatal
                             fields_get[property_definition.get("name")] = (
                                 property_definition
                             )

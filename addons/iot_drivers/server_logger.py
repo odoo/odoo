@@ -129,7 +129,7 @@ class AsyncHTTPHandler(logging.Handler):
                 )
                 self._next_disconnection_time = now + self._DELAY_BEFORE_NO_SERVER_LOG
         except Exception:
-            _logger.error("Unexpected error happened while sending logs to server")
+            _logger.exception("Unexpected error happened while sending logs to server")
 
     def emit(self, record):
         # This is important that this method is as fast as possible.

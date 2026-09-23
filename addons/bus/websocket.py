@@ -645,6 +645,11 @@ class Websocket:
                 registry = registry.check_signaling()
                 registry_reloaded = sequence != registry.registry_sequence
             except Exception:
+                _logger.debug(
+                    "Registry signaling check failed for %s",
+                    self._session.db,
+                    exc_info=True,
+                )
                 registry_reloaded = False
             if registry_reloaded:
                 _logger.warning("Bus operation aborted; registry has been reloaded")

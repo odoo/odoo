@@ -114,6 +114,7 @@ class MixinEncryption(models.AbstractModel):
                     record._name,
                     getattr(record, "id", "new"),
                     e,
+                    exc_info=True,
                 )
                 setattr(record, target_field, False)
 
@@ -313,6 +314,7 @@ class MixinEncryption(models.AbstractModel):
                 self._name,
                 getattr(self, "id", "new"),
                 e,
+                exc_info=True,
             )
             return default
 

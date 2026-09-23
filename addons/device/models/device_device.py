@@ -598,8 +598,8 @@ class DeviceDevice(models.Model):
         if disconnect_method is not None:
             try:
                 disconnect_method()  # pylint: disable=not-callable
-            except Exception as e:
-                _logger.error("Disconnection error for device %s: %s", self.name, e)
+            except Exception:
+                _logger.exception("Disconnection error for device %s", self.name)
 
     def action_read_data(self):
         self.check_singleton()
@@ -630,6 +630,9 @@ class DeviceDevice(models.Model):
                 self.env._("Connection successful!"),
             )
         except Exception as e:
+            _logger.warning(
+                "Connection test failed for device %s", self.name, exc_info=True
+            )
             return self._notify(
                 self.env._("Connection Test"),
                 self.env._("Connection failed: %s") % str(e),
@@ -782,7 +785,7 @@ class DeviceDevice(models.Model):
             try:
                 device.action_read_data()
             except Exception as e:
-                _logger.error("Error polling device %s: %s", device.name, e)
+                _logger.exception("Error polling device %s", device.name)
                 device._write_state_retry(
                     {
                         "connection_state": "error",
@@ -925,8 +928,11 @@ class DeviceDevice(models.Model):
                 break
             try:
                 device.action_connect()
-            except Exception as e:
-                _logger.error("Auto-reconnect failed for device %s: %s", device.name, e)
+            except Exception:
+                _logger.exception(
+                    "Auto-reconnect failed for device %s",
+                    device.name,
+                )
 
     _RECONNECT_BUDGET_SECONDS = 120
 
@@ -1131,8 +1137,11 @@ class DeviceDevice(models.Model):
 
             return point
 
-        except Exception as e:
-            _logger.error("Error storing data point for device %s: %s", self.name, e)
+        except Exception:
+            _logger.exception(
+                "Error storing data point for device %s",
+                self.name,
+            )
             return data_point_model.create(
                 {
                     "device_id": self.id,
@@ -1163,5 +1172,5 @@ class DeviceDevice(models.Model):
                 )
                 if generate:
                     generate()
-            except Exception as e:
-                _logger.error("Error polling demo device %s: %s", device.name, e)
+            except Exception:
+                _logger.exception("Error polling demo device %s", device.name)

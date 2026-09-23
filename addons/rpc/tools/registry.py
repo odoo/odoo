@@ -131,6 +131,7 @@ def describe_method(model, method_name):
             method_name,
             type(exc).__name__,
             exc,
+            exc_info=True,
         )
         described = {
             "signature": "(...)",

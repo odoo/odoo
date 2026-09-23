@@ -38,7 +38,10 @@ def remove_signature(content, target=None):
             # is how remove_signature_openssl went on raising AttributeError from
             # its first line for releases without anyone noticing.
             _logger.info(
-                "%s could not extract the p7m content: %s", removal_strategy.__name__, e
+                "%s could not extract the p7m content: %s",
+                removal_strategy.__name__,
+                e,
+                exc_info=True,
             )
     _logger.warning("No strategy could extract the content of this p7m file.")
     return None

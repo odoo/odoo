@@ -651,7 +651,7 @@ class EventTrackController(http.Controller):
     def _get_search_tags(self, tag_search):
         try:
             tag_ids = literal_eval(tag_search)
-        except Exception:
+        except SyntaxError, ValueError, TypeError, MemoryError, RecursionError:
             tags = request.env["event.track.tag"].sudo()
         else:
             tags = request.env["event.track.tag"].sudo().search([("id", "in", tag_ids)])

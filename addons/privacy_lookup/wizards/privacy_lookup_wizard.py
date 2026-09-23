@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from odoo import Command, _, api, fields, models, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import SQL
 
 
@@ -303,7 +303,7 @@ class PrivacyLookupWizardLine(models.TransientModel):
                 try:
                     self.env[line.res_model].browse(line.res_id).check_access("read")
                     line.resource_ref = "%s,%s" % (line.res_model, line.res_id or 0)
-                except Exception:
+                except AccessError, MissingError, KeyError:
                     line.resource_ref = None
             else:
                 line.resource_ref = None

@@ -373,7 +373,7 @@ class WebsiteSlides(WebsiteProfile):
         ChannelTag = request.env["slide.channel.tag"]
         try:
             tag_ids = literal_eval(search_tags or "")
-        except Exception:
+        except SyntaxError, ValueError, TypeError, MemoryError, RecursionError:
             return ChannelTag
         return ChannelTag.search([("id", "in", tag_ids)]) if tag_ids else ChannelTag
 
@@ -1895,7 +1895,7 @@ class WebsiteSlides(WebsiteProfile):
             _logger.error(e)
             return {"error": e.args[0]}
         except Exception as e:
-            _logger.error(e)
+            _logger.exception("Slide creation failed")
             return {
                 "error": _(
                     "Internal server error, please try again later or contact administrator.\nHere is the error message: %s",

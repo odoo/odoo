@@ -278,5 +278,6 @@ class IrAttachment(models.Model):
                             "Failed to delete %d S3 blobs from bucket %s",
                             len(batch),
                             bucket,
+                            exc_info=True,
                         )
         return res

@@ -182,8 +182,11 @@ class AuthSignupHome(Home):
             except SignupError:
                 qcontext["error"] = _("Could not reset your password")
                 _logger.exception("error when resetting password")
-            except Exception as e:
+            except AssertionError as e:
                 qcontext["error"] = str(e)
+            except Exception:
+                _logger.exception("error when resetting password")
+                qcontext["error"] = _("Could not reset your password")
 
         elif "signup_email" in qcontext:
             user = (

@@ -21,6 +21,6 @@ class ResPartnerBankAccount(models.Model):
     def _get_acc_type(self, acc_number):
         try:
             validate(acc_number)
-        except Exception:
+        except ValueError:
             return super()._get_acc_type(acc_number)
         return "cbu"

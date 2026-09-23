@@ -29,8 +29,8 @@ class BaseLRUCache:
         for key, entry in entries:
             try:
                 self._on_evict(key, entry)
-            except Exception as e:
-                _logger.error("Eviction handler failed for %s: %s", key, e)
+            except Exception:
+                _logger.exception("Eviction handler failed for %s", key)
         return len(entries)
 
     def get(self, key: str) -> Any | None:

@@ -72,6 +72,7 @@ class AccountMoveSend(models.AbstractModel):
             try:
                 service.open_ksef_session()
             except Exception as errors:
+                _logger.warning("KSeF session could not be opened", exc_info=True)
                 set_error(moves, str(errors))
                 continue
 
@@ -125,6 +126,9 @@ class AccountMoveSend(models.AbstractModel):
                     )
 
                 except Exception as errors:
+                    _logger.warning(
+                        "KSeF sending failed for move %s", move.id, exc_info=True
+                    )
                     set_error(move, str(errors))
 
             if self._can_commit():

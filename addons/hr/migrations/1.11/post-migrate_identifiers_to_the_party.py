@@ -60,6 +60,7 @@ def migrate(cr, version):
                     column,
                     value,
                     error,
+                    exc_info=True,
                 )
     _logger.info(
         "identifiers moved onto the party: %s created, %s left in the old columns",

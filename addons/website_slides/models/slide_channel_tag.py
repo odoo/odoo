@@ -77,6 +77,6 @@ class SlideChannelTag(models.Model):
                 )
                 if tag_id
             ]
-        except Exception:
+        except ValueError, TypeError:
             return self.browse()
         return self.search([("id", "in", tag_ids)]) if tag_ids else self.browse()

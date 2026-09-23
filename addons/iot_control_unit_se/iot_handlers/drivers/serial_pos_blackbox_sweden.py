@@ -138,7 +138,7 @@ class SwedishBlackBoxDriver(SerialDriver):
                 _logger.error("Sent IQ request error")
                 return False
         except Exception:
-            _logger.error("Did not receive a response")
+            _logger.exception("Did not receive a response")
 
     @staticmethod
     def _lrc(msg):
@@ -255,7 +255,10 @@ class SwedishBlackBoxDriver(SerialDriver):
                     _logger.error("Received error: %s", ErrorCode.get(response[4]))
                     _logger.error("Sent request: %s received NACK.", packet)
             except Exception:
-                _logger.error("sent request: %s without receiving response.", packet)
+                _logger.exception(
+                    "sent request: %s without receiving response.",
+                    packet,
+                )
 
             retries += 1
 

@@ -258,6 +258,7 @@ class CredentialCredential(models.Model):
                 self.id,
                 code,
                 e,
+                exc_info=True,
             )
             healthy, error = False, str(e)[:255]
         latency_ms = (monotonic() - started) * 1000

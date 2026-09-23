@@ -2,11 +2,12 @@ import base64
 import json
 import logging
 
+import requests
 from markupsafe import Markup
 from werkzeug.exceptions import Forbidden
 
 from odoo import Command, _, http, tools
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 
 from odoo.addons.iap.tools import iap_tools
@@ -127,7 +128,7 @@ class MailPluginController(http.Controller):
                         partner_values.update(
                             {"image_1920": base64.b64encode(response.content)}
                         )
-                except Exception:
+                except requests.exceptions.RequestException, ValueError:
                     _logger.info("Could not fetch the logo %s", logo_url, exc_info=True)
 
         model_fields_to_iap_mapping = {
@@ -342,7 +343,7 @@ class MailPluginController(http.Controller):
                 "type": "insufficient_credit",
                 "info": request.env["iap.account"].get_credits_url("reveal"),
             }
-        except Exception:
+        except UserError:
             enriched_data["enrichment_info"] = {
                 "type": "other",
                 "info": "Unknown reason",
@@ -435,7 +436,7 @@ class MailPluginController(http.Controller):
                 )
                 if response.ok:
                     new_company_info["image_1920"] = base64.b64encode(response.content)
-            except Exception as e:
+            except (requests.exceptions.RequestException, ValueError) as e:
                 _logger.warning(
                     "Download of image for new company %s failed, error %s",
                     new_company_info["name"],

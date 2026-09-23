@@ -72,7 +72,7 @@ class IrHttp(models.AbstractModel):
         except requests.exceptions.Timeout:
             logger.error("Turnstile verification timeout for ip address %s", ip_addr)
             return "timeout"
-        except Exception:
+        except requests.exceptions.RequestException, ValueError, KeyError, TypeError:
             logger.error("Turnstile verification bad request response")
             return "bad_request"
 

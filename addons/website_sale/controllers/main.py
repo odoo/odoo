@@ -675,7 +675,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if video_data.get("src"):
                 try:
                     thumbnail = base64.b64encode(get_video_thumbnail(video_data["src"]))
-                except Exception:
+                except TypeError, ValueError:
                     thumbnail = None
             else:
                 raise ValidationError(_("Invalid video URL provided."))

@@ -27,7 +27,7 @@ class OAuthLogin(Home):
                 .sudo()
                 .search_read([("enabled", "=", True)])
             )
-        except Exception:
+        except KeyError:
             providers = []
         for provider in providers:
             return_url = request.httprequest.url_root + "auth_oauth/signin"

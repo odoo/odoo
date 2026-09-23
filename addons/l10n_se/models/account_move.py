@@ -91,7 +91,7 @@ class AccountMove(models.Model):
             ):
                 try:
                     luhn.validate(invoice.payment_reference)
-                except Exception:
+                except ValueError, TypeError:
                     raise ValidationError(
                         _(
                             "Vendor require OCR Number as payment reference. Payment reference isn't a valid OCR Number."

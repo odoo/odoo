@@ -1614,7 +1614,9 @@ class AccountMove(models.Model):
         try:
             decrypted_content = proxy_user._decrypt_data(content, key)
         except Exception as e:
-            _logger.warning("Cannot decrypt e-invoice: %s, %s", filename, e)
+            _logger.warning(
+                "Cannot decrypt e-invoice: %s, %s", filename, e, exc_info=True
+            )
             return False
 
         return filename, decrypted_content

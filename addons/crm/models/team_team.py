@@ -172,7 +172,7 @@ class TeamTeam(models.Model):
                 domain = literal_eval(team.lead_assignment_domain or "[]")
                 if domain:
                     self.env["crm.lead"].search(domain, limit=1)  # noqa: E8507 - validates each team's own domain
-            except Exception:
+            except SyntaxError, TypeError, ValueError:
                 raise exceptions.ValidationError(
                     _(
                         "Assignment domain for team %(team)s is incorrectly formatted",

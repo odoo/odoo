@@ -49,7 +49,7 @@ def _eval_or_default(
     kind = expected.__name__
     try:
         result = _eval_with_missing_names_false(expr or repr(expected()), eval_ctx)
-    except Exception as exc:
+    except (SyntaxError, TypeError, ValueError, NameError, ZeroDivisionError) as exc:
         if not isinstance(exc.__cause__, NameError):
             _logger.warning("Malformed action expression %r: %s", expr, exc)
         _debug.logic("expression_defaulted", kind=kind, error=type(exc).__name__)

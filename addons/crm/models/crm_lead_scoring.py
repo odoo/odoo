@@ -3,6 +3,8 @@ from collections import OrderedDict, defaultdict
 from datetime import datetime
 from itertools import batched
 
+import psycopg
+
 from odoo import fields, models, modules, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import SQL
@@ -262,7 +264,7 @@ class CrmLead(models.Model):
                     )
                     if auto_commit:
                         self.env.cr.commit()
-                except Exception as e:
+                except psycopg.Error as e:
                     _logger.warning(
                         "Predictive Lead Scoring : update transaction failed. Error: %s",
                         e,

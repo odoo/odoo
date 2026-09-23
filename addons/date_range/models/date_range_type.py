@@ -244,4 +244,5 @@ class DateRangeType(models.Model):
                     "Error autogenerating ranges for date range type %s: %s",
                     dr_type.name,
                     error,
+                    exc_info=True,
                 )

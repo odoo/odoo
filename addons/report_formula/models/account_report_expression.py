@@ -134,7 +134,13 @@ class AccountReportExpression(models.Model):
                 source_model = expression.report_line_id.report_id._get_source_model()
                 if source_model is not None:
                     source_model._search(domain)
-            except Exception as error:
+            except (
+                SyntaxError,
+                TypeError,
+                ValueError,
+                MemoryError,
+                RecursionError,
+            ) as error:
                 expression._raise_formula_error(error)
 
         for expression in expressions_by_engine.get("aggregation", []):

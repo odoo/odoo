@@ -127,7 +127,7 @@ class Geocoder(models.AbstractModel):
                 )
                 raise ValueError("Nominatim returned HTTP %s" % response.status_code)
             result = response.json()
-        except Exception as e:
+        except (OSError, ValueError) as e:
             self._raise_query_error(e)
         if not result:
             return None
@@ -167,7 +167,7 @@ class Geocoder(models.AbstractModel):
                 )
                 raise ValueError("Nominatim returned HTTP %s" % response.status_code)
             result = response.json()
-        except Exception as e:
+        except (OSError, ValueError) as e:
             self._raise_query_error(e)
         return result
 
@@ -207,7 +207,7 @@ class Geocoder(models.AbstractModel):
                 )
                 raise ValueError("Google Maps returned HTTP %s" % response.status_code)
             result = response.json()
-        except Exception as e:
+        except (OSError, ValueError) as e:
             self._raise_query_error(e)
 
         try:

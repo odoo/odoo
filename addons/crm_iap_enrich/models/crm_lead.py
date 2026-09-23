@@ -2,6 +2,7 @@ import datetime
 import logging
 
 from odoo import Command, _, api, fields, models, modules, tools
+from odoo.exceptions import UserError
 from odoo.tools import OrderedSet
 
 from odoo.addons.iap.tools import iap_tools
@@ -108,7 +109,7 @@ class CrmLead(models.Model):
                         title=_("Not enough credits for Lead Enrichment"),
                     )
                 raise
-            except Exception as e:
+            except UserError as e:
                 if send_notification:
                     self.env["iap.account"]._send_error_notification(
                         message=_("An error occurred during lead enrichment")
@@ -155,7 +156,9 @@ class CrmLead(models.Model):
                     break
                 except Exception:
                     self.env.cr.rollback()
-                    _logger.error("A batch of leads could not be enriched: %r", leads)
+                    _logger.exception(
+                        "A batch of leads could not be enriched: %r", leads
+                    )
                     time_left = self.env["ir.cron"]._commit_progress(len(leads))
                 if not time_left:
                     break
@@ -172,7 +175,9 @@ class CrmLead(models.Model):
                 except Exception:
                     if not modules.module.current_test:
                         self.env.cr.rollback()
-                    _logger.error("A batch of leads could not be enriched: %r", leads)
+                    _logger.exception(
+                        "A batch of leads could not be enriched: %r", leads
+                    )
 
     @api.model
     def _iap_enrich_from_response(self, iap_response):

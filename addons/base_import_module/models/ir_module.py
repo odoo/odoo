@@ -105,7 +105,7 @@ class IrModuleModule(models.Model):
                                 translation_importer.load(
                                     fileobj, "po", lang, module=module
                                 )
-                        except Exception:
+                        except OSError, ValueError:
                             _logger.warning(
                                 "module %s: failed to load translation attachment %s for language %s",
                                 module,
@@ -964,7 +964,7 @@ class IrModuleModule(models.Model):
                 try:
                     with z.open(manifest_file) as manifest:
                         terp = ast.literal_eval(manifest.read().decode())
-                except Exception:
+                except SyntaxError, ValueError, TypeError, MemoryError, RecursionError:
                     _logger.debug(
                         "skipping invalid manifest %s in uploaded zip",
                         manifest_file.filename,
@@ -1029,7 +1029,7 @@ class IrModuleModule(models.Model):
                             )
                         )
                         translations.update(webclient_translations)
-                except Exception:
+                except OSError, ValueError:
                     _logger.warning(
                         "module %s: failed to load translation attachment %s for language %s",
                         module,
@@ -1151,7 +1151,7 @@ def _is_studio_custom(path):
     for fp in xml_files:
         try:
             root = lxml.etree.parse(fp).getroot()
-        except Exception:
+        except lxml.etree.XMLSyntaxError, OSError:
             # t27114: this walk visits every .xml file extracted from the
             # zip, not just manifest-declared data files (e.g. anything
             # under static/), so a malformed/non-Odoo XML asset must not
@@ -1170,7 +1170,7 @@ def _is_studio_custom(path):
                 # so just checking for its existence is enough
                 if ctx and ctx.get("studio"):
                     return True
-            except Exception:
+            except SyntaxError, ValueError, TypeError, MemoryError, RecursionError:
                 _logger.debug("skipping record with unparseable context")
                 continue
     return False

@@ -868,7 +868,11 @@ class WeasyPrintEngine:
                         )
                     )
                 except Exception as e:
-                    _logger.warning("HTML-to-PDF rendering failed for one body: %s", e)
+                    _logger.warning(
+                        "HTML-to-PDF rendering failed for one body: %s",
+                        e,
+                        exc_info=True,
+                    )
                     results.append(None)
         _debug.pipeline(
             "render_each_tolerant",
@@ -1495,7 +1499,7 @@ class IrActionsReport(models.Model):
                     )
                 )
             except Exception as e:
-                _logger.warning("HTML-to-image conversion failed: %s", e)
+                _logger.warning("HTML-to-image conversion failed: %s", e, exc_info=True)
                 output_images.append(None)
         return output_images
 

@@ -104,7 +104,7 @@ class MailController(http.Controller):
             return comparison, None, cls._redirect_to_generic_fallback(model, res_id)
         try:
             record = request.env[model].browse(res_id).exists()
-        except Exception:
+        except KeyError, ValueError, TypeError:
             record = None
             redirect = cls._redirect_to_generic_fallback(model, res_id)
         else:

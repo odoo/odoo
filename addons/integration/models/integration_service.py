@@ -453,6 +453,9 @@ class IntegrationService(models.Model):
             client = self._get_api_client(credential)
             response = client.get(endpoint)
         except Exception as e:
+            _logger.warning(
+                "Connection test failed for service %s", self.code, exc_info=True
+            )
             return {
                 "type": "ir.actions.client",
                 "tag": "display_notification",
@@ -561,8 +564,8 @@ class IntegrationService(models.Model):
         for service in due:
             try:
                 service._probe_health()
-            except Exception as e:
-                _logger.error("Health check failed for %s: %s", service.code, e)
+            except Exception:
+                _logger.exception("Health check failed for %s", service.code)
 
     def _probe_health(self):
         """Probe with an eligible connection and store this service's status.
@@ -607,7 +610,9 @@ class IntegrationService(models.Model):
             client = self._get_api_client(credential)
             response = client.get(endpoint)
         except Exception as e:
-            _logger.warning("Health check call failed for %s: %s", self.code, e)
+            _logger.warning(
+                "Health check call failed for %s: %s", self.code, e, exc_info=True
+            )
             self.write(
                 {
                     "last_health_check": fields.Datetime.now(),

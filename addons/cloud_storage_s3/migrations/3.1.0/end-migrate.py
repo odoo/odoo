@@ -67,16 +67,15 @@ def _import_bucket(env, bucket, region):
     try:
         client = s3.get_client(env)
         client.head_bucket(Bucket=bucket)
-    except Exception as exc:
-        _logger.error(
+    except Exception:
+        _logger.exception(
             "cloud_storage_s3: the Amazon S3 keys stored for Cloud Storage cannot "
-            "reach the Cloud Drive bucket '%s' (%s). Grant that IAM user "
+            "reach the Cloud Drive bucket '%s'. Grant that IAM user "
             "s3:ListBucket, s3:GetObject and s3:DeleteObject on it, then upgrade "
             "this module again. The same keys sign every download, so importing "
             "with the drive's own credential instead would leave every imported "
             "file unreadable.",
             bucket,
-            exc,
         )
         return False
 

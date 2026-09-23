@@ -275,7 +275,7 @@ class MixinOauth2MailProvider(models.AbstractModel):
             return _("An error occurred when fetching the access token.")
         try:
             detail = response.json()["error_description"]
-        except Exception:
+        except ValueError, KeyError, TypeError:
             detail = _("Unknown error.")
         return _("An error occurred when fetching the access token. %s", detail)
 

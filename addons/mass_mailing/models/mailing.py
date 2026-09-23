@@ -2101,7 +2101,7 @@ class MailingMailing(models.Model):
         self.check_singleton()
         try:
             mailing_domain = literal_eval(self.mailing_domain)
-        except Exception:
+        except SyntaxError, ValueError, TypeError, MemoryError, RecursionError:
             mailing_domain = [("id", "in", [])]
         return mailing_domain
 

@@ -55,6 +55,7 @@ def migrate(cr, version):
                     "carrying its whole roster over as manual participants",
                     challenge.id,
                     challenge.user_domain,
+                    exc_info=True,
                 )
         if challenge.challenge_mode == "team":
             derived |= set(challenge.team_ids.member_ids.ids)

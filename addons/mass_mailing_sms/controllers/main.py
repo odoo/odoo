@@ -3,6 +3,7 @@ from urllib.parse import urlencode
 from werkzeug.exceptions import NotFound
 
 from odoo import _, http
+from odoo.exceptions import UserError
 from odoo.http import request
 
 from odoo.addons.phone_validation.tools import phone_validation
@@ -64,7 +65,7 @@ class MailingSMSController(http.Controller):
                     force_format="E164",
                     raise_exception=True,
                 )
-            except Exception:
+            except UserError:
                 sanitized_number = False
 
             if sanitized_number:

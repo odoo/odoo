@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+import psycopg
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -451,7 +452,7 @@ class DateRangeGenerator(models.TransientModel):
                 try:
                     with self.env.cr.savepoint():
                         created |= DateRange.create(vals)
-                except Exception as error:
+                except (UserError, psycopg.Error) as error:
                     _logger.warning(
                         "Skipping date range %s: %s", vals.get("name", "?"), error
                     )

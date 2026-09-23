@@ -2,6 +2,7 @@ import json
 import logging
 import re
 
+import requests
 from lxml import etree, html
 from markupsafe import escape
 
@@ -442,7 +443,7 @@ class Website(models.Model):
                     )
                     span.set(status=getattr(response, "status_code", None))
                 response.raise_for_status()
-            except Exception as e:
+            except (requests.exceptions.RequestException, ValueError) as e:
                 logger.warning("Failed to download image: %s.\n%s", image_src, e)
                 _debug.logic("configurator_image_failed", name=name, src=image_src)
             else:

@@ -56,6 +56,7 @@ def migrate(cr, version):
                 "hr 1.21: change request %s kept without an approval request: %s",
                 record_id,
                 exc,
+                exc_info=True,
             )
             continue
         raised += 1

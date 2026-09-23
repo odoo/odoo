@@ -937,7 +937,9 @@ class IntegrationExchange(models.Model):
                     "reason": "payload_hash",
                 }
         except Exception as e:
-            _logger.warning("Failed to compute payload hash for deduplication: %s", e)
+            _logger.warning(
+                "Failed to compute payload hash for deduplication: %s", e, exc_info=True
+            )
 
         return {
             "is_duplicate": False,

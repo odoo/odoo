@@ -1401,7 +1401,7 @@ class IrMail_Server(models.Model):
             if owns_connection and smtp is not None:
                 try:
                     smtp.quit()
-                except Exception:
+                except smtplib.SMTPException, OSError:
                     with suppress(Exception):
                         smtp.close()
 

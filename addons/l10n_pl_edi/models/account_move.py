@@ -1042,6 +1042,9 @@ class AccountMove(models.Model):
                     body=self.env._("KSeF XML failed. Reason: %s", str(e))
                 )
             except Exception:
+                _logger.warning(
+                    "KSeF bill %s could not be fetched", bill.id, exc_info=True
+                )
                 bill.l10n_pl_edi_status = "fetch_failed"
                 bill.message_post(
                     body=self.env._("KSeF XML failed. Something went wrong")

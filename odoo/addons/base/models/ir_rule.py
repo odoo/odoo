@@ -100,7 +100,14 @@ class IrRule(models.Model):
                     domain = safe_eval(rule.domain_force, eval_context)
                     model = self.env[rule.model_id.model].sudo()
                     Domain(domain).check(model)
-                except Exception as e:
+                except (
+                    SyntaxError,
+                    TypeError,
+                    ValueError,
+                    NameError,
+                    KeyError,
+                    ZeroDivisionError,
+                ) as e:
                     _debug.logic(
                         "rule_domain_invalid",
                         rule=rule.id,

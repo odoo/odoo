@@ -815,7 +815,7 @@ class OutboundAPIClient:
                         return error_value["message"]
                     return str(error_value)
             return json.dumps(error_data)
-        except Exception as e:
+        except (ValueError, TypeError) as e:
             _logger.debug("Could not extract error from JSON: %s", e)
             return response.text[:500]
 
@@ -828,7 +828,9 @@ class OutboundAPIClient:
                 },
             )
         except Exception as e:
-            _logger.debug("Failed to increment cache error counter: %s", e)
+            _logger.debug(
+                "Failed to increment cache error counter: %s", e, exc_info=True
+            )
 
     def log_external_exchange(
         self,
@@ -1084,7 +1086,9 @@ class OutboundAPIClient:
             )
             return True
         except Exception as e:
-            _logger.debug("Health check failed for %s: %s", self.endpoint_code, e)
+            _logger.debug(
+                "Health check failed for %s: %s", self.endpoint_code, e, exc_info=True
+            )
             return False
 
 

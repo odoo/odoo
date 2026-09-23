@@ -114,7 +114,12 @@ class IrHttp(models.AbstractModel):
                 "Trial captcha verification timeout for ip address %s", ip_addr
             )
             return "timeout"
-        except Exception as e:
+        except (
+            requests.exceptions.RequestException,
+            ValueError,
+            KeyError,
+            TypeError,
+        ) as e:
             # The class, not the message: the message is the one thing here
             # that could in principle echo back something we sent. It cannot
             # carry the secret -- that travels in the POST body, never a URL --

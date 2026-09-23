@@ -14,10 +14,10 @@ def is_encryption_setup_valid():
         return False
 
     try:
-        from cryptography.fernet import Fernet
+        from cryptography.fernet import Fernet, InvalidToken
 
         cipher = Fernet(key.encode())
-    except Exception:
+    except ImportError, ValueError:
         return False
 
     try:
@@ -32,7 +32,7 @@ def is_encryption_setup_valid():
         else:
             return False
 
-    except Exception:
+    except InvalidToken, ValueError:
         return False
 
     key[:8] + "..." + key[-8:]

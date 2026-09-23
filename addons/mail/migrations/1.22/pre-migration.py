@@ -16,7 +16,7 @@ def migrate(cr: Cursor, version: str | None) -> None:
     for alias_id, defaults in cr.fetchall():
         try:
             parsed = ast.literal_eval(defaults)
-        except Exception:
+        except SyntaxError, ValueError, TypeError, MemoryError, RecursionError:
             broken.append(alias_id)
             continue
         if not isinstance(parsed, dict):

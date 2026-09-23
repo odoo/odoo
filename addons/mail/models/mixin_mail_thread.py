@@ -4119,10 +4119,8 @@ class MixinMailThread(models.AbstractModel):
                         "Push endpoint temporarily unresolvable, keeping device %s",
                         device.id,
                     )
-                except Exception as e:  # pylint: disable=broad-except
-                    _logger.error(
-                        "An error occurred while contacting the endpoint: %s", e
-                    )
+                except Exception:  # pylint: disable=broad-except
+                    _logger.exception("An error occurred while contacting the endpoint")
 
             _debug.pipeline(
                 "web_push_direct",

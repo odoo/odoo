@@ -406,6 +406,7 @@ class PrinterController(http.Controller):
                 iot_devices[printer].action(data)
                 return True
             except Exception:
+                _logger.warning("Printer %s action failed", printer, exc_info=True)
                 return False
         return False
 

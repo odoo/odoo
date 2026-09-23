@@ -401,7 +401,7 @@ class OAuthController(http.Controller):
             error = error_data.get("error", "unknown_error")
             error_description = error_data.get("error_description", error)
             return f"{error}: {error_description}"
-        except Exception:
+        except ValueError, AttributeError:
             return f"HTTP {response.status_code}: {response.text[:200]}"
 
     def _redirect_to_credential(self, credential_id):

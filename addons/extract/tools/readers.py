@@ -37,7 +37,9 @@ def page_count(document: Any) -> int:
         with pymupdf.open(stream=document.data, filetype="pdf") as doc:
             return doc.page_count
     except Exception as e:
-        _logger.debug("Could not count pages of %r: %s", document.name, e)
+        _logger.debug(
+            "Could not count pages of %r: %s", document.name, e, exc_info=True
+        )
         return 0
 
 
@@ -72,7 +74,12 @@ class _PdfText(BaseReader):
             with pymupdf.open(stream=document.data, filetype="pdf") as doc:
                 text = PAGE_BREAK.join(page.get_text() for page in doc).strip()
         except Exception as e:
-            _logger.debug("Could not read the text layer of %r: %s", document.name, e)
+            _logger.debug(
+                "Could not read the text layer of %r: %s",
+                document.name,
+                e,
+                exc_info=True,
+            )
         # A handful of characters off a whole PDF is a header, not a text layer,
         # and reporting them would end the search before a reader that renders
         # the pages ever ran. Answering nothing is what lets one run.
@@ -121,7 +128,7 @@ class _Pages(BaseReader):
                     for n in range(min(doc.page_count, RASTER_MAX_PAGES))
                 ]
         except Exception as e:
-            _logger.warning("Could not render %r: %s", document.name, e)
+            _logger.warning("Could not render %r: %s", document.name, e, exc_info=True)
             return []
 
 

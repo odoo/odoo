@@ -400,6 +400,7 @@ class IrModuleModule(models.Model):
                 "module %s: description is not renderable (%s), showing it raw",
                 self.name,
                 e,
+                exc_info=True,
             )
             return Markup("<pre><code>%s</code></pre>") % raw_description
         if messages:

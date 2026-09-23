@@ -89,7 +89,7 @@ def inspect_json_payload(
             None,
             f"Payload exceeds maximum nesting depth of {max_depth}",
         )
-    except Exception as e:
+    except (RecursionError, TypeError) as e:
         return False, None, f"Payload validation error: {e}"
 
 

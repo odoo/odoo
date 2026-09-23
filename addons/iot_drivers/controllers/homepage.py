@@ -1,5 +1,4 @@
 import logging
-import subprocess
 import threading
 import time
 from functools import lru_cache
@@ -475,7 +474,8 @@ class IotBoxOwlHomePage(http.Controller):
                     "status": "failure",
                     "message": "Invalid URL provided.",
                 }
-            except subprocess.CalledProcessError, OSError, Exception:
+            except Exception:
+                _logger.exception("Failed to write the server configuration files")
                 return {
                     "status": "failure",
                     "message": "Failed to write server configuration files on IoT. Please try again.",

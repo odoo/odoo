@@ -1911,7 +1911,7 @@ class MixinMailGateway(models.AbstractModel):
                     stored_date = parsed_date.replace(tzinfo=UTC)
                 else:
                     stored_date = parsed_date.astimezone(tz=UTC)
-            except Exception:
+            except ValueError, OverflowError, TypeError:
                 _logger.info(
                     "Failed to parse Date header %r in incoming mail "
                     "with message-id %r, assuming current date/time.",

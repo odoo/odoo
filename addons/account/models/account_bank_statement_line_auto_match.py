@@ -91,7 +91,9 @@ class AccountBankStatementLine(models.Model):
         start_time = fields.Datetime.now()
 
         def rollback_and_retire(st_lines, exc):
-            _logger.warning("Error while processing statement lines: %s", exc)
+            _logger.warning(
+                "Error while processing statement lines: %s", exc, exc_info=exc
+            )
             if not isinstance(exc, UserError) and can_commit:
                 _logger.warning(
                     "_cron_try_auto_reconcile_statement_lines will rollback the cursor"
@@ -180,6 +182,7 @@ class AccountBankStatementLine(models.Model):
                     "_auto_reconcile_isolating_failures giving up on statement line %s: %s",
                     st_line.id,
                     line_exc,
+                    exc_info=True,
                 )
                 if retire:
                     st_line.cron_last_check = self.env.cr.now()

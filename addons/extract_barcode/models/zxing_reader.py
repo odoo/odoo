@@ -42,7 +42,10 @@ class Barcodes(BaseReader):
                 found.extend(read_page(page))
             except Exception as e:
                 _logger.warning(
-                    "Barcode reader failed on a page of %r: %s", document.name, e
+                    "Barcode reader failed on a page of %r: %s",
+                    document.name,
+                    e,
+                    exc_info=True,
                 )
         return list(dict.fromkeys(found))
 

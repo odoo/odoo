@@ -110,7 +110,7 @@ class SerialDriver(Driver):
 
         try:
             name = ("%s serial %s" % (self._protocol.name, self.device_type)).title()
-        except Exception:
+        except AttributeError:
             name = "Unknown Serial Device"
         self.device_name = name
 
