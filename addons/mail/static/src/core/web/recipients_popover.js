@@ -1,3 +1,5 @@
+import { PopoverCard } from "@mail/core/common/popover_card/popover_card";
+
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -10,6 +12,7 @@ import { Component, onWillStart, types, useProps } from "@odoo/owl";
  */
 export class RecipientsPopover extends Component {
     static template = "mail.RecipientsPopover";
+    static components = { PopoverCard };
 
     setup() {
         this.props = useProps({

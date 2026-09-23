@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.PopoverCard">
+        <div t-attf-class="o_popover_card card {{this.props.class || ''}}" t-att-class="{ 'o-darkerInDarkTheme': this.props.darkerInDarkTheme }">
+            <div t-if="this.props.hasHeader" class="card-header bg-inherit pb-0">
+                <t t-call-slot="header"/>
+            </div>
+            <div class="card-body bg-inherit">
+                <t t-call-slot="default"/>
+            </div>
+            <div t-if="this.props.hasFooter" class="card-footer bg-inherit">
+                <t t-call-slot="footer"/>
+            </div>
+        </div>
+    </t>
+</templates>

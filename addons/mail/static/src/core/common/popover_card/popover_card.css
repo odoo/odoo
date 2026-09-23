@@ -1,0 +1,13 @@
+.o_popover_card {
+    --card-bg: var(--popover-bg);
+    --card-border-color: var(--border-color);
+    --card-border-radius: calc(var(--popover-border-radius) - var(--popover-border-width));
+    --card-border-width: 0;
+
+    overflow: hidden;
+
+    max-width: 380px;
+    @media screen and (max-width: 480px) {
+        max-width: 90vw;
+    }
+}
