@@ -426,7 +426,9 @@ const chatterPatch = {
         if (status(this) === "destroyed") {
             return;
         }
-        await this.webChatterProps.saveRecord?.();
+        if (this.webChatterProps.saveRecord && !(await this.webChatterProps.saveRecord())) {
+            return;
+        }
         if (this.webChatterProps.record) {
             await this.webChatterProps.record.load();
         }
