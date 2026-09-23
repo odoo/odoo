@@ -278,3 +278,107 @@ class TestPoSStock(TestPoSCommon):
         wh_copy = wh.copy()
         self.assertTrue(wh_copy.pos_type_id)
         self.assertNotEqual(wh.pos_type_id, wh_copy.pos_type_id)
+
+    def _sync_ui_orders(self, orders_data):
+        """ Save orders through the same entry point as the POS UI and return them as a recordset. """
+        result = self.env['pos.order'].sync_from_ui(orders_data)
+        return self.env['pos.order'].browse([order['id'] for order in result['pos.order']])
+
+    def _invoice_with_wizard(self, orders):
+        """ Backend flow: Orders list > Action > Create invoice(s), i.e. the `pos.make.invoice` wizard. """
+        self.env['pos.make.invoice'].with_context(active_ids=orders.ids).create({'consolidated_billing': True}).action_create_invoices()
+        return orders.account_move
+
+    def _get_cogs_balance(self, moves):
+        return sum(moves.line_ids.filtered(lambda line: line.account_id == self.expense_account).mapped('balance'))
+
+    def _create_two_customer_orders(self):
+        """ Two orders of one product1 unit each for the same customer (FIFO cost 5.0 per unit). """
+        return self._sync_ui_orders([
+            self.create_ui_order_data([(self.product1, 1)], customer=self.customer),
+            self.create_ui_order_data([(self.product1, 1)], customer=self.customer),
+        ])
+
+    def _assert_cogs_booked_once(self, orders, invoice):
+        """ The COGS of the two invoiced units (10.0) must be booked exactly once over the invoice,
+        the session closing entry and its per-order reversals. """
+        self.assertEqual(len(invoice), 1, "The two orders of the same customer should be consolidated in one invoice")
+        self.assertEqual(self._get_cogs_balance(invoice), 10.0, "The invoice should book the COGS of the two units")
+        closing_reversals = self.env['account.move'].search([('reversed_pos_order_id', 'in', orders.ids)])
+        self.assertEqual(
+            self._get_cogs_balance(invoice | self.pos_session.move_id | closing_reversals), 10.0,
+            "The COGS of the two invoiced units must be booked once over the invoice, the session closing entry and its reversals",
+        )
+
+    def test_05_cogs_invoice_wizard_before_closing_update_stock_at_closing(self):
+        """ `action_pos_order_invoice` flags the order `to_invoice` and creates its own picking so
+        that the closing entry skips it; the `pos.make.invoice` wizard does neither, so with "update
+        quantities at session closing" the units are costed again by the closing entry. """
+        self.env.company.point_of_sale_update_stock_quantities = 'closing'
+        self.open_new_session()
+        orders = self._create_two_customer_orders()
+        invoice = self._invoice_with_wizard(orders)
+        self.pos_session.action_pos_session_validate()
+        self._assert_cogs_booked_once(orders, invoice)
+
+    def test_06_cogs_invoice_wizard_after_closing_update_stock_at_closing(self):
+        """ Invoicing after the closing: the orders have no own picking, so the automatic reversal of
+        the closing entry carries no stock lines while the invoice books the COGS again. """
+        self.env.company.point_of_sale_update_stock_quantities = 'closing'
+        self.open_new_session()
+        orders = self._create_two_customer_orders()
+        self.pos_session.action_pos_session_validate()
+        invoice = self._invoice_with_wizard(orders)
+        self._assert_cogs_booked_once(orders, invoice)
+
+    def test_07_cogs_invoice_wizard_before_closing_update_stock_in_real_time(self):
+        """ Control: with the default real-time stock update each order owns its picking and the COGS
+        is booked once. """
+        self.env.company.point_of_sale_update_stock_quantities = 'real'
+        self.open_new_session()
+        orders = self._create_two_customer_orders()
+        invoice = self._invoice_with_wizard(orders)
+        self.pos_session.action_pos_session_validate()
+        self._assert_cogs_booked_once(orders, invoice)
+
+    def _sync_uninvoiced_refund(self, order):
+        """ Refund one unit of `order` from the POS UI without ticking "Invoice". """
+        refund_data = self.create_ui_order_data(
+            [{'product': self.product1, 'quantity': -1, 'refunded_orderline_id': order.lines.id}],
+            pos_order_ui_args={'is_refund': True},
+            customer=self.customer,
+        )
+        # `sync_from_ui` also returns the refunded order: keep only the refund.
+        return self._sync_ui_orders([refund_data]).filtered(lambda o: o.refunded_order_id == order)
+
+    def _assert_refund_documented_by_credit_note(self, refund, invoice):
+        self.assertEqual(len(refund), 1)
+        self.assertTrue(refund.account_move, "An accepted refund of an invoiced order must be documented by a credit note")
+        self.assertEqual(refund.account_move.move_type, 'out_refund')
+        self.assertEqual(refund.account_move.reversed_entry_id, invoice, "The credit note must reverse the invoice of the refunded order")
+
+    def test_08_uninvoiced_refund_of_order_invoiced_from_ui(self):
+        """ The sale is documented by a posted customer invoice, so its refund must be documented by a
+        credit note reversing that invoice. The server accepts the refund saved without invoicing, and
+        its revenue and COGS land in the session closing entry without partner while the invoice stays
+        paid. """
+        self.open_new_session()
+        order = self._sync_ui_orders([
+            self.create_ui_order_data([(self.product1, 1)], customer=self.customer, is_invoiced=True),
+        ])
+        invoice = order.account_move
+        self.assertEqual(invoice.state, 'posted')
+        refund = self._sync_uninvoiced_refund(order)
+        self._assert_refund_documented_by_credit_note(refund, invoice)
+
+    def test_09_uninvoiced_refund_of_order_invoiced_with_wizard(self):
+        """ Same as test_08 for an order invoiced with the `pos.make.invoice` wizard: it keeps
+        `to_invoice` False, so the payment screen does not even propose to invoice the refund. """
+        self.open_new_session()
+        order = self._sync_ui_orders([
+            self.create_ui_order_data([(self.product1, 1)], customer=self.customer),
+        ])
+        invoice = self._invoice_with_wizard(order)
+        self.assertEqual(invoice.state, 'posted')
+        refund = self._sync_uninvoiced_refund(order)
+        self._assert_refund_documented_by_credit_note(refund, invoice)
