@@ -1,6 +1,7 @@
 import base64
 import binascii
 import io
+import struct
 from random import randrange
 from typing import Any, Literal, Self
 
@@ -97,8 +98,36 @@ def image_data_uri(base64_source: bytes) -> str:
 _UNREDUCIBLE_MODES = frozenset({"I", "I;16", "I;16L", "I;16B", "I;16N"})
 
 
+# the formats whose orientation Pillow reads from what it parsed at open
+_HEADER_ORIENTATION_FORMATS = frozenset({"JPEG", "MPO", "WEBP", "PNG"})
+
+
+def _exif_orientation(image: PILImage) -> int:
+    # an EXIF block that does not parse says nothing about orientation: the
+    # image is upright, instead of a SyntaxError out of every caller
+    try:
+        return image.getexif().get(EXIF_TAG_ORIENTATION, 1)
+    except SyntaxError, ValueError, TypeError, struct.error, OSError:
+        return 1
+
+
+def _header_orientation(image: PILImage, source: bytes) -> int | None:
+    """The EXIF orientation without decoding, or None when only a decode says
+    it: another format (TIFF reads its tags from the pixel stream), or a PNG
+    whose eXIf chunk follows its pixel data (Pillow's PNG getexif loads the
+    image to find it)."""
+    image_format = (image.format or "").upper()
+    if image_format not in _HEADER_ORIENTATION_FORMATS:
+        return None
+    if image_format == "PNG" and "exif" not in image.info:
+        return None if b"eXIf" in source else 1
+    return _exif_orientation(image)
+
+
 class ImageProcess:
-    image: PILImage | Literal[False]
+    """An image read from its header, decoded on the first operation that
+    needs its pixels: a call that changes nothing never decodes."""
+
     source: bytes | Literal[False]
     original_format: str
 
@@ -110,6 +139,9 @@ class ImageProcess:
         self.original_format = ""
         self.animated = False
         self.animated_frames: list[PILImage] = []
+        self._image: PILImage | Literal[False] = False
+        self._decoded = True
+        self._size: tuple[int, int] | None = None
 
         if not source or source[:1] == b"<":
             _debug.logic(
@@ -117,11 +149,10 @@ class ImageProcess:
                 reason="empty" if not source else "svg",
                 source_bytes=len(source) if source else 0,
             )
-            self.image = False
         else:
-            self.image = binary_to_image(source)
+            image = binary_to_image(source)
 
-            w, h = self.image.size
+            w, h = image.size
             if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
                 _debug.logic(
                     "image.too_large",
@@ -129,34 +160,72 @@ class ImageProcess:
                     height=h,
                     pixels=w * h,
                     limit=IMAGE_MAX_RESOLUTION,
-                    format=(getattr(self.image, "format", None) or "").upper(),
+                    format=(getattr(image, "format", None) or "").upper(),
                 )
                 raise ImageTooLargeError(
                     f"Too large image (above {IMAGE_MAX_RESOLUTION / 1e6}Mpx), reduce the image size."
                 )
 
-            self.original_format = (self.image.format or "").upper()
-            self.animated = getattr(self.image, "n_frames", 1) > 1
+            self.original_format = (image.format or "").upper()
+            self.animated = getattr(image, "n_frames", 1) > 1
+            self._image = image
+            # an animation is worked frame by frame, never as one decoded image
+            self._decoded = self.animated
+            orientation = 1 if self.animated else _header_orientation(image, source)
             _debug.lifecycle(
-                "image.decoded",
+                "image.opened",
                 format=self.original_format,
-                mode=self.image.mode,
+                mode=image.mode,
                 width=w,
                 height=h,
                 animated=self.animated,
+                orientation=orientation,
                 verified=verify_resolution,
             )
-
-            if not self.animated:
+            if orientation is None:
                 self._decode_upright()
+            elif orientation in _TRANSPOSED_ORIENTATIONS:
+                self._size = (h, w)
+            else:
+                self._size = (w, h)
+
+    @property
+    def image(self) -> PILImage | Literal[False]:
+        if not self._decoded:
+            self._decode_upright()
+        return self._image
+
+    @image.setter
+    def image(self, image: PILImage | Literal[False]) -> None:
+        self._image = image
+        self._decoded = True
+
+    @property
+    def size(self) -> tuple[int, int] | None:
+        if not self._image:
+            return None
+        if self._decoded:
+            return self._image.size
+        return self._size
+
+    def validate(self) -> Self:
+        if not self._decoded:
+            self._decode_upright()
+        return self
 
     def _decode_upright(self) -> None:
-        image = self.image
+        image = self._image
         assert image is not False
+        _debug.logic(
+            "image.decoded",
+            format=self.original_format,
+            source_bytes=len(self.source or b""),
+        )
         try:
             image.load()
-            if image.getexif().get(EXIF_TAG_ORIENTATION, 1) != 1:
-                self.image = image_fix_orientation(image)
+            if _exif_orientation(image) != 1:
+                image = image_fix_orientation(image)
+            self.image = image
         except OSError:
             _debug.logic(
                 "image.decode_failed",
@@ -181,13 +250,11 @@ class ImageProcess:
     def image_quality(
         self, quality: int = 0, output_format: str = ""
     ) -> bytes | Literal[False]:
-        if not self.image:
+        if not self._image:
             return self.source
 
         source = self.source
         assert source is not False, "an image was decoded from a falsy source"
-
-        output_image = self.image
 
         output_format = output_format.upper() or self.original_format
         if output_format == "BMP":
@@ -208,6 +275,7 @@ class ImageProcess:
             )
             return self.source
 
+        output_image = self.image
         opt: dict[str, Any] = {"output_format": output_format}
 
         if output_format == "PNG":
@@ -264,8 +332,8 @@ class ImageProcess:
     def resize(
         self, max_width: int = 0, max_height: int = 0, expand: bool = False
     ) -> Self:
-        if self.image and (max_width or max_height):
-            w, h = self.image.size
+        if self._image and (max_width or max_height):
+            w, h = self.size
             asked_width = max_width or max(1, (w * max_height) // h)
             asked_height = max_height or max(1, (h * max_width) // w)
             if self._frame_wise:
@@ -279,7 +347,9 @@ class ImageProcess:
                 self.image = self.image.resize((asked_width, asked_height))
                 self.operations_count += 1
                 return self
-            if asked_width != w or asked_height != h:
+            # thumbnail only ever shrinks: a box the image fits is a no-op,
+            # which needs no pixels
+            if asked_width < w or asked_height < h:
                 self.image.thumbnail(
                     (asked_width, asked_height),
                     Resampling.LANCZOS,
@@ -297,8 +367,8 @@ class ImageProcess:
         center_x: float = 0.5,
         center_y: float = 0.5,
     ) -> Self:
-        if self.image and max_width and max_height:
-            w, h = self.image.size
+        if self._image and max_width and max_height:
+            w, h = self.size
             if w / max_width > h / max_height:
                 new_w, new_h = w, (max_height * w) // max_width
             else:
@@ -337,7 +407,7 @@ class ImageProcess:
                 randrange(32, 224, 24),
                 randrange(32, 224, 24),
             )
-        if self.image:
+        if self._image:
             original = self.image
             if original.mode == "P":
                 original = original.convert("RGBA")
@@ -349,8 +419,8 @@ class ImageProcess:
         return self
 
     def add_padding(self, padding: int) -> Self:
-        if self.image:
-            img_width, img_height = self.image.size
+        if self._image:
+            img_width, img_height = self.size
             if 2 * padding >= min(img_width, img_height):
                 raise ValueError(
                     f"padding {padding} is too large for a "
@@ -396,6 +466,10 @@ def image_process(
         output_format=output_format or None,
     ):
         image = processor(source, verify_resolution)
+        if verify_resolution:
+            # a verified source is an upload: a truncated file is refused even
+            # when it already fits and nothing else would decode it
+            image.validate()
         if size:
             if crop:
                 center_x = 0.5
@@ -535,11 +609,9 @@ def get_webp_size(source: bytes) -> tuple[int, int] | None:
 
 
 def _decoded_image_size(base64_source: bytes | str) -> tuple[int, int]:
-    image = binary_to_image(base64.b64decode(base64_source))
-    width, height = image.size
-    if image.getexif().get(EXIF_TAG_ORIENTATION, 1) in _TRANSPOSED_ORIENTATIONS:
-        return height, width
-    return width, height
+    size = ImageProcess(base64.b64decode(base64_source), verify_resolution=False).size
+    assert size is not None
+    return size
 
 
 def is_image_size_above(

@@ -1197,11 +1197,11 @@ class IrAttachment(models.Model):
         try:
             data = values["raw"] if is_raw else base64.b64decode(values["datas"])
             img = image.ImageProcess(data, verify_resolution=False)
-            if not img.image:
+            if not img.size:
                 _logger.info("Post processing ignored : Empty source, SVG, or WEBP")
                 _debug.logic("autoresize_skipped", subtype=subtype, reason="no_image")
                 return values
-            width, height = img.image.size
+            width, height = img.size
             if width <= max_width and height <= max_height:
                 _debug.logic(
                     "autoresize_skipped",

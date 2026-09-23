@@ -87,6 +87,11 @@ class ImageProcess(_ImageProcessBase):
         except ValueError as e:
             raise _UserError(str(e)) from e
 
+    def _decode_upright(self) -> None:
+        # the pixels are decoded on first use, outside __init__
+        with _decoded_as_user_error():
+            super()._decode_upright()
+
 
 def image_process(
     source: bytes | Literal[False] | None,

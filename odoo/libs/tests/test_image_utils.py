@@ -232,7 +232,9 @@ class TestPillowFailuresAreImageErrors(unittest.TestCase):
             with self.subTest(fmt=fmt):
                 truncated = _encode(fmt, (64, 64))[:-40]
                 with self.assertRaises(ImageDecodeError):
-                    ImageProcess(truncated)
+                    ImageProcess(truncated).validate()
+                with self.assertRaises(ImageDecodeError):
+                    image_process(truncated, size=(16, 16))
 
 
 class TestOrientation(unittest.TestCase):
@@ -247,6 +249,65 @@ class TestOrientation(unittest.TestCase):
     def test_a_rotated_image_is_still_turned_upright(self):
         self.assertEqual(ImageProcess(_with_orientation(6)).image.size, (6, 8))
         self.assertEqual(ImageProcess(_with_orientation(3)).image.size, (8, 6))
+
+
+class TestDecodeOnDemand(unittest.TestCase):
+    def _loads(self):
+        from PIL import ImageFile
+
+        return mock.patch.object(
+            ImageFile.ImageFile,
+            "load",
+            autospec=True,
+            side_effect=ImageFile.ImageFile.load,
+        )
+
+    def test_a_call_that_changes_nothing_never_decodes(self):
+        for source in (
+            _encode("JPEG", (64, 48)),
+            _encode("PNG", (64, 48)),
+            _encode("WEBP", (64, 48)),
+        ):
+            with self.subTest(head=source[:4]), self._loads() as load:
+                self.assertIs(image_process(source, size=(1920, 1920)), source)
+                self.assertEqual(ImageProcess(source).size, (64, 48))
+            load.assert_not_called()
+
+    def test_a_verified_upload_is_decoded_even_when_it_fits(self):
+        source = _encode("JPEG", (64, 48))
+        with self._loads() as load:
+            self.assertIs(
+                image_process(source, size=(1920, 1920), verify_resolution=True),
+                source,
+            )
+        load.assert_called()
+
+    def test_the_upright_size_is_read_from_the_header(self):
+        with self._loads() as load:
+            self.assertEqual(ImageProcess(_with_orientation(6)).size, (6, 8))
+            self.assertEqual(ImageProcess(_with_orientation(3)).size, (8, 6))
+        load.assert_not_called()
+
+    def test_an_oversized_header_is_refused_before_any_decode(self):
+        with self._loads() as load, self.assertRaises(ImageTooLargeError):
+            ImageProcess(_png_header(10000, 6000), verify_resolution=True)
+        load.assert_not_called()
+
+    def test_an_operation_that_needs_pixels_decodes_once(self):
+        with mock.patch.object(
+            ImageProcess,
+            "_decode_upright",
+            autospec=True,
+            side_effect=ImageProcess._decode_upright,
+        ) as decode:
+            out = image_process(_encode("JPEG", (64, 48)), size=(32, 32))
+        self.assertEqual(binary_to_image(out).size, (32, 24))
+        self.assertEqual(decode.call_count, 1)
+
+    def test_an_exif_block_that_does_not_parse_is_upright_not_a_syntax_error(self):
+        broken = _encode("PNG", (8, 6), exif=b"Exif\x00\x00garbage")
+        self.assertEqual(ImageProcess(broken).image.size, (8, 6))
+        self.assertTrue(image_process(broken, size=(4, 4)))
 
 
 class TestDecodeFailuresShareOneError(unittest.TestCase):
