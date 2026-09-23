@@ -359,3 +359,35 @@ class TestHighBitDepthImages(unittest.TestCase):
                 for target in ((128, 128), (0, 64), (64, 0)):
                     with self.subTest(mode=mode, size=size, target=target):
                         self.assertTrue(image_process(source.getvalue(), size=target))
+
+
+class TestCorruptImagesAreImageErrors(unittest.TestCase):
+    def test_a_corrupted_file_is_an_image_error_or_works(self):
+        import contextlib
+        import random
+        import warnings
+
+        from odoo.libs.image.utils import ImageError
+
+        sources = []
+        for mode, options in (
+            ("RGB", {}),
+            ("L", {}),
+            ("RGB", {"compression": "tiff_lzw"}),
+        ):
+            stream = io.BytesIO()
+            Image.new(mode, (40, 30), 120 if mode == "L" else (10, 200, 30)).save(
+                stream, "TIFF", **options
+            )
+            sources.append(stream.getvalue())
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            for data in sources:
+                for seed in range(300):
+                    rnd = random.Random(seed)
+                    corrupt = bytearray(data)
+                    for _ in range(rnd.randint(1, 6)):
+                        corrupt[rnd.randrange(len(corrupt))] = rnd.randrange(256)
+                    for operation in ({"size": (16, 16)}, {"quality": 80}):
+                        with contextlib.suppress(ImageError):
+                            image_process(bytes(corrupt), **operation)

@@ -1,7 +1,9 @@
 import base64
 import binascii
+import contextlib
 import io
 import struct
+from collections.abc import Iterator
 from random import randrange
 from typing import Any, Literal, Self
 
@@ -77,11 +79,45 @@ def image_fix_orientation(image: PILImage) -> PILImage:
     return ImageOps.exif_transpose(image)
 
 
+# what Pillow raises out of a file that is not the image it claims to be: a
+# plugin reading a corrupt header or pixel stream is not limited to OSError
+# (a TIFF without dimensions is a TypeError, a bad tag a KeyError)
+_CORRUPT_IMAGE_ERRORS = (
+    OSError,
+    SyntaxError,
+    TypeError,
+    KeyError,
+    IndexError,
+    EOFError,
+    ValueError,
+    struct.error,
+    ZeroDivisionError,
+)
+
+
+@contextlib.contextmanager
+def _decoding(stage: str, source: bytes | Literal[False] | None) -> Iterator[None]:
+    try:
+        yield
+    except ImageError:
+        raise
+    except _CORRUPT_IMAGE_ERRORS as error:
+        _debug.logic(
+            "image.decode_failed",
+            stage=stage,
+            error=type(error).__name__,
+            source_bytes=len(source or b""),
+        )
+        msg = "This file could not be decoded as an image file."
+        raise ImageDecodeError(msg) from error
+
+
 def image_apply_opt(image: PILImage, output_format: str, **params) -> bytes:
     if output_format == "JPEG" and image.mode not in ["1", "L", "RGB"]:
         image = image.convert("RGB")
     stream = io.BytesIO()
-    image.save(stream, format=output_format, **params)
+    with _decoding("encode", None):
+        image.save(stream, format=output_format, **params)
     return stream.getvalue()
 
 
@@ -112,10 +148,8 @@ def _exif_orientation(image: PILImage) -> int:
 
 
 def _header_orientation(image: PILImage, source: bytes) -> int | None:
-    """The EXIF orientation without decoding, or None when only a decode says
-    it: another format (TIFF reads its tags from the pixel stream), or a PNG
-    whose eXIf chunk follows its pixel data (Pillow's PNG getexif loads the
-    image to find it)."""
+    # None when only a decode says it: another format (TIFF reads its tags from
+    # the pixel stream), or a PNG whose eXIf chunk follows its pixel data
     image_format = (image.format or "").upper()
     if image_format not in _HEADER_ORIENTATION_FORMATS:
         return None
@@ -125,9 +159,6 @@ def _header_orientation(image: PILImage, source: bytes) -> int | None:
 
 
 class ImageProcess:
-    """An image read from its header, decoded on the first operation that
-    needs its pixels: a call that changes nothing never decodes."""
-
     source: bytes | Literal[False]
     original_format: str
 
@@ -167,11 +198,13 @@ class ImageProcess:
                 )
 
             self.original_format = (image.format or "").upper()
-            self.animated = getattr(image, "n_frames", 1) > 1
+            with _decoding("header", source):
+                self.animated = getattr(image, "n_frames", 1) > 1
             self._image = image
             # an animation is worked frame by frame, never as one decoded image
             self._decoded = self.animated
-            orientation = 1 if self.animated else _header_orientation(image, source)
+            with _decoding("header", source):
+                orientation = 1 if self.animated else _header_orientation(image, source)
             _debug.lifecycle(
                 "image.opened",
                 format=self.original_format,
@@ -221,20 +254,11 @@ class ImageProcess:
             format=self.original_format,
             source_bytes=len(self.source or b""),
         )
-        try:
+        with _decoding("pixels", self.source):
             image.load()
             if _exif_orientation(image) != 1:
                 image = image_fix_orientation(image)
             self.image = image
-        except OSError:
-            _debug.logic(
-                "image.decode_failed",
-                source_bytes=len(self.source or b""),
-                format=self.original_format,
-                stage="pixels",
-            )
-            msg = "This file could not be decoded as an image file."
-            raise ImageDecodeError(msg) from None
 
     @property
     def _frame_wise(self) -> bool:
@@ -242,7 +266,8 @@ class ImageProcess:
 
     def _extract_animated_frames(self) -> None:
         if self._frame_wise and not self.animated_frames:
-            frames = [frame.copy() for frame in ImageSequence.Iterator(self.image)]
+            with _decoding("frames", self.source):
+                frames = [frame.copy() for frame in ImageSequence.Iterator(self.image)]
             if frames:
                 self.image = frames[0]
                 self.animated_frames = frames[1:]
@@ -561,7 +586,7 @@ def binary_to_image(source: bytes) -> PILImage:
             "reduce the image size."
         )
         raise ImageTooLargeError(msg) from None
-    except OSError, binascii.Error:
+    except (*_CORRUPT_IMAGE_ERRORS, binascii.Error):
         _debug.logic(
             "image.decode_failed", source_bytes=len(source), head=source[:4].hex()
         )
