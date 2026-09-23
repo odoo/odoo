@@ -104,11 +104,11 @@ class Intervals[T: SupportsOrdering]:
         append = result._items.append
 
         bounds1 = boundaries(self, "start", "stop")
-        bounds2 = boundaries(
-            Intervals(other, keep_distinct=self._keep_distinct),
-            "switch",
-            "switch",
-        )
+        if not (
+            isinstance(other, Intervals) and other._keep_distinct == self._keep_distinct
+        ):
+            other = Intervals(other, keep_distinct=self._keep_distinct)
+        bounds2 = boundaries(other, "switch", "switch")
 
         start = None
         recs1 = None
