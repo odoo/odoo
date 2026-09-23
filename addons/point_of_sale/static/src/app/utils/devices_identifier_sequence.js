@@ -111,20 +111,22 @@ export default class DeviceIdentifierSequence {
     }
 
     /**
-     * Drop from the reuse stack the numbers still used by the given orders.
-     * A number lands on the stack while its order is still held by this
-     * device when the order was removed just before the page unloaded (its
-     * IndexedDB deletion lost, the order comes back on reload) or when
-     * another tab of the same browser removed its copy of the order.
+     * Drop from the reuse stack the numbers used by the given orders of this
+     * device. A number can be on the stack while an order still holds it:
+     * the order was removed right before the page unloaded (its IndexedDB
+     * deletion is lost and it comes back on reload), or another tab of the
+     * same browser removed its own copy of the order.
      */
     removeUsedNumbers(orders) {
         const data = this.data;
         if (!data?.unsynced_number_stack?.length) {
             return;
         }
+        // pos_reference is `${year2Digits}${device}-${config}-${number}`
+        const prefix = `${data.device_identifier}-${odoo.pos_config_id}-`;
         const used = new Set(
             orders
-                .filter((o) => o.pos_reference)
+                .filter((o) => o.pos_reference?.slice(2).startsWith(prefix))
                 .map((o) => this.extractNumberFromReference(o.pos_reference))
         );
         this.save({
