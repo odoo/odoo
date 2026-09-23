@@ -135,7 +135,7 @@ class TestMergePartner(TransactionCase):
             "Destination partner should exist after merge",
         )
         self.assertRecordValues(
-            self.partner2.bank_ids,
+            self.partner2.bank_account_ids,
             [
                 {"acc_number": "12345"},
                 {"acc_number": "54321"},
@@ -165,13 +165,13 @@ class TestMergePartner(TransactionCase):
             "Destination partner should exist after merge",
         )
         self.assertEqual(
-            len(self.partner1.bank_ids),
+            len(self.partner1.bank_account_ids),
             1,
             "There should be a single bank account after merge",
         )
         self.assertIn(
             self.bank1,
-            self.partner1.bank_ids,
+            self.partner1.bank_account_ids,
             "The original bank account of the destination partner should remain",
         )
         self.assertFalse(
@@ -264,7 +264,7 @@ class TestMergePartner(TransactionCase):
             "Destination partner should exist after merge",
         )
         self.assertRecordValues(
-            self.partner2.bank_ids,
+            self.partner2.bank_account_ids,
             [
                 {"acc_number": "12345"},
                 {"acc_number": "54321"},
@@ -424,7 +424,7 @@ class TestMergePartnerAbsorbSourceValues(TransactionCase):
 
         self.assertEqual(dst.vat, "BE0477472701")
         self.assertEqual(dst.tag_ids, self.tag_dst | self.tag_src)
-        self.assertTrue(dst.bank_ids)
+        self.assertTrue(dst.bank_account_ids)
 
     def test_not_absorbing_keeps_the_destination_identity(self):
         dst, src, attachment = self._prepare_pair()
@@ -441,7 +441,7 @@ class TestMergePartnerAbsorbSourceValues(TransactionCase):
         self.assertFalse(dst.street, "a plain field must not be absorbed")
         self.assertFalse(dst.barcode, "a company-dependent field must not be absorbed")
         self.assertEqual(dst.tag_ids, self.tag_dst, "a many2many must not be absorbed")
-        self.assertFalse(dst.bank_ids, "a bank account must not be absorbed")
+        self.assertFalse(dst.bank_account_ids, "a bank account must not be absorbed")
 
     def test_absorbing_a_uniqueness_constrained_value(self):
         dst, src, _attachment = self._prepare_pair()
@@ -458,7 +458,7 @@ class TestMergePartnerAbsorbSourceValues(TransactionCase):
 
     def test_not_absorbing_leaves_the_source_bank_account_behind(self):
         dst, src, _attachment = self._prepare_pair()
-        bank = src.bank_ids
+        bank = src.bank_account_ids
         wizard = self.Wizard.create({"absorb_source_values": False})
         wizard._merge([dst.id, src.id], dst, extra_checks=False)
         self.env.invalidate_all()

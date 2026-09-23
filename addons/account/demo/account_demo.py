@@ -131,7 +131,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _prepare_demo_data_bank(self, company=False):
-        if company.root_id.partner_id.bank_ids:
+        if company.root_id.partner_id.bank_account_ids:
             return {}
         return {
             "demo_bank_1": {
@@ -183,10 +183,10 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _prepare_demo_data_journal(self, company=False):
-        if company.partner_id.bank_ids:
+        if company.partner_id.bank_account_ids:
             return {
                 "bank": {
-                    "bank_account_id": company.partner_id.bank_ids[0].id,
+                    "bank_account_id": company.partner_id.bank_account_ids[0].id,
                 }
             }
         return {}

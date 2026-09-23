@@ -116,7 +116,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
             {
                 "move_type": move_type,
                 "partner_id": partner.id,
-                "bank_account_id": self.env.company.partner_id.bank_ids[:1].id,
+                "bank_account_id": self.env.company.partner_id.bank_account_ids[:1].id,
                 "invoice_payment_term_id": self.pay_terms_b.id,
                 "invoice_date": "2017-01-01",
                 "date": "2017-01-01",
@@ -284,7 +284,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
             {
                 "move_type": "out_invoice",
                 "partner_id": self.partner_a.id,
-                "bank_account_id": self.env.company.partner_id.bank_ids[:1].id,
+                "bank_account_id": self.env.company.partner_id.bank_account_ids[:1].id,
                 "invoice_date": "2017-01-01",
                 "date": "2017-01-01",
                 "narration": "test narration",

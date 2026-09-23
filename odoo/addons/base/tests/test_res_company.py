@@ -288,10 +288,12 @@ class TestCompany(TransactionCase):
         with self.assertRaises(AccessError):
             as_manager.partner_id.write({"comment": "not identity"})
         with self.assertRaises(AccessError):
-            as_manager.write({"bank_ids": [Command.create({"acc_number": "X-1"})]})
+            as_manager.write(
+                {"bank_account_ids": [Command.create({"acc_number": "X-1"})]}
+            )
         with self.assertRaises(AccessError):
             as_manager.write({"phone_ids": [Command.create({"number": "+1 555 0100"})]})
-        self.assertFalse(company.partner_id.bank_ids)
+        self.assertFalse(company.partner_id.bank_account_ids)
         employee = new_test_user(
             self.env,
             login="af_employee",

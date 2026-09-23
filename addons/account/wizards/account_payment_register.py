@@ -359,7 +359,7 @@ class AccountPaymentRegister(models.TransientModel):
             company = self._get_payment_company(batch_result["lines"])
             return (
                 batch_result["lines"]
-                .partner_id.bank_ids.filtered(
+                .partner_id.bank_account_ids.filtered(
                     lambda x: x.company_id.id in (False, company.id)
                 )
                 ._origin

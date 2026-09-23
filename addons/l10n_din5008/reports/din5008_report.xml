@@ -139,10 +139,12 @@
                                         <li>HRB Nr: <span t-field="company.company_registry" /></li>
                                     </ul>
                                 </td>
-                                <td colspan="3" t-if="company.partner_id.bank_ids">
+                                <td
+                                    colspan="3"
+                                    t-if="company.partner_id.bank_account_ids">
                                     <ul class="list-inline">
                                         <t
-                                            t-foreach="company.partner_id.bank_ids[:2]"
+                                            t-foreach="company.partner_id.bank_account_ids[:2]"
                                             t-as="bank">
                                             <li><span t-field="bank.bank_id.name" /></li>
                                             <li class="text-nowrap">IBAN: <span t-field="bank.acc_number" /></li>

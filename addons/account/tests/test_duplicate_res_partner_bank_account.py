@@ -98,12 +98,12 @@ class TestDuplicatePartnerBank(SavepointCaseWithUserDemo):
             }
         )
 
-        self.assertEqual(len(partner.bank_ids), 1)
+        self.assertEqual(len(partner.bank_account_ids), 1)
 
         with Form(partner) as partner_form:
-            partner_form.bank_ids.remove(0)
+            partner_form.bank_account_ids.remove(0)
 
-        self.assertEqual(len(partner.bank_ids), 0)
+        self.assertEqual(len(partner.bank_account_ids), 0)
 
     def test_duplicate_acc_number_inactive_bank_account(self):
         self.partner_bank_b.active = False

@@ -19,7 +19,7 @@ class TestCIIFR(TestUBLCommon):
                 "city": "Paris",
                 "vat": "FR05677404089",
                 "country_id": cls.env.ref("base.fr").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (
                         0,
                         0,
@@ -43,7 +43,7 @@ class TestCIIFR(TestUBLCommon):
                 "city": "Colombey-les-Deux-Églises",
                 "vat": "FR35562153452",
                 "country_id": cls.env.ref("base.fr").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (
                         0,
                         0,

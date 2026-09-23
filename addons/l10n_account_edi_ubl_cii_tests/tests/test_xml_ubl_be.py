@@ -27,7 +27,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 "city": "Ramillies",
                 "vat": "BE0202239951",
                 "country_id": cls.env.ref("base.be").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (
                         0,
                         0,
@@ -48,7 +48,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 "city": "Ramillies",
                 "vat": "BE0477472701",
                 "country_id": cls.env.ref("base.be").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (
                         0,
                         0,

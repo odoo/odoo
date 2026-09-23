@@ -75,3 +75,19 @@ class TestRenameInViewArches(TransactionCase):
         arch = self._arch(view)
         self.assertIn("label == 'x'", arch)
         self.assertIn("name == 'x'", arch)
+
+    def test_a_qweb_loop_over_the_renamed_field_follows_it(self):
+        view = self._view(
+            "res.partner",
+            "<t t-name='probe.report'>"
+            "<t t-foreach='partner.comment' t-as='line'>"
+            "<span t-out='line'/></t>"
+            "<t t-elif='partner.comment'/></t>",
+        )
+        rename_in_stored_expressions(
+            self.env.cr, "comment", "notes", model="res.partner"
+        )
+        arch = self._arch(view)
+        self.assertIn('t-foreach="partner.notes"', arch)
+        self.assertIn('t-elif="partner.notes"', arch)
+        self.assertEqual(arch.count("comment"), 0)

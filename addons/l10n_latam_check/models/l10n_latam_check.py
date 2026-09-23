@@ -221,7 +221,7 @@ class L10n_LatamCheck(models.Model):
             lambda x: x.payment_channel_id.code == "new_third_party_checks"
         )
         for rec in new_third_party_checks:
-            rec.bank_id = rec.partner_id.bank_ids[:1].bank_id
+            rec.bank_id = rec.partner_id.bank_account_ids[:1].bank_id
         (self - new_third_party_checks).bank_id = False
 
     @api.depends("payment_channel_id.code", "payment_id.partner_id")

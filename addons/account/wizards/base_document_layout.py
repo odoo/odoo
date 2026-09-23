@@ -72,8 +72,10 @@ class BaseDocumentLayout(models.TransientModel):
     @api.depends("partner_id", "account_number")
     def _compute_account_number(self):
         for record in self:
-            if record.partner_id.bank_ids:
-                record.account_number = record.partner_id.bank_ids[0].acc_number or ""
+            if record.partner_id.bank_account_ids:
+                record.account_number = (
+                    record.partner_id.bank_account_ids[0].acc_number or ""
+                )
             else:
                 record.account_number = ""
 
@@ -84,8 +86,8 @@ class BaseDocumentLayout(models.TransientModel):
     @_debug.perf.timed
     def _inverse_account_number(self):
         for record in self:
-            if record.partner_id.bank_ids and record.account_number:
-                bank = record.partner_id.bank_ids[0]
+            if record.partner_id.bank_account_ids and record.account_number:
+                bank = record.partner_id.bank_account_ids[0]
                 if bank.acc_number != record.account_number:
                     _debug.logic(
                         "layout_bank_account_renumbered",
@@ -97,7 +99,7 @@ class BaseDocumentLayout(models.TransientModel):
                     bank.allow_out_payment = True
             elif record.account_number:
                 _debug.logic("layout_bank_account_created", partner=record.partner_id)
-                record.partner_id.bank_ids += self.env[
+                record.partner_id.bank_account_ids += self.env[
                     "res.partner.bank.account"
                 ]._get_or_create_bank_account(
                     account_number=record.account_number,

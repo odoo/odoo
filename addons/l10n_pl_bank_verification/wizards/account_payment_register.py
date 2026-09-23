@@ -123,4 +123,4 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
         if bank_account_id := batch["payment_values"]["bank_account_id"]:
             return self.env["res.partner.bank.account"].browse(bank_account_id)
         partner = self.env["res.partner"].browse(batch["payment_values"]["partner_id"])
-        return partner.bank_ids[:1]
+        return partner.bank_account_ids[:1]

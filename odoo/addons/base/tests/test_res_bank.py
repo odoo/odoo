@@ -90,7 +90,7 @@ class TestResBank(TransactionCase):
             ),
             account,
         )
-        self.assertEqual(partner.bank_ids, account)
+        self.assertEqual(partner.bank_account_ids, account)
         self.assertNotEqual(partner, bank.partner_id)
 
     def test_a_party_outlives_its_bank(self):

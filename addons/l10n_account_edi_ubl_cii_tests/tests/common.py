@@ -181,7 +181,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             {
                 "partner_id": buyer.id,
                 "bank_account_id": (seller if move_type == "out_invoice" else buyer)
-                .bank_ids[:1]
+                .bank_account_ids[:1]
                 .id,
                 "invoice_payment_term_id": self.pay_terms_b.id,
                 "invoice_date": "2017-01-01",

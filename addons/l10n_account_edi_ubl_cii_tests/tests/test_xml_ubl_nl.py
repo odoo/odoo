@@ -25,7 +25,7 @@ class TestUBLNL(TestUBLCommon):
                 ],
                 "email": "info@outlook.nl",
                 "country_id": cls.env.ref("base.nl").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (0, 0, {"acc_number": "NL000099998B57", "allow_out_payment": True})
                 ],
                 "peppol_eas": "0106",
@@ -43,7 +43,7 @@ class TestUBLNL(TestUBLCommon):
                 "city": "Rotterdam",
                 "vat": "NL41452B11",
                 "country_id": cls.env.ref("base.nl").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (
                         0,
                         0,

@@ -152,7 +152,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             Command.create({"number": "+33499999999", "type": "landline"})
         ]
         company.zip = "78440"
-        company.partner_id.bank_ids = [
+        company.partner_id.bank_account_ids = [
             Command.create(
                 {
                     "acc_number": "999999",
@@ -1200,7 +1200,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         partner = self.partner_a
         partner.peppol_endpoint = "00000000001020304050"
         partner.country_id = self.env.ref("base.nl").id
-        partner.bank_ids = [
+        partner.bank_account_ids = [
             Command.create({"acc_number": "0123456789", "allow_out_payment": True})
         ]
         invoice = self.env["account.move"].create(

@@ -110,7 +110,7 @@ class TestCustomProviderFlows(PaymentCustomCommon):
         self.provider.qr_code = True
         tx = self._create_transaction(flow="direct", reference="QR-REF")
 
-        self.assertFalse(self.company.partner_id.bank_ids)
+        self.assertFalse(self.company.partner_id.bank_account_ids)
         self.assertIsNone(tx._get_custom_qr_code())
 
         self.env["res.partner.bank.account"].create(
@@ -119,9 +119,9 @@ class TestCustomProviderFlows(PaymentCustomCommon):
                 "partner_id": self.company.partner_id.id,
             }
         )
-        self.company.partner_id.invalidate_recordset(["bank_ids"])
+        self.company.partner_id.invalidate_recordset(["bank_account_ids"])
 
-        self.assertTrue(self.company.partner_id.bank_ids)
+        self.assertTrue(self.company.partner_id.bank_account_ids)
         self.assertIsNone(tx._get_custom_qr_code())
 
     def test_qr_code_none_when_disabled(self):

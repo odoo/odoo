@@ -169,11 +169,11 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
     def _merge_bank_accounts(
         self, src_partners: models.BaseModel, dst_partner: models.BaseModel
     ) -> None:
-        all_src_accounts = src_partners.bank_ids
+        all_src_accounts = src_partners.bank_account_ids
 
         absorbed = 0  # debuglog
         for src_account in all_src_accounts:
-            duplicate_account = dst_partner.bank_ids.filtered(
+            duplicate_account = dst_partner.bank_account_ids.filtered(
                 lambda a, src_account=src_account: (
                     a.sanitized_acc_number == src_account.sanitized_acc_number
                 )

@@ -62,7 +62,7 @@ class L10nPlAccountPayment(models.Model):
             ):
                 continue
 
-            partner_bank = pay.bank_account_id or partner.bank_ids[:1]
+            partner_bank = pay.bank_account_id or partner.bank_account_ids[:1]
             if not partner_bank:
                 partner_to_partner_banks[partner.id] |= partner_bank
                 continue
@@ -84,7 +84,7 @@ class L10nPlAccountPayment(models.Model):
             if not partner:
                 continue
 
-            partner_bank = pay.bank_account_id or partner.bank_ids[:1]
+            partner_bank = pay.bank_account_id or partner.bank_account_ids[:1]
             if partner_bank:
                 pay.l10n_pl_verification_id = bank2verification.get(
                     partner_bank.sanitized_acc_number

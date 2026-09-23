@@ -4268,7 +4268,7 @@
                     <div t-if="tx_sudo.provider_id.sudo().qr_code">
                         <t
                             t-set="qr_code"
-                            t-value="tx_sudo.company_id.partner_id.bank_ids[:1].prepare_qr_code_base64(order.amount_total,tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)" />
+                            t-value="tx_sudo.company_id.partner_id.bank_account_ids[:1].prepare_qr_code_base64(order.amount_total,tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)" />
                         <div class="mt-2" t-if="qr_code">
                             <h3>Or scan me with your banking app.</h3>
                             <img

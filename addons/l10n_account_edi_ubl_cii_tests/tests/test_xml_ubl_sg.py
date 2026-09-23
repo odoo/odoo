@@ -22,7 +22,7 @@ class TestUBLSG(TestUBLCommon):
                 ],
                 "email": "info@outlook.sg",
                 "country_id": cls.env.ref("base.sg").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (0, 0, {"acc_number": "000099998B57", "allow_out_payment": True})
                 ],
                 "ref": "ref_partner_1",
@@ -41,7 +41,7 @@ class TestUBLSG(TestUBLCommon):
                     Command.create({"number": "+65 9123 4589", "type": "landline"})
                 ],
                 "country_id": cls.env.ref("base.sg").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (0, 0, {"acc_number": "93999574162167", "allow_out_payment": True})
                 ],
                 "ref": "ref_partner_2",

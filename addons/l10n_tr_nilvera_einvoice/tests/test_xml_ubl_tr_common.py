@@ -25,7 +25,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
                     Command.create({"number": "+90 501 234 56 78", "type": "landline"})
                 ],
                 "ref": "Ulus",
-                "bank_ids": [
+                "bank_account_ids": [
                     Command.create(
                         {"acc_number": "TR0123456789", "allow_out_payment": True}
                     )
@@ -46,7 +46,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
                 "phone_ids": [
                     Command.create({"number": "+90 509 876 54 32", "type": "landline"})
                 ],
-                "bank_ids": [
+                "bank_account_ids": [
                     Command.create(
                         {"acc_number": "TR9876543210", "allow_out_payment": True}
                     )
@@ -70,7 +70,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
                 "phone_ids": [
                     Command.create({"number": "+90 509 876 54 32", "type": "landline"})
                 ],
-                "bank_ids": [
+                "bank_account_ids": [
                     Command.create(
                         {"acc_number": "TR9876543210", "allow_out_payment": True}
                     )

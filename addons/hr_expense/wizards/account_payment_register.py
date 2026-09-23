@@ -17,7 +17,10 @@ class AccountPaymentRegister(models.TransientModel):
             _debug.logic("payment_bank_from_employee", expense=expense, line=line)
             res["bank_account_id"] = (
                 expense.employee_id.sudo().primary_bank_account_id.id
-                or (line.partner_id.bank_ids and line.partner_id.bank_ids.ids[0])
+                or (
+                    line.partner_id.bank_account_ids
+                    and line.partner_id.bank_account_ids.ids[0]
+                )
             )
         return res
 

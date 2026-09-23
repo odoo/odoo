@@ -26,7 +26,7 @@ class TestUBLDE(TestUBLCommon):
                 ],
                 "email": "info@legoland.de",
                 "country_id": cls.env.ref("base.de").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (
                         0,
                         0,
@@ -49,7 +49,7 @@ class TestUBLDE(TestUBLCommon):
                 "city": "Rust",
                 "vat": "DE186775212",
                 "country_id": cls.env.ref("base.de").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (
                         0,
                         0,

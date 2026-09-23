@@ -64,7 +64,7 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
                 "company_id": cls.company_data["company"].id,
                 "country_id": cls.env.ref("base.vn").id,
                 "city": "Vietnam",
-                "bank_ids": [
+                "bank_account_ids": [
                     Command.create(
                         {
                             "acc_number": "123456789012345670",

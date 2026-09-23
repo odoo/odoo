@@ -206,7 +206,9 @@ class TestUBLROCommon(TestUBLCommon):
                     Command.create({"number": "+40 123 456 780", "type": "landline"})
                 ],
                 "street": "Rolling Roast, 88",
-                "bank_ids": [(0, 0, {"acc_number": "RO98RNCB1234567890123456"})],
+                "bank_account_ids": [
+                    (0, 0, {"acc_number": "RO98RNCB1234567890123456"})
+                ],
                 "ref": "ref_partner_a",
                 "invoice_edi_format": "ciusro",
             }

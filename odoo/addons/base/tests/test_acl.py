@@ -171,19 +171,19 @@ class TestACL(TransactionCaseWithUserDemo):
             has_group_test,
             "`demo` user should not belong to the restricted group",
         )
-        self.assertTrue(partner.read(["bank_ids"]))
-        self.assertTrue(partner.write({"bank_ids": []}))
+        self.assertTrue(partner.read(["bank_account_ids"]))
+        self.assertTrue(partner.write({"bank_account_ids": []}))
 
-        self._set_field_groups(partner, "bank_ids", self.TEST_GROUP)
+        self._set_field_groups(partner, "bank_account_ids", self.TEST_GROUP)
 
         with self.assertRaises(AccessError):
-            partner.search_fetch([], ["bank_ids"])
+            partner.search_fetch([], ["bank_account_ids"])
         with self.assertRaises(AccessError):
-            partner.fetch(["bank_ids"])
+            partner.fetch(["bank_account_ids"])
         with self.assertRaises(AccessError):
-            partner.read(["bank_ids"])
+            partner.read(["bank_account_ids"])
         with self.assertRaises(AccessError):
-            partner.write({"bank_ids": []})
+            partner.write({"bank_account_ids": []})
 
         self.test_group.user_ids += self.user_demo
         has_group_test = self.user_demo.has_group(self.TEST_GROUP)
@@ -191,8 +191,8 @@ class TestACL(TransactionCaseWithUserDemo):
             has_group_test,
             "`demo` user should now belong to the restricted group",
         )
-        self.assertTrue(partner.read(["bank_ids"]))
-        self.assertTrue(partner.write({"bank_ids": []}))
+        self.assertTrue(partner.read(["bank_account_ids"]))
+        self.assertTrue(partner.write({"bank_account_ids": []}))
 
     @mute_logger("odoo.models")
     def test_fields_browse_restriction(self):

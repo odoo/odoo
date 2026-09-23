@@ -1543,20 +1543,22 @@ class AccountMove(models.Model):
                 )
                 continue
 
-            move.bank_account_id = move.bank_partner_id.bank_ids.filtered_domain(
-                [
-                    *self.env["res.partner.bank.account"]._check_company_domain(
-                        move.company_id
-                    ),
-                    ("active", "=", True),
-                ]
-            ).sorted(key=_bank_selection_key)[:1]
+            move.bank_account_id = (
+                move.bank_partner_id.bank_account_ids.filtered_domain(
+                    [
+                        *self.env["res.partner.bank.account"]._check_company_domain(
+                            move.company_id
+                        ),
+                        ("active", "=", True),
+                    ]
+                ).sorted(key=_bank_selection_key)[:1]
+            )
             _debug.logic(
                 "partner_bank_bank_partner",
                 move=move,
                 bank_account_id=move.bank_account_id,
                 bank_partner_id=move.bank_partner_id,
-                bank_ids_count=len(move.bank_partner_id.bank_ids),
+                bank_ids_count=len(move.bank_partner_id.bank_account_ids),
             )
 
     @api.depends("partner_id", "move_type", "company_id")

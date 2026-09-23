@@ -62,8 +62,8 @@ class BaseDocumentLayout(models.TransientModel):
         related="company_id.company_registry",
         readonly=True,
     )
-    bank_ids = fields.One2many(
-        related="company_id.partner_id.bank_ids",
+    bank_account_ids = fields.One2many(
+        related="company_id.partner_id.bank_account_ids",
         readonly=True,
     )
     account_fiscal_country_id = fields.Many2one(

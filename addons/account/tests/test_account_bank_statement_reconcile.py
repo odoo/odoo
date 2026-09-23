@@ -1906,7 +1906,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         partner = self.env["res.partner"].create(
             {
                 "name": "Zitycard",
-                "bank_ids": [
+                "bank_account_ids": [
                     Command.create(
                         {
                             "acc_number": "123456789",
@@ -1936,10 +1936,10 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         partner = self.env["res.partner"].create(
             {
                 "name": "Zitycard",
-                "bank_ids": [Command.create({"acc_number": "123456789"})],
+                "bank_account_ids": [Command.create({"acc_number": "123456789"})],
             }
         )
-        partner.bank_ids.company_id = self.company_data_2["company"]
+        partner.bank_account_ids.company_id = self.company_data_2["company"]
         self.env.user.company_ids = self.env.company
 
         st_line = self._create_st_line(

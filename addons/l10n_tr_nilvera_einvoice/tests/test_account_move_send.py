@@ -107,7 +107,7 @@ class TestTRAccountMoveSend(TestAccountMoveSendCommon, TestUBLTRCommon):
                 "bic": "TESTTRISXXX",
             }
         )
-        self.company_data["company"].bank_ids.bank_id = bank.id
+        self.company_data["company"].bank_account_ids.bank_id = bank.id
 
         self.assertTrue(
             self._generate_invoice_xml(self.einvoice_partner), "XML generation failed"

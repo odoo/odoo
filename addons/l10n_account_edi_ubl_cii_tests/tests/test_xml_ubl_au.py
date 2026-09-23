@@ -23,7 +23,7 @@ class TestUBLAU(TestUBLCommon):
                 ],
                 "email": "info@outlook.au",
                 "country_id": cls.env.ref("base.au").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (0, 0, {"acc_number": "000099998B57", "allow_out_payment": True})
                 ],
                 "ref": "ref_partner_1",
@@ -39,7 +39,7 @@ class TestUBLAU(TestUBLCommon):
                 "city": "Canberra",
                 "vat": "53 930 548 027",
                 "country_id": cls.env.ref("base.au").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     (0, 0, {"acc_number": "93999574162167", "allow_out_payment": True})
                 ],
                 "ref": "ref_partner_2",

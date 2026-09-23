@@ -1853,12 +1853,12 @@ class TestBypassAccess(TransactionExpressionCase):
         name_test = "12"
 
         partners = self._search(
-            partner_obj, [("bank_ids.sanitized_acc_number", "like", name_test)]
+            partner_obj, [("bank_account_ids.sanitized_acc_number", "like", name_test)]
         )
         self.assertEqual(
             partners,
             p_aa,
-            "bypass_search_access off: ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result",
+            "bypass_search_access off: ('bank_account_ids.sanitized_acc_number', 'like', '..'): incorrect result",
         )
 
         partners = self._search(
@@ -1866,37 +1866,37 @@ class TestBypassAccess(TransactionExpressionCase):
             [
                 "|",
                 ("name", "like", "C"),
-                ("bank_ids.sanitized_acc_number", "like", name_test),
+                ("bank_account_ids.sanitized_acc_number", "like", name_test),
             ],
         )
         self.assertIn(
             p_aa,
             partners,
-            "bypass_search_access off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result",
+            "bypass_search_access off: '|', ('name', 'like', 'C'), ('bank_account_ids.sanitized_acc_number', 'like', '..'): incorrect result",
         )
         self.assertIn(
             p_c,
             partners,
-            "bypass_search_access off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result",
+            "bypass_search_access off: '|', ('name', 'like', 'C'), ('bank_account_ids.sanitized_acc_number', 'like', '..'): incorrect result",
         )
 
         partners = self._search(
-            partner_obj, [("child_ids.bank_ids.id", "in", [b_aa.id, b_ba.id])]
+            partner_obj, [("child_ids.bank_account_ids.id", "in", [b_aa.id, b_ba.id])]
         )
         self.assertEqual(
             partners,
             p_a + p_b,
-            "bypass_search_access off: ('child_ids.bank_ids.id', 'in', [..]): incorrect result",
+            "bypass_search_access off: ('child_ids.bank_account_ids.id', 'in', [..]): incorrect result",
         )
 
-        patch_bypass_search_access(partner_obj, "bank_ids", True)
+        patch_bypass_search_access(partner_obj, "bank_account_ids", True)
         partners = self._search(
-            partner_obj, [("bank_ids.sanitized_acc_number", "like", name_test)]
+            partner_obj, [("bank_account_ids.sanitized_acc_number", "like", name_test)]
         )
         self.assertEqual(
             partners,
             p_aa,
-            "bypass_search_access on: ('bank_ids.sanitized_acc_number', 'like', '..') incorrect result",
+            "bypass_search_access on: ('bank_account_ids.sanitized_acc_number', 'like', '..') incorrect result",
         )
 
         partners = self._search(
@@ -1904,37 +1904,39 @@ class TestBypassAccess(TransactionExpressionCase):
             [
                 "|",
                 ("name", "like", "C"),
-                ("bank_ids.sanitized_acc_number", "like", name_test),
+                ("bank_account_ids.sanitized_acc_number", "like", name_test),
             ],
         )
         self.assertIn(
             p_aa,
             partners,
-            "bypass_search_access on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result",
+            "bypass_search_access on: '|', ('name', 'like', 'C'), ('bank_account_ids.sanitized_acc_number', 'like', '..'): incorrect result",
         )
         self.assertIn(
             p_c,
             partners,
-            "bypass_search_access on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result",
+            "bypass_search_access on: '|', ('name', 'like', 'C'), ('bank_account_ids.sanitized_acc_number', 'like', '..'): incorrect result",
         )
 
-        bank_ids = [b_aa.id, b_ab.id]
-        partners = self._search(partner_obj, [("bank_ids.id", "in", bank_ids)])
+        bank_account_ids = [b_aa.id, b_ab.id]
+        partners = self._search(
+            partner_obj, [("bank_account_ids.id", "in", bank_account_ids)]
+        )
         self.assertEqual(
             partners,
             p_aa + p_ab,
-            "bypass_search_access on: ('bank_ids.id', 'in', [..]) incorrect result",
+            "bypass_search_access on: ('bank_account_ids.id', 'in', [..]) incorrect result",
         )
 
         patch_bypass_search_access(partner_obj, "child_ids", True)
-        bank_ids = [b_aa.id, b_ba.id]
+        bank_account_ids = [b_aa.id, b_ba.id]
         partners = self._search(
-            partner_obj, [("child_ids.bank_ids.id", "in", bank_ids)]
+            partner_obj, [("child_ids.bank_account_ids.id", "in", bank_account_ids)]
         )
         self.assertEqual(
             partners,
             p_a + p_b,
-            "bypass_search_access on: ('child_ids.bank_ids.id', 'not in', [..]): incorrect result",
+            "bypass_search_access on: ('child_ids.bank_account_ids.id', 'not in', [..]): incorrect result",
         )
 
         name_test = "US"
@@ -2015,20 +2017,22 @@ class TestBypassAccess(TransactionExpressionCase):
         )
 
         patch_bypass_search_access(partner_obj, "child_ids", True)
-        patch_bypass_search_access(partner_obj, "bank_ids", True)
+        patch_bypass_search_access(partner_obj, "bank_account_ids", True)
         patch_domain(
             partner_obj,
             "child_ids",
             lambda self: ["!", ("name", "=", self._name)],
         )
-        patch_domain(partner_obj, "bank_ids", [("sanitized_acc_number", "like", "2")])
+        patch_domain(
+            partner_obj, "bank_account_ids", [("sanitized_acc_number", "like", "2")]
+        )
 
         partners = self._search(
             partner_obj,
             [
                 "&",
                 (1, "=", 1),
-                ("child_ids.bank_ids.id", "in", [b_aa.id, b_ba.id]),
+                ("child_ids.bank_account_ids.id", "in", [b_aa.id, b_ba.id]),
             ],
         )
         self.assertLessEqual(
@@ -2051,7 +2055,7 @@ class TestBypassAccess(TransactionExpressionCase):
             [
                 "&",
                 (1, "=", 1),
-                ("child_ids.bank_ids.id", "in", [b_aa.id, b_ba.id]),
+                ("child_ids.bank_account_ids.id", "in", [b_aa.id, b_ba.id]),
             ],
         )
         self.assertFalse(
@@ -2065,13 +2069,13 @@ class TestBypassAccess(TransactionExpressionCase):
         self.assertIn(p_a, self._search(partner_obj, [("tag_ids.name", "=", "foo")]))
 
         patch_bypass_search_access(partner_obj, "tag_ids", False)
-        patch_bypass_search_access(partner_obj, "bank_ids", False)
+        patch_bypass_search_access(partner_obj, "bank_account_ids", False)
         patch_bypass_search_access(partner_obj, "child_ids", False)
         patch_bypass_search_access(partner_obj, "state_id", False)
         patch_bypass_search_access(partner_obj, "parent_id", False)
         patch_bypass_search_access(state_obj, "country_id", False)
         patch_domain(partner_obj, "child_ids", [])
-        patch_domain(partner_obj, "bank_ids", [])
+        patch_domain(partner_obj, "bank_account_ids", [])
 
         partners = self._search(
             partner_obj,
@@ -2933,7 +2937,7 @@ class TestOne2many(TransactionCase):
         self.partner = self.Partner.create(
             {
                 "name": "Foo",
-                "bank_ids": [
+                "bank_account_ids": [
                     Command.create({"acc_number": "123", "acc_type": "bank"}),
                     Command.create({"acc_number": "456", "acc_type": "bank"}),
                     Command.create({"acc_number": "789", "acc_type": "bank"}),
@@ -2942,9 +2946,13 @@ class TestOne2many(TransactionCase):
         )
 
     def test_regular(self):
-        self.Partner.search([("bank_ids", "in", self.partner.bank_ids.ids)])
-        self.Partner.search([("bank_ids.sanitized_acc_number", "like", "12")])
-        self.Partner.search([("child_ids.bank_ids.sanitized_acc_number", "like", "12")])
+        self.Partner.search(
+            [("bank_account_ids", "in", self.partner.bank_account_ids.ids)]
+        )
+        self.Partner.search([("bank_account_ids.sanitized_acc_number", "like", "12")])
+        self.Partner.search(
+            [("child_ids.bank_account_ids.sanitized_acc_number", "like", "12")]
+        )
 
         with self.assertQueries(
             [
@@ -2960,7 +2968,9 @@ class TestOne2many(TransactionCase):
         """
             ]
         ):
-            self.Partner.search([("bank_ids", "in", self.partner.bank_ids.ids)])
+            self.Partner.search(
+                [("bank_account_ids", "in", self.partner.bank_account_ids.ids)]
+            )
 
         with self.assertQueries(
             [
@@ -2976,7 +2986,9 @@ class TestOne2many(TransactionCase):
         """
             ]
         ):
-            self.Partner.search([("bank_ids.sanitized_acc_number", "like", "12")])
+            self.Partner.search(
+                [("bank_account_ids.sanitized_acc_number", "like", "12")]
+            )
 
         with self.assertQueries(
             [
@@ -3000,15 +3012,21 @@ class TestOne2many(TransactionCase):
             ]
         ):
             self.Partner.search(
-                [("child_ids.bank_ids.sanitized_acc_number", "like", "12")]
+                [("child_ids.bank_account_ids.sanitized_acc_number", "like", "12")]
             )
 
     def test_bypass_search_access(self):
-        self.patch(self.Partner._fields["bank_ids"], "bypass_search_access", True)
+        self.patch(
+            self.Partner._fields["bank_account_ids"], "bypass_search_access", True
+        )
         self.patch(self.Partner._fields["child_ids"], "bypass_search_access", True)
-        self.Partner.search([("bank_ids", "in", self.partner.bank_ids.ids)])
-        self.Partner.search([("bank_ids.sanitized_acc_number", "like", "12")])
-        self.Partner.search([("child_ids.bank_ids.sanitized_acc_number", "like", "12")])
+        self.Partner.search(
+            [("bank_account_ids", "in", self.partner.bank_account_ids.ids)]
+        )
+        self.Partner.search([("bank_account_ids.sanitized_acc_number", "like", "12")])
+        self.Partner.search(
+            [("child_ids.bank_account_ids.sanitized_acc_number", "like", "12")]
+        )
 
         with self.assertQueries(
             [
@@ -3024,7 +3042,9 @@ class TestOne2many(TransactionCase):
         """
             ]
         ):
-            self.Partner.search([("bank_ids", "in", self.partner.bank_ids.ids)])
+            self.Partner.search(
+                [("bank_account_ids", "in", self.partner.bank_account_ids.ids)]
+            )
 
         with self.assertQueries(
             [
@@ -3040,7 +3060,9 @@ class TestOne2many(TransactionCase):
         """
             ]
         ):
-            self.Partner.search([("bank_ids.sanitized_acc_number", "like", "12")])
+            self.Partner.search(
+                [("bank_account_ids.sanitized_acc_number", "like", "12")]
+            )
 
         with self.assertQueries(
             [
@@ -3063,8 +3085,8 @@ class TestOne2many(TransactionCase):
         ):
             self.Partner.search(
                 [
-                    ("bank_ids.sanitized_acc_number", "like", "12"),
-                    ("bank_ids.sanitized_acc_number", "like", "45"),
+                    ("bank_account_ids.sanitized_acc_number", "like", "12"),
+                    ("bank_account_ids.sanitized_acc_number", "like", "45"),
                 ]
             )
 
@@ -3090,11 +3112,11 @@ class TestOne2many(TransactionCase):
             ]
         ):
             self.Partner.search(
-                [("child_ids.bank_ids.sanitized_acc_number", "like", "12")]
+                [("child_ids.bank_account_ids.sanitized_acc_number", "like", "12")]
             )
 
         self.patch(
-            self.Partner._fields["bank_ids"],
+            self.Partner._fields["bank_account_ids"],
             "domain",
             [("sanitized_acc_number", "like", "2")],
         )
@@ -3130,7 +3152,13 @@ class TestOne2many(TransactionCase):
             ]
         ):
             self.Partner.search(
-                [("child_ids.bank_ids.id", "in", self.partner.bank_ids.ids)]
+                [
+                    (
+                        "child_ids.bank_account_ids.id",
+                        "in",
+                        self.partner.bank_account_ids.ids,
+                    )
+                ]
             )
 
     def test_bypass_search_access_mixed(self):
@@ -3167,7 +3195,7 @@ class TestOne2many(TransactionCase):
             self.Partner.search([("child_ids.state_id.country_id.code", "like", "US")])
 
     def test_name_search(self):
-        self.Partner.search([("bank_ids", "like", "12")])
+        self.Partner.search([("bank_account_ids", "like", "12")])
 
         with self.assertQueries(
             [
@@ -3183,11 +3211,11 @@ class TestOne2many(TransactionCase):
         """
             ]
         ):
-            self.Partner.search([("bank_ids", "like", "12")])
+            self.Partner.search([("bank_account_ids", "like", "12")])
 
     def test_empty(self):
-        self.Partner.search([("bank_ids", "!=", False)], order="id")
-        self.Partner.search([("bank_ids", "=", False)], order="id")
+        self.Partner.search([("bank_account_ids", "!=", False)], order="id")
+        self.Partner.search([("bank_account_ids", "=", False)], order="id")
 
         with self.assertQueries(
             [
@@ -3202,7 +3230,7 @@ class TestOne2many(TransactionCase):
         """
             ]
         ):
-            self.Partner.search([("bank_ids", "!=", False)], order="id")
+            self.Partner.search([("bank_account_ids", "!=", False)], order="id")
 
         with self.assertQueries(
             [
@@ -3217,7 +3245,7 @@ class TestOne2many(TransactionCase):
         """
             ]
         ):
-            self.Partner.search([("bank_ids", "=", False)], order="id")
+            self.Partner.search([("bank_account_ids", "=", False)], order="id")
 
 
 @tagged("res_partner")

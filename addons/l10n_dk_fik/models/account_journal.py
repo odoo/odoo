@@ -27,14 +27,14 @@ class AccountJournal(models.Model):
         readonly=False,
     )
 
-    @api.depends("invoice_reference_model", "company_id.bank_ids.acc_number")
+    @api.depends("invoice_reference_model", "company_id.bank_account_ids.acc_number")
     def _compute_l10n_dk_fik_creditor_number(self):
         for journal in self:
             if journal.invoice_reference_model not in L10N_DK_FIK_MODELS:
                 journal.l10n_dk_fik_creditor_number = False
                 continue
 
-            bank = journal.company_id.bank_ids[:1]
+            bank = journal.company_id.bank_account_ids[:1]
             creditor_number = "00000000"
             if bank and bank.acc_number:
                 digits = re.sub(r"\D", "", bank.acc_number or "")

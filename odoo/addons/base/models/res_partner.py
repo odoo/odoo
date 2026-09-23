@@ -421,10 +421,10 @@ class ResPartner(models.Model):
         inverse_name="partner_id",
         string="Identifiers",
     )
-    bank_ids = fields.One2many(
+    bank_account_ids = fields.One2many(
         comodel_name="res.partner.bank.account",
         inverse_name="partner_id",
-        string="Banks",
+        string="Bank Accounts",
     )
     main_bank_account_id = fields.Many2one(
         comodel_name="res.partner.bank.account",
@@ -836,11 +836,15 @@ class ResPartner(models.Model):
                 lambda number: number.type == "mobile"
             )[:1]
 
-    @api.depends("bank_ids", "bank_ids.sequence", "bank_ids.active")
+    @api.depends(
+        "bank_account_ids", "bank_account_ids.sequence", "bank_account_ids.active"
+    )
     def _compute_main_bank_account_id(self) -> None:
         sources = self.with_context(active_test=False)
         for partner, source in zip(self, sources, strict=True):
-            partner.main_bank_account_id = source.bank_ids.filtered("active")[:1]
+            partner.main_bank_account_id = source.bank_account_ids.filtered("active")[
+                :1
+            ]
 
     @api.depends("industry_ids")
     def _compute_primary_industry_id(self) -> None:
@@ -1921,7 +1925,7 @@ class ResPartner(models.Model):
         return website
 
     def _rename_bank_holders(self, name: str) -> None:
-        banks_to_sync = self.with_context(active_test=False).bank_ids.filtered(
+        banks_to_sync = self.with_context(active_test=False).bank_account_ids.filtered(
             lambda bank: bank.acc_holder_name == bank.partner_id.name
         )
         _debug.logic(

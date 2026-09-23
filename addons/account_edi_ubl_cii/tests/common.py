@@ -43,7 +43,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
                 "city": "Ramillies",
                 "vat": "BE0477472701",
                 "company_registry": "0477472701",
-                "bank_ids": [
+                "bank_account_ids": [
                     Command.create(
                         {"acc_number": "BE90735788866632", "allow_out_payment": True}
                     )
@@ -81,7 +81,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
                 "city": "Canberra",
                 "vat": "53 930 548 027",
                 "country_id": cls.env.ref("base.au").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     Command.create(
                         {"acc_number": "93999574162167", "allow_out_payment": True}
                     )
@@ -181,7 +181,7 @@ class TestUblCiiBECommon(TestUblCiiCommon):
                 "vat": "BE0202239951",
                 "company_registry": "0202239951",
                 "country_id": cls.env.ref("base.be").id,
-                "bank_ids": [
+                "bank_account_ids": [
                     Command.create(
                         {"acc_number": "BE15001559627230", "allow_out_payment": True}
                     )

@@ -81,7 +81,7 @@ class PaymentTransaction(models.Model):
         self.check_singleton()
         if not self.provider_id.sudo().qr_code:
             return None
-        bank = self.company_id.sudo().partner_id.bank_ids[:1]
+        bank = self.company_id.sudo().partner_id.bank_account_ids[:1]
         if not bank or not hasattr(bank, "prepare_qr_code_base64"):
             return None
         return bank.prepare_qr_code_base64(

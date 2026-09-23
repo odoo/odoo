@@ -139,7 +139,7 @@ class TestInvalidateInversePendingWrite(TransactionCase):
 
     def test_inverse_invalidation_keeps_the_pending_write(self):
         source, bank, target = self._dirty_inverse()
-        source.invalidate_recordset(["bank_ids"], flush=False)
+        source.invalidate_recordset(["bank_account_ids"], flush=False)
 
         field = self.env["res.partner.bank.account"]._fields["partner_id"]
         self.assertIn(
@@ -168,7 +168,7 @@ class TestInvalidateInversePendingWrite(TransactionCase):
         self.assertIn(bank.id, cache)
         self.assertIn(clean.id, cache)
 
-        source.invalidate_recordset(["bank_ids"], flush=False)
+        source.invalidate_recordset(["bank_account_ids"], flush=False)
 
         cache = field._get_cache(self.env)
         self.assertIn(bank.id, cache)
@@ -176,7 +176,7 @@ class TestInvalidateInversePendingWrite(TransactionCase):
 
     def test_invalidate_model_inverse_keeps_the_pending_write(self):
         _source, bank, target = self._dirty_inverse()
-        self.env["res.partner"].invalidate_model(["bank_ids"], flush=False)
+        self.env["res.partner"].invalidate_model(["bank_account_ids"], flush=False)
         self.env.flush_all()
         self.env.invalidate_all()
         self.assertEqual(bank.partner_id, target)

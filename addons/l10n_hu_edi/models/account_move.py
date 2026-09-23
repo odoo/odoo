@@ -1117,12 +1117,12 @@ class AccountMove(models.Model):
         supplier_bank = (
             self.bank_account_id
             if self.bank_account_id and self.move_type == "out_invoice"
-            else supplier.bank_ids[:1]
+            else supplier.bank_account_ids[:1]
         )
         customer_bank = (
             self.bank_account_id
             if self.bank_account_id and self.move_type == "out_refund"
-            else customer.bank_ids[:1]
+            else customer.bank_account_ids[:1]
         )
 
         currency_huf = self.env.ref("base.HUF")

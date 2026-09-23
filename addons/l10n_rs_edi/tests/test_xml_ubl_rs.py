@@ -49,7 +49,7 @@ class TestUBLRS(TestUBLCommon):
                     Command.create({"number": "+381 98 765 43 21", "type": "landline"})
                 ],
                 "vat": "RS111032440",
-                "bank_ids": [
+                "bank_account_ids": [
                     Command.create({"acc_number": "RS1234567891234567892345"})
                 ],
                 "l10n_rs_edi_registration_number": "12345678",

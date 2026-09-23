@@ -24,7 +24,7 @@ test("Iban Widget full flow", async () => {
     const bankId = pyEnv["res.partner.bank.account"].create({ acc_number: "" });
     const partnerId = pyEnv["res.partner"].create({
         name: "Awesome partner",
-        bank_ids: [bankId],
+        bank_account_ids: [bankId],
     });
     await start();
     onRpc("res.partner.bank.account", "is_valid_iban", (params) => {
@@ -37,7 +37,7 @@ test("Iban Widget full flow", async () => {
                     <group>
                         <field name="name"/>
                     </group>
-                    <field name="bank_ids">
+                    <field name="bank_account_ids">
                         <list editable="bottom">
                             <field name="acc_number" widget="iban"/>
                         </list>

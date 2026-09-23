@@ -1712,7 +1712,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             [
                 {
                     "journal_id": self.bank_journal_1.id,
-                    "available_bank_account_ids": self.partner_a.bank_ids.ids,
+                    "available_bank_account_ids": self.partner_a.bank_account_ids.ids,
                     "bank_account_id": self.partner_bank_account1.id,
                 }
             ],
@@ -1727,7 +1727,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             [
                 {
                     "journal_id": self.bank_journal_1.id,
-                    "available_bank_account_ids": self.partner_a.bank_ids.ids,
+                    "available_bank_account_ids": self.partner_a.bank_account_ids.ids,
                     "bank_account_id": self.partner_bank_account2.id,
                 }
             ],
@@ -1739,7 +1739,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             [
                 {
                     "journal_id": self.bank_journal_2.id,
-                    "available_bank_account_ids": self.partner_a.bank_ids.ids,
+                    "available_bank_account_ids": self.partner_a.bank_account_ids.ids,
                     "bank_account_id": self.partner_bank_account2.id,
                 }
             ],

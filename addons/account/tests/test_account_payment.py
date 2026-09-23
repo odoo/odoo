@@ -654,7 +654,7 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             payment,
             [
                 {
-                    "available_bank_account_ids": self.partner_a.bank_ids.ids,
+                    "available_bank_account_ids": self.partner_a.bank_account_ids.ids,
                     "bank_account_id": self.partner_bank_account1.id,
                 }
             ],

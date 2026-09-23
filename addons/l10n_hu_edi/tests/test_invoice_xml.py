@@ -19,7 +19,7 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
 
             cls.company_data["company"].write(
                 {
-                    "bank_ids": [
+                    "bank_account_ids": [
                         Command.create(
                             {
                                 "acc_number": "HU0123456789",
@@ -31,7 +31,7 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
             )
             cls.partner_company.write(
                 {
-                    "bank_ids": [
+                    "bank_account_ids": [
                         Command.create(
                             {
                                 "acc_number": "HU6666666666",

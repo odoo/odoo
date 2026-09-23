@@ -801,9 +801,11 @@ class AccountPayment(models.Model):
             if pay.payment_type == "inbound":
                 pay.available_bank_account_ids = pay.journal_id.bank_account_id
             else:
-                pay.available_bank_account_ids = pay.partner_id.bank_ids.filtered(
-                    lambda x, pay=pay: x.company_id.id in (False, pay.company_id.id)
-                )._origin
+                pay.available_bank_account_ids = (
+                    pay.partner_id.bank_account_ids.filtered(
+                        lambda x, pay=pay: x.company_id.id in (False, pay.company_id.id)
+                    )._origin
+                )
 
     @api.depends("available_bank_account_ids", "journal_id")
     def _compute_bank_account_id(self):

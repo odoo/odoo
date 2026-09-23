@@ -59,7 +59,7 @@ class ResPartner(models.Model):
     )
     partner_vat_placeholder = fields.Char(compute="_compute_partner_vat_placeholder")
     duplicate_bank_partner_ids = fields.Many2many(
-        related="bank_ids.duplicate_bank_partner_ids"
+        related="bank_account_ids.duplicate_bank_partner_ids"
     )
     name = fields.Char(tracking=True)
     credit = fields.Monetary(
@@ -180,7 +180,7 @@ class ResPartner(models.Model):
         readonly=True,
     )
     bank_account_count = fields.Count(
-        count_of="bank_ids",
+        count_of="bank_account_ids",
         string="Bank",
     )
     trust = fields.Selection(
@@ -1032,7 +1032,7 @@ class ResPartner(models.Model):
                 {
                     "domain": [
                         (
-                            "bank_ids",
+                            "bank_account_ids",
                             "any",
                             [
                                 "&",

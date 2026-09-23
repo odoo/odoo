@@ -54,7 +54,9 @@ class L10n_LatamPaymentRegisterCheck(models.TransientModel):
             )
         )
         for rec in new_third_party_checks:
-            rec.bank_id = rec.payment_register_id.partner_id.bank_ids[:1].bank_id
+            rec.bank_id = rec.payment_register_id.partner_id.bank_account_ids[
+                :1
+            ].bank_id
         (self - new_third_party_checks).bank_id = False
 
     @api.depends(

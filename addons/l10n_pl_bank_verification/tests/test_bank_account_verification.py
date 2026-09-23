@@ -71,7 +71,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         partner = partner or self.pl_supplier
         journal = journal or self.company_data["default_journal_bank"]
         payment_method = journal.outbound_payment_channel_ids[0]
-        partner_bank = partner_bank or partner.bank_ids[0]
+        partner_bank = partner_bank or partner.bank_account_ids[0]
 
         payment = (
             self.env["account.payment"]

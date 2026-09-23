@@ -132,7 +132,7 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
         )
         bank.unlink()
         self.assertFalse(bank.active)
-        partner.invalidate_recordset(["bank_ids"])
+        partner.invalidate_recordset(["bank_account_ids"])
         partner.write({"name": "New Name"})
         self.assertEqual(
             bank.acc_holder_name,

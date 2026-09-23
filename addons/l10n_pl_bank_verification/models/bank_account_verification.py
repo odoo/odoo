@@ -185,7 +185,7 @@ class BankAccountVerification(models.Model):
                 for partner_id, bank_accounts in partner_bank_data
                 if bank_accounts
             )
-            all_partner_banks = all_partners.bank_ids
+            all_partner_banks = all_partners.bank_account_ids
             # we query verifications for all partner banks so that if the API call returns information for one of the bank
             # account that was not requested, we can know if we need to create a verification
             verifications |= self.search(
@@ -264,7 +264,7 @@ class BankAccountVerification(models.Model):
                 response_content = self._handle_response(response)
             except requests.RequestException, ValueError:
                 create_vals += self._prepare_verification_vals(
-                    "error", partner_banks=partners.bank_ids
+                    "error", partner_banks=partners.bank_account_ids
                 )
                 _logger.exception(error_message, partners.ids, endpoint)
                 continue
@@ -295,7 +295,7 @@ class BankAccountVerification(models.Model):
                             status = "not_found_partner"
                         create_vals += self._prepare_verification_vals(
                             status,
-                            partner_banks=partner.bank_ids,
+                            partner_banks=partner.bank_account_ids,
                             timestamp=timestamp,
                             request_id=request_id,
                         )
@@ -307,14 +307,14 @@ class BankAccountVerification(models.Model):
                     ):  # case where code = 200, but subject is null or empty
                         create_vals += self._prepare_verification_vals(
                             "invalid",
-                            partner_banks=partner.bank_ids,
+                            partner_banks=partner.bank_account_ids,
                             timestamp=timestamp,
                             request_id=request_id,
                         )
                         continue
 
                     subject = subject[0]
-                    for partner_bank in partner.bank_ids:
+                    for partner_bank in partner.bank_account_ids:
                         # We take advantage of the API call to write verification on all bank accounts of this partner
                         # even if no check was requested for them
                         account_number = partner_bank.sanitized_acc_number.removeprefix(
@@ -334,7 +334,7 @@ class BankAccountVerification(models.Model):
 
             except KeyError, json.decoder.JSONDecodeError:
                 create_vals += self._prepare_verification_vals(
-                    "error", partner_banks=partners.bank_ids
+                    "error", partner_banks=partners.bank_account_ids
                 )
                 _logger.exception(error_message, partners.ids, endpoint)
                 continue

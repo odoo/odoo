@@ -47,7 +47,7 @@ class ResCompany(models.Model):
         "vat",
         "company_registry",
         "company_registry_placeholder",
-        "bank_ids",
+        "bank_account_ids",
         "street",
         "street2",
         "zip",

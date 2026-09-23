@@ -326,26 +326,26 @@ class TestAPI(SavepointCaseWithUserDemo):
         same_prefetch(partners, partners[:10].with_prefetch(partners._prefetch_ids))
 
         self.assertEqual(type(partners).country_id.type, "many2one")
-        self.assertEqual(type(partners).bank_ids.type, "one2many")
+        self.assertEqual(type(partners).bank_account_ids.type, "one2many")
         self.assertEqual(type(partners).tag_ids.type, "many2many")
 
         vals0 = {
             "name": "Empty relational fields",
             "country_id": False,
-            "bank_ids": [],
+            "bank_account_ids": [],
             "tag_ids": [],
         }
         vals1 = {
             "name": "Non-empty relational fields",
             "country_id": self.ref("base.be"),
-            "bank_ids": [Command.create({"acc_number": "FOO42"})],
+            "bank_account_ids": [Command.create({"acc_number": "FOO42"})],
             "tag_ids": [Command.link(self.partner_category.id)],
         }
         partners = partners.create(vals0) + partners.create(vals1)
         for partner in partners:
             same_prefetch(partner, partners)
             same_prefetch(partner.country_id, partners.country_id)
-            same_prefetch(partner.bank_ids, partners.bank_ids)
+            same_prefetch(partner.bank_account_ids, partners.bank_account_ids)
             same_prefetch(partner.tag_ids, partners.tag_ids)
 
     @mute_logger("odoo.models")
