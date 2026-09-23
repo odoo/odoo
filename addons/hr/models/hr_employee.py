@@ -1263,6 +1263,14 @@ class HrEmployee(models.Model):
         Allocation = self.env["hr.employee.bank.allocation"]
         for employee in self:
             wanted = employee.salary_bank_account_ids
+            # a create hands the inverse its Command.create accounts as new
+            # records, where a write has already created them
+            drafts = wanted.filtered(lambda account: not account.id)
+            if drafts:
+                wanted -= drafts
+                wanted |= self.env["res.partner.bank.account"].create(
+                    [draft._convert_to_write(draft._cache) for draft in drafts]
+                )
             current = employee.salary_allocation_ids
             by_account = {a.bank_account_id.id: a.id for a in current}
             kept = current.browse(

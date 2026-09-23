@@ -309,6 +309,30 @@ class TestMultipleBankAccountsFlag(TestHrCommon):
 
 
 @tagged("post_install", "-at_install")
+class TestSalaryAccountCreatedWithTheEmployee(TestHrCommon):
+    def test_an_account_created_by_the_employee_create_is_allocated(self):
+        partner = self.env["res.partner"].create({"name": "Salaried"})
+        employee = self.env["hr.employee"].create(
+            {
+                "name": "Salaried",
+                "partner_id": partner.id,
+                "salary_bank_account_ids": [
+                    Command.create(
+                        {"acc_number": "BE68539007547037", "partner_id": partner.id}
+                    )
+                ],
+            }
+        )
+        account = self.env["res.partner.bank.account"].search(
+            [("partner_id", "=", partner.id)]
+        )
+        self.assertEqual(len(account), 1)
+        self.assertEqual(employee.salary_allocation_ids.bank_account_id, account)
+        self.assertEqual(employee.salary_allocation_ids.amount, 100.0)
+        self.assertEqual(employee.salary_bank_account_ids, account)
+
+
+@tagged("post_install", "-at_install")
 class TestManagerDepartmentReportAccessShape(TestHrCommon):
     MODEL = "mixin.hr.manager.department.report"
 
