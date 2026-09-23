@@ -169,3 +169,39 @@ access file (groups must exist before rows can reference them).
 open a test user and confirm "Fleet Training" now shows the User/Manager choice
 under Other. As a Fleet User (no Manager), attempting `unlink()` on a vehicle
 from the shell raises an `AccessError`; as a Fleet Manager it succeeds.
+
+---
+
+## Chapter 5 — Finally, Some UI To Play With
+
+**Concept.** A **window action** (`ir.actions.act_window`) tells the web client
+*what* to display (a model, in which view modes); a **menu item**
+(`ir.ui.menu` / `<menuitem>`) tells it *where* to put a clickable entry point to
+that action. Neither requires a hand-written view yet — Odoo auto-generates a
+default list and form from the model's fields if none is defined.
+
+**Why?** This is the fastest way to get from "a model exists" to "I can click
+around in it" — useful for prototyping, and it's exactly what happens if a
+module never bothers to define custom views at all.
+
+**Where?** [`views/fleet_vehicle_menus.xml`](views/fleet_vehicle_menus.xml)
+
+**Code explanation.** `view_mode = "list,form"` (Odoo 20 renamed the old `tree`
+view type to `list` everywhere, including here) means: open on a list, and allow
+drilling into a form. The root `<menuitem>` with no `action` and no `parent`
+becomes the app's top-level entry (and the app icon on the Apps grid, since the
+manifest set `application: True`); the child menu attaches the action to it.
+The root menu also declares `groups="fleet_training.group_fleet_user"`
+explicitly — Odoo would already hide it from a user with zero access to the
+underlying model, but spelling the group out directly on the menu is the
+convention core modules use (e.g. the built-in `fleet` app's own root menu),
+and it's easier to read straight from the view than to infer from ACL rows.
+
+**Fleet functionality.** The Fleet Training app is now visible and clickable:
+Apps > Fleet Training > Vehicles opens an auto-generated list/form where
+vehicles can be created and edited through the UI, no code required.
+
+**What changed.** Added `views/fleet_vehicle_menus.xml`; manifest now loads it.
+
+**Testing.** Upgrade the module, refresh the browser, open the Fleet Training
+app from the Apps grid, click Vehicles, and create a record from the UI.
