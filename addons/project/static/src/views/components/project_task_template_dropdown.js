@@ -48,7 +48,7 @@ export class ProjectTaskTemplateDropdown extends Component {
     }
 
     get taskTemplateButtonClasses() {
-        let classes = 'btn btn-link o-dropdopwn-item-indent o-task-template d-flex align-items-center';
+        let classes = 'btn btn-link o-dropdown-item-indent o-task-template d-flex align-items-center';
         if (this.isProjectManager) {
             classes += ' pe-0';
         }
