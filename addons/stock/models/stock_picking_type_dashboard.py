@@ -3,6 +3,7 @@ from datetime import UTC
 
 from odoo import _, api, models
 from odoo.fields import Domain
+from odoo.libs.sql import escape_psql
 from odoo.tools import SQL
 
 from ..tools import debug_log as dbg
@@ -349,11 +350,7 @@ class StockPickingTypeDashboard(models.Model):
 
     def _get_unique_sequence_code(self):
         self.check_singleton()
-        pattern = (
-            self.sequence_code.replace("\\", "\\\\")
-            .replace("_", "\\_")
-            .replace("%", "\\%")
-        )
+        pattern = escape_psql(self.sequence_code)
         taken = set(
             self.env["stock.picking.type"]
             .with_context(active_test=False)

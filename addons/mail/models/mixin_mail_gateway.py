@@ -18,6 +18,7 @@ from markupsafe import Markup
 from odoo import Command, _, api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.sql import escape_psql
 from odoo.tools import SQL, html2plaintext
 from odoo.tools.mail import (
     decode_message_header,
@@ -621,11 +622,7 @@ class MixinMailGateway(models.AbstractModel):
 
         primary_email = self._mail_get_primary_email_field()
         if primary_email:
-            escaped = (
-                email_from_normalized.replace("\\", "\\\\")
-                .replace("%", "\\%")
-                .replace("_", "\\_")
-            )
+            escaped = escape_psql(email_from_normalized)
             return [
                 "|",
                 (primary_email, "=ilike", escaped),

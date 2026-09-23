@@ -16,6 +16,7 @@ from odoo.api import ValuesType
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.sql import escape_psql
 from odoo.tools import SQL, Query, format_list, html_escape
 
 from ...tools import discuss, jwt
@@ -36,10 +37,6 @@ _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 SFU_MODE_THRESHOLD = 3
 AVATAR_CARD_FIELDS = ["avatar_128", "im_status", "name"]
-
-
-def escape_like_wildcards(value: str) -> str:
-    return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 
 class DiscussChannelMember(models.Model):
@@ -465,7 +462,7 @@ class DiscussChannelMember(models.Model):
     def _member_email_domain(self, emails: Iterable[str]) -> Domain:
         return Domain.OR(
             [
-                [(field, "=ilike", escape_like_wildcards(email))]
+                [(field, "=ilike", escape_psql(email))]
                 for email in emails
                 for field in ("guest_id.email", "partner_id.email")
             ]

@@ -5,6 +5,7 @@ from odoo import api, models
 from odoo.api import DomainType
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.sql import escape_psql
 
 from odoo.addons.mail.tools.paging import (
     FETCH_LIMIT_DEFAULT,
@@ -132,12 +133,7 @@ class MailMessage(models.Model):
         thread: models.BaseModel | None = None,
         is_notification: bool | None = None,
     ) -> Domain:
-        search_term = (
-            search_term.replace("\\", "\\\\")
-            .replace("%", "\\%")
-            .replace("_", "\\_")
-            .replace(" ", "%")
-        )
+        search_term = escape_psql(search_term).replace(" ", "%")
         attachment_domain = Domain("name", "ilike", search_term)
         if thread:
             attachment_domain &= Domain("res_model", "=", thread._name) & Domain(
