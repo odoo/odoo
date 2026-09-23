@@ -406,6 +406,23 @@ class _FormatGuardTransform(ast.NodeTransformer):
         return node
 
 
+def _may_call_format(expr: str) -> bool:
+    # identifiers are NFKC-normalised, so a non-ASCII source can spell
+    # `format` without containing the ASCII word
+    return "format" in expr or not expr.isascii()
+
+
+def _guard_format_tree(tree: ast.AST) -> ast.AST:
+    _FormatGuardTransform().visit(tree)
+    return ast.fix_missing_locations(tree)
+
+
+def guard_format_calls(expr: str) -> str:
+    if not _may_call_format(expr):
+        return expr
+    return ast.unparse(_guard_format_tree(ast.parse(expr, mode="eval")))
+
+
 def assert_valid_codeobj(
     allowed_codes: frozenset[int] | set[int],
     code_obj: CodeType,
@@ -487,10 +504,8 @@ def compile_codeobj(
             expr = expr.decode()
         if mode == "eval":
             expr = expr.strip()
-        if guard_format and "format" in expr:
-            tree = ast.parse(expr, filename or "", mode)
-            _FormatGuardTransform().visit(tree)
-            ast.fix_missing_locations(tree)
+        if guard_format and _may_call_format(expr):
+            tree = _guard_format_tree(ast.parse(expr, filename or "", mode))
             code_obj = compile(tree, filename or "", mode)  # type: ignore[call-overload]
         else:
             code_obj = compile(expr, filename or "", mode)
@@ -588,7 +603,6 @@ def _compile_checked(
         mode=mode,
         filename=filename,
         expr_len=len(expr),
-        format_guarded="format" in expr,
     ):
         code = compile_codeobj(expr, filename=filename, mode=mode, guard_format=True)
         assert_valid_codeobj(_SAFE_OPCODES, code, expr, memoise=False)

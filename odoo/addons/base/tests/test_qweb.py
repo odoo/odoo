@@ -4872,3 +4872,40 @@ def iter_traceback(error):
     while trace is not None:
         yield trace
         trace = trace.tb_next
+
+
+class TestQWebFormatFieldReflection(TransactionCase):
+    def _out(self, expr, values):
+        arch = etree.Element("t")
+        etree.SubElement(arch, "t", {"t-out": expr})
+        return str(self.env["ir.qweb"]._render(arch, values))
+
+    def _assert_refused(self, expr, values):
+        with self.assertRaises(QWebError) as caught:
+            self._out(expr, values)
+        self.assertIn(
+            "attribute access is not allowed in a format field",
+            repr(caught.exception.__cause__),
+        )
+
+    def test_a_template_assembled_at_run_time_cannot_walk_attributes(self):
+        pieces = "['{0.search.', '_', '_func_', '_.', '_', '_globals_', '_}']"
+        self._assert_refused(f"''.join({pieces}).format(user)", {"user": self.env.user})
+        self._assert_refused(
+            f"''.join({pieces}).format_map([user])", {"user": self.env.user}
+        )
+
+    def test_a_template_passed_as_a_value_cannot_walk_attributes(self):
+        self._assert_refused("t.format(1)", {"t": "{0.__class__}"})
+        self._assert_refused("str.format(t, 1)", {"t": "{0.__class__}"})
+
+    def test_a_compatibility_spelled_format_is_guarded_too(self):
+        self._assert_refused("t.ｆormat(1)", {"t": "{0.__class__}"})
+
+    def test_legitimate_formatting_is_unchanged(self):
+        self.assertEqual(self._out("'{:,.2f}'.format(x)", {"x": 1234.5}), "1,234.50")
+        self.assertEqual(self._out("'{0[a]}-{1}'.format(d, 2)", {"d": {"a": 7}}), "7-2")
+        self.assertEqual(
+            self._out("m.format(v)", {"m": markupsafe.Markup("<b>{}</b>"), "v": "<i>"}),
+            "<b>&lt;i&gt;</b>",
+        )

@@ -36,6 +36,20 @@ class TestFormatReflectionEscapeClosed(unittest.TestCase):
         with self.assertRaises(Exception):
             safe_eval('"{0.__globals__[SECRET]}".format_map(m)', {"m": [_victim]})
 
+    def test_a_compatibility_spelled_method_name_is_refused(self):
+        # the parser NFKC-normalises identifiers: U+FF46 + "ormat" is `format`
+        # although the source text never contains the ASCII word
+        dunder = "__globals__"
+        for expr in (
+            '("{0." + d + "}").\uff46ormat(f)',
+            'str.\uff46ormat("{0." + d + "}", f)',
+            '("{0." + d + "}").\uff46ormat_map([f])',
+            '("{0." + d + "}").ｆｏｒｍａｔ(f)',
+        ):
+            with self.subTest(expr=expr), self.assertRaises(ValueError) as caught:
+                safe_eval(expr, {"f": _victim, "d": dunder})
+            self.assertIn("attribute access is not allowed", str(caught.exception))
+
     def test_the_recordset_public_attribute_pivot_is_refused(self):
 
         class Rec:

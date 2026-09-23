@@ -44,7 +44,9 @@ from odoo.tools.safe_eval import (
     _BLACKLIST,
     _BUILTINS,
     _EXPR_OPCODES,
+    _SAFE_BUILTINS,
     assert_valid_codeobj,
+    guard_format_calls,
     to_opcodes,
 )
 from odoo.tools.translate import FORMAT_REGEX
@@ -1412,7 +1414,7 @@ class IrQweb(models.AbstractModel):
             "VOID_ELEMENTS": VOID_ELEMENTS,
             "QwebCallParameters": QwebCallParameters,
             "QwebContent": QwebContent,
-            **_BUILTINS,
+            **_SAFE_BUILTINS,
         }
 
     def _add_text(
@@ -1790,6 +1792,7 @@ class IrQweb(models.AbstractModel):
             )
 
         try:
+            expression = guard_format_calls(expression)
             code = compile(expression, "<>", "eval")
         except SyntaxError as e:
             _debug.logic("compile_expr.rejected", reason="syntax", chars=len(expr))
