@@ -20,6 +20,30 @@
         </field>
     </record>
 
+    <record id="fleet_training_vehicle_view_kanban" model="ir.ui.view">
+        <field name="name">fleet_training.vehicle.kanban</field>
+        <field name="model">fleet_training.vehicle</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <widget name="web_ribbon" title="In Maintenance" bg_color="text-bg-warning"
+                                invisible="state != 'maintenance'"/>
+                        <field class="fw-bold fs-5" name="name"/>
+                        <div><field name="license_plate"/></div>
+                        <div class="d-flex" invisible="not driver_id">
+                            <field name="driver_id" widget="many2one_avatar" options="{'no_create': 1, 'no_open': 1}"/>
+                            <field name="driver_id" class="ms-2"/>
+                        </div>
+                        <field name="category_id"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="fleet_training_vehicle_view_form" model="ir.ui.view">
         <field name="name">fleet_training.vehicle.form</field>
         <field name="model">fleet_training.vehicle</field>
@@ -33,6 +57,8 @@
                     <field name="state" widget="statusbar" statusbar_visible="available,assigned,maintenance"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>  <!-- Needed for the Archived ribbon's invisible condition -->
                     <div class="oe_title">
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. Fleet-001"/></h1>
