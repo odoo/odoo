@@ -1,3 +1,4 @@
+import math
 import random
 
 import pytest
@@ -55,8 +56,20 @@ class TestBound:
         ]
 
     def test_a_non_positive_base_is_rejected(self):
-        with pytest.raises(ValueError, match="base must be positive"):
+        with pytest.raises(ValueError, match="base must be a positive"):
             backoff.get_bound(1, base=0.0, cap=2.0)
+
+    @pytest.mark.parametrize(
+        ("base", "cap"),
+        [(math.nan, 2.0), (1.0, math.nan), (1.0, math.inf), (math.inf, math.inf)],
+    )
+    def test_a_non_finite_input_is_a_value_error(self, base, cap):
+        with pytest.raises(ValueError, match="finite"):
+            backoff.get_bound(3, base=base, cap=cap)
+
+    def test_a_subnormal_base_doubles_to_the_cap_without_overflowing(self):
+        assert backoff.get_bound(3, base=5e-324, cap=60.0) == 4 * 5e-324
+        assert backoff.get_bound(10_001, base=5e-324, cap=60.0) == 60.0
 
 
 class TestDelay:

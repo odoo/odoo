@@ -1,6 +1,8 @@
 import logging
 from typing import Any
 
+from .debug_log import format_event
+
 __all__ = ["ASSET_ROOT", "get_asset_logger", "log_event"]
 
 ASSET_ROOT = "odoo.assets"
@@ -18,8 +20,5 @@ def log_event(
     event: str,
     **fields: Any,
 ) -> None:
-    if not logger.isEnabledFor(level):
-        return
-    parts = [f"event={event}"]
-    parts.extend(f"{k}={v}" for k, v in fields.items())
-    logger.log(level, "%s", " ".join(parts))
+    if logger.isEnabledFor(level):
+        logger.log(level, "%s", format_event(event, fields))

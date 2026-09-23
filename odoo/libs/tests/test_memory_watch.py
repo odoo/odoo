@@ -42,6 +42,31 @@ class TestMemoryWatch(unittest.TestCase):
         self.assertEqual(logs.records[-1].levelno, logging.CRITICAL)
         self.assertIn("passed the limit of 2048 MiB", logs.records[-1].getMessage())
 
+    def test_a_stopped_watch_can_be_started_again(self):
+        watch = MemoryWatch(step=1024 * MIB, rss=lambda: 0, interval=0.01)
+        with self.assertLogs(memory_watch._logger, logging.INFO):
+            watch.start()
+            watch.stop()
+            watch.start()
+        try:
+            self.assertTrue(watch._thread.is_alive())
+        finally:
+            watch.stop()
+
+    def test_a_non_positive_step_or_negative_limit_is_refused(self):
+        for step, limit in ((0, 0), (-MIB, 0), (MIB, -MIB)):
+            with self.subTest(step=step, limit=limit), self.assertRaises(ValueError):
+                MemoryWatch(step=step, limit=limit)
+
+    def test_a_negative_environ_limit_is_ignored(self):
+        env = {memory_watch.LIMIT_VAR: "-5"}
+        with (
+            unittest.mock.patch.dict("os.environ", env, clear=True),
+            unittest.mock.patch.object(memory_watch, "_started", []),
+            self.assertLogs(memory_watch._logger, logging.ERROR),
+        ):
+            self.assertIsNone(memory_watch.start_from_environ())
+
     def test_environ_off_by_default(self):
         with unittest.mock.patch.dict("os.environ", {}, clear=True):
             self.assertIsNone(memory_watch.start_from_environ())

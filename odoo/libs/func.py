@@ -1,4 +1,5 @@
 import functools
+import operator
 from collections import deque
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
@@ -216,28 +217,28 @@ class lazy:
         return key in self._value
 
     def __add__(self, other: Any) -> Any:
-        return self._value.__add__(other)
+        return operator.add(self._value, other)
 
     def __sub__(self, other: Any) -> Any:
-        return self._value.__sub__(other)
+        return operator.sub(self._value, other)
 
     def __mul__(self, other: Any) -> Any:
-        return self._value.__mul__(other)
+        return operator.mul(self._value, other)
 
     def __matmul__(self, other: Any) -> Any:
-        return self._value.__matmul__(other)
+        return operator.matmul(self._value, other)
 
     def __truediv__(self, other: Any) -> Any:
-        return self._value.__truediv__(other)
+        return operator.truediv(self._value, other)
 
     def __floordiv__(self, other: Any) -> Any:
-        return self._value.__floordiv__(other)
+        return operator.floordiv(self._value, other)
 
     def __mod__(self, other: Any) -> Any:
-        return self._value.__mod__(other)
+        return operator.mod(self._value, other)
 
     def __divmod__(self, other: Any) -> Any:
-        return self._value.__divmod__(other)
+        return divmod(self._value, other)
 
     def __pow__(self, other: Any, modulo: Any = None) -> Any:
         if modulo is None:
@@ -245,100 +246,100 @@ class lazy:
         return pow(self._value, other, modulo)
 
     def __lshift__(self, other: Any) -> Any:
-        return self._value.__lshift__(other)
+        return operator.lshift(self._value, other)
 
     def __rshift__(self, other: Any) -> Any:
-        return self._value.__rshift__(other)
+        return operator.rshift(self._value, other)
 
     def __and__(self, other: Any) -> Any:
-        return self._value.__and__(other)
+        return operator.and_(self._value, other)
 
     def __xor__(self, other: Any) -> Any:
-        return self._value.__xor__(other)
+        return operator.xor(self._value, other)
 
     def __or__(self, other: Any) -> Any:
-        return self._value.__or__(other)
+        return operator.or_(self._value, other)
 
     def __radd__(self, other: Any) -> Any:
-        return self._value.__radd__(other)
+        return operator.add(other, self._value)
 
     def __rsub__(self, other: Any) -> Any:
-        return self._value.__rsub__(other)
+        return operator.sub(other, self._value)
 
     def __rmul__(self, other: Any) -> Any:
-        return self._value.__rmul__(other)
+        return operator.mul(other, self._value)
 
     def __rmatmul__(self, other: Any) -> Any:
-        return self._value.__rmatmul__(other)
+        return operator.matmul(other, self._value)
 
     def __rtruediv__(self, other: Any) -> Any:
-        return self._value.__rtruediv__(other)
+        return operator.truediv(other, self._value)
 
     def __rfloordiv__(self, other: Any) -> Any:
-        return self._value.__rfloordiv__(other)
+        return operator.floordiv(other, self._value)
 
     def __rmod__(self, other: Any) -> Any:
-        return self._value.__rmod__(other)
+        return operator.mod(other, self._value)
 
     def __rdivmod__(self, other: Any) -> Any:
-        return self._value.__rdivmod__(other)
+        return divmod(other, self._value)
 
     def __rpow__(self, other: Any) -> Any:
-        return self._value.__rpow__(other)
+        return other**self._value
 
     def __rlshift__(self, other: Any) -> Any:
-        return self._value.__rlshift__(other)
+        return operator.lshift(other, self._value)
 
     def __rrshift__(self, other: Any) -> Any:
-        return self._value.__rrshift__(other)
+        return operator.rshift(other, self._value)
 
     def __rand__(self, other: Any) -> Any:
-        return self._value.__rand__(other)
+        return operator.and_(other, self._value)
 
     def __rxor__(self, other: Any) -> Any:
-        return self._value.__rxor__(other)
+        return operator.xor(other, self._value)
 
     def __ror__(self, other: Any) -> Any:
-        return self._value.__ror__(other)
+        return operator.or_(other, self._value)
 
     def __iadd__(self, other: Any) -> Any:
-        return self._value.__iadd__(other)
+        return operator.iadd(self._value, other)
 
     def __isub__(self, other: Any) -> Any:
-        return self._value.__isub__(other)
+        return operator.isub(self._value, other)
 
     def __imul__(self, other: Any) -> Any:
-        return self._value.__imul__(other)
+        return operator.imul(self._value, other)
 
     def __imatmul__(self, other: Any) -> Any:
-        return self._value.__imatmul__(other)
+        return operator.imatmul(self._value, other)
 
     def __itruediv__(self, other: Any) -> Any:
-        return self._value.__itruediv__(other)
+        return operator.itruediv(self._value, other)
 
     def __ifloordiv__(self, other: Any) -> Any:
-        return self._value.__ifloordiv__(other)
+        return operator.ifloordiv(self._value, other)
 
     def __imod__(self, other: Any) -> Any:
-        return self._value.__imod__(other)
+        return operator.imod(self._value, other)
 
     def __ipow__(self, other: Any) -> Any:  # type: ignore[misc]
-        return self._value.__ipow__(other)
+        return operator.ipow(self._value, other)
 
     def __ilshift__(self, other: Any) -> Any:
-        return self._value.__ilshift__(other)
+        return operator.ilshift(self._value, other)
 
     def __irshift__(self, other: Any) -> Any:
-        return self._value.__irshift__(other)
+        return operator.irshift(self._value, other)
 
     def __iand__(self, other: Any) -> Any:
-        return self._value.__iand__(other)
+        return operator.iand(self._value, other)
 
     def __ixor__(self, other: Any) -> Any:
-        return self._value.__ixor__(other)
+        return operator.ixor(self._value, other)
 
     def __ior__(self, other: Any) -> Any:
-        return self._value.__ior__(other)
+        return operator.ior(self._value, other)
 
     def __neg__(self) -> Any:
         return self._value.__neg__()

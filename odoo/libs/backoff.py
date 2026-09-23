@@ -13,17 +13,19 @@ __all__ = ["get_bound", "get_delay", "iter_bounds"]
 def get_bound(attempt: int, *, base: float, cap: float) -> float:
     if attempt < 1:
         raise ValueError(f"attempt is 1-based, got {attempt}")
-    if base <= 0.0:
-        raise ValueError(f"base must be positive, got {base}")
+    if not (math.isfinite(base) and base > 0.0):
+        raise ValueError(f"base must be a positive finite number, got {base}")
+    if not math.isfinite(cap):
+        raise ValueError(f"cap must be a finite number, got {cap}")
     if cap < base:
         raise ValueError(
             f"cap ({cap}) is below base ({base}), which flattens the curve: "
             f"every attempt would draw from the same interval"
         )
-    doublings = attempt - 1
-    if doublings >= math.ceil(math.log2(cap / base)):
+    try:
+        return min(math.ldexp(base, attempt - 1), cap)
+    except OverflowError:
         return cap
-    return min(base * 2.0**doublings, cap)
 
 
 def iter_bounds(attempts: int, *, base: float, cap: float) -> Iterator[float]:

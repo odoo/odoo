@@ -18,7 +18,7 @@ class TestEventParsing:
         obj = inotify.Inotify.__new__(inotify.Inotify)
         obj._fd = -1
         obj._wd_by_path = {"/w": 1}
-        obj._path_by_wd = {1: "/w"}
+        obj._paths_by_wd = {1: ["/w"]}
         obj._pending = b""
         return obj
 
@@ -87,6 +87,53 @@ class TestAgainstTheKernel:
             sub.rmdir()
             ino.read(2.0)
             assert ino.watched == frozenset()
+
+    def test_aliases_of_one_directory_stay_watched_until_the_last_goes(self, tmp_path):
+        with inotify.Inotify() as ino:
+            plain, slashed = str(tmp_path), f"{tmp_path}/"
+            assert ino.add_watch(plain, inotify.IN_CREATE) == ino.add_watch(
+                slashed, inotify.IN_CREATE
+            )
+            assert ino.remove_watch(slashed) is True
+            assert ino.watched == {plain}
+            (tmp_path / "f").touch()
+            assert [e.name for e in ino.read(2.0)] == ["f"]
+            assert ino.remove_watch(plain) is True
+            assert ino.watched == frozenset()
+
+    def test_an_ignored_watch_forgets_every_alias(self, tmp_path):
+        sub = tmp_path / "sub"
+        sub.mkdir()
+        with inotify.Inotify() as ino:
+            ino.add_watch(sub, inotify.IN_CREATE)
+            ino.add_watch(f"{sub}/", inotify.IN_CREATE)
+            sub.rmdir()
+            ino.read(2.0)
+            assert ino.watched == frozenset()
+
+    def test_a_failed_epoll_closes_the_inotify_descriptor(self, monkeypatch):
+        opened = []
+        real_init = inotify._get_libc().inotify_init1
+
+        def init(flags):
+            fd = real_init(flags)
+            opened.append(fd)
+            return fd
+
+        def no_epoll():
+            raise OSError(24, "Too many open files")
+
+        monkeypatch.setattr(inotify._get_libc(), "inotify_init1", init)
+        monkeypatch.setattr(inotify.select, "epoll", no_epoll)
+        try:
+            inotify.Inotify()
+        except OSError:
+            # The traceback still holds the half-built instance here, so only
+            # an explicit close -- not garbage collection -- has freed the fd.
+            with pytest.raises(OSError):
+                os.fstat(opened[0])
+        else:
+            pytest.fail("the epoll failure was swallowed")
 
     def test_a_quiet_read_returns_after_its_timeout(self, tmp_path):
         with inotify.Inotify() as ino:

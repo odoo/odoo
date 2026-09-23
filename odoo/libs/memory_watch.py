@@ -51,6 +51,11 @@ class MemoryWatch:
         rss: Callable[[], int] = read_rss,
         abort: Callable[[], None] | None = None,
     ) -> None:
+        if step <= 0 or limit < 0:
+            raise ValueError(
+                f"a memory watch needs a positive step and a non-negative "
+                f"limit, got step={step} limit={limit}"
+            )
         self.step = step
         self.limit = limit
         self.interval = interval
@@ -89,6 +94,7 @@ class MemoryWatch:
 
     def start(self) -> None:
         self._next = 0
+        self._stop.clear()
         self._thread = threading.Thread(
             target=self._run, name="odoo.memory_watch", daemon=True
         )
@@ -117,10 +123,13 @@ def _mib_from_environ(name: str) -> int:
     if not value:
         return 0
     try:
-        return int(value) * _MIB
+        mib = int(value)
     except ValueError:
+        mib = -1
+    if mib < 0:
         _logger.error("%s=%r is not a whole number of MiB; ignored", name, value)
         return 0
+    return mib * _MIB
 
 
 _started: list[MemoryWatch] = []

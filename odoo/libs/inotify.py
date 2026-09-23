@@ -115,10 +115,14 @@ class Inotify:
             raise _errno_error("inotify_init1")
         self._fd = fd
         self._wd_by_path: dict[str, int] = {}
-        self._path_by_wd: dict[int, str] = {}
+        # One watch can answer to several spellings of a path ("d", "d/"):
+        # the kernel returns the same descriptor, and every alias stays
+        # watched until the last of them is removed.
+        self._paths_by_wd: dict[int, list[str]] = {}
         self._pending = b""
-        self._epoll = select.epoll()
+        self._epoll: select.epoll | None = None
         try:
+            self._epoll = select.epoll()
             self._epoll.register(fd, select.EPOLLIN)
         except BaseException:
             self.close()
@@ -136,7 +140,7 @@ class Inotify:
         return self._fd
 
     def descriptors(self) -> tuple[int, ...]:
-        if self.closed:
+        if self.closed or self._epoll is None:
             return ()
         return (self._fd, self._epoll.fileno())
 
@@ -148,14 +152,22 @@ class Inotify:
         # The kernel hands the same descriptor back for a path already
         # watched, so a re-add is a no-op on both sides.
         self._wd_by_path[path] = wd
-        self._path_by_wd[wd] = path
+        aliases = self._paths_by_wd.setdefault(wd, [])
+        if path not in aliases:
+            aliases.append(path)
         return wd
 
     def remove_watch(self, path: str | os.PathLike[str]) -> bool:
-        wd = self._wd_by_path.pop(os.fspath(path), None)
+        path = os.fspath(path)
+        wd = self._wd_by_path.pop(path, None)
         if wd is None:
             return False
-        self._path_by_wd.pop(wd, None)
+        aliases = self._paths_by_wd.get(wd, [])
+        if path in aliases:
+            aliases.remove(path)
+        if aliases:
+            return True
+        self._paths_by_wd.pop(wd, None)
         if _get_libc().inotify_rm_watch(self._fd, wd) < 0:
             code = ctypes.get_errno()
             # A watch the kernel dropped itself (the directory is gone) is
@@ -170,10 +182,11 @@ class Inotify:
         Raises `QueueOverflow` once the drained batch carried the kernel's
         overflow marker; the events read before it are lost with the rest.
         """
-        if self.closed:
+        epoll = self._epoll
+        if self.closed or epoll is None:
             raise InotifyError(errno.EBADF, "inotify instance is closed")
         try:
-            ready = self._epoll.poll(timeout_s if timeout_s is not None else -1)
+            ready = epoll.poll(timeout_s if timeout_s is not None else -1)
         except InterruptedError:
             ready = []
         if not ready:
@@ -207,26 +220,27 @@ class Inotify:
             if mask & IN_Q_OVERFLOW:
                 overflowed = True
                 continue
-            path = self._path_by_wd.get(wd)
+            aliases = self._paths_by_wd.get(wd)
             if mask & IN_IGNORED:
-                if path is not None:
-                    self._wd_by_path.pop(path, None)
-                    self._path_by_wd.pop(wd, None)
+                for alias in self._paths_by_wd.pop(wd, ()):
+                    self._wd_by_path.pop(alias, None)
                 continue
-            if path is None:
+            if not aliases:
                 continue
-            events.append(Event(path, os.fsdecode(name), mask))
+            events.append(Event(aliases[0], os.fsdecode(name), mask))
         return events, data[offset:], overflowed
 
     def close(self) -> None:
         fd, self._fd = self._fd, -1
+        epoll, self._epoll = self._epoll, None
         try:
-            self._epoll.close()
+            if epoll is not None:
+                epoll.close()
         finally:
             if fd >= 0:
                 os.close(fd)
         self._wd_by_path.clear()
-        self._path_by_wd.clear()
+        self._paths_by_wd.clear()
 
     def __enter__(self) -> Self:
         return self

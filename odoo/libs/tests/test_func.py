@@ -47,6 +47,38 @@ class TestLazy(unittest.TestCase):
         self.assertEqual(len(calls), 1)
 
 
+class TestLazyArithmetic(unittest.TestCase):
+    def test_mixed_numeric_types_fall_back_to_the_reflected_operation(self):
+        self.assertEqual(lazy(lambda: 1) + 1.5, 2.5)
+        self.assertEqual(1.5 + lazy(lambda: 1), 2.5)
+        self.assertEqual(lazy(lambda: 3) * 0.5, 1.5)
+        self.assertEqual(lazy(lambda: 1) - 0.25, 0.75)
+        self.assertEqual(0.25 - lazy(lambda: 1), -0.75)
+        self.assertEqual(2.0 ** lazy(lambda: 3), 8.0)
+        self.assertEqual(divmod(7.5, lazy(lambda: 2)), (3.0, 1.5))
+
+    def test_two_lazies_combine(self):
+        self.assertEqual(lazy(lambda: 2) * lazy(lambda: 0.5), 1.0)
+
+    def test_in_place_operators_work_on_immutable_values(self):
+        value = lazy(lambda: 1)
+        value += 1
+        self.assertEqual(value, 2)
+        text = lazy(lambda: "a")
+        text += "b"
+        self.assertEqual(text, "ab")
+
+    def test_in_place_operators_mutate_a_mutable_value(self):
+        items = [1]
+        value = lazy(lambda: items)
+        value += [2]
+        self.assertEqual(items, [1, 2])
+
+    def test_an_unsupported_operation_still_raises_type_error(self):
+        with self.assertRaises(TypeError):
+            lazy(lambda: 1) + "a"
+
+
 if __name__ == "__main__":
     unittest.main()
 
