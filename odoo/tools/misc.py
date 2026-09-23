@@ -23,7 +23,6 @@ from odoo.libs.iteration import (
     groupby,
     merge_sequences,
     partition,
-    split_every,
     topological_sort,
     unique,
 )
@@ -171,7 +170,6 @@ __all__ = [
     "remove_accents",
     "replace_exceptions",
     "resolve_hash_signed",
-    "split_every",
     "str2bool",
     "street_split",
     "stripped_sys_argv",
