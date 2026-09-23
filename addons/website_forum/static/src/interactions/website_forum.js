@@ -105,15 +105,22 @@ export class WebsiteForum extends Interaction {
             const props = {
                 textareaEl,
                 fullEdit: hasFullEdit,
-                getRecordInfo: () => ({
-                    context: this.services.website_page.context,
-                    resModel: "forum.post",
+                getRecordInfo: () => {
                     // Id is retrieved from URL, which is either:
                     // - /forum/name-1/post/something-5
                     // - /forum/name-1/post/something-5/edit
+                    // - /forum/name-1/ask (returns null resId to avoid matching
+                    //   forum_id with resModel forum.post)
                     // TODO: Make this more robust.
-                    resId: +location.pathname.split("-").slice(-1)[0].split("/")[0],
-                }),
+                    const pathname = location.pathname;
+                    const isPostPage = pathname.includes("/post/");
+                    const rawId = +pathname.split("-").slice(-1)[0].split("/")[0];
+                    return {
+                        context: this.services.website_page.context,
+                        resModel: "forum.post",
+                        resId: isPostPage && !isNaN(rawId) ? rawId : null,
+                    };
+                },
                 ...(!isReply && {
                     resizable: !isMobileOS(),
                     height: "350px",
