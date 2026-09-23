@@ -12,6 +12,102 @@ the training session: it doubles as the course notes and as the module's own REA
 > intentionally independent of it (`fleet_training.*` models) so the training can
 > freely evolve the schema without touching a production app.
 
+## Project Overview
+
+Fleet Training is a working Fleet Management app: create vehicles, models
+(categories) and drivers; assign drivers to vehicles; track a vehicle's
+status (Available / Assigned / In Maintenance) with one-click actions or a
+data-capturing wizard; log maintenance history and see running cost totals;
+get an automatic reminder when a vehicle's insurance is about to expire; print
+a vehicle info sheet as a PDF; and browse a kanban board or a pivot/graph
+dashboard of the fleet. Every feature exists specifically to demonstrate one
+Odoo Server Framework concept, in the order it was introduced.
+
+## Odoo Version
+
+**Odoo 20.0** — built and tested against this repository's `20.0` branch
+(module version `20.0.1.0.0`). Two Odoo 20 API changes affected this module
+directly and are called out where they matter: `ir.model.access` was replaced
+by a unified `ir.access` model, and `res.groups.category_id` was replaced by
+`res.groups.privilege`.
+
+## Installation
+
+1. Make sure `fleet_training/` is on your `addons_path` (this repo's own
+   `community/addons` already qualifies).
+2. Update the apps list, then install **Fleet Training** (search for it or,
+   from a shell: `-i fleet_training`).
+3. Install with demo data (`--without-demo=False` from the command line, or
+   leave demo data enabled when creating the database from the browser) to
+   get a populated fleet immediately — see Chapter 19.
+
+## Features
+
+- Vehicles, drivers, categories and colored tags, with full CRUD
+- Driver ↔ vehicle assignment (Many2one/One2many), category (Many2one), tags (Many2many)
+- Computed fleet age, per-driver vehicle count, per-vehicle maintenance count/cost
+- Live onchange warning when assigning a driver with no phone on file
+- Status workflow (Available/Assigned/In Maintenance) via header buttons and a bulk server action
+- SQL + Python validation (unique plate, plausible model year, positive seats, non-negative odometer)
+- Kanban board grouped by status, with ribbons for "In Maintenance" and "Archived"
+- Two security groups (Fleet User / Fleet Manager) with different CRUD rights
+- Chatter (messages, tracked field changes, activities) on every vehicle
+- Smart button on Contacts showing a partner's linked fleet drivers
+- Printable QWeb PDF "Vehicle Info Sheet"
+- Pivot/graph fleet analysis dashboard
+- Maintenance history per vehicle, with a "Log Maintenance…" wizard
+- Daily scheduled action reminding about soon-to-expire insurance
+- Realistic demo data (Tata Nexon, Mahindra XUV700, Hyundai Creta, Toyota Innova Crysta)
+
+## Server Framework Concepts Covered
+
+| Chapter / Concept | Fleet Feature | Files | Commit |
+| --- | --- | --- | --- |
+| 1. Architecture Overview | — (conceptual) | `README.md` | `d40cb0d` |
+| 2. A New Application | Installable empty module shell | `__manifest__.py`, `__init__.py` | `5183523` |
+| 3. Models And Basic Fields | `fleet_training.vehicle` with basic fields | `models/fleet_vehicle.py`, `security/ir.access.csv` | `5a7fb58` |
+| 4. Security: A Brief Introduction | Fleet User / Fleet Manager groups | `security/fleet_training_groups.xml`, `security/ir.access.csv` | `758edec` |
+| 5. Finally, Some UI To Play With | First action + app menu | `views/fleet_vehicle_menus.xml` | `3c7b862` |
+| 6. Basic Views | List/form/search views | `views/fleet_vehicle_views.xml` | `d58d7d0` |
+| 7. Relations Between Models | Driver (M2o/O2m), category (M2o), tags (M2m) | `models/fleet_driver.py`, `models/fleet_category.py`, `models/fleet_vehicle.py` | `8dee6d3` |
+| 8. Computed Fields And Onchanges | `age_years`, `vehicle_count`, driver-phone onchange | `models/fleet_vehicle.py`, `models/fleet_driver.py` | `ec05996` |
+| 9. Ready For Some Action? | Status buttons + bulk server action | `models/fleet_vehicle.py`, `views/fleet_vehicle_menus.xml` | `0c993a5` |
+| 10. Constraints | Unique plate (SQL), model year/seats (Python) | `models/fleet_vehicle.py` | `c9e36d3` |
+| 11. Add The Sprinkles | Kanban board, ribbons | `views/fleet_vehicle_views.xml` | `de8b4a8` |
+| 12. Inheritance | `res.partner` extended with a driver count | `models/res_partner.py`, `models/fleet_driver.py` | `3302423` |
+| 13. Interact With Other Modules | `mail.thread` chatter, tracking, partner smart button | `models/fleet_vehicle.py`, `views/res_partner_views.xml` | `77070a8` |
+| 14. A Brief History Of QWeb | Printable Vehicle Info Sheet (PDF) | `reports/fleet_vehicle_report.xml` | `f61852e` |
+| 15. The Final Word | Pivot/graph fleet analysis dashboard | `views/fleet_vehicle_analysis_views.xml` | `052eb8d` |
+| 16. *(beyond tutorial)* Maintenance records | Maintenance history, smart button, cost totals | `models/fleet_maintenance.py`, `views/fleet_maintenance_views.xml` | `39e43bd` |
+| 17. *(beyond tutorial)* Wizards | "Log Maintenance…" `TransientModel` wizard | `wizard/fleet_maintenance_wizard*.py/.xml` | `93325aa` |
+| 18. *(beyond tutorial)* Scheduled Actions | Insurance expiry reminder (`ir.cron`) | `models/fleet_vehicle.py`, `data/ir_cron_data.xml` | `db13cde` |
+| 19. *(beyond tutorial)* Demo Data & Cleanup | Realistic sample fleet | `demo/fleet_training_demo.xml` | `c051a0c` |
+
+Run `git log --oneline -- addons/fleet_training` from the `community` repo for
+the full, chronological commit history behind this table.
+
+## Demonstration Flow
+
+A suggested live-demo sequence for the training session:
+
+1. Install the module *with* demo data; open Fleet Training from the Apps grid.
+2. Explain the manifest (`__manifest__.py`) — name, depends, data, application.
+3. Open the Vehicles kanban board, grouped by status — point out the ribbon on the vehicle "In Maintenance".
+4. Open a vehicle's form — walk through fields, the two-column layout, the chatter.
+5. Create a new vehicle: show the required `name`, the license plate.
+6. Create a driver, then assign it to a vehicle — show the driver's own form listing that vehicle back (the O2m side).
+7. Assign a driver with no phone number — trigger the onchange warning.
+8. Try to save two vehicles with the same license plate — trigger the SQL constraint; try `model_year=1900` — trigger the Python constraint.
+9. Click "Send to Maintenance" — show the statusbar change and the chatter log entry.
+10. Click "Log Maintenance…" — fill the wizard, show it creates a maintenance record and flips the status in one step.
+11. Open the vehicle's Maintenance smart button — show the cost total.
+12. Switch a user to the Fleet User group (not Manager) and show `unlink` is blocked; switch to Fleet Manager and show it succeeds.
+13. Open a driver's linked Contact — click the "Fleet Drivers" smart button.
+14. Print a vehicle's "Vehicle Info Sheet" PDF from the Print menu.
+15. Open Reporting > Fleet Analysis — show the pivot table and bar chart.
+16. Open Settings > Technical > Scheduled Actions, find "Fleet Training: Insurance Expiry Reminder", and trigger it manually — show the resulting to-do activity on the vehicle expiring soon.
+17. Wrap up with `git log --oneline -- addons/fleet_training` to show the chapter-by-chapter history.
+
 ---
 
 ## Chapter 1 — Architecture Overview
