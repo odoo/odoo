@@ -240,20 +240,11 @@ UNPROMOTED_SUBMODULE_EXPORTS: dict[str, set[str]] = {
         "sort_ids_by_cache",
         "to_prefetch_ids",
     },
-    "filesystem/appdirs.py": {
-        "AppDirs",
-        "site_config_dir",
-        "site_data_dir",
-        "user_cache_dir",
-        "user_config_dir",
-        "user_data_dir",
-        "user_log_dir",
-    },
+    "filesystem/appdirs.py": {"site_data_dir", "user_data_dir"},
     "filesystem/osutil.py": {
         "WINDOWS_RESERVED",
         "clean_filename",
         "is_running_as_nt_service",
-        "zip_dir",
     },
 }
 

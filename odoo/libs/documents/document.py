@@ -5,7 +5,7 @@ import logging
 from typing import Any
 
 from odoo.libs.debug_log import DebugLog
-from odoo.libs.filesystem import guess_mimetype
+from odoo.libs.filesystem.mimetypes import guess_mimetype
 
 from .formats import mimetype_for
 from .guess import decode, is_text_like
@@ -231,7 +231,9 @@ class Document:
         if representation == TREE:
             return self.tree is not None
         return bool(
-            getattr(self, "data_dict" if representation == DATA else representation)
+            getattr(
+                self, "data_dict" if representation == DATA else representation, None
+            )
         )
 
     def _derive(self, representation: str) -> Any:

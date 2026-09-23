@@ -330,13 +330,8 @@ def get_extension(filename: str) -> str:
     if not dot or not _extension_pattern.fullmatch(ext):
         return ""
 
-    if len(ext) <= 4:
+    if len(ext) <= 4 or mimetypes.guess_type(filename)[0]:
         return f".{ext}".lower()
-
-    guessed_mimetype, _guessed_encoding = mimetypes.guess_type(filename)
-    if guessed_mimetype:
-        return mimetypes.guess_extension(guessed_mimetype) or f".{ext}".lower()
-
     return ""
 
 

@@ -20,16 +20,15 @@ _VOICE = re.compile(r"^<v(?:\.\S+)*\s+([^>]*)>(.*)$", re.DOTALL)
 _TAG = re.compile(r"</?[a-zA-Z][^>]*>")
 _NOTE = re.compile(r"^(?:NOTE|STYLE|REGION)\b")
 _BLANK = re.compile(r"\n\s*\n+")
-_NUMERIC = re.compile(r"&#(x[0-9a-fA-F]+|[0-9]+);")
-
 _REFERENCES = {
-    "&amp;": "&",
-    "&lt;": "<",
-    "&gt;": ">",
-    "&nbsp;": "\u00a0",
-    "&lrm;": "\u200e",
-    "&rlm;": "\u200f",
+    "amp": "&",
+    "lt": "<",
+    "gt": ">",
+    "nbsp": "\u00a0",
+    "lrm": "\u200e",
+    "rlm": "\u200f",
 }
+_REFERENCE = re.compile(r"&(?:(amp|lt|gt|nbsp|lrm|rlm)|#([xX][0-9a-fA-F]+|[0-9]+));")
 
 
 @dataclass(frozen=True, slots=True)
@@ -80,15 +79,18 @@ def _split_speaker(text: str) -> tuple[str, str]:
     return match.group(1).strip(), match.group(2)
 
 
+def _decode_reference(match: re.Match[str]) -> str:
+    if match[1]:
+        return _REFERENCES[match[1]]
+    number = match[2]
+    code_point = int(number[1:], 16) if number[0] in "xX" else int(number)
+    if code_point > 0x10FFFF or 0xD800 <= code_point <= 0xDFFF:
+        return match[0]
+    return chr(code_point)
+
+
 def _decode_references(text: str) -> str:
-    for reference, character in _REFERENCES.items():
-        text = text.replace(reference, character)
-    return _NUMERIC.sub(
-        lambda m: chr(
-            int(m.group(1)[1:], 16) if m.group(1)[0] in "xX" else int(m.group(1))
-        ),
-        text,
-    )
+    return _REFERENCE.sub(_decode_reference, text)
 
 
 def _strip_tags(text: str, references: bool) -> str:

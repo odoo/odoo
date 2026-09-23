@@ -89,6 +89,25 @@ class TestParsing(unittest.TestCase):
         (cue,) = parse_vtt(track)
         self.assertEqual(cue.text, "<b>not bold</b>")
 
+    def test_a_reference_is_decoded_once(self):
+        track = "WEBVTT\n\n00:00:00.000 --> 00:00:01.000\nliteral &amp;lt; entity\n"
+        (cue,) = parse_vtt(track)
+        self.assertEqual(cue.text, "literal &lt; entity")
+
+    def test_escaped_text_round_trips(self):
+        cues = [Cue(0.0, 1.0, "literal &lt; entity & <tag>")]
+        self.assertEqual(parse_vtt(render_vtt(cues)), cues)
+
+    def test_an_invalid_code_point_stays_as_written_and_the_rest_reads(self):
+        track = (
+            "WEBVTT\n\n00:00:00.000 --> 00:00:01.000\nbad &#99999999; &#xD800; ok"
+            "\n\n00:00:01.000 --> 00:00:02.000\n&#X41;&#66;\n"
+        )
+        self.assertEqual(
+            [cue.text for cue in parse_vtt(track)],
+            ["bad &#99999999; &#xD800; ok", "AB"],
+        )
+
     def test_text_carrying_no_cue_reads_as_no_cues(self):
         self.assertEqual(parse_vtt("WEBVTT\n\nnothing here at all\n"), [])
 

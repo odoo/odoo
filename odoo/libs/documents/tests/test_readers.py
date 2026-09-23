@@ -22,6 +22,7 @@ from odoo.libs.documents.readers import (
     register_reader,
     registered_readers,
 )
+from odoo.libs.documents.representations import SHEETS
 
 
 class _Stub(BaseReader):
@@ -246,6 +247,9 @@ class TestDeriving(unittest.TestCase):
             self.assertFalse(doc.provides(BARCODES))
         finally:
             _forget(cheap, dear)
+
+    def test_a_representation_only_writers_consume_is_never_provided(self):
+        self.assertFalse(Document(b"a,b\n", "text/csv", "x.csv").provides(SHEETS))
 
     def test_a_childless_root_is_not_passed_over_for_a_costlier_reader(self):
         from lxml import etree

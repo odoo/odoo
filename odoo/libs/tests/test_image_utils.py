@@ -1,6 +1,8 @@
 import base64
 import io
+import struct
 import unittest
+import zlib
 from unittest import mock
 
 from PIL import Image
@@ -13,6 +15,7 @@ from odoo.libs.image.utils import (
     average_dominant_color,
     base64_to_image,
     binary_to_image,
+    image_process,
     is_image_size_above,
 )
 
@@ -180,6 +183,70 @@ class TestColorizeAcceptsEveryMode(unittest.TestCase):
         image = ImageProcess(buf.getvalue()).colorize((7, 8, 9)).image
         assert image is not False, "a PNG must decode"
         self.assertEqual(image.getpixel((0, 0)), (255, 0, 0))
+
+
+def _png_header(width: int, height: int) -> bytes:
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        body = kind + data
+        return struct.pack(">I", len(data)) + body + struct.pack(">I", zlib.crc32(body))
+
+    ihdr = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    return (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", ihdr)
+        + chunk(b"IDAT", zlib.compress(b""))
+        + chunk(b"IEND", b"")
+    )
+
+
+def _with_orientation(orientation: int, size: tuple[int, int] = (8, 6)) -> bytes:
+    exif = Image.Exif()
+    exif[0x112] = orientation
+    return _encode("JPEG", size, exif=exif.tobytes())
+
+
+class TestResizeToOneSide(unittest.TestCase):
+    def test_a_thin_image_asked_for_a_height_keeps_one_column(self):
+        thin = _encode("PNG", (4, 1000))
+        resized = binary_to_image(image_process(thin, size=(0, 128)))
+        self.assertEqual(resized.size, (1, 128))
+
+    def test_a_flat_image_asked_for_a_width_keeps_one_row(self):
+        flat = _encode("PNG", (1000, 4))
+        for crop in (None, "center"):
+            with self.subTest(crop=crop):
+                resized = binary_to_image(image_process(flat, size=(128, 0), crop=crop))
+                self.assertEqual(resized.size, (128, 1))
+
+
+class TestPillowFailuresAreImageErrors(unittest.TestCase):
+    def test_a_decompression_bomb_is_too_large_not_a_pillow_error(self):
+        bomb = _png_header(20000, 10000)
+        with self.assertRaises(ImageTooLargeError):
+            binary_to_image(bomb)
+        with self.assertRaises(ImageTooLargeError):
+            ImageProcess(bomb, verify_resolution=False)
+
+    def test_a_truncated_image_is_a_decode_error_not_an_oserror(self):
+        for fmt in ("JPEG", "PNG"):
+            with self.subTest(fmt=fmt):
+                truncated = _encode(fmt, (64, 64))[:-40]
+                with self.assertRaises(ImageDecodeError):
+                    ImageProcess(truncated)
+
+
+class TestOrientation(unittest.TestCase):
+    def test_an_upright_image_is_not_copied_to_be_transposed(self):
+        with mock.patch(
+            "odoo.libs.image.utils.image_fix_orientation"
+        ) as fix_orientation:
+            ImageProcess(_with_orientation(1))
+            ImageProcess(_encode("JPEG"))
+        fix_orientation.assert_not_called()
+
+    def test_a_rotated_image_is_still_turned_upright(self):
+        self.assertEqual(ImageProcess(_with_orientation(6)).image.size, (6, 8))
+        self.assertEqual(ImageProcess(_with_orientation(3)).image.size, (8, 6))
 
 
 class TestDecodeFailuresShareOneError(unittest.TestCase):

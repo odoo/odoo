@@ -145,7 +145,24 @@ class ImageProcess:
             )
 
             if not self.animated:
-                self.image = image_fix_orientation(self.image)
+                self._decode_upright()
+
+    def _decode_upright(self) -> None:
+        image = self.image
+        assert image is not False
+        try:
+            image.load()
+            if image.getexif().get(EXIF_TAG_ORIENTATION, 1) != 1:
+                self.image = image_fix_orientation(image)
+        except OSError:
+            _debug.logic(
+                "image.decode_failed",
+                source_bytes=len(self.source or b""),
+                format=self.original_format,
+                stage="pixels",
+            )
+            msg = "This file could not be decoded as an image file."
+            raise ImageDecodeError(msg) from None
 
     @property
     def _frame_wise(self) -> bool:
@@ -246,8 +263,8 @@ class ImageProcess:
     ) -> Self:
         if self.image and (max_width or max_height):
             w, h = self.image.size
-            asked_width = max_width or (w * max_height) // h
-            asked_height = max_height or (h * max_width) // w
+            asked_width = max_width or max(1, (w * max_height) // h)
+            asked_height = max_height or max(1, (h * max_width) // w)
             if self._frame_wise:
                 if asked_width < w or asked_height < h:
                     self._extract_animated_frames()
@@ -455,6 +472,13 @@ def average_dominant_color(
 def binary_to_image(source: bytes) -> PILImage:
     try:
         return Image.open(io.BytesIO(source))
+    except Image.DecompressionBombError:
+        _debug.logic("image.decompression_bomb", source_bytes=len(source))
+        msg = (
+            f"Too large image (above {IMAGE_MAX_RESOLUTION / 1e6}Mpx), "
+            "reduce the image size."
+        )
+        raise ImageTooLargeError(msg) from None
     except OSError, binascii.Error:
         _debug.logic(
             "image.decode_failed", source_bytes=len(source), head=source[:4].hex()

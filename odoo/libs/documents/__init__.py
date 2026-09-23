@@ -1,4 +1,4 @@
-from odoo.libs.filesystem import guess_mimetype
+from odoo.libs.filesystem.mimetypes import guess_mimetype
 
 from . import coerce
 from . import document

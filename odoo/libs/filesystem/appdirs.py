@@ -1,249 +1,50 @@
-#!/usr/bin/env python3
-
-
 __all__ = [
-    "AppDirs",
-    "site_config_dir",
     "site_data_dir",
-    "user_cache_dir",
-    "user_config_dir",
     "user_data_dir",
-    "user_log_dir",
 ]
-
-__version_info__ = (1, 3, 0)
-__version__ = ".".join(str(v) for v in __version_info__)
-
 
 import os
 import sys
 from pathlib import Path
 
 
-def user_data_dir(
-    appname: str | None = None,
-    appauthor: str | None = None,
-    version: str | None = None,
-    roaming: bool = False,
-) -> str:
+def _xdg_dirs(variable: str, default: str) -> list[str]:
+    # the XDG base-directory spec: an unset or empty variable takes the
+    # default, and a relative entry is invalid and ignored
+    entries = [
+        entry.rstrip(os.sep)
+        for entry in (os.getenv(variable) or "").split(os.pathsep)
+        if Path(entry).is_absolute()
+    ]
+    return entries or [default]
+
+
+def user_data_dir(appname: str, appauthor: str | None = None) -> str:
     if sys.platform == "win32":
-        if appauthor is None:
-            appauthor = appname
-        const = (roaming and "CSIDL_APPDATA") or "CSIDL_LOCAL_APPDATA"
-        path = str(Path(_get_win_folder(const)))
-        if appname:
-            path = str(Path(path, appauthor, appname))
+        path = Path(_get_win_folder("CSIDL_LOCAL_APPDATA"), appauthor or appname)
     elif sys.platform == "darwin":
-        path = str(Path("~/Library/Application Support/").expanduser())
-        if appname:
-            path = str(Path(path, appname))
+        path = Path("~/Library/Application Support/").expanduser()
     else:
-        path = os.getenv("XDG_DATA_HOME", str(Path("~/.local/share").expanduser()))
-        if appname:
-            path = str(Path(path, appname))
-    if appname and version:
-        path = str(Path(path, version))
-    return path
+        path = Path(
+            _xdg_dirs("XDG_DATA_HOME", str(Path("~/.local/share").expanduser()))[0]
+        )
+    return str(path / appname)
 
 
-def site_data_dir(
-    appname: str | None = None,
-    appauthor: str | None = None,
-    version: str | None = None,
-    multipath: bool = False,
-) -> str:
+def site_data_dir(appname: str, appauthor: str | None = None) -> str:
     if sys.platform == "win32":
-        if appauthor is None:
-            appauthor = appname
-        path = str(Path(_get_win_folder("CSIDL_COMMON_APPDATA")))
-        if appname:
-            path = str(Path(path, appauthor, appname))
+        path = Path(_get_win_folder("CSIDL_COMMON_APPDATA"), appauthor or appname)
     elif sys.platform == "darwin":
-        path = "/Library/Application Support"
-        if appname:
-            path = str(Path(path, appname))
+        path = Path("/Library/Application Support")
     else:
-        path = os.getenv(
-            "XDG_DATA_DIRS", os.pathsep.join(["/usr/local/share", "/usr/share"])
-        )
-        pathlist = [
-            str(Path(x.rstrip(os.sep)).expanduser()) for x in path.split(os.pathsep)
-        ]
-        if appname:
-            if version:
-                appname = str(Path(appname, version))
-            pathlist = [str(Path(x) / appname) for x in pathlist]
-
-        if multipath:
-            path = os.pathsep.join(pathlist)
-        else:
-            path = pathlist[0]
-        return path
-
-    if appname and version:
-        path = str(Path(path, version))
-    return path
-
-
-def user_config_dir(
-    appname: str | None = None,
-    appauthor: str | None = None,
-    version: str | None = None,
-    roaming: bool = False,
-) -> str:
-    if sys.platform in ["win32", "darwin"]:
-        path = user_data_dir(appname, appauthor, None, roaming)
-    else:
-        path = os.getenv("XDG_CONFIG_HOME", str(Path("~/.config").expanduser()))
-        if appname:
-            path = str(Path(path, appname))
-    if appname and version:
-        path = str(Path(path, version))
-    return path
-
-
-def site_config_dir(
-    appname: str | None = None,
-    appauthor: str | None = None,
-    version: str | None = None,
-    multipath: bool = False,
-) -> str:
-    if sys.platform in ["win32", "darwin"]:
-        path = site_data_dir(appname, appauthor)
-        if appname and version:
-            path = str(Path(path, version))
-    else:
-        path = os.getenv("XDG_CONFIG_DIRS", "/etc/xdg")
-        pathlist = [
-            str(Path(x.rstrip(os.sep)).expanduser()) for x in path.split(os.pathsep)
-        ]
-        if appname:
-            if version:
-                appname = str(Path(appname, version))
-            pathlist = [str(Path(x) / appname) for x in pathlist]
-
-        if multipath:
-            path = os.pathsep.join(pathlist)
-        else:
-            path = pathlist[0]
-    return path
-
-
-def user_cache_dir(
-    appname: str | None = None,
-    appauthor: str | None = None,
-    version: str | None = None,
-    opinion: bool = True,
-) -> str:
-    if sys.platform == "win32":
-        if appauthor is None:
-            appauthor = appname
-        path = str(Path(_get_win_folder("CSIDL_LOCAL_APPDATA")))
-        if appname:
-            path = str(Path(path, appauthor, appname))
-            if opinion:
-                path = str(Path(path, "Cache"))
-    elif sys.platform == "darwin":
-        path = str(Path("~/Library/Caches").expanduser())
-        if appname:
-            path = str(Path(path, appname))
-    else:
-        path = os.getenv("XDG_CACHE_HOME", str(Path("~/.cache").expanduser()))
-        if appname:
-            path = str(Path(path, appname))
-    if appname and version:
-        path = str(Path(path, version))
-    return path
-
-
-def user_log_dir(
-    appname: str | None = None,
-    appauthor: str | None = None,
-    version: str | None = None,
-    opinion: bool = True,
-) -> str:
-    if sys.platform == "darwin":
-        path = str(Path(Path("~/Library/Logs").expanduser(), appname))
-    elif sys.platform == "win32":
-        path = user_data_dir(appname, appauthor, version)
-        version = None
-        if opinion:
-            path = str(Path(path, "Logs"))
-    else:
-        path = user_cache_dir(appname, appauthor, version)
-        version = None
-        if opinion:
-            path = str(Path(path, "log"))
-    if appname and version:
-        path = str(Path(path, version))
-    return path
-
-
-class AppDirs:
-    def __init__(
-        self,
-        appname: str,
-        appauthor: str | None = None,
-        version: str | None = None,
-        roaming: bool = False,
-        multipath: bool = False,
-    ) -> None:
-        self.appname: str = appname
-        self.appauthor: str | None = appauthor
-        self.version: str | None = version
-        self.roaming: bool = roaming
-        self.multipath: bool = multipath
-
-    @property
-    def user_data_dir(self) -> str:
-        return user_data_dir(
-            self.appname,
-            self.appauthor,
-            version=self.version,
-            roaming=self.roaming,
-        )
-
-    @property
-    def site_data_dir(self) -> str:
-        return site_data_dir(
-            self.appname,
-            self.appauthor,
-            version=self.version,
-            multipath=self.multipath,
-        )
-
-    @property
-    def user_config_dir(self) -> str:
-        return user_config_dir(
-            self.appname,
-            self.appauthor,
-            version=self.version,
-            roaming=self.roaming,
-        )
-
-    @property
-    def site_config_dir(self) -> str:
-        return site_data_dir(
-            self.appname,
-            self.appauthor,
-            version=self.version,
-            multipath=self.multipath,
-        )
-
-    @property
-    def user_cache_dir(self) -> str:
-        return user_cache_dir(self.appname, self.appauthor, version=self.version)
-
-    @property
-    def user_log_dir(self) -> str:
-        return user_log_dir(self.appname, self.appauthor, version=self.version)
+        path = Path(_xdg_dirs("XDG_DATA_DIRS", "/usr/local/share")[0]).expanduser()
+    return str(path / appname)
 
 
 def _get_win_folder_from_registry(csidl_name: str) -> str:
     import winreg as _winreg
 
     shell_folder_name = {
-        "CSIDL_APPDATA": "AppData",
         "CSIDL_COMMON_APPDATA": "Common AppData",
         "CSIDL_LOCAL_APPDATA": "Local AppData",
     }[csidl_name]
@@ -284,7 +85,6 @@ def _get_win_folder_with_ctypes(csidl_name: str) -> str:
     import ctypes
 
     csidl_const = {
-        "CSIDL_APPDATA": 26,
         "CSIDL_COMMON_APPDATA": 35,
         "CSIDL_LOCAL_APPDATA": 28,
     }[csidl_name]
@@ -317,29 +117,3 @@ if sys.platform == "win32":
             _get_win_folder = _get_win_folder_with_ctypes
         except ImportError:
             _get_win_folder = _get_win_folder_from_registry
-
-
-if __name__ == "__main__":
-    appname = "MyApp"
-    appauthor = "MyCompany"
-
-    props = (
-        "user_data_dir",
-        "site_data_dir",
-        "user_config_dir",
-        "site_config_dir",
-        "user_cache_dir",
-        "user_log_dir",
-    )
-
-    dirs = AppDirs(appname, appauthor, version="1.0")
-    for _prop in props:
-        pass
-
-    dirs = AppDirs(appname, appauthor)
-    for _prop in props:
-        pass
-
-    dirs = AppDirs(appname)
-    for _prop in props:
-        pass

@@ -21,7 +21,6 @@ from odoo.libs.colors.conversions import get_saturation, hex_to_rgb
 from odoo.libs.datetime.tz import ZoneInfoNotFoundError, timezone
 from odoo.libs.email.parsing import formataddr
 from odoo.libs.filesystem.mimetypes import guess_mimetype
-from odoo.libs.filesystem.osutil import zip_dir
 from odoo.libs.hashing import (
     _MT_MIN_BYTES,
     CONTENT_DIGEST_LEN,
@@ -449,33 +448,6 @@ class TestReverseOrderCommas:
         assert reverse_order("name asc, date desc") == "name desc, date asc"
         assert reverse_order("id") == "id desc"
         assert reverse_order("name desc nulls last") == "name asc nulls first"
-
-
-class TestZipDirRelativePath:
-    def _tree(self, tmp_path):
-        (tmp_path / "pkg").mkdir()
-        (tmp_path / "pkg" / "a.txt").write_text("a")
-        (tmp_path / "pkg" / "sub").mkdir()
-        (tmp_path / "pkg" / "sub" / "b.txt").write_text("b")
-
-    def test_relative_bare_name_keeps_full_member_names(self, tmp_path, monkeypatch):
-        import zipfile
-
-        self._tree(tmp_path)
-        monkeypatch.chdir(tmp_path)
-        buf = io.BytesIO()
-        zip_dir("pkg", buf, include_dir=True)
-        names = sorted(zipfile.ZipFile(io.BytesIO(buf.getvalue())).namelist())
-        assert names == ["pkg/a.txt", "pkg/sub/b.txt"]
-
-    def test_absolute_path_still_correct(self, tmp_path):
-        import zipfile
-
-        self._tree(tmp_path)
-        buf = io.BytesIO()
-        zip_dir(str(tmp_path / "pkg"), buf, include_dir=True)
-        names = sorted(zipfile.ZipFile(io.BytesIO(buf.getvalue())).namelist())
-        assert names == ["pkg/a.txt", "pkg/sub/b.txt"]
 
 
 class TestOrderedSetIntersectionAliasing:

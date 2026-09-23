@@ -92,6 +92,12 @@ class test_guess_mimetype(unittest.TestCase):
         self.assertEqual(get_extension("filename.with space"), "")
         self.assertEqual(get_extension("filename.notAnExtension"), "")
 
+    def test_get_extension_keeps_a_long_extension_as_written(self):
+        self.assertEqual(get_extension("notes.markdown"), ".markdown")
+        self.assertEqual(get_extension("page.MHTML"), ".mhtml")
+        self.assertEqual(get_extension("manual.texinfo"), ".texinfo")
+        self.assertEqual(get_extension("clip.3gpp2"), ".3gpp2")
+
     def test_mimetype_fix_extension(self):
         fix = fix_filename_extension
         self.assertEqual(fix("words.txt", "text/plain"), "words.txt")

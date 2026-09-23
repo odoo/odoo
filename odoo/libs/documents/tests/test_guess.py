@@ -1,5 +1,6 @@
 import codecs
 import unittest
+from unittest import mock
 
 from odoo.libs.documents.guess import decode, guess_encoding
 
@@ -21,6 +22,17 @@ class TestGuessEncoding(unittest.TestCase):
     def test_latin1_is_not_utf8(self):
         self.assertNotEqual(guess_encoding("Café".encode("latin-1")), "utf-8")
 
+    def test_plain_ascii_needs_no_detector(self):
+        data = b"name,qty\n" * 1000
+        with mock.patch("odoo.libs.documents.guess.chardet", None):
+            self.assertEqual(guess_encoding(data), "ascii")
+            self.assertEqual(decode(data), data.decode())
+
+    def test_seven_bit_escapes_are_still_left_to_the_detector(self):
+        data = "日本語のテキスト".encode("iso2022_jp")
+        self.assertTrue(data.isascii())
+        self.assertEqual(guess_encoding(data), "iso-2022-jp")
+
     def test_undetectable_answers_none(self):
         self.assertIsNone(guess_encoding(bytes([0x81, 0x8D, 0x8F, 0x90, 0x9D])))
 
@@ -40,7 +52,7 @@ class TestGuessEncoding(unittest.TestCase):
         with mock.patch.object(
             module.chardet, "UniversalDetector", return_value=detector
         ):
-            self.assertIsNone(guess_encoding(b"whatever"))
+            self.assertIsNone(guess_encoding(b"whatever\xff"))
 
     def test_non_ascii_past_the_first_chunk(self):
         data = b"a" * (1 << 17) + "é".encode("latin-1")
