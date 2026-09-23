@@ -745,6 +745,28 @@ class TestFormatAmountFunction(TransactionCase):
         self.currency_object_format_amount.position = "after"
         self.assert_format_amount(1.0000, "1%sfA" % "\N{NO-BREAK SPACE}", False)
 
+    def test_trailing_false_on_currency_without_decimal_places(self):
+        self.currency_object_format_amount.rounding = 1
+        self.assertEqual(self.currency_object_format_amount.decimal_places, 0)
+        for lang_code, separator in [('en_US', ','), ('GFL', '#')]:
+            for position in ['before', 'after']:
+                self.currency_object_format_amount.position = position
+                for amount, formatted_amount in [
+                    (0, '0'),
+                    (10, '10'),
+                    (100, '100'),
+                    (123, '123'),
+                    (-100, '-\N{ZERO WIDTH NO-BREAK SPACE}100'),
+                    (10000, f'10{separator}000'),
+                ]:
+                    with self.subTest(lang_code=lang_code, position=position, amount=amount):
+                        expected = (
+                            f'fA\N{NO-BREAK SPACE}{formatted_amount}'
+                            if position == 'before'
+                            else f'{formatted_amount}\N{NO-BREAK SPACE}fA'
+                        )
+                        self.assert_format_amount(amount, expected, False, lang_code)
+
     def test_trailing_false_on_number_having_trailing_zeroes_with_kilikili_language(self):
         # Here the amount is first will be given decimal separator and thousandth separator as
         # follows 10#000#00 in which second # is decimal so, the RE targets the decimal separator
