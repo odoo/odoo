@@ -407,7 +407,7 @@ class TestTheDiscardPathTellsAnOutageFromAFault(unittest.TestCase):
 
 
 class TestPipelineAccountsForTheSyncCost(unittest.TestCase):
-    # Per process: two Tier-2 runs at once (peer sessions, the pre-push hook)
+    # Per process: two Tier-2 runs at once (peer sessions)
     # would otherwise race on one name, and a killed run's leftover would
     # skip every later one.
     DBNAME = f"test_cursor_pipeline_sync_cost_{os.getpid()}"

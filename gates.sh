@@ -6,8 +6,7 @@
 #   ./gates.sh --rust --js     add the cargo checks and the JS toolchain
 #   ./gates.sh --perf          add statement-count and residual wall-time floors
 #   ./gates.sh --perf-counts   add portable statement-count checks without time limits
-#   ./gates.sh --ref <rev>     run everything on a detached worktree of <rev>,
-#                              which is what the pre-push hook does (.githooks/)
+#   ./gates.sh --ref <rev>     run everything on a detached worktree of <rev>
 #
 # The commands are the ones doc/architecture/gates.md and CLAUDE.md §9 give;
 # this file only sequences them and prints a table. A gate that needs a
@@ -15,7 +14,7 @@
 # The optional performance suite creates and drops its own scratch databases.
 set -u
 
-usage() { sed -n '2,10p' "$0"; exit 2; }
+usage() { sed -n '2,9p' "$0"; exit 2; }
 
 FAST=0 RUST=0 JS=0 PERF=0 PERF_COUNTS=0 REF=""
 while [ $# -gt 0 ]; do

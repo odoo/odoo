@@ -9575,7 +9575,7 @@ which that test should go.
    * - 5.44
      - 2026-09-16
      - §6.4: ``assertQueriesConstant`` pins the shape of a batch's query count;
-       the gates run as one command (``./gates.sh``) with a pre-push hook.
+       the gates run as one command (``./gates.sh``).
    * - 5.43
      - 2026-09-04
      - Every gate runs by hand: the CI workflows are gone, and the gate table

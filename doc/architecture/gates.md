@@ -6,9 +6,7 @@
 
 What is enforced is the standard tools on their pinned versions, the pytest
 tiers, `test_lint`, and the DB-backed suites. The database-free gates run as
-one command, `./gates.sh`, from the repo root; the `.githooks/pre-push` hook
-runs it on every commit about to leave the checkout (enable once per checkout
-with `git config core.hooksPath .githooks`), and `.github/workflows/gates.yml`
+one command, `./gates.sh`, from the repo root, and `.github/workflows/gates.yml`
 is the same command on a runner. Fifteen of the dependency rules in
 [`module.md`](module.md#dependency-rules) are Tier-2 tests
 (`tests/framework/test_layer_contracts.py`); the ORM half of the façade
