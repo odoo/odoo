@@ -320,7 +320,7 @@ export async function keydownShiftTab(editor) {
 /** @param {Editor} editor */
 export function resetSize(editor) {
     const selection = editor.shared.selection.getEditableSelection();
-    editor.shared.table.resetTableSize(findInSelection(selection, "tbody"));
+    editor.shared.table.resetTableSize(findInSelection(selection, "table"));
 }
 /** @param {Editor} editor */
 export function alignLeft(editor) {
