@@ -1,5 +1,4 @@
 import logging
-import posixpath
 import re
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
@@ -17,6 +16,7 @@ from odoo.tools.assets import js_scan
 from odoo.tools.assets.constants import ESM_BRIDGE_REFRESH_DAYS
 from odoo.tools.assets.esm_graph import (
     _IMPORT_ANY_RE,
+    ModuleSourceMap,
     _bridge_shim_source,
     _BridgeExportResolver,
     _extract_esm_exports,
@@ -187,9 +187,7 @@ class BridgeShimManager:
         return True
 
     def _prepare_parent_self_bridge(self) -> dict[str, str]:
-        source_map: dict[str, str] = {
-            a.module_path: a.raw_content for a in self.native_modules
-        }
+        source_map = ModuleSourceMap(self.native_modules)
         exports_cache: dict[str, set[str]] = {}
 
         shims_by_spec: dict[str, str] = {}
@@ -473,7 +471,7 @@ def _lexed_imports(
     out: list[tuple[str, str | None]] = []
     for specifier, kind in _static_edges(src):
         if specifier.startswith("."):
-            resolved = _relative_to_specifier(base_spec, specifier, base_url)
+            resolved = _resolve_export_specifier(base_spec, specifier, base_url)
             if resolved is None:
                 continue
             specifier = resolved
@@ -481,22 +479,3 @@ def _lexed_imports(
             continue
         out.append((specifier, kind))
     return out
-
-
-def _relative_to_specifier(
-    base_spec: str, relative: str, base_url: str | None = None
-) -> str | None:
-    # a specifier is not a directory: "@x/models/related_models" names
-    # related_models/index.js, whose siblings live under related_models/,
-    # so a relative import resolves against the file's url when it is known
-    if base_url:
-        resolved = _resolve_export_specifier(base_spec, relative, base_url)
-        if resolved is not None:
-            return resolved
-    if not base_spec.startswith("@"):
-        return None
-    base_dir = posixpath.dirname(base_spec)
-    joined = posixpath.normpath(posixpath.join(base_dir, relative))
-    if not joined.startswith("@"):
-        return None
-    return joined.removesuffix(".js").removesuffix("/index")

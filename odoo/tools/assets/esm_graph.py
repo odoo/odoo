@@ -15,7 +15,6 @@ from odoo.tools.assets.esm_lexer import lex_module
 from odoo.tools.files import file_open, file_path
 from odoo.tools.json import scriptsafe as json
 
-_logger = logging.getLogger(__name__)
 _bridge_log = get_asset_logger("bridge")
 _debug = DebugLog(__name__)
 
@@ -183,11 +182,6 @@ def get_escaping_relative_imports(
     modules = list(modules)
     if member_specs is None:
         member_specs = {m.module_path for m in modules}
-        member_specs.update(
-            m.module_path + "/index"
-            for m in modules
-            if getattr(m, "url", "").endswith("/index.js")
-        )
     escapes: list[tuple[str, str, str]] = []
     for module in modules:
         specs = _get_import_specifiers(module.raw_content)
@@ -284,23 +278,41 @@ def _resolve_export_specifier(
 ) -> str | None:
     if not target_path.startswith("."):
         return target_path.removesuffix(".js")
+    # a specifier is not a directory: "@x/models/related_models" names
+    # related_models/index.js, whose siblings live under related_models/, so a
+    # relative import resolves against the file's url when it is known
     if importing_url:
         resolved = _resolve_relative_url(importing_url, target_path)
         if resolved is not None:
             return resolved
-    if not importing_specifier:
+    if not importing_specifier or not importing_specifier.startswith("@"):
         return None
-    parent_parts = importing_specifier.rsplit("/", 1)
-    if len(parent_parts) < 2:
-        return None
-    base = parent_parts[0]
-    rel_parts = target_path.split("/")
-    while rel_parts and rel_parts[0] in (".", ".."):
-        if rel_parts[0] == "..":
-            base = base.rsplit("/", 1)[0] if "/" in base else base
-        rel_parts.pop(0)
-    resolved = f"{base}/{'/'.join(rel_parts)}" if rel_parts else base
-    return resolved.removesuffix(".js")
+    addon, _, rest = importing_specifier.partition("/")
+    relative = posixpath.normpath(
+        posixpath.join(posixpath.dirname(rest) or ".", target_path)
+    )
+    # a path climbing out of the addon is kept inside it, as it always was:
+    # the escape check must still see it and name it
+    while relative.startswith("../"):
+        relative = relative[3:]
+    if relative in (".", ".."):
+        return addon
+    return f"{addon}/{relative}".removesuffix(".js").removesuffix("/index")
+
+
+class ModuleSourceMap:
+    __slots__ = ("_sources", "_urls")
+
+    def __init__(self, modules: Iterable) -> None:
+        modules = list(modules)
+        self._sources = {m.module_path: m.raw_content for m in modules}
+        self._urls = {m.module_path: m.url for m in modules if getattr(m, "url", None)}
+
+    def get(self, key: str, default: str | None = None) -> str | None:
+        return self._sources.get(key, default)
+
+    def effective_url(self, spec: str) -> str | None:
+        return self._urls.get(spec)
 
 
 class _SourceMap(typing.Protocol):
@@ -312,43 +324,75 @@ def _extract_esm_exports(
     source_map: _SourceMap | None = None,
     importing_specifier: str | None = None,
     importing_url: str | None = None,
-    _visited: set[str] | None = None,
     _exports_cache: dict[str, set[str]] | None = None,
 ) -> tuple[set[str], bool]:
-    visited = _visited if _visited is not None else set()
+    stack = [importing_specifier] if importing_specifier else []
+    names, has_default, _reach = _exports_walk(
+        src, source_map, importing_specifier, importing_url, stack, _exports_cache
+    )
+    return names, has_default
+
+
+def _exports_walk(
+    src: str,
+    source_map: _SourceMap | None,
+    importing_specifier: str | None,
+    importing_url: str | None,
+    stack: list[str],
+    exports_cache: dict[str, set[str]] | None,
+) -> tuple[set[str], bool, int]:
+    # the third value is the shallowest stack depth a star cycle reached from
+    # here: a result that a cycle cut short of an ancestor's names is partial,
+    # and only the ancestor that closes the cycle may cache its own
     names: set[str] = set()
+    reach = len(stack)
 
     def expand_star(raw_target: str) -> None:
+        nonlocal reach
         target_spec = _resolve_export_specifier(
             importing_specifier, raw_target, importing_url
         )
-        if _exports_cache is not None and target_spec in _exports_cache:
-            names.update(_exports_cache[target_spec])
+        if not target_spec:
             return
-        if not target_spec or source_map is None or target_spec in visited:
+        if exports_cache is not None and target_spec in exports_cache:
+            names.update(exports_cache[target_spec])
+            return
+        if target_spec in stack:
+            reach = min(reach, stack.index(target_spec))
+            return
+        if source_map is None:
             return
         target_src = source_map.get(target_spec)
         if target_src is None:
             return
-        visited.add(target_spec)
-        child_names, _ = _extract_esm_exports(
-            target_src,
-            source_map=source_map,
-            importing_specifier=target_spec,
-            importing_url=_source_map_url(source_map, target_spec),
-            _visited=visited,
-            _exports_cache=_exports_cache,
-        )
+        depth = len(stack)
+        stack.append(target_spec)
+        try:
+            child_names, _default, child_reach = _exports_walk(
+                target_src,
+                source_map,
+                target_spec,
+                _source_map_url(source_map, target_spec),
+                stack,
+                exports_cache,
+            )
+        finally:
+            stack.pop()
         names.update(child_names)
-        if _exports_cache is not None:
-            _exports_cache[target_spec] = child_names
+        if child_reach < depth:
+            reach = min(reach, child_reach)
+            _debug.logic(
+                "esm_graph.star_cycle_partial", spec=target_spec, names=len(child_names)
+            )
+        elif exports_cache is not None:
+            exports_cache[target_spec] = child_names
 
     lexed = lex_module(src)
     if lexed is not None:
         names.update(lexed["names"])
         for raw_target in lexed["starFrom"]:
             expand_star(raw_target)
-        return names, lexed["hasDefault"]
+        return names, lexed["hasDefault"], reach
 
     src = js_scan.scrub(src)
     has_default = bool(_ESM_EXPORT_DEFAULT_RE.search(src))
@@ -378,7 +422,7 @@ def _extract_esm_exports(
         names=len(names),
         default=has_default,
     )
-    return names, has_default
+    return names, has_default, reach
 
 
 def addon_specifier_to_url(spec: str) -> str | None:

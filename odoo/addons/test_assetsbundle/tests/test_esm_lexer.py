@@ -257,11 +257,11 @@ class TestExportExtractionWithoutTheLexer(BaseCase):
         self.assertEqual(names, {"real"})
         self.assertFalse(has_default)
 
-    def test_a_quoted_string_is_NOT_opaque__documented_divergence(self):
+    def test_a_quoted_string_is_opaque(self):
         names, _ = self._names(
             'const s = "export const stringy = 2;";\nexport const real = 3;\n'
         )
-        self.assertEqual(names, {"real", "stringy"})
+        self.assertEqual(names, {"real"})
 
     def test_the_divergence_never_costs_a_real_export(self):
         src = 'const s = "export const stringy = 2;";\nexport const real = 3;\n'

@@ -72,12 +72,16 @@ def esm_registry() -> EsmRegistry:
 
 
 def invalidate_esm_registry() -> None:
+    from .esm_graph import _static_file_exists
     from .esm_libs import invalidate_served_libs
 
     with _lock:
         _debug.lifecycle("esm_registry.invalidated", cached=_cache[0] is not None)
         _cache[0] = None
     invalidate_served_libs()
+    # a dev-mode rename of foo.js to foo/index.js must stop resolving to the
+    # file that is gone
+    _static_file_exists.cache_clear()
 
 
 def external_libs() -> Mapping:
