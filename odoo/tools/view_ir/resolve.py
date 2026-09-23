@@ -111,6 +111,7 @@ class _Working:
         self._arch: etree._Element | None = None
         self._nodes: dict[etree._Element, Node] | None = None
         self._ids: dict[str, Node] | None = None
+        self._named: dict[tuple[str, str], Node] | None = None
 
     @property
     def root(self) -> Node:
@@ -120,31 +121,31 @@ class _Working:
         self._arch = None
         self._nodes = None
         self._ids = None
+        self._named = None
 
     def ids(self) -> dict[str, Node]:
         if self._ids is None:
             self._ids = identify(self.root)
         return self._ids
 
+    def named(self) -> dict[tuple[str, str], Node]:
+        if self._named is None:
+            self._named = {}
+            for _path, node in self.root.walk():
+                if name := node.attrs.get("name"):
+                    self._named.setdefault((node.kind, name), node)
+        return self._named
+
     def locate(self, spec: etree._Element) -> Node | None:
-        """The node a spec addresses — off the ids for the shapes that name
+        """The node a spec addresses — off the tree for the shapes that name
         one node (`<field name="x">`, `//tag`, `//tag[@attr='v']`, the
         overwhelming majority), off the materialised arch's xpath otherwise,
         both with the XML combine's first-match rule."""
-        ids = self.ids()
+        self.ids()
         tag, attr, value = _simple_target(spec)
         if tag is not None:
             if attr == "name" and value:
-                named = ids.get(f"{tag}:{value}")
-                # a node under an explicit html id has no `kind:name` entry,
-                # and an explicit id spelled `kind:name` is not that node:
-                # both fall through to the scan the XML locate does
-                if (
-                    named is not None
-                    and named.kind == tag
-                    and named.attrs.get("name") == value
-                ):
-                    return named
+                return self.named().get((tag, value))
             if attr is None:
                 return next(self.root.find(tag), None)
             return next(

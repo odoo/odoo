@@ -246,6 +246,29 @@ class TestTranslateSpecs(unittest.TestCase):
         )
         self.assertEqual(canon(view_ir.to_arch(applied.root)), canon(xml_result))
 
+    def test_a_repeated_name_whose_first_node_carries_an_id_locates_the_first(self):
+        attributes = '<attribute name="string">S</attribute>'
+        for base, spec in (
+            (
+                '<form><field name="x" id="a"/><field name="x"/></form>',
+                f'<field name="x" position="attributes">{attributes}</field>',
+            ),
+            (
+                '<form><group><field name="x" id="a"/></group><field name="x"/></form>',
+                f'<xpath expr="//field[@name=\'x\']" position="attributes">{attributes}</xpath>',
+            ),
+            (
+                '<form><div id="field:x"/><group name="g" id="b"/><group name="g"/></form>',
+                '<group name="g" position="inside"><field name="y"/></group>',
+            ),
+        ):
+            with self.subTest(base=base):
+                xml_result, _translated, applied, fallbacks = both_ways(base, spec)
+                self.assertEqual(fallbacks, [])
+                self.assertEqual(
+                    canon(view_ir.to_arch(applied.root)), canon(xml_result)
+                )
+
 
 class TestEveryShapeBothWays(unittest.TestCase):
     """Every position over every content shape on an indented target with
