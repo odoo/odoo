@@ -2113,3 +2113,33 @@ class StockPicking(models.Model):
             if moves_count > self.picking_type_id.batch_max_lines:
                 return False
         return True
+
+    def _get_grouped_move_lines(self, move):
+        self.ensure_one()
+        lines = move.move_line_ids.filtered(lambda ml: not ml.is_entire_pack)
+
+        show_lots = bool(self.picking_type_id.show_reserved_sns)
+        show_locations = self.env.user.has_group('stock.group_stock_multi_locations')
+        show_packages = self.env.user.has_group('stock.group_tracking_lot')
+
+        grouped = defaultdict(lambda: {'line': False, 'quantity': 0.0})
+
+        for ml in lines:
+            key = (
+                (ml.lot_id.id, ml.lot_name) if show_lots else False,
+                (ml.location_id.id, ml.location_dest_id.id) if show_locations else False,
+                (ml.package_id.id, ml.result_package_id.id) if show_packages else False,
+            )
+            if not grouped[key]['line']:
+                grouped[key]['line'] = ml
+            grouped[key]['quantity'] += ml.quantity
+
+        result = list(grouped.values())
+
+        result.sort(key=lambda g: (
+            g['line'].location_id.complete_name or '',
+            g['line'].location_dest_id.complete_name or '',
+            g['line'].lot_id.name or g['line'].lot_name or '',
+        ))
+
+        return result
