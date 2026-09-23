@@ -946,7 +946,7 @@ class TestSyncRecorder(BaseCase):
 
         stacks_methods = [[frame[2] for frame in stack] for stack in stacks]
         self.assertEqual(
-            stacks_methods[:-2],
+            stacks_methods,
             [
                 ["a"],
                 ["a", "b"],

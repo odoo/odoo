@@ -393,7 +393,8 @@ class SyncCollector(Collector):
             sys.settrace(None)
 
     def hook(self, _frame, event, _arg=None):
-        if event == "line":
+        # the profiler's own teardown (__exit__, end, stop) runs traced
+        if event == "line" or _frame.f_code.co_filename == __file__:
             return None
         entry = {"event": event, "frame": _format_frame(_frame)}
         if event == "call" and _frame.f_back:
@@ -685,6 +686,16 @@ class Profiler:
             self.init_thread.profiler_params = self.params
         if self.disable_gc:
             self.exit_stack.enter_context(disabling_gc())
+        # logged before the collectors start: a tracing collector would
+        # otherwise record the logging call as part of the profiled code
+        _debug.lifecycle(
+            "profiler.starting",
+            db=self.db,
+            session=self.profile_session,
+            description=self.description,
+            collectors=[collector.name for collector in self.collectors],
+            disable_gc=self.disable_gc,
+        )
         self.start_time = real_time()
         self.start_cpu_time = real_cpu_time()
         started = []
@@ -708,14 +719,6 @@ class Profiler:
                         collector,
                     )
             raise
-        _debug.lifecycle(
-            "profiler.started",
-            db=self.db,
-            session=self.profile_session,
-            description=self.description,
-            collectors=[collector.name for collector in self.collectors],
-            disable_gc=self.disable_gc,
-        )
         return self
 
     def __exit__(self, *args: object) -> None:
