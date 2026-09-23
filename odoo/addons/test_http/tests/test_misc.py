@@ -55,7 +55,7 @@ class TestHttpMisc(TestHttpBase):
 
     def test_misc2_local_redirect(self):
         def local_redirect(path):
-            fake_req = odoo.tools.misc.DotDict(db=False)
+            fake_req = odoo.tools.DotDict(db=False)
             return odoo.http.Request.redirect(fake_req, path, local=True).headers[
                 "Location"
             ]

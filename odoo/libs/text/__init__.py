@@ -12,9 +12,7 @@ from .strings import (
 from .address import street_split
 from .arabic_reshaper import reshape
 from .html import (
-    HTML_NEWLINES_REGEX,
     HTML_TAG_URL_REGEX,
-    HTML_TAGS_REGEX,
     TEXT_URL_REGEX,
     URL_REGEX,
     URL_SKIP_PROTOCOL_REGEX,
@@ -30,7 +28,6 @@ from .html import (
     replace_local_links,
     create_link,
     normalize_url,
-    tag_quote,
     fromstring,
     safe_attrs,
     SANITIZE_TAGS,
@@ -41,8 +38,6 @@ from .html import (
 )
 
 __all__ = [
-    "HTML_NEWLINES_REGEX",
-    "HTML_TAGS_REGEX",
     "HTML_TAG_URL_REGEX",
     "SANITIZE_TAGS",
     "TEXT_URL_REGEX",
@@ -77,5 +72,4 @@ __all__ = [
     "split_refs",
     "str2bool",
     "street_split",
-    "tag_quote",
 ]

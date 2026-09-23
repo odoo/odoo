@@ -3,7 +3,6 @@ from .parsing import (
     email_re,
     single_email_re,
     mail_header_msgid_re,
-    email_addr_escapes_re,
     email_split_tuples,
     email_split,
     email_split_and_format,
@@ -19,16 +18,13 @@ from .parsing import (
     email_domain_normalize,
     url_domain_extract,
     email_anonymize,
-    email_escape_char,
     unfold_references,
 )
 
 __all__ = [
-    "email_addr_escapes_re",
     "email_anonymize",
     "email_domain_extract",
     "email_domain_normalize",
-    "email_escape_char",
     "email_normalize",
     "email_normalize_all",
     "email_re",

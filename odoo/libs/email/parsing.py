@@ -10,11 +10,9 @@ import idna
 from odoo.libs.debug_log import DebugLog
 
 __all__ = [
-    "email_addr_escapes_re",
     "email_anonymize",
     "email_domain_extract",
     "email_domain_normalize",
-    "email_escape_char",
     "email_normalize",
     "email_normalize_all",
     "email_re",
@@ -49,7 +47,7 @@ single_email_re = re.compile(
 )
 mail_header_msgid_re = re.compile(r"<[^<>]+>")
 _address_pattern = re.compile(r'([^" ,<@]+@[^>" ,]+)')
-email_addr_escapes_re = re.compile(r'[\\"]')
+_EMAIL_ADDR_ESCAPES_RE = re.compile(r'[\\"]')
 _HEADER_CONTROL_RE = re.compile(r"[\x00-\x1f\x7f]")
 _FOLDING_WHITESPACE_RE = re.compile(r"[\r\n\t ]+")
 
@@ -196,10 +194,6 @@ def url_domain_extract(url: str) -> str | Literal[False]:
     return False
 
 
-def email_escape_char(email_address: str) -> str:
-    return email_address.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
-
-
 def formataddr(pair: tuple[str, str], charset: str = "utf-8") -> str:
     name, address = pair
     if name:
@@ -226,7 +220,7 @@ def formataddr(pair: tuple[str, str], charset: str = "utf-8") -> str:
             name = base64.b64encode(name.encode("utf-8")).decode("ascii")
             return f"=?utf-8?b?{name}?= <{local}@{domain}>"
         else:
-            name = email_addr_escapes_re.sub(r"\\\g<0>", name)
+            name = _EMAIL_ADDR_ESCAPES_RE.sub(r"\\\g<0>", name)
             return f'"{name}" <{local}@{domain}>'
     return f"{local}@{domain}"
 

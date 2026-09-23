@@ -445,7 +445,7 @@ class xml_import:
             if group.startswith("-"):
                 group_id = self.id_get(group[1:])
                 groups.append(Command.unlink(group_id))
-            elif group:
+            else:
                 group_id = self.id_get(group)
                 groups.append(Command.link(group_id))
         if groups:

@@ -6,7 +6,6 @@ from odoo.libs import xml as _xml_lib
 from odoo.libs.collections import (
     Collector,
     ConstantMapping,
-    DotDict,
     LastOrderedSet,
     OrderedSet,
     ReadonlyDict,
@@ -115,7 +114,6 @@ __all__ = [
     "Callbacks",
     "Collector",
     "ConstantMapping",
-    "DotDict",
     "LastOrderedSet",
     "OrderedSet",
     "ReadonlyDict",

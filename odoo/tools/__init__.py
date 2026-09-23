@@ -1,5 +1,6 @@
 from . import constants
 from . import documents
+from odoo.libs.collections import DotDict
 from odoo.libs.func import (
     classproperty,
     conditional,
@@ -52,7 +53,6 @@ from .misc import (
     NEGATIVE_SIGN_JOINER,
     NON_BREAKING_SPACE,
     SKIPPED_ELEMENT_TYPES,
-    DotDict,
     LastOrderedSet,
     OrderedSet,
     babel_locale_parse,

@@ -4,11 +4,9 @@ import time
 from email.message import Message as EmailMessage
 
 from odoo.libs.email import (
-    email_addr_escapes_re,
     email_anonymize,
     email_domain_extract,
     email_domain_normalize,
-    email_escape_char,
     email_normalize,
     email_normalize_all,
     email_re,
@@ -27,9 +25,7 @@ from odoo.libs.email import (
     url_domain_extract,
 )
 from odoo.libs.text import (
-    HTML_NEWLINES_REGEX,
     HTML_TAG_URL_REGEX,
-    HTML_TAGS_REGEX,
     SANITIZE_TAGS,
     TEXT_URL_REGEX,
     URL_REGEX,
@@ -49,12 +45,9 @@ from odoo.libs.text import (
     prepend_html_content,
     replace_local_links,
     safe_attrs,
-    tag_quote,
 )
 
 __all__ = [
-    "HTML_NEWLINES_REGEX",
-    "HTML_TAGS_REGEX",
     "HTML_TAG_URL_REGEX",
     "SANITIZE_TAGS",
     "TEXT_URL_REGEX",
@@ -63,11 +56,9 @@ __all__ = [
     "add_html_content",
     "create_link",
     "decode_message_header",
-    "email_addr_escapes_re",
     "email_anonymize",
     "email_domain_extract",
     "email_domain_normalize",
-    "email_escape_char",
     "email_normalize",
     "email_normalize_all",
     "email_re",
@@ -96,7 +87,6 @@ __all__ = [
     "replace_local_links",
     "safe_attrs",
     "single_email_re",
-    "tag_quote",
     "unfold_references",
     "url_domain_extract",
 ]

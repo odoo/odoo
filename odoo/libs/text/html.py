@@ -25,8 +25,6 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
 
 __all__ = [
-    "HTML_NEWLINES_REGEX",
-    "HTML_TAGS_REGEX",
     "HTML_TAG_URL_REGEX",
     "SANITIZE_TAGS",
     "TEXT_URL_REGEX",
@@ -50,7 +48,6 @@ __all__ = [
     "prepend_html_content",
     "replace_local_links",
     "safe_attrs",
-    "tag_quote",
 ]
 
 
@@ -409,7 +406,7 @@ def _quote_inherited_from_parent(el: etree._Element) -> None:
         el.set(_QUOTE, "1")
 
 
-def tag_quote(el: etree._Element) -> None:
+def _tag_quote(el: etree._Element) -> None:
     el_class = el.get("class", "") or ""
     el_id = el.get("id", "") or ""
 
@@ -534,7 +531,7 @@ def html_normalize(
         raise
 
     for el in doc.iter(tag=etree.Element):
-        tag_quote(el)
+        _tag_quote(el)
 
     if filter_callback:
         doc = filter_callback(doc)
@@ -676,8 +673,8 @@ _HREF_URL_SOURCE = rf"""(\bhref=['"](?!{URL_SKIP_PROTOCOL_REGEX})([^'"]+)['"])""
 URL_REGEX = re.compile(_HREF_URL_SOURCE)
 TEXT_URL_REGEX = re.compile(r"https?://[\w@:%.+&~#=/-]+(?:\?\S+)?")
 HTML_TAG_URL_REGEX = re.compile(_HREF_URL_SOURCE + r"([^<>]*>([^<>]+)<\/)?")
-HTML_TAGS_REGEX = re.compile(r"<[^>]*>")
-HTML_NEWLINES_REGEX = re.compile(r"<(div|p|br|tr)[^>]*>|\n")
+_HTML_TAGS_RE = re.compile(r"<[^>]*>")
+_HTML_NEWLINES_RE = re.compile(r"<(div|p|br|tr)[^>]*>|\n")
 
 _RUNS_OF_SPACE_OR_TAB_RE = re.compile(r" {2,}|\t")
 _CLOSING_BODY_RE = re.compile(r"</body\s*>", re.IGNORECASE)
@@ -767,8 +764,8 @@ def html_to_inner_content(source: str | markupsafe.Markup | None) -> str:
         return ""
     if not isinstance(source, markupsafe.Markup):
         source = html_sanitize(source) or ""
-    processed = HTML_NEWLINES_REGEX.sub(" ", source)
-    processed = HTML_TAGS_REGEX.sub("", processed)
+    processed = _HTML_NEWLINES_RE.sub(" ", source)
+    processed = _HTML_TAGS_RE.sub("", processed)
     processed = _RUNS_OF_SPACE_OR_TAB_RE.sub(" ", processed)
     processed = processed.replace("\xa0", " ")
     processed = htmllib.unescape(processed)
