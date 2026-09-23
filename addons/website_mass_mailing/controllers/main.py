@@ -65,50 +65,59 @@ class MassMailController(main.MassMailController):
             }
 
         fname = self._get_fname(subscription_type)
-        self.subscribe_to_newsletter(subscription_type, value, list_id, fname)
+        try:
+            self.subscribe_to_newsletter(subscription_type, value, list_id, fname)
+        except werkzeug.exceptions.BadRequest as e:
+            return {
+                'toast_type': 'danger',
+                'toast_content': str(e),
+            }
+
         return {
             'toast_type': 'success',
             'toast_content': _("Thanks for subscribing!"),
         }
 
     @staticmethod
-    def subscribe_to_newsletter(subscription_type, value, list_id, fname, address_name=None):
-        ContactSubscription = request.env['mailing.subscription'].sudo()
+    def subscribe_to_newsletter(subscription_type, input_value, list_id, fname, address_name=None):
         Contacts = request.env['mailing.contact'].sudo()
         MailingList = request.env['mailing.list'].sudo()
 
         if subscription_type == 'email':
-            name, value = tools.parse_contact_from_email(value)
+            name, value = tools.parse_contact_from_email(input_value)
             if not name:
                 name = address_name
             fname_normalized = 'email_normalized'
+            contact_fname_normalized = fname_normalized
         elif subscription_type == 'mobile':
-            name = value
+            name = address_name or input_value
+            value = input_value
             fname_normalized = 'phone_sanitized'
+            contact_fname_normalized = fname_normalized if fname_normalized in Contacts else 'mobile'
         else:
-            raise werkzeug.exceptions.BadRequest(_('Invalid subscription type'))
+            raise werkzeug.exceptions.BadRequest(_('Invalid subscription type `%(type)s`', type=subscription_type))
+        if not value:
+            raise werkzeug.exceptions.BadRequest(_('Invalid subscription value `%(value)s`', value=input_value or ''))
+
+        # fetch mialing list -> if it does not exist, just skip subscribe, but keep contact management
+        mailing_list = MailingList.browse(int(list_id)).exists()
 
         # add field to session
-        request.session[f'mass_mailing_{fname}'] = value
+        request.session[f'mass_mailing_{fname}'] = input_value
 
-        mailing_list = MailingList.browse(int(list_id)).exists()
-        subscription = ContactSubscription.search(
-            [('list_id', '=', mailing_list.id), (f'contact_id.{fname}', '=', value)], limit=1)
-        if not subscription:
-            if not request.env.user.is_public and request.env.user.partner_id[fname_normalized] == value:
-                partner_id = request.env.user.partner_id.id
-                contacts = mailing_list.sudo()._update_subscription_from_email(value, opt_out=False)
-                contact_id = contacts[:1]
-                if contact_id:
-                    if not contact_id.partner_id:
-                        contact_id.partner_id = partner_id
-                    return
-            else:
-                contact_id = Contacts.search([(fname, '=', value)], limit=1)
-                partner_id = False
-            if not contact_id:
-                contact_id = Contacts.create({'name': name, fname: value, 'partner_id': partner_id})
-            if mailing_list:
-                ContactSubscription.create({'contact_id': contact_id.id, 'list_id': mailing_list.id})
-        elif subscription.opt_out:
-            subscription.opt_out = False
+        # fetch contact information
+        contact = Contacts.search(
+            ['|', (fname, '=', value), (contact_fname_normalized, '=', value)],
+            limit=1,
+        )
+        contact_partner = request.env.user.partner_id if (
+            not request.env.user.is_public and
+            request.env.user.partner_id[fname_normalized] == value
+        ) else request.env['res.partner']
+        if contact:
+            if contact_partner and not contact.partner_id:
+                contact.partner_id = contact_partner.id
+        else:
+            contact = Contacts.create({'name': name, fname: value, 'partner_id': contact_partner.id})
+
+        return mailing_list._update_subscription_from_email(value, opt_out=False)
