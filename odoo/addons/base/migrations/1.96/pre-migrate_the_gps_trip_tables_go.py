@@ -51,12 +51,51 @@ def migrate(cr, version):
             )
             continue
 
+        # the 2026-09-13 dump still carries two reports built over the trip table
+        # (the materialized view remote_gps_trip_report and the view
+        # fleet_performance_report); they go with it only when they are as
+        # orphaned as the table, and a report some model still owns keeps it
+        dependents = _dependent_views(cr, table)
+        cr.execute(
+            "SELECT model FROM ir_model WHERE replace(model, '.', '_') = ANY(%s)",
+            [list(dependents)],
+        )
+        if owned := [model for (model,) in cr.fetchall()]:
+            _logger.warning(
+                "%s is read by views that models still own (%s) and is kept",
+                table,
+                ", ".join(owned),
+            )
+            continue
+
         cr.execute(SQL("SELECT count(*) FROM %s", SQL.identifier(table)))
         [rows] = cr.fetchone()
-        cr.execute(SQL("DROP TABLE %s", SQL.identifier(table)))
+        cr.execute(SQL("DROP TABLE %s CASCADE", SQL.identifier(table)))
         _logger.info(
             "dropped orphaned table %r with %s row(s), at the user's instruction: "
-            "no model names it and no module on the addons path defines one",
+            "no model names it and no module on the addons path defines one; "
+            "the views built over it went too: %s",
             table,
             rows,
+            ", ".join(sorted(dependents)) or "none",
         )
+
+
+def _dependent_views(cr, table):
+    cr.execute(
+        """
+        WITH RECURSIVE dependent(oid) AS (
+            SELECT %s::regclass::oid
+            UNION
+            SELECT rewrite.ev_class
+              FROM dependent
+              JOIN pg_depend depend ON depend.refobjid = dependent.oid
+              JOIN pg_rewrite rewrite ON rewrite.oid = depend.objid
+             WHERE rewrite.ev_class <> dependent.oid
+        )
+        SELECT relname FROM pg_class
+         WHERE oid IN (SELECT oid FROM dependent) AND relname <> %s
+        """,
+        [f"public.{table}", table],
+    )
+    return {name for (name,) in cr.fetchall()}
