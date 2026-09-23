@@ -36,3 +36,18 @@ class TestBatchViewArch(TransactionCase):
             "the list and the kanban of this same view file already show the "
             "responsible as an avatar; the form was the only one left as text",
         )
+
+    def test_the_wave_action_opens_a_form_that_cannot_create(self):
+        action = self.env.ref("stock_picking_batch.action_picking_tree_wave")
+        views = {view.view_mode: view.view_id for view in action.view_ids}
+        self.assertEqual(set(views), {"list", "kanban", "form"})
+        for view_type, view in views.items():
+            arch = self._arch(view.get_external_id()[view.id], view_type)
+            self.assertEqual(
+                arch.get("create"),
+                "0",
+                f"the wave {view_type} must not create: a record made there is a "
+                "batch (is_wave is not set) that the wave action's domain hides",
+            )
+        batch_form = self._arch("stock_picking_batch.stock_picking_batch_form", "form")
+        self.assertNotEqual(batch_form.get("create"), "0")

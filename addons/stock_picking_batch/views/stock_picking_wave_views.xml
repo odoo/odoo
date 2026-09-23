@@ -71,6 +71,19 @@
         </field>
     </record>
 
+    <record id="stock_picking_wave_form" model="ir.ui.view">
+        <field name="name">stock.picking.wave.form</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form" />
+        <field name="mode">primary</field>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="action_picking_tree_wave" model="ir.actions.act_window">
         <field name="name">Wave Transfers</field>
         <field name="res_model">stock.picking.batch</field>
@@ -109,7 +122,7 @@
         </field>
         <field
             name="view_ids"
-            eval="[Command.clear(), Command.create({'view_mode': 'list', 'view_id': ref('stock_picking_batch.stock_picking_wave_tree')}), Command.create({'view_mode': 'kanban', 'view_id': ref('stock_picking_batch.stock_picking_wave_kanban')})]" />
+            eval="[Command.clear(), Command.create({'view_mode': 'list', 'view_id': ref('stock_picking_batch.stock_picking_wave_tree')}), Command.create({'view_mode': 'kanban', 'view_id': ref('stock_picking_batch.stock_picking_wave_kanban')}), Command.create({'view_mode': 'form', 'view_id': ref('stock_picking_batch.stock_picking_wave_form')})]" />
     </record>
 
     <record id="view_stock_picking_type_kanban_batch" model="ir.ui.view">
