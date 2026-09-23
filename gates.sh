@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Every hard-zero gate of this checkout in one run, with one exit code.
 #
-#   ./gates.sh                 lint, the two pytest tiers, bare-env mypy, the doc figures
+#   ./gates.sh                 lint, the two pytest tiers, bare-env mypy, the doc and machine_doc figures
 #   ./gates.sh --fast          lint and the two pytest tiers only
 #   ./gates.sh --rust --js     add the cargo checks and the JS toolchain
 #   ./gates.sh --perf          add statement-count and residual wall-time floors
@@ -55,6 +55,8 @@ else
     exit 2
 fi
 PYTHON="$BIN/python"
+CONF="$ROOT/../$(basename "$(dirname "$BIN")").conf"
+[ -f "$CONF" ] || CONF=""
 
 MYPY_PIN="$(sed -n 's/^mypy==\([0-9.]*\).*/\1/p' requirements-dev.txt)"
 MYPY_ENV="${XDG_CACHE_HOME:-$HOME/.cache}/odoo-gates/mypy-$MYPY_PIN"
@@ -90,21 +92,14 @@ bare_mypy() {
     "$MYPY_ENV/bin/mypy" --no-incremental --config-file mypy.ini "$@"
 }
 
+machine_doc() {
+    env ODOO_VENV_PYTHON="$PYTHON" VENV_PY="$PYTHON" ${CONF:+ODOO_CONF="$CONF"} bash "$1"
+}
+
 tier2() {
     "$BIN/pytest" -q -p no:cacheprovider \
         odoo/orm/tests odoo/http/tests odoo/db/tests odoo/tools/tests \
         tests/service tests/framework
-}
-
-machine_docs() {
-    local failed=0 harness
-    while IFS= read -r harness; do
-        if ! env ODOO_VENV_PYTHON="$PYTHON" bash "$harness" >/dev/null 2>&1; then
-            echo "  red: $harness"
-            failed=1
-        fi
-    done < <(find . -path ./node_modules -prune -o -path '*/machine_doc_v*/factcheck.sh' -print | sort)
-    return $failed
 }
 
 echo "gates on $(git -C "$TREE" rev-parse --short HEAD)${REF:+ ($REF)} — $TREE"
@@ -113,13 +108,16 @@ run "ruff check tests/"           "$BIN/ruff" check tests/ --no-cache
 run "ruff format --check tests/"  "$BIN/ruff" format --check tests/
 run "pytest tier 1"               "$BIN/pytest" -q -p no:cacheprovider
 run "pytest tier 2"               tier2
-run "module machine docs"         machine_docs
 if [ "$FAST" -eq 0 ]; then
     run "mypy core packages"      bare_mypy -p odoo.orm -p odoo.db -p odoo.libs -p odoo.http -p odoo.service -p odoo.modules
     run "mypy tools, cli, tests"  bare_mypy -p odoo.tools -p odoo.cli -p odoo.tests
     # factcheck_env.sh finds the venv beside the checkout; a --ref worktree
     # under /tmp has none beside it and would fall back to the system python3
     run "doc/architecture figures" env ODOO_VENV_PYTHON="$PYTHON" bash doc/architecture/factcheck.sh
+    for harness in addons/*/machine_doc_v*/factcheck.sh odoo/addons/*/machine_doc_v*/factcheck.sh odoo/tests/machine_doc_v*/factcheck.sh; do
+        [ -f "$harness" ] || continue
+        run "machine_doc ${harness%/machine_doc_v*}" machine_doc "$harness"
+    done
 fi
 if [ "$RUST" -eq 1 ]; then
     run "cargo fmt"               cargo fmt --all --check --manifest-path crates/Cargo.toml

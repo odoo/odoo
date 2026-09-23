@@ -16,7 +16,7 @@ boundary is `test_lint`'s; the rest are held by review.
 
 ```bash
 ./gates.sh                                     # everything below the line, one exit code
-./gates.sh --fast                              # lint, the two tiers and the module machine docs
+./gates.sh --fast                              # lint and the two tiers
 ./gates.sh --ref <rev>                         # the same, on a worktree of <rev>
 ./gates.sh --rust --js                         # add the cargo and JS toolchains
 ```
@@ -78,9 +78,21 @@ environment's company protocol, while its result retains the receiver's type.
 `doc/architecture/factcheck.sh` derives the figures these pages state (mixin
 composition, base-model reaches, executed statements, dispatch sites) from the
 classes and the pin tests, and fails when a page stops citing one.
-Every module's `machine_doc_v*/factcheck.sh` runs in the same lane set, each as
-its own harness: a module that adds a model, a file or a test without its
-machine doc fails `gates.sh` instead of leaving a red for the next reader.
+
+The module machine docs are gated the same way, one `gates.sh` row per harness:
+every `addons/*/machine_doc_v*/factcheck.sh`,
+`odoo/addons/*/machine_doc_v*/factcheck.sh` and
+`odoo/tests/machine_doc_v*/factcheck.sh` the tree holds is discovered and run,
+so a new harness is gated the day it lands: a module that adds a model, a file
+or a test without its machine doc fails `gates.sh` instead of leaving a red for
+the next reader. Each gets the same interpreter as the other steps (`ODOO_VENV_PYTHON` and `VENV_PY`) and,
+when the venv has an `<env>.conf` beside the checkout, `ODOO_CONF`, which
+`web`'s `prepare_suite` counts need. Under `--ref` the worktree has no sibling
+checkouts, so assertions about `enterprise`, `agromarin` or `design-themes`
+report SKIP rather than pass; the repository's own figures are still checked.
+Like the architecture figures they run in the full lane, not under `--fast`.
+A harness whose check needs a named database (`web`'s bundle sizes,
+`FACTCHECK_DB`) skips without one.
 
 **`test_lint`** (`odoo/addons/test_lint/tests/`) holds the rules no general
 linter knows — SQL-injection shapes, gettext discipline, N+1 query shapes,

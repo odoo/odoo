@@ -94,7 +94,7 @@ bash addons/<module>/machine_doc_v1/factcheck.sh
 
 ### The machine_doc harnesses
 
-Every `factcheck.sh` under `odoo` and `addons` blocks.
+Every `factcheck.sh` under `odoo` and `addons` blocks, and `./gates.sh` (full lane, not `--fast`) runs each one it finds, one row per harness.
 
 - Discovery must walk the whole repo: `odoo/tests/machine_doc_v1` lies outside both `odoo/addons` and `addons`.
 - A machine_doc with no harness is the standing list of what is ungated. **That list is empty**: every machine doc in this repository is gated and blocking. An empty warning list is the thing to keep true, not permission to skip checking.
@@ -191,7 +191,7 @@ Gates that read the *installed registry* rather than the tree cannot be graded a
 
 ### Other gates
 
-`./gates.sh` from the repo root runs every database-free gate — ruff's hard zeros, both pytest tiers, every module's `machine_doc_v*/factcheck.sh`, bare-env mypy, `doc/architecture/factcheck.sh` — with one exit code; `--fast` skips mypy and the architecture figures, `--rust`/`--js` add the cargo and JS toolchains, `--ref <rev>` runs on a detached worktree. `.github/workflows/gates.yml` runs the same script on a runner. The Rust checks are the crate workspace's own `cargo` commands. There is no other gate tree.
+`./gates.sh` from the repo root runs every database-free gate — ruff's hard zeros, both pytest tiers, bare-env mypy, `doc/architecture/factcheck.sh` and every module machine_doc harness it discovers (`addons/*`, `odoo/addons/*`, `odoo/tests`) — with one exit code; `--fast` skips mypy and the figures, `--rust`/`--js` add the cargo and JS toolchains, `--ref <rev>` runs on a detached worktree. `.github/workflows/gates.yml` runs the same script on a runner. The Rust checks are the crate workspace's own `cargo` commands. There is no other gate tree.
 
 ### Changing the guidelines
 
