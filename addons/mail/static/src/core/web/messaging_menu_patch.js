@@ -1,5 +1,6 @@
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
+import { attClassObjectToString } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -12,6 +13,7 @@ const messagingMenuPatch = {
         super.setup(...arguments);
         this.action = useService("action");
         this.dialog = useService("dialog");
+        this.attClassObjectToString = attClassObjectToString;
     },
     get showFailures() {
         return this.store.failures.length > 0 && this.showNotificationHubExtras;

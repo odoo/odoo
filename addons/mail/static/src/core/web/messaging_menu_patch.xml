@@ -6,6 +6,11 @@
         <NotificationItem
             t-if="this.showFailures"
             t-foreach="this.store.sortedFailures" t-as="failure" t-key="failure.localId"
+            className="this.attClassObjectToString({
+                'o-mail-MessagingMenu-failure bg-warning': true,
+                'o-first': failure_first,
+                'o-last': failure_last,
+            })"
             important="1"
             counter="failure.notifications.length"
             datetime="failure.datetime"
