@@ -93,7 +93,7 @@ class KeyboardUSBDriver(Driver):
         return False
 
     @classmethod
-    def get_status(self):
+    def get_status(cls):
         """Allows `hw_proxy.Proxy` to retrieve the status of the scanners"""
         status = (
             "connected"
@@ -184,11 +184,10 @@ class KeyboardUSBDriver(Driver):
         """Change the layout of the current device to what is specified in
         new_layout.
 
-        Args:
-            new_layout (dict): A dict containing two keys:
-                - layout (str): The layout code
-                - variant (str): An optional key to represent the variant of the
-                                 selected layout
+        :param dict new_layout: a dict with two keys:
+
+            - ``layout`` (str): the layout code
+            - ``variant`` (str): optional, the variant of the selected layout
         """
         if hasattr(self, "keyboard_layout"):
             KeyboardUSBDriver.keyboard_layout_groups.remove(self.keyboard_layout)
@@ -218,11 +217,10 @@ class KeyboardUSBDriver(Driver):
         """Save the layout to a file on the box to read it when restarting it.
         We need that in order to keep the selected layout after a reboot.
 
-        Args:
-            new_layout (dict): A dict containing two keys:
-                - layout (str): The layout code
-                - variant (str): An optional key to represent the variant of the
-                                 selected layout
+        :param dict layout: a dict with two keys:
+
+            - ``layout`` (str): the layout code
+            - ``variant`` (str): optional, the variant of the selected layout
         """
         file_path = helpers.path_file("odoo-keyboard-layouts.conf")
         if file_path.exists():
@@ -270,8 +268,7 @@ class KeyboardUSBDriver(Driver):
         """Deal with a keyboard input. Send the character corresponding to the
         pressed key represented by its scancode to the connected Odoo instance.
 
-        Args:
-            scancode (int): The scancode of the pressed key.
+        :param int scancode: The scancode of the pressed key.
         """
         self.data["value"] = self._scancode_to_char(scancode)
         if self.data["value"]:
@@ -286,8 +283,7 @@ class KeyboardUSBDriver(Driver):
             - Add the barcode to the list barcodes that are being queried in
             Community.
 
-        Args:
-            scancode (int): The scancode of the pressed key.
+        :param int scancode: The scancode of the pressed key.
         """
         if scancode == 28:  # Return
             self.data["value"] = self._current_barcode
@@ -324,8 +320,7 @@ class KeyboardUSBDriver(Driver):
     def _set_device_type(self, device_type="keyboard"):
         """Modify the device type between 'keyboard' and 'scanner'
 
-        Args:
-            type (string): Type wanted to switch
+        :param str device_type: the type to switch to
         """
         if device_type == "scanner":
             self.device_type = "scanner"
@@ -345,12 +340,11 @@ class KeyboardUSBDriver(Driver):
         selected keyboard layout and the current state of the keyboard's
         modifiers.
 
-        Args:
-            scancode (int): The scancode of the pressed key, to be translated to
-                a character
+        :param int scancode: The scancode of the pressed key, to be translated to
+            a character
 
-        Returns:
-            str: The translated scancode.
+        :return: The translated scancode.
+        :rtype: str
         """
         # Scancode -> Keysym : Depends on the keyboard layout
         group = KeyboardUSBDriver.keyboard_layout_groups.index(self.keyboard_layout)
@@ -378,15 +372,14 @@ class KeyboardUSBDriver(Driver):
     def _get_active_modifiers(self, scancode):
         """Get the state of currently active modifiers.
 
-        Args:
-            scancode (int): The scancode of the key being translated
+        :param int scancode: The scancode of the key being translated
 
-        Returns:
-            int: The current state of the modifiers:
-                0 -- Lowercase
-                1 -- Highercase or (NumLock + key pressed on keypad)
-                2 -- AltGr
-                3 -- Highercase + AltGr
+        :return: The current state of the modifiers:
+            0 -- Lowercase
+            1 -- Highercase or (NumLock + key pressed on keypad)
+            2 -- AltGr
+            3 -- Highercase + AltGr
+        :rtype: int
         """
         modifiers = 0
         uppercase = (
@@ -409,8 +402,8 @@ class KeyboardUSBDriver(Driver):
         and not older than 5 seconds. This function is used in Community, when
         we don't have access to the IoTLongpolling.
 
-        Returns:
-            str: The next barcode to be read or an empty string.
+        :return: The next barcode to be read or an empty string.
+        :rtype: str
         """
 
         # Previous query still running, stop it by sending a fake barcode

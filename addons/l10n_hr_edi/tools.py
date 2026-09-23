@@ -38,11 +38,10 @@ def _get_server_url(company, edi_mode=None):
 
 
 def _prepare_request(company, endpoint_type, params=False):
-    """
-    Returns:
-        For multiple document endpoints (such as query*): list of dicts
-        For single document endpoints (such as markPaid): dict
-        For receive specifically: bytestring
+    """Call the moj-eRačun endpoint named ``endpoint_type``.
+
+    :return: a list of dicts for multi-document endpoints (``query*``), a dict for
+        single-document endpoints (``markPaid``), bytes for ``receive``
     """
     endpoints = {
         "send": "/apis/v2/send",
@@ -97,7 +96,7 @@ def _prepare_request(company, endpoint_type, params=False):
                 "The url that this service requested returned an error. The url it tried to contact was %s",
                 url,
             ),
-        )
+        ) from None
 
     # Structure-specific error handling
     if response.status_code != 200:
@@ -116,7 +115,7 @@ def _prepare_request(company, endpoint_type, params=False):
         try:
             response_json = response.json()
         except JSONDecodeError, TypeError:
-            raise MojEracunServiceError("Invalid response format received")
+            raise MojEracunServiceError("Invalid response format received") from None
         if "error" in response_json:
             message = company.env._(
                 "The url that this service requested returned an error. The url it tried to contact was %(url)s. %(error_message)s",
@@ -159,7 +158,7 @@ def _call_mer_service(company, endpoint, params=None):
             params=params,
         )
     except MojEracunServiceError as e:
-        raise UserError(e)
+        raise UserError(e) from e
 
     return response
 
@@ -176,8 +175,7 @@ def _mer_api_send(company, xml_file):
     params = {
         "File": xml_file,
     }
-    response_dict = _call_mer_service(company, "send", params=params)
-    return response_dict
+    return _call_mer_service(company, "send", params=params)
 
 
 def _mer_api_query_inbox(
@@ -200,8 +198,7 @@ def _mer_api_query_inbox(
         "From": date_from,
         "To": date_to,
     }
-    response_list = _call_mer_service(company, "query_inbox", params=params)
-    return response_list
+    return _call_mer_service(company, "query_inbox", params=params)
 
 
 def _mer_api_receive_document(company, electronic_id):
@@ -236,8 +233,7 @@ def _mer_api_update_document_process_status(
         "StatusId": status_id,
         "RejectReason": rejection_reason,
     }
-    response_dict = _call_mer_service(company, "update_status", params=params)
-    return response_dict
+    return _call_mer_service(company, "update_status", params=params)
 
 
 def _mer_api_query_document_process_status_inbox(
@@ -262,8 +258,7 @@ def _mer_api_query_document_process_status_inbox(
         "To": date_to,
         "ByUpdateDate": by_update_date,
     }
-    response_list = _call_mer_service(company, "query_status_inbox", params=params)
-    return response_list
+    return _call_mer_service(company, "query_status_inbox", params=params)
 
 
 def _mer_api_query_document_process_status_outbox(
@@ -288,8 +283,7 @@ def _mer_api_query_document_process_status_outbox(
         "To": date_to,
         "ByUpdateDate": by_update_date,
     }
-    response_list = _call_mer_service(company, "query_status_outbox", params=params)
-    return response_list
+    return _call_mer_service(company, "query_status_outbox", params=params)
 
 
 def _mer_api_notify_import(company, electronic_id):
@@ -298,10 +292,7 @@ def _mer_api_notify_import(company, electronic_id):
     You can use it to update which document you have successfully imported and to make procedure for
     importing  only documents that you previously did not download and import.
     """
-    response_dict = _call_mer_service(
-        company, "notify_import", params={"eid": electronic_id}
-    )
-    return response_dict
+    return _call_mer_service(company, "notify_import", params={"eid": electronic_id})
 
 
 def _mer_api_mark_paid(
@@ -316,8 +307,7 @@ def _mer_api_mark_paid(
         "PaymentAmoung": payment_amount,
         "PaymentMethod": payment_method,
     }
-    response_dict = _call_mer_service(company, "mark_paid", params=params)
-    return response_dict
+    return _call_mer_service(company, "mark_paid", params=params)
 
 
 def _mer_api_reject_with_id(
@@ -332,8 +322,7 @@ def _mer_api_reject_with_id(
         "RejectionReasonType": rejection_type,
         "RejectionReasonDescription": rejection_desc,
     }
-    response_dict = _call_mer_service(company, "reject", params=params)
-    return response_dict
+    return _call_mer_service(company, "reject", params=params)
 
 
 def _mer_api_check_fiscalization_status_outbox(
@@ -356,8 +345,7 @@ def _mer_api_check_fiscalization_status_outbox(
         "FiscalizationRequestID": request_id,
         "Status": status,
     }
-    response_list = _call_mer_service(company, "fisc_outbox", params=params)
-    return response_list
+    return _call_mer_service(company, "fisc_outbox", params=params)
 
 
 def _mer_api_check_fiscalization_status_inbox(
@@ -380,5 +368,4 @@ def _mer_api_check_fiscalization_status_inbox(
         "FiscalizationRequestID": request_id,
         "Status": status,
     }
-    response_list = _call_mer_service(company, "fisc_inbox", params=params)
-    return response_list
+    return _call_mer_service(company, "fisc_inbox", params=params)

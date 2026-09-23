@@ -60,16 +60,6 @@ class TestRuntimeWorkflows(common.TransactionCase):
         )
 
     def _create_runtime_action(self, name, code="pass", predecessors=None):
-        """Helper to create a server action for runtime workflow.
-
-        Args:
-            name: Action name
-            code: Python code to execute
-            predecessors: List of action records that must complete first
-
-        Returns:
-            ir.actions.server record
-        """
         vals = {
             "name": name,
             "model_id": self.model_automation.id,

@@ -1,4 +1,5 @@
 # ruff: noqa: EXE001, EXE003, EXE005  the vendor protocol table documents each constant with a Doxygen `#!<` trailing marker, which ruff reads as a shebang
+import contextlib
 import logging
 import socket
 from binascii import unhexlify
@@ -33,16 +34,15 @@ class IngenicoTagType:
 
     def __init__(self, name, tag, tagFormat, tagLen):
         """
-        Args:
-            name (str): Human readable tag name.
-            tag (b): Identification tag formated as a byteArray.
-            tagformat (str): Format of the tag content.
-                    * b: boolean values. Each boolean is 1 bit.
-                    * a: ASCII characters
-                    * i: Binari Code Decimals
-                    * x: Hexadecimal digits
-            tagLen (int): Length of the tag content. This value is always the numbers of bytes
-                    (This is not always the case in the official documentation provided by Ingenico!!)
+        :param str name: Human readable tag name.
+        :param bytes tag: Identification tag formated as a byteArray.
+        :param str tagFormat: Format of the tag content.
+            * b: boolean values. Each boolean is 1 bit.
+            * a: ASCII characters
+            * i: Binari Code Decimals
+            * x: Hexadecimal digits
+        :param int tagLen: Length of the tag content. This value is always the numbers of bytes
+            (This is not always the case in the official documentation provided by Ingenico!!)
         """
         self.name = name
         self.tag = tag
@@ -319,15 +319,10 @@ class IngenicoMessage:
 
         Returns InenicoTagType instance.
 
-        Args:
-            tagCode (b): hexadecimal identifier of tag.
+        :param bytes tagCode: hexadecimal identifier of tag.
         """
         return next(
-            (
-                tagType
-                for tagType in cls._const.tagType
-                if tagType.hasTag(tagCode) == True
-            ),
+            (tagType for tagType in cls._const.tagType if tagType.hasTag(tagCode)),
             None,
         )
 
@@ -337,8 +332,7 @@ class IngenicoMessage:
 
         Returns InenicoTagType instance.
 
-        Args:
-            tagCode (b): hexadecimal identifier of tag.
+        :param str tagName: human readable tag name.
         """
         return next(
             (tagType for tagType in cls._const.tagType if tagType.name == tagName), None
@@ -347,8 +341,7 @@ class IngenicoMessage:
     def __init__(self, dev):
         """Base Initialisation of Ingenico Message.
 
-        Args:
-            dev (Obj): tcp socket (or other device with byte-based send and recv function)
+        :param dev: tcp socket (or other device with byte-based send and recv function)
         """
         self.dev = dev
 
@@ -361,15 +354,10 @@ class OutgoingIngenicoMessage(IngenicoMessage):
         Some tags have to have a fixed length to be accepted by the payment terminal. This function will add null-bytes
         to match the required length.
 
-        Args:
-            msg (b): the message to edit
-            length (int): wanted length
+        :param bytes msg: the message to edit
+        :param int length: wanted length
         """
-        try:
-            toAdd = length - len(msg)
-        except:
-            _logger.error(format_exc())
-
+        toAdd = length - len(msg)
         if toAdd > 0:
             return b"\x00" * toAdd + msg
         return msg
@@ -380,8 +368,7 @@ class OutgoingIngenicoMessage(IngenicoMessage):
 
         The result will always be 4 bytes long.
 
-        Args:
-            msg (b): the message to calculate the CRC for
+        :param bytes msg: the message to calculate the CRC for
         """
         return unhexlify(f"{crc32(msg):08x}")
 
@@ -391,9 +378,8 @@ class OutgoingIngenicoMessage(IngenicoMessage):
 
         The content of a tag often includes other tags, these have to be already formatted.
 
-        Args:
-            tagName (str): Human readable tag name
-            content (b): formatted tag content
+        :param str tagName: Human readable tag name
+        :param bytes content: formatted tag content
         """
 
         tag = cls._getTagDetailsByName(tagName)
@@ -410,11 +396,6 @@ class OutgoingIngenicoMessage(IngenicoMessage):
         """Return The formatted outgoing message including MessageLength and Magic string.
 
         This is the very last step of the message generation. All arguments have to be completely formatted.
-
-        Args:
-            header (b)
-            body (b)
-            footer (b)
         """
         root = cls._generateTag("Group_Root", header + body + footer)
         msgLength = (len(cls._const.magic + root)).to_bytes(3, byteorder="big")
@@ -430,10 +411,7 @@ class OutgoingIngenicoMessage(IngenicoMessage):
         After initialisation the message will be automatically generated. the send function can be called to send the
         message to the device.
 
-        Args:
-            dev (Obj): tcp socket (or other device with byte-based send and recv function)
-            protocolId
-            messageType
+        :param dev: tcp socket (or other device with byte-based send and recv function)
 
         Kwargs:
             keepAliveInterval
@@ -489,8 +467,7 @@ class OutgoingIngenicoMessage(IngenicoMessage):
 
         The footer can only be created after the body has been generated.
 
-        Args:
-            mdc (b): The Modification Detection Code generated on the Body tag.
+        :param bytes mdc: The Modification Detection Code generated on the Body tag.
         """
         return self._generateTag("Group_Footer", mdc)
 
@@ -499,16 +476,14 @@ class OutgoingIngenicoMessage(IngenicoMessage):
 
         This function gets called after generating the body and before generating the footer.
 
-        Args:
-            innerBody (b): formatted body excluding body-tag and length.
+        :param bytes innerBody: formatted body excluding body-tag and length.
         """
         return self._generateTag("Mdc", self._getCRC32(innerBody))
 
     def _generateBody(self, messageTypeId):
         """Return formatted body and Modification Detection Code.
 
-        Args:
-            messageTypeId (b): Hexadecimal message type identifier.
+        :param bytes messageTypeId: Hexadecimal message type identifier.
         """
         innerBody = b""
         messageTypes = self._const.messageType
@@ -568,8 +543,7 @@ class IncomingIngenicoMessage(IngenicoMessage):
 
         Returns length left in parent tag.
 
-        Args:
-            length (int): length left to be read in the parent tag.
+        :param int length: length left to be read in the parent tag.
         """
         tag = self._getTag()
         tag["len"], lengthBytes = self._getLength()
@@ -608,12 +582,10 @@ class IncomingIngenicoMessage(IngenicoMessage):
         correct sequence. The messages from Ingenico have the Tag Length Value format. Becouse the mixed content of the
         messages the standard Python TLV library cannot be used to decode the messages.
 
-        Raises:
-            ValueError: If the `Magic String` is not found an error will be thrown indicating the received message is
-                no Ingenico message.
+        :raises ValueError: If the `Magic String` is not found an error will be thrown indicating the received message is
+            no Ingenico message.
 
-        Args:
-            dev (Obj): tcp socket (or other device with byte-based send and recv function)
+        :param dev: tcp socket (or other device with byte-based send and recv function)
         """
         super().__init__(dev)
 
@@ -631,7 +603,7 @@ class IncomingIngenicoMessage(IngenicoMessage):
         self.magic = self.dev.recv(8)
         if self.magic and self.magic == self._const.magic:
             # Receive and decode message
-            self._tagTree, leftLength = self._getMsg(length)
+            self._tagTree, _leftLength = self._getMsg(length)
         else:
             _logger.warning("Out of magic!")
 
@@ -682,7 +654,7 @@ class IncomingIngenicoMessage(IngenicoMessage):
 
     def getTransactionResult(self):
         """Return The Protocol Id from the tagtree."""
-        if "TransactionResult" in self._tagTree["msg"]["Group_Body"].keys():
+        if "TransactionResult" in self._tagTree["msg"]["Group_Body"]:
             return self._const.transactionResult[
                 self._tagTree["msg"]["Group_Body"]["TransactionResult"]
             ]
@@ -693,7 +665,7 @@ class IncomingIngenicoMessage(IngenicoMessage):
 
         If the transaction stage is not found return False.
         """
-        if "TransactionStage" in self._tagTree["msg"]["Group_Body"].keys():
+        if "TransactionStage" in self._tagTree["msg"]["Group_Body"]:
             return self._const.transactionStage[
                 self._tagTree["msg"]["Group_Body"]["TransactionStage"]
             ]
@@ -721,7 +693,7 @@ class IncomingIngenicoMessage(IngenicoMessage):
 
         If there is connection data available return False.
         """
-        if "Group_ConnectionParameters" in self._tagTree["msg"].keys():
+        if "Group_ConnectionParameters" in self._tagTree["msg"]:
             return self._tagTree["msg"]["Group_ConnectionParameters"][
                 "KeepAliveInterval"
             ]
@@ -732,7 +704,7 @@ class IncomingIngenicoMessage(IngenicoMessage):
 
         If the message is no keep alive message return False.
         """
-        if "KeepAliveReason" in self._tagTree["msg"]["Group_Body"].keys():
+        if "KeepAliveReason" in self._tagTree["msg"]["Group_Body"]:
             return self._tagTree["msg"]["Group_Body"]["KeepAliveReason"]
         return False
 
@@ -743,7 +715,7 @@ class IncomingIngenicoMessage(IngenicoMessage):
             (
                 mt
                 for mt, mtId in self._const.messageType.items()
-                if mtId == messageTypeId and not mt == "HelloResponse"
+                if mtId == messageTypeId and mt != "HelloResponse"
             ),
             None,
         )
@@ -830,12 +802,10 @@ class IngenicoDriver(Driver):
         # changing the architecture of Interface and how interfaces and drivers can
         # talk to each other.
         sock = socket_devices[self.device_identifier].dev
-        try:
+        # A bad file descriptor OSError will be thrown if the socket was already
+        # closed
+        with contextlib.suppress(OSError):
             sock.shutdown(socket.SHUT_RD)
-        except OSError:
-            # A bad file descriptor OSError will be thrown if the socket was already
-            # closed
-            pass
         sock.close()
 
         super().disconnect()
@@ -938,16 +908,12 @@ class IngenicoDriver(Driver):
                         )
                     elif msgType == "TransactionResponse":
                         self.data["Response"] = (
-                            msg.getTransactionResult()
-                            if msg.getTransactionResult()
-                            else self.data["Response"]
+                            msg.getTransactionResult() or self.data["Response"]
                         )
                         if self.data["Response"] == "Error":
                             self.data["Error"] = "Canceled"
                         self.data["Ticket"] = (
-                            msg.getTransactionTicket()
-                            if msg.getTransactionTicket()
-                            else self.data["Ticket"]
+                            msg.getTransactionTicket() or self.data["Ticket"]
                         )
                         to_notify = True
                     if to_notify:
