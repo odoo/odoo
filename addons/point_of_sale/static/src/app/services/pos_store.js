@@ -657,7 +657,6 @@ export class PosStore extends WithLazyGetterTrap {
                 this.removeOrder(order, false);
                 this.removePendingOrder(order);
             }
-            await Promise.all(ordersToDelete.map((order) => this.recycleOrderNumber(order)));
         }
 
         return true;
@@ -1358,18 +1357,8 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        const removed = this.data.localDeleteCascade(order);
-        this.recycleOrderNumber(order);
-        return removed;
-    }
-    /**
-     * Recycle the receipt number only once the order is gone from IndexedDB,
-     * otherwise a reload restores it next to a new order using the same number.
-     */
-    recycleOrderNumber(order) {
-        return this.data
-            .deleteRecordsInIndexedDB("pos.order", [order.uuid])
-            .then(() => this.device.saveUnusedNumber([order]));
+        this.device.saveUnusedNumber([order]);
+        return this.data.localDeleteCascade(order);
     }
 
     /**
@@ -1436,6 +1425,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
     setNextOrderRefs(order) {
         const deviceIdentifier = this.device.identifier;
+        this.device.removeUsedNumbers(this.models["pos.order"].filter((o) => !o.isSynced));
         const number = `${this.device.useNext()}`.padStart(6, "0");
         const configId = this.config.id;
         const year2Digits = DateTime.now().year.toString().slice(-2);

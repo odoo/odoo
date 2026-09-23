@@ -63,7 +63,7 @@ test("Device identifier is set", async () => {
     expect(device.identifier).not.toBeEmpty();
 });
 
-test("Number is recycled only once the order is gone from IndexedDB", async () => {
+test("A removed order frees its number right away", async () => {
     const store = await setupPosEnv();
     const device = store.device;
     await store.deleteOrders(store.models["pos.order"].getAll());
@@ -72,10 +72,22 @@ test("Number is recycled only once the order is gone from IndexedDB", async () =
     const number = parseInt(order.pos_reference.split("-")[2]);
 
     store.removeOrder(order, false);
-    // A reload at this point must not find the number on the stack while the
-    // order can still be restored from IndexedDB
-    expect(device.data.unsynced_number_stack).toBeEmpty();
-
-    await store.recycleOrderNumber(order);
     expect(device.data.unsynced_number_stack).toEqual([number]);
+});
+
+test("A number still used by an order is not reused", async () => {
+    const store = await setupPosEnv();
+    const device = store.device;
+    await store.deleteOrders(store.models["pos.order"].getAll());
+
+    const order = await getFilledOrder(store);
+    const number = parseInt(order.pos_reference.split("-")[2]);
+    // The number is back on the stack while the order is still here: its
+    // removal was lost by a reload, or another tab removed its own copy
+    device.saveUnusedNumber([order]);
+    expect(device.data.unsynced_number_stack).toEqual([number]);
+
+    const next = await getFilledOrder(store);
+    expect(next.pos_reference).not.toBe(order.pos_reference);
+    expect(device.data.unsynced_number_stack).toBeEmpty();
 });
