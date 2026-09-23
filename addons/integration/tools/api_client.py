@@ -956,7 +956,7 @@ class OutboundAPIClient:
         if not isinstance(body, (dict, list)):
             return f"<{type(body).__name__}, not logged>"
 
-        return json.dumps(redact.mask_data(body))[:_MAX_LOGGED_PAYLOAD]
+        return redact.dump_masked(body, _MAX_LOGGED_PAYLOAD)
 
     EVENT_LOG_ANNOTATIONS_KEY = "integration_exchange_annotations"
     _ANNOTATION_FIELDS = ("tags", "origin_model", "origin_record_id")
@@ -1008,17 +1008,14 @@ class OutboundAPIClient:
             safe_response_headers = redact.mask_data(
                 response_data.get("headers") or {},
             )
-            safe_response_body = redact.mask_data(
-                response_data.get("body"),
-            )
             status_code = response_data.get("status_code")
             vals.update(
                 {
                     "status_code": status_code,
                     "response_headers": safe_response_headers,
-                    "response_payload": json.dumps(safe_response_body)[
-                        :_MAX_LOGGED_PAYLOAD
-                    ],
+                    "response_payload": redact.dump_masked(
+                        response_data.get("body"), _MAX_LOGGED_PAYLOAD
+                    ),
                     "duration_ms": response_data.get("elapsed_ms", 0),
                     "date_completed": fields.Datetime.now(),
                     "state": "failed" if (status_code or 0) >= 400 else "success",

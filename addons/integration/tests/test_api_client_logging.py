@@ -127,6 +127,12 @@ class TestPayloadSerialization(ClientLoggingCommon):
         out = self._client()._serialize_payload_for_log({"k": "v" * 40000})
         self.assertEqual(len(out), _MAX_LOGGED_PAYLOAD)
 
+    def test_a_capped_body_is_the_masked_serialisation_cut(self):
+        body = {"password": "hunter2", "rows": [{"n": i} for i in range(20000)]}
+        out = self._client()._serialize_payload_for_log(body)
+        self.assertEqual(out, json.dumps(redact.mask_data(body))[:_MAX_LOGGED_PAYLOAD])
+        self.assertNotIn("hunter2", out)
+
 
 @tagged("post_install", "-at_install")
 class TestUsageTrackingOnAnUnauthenticatedService(ClientLoggingCommon):

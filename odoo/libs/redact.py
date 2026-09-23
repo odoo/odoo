@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import logging
 import re
 import typing
@@ -13,6 +14,7 @@ __all__ = [
     "REGISTERED_PATTERNS",
     "SECRET_SHAPES",
     "SENSITIVE_KEY_FRAGMENTS",
+    "dump_masked",
     "find_secret_shapes",
     "is_sensitive_key",
     "mask_data",
@@ -190,10 +192,22 @@ def _mask_key_values(text: str) -> str:
     return "".join(parts)
 
 
-def mask_text(text: str) -> str:
+# A bounded mask reads this much past the limit, so a secret straddling the
+# cut is still matched whole: every fixed-length shape is far shorter, and the
+# open-ended ones (a quoted value, a PEM block) match to the end of the window.
+_WINDOW_MARGIN = 4096
+
+
+def mask_text(text: str, limit: int | None = None) -> str:
     if not text:
         return text
-    masked = _apply_registered(str(text))
+    if limit:
+        return _mask_text(str(text)[: limit + _WINDOW_MARGIN])[:limit]
+    return _mask_text(str(text))
+
+
+def _mask_text(text: str) -> str:
+    masked = _apply_registered(text)
     masked = _URL_IN_TEXT.sub(lambda match: mask_url(match.group(0)), masked)
     masked = _mask_key_values(masked)
     for _name, shape in _VALUE_SHAPES:
@@ -208,6 +222,110 @@ def _is_sensitive_pair(data: dict[typing.Any, typing.Any]) -> bool:
         isinstance(label := data.get(key), str) and is_sensitive_key(label)
         for key in _PAIR_LABEL_KEYS
     )
+
+
+class _BudgetSpent(Exception):
+    pass
+
+
+def _json_key(key: typing.Any) -> str:
+    if isinstance(key, str):
+        return key
+    if key is True:
+        return "true"
+    if key is False:
+        return "false"
+    if key is None:
+        return "null"
+    if isinstance(key, (int, float)):
+        return json.dumps(key)
+    return str(key)
+
+
+def _json_scalar(value: typing.Any) -> str:
+    try:
+        return json.dumps(value)
+    except TypeError, ValueError:
+        return json.dumps(str(value))
+
+
+def _json_default(value: typing.Any) -> typing.Any:
+    if isinstance(value, (set, frozenset)):
+        return list(value)
+    return str(value)
+
+
+def dump_masked(
+    data: typing.Any, max_bytes: int | None = None, *, max_depth: int = 50
+) -> str:
+    limit = max_bytes or None
+    if limit is None:
+        # nothing to stop early for: the C encoder over the masked copy is faster
+        try:
+            return json.dumps(
+                mask_data(data, max_depth=max_depth), default=_json_default
+            )
+        except TypeError, ValueError:
+            pass
+    parts: list[str] = []
+    used = 0
+
+    def write(chunk: str) -> None:
+        nonlocal used
+        parts.append(chunk)
+        used += len(chunk)
+        if limit is not None and used > limit:
+            raise _BudgetSpent
+
+    def emit(value: typing.Any, depth: int) -> None:
+        if isinstance(value, str):
+            window = None if limit is None else max(limit - used, 1)
+            write(json.dumps(mask_text(value, window) if window else mask_text(value)))
+            return
+        if value and depth > max_depth:
+            _logger.warning(
+                "Redaction depth limit (%s) exceeded; the structure below it is "
+                "dropped",
+                max_depth,
+            )
+            write(json.dumps("***REDACTED_DEEP_NESTING***"))
+            return
+        if isinstance(value, dict):
+            pair = _is_sensitive_pair(value)
+            write("{")
+            for index, (key, item) in enumerate(value.items()):
+                if index:
+                    write(", ")
+                write(json.dumps(_json_key(key)))
+                write(": ")
+                if is_sensitive_key(key) or (pair and key == "value"):
+                    write(json.dumps(MASK))
+                else:
+                    emit(item, depth + 1)
+            write("}")
+            return
+        if isinstance(value, (list, tuple, set, frozenset)):
+            if (
+                isinstance(value, tuple)
+                and len(value) == 2
+                and isinstance(value[0], str)
+                and is_sensitive_key(value[0])
+            ):
+                value = (value[0], MASK)
+            write("[")
+            for index, item in enumerate(value):
+                if index:
+                    write(", ")
+                emit(item, depth + 1)
+            write("]")
+            return
+        write(_json_scalar(value))
+
+    try:
+        emit(data, 0)
+    except _BudgetSpent:
+        return "".join(parts)[:limit]
+    return "".join(parts)
 
 
 def mask_data(data: typing.Any, *, max_depth: int = 50, _depth: int = 0) -> typing.Any:
@@ -239,7 +357,7 @@ def mask_data(data: typing.Any, *, max_depth: int = 50, _depth: int = 0) -> typi
         return [walk(item) for item in data]
     if isinstance(data, tuple):
         if len(data) == 2 and isinstance(data[0], str) and is_sensitive_key(data[0]):
-            return (data[0], MASK)
+            return (mask_text(data[0]), MASK)
         return tuple(walk(item) for item in data)
     if isinstance(data, (set, frozenset)):
         return type(data)(walk(item) for item in data)

@@ -364,7 +364,7 @@ class MixinInboundGate(models.AbstractModel):
                     "_omitted": {
                         "bytes": size,
                         "reason": "larger than this endpoint's payload log limit",
-                        "head": body[:_OMITTED_PAYLOAD_HEAD_CHARS],
+                        "head": redact.mask_text(body, _OMITTED_PAYLOAD_HEAD_CHARS),
                     },
                 },
             ),
@@ -635,20 +635,23 @@ class MixinInboundGate(models.AbstractModel):
         text = (
             body.decode("utf-8", errors="replace") if isinstance(body, bytes) else body
         )
-        try:
-            text = json.dumps(redact.mask_data(json.loads(text)))
-        except ValueError, TypeError:
-            text = redact.mask_text(text)
         limit = self._get_inbound_payload_log_bytes()
-        size = len(text.encode("utf-8"))
-        if limit and size > limit:
+        # masked and cut in one pass that stops a byte past the limit, so a
+        # large body costs what is kept; one byte more says it was cut
+        bound = limit + 1 if limit else None
+        try:
+            masked = redact.dump_masked(json.loads(text), bound)
+        except ValueError, TypeError:
+            masked = redact.mask_text(text, bound)
+        encoded = masked.encode("utf-8")
+        if limit and len(encoded) > limit:
             return {
-                "request_payload": text.encode("utf-8")[:limit].decode(
-                    "utf-8", errors="ignore"
+                "request_payload": encoded[:limit].decode("utf-8", errors="ignore"),
+                "request_payload_omitted_bytes": max(
+                    len(text.encode("utf-8")) - limit, 0
                 ),
-                "request_payload_omitted_bytes": size - limit,
             }
-        return {"request_payload": text}
+        return {"request_payload": masked}
 
     def _presented_token(self, headers: dict[str, Any]) -> str:
         auth_header = headers.get("Authorization") or ""

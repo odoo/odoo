@@ -238,3 +238,87 @@ def test_a_key_followed_by_a_run_of_separators_is_linear():
     redact.mask_text("password" + "_" * 5000 + "!")
     redact.mask_text("secret" + "-_" * 5000 + "!")
     assert time.perf_counter() - start < 1.0
+
+
+def _random_structure(rnd, depth=0):
+    leaves = [
+        "plain",
+        "password=hunter2",
+        "Bearer abcdefghijklmn",
+        "https://h.invalid/?token=a&b=c",
+        "ünï  ",
+        'a"b',
+        "ghp_" + "a" * 36,
+        "",
+        "x" * 300,
+        0,
+        2.5,
+        None,
+        True,
+    ]
+    roll = rnd.random()
+    if depth > 4 or roll < 0.3:
+        return rnd.choice(leaves)
+    keys = ["id", "name", "password", "token", "note", "value", "api_key", 1, None]
+    if roll < 0.6:
+        return {
+            rnd.choice(keys): _random_structure(rnd, depth + 1)
+            for _ in range(rnd.randint(0, 4))
+        }
+    if roll < 0.75:
+        return [_random_structure(rnd, depth + 1) for _ in range(rnd.randint(0, 4))]
+    if roll < 0.85:
+        return ("token", _random_structure(rnd, depth + 1))
+    return {"name": rnd.choice(["api_key", "q"]), "value": _random_structure(rnd)}
+
+
+class TestDumpMasked:
+    def test_it_is_the_masked_copy_serialised_and_cut(self):
+        import json
+        import random
+
+        rnd = random.Random(5)
+        for _ in range(3000):
+            data = _random_structure(rnd)
+            full = json.dumps(redact.mask_data(data))
+            assert redact.dump_masked(data) == full
+            assert redact.dump_masked(data, 10**9) == full
+            limit = rnd.randint(1, 400)
+            assert redact.dump_masked(data, limit) == full[:limit]
+
+    def test_a_sensitive_pair_masks_its_label_too(self):
+        assert redact.mask_data(("password=hunter2", "x")) == (
+            "password=***REDACTED***",
+            redact.MASK,
+        )
+
+    def test_a_set_is_an_array(self):
+        assert redact.dump_masked({"s": {1}}) == '{"s": [1]}'
+        assert redact.dump_masked({"s": {1}}, 100) == '{"s": [1]}'
+
+    def test_the_cost_follows_what_is_kept(self):
+        rows = [
+            {"lat": 19.4 + i * 1e-5, "imei": str(i).zfill(15), "note": "ok"}
+            for i in range(60000)
+        ]
+        start = time.perf_counter()
+        kept = redact.dump_masked({"points": rows}, 10000)
+        assert time.perf_counter() - start < 0.02
+        assert len(kept) == 10000
+
+    def test_one_huge_string_value_is_masked_only_as_far_as_it_is_kept(self):
+        start = time.perf_counter()
+        kept = redact.dump_masked({"blob": "password=" + "x" * 8_000_000}, 10000)
+        assert time.perf_counter() - start < 0.05
+        assert "xxx" not in kept
+
+
+class TestBoundedMaskText:
+    def test_a_limit_keeps_a_masked_prefix(self):
+        text = "a " * 10 + "password=hunter2 " + "b" * 50000
+        assert redact.mask_text(text, 40) == redact.mask_text(text)[:40]
+
+    def test_a_secret_straddling_the_limit_is_masked_whole(self):
+        token = "ghp_" + "a" * 36
+        kept = redact.mask_text("x" * 20 + " " + token + " tail", 30)
+        assert "aaaa" not in kept

@@ -65,6 +65,28 @@ class TestInboundExchangeRecording(TransactionCase):
         self.assertEqual(len(row.request_payload), 16)
         self.assertEqual(row.request_payload_omitted_bytes, 84)
 
+    def test_a_large_json_body_keeps_a_masked_prefix_and_says_how_much(self):
+        body = json.dumps({"password": "hunter2", "rows": list(range(5000))})
+        with patch.object(type(self.receiver), "_INBOUND_PAYLOAD_LOG_BYTES", 64):
+            self._record(body=body)
+            self.env.cr.precommit.run()
+
+        row = self._rows()
+        self.assertEqual(len(row.request_payload), 64)
+        self.assertTrue(row.request_payload.startswith('{"password": "***REDACTED***"'))
+        self.assertEqual(row.request_payload_omitted_bytes, len(body) - 64)
+
+    def test_the_head_of_an_omitted_body_is_masked(self):
+        self.receiver.log_request_payload_max_bytes = 32
+        body = '{"password": "hunter2", "audio": "' + "A" * 500 + '"}'
+
+        head = json.loads(self.receiver._omitted_payload_vals(body)["request_payload"])[
+            "_omitted"
+        ]["head"]
+
+        self.assertNotIn("hunter2", head)
+        self.assertTrue(head.startswith('{"password": '))
+
     def test_a_failed_call_survives_the_rollback_it_caused(self):
         self._record(status_code=500, error="handler raised")
 
