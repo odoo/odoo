@@ -15,10 +15,10 @@ cellMenuRegistry.add("move_lines_see_records", {
     name: _t("See records"),
     sequence: 176,
     async execute(env, newWindow) {
-        const position = env.model.getters.getActivePosition();
+        const position = env.model().getters.getActivePosition();
         const sheetId = position.sheetId;
-        const cell = env.model.getters.getCell(position);
-        const func = getFirstAccountFunction(cell.compiledFormula, env.model.getters);
+        const cell = env.model().getters.getCell(position);
+        const func = getFirstAccountFunction(cell.compiledFormula, env.model().getters);
         let codes,
             partner_ids,
             account_tag_ids = "";
@@ -28,7 +28,7 @@ cellMenuRegistry.add("move_lines_see_records", {
             includeUnposted = false;
         const parsed_args = func.args
             .map(astToFormula)
-            .map((arg) => env.model.getters.evaluateFormulaResult(sheetId, arg));
+            .map((arg) => env.model().getters.evaluateFormulaResult(sheetId, arg));
         if (func.functionName === "ODOO.PARTNER.BALANCE") {
             [partner_ids, codes, date_range, offset, companyId, includeUnposted] = parsed_args;
         } else if (func.functionName === "ODOO.BALANCE.TAG") {
@@ -43,7 +43,7 @@ cellMenuRegistry.add("move_lines_see_records", {
         } else {
             codes = [];
         }
-        const locale = env.model.getters.getLocale();
+        const locale = env.model().getters.getLocale();
         let dateRange;
         if (date_range?.value && !isEvaluationError(date_range.value)) {
             dateRange = parseAccountingDate(date_range, locale);
@@ -94,9 +94,9 @@ cellMenuRegistry.add("move_lines_see_records", {
         await env.services.action.doAction(action, { newWindow });
     },
     isVisible: (env) => {
-        const position = env.model.getters.getActivePosition();
-        const evaluatedCell = env.model.getters.getEvaluatedCell(position);
-        const cell = env.model.getters.getCell(position);
+        const position = env.model().getters.getActivePosition();
+        const evaluatedCell = env.model().getters.getEvaluatedCell(position);
+        const cell = env.model().getters.getCell(position);
         return (
             !isEvaluationError(evaluatedCell.value) &&
             evaluatedCell.value !== "" &&

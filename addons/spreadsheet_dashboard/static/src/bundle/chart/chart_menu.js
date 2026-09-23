@@ -5,11 +5,11 @@ const { ChartMenu } = components;
 
 patch(ChartMenu.prototype, {
     get granularityOptions() {
-        return this.env.model.getters.getAvailableChartGranularities(this.props.chartId);
+        return this.model().getters.getAvailableChartGranularities(this.props.chartId);
     },
 
     onGranularitySelected(granularity) {
-        this.env.model.dispatch("UPDATE_CHART_GRANULARITY", {
+        this.model().dispatch("UPDATE_CHART_GRANULARITY", {
             chartId: this.props.chartId,
             granularity,
         });

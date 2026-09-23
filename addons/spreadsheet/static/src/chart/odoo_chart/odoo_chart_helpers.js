@@ -170,7 +170,7 @@ export function onGeoOdooChartItemHover() {
 
 export async function navigateToOdooMenu(env, odooMenuId, newWindow) {
     const { action: actionService, notification: notificationService } = env.services;
-    const menu = env.model.getters.getIrMenu(odooMenuId);
+    const menu = env.model().getters.getIrMenu(odooMenuId);
     if (!menu) {
         throw new Error(`Cannot find any menu associated with the chart`);
     }
@@ -187,7 +187,7 @@ export async function navigateToOdooMenu(env, odooMenuId, newWindow) {
 }
 
 export async function navigateToOdooDatasource(env, dataSourceType, dataSourceCoreId, newWindow) {
-    const getters = env.model.getters;
+    const getters = env.model().getters;
     const dataSourceFieldMatching = globalFieldMatchingRegistry.get(dataSourceType);
     if (!dataSourceFieldMatching.getIds(getters).includes(dataSourceCoreId)) {
         return;
@@ -214,7 +214,7 @@ export async function navigateToOdooDatasource(env, dataSourceType, dataSourceCo
 }
 
 export async function navigateToOdoolinkFromChart(env, chartId, newWindow) {
-    const odooLink = env.model.getters.getChartOdooLink(chartId);
+    const odooLink = env.model().getters.getChartOdooLink(chartId);
     if (!odooLink) {
         return;
     } else if (odooLink.type === "dataSource") {

@@ -13,26 +13,26 @@ const { isMatrix } = helpers;
  * @returns {Promise<void>}
  */
 export const SEE_RECORD_LIST = async (position, env, newWindow) => {
-    position = env.model.getters.getEvaluatedCell(position).origin ?? position;
-    const cell = env.model.getters.getCorrespondingFormulaCell(position);
+    position = env.model().getters.getEvaluatedCell(position).origin ?? position;
+    const cell = env.model().getters.getCorrespondingFormulaCell(position);
     const sheetId = position.sheetId;
     if (!cell || !cell.isFormula) {
         return;
     }
-    const { functionName, args } = getFirstListFunction(cell.compiledFormula, env.model.getters);
-    const listId = env.model.getters.getListIdFromPosition(position);
-    const dataSource = await env.model.getters.getAsyncListDataSource(listId);
+    const { functionName, args } = getFirstListFunction(cell.compiledFormula, env.model().getters);
+    const listId = env.model().getters.getListIdFromPosition(position);
+    const dataSource = await env.model().getters.getAsyncListDataSource(listId);
     let index;
     if (functionName === "ODOO.LIST") {
-        const mainPosition = env.model.getters.getCellPosition(cell.id);
+        const mainPosition = env.model().getters.getCellPosition(cell.id);
         index = position.row - mainPosition.row;
     } else if (functionName === "ODOO.LIST.VALUE") {
         const evaluatedArgs = args
             .map(astToFormula)
-            .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
+            .map((arg) => env.model().getters.evaluateFormula(sheetId, arg));
         index = evaluatedArgs[1];
         if (isMatrix(index)) {
-            const mainPosition = env.model.getters.getCellPosition(cell.id);
+            const mainPosition = env.model().getters.getCellPosition(cell.id);
             const rowOffset = position.row - mainPosition.row;
             const colOffset = position.col - mainPosition.col;
             index = index[colOffset][rowOffset];
@@ -41,7 +41,7 @@ export const SEE_RECORD_LIST = async (position, env, newWindow) => {
     if (typeof index !== "number") {
         return;
     }
-    const { model, actionXmlId, context } = env.model.getters.getListDefinition(listId);
+    const { model, actionXmlId, context } = env.model().getters.getListDefinition(listId);
     const recordId = dataSource.getIdFromPosition(index - 1);
     if (!recordId) {
         return;

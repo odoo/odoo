@@ -38,7 +38,7 @@ test("Links between charts and ir.menus are correctly imported/exported", async 
 });
 
 test("Links between charts and datasources are correctly imported/exported", async function () {
-    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const { model, pivotId } = await createSpreadsheetWithPivot({ createMockApp: true });
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
@@ -53,6 +53,7 @@ test("Links between charts and datasources are correctly imported/exported", asy
     );
     const { model: importedModel } = await createModelWithDataSource({
         spreadsheetData: exportedData,
+        createMockApp: true,
     });
     const dataSourceLink = importedModel.getters.getChartOdooLink(chartId);
     expect(dataSourceLink).toEqual(
@@ -62,7 +63,7 @@ test("Links between charts and datasources are correctly imported/exported", asy
 });
 
 test("Can undo-redo a UPDATE_ODOO_LINK_TO_CHART", async function () {
-    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const { model, pivotId } = await createSpreadsheetWithPivot({ createMockApp: true });
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
@@ -84,7 +85,7 @@ test("Can undo-redo a UPDATE_ODOO_LINK_TO_CHART", async function () {
 });
 
 test("link is removed when figure is deleted", async function () {
-    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const { model, pivotId } = await createSpreadsheetWithPivot({ createMockApp: true });
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
@@ -103,7 +104,7 @@ test("link is removed when figure is deleted", async function () {
 });
 
 test("Links of Odoo charts are duplicated when duplicating a sheet", async function () {
-    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const { model, pivotId } = await createSpreadsheetWithPivot({ createMockApp: true });
     insertChartInSpreadsheet(model, "pie");
     const sheetId = model.getters.getActiveSheetId();
     const secondSheetId = "mySecondSheetId";
@@ -124,7 +125,7 @@ test("Links of Odoo charts are duplicated when duplicating a sheet", async funct
 });
 
 test("Links of standard charts are duplicated when duplicating a sheet", async function () {
-    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const { model, pivotId } = await createSpreadsheetWithPivot({ createMockApp: true });
     const sheetId = model.getters.getActiveSheetId();
     const secondSheetId = "mySecondSheetId";
     createBasicChart(model, chartId);
@@ -144,7 +145,7 @@ test("Links of standard charts are duplicated when duplicating a sheet", async f
 });
 
 test("Datasource link is removed when a pivot is deleted", async function () {
-    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const { model, pivotId } = await createSpreadsheetWithPivot({ createMockApp: true });
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
@@ -200,7 +201,7 @@ test("Datasource link is removed when an odoo chart is deleted", async function 
 });
 
 test("cannot link against a non-existing datasource", async function () {
-    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const { model, pivotId } = await createSpreadsheetWithPivot({ createMockApp: true });
     createBasicChart(model, chartId);
     const result1 = model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,

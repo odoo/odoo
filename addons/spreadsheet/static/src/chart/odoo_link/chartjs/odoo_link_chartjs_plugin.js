@@ -6,8 +6,8 @@ import {
 export const chartJsOdooLinkPlugin = {
     id: "chartJsOdooLinkPlugin",
     afterEvent(chart, { event }, { env, chartId }) {
-        const odooLink = env?.model.getters.getChartOdooLink(chartId);
-        const isDashboard = env?.model.getters.isDashboard();
+        const odooLink = env?.model().getters.getChartOdooLink(chartId);
+        const isDashboard = env?.model().getters.isDashboard();
         if (!odooLink || !isDashboard) {
             return;
         }

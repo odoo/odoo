@@ -54,7 +54,7 @@ urlRegistry.add("OdooDataSources", {
     },
     getLinkProposals(env) {
         const proposals = [];
-        const getters = env.model.getters;
+        const getters = env.model().getters;
         for (const dataSourceType of globalFieldMatchingRegistry.getKeys()) {
             const dsFieldMatching = globalFieldMatchingRegistry.get(dataSourceType);
             for (const dataSourceCoreId of dsFieldMatching.getIds(getters)) {

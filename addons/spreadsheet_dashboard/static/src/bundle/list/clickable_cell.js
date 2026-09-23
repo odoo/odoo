@@ -15,12 +15,12 @@ clickableCellRegistry.add("list", {
 });
 
 function sortList(env, position, direction) {
-    const field = env.model.getters.getListFieldFromPosition(position);
+    const field = env.model().getters.getListFieldFromPosition(position);
     if (!field) {
         return;
     }
-    const listId = env.model.getters.getListIdFromPosition(position);
-    const definition = env.model.getters.getListDefinition(listId);
+    const listId = env.model().getters.getListIdFromPosition(position);
+    const definition = env.model().getters.getListDefinition(listId);
     const orderBy =
         direction === "none"
             ? []
@@ -28,7 +28,7 @@ function sortList(env, position, direction) {
                   { name: field.name, asc: direction === "asc" },
                   ...definition.orderBy.filter((orderBy) => orderBy.name !== field.name),
               ];
-    env.model.dispatch("UPDATE_ODOO_LIST", {
+    env.model().dispatch("UPDATE_ODOO_LIST", {
         listId,
         list: {
             ...definition,
@@ -41,7 +41,7 @@ clickableCellRegistry.add("dashboard_list_sorting", {
     condition: (position, getters) =>
         getters.isDashboard() && getters.isSortableListHeader(position),
     execute: (position, env) => {
-        sortList(env, position, getNextSortDirection(env.model.getters, position));
+        sortList(env, position, getNextSortDirection(env.model().getters, position));
     },
     component: ClickableCellSortIcon,
     componentProps: (position, getters) => ({

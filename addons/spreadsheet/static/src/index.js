@@ -112,8 +112,8 @@ globalFieldMatchingRegistry.add("chart", {
     // Note: we don't support the datasource context on drilldown for the charts, so we never stored it
     getContext: (getters, chartId) => {},
     openSidePanel: (env, chartId) => {
-        const figureId = env.model.getters.getFigureIdFromChartId(chartId);
-        env.model.dispatch("SELECT_FIGURE", { figureId });
+        const figureId = env.model().getters.getFigureIdFromChartId(chartId);
+        env.model().dispatch("SELECT_FIGURE", { figureId });
         env.getStore(SidePanelStore).open("ChartPanel", { chartId });
     },
 });

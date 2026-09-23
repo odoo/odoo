@@ -7,9 +7,8 @@ import {
     defineSpreadsheetModels,
     getBasicData,
 } from "@spreadsheet/../tests/helpers/data";
-import { mountSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
+import { mountSpreadsheet, createModelAndMountSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
 import { createSpreadsheetWithList } from "@spreadsheet/../tests/helpers/list";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { mockService, serverState } from "@web/../tests/web_test_helpers";
 
 defineSpreadsheetModels();
@@ -93,8 +92,7 @@ test("clicking scorecard outside dashboard mode does nothing", async function ()
     mockService("action", {
         doAction: () => expect.step("doAction"),
     });
-    const { model } = await createModelWithDataSource({ serverData });
-    const fixture = await mountSpreadsheet(model);
+    const { model, fixture } = await createModelAndMountSpreadsheet({ serverData });
     createScorecardChart(model);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
@@ -113,8 +111,7 @@ test("clicking scorecard in dashboard mode navigates to odoo link", async functi
             }
         },
     });
-    const { model } = await createModelWithDataSource({ serverData });
-    const fixture = await mountSpreadsheet(model);
+    const { model, fixture } = await createModelAndMountSpreadsheet({ serverData });
     createScorecardChart(model);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
@@ -134,7 +131,7 @@ test("clicking key area opens seeRecord when key cell has a list record", async 
             }
         },
     });
-    const { model } = await createSpreadsheetWithList();
+    const { model } = await createSpreadsheetWithList({ createMockApp: false });
     const fixture = await mountSpreadsheet(model);
     createScorecardChart(model, { keyValue: "=A2" });
     model.updateMode("dashboard");
@@ -151,7 +148,7 @@ test("clicking baseline area opens seeRecord when baseline cell has a list recor
             }
         },
     });
-    const { model } = await createSpreadsheetWithList();
+    const { model } = await createSpreadsheetWithList({ createMockApp: false });
     const fixture = await mountSpreadsheet(model);
     createScorecardChart(model, { keyValue: "=A2", baseline: "=A2" });
     model.updateMode("dashboard");
