@@ -9,6 +9,10 @@ from odoo.tools.misc import str2bool
 
 logger = logging.getLogger(__name__)
 
+#: How much of a failed captcha token reaches the log. The value is
+#: attacker-controlled, so it is truncated rather than written whole.
+TOKEN_LOG_PREFIX = 12
+
 
 class IrHttp(models.AbstractModel):
     _inherit = "ir.http"
@@ -138,11 +142,16 @@ class IrHttp(models.AbstractModel):
             )
             return "is_human"
         errors = result.get("error-codes", [])
+        # The token is an attacker-controlled request parameter bounded only by
+        # DEFAULT_MAX_CONTENT_LENGTH (128 MB), and this line runs once per failed
+        # verification on public routes: logging it whole let a caller choose how
+        # much we write to disk. A short prefix is enough to correlate a report
+        # with a request; the error codes are the actual diagnostic.
         logger.warning(
-            "Trial captcha verification for ip address %s failed error codes %r. token was: [%s]",
+            "Trial captcha verification for ip address %s failed error codes %r. token prefix was: [%s]",
             ip_addr,
             errors,
-            token,
+            (token or "")[:TOKEN_LOG_PREFIX],
         )
         for error in errors:
             if error in ["missing-input-secret", "invalid-input-secret"]:

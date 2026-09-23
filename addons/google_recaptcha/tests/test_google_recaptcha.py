@@ -220,3 +220,51 @@ class TestGoogleRecaptcha(TransactionCase):
                 "enable_recaptcha"
             ]
         )
+
+    def test_failed_verification_truncates_the_token_in_the_log(self):
+        """The log must not grow with the caller-supplied token (R02).
+
+        The token is a request parameter, bounded only by Odoo's 128 MB body
+        cap, and this line runs once per failed verification on public routes.
+        Logging it whole let the caller choose how much we write to disk.
+        """
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
+        self.icp.set_param("enable_recaptcha", "True")
+        huge = "A" * 100_000
+        payload = {"success": False, "error-codes": ["invalid-input-response"]}
+
+        with (
+            self._mocked_verify(json_result=payload),
+            self.assertLogs(MODULE, level="WARNING") as captured,
+        ):
+            verdict = self.env["ir.http"]._get_recaptcha_verdict(
+                "10.0.0.1", huge, action="login"
+            )
+
+        self.assertEqual(verdict, "wrong_token")
+        logged = "".join(captured.output)
+        self.assertNotIn(huge, logged, "the whole token reached the log")
+        self.assertLess(len(logged), 500, "the log line grows with the caller's token")
+        self.assertIn("invalid-input-response", logged, "keep the diagnostic")
+
+    def test_failed_verification_without_a_token_still_logs(self):
+        """An empty/False token must not break the truncation."""
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
+        self.icp.set_param("enable_recaptcha", "True")
+        with (
+            self._mocked_verify(
+                json_result={
+                    "success": False,
+                    "error-codes": ["missing-input-response"],
+                }
+            ),
+            self.assertLogs(MODULE, level="WARNING"),
+        ):
+            verdict = self.env["ir.http"]._get_recaptcha_verdict(
+                "10.0.0.1", False, action="login"
+            )
+        self.assertEqual(verdict, "wrong_token")
