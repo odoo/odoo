@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityMarkAsDone">
-        <div class="o-mail-ActivityMarkAsDone o_avatar_card card">
-            <div t-if="this.hasHeader" class="card-header bg-inherit pb-0">
+        <PopoverCard class="'o-mail-ActivityMarkAsDone'">
+            <t t-if="this.hasHeader" t-set-slot="header">
                 <h6>Mark Done</h6>
-            </div>
+            </t>
             <div class="card-body bg-inherit">
                 <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model.proxy="this.activity().feedback" t-ref="this.textArea"/>
                 <div class="mt-2">
@@ -19,6 +19,6 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </PopoverCard>
     </t>
 </templates>

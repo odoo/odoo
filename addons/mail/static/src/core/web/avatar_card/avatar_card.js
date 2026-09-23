@@ -1,5 +1,6 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { ImStatus } from "@mail/core/common/im_status";
+import { PopoverCard } from "@mail/core/common/popover_card/popover_card";
 
 import { Component, computed, signal, t, useListener, useProps } from "@odoo/owl";
 
@@ -10,7 +11,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class AvatarCard extends Component {
     static template = "mail.AvatarCard";
-    static components = { ActionList, Dropdown, DropdownItem, ImStatus };
+    static components = { ActionList, Dropdown, DropdownItem, ImStatus, PopoverCard };
     static get allowedModels() {
         return ["res.users", "res.partner"];
     }

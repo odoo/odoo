@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityAssignPopover">
-        <div class="o-mail-ActivityAssignPopover o_avatar_card card">
-            <div t-if="this.hasHeader" class="card-header bg-inherit pb-0">
+        <PopoverCard class="'o-mail-ActivityAssignPopover'">
+            <t t-if="this.hasHeader" t-set-slot="header">
                 <h6>Assign</h6>
-            </div>
+            </t>
             <div class="card-body bg-inherit">
                 <div class="d-flex align-items-center">
                     <i class="oi oi-filled me-2" data-icon="person" role="img" aria-label="User"/>
@@ -43,6 +43,6 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </PopoverCard>
     </t>
 </templates>
