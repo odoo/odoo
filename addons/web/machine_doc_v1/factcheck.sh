@@ -829,7 +829,7 @@ assert_eq "ARCHITECTURE.md Layer table covers libs/" \
     "$(grep -cE '\| .libs/. \|' "$WEB/machine_doc_v1/ARCHITECTURE.md")" "1"
 
 # 16. DIRECTORY_MAP.md header count and row set.
-SRC_DIRS=$(find "$WEB/static/src" -mindepth 1 -type d -not -path '*/.claude*' | wc -l)
+SRC_DIRS=$(find "$WEB/static/src" -mindepth 1 -type d -not -path "$WEB/static/src*/.claude*" | wc -l)
 assert_doc_cites "DIRECTORY_MAP.md header states the entry count" "$((SRC_DIRS + 1))" \
     '\\*\\*%s entries\\*\\*' DIRECTORY_MAP.md
 # Set equality, not just cardinality: a phantom row plus a missing row cancel
@@ -1578,8 +1578,10 @@ read -r RF_TOTAL RF_PLAIN RF_SPEC <<<"$("$VENV_PY" - "$ADDONS" <<'PYEOF' 2>/dev/
 import pathlib, re, sys
 call = re.compile(r"(?<!function )\b(registerField|registerFallbackField)\(\s*")
 tot = plain = spec = 0
-for p in pathlib.Path(sys.argv[1]).rglob("*.js"):
-    if "machine_doc" in str(p) or "node_modules" in str(p) or ".worktrees" in p.parts:
+root = pathlib.Path(sys.argv[1])
+for p in root.rglob("*.js"):
+    parts = p.relative_to(root).parts
+    if "machine_doc" in str(p) or "node_modules" in parts or ".worktrees" in parts or ".claude" in parts:
         continue
     try:
         t = p.read_text(errors="ignore")
