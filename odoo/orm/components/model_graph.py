@@ -127,6 +127,15 @@ class TriggerTree(dict):
 
         return result
 
+    def nodes(self) -> list[Any]:
+        seen: dict[Any, None] = {}
+        stack = [self]
+        while stack:
+            tree = stack.pop()
+            seen.update(dict.fromkeys(tree.root))
+            stack.extend(tree.values())
+        return list(seen)
+
     def _filtered(self, select: Callable) -> TriggerTree:
         root = self.root
         filtered_root = [f for f in root if select(f)]
@@ -235,7 +244,9 @@ class _TriggerIndex:
 
 class _TriggerState:
     __slots__ = (
+        "dynamic_nodes",
         "fact_of",
+        "filtered",
         "index",
         "merged",
         "modifying_relations",
@@ -253,6 +264,8 @@ class _TriggerState:
         self.index: _TriggerIndex | None = None
         self.trees: dict[Any, TriggerTree] = {}
         self.merged: LRU[tuple, TriggerTree] = LRU(_MERGED_CACHE_MAX)
+        self.dynamic_nodes: dict[tuple, tuple] = {}
+        self.filtered: LRU[tuple, TriggerTree] = LRU(_MERGED_CACHE_MAX)
         self.modifying_relations: dict[Any, bool] = {}
         self.path_fields: frozenset | None = None
         self.recompute_order: dict[Any, int] | None = None
@@ -333,6 +346,8 @@ class ModelGraph:
             # and is stale now, not only `dep_field`'s own tree
             state.trees.clear()
             state.merged.clear()
+            state.dynamic_nodes.clear()
+            state.filtered.clear()
             state.modifying_relations.clear()
             state.path_fields = None
             state.recompute_order = None
@@ -427,7 +442,10 @@ class ModelGraph:
         return field in self._state.triggers
 
     def get_trigger_tree(
-        self, fields: list[Any], select: Callable = bool
+        self,
+        fields: list[Any],
+        select: Callable = bool,
+        static: Callable | None = None,
     ) -> TriggerTree:
         state = self._state
         key = tuple(fields)
@@ -450,7 +468,22 @@ class ModelGraph:
             # trees and folding them would reorder a recompute. The LRU keeps
             # the shapes in use instead of dropping every entry at the cap.
             state.merged[key] = structure
-        return structure._filtered(select)
+        if static is None:
+            return structure._filtered(select)
+        # `static` names the nodes `select` keeps whatever the cache holds (a
+        # fact of the registry), so the filtered tree is a function of `select`
+        # on the other nodes alone: walking the tree on every call rebuilt the
+        # same few shapes, 18 of them over 290 calls of an invoice's cycle
+        dynamic = state.dynamic_nodes.get(key)
+        if dynamic is None:
+            dynamic = state.dynamic_nodes[key] = tuple(
+                node for node in structure.nodes() if not static(node)
+            )
+        filtered_key = (key, tuple(select(node) for node in dynamic))
+        filtered = state.filtered.get(filtered_key)
+        if filtered is None:
+            filtered = state.filtered[filtered_key] = structure._filtered(select)
+        return filtered
 
     def get_field_trigger_tree(self, field: Any) -> TriggerTree:
         return self._get_field_trigger_tree(self._state, field)

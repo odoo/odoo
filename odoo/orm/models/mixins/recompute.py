@@ -251,14 +251,17 @@ class RecomputeMixin(_ModelStubs):
         env = self.env
         core = env.core
 
+        def static(field: Field) -> bool:
+            return field.is_stored_computed or _fires_constraints(env, field)
+
         def select(field: Field) -> bool:
-            if field.is_stored_computed or _fires_constraints(env, field):
+            if static(field):
                 return True
             if field._is_context_dependent(env):
                 return core.has_any_context_cached(field)
             return core.has_any_cached(field)
 
-        tree = self.pool.get_trigger_tree(fields, select=select)
+        tree = self.pool.get_trigger_tree(fields, select=select, static=static)
         if not tree:
             return ()
 

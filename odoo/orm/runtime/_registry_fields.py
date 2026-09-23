@@ -198,10 +198,13 @@ class _RegistryFieldsMixin(_RegistryStubs):
         return computed
 
     def get_trigger_tree(
-        self, fields: list[Field], select: Callable[[Field], bool] = bool
+        self,
+        fields: list[Field],
+        select: Callable[[Field], bool] = bool,
+        static: Callable[[Field], bool] | None = None,
     ) -> TriggerTree:
         self._get_field_triggers()
-        return self.model_graph.get_trigger_tree(fields, select)
+        return self.model_graph.get_trigger_tree(fields, select, static)
 
     def get_dependent_fields(self, field: Field) -> Iterator[Field]:
         self._get_field_triggers()
