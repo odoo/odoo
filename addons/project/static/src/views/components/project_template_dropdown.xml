@@ -2,7 +2,7 @@
 <templates>
     <t t-name="project.ProjectTemplateDropdown">
         <button t-if="!this.state.projectTemplates.length" type="button" t-att-class="this.props.newButtonClasses" t-att-disabled="this.props.isDisabled" t-att-data-hotkey="this.props.hotkey" t-on-click.stop="this.props.onCreate" data-bounce-button="">New</button>
-        <Dropdown t-else="" menuClass="'py-0'">
+        <Dropdown t-else="" navigationOptions="this.navigationOptions">
             <button t-attf-class="{{ this.props.newButtonClasses }} o-dropdown-caret" t-att-disabled="this.props.isDisabled" t-att-data-hotkey="this.props.hotkey" data-bounce-button="">
                 New
             </button>
@@ -10,10 +10,10 @@
                 <DropdownItem tag="'button'" class="'o-project-template btn btn-link'" onSelected="this.props.onCreate">
                     New Project
                 </DropdownItem>
-                <div role="separator" class="dropdown-divider my-0"/>
+                <div role="separator" class="dropdown-divider"/>
                 <div class="dropdown-header">Project Templates</div>
                 <t t-foreach="this.state.projectTemplates" t-as="template" t-key="template.id">
-                    <DropdownItem tag="'button'" class="'btn btn-link o-dropdopwn-item-indent o-project-template d-flex align-items-center pe-0'"
+                    <DropdownItem tag="'span'" class="'btn btn-link o-dropdopwn-item-indent o-project-template d-flex align-items-center pe-0'"
                         onSelected="() => this.createProjectFromTemplate(template)">
                         <span class="text-truncate" t-out="template.name"/>
                         <ProjectTemplateButtons resModel="'project.project'" resId="template.id"/>

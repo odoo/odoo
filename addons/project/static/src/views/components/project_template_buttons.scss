@@ -5,24 +5,17 @@
 .o-project-template, .o-task-template {
     @include media-breakpoint-up(sm) {
         .o_template_icon_group {
-            visibility: hidden;
+            // opacity, not visibility: the buttons must stay focusable for
+            // keyboard navigation. pointer-events keeps a stray click on a
+            // hidden icon falling through to the row.
+            opacity: 0;
+            pointer-events: none;
         }
-        line-height: 2rem;
-        &:hover, &.focus {
+
+        &:hover, &.focus, &:focus-within {
             .o_template_icon_group {
-                visibility: visible;
-
-                .btn {
-                    color: $text-muted !important;
-
-                    &.btn-link:hover {
-                        color: $btn-link-hover-color !important;
-                    }
-
-                    &[data-icon="delete"]:hover {
-                        color: $o-danger !important;
-                    }
-                }
+                opacity: 1;
+                pointer-events: auto;
             }
         }
     }

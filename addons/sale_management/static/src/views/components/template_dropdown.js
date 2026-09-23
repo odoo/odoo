@@ -5,6 +5,16 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { user } from "@web/core/user";
 
+const navigationOptions = {
+    // false: the default would target each row's first nested <button> (the edit
+    // icon), so Enter would open the template instead of using it.
+    shouldFocusChildInput: false,
+    hotkeys: {
+        // Rebound because the rows are <span>, not <button>.
+        space: (navigator) => navigator.activeItem?.select(),
+    },
+};
+
 export class SaleTemplateDropdown extends Component {
     static template = "sale_management.SaleTemplateDropdown";
     static components = {
@@ -24,6 +34,7 @@ export class SaleTemplateDropdown extends Component {
         this.action = useService("action");
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
+        this.navigationOptions = navigationOptions;
         this.state = proxy({
             canManageTemplates: false,
             quotationTemplates: [],
