@@ -329,7 +329,7 @@ describe("normalize table structure", () => {
                     <caption>c</caption>
                     <tbody>
                         <tr>
-                            <td><div class="o-paragraph"><br></div></td>
+                            <td><p><br></p></td>
                         </tr>
                     </tbody>
                 </table>
