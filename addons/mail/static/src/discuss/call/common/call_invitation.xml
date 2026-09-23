@@ -12,8 +12,8 @@
                                 <i t-else="" class="fa-solid fa-phone"/>
                             </div>
                             <div class="ms-2 me-3 flex-grow-1 overflow-hidden">
-                                <p class="o-discuss-CallInvitation-channelName m-0 fw-bold small text-truncate" t-esc="props.thread.displayName"/>
-                                <p class="o-discuss-CallInvitation-description m-0 fst-italic smaller text-truncate pe-1" t-esc="incomingCallText"/>
+                                <p class="o-discuss-CallInvitation-channelName m-0 fw-bold small text-truncate" t-out="props.thread.displayName"/>
+                                <p class="o-discuss-CallInvitation-description m-0 fst-italic smaller text-truncate pe-1" t-out="incomingCallText"/>
                             </div>
                         </div>
                         <div class="d-flex align-items-center flex-shrink-0">

@@ -8,7 +8,7 @@
                         autofocus="true" t-on-blur="onBlur" t-on-keydown="onKeyDown" t-ref="nameInput"/>
                 </t>
                 <t t-else="">
-                    <span class="o_pdf_name_display" t-esc="props.name" t-att-title="props.name"
+                    <span class="o_pdf_name_display" t-out="props.name" t-att-title="props.name"
                         t-on-click.stop="onClickGroupName"/>
                 </t>
             </div>

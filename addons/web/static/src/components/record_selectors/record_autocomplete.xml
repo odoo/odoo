@@ -14,9 +14,9 @@
             <t t-set-slot="option" t-slot-scope="optionScope">
                 <span t-if="isAvatarModel and optionScope.data.record" class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
                     <img class="rounded me-1" t-att-src="avatarUrl(optionScope.data.record.id)" alt=""/>
-                    <t t-esc="optionScope.label"/>
+                    <t t-out="optionScope.label"/>
                 </span>
-                <t t-else="" t-esc="optionScope.label"/>
+                <t t-else="" t-out="optionScope.label"/>
             </t>
         </AutoComplete>
     </t>

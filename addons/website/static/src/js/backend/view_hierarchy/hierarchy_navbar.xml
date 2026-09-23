@@ -7,7 +7,7 @@
             <div class="btn-group">
                 <Dropdown items="websiteNames">
                     <button class="btn btn-secondary">
-                        <span t-esc="props.websites.selected"/>
+                        <span t-out="props.websites.selected"/>
                     </button>
                 </Dropdown>
             </div>

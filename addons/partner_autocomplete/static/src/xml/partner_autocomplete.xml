@@ -21,10 +21,10 @@
 
     <t t-name="partner_autocomplete.DropdownOption">
         <div t-if="option.data.isWorldwideAction" class="o_partner_autocomplete_option text-info">
-            <span t-esc="option.label"/> 🌎
+            <span t-out="option.label"/> 🌎
         </div>
         <div t-else="" class="o_partner_autocomplete_option">
-            <span t-esc="option.label"/><t t-if="option.data.description">, <span class="text-muted" t-esc="option.data.description"/></t>
+            <span t-out="option.label"/><t t-if="option.data.description">, <span class="text-muted" t-out="option.data.description"/></t>
         </div>
     </t>
 

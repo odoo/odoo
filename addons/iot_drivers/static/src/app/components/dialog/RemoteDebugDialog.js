@@ -128,7 +128,7 @@ export class RemoteDebugDialog extends Component {
                         <span class="visually-hidden">Loading...</span>
                     </div>
                     <t t-else="">
-                        <t t-esc="state.ngrok ? 'Disable remote debugging' : 'Enable remote debugging'" />
+                        <t t-out="state.ngrok ? 'Disable remote debugging' : 'Enable remote debugging'" />
                     </t>
                 </button>
                 <button type="button" t-att-class="'btn btn-sm btn-' + (state.ngrok ? 'secondary' : 'primary')" data-bs-dismiss="modal">Close</button>

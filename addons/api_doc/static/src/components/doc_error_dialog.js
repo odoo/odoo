@@ -8,7 +8,7 @@ export class DocErrorDialog extends Component {
             <div class="d-flex align-items-center mb-2">
                 <i class="pe-2 fa-solid fa-exclamation-triangle fa-lg" aria-hidden="true"/>
                 <h5 class="m-0 text-danger">
-                    <t t-esc="title"/>: <strong t-out="props.name"/>
+                    <t t-out="title"/>: <strong t-out="props.name"/>
                 </h5>
             </div>
             <t t-if="traceback">

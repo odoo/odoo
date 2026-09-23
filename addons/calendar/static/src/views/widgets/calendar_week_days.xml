@@ -11,7 +11,7 @@
                     t-att-tabindex="props.readonly ? -1 : 0"
                     t-on-click="this.props.readonly? () => {} : () => this.onChange(day)"
                     t-on-keydown="(ev) => this.onKeydown(ev, day)">
-                    <t t-esc="props.record.fields[day].string[0]"/>
+                    <t t-out="props.record.fields[day].string[0]"/>
                 </div>
             </t>
         </div>

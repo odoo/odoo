@@ -3,7 +3,7 @@
     <t t-name="report_formula.AccountReportFilterVariant">
         <Dropdown>
             <button class="btn btn-secondary">
-                <i class="fa-solid fa-book me-1"/>Report: <t t-esc="selectedVariantName"/>
+                <i class="fa-solid fa-book me-1"/>Report: <t t-out="selectedVariantName"/>
             </button>
 
             <t t-set-slot="content">

@@ -12,7 +12,7 @@
                         <t t-set="product" t-value="props.productTemplate"/>
 
                         <div class="modal-body px-3 px-sm-4 pt-0" t-ref="scrollContainer">
-                            <h2 t-esc="product.name" class="mb-3"/>
+                            <h2 t-out="product.name" class="mb-3"/>
                             <div t-if="product.public_description" >
                                 <t t-out="product.productDescriptionMarkup"/>
                             </div>
@@ -24,7 +24,7 @@
                                            </div>
                                            <div t-else="" class="flex-shrink-0 rounded-circle" t-attf-style="width:30px;height:30px; background-color: {{tag.color}};"/>
                                            <div class="ms-2">
-                                                <div class="fs-4 fw-bold" style="line-height: 30px" t-esc="tag.name"/>
+                                                <div class="fs-4 fw-bold" style="line-height: 30px" t-out="tag.name"/>
                                                 <div t-if="tag.pos_description">
                                                     <t t-out="tag.posDescriptionMarkup"/>
                                                 </div>

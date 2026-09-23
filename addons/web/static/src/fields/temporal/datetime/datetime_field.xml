@@ -4,7 +4,7 @@
         <t t-set="showSeparator" t-value="shouldShowSeparator()" />
         <div class="d-flex gap-2 align-items-center" t-ref="root">
             <t t-if="props.readonly">
-                <span t-if="!isEmpty(startDateField)" class="text-truncate" t-esc="getFormattedValue(0)" t-att-data-tooltip="getFormattedValue(0, true)"/>
+                <span t-if="!isEmpty(startDateField)" class="text-truncate" t-out="getFormattedValue(0)" t-att-data-tooltip="getFormattedValue(0, true)"/>
             </t>
             <t t-elif="props.required or props.alwaysRange or !isEmpty(startDateField) or startDateField === props.name">
                 <t t-if="picker.activeInput !== startDateField and values[0]">
@@ -16,7 +16,7 @@
                         t-on-click="onDateButtonClick"
                         t-att-data-field="startDateField"
                         t-att-class="'o_input o_daterange_start w-100 text-start ' + (props.warnFuture and isDateInTheFuture(0) ? 'text-danger' : '')">
-                        <t t-esc="getFormattedValue(0)" />
+                        <t t-out="getFormattedValue(0)" />
                     </button>
                 </t>
                 <t t-else="">
@@ -41,7 +41,7 @@
 
             <t t-if="endDateField">
                 <t t-if="props.readonly">
-                    <span class="text-truncate" t-esc="getFormattedValue(1)" t-att-data-tooltip="getFormattedValue(1, true)"/>
+                    <span class="text-truncate" t-out="getFormattedValue(1)" t-att-data-tooltip="getFormattedValue(1, true)"/>
                 </t>
                 <t t-elif="props.required or props.alwaysRange or !isEmpty(endDateField) or (isEmpty(startDateField) and endDateField === props.name)">
                     <t t-if="picker.activeInput !== endDateField and values[1]">
@@ -53,7 +53,7 @@
                             t-att-id="props.startDateField and props.id"
                             t-att-data-field="endDateField"
                             t-att-class="'o_input o_daterange_end w-100 text-start ' + (props.warnFuture and isDateInTheFuture(1) ? 'text-danger' : '')">
-                            <t t-esc="getFormattedValue(1)" />
+                            <t t-out="getFormattedValue(1)" />
                         </button>
                     </t>
                     <t t-else="">

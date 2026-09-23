@@ -5,8 +5,8 @@
     <Dialog size="'md'" title="props.title" modalRef="modalRef">
       <p t-out="props.body" class="text-prewrap"/>
       <t t-set-slot="footer">
-        <button type="button" class="btn" t-att-class="props.confirmClass" t-att-disabled="state.isProcess" t-on-click="confirm" t-esc="props.confirmLabel" data-hotkey="q"/>
-        <button type="button" t-if="props.cancel" class="btn btn-secondary" t-att-disabled="state.isProcess" t-on-click="cancel" t-esc="props.cancelLabel" data-hotkey="x"/>
+        <button type="button" class="btn" t-att-class="props.confirmClass" t-att-disabled="state.isProcess" t-on-click="confirm" t-out="props.confirmLabel" data-hotkey="q"/>
+        <button type="button" t-if="props.cancel" class="btn btn-secondary" t-att-disabled="state.isProcess" t-on-click="cancel" t-out="props.cancelLabel" data-hotkey="x"/>
       </t>
     </Dialog>
   </t>

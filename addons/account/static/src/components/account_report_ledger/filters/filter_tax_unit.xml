@@ -3,7 +3,7 @@
     <t t-name="account.AccountReportFilterTaxUnit">
         <Dropdown>
             <button class="btn btn-secondary">
-                <i class="fa-solid fa-house me-1"/>Tax Unit: <t t-esc="selectedTaxUnitName"/>
+                <i class="fa-solid fa-house me-1"/>Tax Unit: <t t-out="selectedTaxUnitName"/>
             </button>
 
             <t t-set-slot="content">

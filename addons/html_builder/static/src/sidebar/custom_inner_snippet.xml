@@ -24,7 +24,7 @@
                 </div>
             </t>
             <t t-else="">
-                <span class="o_snippet_thumbnail_title" t-esc="snippet.title"/>
+                <span class="o_snippet_thumbnail_title" t-out="snippet.title"/>
             </t>
         </div>
         <div t-if="!state.isRenaming" class="rename-delete-buttons float-end z-1">

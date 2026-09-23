@@ -9,7 +9,7 @@
                 <p>
                     It seems that 
                     <strong class="text-danger">
-                        <t t-esc="props.productNames.join(', ')"/>
+                        <t t-out="props.productNames.join(', ')"/>
                     </strong> 
                     <t t-if="props.productNames.length > 1"> are</t>
                     <t t-else=""> is</t>

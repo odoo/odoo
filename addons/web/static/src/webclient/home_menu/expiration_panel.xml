@@ -10,7 +10,7 @@
         <span t-if="!subscription.lastRequestStatus" class="oe_instance_register">
             <t t-if="!subscription.hasInstalledApps">You will be able to register your database once you have installed your first app.</t>
             <t t-else="">
-                <t t-esc="expirationMessage"/>
+                <t t-out="expirationMessage"/>
                 <t t-if="subscription.warningType === 'admin'">
                     <t t-if="subscription.unregistered">
                         <a class="oe_instance_register_show alert-link text-decoration-underline" href="#" t-on-click.prevent="showRegistrationForm">Register your subscription</a>
@@ -33,8 +33,8 @@
                 <t t-elif="subscription.warningType === 'user'">Log in as an administrator to correct the issue.</t>
             </t>
         </span>
-        <span t-if="subscription.lastRequestStatus === 'success'" class="oe_instance_register oe_instance_success">Thank you, your registration was successful! Your database is valid until <span><t t-esc="subscription.formattedExpirationDate"/></span>.</span>
-        <span t-elif="subscription.lastRequestStatus === 'update'" class="oe_instance_register oe_subscription_updated">Your subscription was updated and is valid until <span><t t-esc="subscription.formattedExpirationDate"/></span>.</span>
+        <span t-if="subscription.lastRequestStatus === 'success'" class="oe_instance_register oe_instance_success">Thank you, your registration was successful! Your database is valid until <span><t t-out="subscription.formattedExpirationDate"/></span>.</span>
+        <span t-elif="subscription.lastRequestStatus === 'update'" class="oe_instance_register oe_subscription_updated">Your subscription was updated and is valid until <span><t t-out="subscription.formattedExpirationDate"/></span>.</span>
         <span t-elif="subscription.lastRequestStatus === 'error'" class="oe_instance_register oe_instance_error">Something went wrong while registering your database. You can try again or contact <a class="alert-link text-decoration-underline" href="https://www.odoo.com/help" target="_blank">Odoo Support</a>.</span>
         <span t-elif="subscription.lastRequestStatus === 'link'" class="oe_instance_register oe_database_already_linked">
             Your subscription is already linked to a database.<br/>
@@ -43,7 +43,7 @@
                 <p t-if="subscription.mailDeliveryStatus === 'ongoing'">Sending the instructions by email ...</p>
                 <p t-elif="subscription.mailDeliveryStatus === 'success'">The instructions to unlink your subscription from the previous database(s) have been sent</p>
                 <p t-elif="subscription.mailDeliveryStatus === 'fail'">Unable to send the instructions by email, please contact the <a href="https://www.odoo.com/help" target="_blank">Odoo Support</a><br/>
-                    Error reason: <t t-esc="subscription.mailDeliveryStatusError"/>
+                    Error reason: <t t-out="subscription.mailDeliveryStatusError"/>
                 </p>
             </span>
             <span t-else="">Contact your sales representative to help you to unlink your previous database</span>
@@ -55,7 +55,7 @@
                     placeholder="Paste code here"
                     title="Your subscription code"
                     />
-                <button class="btn btn-primary" t-on-click.prevent="onCodeSubmit"><t t-esc="buttonText"/></button>
+                <button class="btn btn-primary" t-on-click.prevent="onCodeSubmit"><t t-out="buttonText"/></button>
             </form>
         </Transition>
     </div>

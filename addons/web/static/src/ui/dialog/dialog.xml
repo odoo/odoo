@@ -50,7 +50,7 @@
         <h4 class="modal-title text-break flex-grow-1"
             t-att-id="titleId"
             t-att-class="{ 'me-auto': fullscreen }">
-            <t t-esc="title"/>
+            <t t-out="title"/>
         </h4>
         <t t-if="onExpand">
             <button type="button" class="fa-solid fa-up-right-and-down-left-from-center btn opacity-75 opacity-100-hover o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand"/>

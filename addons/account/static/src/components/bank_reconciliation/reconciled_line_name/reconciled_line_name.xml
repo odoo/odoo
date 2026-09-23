@@ -4,7 +4,7 @@
         <t t-if="props.valueToDisplay?.tax">
             <t t-foreach="props.valueToDisplay.tax" t-as="tax_id" t-key="tax_id_index">
                 <div class="o_tag d-inline-flex align-items-center badge rounded-pill o_tag_color_0 flex-shrink-0" t-att-class="!tax_id_last ? 'me-1': ''">
-                    <span class="o_tag_badge_text text-truncate" t-esc="tax_id.data.display_name"/>
+                    <span class="o_tag_badge_text text-truncate" t-out="tax_id.data.display_name"/>
                 </div>
             </t>
         </t>

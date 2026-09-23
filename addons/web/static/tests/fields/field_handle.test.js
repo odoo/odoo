@@ -28,7 +28,7 @@ class FakeRecord extends SignalStore {
 }
 
 class Widget extends Component {
-    static template = xml`<span t-esc="handle.value"/>`;
+    static template = xml`<span t-out="handle.value"/>`;
     static props = ["record", "name", "readonly?"];
     get handle() {
         return fieldHandle(this);
@@ -121,7 +121,7 @@ test("the handle follows a swapped name prop", async () => {
 test("a parent-built handle does NOT subscribe the child", async () => {
     const record = new FakeRecord();
     class Leaf extends Component {
-        static template = xml`<span t-esc="props.handle.value"/>`;
+        static template = xml`<span t-out="props.handle.value"/>`;
         static props = ["handle"];
     }
     class Parent extends Component {
@@ -150,7 +150,7 @@ test("a parent-built handle does NOT subscribe the child", async () => {
 test("wrapping the record in useState in the PARENT does not fix it", async () => {
     const record = new FakeRecord();
     class Leaf extends Component {
-        static template = xml`<span t-esc="props.handle.value"/>`;
+        static template = xml`<span t-out="props.handle.value"/>`;
         static props = ["handle"];
     }
     class Parent extends Component {
@@ -179,7 +179,7 @@ test("the handle survives a subclass that overrides setup without super", async 
     const record = new FakeRecord();
 
     class Base extends Component {
-        static template = xml`<span t-esc="field.value"/>`;
+        static template = xml`<span t-out="field.value"/>`;
         static props = ["record", "name"];
         setup() {
             this.fromBase = true;

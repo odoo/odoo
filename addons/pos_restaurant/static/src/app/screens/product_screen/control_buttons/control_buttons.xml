@@ -20,7 +20,7 @@
                     <i class="fa-solid fa-print me-1"></i>Bill
                 </button>
                 <button t-att-class="buttonClass" t-on-click="clickTableGuests">
-                    <span t-esc="currentOrder?.getCustomerCount() || 0" t-attf-class="rounded-circle text-bg-dark fw-bolder small me-1 {{ui.isSmall ? 'px-1' : 'px-2 py-1'}}"/>
+                    <span t-out="currentOrder?.getCustomerCount() || 0" t-attf-class="rounded-circle text-bg-dark fw-bolder small me-1 {{ui.isSmall ? 'px-1' : 'px-2 py-1'}}"/>
                     <span>Guests</span>
                 </button>
             </t>

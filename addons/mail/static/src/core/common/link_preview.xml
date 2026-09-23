@@ -59,7 +59,7 @@
                     <div class="d-flex flex-column gap-1 px-3 py-1 bg-view">
                         <p t-if="props.linkPreview.og_site_name" class="mb-0 card-text text-muted smaller overflow-hidden" t-out="props.linkPreview.og_site_name"></p>
                         <h6 class="o-mail-LinkPreviewVideo-title card-title mb-0 me-2" t-attf-class="{{ props.linkPreview.og_description ? 'text-truncate' : 'o_line_clamp o_line_clamp_3' }}">
-                            <a t-att-href="props.linkPreview.source_url" target="_blank" t-esc="props.linkPreview.og_title"/>
+                            <a t-att-href="props.linkPreview.source_url" target="_blank" t-out="props.linkPreview.og_title"/>
                         </h6>
                         <p t-if="props.linkPreview.og_description" class="o-mail-LinkPreviewVideo-description card-text mb-0 text-muted small o_line_clamp" t-out="props.linkPreview.og_description"></p>
                     </div>

@@ -23,7 +23,7 @@ function makeHost({ onResize = () => {} } = {}) {
                     <div style="width: 300px; height: 200px;">video</div>
                 </CropOverlay>
             </div>
-            <span class="tick" t-esc="state.tick"/>
+            <span class="tick" t-out="state.tick"/>
         `;
         setup() {
             this.state = useState({ isReady: true, tick: 0 });

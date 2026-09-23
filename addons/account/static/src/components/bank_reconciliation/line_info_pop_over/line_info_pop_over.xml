@@ -5,17 +5,17 @@
             <tbody>
                 <tr t-if="props.exchangeMove">
                     <td t-on-click="openExchangeMove" class="cursor-pointer">
-                        <span class="btn btn-link p-0" t-esc="exchangeDiffMoveName"/>
+                        <span class="btn btn-link p-0" t-out="exchangeDiffMoveName"/>
                     </td>
-                    <td class="align-middle text-end" t-esc="formattedExchangeMoveBalance"/>
+                    <td class="align-middle text-end" t-out="formattedExchangeMoveBalance"/>
                 </tr>
                 <tr t-if="props.isPartiallyReconciled">
                     <td t-on-click="openReconciledMove" class="cursor-pointer">
-                        <span class="btn btn-link p-0" t-esc="reconciledMoveName"/>
+                        <span class="btn btn-link p-0" t-out="reconciledMoveName"/>
                     </td>
                     <td class="align-middle">
-                        <span class="text-decoration-line-through me-2" t-esc="formattedReconciledMoveAmountCurrency"/>
-                        <span t-esc="formattedLineDataAmountCurrency"/>
+                        <span class="text-decoration-line-through me-2" t-out="formattedReconciledMoveAmountCurrency"/>
+                        <span t-out="formattedLineDataAmountCurrency"/>
                     </td>
                 </tr>
             </tbody>

@@ -6,18 +6,18 @@
             t-att-class="classNames"
             t-att-title="step.name">
             <header class="o_workflow_canvas_step_header text-truncate fw-semibold px-2 py-1">
-                <t t-esc="step.label"/>
+                <t t-out="step.label"/>
             </header>
             <div class="o_workflow_canvas_step_body flex-grow-1 px-2 py-1 small">
                 <div t-if="typeLabel" class="text-muted text-capitalize">
-                    <t t-esc="typeLabel"/>
+                    <t t-out="typeLabel"/>
                 </div>
                 <div t-if="detail" class="o_workflow_canvas_step_detail text-truncate"
                     t-att-title="detail">
-                    <t t-esc="detail"/>
+                    <t t-out="detail"/>
                 </div>
                 <span t-if="stateLabel" class="o_workflow_canvas_step_state badge">
-                    <t t-esc="stateLabel"/>
+                    <t t-out="stateLabel"/>
                 </span>
             </div>
         </div>

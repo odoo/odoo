@@ -113,12 +113,12 @@
       "probe": { "file": "Read Me.txt", "pattern": "Odoo UI Icons - v{version}" }
     },
     "owl": {
-      "version": "2.8.3",
+      "version": "2.8.4",
       "npm": "@odoo/owl",
       "license": "LGPL-3.0-only",
-      "source": "https://github.com/odoo/owl",
+      "source": "https://github.com/Agro-Marin/owl/tree/2.8-marin",
       "probe": { "file": "owl.es.js", "pattern": "version = \"{version}\"" },
-      "notes": "Upstream dist/owl.es.js, verbatim — a published npm release, not an in-tree fork. Bumping it is a framework-wide change: re-run the full @web suite."
+      "notes": "dist/owl.es.js built (npm ci && npm run build) from Agro-Marin/owl 2.8-marin = odoo/owl v2.8.4 (never published to npm) + one fork commit: t-out renders a non-block object as its string, like t-esc and owl 3, so t-esc can be replaced by t-out ahead of the owl 3 switch. __info__.hash names the built commit. Bumping it is a framework-wide change: re-run the full @web suite."
     },
     "pdfjs": {
       "version": "6.1.200",

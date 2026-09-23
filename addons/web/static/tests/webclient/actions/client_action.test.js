@@ -27,7 +27,7 @@ const actionRegistry = registry.category("actions");
 class TestClientAction extends Component {
     static template = xml`
         <div class="test_client_action">
-            ClientAction_<t t-esc="props.action.params?.description"/>
+            ClientAction_<t t-out="props.action.params?.description"/>
         </div>`;
     static props = ["*"];
     setup() {
@@ -327,7 +327,7 @@ test("ClientAction with extractProps", async () => {
         },
     ]);
     class ClientAction extends Component {
-        static template = xml`<div class="my_client_action" t-esc="props.myProp"/>`;
+        static template = xml`<div class="my_client_action" t-out="props.myProp"/>`;
         static props = ["*"];
         static extractProps(/** @type {any} */ action) {
             return { myProp: action.params.my_prop };

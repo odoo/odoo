@@ -114,7 +114,7 @@ export class UpdateDialog extends Component {
                     </div>
                     <div t-if="this.store.dev" class="alert alert-light small">
                         <a href="https://nightly.odoo.com/master/iotbox/" target="_blank" class="alert-link">
-                            Current: <t t-esc="this.store.base.version"/>
+                            Current: <t t-out="this.store.base.version"/>
                         </a>
                     </div>
                 </div>
@@ -131,7 +131,7 @@ export class UpdateDialog extends Component {
                     <div t-if="this.store.dev" class="alert alert-light small">
                         Current: 
                         <a t-att-href="'https://github.com/odoo/odoo/commit/' + this.state.currentCommitHash" target="_blank" class="alert-link">
-                            <t t-esc="this.state.currentCommitHash"/>
+                            <t t-out="this.state.currentCommitHash"/>
                         </a>
                     </div>
                 </div>

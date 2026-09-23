@@ -53,14 +53,14 @@
             </span>
         </t>
         <span t-if="otherTags.length" class="o_m2m_avatar_empty rounded text-center fw-bold cursor-default" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo" t-on-click.stop="">
-            <span t-if="otherTags.length > 9" t-esc="'9+'" />
-            <span t-else="" t-esc="'+' + otherTags.length" />
+            <span t-if="otherTags.length > 9" t-out="'9+'" />
+            <span t-else="" t-out="'+' + otherTags.length" />
         </span>
     </t>
 
     <t t-name="web.TagsList.Tooltip">
         <t t-foreach="tags" t-as="tag" t-key="tag.resId or tag.id or tag_index">
-            <div t-esc="tag.text"/>
+            <div t-out="tag.text"/>
         </t>
     </t>
 

@@ -3,7 +3,7 @@
     <t t-name="account.SalesReportFilterCode">
         <Dropdown>
             <button class="btn btn-secondary">
-                <i class="fa-solid fa-filter me-1"/> Codes: <t t-esc="selectedEcTaxName"/>
+                <i class="fa-solid fa-filter me-1"/> Codes: <t t-out="selectedEcTaxName"/>
             </button>
 
             <t t-set-slot="content">

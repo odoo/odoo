@@ -7,7 +7,7 @@
                 t-att-data-tooltip="props.btn_name"
                 t-att-aria-label="props.btn_name"
                 t-on-click.stop="onClick">
-            <t t-esc='props.btn_name'/>
+            <t t-out='props.btn_name'/>
         </button>
     </t>
 

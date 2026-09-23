@@ -24,17 +24,17 @@
                     <t t-foreach="state.runs" t-as="run" t-key="run.id">
                         <option t-att-value="run.id"
                                 t-att-selected="run.id === state.runtimeId">
-                            <t t-esc="run.name"/> — <t t-esc="run.state_label"/>
+                            <t t-out="run.name"/> — <t t-out="run.state_label"/>
                             <t t-if="run.live"> (live)</t>
                         </option>
                     </t>
                 </select>
                 <span t-if="state.runtimeId" class="badge text-bg-info">
-                    <i class="fa fa-eye me-1"/>Showing <t t-esc="runLabel"/>
+                    <i class="fa fa-eye me-1"/>Showing <t t-out="runLabel"/>
                 </span>
                 <span class="text-muted small ms-auto">
-                    <t t-esc="state.countNode"/> steps,
-                    <t t-esc="state.countEdge"/> connections
+                    <t t-out="state.countNode"/> steps,
+                    <t t-out="state.countEdge"/> connections
                 </span>
             </div>
 
@@ -49,7 +49,7 @@
             </div>
             <div t-elif="state.status === 'error'" class="alert alert-warning" role="alert">
                 <strong>The workflow could not be drawn.</strong>
-                <div class="small mt-1" t-esc="state.error"/>
+                <div class="small mt-1" t-out="state.error"/>
             </div>
             <div t-else="" class="o_workflow_canvas_paper">
                 <FlowEditor nodes="state.nodes"

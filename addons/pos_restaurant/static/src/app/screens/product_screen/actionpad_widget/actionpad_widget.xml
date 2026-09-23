@@ -30,8 +30,8 @@
                             <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
                                 <div class="d-flex align-items-center justify-content-between small" t-att-class="{ 'gap-2' : !(displayCategoryCount.length > 2) }">
                                     <div class="flex-grow-1"/>
-                                    <label class="product-category-label o_line_clamp o_line_clamp_1 px-2"><t t-esc="categoryCountLine.name"/></label>
-                                    <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="this.env.utils.formatProductQty(categoryCountLine.count, false)"/></label>
+                                    <label class="product-category-label o_line_clamp o_line_clamp_1 px-2"><t t-out="categoryCountLine.name"/></label>
+                                    <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-out="this.env.utils.formatProductQty(categoryCountLine.count, false)"/></label>
                                 </div>
                             </t>
                         </t>
@@ -45,7 +45,7 @@
                     t-on-click="() => this.clickFireCourse()"
                     t-elif="this.displayFireCourseBtn"
                 >
-                    <span t-esc="this.fireCourseBtnText"></span>
+                    <span t-out="this.fireCourseBtnText"></span>
                 </button>
                 <button
                     class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"

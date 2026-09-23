@@ -44,7 +44,7 @@ test("pending page activation does not select a removed page", async () => {
     const gate = new Deferred();
     class Page extends Component {
         static props = ["*"];
-        static template = xml`<div class="page-body" t-esc="props.title"/>`;
+        static template = xml`<div class="page-body" t-out="props.title"/>`;
     }
     class Host extends Component {
         static props = ["*"];
@@ -219,8 +219,8 @@ test("notebook set vertically", async () => {
 test("notebook pages rendered by a template component", async () => {
     class NotebookPageRenderer extends Component {
         static template = xml`
-                <h3 t-esc="props.heading"></h3>
-                <p t-esc="props.text" />
+                <h3 t-out="props.heading"></h3>
+                <p t-out="props.text" />
             `;
         static props = {
             heading: String,
@@ -283,7 +283,7 @@ test("notebook pages rendered by a template component", async () => {
 
 test("a programmatic page with index 0 is ordered first", async () => {
     class Page extends Component {
-        static template = xml`<h3 t-esc="props.heading"/>`;
+        static template = xml`<h3 t-out="props.heading"/>`;
         static props = ["*"];
     }
 

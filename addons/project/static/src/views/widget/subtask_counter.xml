@@ -7,7 +7,7 @@
            class="subtask_list_button btn-link text-dark"
            t-on-click.prevent="() => this.onClick()">
             <span class="fa-regular fa-square-check me-1"/>
-            <t t-esc="counterDisplay"/>
+            <t t-out="counterDisplay"/>
         </a>
     </t>
 

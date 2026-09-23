@@ -5,8 +5,8 @@
             <div class="card h-100 shadow-sm cursor-pointer transition-base journal-create-wizard-card">
                 <div class="card-body d-flex justify-content-between align-items-start gap-3">
                     <div>
-                        <h4 class="card-title" t-esc="props.title"/>
-                        <p class="card-text" t-esc="props.text"/>
+                        <h4 class="card-title" t-out="props.title"/>
+                        <p class="card-text" t-out="props.text"/>
                     </div>
                     <img t-if="props.images.length === 1" t-att-src="props.images[0]" class="flex-shrink-0 w-25" t-att-alt="props.title"/>
                     <div t-elif="props.images.length >= 2" class="position-relative flex-shrink-0 w-25 ratio ratio-1x1">

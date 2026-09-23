@@ -167,7 +167,7 @@ Linter and formatter config, with the rationale for every suppression.
 
 ### `odoo/addons/test_lint/`
 
-The fork's own AST checkers and registry gates: SQL built from non-constant values, gettext misuse, N+1 queries, ORM-facade imports, XML/manifest canonical form, the XML data-file rules (`tests/_xml_rules.py`: dead duplicate fields, orphan data files, unresolvable references, expressions that do not parse, `<tree>`, `attrs=`, `t-esc`, legacy x2many tuples), asset bundles that do not assemble, UNIQUE declared over a translated (jsonb) column.
+The fork's own AST checkers and registry gates: SQL built from non-constant values, gettext misuse, N+1 queries, ORM-facade imports, XML/manifest canonical form, the XML data-file rules (`tests/_xml_rules.py`: dead duplicate fields, orphan data files, unresolvable references, expressions that do not parse, `<tree>`, `attrs=`, `t-esc`, legacy x2many tuples), `t-esc` in OWL templates (`tests/test_owl_templates.py`, static XML and tagged `xml` templates), asset bundles that do not assemble, UNIQUE declared over a translated (jsonb) column.
 
 Each is an exact-match ratchet, so an undone fix fails as loudly as a new offence. The AST and XML rules run at the narrow scope below; the registry-dependent classes need a fuller install. The AST rules run `E8501`–`E8530`; none is advisory and none fails outright — the floor decides.
 

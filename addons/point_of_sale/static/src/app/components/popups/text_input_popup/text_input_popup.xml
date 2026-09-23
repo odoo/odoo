@@ -8,7 +8,7 @@
                     type="button"
                     class="btn me-2 mb-2 toggle-button "
                     t-attf-class="{{button.class || 'btn-secondary'}}">
-                    <t t-esc="button.label"/>
+                    <t t-out="button.label"/>
                 </button>
             </t>
             <textarea t-att-rows="props.rows" class="form-control form-control-lg mx-auto" type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder" t-on-keydown="onKeydown" />

@@ -20,12 +20,12 @@
                         <div class="o_row">
                             <div class="d-flex gap-3">
                                 <div t-att-data-tooltip="formattedFullDate">
-                                    <t t-esc="formattedDate"/>
+                                    <t t-out="formattedDate"/>
                                 </div>
                                 <div t-on-click.stop="openChatter" t-if="!ui.isSmall" class="o_chatter_icon btn-link text-action" t-att-class="{'visible': activityNumber or hasAttachment}">
                                     <div t-if="activityNumber" class="activity-container position-relative">
                                         <i class="fa-regular fa-clock fa-lg" role="img" aria-label="Activities"/>
-                                        <span class="activity-badge badge rounded-pill" t-esc="activityNumber"/>
+                                        <span class="activity-badge badge rounded-pill" t-out="activityNumber"/>
                                     </div>
                                     <i t-elif="hasAttachment"
                                        class="fa-solid fa-paperclip fa-lg"
@@ -44,15 +44,15 @@
                                 <span class="d-inline">
                                     <t t-if="partner">
                                         <a class="fw-bold" href="#" t-on-click.prevent.stop="openPartner">
-                                            <span t-esc="partner.display_name" name="statement_line_partner_name"/>
+                                            <span t-out="partner.display_name" name="statement_line_partner_name"/>
                                         </a>
                                         <button class="btn btn-link oi oi-close p-0 align-baseline" t-on-click.stop="removePartner" t-if="!linesToReconcile.length"/>
                                     </t>
                                     <t t-elif="recordData.partner_name">
-                                        <span class="fw-bold" t-esc="recordData.partner_name" name="statement_line_partner_name"/>
+                                        <span class="fw-bold" t-out="recordData.partner_name" name="statement_line_partner_name"/>
                                     </t>
                                     <span t-att-class="partner or recordData.partner_name ? 'ms-1' : undefined"
-                                          t-esc="recordData.payment_ref"
+                                          t-out="recordData.payment_ref"
                                     />
                                 </span>
                             </div>
@@ -78,9 +78,9 @@
                             </div>
                             <div class="d-flex align-items-start justify-content-between o_line_amount">
                                 <span class="text-muted w-50 text-end text-nowrap" t-if="recordData.foreign_currency_id">
-                                    <t t-esc="formattedAmountCurrencyInForeign"/>
+                                    <t t-out="formattedAmountCurrencyInForeign"/>
                                 </span>
-                                <span t-att-class="amountClasses" class="text-end text-nowrap" t-esc="formattedAmount"/>
+                                <span t-att-class="amountClasses" class="text-end text-nowrap" t-out="formattedAmount"/>
                             </div>
                             <div class="d-none d-md-block text-end" t-on-click.stop="toggleUnfold" t-if="recordData.is_reconciled">
                                 <i class="oi" t-att-class="{'oi-chevron-up': isUnfolded, 'oi-chevron-down': !isUnfolded}"/>
@@ -89,7 +89,7 @@
 
                         <div class="o_row d-md-none">
                             <span class="text-truncate o_payment_ref"
-                                  t-esc="recordData.payment_ref"
+                                  t-out="recordData.payment_ref"
                             />
                         </div>
                         <t t-if="isUnfolded or !recordData.is_reconciled">
@@ -98,7 +98,7 @@
                             </t>
                             <div class="o_row" t-if="linesToReconcile.length">
                                 <div t-if="suspenseAccountLine" class="d-none d-md-flex fw-bold text-muted align-items-center justify-content-end o_line_amount" t-att-class="hasForeignCurrencyAndSameCurrencyForAllLines ? 'w-50' : 'w-100'">
-                                    <t t-esc="suspenseAccountLineFormattedAmount"/>
+                                    <t t-out="suspenseAccountLineFormattedAmount"/>
                                 </div>
                             </div>
                         </t>

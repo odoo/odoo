@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.65
+:Version: 6.66
 :Date: 2026-09-22
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -6830,6 +6830,14 @@ Escape hatch for a run that must survive a known-broken bundle:
 * **POS: ``t-inherit`` for markup, ``patch`` for behaviour.** Reserve
   ``onMounted`` DOM access for measurement and focus -- raw DOM injection breaks
   on re-render.
+* **``t-out``, never ``t-esc``, in an OWL template** -- static XML and tagged
+  ``xml`` templates in JS alike, inheritance locators, ``<attribute name="t-out">``
+  and ``@t-out`` XPaths included ``[test_lint owl_t_esc]``. OWL 3 removes
+  ``t-esc``; the vendored OWL 2 (``Agro-Marin/owl`` ``2.8-marin``) renders a
+  non-block object through ``t-out`` as its string, as ``t-esc`` did. Two
+  differences remain: a ``markup()`` value renders as HTML, and a body default
+  replaces ``null``/``undefined`` but not ``false``. View archs are compiled by
+  the view compilers and still accept ``t-esc``.
 
 4.3.2 ``this`` in a template is not always the component
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8864,6 +8872,10 @@ which that test should go.
    * - Version
      - Date
      - Summary
+   * - 6.66
+     - 2026-09-22
+     - §4.3.1: OWL templates write ``t-out``; ``t-esc`` is a hard zero
+       (``test_owl_templates.py``) ahead of the OWL 3 switch.
    * - 6.65
      - 2026-09-22
      - §10.11: the context carries preferences, never authority; authority

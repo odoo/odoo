@@ -6,21 +6,21 @@
             <t t-if="order.config.is_spanish">
                 <t t-if="isSimplifiedInvoice">
                     <div>Simplified invoice</div>
-                    <div class="simplified-invoice-number" t-esc="order.invoice_name" />
+                    <div class="simplified-invoice-number" t-out="order.invoice_name" />
                 </t>
-                <div t-if="order.company.street" t-esc="order.company.street" />
-                <div t-if="order.company.zip" t-esc="order.company.zip" />
-                <div t-if="order.company.city" t-esc="order.company.city" />
-                <div t-if="order.company.state_id">(<t t-esc="order.company.state_id.name"/>)</div>
+                <div t-if="order.company.street" t-out="order.company.street" />
+                <div t-if="order.company.zip" t-out="order.company.zip" />
+                <div t-if="order.company.city" t-out="order.company.city" />
+                <div t-if="order.company.state_id">(<t t-out="order.company.state_id.name"/>)</div>
             </t>
         </xpath>
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="inside">
             <t t-set="partner" t-value="order.partner_id"/>
             <t t-if="order.config.is_spanish and partner and partner.id !== order.config.simplified_partner_id.id">
-                <div>Customer: <t t-esc="partner.name" /></div>
+                <div>Customer: <t t-out="partner.name" /></div>
                 <t t-set="default_vat_label">Tax ID</t>
-                <div t-if="partner.vat"><t t-esc="order.company.country_id?.vat_label || default_vat_label"/>: <t t-esc="partner.vat" /></div>
-                <div t-if="partner.address" t-esc="partner.address"/>
+                <div t-if="partner.vat"><t t-out="order.company.country_id?.vat_label || default_vat_label"/>: <t t-out="partner.vat" /></div>
+                <div t-if="partner.address" t-out="partner.address"/>
             </t>
         </xpath>
     </t>

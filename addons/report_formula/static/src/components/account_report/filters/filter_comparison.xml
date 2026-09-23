@@ -29,7 +29,7 @@
                             <span>Previous Period</span>
                         </t>
                         <t t-elif="controller.cachedFilterOptions.comparison.number_period > 1">
-                            <t t-esc="`${ controller.cachedFilterOptions.comparison.number_period } `"/>
+                            <t t-out="`${ controller.cachedFilterOptions.comparison.number_period } `"/>
                             <span>Previous Periods</span>
                         </t>
                     </t>
@@ -38,12 +38,12 @@
                             <span>Previous Year</span>
                         </t>
                         <t t-elif="controller.cachedFilterOptions.comparison.number_period > 1">
-                            <t t-esc="`${ controller.cachedFilterOptions.comparison.number_period } `"/>
+                            <t t-out="`${ controller.cachedFilterOptions.comparison.number_period } `"/>
                             <span>Previous Years</span>
                         </t>
                     </t>
                     <t t-else="">
-                        <t t-esc="`${ controller.cachedFilterOptions.comparison.string }`"/>
+                        <t t-out="`${ controller.cachedFilterOptions.comparison.string }`"/>
                     </t>
                 </t>
             </button>

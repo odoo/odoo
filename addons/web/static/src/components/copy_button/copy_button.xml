@@ -11,7 +11,7 @@
             t-on-click.stop="onClick"
         >
             <span class="mx-1" t-att-class="iconClass"/>
-            <span t-if="props.copyText" t-esc="props.copyText"/>
+            <span t-if="props.copyText" t-out="props.copyText"/>
         </button>
     </t>
 

@@ -4,7 +4,7 @@
     <t t-name="web.BadgeSelectionField">
         <div class="d-flex flex-wrap gap-1 mb-3" t-att-role="props.readonly ? '' : 'radiogroup'" t-att-aria-label="props.readonly ? '' : props.record.fields[props.name].string">
             <t t-if="props.readonly">
-                <span t-esc="string" t-att-raw-value="value" />
+                <span t-out="string" t-att-raw-value="value" />
             </t>
             <t t-else="">
                 <t t-foreach="options" t-as="option" t-key="option[0]">
@@ -16,7 +16,7 @@
                         role="radio"
                         t-att-tabindex="isReady ? 0 : -1"
                         t-att-aria-checked="value === option[0] ? 'true' : 'false'"
-                        t-esc="option[1]"
+                        t-out="option[1]"
                         t-on-click="() => this.onChange(option[0])"
                         t-on-keydown="(ev) => this.onKeydown(ev, option[0])"
                     />

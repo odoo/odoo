@@ -3,7 +3,7 @@
 
     <t t-name="web.ProgressBarField">
         <div class="o_progressbar w-100 d-flex align-items-center" t-ref="numpadDecimal">
-            <div t-if="props.title" class="o_progressbar_title text-nowrap pe-1"><t t-esc="props.title"/></div>
+            <div t-if="props.title" class="o_progressbar_title text-nowrap pe-1"><t t-out="props.title"/></div>
             <div class="o_progress align-middle overflow-hidden" role="progressbar" aria-valuemin="0" t-att-aria-valuemax="this.maxValue" t-att-aria-valuenow="this.currentValue" t-att-aria-label="props.title">
                 <div t-attf-class="{{ progressBarColorClass }} h-100" t-att-style="progressBarStyle"></div>
             </div>
@@ -19,7 +19,7 @@
                     t-on-focus="onInputFocus"
                     t-on-blur="onInputBlur"
                 />
-                <span t-else="" class="mx-1" t-esc="formatCurrentValue(true)"/>
+                <span t-else="" class="mx-1" t-out="formatCurrentValue(true)"/>
                 <span t-if="isPercentage">%</span>
                 <t t-else="">
                     /
@@ -33,7 +33,7 @@
                         t-on-focus="onInputFocus"
                         t-on-blur="onInputBlur"
                     />
-                    <span t-else="" class="mx-1" t-esc="formatMaxValue(true)"/>
+                    <span t-else="" class="mx-1" t-out="formatMaxValue(true)"/>
                 </t>
             </div>
         </div>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="hr_holidays.CalendarFilterSection.filter" t-inherit="web.CalendarFilterSection.filter" t-inherit-mode="primary">
-        <xpath expr="//span[@t-esc='filter.label']" position="replace">
+        <xpath expr="//span[@t-out='filter.label']" position="replace">
             <span class="o_cw_filter_title flex-grow-1 text-truncate lh-base">
-                <t t-esc="filter.label"/>
+                <t t-out="filter.label"/>
 
                 <t t-if="env.isSmall">
                     <t t-set="holiday" t-value="leaveState.holidays[filter.value]"/>

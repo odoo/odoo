@@ -14,7 +14,7 @@
          <xpath expr="//div[@id='order-tags']" position="after">
             <t t-set="tableTag" t-value="getTableTag(order)"/>
             <div t-if="tableTag" t-attf-class="badge rounded o_colorlist_item_color_1 ms-1" style="font-size: 0.75rem !important;">
-                Table <t t-esc="tableTag" />
+                Table <t t-out="tableTag" />
             </div>
         </xpath>
     </t>
@@ -25,7 +25,7 @@
                 <input type="text" name="tip-amount" t-ref="autofocus" t-model="orderUiState.inputTipAmount" t-on-blur="onBlur" t-on-keydown="onKeydown" />
             </t>
             <div t-else="">
-                <t t-esc="tipAmountStr"></t>
+                <t t-out="tipAmountStr"></t>
             </div>
         </div>
     </t>

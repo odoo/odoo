@@ -22,7 +22,7 @@
                 </t>
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-1">
                     <div t-if="thread.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
-                        <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-esc="thread.parent_channel_id.displayName" t-on-click="() => this.thread?.parent_channel_id?.open({ focus: true })"/>
+                        <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-out="thread.parent_channel_id.displayName" t-on-click="() => this.thread?.parent_channel_id?.open({ focus: true })"/>
                         <i class="oi oi-chevron-right o-xsmaller mx-1"/>
                     </div>
                     <AutoresizeInput
@@ -50,7 +50,7 @@
                 <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
                     <img class="o-mail-DiscussContent-selfAvatar ms-3 me-1 rounded-3 object-fit-cover flex-shrink-0 smaller" alt="Avatar" t-att-src="store.self.avatarUrl"/>
                     <div class="fw-bold flex-shrink-1 text-dark">
-                        <t t-if="store.self_partner" t-esc="store.self.name"/>
+                        <t t-if="store.self_partner" t-out="store.self.name"/>
                         <t t-else="">
                             <AutoresizeInput
                                 className="'py-1'"

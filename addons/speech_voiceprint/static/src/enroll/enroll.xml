@@ -5,13 +5,13 @@
             <h2>My voice</h2>
             <t t-if="state.loading"><p class="text-muted">Loading…</p></t>
             <t t-else="">
-                <t t-if="state.error"><div class="alert alert-danger" t-esc="state.error" /></t>
+                <t t-if="state.error"><div class="alert alert-danger" t-out="state.error" /></t>
                 <t t-if="state.status">
                     <p>
-                        <strong t-esc="state.status.employee" />
+                        <strong t-out="state.status.employee" />
                         <t t-if="state.status.enrolled">
-                            — voice enrolled on <t t-esc="state.status.enrolled_at and state.status.enrolled_at.slice(0, 10)" />
-                            (<t t-esc="state.status.sample_seconds" /> s of audio).
+                            — voice enrolled on <t t-out="state.status.enrolled_at and state.status.enrolled_at.slice(0, 10)" />
+                            (<t t-out="state.status.sample_seconds" /> s of audio).
                             <t t-if="!state.status.active"><span class="badge text-bg-warning ms-1">deactivated by a leader</span></t>
                         </t>
                         <t t-else=""> — no voiceprint yet.</t>
@@ -23,8 +23,8 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Read this phrase aloud, at your normal pace</h5>
-                        <p class="card-text fs-5" t-esc="phrase" />
-                        <p class="text-muted small">Recording stops by itself after <t t-esc="target" /> seconds. Find a quiet spot; use the phone or headset you normally call with.</p>
+                        <p class="card-text fs-5" t-out="phrase" />
+                        <p class="text-muted small">Recording stops by itself after <t t-out="target" /> seconds. Find a quiet spot; use the phone or headset you normally call with.</p>
                     </div>
                 </div>
                 <t t-if="!state.supported">
@@ -36,7 +36,7 @@
                             <i class="fa fa-microphone me-1" /> Record
                         </button>
                         <button class="btn btn-danger" t-if="state.recording" t-on-click="stop">
-                            <i class="fa fa-stop me-1" /> Stop (<t t-esc="state.seconds" />/<t t-esc="target" /> s)
+                            <i class="fa fa-stop me-1" /> Stop (<t t-out="state.seconds" />/<t t-out="target" /> s)
                         </button>
                         <audio t-if="state.blobUrl" controls="controls" t-att-src="state.blobUrl" />
                     </div>

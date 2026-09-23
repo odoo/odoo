@@ -619,7 +619,7 @@ test("a focused box keeps the user's keystrokes across an unrelated re-render", 
     class Parent extends Component {
         static components = { TimePicker };
         static props = ["*"];
-        static template = xml`<TimePicker value="'08:30'"/><span t-esc="state.tick"/>`;
+        static template = xml`<TimePicker value="'08:30'"/><span t-out="state.tick"/>`;
         setup() {
             this.state = useState({ tick: 0 });
         }

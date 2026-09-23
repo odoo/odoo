@@ -440,7 +440,7 @@ describe("a query mutation racing a props-driven reload", () => {
         const renderedDomains = [];
         class Child extends Component {
             static props = ["*"];
-            static template = xml`<div class="o_child" t-esc="tag"/>`;
+            static template = xml`<div class="o_child" t-out="tag"/>`;
             setup() {
                 searchModel = this.env.searchModel;
             }

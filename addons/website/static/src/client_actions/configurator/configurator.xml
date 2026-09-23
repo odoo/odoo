@@ -38,7 +38,7 @@
                                 aria-controls="selectTypeMenu">
                             <span class="d-flex align-items-center">
                                 <i class="text-primary" t-if="state.selectedType">
-                                    <t t-esc="state.getSelectedType(state.selectedType).label"/>
+                                    <t t-out="state.getSelectedType(state.selectedType).label"/>
                                 </i>
                                 <i class="fa-solid fa-angle-down ms-auto ps-2" role="img"/>
                             </span>
@@ -50,7 +50,7 @@
                                         class="dropdown-item o-navigable o_change_website_type"
                                         role="menuitem"
                                         t-ref="{{type.id === 1 ? 'autofocus' : type.name}}">
-                                    <t t-esc="type.label"/>
+                                    <t t-out="type.label"/>
                                 </button>
                             </t>
                         </t>
@@ -86,7 +86,7 @@
                                 aria-controls="selectPurposeMenu">
                             <span class="d-flex align-items-center">
                                 <t t-if="state.selectedPurpose">
-                                    <t t-esc="state.getSelectedPurpose(state.selectedPurpose).label"/>
+                                    <t t-out="state.getSelectedPurpose(state.selectedPurpose).label"/>
                                 </t>
                                 <i class="fa-solid fa-angle-down ms-auto ps-2" role="img"/>
                             </span>
@@ -97,7 +97,7 @@
                                         class="dropdown-item o-navigable o_change_website_purpose"
                                         role="menuitem"
                                         t-ref="{{type.id === 1 ? 'purposeSelection' : type.name}}">
-                                    <t t-esc="type.label"/>
+                                    <t t-out="type.label"/>
                                 </button>
                             </t>
                         </t>
@@ -196,10 +196,10 @@
                                         <div t-attf-class="h2 mb-0 card-title d-flex align-items-center {{isInstalled ? 'text-muted' : ''}}">
                                             <i t-attf-class="me-2 {{feature.icon}} {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}}"/>
                                             <h3 class="m-1">
-                                                <t t-esc="feature.name"/>
+                                                <t t-out="feature.name"/>
                                             </h3>
                                         </div>
-                                        <p class="small card-text text-muted" t-esc="feature.description"/>
+                                        <p class="small card-text text-muted" t-out="feature.description"/>
                                     </div>
                                 </div>
                             </div>

@@ -3,7 +3,7 @@
 
     <t t-name="calendar.booking.BadgeSelectionIconMappingField" t-inherit="web.BadgeSelectionField" t-inherit-mode="primary">
         <xpath expr="//span[hasclass('o_selection_badge')]" position="attributes">
-            <attribute name="t-esc"/>
+            <attribute name="t-out"/>
             <attribute name="class" add="me-2" remove="badge rounded-pill" separator=" "/>
         </xpath>
         <xpath expr="//span[hasclass('o_selection_badge')]" position="inside">

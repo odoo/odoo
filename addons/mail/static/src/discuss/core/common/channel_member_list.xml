@@ -23,7 +23,7 @@
                 </div>
             </t>
             <span t-if="props.thread.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
-            <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.thread.unknownMembersCount"/> other members.</span>
+            <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-out="props.thread.unknownMembersCount"/> other members.</span>
             <div t-if="!props.thread.areAllMembersLoaded" class="mx-2 my-1">
                 <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => props.thread.fetchChannelMembers()">Load more</button>
             </div>
@@ -31,7 +31,7 @@
     </t>
 
     <t t-name="discuss.ChannelMemberList.section">
-        <h6 class="text-muted pt-4 text-uppercase o-xsmaller opacity-75" t-esc="sectionName"/>
+        <h6 class="text-muted pt-4 text-uppercase o-xsmaller opacity-75" t-out="sectionName"/>
     </t>
 
     <t t-name="discuss.channel_member">
@@ -41,7 +41,7 @@
                 <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ' + (member.isTyping ? 'ms-n2' : 'ms-n1')" size="'md'"/>
             </div>
             <div t-ref="displayName" class="d-flex overflow-hidden flex-column lh-sm">
-                <span class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name" t-att-title="member.name"/>
+                <span class="ms-2 text-truncate text-muted fw-bold" t-out="member.name" t-att-title="member.name"/>
             </div>
             <span class="ms-auto">
                 <span t-if="member.in(props.thread.invited_member_ids)" class="p-1 oi oi-user-plus opacity-75"/>

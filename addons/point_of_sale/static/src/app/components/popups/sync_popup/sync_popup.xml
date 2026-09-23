@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.SyncPopup">
         <Dialog size="'md'">
             <t t-set-slot="header">
-                <h4 class="modal-title" t-esc="props.title" />
+                <h4 class="modal-title" t-out="props.title" />
             </t>
             <div class="payment-methods-overview overflow-auto">
                 <h5 class="text-warning">Be aware that reloading data will delete unsaved orders.</h5>

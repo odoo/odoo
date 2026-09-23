@@ -7,8 +7,8 @@
                   class="o_column_task_count"
                   t-att-class="{ 'text-danger fw-bolder': isOverWipLimit }"
                   t-att-title="isOverWipLimit ? wipLimitTitle : undefined">
-                <t t-if="wipLimit" t-esc="'(' + group.count + ' / ' + wipLimit + ')'"/>
-                <t t-else="" t-esc="'(' + group.count + ')'"/>
+                <t t-if="wipLimit" t-out="'(' + group.count + ' / ' + wipLimit + ')'"/>
+                <t t-else="" t-out="'(' + group.count + ')'"/>
             </span>
         </xpath>
     </t>

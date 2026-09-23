@@ -8,7 +8,7 @@
                     <DropdownItem class="{ 'selected': option.id === props.value }"
                                   attrs="{ 'data-id': option.id }"
                                   onSelected="() => props.update(option.id)">
-                        <span t-esc="option.label"/>
+                        <span t-out="option.label"/>
                     </DropdownItem>
                     <div class="dropdown-divider" t-if="option.separator"/>
                 </t>

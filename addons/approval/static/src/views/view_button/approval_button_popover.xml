@@ -15,9 +15,9 @@
             </div>
             <div t-foreach="result.steps" t-as="step" t-key="step.id or 'category'" class="o_approval_button_step mb-2">
                 <div class="d-flex align-items-center gap-2">
-                    <strong class="flex-grow-1" t-esc="step.name"/>
+                    <strong class="flex-grow-1" t-out="step.name"/>
                     <i t-if="step.exclusive" class="fa-solid fa-shield" title="Whoever decides this step decides no other step on this record"/>
-                    <span class="small text-muted"><t t-esc="approvedCount(step)"/> / <t t-esc="step.minimum"/></span>
+                    <span class="small text-muted"><t t-out="approvedCount(step)"/> / <t t-out="step.minimum"/></span>
                 </div>
                 <div
                     t-foreach="step.decisions"
@@ -29,11 +29,11 @@
                         t-att-alt="decision.user_name"
                         class="o_approval_button_avatar rounded-circle"/>
                     <span class="flex-grow-1">
-                        <t t-esc="decision.user_name"/>
+                        <t t-out="decision.user_name"/>
                         <span class="small text-muted ms-1">
                             <t t-if="decision.state === 'approved'">approved</t>
                             <t t-else="">refused</t>
-                            <t t-if="decision.date"> <t t-esc="formatDate(decision.date)"/></t>
+                            <t t-if="decision.date"> <t t-out="formatDate(decision.date)"/></t>
                         </span>
                     </span>
                     <button

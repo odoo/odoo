@@ -7,7 +7,7 @@
                 t-att-class="this.buttonClasses?.()"
                 t-att-data-tooltip="this.buttonTooltip?.()"
                 t-on-click.prevent="onClick">
-                <t t-esc="lang" />
+                <t t-out="lang" />
             </button>
         </t>
     </t>

@@ -277,7 +277,7 @@ test("an unchanged models prop is not reloaded", async () => {
     class Parent extends Component {
         static components = { ModelSelector };
         static props = ["*"];
-        static template = xml`<ModelSelector models="models" onModelSelected="() => {}"/><span t-esc="state.tick"/>`;
+        static template = xml`<ModelSelector models="models" onModelSelected="() => {}"/><span t-out="state.tick"/>`;
         setup() {
             this.models = models;
             this.state = useState({ tick: 0 });

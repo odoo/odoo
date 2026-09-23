@@ -62,7 +62,7 @@
             t-att-data-title="record.title"
         >
             <span t-if="record.startHour"><t t-out="record.startHour" /></span>
-            <span t-esc="record.title"/>
+            <span t-out="record.title"/>
         </a>
     </t>
 

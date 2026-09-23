@@ -4,7 +4,7 @@
     <t t-name="web.WarningDialog">
         <Dialog title="title" size="'xl'" contentClass="'o_error_dialog'">
             <div role="alert">
-                <p t-esc="message" class="text-prewrap"/>
+                <p t-out="message" class="text-prewrap"/>
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary o-default-button" t-on-click="props.close">Close</button>
@@ -15,10 +15,10 @@
     <t t-name="web.RedirectWarningDialog">
         <Dialog title="title" size="'xl'" contentClass="'o_error_dialog'">
             <div role="alert">
-                <p t-esc="message" class="text-prewrap"/>
+                <p t-out="message" class="text-prewrap"/>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="onClick" t-esc="buttonText"/>
+                <button class="btn btn-primary" t-on-click="onClick" t-out="buttonText"/>
                 <button class="btn btn-secondary" t-on-click="props.close">Close</button>
             </t>
         </Dialog>
@@ -56,7 +56,7 @@
                 <p class="text-prewrap">
                     Something went wrong... If you really are stuck, share the report with your friendly support service
                 </p>
-                <button class="btn btn-link p-0" t-on-click="() => { state.showTraceback = !state.showTraceback }" t-esc="state.showTraceback ? this.constructor.hideTracebackButtonText : this.constructor.showTracebackButtonText"/>
+                <button class="btn btn-link p-0" t-on-click="() => { state.showTraceback = !state.showTraceback }" t-out="state.showTraceback ? this.constructor.hideTracebackButtonText : this.constructor.showTracebackButtonText"/>
                 <div t-if="state.showTraceback" class="bg-100 mb-0 clearfix mt-3 position-relative o_error_detail">
                     <CopyButton
                         className="'position-absolute bg-100'"
@@ -65,11 +65,11 @@
                         content="clipboardReport"
                     />
                     <div class="ps-3 pt-3">
-                        <p class="m-0"><b t-esc="title"/></p>
-                        <code t-if="props.name" t-esc="props.name"></code>
-                        <p class="m-0" t-if="props.message" t-esc="props.message"></p>
-                        <p class="m-0" t-esc="contextDetails"/>
-                        <pre class="m-0 p-0 mt-2" t-esc="traceback"/>
+                        <p class="m-0"><b t-out="title"/></p>
+                        <code t-if="props.name" t-out="props.name"></code>
+                        <p class="m-0" t-if="props.message" t-out="props.message"></p>
+                        <p class="m-0" t-out="contextDetails"/>
+                        <pre class="m-0 p-0 mt-2" t-out="traceback"/>
                     </div>
                 </div>
             </div>

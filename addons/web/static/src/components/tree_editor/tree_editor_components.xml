@@ -8,14 +8,14 @@
     <t t-name="web.TreeEditor.Select">
         <select class="o_input pe-3 text-truncate" t-on-change="(ev) => props.update(deserialize(ev.target.value))">
             <t t-set="rendered" t-value="renderedOptions"/>
-            <option class="o_select_placeholder" t-if="props.addBlankOption" hidden="true" t-esc="props.placeholder ? props.placeholder : ''"/>
+            <option class="o_select_placeholder" t-if="props.addBlankOption" hidden="true" t-out="props.placeholder ? props.placeholder : ''"/>
             <t t-foreach="rendered.ungrouped" t-as="option" t-key="serialize(option[0])">
-                <option class="text-black" t-att-value="serialize(option[0])" t-att-selected="!props.addBlankOption and option[0] === props.value" t-esc="option[1]" />
+                <option class="text-black" t-att-value="serialize(option[0])" t-att-selected="!props.addBlankOption and option[0] === props.value" t-out="option[1]" />
             </t>
             <t t-foreach="rendered.groups" t-as="group" t-key="group[0]">
                 <optgroup t-att-label="group[0]">
                     <t t-foreach="group[1]" t-as="option" t-key="serialize(option[0])">
-                        <option class="text-black" t-att-value="serialize(option[0])" t-att-selected="!props.addBlankOption and option[0] === props.value" t-esc="option[1]" />
+                        <option class="text-black" t-att-value="serialize(option[0])" t-att-selected="!props.addBlankOption and option[0] === props.value" t-out="option[1]" />
                     </t>
                 </optgroup>
             </t>

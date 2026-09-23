@@ -241,7 +241,7 @@ test("special data: real Owl scheduling with old response after newer props", as
     let parent;
     class Child extends Component {
         static props = ["record", "requestKey"];
-        static template = xml`<span class="special-result" t-esc="result.data"/>`;
+        static template = xml`<span class="special-result" t-out="result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 const key = props.requestKey;
@@ -388,7 +388,7 @@ test("special data: shared cache refresh reaches current subscribers only", asyn
     let parent;
     class Child extends Component {
         static props = ["record", "requestKey", "id"];
-        static template = xml`<span t-att-class="props.id" t-esc="result.data"/>`;
+        static template = xml`<span t-att-class="props.id" t-out="result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 loads.push(`${props.id}:${props.requestKey}`);
@@ -564,7 +564,7 @@ test("special data: replacement during initial loading never renders uninitializ
     let parent;
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span class="initial-result" t-esc="result.data.join(',')"/>`;
+        static template = xml`<span class="initial-result" t-out="result.data.join(',')"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 const key = props.record.data.key;
@@ -611,7 +611,7 @@ test("special data: current initial data mounts without waiting for an obsolete 
     });
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span class="latest-initial" t-esc="result.data"/>`;
+        static template = xml`<span class="latest-initial" t-out="result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 requests.push(props.record.data.key);
@@ -642,7 +642,7 @@ test("special data: an obsolete rejection does not report an error after newer d
     });
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span class="latest-success" t-esc="result.data"/>`;
+        static template = xml`<span class="latest-success" t-out="result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) =>
                 props.record.data.key === 1
@@ -672,7 +672,7 @@ test("special data: switching records stops observing the previous record", asyn
     const loads = [];
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span class="current-record" t-esc="result.data"/>`;
+        static template = xml`<span class="current-record" t-out="result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 loads.push(props.record.data.key);
@@ -710,7 +710,7 @@ test("special data: a current request failure remains visible and a later input 
     });
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span class="recoverable-result" t-esc="result.data"/>`;
+        static template = xml`<span class="recoverable-result" t-out="result.data"/>`;
         setup() {
             this.result = useSpecialData(async (orm, props) => {
                 if (props.record.data.key === 1) {
@@ -748,7 +748,7 @@ test("special data: a replacement initial failure reaches the Owl error boundary
     const requests = [];
     class Child extends Component {
         static props = ["record"];
-        static template = xml`<span t-esc="result.data"/>`;
+        static template = xml`<span t-out="result.data"/>`;
         setup() {
             this.result = useSpecialData((orm, props) => {
                 requests.push(props.record.data.key);

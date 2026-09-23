@@ -20,7 +20,7 @@
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="validate" t-att-disabled="!state.token and !props.enabled">
-                    <t t-esc="props.enabled ? 'Disable' : 'Enable'"/>
+                    <t t-out="props.enabled ? 'Disable' : 'Enable'"/>
                 </button>
                 <button class="btn btn-secondary" t-on-click="props.close">Discard</button>
             </t>

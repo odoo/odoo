@@ -5,7 +5,7 @@
         <div class="o-mail-VoiceTranscript small">
             <t t-if="props.attachment.transcript_text">
                 <div class="o-mail-VoiceTranscript-text text-muted fst-italic"
-                     t-esc="props.attachment.transcript_text" />
+                     t-out="props.attachment.transcript_text" />
             </t>
             <t t-elif="props.attachment.can_transcribe">
                 <button class="btn btn-link btn-sm p-0 text-muted"
@@ -13,7 +13,7 @@
                         t-att-disabled="isPending"
                         t-on-click="onClickTranscribe">
                     <i class="fa fa-file-text-o me-1" />
-                    <t t-esc="label" />
+                    <t t-out="label" />
                 </button>
             </t>
         </div>

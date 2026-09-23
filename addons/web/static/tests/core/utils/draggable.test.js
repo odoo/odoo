@@ -23,7 +23,7 @@ test("Parameters error handling", async () => {
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
-                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
             static props = ["*"];
@@ -78,7 +78,7 @@ test("Simple dragging in single group", async () => {
         static template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         static props = ["*"];
@@ -125,7 +125,7 @@ test("Dynamically disable draggable feature", async () => {
         static template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         static props = ["*"];
@@ -166,8 +166,8 @@ test("Ignore specified elements", async () => {
             <div t-ref="root" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
-                        <span class="ignored" t-esc="i" />
-                        <span class="not-ignored" t-esc="i" />
+                        <span class="ignored" t-out="i" />
+                        <span class="not-ignored" t-out="i" />
                     </li>
                 </ul>
             </div>`;
@@ -211,11 +211,11 @@ test("Ignore specific elements in a nested draggable", async () => {
                 <ul class="list">
                     <li t-foreach="[0, 1]" t-as="i" t-key="i"
                         t-attf-class="item parent #{ i % 2 ? 'ignored' : 'not-ignored' }">
-                        <span t-esc="'parent' + i" />
+                        <span t-out="'parent' + i" />
                         <ul class="list">
                             <li t-foreach="[0, 1]" t-as="j" t-key="j"
                                 t-attf-class="item child #{ j % 2 ? 'ignored' : 'not-ignored' }">
-                                <span t-esc="'child' + j" />
+                                <span t-out="'child' + j" />
                             </li>
                         </ul>
                     </li>
@@ -266,7 +266,7 @@ test("Dragging element with touch event", async () => {
         static template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         static props = ["*"];
@@ -306,7 +306,7 @@ test("Dragging element with touch event: initiation delay can be overrided", asy
         static template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         static props = ["*"];
@@ -342,7 +342,7 @@ test("Dragging element with touch event: explicit touchDelay wins over delay", a
         static template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         static props = ["*"];
@@ -373,7 +373,7 @@ test("Elements are confined within their container and keep their initial width 
         static template = xml`
             <div t-ref="root" class="root" style="width: 800px; height: 600px;">
                 <ul class="list list-unstyled m-0 d-flex flex-column">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item w-50 h-100" />
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item w-50 h-100" />
                 </ul>
             </div>
         `;
@@ -467,7 +467,7 @@ test("allowDisconnected option", async () => {
             <div t-ref="root" class="root">
                 <button class="handle" t-if="state.hasHandle">Handle</button>
                 <ul class="list list-unstyled m-0 d-flex flex-column">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item w-50 h-100" />
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item w-50 h-100" />
                 </ul>
             </div>`;
         static props = ["*"];
@@ -504,7 +504,7 @@ test("willDrag is lowered again when the press never becomes a drag", async () =
         static template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         static props = ["*"];
@@ -530,7 +530,7 @@ function makeDraggableList(hookParams = {}) {
         static template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         static props = ["*"];
@@ -685,7 +685,7 @@ function makeScrollableDraggableList(hookParams = {}) {
             <div class="scroll" style="height: 100px; overflow-y: auto;">
                 <div t-ref="root" class="root">
                     <ul class="list">
-                        <li t-foreach="items" t-as="i" t-key="i" t-esc="i"
+                        <li t-foreach="items" t-as="i" t-key="i" t-out="i"
                             class="item" style="height: 30px;"/>
                     </ul>
                 </div>

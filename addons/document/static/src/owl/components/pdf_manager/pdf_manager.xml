@@ -29,11 +29,11 @@
                     <t t-if="state.viewedPage">
                         <div class="o_top_bar_previewer">
                             <div class="o_page_name d-flex justify-content-center align-items-center px-2 text-white opacity-75">
-                                <t t-esc="state.viewedPageName"/>
+                                <t t-out="state.viewedPageName"/>
                             </div>
                             <div class="d-flex justify-content-center align-items-center me-3">
                                 <div class="o_page_index d-flex justify-content-center align-items-center px-2 text-white opacity-75">
-                                    <t t-esc="state.viewedPageIndex + 1"/>/<t t-esc="store.numberOfPages"/>
+                                    <t t-out="state.viewedPageIndex + 1"/>/<t t-out="store.numberOfPages"/>
                                 </div>
                                 <button class="o_delete_button d-flex justify-content-center align-items-center px-2 text-white opacity-75 h-100 btn fa-solid fa-trash-can" 
                                     t-on-click="onArchive"
@@ -138,7 +138,7 @@
             <button class="btn btn-secondary o_pdf_manager_button text-uppercase"
                 t-att-class="{'dropdown-item': isMobile, 'm-0': isMobile, 'h-auto': isMobile}"
                 t-on-click.stop="(ev) => this.onClickEmbeddedAction(embeddedAction.id)"
-                t-esc="embeddedAction.name"
+                t-out="embeddedAction.name"
                 t-att-data-hotkey="hotkey"
                 t-att-disabled="state.uploadingLock || state.viewedPage"/>
         </t>

@@ -10,7 +10,7 @@
                 <div t-else="" class="o_app_icon d-flex justify-content-center align-items-center rounded-2" t-attf-style="background-color: {{app.webIcon.backgroundColor}};">
                     <i t-attf-class="{{app.webIcon.iconClass}}" t-attf-style="color: {{app.webIcon.color}};"/>
                 </div>
-                <div class="o_caption w-100 text-center text-truncate small mt-1" t-esc="app.label"/>
+                <div class="o_caption w-100 text-center text-truncate small mt-1" t-out="app.label"/>
                 <t t-set="badge" t-value="badgeFor(app)"/>
                 <t t-call="web.AppBadge"/>
             </a>

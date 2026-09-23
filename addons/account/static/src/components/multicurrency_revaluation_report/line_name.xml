@@ -28,7 +28,7 @@
                         </DropdownItem>
 
                         <DropdownItem onSelected="(ev) => controller.reportAction(ev, 'action_multi_currency_revaluation_toggle_provision', { line_id: props.line.id })">
-                            <t t-esc="props.line.is_included_line ? 'Exclude' : 'Include'"/>
+                            <t t-out="props.line.is_included_line ? 'Exclude' : 'Include'"/>
                         </DropdownItem>
                     </t>
                 </Dropdown>

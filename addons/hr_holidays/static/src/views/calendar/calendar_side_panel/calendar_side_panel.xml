@@ -15,9 +15,9 @@
                     <ul class="ps-0">
                         <li t-foreach="leaveState.mandatoryDays" t-as="mandatoryDay" t-key="mandatoryDay.id" class="mt-2 list-unstyled">
                             <strong
-                                    t-esc="getFormattedDateSpan(mandatoryDay.start, mandatoryDay.end)"
+                                    t-out="getFormattedDateSpan(mandatoryDay.start, mandatoryDay.end)"
                                     t-att-class="'hr_mandatory_day_'+mandatoryDay.colorIndex"/>
-                            : <t t-esc="mandatoryDay.title"/>
+                            : <t t-out="mandatoryDay.title"/>
                         </li>
                     </ul>
                 </div>
@@ -27,8 +27,8 @@
                     <ul class="ps-0">
                         <li t-foreach="leaveState.bankHolidays" t-as="bankHoliday" t-key="bankHoliday.id" class="mt-2 list-unstyled">
                             <strong
-                                    t-esc="getFormattedDateSpan(bankHoliday.start, bankHoliday.end)"/>
-                            : <t t-esc="bankHoliday.title"/>
+                                    t-out="getFormattedDateSpan(bankHoliday.start, bankHoliday.end)"/>
+                            : <t t-out="bankHoliday.title"/>
                         </li>
                     </ul>
                 </div>

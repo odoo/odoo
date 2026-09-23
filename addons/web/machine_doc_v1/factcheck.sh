@@ -484,10 +484,10 @@ assert_eq "_pl selects via Intl.PluralRules with an 'other' fallback" \
     "$(grep -c 'forms\[category\] ?? forms.other' "$WEB/static/src/core/translation.js")" "1"
 
 # ------- OWL bundle -------
-assert_eq "OWL bundle bytes" "$(stat -c '%s' "$WEB/static/lib/owl/owl.es.js")" "233543"
+assert_eq "OWL bundle bytes" "$(stat -c '%s' "$WEB/static/lib/owl/owl.es.js")" "234211"
 assert_eq "OWL version string" \
     "$(grep -oE 'version = "[0-9]+\.[0-9]+\.[0-9]+"' "$WEB/static/lib/owl/owl.es.js" | head -1)" \
-    'version = "2.8.3"'
+    'version = "2.8.4"'
 assert_eq "OWL ships ESM only (UMD build dropped)" \
     "$(ls "$WEB/static/lib/owl/" | tr '\n' ' ')" "owl.es.js "
 

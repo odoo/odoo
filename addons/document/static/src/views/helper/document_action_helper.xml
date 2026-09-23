@@ -8,7 +8,7 @@
                     <div t-if="state.mailTo">
                         <p class="fw-normal">Or send emails to
                             <a t-attf-href="mailto:{{state.mailTo}}">
-                                <t t-esc="state.mailTo"/>
+                                <t t-out="state.mailTo"/>
                             </a>
                         </p>
                         <p class="fw-normal"><em>Tip: configure your scanner to send all documents to this address.</em></p>

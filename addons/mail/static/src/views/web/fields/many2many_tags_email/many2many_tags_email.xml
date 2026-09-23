@@ -8,7 +8,7 @@
                  t-att-data-id="tag.resId"
                  t-att-title="tag.text"
                  t-on-click="(ev) => tag.onClick and tag.onClick(ev)" t-ref="{{tagEquals(tag, state.tagToUpdate) ? 'tagToUpdate' : `tag_${tag_index}`}}">
-                <span class="o_badge_text" t-att-title="tag.email"><t t-esc="tag.text"/></span>
+                <span class="o_badge_text" t-att-title="tag.email"><t t-out="tag.text"/></span>
                 <a t-if="!readonly &amp;&amp; tag.onDelete" t-on-click.stop.prevent="tag.onDelete" href="#" class="fa-solid fa-times o_delete ms-1" title="Delete" aria-label="Delete"/>
             </div>
         </xpath>

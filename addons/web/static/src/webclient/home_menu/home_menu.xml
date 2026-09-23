@@ -17,7 +17,7 @@
                   <i class="oi oi-settings-adjust me-1" aria-hidden="true"/><span>Customize</span>
               </button>
             </div>
-            <div class="o_home_menu_search_status visually-hidden" role="status" aria-live="polite" t-esc="grid.searchSummary"/>
+            <div class="o_home_menu_search_status visually-hidden" role="status" aria-live="polite" t-out="grid.searchSummary"/>
             <div t-if="canEditLayout and state.editing" class="o_home_menu_toolbar d-flex flex-wrap justify-content-center align-items-center gap-2 mt-2">
                 <t>
                     <span class="o_home_menu_edit_hint text-muted small me-2">Drag a tile or use its move buttons</span>
@@ -34,7 +34,7 @@
                 </t>
                 <span t-else="">Saved</span>
             </div>
-            <div class="visually-hidden" role="status" t-esc="state.layoutAnnouncement"/>
+            <div class="visually-hidden" role="status" t-out="state.layoutAnnouncement"/>
             <ExpirationPanel t-if="subscription.warningType and !subscription.isWarningHidden and subscription.daysLeft &lt;= 30 and subscription.daysLeft > 0 and !subscription.sysadmin.replace"/>
             <SysAdminPanel t-if="subscription.daysLeft > 0 and subscription.sysadmin.message"/>
             <t t-set="attention" t-value="grid.attentionApps"/>
@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div t-foreach="sections" t-as="section" t-key="section.category or 'all'" class="o_apps_section">
-                    <div t-if="section.category" class="o_home_menu_section_title text-uppercase small fw-bold px-2 mb-1" t-esc="section.category"/>
+                    <div t-if="section.category" class="o_home_menu_section_title text-uppercase small fw-bold px-2 mb-1" t-out="section.category"/>
                     <div class="o_apps row mx-0">
                         <div t-foreach="section.apps" t-as="app" t-key="app.id" class="col-3 col-md-2 o_draggable mb-3 px-0" role="listitem">
                             <t t-call="{{ constructor.appTemplate }}">
@@ -97,7 +97,7 @@
             <nav t-if="menuResults.length" class="o_home_menu_menu_results mx-auto mt-3" aria-label="Matching menus">
                 <div class="o_home_menu_section_title text-uppercase small fw-bold px-2 mb-1">Menus</div>
                 <a t-foreach="menuResults" t-as="menu" t-key="menu.id" t-att-id="'result_menu_' + menu_index" class="o_menu_result o_menuitem d-block px-2 py-1 rounded text-decoration-none" t-att-class="{o_focused: keyboard.focusedIndex === menuIndexOffset + menu_index}" t-att-href="menu.href" t-on-click.prevent="() => this._onMenuResultClick(menu)" t-on-focus="() => this._onItemFocus(menuIndexOffset + menu_index)">
-                    <span class="text-muted" t-esc="menu.parents"/><span class="text-muted"> / </span><span t-esc="menu.label"/>
+                    <span class="text-muted" t-out="menu.parents"/><span class="text-muted"> / </span><span t-out="menu.label"/>
                 </a>
                 <button t-if="menuResults.length === 8" type="button" class="o_home_menu_all_results btn btn-link btn-sm" t-on-click="showAllMenuResults">View all matching menus</button>
             </nav>
@@ -124,7 +124,7 @@
         >
             <i t-attf-class="{{app.webIcon.iconClass}} position-relative w-auto h-auto" t-attf-style="color: {{app.webIcon.color}};"/>
         </div>
-        <div class="o_caption o_line_clamp w-100 text-center mt-2" t-att-title="app.label" t-esc="app.label"/>
+        <div class="o_caption o_line_clamp w-100 text-center mt-2" t-att-title="app.label" t-out="app.label"/>
         <t t-set="badge" t-value="badgeFor(app)"/>
         <t t-if="!state.editing" t-call="web.AppBadge"/>
         <span t-if="search.query and layout.isHidden(app)" class="small text-muted">Hidden</span>
@@ -143,12 +143,12 @@
 </t>
 
 <t t-name="web.AppBadge">
-    <span t-if="badge.count" class="o_app_badge badge rounded-pill text-bg-danger position-absolute" t-att-aria-label="badge.label" t-esc="badge.text"/>
+    <span t-if="badge.count" class="o_app_badge badge rounded-pill text-bg-danger position-absolute" t-att-aria-label="badge.label" t-out="badge.text"/>
 </t>
 
 <t t-name="web.HomeMenu.CommandPalette.Footer">
     <span>
-        <span class='fw-bolder text-primary'>TIP</span> — open me anywhere with <span t-esc="controlKey" class='fw-bolder text-primary'/> + <span class='fw-bolder text-primary'>K</span>
+        <span class='fw-bolder text-primary'>TIP</span> — open me anywhere with <span t-out="controlKey" class='fw-bolder text-primary'/> + <span class='fw-bolder text-primary'>K</span>
     </span>
 </t>
 

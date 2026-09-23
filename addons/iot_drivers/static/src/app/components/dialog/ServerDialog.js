@@ -74,7 +74,7 @@ export class ServerDialog extends Component {
                     <div class="small" t-else="">
                         <p class="m-0">
                             Your current database is: <br/> 
-                            <strong t-esc="store.base.server_status" />
+                            <strong t-out="store.base.server_status" />
                         </p>
                     </div>
                 </div>

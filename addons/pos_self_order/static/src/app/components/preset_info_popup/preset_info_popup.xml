@@ -13,12 +13,12 @@
                         Choose your time
                     </option>
                     <t t-foreach="slots" t-as="slot" t-key="slot_index">
-                        <option t-att-value="slot[0]" t-esc="formatDate(slot[0])" disabled="1" />
+                        <option t-att-value="slot[0]" t-out="formatDate(slot[0])" disabled="1" />
                         <option t-foreach="Object.values(slot[1])"
                             t-as="s" t-key="s_index"
                             t-if="!s.isFull"
                             t-att-value="s.datetime.toFormat('yyyy-MM-dd HH:mm:ss')"
-                            t-esc="s.datetime.toFormat('HH:mm')" />
+                            t-out="s.datetime.toFormat('HH:mm')" />
                     </t>
                 </select>
                 <select t-if="preset.needsPartner and existingPartners.length"
@@ -29,7 +29,7 @@
                         Select your address
                     </option>
                     <t t-foreach="existingPartners" t-as="partner" t-key="partner.id">
-                        <option t-att-value="partner.id" t-esc="partner.name + ' ' + partner.pos_contact_address" />
+                        <option t-att-value="partner.id" t-out="partner.name + ' ' + partner.pos_contact_address" />
                     </t>
                 </select>
                 <input t-if="preset.needsName || preset.needsPartner"
@@ -57,7 +57,7 @@
                             Select a country
                         </option>
                         <t t-foreach="this.countries" t-as="country" t-key="country.id">
-                            <option t-att-value="country.id" t-esc="country.name" />
+                            <option t-att-value="country.id" t-out="country.name" />
                         </t>
                     </select>
                     <div class="d-flex gap-3">
@@ -80,7 +80,7 @@
                                 Select a state
                             </option>
                             <t t-foreach="availableState" t-as="state" t-key="state.id">
-                                <option t-att-value="state.id" t-esc="state.name" />
+                                <option t-att-value="state.id" t-out="state.name" />
                             </t>
                         </select>
                         <input type="text"

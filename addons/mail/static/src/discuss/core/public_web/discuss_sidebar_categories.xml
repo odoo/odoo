@@ -22,7 +22,7 @@
  <t t-call="mail.DiscussSidebarCategory.main"/>
  <t t-set-slot="content">
  <div class="overflow-hidden d-flex flex-column" t-ref="floating">
- <span class="fw-bold text-uppercase o-xsmaller user-select-none text-muted" t-ref="floatingCategoryName" t-esc="category.name"/>
+ <span class="fw-bold text-uppercase o-xsmaller user-select-none text-muted" t-ref="floatingCategoryName" t-out="category.name"/>
  <t t-call="mail.DiscussSidebarCategory.actions"/>
  </div>
  </t>
@@ -44,13 +44,13 @@
  <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa-solid fa-circle-notch fa-spin opacity-50 o-mt-0_5"/></span>
  <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xsmaller position-absolute ms-n3 align-self-center o-mt-0_5" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
  <span class="o-mail-DiscussSidebarCategory-title text-break smaller d-flex align-items-center" t-att-class="{ 'fs-bold': category.open }">
- <t name="titleText" t-esc="category.name"/>
+ <t name="titleText" t-out="category.name"/>
  </span>
  </t>
  </button>
  <t t-if="actions.length and !store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarCategory.actions"/>
  <div t-if="!category.open and category.threadsWithCounter.length > 0" class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold" t-att-class="{ 'position-absolute o-compact': store.discuss.isSidebarCompact, 'me-1': !store.discuss.isSidebarCompact }">
- <t t-esc="category.threadsWithCounter.length"/>
+ <t t-out="category.threadsWithCounter.length"/>
  </div>
  </div>
  </t>
@@ -62,7 +62,7 @@
  <t t-foreach="actions" t-as="action" t-key="action_index">
  <button class="btn w-100 opacity-75 opacity-100-hover" t-on-click="() => action.onSelect()" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start small btn-secondary shadow-sm': store.discuss.isSidebarCompact, 'p-0': !store.discuss.isSidebarCompact }" t-attf-class="#{action.class}" t-att-title="store.discuss.isSidebarCompact ? '' : action.label" t-att-data-hotkey="action.hotkey">
  <i role="presentation" class=" fa-lg" t-att-class="action.icon"/>
- <span t-if="store.discuss.isSidebarCompact" class="text-muted" t-esc="action.label"/>
+ <span t-if="store.discuss.isSidebarCompact" class="text-muted" t-out="action.label"/>
  </button>
  </t>
  </t>
@@ -78,7 +78,7 @@
  <t t-set-slot="content">
  <UseHoverOverlay hover="hover">
  <div class="overflow-hidden d-flex flex-column" t-ref="floating">
- <span class="o-mail-DiscussSidebarChannel-floatingName fw-bolder user-select-none text-truncate d-inline-block p-2 pb-0" t-esc="thread.displayName"/>
+ <span class="o-mail-DiscussSidebarChannel-floatingName fw-bolder user-select-none text-truncate d-inline-block p-2 pb-0" t-out="thread.displayName"/>
  <DiscussSidebarChannelActions thread="thread"/>
  </div>
  </UseHoverOverlay>
@@ -100,7 +100,7 @@
  <t t-set-slot="content">
  <UseHoverOverlay hover="hover">
  <div class="overflow-hidden d-flex flex-column" t-ref="floating">
- <span class="fw-bolder user-select-none text-truncate d-inline-block p-2 pb-0" t-esc="thread.displayName"/>
+ <span class="fw-bolder user-select-none text-truncate d-inline-block p-2 pb-0" t-out="thread.displayName"/>
  <DiscussSidebarChannelActions thread="thread"/>
  </div>
  </UseHoverOverlay>
@@ -128,13 +128,13 @@
  'o-unread': thread.self_member_id?.message_unread_counter > 0 and !thread.isMuted,
  'opacity-50': thread.isMuted,
  }">
- <span class="text-truncate" t-esc="thread.displayName" t-att-class="{
+ <span class="text-truncate" t-out="thread.displayName" t-att-class="{
  'fw-bolder': thread.self_member_id?.message_unread_counter > 0,
  'opacity-75 opacity-100-hover': !(thread.self_member_id?.message_unread_counter > 0 and !thread.isMuted),
  }" t-att-style="store.discuss.isSidebarCompact ? 'text-overflow: clip;' : ''"/>
  <span class="flex-grow-1"/>
  <t t-if="!store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.actions"/>
- <span t-if="thread.importantCounter > 0" t-attf-class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold {{thread.isMuted ? 'o-muted' : ''}}" t-att-class="{ 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute o-compact': store.discuss.isSidebarCompact }" t-esc="thread.importantCounter"/>
+ <span t-if="thread.importantCounter > 0" t-attf-class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold {{thread.isMuted ? 'o-muted' : ''}}" t-att-class="{ 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute o-compact': store.discuss.isSidebarCompact }" t-out="thread.importantCounter"/>
  </button>
  <t t-if="thread.self_member_id?.message_unread_counter > 0 and !thread.isMuted and thread.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
  </li>
@@ -156,7 +156,7 @@
  <ThreadIcon t-if="thread.channel_type?.includes('chat') or (thread.channel_type === 'channel' and !thread.group_public_id)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
  </div>
  <span t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName mx-2 text-truncate text-start lh-sm opacity-trigger-hove flex-grow-1" t-att-class="itemNameAttClass">
- <t t-esc="thread.displayName"/>
+ <t t-out="thread.displayName"/>
  </span>
  </div>
  <div t-if="indicators.length" class="position-absolute rounded-circle p-0 smaller o-mail-DiscussSidebarChannel-indicatorCompact lh-1 bg-inherit" name="indicator-compact">

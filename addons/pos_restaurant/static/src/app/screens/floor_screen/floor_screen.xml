@@ -21,9 +21,9 @@
                 <div class="floor-selector d-flex gap-1 py-2 overflow-auto">
                     <t t-foreach="pos.models['restaurant.floor'].filter(f => f.active !== false)" t-as="floor" t-key="floor.id">
                         <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap text-body" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
-                            <t t-esc="floor.name" />
+                            <t t-out="floor.name" />
                             <t t-set="changeCount" t-value="this.getFloorChangeCount(floor)"/>
-                            <span t-if="changeCount > 0" class="badge rounded-pill text-bg-danger ms-2 py-1 smaller fw-bolder" t-esc="changeCount"/>
+                            <span t-if="changeCount > 0" class="badge rounded-pill text-bg-danger ms-2 py-1 smaller fw-bolder" t-out="changeCount"/>
                         </button>
                     </t>
                     <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" t-on-click="addFloor" title="Add Floor" >
@@ -34,7 +34,7 @@
                 <div t-if="pos.isEditMode" class="edit-buttons d-flex flex-grow-1 justify-content-center justify-content-md-end gap-2 m-2 px-1 px-sm-0 overflow-x-auto">
                     <div class="d-flex gap-1 p-1 rounded-3 bg-200">
                         <t t-if="hasSelectedTable">
-                            <span t-if="!ui.isSmall" class="mx-2 align-self-center text-uppercase smaller fw-bolder">Table <t t-esc="firstSelectedTable.table_number" /></span>
+                            <span t-if="!ui.isSmall" class="mx-2 align-self-center text-uppercase smaller fw-bolder">Table <t t-out="firstSelectedTable.table_number" /></span>
                             <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="changeSeatsNum" t-att-disabled="!hasSelectedTable" title="Seats">
                                 <i class="fa-solid fa-user" role="img" aria-label="Seats" />
                             </button>
@@ -168,12 +168,12 @@
                                         t-att-class="{'opacity-25': table.parent_id}"
                                         t-attf-style="border-radius: {{table.shape === 'round' ? 1000 : 3}}px;"
                                     >
-                                        <div t-esc="table.table_number" class="label fw-bolder fs-4 position-absolute top-50 start-50 translate-middle" />
+                                        <div t-out="table.table_number" class="label fw-bolder fs-4 position-absolute top-50 start-50 translate-middle" />
                                     </div>
                                     <t t-set="data" t-value="getChangeCount(table)"/>
                                     <div
                                         t-if="data.changes > 0"
-                                        t-esc="this.env.utils.formatProductQty(data.changes, false)"
+                                        t-out="this.env.utils.formatProductQty(data.changes, false)"
                                         t-att-class="{
                                             'text-bg-danger': data.changes
                                         }"

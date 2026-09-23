@@ -8,8 +8,8 @@
             </div>
             <t t-else="">
                 <div class="d-flex align-items-center gap-2 mb-2">
-                    <span class="badge" t-att-class="stateBadge" t-esc="stateLabel"/>
-                    <span t-if="error" class="text-danger small" t-esc="error"/>
+                    <span class="badge" t-att-class="stateBadge" t-out="stateLabel"/>
+                    <span t-if="error" class="text-danger small" t-out="error"/>
                 </div>
 
                 <div t-if="missingFields.length or brokenRules.length"
@@ -17,12 +17,12 @@
                     <div t-if="missingFields.length">
                         <span class="fw-bold">Nobody could read:</span>
                         <span t-foreach="missingFields" t-as="name" t-key="name"
-                              class="badge text-bg-light ms-1" t-esc="name"/>
+                              class="badge text-bg-light ms-1" t-out="name"/>
                     </div>
                     <div t-if="brokenRules.length" class="mt-1">
                         <span class="fw-bold">What does not add up:</span>
                         <span t-foreach="brokenRules" t-as="rule" t-key="rule"
-                              class="badge text-bg-light ms-1" t-esc="rule"/>
+                              class="badge text-bg-light ms-1" t-out="rule"/>
                     </div>
                 </div>
 
@@ -38,12 +38,12 @@
                     <tbody>
                         <t t-foreach="readings" t-as="reading" t-key="reading.name">
                             <tr t-att-class="reading.disputed ? 'table-warning' : ''">
-                                <td t-esc="reading.name"/>
-                                <td class="fw-bold" t-esc="reading.value"/>
-                                <td class="text-muted" t-esc="reading.source"/>
+                                <td t-out="reading.name"/>
+                                <td class="fw-bold" t-out="reading.value"/>
+                                <td class="text-muted" t-out="reading.source"/>
                                 <td class="text-end text-muted">
                                     <t t-if="reading.confidence !== null">
-                                        <t t-esc="reading.confidence"/>%
+                                        <t t-out="reading.confidence"/>%
                                     </t>
                                 </td>
                             </tr>
@@ -53,12 +53,12 @@
                                 <td/>
                                 <td>
                                     <span class="text-decoration-line-through"
-                                          t-esc="other.value"/>
+                                          t-out="other.value"/>
                                 </td>
-                                <td t-esc="other.source"/>
+                                <td t-out="other.source"/>
                                 <td class="text-end">
                                     <t t-if="other.confidence !== null">
-                                        <t t-esc="other.confidence"/>%
+                                        <t t-out="other.confidence"/>%
                                     </t>
                                 </td>
                             </tr>
@@ -78,11 +78,11 @@
                     </thead>
                     <tbody>
                         <tr t-foreach="corrections" t-as="correction" t-key="correction.name">
-                            <td t-esc="correction.name"/>
+                            <td t-out="correction.name"/>
                             <td class="text-decoration-line-through text-muted"
-                                t-esc="correction.read"/>
-                            <td class="fw-bold" t-esc="correction.correctedTo"/>
-                            <td class="text-muted" t-esc="correction.readBy"/>
+                                t-out="correction.read"/>
+                            <td class="fw-bold" t-out="correction.correctedTo"/>
+                            <td class="text-muted" t-out="correction.readBy"/>
                         </tr>
                     </tbody>
                 </table>

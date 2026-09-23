@@ -6,13 +6,13 @@
  <i t-if="employeeId.work_location_id.location_type === 'office'" class="me-1 fa-regular fa-building "/>
  <i t-elif="employeeId.work_location_id.location_type === 'home'" class="me-1 fa-solid fa-house "/>
  <i t-else="" class="me-1 fa-solid fa-location-dot"/>
- <t t-esc="employeeId.work_location_id.name"/>
+ <t t-out="employeeId.work_location_id.name"/>
  </span>
  </xpath>
  </t>
 
  <t t-name="hr.avatarCardUserInfos">
- <small class="text-muted text-truncate" t-if="employeeId?.job_title" t-att-title="employeeId.job_title" t-esc="employeeId.job_title"/>
- <span class="text-muted text-truncate" t-if="employeeId?.department_id" data-tooltip="Department" t-att-title="employeeId.department_id.name" t-esc="employeeId.department_id.name"/>
+ <small class="text-muted text-truncate" t-if="employeeId?.job_title" t-att-title="employeeId.job_title" t-out="employeeId.job_title"/>
+ <span class="text-muted text-truncate" t-if="employeeId?.department_id" data-tooltip="Department" t-att-title="employeeId.department_id.name" t-out="employeeId.department_id.name"/>
  </t>
 </templates>

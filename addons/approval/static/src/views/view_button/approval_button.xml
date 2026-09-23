@@ -18,7 +18,7 @@
                     title="Waiting for approval"
                     alt="Waiting for approval"
                     class="o_approval_button_avatar o_approval_button_waiting rounded-circle border"/>
-                <span t-if="decisions.length gt 3" class="o_approval_button_more badge rounded-pill text-bg-secondary" t-esc="'+' + (decisions.length - 3)"/>
+                <span t-if="decisions.length gt 3" class="o_approval_button_more badge rounded-pill text-bg-secondary" t-out="'+' + (decisions.length - 3)"/>
             </t>
         </span>
     </t>

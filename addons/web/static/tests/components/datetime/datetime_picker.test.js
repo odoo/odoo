@@ -1444,7 +1444,7 @@ test("the day grid restates today after the clock crosses midnight", async () =>
 test("a render that does not move the value leaves the browsed month alone", async () => {
     class Parent extends Component {
         static template = xml`
-            <span class="tick" t-esc="state.tick"/>
+            <span class="tick" t-out="state.tick"/>
             <DateTimePicker value="state.value" onSelect="() => {}" type="'date'"/>`;
         static components = { DateTimePicker };
         static props = [];

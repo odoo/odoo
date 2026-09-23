@@ -90,11 +90,11 @@
         <ImStatus t-if="showImStatus" className="'o-mail-ChatWindow-imStatus position-absolute'" member="thread.imStatusMember" size="'sm'"/>
     </div>
     <t t-if="thread?.parent_channel_id">
-        <span class="fw-bold small o-mx-0_5 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-esc="thread.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.thread.parent_channel_id.open({ focus: true })"/>
+        <span class="fw-bold small o-mx-0_5 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-out="thread.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.thread.parent_channel_id.open({ focus: true })"/>
         <i class="fa-solid fa-chevron-right o-xsmaller ms-1 mt-1 text-muted opacity-75"/>
     </t>
     <CountryFlag t-if="thread?.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>
-    <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{ 'fs-4': ui.isSmall, 'fs-5': !ui.isSmall }"/>
+    <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="props.chatWindow.displayName" t-out="props.chatWindow.displayName" t-att-class="{ 'fs-4': ui.isSmall, 'fs-5': !ui.isSmall }"/>
 </t>
 
 <t t-name="mail.ChatWindow.memberTyping">

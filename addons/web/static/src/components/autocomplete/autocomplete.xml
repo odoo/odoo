@@ -40,7 +40,7 @@
                                     'd-block': !props.dropdown
                                 }">
                                 <span class="o_loading dropdown-item ui-menu-item-wrapper">
-                                    <i class="fa-solid fa-circle-notch fa-spin" /> <t t-esc="source.placeholder" />
+                                    <i class="fa-solid fa-circle-notch fa-spin" /> <t t-out="source.placeholder" />
                                 </span>
                             </li>
                         </t>
@@ -67,8 +67,8 @@
                                             <t t-if="!option.labelTermOrder" t-out="option.label"/>
                                             <t t-else="">
                                                 <t t-foreach="option.labelTermOrder.labelBits" t-as="bit" t-key="bit.id">
-                                                    <t t-if="!option.labelTermOrder.searchTermIndexes.includes(bit.id)" t-esc="bit.bit"/>
-                                                    <mark t-else="" class="o-autocomplete--mark" t-esc="bit.bit"/>
+                                                    <t t-if="!option.labelTermOrder.searchTermIndexes.includes(bit.id)" t-out="bit.bit"/>
+                                                    <mark t-else="" class="o-autocomplete--mark" t-out="bit.bit"/>
                                                 </t>
                                             </t>
                                         </t>

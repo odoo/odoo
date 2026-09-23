@@ -34,7 +34,7 @@
         </xpath>
         <xpath expr="//div[hasclass('cashier')]" position="after">
             <div t-elif="order.isGccCountry and order.config_id.l10n_gcc_dual_language_receipt" t-translation="off">
-                <div>Served by / خدم بواسطة <t t-esc="order.getCashierName()"/></div>
+                <div>Served by / خدم بواسطة <t t-out="order.getCashierName()"/></div>
             </div>
         </xpath>
     </t>

@@ -37,7 +37,7 @@
  attrs="{ 'aria-label': this.getPrintItemAriaLabel(printItem) }"
  onSelected="() => this.onItemSelected(printItem)"
  >
- <t t-esc="printItem.description"/>
+ <t t-out="printItem.description"/>
  </DropdownItem>
  </t>
  </Dropdown>

@@ -16,7 +16,7 @@
                             <t t-if="group.count > 0">
 
                                 <span class="ms-4 h5 return-group-header">
-                                    <t t-esc="group.displayName"/>
+                                    <t t-out="group.displayName"/>
                                 </span>
                                 <t t-call="account.return_check_list">
                                     <t t-set="list" t-value="group.list"/>

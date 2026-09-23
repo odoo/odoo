@@ -20,19 +20,19 @@
                         'mt-1': props.isComboPopup and !props.imageUrl
                     }"
                     t-attf-id="article_product_{{props.productId}}"
-                    t-esc="props.name" />
+                    t-out="props.name" />
                 <span t-if="props.productCartQty"
                     t-out="this.productQty"
                     class="product-cart-qty position-absolute bottom-0 end-0 m-1 px-2 rounded bg-black fs-5 fw-bolder"
                     t-att-class="props.productCartQty lt 0 ? 'text-danger' : 'text-white'"/>
             </div>
             <span t-if="props.comboExtraPrice" style="font-size: 0.75rem;" class="price-extra px-2 py-0 rounded-pill text-bg-info position-absolute top-0 end-0 mt-1 me-1">
-                <t t-esc="props.comboExtraPrice"/>
+                <t t-out="props.comboExtraPrice"/>
             </span>
             <t t-set="badge" t-value="stockBadge"/>
             <span t-if="badge"
                 t-attf-class="o_pos_stock_badge position-absolute m-1 px-1 badge rounded-0 fw-bold pe-none user-select-none {{ badge.positionClass }} {{ badge.statusClass }}"
-                t-esc="badge.text"/>
+                t-out="badge.text"/>
             <t t-slot="quantityButtons" />
         </article>
     </t>

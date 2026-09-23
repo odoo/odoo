@@ -14,7 +14,7 @@ const publicComponentRegistry = registry.category("public_components");
 
 test(`render Public Component`, async () => {
     class MyPublicComp extends Component {
-        static template = xml`<div class="my_public_comp" t-esc="value"/>`;
+        static template = xml`<div class="my_public_comp" t-out="value"/>`;
         static props = ["*"];
         setup() {
             const { info } = this.props;

@@ -116,7 +116,7 @@ test("the isExpanded prop sync does not undo the user's own toggle", async () =>
     class Controller extends Component {
         static template = xml`
             <ColorList colors="[1,2,3]" onColorSelected="() => {}" isExpanded="state.expanded" canToggle="true"/>
-            <span t-esc="state.tick"/>`;
+            <span t-out="state.tick"/>`;
         static components = { ColorList };
         static props = /** @type {string[]} */ ([]);
 

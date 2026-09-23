@@ -26,7 +26,7 @@
                     <td>Exclusively implies</td>
                     <td>
                         <div t-foreach="exclusiveImplyGroups" t-as="group" t-key="group.id">
-                            - <t t-esc="getGroupDisplayName(group)"/>
+                            - <t t-out="getGroupDisplayName(group)"/>
                         </div>
                     </td>
                 </tr>
@@ -34,12 +34,12 @@
                     <td>Jointly implies</td>
                     <td>
                         <div t-foreach="jointImplyGroups" t-as="group" t-key="group.id" class="text-muted">
-                            - <t t-esc="getGroupDisplayName(group)"/>
+                            - <t t-out="getGroupDisplayName(group)"/>
                         </div>
                         <t t-if="jointExtraImplyGroups.length">
                             <t t-if="state.showExtraGroups">
                                 <div t-foreach="jointExtraImplyGroups" t-as="group" t-key="group.id" class="text-muted">
-                                    - <t t-esc="getGroupDisplayName(group)"/>
+                                    - <t t-out="getGroupDisplayName(group)"/>
                                 </div>
                             </t>
                             <div t-else="">
@@ -52,7 +52,7 @@
                     <td class="align-top text-danger">Incompatibility</td>
                     <td>
                         <div t-foreach="group.disjointIds" t-as="groupId" t-key="groupId">
-                            - <t t-esc="getGroupDisplayName(groups[groupId])"/>
+                            - <t t-out="getGroupDisplayName(groups[groupId])"/>
                         </div>
                     </td>
                 </tr>

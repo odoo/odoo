@@ -197,7 +197,7 @@ test("isSmall is its own reactive key, so a same-band resize does not invalidate
     const ui = /** @type {any} */ (env.services.ui);
 
     class Reader extends Component {
-        static template = xml`<div class="reader" t-esc="ui.isSmall"/>`;
+        static template = xml`<div class="reader" t-out="ui.isSmall"/>`;
         static props = {};
         setup() {
             /** @type {any} */

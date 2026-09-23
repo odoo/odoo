@@ -24,7 +24,7 @@ OWL bundle, bottoming out in the native `Element.remove()`:
 remove [native]
   └─ remove [owl.es.js:1101]     ← blockdom, recursive over the block tree
     └─ remove [owl.es.js:1057]
-      └─ remove [owl.es.js:2699]
+      └─ remove [owl.es.js:2708]
         └─ remove [owl.es.js:69]
           … recursion …
             └─ patch  [owl.es.js:47]

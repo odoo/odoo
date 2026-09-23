@@ -31,7 +31,7 @@ function makeDraggableList(hookParams = {}) {
         static template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i"
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i"
                         class="item" style="height: 30px;"/>
                 </ul>
             </div>`;

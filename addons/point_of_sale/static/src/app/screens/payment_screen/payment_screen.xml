@@ -114,7 +114,7 @@
  t-on-click="() => this.pos.selectPartner()">
  <i class="fa-solid fa-user me-2" role="img" title="Customer" />
  <span class="partner-name">
- <t t-if="currentOrder.getPartner()" t-esc="currentOrder.getPartner().name"/>
+ <t t-if="currentOrder.getPartner()" t-out="currentOrder.getPartner().name"/>
  <t t-else="">Customer</t>
  </span>
  </button>
@@ -134,7 +134,7 @@
  t-on-click="addTip">
  <span t-attf-class="{{currentOrder.getTip() ? 'me-auto' : 'mx-auto' }}"><i class="fa-solid fa-heart me-2" />Tip</span>
  <t t-if="currentOrder.getTip() != 0">
- <t t-esc="env.utils.formatCurrency(currentOrder.getTip())" />
+ <t t-out="env.utils.formatCurrency(currentOrder.getTip())" />
  </t>
  </button>
  <button t-if="pos.config.iface_cashdrawer" class="button js_cashdrawer btn btn-secondary btn-lg py-3 rounded"
@@ -145,7 +145,7 @@
  t-on-click="toggleShippingDatePicker">
  <span t-attf-class="{{currentOrder.getShippingDate() ? 'me-auto' : 'mx-auto' }}"><i class="fa-regular fa-clock me-2" />Ship Later</span>
  <span t-if="currentOrder.getShippingDate()">
- <t t-esc="currentOrder.getShippingDate()" />
+ <t t-out="currentOrder.getShippingDate()" />
  </span>
  </button>
  </div>
@@ -161,9 +161,9 @@
  t-on-click="() => this.addNewPaymentLine(paymentMethod)">
  <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
  <img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)" />
- <span class="payment-name" t-esc="paymentMethod.name" />
+ <span class="payment-name" t-out="paymentMethod.name" />
  </div>
- <span class="text-muted" t-esc="pos.getPaymentMethodFmtAmount(paymentMethod, currentOrder)"/>
+ <span class="text-muted" t-out="pos.getPaymentMethodFmtAmount(paymentMethod, currentOrder)"/>
  </div>
  </t>
  </div>

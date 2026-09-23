@@ -10,7 +10,7 @@
                     </div>
                 </t>
                 <div t-if="props.currencyIds.includes(false)">
-                    <t t-esc="formatedValue(this.props.value)"/> without currency
+                    <t t-out="formatedValue(this.props.value)"/> without currency
                 </div>
             </div>
         </div>

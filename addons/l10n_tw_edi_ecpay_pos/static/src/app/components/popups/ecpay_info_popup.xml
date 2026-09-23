@@ -16,7 +16,7 @@
                                 <label for="l10n_tw_edi_carrier_type" class="form-label">Carrier</label>
                                 <select t-model="state.carrierType" id="l10n_tw_edi_carrier_type" name="l10n_tw_edi_carrier_type" class="form-select">
                                     <t t-foreach="Object.entries(carrierTypes)" t-as="carrierType" t-key="carrierType[0]">
-                                        <option t-att-value="carrierType[0]" t-esc="carrierType[1]"/>
+                                        <option t-att-value="carrierType[0]" t-out="carrierType[1]"/>
                                     </t>
                                 </select>
                             </div>

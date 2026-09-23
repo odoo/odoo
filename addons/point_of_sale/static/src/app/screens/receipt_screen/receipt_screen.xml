@@ -14,7 +14,7 @@
  <t t-else="">Payment Successful</t>
  </span>
  <div class="fs-4 fw-bold d-flex justify-content-center align-items-center gap-2">
- <span t-esc="orderAmountPlusTip" />
+ <span t-out="orderAmountPlusTip" />
  <span t-if="this.pos.canEditPayment(currentOrder)" class="edit-order-payment badge bg-success text-white rounded cursor-pointer pt-1" t-on-click="() => this.pos.orderDetails(this.currentOrder)">Edit Payment</span>
  </div>
  </div>
@@ -43,11 +43,11 @@
  </div>
  <div class="notice text-center">
  <t t-set="usedMethod" t-value="sendReceipt.lastArgs?.[0]?.name" />
- <div t-if="sendReceipt.status === 'loading'" class="text-info">Sending <t t-esc="usedMethod"/> in progress</div>
+ <div t-if="sendReceipt.status === 'loading'" class="text-info">Sending <t t-out="usedMethod"/> in progress</div>
  <div t-if="sendReceipt.status === 'success'" class="text-success">
  <t t-if="this.currentOrder.is_invoiced">Receipt and invoice sent successfully</t>
  <t t-else="">Receipt sent successfully</t></div>
- <div t-if="sendReceipt.status === 'error'" class="text-danger">Sending <t t-esc="usedMethod"/> failed. Please try again</div>
+ <div t-if="sendReceipt.status === 'error'" class="text-danger">Sending <t t-out="usedMethod"/> failed. Please try again</div>
  </div>
  </div>
  </div>

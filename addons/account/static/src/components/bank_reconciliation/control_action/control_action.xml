@@ -13,12 +13,12 @@
                     <t t-set-slot="content">
                         <t t-foreach="reconcileModelsToDisplay" t-as="model" t-key="model.id">
                             <DropdownItem class="'btn btn-link'" onSelected.bind="() => this.triggerReconciliationModel(model.id)">
-                                <t t-esc="model.display_name"/>
+                                <t t-out="model.display_name"/>
                             </DropdownItem>
                         </t>
                         <t t-foreach="extraButtonToDisplay" t-as="button" t-key="button_index">
                             <DropdownItem class="'btn btn-link'" onSelected.bind="button.action">
-                                <t t-esc="button.label"/>
+                                <t t-out="button.label"/>
                             </DropdownItem>
                         </t>
                     </t>

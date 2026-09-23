@@ -105,7 +105,7 @@
             t-att-class="{'o_select_menu_searchable_group': displayInputInDropdown, 'ms-2': !!choice.section }"
             role="presentation"
         >
-            <span t-esc="choice.label" />
+            <span t-out="choice.label" />
         </div>
         <DropdownItem
             t-if="!choice.isGroup"
@@ -116,7 +116,7 @@
         >
             <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
             <t t-else="">
-                <div t-esc="choice.label || choice.value" />
+                <div t-out="choice.label || choice.value" />
             </t>
         </DropdownItem>
     </t>

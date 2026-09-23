@@ -26,19 +26,19 @@
                                     </div>
                                 </t>
                                 <div class="flex-grow-1">
-                                    <h3 class="mb-1" t-esc="state.profile.user_name"/>
+                                    <h3 class="mb-1" t-out="state.profile.user_name"/>
                                     <div class="d-flex align-items-center gap-3">
-                                        <span class="badge bg-primary fs-6" t-esc="state.profile.rank_name"/>
+                                        <span class="badge bg-primary fs-6" t-out="state.profile.rank_name"/>
                                         <span class="text-muted">
                                             <i class="fa fa-star text-warning"/>
-                                            <t t-esc="state.profile.karma"/> XP
+                                            <t t-out="state.profile.karma"/> XP
                                         </span>
                                     </div>
                                     <t t-if="state.profile.next_rank_name">
                                         <div class="mt-2">
                                             <div class="d-flex justify-content-between small text-muted mb-1">
-                                                <span>Progress to <t t-esc="state.profile.next_rank_name"/></span>
-                                                <span><t t-esc="state.profile.xp_to_next_rank"/> XP to go</span>
+                                                <span>Progress to <t t-out="state.profile.next_rank_name"/></span>
+                                                <span><t t-out="state.profile.xp_to_next_rank"/> XP to go</span>
                                             </div>
                                             <div class="progress" style="height: 8px;">
                                                 <div class="progress-bar bg-success"
@@ -52,15 +52,15 @@
                                 </div>
                                 <div class="d-flex gap-3 text-center">
                                     <div>
-                                        <div class="fs-4 text-warning" t-esc="state.profile.gold_badge"/>
+                                        <div class="fs-4 text-warning" t-out="state.profile.gold_badge"/>
                                         <small class="text-muted">Gold</small>
                                     </div>
                                     <div>
-                                        <div class="fs-4 text-secondary" t-esc="state.profile.silver_badge"/>
+                                        <div class="fs-4 text-secondary" t-out="state.profile.silver_badge"/>
                                         <small class="text-muted">Silver</small>
                                     </div>
                                     <div>
-                                        <div class="fs-4 text-danger" t-esc="state.profile.bronze_badge"/>
+                                        <div class="fs-4 text-danger" t-out="state.profile.bronze_badge"/>
                                         <small class="text-muted">Bronze</small>
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                                     <t t-foreach="state.profile.featured_badges" t-as="fb" t-key="fb.id">
                                         <span class="badge bg-light text-dark border">
                                             <i t-att-class="'fa fa-certificate me-1 ' + getBadgeLevelClass(fb.level)"/>
-                                            <t t-esc="fb.badge_name"/>
+                                            <t t-out="fb.badge_name"/>
                                         </span>
                                     </t>
                                 </div>
@@ -101,33 +101,33 @@
                                         <t t-set="a" t-value="state.analytics.current"/>
                                         <t t-set="t" t-value="state.analytics.trends"/>
                                         <div class="col">
-                                            <div class="fs-4 fw-bold" t-esc="a.active_users_7d"/>
+                                            <div class="fs-4 fw-bold" t-out="a.active_users_7d"/>
                                             <small class="text-muted">Active Users (7d)</small>
                                             <br/><i t-att-class="'fa small ' + getTrendIcon(t.active_users_7d)"/>
                                         </div>
                                         <div class="col">
-                                            <div class="fs-4 fw-bold" t-esc="a.goals_reached_7d"/>
+                                            <div class="fs-4 fw-bold" t-out="a.goals_reached_7d"/>
                                             <small class="text-muted">Goals Reached (7d)</small>
                                             <br/><i t-att-class="'fa small ' + getTrendIcon(t.goals_reached_7d)"/>
                                         </div>
                                         <div class="col">
-                                            <div class="fs-4 fw-bold" t-esc="a.kudos_7d"/>
+                                            <div class="fs-4 fw-bold" t-out="a.kudos_7d"/>
                                             <small class="text-muted">Kudos Sent (7d)</small>
                                             <br/><i t-att-class="'fa small ' + getTrendIcon(t.kudos_7d)"/>
                                         </div>
                                         <div class="col">
-                                            <div class="fs-4 fw-bold" t-esc="a.active_streaks"/>
+                                            <div class="fs-4 fw-bold" t-out="a.active_streaks"/>
                                             <small class="text-muted">Active Streaks</small>
                                             <br/><i t-att-class="'fa small ' + getTrendIcon(t.active_streaks)"/>
                                         </div>
                                         <div class="col">
-                                            <div class="fs-4 fw-bold" t-esc="a.karma_granted_7d"/>
+                                            <div class="fs-4 fw-bold" t-out="a.karma_granted_7d"/>
                                             <small class="text-muted">Karma (7d)</small>
                                             <br/><i t-att-class="'fa small ' + getTrendIcon(t.karma_granted_7d)"/>
                                         </div>
                                         <div class="col">
                                             <div class="fs-4 fw-bold">
-                                                <t t-esc="Math.round(a.goal_completion_rate)"/>%
+                                                <t t-out="Math.round(a.goal_completion_rate)"/>%
                                             </div>
                                             <small class="text-muted">Completion Rate</small>
                                             <br/><i t-att-class="'fa small ' + getTrendIcon(t.goal_completion_rate)"/>
@@ -169,14 +169,14 @@
                                                 <tr>
                                                     <td class="align-middle">
                                                         <i t-att-class="'fa me-2 ' + getStreakIcon(streak)"/>
-                                                        <t t-esc="streak.name"/>
+                                                        <t t-out="streak.name"/>
                                                     </td>
                                                     <td class="align-middle text-center">
-                                                        <strong t-esc="streak.current_count"/>
+                                                        <strong t-out="streak.current_count"/>
                                                         <small class="text-muted"> days</small>
                                                     </td>
                                                     <td class="align-middle text-center">
-                                                        <small class="text-muted">Best: <t t-esc="streak.longest_count"/></small>
+                                                        <small class="text-muted">Best: <t t-out="streak.longest_count"/></small>
                                                     </td>
                                                     <td class="align-middle text-end">
                                                         <t t-if="streak.state === 'active'">
@@ -212,16 +212,16 @@
                                             <div class="list-group-item">
                                                 <div class="d-flex justify-content-between mb-1">
                                                     <div>
-                                                        <strong t-esc="goal.definition_name"/>
+                                                        <strong t-out="goal.definition_name"/>
                                                         <t t-if="goal.challenge_name">
                                                             <small class="text-muted ms-2">
-                                                                <t t-esc="goal.challenge_name"/>
+                                                                <t t-out="goal.challenge_name"/>
                                                             </small>
                                                         </t>
                                                     </div>
                                                     <span>
-                                                        <t t-esc="goal.current"/>
-                                                        / <t t-esc="goal.target"/>
+                                                        <t t-out="goal.current"/>
+                                                        / <t t-out="goal.target"/>
                                                     </span>
                                                 </div>
                                                 <div class="progress" style="height: 6px;">
@@ -230,7 +230,7 @@
                                                 </div>
                                                 <t t-if="goal.end_date">
                                                     <small class="text-muted">
-                                                        Due: <t t-esc="goal.end_date"/>
+                                                        Due: <t t-out="goal.end_date"/>
                                                     </small>
                                                 </t>
                                             </div>
@@ -265,21 +265,21 @@
                                                             <i class="fa fa-trophy text-danger" role="img" aria-label="3rd place"/>
                                                         </t>
                                                         <t t-else="">
-                                                            <span class="text-muted" t-esc="entry_index + 1"/>
+                                                            <span class="text-muted" t-out="entry_index + 1"/>
                                                         </t>
                                                     </td>
                                                     <td class="align-middle">
-                                                        <strong t-esc="entry.user_name"/>
+                                                        <strong t-out="entry.user_name"/>
                                                         <t t-if="entry.is_current_user">
                                                             <small class="text-primary ms-1">(you)</small>
                                                         </t>
                                                     </td>
                                                     <td class="align-middle text-center">
-                                                        <small class="text-muted" t-esc="entry.rank_name"/>
+                                                        <small class="text-muted" t-out="entry.rank_name"/>
                                                     </td>
                                                     <td class="align-middle text-end">
                                                         <i class="fa fa-star text-warning me-1"/>
-                                                        <strong t-esc="entry.karma"/>
+                                                        <strong t-out="entry.karma"/>
                                                     </td>
                                                 </tr>
                                             </t>
@@ -310,14 +310,14 @@
                                             <div class="list-group-item d-flex align-items-center gap-2">
                                                 <i t-att-class="'fa fa-certificate ' + getBadgeLevelClass(badge.level)"/>
                                                 <div class="flex-grow-1">
-                                                    <strong t-esc="badge.badge_name"/>
+                                                    <strong t-out="badge.badge_name"/>
                                                     <t t-if="badge.sender_name">
                                                         <br/><small class="text-muted">
-                                                            from <t t-esc="badge.sender_name"/>
+                                                            from <t t-out="badge.sender_name"/>
                                                         </small>
                                                     </t>
                                                 </div>
-                                                <small class="text-muted" t-esc="badge.date"/>
+                                                <small class="text-muted" t-out="badge.date"/>
                                             </div>
                                         </t>
                                     </div>
@@ -339,11 +339,11 @@
                                         <t t-foreach="state.achievements" t-as="ach" t-key="ach.id">
                                             <div class="list-group-item">
                                                 <div class="d-flex justify-content-between">
-                                                    <strong t-esc="ach.name"/>
+                                                    <strong t-out="ach.name"/>
                                                     <span t-att-class="'badge ' + getRarityBadgeClass(ach.rarity)"
-                                                          t-esc="ach.rarity"/>
+                                                          t-out="ach.rarity"/>
                                                 </div>
-                                                <small class="text-muted" t-esc="ach.date"/>
+                                                <small class="text-muted" t-out="ach.date"/>
                                             </div>
                                         </t>
                                     </div>
@@ -368,7 +368,7 @@
                                                 aria-label="Select kudos recipient">
                                             <option value="">Select recipient...</option>
                                             <t t-foreach="state.kudosUsers" t-as="u" t-key="u.id">
-                                                <option t-att-value="u.id" t-esc="u.name"/>
+                                                <option t-att-value="u.id" t-out="u.name"/>
                                             </t>
                                         </select>
                                     </div>
@@ -379,7 +379,7 @@
                                             <option value="">Select category...</option>
                                             <t t-foreach="state.kudosCategories" t-as="cat" t-key="cat.id">
                                                 <option t-att-value="cat.id">
-                                                    <t t-esc="cat.name"/> (+<t t-esc="cat.karma_granted"/> karma)
+                                                    <t t-out="cat.name"/> (+<t t-out="cat.karma_granted"/> karma)
                                                 </option>
                                             </t>
                                         </select>
@@ -413,11 +413,11 @@
                                                 <div class="d-flex align-items-start gap-2">
                                                     <i t-att-class="(act.icon || 'fa fa-star') + ' mt-1 text-primary'" aria-hidden="true"/>
                                                     <div class="flex-grow-1">
-                                                        <div t-esc="act.summary"/>
+                                                        <div t-out="act.summary"/>
                                                         <div class="d-flex justify-content-between">
-                                                            <small class="text-muted" t-esc="act.date"/>
+                                                            <small class="text-muted" t-out="act.date"/>
                                                             <t t-if="act.karma_gained">
-                                                                <small class="text-success">+<t t-esc="act.karma_gained"/> karma</small>
+                                                                <small class="text-success">+<t t-out="act.karma_gained"/> karma</small>
                                                             </t>
                                                         </div>
                                                     </div>

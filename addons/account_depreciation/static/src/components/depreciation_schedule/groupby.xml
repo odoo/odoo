@@ -10,7 +10,7 @@
             <button class="btn btn-secondary">
                 <i class="fa-solid fa-list me-1"/>
                 <t t-foreach="groupings" t-as="grouping" t-key="grouping[0]">
-                    <t t-if="controller.cachedFilterOptions.assets_grouping_field === grouping[0]" t-esc="grouping[1]"/>
+                    <t t-if="controller.cachedFilterOptions.assets_grouping_field === grouping[0]" t-out="grouping[1]"/>
                 </t>
             </button>
 
@@ -19,7 +19,7 @@
                     class="{ 'selected': controller.cachedFilterOptions.assets_grouping_field === grouping[0] }"
                     onSelected="() => this.filterClicked({ optionKey: 'assets_grouping_field', optionValue: grouping[0], reload: true})"
                 >
-                    <t t-esc="grouping[1]"/>
+                    <t t-out="grouping[1]"/>
                 </DropdownItem>
             </t>
         </Dropdown>

@@ -10,23 +10,23 @@
                     <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
                     <t t-set="counted" t-value="state.payments[props.default_cash_details.id]?.counted || '0'" />
                     <div class="d-flex align-items-center justify-content-between fs-3">
-                        <span t-esc="props.default_cash_details.name" />
-                        <span t-esc="env.utils.formatCurrency(props.default_cash_details.amount)" />
+                        <span t-out="props.default_cash_details.name" />
+                        <span t-out="env.utils.formatCurrency(props.default_cash_details.amount)" />
                     </div>
                     <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
                         <span>Opening</span>
-                        <span t-esc="env.utils.formatCurrency(props.default_cash_details.opening)" />
+                        <span t-out="env.utils.formatCurrency(props.default_cash_details.opening)" />
                     </div>
                     <t t-set="amountByEmployee" t-value="props.default_cash_details.amount_per_employee" />
                     <PaymentMethodBreakdown title.translate="Payments" total_amount="props.default_cash_details.payment_amount" transactions="props.default_cash_details.amount_per_employee"/>
                     <PaymentMethodBreakdown title.translate="Cash in/out" total_amount="getMovesTotalAmount()" transactions="props.default_cash_details.moves_per_employee"/>
                     <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
                         <span>Counted</span>
-                        <span t-esc="env.utils.formatCurrency(env.utils.parseValidFloat(counted))" />
+                        <span t-out="env.utils.formatCurrency(env.utils.parseValidFloat(counted))" />
                     </div>
                     <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2" t-att-class="{'text-danger fw-bold': diff}">
                         <span>Difference</span>
-                        <span class="cash-difference" t-esc="env.utils.formatCurrency(diff)" />
+                        <span class="cash-difference" t-out="env.utils.formatCurrency(diff)" />
                     </div>
                 </div>
                 <div class="w-100 mb-3" t-foreach="props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
@@ -34,13 +34,13 @@
                     <t t-set="diff" t-value="_showDiff ? getDifference(pm.id) : 0" />
                     <t t-set="counted" t-value="_showDiff ? env.utils.parseValidFloat(state.payments[pm.id].counted) : 0" />
                     <div class="d-flex align-items-center justify-content-between fs-3">
-                        <span t-esc="pm.name" />
-                        <span t-esc="env.utils.formatCurrency(pm.amount)" />
+                        <span t-out="pm.name" />
+                        <span t-out="env.utils.formatCurrency(pm.amount)" />
                     </div>
                     <PaymentMethodBreakdown title.translate="Payments" total_amount="pm.amount" transactions="pm.amount_per_employee"/>
                     <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2" t-att-class="{'text-danger fw-bold': diff}">
                         <span>Difference</span>
-                        <span t-esc="env.utils.formatCurrency(diff)" />
+                        <span t-out="env.utils.formatCurrency(diff)" />
                     </div>
             </div>
             </t>

@@ -3,7 +3,7 @@
 
 <t t-name="mail.MessageConfirmDialog">
     <Dialog size="props.size" title="props.title" contentClass="'o-bg-body'">
-        <p class="mx-3 mb-3" t-esc="props.prompt"/>
+        <p class="mx-3 mb-3" t-out="props.prompt"/>
         <blockquote class="mx-3 mb-3 fst-normal" style="pointer-events:none;">
             <t t-component="messageComponent" message="props.message" isReadOnly="true" hasActions="false"/>
         </blockquote>

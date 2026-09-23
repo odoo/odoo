@@ -849,7 +849,7 @@ test("Dynamically disable NestedSortable feature", async () => {
         static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
-                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>
             `;
@@ -890,7 +890,7 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
         static template = xml`
                     <div t-ref="root" class="root">
                         <ul class="list">
-                            <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                            <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                         </ul>
                     </div>
                 `;
@@ -1200,8 +1200,8 @@ test("Ignore specified elements", async () => {
             <div t-ref="root" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
-                        <span class="ignored" t-esc="i" />
-                        <span class="not-ignored" t-esc="i" />
+                        <span class="ignored" t-out="i" />
+                        <span class="not-ignored" t-out="i" />
                     </li>
                 </ul>
             </div>

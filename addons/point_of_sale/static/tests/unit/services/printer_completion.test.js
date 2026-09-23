@@ -131,7 +131,7 @@ test("concurrent browser jobs print their own rendered receipt", async () => {
     const printer = new PrinterService({}, { renderer: comp.env.services.renderer });
     class Receipt extends Component {
         static props = ["number"];
-        static template = xml`<div t-esc="props.number"/>`;
+        static template = xml`<div t-out="props.number"/>`;
     }
     patchWithCleanup(window, {
         print() {

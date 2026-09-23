@@ -235,7 +235,7 @@ test("a props update that changes no size does not notify onResize", async () =>
         static template = xml`
             <div style="width: 1000px;">
                 <ResizablePanel minWidth="60" initialWidth="300" onResize="onResize">
-                    <p t-esc="state.label"/>
+                    <p t-out="state.label"/>
                 </ResizablePanel>
             </div>`;
         static props = ["*"];

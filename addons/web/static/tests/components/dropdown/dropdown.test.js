@@ -1965,7 +1965,7 @@ test("an open menu is watched by one observer, however often the dropdown re-ren
                 <button class="toggler">toggle</button>
                 <t t-set-slot="content">
                     <t t-foreach="state.items" t-as="item" t-key="item">
-                        <DropdownItem class="'item'" t-esc="item"/>
+                        <DropdownItem class="'item'" t-out="item"/>
                     </t>
                 </t>
             </Dropdown>
@@ -2001,7 +2001,7 @@ test("an open menu follows the dropdown's later renders: slot fields and items",
             <Dropdown items="items">
                 <button class="toggler">toggle</button>
                 <t t-set-slot="content">
-                    <span class="plain" t-esc="plain"/>
+                    <span class="plain" t-out="plain"/>
                 </t>
             </Dropdown>
         `;

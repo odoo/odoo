@@ -9,7 +9,7 @@
                 <t t-set="lastEmbeddedActions"
                    t-value="props.folderId === 'TRASH' ? [] : topbarActions.slice(ui.isSmall ? 0 : this.visibleTopbarActions)"/>
                 <button t-foreach="firstEmbeddedActions" t-as="action" t-key="action_index" class="btn btn-secondary"
-                    t-on-click="() => action.callback()" t-esc="action.description" />
+                    t-on-click="() => action.callback()" t-out="action.description" />
                 <div class="dropdown btn-group" t-if="lastEmbeddedActions?.length">
                     <Dropdown>
                         <button class="btn btn-secondary o_dropdown_title dropdown-toggle" type="button">

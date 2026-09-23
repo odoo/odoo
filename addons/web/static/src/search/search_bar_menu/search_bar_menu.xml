@@ -33,7 +33,7 @@
                                             <div class="dropdown-divider" role="separator"/>
                                         </t>
                                         <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
-                                                            t-esc="option.description"
+                                                            t-out="option.description"
                                                             checked="option.isActive"
                                                             closingMode="'none'"
                                                             onSelected="() => this.onFilterSelected({ itemId: item.id, optionId: option.id })"
@@ -46,7 +46,7 @@
                                 <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
                                                     checked="item.isActive"
                                                     closingMode="'none'"
-                                                    t-esc="item.description"
+                                                    t-out="item.description"
                                                     attrs="{ title: item.description.length > 15 ? item.description : ''}"
                                                     onSelected="() => this.onFilterSelected({ itemId: item.id })"
                                 />
@@ -83,7 +83,7 @@
                                         <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
                                                             checked="option.isActive ? true : false"
                                                             closingMode="'none'"
-                                                            t-esc="option.description"
+                                                            t-out="option.description"
                                                             attrs="{ title: option.description.length > 15 ? option.description : ''}"
                                                             onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
                                         />
@@ -95,7 +95,7 @@
                                 <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
                                                     checked="item.isActive"
                                                     closingMode="'none'"
-                                                    t-esc="item.description"
+                                                    t-out="item.description"
                                                     attrs="{ title: item.description.length > 15 ? item.description : ''}"
                                                     onSelected="() => this.onGroupBySelected({ itemId: item.id })"
                                 />
@@ -152,7 +152,7 @@
             <span class="d-flex p-0 align-items-center justify-content-between">
                 <t t-set="invalidTooltip">Disabled due to invalid configuration</t>
                 <span
-                    t-esc="item.description"
+                    t-out="item.description"
                     t-att-title="item.description.length > 15 ? item.description : ''"
                     class="text-truncate flex-grow-1"
                     t-att-class="item.isInvalid ? 'text-muted' : ''"

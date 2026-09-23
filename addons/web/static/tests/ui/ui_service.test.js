@@ -111,8 +111,8 @@ test("isBlocked and activeElement are reactive properties", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-                <span class="blocked" t-esc="ui.isBlocked"/>
-                <span class="active" t-esc="isDocumentActive ? 'document' : 'other'"/>
+                <span class="blocked" t-out="ui.isBlocked"/>
+                <span class="active" t-out="isDocumentActive ? 'document' : 'other'"/>
                 <div t-if="hasRef" id="owner" t-ref="delegatedRef">
                     <input type="text"/>
                 </div>
@@ -603,7 +603,7 @@ test("an unmatched unblock leaves the ui unblocked and announces nothing", async
 
 test("isBlocked is its own reactive key, so a nested block does not invalidate it", async () => {
     class Reader extends Component {
-        static template = xml`<div class="reader" t-esc="ui.isBlocked"/>`;
+        static template = xml`<div class="reader" t-out="ui.isBlocked"/>`;
         static props = {};
         setup() {
             this.ui = useState(useService("ui"));

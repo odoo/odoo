@@ -13,7 +13,7 @@
  <t t-set="data" t-value="holiday[1]"/>
  <t t-set="duration" t-value="holiday[2] ? data.virtual_remaining_leaves : data.virtual_leaves_taken"/>
  <span class="fw-bold text-nowrap ms-1">
- (<span class="o_timeoff_green text-success" t-esc="duration"/> / <span class="fw-bold text-nowrap" t-esc="data.max_leaves"/>)
+ (<span class="o_timeoff_green text-success" t-out="duration"/> / <span class="fw-bold text-nowrap" t-out="data.max_leaves"/>)
  </span>
  </t>
  </xpath>

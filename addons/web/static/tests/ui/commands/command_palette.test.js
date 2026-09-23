@@ -357,7 +357,7 @@ test("command with a Custom Component", async () => {
     class CustomComponent extends Component {
         static template = xml`
             <div class="o_command_custom">
-                <span t-esc="props.name"/>
+                <span t-out="props.name"/>
             </div>
         `;
         static props = ["*"];
@@ -1949,7 +1949,7 @@ test("a failing initial search is reported and leaves the palette usable", async
 test("a row that survives a search keeps its component", async () => {
     let setups = 0;
     class Counted extends Component {
-        static template = xml`<span class="counted" t-esc="props.name"/>`;
+        static template = xml`<span class="counted" t-out="props.name"/>`;
         static props = ["*"];
         setup() {
             setups++;
@@ -2104,7 +2104,7 @@ test("a command that cannot render is dropped, and its namesake is not", async (
         },
     });
     class RecordItem extends Component {
-        static template = xml`<span class="o_command_default" t-esc="props.name"/>`;
+        static template = xml`<span class="o_command_default" t-out="props.name"/>`;
         static props = ["*"];
     }
     const openRecord = (/** @type {number} */ id) => ({

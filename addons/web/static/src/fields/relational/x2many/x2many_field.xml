@@ -14,7 +14,7 @@
                                 t-att-class="control.class"
                                 t-on-click.stop.prevent="() => this.onAdd({ context: control.context })"
                             >
-                                <t t-esc="control.string"/>
+                                <t t-out="control.string"/>
                             </button>
                             <ViewButton
                                 t-if="control.type === 'button' and !evalInvisible(control.invisible)"

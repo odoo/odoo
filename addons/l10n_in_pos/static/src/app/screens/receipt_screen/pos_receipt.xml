@@ -14,7 +14,7 @@
         </xpath>
         <xpath expr="//span[hasclass('pos-receipt-vat')]" position="after">
             <span t-if="order.isInCompany and !order.isToInvoice()" class="pos-receipt-vat">
-                INVOICE <t t-esc="order.invoiceName" />
+                INVOICE <t t-out="order.invoiceName" />
             </span>
         </xpath>
         <xpath expr="//span[@class='ticket-name-prefix']" position="attributes">

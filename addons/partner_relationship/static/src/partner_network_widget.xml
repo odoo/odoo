@@ -12,11 +12,11 @@
                                 t-att-class="degree === state.degree ? 'btn-primary' : 'btn-outline-primary'"
                                 t-att-aria-pressed="degree === state.degree"
                                 t-on-click="() => this.setDegree(degree)"
-                                t-esc="degree"/>
+                                t-out="degree"/>
                     </div>
                 </t>
                 <span t-if="state.status === 'ready'" class="text-muted small">
-                    <t t-esc="countRelated"/> related contacts
+                    <t t-out="countRelated"/> related contacts
                 </span>
 
                 <div class="ms-auto d-flex align-items-center gap-2">
@@ -32,7 +32,7 @@
                             <i class="fa fa-search-minus"/>
                         </button>
                         <span class="btn btn-outline-secondary disabled o_partner_network_zoom"
-                              t-esc="zoomPercent"/>
+                              t-out="zoomPercent"/>
                         <button type="button" class="btn btn-outline-secondary"
                                 title="Zoom in" aria-label="Zoom in"
                                 t-on-click="() => this.zoomBy(1.25)">
@@ -65,8 +65,8 @@
                            t-on-change="() => this.toggleCategory(category.key)"/>
                     <span class="o_partner_network_swatch"
                           t-att-class="'o_partner_network_category_' + category.key"/>
-                    <span t-esc="category.label"/>
-                    <span class="o_partner_network_count" t-esc="counts[category.key]"/>
+                    <span t-out="category.label"/>
+                    <span class="o_partner_network_count" t-out="counts[category.key]"/>
                     <!-- Inside the label, so a bare click would toggle the box
                          as well; stop it and let "only" mean only. -->
                     <button type="button" class="o_partner_network_only"
@@ -89,17 +89,17 @@
             <div t-elif="state.status === 'unsaved'" class="text-muted p-4">
                 Save this contact to draw its network.
             </div>
-            <div t-elif="state.status === 'empty'" class="text-muted p-4" t-esc="emptyMessage"/>
+            <div t-elif="state.status === 'empty'" class="text-muted p-4" t-out="emptyMessage"/>
             <div t-elif="state.status === 'error'" class="alert alert-warning" role="alert">
                 <strong>The network could not be drawn.</strong>
-                <div class="small mt-1" t-esc="state.error"/>
+                <div class="small mt-1" t-out="state.error"/>
             </div>
             <t t-else="">
                 <div class="o_partner_network_canvas" t-ref="box">
                     <div class="o_partner_network_paper" t-ref="canvas"/>
                 </div>
                 <div class="text-muted small mt-1">
-                    Viewing <strong t-esc="state.focusName"/> — click a contact to
+                    Viewing <strong t-out="state.focusName"/> — click a contact to
                     centre the network on it, double-click to open it.
                     <t t-if="countRelated === 0"> No tie of the selected kinds reaches anyone.</t>
                 </div>

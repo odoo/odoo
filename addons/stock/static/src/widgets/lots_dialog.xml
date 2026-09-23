@@ -16,7 +16,7 @@
             </t>
             <div class="o_form_view o_form_nosheet">
                 <div t-if="state.error" class="alert alert-warning mx-3 mt-3 mb-0" role="alert">
-                    <t t-esc="state.error"/>
+                    <t t-out="state.error"/>
                 </div>
                 <t t-if="props.mode === 'generate'">
                     <div class="container">
@@ -49,7 +49,7 @@
                                     <input inputmode="decimal" class="o_input" id="generate_next_serial_count" type="text"
                                         t-model="state.count"/>
                                 </div>
-                                <span t-if="isLot and displayUOM" t-esc="props.move.data.product_uom_id.display_name"/>
+                                <span t-if="isLot and displayUOM" t-out="props.move.data.product_uom_id.display_name"/>
                             </div>
                         </div>
                         <div t-if="isLot" class="row mb-2">
@@ -61,7 +61,7 @@
                                     <input inputmode="decimal" class="o_input" id="generate_total_received" type="text"
                                         t-model="state.totalReceived"/>
                                 </div>
-                                <span t-if="displayUOM" t-esc="props.move.data.product_uom_id.display_name"/>
+                                <span t-if="displayUOM" t-out="props.move.data.product_uom_id.display_name"/>
                             </div>
                         </div>
                         <div class="row">

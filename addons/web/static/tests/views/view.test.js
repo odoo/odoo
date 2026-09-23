@@ -1365,7 +1365,7 @@ test("a descriptor with an ArchParser and no props factory gets the parsed arch"
         }
     }
     class TinyController extends Component {
-        static template = xml`<div class="o_tiny" t-esc="props.archInfo.tag"/>`;
+        static template = xml`<div class="o_tiny" t-out="props.archInfo.tag"/>`;
         static props = ["*"];
     }
     viewRegistry.add("toy_parsed", {
@@ -1388,7 +1388,7 @@ test("a descriptor declaring modelParams builds them from the arch, and from a s
         }
     }
     class TinyController extends Component {
-        static template = xml`<div class="o_tiny" t-esc="props.modelParams.source"/>`;
+        static template = xml`<div class="o_tiny" t-out="props.modelParams.source"/>`;
         static props = ["*"];
     }
     viewRegistry.add("toy_model_params", {

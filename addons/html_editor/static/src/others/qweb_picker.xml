@@ -5,7 +5,7 @@
                 <select class="form-select" t-on-change="onChange">
                     <t t-foreach="group" t-as="element" t-key="element_index">
                         <option t-attf-value="{{group_index}},{{element_index}}" t-att-selected="element.isActive">
-                            <t t-esc="element.label"/>
+                            <t t-out="element.label"/>
                         </option>
                     </t>
                 </select>

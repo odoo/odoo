@@ -23,31 +23,31 @@ export class FieldWidgetsDialog extends Component {
                         autofocus="true"
                     />
                     <small class="text-muted text-nowrap">
-                        <t t-esc="filteredEntries.length"/> / <t t-esc="entries.length"/>
+                        <t t-out="filteredEntries.length"/> / <t t-out="entries.length"/>
                     </small>
                 </div>
                 <div class="table-responsive" style="max-height: 60vh">
                     <table class="table table-sm table-hover table-striped mb-0">
                         <thead class="position-sticky top-0 bg-white">
                             <tr>
-                                <th t-esc="labels.name"/>
-                                <th t-esc="labels.displayName"/>
-                                <th t-esc="labels.supportedTypes"/>
-                                <th t-esc="labels.component"/>
-                                <th class="text-end" t-esc="labels.options"/>
+                                <th t-out="labels.name"/>
+                                <th t-out="labels.displayName"/>
+                                <th t-out="labels.supportedTypes"/>
+                                <th t-out="labels.component"/>
+                                <th class="text-end" t-out="labels.options"/>
                             </tr>
                         </thead>
                         <tbody>
                             <tr t-foreach="filteredEntries" t-as="entry" t-key="entry[0]">
-                                <td><code t-esc="entry[0]"/></td>
-                                <td t-esc="displayName(entry[1])"/>
-                                <td t-esc="supportedTypes(entry[1])"/>
-                                <td><code t-esc="componentName(entry[1])"/></td>
-                                <td class="text-end" t-esc="optionCount(entry[1])"/>
+                                <td><code t-out="entry[0]"/></td>
+                                <td t-out="displayName(entry[1])"/>
+                                <td t-out="supportedTypes(entry[1])"/>
+                                <td><code t-out="componentName(entry[1])"/></td>
+                                <td class="text-end" t-out="optionCount(entry[1])"/>
                             </tr>
                             <tr t-if="!filteredEntries.length">
                                 <td colspan="5" class="text-center text-muted py-3"
-                                    t-esc="labels.empty"/>
+                                    t-out="labels.empty"/>
                             </tr>
                         </tbody>
                     </table>

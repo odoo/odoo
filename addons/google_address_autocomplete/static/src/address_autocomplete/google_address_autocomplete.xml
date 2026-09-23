@@ -11,7 +11,7 @@
             input="input"
         >
             <t t-set-slot="option" t-slot-scope="optionScope">
-                <strong t-esc="optionScope.label"/>
+                <strong t-out="optionScope.label"/>
             </t>
         </AutoComplete>
     </t>
