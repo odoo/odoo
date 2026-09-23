@@ -18,8 +18,11 @@ const storeServicePatch = {
             this.employees[employeeId] = { id: employeeId };
             employee = this.employees[employeeId];
         }
-        if (!employee.user_id && !employee.hasCheckedUser) {
-            employee.hasCheckedUser = true;
+        if (!employee.user_id) {
+            // Re-read on every explicit chat attempt. A "checked once" flag
+            // was cheaper but never invalidated, so an employee who gained a
+            // user after the first lookup stayed unchattable for the whole
+            // session.
             const [employeeData] = await this.env.services.orm.silent.read(
                 "hr.employee",
                 [employee.id],
