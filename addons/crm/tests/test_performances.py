@@ -99,7 +99,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
                     .browse(self.sales_teams.ids)
                     ._action_assign_leads()
                 ),
-                user_sales_manager=111,
+                user_sales_manager=110,
             )
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
@@ -192,7 +192,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
                 lambda: (
                     self.env["team.team"].browse(sales_teams.ids)._action_assign_leads()
                 ),
-                user_sales_manager=990,
+                user_sales_manager=989,
             )
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])

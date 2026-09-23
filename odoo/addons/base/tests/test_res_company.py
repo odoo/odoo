@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from psycopg import IntegrityError
 
 from odoo.exceptions import AccessError, ValidationError
@@ -389,3 +391,45 @@ class TestCompanyMembershipCache(TransactionCase):
             user._get_company_ids(),
             "unlinking a user from the company side must refresh _get_company_ids",
         )
+
+
+class TestCompanyConfigLink(TransactionCase):
+    def test_a_warm_link_reads_no_row(self):
+        company = self.env.company
+        Config = self.env["report.config"]
+        Config._for_each(company)
+        with self.assertQueryCount(0):
+            configs = Config._for_each(company)
+        self.assertEqual(configs.company_id, company)
+
+    def test_a_new_company_is_in_the_map(self):
+        Config = self.env["report.config"]
+        Config._for_each(self.env.company)
+        company = self.env["res.company"].create({"name": "Linked Co"})
+        config = Config._for_each(company)
+        self.assertEqual(config.company_id, company)
+        self.assertEqual(Config._config_ids_by_company()[company.id], config.id)
+
+    def test_a_row_the_map_has_not_seen_is_found_not_duplicated(self):
+        Config = self.env["report.config"]
+        company = self.env["res.company"].create({"name": "Unseen Co"})
+        config = Config._for_each(company)
+        stale = {
+            cid: rid
+            for cid, rid in Config._config_ids_by_company().items()
+            if cid != company.id
+        }
+        with patch.object(type(Config), "_config_ids_by_company", lambda self: stale):
+            found = Config._for_each(company)
+        self.assertEqual(found, config)
+        self.assertEqual(Config.search_count([("company_id", "=", company.id)]), 1)
+
+    def test_a_deleted_configuration_is_made_again(self):
+        Config = self.env["report.config"]
+        company = self.env["res.company"].create({"name": "Deleted Config Co"})
+        old = Config._for_each(company)
+        old.unlink()
+        new = Config._for_each(company)
+        self.assertTrue(new.exists())
+        self.assertNotEqual(new, old)
+        self.assertEqual(new.company_id, company)

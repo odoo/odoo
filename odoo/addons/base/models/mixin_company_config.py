@@ -4,6 +4,7 @@ from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
+from odoo.tools import frozendict, ormcache
 
 _debug = DebugLog(__name__)
 
@@ -86,6 +87,7 @@ class MixinCompanyConfig(models.AbstractModel):
         }
         if not existing:
             records = super().create(vals_list)
+            self.env.registry.clear_cache()
             for vals in vals_list:
                 self._clear_registry_cache_for(vals)
             return records
@@ -107,13 +109,21 @@ class MixinCompanyConfig(models.AbstractModel):
             records |= config.with_env(self.env)
         if to_create:
             records |= super().create(to_create)
+            self.env.registry.clear_cache()
         for vals in vals_list:
             self._clear_registry_cache_for(vals)
         return records
 
     def write(self, vals: ValuesType) -> bool:
         result = super().write(vals)
+        if "company_id" in vals:
+            self.env.registry.clear_cache()
         self._clear_registry_cache_for(vals)
+        return result
+
+    def unlink(self) -> bool:
+        result = super().unlink()
+        self.env.registry.clear_cache()
         return result
 
     def _clear_registry_cache_for(self, vals: ValuesType) -> None:
@@ -140,15 +150,35 @@ class MixinCompanyConfig(models.AbstractModel):
         return self._for_each(company)
 
     @api.model
+    @ormcache()
+    def _config_ids_by_company(self) -> frozendict:
+        # which row configures which company changes only when a row is
+        # created, deleted or re-pointed, so a request reads the pairing from
+        # the registry instead of searching the table for it
+        configs = (
+            self.sudo().with_context(active_test=False).search_fetch([], ["company_id"])
+        )
+        return frozendict((config.company_id.id, config.id) for config in configs)
+
+    @api.model
     def _for_each(self, companies: models.Model) -> Self:
         # a company not yet saved has no configuration to find or create
         companies = companies.filtered(lambda company: isinstance(company.id, int))
+        by_company = self._config_ids_by_company()
+        config_ids = [by_company[cid] for cid in companies.ids if cid in by_company]
+        unmapped = companies.filtered(lambda company: company.id not in by_company)
+        if not unmapped:
+            return self.browse(config_ids)
+        # a row another transaction committed after the map was read is found
+        # here, and the map refreshed for the next request
         existing = (
             self.sudo()
             .with_context(active_test=False)
-            .search_fetch([("company_id", "in", companies.ids)], ["company_id"])
+            .search_fetch([("company_id", "in", unmapped.ids)], ["company_id"])
         )
-        missing = companies - existing.company_id
+        if existing:
+            self.env.registry.clear_cache()
+        missing = unmapped - existing.company_id
         if missing:
             _debug.lifecycle(
                 "created_for_companies", model=self._name, companies=missing.ids
@@ -156,4 +186,4 @@ class MixinCompanyConfig(models.AbstractModel):
             existing |= self.sudo().create(
                 [{"company_id": company.id} for company in missing]
             )
-        return self.browse(existing.ids)
+        return self.browse(config_ids + existing.ids)
