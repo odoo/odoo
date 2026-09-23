@@ -7,6 +7,7 @@ _logger = logging.getLogger(__name__)
 
 
 class QFPayNotificationController(Controller):
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @route(
         "/qfpay/notify",
         type="http",

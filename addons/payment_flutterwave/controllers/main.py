@@ -42,6 +42,7 @@ class FlutterwaveController(http.Controller):
         data = json.loads(response) if response else {}
         return self.flutterwave_return_from_checkout(**data)
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _webhook_url,
         type="http",

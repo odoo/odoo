@@ -3,6 +3,7 @@ from odoo.http import request
 
 
 class EcpayInvoiceController(http.Controller):
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/invoice/ecpay/agreed_invoice_allowance/<int:invoice_id>",
         type="http",

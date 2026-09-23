@@ -46,6 +46,7 @@ class PaypalController(http.Controller):
             )
             tx_sudo._process("paypal", normalized_response)
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _webhook_url,
         type="http",

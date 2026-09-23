@@ -22,6 +22,7 @@ class AsiaPayController(http.Controller):
         # reference and AsiaPay doesn't expose an endpoint to fetch the data from the API.
         return request.redirect("/payment/status")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _webhook_url,
         type="http",

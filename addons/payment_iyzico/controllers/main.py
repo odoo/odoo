@@ -11,6 +11,7 @@ _logger = get_payment_logger(__name__)
 
 
 class IyzicoController(http.Controller):
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         const.PAYMENT_RETURN_ROUTE,
         type="http",
@@ -41,6 +42,7 @@ class IyzicoController(http.Controller):
         self._check_and_process()
         return request.redirect("/payment/status")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         const.WEBHOOK_ROUTE,
         type="http",

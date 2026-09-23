@@ -31,6 +31,7 @@ class PaymobController(http.Controller):
         request.admission.subject._process("paymob", request.admission.extra["data"])
         return request.redirect("/payment/status")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _webhook_url,
         type="http",

@@ -10,6 +10,7 @@ _logger = get_payment_logger(__name__)
 class CustomController(Controller):
     _process_url = "/payment/custom/process"
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @route(
         _process_url,
         type="http",

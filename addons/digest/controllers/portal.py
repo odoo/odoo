@@ -9,7 +9,7 @@ from odoo.addons.digest.models.digest import PERIODICITIES
 
 
 class DigestController(Controller):
-    # csrf is disabled here because it will be called by the MUA with unpredictable session at that time
+    # csrf=False: a mail client posts the one-click unsubscribe; auth="receiver" admits it
     @route(
         [
             "/digest/<int:digest_id>/unsubscribe_oneclick",

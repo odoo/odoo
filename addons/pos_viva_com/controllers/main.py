@@ -7,6 +7,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PosVivaComController(http.Controller):
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/pos_viva_com/notification",
         type="http",

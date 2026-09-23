@@ -12,6 +12,7 @@ class APSController(http.Controller):
     _return_url = "/payment/aps/return"
     _webhook_url = "/payment/aps/webhook"
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _return_url,
         type="http",
@@ -42,6 +43,7 @@ class APSController(http.Controller):
         request.admission.subject._process("aps", request.admission.extra["data"])
         return request.redirect("/payment/status")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _webhook_url,
         type="http",

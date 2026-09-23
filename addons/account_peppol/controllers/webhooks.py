@@ -3,6 +3,7 @@ from odoo.http import request
 
 
 class PeppolWebhookController(http.Controller):
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/peppol/webhook/new-message",
         type="http",
@@ -16,6 +17,7 @@ class PeppolWebhookController(http.Controller):
     def webhook_new_message(self, token: str):
         return self._trigger("account_peppol.ir_cron_peppol_get_new_documents")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/peppol/webhook/message-state-update",
         type="http",
@@ -29,6 +31,7 @@ class PeppolWebhookController(http.Controller):
     def webhook_message_update(self, token: str):
         return self._trigger("account_peppol.ir_cron_peppol_get_message_status")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/peppol/webhook/user-state-update",
         type="http",

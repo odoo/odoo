@@ -85,6 +85,7 @@ class StripeController(http.Controller):
         # Redirect the user to the status page.
         return request.redirect("/payment/status")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _webhook_url,
         type="http",

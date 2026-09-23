@@ -298,6 +298,7 @@ class MailController(http.Controller):
                 res_id = False
         return self._redirect_to_record(model, res_id, access_token, **kwargs)
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/mail/unfollow",
         type="http",

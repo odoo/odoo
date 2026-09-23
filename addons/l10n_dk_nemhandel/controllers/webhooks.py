@@ -3,6 +3,7 @@ from odoo.http import request
 
 
 class NemhandelWebhookController(http.Controller):
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/nemhandel/webhook/new-message",
         type="http",
@@ -16,6 +17,7 @@ class NemhandelWebhookController(http.Controller):
     def webhook_nemhandel_new_message(self, token: str):
         return self._trigger("l10n_dk_nemhandel.ir_cron_nemhandel_get_new_documents")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/nemhandel/webhook/message-state-update",
         type="http",
@@ -29,6 +31,7 @@ class NemhandelWebhookController(http.Controller):
     def webhook_nemhandel_message_update(self, token: str):
         return self._trigger("l10n_dk_nemhandel.ir_cron_nemhandel_get_message_status")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/nemhandel/webhook/user-state-update",
         type="http",

@@ -7,6 +7,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PosMercadoPagoWebhook(http.Controller):
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/pos_mercado_pago/notification",
         methods=["POST"],

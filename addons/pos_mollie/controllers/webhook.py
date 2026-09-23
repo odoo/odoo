@@ -7,6 +7,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PosMollie(http.Controller):
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/pos_mollie/webhook",
         methods=["POST"],

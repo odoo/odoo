@@ -142,6 +142,7 @@ class OAuthController(http.Controller):
                 },
             )
 
+    # csrf=False: the OAuth state is HMAC-signed and verified in the body
     @http.route(
         [_CALLBACK_PATH, _CALLBACK_PATH_LEGACY],
         type="http",

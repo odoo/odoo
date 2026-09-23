@@ -81,6 +81,7 @@ class MercadoPagoPaymentController(http.Controller):
         # Redirect the user to the status page.
         return request.redirect("/payment/status")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         f"{const.WEBHOOK_ROUTE}/<reference>",
         type="http",

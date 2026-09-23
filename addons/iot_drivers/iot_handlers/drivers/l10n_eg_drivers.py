@@ -24,6 +24,7 @@ class EtaUsbController(http.Controller):
             return False
         return crypt_context.is_password_valid(access_token, stored_hash)
 
+    # csrf=False: an IoT box has no session; the proxy access token is verified in the body
     @route.iot_route(
         "/hw_l10n_eg_eta/certificate",
         type="http",
@@ -58,6 +59,7 @@ class EtaUsbController(http.Controller):
             session.logout()
             session.closeSession()
 
+    # csrf=False: an IoT box has no session; the proxy access token is verified in the body
     @route.iot_route(
         "/hw_l10n_eg_eta/sign", type="http", cors="*", csrf=False, methods=["POST"]
     )

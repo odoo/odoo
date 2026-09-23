@@ -154,6 +154,7 @@ class TestHttp(http.Controller):
         )
         return request.prepare_json_response(spec)
 
+    # csrf=False: a test fixture posted without a session token
     @http.route(
         "/test_http/echo-http-post",
         type="http",
@@ -179,7 +180,6 @@ class TestHttp(http.Controller):
         type="http",
         auth="none",
         methods=["GET"],
-        csrf=False,
     )
     def csrf_token(self, **kwargs):
         return request.csrf_token()
@@ -189,7 +189,6 @@ class TestHttp(http.Controller):
         type="http",
         auth="public",
         methods=["GET"],
-        csrf=False,
     )
     def echo_http_context_lang(self, **kwargs):
         return self.env.context.get("lang", "")
@@ -199,7 +198,6 @@ class TestHttp(http.Controller):
         type="jsonrpc",
         auth="none",
         methods=["POST"],
-        csrf=False,
     )
     def echo_json(self, **kwargs):
         return kwargs
@@ -209,12 +207,12 @@ class TestHttp(http.Controller):
         type="jsonrpc",
         auth="user",
         methods=["POST"],
-        csrf=False,
         readonly=True,
     )
     def echo_json_context(self, **kwargs):
         return self.env.context
 
+    # csrf=False: a test fixture posted without a session token
     @http.route(
         "/test_http/echo-json-over-http",
         type="http",
@@ -365,6 +363,7 @@ class TestHttp(http.Controller):
             if error == "UserError":
                 raise UserError("Walter is AFK")
 
+    # csrf=False: a test fixture posted without a session token
     @http.route(
         "/test_http/upload_file",
         methods=["POST"],
@@ -386,6 +385,7 @@ class TestHttp(http.Controller):
 
         return data.decode()
 
+    # csrf=False: a test fixture posted without a session token
     @http.route(
         '/test_http/<model("test_http.galaxy"):galaxy>/su_setname',
         methods=["POST"],
@@ -400,6 +400,7 @@ class TestHttp(http.Controller):
         galaxy.sudo().name = name
         return name
 
+    # csrf=False: a test fixture posted without a session token
     @http.route(
         "/test_http/promotion_upload",
         methods=["POST"],
@@ -415,6 +416,7 @@ class TestHttp(http.Controller):
         )
         return str(len(promotion_upload_reads))
 
+    # csrf=False: a test fixture posted without a session token
     @http.route(
         "/test_http/reroute_upload",
         methods=["POST"],

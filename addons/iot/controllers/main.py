@@ -69,6 +69,7 @@ class IoTController(IoTBoxLookup, http.Controller):
 
         return sorted(modules | {"iot_drivers"})
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/iot/get_handlers",
         type="http",
@@ -370,6 +371,7 @@ class IoTLogController(IoTBoxLookup, http.Controller):
             .get_param("iot.should_log_iot_logs", True)
         )
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/iot/log",
         type="http",

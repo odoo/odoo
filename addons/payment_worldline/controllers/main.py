@@ -48,6 +48,7 @@ class WorldlineController(http.Controller):
             )
         return request.redirect("/payment/status")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _webhook_url,
         type="http",

@@ -234,6 +234,7 @@ class AdyenController(http.Controller):
 
         return response_content
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/payment/adyen/return",
         type="http",
@@ -284,6 +285,7 @@ class AdyenController(http.Controller):
         # Redirect the user to the status page
         return request.redirect("/payment/status")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _webhook_url,
         type="http",

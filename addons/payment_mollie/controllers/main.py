@@ -13,6 +13,7 @@ class MollieController(http.Controller):
     _return_url = "/payment/mollie/return"
     _webhook_url = "/payment/mollie/webhook"
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _return_url,
         type="http",
@@ -43,6 +44,7 @@ class MollieController(http.Controller):
         self._check_and_process(data)
         return request.redirect("/payment/status")
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _webhook_url,
         type="http",

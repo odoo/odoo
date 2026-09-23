@@ -30,7 +30,7 @@ DEVICE_TYPES = [
 
 class DriverController(http.Controller):
     @helpers.toggleable
-    @route.iot_route("/iot_drivers/action", type="jsonrpc", cors="*", csrf=False)
+    @route.iot_route("/iot_drivers/action", type="jsonrpc", cors="*")
     def action(self, session_id, device_identifier, data):
         """This route is called when we want to make an action with device (take picture, printing,...)
         We specify in data from which session_id that action is called
@@ -85,7 +85,7 @@ class DriverController(http.Controller):
         return True
 
     @helpers.toggleable
-    @route.iot_route("/iot_drivers/event", type="jsonrpc", cors="*", csrf=False)
+    @route.iot_route("/iot_drivers/event", type="jsonrpc", cors="*")
     def event(self, listener):
         """
         listener is a dict in witch there are a sessions_id and a dict of device_identifier to listen
@@ -114,7 +114,9 @@ class DriverController(http.Controller):
             return req["result"]
         return None
 
-    @route.iot_route("/iot_drivers/download_logs", type="http", cors="*", csrf=False)
+    @route.iot_route(
+        "/iot_drivers/download_logs", type="http", methods=["GET"], cors="*"
+    )
     def download_logs(self):
         """
         Downloads the log file

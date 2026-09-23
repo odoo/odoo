@@ -12,6 +12,7 @@ _debug = DebugLog(__name__)
 class GelatoController(Controller):
     _webhook_url = "/gelato/webhook"
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @route(
         _webhook_url,
         type="http",

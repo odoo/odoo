@@ -97,7 +97,7 @@ class MassMailController(http.Controller):
         render_values.update(feedback_enabled=False)
         return request.render("mass_mailing.page_mailing_unsubscribe", render_values)
 
-    # csrf is disabled here because it will be called by the MUA with unpredictable session at that time
+    # csrf=False: a mail client posts the one-click unsubscribe; auth="receiver" admits it
     @http.route(
         ["/mailing/<int:mailing_id>/unsubscribe_oneclick"],
         type="http",

@@ -247,6 +247,7 @@ class TremolG03Driver(SerialDriver):
 
 
 class TremolG03Controller(http.Controller):
+    # csrf=False: an IoT box has no session; the device refuses a company VAT it does not carry
     @route.iot_route(
         "/hw_proxy/l10n_ke_cu_send", type="http", cors="*", csrf=False, methods=["POST"]
     )

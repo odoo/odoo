@@ -30,6 +30,7 @@ class XenditController(http.Controller):
         )
         tx_sudo._xendit_create_charge(token_ref, auth_id=auth_id)
 
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         _webhook_url,
         type="http",

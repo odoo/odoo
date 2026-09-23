@@ -25,6 +25,7 @@ _logger = logging.getLogger(__name__)
 
 
 class SmsTwilioController(Controller):
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @route(
         "/sms_twilio/status/<string:uuid>",
         type="http",

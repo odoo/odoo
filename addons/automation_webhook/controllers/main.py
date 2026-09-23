@@ -6,6 +6,7 @@ from odoo.addons.automation_webhook.models.automation_rule import (
 
 
 class AutomationRuleController(Controller):
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @route(
         ["/web/hook/<string:webhook_uuid>"],
         type="http",

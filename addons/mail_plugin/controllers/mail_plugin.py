@@ -22,7 +22,6 @@ class MailPluginController(http.Controller):
         type="jsonrpc",
         auth="bearer",
         scope="odoo.plugin.outlook",
-        csrf=False,
         cors="*",
         typed=True,
     )

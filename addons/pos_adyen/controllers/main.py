@@ -17,7 +17,6 @@ class PosAdyenController(http.Controller):
         auth="receiver",
         receiver="pos.payment.method:_receiver_for_adyen_terminal",
         receiver_event="adyen_terminal",
-        csrf=False,
         save_session=False,
         typed=True,
     )

@@ -257,6 +257,7 @@ class PortalMailGroup(http.Controller):
         }
         return request.env["ir.qweb"]._render("mail_group.messages_short", values)
 
+    # csrf=False: a mail client posts the one-click unsubscribe; auth="receiver" admits it
     @http.route(
         "/group/<int:group_id>/unsubscribe_oneclick",
         website=True,

@@ -7,6 +7,7 @@ _logger = logging.getLogger(__name__)
 
 
 class DeviceDeviceController(http.Controller):
+    # csrf=False: auth="receiver" admits the caller through its inbound gate
     @http.route(
         "/remote/device/<string:identifier>/data",
         type="http",
@@ -66,7 +67,6 @@ class DeviceDeviceController(http.Controller):
         receiver="device.device:_receiver_for_identifier",
         receiver_event="device_status",
         methods=["GET"],
-        csrf=False,
         save_session=False,
         typed=True,
     )
