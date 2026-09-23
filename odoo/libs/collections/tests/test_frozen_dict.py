@@ -179,3 +179,22 @@ class TestFreehashCycles(unittest.TestCase):
                     hash(frozendict({"v": value})),
                     hash(frozenset({("v", _acyclic_freehash(value))})),
                 )
+
+
+class TestHashFollowsMutableValues(unittest.TestCase):
+    def test_a_mutated_list_value_hashes_like_its_new_content(self):
+        frozen = frozendict(ids=[1])
+        hash(frozen)
+        frozen["ids"].append(2)
+        self.assertEqual(hash(frozen), hash(frozendict(ids=[1, 2])))
+        self.assertEqual({frozendict(ids=[1, 2]): "found"}.get(frozen), "found")
+
+    def test_a_hashable_content_keeps_its_cached_hash(self):
+        frozen = frozendict(lang="en_US", ids=(1, 2))
+        hash(frozen)
+        self.assertIsNotNone(getattr(frozen, "_hash", None))
+
+    def test_a_plain_dict_value_hashes_like_an_equal_frozendict_value(self):
+        self.assertEqual(
+            hash(frozendict(a={"x": "s"})), hash(frozendict(a=frozendict(x="s")))
+        )

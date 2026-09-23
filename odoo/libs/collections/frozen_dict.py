@@ -8,7 +8,7 @@ def freehash(arg: Any) -> int:
     return _freehash(arg, set())
 
 
-def _freehash(arg: Any, path: set[int]) -> int:
+def _freehash(arg: Any, path: set[int], mutable: list[bool] | None = None) -> int:
     if isinstance(arg, frozendict):
         cached = getattr(arg, "_hash", None)
         if cached is not None:
@@ -17,7 +17,8 @@ def _freehash(arg: Any, path: set[int]) -> int:
         try:
             return hash(arg)
         except TypeError:
-            pass
+            if mutable is not None:
+                mutable[0] = True
     marker = id(arg)
     if marker in path:
         # A value met again on its own path closes a cycle. Equal structures close it at the
@@ -28,14 +29,21 @@ def _freehash(arg: Any, path: set[int]) -> int:
         if isinstance(arg, Mapping):
             return hash(
                 frozenset(
-                    (key, hash(val) if type(val) in _SCALARS else _freehash(val, path))
+                    (
+                        key,
+                        hash(val)
+                        if type(val) in _SCALARS
+                        else _freehash(val, path, mutable),
+                    )
                     for key, val in arg.items()
                 )
             )
         if isinstance(arg, Iterable):
             return hash(
                 frozenset(
-                    hash(item) if type(item) in _SCALARS else _freehash(item, path)
+                    hash(item)
+                    if type(item) in _SCALARS
+                    else _freehash(item, path, mutable)
                     for item in arg
                 )
             )
@@ -92,8 +100,11 @@ class frozendict[K, T](dict[K, T]):
         try:
             return self._hash
         except AttributeError:
-            h = _freehash(self, set())
-            object.__setattr__(self, "_hash", h)
+            # a hash over an unhashable value would outlive a change to that value
+            mutable = [False]
+            h = _freehash(self, set(), mutable)
+            if not mutable[0]:
+                object.__setattr__(self, "_hash", h)
             return h
 
 
