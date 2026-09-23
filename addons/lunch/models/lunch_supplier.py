@@ -1,13 +1,12 @@
-import math
 from collections import defaultdict
-from datetime import UTC, datetime, time, timedelta
+from datetime import UTC, datetime, timedelta
 from textwrap import dedent
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.datetime import float_to_time as hours_to_time
 from odoo.libs.datetime import timezone
-from odoo.tools import float_round
 
 from odoo.addons.base.models.res_partner import _selection_timezones
 
@@ -16,17 +15,7 @@ CRON_DEPENDS = {"name", "active", "send_by", "automatic_email_time", "moment", "
 
 
 def float_to_time(hours, moment="am"):
-    """Convert a number of hours into a time object."""
-    if hours == 12.0 and moment == "pm":
-        return time.max
-    fractional, integral = math.modf(hours)
-    if moment == "pm":
-        integral += 12
-    return time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
-
-
-def time_to_float(t):
-    return float_round(t.hour + t.minute / 60 + t.second / 3600, precision_digits=2)
+    return hours_to_time(hours + 12 if moment == "pm" else hours)
 
 
 class LunchSupplier(models.Model):

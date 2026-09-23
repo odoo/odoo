@@ -330,3 +330,13 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""",
 
         order.action_order()
         self.assertEqual(order.state, "ordered")
+
+
+class TestFloatToTime(common.BaseCase):
+    def test_a_time_that_rounds_to_the_next_hour_does_not_raise(self):
+        from odoo.addons.lunch.models.lunch_supplier import float_to_time
+
+        self.assertEqual(float_to_time(11.995, "am"), time(12, 0))
+        self.assertEqual(float_to_time(11.9999, "pm"), time.max)
+        self.assertEqual(float_to_time(12.0, "pm"), time.max)
+        self.assertEqual(float_to_time(7.5, "pm"), time(19, 30))
