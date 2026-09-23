@@ -1,8 +1,9 @@
 from datetime import timedelta
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.tests import tagged
 
+from odoo.addons.base.tests.common import converted_reach
 from odoo.addons.integration.tests.common import APITransportTestCase
 from odoo.addons.integration.tools.api_client import get_api_client
 from odoo.addons.integration.tools.exceptions import CommError
@@ -220,3 +221,55 @@ class TestMultiCompany(APITransportTestCase):
         log_ids_a = set(logs_a.ids)
         log_ids_b = set(logs_b.ids)
         self.assertEqual(len(log_ids_a & log_ids_b), 0)
+
+
+@tagged("post_install", "-at_install", "integration")
+class TestCompanyGuard(APITransportTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.administrator = cls.env["res.users"].create(
+            {
+                "name": "Guarded Administrator",
+                "login": "guarded_administrator",
+                "group_ids": [Command.link(cls.env.ref("base.group_system").id)],
+                "company_ids": [Command.set(cls.company_a.ids)],
+                "company_id": cls.company_a.id,
+            }
+        )
+
+    def _assert_guarded(self, records, reachable):
+        self.assertEqual(
+            records.with_user(self.administrator).search([("id", "in", records.ids)]),
+            reachable,
+        )
+        self.assertEqual(
+            converted_reach(self.env, records._name, self.administrator) & records,
+            reachable,
+        )
+
+    def test_a_connection_of_another_company_is_out_of_reach(self):
+        Connection = self.env["integration.connection"]
+        connections = {
+            company: Connection.create(
+                {"service_id": self.service_stripe.id, "company_id": company.id}
+            )
+            for company in (self.company_a, self.company_b, self.env["res.company"])
+        }
+        self._assert_guarded(
+            Connection.union(*connections.values()),
+            connections[self.company_a] | connections[self.env["res.company"]],
+        )
+
+    def test_a_receiver_of_another_company_is_out_of_reach(self):
+        Receiver = self.env["integration.receiver"]
+        receivers = {
+            company: Receiver.create(
+                {"name": f"Guarded {company.name}", "company_id": company.id}
+            )
+            for company in (self.company_a, self.company_b, self.env["res.company"])
+        }
+        self._assert_guarded(
+            Receiver.union(*receivers.values()),
+            receivers[self.company_a] | receivers[self.env["res.company"]],
+        )

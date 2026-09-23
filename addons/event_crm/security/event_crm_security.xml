@@ -7,9 +7,7 @@
             <field name="model_id" ref="model_event_lead_rule" />
             <field
                 name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
-            <field
-                name="groups"
-                eval="[Command.link(ref('base.group_multi_company'))]" />
+            <field name="groups" eval="[Command.clear()]" />
         </record>
     </data>
 

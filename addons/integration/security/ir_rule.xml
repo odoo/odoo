@@ -23,14 +23,14 @@
         <field name="name">Receiver: Company isolation</field>
         <field name="model_id" ref="model_integration_receiver" />
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
-        <field name="groups" eval="[Command.link(ref('group_api_transport_user'))]" />
+        <field name="groups" eval="[Command.clear()]" />
     </record>
 
     <record id="rule_integration_connection_company" model="ir.rule">
         <field name="name">Connection: Company isolation</field>
         <field name="model_id" ref="model_integration_connection" />
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
-        <field name="groups" eval="[Command.link(ref('group_api_transport_user'))]" />
+        <field name="groups" eval="[Command.clear()]" />
     </record>
 
     <record id="rule_integration_response_cache_company" model="ir.rule">
