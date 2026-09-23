@@ -2,6 +2,7 @@ import ast
 import os
 import re
 import shutil
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +27,96 @@ STANDARD_MODULES = ["web", "test_themes", "base"]
 MAX_FILE_SIZE = 25 * 2**20
 MAX_LINE_SIZE = 100000
 VALID_EXTENSION = [".py", ".js", ".xml", ".css", ".scss"]
+
+_JS_CODE_RUN = re.compile(r"[^/'\"`{}]+")
+_JS_STRING = re.compile(r"'(?:\\.|[^\\'\n])*'?|\"(?:\\.|[^\\\"\n])*\"?", re.DOTALL)
+_JS_TEMPLATE_CHUNK = re.compile(r"(?:\\.|[^\\`$]|\$(?!\{))*(`|\$\{|\Z)", re.DOTALL)
+_JS_REGEX_LITERAL = re.compile(
+    r"/(?![*/])(?:\\.|\[(?:\\.|[^\]\\\n])*\]|[^/\\\n\[])+/[A-Za-z]*"
+)
+_JS_OPERAND_END = re.compile(r"(?:[\w$)\]]|\+\+|--)\Z")
+_JS_KEYWORD_END = re.compile(
+    r"(?<![\w$.])(?:return|typeof|instanceof|in|of|new|delete|void|throw|case"
+    r"|do|else|yield|await)\Z"
+)
+
+
+def _strip_js_comments(s: str) -> str:
+    # A quoted string ends at the newline JavaScript rejects it at, so a
+    # misread slash (regex or division) can never run past its own line.
+    out: list[str] = []
+    template_braces: list[int] = []
+    pos, end = 0, len(s)
+    regex_allowed = True
+    in_template = False
+    while pos < end:
+        if in_template:
+            match = _JS_TEMPLATE_CHUNK.match(s, pos)
+            assert match is not None
+            out.append(match.group(0))
+            pos = match.end()
+            if match.group(1) == "${":
+                template_braces.append(0)
+                regex_allowed = True
+            else:
+                regex_allowed = False
+            in_template = False
+            continue
+        char = s[pos]
+        if char == "/":
+            if s.startswith("//", pos):
+                newline = s.find("\n", pos)
+                pos = end if newline < 0 else newline
+                out.append(" ")
+            elif s.startswith("/*", pos):
+                close = s.find("*/", pos + 2)
+                pos = end if close < 0 else close + 2
+                out.append(" ")
+            elif regex_allowed and (match := _JS_REGEX_LITERAL.match(s, pos)):
+                out.append(match.group(0))
+                pos = match.end()
+                regex_allowed = False
+            else:
+                out.append(char)
+                pos += 1
+                regex_allowed = True
+        elif char in "'\"":
+            match = _JS_STRING.match(s, pos)
+            assert match is not None
+            out.append(match.group(0))
+            pos = match.end()
+            regex_allowed = False
+        elif char == "`":
+            out.append(char)
+            pos += 1
+            in_template = True
+        elif char == "{":
+            if template_braces:
+                template_braces[-1] += 1
+            out.append(char)
+            pos += 1
+            regex_allowed = True
+        elif char == "}":
+            out.append(char)
+            pos += 1
+            if template_braces and not template_braces[-1]:
+                template_braces.pop()
+                in_template = True
+            else:
+                if template_braces:
+                    template_braces[-1] -= 1
+                regex_allowed = True
+        else:
+            match = _JS_CODE_RUN.match(s, pos)
+            assert match is not None
+            run = match.group(0)
+            out.append(run)
+            pos = match.end()
+            if tail := run.rstrip():
+                regex_allowed = bool(
+                    _JS_KEYWORD_END.search(tail) or not _JS_OPERAND_END.search(tail)
+                )
+    return "".join(out)
 
 
 class Cloc:
@@ -56,25 +147,27 @@ class Cloc:
         except Exception:
             return (-1, "Syntax Error")
 
-    def parse_c_like(self, s: str, regex: str) -> tuple[int, int] | tuple[int, str]:
+    def _count_code_lines(
+        self, s: str, strip_comments: Callable[[str], str]
+    ) -> tuple[int, int] | tuple[int, str]:
         s = s.strip() + "\n"
         total = s.count("\n")
         if max(len(l) for l in s.split("\n")) > MAX_LINE_SIZE:
             return -1, "Max line size exceeded"
+        s = strip_comments(s)
+        s = re.sub(r"\s*\n\s*", r"\n", s).lstrip()
+        return s.count("\n"), total
 
+    def parse_c_like(self, s: str, regex: str) -> tuple[int, int] | tuple[int, str]:
         def replacer(match: re.Match) -> str:
             s = match.group(0)
             return " " if s.startswith("/") else s
 
         comments_re = re.compile(regex, re.DOTALL | re.MULTILINE)
-        s = re.sub(comments_re, replacer, s)
-        s = re.sub(r"\s*\n\s*", r"\n", s).lstrip()
-        return s.count("\n"), total
+        return self._count_code_lines(s, lambda text: comments_re.sub(replacer, text))
 
     def parse_js(self, s: str) -> tuple[int, int] | tuple[int, str]:
-        return self.parse_c_like(
-            s, r'//.*?$|(?<!\\)/\*.*?\*/|\'(\\.|[^\\\'])*\'|"(\\.|[^\\"])*"'
-        )
+        return self._count_code_lines(s, _strip_js_comments)
 
     def parse_scss(self, s: str) -> tuple[int, int] | tuple[int, str]:
         return self.parse_c_like(
@@ -146,18 +239,31 @@ class Cloc:
             exclude_list.extend(DEFAULT_EXCLUDE)
             if isinstance(declared, dict):
                 for j in ["cloc_exclude", "demo", "demo_xml"]:
-                    exclude_list.extend(declared.get(j, []))
+                    patterns = declared.get(j) or []
+                    exclude_list.extend(
+                        [patterns] if isinstance(patterns, str) else patterns
+                    )
             break
+        module_name = Path(path).name
         exclude = set(exclude or ())
         for i in filter(None, exclude_list):
-            if ".." in i:
+            if isinstance(i, str) and ".." in i:
                 raise ValueError(
                     f"Invalid exclusion path {i!r}: '..' is not allowed. "
                     "Use a normalized path."
                 )
-            exclude.update(str(p) for p in Path(path).glob(i))
+            try:
+                exclude.update(str(p) for p in Path(path).glob(i))
+            except (NotImplementedError, ValueError, TypeError) as exc:
+                self.book(
+                    module_name,
+                    f"exclusion {i!r}",
+                    (-1, f"Invalid exclusion pattern, ignored: {exc}"),
+                )
+                _debug.logic(
+                    "cloc.exclusion_invalid", module=module_name, pattern=repr(i)
+                )
 
-        module_name = Path(path).name
         self.book(module_name)
         counted = excluded = 0  # debuglog
         with _debug.perf(

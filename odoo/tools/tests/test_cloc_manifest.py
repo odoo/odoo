@@ -56,5 +56,38 @@ class TestManifestExclusions(unittest.TestCase):
         self.assertIn("exclusions ignored", cloc.report())
 
 
+class TestManifestExclusionShapes(unittest.TestCase):
+    def test_a_single_string_exclusion_is_one_pattern(self):
+        cloc = _count('{"name": "m", "cloc_exclude": "secret.py"}')
+        self.assertEqual(cloc.code["mymod"], 3)
+        self.assertFalse(cloc.errors)
+
+    def test_a_string_holding_a_path_does_not_abort_the_count(self):
+        root = _module('{"name": "m", "cloc_exclude": "sub/secret.py"}')
+        (root / "sub").mkdir()
+        (root / "sub" / "secret.py").write_text("z = 1\n" * 9, encoding="utf-8")
+        cloc = Cloc()
+        cloc.count_path(str(root))
+        self.assertEqual(cloc.code["mymod"], 43)
+        self.assertFalse(cloc.errors)
+
+    def test_an_absolute_pattern_is_reported_and_the_rest_still_applies(self):
+        cloc = _count('{"name": "m", "cloc_exclude": ["/etc/*", "secret.py"]}')
+        self.assertEqual(cloc.code["mymod"], 3)
+        self.assertIn(
+            "Invalid exclusion pattern", " ".join(cloc.errors["mymod"].values())
+        )
+        self.assertIn("/etc/*", " ".join(cloc.errors["mymod"]))
+
+    def test_a_non_string_pattern_is_reported(self):
+        cloc = _count('{"name": "m", "cloc_exclude": [None, 3, "secret.py"]}')
+        self.assertEqual(cloc.code["mymod"], 3)
+        self.assertEqual(len(cloc.errors["mymod"]), 1)
+
+    def test_a_parent_directory_pattern_is_still_refused(self):
+        with self.assertRaises(ValueError):
+            _count('{"name": "m", "cloc_exclude": "../x.py"}')
+
+
 if __name__ == "__main__":
     unittest.main()
