@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from unittest.mock import call, patch
+from unittest.mock import patch
 
 from freezegun import freeze_time
 

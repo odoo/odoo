@@ -2,7 +2,6 @@
 
 from odoo.tests import TransactionCase, tagged
 
-
 ACCESS = "microsoft_outlook_access_token"
 REFRESH = "microsoft_outlook_refresh_token"
 

@@ -86,7 +86,7 @@ class TeamMember(models.Model):
                         user=member.user_id.name,
                         team=member.team_id.name,
                     )
-                )
+                ) from None
 
     @api.constrains("lead_assignment_domain_preferred")
     def _constrains_assignment_domain_preferred(self):
@@ -102,7 +102,7 @@ class TeamMember(models.Model):
                         user=member.user_id.name,
                         team=member.team_id.name,
                     )
-                )
+                ) from None
 
     def _get_assignment_quota(self, force_quota=False):
         quota = float_round(

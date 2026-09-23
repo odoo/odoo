@@ -841,7 +841,7 @@ class TestLeadConvertBatch(crm_common.TestLeadConvertMassCommon):
             else:
                 self.assertEqual(opp.date_open, date)
             self.assertEqual(opp.date_conversion, date)
-            if opp == self.lead_1 or opp == lead_w_partner:
+            if opp in (self.lead_1, lead_w_partner):
                 self.assertEqual(opp.stage_id, self.stage_team1_1)
             elif opp == lead_w_contact:
                 self.assertEqual(opp.stage_id, self.stage_gen_1)

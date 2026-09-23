@@ -282,7 +282,7 @@ class CrmIapLeadMiningRequest(models.Model):
                 {
                     "code": country.code,
                     "states": self.state_ids.filtered(
-                        lambda state: state in country.state_ids
+                        lambda state, country=country: state in country.state_ids
                     ).mapped("code"),
                 }
                 for country in self.country_ids
@@ -353,7 +353,7 @@ class CrmIapLeadMiningRequest(models.Model):
             self.state = "error"
             return False
         except Exception as e:
-            raise UserError(_("Your request could not be executed: %s", e))
+            raise UserError(_("Your request could not be executed: %s", e)) from e
 
     def _iap_contact_mining(self, params, timeout=300):
         endpoint = (
@@ -444,6 +444,7 @@ class CrmIapLeadMiningRequest(models.Model):
             }
         else:
             return False
+        return None
 
     def action_get_lead_action(self):
         self.check_singleton()

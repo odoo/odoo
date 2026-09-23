@@ -143,7 +143,7 @@ class MicrosoftCalendarService:
             if e.response.status_code == 410 and full_sync_needed and sync_token:
                 # retry with a full sync
                 return self._get_events_delta(token=token, timeout=timeout)
-            raise e
+            raise
 
         # event occurrences (from a recurrence) are retrieved separately to get all their info,
         # # and mainly the iCalUId attribute which is not provided by the 'get_delta' api end point
@@ -229,7 +229,7 @@ class MicrosoftCalendarService:
             if status in (410, 403):
                 _logger.info("Microsoft event %s was already deleted", event_id)
             else:
-                raise e
+                raise
 
         return status not in RESOURCE_NOT_FOUND_STATUSES
 

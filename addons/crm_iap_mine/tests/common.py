@@ -48,7 +48,6 @@ class MockIAPReveal(MockIAPEnrich):
                 else:
                     base_name = "heinrich_%d" % counter
 
-                iap_payload = {}
                 company_data = self._get_iap_company_data(base_name, service="mine")
                 if default_data:
                     company_data.update(default_data)
@@ -73,10 +72,9 @@ class MockIAPReveal(MockIAPEnrich):
             yield
 
     def _get_iap_company_data(self, base_name, service=None, add_values=None):
-        company_data = super()._get_iap_dnb_company_data(
+        return super()._get_iap_dnb_company_data(
             base_name, service=service, add_values=add_values
         )
-        return company_data
 
     def assertMineCallParams(self, params):
         self.assertTrue(bool(params["account_token"]))

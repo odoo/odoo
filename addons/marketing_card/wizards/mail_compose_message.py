@@ -31,7 +31,9 @@ class MailComposeMessage(models.TransientModel):
                     for res_id, mail_values in mail_values_all.items()
                 ]
             )
-            for mail_values, body in zip(mail_values_all.values(), processed_bodies):
+            for mail_values, body in zip(
+                mail_values_all.values(), processed_bodies, strict=True
+            ):
                 if body is not None:
                     # in a mailing these are the same
                     mail_values["body"] = body
@@ -59,10 +61,10 @@ class MailComposeMessage(models.TransientModel):
         for card, body in card_body_pairs:
             if body:
 
-                def replace_card_image_url(match):
+                def replace_card_image_url(match, card=card):
                     return Markup('src="{}"').format(card._get_path("card.jpg"))
 
-                def replace_card_preview_url(match):
+                def replace_card_preview_url(match, card=card):
                     return Markup('href="{}"').format(card._get_path("preview"))
 
                 body_is_markup = False

@@ -13,7 +13,7 @@ class CalendarEvent(models.Model):
             ).partner_id
             for alarm in alarms:
                 partners = event._mail_get_partners()[event.id].filtered(
-                    lambda partner: (
+                    lambda partner, declined_partners=declined_partners: (
                         partner.phone_sanitized and partner not in declined_partners
                     )
                 )

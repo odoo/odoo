@@ -190,19 +190,21 @@ class CrmLead(models.Model):
         self._rebuild_pls_frequency_table()
         self._update_automated_probabilities()
         _logger.info(
-            "Predictive Lead Scoring : Cron duration = %d seconds"
-            % ((datetime.now() - cron_start_date).total_seconds())
+            "Predictive Lead Scoring : Cron duration = %d seconds",
+            (datetime.now() - cron_start_date).total_seconds(),
         )
 
     def _rebuild_pls_frequency_table(self):
         try:
             self.browse().check_access("unlink")
         except AccessError:
-            raise UserError(_("You don't have the access needed to run this cron."))
+            raise UserError(
+                _("You don't have the access needed to run this cron.")
+            ) from None
         else:
             self.env.cr.execute("TRUNCATE TABLE crm_lead_scoring_frequency")
 
-        new_frequencies_by_team, unused = self._pls_prepare_update_frequency_table(
+        new_frequencies_by_team, _unused = self._pls_prepare_update_frequency_table(
             rebuild=True
         )
         self._pls_update_frequency_table(new_frequencies_by_team, 1)
@@ -251,7 +253,7 @@ class CrmLead(models.Model):
         self.flush_model()
         for probability, probability_lead_ids in probability_leads.items():
             for lead_ids_current in batched(
-                probability_lead_ids, PLS_UPDATE_BATCH_STEP
+                probability_lead_ids, PLS_UPDATE_BATCH_STEP, strict=False
             ):
                 transactions_count += 1
                 try:
@@ -262,20 +264,18 @@ class CrmLead(models.Model):
                         self.env.cr.commit()
                 except Exception as e:
                     _logger.warning(
-                        "Predictive Lead Scoring : update transaction failed. Error: %s"
-                        % e
+                        "Predictive Lead Scoring : update transaction failed. Error: %s",
+                        e,
                     )
                     transactions_failed_count += 1
         self.invalidate_model()
 
         _logger.info(
-            "Predictive Lead Scoring : All automated probabilities updated (%d leads / %d transactions (%d failed) / %d seconds)"
-            % (
-                leads_to_update_count,
-                transactions_count,
-                transactions_failed_count,
-                (datetime.now() - cron_update_lead_start_date).total_seconds(),
-            )
+            "Predictive Lead Scoring : All automated probabilities updated (%d leads / %d transactions (%d failed) / %d seconds)",
+            leads_to_update_count,
+            transactions_count,
+            transactions_failed_count,
+            (datetime.now() - cron_update_lead_start_date).total_seconds(),
         )
 
     def _pls_prepare_update_frequency_table(self, rebuild=False, target_state=False):
@@ -309,7 +309,7 @@ class CrmLead(models.Model):
 
         leads_values_dict = pls_leads._pls_get_lead_pls_values(domain=domain)
 
-        leads_frequency_values_by_team = dict((team_id, []) for team_id in team_ids)
+        leads_frequency_values_by_team = {team_id: [] for team_id in team_ids}
         leads_pls_fields = set()
         for values in leads_values_dict.values():
             team_id = values.get("team_id", 0)
@@ -350,9 +350,9 @@ class CrmLead(models.Model):
             for frequency in existing_frequencies:
                 team_id = frequency["team_id"][0] if frequency.get("team_id") else 0
                 if team_id not in existing_frequencies_by_team:
-                    existing_frequencies_by_team[team_id] = dict(
-                        (field, {}) for field in leads_pls_fields
-                    )
+                    existing_frequencies_by_team[team_id] = {
+                        field: {} for field in leads_pls_fields
+                    }
 
                 existing_frequencies_by_team[team_id][frequency["variable"]][
                     frequency["value"]
@@ -423,10 +423,7 @@ class CrmLead(models.Model):
             self.env["ir.config_parameter"].sudo().get_param("crm.pls_fields")
         )
         pls_fields = pls_fields_config.split(",") if pls_fields_config else []
-        pls_safe_fields = [
-            field for field in pls_fields if field in self._fields.keys()
-        ]
-        return pls_safe_fields
+        return [field for field in pls_fields if field in self._fields]
 
     def _pls_first_stage(self):
         return self.env["crm.stage"].search(
@@ -449,7 +446,7 @@ class CrmLead(models.Model):
         self, lead_values, leads_pls_fields, target_state=None
     ):
         pls_fields = leads_pls_fields.copy()
-        frequencies = dict((field, {}) for field in pls_fields)
+        frequencies = {field: {} for field in pls_fields}
 
         stage_ids = self.env["crm.stage"].search_read(
             [], ["sequence", "name", "id"], order="sequence, id"
@@ -613,7 +610,7 @@ class CrmLead(models.Model):
                 if value == "correct" and tools.float_compare(score, 0.50, 2) < 0:
                     continue
             if field == "tag_id":
-                tag = self.tag_ids.filtered(lambda tag: tag.id == value)
+                tag = self.tag_ids.filtered(lambda tag, value=value: tag.id == value)
                 sorted_scores_with_name.append(
                     (score, field, tag.display_name, tag.color)
                 )

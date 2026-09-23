@@ -59,7 +59,7 @@ class TestCRMLead(TestCrmCommon):
             self.env["res.country.state"],
             self.country_ref,
         )
-        for fname in set(PARTNER_FIELDS_TO_SYNC) - set(["function", "lang"]):
+        for fname in set(PARTNER_FIELDS_TO_SYNC) - {"function", "lang"}:
             self.assertEqual(
                 lead[fname],
                 self.contact_1[fname],
@@ -866,8 +866,8 @@ class TestCRMLead(TestCrmCommon):
         lead.unlink()
         self.assertEqual(meetings.exists(), meetings)
         self.assertFalse(meetings.opportunity_id)
-        self.assertEqual(set(meetings.mapped("res_id")), set([0]))
-        self.assertEqual(set(meetings.mapped("res_model")), set([False]))
+        self.assertEqual(set(meetings.mapped("res_id")), {0})
+        self.assertEqual(set(meetings.mapped("res_model")), {False})
 
     @users("user_sales_leads")
     def test_crm_lead_update_contact(self):

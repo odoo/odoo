@@ -10,6 +10,7 @@ class IrWebsocket(models.AbstractModel):
     def _get_bus_channels(self, channels):
         if self.env.uid:
             channels = list(channels)
+            collaboration_channels = []
             for channel in channels:
                 if isinstance(channel, str):
                     match = re.match(
@@ -36,7 +37,7 @@ class IrWebsocket(models.AbstractModel):
                         except AccessError:
                             continue
 
-                        channels.append(
+                        collaboration_channels.append(
                             (
                                 self.env.registry.db_name,
                                 "editor_collaboration",
@@ -45,4 +46,5 @@ class IrWebsocket(models.AbstractModel):
                                 res_id,
                             )
                         )
+            channels.extend(collaboration_channels)
         return super()._get_bus_channels(channels)

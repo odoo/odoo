@@ -108,7 +108,7 @@ class ChatbotScriptStep(models.Model):
             ).sorted(lambda s: s.sequence, reverse=True)
         for step in self:
             parent_steps = parent_steps_by_chatbot[step.chatbot_script_id.id].filtered(
-                lambda s: s.sequence < step.sequence
+                lambda s, step=step: s.sequence < step.sequence
             )
             parent = step
             while True:
@@ -274,12 +274,12 @@ class ChatbotScriptStep(models.Model):
         self.check_singleton()
         discuss_channel = discuss_channel or self.env["discuss.channel"]
 
-        if self.step_type != "question_selection" and not self._get_next_step(
-            discuss_channel.sudo().chatbot_message_ids.user_script_answer_id
-        ):
-            return True
-
-        return False
+        return bool(
+            self.step_type != "question_selection"
+            and not self._get_next_step(
+                discuss_channel.sudo().chatbot_message_ids.user_script_answer_id
+            )
+        )
 
     def _process_answer(self, discuss_channel, message_body):
         self.check_singleton()

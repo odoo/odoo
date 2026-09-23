@@ -14,7 +14,7 @@ class MicrosoftAuth(http.Controller):
         service = state.get("s")
         url_return = state.get("f")
         if not service or (kw.get("code") and not url_return):
-            raise BadRequest()
+            raise BadRequest
 
         if kw.get("code"):
             base_url = (

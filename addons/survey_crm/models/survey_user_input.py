@@ -40,7 +40,7 @@ class SurveyUser_Input(models.Model):
                 )
         if lead_create_vals:
             leads = self.env["crm.lead"].sudo().create(list(lead_create_vals.values()))
-            for user_input, lead in zip(lead_create_vals.keys(), leads):
+            for user_input, lead in zip(lead_create_vals.keys(), leads, strict=True):
                 user_input.lead_id = lead
 
     def _prepare_common_survey_lead_values(self, survey):

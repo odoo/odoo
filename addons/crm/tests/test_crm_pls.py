@@ -99,9 +99,7 @@ class CrmPlsCommon(TransactionCase):
                     }
                 )
 
-        leads_with_tags = self.env["crm.lead"].create(leads_to_create)
-
-        return leads_with_tags
+        return self.env["crm.lead"].create(leads_to_create)
 
 
 @tagged("post_install", "-at_install", "crm_lead_pls")
@@ -196,20 +194,19 @@ class TestCrmPls(CrmPlsCommon):
             )
             .ids
         )
-        leads_to_create = []
-        for i in range(3):
-            leads_to_create.append(
-                self._prepare_test_lead_values(
-                    team_ids[0],
-                    "team_1_%s" % str(i),
-                    country_ids[i],
-                    state_ids[i],
-                    state_values[i],
-                    state_values[i],
-                    source_ids[i],
-                    stage_ids[i],
-                )
+        leads_to_create = [
+            self._prepare_test_lead_values(
+                team_ids[0],
+                "team_1_%s" % str(i),
+                country_ids[i],
+                state_ids[i],
+                state_values[i],
+                state_values[i],
+                source_ids[i],
+                stage_ids[i],
             )
+            for i in range(3)
+        ]
         leads_to_create.append(
             self._prepare_test_lead_values(
                 team_ids[0],

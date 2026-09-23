@@ -36,7 +36,9 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         sent_cards = self.env["card.card"]
         for sent_mail in sent_mails:
             record_id = int(sent_mail["object_id"].split("-")[0])
-            card = cards.filtered(lambda card: card.res_id == record_id)
+            card = cards.filtered(
+                lambda card, record_id=record_id: card.res_id == record_id
+            )
             self.assertEqual(len(card), 1)
             sent_cards += card
             campaign_base_url = card.campaign_id.get_base_url()
@@ -310,7 +312,8 @@ class TestMarketingCardRender(MarketingCardCommon):
         for tz in timezones:
             # force find different timezones to check the returned time
             with patch(
-                "odoo.addons.mail.models.base.Base._mail_get_timezone", lambda model: tz
+                "odoo.addons.mail.models.base.Base._mail_get_timezone",
+                lambda model, tz=tz: tz,
             ):
                 timezone_result_headers.append(
                     campaign._get_card_element_values(campaign.preview_record_ref)[

@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import requests
 
-from odoo import Command, _, api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import str2bool
 
@@ -92,7 +92,7 @@ class ResUsers(models.Model):
                 "You should check your Client ID and secret on the Microsoft Azure portal or try to stop and restart your calendar synchronisation.",
                 error_key,
             )
-            raise UserError(error_msg)
+            raise UserError(error_msg) from error
 
     def _get_microsoft_sync_status(self):
         """Returns the calendar synchronization status (active, paused or stopped)."""
@@ -178,10 +178,8 @@ class ResUsers(models.Model):
             try:
                 user.with_user(user).sudo()._sync_microsoft_calendar()
                 self.env.cr.commit()
-            except Exception as e:
-                _logger.exception(
-                    "[%s] Calendar Synchro - Exception : %s!", user, str(e)
-                )
+            except Exception:
+                _logger.exception("[%s] Calendar Synchro failed", user)
                 self.env.cr.rollback()
 
     def stop_microsoft_synchronization(self):

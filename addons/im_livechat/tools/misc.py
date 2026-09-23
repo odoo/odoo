@@ -16,4 +16,4 @@ def force_guest_env(guest_token, raise_if_not_found=True):
     if guest:
         request.update_context(guest=guest)
     elif raise_if_not_found:
-        raise NotFound()
+        raise NotFound

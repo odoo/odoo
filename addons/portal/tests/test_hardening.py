@@ -9,9 +9,9 @@ from odoo.addons.portal.controllers.portal import (
 )
 from odoo.addons.portal.utils import (
     get_portal_partner,
-    resolve_thread_for_credentials,
     is_thread_hash_pid_valid,
     is_thread_token_valid,
+    resolve_thread_for_credentials,
 )
 
 

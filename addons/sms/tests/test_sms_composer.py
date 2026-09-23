@@ -61,20 +61,26 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
         cases = [
             (
                 "Hello there, check this awesome app I found:\nhttps://odoo.com",
-                "<p>Hello there, check this awesome app I found:<br>"
-                '<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a></p>',
+                (
+                    "<p>Hello there, check this awesome app I found:<br>"
+                    '<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a></p>'
+                ),
             ),
             (
                 "Hello there, check this awesome <b>app</b> I found:\nhttps://odoo.com",
                 # b is kept as is in notification, but link is still added as well
-                "<p>Hello there, check this awesome &lt;b&gt;app&lt;/b&gt; I found:<br>"
-                '<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a></p>',
+                (
+                    "<p>Hello there, check this awesome &lt;b&gt;app&lt;/b&gt; I found:<br>"
+                    '<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a></p>'
+                ),
             ),
             (
                 # Here, we check that the sms sent is the sms written.
                 "Hello there, check this awesome <b>app</b> I found:\n*https://odoo.com*",
-                "<p>Hello there, check this awesome &lt;b&gt;app&lt;/b&gt; I found:<br>"
-                '*<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a>*</p>',
+                (
+                    "<p>Hello there, check this awesome &lt;b&gt;app&lt;/b&gt; I found:<br>"
+                    '*<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a>*</p>'
+                ),
             ),
         ]
 

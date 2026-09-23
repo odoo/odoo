@@ -90,8 +90,10 @@ class TestSurveyCrm(common.TestSurveyCommon, HttpCase):
         cls.assertFalse(cls, q04.generate_lead)
 
     def _test_survey_crm(
-        self, answers=[], login=None, sales_team=False, survey_type="survey"
+        self, answers=None, login=None, sales_team=False, survey_type="survey"
     ):
+        if answers is None:
+            answers = []
         if sales_team:
             sales_team = self.env["team.team"].create(
                 {"use_sale": True, "name": "Odoo Survey Team", "use_leads": True}

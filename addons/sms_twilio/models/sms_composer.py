@@ -6,7 +6,7 @@ class SendSMS(models.TransientModel):
 
     def _prepare_mass_sms_values(self, records):
         results = super()._prepare_mass_sms_values(records)
-        for record, result in zip(records, results):
+        for record in records:
             company = self.env.company
             if "company_id" in record._fields:
                 company = record.company_id

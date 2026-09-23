@@ -2,7 +2,6 @@
 
 from odoo.tests import TransactionCase, tagged
 
-
 ACCESS = "google_gmail_access_token"
 REFRESH = "google_gmail_refresh_token"
 

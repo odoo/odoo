@@ -1,6 +1,6 @@
 import io
 
-from odoo.libs.documents import ROWS, Document, get_readers, get_known_reader_names
+from odoo.libs.documents import ROWS, Document, get_known_reader_names, get_readers
 from odoo.tests import TransactionCase, tagged
 
 XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

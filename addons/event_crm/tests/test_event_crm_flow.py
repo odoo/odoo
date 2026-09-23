@@ -80,7 +80,9 @@ class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
         self.assertEqual(len(self.test_rule_attendee.lead_ids), 4)
         for registration in new_registrations:
             lead = self.test_rule_attendee.lead_ids.filtered(
-                lambda lead: registration in lead.registration_ids
+                lambda lead, registration=registration: (
+                    registration in lead.registration_ids
+                )
             )
             if registration.email == '"John Doe" <invalid@not.example.com>':
                 self.assertEqual(lead, self.env["crm.lead"])
@@ -121,7 +123,9 @@ class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
         self.assertEqual(len(self.test_rule_attendee.lead_ids), 4)
         for registration in new_registrations:
             lead = self.test_rule_attendee.lead_ids.filtered(
-                lambda lead: registration in lead.registration_ids
+                lambda lead, registration=registration: (
+                    registration in lead.registration_ids
+                )
             )
             if registration.email == '"John Doe" <invalid@not.example.com>':
                 self.assertEqual(lead, self.env["crm.lead"])

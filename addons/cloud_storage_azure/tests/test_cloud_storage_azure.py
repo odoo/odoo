@@ -203,7 +203,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
                 response.status_code = 200
                 response._content = bytes(json.dumps({"access_token": "xxx"}), "utf-8")
             if "blob.core.windows.net" in url:
-                raise requests.exceptions.ConnectionError()  # account_name wrong: domain https://accountname.blob.core.windows.net doesn't exist
+                raise requests.exceptions.ConnectionError  # account_name wrong: domain https://accountname.blob.core.windows.net doesn't exist
             return response
 
         with (
@@ -333,14 +333,12 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
             composer._action_send_mail()
         self.assertEqual(len(self._mails), 2, "Two emails should be sent.")
 
-        for body, attachment in zip(
-            [m["body"] for m in self._mails], self._new_mails.attachment_ids
-        ):
-            large_attachment_link = str(
-                self.env["ir.qweb"]._render(
-                    "mail.mail_attachment_links", {"attachments": attachment}
-                )
+        large_attachment_link = str(
+            self.env["ir.qweb"]._render(
+                "mail.mail_attachment_links", {"attachments": cloud_attachment}
             )
+        )
+        for body in [m["body"] for m in self._mails]:
             self.assertEqual(
                 body.count(large_attachment_link),
                 1,
@@ -388,9 +386,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
                 "Only text attachment should be sent in the message",
             )
 
-        for body, attachment in zip(
-            [m["body"] for m in self._mails], self._new_mails.attachment_ids
-        ):
+        for body in [m["body"] for m in self._mails]:
             large_attachment_link = str(
                 self.env["ir.qweb"]._render(
                     "mail.mail_attachment_links", {"attachments": cloud_attachment}
@@ -443,9 +439,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer._action_send_mail()
 
-        for body, attachment in zip(
-            [m["body"] for m in self._mails], self._new_mails.attachment_ids
-        ):
+        for body in [m["body"] for m in self._mails]:
             cloud_attachment_present = (
                 body.count(cloud_attachment.access_token)
                 == body.count(cloud_attachment.name)

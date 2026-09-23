@@ -85,7 +85,7 @@ def list_blob_urls(container_name, batch_size=1000):
         if params["marker"] is None:
             break
 
-    logging.info("The cloud storage container has %d blobs", cloud_storage_blobs_num)
+    _logger.info("The cloud storage container has %d blobs", cloud_storage_blobs_num)
 
 
 def get_blobs_to_be_deleted(blob_urls, batch_size=1000):
@@ -96,7 +96,7 @@ def get_blobs_to_be_deleted(blob_urls, batch_size=1000):
     models = xmlrpc.client.ServerProxy(  # noqa: E8518 - same standalone script
         f"{odoo_url}/xmlrpc/2/object"
     )
-    for blob_urls_ in batched(blob_urls, batch_size):
+    for blob_urls_ in batched(blob_urls, batch_size, strict=False):
         blob_urls_ = list(blob_urls_)
         attachments = models.execute_kw(
             odoo_db,
@@ -136,7 +136,7 @@ def remove_blobs(blob_urls, max_worker=None):
     with ThreadPoolExecutor(max_workers=max_worker) as executor:
         executor.map(remove_blob, blob_urls)
 
-    logging.info("%d blobs are deleted by the script", deleted_cloud_storage_blobs_num)
+    _logger.info("%d blobs are deleted by the script", deleted_cloud_storage_blobs_num)
 
 
 if __name__ == "__main__":

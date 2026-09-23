@@ -44,7 +44,7 @@ class SmsApiTwilio(SmsApiBase):
                 timeout=5,
             )
         except requests.exceptions.RequestException as e:
-            _logger.warning("Twilio SMS API error: %s", str(e))
+            _logger.warning("Twilio SMS API error: %s", e)
         return None
 
     def _send_sms_batch(self, messages, delivery_reports_url=False):

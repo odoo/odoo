@@ -42,6 +42,7 @@ class ChatbotScriptAnswer(models.Model):
                 answer.display_name = f"{shortened_message}: {answer.name}"
             else:
                 answer.display_name = answer.name
+        return None
 
     @api.model
     def _search_display_name(self, operator, value):

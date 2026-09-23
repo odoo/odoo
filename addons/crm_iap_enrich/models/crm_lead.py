@@ -134,8 +134,8 @@ class CrmLead(models.Model):
             leads = self.browse(all_lead_ids).try_lock_for_update(limit=batch_size)
             if not leads:
                 _logger.error(
-                    "A batch of leads could not be enriched (locked): %s",
-                    repr(self.browse(all_lead_ids)),
+                    "A batch of leads could not be enriched (locked): %r",
+                    self.browse(all_lead_ids),
                 )
                 self.env["ir.cron"]._trigger_ref(
                     "crm_iap_enrich.ir_cron_lead_enrichment",
@@ -155,9 +155,7 @@ class CrmLead(models.Model):
                     break
                 except Exception:
                     self.env.cr.rollback()
-                    _logger.error(
-                        "A batch of leads could not be enriched: %s", repr(leads)
-                    )
+                    _logger.error("A batch of leads could not be enriched: %r", leads)
                     time_left = self.env["ir.cron"]._commit_progress(len(leads))
                 if not time_left:
                     break
@@ -174,9 +172,7 @@ class CrmLead(models.Model):
                 except Exception:
                     if not modules.module.current_test:
                         self.env.cr.rollback()
-                    _logger.error(
-                        "A batch of leads could not be enriched: %s", repr(leads)
-                    )
+                    _logger.error("A batch of leads could not be enriched: %r", leads)
 
     @api.model
     def _iap_enrich_from_response(self, iap_response):
@@ -193,7 +189,7 @@ class CrmLead(models.Model):
             values = {"iap_enrich_done": True}
             lead_fields = ["partner_name", "reveal_id", "street", "city", "zip"]
             iap_fields = ["name", "clearbit_id", "location", "city", "postal_code"]
-            for lead_field, iap_field in zip(lead_fields, iap_fields):
+            for lead_field, iap_field in zip(lead_fields, iap_fields, strict=True):
                 if not lead[lead_field] and iap_data.get(iap_field):
                     values[lead_field] = iap_data[iap_field]
 

@@ -737,10 +737,10 @@ class CrmLead(models.Model):
     def _compute_lang_id(self):
         lang_codes = [code for code in self.mapped("partner_id.lang") if code]
         if lang_codes:
-            lang_id_by_code = dict(
-                (code, self.env["res.lang"]._get_data(code=code).id)
+            lang_id_by_code = {
+                code: self.env["res.lang"]._get_data(code=code).id
                 for code in lang_codes
-            )
+            }
         else:
             lang_id_by_code = {}
         for lead in self.filtered("partner_id"):
@@ -1249,7 +1249,7 @@ class CrmLead(models.Model):
             default["recurring_plan"] = False
         vals_list = super().copy_data(default=default)
         now = self.env.cr.now()
-        for lead, vals in zip(self, vals_list):
+        for lead, vals in zip(self, vals_list, strict=True):
             vals.setdefault("type", lead.type)
             vals.setdefault("team_id", lead.team_id.id)
             vals["date_open"] = (
@@ -1340,7 +1340,7 @@ class CrmLead(models.Model):
             team: team_leads._stage_find(domain=[("is_won", "=", True)], limit=None)
             for team, team_leads in self.grouped("team_id").items()
         }
-        leads_by_won_stage = defaultdict(lambda: self.browse())
+        leads_by_won_stage = defaultdict(self.browse)
         for lead in self:
             won_stages = won_stages_by_team[lead.team_id]
             won_stage = next(
@@ -1858,11 +1858,7 @@ class CrmLead(models.Model):
         source_lead = max(
             self,
             key=lambda lead: len(
-                list(
-                    lead[field]
-                    for field in PARTNER_ADDRESS_FIELDS_TO_SYNC
-                    if lead[field]
-                )
+                [lead[field] for field in PARTNER_ADDRESS_FIELDS_TO_SYNC if lead[field]]
             ),
         )
         return {fname: source_lead[fname] for fname in PARTNER_ADDRESS_FIELDS_TO_SYNC}
@@ -1942,7 +1938,7 @@ class CrmLead(models.Model):
 
         for opportunity in opportunities:
             attachments = all_attachments.filtered(
-                lambda attach: attach.res_id == opportunity.id
+                lambda attach, opportunity=opportunity: attach.res_id == opportunity.id
             )
             for attachment in attachments:
                 attachment.write(

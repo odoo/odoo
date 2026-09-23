@@ -86,7 +86,7 @@ def get_blobs_to_be_deleted(blob_urls, batch_size=1000):
     models = xmlrpc.client.ServerProxy(  # noqa: E8518 - same standalone script
         f"{odoo_url}/xmlrpc/2/object"
     )
-    for blob_urls_ in batched(blob_urls, batch_size):
+    for blob_urls_ in batched(blob_urls, batch_size, strict=False):
         blob_urls_ = list(blob_urls_)
         attachments = models.execute_kw(
             odoo_db,

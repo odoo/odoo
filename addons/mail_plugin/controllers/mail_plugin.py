@@ -129,7 +129,7 @@ class MailPluginController(http.Controller):
                             {"image_1920": base64.b64encode(response.content)}
                         )
                 except Exception:
-                    pass
+                    _logger.info("Could not fetch the logo %s", logo_url, exc_info=True)
 
         model_fields_to_iap_mapping = {
             "street": "street_name",
@@ -284,7 +284,7 @@ class MailPluginController(http.Controller):
             .mapped("default_from_email")
         )
         if tools.email_normalize(email) in notification_emails:
-            raise Forbidden()
+            raise Forbidden
         partner_info = {
             "name": name,
             "email": email,
@@ -294,8 +294,7 @@ class MailPluginController(http.Controller):
             partner_info["parent_id"] = company
         partner = request.env["res.partner"].create(partner_info)
 
-        response = {"id": partner.id}
-        return response
+        return {"id": partner.id}
 
     @http.route(
         "/mail_plugin/log_mail_content",
@@ -309,7 +308,7 @@ class MailPluginController(http.Controller):
         self, model: str, res_id: int, message: str, attachments: list | None = None
     ):
         if model not in self._mail_content_logging_models_whitelist():
-            raise Forbidden()
+            raise Forbidden
 
         if attachments:
             attachments = [
@@ -387,7 +386,7 @@ class MailPluginController(http.Controller):
 
         fields_list = ["id", "name", "email", "website"]
 
-        company_values = dict((fname, company[fname]) for fname in fields_list)
+        company_values = {fname: company[fname] for fname in fields_list}
         company_values["phone"] = company._phone_get_number().number
         company_values["address"] = {
             "street": company.street,
@@ -481,7 +480,7 @@ class MailPluginController(http.Controller):
 
         fields_list = ["id", "name", "email", "is_company"]
 
-        partner_values = dict((fname, partner[fname]) for fname in fields_list)
+        partner_values = {fname: partner[fname] for fname in fields_list}
         partner_values["phone"] = partner._phone_get_number().number
         partner_values["image"] = partner.image_128
         partner_values["title"] = partner.function

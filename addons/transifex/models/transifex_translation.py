@@ -1,7 +1,6 @@
 import pathlib
 from configparser import ConfigParser
 from os import pardir
-from os.path import join as opj
 from urllib.parse import quote_plus
 
 import odoo
@@ -26,10 +25,10 @@ class TransifexTranslation(models.AbstractModel):
         projects = {}
         for addon_path in odoo.addons.__path__:
             for tx_path in (
-                opj(addon_path, ".tx", "config"),
-                opj(addon_path, pardir, ".tx", "config"),
+                pathlib.Path(addon_path, ".tx", "config"),
+                pathlib.Path(addon_path, pardir, ".tx", "config"),
             ):
-                if pathlib.Path(tx_path).is_file():
+                if tx_path.is_file():
                     tx_config_file.read(tx_path)
                     for sec in tx_config_file.sections()[1:]:
                         if len(sec.split(":")) != 6:

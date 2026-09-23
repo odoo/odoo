@@ -187,11 +187,12 @@ class NewLeadNotification(TestCrmCommon):
                     },
                 ],
             ],
+            strict=True,
         ):
             with self.subTest(lead_name=lead.name, email_from=lead.email_from):
                 res = lead._message_get_suggested_recipients(no_create=True)
                 self.assertEqual(len(res), len(expected_suggested))
-                for received, expected in zip(res, expected_suggested):
+                for received, expected in zip(res, expected_suggested, strict=True):
                     self.assertDictEqual(received, expected)
 
     @users("user_sales_manager")

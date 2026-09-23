@@ -84,7 +84,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
 
         traces_info = []
         for trace in traces:
-            record = records.filtered(lambda r: r.id == trace.res_id)
+            record = records.filtered(lambda r, trace=trace: r.id == trace.res_id)
             if record:
                 traces_info.append(
                     f"Trace: doc {trace.res_id} on {trace.sms_number} - status {trace.trace_status} (rec {record.id})"
@@ -106,7 +106,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
         if not sms_links_info:
             sms_links_info = [None] * len(recipients_info)
         for recipient_info, link_info, record in zip(
-            recipients_info, sms_links_info, records
+            recipients_info, sms_links_info, records, strict=True
         ):
             # check input
             invalid = set(recipient_info.keys()) - {
@@ -143,7 +143,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             recipient_check_sms = recipient_info.get("check_sms", check_sms)
 
             trace = traces.filtered(
-                lambda t: (
+                lambda t, number=number, record=record, status=status: (
                     t.sms_number == number
                     and t.trace_status == status
                     and (t.res_id == record.id if record else True)

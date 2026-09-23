@@ -30,7 +30,7 @@ class TestMailGroupModeration(TestMailListCommon):
     def test_constraints(self):
         mail_group = self.env["mail.group"].browse(self.test_group.ids)
         with self.assertRaises(IntegrityError):
-            moderation = self.env["mail.group.moderation"].create(
+            self.env["mail.group.moderation"].create(
                 {
                     "mail_group_id": mail_group.id,
                     "email": "banned_member@test.com",
@@ -47,7 +47,7 @@ class TestMailGroupModeration(TestMailListCommon):
         mail_group_2 = self.env["mail.group"].browse(self.test_group_2.ids)
         self.assertEqual(
             set(mail_group.moderation_rule_ids.mapped("email")),
-            set(["banned_member@test.com"]),
+            {"banned_member@test.com"},
         )
 
         moderation_1, moderation_2, moderation_3 = self.env[
@@ -74,7 +74,7 @@ class TestMailGroupModeration(TestMailListCommon):
 
         self.assertEqual(
             set(mail_group.moderation_rule_ids.mapped("email")),
-            set(["banned_member@test.com", "std@test.com", "xss@test.com"]),
+            {"banned_member@test.com", "std@test.com", "xss@test.com"},
         )
 
         message_1, message_2, message_3 = self.env["mail.group.message"].create(
@@ -106,14 +106,12 @@ class TestMailGroupModeration(TestMailListCommon):
         )
         self.assertEqual(
             set(mail_group.moderation_rule_ids.mapped("email")),
-            set(
-                [
-                    "banned_member@test.com",
-                    "std@test.com",
-                    "xss@test.com",
-                    "bob@test.com",
-                ]
-            ),
+            {
+                "banned_member@test.com",
+                "std@test.com",
+                "xss@test.com",
+                "bob@test.com",
+            },
         )
         self.assertEqual(moderation_1.status, "allow")
         self.assertEqual(

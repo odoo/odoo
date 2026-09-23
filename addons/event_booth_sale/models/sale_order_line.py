@@ -49,7 +49,9 @@ class SaleOrderLine(models.Model):
             selected_booths = so_line.event_booth_pending_ids
 
             so_line.event_booth_registration_ids.filtered(
-                lambda reg: reg.event_booth_id not in selected_booths
+                lambda reg, selected_booths=selected_booths: (
+                    reg.event_booth_id not in selected_booths
+                )
             ).unlink()
 
             self.env["event.booth.registration"].create(

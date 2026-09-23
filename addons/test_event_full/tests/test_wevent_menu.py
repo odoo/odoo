@@ -38,7 +38,7 @@ class TestWEventMenu(TestWEventCommon):
             if menu_field == "track_menu_ids":
                 menu_url = "/track" if menu_name == "Talks" else "/agenda"
                 menu = self.event[menu_field].filtered(
-                    lambda menu: menu.menu_id.url.endswith(menu_url)
+                    lambda menu, menu_url=menu_url: menu.menu_id.url.endswith(menu_url)
                 )
 
             self.assertFalse(

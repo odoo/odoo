@@ -3,7 +3,6 @@ from urllib.parse import parse_qs, urlsplit
 
 from odoo.tests import TransactionCase, tagged
 
-
 PROVIDER_MIXINS = ("mixin.google.gmail", "mixin.microsoft.outlook")
 
 

@@ -24,8 +24,7 @@ def sign_string(key, string_to_sign):
     string_to_sign = string_to_sign.encode()
     signed_hmac_sha256 = hmac.HMAC(key, string_to_sign, hashlib.sha256)
     digest = signed_hmac_sha256.digest()
-    encoded_digest = base64.b64encode(digest).decode()
-    return encoded_digest
+    return base64.b64encode(digest).decode()
 
 
 def _to_utc_datetime(value):
@@ -440,7 +439,7 @@ def get_user_delegation_key(
     except requests.exceptions.ConnectionError:
         raise ValidationError(
             "Failed to get user delegation key: the account name may be incorrect"
-        )  # pylint: disable=missing-gettext
+        ) from None  # pylint: disable=missing-gettext
     if key_response.status_code in (401, 403):
         raise ClientAuthenticationError(
             f"Failed to get user delegation key: {key_response.content}"

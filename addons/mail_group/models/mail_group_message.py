@@ -160,7 +160,7 @@ class MailGroupMessage(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)
-        for message, vals in zip(self, vals_list):
+        for message, vals in zip(self, vals_list, strict=True):
             vals["mail_message_id"] = message.mail_message_id.copy().id
         return vals_list
 

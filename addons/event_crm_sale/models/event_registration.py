@@ -34,13 +34,13 @@ class EventRegistration(models.Model):
                 for sale_order, registrations in so_to_regs.items():
                     registrations = registrations.sorted("id")
                     leads = related_leads.filtered(
-                        lambda lead: (
+                        lambda lead, rule=rule, sale_order=sale_order: (
                             lead.event_lead_rule_id == rule
                             and lead.registration_ids.sale_order_id == sale_order
                         )
                     )
                     so_res.append((leads, sale_order, registrations))
                 if so_res:
-                    grouping_res[rule] = grouping_res.get(rule, list()) + so_res
+                    grouping_res[rule] = grouping_res.get(rule, []) + so_res
 
         return grouping_res

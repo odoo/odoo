@@ -38,7 +38,7 @@ def _get_card_from_url(card_id, card_slug):
         raise request.prepare_not_found_error()
     card = request.env["card.card"].browse(card_id).exists()
     if not card:
-        raise BadRequest()
+        raise BadRequest
     return card
 
 

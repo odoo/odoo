@@ -60,11 +60,13 @@ class MailingSmsTest(models.TransientModel):
             self.env.user._phone_format(number=number) for number in numbers
         ]
         valid_numbers = [
-            number for sanitized, number in zip(sanitized_numbers, numbers) if sanitized
+            number
+            for sanitized, number in zip(sanitized_numbers, numbers, strict=True)
+            if sanitized
         ]
         invalid_numbers = [
             number
-            for sanitized, number in zip(sanitized_numbers, numbers)
+            for sanitized, number in zip(sanitized_numbers, numbers, strict=True)
             if not sanitized
         ]
 

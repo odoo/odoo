@@ -154,10 +154,8 @@ class SmsApi(
         sms_account_token = (
             self.env["iap.account"].sudo().get("sms").sudo().account_token
         )
-        register_now = (
-            f'<a href="{sms_endpoint}/1/account?account_token={sms_account_token}" target="_blank">%s</a>'
-            % (_("Register now."))
-        )
+        register_label = _("Register now.")
+        register_now = f'<a href="{sms_endpoint}/1/account?account_token={sms_account_token}" target="_blank">{register_label}</a>'
 
         error_dict = super()._get_sms_api_error_messages()
         error_dict.update(

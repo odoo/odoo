@@ -189,7 +189,7 @@ class LunchAlert(models.Model):
                 for cron in crons
             ]
         )
-        for vals, cron in zip(vals_list, crons):
+        for vals, cron in zip(vals_list, crons, strict=True):
             vals["cron_id"] = cron.id
 
         alerts = super().create(vals_list)

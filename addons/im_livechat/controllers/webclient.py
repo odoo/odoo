@@ -18,7 +18,7 @@ class WebClient(WebclientController):
         )
 
     @classmethod
-    def _process_request_for_internal_user(self, store: Store, name, params):
+    def _process_request_for_internal_user(cls, store: Store, name, params):
         super()._process_request_for_internal_user(store, name, params)
         if name == "im_livechat.channel":
             store.add(
@@ -45,7 +45,7 @@ class WebClient(WebclientController):
             store.add(request.env.user, Store.Many("livechat_expertise_ids", ["name"]))
 
     @classmethod
-    def _process_request_for_all(self, store: Store, name, params):
+    def _process_request_for_all(cls, store: Store, name, params):
         super()._process_request_for_all(store, name, params)
         if name == "init_livechat":
             partner, guest = request.env["res.partner"]._get_current_persona()

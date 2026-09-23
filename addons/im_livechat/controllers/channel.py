@@ -16,10 +16,10 @@ class LivechatChannelController(ChannelController):
     )
     def livechat_session_update_note(self, channel_id, note):
         if self.env.user.share:
-            raise NotFound()
+            raise NotFound
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
-            raise NotFound()
+            raise NotFound
         channel.sudo().livechat_note = Markup(note)
 
     @route(
@@ -30,10 +30,10 @@ class LivechatChannelController(ChannelController):
     )
     def livechat_session_update_status(self, channel_id, livechat_status):
         if self.env.user.share:
-            raise NotFound()
+            raise NotFound
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
-            raise NotFound()
+            raise NotFound
         channel.sudo().livechat_status = livechat_status
 
     @route(
@@ -44,10 +44,10 @@ class LivechatChannelController(ChannelController):
     )
     def livechat_conversation_update_tags(self, channel_id, tag_ids, method="ADD"):
         if not self.env["im_livechat.conversation.tag"].has_access("write"):
-            raise NotFound()
+            raise NotFound
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
-            raise NotFound()
+            raise NotFound
         if method == "ADD":
             channel.sudo().livechat_conversation_tag_ids = [
                 Command.link(tag_id) for tag_id in tag_ids

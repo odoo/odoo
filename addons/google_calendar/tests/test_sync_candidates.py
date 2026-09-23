@@ -1,6 +1,5 @@
 from odoo.tests import TransactionCase, tagged
 
-
 SYNC_DOMAIN = [
     ("google_calendar_rtoken", "!=", False),
     ("google_synchronization_stopped", "=", False),

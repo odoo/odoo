@@ -1388,7 +1388,7 @@ class MailingMailing(models.Model):
                AND s.model = %%(target_model)s;
             """
         join_domain, where_domain = self._get_seen_list_extra()
-        query = query % {
+        query %= {
             "target": target._table,
             "join_domain": join_domain,
             "where_domain": where_domain,

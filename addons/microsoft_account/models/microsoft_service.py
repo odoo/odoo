@@ -95,8 +95,6 @@ class MicrosoftService(models.AbstractModel):
             "u": self.env["ir.config_parameter"].sudo().get_param("database.uuid"),
         }
 
-        get_param = self.env["ir.config_parameter"].sudo().get_param
-
         encoded_params = urlencode(
             {
                 "response_type": "code",
@@ -127,7 +125,7 @@ class MicrosoftService(models.AbstractModel):
             "redirect_uri": redirect_uri,
         }
         try:
-            dummy, response, dummy = self._do_request(
+            _status, response, _ask_time = self._do_request(
                 self._get_token_endpoint(),
                 params=data,
                 headers=headers,
@@ -142,7 +140,9 @@ class MicrosoftService(models.AbstractModel):
             error_msg = _(
                 "Something went wrong during your token generation. Maybe your Authorization Code is invalid"
             )
-            raise self.env["res.config.settings"].prepare_config_warning(error_msg)
+            raise self.env["res.config.settings"].prepare_config_warning(
+                error_msg
+            ) from None
 
     @api.model
     def _do_request(
@@ -175,8 +175,11 @@ class MicrosoftService(models.AbstractModel):
         ]
 
         _logger.debug(
-            "Uri: %s - Type : %s - Headers: %s - Params : %s !"
-            % (uri, method, headers, params)
+            "Uri: %s - Type : %s - Headers: %s - Params : %s !",
+            uri,
+            method,
+            headers,
+            params,
         )
 
         ask_time = fields.Datetime.now()
@@ -200,7 +203,7 @@ class MicrosoftService(models.AbstractModel):
                     timeout=timeout,
                 )
             else:
-                raise Exception(
+                raise ValueError(
                     _(
                         "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!",
                         method,
@@ -225,5 +228,5 @@ class MicrosoftService(models.AbstractModel):
                 response = {}
             else:
                 _logger.exception("Bad microsoft request: %s!", error.response.content)
-                raise error
+                raise
         return (status, response, ask_time)

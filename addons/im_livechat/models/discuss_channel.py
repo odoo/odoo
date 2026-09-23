@@ -539,7 +539,7 @@ class DiscussChannel(models.Model):
             step_message = self.env["chatbot.message"]
             if not current_step_sudo.is_forward_operator:
                 step_message = channel.sudo().chatbot_message_ids.filtered(
-                    lambda m: (
+                    lambda m, chatbot_script=chatbot_script, current_step_sudo=current_step_sudo: (
                         m.script_step_id == current_step_sudo
                         and m.mail_message_id.author_id
                         == chatbot_script.operator_partner_id
@@ -989,10 +989,7 @@ class DiscussChannel(models.Model):
         }
         if chatbot_script_step:
             operator_params["expertises"] = chatbot_script_step.operator_expertise_ids
-        human_operator = self.livechat_channel_id.sudo()._get_operator(
-            **operator_params
-        )
-        return human_operator
+        return self.livechat_channel_id.sudo()._get_operator(**operator_params)
 
     def _post_current_chatbot_step_message(self, chatbot_script_step):
         posted_message = self.env["mail.message"]

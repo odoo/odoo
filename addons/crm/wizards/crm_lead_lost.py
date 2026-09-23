@@ -26,5 +26,4 @@ class CrmLeadLost(models.TransientModel):
                 Markup('<div style="margin-bottom: 4px;"><p>%s:</p>%s<br /></div>')
                 % (_("Lost Comment"), self.lost_feedback)
             )
-        res = self.lead_ids.action_set_lost(lost_reason_id=self.lost_reason_id.id)
-        return res
+        return self.lead_ids.action_set_lost(lost_reason_id=self.lost_reason_id.id)

@@ -106,7 +106,7 @@ class Authenticate(http.Controller):
 
     def _generate_auth_code(self, scope, name):
         if not request.env.user._is_internal():
-            raise NotFound()
+            raise NotFound
         auth_dict = {
             "scope": scope,
             "name": name,

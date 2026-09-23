@@ -10,12 +10,9 @@ from odoo.addons.phone_validation.tools import phone_validation
 
 class MailingSMSController(http.Controller):
     def _check_trace(self, mailing_id, trace_code):
-        try:
-            mailing = (
-                request.env["mailing.mailing"].sudo().search([("id", "=", mailing_id)])
-            )
-        except:
-            mailing = False
+        mailing = (
+            request.env["mailing.mailing"].sudo().search([("id", "=", mailing_id)])
+        )
         if not mailing:
             return {"error": "mailing_error"}
         trace = (

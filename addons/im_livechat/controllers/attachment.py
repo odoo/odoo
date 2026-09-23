@@ -18,7 +18,7 @@ class LivechatAttachmentController(AttachmentController):
             thread_model, thread_id, **kwargs
         )
         if not thread:
-            raise NotFound()
+            raise NotFound
         if (
             thread_model == "discuss.channel"
             and thread.channel_type == "livechat"

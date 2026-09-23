@@ -1,5 +1,3 @@
-import json
-
 from odoo.addons.mail_plugin.tests.common import (
     TestMailPluginControllerCommon,
     as_outlook_user,

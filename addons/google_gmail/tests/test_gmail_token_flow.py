@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
-
 # the flow itself lives in the shared provider mixin
 MIXIN_MODULE = "odoo.addons.mail_oauth2.models.mixin_oauth2_mail_provider"
 

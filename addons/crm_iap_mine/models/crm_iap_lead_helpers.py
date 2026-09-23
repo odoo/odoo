@@ -1,5 +1,3 @@
-from math import floor, log10
-
 from odoo import Command, api, models
 
 
@@ -21,9 +19,9 @@ class CrmIapLeadHelpers(models.Model):
             [("service_name", "=", service_name)], limit=1
         )
         res = self.env[model_name].search_read([], ["create_uid"])
-        uids = set(r["create_uid"][0] for r in res if r.get("create_uid"))
+        uids = {r["create_uid"][0] for r in res if r.get("create_uid")}
         res = self.env["res.users"].search_read([("id", "in", list(uids))], ["email"])
-        emails = set(r["email"] for r in res if r.get("email"))
+        emails = {r["email"] for r in res if r.get("email")}
 
         email_values = {"email_to": ",".join(emails)}
         mail_template.send_mail(

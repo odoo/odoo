@@ -54,7 +54,7 @@ class SmsTwilioAccountManage(models.TransientModel):
                 timeout=5,
             )
         except requests.exceptions.RequestException as e:
-            _logger.warning("Twilio SMS API error: %s", str(e))
+            _logger.warning("Twilio SMS API error: %s", e)
             return self._display_notification(
                 notif_type="danger",
                 message=_("An error occurred while fetching the numbers."),

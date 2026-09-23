@@ -7,7 +7,6 @@ from odoo import fields
 from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
-
 TOKEN_URL = "https://oauth.example.com/token"
 
 

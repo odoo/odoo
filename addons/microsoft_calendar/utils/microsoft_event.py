@@ -45,10 +45,9 @@ class MicrosoftEvent(abc.Set):
     def __getattr__(self, name):
         # check_singleton
         try:
-            (event,) = self._events.keys()
+            (event_id,) = self._events
         except ValueError:
-            raise ValueError("Expected singleton: %s" % self)
-        event_id = list(self._events.keys())[0]
+            raise ValueError(f"Expected singleton: {self}") from None
         value = self._events[event_id].get(name)
         json.dumps(value)
         return value

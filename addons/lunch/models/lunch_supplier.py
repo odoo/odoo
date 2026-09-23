@@ -306,7 +306,7 @@ class LunchSupplier(models.Model):
                 for cron in crons
             ]
         )
-        for vals, cron in zip(vals_list, crons):
+        for vals, cron in zip(vals_list, crons, strict=True):
             vals["cron_id"] = cron.id
 
         suppliers = super().create(vals_list)
@@ -383,7 +383,7 @@ class LunchSupplier(models.Model):
         if not available_today:
             return self.env["lunch.order"]
 
-        orders = self.env["lunch.order"].search(
+        return self.env["lunch.order"].search(
             [
                 ("supplier_id", "in", available_today.ids),
                 ("state", "=", state),
@@ -391,7 +391,6 @@ class LunchSupplier(models.Model):
             ],
             order="user_id, product_id",
         )
-        return orders
 
     def _send_auto_email(self):
         """Send an email to the supplier with the order of the day"""

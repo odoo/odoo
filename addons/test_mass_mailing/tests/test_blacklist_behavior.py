@@ -72,7 +72,7 @@ class TestAutoBlacklist(common.TestMassMailCommon):
             # is not sufficient
             with (
                 freeze_time(new_dt),
-                patch.object(Cursor, "now", lambda *args, **kwargs: new_dt),
+                patch.object(Cursor, "now", return_value=new_dt),
             ):
                 traces += self._create_bounce_trace(
                     new_mailing,

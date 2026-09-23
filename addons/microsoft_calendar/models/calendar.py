@@ -1,6 +1,6 @@
 import logging
 import re
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
@@ -119,7 +119,9 @@ class CalendarEvent(models.Model):
         vals_check_organizer = self._get_organizer_validation_conditions(vals_list)
         for vals in [
             vals
-            for vals, check_organizer in zip(vals_list, vals_check_organizer)
+            for vals, check_organizer in zip(
+                vals_list, vals_check_organizer, strict=True
+            )
             if check_organizer
         ]:
             # If event has a different organizer, check its sync status and verify if the user is listed as attendee.
@@ -316,7 +318,7 @@ class CalendarEvent(models.Model):
             ).write({**values, "active": False})
 
         if (
-            recurrence_update_setting in ("all",)
+            recurrence_update_setting == "all"
             and len(self) == 1
             and values.keys() & self._get_fields_microsoft_synced()
         ):
@@ -362,9 +364,11 @@ class CalendarEvent(models.Model):
         )
         partner_ids = []
         if attendee_values:
-            for command in attendee_values:
-                if len(command) == 3 and isinstance(command[2], dict):
-                    partner_ids.append(command[2].get("partner_id"))
+            partner_ids.extend(
+                command[2].get("partner_id")
+                for command in attendee_values
+                if len(command) == 3 and isinstance(command[2], dict)
+            )
         return sender_user, partner_ids
 
     def _update_attendee_status(self, attendee_ids):
@@ -558,12 +562,12 @@ class CalendarEvent(models.Model):
         commands_attendee = []
         commands_partner = []
 
-        microsoft_attendees = microsoft_event.attendees or []
-        emails = [
-            a.get("emailAddress").get("address")
-            for a in microsoft_attendees
+        microsoft_attendees = [
+            a
+            for a in microsoft_event.attendees or []
             if email_normalize(a.get("emailAddress").get("address"))
         ]
+        emails = [a.get("emailAddress").get("address") for a in microsoft_attendees]
         existing_attendees = self.env["calendar.attendee"]
         if microsoft_event.match_with_odoo_events(self.env):
             existing_attendees = self.env["calendar.attendee"].search(
@@ -582,7 +586,7 @@ class CalendarEvent(models.Model):
         ]._partner_get_or_create_from_emails_single(emails, no_create=False)
         attendees_by_emails = {a.email: a for a in existing_attendees}
         partners_by_emails = {p.email_normalized: p for p in partners}
-        for email, attendee_info in zip(emails, microsoft_attendees):
+        for email, attendee_info in zip(emails, microsoft_attendees, strict=True):
             partner = partners_by_emails.get(
                 email_normalize(email) or email, self.env["res.partner"]
             )
@@ -699,12 +703,6 @@ class CalendarEvent(models.Model):
         values = dict(initial_values)
         if not fields_to_sync:
             return values
-
-        microsoft_guid = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("microsoft_calendar.microsoft_guid", False)
-        )
 
         if self.microsoft_recurrence_master_id and "type" not in values:
             values["seriesMasterId"] = self.microsoft_recurrence_master_id
@@ -970,5 +968,4 @@ class CalendarEvent(models.Model):
 
     def _is_microsoft_insertion_blocked(self, sender_user):
         self.check_singleton()
-        has_different_owner = self.user_id and self.user_id != sender_user
-        return has_different_owner
+        return self.user_id and self.user_id != sender_user

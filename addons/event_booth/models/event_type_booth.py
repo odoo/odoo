@@ -10,6 +10,7 @@ class EventTypeBooth(models.Model):
         category_id = self.env["event.booth.category"].search([])
         if category_id and len(category_id) == 1:
             return category_id
+        return None
 
     name = fields.Char(
         translate=True,

@@ -19,5 +19,5 @@ class LivechatRtcController(RtcController):
                 ("rtc_session_ids", "=", False),
             ]
         ):
-            raise NotFound()
+            raise NotFound
         return super().channel_call_join(channel_id, check_rtc_session_ids, camera)

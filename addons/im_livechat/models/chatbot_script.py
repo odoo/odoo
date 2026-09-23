@@ -105,7 +105,7 @@ class ChatbotScript(models.Model):
         vals_list = super().copy_data(default=default)
         return [
             dict(vals, title=self.env._("%s (copy)", script.title))
-            for script, vals in zip(self, vals_list)
+            for script, vals in zip(self, vals_list, strict=True)
         ]
 
     def copy_translations(self, new, excluded=()):
@@ -120,18 +120,28 @@ class ChatbotScript(models.Model):
         if "question_ids" in default:
             return new_scripts
 
-        for old_script, new_script in zip(self, new_scripts):
+        for old_script, new_script in zip(self, new_scripts, strict=True):
             original_steps = old_script.script_step_ids.sorted()
             clone_steps = new_script.script_step_ids.sorted()
 
             answers_map = {}
-            for clone_step, original_step in zip(clone_steps, original_steps):
-                for clone_answer, original_answer in zip(
-                    clone_step.answer_ids.sorted(), original_step.answer_ids.sorted()
-                ):
-                    answers_map[original_answer] = clone_answer
+            for clone_step, original_step in zip(
+                clone_steps, original_steps, strict=False
+            ):
+                answers_map.update(
+                    {
+                        original_answer: clone_answer
+                        for clone_answer, original_answer in zip(
+                            clone_step.answer_ids.sorted(),
+                            original_step.answer_ids.sorted(),
+                            strict=False,
+                        )
+                    }
+                )
 
-            for clone_step, original_step in zip(clone_steps, original_steps):
+            for clone_step, original_step in zip(
+                clone_steps, original_steps, strict=False
+            ):
                 clone_step.write(
                     {
                         "triggering_answer_ids": [
@@ -166,6 +176,7 @@ class ChatbotScript(models.Model):
                 if "operator_partner_id" not in vals and "title" in vals
             ],
             operator_partners,
+            strict=True,
         ):
             vals["operator_partner_id"] = partner.id
 

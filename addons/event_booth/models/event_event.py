@@ -81,7 +81,7 @@ class EventEvent(models.Model):
             )
         )
         elements_total_count = defaultdict(int)
-        elements_available_count = dict()
+        elements_available_count = {}
         for event, state, count in elements:
             if state == "available":
                 elements_available_count[event.id] = count

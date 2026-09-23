@@ -1,4 +1,4 @@
-from odoo import _, fields, models, tools
+from odoo import _, fields, models
 from odoo.db.schema import drop_view_if_exists
 
 

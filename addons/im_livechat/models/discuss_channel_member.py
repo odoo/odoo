@@ -206,8 +206,7 @@ class DiscussChannelMember(models.Model):
 
     def _get_excluded_rtc_members_partner_ids(self):
         chatbot = self.channel_id.chatbot_current_step_id.chatbot_script_id
-        excluded_partner_ids = [chatbot.operator_partner_id.id] if chatbot else []
-        return excluded_partner_ids
+        return [chatbot.operator_partner_id.id] if chatbot else []
 
     def _get_html_link_title(self):
         if (
