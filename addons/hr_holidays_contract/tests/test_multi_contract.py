@@ -410,3 +410,56 @@ class TestHolidaysMultiContract(TestHolidayContract):
             'is_absent': True,
             'current_leave_state': 'validate',
         }])
+
+    @freeze_time('2026-09-24')
+    def test_recompute_leave_on_contract_change_date_rollover(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'mythra juice box',
+            'tz': 'America/New_York'
+        })
+        first_schedule, second_schedule = self.env['resource.calendar'].create([
+            {
+                'name': "40 Hour Schedule",
+                'tz': "America/New_York"
+            },
+            {
+                'name': '50 Hour Schedule',
+                'tz': 'America/New_York',
+                'attendance_ids': [
+                    (0, 0, {'name': 'Monday', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 22, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 22, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Wednesday', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 22, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 22, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Friday', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 22, 'day_period': 'morning'})
+                ]
+            }
+
+        ])
+        contract = self.env['hr.contract'].create({
+            'name': "mythra's contract",
+            'date_start': datetime.strptime('2026-09-01', '%Y-%m-%d').date(),
+            'employee_id': employee.id,
+            'resource_calendar_id': first_schedule.id,
+            'state': 'open',
+            'wage': 6700.0
+        })
+
+        allocation = self.env['hr.leave.allocation'].create({
+            'display_name': 'pto for mythra',
+            'date_from': datetime.strptime('2026-09-01', '%Y-%m-%d').date(),
+            'number_of_days': 3,
+            'holiday_status_id': self.env.ref('hr_holidays.holiday_status_cl').id,
+            'employee_id': employee.id
+        })
+        allocation.action_approve()
+
+        leave = self.env['hr.leave'].create({
+            'request_date_from': datetime(2026, 9, 15, 12, 0, 0),
+            'request_date_to': datetime(2026, 9, 17, 21, 0, 0),
+            'display_name': "mythra goes to elysium",
+            'employee_id': employee.id,
+            'holiday_status_id': self.env.ref('hr_holidays.holiday_status_cl').id,
+        })
+        leave.action_approve()
+
+        self.assertRaises(contract.write({'resource_calendar_id': second_schedule.id}))
