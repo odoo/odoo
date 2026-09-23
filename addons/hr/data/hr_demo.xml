@@ -17,7 +17,7 @@
             <field name="user_id" ref="base.user_admin"/>
             <field name="department_id" ref="dep_administration"/>
             <field name="address_id" ref="base.main_partner"/>
-            <field name="image_1920" eval="obj(ref('base.partner_admin')).image_1920" model="res.partner"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_admin-image.webp"/>
             <field name="structure_type_id" ref="hr.structure_type_employee"/>
             <field name="employee_type_id" ref="contract_type_employee"/>
         </record>
@@ -245,7 +245,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Jeffrey Kelly</field>
             <field name="email">jeffrey.kelly72@example.com</field>
             <field name="phone">(555)-264-7362</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_ngh-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_ngh-image.webp"/>
         </record>
 
         <record id="employee_ngh" model="hr.employee">
@@ -257,7 +257,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
             <field name="work_location_id" ref="work_location_1"/>
             <field name="work_contact_id" ref="hr.work_contact_ngh"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_ngh-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_ngh-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="sex">male</field>
             <field name="date_version" eval="(DateTime.today() + relativedelta(months=-1, day=1))"/>
@@ -275,6 +275,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="user_id" ref="base.user_demo"/>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
             <field name="work_contact_id" ref="base.partner_demo"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_md-image.webp"/>
             <field name="date_version" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
             <field name="contract_date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
             <field name="employee_type_id" ref="contract_type_employee"/>
@@ -301,14 +302,14 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Ronnie Hart</field>
             <field name="email">ronnie.hart87@example.com</field>
             <field name="phone">(555)-310-7863</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_al-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_al-image.webp"/>
         </record>
 
         <record id="employee_al" model="hr.employee">
             <field name="name">Ronnie Hart</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_3')])]"/>
             <field name="work_contact_id" ref="hr.work_contact_al"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_al-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_al-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="time.strftime('%Y')+'-01-01'"/>
             <field name="contract_date_start" eval="time.strftime('%Y')+'-01-01'"/>
@@ -329,14 +330,14 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Tina Williamson</field>
             <field name="email">tina.williamson98@example.com</field>
             <field name="phone">(555)-694-7266</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_vad-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_vad-image.webp"/>
         </record>
 
         <record id="employee_vad" model="hr.employee">
             <field name="name">Tina Williamson</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_7')])]"/>
             <field name="work_contact_id" ref="hr.work_contact_vad"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_vad-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_vad-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="'2015-01-01'"/>
             <field name="contract_date_start" eval="'2015-01-01'"/>
@@ -358,7 +359,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Abigail Peterson</field>
             <field name="email">abigail.peterson39@example.com</field>
             <field name="phone">(555)-233-3393</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_hne-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_hne-image.webp"/>
         </record>
 
         <record id="employee_hne" model="hr.employee">
@@ -372,7 +373,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
             <field name="work_location_id" ref="work_location_1"/>
             <field name="work_contact_id" ref="hr.work_contact_hne"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_hne-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_hne-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="marital">married</field>
             <field name="sex">female</field>
@@ -391,7 +392,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Audrey Peterson</field>
             <field name="email">audrey.peterson25@example.com</field>
             <field name="phone">(555)-276-7903</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_fpi-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_fpi-image.webp"/>
         </record>
 
         <record id="employee_fpi" model="hr.employee">
@@ -400,7 +401,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="private_country_id" ref="base.us"/>
             <field name="private_email">Audrey.peterson2020@example.com</field>
             <field name="work_contact_id" ref="hr.work_contact_fpi"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_fpi-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_fpi-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="sex">female</field>
             <field name="distance_home_work">7</field>
@@ -433,7 +434,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Eli Lambert</field>
             <field name="email">eli.lambert22@example.com</field>
             <field name="phone">(555)-169-1352</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_lur-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_lur-image.webp"/>
         </record>
 
         <record id="employee_lur" model="hr.employee">
@@ -445,7 +446,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
             <field name="work_location_id" ref="work_location_1"/>
             <field name="work_contact_id" ref="hr.work_contact_lur"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_lur-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_lur-image.webp"/>
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">male</field>
             <field name="hr_responsible_id" ref="base.user_admin"/>
@@ -457,7 +458,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Rachel Perry</field>
             <field name="email">jod@odoo.com</field>
             <field name="phone">(555)-267-3735</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jod-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jod-image.webp"/>
         </record>
 
         <record id="employee_jod" model="hr.employee">
@@ -469,7 +470,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
             <field name="work_location_id" ref="work_location_1"/>
             <field name="work_contact_id" ref="hr.work_contact_jod"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jod-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jod-image.webp"/>
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">female</field>
             <field name="hourly_cost">55</field>
@@ -481,14 +482,14 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Keith Byrd</field>
             <field name="email">keith.byrd52@example.com</field>
             <field name="phone">(555)-505-5146</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_fme-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_fme-image.webp"/>
         </record>
 
         <record id="employee_fme" model="hr.employee">
             <field name="name">Keith Byrd</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
             <field name="work_contact_id" ref="hr.work_contact_fme"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_fme-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_fme-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="'2015-01-01'"/>
             <field name="contract_date_start" eval="'2015-01-01'"/>
@@ -510,7 +511,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Doris Cole</field>
             <field name="email">doris.cole31@example.com</field>
             <field name="phone">(555)-331-5378</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jep-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jep-image.webp"/>
         </record>
 
         <record id="employee_jep" model="hr.employee">
@@ -524,7 +525,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
             <field name="work_location_id" ref="work_location_1"/>
             <field name="work_contact_id" ref="hr.work_contact_jep"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jep-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jep-image.webp"/>
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">female</field>
             <field name="distance_home_work">13</field>
@@ -537,7 +538,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Ernest Reed</field>
             <field name="email">ernest.reed47@example.com</field>
             <field name="phone">(555)-518-8232</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jgo-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jgo-image.webp"/>
         </record>
 
         <record id="employee_jgo" model="hr.employee">
@@ -549,7 +550,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
             <field name="work_contact_id" ref="hr.work_contact_jgo"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jgo-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jgo-image.webp"/>
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">male</field>
             <field name="hourly_cost">45</field>
@@ -561,14 +562,14 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Toni Jimenez</field>
             <field name="email">toni.jimenez23@example.com</field>
             <field name="phone">(555)-707-8451</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jth-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jth-image.webp"/>
         </record>
 
         <record id="employee_jth" model="hr.employee">
             <field name="name">Toni Jimenez</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_5'), ref('employee_category_6')])]"/>
             <field name="work_contact_id" ref="hr.work_contact_jth"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jth-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jth-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
@@ -591,14 +592,14 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="phone">(555)-672-3185</field>
             <field name="email">anita.oliver32@example.com</field>
             <field name="phone">(555)-497-4804</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_mit-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_mit-image.webp"/>
         </record>
 
         <record id="employee_mit" model="hr.employee">
             <field name="name">Anita Oliver</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
             <field name="work_contact_id" ref="hr.work_contact_mit"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_mit-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_mit-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="time.strftime('%Y')+'-01-01'"/>
             <field name="contract_date_start" eval="time.strftime('%Y')+'-01-01'"/>
@@ -622,14 +623,14 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Sharlene Rhodes</field>
             <field name="email">sharlene.rhodes49@example.com</field>
             <field name="phone">(555)-719-4182</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_niv-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_niv-image.webp"/>
         </record>
 
         <record id="employee_niv" model="hr.employee">
             <field name="name">Sharlene Rhodes</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_7')])]"/>
             <field name="work_contact_id" ref="hr.work_contact_niv"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_niv-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_niv-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
@@ -651,14 +652,14 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Randall Lewis</field>
             <field name="email">randall.lewis74@example.com</field>
             <field name="phone">(555)-775-6660</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_stw-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_stw-image.webp"/>
         </record>
 
         <record id="employee_stw" model="hr.employee">
             <field name="name">Randall Lewis</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
             <field name="work_contact_id" ref="hr.work_contact_stw"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_stw-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_stw-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="time.strftime('%Y')+'-02-01'"/>
             <field name="contract_date_start" eval="time.strftime('%Y')+'-02-01'"/>
@@ -680,14 +681,14 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Jennie Fletcher</field>
             <field name="email">jennie.fletcher76@example.com</field>
             <field name="phone">(555)-363-8229</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_chs-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_chs-image.webp"/>
         </record>
 
         <record id="employee_chs" model="hr.employee">
             <field name="name">Jennie Fletcher</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_7')])]"/>
             <field name="work_contact_id" ref="hr.work_contact_chs"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_chs-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_chs-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="(DateTime.today() - relativedelta(years=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_start" eval="(DateTime.today() - relativedelta(years=2)).strftime('%Y-%m')+'-01'"/>
@@ -709,13 +710,13 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Paul Williams</field>
             <field name="email">paul.williams59@example.com</field>
             <field name="phone">(555)-262-1607</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jve-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jve-image.webp"/>
         </record>
 
         <record id="employee_jve" model="hr.employee">
             <field name="name">Paul Williams</field>
             <field name="work_contact_id" ref="hr.work_contact_jve"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jve-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jve-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
@@ -737,13 +738,13 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Walter Horton</field>
             <field name="email">walter.horton80@example.com</field>
             <field name="phone">(555)-912-1201</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_han-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_han-image.webp"/>
         </record>
 
         <record id="employee_han" model="hr.employee">
             <field name="name">Walter Horton</field>
             <field name="work_contact_id" ref="hr.work_contact_han"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_han-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_han-image.webp"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="date_version" eval="time.strftime('%Y')+'-03-01'"/>
             <field name="contract_date_start" eval="time.strftime('%Y')+'-03-01'"/>
@@ -764,7 +765,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Beth Evans</field>
             <field name="email">beth.evans77@example.com</field>
             <field name="phone">(555)-532-3841</field>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jog-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jog-image.webp"/>
         </record>
 
         <record id="employee_jog" model="hr.employee">
@@ -778,7 +779,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
             <field name="work_location_id" ref="work_location_1"/>
             <field name="work_contact_id" ref="hr.work_contact_jog"/>
-            <field name="image_1920" type="bytes" file="hr/static/img/employee_jog-image.jpg"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_jog-image.webp"/>
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">female</field>
             <field name="distance_home_work">50</field>
