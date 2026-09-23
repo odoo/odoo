@@ -65,7 +65,7 @@ class TestDurationDisplayLanguage(TestHrHolidaysCommon):
                     "name": "Autumn Holidays",
                     "date_from": "2021-11-16 00:00:00",
                     "date_to": "2021-11-16 23:59:59",
-                    "time_type": "leave",
+                    "time_type_id": self.env.ref("resource.time_type_leave").id,
                 }
             )
         ]
