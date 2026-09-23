@@ -2,7 +2,7 @@ from urllib.parse import parse_qsl, urlsplit
 
 import werkzeug.exceptions
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -143,7 +143,9 @@ class WebsiteMenu(models.Model):
                         "menu_refused", reason="too_deep", menu=record.id, level=level
                     )
                     raise UserError(
-                        _("Menus cannot have more than two levels of hierarchy.")
+                        self.env._(
+                            "Menus cannot have more than two levels of hierarchy."
+                        )
                     )
 
             if parent_menu:
@@ -154,7 +156,7 @@ class WebsiteMenu(models.Model):
                         "menu_refused", reason="mega_menu_nesting", menu=record.id
                     )
                     raise UserError(
-                        _("A mega menu cannot have a parent or child menu.")
+                        self.env._("A mega menu cannot have a parent or child menu.")
                     )
 
                 if record.child_id and (
@@ -164,7 +166,9 @@ class WebsiteMenu(models.Model):
                         "menu_refused", reason="submenu_with_children", menu=record.id
                     )
                     raise UserError(
-                        _("Menus with child menus cannot be added as a submenu.")
+                        self.env._(
+                            "Menus with child menus cannot be added as a submenu."
+                        )
                     )
 
     @api.model_create_multi
@@ -266,7 +270,7 @@ class WebsiteMenu(models.Model):
         if main_menu and main_menu in self:
             _debug.logic("menu_unlink_refused", reason="main_menu")
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete this website menu as this serves as the default parent menu for new websites (e.g., /shop, /event, ...)."
                 )
             )
@@ -368,7 +372,7 @@ class WebsiteMenu(models.Model):
     def save(self, website_id, data):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
             _debug.logic("menu_save_refused", reason="not_restricted_editor")
-            raise AccessError(_("Only website editors can edit the menus."))
+            raise AccessError(self.env._("Only website editors can edit the menus."))
         _debug.pipeline(
             "menu_save",
             website=website_id,

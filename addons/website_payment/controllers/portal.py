@@ -1,4 +1,4 @@
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
@@ -68,7 +68,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         amount = self._cast_as_float(amount)
         minimum_amount = self._cast_as_float(minimum_amount)
         if amount is None or minimum_amount is None:
-            raise ValidationError(_("Invalid donation amount."))
+            raise ValidationError(request.env._("Invalid donation amount."))
         if amount < minimum_amount:
             _debug.logic(
                 "donation_refused",
@@ -77,20 +77,20 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 minimum=minimum_amount,
             )
             raise ValidationError(
-                _("Donation amount must be at least %.2f.", minimum_amount)
+                request.env._("Donation amount must be at least %.2f.", minimum_amount)
             )
         use_public_partner = request.env.user._is_public() or not partner_id
         if use_public_partner:
             details = kwargs.get("partner_details") or {}
             if not details.get("name"):
                 _debug.logic("donation_refused", reason="no_name")
-                raise ValidationError(_("Name is required."))
+                raise ValidationError(request.env._("Name is required."))
             if not details.get("email"):
                 _debug.logic("donation_refused", reason="no_email")
-                raise ValidationError(_("Email is required."))
+                raise ValidationError(request.env._("Email is required."))
             if not details.get("country_id"):
                 _debug.logic("donation_refused", reason="no_country")
-                raise ValidationError(_("Country is required."))
+                raise ValidationError(request.env._("Country is required."))
             partner_id = request.website.user_id.partner_id.id
             del kwargs["partner_details"]
         else:
@@ -114,7 +114,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if use_public_partner:
             country_id = self._cast_as_int(details["country_id"])
             if not country_id:
-                raise ValidationError(_("Country is required."))
+                raise ValidationError(request.env._("Country is required."))
             tx_sudo.update(
                 {
                     "partner_name": details["name"],
@@ -127,7 +127,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 kwargs.get("partner_details", {}).get("country_id")
             )
             if not country_id:
-                raise ValidationError(_("Country is required."))
+                raise ValidationError(request.env._("Country is required."))
             tx_sudo.partner_country_id = country_id
         # the user can change the donation amount on the payment page,
         # therefor we need to recompute the access_token
@@ -181,7 +181,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 {
                     "is_donation": True,
                     "partner": partner_sudo,
-                    "submit_button_label": _("Donate"),
+                    "submit_button_label": request.env._("Donate"),
                     "transaction_route": "/donation/transaction/%s"
                     % donation_options.get("minimumAmount", 0),
                     "partner_details": partner_details,

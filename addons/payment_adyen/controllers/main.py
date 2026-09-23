@@ -1,6 +1,6 @@
 import pprint
 
-from odoo import _, http, release
+from odoo import http, release
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import py_to_js_locale, urls
@@ -87,7 +87,9 @@ class AdyenController(http.Controller):
         if not payment_utils.is_access_token_valid(
             access_token, reference, converted_amount, currency_id, partner_id
         ):
-            raise ValidationError(_("Received tampered payment request data."))
+            raise ValidationError(
+                request.env._("Received tampered payment request data.")
+            )
 
         # Prepare the payment request to Adyen
         provider_sudo = (

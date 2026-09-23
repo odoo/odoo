@@ -14,7 +14,7 @@ import werkzeug.exceptions
 from defusedxml.ElementTree import fromstring as defused_fromstring
 from lxml import html
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -131,7 +131,7 @@ class WebsiteSeoRoutes:
                         "image_update_refused", reason="stale_src", img=img["id"]
                     )
                     raise UserError(
-                        _(
+                        request.env._(
                             "The page images have changed. Refresh the page before saving image descriptions."
                         )
                     )
@@ -160,7 +160,7 @@ class WebsiteSeoRoutes:
                 missing=len(images_by_id),
             )
             raise UserError(
-                _(
+                request.env._(
                     "The page images have changed. Refresh the page before saving image descriptions."
                 )
             )

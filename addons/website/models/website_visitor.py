@@ -9,7 +9,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.libs.datetime import all_timezones
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, _
+from odoo.tools import SQL
 from odoo.tools.misc import _format_time_ago
 
 from odoo.addons.base.models.res_partner import _selection_timezones
@@ -182,7 +182,7 @@ class WebsiteVisitor(models.Model):
     @api.depends("partner_id")
     def _compute_display_name(self):
         for record in self:
-            record.display_name = record.partner_id.sudo().name or _(
+            record.display_name = record.partner_id.sudo().name or self.env._(
                 "Website Visitor #%s", record.id
             )
 
@@ -293,7 +293,9 @@ class WebsiteVisitor(models.Model):
         self.check_singleton()
         if not self._check_for_message_composer():
             raise UserError(
-                _("There are no contact and/or no email linked to this visitor.")
+                self.env._(
+                    "There are no contact and/or no email linked to this visitor."
+                )
             )
         visitor_composer_ctx = self._prepare_message_composer_context()
         compose_form = self.env.ref("mail.email_compose_message_wizard_form", False)
@@ -302,7 +304,7 @@ class WebsiteVisitor(models.Model):
         }
         compose_ctx.update(**visitor_composer_ctx)
         return {
-            "name": _("Contact Visitor"),
+            "name": self.env._("Contact Visitor"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "mail.compose.message",

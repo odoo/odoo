@@ -4,7 +4,7 @@ from pprint import pformat
 
 import requests
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.mail import is_html_empty
 
@@ -169,7 +169,7 @@ class PaymentProvider(models.Model):
     pending_msg = fields.Html(
         string="Pending Message",
         translate=True,
-        default=lambda self: _(
+        default=lambda self: self.env._(
             "Your payment has been processed but is waiting for approval."
         ),
         help="The message displayed if the order pending after the payment process",
@@ -177,19 +177,19 @@ class PaymentProvider(models.Model):
     auth_msg = fields.Html(
         string="Authorize Message",
         translate=True,
-        default=lambda self: _("Your payment has been authorized."),
+        default=lambda self: self.env._("Your payment has been authorized."),
         help="The message displayed if payment is authorized",
     )
     done_msg = fields.Html(
         string="Done Message",
         translate=True,
-        default=lambda self: _("Your payment has been processed."),
+        default=lambda self: self.env._("Your payment has been processed."),
         help="The message displayed if the order is successfully done after the payment process",
     )
     cancel_msg = fields.Html(
         string="Cancelled Message",
         translate=True,
-        default=lambda self: _("Your payment has been cancelled."),
+        default=lambda self: self.env._("Your payment has been cancelled."),
         help="The message displayed if the order is cancelled during the payment process",
     )
 
@@ -358,8 +358,8 @@ class PaymentProvider(models.Model):
             if related_tokens:
                 return {
                     "warning": {
-                        "title": _("Warning"),
-                        "message": _(
+                        "title": self.env._("Warning"),
+                        "message": self.env._(
                             "This action will also archive %s tokens that are registered with this "
                             "provider. ",
                             len(related_tokens),
@@ -379,7 +379,7 @@ class PaymentProvider(models.Model):
             "payment.transaction"
         ].search_count([("provider_id", "=", self._origin.id)], limit=1):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot change the company of a payment provider with existing transactions."
                 )
             )
@@ -394,7 +394,7 @@ class PaymentProvider(models.Model):
             )
             if incompatible_pms:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The following payment methods must be disabled in order to enable manual"
                         " capture: %s",
                         ", ".join(incompatible_pms.mapped("name")),
@@ -460,7 +460,9 @@ class PaymentProvider(models.Model):
                 field_names.append(ir_field.field_description)
         if field_names:
             raise ValidationError(
-                _("The following fields must be filled: %s", ", ".join(field_names))
+                self.env._(
+                    "The following fields must be filled: %s", ", ".join(field_names)
+                )
             )
 
     @api.model
@@ -544,7 +546,7 @@ class PaymentProvider(models.Model):
             external_id = external_ids[provider.id]
             if external_id and not external_id.startswith("__export__"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot delete the payment provider %s; disable it or uninstall it"
                         " instead.",
                         provider.name,
@@ -618,14 +620,14 @@ class PaymentProvider(models.Model):
         :raise UserError: If the provider is disabled and not published yet.
         """
         if self.state == "disabled" and not self.is_published:
-            raise UserError(_("You cannot publish a disabled provider."))
+            raise UserError(self.env._("You cannot publish a disabled provider."))
         self.is_published = not self.is_published
 
     def action_view_payment_methods(self):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Payment Methods"),
+            "name": self.env._("Payment Methods"),
             "res_model": "payment.method",
             "view_mode": "list,kanban,form",
             "domain": [
@@ -940,7 +942,9 @@ class PaymentProvider(models.Model):
             requests.exceptions.InvalidURL,
         ):
             raise ValidationError(
-                _("Could not establish the connection to the payment provider.")
+                self.env._(
+                    "Could not establish the connection to the payment provider."
+                )
             ) from None
 
         # Log the response.
@@ -955,7 +959,7 @@ class PaymentProvider(models.Model):
             except JSONDecodeError:  # The provider failed to parse plain text.
                 error_msg = response.text
             raise ValidationError(
-                _("The payment provider rejected the request.\n%s", error_msg)
+                self.env._("The payment provider rejected the request.\n%s", error_msg)
             ) from None
         return self._parse_response_content(response, **kwargs)
 
@@ -1108,7 +1112,7 @@ class PaymentProvider(models.Model):
         if response_content.get("error"):  # An exception was raised on the proxy.
             error_data = response_content["error"]["data"]
             raise ValidationError(
-                _(
+                self.env._(
                     "The payment provider rejected the request.\n%s",
                     pformat(error_data["message"]),
                 )

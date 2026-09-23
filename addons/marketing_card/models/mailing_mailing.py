@@ -1,4 +1,4 @@
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.fields import Domain
 
 
@@ -43,7 +43,7 @@ class MailingMailing(models.Model):
                     != mailing.card_campaign_id.res_model
                 ):
                     raise exceptions.ValidationError(
-                        _(
+                        self.env._(
                             "Card Campaign Mailing should target model %(model_name)s",
                             model_name=self.env["ir.model"]
                             ._get(mailing.card_campaign_id.res_model)
@@ -84,7 +84,7 @@ class MailingMailing(models.Model):
         for mailing in self.filtered("card_campaign_id"):
             if mailing.card_requires_sync_count:
                 raise exceptions.UserError(
-                    _(
+                    self.env._(
                         "You should update all the cards for %(mailing)s before scheduling a mailing.",
                         mailing=mailing.display_name,
                     )
@@ -95,7 +95,7 @@ class MailingMailing(models.Model):
         for mailing in self.filtered("card_campaign_id"):
             if mailing.card_requires_sync_count:
                 raise exceptions.UserError(
-                    _(
+                    self.env._(
                         "You should update all the cards for %(mailing)s before scheduling a mailing.",
                         mailing=mailing.display_name,
                     )

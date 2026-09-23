@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -120,7 +120,7 @@ class PaymentTransaction(models.Model):
             self._set_canceled()
         elif status_code in const.PAYMENT_STATUS_MAPPING["error"]:
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during processing of your payment (code %(code)s:"
                     " %(explanation)s). Please try again.",
                     code=status_code,
@@ -133,5 +133,5 @@ class PaymentTransaction(models.Model):
                 status_code,
                 self.reference,
             )
-            self._set_error(_("Unknown status code: %s", status_code))
+            self._set_error(self.env._("Unknown status code: %s", status_code))
         return None

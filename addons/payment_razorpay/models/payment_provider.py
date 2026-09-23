@@ -4,7 +4,7 @@ import uuid
 from datetime import timedelta
 from urllib.parse import urlencode
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.http import request
 
@@ -107,7 +107,7 @@ class PaymentProvider(models.Model):
             if not provider.razorpay_account_id:
                 if not provider.razorpay_key_id or not provider.razorpay_key_secret:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             'Razorpay credentials are missing. Click the "Connect" button to set up'
                             " your account."
                         )
@@ -141,12 +141,12 @@ class PaymentProvider(models.Model):
 
         if self.company_id.currency_id.name not in const.SUPPORTED_CURRENCIES:
             raise RedirectWarning(
-                _(
+                self.env._(
                     "Razorpay is not available in your country; please use another payment"
                     " provider."
                 ),
                 self.env.ref("payment.action_payment_provider").id,
-                _("Other Payment Providers"),
+                self.env._("Other Payment Providers"),
             )
 
         params = {
@@ -206,7 +206,7 @@ class PaymentProvider(models.Model):
             "tag": "display_notification",
             "params": {
                 "type": "success",
-                "message": _("Your Razorpay webhook was successfully set up!"),
+                "message": self.env._("Your Razorpay webhook was successfully set up!"),
                 "next": {"type": "ir.actions.client", "tag": "soft_reload"},
             },
         }

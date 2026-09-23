@@ -2,7 +2,7 @@ import hashlib
 import hmac
 import json
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import urls
@@ -249,7 +249,7 @@ class PaymentTransaction(models.Model):
             )
             message = payment_data.get("data.message")
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during the processing of your payment (%(msg)s). Please try"
                     " again.",
                     msg=message,

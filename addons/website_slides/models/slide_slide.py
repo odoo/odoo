@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from psycopg import IntegrityError
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -766,11 +766,11 @@ class SlideSlide(models.Model):
                     )
                     embed_code = Markup(
                         '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0" aria-label="%s"></iframe>'
-                    ) % (slide.youtube_id, query_params, _("YouTube"))
+                    ) % (slide.youtube_id, query_params, self.env._("YouTube"))
                 elif slide.video_source_type == "google_drive":
                     embed_code = Markup(
                         '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0" aria-label="%s"></iframe>'
-                    ) % (slide.google_drive_id, _("Google Drive"))
+                    ) % (slide.google_drive_id, self.env._("Google Drive"))
                 elif slide.video_source_type == "vimeo":
                     if "/" in slide.vimeo_id:
                         [vimeo_id, vimeo_token] = slide.vimeo_id.split("/")
@@ -778,14 +778,14 @@ class SlideSlide(models.Model):
                             Markup("""
                             <iframe src="https://player.vimeo.com/video/%s?h=%s&badge=0&amp;autopause=0&amp;player_id=0"
                                 frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen aria-label="%s"></iframe>""")
-                            % (vimeo_id, vimeo_token, _("Vimeo"))
+                            % (vimeo_id, vimeo_token, self.env._("Vimeo"))
                         )
                     else:
                         embed_code = (
                             Markup("""
                             <iframe src="https://player.vimeo.com/video/%s?badge=0&amp;autopause=0&amp;player_id=0"
                                 frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen aria-label="%s"></iframe>""")
-                            % (slide.vimeo_id, _("Vimeo"))
+                            % (slide.vimeo_id, self.env._("Vimeo"))
                         )
             elif (
                 slide.slide_category in ["infographic", "document"]
@@ -794,7 +794,7 @@ class SlideSlide(models.Model):
             ):
                 embed_code = Markup(
                     '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0" aria-label="%s"></iframe>'
-                ) % (slide.google_drive_id, _("Google Drive"))
+                ) % (slide.google_drive_id, self.env._("Google Drive"))
             elif (
                 slide.slide_category == "document" and slide.source_type == "local_file"
             ):
@@ -807,7 +807,7 @@ class SlideSlide(models.Model):
                 base_embed_code = Markup(
                     '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0" aria-label="%s"></iframe>'
                 )
-                iframe_aria_label = _("Embed code")
+                iframe_aria_label = self.env._("Embed code")
                 embed_code = base_embed_code % (slide_url, 315, 420, iframe_aria_label)
                 embed_code_external = base_embed_code % (
                     slide_url_external,
@@ -1108,7 +1108,7 @@ class SlideSlide(models.Model):
         self.check_singleton()
         if message_type == "comment" and not self.channel_id.can_comment:
             _debug.logic("slide_comment_refused", reason="karma", slides=self)
-            raise AccessError(_("Not enough karma to comment"))
+            raise AccessError(self.env._("Not enough karma to comment"))
         return super().message_post(message_type=message_type, **kwargs)
 
     def _get_access_action(self, access_uid=None, force_website=False):
@@ -1224,7 +1224,7 @@ class SlideSlide(models.Model):
                 channels=courses_without_templates,
             )
             raise UserError(
-                _(
+                self.env._(
                     'Impossible to send emails. Select a "Share Template" for courses %(course_names)s first',
                     course_names=", ".join(courses_without_templates.mapped("name")),
                 )
@@ -1282,7 +1282,9 @@ class SlideSlide(models.Model):
         if any(not slide.channel_id.is_member for slide in self):
             _debug.logic("slide_view_refused", reason="not_a_member", slides=self)
             raise UserError(
-                _("You cannot mark a slide as viewed if you are not among its members.")
+                self.env._(
+                    "You cannot mark a slide as viewed if you are not among its members."
+                )
             )
 
         return bool(
@@ -1318,7 +1320,7 @@ class SlideSlide(models.Model):
     def action_mark_completed(self):
         if any(not slide.can_self_mark_completed for slide in self):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot mark a slide as completed if you are not among its members."
                 )
             )
@@ -1356,7 +1358,7 @@ class SlideSlide(models.Model):
     def action_mark_uncompleted(self):
         if any(not slide.can_self_mark_uncompleted for slide in self):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot mark a slide as uncompleted if you are not among its members."
                 )
             )
@@ -1395,11 +1397,11 @@ class SlideSlide(models.Model):
             for slide in self
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot mark a slide quiz as completed if you are not among its members or it is unpublished."
                 )
                 if completed
-                else _(
+                else self.env._(
                     "You cannot mark a slide quiz as not completed if you are not among its members or it is unpublished."
                 )
             )
@@ -1417,10 +1419,10 @@ class SlideSlide(models.Model):
             points = slide._get_quiz_reward(user_membership_sudo.quiz_attempts_count)
             if points:
                 if completed:
-                    reason = _("Quiz Completed")
+                    reason = self.env._("Quiz Completed")
                 else:
                     points *= -1
-                    reason = _("Quiz Set Uncompleted")
+                    reason = self.env._("Quiz Set Uncompleted")
                 self.env.user.sudo()._add_karma(points, slide, reason)
 
         return True
@@ -1441,7 +1443,7 @@ class SlideSlide(models.Model):
                 .sudo()
                 .create(
                     {
-                        "title": slide.name or _("Quiz"),
+                        "title": slide.name or self.env._("Quiz"),
                         "scoring_type": "scoring_without_answers",
                         "scoring_success_min": 100.0,
                         "questions_layout": "one_page",
@@ -1594,14 +1596,14 @@ class SlideSlide(models.Model):
                 "key": self._get_google_app_key(),
                 "part": "snippet,contentDetails",
             },
-            not_found_message=_(
+            not_found_message=self.env._(
                 "Your video could not be found on YouTube, please check the link and/or privacy settings"
             ),
         )
         if error:
             return {}, error
         if not response.get("items"):
-            return {}, _(
+            return {}, self.env._(
                 "Your video could not be found on YouTube, please check the link and/or privacy settings"
             )
 
@@ -1650,7 +1652,7 @@ class SlideSlide(models.Model):
         google_drive_values, error = self._get_external_json(
             "https://www.googleapis.com/drive/v2/files/%s" % self.google_drive_id,
             params={"projection": "BASIC", "key": self._get_google_app_key()},
-            not_found_message=_(
+            not_found_message=self.env._(
                 "Your file could not be found on Google Drive, please check the link and/or privacy settings"
             ),
         )
@@ -1722,14 +1724,14 @@ class SlideSlide(models.Model):
         self.check_singleton()
         vimeo_values, error = self._get_external_json(
             "https://vimeo.com/api/oembed.json?%s" % urlencode({"url": self.video_url}),
-            not_found_message=_(
+            not_found_message=self.env._(
                 "Your video could not be found on Vimeo, please check the link and/or privacy settings"
             ),
         )
         if error:
             return {}, error
         if not vimeo_values:
-            return {}, _("Please enter a valid Vimeo video link")
+            return {}, self.env._("Please enter a valid Vimeo video link")
 
         slide_metadata = {"slide_type": "vimeo_video"}
         if vimeo_values.get("title"):
@@ -1848,7 +1850,7 @@ class SlideSlide(models.Model):
                 slide.slide_category, "fa-regular fa-file-pdf"
             )
             data["url"] = slide.website_absolute_url
-            data["course"] = _("Course: %s", slide.channel_id.name)
+            data["course"] = self.env._("Course: %s", slide.channel_id.name)
             data["course_url"] = slide.channel_id.website_absolute_url
         return results_data
 

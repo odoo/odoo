@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -86,7 +86,7 @@ class ProductProduct(models.Model):
         if any(product.base_unit_count < 0 for product in self):
             _debug.logic("base_unit_count_refused", products=self)
             raise ValidationError(
-                _(
+                self.env._(
                     "The value of Base Unit Count must be greater than 0."
                     " Use 0 to hide the price per unit on this product."
                 )

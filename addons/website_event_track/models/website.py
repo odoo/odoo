@@ -3,7 +3,6 @@ import base64
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.image import ImageProcess
-from odoo.tools.translate import _
 
 
 class Website(models.Model):
@@ -27,13 +26,15 @@ class Website(models.Model):
     def _compute_events_app_name(self):
         for website in self:
             if not website.events_app_name:
-                website.events_app_name = _("%s Events") % website.name
+                website.events_app_name = self.env._("%s Events") % website.name
 
     @api.constrains("events_app_name")
     def _check_events_app_name(self):
         for website in self:
             if not website.events_app_name:
-                raise ValidationError(_('"Events App Name" field is required.'))
+                raise ValidationError(
+                    self.env._('"Events App Name" field is required.')
+                )
 
     @api.depends("favicon")
     def _compute_app_icon(self):

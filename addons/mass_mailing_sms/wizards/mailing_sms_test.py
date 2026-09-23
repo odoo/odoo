@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from markupsafe import Markup
 
-from odoo import Command, _, fields, models
+from odoo import Command, fields, models
 from odoo.libs.web import urljoin as url_join
 
 
@@ -122,7 +122,7 @@ class MailingSmsTest(models.TransientModel):
             # (= send for Odoo) via IAP_TO_SMS_STATE_SUCCESS
             if sent_sms.get("state") in ("success", "sent"):
                 notification_messages.append(
-                    _("Test SMS successfully sent to %s", recipient)
+                    self.env._("Test SMS successfully sent to %s", recipient)
                 )
             else:
                 failure_explanation = sms_api._get_sms_api_error_messages().get(
@@ -130,17 +130,17 @@ class MailingSmsTest(models.TransientModel):
                 )
                 failure_reason = sent_sms.get("failure_reason")
                 notification_messages.append(
-                    _(
+                    self.env._(
                         "Test SMS could not be sent to %(destination)s: %(state)s",
                         destination=recipient,
                         state=failure_explanation
                         or failure_reason
-                        or _("An error occurred."),
+                        or self.env._("An error occurred."),
                     )
                 )
         if invalid_numbers:
             notification_messages.append(
-                _(
+                self.env._(
                     "Test SMS skipped those numbers as they appear invalid: %(numbers)s",
                     numbers=", ".join(invalid_numbers),
                 )

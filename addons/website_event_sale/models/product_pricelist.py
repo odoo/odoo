@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class ProductPricelistItem(models.Model):
@@ -9,7 +9,7 @@ class ProductPricelistItem(models.Model):
         if self.min_quantity > 0:
             msg = ""
             if self.applied_on in ("3_global", "2_product_category"):
-                msg = _(
+                msg = self.env._(
                     "A pricelist item with a positive min. quantity will not be applied to the event tickets products."
                 )
             elif (
@@ -19,9 +19,9 @@ class ProductPricelistItem(models.Model):
                 self.applied_on == "0_product_variant"
                 and self.product_id.service_tracking == "event"
             ):
-                msg = _(
+                msg = self.env._(
                     "A pricelist item with a positive min. quantity cannot be applied to this event tickets product."
                 )
             if msg:
-                return {"warning": {"title": _("Warning"), "message": msg}}
+                return {"warning": {"title": self.env._("Warning"), "message": msg}}
         return None

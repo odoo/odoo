@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 import werkzeug
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, fields, http, tools
+from odoo import Command, fields, http, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import Response, request
@@ -88,7 +88,7 @@ class WebsiteSlides(WebsiteProfile):
                 "slide_complete_refused", reason="has_questions", slide=slide.id
             )
             raise UserError(
-                _(
+                request.env._(
                     "Slide with questions must be marked as done when submitting all good answers "
                 )
             )
@@ -97,7 +97,7 @@ class WebsiteSlides(WebsiteProfile):
                 "slide_complete_refused", reason="not_self_markable", slide=slide.id
             )
             raise werkzeug.exceptions.Forbidden(
-                _("This slide can not be marked as completed.")
+                request.env._("This slide can not be marked as completed.")
             )
         _debug.lifecycle("slide_completed", slide=slide.id)
         slide.action_mark_completed()
@@ -108,7 +108,7 @@ class WebsiteSlides(WebsiteProfile):
                 "slide_uncomplete_refused", reason="not_self_markable", slide=slide.id
             )
             raise werkzeug.exceptions.Forbidden(
-                _("This slide can not be marked as uncompleted.")
+                request.env._("This slide can not be marked as uncompleted.")
             )
         _debug.lifecycle("slide_uncompleted", slide=slide.id)
         slide.action_mark_uncompleted()
@@ -387,7 +387,11 @@ class WebsiteSlides(WebsiteProfile):
             try:
                 group_id = self._create_or_get_channel_tag_group_id(group_id)
                 if not group_id:
-                    return {"error": _('Missing "Tag Group" for creating a new "Tag".')}
+                    return {
+                        "error": request.env._(
+                            'Missing "Tag Group" for creating a new "Tag".'
+                        )
+                    }
                 return request.env["slide.channel.tag"].create(
                     {
                         "name": tag_id[1]["name"],
@@ -396,7 +400,7 @@ class WebsiteSlides(WebsiteProfile):
                 )
             except AccessError:
                 return {
-                    "error": _(
+                    "error": request.env._(
                         "You are not allowed to create new course tags. "
                         "Pick an existing one, or ask an eLearning officer."
                     )
@@ -878,7 +882,7 @@ class WebsiteSlides(WebsiteProfile):
                         {
                             "id": module.id,
                             "name": module.shortdesc,
-                            "motivational": _(
+                            "motivational": request.env._(
                                 "Want to test and certify your students?"
                             ),
                             "default_slide_category": "certification",
@@ -1155,7 +1159,7 @@ class WebsiteSlides(WebsiteProfile):
         try:
             channel = request.env["slide.channel"].browse(int(channel_id)).exists()
             if not channel:
-                return {"error": _("This course no longer exists.")}
+                return {"error": request.env._("This course no longer exists.")}
             can_upload = channel.can_upload
             can_publish = channel.can_publish
         except UserError as e:
@@ -1163,13 +1167,13 @@ class WebsiteSlides(WebsiteProfile):
             return {"error": e.args[0]}
         else:
             if not can_upload or not can_publish:
-                return {"error": _("You cannot add tags to this course.")}
+                return {"error": request.env._("You cannot add tags to this course.")}
 
         tag = self._create_or_get_channel_tag(tag_id, group_id)
         if isinstance(tag, dict):
             return tag
         if not tag:
-            return {"error": _("No tag to add.")}
+            return {"error": request.env._("No tag to add.")}
 
         tag.sudo().write({"channel_ids": [Command.link(channel.id)]})
 
@@ -1487,7 +1491,9 @@ class WebsiteSlides(WebsiteProfile):
         self._check_channel_publisher(slide.channel_id)
         slide_sudo = slide.sudo()
         if slide_sudo.slide_category == "certification" and not slide_sudo.is_preview:
-            return {"error": _("A certification cannot be set as a preview.")}
+            return {
+                "error": request.env._("A certification cannot be set as a preview.")
+            }
         slide_sudo.is_preview = not slide_sudo.is_preview
         return slide_sudo.is_preview
 
@@ -1754,12 +1760,12 @@ class WebsiteSlides(WebsiteProfile):
 
         channel = request.env["slide.channel"].browse(int(channel_id)).exists()
         if not channel:
-            return {"error": _("This course no longer exists.")}
+            return {"error": request.env._("This course no longer exists.")}
         if not channel.can_upload:
-            return {"error": _("You cannot upload on this channel.")}
+            return {"error": request.env._("You cannot upload on this channel.")}
         if slide_category not in ("video", "document", "infographic"):
             return {
-                "error": _(
+                "error": request.env._(
                     "Previews are only available for videos, documents and images."
                 )
             }
@@ -1784,7 +1790,7 @@ class WebsiteSlides(WebsiteProfile):
 
             if not slide.video_source_type:
                 return {
-                    "error": _(
+                    "error": request.env._(
                         "Could not find your video. Please check if your link is correct and if the video can be accessed."
                     )
                 }
@@ -1805,7 +1811,7 @@ class WebsiteSlides(WebsiteProfile):
                 )
             if identical_video:
                 identical_video_name = identical_video[0].name
-                additional_values["info"] = _(
+                additional_values["info"] = request.env._(
                     "This video already exists in this channel on the following content: %s",
                     identical_video_name,
                 )
@@ -1821,7 +1827,7 @@ class WebsiteSlides(WebsiteProfile):
             )
 
             if not slide.google_drive_id:
-                return {"error": _("Please enter valid Google Drive Link")}
+                return {"error": request.env._("Please enter valid Google Drive Link")}
 
         slide_values, error = slide._get_external_metadata(image_url_only=True)
         if error:
@@ -1843,10 +1849,18 @@ class WebsiteSlides(WebsiteProfile):
         if post.get("binary_content"):
             file_size = len(post["binary_content"]) * 3 / 4
             if (file_size / 1024.0 / 1024.0) > 25:
-                return {"error": _("File is too big. File size cannot exceed 25MB")}
+                return {
+                    "error": request.env._(
+                        "File is too big. File size cannot exceed 25MB"
+                    )
+                }
 
         if not post.get("channel_id"):
-            return {"error": _("No course given, please contact the administrator.")}
+            return {
+                "error": request.env._(
+                    "No course given, please contact the administrator."
+                )
+            }
 
         values = {
             fname: post[fname]
@@ -1862,7 +1876,7 @@ class WebsiteSlides(WebsiteProfile):
             return {"error": e.args[0]}
         else:
             if not can_upload:
-                return {"error": _("You cannot upload on this channel.")}
+                return {"error": request.env._("You cannot upload on this channel.")}
 
         if post.get("duration"):
             values["completion_time"] = int(post["duration"]) / 60
@@ -1897,7 +1911,7 @@ class WebsiteSlides(WebsiteProfile):
         except Exception as e:
             _logger.exception("Slide creation failed")
             return {
-                "error": _(
+                "error": request.env._(
                     "Internal server error, please try again later or contact administrator.\nHere is the error message: %s",
                     e,
                 )
@@ -2022,15 +2036,21 @@ class WebsiteSlides(WebsiteProfile):
     @staticmethod
     def _get_invite_error_msg(invite_error):
         return {
-            "expired": _("This invitation link has expired."),
-            "hash_fail": _("This invitation link has an invalid hash."),
-            "identify_fail": _("This identification link does not seem to be valid."),
-            "no_channel": _("This course does not exist."),
-            "no_partner": _(
+            "expired": request.env._("This invitation link has expired."),
+            "hash_fail": request.env._("This invitation link has an invalid hash."),
+            "identify_fail": request.env._(
+                "This identification link does not seem to be valid."
+            ),
+            "no_channel": request.env._("This course does not exist."),
+            "no_partner": request.env._(
                 "The contact associated with this invitation does not seem to be valid."
             ),
-            "no_rights": _("You do not have permission to access this course."),
-            "partner_fail": _("This invitation link is not for this contact."),
+            "no_rights": request.env._(
+                "You do not have permission to access this course."
+            ),
+            "partner_fail": request.env._(
+                "This invitation link is not for this contact."
+            ),
         }.get(invite_error, "")
 
     def _prepare_user_slides_profile(self, user):

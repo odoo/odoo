@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -101,7 +101,7 @@ class UtmMedium(models.Model):
         )
         if utm_medium_sms and utm_medium_sms in self:
             raise UserError(
-                _(
+                self.env._(
                     "The UTM medium '%s' cannot be deleted as it is used in some main "
                     "functional flows, such as the SMS Marketing.",
                     utm_medium_sms.name,

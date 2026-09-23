@@ -1,7 +1,7 @@
 from urllib.parse import parse_qsl
 from urllib.parse import urlsplit as url_parse
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import urls
@@ -137,7 +137,9 @@ class PaymentTransaction(models.Model):
         elif payment_status == "paid":
             self._set_done()
         elif payment_status in ["expired", "canceled", "failed"]:
-            self._set_canceled(_("Cancelled payment with status: %s", payment_status))
+            self._set_canceled(
+                self.env._("Cancelled payment with status: %s", payment_status)
+            )
         else:
             _logger.info(
                 "Received data with invalid payment status (%s) for transaction %s.",
@@ -145,6 +147,8 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(
-                _("Received data with invalid payment status: %s.", payment_status)
+                self.env._(
+                    "Received data with invalid payment status: %s.", payment_status
+                )
             )
         return None

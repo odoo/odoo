@@ -1,6 +1,5 @@
 from werkzeug.exceptions import BadRequest
 
-from odoo import _
 from odoo.http import Controller, request, route
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.mail import email_re
@@ -15,7 +14,7 @@ class WebsiteSaleStock(Controller):
             _debug.logic(
                 "stock_notification_refused", reason="bad_email", product=product_id
             )
-            raise BadRequest(_("Invalid Email"))
+            raise BadRequest(request.env._("Invalid Email"))
 
         product = request.env["product.product"].browse(int(product_id))
         partner = (

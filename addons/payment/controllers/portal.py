@@ -2,7 +2,7 @@ import urllib.parse
 
 from werkzeug.exceptions import BadRequest, Forbidden, NotFound
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
 
@@ -401,7 +401,9 @@ class PaymentPortal(portal.CustomerPortal):
                 partner_sudo.commercial_partner_id
                 != token_sudo.partner_id.commercial_partner_id
             ):
-                raise AccessError(_("You do not have access to this payment token."))
+                raise AccessError(
+                    request.env._("You do not have access to this payment token.")
+                )
 
             payment_method_id = token_sudo.payment_method_id.id
 
@@ -613,7 +615,7 @@ class PaymentPortal(portal.CustomerPortal):
         rejected_keys = set(kwargs.keys()) - whitelist
         if rejected_keys:
             raise BadRequest(
-                _(
+                request.env._(
                     "The following kwargs are not whitelisted: %s",
                     ", ".join(rejected_keys),
                 )

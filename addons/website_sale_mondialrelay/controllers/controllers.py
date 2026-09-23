@@ -1,4 +1,4 @@
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -22,7 +22,7 @@ class MondialRelay(http.Controller):
         if not order_sudo or order_sudo._is_anonymous_cart():
             _debug.logic("pickup_point_refused", reason="anonymous_cart")
             raise AccessDenied(
-                _("A customer is required before selecting a pickup point.")
+                request.env._("A customer is required before selecting a pickup point.")
             )
         if not order_sudo.carrier_id.is_mondialrelay:
             _debug.logic(
@@ -30,7 +30,9 @@ class MondialRelay(http.Controller):
                 reason="not_mondialrelay",
                 carrier=order_sudo.carrier_id.id,
             )
-            raise UserError(_("Select a Mondial Relay delivery method first."))
+            raise UserError(
+                request.env._("Select a Mondial Relay delivery method first.")
+            )
         address_values = self._parse_relay_address(data)
 
         countries = order_sudo.carrier_id.country_ids
@@ -38,7 +40,9 @@ class MondialRelay(http.Controller):
             "code"
         ):
             raise UserError(
-                _("The pickup point country is not allowed for this delivery carrier.")
+                request.env._(
+                    "The pickup point country is not allowed for this delivery carrier."
+                )
             )
 
         partner_shipping = order_sudo.partner_id.sudo()._mondialrelay_search_or_create(
@@ -74,12 +78,16 @@ class MondialRelay(http.Controller):
                 value = str(value)
             if not isinstance(value, str) or not value.strip():
                 raise UserError(
-                    _("The pickup point is missing valid address information.")
+                    request.env._(
+                        "The pickup point is missing valid address information."
+                    )
                 )
             values[field] = value.strip()
         street2 = data.get("Adresse2") or ""
         if not isinstance(street2, str):
-            raise UserError(_("The pickup point is missing valid address information."))
+            raise UserError(
+                request.env._("The pickup point is missing valid address information.")
+            )
         values["street2"] = street2.strip()
         values["country_code"] = values["country_code"][:2].lower()
         return values
@@ -90,7 +98,9 @@ class WebsiteSaleMondialrelay(WebsiteSale):
         partner_sudo, _address_type = super()._prepare_address_update(*args, **kwargs)
 
         if partner_sudo and partner_sudo.is_mondialrelay:
-            raise UserError(_("You cannot edit the address of a Point Relais®."))
+            raise UserError(
+                request.env._("You cannot edit the address of a Point Relais®.")
+            )
 
         return partner_sudo, _address_type
 

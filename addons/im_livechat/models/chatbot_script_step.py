@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import email_normalize, html2plaintext
@@ -190,12 +190,12 @@ class ChatbotScriptStep(models.Model):
         description = Markup("")
         if input_email:
             description += Markup("%s<strong>%s</strong><br>") % (
-                _("Email: "),
+                self.env._("Email: "),
                 input_email,
             )
         if input_phone:
             description += Markup("%s<strong>%s</strong><br>") % (
-                _("Phone: "),
+                self.env._("Phone: "),
                 input_phone,
             )
         if description:
@@ -286,7 +286,9 @@ class ChatbotScriptStep(models.Model):
 
         user_text_answer = html2plaintext(message_body)
         if self.step_type == "question_email" and not email_normalize(user_text_answer):
-            raise ValidationError(_('"%s" is not a valid email.', user_text_answer))
+            raise ValidationError(
+                self.env._('"%s" is not a valid email.', user_text_answer)
+            )
 
         if self.step_type in [
             "question_email",

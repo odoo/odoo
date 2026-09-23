@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.exceptions import UserError
 
 
@@ -174,7 +174,7 @@ class MailingList(models.Model):
 
             if mass_mailings > 0:
                 raise UserError(
-                    _(
+                    self.env._(
                         "At least one of the mailing list you are trying to archive is used in an ongoing mailing campaign."
                     )
                 )
@@ -447,7 +447,7 @@ class MailingList(models.Model):
                 body = force_message
             elif opt_out:
                 body = Markup("<p>%s</p><ul>%s</ul>") % (
-                    _(
+                    self.env._(
                         "%(contact_name)s unsubscribed from the following mailing list(s)",
                         contact_name=contact.display_name,
                     ),
@@ -457,7 +457,7 @@ class MailingList(models.Model):
                 )
             else:
                 body = Markup("<p>%s</p><ul>%s</ul>") % (
-                    _(
+                    self.env._(
                         "%(contact_name)s subscribed to the following mailing list(s)",
                         contact_name=contact.display_name,
                     ),

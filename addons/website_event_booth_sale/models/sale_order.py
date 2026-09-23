@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
 
@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
                 product=product,
                 requested=new_qty,
             )
-            return 1, _(
+            return 1, self.env._(
                 "You cannot manually change the quantity of an Event Booth product."
             )
         return super()._get_updated_quantity(

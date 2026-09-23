@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import Command, _, fields, models
+from odoo import Command, fields, models
 from odoo.tools.misc import file_open
 
 
@@ -30,9 +30,9 @@ class MailComposeMessage(models.TransientModel):
         """
         if not self.mass_mailing_id:
             return super()._get_render_error_label()
-        return _(
+        return self.env._(
             "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)",
-            name=self.mass_mailing_id.display_name or _("Unnamed Mailing"),
+            name=self.mass_mailing_id.display_name or self.env._("Unnamed Mailing"),
             record_id=self.mass_mailing_id.id,
         )
 
@@ -113,7 +113,7 @@ class MailComposeMessage(models.TransientModel):
                     "</blockquote>"
                 ).format(
                     mailing_sent_message=Markup(
-                        _(
+                        self.env._(
                             "Received the mailing <b>{mailing_name}</b>",
                         )
                     ).format(

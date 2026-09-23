@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -13,7 +13,7 @@ class ProductTemplate(models.Model):
         for product in self.filtered("gelato_template_ref"):
             if product.is_published and product.gelato_missing_images:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Print images must be set on products before they can be published."
                     )
                 )

@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
@@ -281,7 +281,9 @@ class EventEvent(models.Model):
                     website=event.website_id.id,
                 )
                 raise ValidationError(
-                    _("The website must be from the same company as the event.")
+                    self.env._(
+                        "The website must be from the same company as the event."
+                    )
                 )
 
     def copy(self, default=None):
@@ -365,7 +367,7 @@ class EventEvent(models.Model):
         self.check_singleton()
         return [
             (
-                _("Home"),
+                self.env._("Home"),
                 False,
                 "website_event.template_intro",
                 1,
@@ -373,7 +375,7 @@ class EventEvent(models.Model):
                 False,
             ),
             (
-                _("Practical"),
+                self.env._("Practical"),
                 "/event/%s/register" % self.env["ir.http"]._slug(self),
                 False,
                 100,
@@ -381,7 +383,7 @@ class EventEvent(models.Model):
                 False,
             ),
             (
-                _("Rooms"),
+                self.env._("Rooms"),
                 "/event/%s/community" % self.env["ir.http"]._slug(self),
                 False,
                 80,
@@ -581,7 +583,7 @@ class EventEvent(models.Model):
                 localized_month_begin + relativedelta(months=months_delta + 1)
             ).astimezone(UTC)
             filter_string = (
-                _("This month")
+                self.env._("This month")
                 if months_delta == 0
                 else format_date(
                     self.env,
@@ -601,16 +603,21 @@ class EventEvent(models.Model):
             ]
 
         return [
-            ["scheduled", _("Scheduled Events"), [("date_end", ">=", sd(now))], 0],
+            [
+                "scheduled",
+                self.env._("Scheduled Events"),
+                [("date_end", ">=", sd(now))],
+                0,
+            ],
             [
                 "today",
-                _("Today"),
+                self.env._("Today"),
                 [("date_end", ">", sd(now)), ("date_begin", "<", sd(utc_today_end))],
                 0,
             ],
             get_domain_month_filter("month", 0),
-            ["old", _("Past Events"), [("date_end", "<", sd(now))], 0],
-            ["all", _("All Events"), [], 0],
+            ["old", self.env._("Past Events"), [("date_end", "<", sd(now))], 0],
+            ["all", self.env._("All Events"), [], 0],
         ]
 
     @api.model

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -97,7 +97,7 @@ class EventQuestion(models.Model):
                 )
                 if answer_count > 0:
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot change the question type of a question that already has answers!"
                         )
                     )
@@ -109,7 +109,7 @@ class EventQuestion(models.Model):
             [("question_id", "in", self.ids)], limit=1
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete a question that has already been answered by attendees. You can archive it instead."
                 )
             )
@@ -117,7 +117,7 @@ class EventQuestion(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_question(self):
         if set(self.ids) & set(self.env["event.type"]._default_question_ids()):
-            raise UserError(_("You cannot delete a default question."))
+            raise UserError(self.env._("You cannot delete a default question."))
 
     def action_view_question_answers(self):
         """Allow analyzing the attendees answers to event questions in a convenient way:

@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ResUsers(models.Model):
@@ -17,7 +17,7 @@ class ResUsers(models.Model):
         res = super().prepare_rank_email_links()
         res.append(
             {
-                "label": _("See our Forum"),
+                "label": self.env._("See our Forum"),
                 "url": "/forum",
             }
         )

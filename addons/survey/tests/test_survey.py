@@ -2,7 +2,7 @@ import datetime
 
 from freezegun import freeze_time
 
-from odoo import Command, _, fields
+from odoo import Command, fields
 from odoo.tests.common import users
 
 from odoo.addons.mail.tests.common import MailCase
@@ -184,7 +184,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         self.assertEqual(
             question._check_answer("Is Alfred an answer?"),
-            {question.id: _("This is not a date")},
+            {question.id: self.env._("This is not a date")},
         )
 
         self.assertEqual(
@@ -211,7 +211,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         self.assertEqual(
             question._check_answer("Is Alfred an answer?"),
-            {question.id: _("This is not a number")},
+            {question.id: self.env._("This is not a number")},
         )
 
         self.assertEqual(
@@ -232,7 +232,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         self.assertEqual(
             question._check_answer("not an email"),
-            {question.id: _("This answer must be an email address")},
+            {question.id: self.env._("This answer must be an email address")},
         )
 
         self.assertEqual(question._check_answer("email@example.com"), {})

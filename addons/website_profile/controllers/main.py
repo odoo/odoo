@@ -6,7 +6,7 @@ import psycopg
 import werkzeug.exceptions
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, fields, http, tools
+from odoo import fields, http, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -41,7 +41,7 @@ class WebsiteProfile(http.Controller):
 
         if not user_sudo.website_published:
             _debug.logic("profile_refused", reason="private", user=user_id)
-            return False, _("This profile is private!")
+            return False, request.env._("This profile is private!")
         elif request.env.user.karma < request.website.karma_profile_min:
             _debug.logic(
                 "profile_refused",
@@ -49,7 +49,9 @@ class WebsiteProfile(http.Controller):
                 user=user_id,
                 required=request.website.karma_profile_min,
             )
-            return False, _("Not have enough karma to view other users' profile.")
+            return False, request.env._(
+                "Not have enough karma to view other users' profile."
+            )
         return user_sudo, False
 
     def _prepare_user_values(self, **kwargs):
@@ -121,8 +123,8 @@ class WebsiteProfile(http.Controller):
                 (
                     {"url_from_label": label, "url_from": url_from}
                     for prefix, label in (
-                        ("forum", _("Forum")),
-                        ("slides", _("All Courses")),
+                        ("forum", request.env._("Forum")),
+                        ("slides", request.env._("All Courses")),
                     )
                     if path == f"/{prefix}" or path.startswith(f"/{prefix}/")
                 ),
@@ -193,7 +195,7 @@ class WebsiteProfile(http.Controller):
             and whitelisted_values.get("country_id") != user.partner_id.country_id.id
         ):
             raise UserError(
-                _(
+                request.env._(
                     "Changing the country is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
                 )
             )

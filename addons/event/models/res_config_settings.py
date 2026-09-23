@@ -1,4 +1,4 @@
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -80,7 +80,9 @@ class ResConfigSettings(models.TransientModel):
                 secret
                 and self.env["res.partner"]._decode_google_maps_secret(secret) is None
             ):
-                raise exceptions.UserError(_("Please enter a valid base64 secret"))
+                raise exceptions.UserError(
+                    self.env._("Please enter a valid base64 secret")
+                )
 
     @api.model_create_multi
     def create(self, vals_list):

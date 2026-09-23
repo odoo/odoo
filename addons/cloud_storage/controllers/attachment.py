@@ -1,4 +1,3 @@
-from odoo import _
 from odoo.http import request, route
 
 from odoo.addons.mail.controllers.attachment import AttachmentController
@@ -17,7 +16,7 @@ class CloudAttachmentController(AttachmentController):
         ):
             return request.prepare_json_response(
                 {
-                    "error": _(
+                    "error": request.env._(
                         "Cloud storage configuration has been changed. Please refresh the page."
                     )
                 }

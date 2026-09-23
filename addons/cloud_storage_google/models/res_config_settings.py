@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 
 from google.auth.transport.requests import Request
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from .ir_attachment import get_cloud_storage_google_credential
@@ -83,7 +83,7 @@ class ResConfigSettings(models.TransientModel):
         )
         if upload_response.status_code != 200:
             raise ValidationError(
-                _(
+                self.env._(
                     "The account info is not allowed to upload blobs to the bucket.\n%s",
                     str(upload_response.text),
                 )
@@ -101,7 +101,7 @@ class ResConfigSettings(models.TransientModel):
         )
         if download_response.status_code != 200:
             raise ValidationError(
-                _(
+                self.env._(
                     "The account info is not allowed to download blobs from the bucket.\n%s",
                     str(upload_response.text),
                 )
@@ -132,7 +132,7 @@ class ResConfigSettings(models.TransientModel):
         )
         if patch_response.status_code != 200:
             raise ValidationError(
-                _(
+                self.env._(
                     "The account info is not allowed to set the bucket's CORS.\n%s",
                     str(patch_response.text),
                 )
@@ -167,7 +167,7 @@ class ResConfigSettings(models.TransientModel):
         )
         if cr.fetchone():
             raise UserError(
-                _(
+                self.env._(
                     "Some Google attachments are in use, please migrate cloud storages before disable the provider"
                 )
             )

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class SlideEmbed(models.Model):
@@ -31,4 +31,4 @@ class SlideEmbed(models.Model):
     @api.depends("url")
     def _compute_website_name(self):
         for slide_embed in self:
-            slide_embed.website_name = slide_embed.url or _("Unknown Website")
+            slide_embed.website_name = slide_embed.url or self.env._("Unknown Website")

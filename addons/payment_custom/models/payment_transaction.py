@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
@@ -126,7 +126,7 @@ class PaymentTransaction(models.Model):
         """
         message = super()._get_sent_message()
         if self.provider_code == "custom":
-            message = _(
+            message = self.env._(
                 "The customer has selected %(provider_name)s to make the payment.",
                 provider_name=self.provider_id.name,
             )

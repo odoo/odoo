@@ -1,4 +1,4 @@
-from odoo import SUPERUSER_ID, _, models, tools
+from odoo import SUPERUSER_ID, models, tools
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -20,7 +20,7 @@ class ResLang(models.Model):
                     "lang_deactivation_refused", reason="used_by_website", langs=self
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot deactivate a language that is currently used on a website."
                     )
                 )
@@ -72,7 +72,7 @@ class ResLang(models.Model):
     def action_activate_langs(self):
         return {
             "type": "ir.actions.act_window",
-            "name": _("Add languages"),
+            "name": self.env._("Add languages"),
             "view_mode": "form",
             "res_model": "base.language.install",
             "views": [[False, "form"]],

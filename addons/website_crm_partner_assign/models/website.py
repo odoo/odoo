@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class Website(models.Model):
@@ -8,7 +8,7 @@ class Website(models.Model):
         suggested_controllers = super().get_suggested_controllers()
         suggested_controllers.append(
             (
-                _("Resellers"),
+                self.env._("Resellers"),
                 self.env["ir.http"]._url_for("/partners"),
                 "website_crm_partner_assign",
             )

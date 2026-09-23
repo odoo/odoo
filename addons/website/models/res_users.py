@@ -1,6 +1,6 @@
 import logging
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -42,7 +42,9 @@ class ResUsers(models.Model):
             _debug.logic(
                 "user_login_refused", reason="duplicate", users=self, count=len(self)
             )
-            raise ValidationError(_("You can not have two users with the same login!"))
+            raise ValidationError(
+                self.env._("You can not have two users with the same login!")
+            )
 
     @api.model
     def _get_domain_login(self, login):
@@ -130,7 +132,9 @@ class ResUsers(models.Model):
                 users=internal_users,
             )
             raise ValidationError(
-                _("Remove website on related partner before they become internal user.")
+                self.env._(
+                    "Remove website on related partner before they become internal user."
+                )
             )
 
     def website_publish_button(self):

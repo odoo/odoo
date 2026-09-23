@@ -2,7 +2,7 @@ import ast
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools.misc import OrderedSet
 
@@ -88,7 +88,7 @@ class ResPartner(models.Model):
         ]
 
     def _bus_send_history_message(self, channel, page_history):
-        message_body = _("No history found")
+        message_body = self.env._("No history found")
         if page_history:
             message_body = Markup("<ul>%s</ul>") % (
                 Markup("").join(

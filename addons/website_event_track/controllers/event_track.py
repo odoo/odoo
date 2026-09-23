@@ -7,7 +7,7 @@ from datetime import UTC, timedelta
 import babel.dates
 from werkzeug.exceptions import Forbidden, NotFound
 
-from odoo import Command, _, fields, http, tools
+from odoo import Command, fields, http, tools
 from odoo.fields import Domain
 from odoo.http import prepare_content_disposition_header, request
 from odoo.libs.datetime import timezone
@@ -144,7 +144,11 @@ class EventTrackController(http.Controller):
                 "wishlisted_by_default", reverse=True
             )
             tracks_by_day.append(
-                {"date": False, "name": _("Coming soon"), "tracks": tracks_announced}
+                {
+                    "date": False,
+                    "name": request.env._("Coming soon"),
+                    "tracks": tracks_announced,
+                }
             )
         has_upcoming_or_ongoing = any(
             track for track in tracks_sudo if not track.is_track_done
@@ -449,13 +453,13 @@ class EventTrackController(http.Controller):
         )
         error_message = ""
         if not track:
-            error_message = _("Invalid data.")
+            error_message = request.env._("Invalid data.")
         elif not valid_email_to:
-            error_message = _("Invalid email.")
+            error_message = request.env._("Invalid email.")
         elif track.is_track_done or track.event_id.is_finished:
-            error_message = _("The talk is already finished.")
+            error_message = request.env._("The talk is already finished.")
         elif not track.is_track_upcoming:
-            error_message = _("The talk has already begun.")
+            error_message = request.env._("The talk has already begun.")
         if error_message:
             return {"success": False, "message": error_message}
 

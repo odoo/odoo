@@ -12,7 +12,7 @@ from odoo.http import request, route
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, clean_context, float_round, lazy
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.html_editor.tools import get_video_thumbnail
 from odoo.addons.payment import utils as payment_utils
@@ -678,7 +678,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 except TypeError, ValueError:
                     thumbnail = None
             else:
-                raise ValidationError(_("Invalid video URL provided."))
+                raise ValidationError(request.env._("Invalid video URL provided."))
             media_create_data = [
                 Command.create(
                     {
@@ -769,11 +769,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             )
 
         if not product and not product_template:
-            raise ValidationError(_("Product not found"))
+            raise ValidationError(request.env._("Product not found"))
 
         product_images = (product or product_template)._get_images()
         if image_to_resequence not in product_images:
-            raise ValidationError(_("Invalid image"))
+            raise ValidationError(request.env._("Invalid image"))
 
         image_idx = product_images.index(image_to_resequence)
         new_image_idx = 0
@@ -799,7 +799,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             additional_image = product_images[0]
             if additional_image.video_url:
                 raise ValidationError(
-                    _("You can't use a video as the product's main image.")
+                    request.env._("You can't use a video as the product's main image.")
                 )
             product_images[main_image_idx], product_images[0] = (
                 additional_image,
@@ -1510,7 +1510,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "errors": self._get_shop_payment_errors(order),
             "partner": order.partner_invoice_id,
             "order": order,
-            "submit_button_label": _("Pay now"),
+            "submit_button_label": request.env._("Pay now"),
         }
         payment_form_values = {
             **sale_portal.CustomerPortal._prepare_payment_form_context(
@@ -1544,8 +1544,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order._has_deliverable_products() and not order._get_delivery_methods():
             errors.append(
                 (
-                    _("Sorry, we are unable to ship your order."),
-                    _(
+                    request.env._("Sorry, we are unable to ship your order."),
+                    request.env._(
                         "No shipping method is available for your current order and shipping address."
                         " Please contact us for more information."
                     ),
@@ -1911,7 +1911,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             and category
             and not str(category).isdigit()
         ):
-            raise ValidationError(_("Invalid category."))
+            raise ValidationError(request.env._("Invalid category."))
         if (
             category := ProductCategory.browse(category and int(category)).exists()
         ) and category.can_access_from_current_website():

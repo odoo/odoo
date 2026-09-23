@@ -12,7 +12,6 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
 from odoo.modules.module import get_manifest
-from odoo.tools.translate import _
 
 from odoo.addons.iap.tools import iap_tools
 
@@ -273,7 +272,7 @@ class Website(models.Model):
 
     def configurator_get_footer_links(self):
         return [
-            {"text": _("Privacy Policy"), "href": "/privacy"},
+            {"text": self.env._("Privacy Policy"), "href": "/privacy"},
         ]
 
     @api.model
@@ -651,7 +650,7 @@ class Website(models.Model):
             )
             menu_company = self.env["website.menu"].create(
                 {
-                    "name": _("Company"),
+                    "name": self.env._("Company"),
                     "parent_id": website.menu_id.id,
                     "website_id": website.id,
                     "sequence": 40,

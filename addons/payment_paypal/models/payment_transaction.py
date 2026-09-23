@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -47,7 +47,7 @@ class PaymentTransaction(models.Model):
         except ValidationError:
             # PayPal could not be asked: the transaction records the failure
             # and the notification is still processed, as before.
-            self._set_error(_("Unable to verify the payment data"))
+            self._set_error(self.env._("Unable to verify the payment data"))
             return True
         if verification.get("verification_status") != "SUCCESS":
             _logger.warning("Received payment data that was not verified by PayPal.")
@@ -74,7 +74,7 @@ class PaymentTransaction(models.Model):
         elif captured := purchase_unit.get("payments", {}).get("captures"):
             result.update({**captured[0], "txn_type": "CAPTURE"})
         else:
-            _logger.warning(_("Invalid response format, can't normalize."))
+            _logger.warning(self.env._("Invalid response format, can't normalize."))
         return result
 
     # See https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNandPDTVariables/
@@ -201,7 +201,9 @@ class PaymentTransaction(models.Model):
             return super()._apply_updates(payment_data)
 
         if not payment_data:
-            self._set_canceled(state_message=_("The customer left the payment page."))
+            self._set_canceled(
+                state_message=self.env._("The customer left the payment page.")
+            )
             return None
 
         # Update the provider reference.
@@ -209,7 +211,7 @@ class PaymentTransaction(models.Model):
         txn_type = payment_data.get("txn_type")
         if not all((txn_id, txn_type)):
             self._set_error(
-                _(
+                self.env._(
                     "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
                     txn_id=txn_id,
                     txn_type=txn_type,
@@ -241,6 +243,8 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(
-                _("Received data with invalid payment status: %s", payment_status)
+                self.env._(
+                    "Received data with invalid payment status: %s", payment_status
+                )
             )
         return None

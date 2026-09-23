@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class ResUsers(models.Model):
@@ -10,5 +10,5 @@ class ResUsers(models.Model):
             group, model_name, subkey, res_ids
         )
         if model_name == "mailing.mailing":
-            group["name"] = _("Email Marketing")
+            group["name"] = self.env._("Email Marketing")
         return group

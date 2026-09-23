@@ -2,7 +2,6 @@ from urllib.parse import parse_qs, urlsplit
 
 from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -267,7 +266,7 @@ class ResConfigSettings(models.TransientModel):
 
     def action_website_create_new(self):
         return {
-            "name": _("Add Website"),
+            "name": self.env._("Add Website"),
             "view_mode": "form",
             "view_id": self.env.ref("website.view_website_form_view_themes_modal").id,
             "res_model": "website",
@@ -279,7 +278,7 @@ class ResConfigSettings(models.TransientModel):
     def action_view_robots(self):
         self.website_id._force()
         return {
-            "name": _("Robots.txt"),
+            "name": self.env._("Robots.txt"),
             "view_mode": "form",
             "res_model": "website.robots",
             "type": "ir.actions.act_window",
@@ -290,7 +289,7 @@ class ResConfigSettings(models.TransientModel):
     def action_view_blocked_third_party_domains(self):
         self.website_id._force()
         return {
-            "name": _("Add external websites"),
+            "name": self.env._("Add external websites"),
             "view_mode": "form",
             "res_model": "website.custom_blocked_third_party_domains",
             "type": "ir.actions.act_window",

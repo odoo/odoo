@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -13,5 +13,5 @@ class HrApplicant(models.Model):
             job = self.env["hr.job"].browse(values.get("job_id"))
             if not job.sudo().active:
                 _debug.logic("application_refused", reason="job_closed", job=job.id)
-                raise UserError(_("The job offer has been closed."))
+                raise UserError(self.env._("The job offer has been closed."))
         return values

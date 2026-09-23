@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 
 
 class SmsComposer(models.TransientModel):
@@ -27,7 +27,7 @@ class SmsComposer(models.TransientModel):
 
     @api.model
     def _get_unsubscribe_info(self, url):
-        return _("STOP SMS: %(unsubscribe_url)s", unsubscribe_url=url)
+        return self.env._("STOP SMS: %(unsubscribe_url)s", unsubscribe_url=url)
 
     def _prepare_mass_sms_trace_values(self, record, sms_values):
         trace_code = self.env["mailing.trace"]._get_random_code()

@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ProductProduct(models.Model):
@@ -50,12 +50,12 @@ class ProductProduct(models.Model):
                 full_mail = product_ctxt.env["mixin.mail.render"]._render_encapsulate(
                     "mail.mail_notification_light",
                     body_html,
-                    add_context={"model_description": _("Product")},
+                    add_context={"model_description": self.env._("Product")},
                     context_record=product_ctxt,
                 )
-                context = {"lang": partner.lang}
+                partner_env = self_ctxt.env if partner.lang else self.env
                 mail_values = {
-                    "subject": _(
+                    "subject": partner_env._(
                         "The product '%(product_name)s' is now available",
                         product_name=product_ctxt.name,
                     ),
@@ -65,7 +65,6 @@ class ProductProduct(models.Model):
                     "email_to": partner.email_formatted,
                     "body_html": full_mail,
                 }
-                del context
 
                 mail = self_ctxt.env["mail.mail"].sudo().create(mail_values)
                 mail.send(raise_exception=False)

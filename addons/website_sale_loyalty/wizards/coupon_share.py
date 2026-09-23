@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -65,7 +65,7 @@ class CouponShare(models.TransientModel):
                 not record.coupon_id and record.program_id.program_type == "coupons"
             )
         ):
-            raise ValidationError(_("A coupon is needed for coupon programs."))
+            raise ValidationError(self.env._("A coupon is needed for coupon programs."))
 
     @api.constrains("website_id", "program_id")
     def _check_website(self):
@@ -76,7 +76,9 @@ class CouponShare(models.TransientModel):
             )
         ):
             raise ValidationError(
-                _("The shared website should correspond to the website of the program.")
+                self.env._(
+                    "The shared website should correspond to the website of the program."
+                )
             )
 
     @api.depends("coupon_id.code", "program_id.rule_ids.code")
@@ -109,7 +111,7 @@ class CouponShare(models.TransientModel):
 
     def action_generate_short_link(self):
         return {
-            "name": _("Share"),
+            "name": self.env._("Share"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "coupon.share",
@@ -123,10 +125,10 @@ class CouponShare(models.TransientModel):
     @api.model
     def create_share_action(self, coupon=None, program=None):
         if bool(program) == bool(coupon):
-            raise UserError(_("Provide either a coupon or a program."))
+            raise UserError(self.env._("Provide either a coupon or a program."))
 
         return {
-            "name": _(
+            "name": self.env._(
                 "Share %s",
                 self.env["loyalty.program"]
                 ._program_items_name()

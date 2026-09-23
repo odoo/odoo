@@ -12,7 +12,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import file_open, ormcache
-from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.website_sale import const
 
@@ -319,14 +319,13 @@ class Website(models.Model):
         for website in self:
             website.show_line_subtotals_tax_selection = "tax_excluded"
 
-    @staticmethod
-    def _selection_product_sorts():
+    def _selection_product_sorts(self):
         return [
-            ("website_sequence asc", _("Featured")),
-            ("publish_date desc", _("Newest Arrivals")),
-            ("name asc", _("Name (A-Z)")),
-            ("list_price asc", _("Price - Low to High")),
-            ("list_price desc", _("Price - High to Low")),
+            ("website_sequence asc", self.env._("Featured")),
+            ("publish_date desc", self.env._("Newest Arrivals")),
+            ("name asc", self.env._("Name (A-Z)")),
+            ("list_price asc", self.env._("Price - Low to High")),
+            ("list_price desc", self.env._("Price - High to Low")),
         ]
 
     @api.model
@@ -888,7 +887,11 @@ class Website(models.Model):
     def get_suggested_controllers(self):
         suggested_controllers = super().get_suggested_controllers()
         suggested_controllers.append(
-            (_("eCommerce"), self.env["ir.http"]._url_for("/shop"), "website_sale")
+            (
+                self.env._("eCommerce"),
+                self.env["ir.http"]._url_for("/shop"),
+                "website_sale",
+            )
         )
         return suggested_controllers
 

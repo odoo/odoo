@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class SlideChannel(models.Model):
@@ -7,7 +7,7 @@ class SlideChannel(models.Model):
     def action_mass_mailing_attendees(self):
         domain = repr([("slide_channel_ids", "in", self.ids)])
         return {
-            "name": _("Mass Mail Course Members"),
+            "name": self.env._("Mass Mail Course Members"),
             "type": "ir.actions.act_window",
             "res_model": "mailing.mailing",
             "view_mode": "form",

@@ -1,7 +1,7 @@
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 
 
 class EventLeadRule(models.Model):
@@ -147,7 +147,7 @@ class EventLeadRule(models.Model):
                     if toupdate_leads:
                         additionnal_description = (
                             group_registrations._get_lead_description(
-                                _("New registrations"), line_counter=True
+                                self.env._("New registrations"), line_counter=True
                             )
                         )
                         for lead in toupdate_leads:

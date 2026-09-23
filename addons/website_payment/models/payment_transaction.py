@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class PaymentTransaction(models.Model):
@@ -14,7 +14,7 @@ class PaymentTransaction(models.Model):
             lambda tx: tx.state == "done" and tx.is_donation
         ):
             donation_tx._send_donation_email()
-            msg = [_("Payment received from donation with following details:")]
+            msg = [self.env._("Payment received from donation with following details:")]
             for field in [
                 "company_id",
                 "partner_id",
@@ -36,9 +36,9 @@ class PaymentTransaction(models.Model):
         self.check_singleton()
         if is_internal_notification or self.state == "done":
             subject = (
-                _("A donation has been made on your website")
+                self.env._("A donation has been made on your website")
                 if is_internal_notification
-                else _("Donation confirmation")
+                else self.env._("Donation confirmation")
             )
             body = (
                 self.env["ir.qweb"]

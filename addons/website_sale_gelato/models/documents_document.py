@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 
 
@@ -11,7 +11,7 @@ class DocumentsDocument(models.Model):
             template = self.env["product.template"].browse(print_image.res_id)
             if template.is_published and not print_image.datas:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Products must be unpublished before print images can be removed."
                     )
                 )

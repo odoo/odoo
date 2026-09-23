@@ -8,7 +8,7 @@ import requests
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup, escape
 
-from odoo import Command, _, api, fields, models, modules
+from odoo import Command, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.guarded_http import RefusedDestination
@@ -862,7 +862,7 @@ class SurveyUser_Input(models.Model):
             [("user_input_id", "=", self.id), ("question_id", "=", question.id)]
         )
         if old_answers and not overwrite_existing:
-            raise UserError(_("This answer cannot be overwritten."))
+            raise UserError(self.env._("This answer cannot be overwritten."))
 
         if question.question_type in [
             "char_box",
@@ -937,7 +937,7 @@ class SurveyUser_Input(models.Model):
                 answers.keys(), field_name="matrix_row_ids"
             ):
                 raise ValidationError(
-                    _("This answer is not a valid choice for this question.")
+                    self.env._("This answer is not a valid choice for this question.")
                 )
             for row_key, row_answer in answers.items():
                 for answer in row_answer:
@@ -967,7 +967,7 @@ class SurveyUser_Input(models.Model):
         else:
             if question._filter_foreign_answer_ids(answers.keys()):
                 raise ValidationError(
-                    _("This answer is not a valid choice for this question.")
+                    self.env._("This answer is not a valid choice for this question.")
                 )
             for answer_id, value in answers.items():
                 vals_list.append(
@@ -1014,7 +1014,7 @@ class SurveyUser_Input(models.Model):
         if answer_type == "suggestion":
             if question._filter_foreign_answer_ids([answer]):
                 raise ValidationError(
-                    _("This answer is not a valid choice for this question.")
+                    self.env._("This answer is not a valid choice for this question.")
                 )
             vals["suggested_answer_id"] = int(answer)
         elif answer_type in ("numerical_box", "slider"):
@@ -1063,7 +1063,7 @@ class SurveyUser_Input(models.Model):
                     )
                 )
 
-            question_section = question.page_id.title or _("Uncategorized")
+            question_section = question.page_id.title or self.env._("Uncategorized")
             for user_input in self:
                 user_input_lines = user_input.user_input_line_ids.filtered(
                     lambda line, q=question: (
@@ -1118,10 +1118,10 @@ class SurveyUser_Input(models.Model):
             incorrect += section_counts.get("incorrect", 0)
             skipped += section_counts.get("skipped", 0)
         return [
-            {"text": _("Correct"), "count": correct},
-            {"text": _("Partially"), "count": partial},
-            {"text": _("Incorrect"), "count": incorrect},
-            {"text": _("Unanswered"), "count": skipped},
+            {"text": self.env._("Correct"), "count": correct},
+            {"text": self.env._("Partially"), "count": partial},
+            {"text": self.env._("Incorrect"), "count": incorrect},
+            {"text": self.env._("Unanswered"), "count": skipped},
         ]
 
     def _multiple_choice_question_answer_result(
@@ -1362,13 +1362,13 @@ class SurveyUser_Input(models.Model):
         ):
             survey_title = user_input.survey_id.title
             if user_input.partner_id:
-                body = _(
+                body = self.env._(
                     '%(participant)s just participated in "%(survey_title)s".',
                     participant=user_input.partner_id.display_name,
                     survey_title=survey_title,
                 )
             else:
-                body = _(
+                body = self.env._(
                     'Someone just participated in "%(survey_title)s".',
                     survey_title=survey_title,
                 )

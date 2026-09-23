@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -45,7 +45,7 @@ class ResCompany(models.Model):
                     website=company.website_id.id,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The company “%(company_name)s” cannot be archived because it has a linked website “%(website_name)s”."
                         "\nChange that website's company first.",
                         company_name=company.name,

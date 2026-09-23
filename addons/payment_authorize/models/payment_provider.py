@@ -1,7 +1,7 @@
 import json
 import pprint
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 
@@ -61,7 +61,9 @@ class PaymentProvider(models.Model):
                 and provider.state != "disabled"
             ):
                 raise ValidationError(
-                    _("Only one currency can be selected by Authorize.Net account.")
+                    self.env._(
+                        "Only one currency can be selected by Authorize.Net account."
+                    )
                 )
 
     # === COMPUTE METHODS === #
@@ -94,7 +96,9 @@ class PaymentProvider(models.Model):
 
         if self.state == "disabled":
             raise UserError(
-                _("This action cannot be performed while the provider is disabled.")
+                self.env._(
+                    "This action cannot be performed while the provider is disabled."
+                )
             )
 
         authorize_API = AuthorizeAPI(self)
@@ -105,7 +109,9 @@ class PaymentProvider(models.Model):
             "test_authenticate request response:\n%s", pprint.pformat(res_content)
         )
         if res_content.get("err_msg"):
-            raise UserError(_("Failed to authenticate.\n%s", res_content["err_msg"]))
+            raise UserError(
+                self.env._("Failed to authenticate.\n%s", res_content["err_msg"])
+            )
 
         # Update the merchant details
         res_content = authorize_API.merchant_details()
@@ -114,7 +120,9 @@ class PaymentProvider(models.Model):
         )
         if res_content.get("err_msg"):
             raise UserError(
-                _("Could not fetch merchant details:\n%s", res_content["err_msg"])
+                self.env._(
+                    "Could not fetch merchant details:\n%s", res_content["err_msg"]
+                )
             )
 
         currency = self.env["res.currency"].search(

@@ -5,7 +5,7 @@ from urllib.parse import urlencode, urlsplit
 import requests
 import werkzeug.http
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -137,7 +137,7 @@ class MicrosoftService(models.AbstractModel):
             ttl = response.get("expires_in")
             return access_token, refresh_token, ttl
         except requests.HTTPError:
-            error_msg = _(
+            error_msg = self.env._(
                 "Something went wrong during your token generation. Maybe your Authorization Code is invalid"
             )
             raise self.env["res.config.settings"].prepare_config_warning(

@@ -5,7 +5,7 @@ from operator import itemgetter
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, http
+from odoo import http
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import email_normalize, escape_psql
@@ -219,7 +219,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             .with_context(rendering_bundle=True)
             .create(
                 {
-                    "name": _("Job Title"),
+                    "name": request.env._("Job Title"),
                 }
             )
         )
@@ -329,7 +329,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             if refused_applicants_condition(applicant)
         ):
             return {
-                "message": _(
+                "message": request.env._(
                     "We've found a previous closed application in our system within the last 6 months."
                     " Please consider before applying in order not to duplicate efforts."
                 )
@@ -343,7 +343,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             recruiter_contact = (
                 ""
                 if not ongoing_application.user_id
-                else _(
+                else request.env._(
                     " In case of issue, contact %(contact_infos)s",
                     contact_infos=", ".join(
                         [
@@ -357,7 +357,7 @@ class WebsiteHrRecruitment(WebsiteForm):
                 )
             )
             return {
-                "message": _(
+                "message": request.env._(
                     "An application already exists for %(value)s."
                     " Duplicates might be rejected. %(recruiter_contact)s",
                     value=value,
@@ -366,7 +366,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             }
 
         return {
-            "message": _(
+            "message": request.env._(
                 "We found a recent application with a similar name, email, phone number."
                 " You can continue if it's not a mistake."
             )

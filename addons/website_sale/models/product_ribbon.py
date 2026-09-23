@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -62,7 +62,7 @@ class ProductRibbon(models.Model):
         for ribbon in automatic:
             if ribbons_by_assign.get(ribbon.assign, self.browse()) - ribbon:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Only one ribbon with the assign %s is allowed.",
                         dict(self._fields["assign"].selection).get(ribbon.assign),
                     )

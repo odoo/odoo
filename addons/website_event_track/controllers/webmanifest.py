@@ -3,7 +3,6 @@ import json
 from odoo import http
 from odoo.http import request
 from odoo.tools.misc import file_open
-from odoo.tools.translate import _
 
 
 class TrackManifest(http.Controller):
@@ -21,7 +20,8 @@ class TrackManifest(http.Controller):
         manifest = {
             "name": website.events_app_name,
             "short_name": website.events_app_name,
-            "description": _("%s Online Events Application") % website.company_id.name,
+            "description": request.env._("%s Online Events Application")
+            % website.company_id.name,
             "scope": request.env["ir.http"]._url_for("/event"),
             "start_url": request.env["ir.http"]._url_for("/event"),
             "display": "standalone",

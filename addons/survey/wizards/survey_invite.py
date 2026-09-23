@@ -2,7 +2,7 @@ import logging
 import re
 from typing import Any, Self
 
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.models import ValuesType
 from odoo.tools.mail import email_normalize, email_split_and_format
@@ -133,10 +133,10 @@ class SurveyInvite(models.TransientModel):
             existing_text = False
             if wizard.existing_partner_ids:
                 partner_names = ", ".join(wizard.mapped("existing_partner_ids.name"))
-                existing_text = f"{_('The following customers have already received an invite')}: {partner_names}."
+                existing_text = f"{self.env._('The following customers have already received an invite')}: {partner_names}."
             if wizard.existing_emails:
                 existing_text = f"{existing_text}\n" if existing_text else ""
-                existing_text += f"{_('The following emails have already received an invite')}: {wizard.existing_emails}."
+                existing_text += f"{self.env._('The following emails have already received an invite')}: {wizard.existing_emails}."
 
             wizard.existing_text = existing_text
 
@@ -160,13 +160,13 @@ class SurveyInvite(models.TransientModel):
         for invite in self.filtered("template_id"):
             if invite.template_id.model != "survey.user_input":
                 raise UserError(
-                    _(
+                    self.env._(
                         'The email template "%(template)s" is not a survey '
                         "invitation template: it renders %(model)s rather than "
                         "survey participations. Set its model to "
                         '"Survey User Input" or pick another template.',
                         template=invite.template_id.display_name,
-                        model=invite.template_id.model or _("no model"),
+                        model=invite.template_id.model or self.env._("no model"),
                     )
                 )
 
@@ -176,7 +176,7 @@ class SurveyInvite(models.TransientModel):
             self.survey_users_login_required and not self.survey_id.users_can_signup
         ):
             raise UserError(
-                _(
+                self.env._(
                     "This survey does not allow external people to participate. You should create user accounts or update survey access mode accordingly."
                 )
             )
@@ -192,7 +192,9 @@ class SurveyInvite(models.TransientModel):
                 valid.extend(email_check)
         if error:
             raise UserError(
-                _("Some emails you just entered are incorrect: %s", ", ".join(error))
+                self.env._(
+                    "Some emails you just entered are incorrect: %s", ", ".join(error)
+                )
             )
         self.emails = "\n".join(valid)
 
@@ -205,7 +207,7 @@ class SurveyInvite(models.TransientModel):
                 )
                 if invalid_partners:
                     raise UserError(
-                        _(
+                        self.env._(
                             "The following recipients have no user account: %s. You should create user accounts for them or allow external signup in configuration.",
                             ", ".join(invalid_partners.mapped("name")),
                         )
@@ -230,7 +232,7 @@ class SurveyInvite(models.TransientModel):
             if invite.template_id and invite.template_id.subject:
                 invite.subject = invite.template_id.subject
             else:
-                invite.subject = _(
+                invite.subject = self.env._(
                     "Participate to %(survey_name)s",
                     survey_name=invite.survey_id.display_name,
                 )
@@ -341,7 +343,7 @@ class SurveyInvite(models.TransientModel):
         )
         if not email_from:
             raise UserError(
-                _(
+                self.env._(
                     "Unable to post message, please configure the sender's email address."
                 )
             )
@@ -399,7 +401,7 @@ class SurveyInvite(models.TransientModel):
                     valid_emails.extend(email_formatted)
 
         if not valid_partners and not valid_emails:
-            raise UserError(_("Please enter at least one valid recipient."))
+            raise UserError(self.env._("Please enter at least one valid recipient."))
 
         invite._send_mails(invite._prepare_answers(valid_partners, valid_emails))
 

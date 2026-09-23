@@ -1,7 +1,7 @@
 import logging
 import re
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -63,10 +63,10 @@ class SlideChannelInvite(models.TransientModel):
         self.check_singleton()
 
         if not self.partner_ids:
-            raise UserError(_("Please select at least one recipient."))
+            raise UserError(self.env._("Please select at least one recipient."))
         if self.send_email and not self.env.user.email:
             raise UserError(
-                _(
+                self.env._(
                     "Unable to post message, please configure the sender's email address."
                 )
             )

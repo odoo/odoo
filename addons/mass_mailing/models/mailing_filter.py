@@ -1,6 +1,6 @@
 from ast import literal_eval
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -51,5 +51,7 @@ class MailingFilter(models.Model):
                     )
                 except Exception as err:
                     raise ValidationError(
-                        _("The filter domain is not valid for this recipients.")
+                        self.env._(
+                            "The filter domain is not valid for this recipients."
+                        )
                     ) from err

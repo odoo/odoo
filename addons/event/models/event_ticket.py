@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import formatLang
 
@@ -16,10 +16,10 @@ class EventEventTicket(models.Model):
         res = super().default_get(fields)
         if (
             "name" in fields
-            and (not res.get("name") or res["name"] == _("Registration"))
+            and (not res.get("name") or res["name"] == self.env._("Registration"))
             and self.env.context.get("default_event_name")
         ):
-            res["name"] = _(
+            res["name"] = self.env._(
                 "Registration for %s", self.env.context["default_event_name"]
             )
         return res
@@ -152,7 +152,7 @@ class EventEventTicket(models.Model):
                 and ticket.start_sale_datetime > ticket.end_sale_datetime
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "The stop date cannot be earlier than the start date. "
                         "Please check ticket %(ticket_name)s",
                         ticket_name=ticket.name,
@@ -164,7 +164,7 @@ class EventEventTicket(models.Model):
         for ticket in self:
             if ticket.seats_max and ticket.limit_max_per_order > ticket.seats_max:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The limit per order cannot be greater than the maximum seats number. "
                         "Please check ticket %(ticket_name)s",
                         ticket_name=ticket.name,
@@ -172,7 +172,7 @@ class EventEventTicket(models.Model):
                 )
             if ticket.limit_max_per_order > ticket.event_id.EVENT_MAX_TICKETS:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The limit per order cannot be greater than %(limit_orderable)s. "
                         "Please check ticket %(ticket_name)s",
                         limit_orderable=ticket.event_id.EVENT_MAX_TICKETS,
@@ -181,7 +181,7 @@ class EventEventTicket(models.Model):
                 )
             if ticket.limit_max_per_order < 0:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The limit per order must be positive. "
                         "Please check ticket %(ticket_name)s",
                         ticket_name=ticket.name,
@@ -202,9 +202,9 @@ class EventEventTicket(models.Model):
             if not ticket.seats_max or ticket.event_id.is_multi_slots:
                 name = ticket.name
             elif not ticket.seats_available:
-                name = _("%(ticket_name)s (Sold out)", ticket_name=ticket.name)
+                name = self.env._("%(ticket_name)s (Sold out)", ticket_name=ticket.name)
             else:
-                name = _(
+                name = self.env._(
                     "%(ticket_name)s (%(count)s seats remaining)",
                     ticket_name=ticket.name,
                     count=formatLang(self.env, ticket.seats_available, digits=0),
@@ -259,7 +259,7 @@ class EventEventTicket(models.Model):
         blocking = self.filtered("registration_ids")
         if blocking:
             raise UserError(
-                _(
+                self.env._(
                     "The following tickets cannot be deleted while they have one or more registrations linked to them:\n- %s",
                     "\n- ".join(blocking.mapped("name")),
                 )

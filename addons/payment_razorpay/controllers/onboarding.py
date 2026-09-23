@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import _, fields
+from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.http import Controller, request, route
 
@@ -37,7 +37,9 @@ class RazorpayController(Controller):
         )
         if not provider_sudo or provider_sudo.code != "razorpay":
             raise ValidationError(
-                _("Could not find Razorpay provider with id %s", provider_sudo)
+                request.env._(
+                    "Could not find Razorpay provider with id %s", provider_sudo
+                )
             )
 
         # Verify the CSRF token.

@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.web import urljoin
 
@@ -174,7 +174,7 @@ class MailingMailing(models.Model):
                 self.env.context, default_mailing_id=self.id, dialog_size="medium"
             )
             return {
-                "name": _("Test Mailing"),
+                "name": self.env._("Test Mailing"),
                 "type": "ir.actions.act_window",
                 "view_mode": "form",
                 "res_model": "mailing.sms.test",
@@ -258,7 +258,7 @@ class MailingMailing(models.Model):
             )
         if not phone_fields and not partner_field:
             raise UserError(
-                _("Unsupported %s for mass SMS", self.mailing_model_id.name)
+                self.env._("Unsupported %s for mass SMS", self.mailing_model_id.name)
             )
 
         if phone_fields:
@@ -349,28 +349,28 @@ class MailingMailing(models.Model):
         values = super()._prepare_statistics_email_values()
         if self.mailing_type == "sms":
             mailing_type = self._get_pretty_mailing_type()
-            values["title"] = _(
+            values["title"] = self.env._(
                 '24H Stats of %(mailing_type)s "%(mailing_name)s"',
                 mailing_type=mailing_type,
                 mailing_name=self.subject,
             )
             values["kpi_data"][0] = {
-                "kpi_fullname": _(
+                "kpi_fullname": self.env._(
                     "Report for %(expected)i %(mailing_type)s Sent",
                     expected=self.expected,
                     mailing_type=mailing_type,
                 ),
                 "kpi_col1": {
                     "value": f"{self.received_ratio}%",
-                    "col_subtitle": _("RECEIVED (%i)", self.delivered),
+                    "col_subtitle": self.env._("RECEIVED (%i)", self.delivered),
                 },
                 "kpi_col2": {
                     "value": f"{self.clicks_ratio}%",
-                    "col_subtitle": _("CLICKED (%i)", self.clicked),
+                    "col_subtitle": self.env._("CLICKED (%i)", self.clicked),
                 },
                 "kpi_col3": {
                     "value": f"{self.bounced_ratio}%",
-                    "col_subtitle": _("BOUNCED (%i)", self.bounced),
+                    "col_subtitle": self.env._("BOUNCED (%i)", self.bounced),
                 },
                 "kpi_action": None,
                 "kpi_name": self.mailing_type,
@@ -379,7 +379,7 @@ class MailingMailing(models.Model):
 
     def _get_pretty_mailing_type(self):
         if self.mailing_type == "sms":
-            return _("SMS Text Message")
+            return self.env._("SMS Text Message")
         return super()._get_pretty_mailing_type()
 
     # --------------------------------------------------
@@ -496,7 +496,7 @@ class MailingMailing(models.Model):
         if self.mailing_type == "sms":
             sms_subject = values.get("sms_subject") or self.sms_subject
             if sms_subject:
-                campaign_values["name"] = _("A/B Test: %s", sms_subject)
+                campaign_values["name"] = self.env._("A/B Test: %s", sms_subject)
             campaign_values["ab_testing_sms_winner_selection"] = (
                 self.ab_testing_sms_winner_selection
             )

@@ -1,6 +1,6 @@
 import hmac
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.http import request
 from odoo.tools import urls
 
@@ -119,7 +119,7 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         transaction_keys = payment_data.get("brq_transactions")
         if not transaction_keys:
-            self._set_error(_("Received data with missing transaction keys"))
+            self._set_error(self.env._("Received data with missing transaction keys"))
             return None
         # BRQ_TRANSACTIONS can hold multiple, comma-separated, tx keys. In practice, it holds only
         # one reference. So we split for semantic correctness and keep the first transaction key.
@@ -142,11 +142,13 @@ class PaymentTransaction(models.Model):
             self._set_canceled()
         elif status_code in const.STATUS_CODES_MAPPING["refused"]:
             self._set_error(
-                _("Your payment was refused (code %s). Please try again.", status_code)
+                self.env._(
+                    "Your payment was refused (code %s). Please try again.", status_code
+                )
             )
         elif status_code in const.STATUS_CODES_MAPPING["error"]:
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during processing of your payment (code %s). Please try again.",
                     status_code,
                 )
@@ -157,5 +159,5 @@ class PaymentTransaction(models.Model):
                 status_code,
                 self.reference,
             )
-            self._set_error(_("Unknown status code: %s.", status_code))
+            self._set_error(self.env._("Unknown status code: %s.", status_code))
         return None

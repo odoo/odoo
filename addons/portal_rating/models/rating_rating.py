@@ -1,4 +1,4 @@
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 
 
 class RatingRating(models.Model):
@@ -51,7 +51,9 @@ class RatingRating(models.Model):
                 records.check_access("write")
             except exceptions.AccessError as e:
                 raise exceptions.AccessError(
-                    _("Updating rating comment require write access on related record")
+                    self.env._(
+                        "Updating rating comment require write access on related record"
+                    )
                 ) from e
 
     def _prepare_publisher_values(self, values):

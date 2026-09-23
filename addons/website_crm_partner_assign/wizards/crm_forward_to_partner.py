@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -62,7 +62,9 @@ class CrmLeadForwardToPartner(models.TransientModel):
             "website_crm_partner_assign.email_template_lead_forward_mail", False
         )
         if not template:
-            raise UserError(_("The Forward Email Template is not in the database"))
+            raise UserError(
+                self.env._("The Forward Email Template is not in the database")
+            )
         portal_group = self.env.ref("base.group_portal")
 
         local_context = self.env.context.copy()
@@ -73,14 +75,16 @@ class CrmLeadForwardToPartner(models.TransientModel):
                     no_email.add(lead.partner_assigned_id.name)
             if no_email:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Set an email address for the partner(s): %s",
                         ", ".join(no_email),
                     )
                 )
         if self.forward_type == "single" and not self.partner_id.email:
             raise UserError(
-                _("Set an email address for the partner %s", self.partner_id.name)
+                self.env._(
+                    "Set an email address for the partner %s", self.partner_id.name
+                )
             )
 
         partners_leads = {}

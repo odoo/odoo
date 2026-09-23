@@ -5,7 +5,6 @@ import werkzeug
 from odoo import http
 from odoo.http import request
 from odoo.tools.misc import get_lang
-from odoo.tools.translate import _
 
 from odoo.addons.rating.models.rating_data import (
     RATING_HAPPY_VALUE,
@@ -45,9 +44,9 @@ class Rating(http.Controller):
                     "rating": rating,
                     "token": token,
                     "rate_names": {
-                        RATING_HAPPY_VALUE: _("Happy"),
-                        RATING_NEUTRAL_VALUE: _("Neutral"),
-                        RATING_UNHAPPY_VALUE: _("Unhappy"),
+                        RATING_HAPPY_VALUE: request.env._("Happy"),
+                        RATING_NEUTRAL_VALUE: request.env._("Neutral"),
+                        RATING_UNHAPPY_VALUE: request.env._("Unhappy"),
                     },
                     "rate": rate,
                 },

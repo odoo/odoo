@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class Website(models.Model):
@@ -12,7 +12,11 @@ class Website(models.Model):
     def get_suggested_controllers(self):
         suggested_controllers = super().get_suggested_controllers()
         suggested_controllers.append(
-            (_("Courses"), self.env["ir.http"]._url_for("/slides"), "website_slides")
+            (
+                self.env._("Courses"),
+                self.env["ir.http"]._url_for("/slides"),
+                "website_slides",
+            )
         )
         return suggested_controllers
 

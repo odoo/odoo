@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class EventEvent(models.Model):
@@ -148,9 +148,9 @@ class EventEvent(models.Model):
     def _get_website_menu_entries(self):
         self.check_singleton()
         return super()._get_website_menu_entries() + [
-            (_("Talks"), "#", False, 10, "track", False),
+            (self.env._("Talks"), "#", False, 10, "track", False),
             (
-                _("Talks"),
+                self.env._("Talks"),
                 "/event/%s/track" % self.env["ir.http"]._slug(self),
                 False,
                 10,
@@ -158,7 +158,7 @@ class EventEvent(models.Model):
                 "track",
             ),
             (
-                _("Agenda"),
+                self.env._("Agenda"),
                 "/event/%s/agenda" % self.env["ir.http"]._slug(self),
                 False,
                 15,
@@ -166,7 +166,7 @@ class EventEvent(models.Model):
                 "track",
             ),
             (
-                _("Propose a talk"),
+                self.env._("Propose a talk"),
                 "/event/%s/track_proposal" % self.env["ir.http"]._slug(self),
                 False,
                 20,

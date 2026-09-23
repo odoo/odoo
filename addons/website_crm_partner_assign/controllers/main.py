@@ -6,7 +6,7 @@ from odoo import fields, http
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
-from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_google_map.controllers.main import GoogleMap
@@ -61,9 +61,12 @@ class WebsiteAccount(CustomerPortal):
         domain = self.get_domain_my_lead(request.env.user)
 
         searchbar_sortings = {
-            "date": {"label": _("Newest"), "order": "create_date desc"},
-            "name": {"label": _("Name"), "order": "name"},
-            "contact_name": {"label": _("Contact Name"), "order": "contact_name"},
+            "date": {"label": request.env._("Newest"), "order": "create_date desc"},
+            "name": {"label": request.env._("Name"), "order": "name"},
+            "contact_name": {
+                "label": request.env._("Contact Name"),
+                "order": "contact_name",
+            },
         }
 
         sortby = self._resolve_searchbar_option(searchbar_sortings, sortby, "date")
@@ -116,9 +119,9 @@ class WebsiteAccount(CustomerPortal):
         today = fields.Date.today()
 
         searchbar_filters = {
-            "all": {"label": _("Active"), "domain": []},
+            "all": {"label": request.env._("Active"), "domain": []},
             "no_activities": {
-                "label": _("No Activities"),
+                "label": request.env._("No Activities"),
                 "domain": [
                     (
                         "activity_ids",
@@ -129,30 +132,42 @@ class WebsiteAccount(CustomerPortal):
                 ],
             },
             "overdue": {
-                "label": _("Late Activities"),
+                "label": request.env._("Late Activities"),
                 "domain": [("activity_date_deadline", "<", today)],
             },
             "today": {
-                "label": _("Today Activities"),
+                "label": request.env._("Today Activities"),
                 "domain": [("activity_date_deadline", "=", today)],
             },
             "future": {
-                "label": _("Future Activities"),
+                "label": request.env._("Future Activities"),
                 "domain": [("activity_date_deadline", ">", today)],
             },
-            "won": {"label": _("Won"), "domain": [("won_status", "=", "won")]},
-            "lost": {"label": _("Lost"), "domain": [("won_status", "=", "lost")]},
+            "won": {
+                "label": request.env._("Won"),
+                "domain": [("won_status", "=", "won")],
+            },
+            "lost": {
+                "label": request.env._("Lost"),
+                "domain": [("won_status", "=", "lost")],
+            },
         }
         searchbar_sortings = {
-            "date": {"label": _("Newest"), "order": "create_date desc"},
-            "name": {"label": _("Name"), "order": "name"},
-            "contact_name": {"label": _("Contact Name"), "order": "contact_name"},
+            "date": {"label": request.env._("Newest"), "order": "create_date desc"},
+            "name": {"label": request.env._("Name"), "order": "name"},
+            "contact_name": {
+                "label": request.env._("Contact Name"),
+                "order": "contact_name",
+            },
             "revenue": {
-                "label": _("Expected Revenue"),
+                "label": request.env._("Expected Revenue"),
                 "order": "expected_revenue desc",
             },
-            "probability": {"label": _("Probability"), "order": "probability desc"},
-            "stage": {"label": _("Stage"), "order": "stage_id"},
+            "probability": {
+                "label": request.env._("Probability"),
+                "order": "probability desc",
+            },
+            "stage": {"label": request.env._("Stage"), "order": "stage_id"},
         }
 
         sortby = self._resolve_searchbar_option(searchbar_sortings, sortby, "date")
@@ -418,7 +433,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
         countries = [
             {
                 "country_id_count": sum(count for __, count in country_groups),
-                "country_id": (0, _("All Countries")),
+                "country_id": (0, request.env._("All Countries")),
                 "active": country is None,
             }
         ]

@@ -12,7 +12,7 @@ import werkzeug
 from dateutil.relativedelta import relativedelta
 from werkzeug.wrappers import Response
 
-from odoo import _, fields, http
+from odoo import fields, http
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import prepare_content_disposition_header, request
@@ -949,7 +949,7 @@ class Survey(http.Controller):
         )
 
         if answer_sudo.state != "new":
-            return {}, {"error": _("The survey has already started.")}
+            return {}, {"error": request.env._("The survey has already started.")}
 
         if "lang_code" in post:
             lang = request.env["res.lang"]._get_lang_cached(post["lang_code"])
@@ -1185,7 +1185,9 @@ class Survey(http.Controller):
             [int(a) for a in answer] if isinstance(answer, list) else [int(answer)]
         )
         if survey_sudo.quota_ids._check_quota(answer_ids):
-            return _("One or more selected answers have reached their response quota.")
+            return request.env._(
+                "One or more selected answers have reached their response quota."
+            )
         return None
 
     _SKIP_ACTION_PRECEDENCE = {"end_survey": 0, "redirect": 1, "skip_to": 2}
@@ -1969,16 +1971,16 @@ class Survey(http.Controller):
             median = durations[len(durations) // 2]
             q3 = durations[3 * len(durations) // 4]
             buckets = {
-                _("< %(minutes).0f min", minutes=q1): len(
+                request.env._("< %(minutes).0f min", minutes=q1): len(
                     [d for d in durations if d < q1]
                 ),
-                _("%(low).0f-%(high).0f min", low=q1, high=median): len(
+                request.env._("%(low).0f-%(high).0f min", low=q1, high=median): len(
                     [d for d in durations if q1 <= d < median]
                 ),
-                _("%(low).0f-%(high).0f min", low=median, high=q3): len(
+                request.env._("%(low).0f-%(high).0f min", low=median, high=q3): len(
                     [d for d in durations if median <= d < q3]
                 ),
-                _("> %(minutes).0f min", minutes=q3): len(
+                request.env._("> %(minutes).0f min", minutes=q3): len(
                     [d for d in durations if d >= q3]
                 ),
             }
@@ -1990,9 +1992,9 @@ class Survey(http.Controller):
             "quality_tiers": [
                 {"label": label, "count": tiers[key]}
                 for key, label in (
-                    ("low", _("Low (0-33)")),
-                    ("medium", _("Medium (34-66)")),
-                    ("high", _("High (67-100)")),
+                    ("low", request.env._("Low (0-33)")),
+                    ("medium", request.env._("Medium (34-66)")),
+                    ("high", request.env._("High (67-100)")),
                 )
             ],
             "duration_buckets": [{"label": k, "count": v} for k, v in buckets.items()],

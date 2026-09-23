@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import html_escape
 from odoo.tools.json import scriptsafe as json_scriptsafe
@@ -219,7 +219,7 @@ class BlogPost(models.Model):
                 )
 
     def _default_content(self):
-        text = html_escape(_("Start writing here..."))
+        text = html_escape(self.env._("Start writing here..."))
         return """
             <p>%(text)s</p>
         """ % {"text": text}

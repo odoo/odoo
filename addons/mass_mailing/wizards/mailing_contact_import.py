@@ -1,4 +1,4 @@
-from odoo import Command, _, fields, models, tools
+from odoo import Command, fields, models, tools
 from odoo.tools.misc import clean_context
 
 
@@ -25,7 +25,7 @@ class MailingContactImport(models.TransientModel):
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
-                    "message": _("No valid email address found."),
+                    "message": self.env._("No valid email address found."),
                     "next": {"type": "ir.actions.act_window_close"},
                     "sticky": False,
                     "type": "warning",
@@ -37,7 +37,9 @@ class MailingContactImport(models.TransientModel):
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
-                    "message": _("You have to much emails, please upload a file."),
+                    "message": self.env._(
+                        "You have to much emails, please upload a file."
+                    ),
                     "type": "warning",
                     "sticky": False,
                     "next": self.action_view_base_import(),
@@ -82,7 +84,7 @@ class MailingContactImport(models.TransientModel):
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
-                    "message": _(
+                    "message": self.env._(
                         "No contacts were imported. All email addresses are already in the mailing list."
                     ),
                     "next": {"type": "ir.actions.act_window_close"},
@@ -106,13 +108,13 @@ class MailingContactImport(models.TransientModel):
         )
 
         if ignored := len(contacts) - len(unique_contacts):
-            message = _(
+            message = self.env._(
                 "Contacts successfully imported. Number of contacts imported: %(imported_count)s. Number of duplicates ignored: %(duplicate_count)s",
                 imported_count=len(unique_contacts),
                 duplicate_count=ignored,
             )
         else:
-            message = _(
+            message = self.env._(
                 "Contacts successfully imported. Number of contacts imported: %(imported_count)s",
                 imported_count=len(unique_contacts),
             )
@@ -127,7 +129,7 @@ class MailingContactImport(models.TransientModel):
                 "next": {
                     "context": self.env.context,
                     "domain": [("id", "in", new_contacts.ids)],
-                    "name": _("New contacts imported"),
+                    "name": self.env._("New contacts imported"),
                     "res_model": "mailing.contact",
                     "type": "ir.actions.act_window",
                     "view_mode": "list",
@@ -143,7 +145,7 @@ class MailingContactImport(models.TransientModel):
         return {
             "type": "ir.actions.client",
             "tag": "import",
-            "name": _("Import Mailing Contacts"),
+            "name": self.env._("Import Mailing Contacts"),
             "params": {
                 "context": self.env.context,
                 "active_model": "mailing.contact",

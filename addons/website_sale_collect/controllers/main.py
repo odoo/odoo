@@ -1,4 +1,3 @@
-from odoo import _
 from odoo.http import request
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -59,8 +58,8 @@ class WebsiteSaleCollect(WebsiteSale):
             if not order.pickup_location_data:
                 errors.append(
                     (
-                        _("Sorry, we are unable to ship your order."),
-                        _("Please choose a store to collect your order."),
+                        request.env._("Sorry, we are unable to ship your order."),
+                        request.env._("Please choose a store to collect your order."),
                     )
                 )
             else:
@@ -68,8 +67,10 @@ class WebsiteSaleCollect(WebsiteSale):
                 if not order._is_in_stock(selected_wh_id):
                     errors.append(
                         (
-                            _("Sorry, we are unable to ship your order."),
-                            _("Some products are not available in the selected store."),
+                            request.env._("Sorry, we are unable to ship your order."),
+                            request.env._(
+                                "Some products are not available in the selected store."
+                            ),
                         )
                     )
         return errors

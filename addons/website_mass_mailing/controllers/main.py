@@ -1,4 +1,4 @@
-from odoo import Command, _, tools
+from odoo import Command, tools
 from odoo.exceptions import UserError
 from odoo.http import request, route
 from odoo.libs.debug_log import DebugLog
@@ -83,7 +83,7 @@ class MassMailController(main.MassMailController):
         self.subscribe_to_newsletter(subscription_type, value, list_id, fname)
         return {
             "toast_type": "success",
-            "toast_content": _("Thanks for subscribing!"),
+            "toast_content": request.env._("Thanks for subscribing!"),
         }
 
     @staticmethod

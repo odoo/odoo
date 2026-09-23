@@ -7,7 +7,7 @@ from dateutil.parser import parse
 from markupsafe import Markup
 from requests import HTTPError
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.db import BaseCursor
 from odoo.fields import Domain
 from odoo.modules.registry import Registry
@@ -278,9 +278,9 @@ class MixinGoogleCalendarSync(models.AbstractModel):
                 return
 
             if self._name == "calendar.event":
-                start = (self.start and self.start.strftime("%Y-%m-%d at %H:%M")) or _(
-                    "undefined time"
-                )
+                start = (
+                    self.start and self.start.strftime("%Y-%m-%d at %H:%M")
+                ) or self.env._("undefined time")
                 event_ids = self.id
                 name = self.name
                 error_log = "Error while syncing event: "
@@ -292,8 +292,8 @@ class MixinGoogleCalendarSync(models.AbstractModel):
                 )
                 start = (
                     event.start and event.start.strftime("%Y-%m-%d at %H:%M")
-                ) or _("undefined time")
-                event_ids = _(
+                ) or self.env._("undefined time")
+                event_ids = self.env._(
                     "%(id)s and %(length)s following",
                     id=event.id,
                     length=len(self.calendar_event_ids.ids),
@@ -309,11 +309,11 @@ class MixinGoogleCalendarSync(models.AbstractModel):
                 http_error.response.status_code == 403
                 and "forbiddenForNonOrganizer" in http_error.response.text
             ):
-                reason = _(
+                reason = self.env._(
                     "you don't seem to have permission to modify this event on Google Calendar"
                 )
             else:
-                reason = _(
+                reason = self.env._(
                     "Google gave the following explanation: %s",
                     response["error"].get("message"),
                 )
@@ -325,9 +325,11 @@ class MixinGoogleCalendarSync(models.AbstractModel):
             _logger.warning(error_log)
 
             body = (
-                _("The following event could not be synced with Google Calendar.")
+                self.env._(
+                    "The following event could not be synced with Google Calendar."
+                )
                 + Markup("<br/>")
-                + _("It will not be synced as long at it is not updated.")
+                + self.env._("It will not be synced as long at it is not updated.")
                 + Markup("<br/>")
                 + reason
             )

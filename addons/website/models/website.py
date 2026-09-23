@@ -21,7 +21,6 @@ from odoo.libs.sql import escape_psql
 from odoo.libs.web import contains_dot_segments
 from odoo.tools import SQL
 from odoo.tools.image import image_process
-from odoo.tools.translate import _
 
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
@@ -584,13 +583,13 @@ class Website(models.Model):
                 parsed = urlparse(record.domain)
             except ValueError:
                 raise ValidationError(
-                    _("The provided website domain is not a valid URL.")
+                    self.env._("The provided website domain is not a valid URL.")
                 ) from None
 
             if contains_dot_segments(parsed.path):
                 _debug.logic("domain_refused", reason="dot_segments", website=record.id)
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The domain path cannot contain relative path segments like '/./' or '/../'."
                     )
                 )
@@ -606,7 +605,7 @@ class Website(models.Model):
                 except re.error as e:
                     _debug.logic("cdn_filter_refused", website=website.id, filter=line)
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The CDN filter %(filter)s is not a valid regular expression: %(error)s",
                             filter=line,
                             error=e,
@@ -623,7 +622,9 @@ class Website(models.Model):
                     website=website.id,
                 )
                 raise ValidationError(
-                    _("The homepage URL should be relative and start with '/'.")
+                    self.env._(
+                        "The homepage URL should be relative and start with '/'."
+                    )
                 )
 
     @api.ondelete(at_uninstall=False)
@@ -634,7 +635,7 @@ class Website(models.Model):
         if default_website and default_website in self:
             _debug.logic("unlink_refused", reason="default_website")
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete default website %s. Try to change its settings instead",
                     default_website.name,
                 )
@@ -739,7 +740,7 @@ class Website(models.Model):
         for website in self:
             new_top_menu = top_menu.copy(
                 {
-                    "name": _("Top Menu for Website %s", website.id),
+                    "name": self.env._("Top Menu for Website %s", website.id),
                     "website_id": website.id,
                 }
             )
@@ -770,7 +771,9 @@ class Website(models.Model):
             _debug.logic(
                 "new_page_refused", reason="unknown_template", template=template
             )
-            raise UserError(_("'%s' is not a valid template reference.", template))
+            raise UserError(
+                self.env._("'%s' is not a valid template reference.", template)
+            )
         if namespace:
             template_module = namespace
         else:
@@ -1272,7 +1275,7 @@ class Website(models.Model):
             _debug.logic(
                 "page_ids_refused", reason="not_restricted_editor", user=self.env.uid
             )
-            raise AccessError(_("Access Denied"))
+            raise AccessError(self.env._("Access Denied"))
 
         domain = Domain("url", "!=", False)
         pages_sudo = self.env["website.page"].sudo()
@@ -1369,9 +1372,9 @@ class Website(models.Model):
 
     def get_suggested_controllers(self):
         return [
-            (_("Homepage"), self.env["ir.http"]._url_for("/"), "website"),
+            (self.env._("Homepage"), self.env["ir.http"]._url_for("/"), "website"),
             (
-                _("Contact Us"),
+                self.env._("Contact Us"),
                 self.env["ir.http"]._url_for("/contactus"),
                 "website_crm",
             ),
@@ -1414,7 +1417,9 @@ class Website(models.Model):
             )
         _debug.logic("dashboard_refused", user=self.env.uid)
         raise AccessError(
-            _("You don't have the necessary access rights to access this dashboard.")
+            self.env._(
+                "You don't have the necessary access rights to access this dashboard."
+            )
         )
 
     def get_client_action_url(self, url, mode_edit=False, mode_debug=0):

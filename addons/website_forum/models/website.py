@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class Website(models.Model):
@@ -18,13 +18,17 @@ class Website(models.Model):
     def get_suggested_controllers(self):
         suggested_controllers = super().get_suggested_controllers()
         suggested_controllers.append(
-            (_("Forum"), self.env["ir.http"]._url_for("/forum"), "website_forum")
+            (
+                self.env._("Forum"),
+                self.env["ir.http"]._url_for("/forum"),
+                "website_forum",
+            )
         )
         return suggested_controllers
 
     def configurator_get_footer_links(self):
         links = super().configurator_get_footer_links()
-        links.append({"text": _("Forum"), "href": "/forum"})
+        links.append({"text": self.env._("Forum"), "href": "/forum"})
         return links
 
     def configurator_set_menu_links(self, menu_company, module_data):

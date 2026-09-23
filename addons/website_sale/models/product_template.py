@@ -2,7 +2,7 @@ import logging
 from collections import defaultdict
 from urllib.parse import urlencode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.db import FunctionStatus
 from odoo.db.schema import column_exists, create_column
 from odoo.fields import Domain
@@ -556,7 +556,7 @@ class ProductTemplate(models.Model):
                 for tax in product_or_template.sudo().combo_ids.combo_item_ids.product_id.taxes_id
             )
         ):
-            combination_info["tax_disclaimer"] = _(
+            combination_info["tax_disclaimer"] = self.env._(
                 "Final price may vary based on selection. Tax will be calculated at checkout."
             )
 

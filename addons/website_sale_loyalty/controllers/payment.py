@@ -1,5 +1,5 @@
-from odoo import _
 from odoo.exceptions import ValidationError
+from odoo.http import request
 from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.website_sale.controllers import payment
@@ -23,7 +23,7 @@ class PaymentPortal(payment.PaymentPortal):
                     current=sale_order.amount_total,
                 )
                 raise ValidationError(
-                    _(
+                    request.env._(
                         "Cannot process payment: applied reward was changed or has expired.\n"
                         "Please refresh the page and try again."
                     )

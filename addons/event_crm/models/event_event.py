@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -32,7 +32,7 @@ class EventEvent(models.Model):
     def action_generate_leads(self, event_lead_rules=False):
         if not self.env.user.has_group("event.group_event_manager"):
             raise UserError(
-                _("Only Event Managers are allowed to re-generate all leads.")
+                self.env._("Only Event Managers are allowed to re-generate all leads.")
             )
 
         registrations_count = self.env["event.registration"].search_count(
@@ -57,12 +57,12 @@ class EventEvent(models.Model):
                 ._apply_lead_generation_rules(event_lead_rules)
             )
             if leads:
-                notification = _(
+                notification = self.env._(
                     "Yee-ha, %(leads_count)s Leads have been created!",
                     leads_count=len(leads),
                 )
             else:
-                notification = _(
+                notification = self.env._(
                     "Aww! No Leads created, check your Lead Generation Rules and try again."
                 )
         else:
@@ -76,7 +76,7 @@ class EventEvent(models.Model):
                 ]
             )
             self.env["ir.cron"]._trigger_ref("event_crm.ir_cron_generate_leads")
-            notification = _(
+            notification = self.env._(
                 "Got it! We've noted your request. Your leads will be created soon!"
             )
 

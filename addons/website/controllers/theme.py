@@ -17,7 +17,7 @@ from io import BytesIO
 import werkzeug.exceptions
 from lxml import etree
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -198,17 +198,23 @@ class WebsiteThemeRoutes:
         result = []
         if len(data) > 4 * ((MAX_FONT_UPLOAD_SIZE + 2) // 3):
             _debug.logic("font_upload_refused", reason="encoded_too_large")
-            raise UserError(_("Font upload exceeds maximum allowed file size"))
+            raise UserError(
+                request.env._("Font upload exceeds maximum allowed file size")
+            )
         try:
             binary_data = base64.b64decode(data, validate=True)
         except binascii.Error, ValueError:
             _debug.logic("font_upload_refused", reason="not_base64")
-            raise UserError(_("Font upload is not valid base64 data")) from None
+            raise UserError(
+                request.env._("Font upload is not valid base64 data")
+            ) from None
         if len(binary_data) > MAX_FONT_UPLOAD_SIZE:
             _debug.logic(
                 "font_upload_refused", reason="too_large", bytes=len(binary_data)
             )
-            raise UserError(_("Font upload exceeds maximum allowed file size"))
+            raise UserError(
+                request.env._("Font upload exceeds maximum allowed file size")
+            )
         readable_data = BytesIO(binary_data)
         if zipfile.is_zipfile(readable_data):
             with zipfile.ZipFile(readable_data, "r") as zip_file:
@@ -230,7 +236,7 @@ class WebsiteThemeRoutes:
                         expanded=expanded_size,
                     )
                     raise UserError(
-                        _(
+                        request.env._(
                             "Font archive exceeds maximum allowed size or number of files"
                         )
                     )
@@ -242,7 +248,7 @@ class WebsiteThemeRoutes:
                             entry=entry.filename,
                         )
                         raise UserError(
-                            _(
+                            request.env._(
                                 "File '%s' exceeds maximum allowed file size",
                                 entry.filename,
                             )
@@ -271,7 +277,7 @@ class WebsiteThemeRoutes:
                             entry=entry.filename,
                         )
                         raise UserError(
-                            _("File '%s' is corrupted", entry.filename)
+                            request.env._("File '%s' is corrupted", entry.filename)
                         ) from None
                     if not _font_content_matches_extension(entry.filename, data):
                         continue
@@ -288,7 +294,9 @@ class WebsiteThemeRoutes:
             _debug.logic(
                 "font_upload_refused", reason="file_too_large", bytes=len(binary_data)
             )
-            raise UserError(_("File '%s' exceeds maximum allowed file size", name))
+            raise UserError(
+                request.env._("File '%s' exceeds maximum allowed file size", name)
+            )
         elif name.rsplit(".", 1)[
             -1
         ].lower() in SUPPORTED_FONT_EXTENSIONS and _font_content_matches_extension(
@@ -304,7 +312,9 @@ class WebsiteThemeRoutes:
             )
         if not result:
             _debug.logic("font_upload_refused", reason="unrecognized", name=name)
-            raise UserError(_("File '%s' is not recognized as a font", name))
+            raise UserError(
+                request.env._("File '%s' is not recognized as a font", name)
+            )
         _debug.lifecycle("fonts_uploaded", name=name, fonts=len(result))
         return result
 

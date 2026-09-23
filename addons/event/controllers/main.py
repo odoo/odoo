@@ -2,7 +2,7 @@ import json
 
 from werkzeug.exceptions import NotFound
 
-from odoo import _, http
+from odoo import http
 from odoo.http import Controller, prepare_content_disposition_header, request, route
 from odoo.tools import consteq, format_datetime
 
@@ -75,11 +75,11 @@ class EventController(Controller):
             # the hash covered these ids, but the registrations are gone since
             raise NotFound
         report_name_prefix = (
-            _("Ticket")
+            request.env._("Ticket")
             if responsive_html
-            else _("Badges")
+            else request.env._("Badges")
             if badge_mode
-            else _("Tickets")
+            else request.env._("Tickets")
         )
         report_date = format_datetime(
             request.env,
@@ -138,7 +138,7 @@ class EventController(Controller):
             }
         else:
             return {
-                "name": _("Event Registrations"),
+                "name": request.env._("Event Registrations"),
                 "country": False,
                 "city": False,
                 "company_name": request.env.company.name,

@@ -1,6 +1,6 @@
 import pprint
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -23,7 +23,9 @@ class AuthorizeController(http.Controller):
         """
         # Check that the transaction details have not been altered
         if not payment_utils.is_access_token_valid(access_token, reference, partner_id):
-            raise ValidationError(_("Received tampered payment request data."))
+            raise ValidationError(
+                request.env._("Received tampered payment request data.")
+            )
 
         # Send the payment request to Authorize.Net.
         tx_sudo = (

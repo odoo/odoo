@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -41,7 +41,7 @@ class SurveySurvey(models.Model):
                 for certi in certifications
             ]
             raise ValidationError(
-                _(
+                self.env._(
                     "Uh-oh! You can’t delete surveys used as a Course Certification! Otherwise, students might think diplomas just grow on trees.\n"
                     "The courses that need them are:\n%s",
                     "\n".join(certifications_course_mapping),
@@ -52,7 +52,7 @@ class SurveySurvey(models.Model):
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "website_slides.slide_channel_action_overview"
         )
-        action["display_name"] = _("Courses")
+        action["display_name"] = self.env._("Courses")
         if self.slide_channel_count == 1:
             action.update(
                 {"views": [(False, "form")], "res_id": self.slide_channel_ids[0].id}

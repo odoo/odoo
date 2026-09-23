@@ -1,4 +1,4 @@
-from odoo import _, api, exceptions, models
+from odoo import api, exceptions, models
 
 
 class UtmSource(models.Model):
@@ -11,7 +11,7 @@ class UtmSource(models.Model):
         )
         if utm_source_marketing_card and utm_source_marketing_card in self:
             raise exceptions.UserError(
-                _(
+                self.env._(
                     "The UTM source '%s' cannot be deleted as it is used to promote marketing cards campaigns.",
                     utm_source_marketing_card.name,
                 )

@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.libs.web import urljoin as url_join
 
@@ -85,4 +85,4 @@ class MixinWebsitePublished(models.AbstractModel):
 
     @api.model
     def _get_can_publish_error_message(self):
-        return _("You do not have the rights to publish/unpublish")
+        return self.env._("You do not have the rights to publish/unpublish")

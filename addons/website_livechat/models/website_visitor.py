@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.db.schema import column_exists, create_column
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
@@ -81,7 +81,7 @@ class WebsiteVisitor(models.Model):
                 sessions=unavailable_visitors_count,
             )
             raise UserError(
-                _(
+                self.env._(
                     "Recipients are not available. Please refresh the page to get latest visitors status."
                 )
             )
@@ -91,7 +91,7 @@ class WebsiteVisitor(models.Model):
                     "livechat_refused", reason="no_channel", website=website.id
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "No Livechat Channel allows you to send a chat request for website %s.",
                         website.name,
                     )
@@ -136,7 +136,9 @@ class WebsiteVisitor(models.Model):
                         {
                             "country_id": country.id,
                             "lang": get_lang(channel.env).code,
-                            "name": _("Visitor #%d", channel.livechat_visitor_id.id),
+                            "name": self.env._(
+                                "Visitor #%d", channel.livechat_visitor_id.id
+                            ),
                             "timezone": visitor.timezone,
                         }
                     )

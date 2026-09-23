@@ -3,7 +3,7 @@ from operator import itemgetter
 
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import html_translate
 
@@ -38,13 +38,13 @@ class ForumForum(models.Model):
                     </p>
                 </div>
             """) % {
-            "message_intro": _("Welcome!"),
-            "message_post": _(
+            "message_intro": self.env._("Welcome!"),
+            "message_post": self.env._(
                 "Share and discuss the best content and new marketing ideas, build your professional profile and become"
                 " a better marketer together."
             ),
-            "hide_text": _("Dismiss"),
-            "register_text": _("Sign up"),
+            "hide_text": self.env._("Dismiss"),
+            "register_text": self.env._("Sign up"),
         }
 
     name = fields.Char(

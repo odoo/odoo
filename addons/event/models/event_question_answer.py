@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -28,7 +28,7 @@ class EventQuestionAnswer(models.Model):
             [("value_answer_id", "in", self.ids)], limit=1
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete an answer that has already been selected by attendees."
                 )
             )

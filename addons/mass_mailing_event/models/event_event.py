@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class EventEvent(models.Model):
@@ -21,7 +21,7 @@ class EventEvent(models.Model):
                         ("state", "not in", ["cancel", "draft"]),
                     ]
                 ),
-                "default_subject": _("Event: %s", self.name),
+                "default_subject": self.env._("Event: %s", self.name),
             },
         }
 
@@ -34,6 +34,6 @@ class EventEvent(models.Model):
             "target": "current",
             "context": {
                 "default_mailing_model_id": self.env.ref("base.model_res_partner").id,
-                "default_subject": _("Event: %s", self.name),
+                "default_subject": self.env._("Event: %s", self.name),
             },
         }

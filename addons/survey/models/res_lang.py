@@ -1,6 +1,6 @@
 from typing import Literal
 
-from odoo import Command, _, models
+from odoo import Command, models
 from odoo.exceptions import UserError
 from odoo.models import ValuesType
 
@@ -20,11 +20,11 @@ class ResLang(models.Model):
                 lambda survey: survey.lang_ids <= self
             ):
                 if len(self) > 1:
-                    error = _(
+                    error = self.env._(
                         "Cannot deactivate languages currently used by survey(s) only supporting those languages."
                     )
                 else:
-                    error = _(
+                    error = self.env._(
                         "Cannot deactivate a language currently used by survey(s) only supporting that language."
                     )
                 if (
@@ -34,7 +34,7 @@ class ResLang(models.Model):
                     == will_be_all_lang_survey_sudo
                 ):
                     error += "\n"
-                    error += _(
+                    error += self.env._(
                         "Survey(s): %(surveys_list)s",
                         surveys_list=", ".join(
                             f'"{survey.title}"'

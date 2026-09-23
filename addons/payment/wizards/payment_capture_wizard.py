@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import format_amount
 
@@ -128,7 +128,7 @@ class PaymentCaptureWizard(models.TransientModel):
                     self.env, wizard.available_amount, wizard.currency_id
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The amount to capture must be positive and cannot be superior to %s.",
                         formatted_amount,
                     )
@@ -138,7 +138,7 @@ class PaymentCaptureWizard(models.TransientModel):
                 and wizard.amount_to_capture != wizard.available_amount
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Some of the transactions you intend to capture can only be captured in full. "
                         "Handle the transactions individually to capture a partial amount."
                     )

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.payment_demo import const
@@ -33,7 +33,7 @@ class PaymentProvider(models.Model):
         if self.filtered(
             lambda p: p.code == "demo" and p.state not in ("test", "disabled")
         ):
-            raise UserError(_("Demo providers should never be enabled."))
+            raise UserError(self.env._("Demo providers should never be enabled."))
 
     # === CRUD METHODS ===#
 

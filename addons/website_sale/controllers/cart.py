@@ -6,7 +6,6 @@ from odoo.http import request, route
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import consteq
 from odoo.tools.image import image_data_uri
-from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
@@ -114,7 +113,7 @@ class Cart(PaymentPortal):
                 product=product_data["product_id"],
             )
             raise UserError(
-                _(
+                request.env._(
                     "The given product does not exist therefore it cannot be added to cart."
                 )
             )
@@ -172,7 +171,7 @@ class Cart(PaymentPortal):
                 order=order_sudo.id,
             )
             raise UserError(
-                _(
+                request.env._(
                     "The given product does not exist therefore it cannot be added to cart."
                 )
             )

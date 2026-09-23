@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -86,7 +86,7 @@ class EventQuizQuestion(models.Model):
                     question=question.id,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Question "%s" must have 1 correct answer to be valid.',
                         question.name,
                     )
@@ -98,7 +98,7 @@ class EventQuizQuestion(models.Model):
                     question=question.id,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Question "%s" must have 1 correct answer and at least 1 incorrect answer to be valid.',
                         question.name,
                     )

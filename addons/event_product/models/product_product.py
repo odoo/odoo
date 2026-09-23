@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -14,7 +14,7 @@ def raise_event_ticket_service_tracking_error(products):
         ["service_tracking"], ["string", "selection"]
     )["service_tracking"]
     raise ValidationError(
-        _(
+        products.env._(
             'Products linked to an event ticket must have "%(tracking)s" set to '
             '"%(event)s":\n%(products)s',
             tracking=service_tracking["string"],

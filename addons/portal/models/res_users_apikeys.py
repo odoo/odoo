@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import AccessError
 from odoo.tools.misc import str2bool
 
@@ -21,5 +21,5 @@ class ResUsersApikeys(models.Model):
             if self.env.user._is_portal():
                 return None
             raise AccessError(
-                _("Only internal and portal users can create API keys")
+                self.env._("Only internal and portal users can create API keys")
             ) from None

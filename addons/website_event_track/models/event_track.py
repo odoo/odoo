@@ -12,7 +12,7 @@ from odoo.fields import Domain
 from odoo.libs.datetime import timezone
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.mail import email_normalize, html_to_inner_content, is_html_empty
-from odoo.tools.translate import _, html_translate
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -358,7 +358,7 @@ class EventTrack(models.Model):
             tag_line = track.partner_name
             if track.partner_function:
                 if track.partner_company_name:
-                    tag_line = _(
+                    tag_line = self.env._(
                         "%(name)s, %(function)s at %(company)s",
                         name=track.partner_name,
                         function=track.partner_function,
@@ -367,7 +367,7 @@ class EventTrack(models.Model):
                 else:
                     tag_line = "%s, %s" % (track.partner_name, track.partner_function)
             elif track.partner_company_name:
-                tag_line = _(
+                tag_line = self.env._(
                     "%(name)s from %(company)s",
                     name=tag_line,
                     company=track.partner_company_name,
@@ -743,7 +743,7 @@ class EventTrack(models.Model):
 
     def open_track_speakers_list(self):
         return {
-            "name": _("Speakers"),
+            "name": self.env._("Speakers"),
             "domain": [("id", "in", self.mapped("partner_id").ids)],
             "view_mode": "kanban,form",
             "res_model": "res.partner",
@@ -888,8 +888,8 @@ class EventTrack(models.Model):
         return (
             Markup("<strong><u>%(warning_title)s</u></strong>: %(warning_content)s")
             % {
-                "warning_title": _("Note"),
-                "warning_content": _(
+                "warning_title": self.env._("Note"),
+                "warning_content": self.env._(
                     "The start and end times of the talk were not specified when you asked to add them to your calendar, "
                     "therefore the times indicated in this reminder correspond to those of the event."
                 ),

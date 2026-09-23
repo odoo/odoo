@@ -14,7 +14,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from PIL import Image, UnidentifiedImageError
 
-from odoo import Command, _, api, fields, models, modules, tools
+from odoo import Command, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Datetime, Domain
 from odoo.http import request
@@ -418,7 +418,7 @@ class MailingMailing(models.Model):
                 != mailing.mailing_filter_id.mailing_model_id
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The saved filter targets different recipients and is incompatible with this mailing."
                     )
                 )
@@ -626,7 +626,7 @@ class MailingMailing(models.Model):
             if mail_server and not mail_server._match_from_filter(
                 mailing.email_from, mail_server.from_filter
             ):
-                mailing.warning_message = _(
+                mailing.warning_message = self.env._(
                     "This email from can not be used with this mail server.\n"
                     "Your emails might be marked as spam on the mail clients."
                 )
@@ -833,7 +833,7 @@ class MailingMailing(models.Model):
             and "ab_testing_enabled" not in values
         ):
             raise ValidationError(
-                _("A campaign should be set when A/B test is enabled")
+                self.env._("A campaign should be set when A/B test is enabled")
             )
 
         result = super().write(values)
@@ -887,7 +887,7 @@ class MailingMailing(models.Model):
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "message": _(
+                "message": self.env._(
                     "Design added to the %s Templates!",
                     ", ".join(self.mapped("mailing_model_id.name")),
                 ),
@@ -905,7 +905,7 @@ class MailingMailing(models.Model):
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "message": _(
+                "message": self.env._(
                     "Design removed from the %s Templates!",
                     ", ".join(self.mapped("mailing_model_id.name")),
                 ),
@@ -933,7 +933,7 @@ class MailingMailing(models.Model):
             self.env.context, default_mass_mailing_id=self.id, dialog_size="medium"
         )
         return {
-            "name": _("Test Mailing"),
+            "name": self.env._("Test Mailing"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "mailing.mailing.test",
@@ -1005,8 +1005,8 @@ class MailingMailing(models.Model):
     def action_view_link_trackers(self):
         model_name = self.env["ir.model"]._get("link.tracker").display_name
         recipient = self.env["ir.model"]._get(self.mailing_model_real).display_name
-        helper_header = _("No Link Tracker for that mailing!")
-        helper_message = _(
+        helper_header = self.env._("No Link Tracker for that mailing!")
+        helper_message = self.env._(
             "Link Trackers will measure how many times each link is clicked as well as "
             "the proportion of %s who clicked at least once in your mailing.",
             recipient,
@@ -1044,7 +1044,7 @@ class MailingMailing(models.Model):
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "mass_mailing.mailing_trace_action"
         )
-        action["name"] = _("Sent Mailings")
+        action["name"] = self.env._("Sent Mailings")
         action["context"] = {
             "search_default_mass_mailing_id": self.id,
         }
@@ -1085,36 +1085,36 @@ class MailingMailing(models.Model):
         helper_message = None
         if view_filter == "reply":
             res_ids = get_trace_res_ids(Domain("trace_status", "=", "reply"))
-            helper_header = _("No %s replied to your mailing yet!", model_name)
-            helper_message = _(
+            helper_header = self.env._("No %s replied to your mailing yet!", model_name)
+            helper_message = self.env._(
                 "To track how many replies this mailing gets, make sure "
                 "its reply-to address belongs to this database."
             )
         elif view_filter == "bounce":
             res_ids = get_trace_res_ids(Domain("trace_status", "=", "bounce"))
-            helper_header = _("No %s address bounced yet!", model_name)
-            helper_message = _(
+            helper_header = self.env._("No %s address bounced yet!", model_name)
+            helper_message = self.env._(
                 "Bounce happens when a mailing cannot be delivered (fake address, "
                 "server issues, ...). Check each record to see what went wrong."
             )
         elif view_filter == "clicked":
             res_ids = get_trace_res_ids(Domain("links_click_ids", "!=", False))
-            helper_header = _("No %s clicked your mailing yet!", model_name)
-            helper_message = _(
+            helper_header = self.env._("No %s clicked your mailing yet!", model_name)
+            helper_message = self.env._(
                 "Come back once your mailing has been sent to track who clicked on the embedded links."
             )
         elif view_filter == "open":
             res_ids = get_trace_res_ids(Domain("trace_status", "in", ("open", "reply")))
-            helper_header = _("No %s opened your mailing yet!", model_name)
-            helper_message = _(
+            helper_header = self.env._("No %s opened your mailing yet!", model_name)
+            helper_message = self.env._(
                 "Come back once your mailing has been sent to track who opened your mailing."
             )
         elif view_filter == "delivered":
             res_ids = get_trace_res_ids(
                 Domain("trace_status", "in", ("sent", "open", "reply"))
             )
-            helper_header = _("No %s received your mailing yet!", model_name)
-            helper_message = _(
+            helper_header = self.env._("No %s received your mailing yet!", model_name)
+            helper_message = self.env._(
                 "Wait until your mailing has been sent to check how many recipients you managed to reach."
             )
         elif view_filter == "sent":
@@ -1196,9 +1196,9 @@ class MailingMailing(models.Model):
     def action_compare_versions(self):
         self.check_singleton()
         if not self.campaign_id:
-            raise UserError(_("No mailing campaign has been found"))
+            raise UserError(self.env._("No mailing campaign has been found"))
         return {
-            "name": _("A/B Tests"),
+            "name": self.env._("A/B Tests"),
             "type": "ir.actions.act_window",
             "view_mode": "list,kanban,form,calendar,graph",
             "res_model": "mailing.mailing",
@@ -1225,13 +1225,13 @@ class MailingMailing(models.Model):
         """
         if len(self.campaign_id) != 1:
             raise UserError(
-                _(
+                self.env._(
                     "To send the winner mailing the same campaign should be used by the mailings"
                 )
             )
         if any(mailing.ab_testing_completed for mailing in self):
             raise UserError(
-                _(
+                self.env._(
                     "To send the winner mailing the campaign should not have been completed."
                 )
             )
@@ -1248,7 +1248,7 @@ class MailingMailing(models.Model):
                 final_mailing = selected_mailings[0]
             else:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "No mailing for this A/B testing campaign has been sent yet! Send one first and try again later."
                     )
                 )
@@ -1257,11 +1257,11 @@ class MailingMailing(models.Model):
     def action_select_as_winner(self):
         self.check_singleton()
         if not self.ab_testing_enabled:
-            raise UserError(_("A/B test option has not been enabled"))
+            raise UserError(self.env._("A/B test option has not been enabled"))
         final_mailing = self.copy(
             {
                 "ab_testing_pc": 100,
-                "name": _(
+                "name": self.env._(
                     " %(subject)s (final)", subject=self.name
                 ),  # Add suffix on name to show it's the final mailing
             }
@@ -1310,7 +1310,7 @@ class MailingMailing(models.Model):
             "ab_testing_winner_selection": values.get("ab_testing_winner_selection")
             or self.ab_testing_winner_selection,
             "mailing_mail_ids": self.ids,
-            "name": _(
+            "name": self.env._(
                 "A/B Test: %s",
                 values.get("subject") or self.subject or fields.Datetime.now(),
             ),
@@ -1526,7 +1526,7 @@ class MailingMailing(models.Model):
             )
             mailing_res_ids = res_ids or mailing._get_remaining_recipients()
             if not mailing_res_ids:
-                raise UserError(_("There are no recipients selected."))
+                raise UserError(self.env._("There are no recipients selected."))
 
             composer_values = {
                 "auto_delete": not mailing.keep_archives,
@@ -1720,7 +1720,7 @@ class MailingMailing(models.Model):
                 "body_html": full_mail,
                 "reply_to": mail_company.email_formatted or mail_user.email_formatted,
                 "state": "outgoing",
-                "subject": _(
+                "subject": self.env._(
                     '24H Stats of %(mailing_type)s "%(mailing_name)s"',
                     mailing_type=mailing._get_pretty_mailing_type(),
                     mailing_name=mailing.subject,
@@ -1740,22 +1740,22 @@ class MailingMailing(models.Model):
         kpi = {}
         if self.mailing_type == "mail":
             kpi = {
-                "kpi_fullname": _(
+                "kpi_fullname": self.env._(
                     "Engagement on %(expected)i %(mailing_type)s Sent",
                     expected=self.expected,
                     mailing_type=mailing_type,
                 ),
                 "kpi_col1": {
                     "value": f"{self.received_ratio}%",
-                    "col_subtitle": _("RECEIVED (%i)", self.delivered),
+                    "col_subtitle": self.env._("RECEIVED (%i)", self.delivered),
                 },
                 "kpi_col2": {
                     "value": f"{self.opened_ratio}%",
-                    "col_subtitle": _("OPENED (%i)", self.opened),
+                    "col_subtitle": self.env._("OPENED (%i)", self.opened),
                 },
                 "kpi_col3": {
                     "value": f"{self.replied_ratio}%",
-                    "col_subtitle": _("REPLIED (%i)", self.replied),
+                    "col_subtitle": self.env._("REPLIED (%i)", self.replied),
                 },
                 "kpi_action": None,
                 "kpi_name": self.mailing_type,
@@ -1790,19 +1790,19 @@ class MailingMailing(models.Model):
         web_base_url = self.get_base_url()
 
         return {
-            "title": _(
+            "title": self.env._(
                 '24H Stats of %(mailing_type)s "%(mailing_name)s"',
                 mailing_type=mailing_type,
                 mailing_name=self.subject,
             ),
-            "top_button_label": _("More Info"),
+            "top_button_label": self.env._("More Info"),
             "top_button_url": tools.urls.urljoin(
                 web_base_url, f"/odoo/mailing.mailing/{self.id}"
             ),
             "kpi_data": [
                 kpi,
                 {
-                    "kpi_fullname": _(
+                    "kpi_fullname": self.env._(
                         "Business Benefits on %(expected)i %(mailing_type)s Sent",
                         expected=self.expected,
                         mailing_type=mailing_type,
@@ -1819,7 +1819,7 @@ class MailingMailing(models.Model):
         }
 
     def _get_pretty_mailing_type(self):
-        return _("Emails")
+        return self.env._("Emails")
 
     def _generate_mailing_report_token(self, user_id):
         """Generate a secure token for this user. It allows to opt out from
@@ -2067,7 +2067,9 @@ class MailingMailing(models.Model):
                 and int(response.headers["Content-Length"]) > maxsize
             ):
                 raise ImportValidationError(
-                    _("File size exceeds configured maximum (%s bytes)", maxsize)
+                    self.env._(
+                        "File size exceeds configured maximum (%s bytes)", maxsize
+                    )
                 )
 
             content = bytearray()
@@ -2075,14 +2077,16 @@ class MailingMailing(models.Model):
                 content += chunk
                 if len(content) > maxsize:
                     raise ImportValidationError(
-                        _("File size exceeds configured maximum (%s bytes)", maxsize)
+                        self.env._(
+                            "File size exceeds configured maximum (%s bytes)", maxsize
+                        )
                     )
 
             image = Image.open(io.BytesIO(content))
             w, h = image.size
             if w * h > 42e6:
                 raise ImportValidationError(
-                    _(
+                    self.env._(
                         "Image size excessive, imported images must be smaller than 42 million pixel"
                     )
                 )
@@ -2095,7 +2099,9 @@ class MailingMailing(models.Model):
             raise
         except Exception as e:
             _logger.exception("Could not retrieve URL: %s", url)
-            raise ImportValidationError(_("Could not retrieve URL: %s", url)) from e
+            raise ImportValidationError(
+                self.env._("Could not retrieve URL: %s", url)
+            ) from e
 
     def _parse_mailing_domain(self):
         self.check_singleton()

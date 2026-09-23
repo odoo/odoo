@@ -5,7 +5,7 @@ from typing import Any, Self
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.models import ValuesType
 
@@ -471,7 +471,7 @@ class SurveyQuestion(models.Model):
         )
         if invalid_pages:
             raise ValidationError(
-                _(
+                self.env._(
                     "Question type should be empty for these pages: %s",
                     ", ".join(invalid_pages.mapped("title")),
                 )
@@ -518,7 +518,7 @@ class SurveyQuestion(models.Model):
         for question in conditional & self:
             if _has_cycle(question.id):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Circular dependency detected in conditional questions. "
                         "Question '%(title)s' is part of a trigger cycle.",
                         title=question.title,
@@ -597,7 +597,7 @@ class SurveyQuestion(models.Model):
         )
         if running_surveys:
             raise UserError(
-                _(
+                self.env._(
                     'You cannot delete questions from surveys "%(survey_names)s" while live sessions are in progress.',
                     survey_names=", ".join(running_surveys.mapped("title")),
                 )
@@ -921,7 +921,11 @@ class SurveyQuestion(models.Model):
                 self.id,
                 type(answer).__name__,
             )
-            return {self.id: _("This answer is not a valid choice for this question.")}
+            return {
+                self.id: self.env._(
+                    "This answer is not a valid choice for this question."
+                )
+            }
         if self._is_unanswered(answer) and self.question_type not in [
             "simple_choice",
             "dropdown",
@@ -930,7 +934,7 @@ class SurveyQuestion(models.Model):
             if self.constr_mandatory and not self.survey_id.users_can_go_back:
                 return {
                     self.id: self.constr_error_msg
-                    or _("This question requires an answer.")
+                    or self.env._("This question requires an answer.")
                 }
         elif self.question_type == "char_box":
             return self._check_answer_char_box(answer)
@@ -974,7 +978,7 @@ class SurveyQuestion(models.Model):
         answer = str(answer)
         if self.validation_email:
             if not tools.email_normalize(answer):
-                return {self.id: _("This answer must be an email address")}
+                return {self.id: self.env._("This answer must be an email address")}
 
         if self.validation_required:
             if not (
@@ -982,7 +986,7 @@ class SurveyQuestion(models.Model):
             ):
                 return {
                     self.id: self.validation_error_msg
-                    or _("The answer you entered is not valid.")
+                    or self.env._("The answer you entered is not valid.")
                 }
         return {}
 
@@ -990,7 +994,7 @@ class SurveyQuestion(models.Model):
         try:
             floatanswer = float(answer)
         except ValueError, TypeError:
-            return {self.id: _("This is not a number")}
+            return {self.id: self.env._("This is not a number")}
 
         if self.validation_required:
             with contextlib.suppress(TypeError, ValueError):
@@ -1001,7 +1005,7 @@ class SurveyQuestion(models.Model):
                 ):
                     return {
                         self.id: self.validation_error_msg
-                        or _("The answer you entered is not valid.")
+                        or self.env._("The answer you entered is not valid.")
                     }
         return {}
 
@@ -1011,7 +1015,7 @@ class SurveyQuestion(models.Model):
         try:
             dateanswer = field_class.from_string(answer)
         except ValueError, TypeError:
-            return {self.id: _("This is not a date")}
+            return {self.id: self.env._("This is not a date")}
         if self.validation_required:
             if is_datetime:
                 min_date = fields.Datetime.from_string(self.validation_min_datetime)
@@ -1027,7 +1031,7 @@ class SurveyQuestion(models.Model):
             ):
                 return {
                     self.id: self.validation_error_msg
-                    or _("The answer you entered is not valid.")
+                    or self.env._("The answer you entered is not valid.")
                 }
         return {}
 
@@ -1047,14 +1051,19 @@ class SurveyQuestion(models.Model):
             and not self.survey_id.users_can_go_back
         ):
             return {
-                self.id: self.constr_error_msg or _("This question requires an answer.")
+                self.id: self.constr_error_msg
+                or self.env._("This question requires an answer.")
             }
 
         if valid_answers_count > 1 and self.question_type in (
             "simple_choice",
             "dropdown",
         ):
-            return {self.id: _("For this question, you can only select one answer.")}
+            return {
+                self.id: self.env._(
+                    "For this question, you can only select one answer."
+                )
+            }
 
         return {}
 
@@ -1076,7 +1085,8 @@ class SurveyQuestion(models.Model):
             and len(self.matrix_row_ids) != len(answers)
         ):
             return {
-                self.id: self.constr_error_msg or _("This question requires an answer.")
+                self.id: self.constr_error_msg
+                or self.env._("This question requires an answer.")
             }
         return {}
 
@@ -1106,7 +1116,7 @@ class SurveyQuestion(models.Model):
             self.id,
             foreign,
         )
-        return _("This answer is not a valid choice for this question.")
+        return self.env._("This answer is not a valid choice for this question.")
 
     def _check_answer_scale(self, answer: Any) -> dict[int, str]:
         if (
@@ -1115,7 +1125,8 @@ class SurveyQuestion(models.Model):
             and self._is_unanswered(answer)
         ):
             return {
-                self.id: self.constr_error_msg or _("This question requires an answer.")
+                self.id: self.constr_error_msg
+                or self.env._("This question requires an answer.")
             }
         return {}
 
@@ -1124,16 +1135,16 @@ class SurveyQuestion(models.Model):
             if self.constr_mandatory and not self.survey_id.users_can_go_back:
                 return {
                     self.id: self.constr_error_msg
-                    or _("This question requires an answer.")
+                    or self.env._("This question requires an answer.")
                 }
             return {}
         try:
             val = float(answer)
         except ValueError, TypeError:
-            return {self.id: _("Invalid numerical value.")}
+            return {self.id: self.env._("Invalid numerical value.")}
         if val < self.slider_min or val > self.slider_max:
             return {
-                self.id: _(
+                self.id: self.env._(
                     "Value must be between %(min)s and %(max)s.",
                     min=self.slider_min,
                     max=self.slider_max,
@@ -1146,15 +1157,17 @@ class SurveyQuestion(models.Model):
             if self.constr_mandatory and not self.survey_id.users_can_go_back:
                 return {
                     self.id: self.constr_error_msg
-                    or _("This question requires an answer.")
+                    or self.env._("This question requires an answer.")
                 }
             return {}
         try:
             val = int(answer)
         except ValueError, TypeError:
-            return {self.id: _("Invalid rating value.")}
+            return {self.id: self.env._("Invalid rating value.")}
         if val < 1 or val > self.rating_max:
-            return {self.id: _("Rating must be between 1 and %s.", self.rating_max)}
+            return {
+                self.id: self.env._("Rating must be between 1 and %s.", self.rating_max)
+            }
         return {}
 
     def _check_answer_ranking(self, answer: Any) -> dict[int, str]:
@@ -1162,13 +1175,13 @@ class SurveyQuestion(models.Model):
             if self.constr_mandatory and not self.survey_id.users_can_go_back:
                 return {
                     self.id: self.constr_error_msg
-                    or _("This question requires an answer.")
+                    or self.env._("This question requires an answer.")
                 }
             return {}
         if not isinstance(answer, dict):
-            return {self.id: _("Invalid ranking answer format.")}
+            return {self.id: self.env._("Invalid ranking answer format.")}
         if len(answer) != len(self.suggested_answer_ids):
-            return {self.id: _("Please rank all items.")}
+            return {self.id: self.env._("Please rank all items.")}
         return {}
 
     def _check_answer_constant_sum(self, answer: Any) -> dict[int, str]:
@@ -1176,18 +1189,18 @@ class SurveyQuestion(models.Model):
             if self.constr_mandatory and not self.survey_id.users_can_go_back:
                 return {
                     self.id: self.constr_error_msg
-                    or _("This question requires an answer.")
+                    or self.env._("This question requires an answer.")
                 }
             return {}
         if not isinstance(answer, dict):
-            return {self.id: _("Invalid answer format.")}
+            return {self.id: self.env._("Invalid answer format.")}
         try:
             total = sum(float(v) for v in answer.values())
         except ValueError, TypeError:
-            return {self.id: _("All values must be numbers.")}
+            return {self.id: self.env._("All values must be numbers.")}
         if abs(total - self.constant_sum_total) > 0.01:
             return {
-                self.id: _(
+                self.id: self.env._(
                     "Values must sum to %(expected)s (currently %(total)s).",
                     expected=self.constant_sum_total,
                     total=total,
@@ -1200,16 +1213,16 @@ class SurveyQuestion(models.Model):
             if self.constr_mandatory and not self.survey_id.users_can_go_back:
                 return {
                     self.id: self.constr_error_msg
-                    or _("This question requires an answer.")
+                    or self.env._("This question requires an answer.")
                 }
             return {}
         try:
             attachment_id = int(answer)
         except ValueError, TypeError:
-            return {self.id: _("Invalid file upload.")}
+            return {self.id: self.env._("Invalid file upload.")}
         attachment = self.env["ir.attachment"].sudo().browse(attachment_id).exists()
         if not attachment:
-            return {self.id: _("Uploaded file not found.")}
+            return {self.id: self.env._("Uploaded file not found.")}
         if self.file_upload_types:
             allowed = {
                 ext.strip().lower()
@@ -1219,7 +1232,7 @@ class SurveyQuestion(models.Model):
             fname = (attachment.name or "").lower()
             if allowed and not any(fname.endswith(ext) for ext in allowed):
                 return {
-                    self.id: _(
+                    self.id: self.env._(
                         "File type not allowed. Accepted: %s", self.file_upload_types
                     )
                 }
@@ -1227,7 +1240,7 @@ class SurveyQuestion(models.Model):
             max_bytes = self.file_upload_max_size * 1024 * 1024
             if attachment.file_size > max_bytes:
                 return {
-                    self.id: _(
+                    self.id: self.env._(
                         "File exceeds maximum size of %s MB.", self.file_upload_max_size
                     )
                 }

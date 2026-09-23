@@ -1,6 +1,6 @@
 import werkzeug.exceptions
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request
@@ -63,7 +63,9 @@ class WebsiteSlidesSurvey(WebsiteSlides):
 
         if create_new_survey:
             if not request.env["survey.survey"].has_access("create"):
-                return {"error": _("You are not allowed to create a survey.")}
+                return {
+                    "error": request.env._("You are not allowed to create a survey.")
+                }
 
             post["survey_id"] = (
                 request.env["survey.survey"]
@@ -88,7 +90,11 @@ class WebsiteSlidesSurvey(WebsiteSlides):
             try:
                 request.env["survey.survey"].browse([linked_survey_id]).read(["title"])
             except AccessError:
-                return {"error": _("You are not allowed to link a certification.")}
+                return {
+                    "error": request.env._(
+                        "You are not allowed to link a certification."
+                    )
+                }
 
             post["survey_id"] = post["survey"]["id"]
 
@@ -108,7 +114,9 @@ class WebsiteSlidesSurvey(WebsiteSlides):
                 "slide_complete_refused", reason="certification", slide=slide.id
             )
             raise werkzeug.exceptions.Forbidden(
-                _("Certification slides are completed when the survey is succeeded.")
+                request.env._(
+                    "Certification slides are completed when the survey is succeeded."
+                )
             )
         return super()._slide_mark_completed(slide)
 

@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 
 
 class EventRegistration(models.Model):
@@ -133,7 +133,7 @@ class EventRegistration(models.Model):
                     lead_values["description"] = "%s<br/>%s" % (
                         lead.description,
                         registration._get_lead_description(
-                            _("Updated registrations"), line_counter=True
+                            self.env._("Updated registrations"), line_counter=True
                         ),
                     )
                     lead.write(lead_values)
@@ -150,7 +150,7 @@ class EventRegistration(models.Model):
                 if not lead.partner_id:
                     lead_values["description"] = (
                         lead.registration_ids._get_lead_description(
-                            _("Participants"), line_counter=True
+                            self.env._("Participants"), line_counter=True
                         )
                     )
                 elif new_vals["partner_id"] != lead.partner_id.id:
@@ -158,9 +158,9 @@ class EventRegistration(models.Model):
                         (lead.description or "")
                         + "<br/>"
                         + lead.registration_ids._get_lead_description(
-                            _("Updated registrations"),
+                            self.env._("Updated registrations"),
                             line_counter=True,
-                            line_suffix=_("(updated)"),
+                            line_suffix=self.env._("(updated)"),
                         )
                     )
             if lead_values:
@@ -183,7 +183,7 @@ class EventRegistration(models.Model):
         }
         lead_values.update(sorted_self._prepare_lead_contact_vals())
         lead_values["description"] = sorted_self._get_lead_description(
-            _("Participants"), line_counter=True
+            self.env._("Participants"), line_counter=True
         )
         return lead_values
 

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class EventRegistration(models.Model):
@@ -190,7 +190,9 @@ class EventRegistration(models.Model):
             else self.env.ref("base.user_admin").id
         )
         record_type = (
-            _("Ticket") if new_record_field == "event_ticket_id" else _("Slot")
+            self.env._("Ticket")
+            if new_record_field == "event_ticket_id"
+            else self.env._("Slot")
         )
         # One activity per (order, event), not per registration: moving a batch
         # of attendees to another ticket used to bury a single order under one

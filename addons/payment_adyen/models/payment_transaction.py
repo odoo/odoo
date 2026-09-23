@@ -1,4 +1,4 @@
-from odoo import _, api, models, release
+from odoo import api, models, release
 from odoo.http import request
 from odoo.tools import format_amount
 
@@ -159,7 +159,7 @@ class PaymentTransaction(models.Model):
         formatted_amount = format_amount(self.env, self.amount, self.currency_id)
         if status == "received":
             self._log_message_on_linked_documents(
-                _(
+                self.env._(
                     "The capture request of %(amount)s for transaction %(ref)s has been sent.",
                     amount=formatted_amount,
                     ref=self.reference,
@@ -191,7 +191,7 @@ class PaymentTransaction(models.Model):
         status = response_content.get("status")
         if status == "received":
             self._log_message_on_linked_documents(
-                _(
+                self.env._(
                     "A request was sent to void the transaction %(reference)s.",
                     reference=self.reference,
                 )
@@ -300,7 +300,7 @@ class PaymentTransaction(models.Model):
                         # others captures that Odoo was unaware of were done, the amount voided will
                         # be different from the amount of the existing transaction.
                         tx._set_error(
-                            _(
+                            self.env._(
                                 "The amount processed by Adyen for the transaction %s is different than"
                                 " the one requested. Another transaction is created with the correct"
                                 " amount.",
@@ -436,7 +436,7 @@ class PaymentTransaction(models.Model):
         payment_state = payment_data.get("resultCode")
         refusal_reason = payment_data.get("refusalReason") or payment_data.get("reason")
         if not payment_state:
-            self._set_error(_("Received data with missing payment state."))
+            self._set_error(self.env._("Received data with missing payment state."))
         elif payment_state in const.RESULT_CODES_MAPPING["pending"]:
             self._set_pending()
         elif payment_state in const.RESULT_CODES_MAPPING["done"]:
@@ -462,7 +462,7 @@ class PaymentTransaction(models.Model):
                     refusal_reason,
                 )
                 self._set_error(
-                    _(
+                    self.env._(
                         "An error occurred during the processing of your payment. Please try again."
                     )
                 )
@@ -476,11 +476,15 @@ class PaymentTransaction(models.Model):
                     self.source_transaction_id
                 ):  # child tx => The event can't be retried.
                     self._set_error(
-                        _("The void of the transaction %s failed.", self.reference)
+                        self.env._(
+                            "The void of the transaction %s failed.", self.reference
+                        )
                     )
                 else:  # source tx with failed void stays in its state, could be voided again
                     self._log_message_on_linked_documents(
-                        _("The void of the transaction %s failed.", self.reference)
+                        self.env._(
+                            "The void of the transaction %s failed.", self.reference
+                        )
                     )
             else:  # 'CAPTURE', 'CAPTURE_FAILED'
                 _logger.warning(
@@ -492,11 +496,15 @@ class PaymentTransaction(models.Model):
                     self.source_transaction_id
                 ):  # child_tx => The event can't be retried.
                     self._set_error(
-                        _("The capture of the transaction %s failed.", self.reference)
+                        self.env._(
+                            "The capture of the transaction %s failed.", self.reference
+                        )
                     )
                 else:  # source tx with failed capture stays in its state, could be captured again
                     self._log_message_on_linked_documents(
-                        _("The capture of the transaction %s failed.", self.reference)
+                        self.env._(
+                            "The capture of the transaction %s failed.", self.reference
+                        )
                     )
         elif payment_state in const.RESULT_CODES_MAPPING["refused"]:
             _logger.warning(
@@ -504,7 +512,7 @@ class PaymentTransaction(models.Model):
                 self.reference,
                 refusal_reason,
             )
-            self._set_error(_("Your payment was refused. Please try again."))
+            self._set_error(self.env._("Your payment was refused. Please try again."))
         else:  # Classify unsupported payment state as `error` tx state
             _logger.warning(
                 "received data for transaction %s with invalid payment state: %s",
@@ -513,7 +521,9 @@ class PaymentTransaction(models.Model):
             )
             self._set_error(
                 "Adyen: "
-                + _("Received data with invalid payment state: %s", payment_state)
+                + self.env._(
+                    "Received data with invalid payment state: %s", payment_state
+                )
             )
         return None
 

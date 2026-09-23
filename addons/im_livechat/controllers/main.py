@@ -3,7 +3,7 @@ from urllib.parse import urlsplit
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound, ServiceUnavailable
 
-from odoo import _, http
+from odoo import http
 from odoo.http import prepare_content_disposition_header, request
 from odoo.libs.datetime import timezone
 from odoo.libs.text import nl2br
@@ -92,7 +92,7 @@ class LivechatController(http.Controller):
 
     @http.route("/im_livechat/loader/<int:channel_id>", type="http", auth="public")
     def loader(self, channel_id, **kwargs):
-        username = kwargs.get("username", _("Visitor"))
+        username = kwargs.get("username", request.env._("Visitor"))
         channel = request.env["im_livechat.channel"].sudo().browse(channel_id)
         info = channel.get_livechat_info(username=username)
         return request.render(
@@ -105,7 +105,7 @@ class LivechatController(http.Controller):
         return {}, {}
 
     def _get_guest_name(self):
-        return _("Visitor")
+        return request.env._("Visitor")
 
     @http.route(
         "/im_livechat/get_session", methods=["POST"], type="jsonrpc", auth="public"
@@ -240,7 +240,7 @@ class LivechatController(http.Controller):
             """%(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s"""
             """</div>"""
         ) % {
-            "rating": _("Rating"),
+            "rating": request.env._("Rating"),
             "rating_url": rating.rating_image_url,
             "reason": nl2br("\n" + reason) if reason else "",
         }

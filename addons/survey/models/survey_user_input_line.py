@@ -1,7 +1,7 @@
 import textwrap
 from typing import Any
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import SQL, float_is_zero
 
@@ -124,7 +124,7 @@ class SurveyUser_InputLine(models.Model):
                     line.display_name = line.suggested_answer_id.value
 
             if not line.display_name:
-                line.display_name = _("Skipped")
+                line.display_name = self.env._("Skipped")
 
     @api.depends(
         "answer_type",
@@ -258,7 +258,9 @@ class SurveyUser_InputLine(models.Model):
         for line in self:
             if line.skipped == bool(line.answer_type):
                 raise ValidationError(
-                    _("A question can either be skipped or answered, not both.")
+                    self.env._(
+                        "A question can either be skipped or answered, not both."
+                    )
                 )
 
             if line.answer_type == "numerical_box" and float_is_zero(
@@ -276,7 +278,9 @@ class SurveyUser_InputLine(models.Model):
                 field_name = False
 
             if field_name and not line[field_name]:
-                raise ValidationError(_("The answer must be in the right type"))
+                raise ValidationError(
+                    self.env._("The answer must be in the right type")
+                )
 
     def _get_domain_answer_matching(self) -> list[Any] | None:
         self.check_singleton()

@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -147,7 +147,7 @@ class MailingContact(models.Model):
         for vals in vals_list:
             if vals.get("list_ids") and vals.get("subscription_ids"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You should give either list_ids, either subscription_ids to create new contacts."
                     )
                 )
@@ -234,7 +234,7 @@ class MailingContact(models.Model):
     def get_import_templates(self):
         return [
             {
-                "label": _("Import Template for Mailing List Contacts"),
+                "label": self.env._("Import Template for Mailing List Contacts"),
                 "template": "/mass_mailing/static/xls/mailing_contact.xls",
             }
         ]

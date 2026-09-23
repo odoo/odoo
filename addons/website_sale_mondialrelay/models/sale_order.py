@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import ValidationError
 
 
@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
             and not self.carrier_id.is_mondialrelay
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "Point Relais® can only be used with the delivery method Mondial Relay."
                 )
             )
@@ -22,7 +22,9 @@ class SaleOrder(models.Model):
             and self.carrier_id.is_mondialrelay
         ):
             raise ValidationError(
-                _("Delivery method Mondial Relay can only ship to Point Relais®.")
+                self.env._(
+                    "Delivery method Mondial Relay can only ship to Point Relais®."
+                )
             )
         return super()._check_cart_is_ready_to_be_paid()
 

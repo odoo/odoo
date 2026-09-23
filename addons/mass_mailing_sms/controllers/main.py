@@ -2,7 +2,7 @@ from urllib.parse import urlencode
 
 from werkzeug.exceptions import NotFound
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import request
 
@@ -82,11 +82,11 @@ class MailingSMSController(http.Controller):
         # otherwise: generate error message, loop on same page
         unsubscribe_error = False
         if sms_number and not sanitized_number:
-            unsubscribe_error = _(
+            unsubscribe_error = request.env._(
                 "Oops! The phone number seems to be incorrect. Please make sure to include the country code."
             )
         if sanitized_number and not valid_trace:
-            unsubscribe_error = _("Oops! Number not found")
+            unsubscribe_error = request.env._("Oops! Number not found")
         return request.render(
             "mass_mailing_sms.blacklist_main",
             {
@@ -140,7 +140,7 @@ class MailingSMSController(http.Controller):
                     request.env["phone.blacklist"].sudo().add(tocheck_number)
                 )
                 blacklist_rec._message_log(
-                    body=_(
+                    body=request.env._(
                         "Blacklist through SMS Marketing unsubscribe (mailing ID: %(mailing_id)s - model: %(model)s)",
                         mailing_id=trace.mass_mailing_id.id,
                         model=trace.mass_mailing_id.mailing_model_id.display_name,

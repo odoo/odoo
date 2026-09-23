@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -138,7 +138,7 @@ class PaymentTransaction(models.Model):
             self._set_canceled()
         else:  # Simulate an error state.
             self._set_error(
-                _("You selected the following demo payment status: %s", state)
+                self.env._("You selected the following demo payment status: %s", state)
             )
         return None
 

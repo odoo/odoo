@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.libs.datetime import timezone
 from odoo.libs.filesystem import get_extension
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
@@ -601,7 +601,7 @@ class DiscussChannel(models.Model):
         )
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
-        return _("Visitor left the conversation.")
+        return self.env._("Visitor left the conversation.")
 
     def _close_livechat_session(self, **kwargs):
         self.check_singleton()
@@ -646,7 +646,7 @@ class DiscussChannel(models.Model):
             .sudo()
             .create(
                 {
-                    "subject": _(
+                    "subject": self.env._(
                         "Conversation with %s",
                         self.livechat_operator_id.user_livechat_username
                         or self.livechat_operator_id.name,
@@ -755,7 +755,7 @@ class DiscussChannel(models.Model):
         posted_message = False
         error_message = False
         if not email_normalized:
-            error_message = _(
+            error_message = self.env._(
                 "'%(input_email)s' does not look like a valid email. Can you please try again?",
                 input_email=email_address,
             )
@@ -879,7 +879,7 @@ class DiscussChannel(models.Model):
         return self._chatbot_post_message(
             chatbot_script,
             Markup('<div class="o_mail_notification">%s</div>')
-            % _("Restarting conversation..."),
+            % self.env._("Restarting conversation..."),
         )
 
     def _get_allowed_channel_member_create_params(self):

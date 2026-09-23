@@ -7,7 +7,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -56,7 +56,7 @@ class SlideChannel(models.Model):
         return str(uuid.uuid4())
 
     def _default_enroll_msg(self):
-        return _("Contact Responsible")
+        return self.env._("Contact Responsible")
 
     name = fields.Char(
         translate=True,
@@ -779,7 +779,7 @@ class SlideChannel(models.Model):
 
     @api.model
     def _get_can_publish_error_message(self):
-        return _(
+        return self.env._(
             "Publishing is restricted to the course responsible and to eLearning managers"
         )
 
@@ -920,7 +920,7 @@ class SlideChannel(models.Model):
         vals_list = super().copy_data(default=default)
         for channel, vals in zip(self, vals_list, strict=True):
             if "name" not in default:
-                vals["name"] = f"{channel.name} ({_('copy')})"
+                vals["name"] = f"{channel.name} ({self.env._('copy')})"
             if "enroll" not in default and channel.visibility == "members":
                 vals["enroll"] = "invite"
         return vals_list
@@ -978,7 +978,7 @@ class SlideChannel(models.Model):
         self.check_singleton()
         if kwargs.get("message_type") == "comment" and not self.can_review:
             _debug.logic("channel_review_refused", reason="karma", channels=self)
-            raise AccessError(_("Not enough karma to review"))
+            raise AccessError(self.env._("Not enough karma to review"))
         if parent_id:
             parent_message = self.env["mail.message"].sudo().browse(parent_id)
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref(
@@ -1000,11 +1000,11 @@ class SlideChannel(models.Model):
             ]
             if self.env["mail.message"].search_count(domain, limit=2) > 1:
                 raise ValidationError(
-                    _("Only a single review can be posted per course.")
+                    self.env._("Only a single review can be posted per course.")
                 )
         if message.rating_value and message.is_current_user_or_guest_author:
             self.env.user._add_karma(
-                self.karma_gen_channel_rank, self, _("Course Ranked")
+                self.karma_gen_channel_rank, self, self.env._("Course Ranked")
             )
         return message
 
@@ -1022,13 +1022,15 @@ class SlideChannel(models.Model):
         action["sample"] = 1
         if status_filter == "completed":
             help_message = {
-                "header_message": _("No Attendee has completed this course yet!"),
+                "header_message": self.env._(
+                    "No Attendee has completed this course yet!"
+                ),
                 "body_message": "",
             }
         else:
             help_message = {
-                "header_message": _("No Attendees Yet!"),
-                "body_message": _(
+                "header_message": self.env._("No Attendees Yet!"),
+                "body_message": self.env._(
                     "From here you'll be able to monitor attendees and to track their progress."
                 ),
             }
@@ -1039,7 +1041,7 @@ class SlideChannel(models.Model):
             % help_message
         )
         if len(self) == 1:
-            action["display_name"] = _("Attendees of %s", self.name)
+            action["display_name"] = self.env._("Attendees of %s", self.name)
             action_ctx["default_channel_id"] = self.id
         action["context"] = action_ctx
         return action
@@ -1078,14 +1080,14 @@ class SlideChannel(models.Model):
             default_use_template=bool(mail_template),
         )
         if enroll_mode:
-            name = _(
+            name = self.env._(
                 "Enroll Attendees to %(course_name)s",
-                course_name=course_name or _("a course"),
+                course_name=course_name or self.env._("a course"),
             )
         else:
-            name = _(
+            name = self.env._(
                 "Invite Attendees to %(course_name)s",
-                course_name=course_name or _("a course"),
+                course_name=course_name or self.env._("a course"),
             )
 
         return {
@@ -1195,7 +1197,7 @@ class SlideChannel(models.Model):
                     channels=self - allowed,
                 )
                 raise AccessError(
-                    _(
+                    self.env._(
                         "You are not allowed to add members to this course. "
                         "Please contact the course responsible or an administrator."
                     )
@@ -1303,7 +1305,7 @@ class SlideChannel(models.Model):
         )
         if courses_without_templates:
             raise UserError(
-                _(
+                self.env._(
                     'Impossible to send emails. Select a "Channel Share Template" for courses %(course_names)s first',
                     course_names=", ".join(courses_without_templates.mapped("name")),
                 )
@@ -1328,7 +1330,7 @@ class SlideChannel(models.Model):
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "website_slides.rating_rating_action_slide_channel"
         )
-        action["name"] = _("Rating of %s", self.name)
+        action["name"] = self.env._("Rating of %s", self.name)
         action["domain"] = Domain.AND(
             [
                 ast.literal_eval(action.get("domain", "[]")),
@@ -1339,15 +1341,15 @@ class SlideChannel(models.Model):
 
     def action_request_access(self):
         if self.env.user._is_public():
-            return {"error": _("You have to sign in before")}
+            return {"error": self.env._("You have to sign in before")}
         if not self.is_published:
-            return {"error": _("Course not published yet")}
+            return {"error": self.env._("Course not published yet")}
         if self.is_member:
-            return {"error": _("Already member")}
+            return {"error": self.env._("Already member")}
         if self.enroll == "invite":
             partner = self.env.user.partner_id
             if self._get_live_access_request(partner):
-                return {"error": _("Already Requested")}
+                return {"error": self.env._("Already Requested")}
             self.sudo()._request_access(partner)
             return {"done": True}
         return {"done": False}
@@ -1378,7 +1380,7 @@ class SlideChannel(models.Model):
         self._action_add_members(partner)
 
     def _get_access_request_name(self, partner, role):
-        return _(
+        return self.env._(
             "Access to %(course)s for %(partner)s",
             course=self.name,
             partner=partner.name,
@@ -1479,8 +1481,8 @@ class SlideChannel(models.Model):
                 {
                     "category": False,
                     "id": False,
-                    "name": _("Uncategorized"),
-                    "slug_name": _("Uncategorized"),
+                    "name": self.env._("Uncategorized"),
+                    "slug_name": self.env._("Uncategorized"),
                     "total_slides": len(uncategorized_slides),
                     "slides": uncategorized_slides[start:end],
                 },

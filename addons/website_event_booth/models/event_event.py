@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class EventEvent(models.Model):
@@ -67,7 +67,7 @@ class EventEvent(models.Model):
         self.check_singleton()
         return super()._get_website_menu_entries() + [
             (
-                _("Become exhibitor"),
+                self.env._("Become exhibitor"),
                 "/event/%s/booth" % self.env["ir.http"]._slug(self),
                 False,
                 90,

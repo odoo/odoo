@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 import babel.dates
 from werkzeug.exceptions import NotFound
 
-from odoo import Command, _, fields, http
+from odoo import Command, fields, http
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
@@ -118,7 +118,7 @@ class WebsiteEventController(http.Controller):
         countries = [
             {
                 "country_id_count": sum(count for __, count in country_groups),
-                "country_id": (0, _("All Countries")),
+                "country_id": (0, request.env._("All Countries")),
             }
         ]
         for g_country, count in country_groups:
@@ -326,7 +326,7 @@ class WebsiteEventController(http.Controller):
                 "ticket": ticket_dict.get(tid),
                 "name": ticket_dict[tid]["name"]
                 if ticket_dict.get(tid)
-                else _("Registration"),
+                else request.env._("Registration"),
                 "quantity": count,
                 "current_limit_per_order": tickets_limits.get(
                     tid, next(iter(tickets_limits.values()))
@@ -452,13 +452,13 @@ class WebsiteEventController(http.Controller):
             form_details,
             "event_ticket_id",
             event.event_ticket_ids.ids,
-            _("This ticket is not available for sale for this event"),
+            request.env._("This ticket is not available for sale for this event"),
         )
         self._check_posted_ids_are_offered(
             form_details,
             "event_slot_id",
             event.event_slot_ids.ids,
-            _("This slot is not available for this event"),
+            request.env._("This slot is not available for this event"),
         )
         registrations = {}
         general_answer_ids = []

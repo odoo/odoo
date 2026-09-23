@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import UserError
 
@@ -14,7 +14,7 @@ class FetchmailServer(models.Model):
 
     def _compute_server_type_info(self):
         gmail_servers = self.filtered(lambda server: server.server_type == "gmail")
-        gmail_servers.server_type_info = _(
+        gmail_servers.server_type_info = self.env._(
             "Connect your Gmail account with the OAuth Authentication process. \n"
             "You will be redirected to the Gmail login page where you will "
             "need to accept the permission."
@@ -32,7 +32,7 @@ class FetchmailServer(models.Model):
         for server in self.filtered(lambda s: s.server_type == "gmail"):
             if server.password:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Please leave the password field empty for Gmail mail server “%s”. "
                         "The OAuth process does not require it.",
                         server.name,
@@ -40,7 +40,7 @@ class FetchmailServer(models.Model):
                 )
             if server.encryption not in ("ssl", "ssl_strict"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Incorrect Connection Encryption for Gmail mail server “%s”. "
                         'Please set it to "SSL/TLS".',
                         server.name,
@@ -48,7 +48,7 @@ class FetchmailServer(models.Model):
                 )
             if not server.user:
                 raise UserError(
-                    _(
+                    self.env._(
                         'Please fill the "Username" field with your Gmail username (your email address). '
                         "This should be the same account as the one used for the Gmail "
                         "OAuthentication Token."

@@ -1,5 +1,5 @@
-from odoo import _
 from odoo.exceptions import ValidationError
+from odoo.http import request
 from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.website_sale.controllers.payment import PaymentPortal
@@ -19,7 +19,7 @@ class OnSitePaymentPortal(PaymentPortal):
         ):
             _debug.logic("in_store_payment_refused", provider=provider.id)
             raise ValidationError(
-                _(
+                request.env._(
                     "You can only pay on site when selecting the pick up in store delivery method."
                 )
             )

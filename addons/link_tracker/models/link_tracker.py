@@ -4,7 +4,7 @@ import secrets
 import string
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -335,7 +335,7 @@ class LinkTracker(models.Model):
             url = vals["url"]
             if url.startswith(("?", "#")):
                 raise UserError(
-                    _(
+                    self.env._(
                         "“%s” is not a valid link, links cannot redirect to the current page.",
                         url,
                     )
@@ -363,7 +363,7 @@ class LinkTracker(models.Model):
             )
             if absolute.startswith(short_prefix):
                 raise UserError(
-                    _(
+                    self.env._(
                         "“%s” is not a valid link, it already is a tracked short link.",
                         url,
                     )
@@ -416,7 +416,7 @@ class LinkTracker(models.Model):
                 for key in duplicates
             )
             raise UserError(
-                _(
+                self.env._(
                     "Combinations of Link Tracker values (URL, campaign, medium, source, and label) must be unique.\n"
                     "The following combinations are already used: \n- %(error_lines)s",
                     error_lines=error_lines,
@@ -433,7 +433,7 @@ class LinkTracker(models.Model):
         for vals in vals_list:
             if "url" not in vals:
                 raise UserError(
-                    _("Creating a Link Tracker without URL is not possible")
+                    self.env._("Creating a Link Tracker without URL is not possible")
                 )
         self._check_url_is_not_a_short_url(vals_list)
 
@@ -523,7 +523,7 @@ class LinkTracker(models.Model):
         for vals in vals_list:
             if "url" not in vals:
                 raise UserError(
-                    _("Creating a Link Tracker without URL is not possible")
+                    self.env._("Creating a Link Tracker without URL is not possible")
                 )
             self._normalize_vals(vals)
             # fill vals so `_unique_key_from_values` sees the defaults a create would apply
@@ -603,7 +603,7 @@ class LinkTracker(models.Model):
     def action_visit_page(self):
         self.check_singleton()
         return {
-            "name": _("Visit Webpage"),
+            "name": self.env._("Visit Webpage"),
             "type": "ir.actions.act_url",
             "url": self.url,
             "target": "new",
@@ -642,7 +642,7 @@ class LinkTracker(models.Model):
             )
         # Returning {'Error': ...} put a dict where the only caller does
         # `links.reverse()`, so a bad filter surfaced as a TypeError in the browser.
-        raise UserError(_("“%s” is not a known sort order.", sort_by))
+        raise UserError(self.env._("“%s” is not a known sort order.", sort_by))
 
     @api.model
     def get_url_from_code(self, code):

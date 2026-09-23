@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class MailingContactToList(models.TransientModel):
@@ -60,7 +60,7 @@ class MailingContactToList(models.TransientModel):
             "tag": "display_notification",
             "params": {
                 "type": "info",
-                "message": _(
+                "message": self.env._(
                     "%s Mailing Contacts have been added. ", len(contacts_to_add)
                 ),
                 "sticky": False,

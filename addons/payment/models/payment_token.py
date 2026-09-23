@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -102,7 +102,7 @@ class PaymentToken(models.Model):
                     for token in self
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "You can't unarchive tokens linked to inactive payment methods or disabled"
                             " providers."
                         )
@@ -119,7 +119,7 @@ class PaymentToken(models.Model):
         for token in self:
             if token.partner_id.is_public:
                 raise ValidationError(
-                    _("No token can be assigned to the public partner.")
+                    self.env._("No token can be assigned to the public partner.")
                 )
 
     def _handle_archiving(self):
@@ -190,7 +190,9 @@ class PaymentToken(models.Model):
         padding_length = max_length - len(self.payment_details or "")
         if not self.payment_details:
             create_date_str = self.create_date.strftime("%Y/%m/%d")
-            display_name = _("Payment details saved on %(date)s", date=create_date_str)
+            display_name = self.env._(
+                "Payment details saved on %(date)s", date=create_date_str
+            )
         elif padding_length >= 2:  # Enough room for padding.
             padding = "•" * min(padding_length - 1, 4) + " " if should_pad else ""
             display_name = f"{padding}{self.payment_details}"

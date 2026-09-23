@@ -4,7 +4,7 @@ from urllib.parse import parse_qsl, urljoin, urlsplit
 
 import werkzeug
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -125,23 +125,25 @@ class WebsiteRewrite(models.Model):
                     _debug.logic(
                         "rewrite_refused", reason="no_url_to", rewrite=rewrite.id
                     )
-                    raise ValidationError(_('"URL to" can not be empty.'))
+                    raise ValidationError(self.env._('"URL to" can not be empty.'))
                 if not rewrite.url_from:
                     _debug.logic(
                         "rewrite_refused", reason="no_url_from", rewrite=rewrite.id
                     )
-                    raise ValidationError(_('"URL from" can not be empty.'))
+                    raise ValidationError(self.env._('"URL from" can not be empty.'))
                 if rewrite.url_to.startswith("#") or rewrite.url_from.startswith("#"):
                     _debug.logic(
                         "rewrite_refused", reason="fragment_url", rewrite=rewrite.id
                     )
-                    raise ValidationError(_("URL must not start with '#'."))
+                    raise ValidationError(self.env._("URL must not start with '#'."))
                 if rewrite.url_to.split("#")[0] == rewrite.url_from.split("#")[0]:
                     _debug.logic(
                         "rewrite_refused", reason="self_redirect", rewrite=rewrite.id
                     )
                     raise ValidationError(
-                        _("base URL of 'URL to' should not be same as 'URL from'.")
+                        self.env._(
+                            "base URL of 'URL to' should not be same as 'URL from'."
+                        )
                     )
 
             if rewrite.redirect_type == "308":
@@ -155,7 +157,9 @@ class WebsiteRewrite(models.Model):
                     reason="url_to_not_absolute",
                     rewrite=rewrite.id,
                 )
-                raise ValidationError(_('"URL to" must start with a leading slash.'))
+                raise ValidationError(
+                    self.env._('"URL to" must start with a leading slash.')
+                )
             for param in re.findall(r"/<.*?>", rewrite.url_from):
                 if param not in rewrite.url_to:
                     _debug.logic(
@@ -165,7 +169,7 @@ class WebsiteRewrite(models.Model):
                         param=param,
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             '"URL to" must contain parameter %s used in "URL from".',
                             param,
                         )
@@ -179,7 +183,7 @@ class WebsiteRewrite(models.Model):
                         param=param,
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             '"URL to" cannot contain parameter %s which is not used in "URL from".',
                             param,
                         )
@@ -190,7 +194,7 @@ class WebsiteRewrite(models.Model):
                     "rewrite_refused", reason="url_to_is_root", rewrite=rewrite.id
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         '"URL to" cannot be set to "/". To change the homepage content, use the "Homepage URL" field in the website settings or the page properties on any custom page.'
                     )
                 )
@@ -206,7 +210,9 @@ class WebsiteRewrite(models.Model):
                     rewrite=rewrite.id,
                     url=rewrite.url_to,
                 )
-                raise ValidationError(_('"URL to" cannot be set to an existing page.'))
+                raise ValidationError(
+                    self.env._('"URL to" cannot be set to an existing page.')
+                )
 
             try:
                 converters = self.env["ir.http"]._get_converters()
@@ -221,7 +227,7 @@ class WebsiteRewrite(models.Model):
                     reason="url_to_unparseable",
                     rewrite=rewrite.id,
                 )
-                raise ValidationError(_('"URL to" is invalid: %s', e)) from e
+                raise ValidationError(self.env._('"URL to" is invalid: %s', e)) from e
 
     @staticmethod
     def _get_redirect_source_urls(path, full_path):
@@ -387,7 +393,9 @@ class WebsiteRewrite(models.Model):
                     hops=len(seen),
                 )
                 raise ValidationError(
-                    _("This redirect creates a cycle with another active redirect.")
+                    self.env._(
+                        "This redirect creates a cycle with another active redirect."
+                    )
                 )
             seen.add(current_url)
             if query:
@@ -451,7 +459,7 @@ class WebsiteRewrite(models.Model):
     def get_import_templates(self):
         return [
             {
-                "label": _("Import Template for Redirects"),
+                "label": self.env._("Import Template for Redirects"),
                 "template": "/website/static/xls/redirects_import_template.xlsx",
             }
         ]

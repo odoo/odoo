@@ -1,4 +1,4 @@
-from odoo import _, http
+from odoo import http
 from odoo.http import request
 
 
@@ -14,13 +14,13 @@ class PortalRating(http.Controller):
         try:
             rating_id = int(rating_id)
         except TypeError, ValueError:
-            return {"error": _("Invalid rating")}
+            return {"error": request.env._("Invalid rating")}
         rating = request.env["rating.rating"].search_fetch(
             [("id", "=", rating_id)],
             ["publisher_comment", "publisher_id", "publisher_datetime"],
         )
         if not rating:
-            return {"error": _("Invalid rating")}
+            return {"error": request.env._("Invalid rating")}
         rating.write({"publisher_comment": publisher_comment})
         return request.env["mail.message"]._portal_message_format_rating(
             rating.read(["publisher_comment", "publisher_id", "publisher_datetime"])[0]

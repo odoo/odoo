@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.json import scriptsafe as json_safe
 
@@ -57,7 +57,9 @@ class MixinWebsiteCover_Properties(models.AbstractModel):
         try:
             cover_properties = json_safe.loads(vals["cover_properties"])
         except ValueError, TypeError:
-            raise ValidationError(_("Invalid cover properties value.")) from None
+            raise ValidationError(
+                self.env._("Invalid cover properties value.")
+            ) from None
         resize_classes = cover_properties.get("resize_class", "").split()
         classes = ["o_half_screen_height", "o_full_screen_height", "cover_auto"]
         if not set(resize_classes).isdisjoint(classes):

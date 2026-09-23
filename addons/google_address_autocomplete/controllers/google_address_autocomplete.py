@@ -3,7 +3,7 @@ from pprint import pformat
 
 import requests
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import html2plaintext
@@ -263,7 +263,9 @@ class AutoCompleteController(http.Controller):
 
     def _get_api_key(self, use_employees_key):
         if not request.env.user._is_internal():
-            raise AccessError(_("You don't have access to the internal API key."))
+            raise AccessError(
+                request.env._("You don't have access to the internal API key.")
+            )
         return request.env["credential.credential"]._get_system_secret(
             "google_address_autocomplete.google_places_api_key"
         )
@@ -307,7 +309,7 @@ class AutoCompleteController(http.Controller):
             api_key = self._get_api_key(use_employees_key)
         except AccessError as e:
             raise AccessError(
-                _("You don't have access to the full autocomplete feature.")
+                request.env._("You don't have access to the full autocomplete feature.")
             ) from e
         if not api_key:
             # Same guard as /autocomplete/address: with no key configured the

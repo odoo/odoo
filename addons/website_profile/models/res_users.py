@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import consteq
@@ -44,7 +44,7 @@ class ResUsers(models.Model):
                         "profile_country_refused", reason="not_editable", user=user.id
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             "Changing the country is not allowed once document(s) "
                             "have been issued for your account. Please contact us "
                             "directly for this operation."

@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, fields, models, tools
+from odoo import fields, models, tools
 
 
 class MailingMailing(models.Model):
@@ -31,9 +31,9 @@ class MailingMailing(models.Model):
             mass_mailing.crm_lead_count = mapped_data.get(mass_mailing.source_id.id, 0)
 
     def action_redirect_to_leads_and_opportunities(self):
-        text = _("Leads") if self.use_leads else _("Opportunities")
-        helper_header = _("No %s yet!", text)
-        helper_message = _(
+        text = self.env._("Leads") if self.use_leads else self.env._("Opportunities")
+        helper_header = self.env._("No %s yet!", text)
+        helper_message = self.env._(
             "Note that Odoo cannot track replies if they are sent towards email addresses to this database."
         )
         return {
@@ -49,7 +49,7 @@ class MailingMailing(models.Model):
                 helper_header,
                 helper_message,
             ),
-            "name": _("Leads Analysis"),
+            "name": self.env._("Leads Analysis"),
             "res_model": "crm.lead",
             "type": "ir.actions.act_window",
             "view_mode": "list,pivot,graph,form",
@@ -66,7 +66,7 @@ class MailingMailing(models.Model):
             "value": tools.misc.format_decimalized_number(
                 self.crm_lead_count, decimal=0
             ),
-            "col_subtitle": _("LEADS"),
+            "col_subtitle": self.env._("LEADS"),
         }
         values["kpi_data"][1]["kpi_name"] = "lead"
         return values

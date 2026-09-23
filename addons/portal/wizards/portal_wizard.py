@@ -2,7 +2,6 @@ from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import email_normalize
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -64,7 +63,7 @@ class PortalWizard(models.TransientModel):
 
     def _action_view_modal(self):
         return {
-            "name": _("Portal Access Management"),
+            "name": self.env._("Portal Access Management"),
             "type": "ir.actions.act_window",
             "res_model": "portal.wizard",
             "view_mode": "form",
@@ -171,7 +170,7 @@ class PortalWizardUser(models.TransientModel):
                 partner=self.partner_id.id,
             )
             raise UserError(
-                _(
+                self.env._(
                     'The partner "%s" already has the portal access.',
                     self.partner_id.name,
                 )
@@ -223,7 +222,7 @@ class PortalWizardUser(models.TransientModel):
                 partner=self.partner_id.id,
             )
             raise UserError(
-                _(
+                self.env._(
                     'The partner "%s" has no portal access or is internal.',
                     self.partner_id.name,
                 )
@@ -255,7 +254,7 @@ class PortalWizardUser(models.TransientModel):
                 "invite_refused", reason="no_portal_access", partner=self.partner_id.id
             )
             raise UserError(
-                _(
+                self.env._(
                     'You should first grant the portal access to the partner "%s".',
                     self.partner_id.name,
                 )
@@ -302,7 +301,7 @@ class PortalWizardUser(models.TransientModel):
         if not template:
             _debug.logic("portal_invite_refused", reason="no_template")
             raise UserError(
-                _(
+                self.env._(
                     'The template "Portal: new user" not found for sending email to the portal user.'
                 )
             )
@@ -328,14 +327,17 @@ class PortalWizardUser(models.TransientModel):
                 "portal_email_refused", reason="invalid", partner=self.partner_id.id
             )
             raise UserError(
-                _('The contact "%s" does not have a valid email.', self.partner_id.name)
+                self.env._(
+                    'The contact "%s" does not have a valid email.',
+                    self.partner_id.name,
+                )
             )
         if self.email_state == "exist":
             _debug.logic(
                 "portal_email_refused", reason="taken", partner=self.partner_id.id
             )
             raise UserError(
-                _(
+                self.env._(
                     'The contact "%s" has the same email as an existing user',
                     self.partner_id.name,
                 )

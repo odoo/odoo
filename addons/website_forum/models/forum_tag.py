@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError
 
 
@@ -51,7 +51,9 @@ class ForumTag(models.Model):
             forum = self.env["forum.forum"].browse(vals.get("forum_id"))
             if self.env.user.karma < forum.karma_tag_create and not self.env.is_admin():
                 raise AccessError(
-                    _("%d karma required to create a new Tag.", forum.karma_tag_create)
+                    self.env._(
+                        "%d karma required to create a new Tag.", forum.karma_tag_create
+                    )
                 )
         return super(
             ForumTag,

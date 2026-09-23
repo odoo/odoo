@@ -1,4 +1,3 @@
-from odoo import _
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, route
 from odoo.libs.debug_log import DebugLog
@@ -47,7 +46,7 @@ class Delivery(WebsiteSale):
                         transaction=tx_sudo.id,
                     )
                     raise UserError(
-                        _(
+                        request.env._(
                             "It seems that there is already a transaction for your order; you can't"
                             " change the delivery method anymore."
                         )
@@ -93,7 +92,7 @@ class Delivery(WebsiteSale):
     def shop_get_delivery_rate(self, dm_id):
         if not (order_sudo := request.cart):
             _debug.logic("delivery_rate_refused", reason="empty_cart")
-            raise ValidationError(_("Your cart is empty."))
+            raise ValidationError(request.env._("Your cart is empty."))
 
         if int(dm_id) not in order_sudo._get_delivery_methods().ids:
             _debug.logic(
@@ -103,7 +102,7 @@ class Delivery(WebsiteSale):
                 carrier=int(dm_id),
             )
             raise UserError(
-                _(
+                request.env._(
                     "It seems that a delivery method is not compatible with your address. Please"
                     " refresh the page and try again."
                 )
@@ -158,7 +157,7 @@ class Delivery(WebsiteSale):
             partial_delivery_address
         )
         if order_sudo._is_anonymous_cart():
-            partial_delivery_address["name"] = _(
+            partial_delivery_address["name"] = request.env._(
                 "Anonymous express checkout partner for order %s",
                 order_sudo.name,
             )
@@ -185,7 +184,7 @@ class Delivery(WebsiteSale):
             child_partner_id = self._find_child_partner(
                 order_sudo.partner_id.commercial_partner_id.id, partial_delivery_address
             )
-            partial_delivery_address["name"] = _(
+            partial_delivery_address["name"] = request.env._(
                 "Anonymous express checkout partner for order %s",
                 order_sudo.name,
             )

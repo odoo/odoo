@@ -2,7 +2,7 @@ import logging
 import os
 from datetime import UTC
 
-from odoo import SUPERUSER_ID, Command, _, api, fields, models
+from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
@@ -383,13 +383,15 @@ class EventRegistration(models.Model):
             for registration in self
             if registration.event_slot_id
         ):
-            raise ValidationError(_("Invalid event / slot choice"))
+            raise ValidationError(self.env._("Invalid event / slot choice"))
         if any(
             not registration.event_slot_id
             for registration in self
             if registration.is_multi_slots
         ):
-            raise ValidationError(_("Slot choice is mandatory on multi-slots events."))
+            raise ValidationError(
+                self.env._("Slot choice is mandatory on multi-slots events.")
+            )
 
     @api.constrains("event_id", "event_ticket_id")
     def _check_event_ticket(self):
@@ -398,7 +400,7 @@ class EventRegistration(models.Model):
             for registration in self
             if registration.event_ticket_id
         ):
-            raise ValidationError(_("Invalid event / ticket choice"))
+            raise ValidationError(self.env._("Invalid event / ticket choice"))
 
     def _prepare_partner_values(self, partner, fnames=None):
         if fnames is None:
@@ -508,7 +510,7 @@ class EventRegistration(models.Model):
             to_confirm._update_mail_schedulers()
 
         if vals.get("state") == "done":
-            message = _(
+            message = self.env._(
                 "Attended on %(attended_date)s",
                 attended_date=format_date(
                     env=self.env, value=fields.Datetime.now(), date_format="short"
@@ -558,7 +560,7 @@ class EventRegistration(models.Model):
             "default_composition_mode": "comment",
         }
         return {
-            "name": _("Compose Email"),
+            "name": self.env._("Compose Email"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "mail.compose.message",
@@ -629,12 +631,12 @@ class EventRegistration(models.Model):
 
     def _message_compute_subject(self):
         if self.name:
-            return _(
+            return self.env._(
                 "%(event_name)s - Registration for %(attendee_name)s",
                 event_name=self.event_id.name,
                 attendee_name=self.name,
             )
-        return _(
+        return self.env._(
             "%(event_name)s - Registration #%(registration_id)s",
             event_name=self.event_id.name,
             registration_id=self.id,

@@ -1,6 +1,6 @@
 import base64
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -21,7 +21,7 @@ class IrMail_Server(models.Model):
         outlook_servers = self.filtered(
             lambda server: server.smtp_authentication == "outlook"
         )
-        outlook_servers.smtp_authentication_info = _(
+        outlook_servers.smtp_authentication_info = self.env._(
             "Connect your Outlook account with the OAuth Authentication process.  \n"
             "By default, only a user with a matching email address will be able to use this server. "
             'To extend its use, you should set a "mail.default.from" system parameter.'
@@ -36,7 +36,7 @@ class IrMail_Server(models.Model):
         for server in outlook_servers:
             if server.smtp_pass:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Please leave the password field empty for Outlook mail server “%s”. "
                         "The OAuth process does not require it",
                         server.name,
@@ -45,7 +45,7 @@ class IrMail_Server(models.Model):
 
             if server.smtp_encryption not in ("starttls", "starttls_strict"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Incorrect Connection Security for Outlook mail server “%s”. "
                         'Please set it to "TLS (STARTTLS)".',
                         server.name,
@@ -54,7 +54,7 @@ class IrMail_Server(models.Model):
 
             if not server.smtp_user:
                 raise UserError(
-                    _(
+                    self.env._(
                         'Please fill the "Username" field with your Outlook/Office365 username (your email address). '
                         "This should be the same account as the one used for the Outlook OAuthentication Token."
                     )

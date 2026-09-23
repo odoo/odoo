@@ -3,7 +3,7 @@ from urllib.parse import urlencode
 from odoo import http
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
-from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_google_map.controllers.main import GoogleMap
@@ -115,7 +115,7 @@ class WebsiteCustomer(GoogleMap):
         industries = [
             {
                 "industry_id_count": sum(count for __, count in industry_groups),
-                "industry_id": (0, _("All Industries")),
+                "industry_id": (0, request.env._("All Industries")),
             }
         ]
         for g_industry, count in industry_groups:
@@ -144,7 +144,7 @@ class WebsiteCustomer(GoogleMap):
         countries = [
             {
                 "country_id_count": sum(count for __, count in country_groups),
-                "country_id": (0, _("All Countries")),
+                "country_id": (0, request.env._("All Countries")),
             }
         ]
         for g_country, count in country_groups:

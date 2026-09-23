@@ -2,7 +2,7 @@ import json
 from datetime import timedelta
 from urllib.parse import urlencode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.fields import Command
 from odoo.http import request
@@ -105,7 +105,7 @@ class PaymentProvider(models.Model):
         ):
             if not provider.mercado_pago_access_token:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Mercado Pago credentials are missing. Click the "Connect" button to set up'
                         " your account."
                     )
@@ -124,7 +124,7 @@ class PaymentProvider(models.Model):
             for p in self
         ):
             raise ValidationError(
-                _("Connect your account before enabling tokenization.")
+                self.env._("Connect your account before enabling tokenization.")
             )
 
     # === CRUD METHODS === #
@@ -155,17 +155,17 @@ class PaymentProvider(models.Model):
 
         if self.company_id.country_id.code not in const.SUPPORTED_COUNTRIES:
             raise RedirectWarning(
-                _(
+                self.env._(
                     "Mercado Pago is not available in your country; please use another payment"
                     " provider."
                 ),
                 self.env.ref("payment.action_payment_provider").id,
-                _("Other Payment Providers"),
+                self.env._("Other Payment Providers"),
             )
 
         if not self.mercado_pago_account_country_id:
             raise ValidationError(
-                _("Set the account country before connecting the account.")
+                self.env._("Set the account country before connecting the account.")
             )
 
         # Encode the return URL parameters here rather than passing them in the 'state' parameter

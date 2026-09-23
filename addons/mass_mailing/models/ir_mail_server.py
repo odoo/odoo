@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.tools.misc import format_date
 
 
@@ -15,10 +15,10 @@ class IrMail_Server(models.Model):
 
     def _get_active_usages(self):
         def format_usage(mailing_id):
-            base = _('Mass Mailing "%s"', mailing_id.display_name)
+            base = self.env._('Mass Mailing "%s"', mailing_id.display_name)
             if not mailing_id.schedule_date:
                 return base
-            details = _(
+            details = self.env._(
                 "(scheduled for %s)", format_date(self.env, mailing_id.schedule_date)
             )
             return f"{base} {details}"
@@ -29,7 +29,7 @@ class IrMail_Server(models.Model):
             usages = []
             if default_mail_server_id == record.id:
                 usages.append(
-                    _(
+                    self.env._(
                         "Email Marketing uses it as its default mail server to send mass mailings"
                     )
                 )

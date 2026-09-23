@@ -1,6 +1,5 @@
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
-from odoo import _
 from odoo.exceptions import UserError
 from odoo.http import request, route
 
@@ -58,7 +57,7 @@ class WebsiteSale(main.WebsiteSale):
             else:
                 url_query["notify_coupon"] = code
         else:
-            url_query["coupon_error"] = _(
+            url_query["coupon_error"] = request.env._(
                 "The coupon will be automatically applied when you add something in your cart."
             )
             url_query["coupon_error_type"] = "warning"

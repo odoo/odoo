@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import consteq, float_round
@@ -231,7 +231,7 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.PAYMENT_STATUS_MAPPING["error"]:
             failure_reason = payment_data.get("failure_reason")
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during the processing of your payment (%s). Please try again.",
                     failure_reason,
                 )

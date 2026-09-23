@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.tools.misc import str2bool
@@ -58,14 +58,14 @@ class IrHttp(models.AbstractModel):
         if recaptcha_result in ["is_human", "no_secret"]:
             return
         if recaptcha_result == "wrong_secret":
-            raise ValidationError(_("The reCaptcha private key is invalid."))
+            raise ValidationError(self.env._("The reCaptcha private key is invalid."))
         if recaptcha_result == "wrong_token":
-            raise ValidationError(_("The reCaptcha token is invalid."))
+            raise ValidationError(self.env._("The reCaptcha token is invalid."))
         if recaptcha_result == "timeout":
-            raise UserError(_("Your request has timed out, please retry."))
+            raise UserError(self.env._("Your request has timed out, please retry."))
         if recaptcha_result == "bad_request":
-            raise UserError(_("The request is invalid or malformed."))
-        raise UserError(_("Suspicious activity detected by google reCAPTCHA."))
+            raise UserError(self.env._("The request is invalid or malformed."))
+        raise UserError(self.env._("Suspicious activity detected by google reCAPTCHA."))
 
     @api.model
     def _get_recaptcha_verdict(self, ip_addr, token, action=False):

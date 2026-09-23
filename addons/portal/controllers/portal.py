@@ -4,7 +4,7 @@ from urllib.parse import quote, urlsplit, urlunsplit
 
 from werkzeug.exceptions import BadRequest, Forbidden, NotFound
 
-from odoo import SUPERUSER_ID, _
+from odoo import SUPERUSER_ID
 from odoo.exceptions import (
     AccessDenied,
     AccessError,
@@ -639,14 +639,16 @@ class CustomerPortal(Controller):
         state = request.env["res.country.state"].browse(state_id).exists()
         if country_id and not country:
             invalid_fields.add("country_id")
-            error_messages.append(_("Please select a valid country."))
+            error_messages.append(request.env._("Please select a valid country."))
         if state_id and not state:
             invalid_fields.add("state_id")
-            error_messages.append(_("Please select a valid state."))
+            error_messages.append(request.env._("Please select a valid state."))
         elif state and country and state.country_id != country:
             invalid_fields.add("state_id")
             error_messages.append(
-                _("The selected state does not belong to the selected country.")
+                request.env._(
+                    "The selected state does not belong to the selected country."
+                )
             )
 
     def _is_commercial_address(self, partner_sudo, **kwargs):
@@ -685,7 +687,7 @@ class CustomerPortal(Controller):
         if country_change and not partner_sudo._can_edit_country():
             invalid_fields.add("country_id")
             error_messages.append(
-                _(
+                request.env._(
                     "Changing your country is not allowed once document(s) have been issued for your"
                     " account. Please contact us directly for this operation."
                 )
@@ -699,7 +701,7 @@ class CustomerPortal(Controller):
             if email_change:
                 invalid_fields.add("email")
             error_messages.append(
-                _(
+                request.env._(
                     "If you are ordering for an external person, please place your order via the"
                     " backend. If you wish to change your name or email address, please do so in"
                     " the account settings or contact your administrator."
@@ -718,7 +720,7 @@ class CustomerPortal(Controller):
         ):
             invalid_fields.add("vat")
             error_messages.append(
-                _(
+                request.env._(
                     "Changing VAT number is not allowed once document(s) have been issued for your"
                     " account. Please contact us directly for this operation."
                 )
@@ -742,14 +744,14 @@ class CustomerPortal(Controller):
                 field_description = partner_sudo_field._description_string(request.env)
                 if partner_sudo.commercial_partner_id.is_company:
                     error_messages.append(
-                        _(
+                        request.env._(
                             "The %(field_name)s is managed on your company account.",
                             field_name=field_description,
                         )
                     )
                 else:
                     error_messages.append(
-                        _(
+                        request.env._(
                             "The %(field_name)s is managed on your main account address.",
                             field_name=field_description,
                         )
@@ -765,7 +767,7 @@ class CustomerPortal(Controller):
         ):
             invalid_fields.add("email")
             error_messages.append(
-                _("Invalid Email! Please enter a valid email address.")
+                request.env._("Invalid Email! Please enter a valid email address.")
             )
 
     def _add_address_vat_format_errors(
@@ -825,7 +827,7 @@ class CustomerPortal(Controller):
             if not address_values.get(field_name):
                 missing_fields.add(field_name)
         if missing_fields:
-            error_messages.append(_("Some required fields are empty."))
+            error_messages.append(request.env._("Some required fields are empty."))
 
     def _get_vat_validation_fields(self):
         return {"country_id", "vat"}
@@ -933,7 +935,7 @@ class CustomerPortal(Controller):
 
         if address_sudo == request.env.user.partner_id:
             _debug.logic("address_archive_refused", reason="main_address")
-            raise UserError(_("You cannot archive your main address"))
+            raise UserError(request.env._("You cannot archive your main address"))
 
         _debug.lifecycle("address_archived", partner=address_sudo.id)
         address_sudo.action_archive()
@@ -977,7 +979,9 @@ class CustomerPortal(Controller):
                 _debug.logic("password_change_refused", reason="empty", field=k)
                 return {
                     "errors": {
-                        "password": {k: _("You cannot leave any password empty.")}
+                        "password": {
+                            k: request.env._("You cannot leave any password empty.")
+                        }
                     }
                 }
 
@@ -986,7 +990,7 @@ class CustomerPortal(Controller):
             return {
                 "errors": {
                     "password": {
-                        "new2": _(
+                        "new2": request.env._(
                             "The new password and its confirmation must be identical."
                         )
                     }
@@ -998,7 +1002,7 @@ class CustomerPortal(Controller):
         except AccessDenied as e:
             msg = e.args[0]
             if msg == AccessDenied().args[0]:
-                msg = _(
+                msg = request.env._(
                     "The old password you provided is incorrect, your password was not changed."
                 )
             _debug.logic("password_change_refused", reason="access_denied")
@@ -1041,7 +1045,7 @@ class CustomerPortal(Controller):
                 request.env.user.sudo()._deactivate_portal_user(**post)
                 request.session.logout()
                 return request.redirect(
-                    f"/web/login?message={quote(_('Account deleted!'), safe='/:')}"
+                    f"/web/login?message={quote(request.env._('Account deleted!'), safe='/:')}"
                 )
             except AccessDenied:
                 _debug.logic("deactivate_refused", reason="bad_password")
@@ -1065,7 +1069,7 @@ class CustomerPortal(Controller):
         except AccessError, MissingError, TypeError, ValueError:
             _debug.logic("attachment_remove_refused", reason="no_access")
             raise UserError(
-                _(
+                request.env._(
                     "The attachment does not exist or you do not have the rights to access it."
                 )
             ) from None
@@ -1081,7 +1085,7 @@ class CustomerPortal(Controller):
                 model=attachment_sudo.res_model,
             )
             raise UserError(
-                _(
+                request.env._(
                     "The attachment %s cannot be removed because it is not in a pending state.",
                     attachment_sudo.name,
                 )
@@ -1096,7 +1100,7 @@ class CustomerPortal(Controller):
                 attachment=attachment_sudo.id,
             )
             raise UserError(
-                _(
+                request.env._(
                     "The attachment %s cannot be removed because it is linked to a message.",
                     attachment_sudo.name,
                 )
@@ -1115,7 +1119,7 @@ class CustomerPortal(Controller):
                 model=model_name,
                 record=document_id,
             )
-            raise MissingError(_("This document does not exist."))
+            raise MissingError(request.env._("This document does not exist."))
         try:
             document.check_access("read")
         except AccessError:
@@ -1186,7 +1190,7 @@ class CustomerPortal(Controller):
             _debug.logic(
                 "report_refused", reason="bad_type", report_type=str(report_type)
             )
-            raise UserError(_("Invalid report type: %s", report_type))
+            raise UserError(request.env._("Invalid report type: %s", report_type))
 
         ReportAction = request.env["ir.actions.report"].sudo()
 
@@ -1195,7 +1199,9 @@ class CustomerPortal(Controller):
                 _debug.logic(
                     "report_refused", reason="multi_company", model=model._name
                 )
-                raise UserError(_("Multi company reports are not supported."))
+                raise UserError(
+                    request.env._("Multi company reports are not supported.")
+                )
             ReportAction = ReportAction.with_company(model.company_id)
 
         method_name = f"_render_qweb_{report_type}"

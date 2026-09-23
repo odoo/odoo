@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 
 from markupsafe import escape
 
-from odoo import Command, _, api, exceptions, fields, models
+from odoo import Command, api, exceptions, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.netguard import DestinationRefused
@@ -819,7 +819,7 @@ class SurveySurvey(models.Model):
         for survey in self.filtered("slug"):
             if not self._SLUG_RE.match(survey.slug):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The custom URL slug '%(slug)s' may only contain lowercase "
                         "letters, digits and single hyphens.",
                         slug=survey.slug,
@@ -829,7 +829,7 @@ class SurveySurvey(models.Model):
                 survey.slug
             ) == self.SHORT_TOKEN_LENGTH and self._resolve_short_token(survey.slug):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The custom URL slug '%(slug)s' collides with another survey's "
                         "short link. Pick a different length or wording.",
                         slug=survey.slug,
@@ -848,7 +848,7 @@ class SurveySurvey(models.Model):
         try:
             self.env["ir.egress"].check_url((url or "").strip())
         except DestinationRefused as refusal:
-            return _(
+            return self.env._(
                 "Webhook URL %(url)s may not be called: %(reason)s",
                 url=url,
                 reason=str(refusal),
@@ -865,7 +865,7 @@ class SurveySurvey(models.Model):
         )
         if failing:
             raise ValidationError(
-                _(
+                self.env._(
                     'Combining roaming and "Scoring with answers after each page" is not possible; please update the following surveys:\n- %(survey_names)s',
                     survey_names="\n- ".join(failing.mapped("title")),
                 )
@@ -882,7 +882,7 @@ class SurveySurvey(models.Model):
             if len(accessible) < len(surveys):
                 failing_surveys_sudo = (self - accessible).sudo()
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The access of the following surveys is restricted. Make sure their responsible still has access to it: \n%(survey_names)s\n",
                         survey_names="\n".join(
                             f"- {survey.title}: {survey.user_id.name}"
@@ -1097,18 +1097,20 @@ class SurveySurvey(models.Model):
                 self.with_user(user).check_access("read")
             except AccessError as e:
                 raise exceptions.UserError(
-                    _("Creating test token is not allowed for you.")
+                    self.env._("Creating test token is not allowed for you.")
                 ) from e
 
         if not test_entry:
             if not self.active:
                 raise exceptions.UserError(
-                    _("Creating token for closed/archived surveys is not allowed.")
+                    self.env._(
+                        "Creating token for closed/archived surveys is not allowed."
+                    )
                 )
             if check_attempts and not self._has_attempts_left(
                 partner or (user and user.partner_id), email, invite_token
             ):
-                raise exceptions.UserError(_("No attempts left."))
+                raise exceptions.UserError(self.env._("No attempts left."))
 
     def _prepare_user_input_predefined_questions(self) -> Self:
         self.check_singleton()
@@ -1517,12 +1519,14 @@ class SurveySurvey(models.Model):
         self.check_singleton()
         if not self.question_ids:
             raise UserError(
-                _("You cannot send an invitation for a survey that has no questions.")
+                self.env._(
+                    "You cannot send an invitation for a survey that has no questions."
+                )
             )
 
         if self.scoring_type != "no_scoring" and self.scoring_max_obtainable <= 0:
             raise UserError(
-                _(
+                self.env._(
                     "A scored survey needs at least one question that gives points.\n"
                     "Please check answers and their scores."
                 )
@@ -1531,20 +1535,20 @@ class SurveySurvey(models.Model):
         if self.questions_layout_effective == "page_per_section":
             if not self.page_ids:
                 raise UserError(
-                    _(
+                    self.env._(
                         'You cannot send an invitation for a "One page per section" survey if the survey has no sections.'
                     )
                 )
             if not self.page_ids.mapped("question_ids"):
                 raise UserError(
-                    _(
+                    self.env._(
                         'You cannot send an invitation for a "One page per section" survey if the survey only contains empty sections.'
                     )
                 )
 
         if not self.active:
             raise exceptions.UserError(
-                _("You cannot send invitations for closed surveys.")
+                self.env._("You cannot send invitations for closed surveys.")
             )
 
     def action_send_survey(self) -> dict[str, Any]:
@@ -1563,7 +1567,7 @@ class SurveySurvey(models.Model):
         )
         return {
             "type": "ir.actions.act_window",
-            "name": _("Share a Survey"),
+            "name": self.env._("Share a Survey"),
             "view_mode": "form",
             "res_model": "survey.invite",
             "target": "new",
@@ -1642,7 +1646,7 @@ class SurveySurvey(models.Model):
 
     def action_start_session(self) -> dict[str, Any]:
         if not self.env.user.has_group("survey.group_survey_user"):
-            raise AccessError(_("Only survey users can manage sessions."))
+            raise AccessError(self.env._("Only survey users can manage sessions."))
 
         self.check_singleton()
         self.sudo().write(
@@ -1667,7 +1671,7 @@ class SurveySurvey(models.Model):
 
     def action_end_session(self) -> None:
         if not self.env.user.has_group("survey.group_survey_user"):
-            raise AccessError(_("Only survey users can manage sessions."))
+            raise AccessError(self.env._("Only survey users can manage sessions."))
 
         self.sudo().write({"session_state": False})
         session_inputs = self.user_input_ids.sudo().filtered(
@@ -1863,7 +1867,7 @@ class SurveySurvey(models.Model):
         self.check_singleton()
         if not self.certification_badge_id:
             raise UserError(
-                _(
+                self.env._(
                     "Certification Badge is not configured for the survey %(survey_name)s",
                     survey_name=self.title,
                 )
@@ -1876,7 +1880,7 @@ class SurveySurvey(models.Model):
         goal = self.env["gamification.goal.definition"].create(
             {
                 "name": self.title,
-                "description": _("%s certification passed", self.title),
+                "description": self.env._("%s certification passed", self.title),
                 "domain": "['&', ('survey_id', '=', %s), ('scoring_success', '=', True)]"
                 % self.id,
                 "computation_mode": "count",
@@ -1892,7 +1896,7 @@ class SurveySurvey(models.Model):
         )
         challenge = self.env["gamification.challenge"].create(
             {
-                "name": _("%s challenge certification", self.title),
+                "name": self.env._("%s challenge certification", self.title),
                 "reward_id": self.certification_badge_id.id,
                 "state": "inprogress",
                 "period": "once",

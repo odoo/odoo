@@ -5,7 +5,7 @@ import re
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -161,7 +161,7 @@ class CrmRevealRule(models.Model):
                 re.compile(self.regex_url)
         except Exception as error:
             _debug.logic("reveal_rule_refused", reason="bad_regex", rule=self.id)
-            raise ValidationError(_("Enter Valid Regex.")) from error
+            raise ValidationError(self.env._("Enter Valid Regex.")) from error
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -431,7 +431,9 @@ class CrmRevealRule(models.Model):
         template_values = result["reveal_data"]
         template_values.update(
             {
-                "flavor_text": _("Opportunity created by Odoo Lead Generation"),
+                "flavor_text": self.env._(
+                    "Opportunity created by Odoo Lead Generation"
+                ),
                 "people_data": result.get("people_data"),
             }
         )

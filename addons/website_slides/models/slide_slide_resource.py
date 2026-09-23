@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.filesystem import get_extension
 
@@ -76,7 +76,7 @@ class SlideSlideResource(models.Model):
         # translated comparison string, so it was never replaced.
         for resource in self:
             if not resource.name or resource.is_name_default:
-                new_name = _("Resource")
+                new_name = self.env._("Resource")
                 if resource.resource_type == "file" and (
                     resource.data or resource.file_name
                 ):
@@ -117,7 +117,7 @@ class SlideSlideResource(models.Model):
         for record in self:
             if record.resource_type != "file" and record.data:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Resource %(resource_name)s is a link and should not contain a data file",
                         resource_name=record.name,
                     )

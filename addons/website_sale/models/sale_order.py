@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request
@@ -197,7 +197,7 @@ class SaleOrder(models.Model):
                             company=company.id,
                         )
                         raise UserError(
-                            _(
+                            self.env._(
                                 "The company of the website you are trying to sell from (%(website_company)s)"
                                 " is different than the one you want to use (%(company)s)",
                                 website_company=website.company_id.name,
@@ -457,7 +457,7 @@ class SaleOrder(models.Model):
                 line=line_id,
             )
             return {
-                "warning": _(
+                "warning": self.env._(
                     "We weren't able to update your cart. Please refresh your page before trying"
                     " again."
                 )
@@ -601,13 +601,13 @@ class SaleOrder(models.Model):
         if not product:
             _debug.logic("cart_line_refused", reason="no_variant", order=self.id)
             raise UserError(
-                _(
+                self.env._(
                     "The given combination does not exist therefore it cannot be added to cart."
                 )
             )
 
         if linked_line_id and linked_line_id not in self.line_ids.ids:
-            raise UserError(_("Invalid request parameters."))
+            raise UserError(self.env._("Invalid request parameters."))
 
         values = {
             "product_id": product.id,
@@ -783,7 +783,7 @@ class SaleOrder(models.Model):
         if customer_portal_group:
             access_opt = customer_portal_group[2].setdefault("button_access", {})
             if self.env.context.get("website_sale_send_recovery_email"):
-                access_opt["title"] = _("Resume Order")
+                access_opt["title"] = self.env._("Resume Order")
                 access_opt["url"] = (
                     f"{self.get_base_url()}/shop/cart?id={self.id}&access_token={self.access_token}"
                 )
@@ -915,15 +915,17 @@ class SaleOrder(models.Model):
     def _check_cart_is_ready_to_be_paid(self):
         if not self._is_cart_ready():
             raise ValidationError(
-                _("Your cart is not ready to be paid, please verify previous steps.")
+                self.env._(
+                    "Your cart is not ready to be paid, please verify previous steps."
+                )
             )
 
         if not self.only_services:
             if not self.carrier_id:
-                raise ValidationError(_("No shipping method is selected."))
+                raise ValidationError(self.env._("No shipping method is selected."))
             if self.carrier_id not in self._get_delivery_methods():
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The delivery method is not compatible with your delivery address."
                     )
                 )

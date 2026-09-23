@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import requests
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import str2bool
 
@@ -87,7 +87,7 @@ class ResUsers(models.Model):
                 )
                 self.env["ir.cron"]._commit_progress()
             error_key = error.response.json().get("error", "nc")
-            error_msg = _(
+            error_msg = self.env._(
                 "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. "
                 "You should check your Client ID and secret on the Microsoft Azure portal or try to stop and restart your calendar synchronisation.",
                 error_key,

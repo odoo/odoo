@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request
@@ -34,7 +34,7 @@ class DeliveryCarrier(models.Model):
         ):
             _debug.logic("in_store_carrier_refused", reason="provider", carriers=self)
             raise ValidationError(
-                _(
+                self.env._(
                     "The delivery method must have at least one warehouse to be published."
                 )
             )
@@ -51,7 +51,9 @@ class DeliveryCarrier(models.Model):
                 )
             ):
                 raise ValidationError(
-                    _("The delivery method and a warehouse must share the same company")
+                    self.env._(
+                        "The delivery method and a warehouse must share the same company"
+                    )
                 )
 
     @api.model_create_multi

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import UserError
 
@@ -18,7 +18,7 @@ class FetchmailServer(models.Model):
 
     def _compute_server_type_info(self):
         outlook_servers = self.filtered(lambda server: server.server_type == "outlook")
-        outlook_servers.server_type_info = _(
+        outlook_servers.server_type_info = self.env._(
             "Connect your personal Outlook account using OAuth. \n"
             "You will be redirected to the Outlook login page to accept "
             "the permissions."
@@ -36,7 +36,7 @@ class FetchmailServer(models.Model):
         for server in self.filtered(lambda s: s.server_type == "outlook"):
             if server.password:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Please leave the password field empty for Outlook mail server “%s”. "
                         "The OAuth process does not require it.",
                         server.name,
@@ -44,7 +44,7 @@ class FetchmailServer(models.Model):
                 )
             if server.encryption not in ("ssl", "ssl_strict"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Incorrect Connection Encryption for Outlook mail server “%s”. "
                         'Please set it to "SSL/TLS".',
                         server.name,
@@ -52,7 +52,7 @@ class FetchmailServer(models.Model):
                 )
             if not server.user:
                 raise UserError(
-                    _(
+                    self.env._(
                         'Please fill the "Username" field with your Outlook/Office365 username (your email address). '
                         "This should be the same account as the one used for the Outlook "
                         "OAuthentication Token."

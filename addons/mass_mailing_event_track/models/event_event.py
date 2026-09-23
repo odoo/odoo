@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class EventEvent(models.Model):
@@ -18,6 +18,6 @@ class EventEvent(models.Model):
                 "default_mailing_domain": repr(
                     [("event_id", "in", self.ids), ("stage_id.is_cancel", "!=", True)]
                 ),
-                "default_subject": _("Event: %s", self.name),
+                "default_subject": self.env._("Event: %s", self.name),
             },
         }

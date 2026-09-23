@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -44,7 +44,7 @@ class SaleOrder(models.Model):
                     for so_line_description in so_lines_missing_booth
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Please make sure all your event-booth related lines are configured before confirming this order:%s",
                         so_lines_descriptions,
                     )

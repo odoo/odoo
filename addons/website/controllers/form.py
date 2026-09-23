@@ -14,7 +14,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.libs.text import nl2br, nl2br_enclose
 from odoo.tools import plaintext2html
 from odoo.tools.misc import consteq, hmac
-from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.translate import LazyTranslate
 
 from ..tools import website_form_signature_payload
 
@@ -83,7 +83,7 @@ class WebsiteForm(http.Controller):
                 "form_refused", reason="model_not_form_enabled", model=model_name
             )
             return request.prepare_json_response(
-                {"error": _("The form's specified model does not exist")}
+                {"error": request.env._("The form's specified model does not exist")}
             )
 
         if model_name == "mail.mail":
@@ -284,7 +284,7 @@ class WebsiteForm(http.Controller):
                     error_fields.append(field_name)
 
                 if dest_model._name == "mail.mail" and field_name == "email_from":
-                    custom_fields.append((_("email"), field_value))
+                    custom_fields.append((request.env._("email"), field_value))
 
             elif (
                 request.env["ir.model.fields"]._formbuilder_field_name(
@@ -337,7 +337,7 @@ class WebsiteForm(http.Controller):
             raise ValueError("model_sudo should get passed with sudo")
         model_name = model_sudo.model
         if model_name == "mail.mail":
-            email_from = _(
+            email_from = request.env._(
                 '"%(company)s form submission" <%(email)s>',
                 company=request.env.company.name,
                 email=request.env.company.email,
@@ -355,9 +355,9 @@ class WebsiteForm(http.Controller):
         )
 
         if custom or meta:
-            _custom_label = "%s\n___________\n\n" % _("Other Information:")
+            _custom_label = "%s\n___________\n\n" % request.env._("Other Information:")
             if model_name == "mail.mail":
-                _custom_label = "%s\n___________\n\n" % _(
+                _custom_label = "%s\n___________\n\n" % request.env._(
                     "This message has been posted on your website!"
                 )
             default_field = model_sudo.website_form_default_field_id
@@ -422,7 +422,7 @@ class WebsiteForm(http.Controller):
         ):
             record._message_log(
                 attachment_ids=[Command.set(orphan_attachment_ids)],
-                body=Markup(_("<p>Attached files: </p>")),
+                body=Markup(request.env._("<p>Attached files: </p>")),
                 message_type="comment",
             )
         elif model_name == "mail.mail" and orphan_attachment_ids:

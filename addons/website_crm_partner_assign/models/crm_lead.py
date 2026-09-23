@@ -2,7 +2,7 @@ import random
 
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -67,7 +67,7 @@ class CrmLead(models.Model):
             )
         ):
             raise AccessError(
-                _(
+                self.env._(
                     "Only users with commercial partner which is a parent of the assigned partner can edit this lead."
                 )
             )
@@ -120,8 +120,8 @@ class CrmLead(models.Model):
                 "simple_notification",
                 {
                     "type": "danger",
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "There is no country set in addresses for %(lead_names)s.",
                         lead_names=", ".join(leads_without_country.mapped("name")),
                     ),
@@ -270,7 +270,7 @@ class CrmLead(models.Model):
 
     def partner_interested(self, comment=False):
         self._assert_portal_write_access()
-        message = Markup("<p>%s</p>") % _("I am interested by this lead.")
+        message = Markup("<p>%s</p>") % self.env._("I am interested by this lead.")
         if comment:
             message += Markup("<p>%s</p>") % comment
         for lead in self:
@@ -280,11 +280,11 @@ class CrmLead(models.Model):
     def partner_desinterested(self, comment=False, contacted=False, spam=False):
         self._assert_portal_write_access()
         if contacted:
-            message = Markup("<p>%s</p>") % _(
+            message = Markup("<p>%s</p>") % self.env._(
                 "I am not interested by this lead. I contacted the lead."
             )
         else:
-            message = Markup("<p>%s</p>") % _(
+            message = Markup("<p>%s</p>") % self.env._(
                 "I am not interested by this lead. I have not contacted the lead."
             )
         partner_ids = self.env["res.partner"].search(
@@ -365,7 +365,7 @@ class CrmLead(models.Model):
                 fields=sorted(set(values) - set(fields)),
             )
             raise UserError(
-                _(
+                self.env._(
                     "Not allowed to update the following field(s): %s.",
                     ", ".join([key for key in values if key not in fields]),
                 )
@@ -395,7 +395,7 @@ class CrmLead(models.Model):
         user = self.env.user
         self = self.sudo()
         if not (values["contact_name"] and values["description"] and values["title"]):
-            return {"errors": _("All fields are required!")}
+            return {"errors": self.env._("All fields are required!")}
         tag_own = self.env.ref(
             "website_crm_partner_assign.tag_portal_lead_own_opp", False
         )

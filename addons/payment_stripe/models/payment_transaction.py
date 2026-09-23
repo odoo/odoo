@@ -3,7 +3,7 @@ import hmac
 from datetime import UTC, datetime
 from urllib.parse import urlencode as url_encode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools.urls import urljoin as url_join
@@ -464,7 +464,7 @@ class PaymentTransaction(models.Model):
             self.provider_reference = payment_data["payment_intent"]["id"]
             status = payment_data["payment_intent"]["status"]
         if not status:
-            self._set_error(_("Received data with missing intent status."))
+            self._set_error(self.env._("Received data with missing intent status."))
         elif status in const.STATUS_MAPPING["draft"]:
             pass
         elif status in const.STATUS_MAPPING["pending"]:
@@ -488,11 +488,11 @@ class PaymentTransaction(models.Model):
                 if last_payment_error:
                     message = last_payment_error.get("message", {})
                 else:
-                    message = _("The customer left the payment page.")
+                    message = self.env._("The customer left the payment page.")
                 self._set_error(message)
             else:
                 self._set_error(
-                    _(
+                    self.env._(
                         "The refund did not go through. Please log into your Stripe Dashboard to get "
                         "more information on that matter, and address any accounting discrepancies."
                     ),
@@ -504,7 +504,9 @@ class PaymentTransaction(models.Model):
                 status,
                 self.reference,
             )
-            self._set_error(_("Received data with invalid intent status: %s.", status))
+            self._set_error(
+                self.env._("Received data with invalid intent status: %s.", status)
+            )
         return None
 
     def _extract_token_values(self, payment_data):

@@ -6,7 +6,6 @@ from markupsafe import Markup
 
 from odoo import Command, api, fields, models, modules
 from odoo.tools.rendering_tools import QWebError
-from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -533,7 +532,7 @@ class EventMail(models.Model):
                 scheduled_date = now
             else:
                 scheduled_date = self.scheduled_date
-            body_content = _(
+            body_content = self.env._(
                 "Communication for %(event_name)s scheduled on %(scheduled_date)s failed.",
                 event_name=event.name,
                 scheduled_date=scheduled_date,
@@ -547,28 +546,28 @@ class EventMail(models.Model):
             )
             cause = exception.__cause__ or exception.__context__
             if hasattr(cause, "qweb"):
-                source_content = _(
+                source_content = self.env._(
                     "This is due to an error in template %(template_link)s.",
                     template_link=template_link,
                 )
                 if isinstance(cause, QWebError) and isinstance(
                     cause.__cause__, AttributeError
                 ):
-                    error_message = _(
+                    error_message = self.env._(
                         "There is an issue with dynamic placeholder. Actual error received is: %(error)s.",
                         error=Markup("<br/>%s") % cause.__cause__,
                     )
                 else:
-                    error_message = _(
+                    error_message = self.env._(
                         "Rendering of template failed with error: %(error)s.",
                         error=Markup("<br/>%s") % cause.qweb,
                     )
             else:
-                source_content = _(
+                source_content = self.env._(
                     "This may be linked to template %(template_link)s.",
                     template_link=template_link,
                 )
-                error_message = _(
+                error_message = self.env._(
                     "It failed with error %(error)s.",
                     error=str(exception),
                 )

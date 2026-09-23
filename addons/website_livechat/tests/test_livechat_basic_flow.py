@@ -2,7 +2,7 @@ import datetime
 
 from freezegun import freeze_time
 
-from odoo import _, fields, tests
+from odoo import fields, tests
 from odoo.tests.common import new_test_user
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -199,7 +199,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
         self.assertEqual(
             self.visitor.display_name,
-            "%s #%s" % (_("Website Visitor"), self.visitor.id),
+            "%s #%s" % (self.env._("Website Visitor"), self.visitor.id),
         )
         self.assertEqual(
             channel.name,

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -15,7 +15,7 @@ class DocumentsDocument(models.Model):
                 and document.shown_on_product_page
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Documents shown on product page cannot be restricted to a specific variant"
                     )
                 )

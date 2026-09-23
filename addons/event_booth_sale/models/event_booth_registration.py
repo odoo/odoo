@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 
 
 class EventBoothRegistration(models.Model):
@@ -99,7 +99,7 @@ class EventBoothRegistration(models.Model):
 
     def _cancel_pending_registrations(self):
         body = Markup("<p>%(message)s: <ul>%(booth_names)s</ul></p>") % {
-            "message": _(
+            "message": self.env._(
                 "Your order has been cancelled because the following booths have been reserved"
             ),
             "booth_names": Markup().join(

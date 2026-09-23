@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class GamificationKarmaTracking(models.Model):
@@ -6,6 +6,6 @@ class GamificationKarmaTracking(models.Model):
 
     def _selection_origin_models(self):
         return super()._selection_origin_models() + [
-            ("slide.slide", _("Course Quiz")),
+            ("slide.slide", self.env._("Course Quiz")),
             ("slide.channel", self.env["ir.model"]._get("slide.channel").display_name),
         ]

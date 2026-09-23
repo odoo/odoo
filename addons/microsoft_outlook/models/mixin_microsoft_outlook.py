@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.web import urljoin as url_join
 
@@ -122,7 +122,7 @@ class MixinMicrosoftOutlook(models.AbstractModel):
     def _renew_outlook_access_token(self):
         if not self.microsoft_outlook_refresh_token:
             raise UserError(
-                _("Please connect with your Outlook account before using it.")
+                self.env._("Please connect with your Outlook account before using it.")
             )
         client_id, client_secret = self._oauth2_credentials(OUTLOOK)
         if not client_id or not client_secret:

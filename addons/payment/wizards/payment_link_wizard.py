@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -50,11 +50,11 @@ class PaymentLinkWizard(models.TransientModel):
         self.warning_message = ""
         for wizard in self:
             if wizard.amount_max <= 0:
-                wizard.warning_message = _("There is nothing to be paid.")
+                wizard.warning_message = self.env._("There is nothing to be paid.")
             elif wizard.amount <= 0:
-                wizard.warning_message = _("Please set a positive amount.")
+                wizard.warning_message = self.env._("Please set a positive amount.")
             elif wizard.amount > wizard.amount_max:
-                wizard.warning_message = _(
+                wizard.warning_message = self.env._(
                     "Please set an amount lower than %s.",
                     wizard.currency_id.format(wizard.amount_max),
                 )

@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 _UNSET = object()
 
@@ -86,7 +86,7 @@ class ResUsers(models.Model):
             .sudo()
             .create(
                 {
-                    "name": _("Microsoft Calendar: %s", self.login),
+                    "name": self.env._("Microsoft Calendar: %s", self.login),
                     "category_id": self.env.ref(
                         "credential.credential_category_oauth2"
                     ).id,

@@ -1,7 +1,7 @@
 from textwrap import shorten
 from typing import Any
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -83,7 +83,7 @@ class SurveyQuestionAnswer(models.Model):
         for label in self:
             if not (label.value or "").strip() and not label.value_image:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Suggested answer value must not be empty (a text and/or an "
                         "image must be provided)."
                     )
@@ -94,7 +94,7 @@ class SurveyQuestionAnswer(models.Model):
         for label in self:
             if bool(label.question_id) == bool(label.matrix_question_id):
                 raise ValidationError(
-                    _("A label must be attached to only one question.")
+                    self.env._("A label must be attached to only one question.")
                 )
 
     @api.constrains("question_id", "matrix_question_id")
@@ -154,7 +154,7 @@ class SurveyQuestionAnswer(models.Model):
             ):
                 answer.display_name = answer_label
                 continue
-            title = answer.question_id.title or _("[Question Title]")
+            title = answer.question_id.title or self.env._("[Question Title]")
             n_extra_characters = (
                 len(title) + len(answer_label) + 3 - self.MAX_ANSWER_NAME_LENGTH
             )

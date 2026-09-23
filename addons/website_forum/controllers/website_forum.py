@@ -4,7 +4,7 @@ from urllib.parse import unquote_plus
 
 import werkzeug.exceptions
 
-from odoo import _, http, tools
+from odoo import http, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -319,7 +319,7 @@ class WebsiteForum(WebsiteProfile):
         ):
             _debug.logic("forum_tags_refused", reason="bad_tag_char", forum=forum.id)
             raise werkzeug.exceptions.BadRequest(
-                _('Bad "tag_char" value "%(tag_char)s"', tag_char=tag_char)
+                request.env._('Bad "tag_char" value "%(tag_char)s"', tag_char=tag_char)
             )
 
         domain = [
@@ -364,12 +364,12 @@ class WebsiteForum(WebsiteProfile):
                 filter=str(filters),
             )
             raise werkzeug.exceptions.BadRequest(
-                _('Bad "filters" value "%(filters)s".', filters=filters)
+                request.env._('Bad "filters" value "%(filters)s".', filters=filters)
             )
 
         first_char_tag = forum._get_tags_first_char(tags=tags)
         first_char_list = [(t, t.lower()) for t in first_char_tag if t.isalnum()]
-        first_char_list.insert(0, (_("All"), ""))
+        first_char_list.insert(0, (request.env._("All"), ""))
         if tag_char:
             tags = tags.filtered(
                 lambda t: t.name.startswith((tag_char.lower(), tag_char.upper()))
@@ -609,9 +609,11 @@ class WebsiteForum(WebsiteProfile):
             return request.render(
                 "http_routing.http_error",
                 {
-                    "status_code": _("Bad Request"),
-                    "status_message": (post_parent and _("Reply should not be empty."))
-                    or _("Question should not be empty."),
+                    "status_code": request.env._("Bad Request"),
+                    "status_message": (
+                        post_parent and request.env._("Reply should not be empty.")
+                    )
+                    or request.env._("Question should not be empty."),
                 },
             )
 
@@ -726,8 +728,8 @@ class WebsiteForum(WebsiteProfile):
                 return request.render(
                     "http_routing.http_error",
                     {
-                        "status_code": _("Bad Request"),
-                        "status_message": _("Title should not be empty."),
+                        "status_code": request.env._("Bad Request"),
+                        "status_message": request.env._("Title should not be empty."),
                     },
                 )
 
@@ -946,7 +948,7 @@ class WebsiteForum(WebsiteProfile):
                 "mark_offensive_refused", reason="cannot_moderate", post=post.id
             )
             raise AccessError(
-                _(
+                request.env._(
                     "%d karma required to mark a post as offensive.",
                     post.forum_id.karma_moderate,
                 )
@@ -966,7 +968,7 @@ class WebsiteForum(WebsiteProfile):
     def post_http_ask_for_mark_as_offensive(self, forum, post, **kwargs):
         if not post.can_moderate:
             raise AccessError(
-                _(
+                request.env._(
                     "%d karma required to mark a post as offensive.",
                     forum.karma_moderate,
                 )

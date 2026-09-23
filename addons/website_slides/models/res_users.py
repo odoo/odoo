@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class ResUsers(models.Model):
@@ -33,5 +33,5 @@ class ResUsers(models.Model):
 
     def prepare_rank_email_links(self):
         res = super().prepare_rank_email_links()
-        res.append({"url": "/slides", "label": _("See our eLearning")})
+        res.append({"url": "/slides", "label": self.env._("See our eLearning")})
         return res

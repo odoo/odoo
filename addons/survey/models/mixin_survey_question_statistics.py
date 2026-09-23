@@ -5,7 +5,7 @@ import operator
 import re
 from typing import Any
 
-from odoo import _, models, tools
+from odoo import models, tools
 
 
 class MixinSurveyQuestionStatistics(models.AbstractModel):
@@ -130,7 +130,7 @@ class MixinSurveyQuestionStatistics(models.AbstractModel):
 
         table_data = [
             {
-                "value": _("Other (see comments)")
+                "value": self.env._("Other (see comments)")
                 if not suggested_answer
                 else suggested_answer.value_label,
                 "suggested_answer": suggested_answer,
@@ -207,7 +207,7 @@ class MixinSurveyQuestionStatistics(models.AbstractModel):
                     "value": str(sug_answer),
                     "suggested_answer": self.env["survey.question.answer"],
                     "count": count_data[sug_answer],
-                    "count_text": _("%s Votes", count_data[sug_answer]),
+                    "count_text": self.env._("%s Votes", count_data[sug_answer]),
                 }
             )
             graph_data.append(
@@ -239,7 +239,7 @@ class MixinSurveyQuestionStatistics(models.AbstractModel):
                     "value": str(value),
                     "suggested_answer": self.env["survey.question.answer"],
                     "count": count_data[value],
-                    "count_text": _("%s Votes", count_data[value]),
+                    "count_text": self.env._("%s Votes", count_data[value]),
                 }
             )
             graph_data.append(
@@ -280,7 +280,7 @@ class MixinSurveyQuestionStatistics(models.AbstractModel):
                     "value": str(value),
                     "suggested_answer": self.env["survey.question.answer"],
                     "count": count_data[value],
-                    "count_text": _("%s Votes", count_data[value]),
+                    "count_text": self.env._("%s Votes", count_data[value]),
                 }
             )
             graph_data.append({"text": str(value), "count": count_data[value]})
@@ -302,7 +302,7 @@ class MixinSurveyQuestionStatistics(models.AbstractModel):
                     "value": answer.value,
                     "suggested_answer": answer,
                     "count": len(values),
-                    "count_text": _("Avg: %s", round(avg_val, 1)),
+                    "count_text": self.env._("Avg: %s", round(avg_val, 1)),
                 }
             )
             graph_data.append({"text": answer.value, "count": round(avg_val, 1)})

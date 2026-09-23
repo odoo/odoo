@@ -4,7 +4,7 @@ import logging
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import consteq, email_normalize
@@ -133,7 +133,7 @@ class MicrosoftOutlookController(http.Controller):
                 return request.render(
                     "microsoft_outlook.microsoft_outlook_oauth_error",
                     {
-                        "error": _(
+                        "error": request.env._(
                             "Oops, you're creating an authorization to send from %(email_login)s but your address is %(email_server)s. Make sure your addresses match!",
                             email_login=email,
                             email_server=record[record._email_field],

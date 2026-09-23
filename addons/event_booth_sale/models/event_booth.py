@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -43,7 +43,7 @@ class EventBooth(models.Model):
         booth_with_so = self.sudo().filtered("sale_order_id")
         if booth_with_so:
             raise UserError(
-                _(
+                self.env._(
                     "You can't delete the following booths as they are linked to sales orders: "
                     "%(booths)s",
                     booths=", ".join(booth_with_so.mapped("name")),

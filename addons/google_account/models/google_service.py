@@ -5,7 +5,7 @@ from urllib.parse import urlencode, urlsplit
 import requests
 import werkzeug.http
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -104,7 +104,7 @@ class GoogleService(models.AbstractModel):
             )
         except requests.HTTPError as e:
             _logger.error(e)
-            error_msg = _(
+            error_msg = self.env._(
                 "Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired"
             )
             raise self.env["res.config.settings"].prepare_config_warning(

@@ -1,4 +1,4 @@
-from odoo import _, api, models, modules
+from odoo import api, models, modules
 
 SMS_SUBKEY = "sms"
 
@@ -27,7 +27,7 @@ class ResUsers(models.Model):
         if model_name != "mailing.mailing":
             return group
         if subkey == SMS_SUBKEY:
-            group["name"] = _("SMS Marketing")
+            group["name"] = self.env._("SMS Marketing")
             group["icon"] = modules.Manifest.for_addon("mass_mailing_sms").icon
         group["domain"] = [
             ("active", "in", [True, False]),

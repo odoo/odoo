@@ -1,6 +1,6 @@
 import hmac
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.http import request
 from odoo.tools import urls
 
@@ -147,7 +147,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = payment_data.get("status")
         if not status:
-            self._set_error(_("Received data with missing payment state."))
+            self._set_error(self.env._("Received data with missing payment state."))
         elif status in PAYMENT_STATUS_MAPPING["pending"]:
             self._set_pending()
         elif status in PAYMENT_STATUS_MAPPING["done"]:
@@ -160,7 +160,7 @@ class PaymentTransaction(models.Model):
                 {"status": status, "reason": status_description, "ref": self.reference},
             )
             self._set_error(
-                _(
+                self.env._(
                     "Received invalid transaction status %(status)s and reason '%(reason)s'.",
                     status=status,
                     reason=status_description,

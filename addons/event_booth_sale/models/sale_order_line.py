@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -74,7 +74,7 @@ class SaleOrderLine(models.Model):
     def _check_event_booth_registration_ids(self):
         if len(self.event_booth_registration_ids.event_booth_id.event_id) > 1:
             raise ValidationError(
-                _(
+                self.env._(
                     "Registrations from the same Order Line must belong to a single event."
                 )
             )
@@ -114,7 +114,7 @@ class SaleOrderLine(models.Model):
                 )
                 if unavailable:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The following booths are unavailable, please remove them to continue : %(booth_names)s",
                             booth_names="".join(
                                 "\n\t- %s" % booth.display_name for booth in unavailable

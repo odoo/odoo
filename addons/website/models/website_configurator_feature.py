@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError
 
 
@@ -38,7 +38,7 @@ class WebsiteConfiguratorFeature(models.Model):
     def _check_module_xor_page_view(self):
         if bool(self.module_id) == bool(self.page_view_id):
             raise ValidationError(
-                _(
+                self.env._(
                     "One and only one of the two fields 'page_view_id' and 'module_id' should be set"
                 )
             )

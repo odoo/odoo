@@ -1,4 +1,4 @@
-from odoo import Command, _, models
+from odoo import Command, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -10,7 +10,7 @@ class ChatbotScriptStep(models.Model):
     def _chatbot_crm_prepare_lead_values(self, discuss_channel, description):
         values = super()._chatbot_crm_prepare_lead_values(discuss_channel, description)
         if discuss_channel.livechat_visitor_id:
-            values["name"] = _(
+            values["name"] = self.env._(
                 "%s's New Lead", discuss_channel.livechat_visitor_id.display_name
             )
             values["visitor_ids"] = [

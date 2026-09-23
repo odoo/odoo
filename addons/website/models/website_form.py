@@ -2,7 +2,7 @@ from ast import literal_eval
 
 from lxml import etree, html
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
@@ -85,13 +85,13 @@ class IrModel(models.Model):
                 model=model_name,
             )
             raise AccessError(
-                _("Only website editors can introspect form model fields.")
+                self.env._("Only website editors can introspect form model fields.")
             )
         model_record = self.sudo().search(
             [("model", "=", model_name), ("website_form_access", "=", True)], limit=1
         )
         if not model_record:
-            raise AccessError(_("This model cannot be used in website forms."))
+            raise AccessError(self.env._("This model cannot be used in website forms."))
         return self._get_fields_authorized(model_name, property_origins)
 
     @api.model
@@ -232,7 +232,7 @@ class IrModelFields(models.Model):
                             record=record.id,
                         )
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "The field '%(field)s' cannot be deleted because it is referenced in a website view.\n"
                                 "Model: %(model)s\n"
                                 "View: %(view)s",

@@ -2,7 +2,7 @@ from urllib.parse import parse_qsl
 from urllib.parse import quote as url_quote
 from urllib.parse import urlsplit as url_parse
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import float_round
@@ -262,7 +262,7 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         payment_id = payment_data.get("id")
         if not payment_id:
-            self._set_error(_("Received data with missing payment id."))
+            self._set_error(self.env._("Received data with missing payment id."))
             return None
         self.provider_reference = payment_id
 
@@ -290,7 +290,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         payment_status = payment_data.get("status")
         if not payment_status:
-            self._set_error(_("Received data with missing status."))
+            self._set_error(self.env._("Received data with missing status."))
             return None
 
         if payment_status in const.TRANSACTION_STATUS_MAPPING["pending"]:
@@ -315,7 +315,9 @@ class PaymentTransaction(models.Model):
                 self.reference,
                 payment_status,
             )
-            self._set_error(_("Received data with invalid status: %s.", payment_status))
+            self._set_error(
+                self.env._("Received data with invalid status: %s.", payment_status)
+            )
         return None
 
     def _extract_token_values(self, payment_data):

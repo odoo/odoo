@@ -1,7 +1,7 @@
 import copy
 from typing import Any
 
-from odoo import _, api, models
+from odoo import api, models
 
 from . import samples
 
@@ -18,24 +18,26 @@ class SurveySurvey(models.Model):
     def get_survey_templates_data(self) -> dict[str, dict[str, Any]]:
         return {
             "survey": {
-                "description": _("Gather feedbacks from your employees and customers"),
+                "description": self.env._(
+                    "Gather feedbacks from your employees and customers"
+                ),
                 "icon": "/survey/static/src/img/survey_sample_survey.png",
                 "template_key": "survey",
-                "title": _("Survey"),
+                "title": self.env._("Survey"),
             },
             "assessment": {
-                "description": _("Handle quiz & certifications"),
+                "description": self.env._("Handle quiz & certifications"),
                 "icon": "/survey/static/src/img/survey_sample_assessment.png",
                 "template_key": "assessment",
-                "title": _("Assessment"),
+                "title": self.env._("Assessment"),
             },
             "live_session": {
-                "description": _(
+                "description": self.env._(
                     "Make your presentations more fun by sharing questions live"
                 ),
                 "icon": "/survey/static/src/img/survey_sample_live_session.png",
                 "template_key": "live_session",
-                "title": _("Live Session"),
+                "title": self.env._("Live Session"),
             },
         }
 

@@ -14,7 +14,7 @@ from lxml import etree, html
 from werkzeug.exceptions import NotFound
 
 import odoo
-from odoo import _, fields, http, models, tools
+from odoo import fields, http, models, tools
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import SessionExpiredException, request
@@ -535,8 +535,11 @@ class Website(WebsiteSeoRoutes, WebsiteThemeRoutes, Home):
         return {
             "matching_pages": sorted(matching_pages, key=lambda o: o["label"]),
             "others": [
-                {"title": _("Last modified pages"), "values": matching_last_modified},
-                {"title": _("Apps url"), "values": suggested_controllers},
+                {
+                    "title": request.env._("Last modified pages"),
+                    "values": matching_last_modified,
+                },
+                {"title": request.env._("Apps url"), "values": suggested_controllers},
             ],
         }
 

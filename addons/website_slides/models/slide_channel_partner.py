@@ -1,6 +1,6 @@
 import math
 
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.fields import Domain
 
 
@@ -224,9 +224,9 @@ class SlideChannelPartner(models.Model):
                 karma_per_users[user] = {
                     "gain": karma if completed else karma * -1,
                     "source": channel,
-                    "reason": _("Course Finished")
+                    "reason": self.env._("Course Finished")
                     if completed
-                    else _("Course Set Uncompleted"),
+                    else self.env._("Course Set Uncompleted"),
                 }
 
             self.env["res.users"]._add_karma_batch(karma_per_users)
@@ -284,7 +284,7 @@ class SlideChannelPartner(models.Model):
             email_values["body_html"] = template._render_encapsulate(
                 "mail.mail_notification_light",
                 email_values["body_html"],
-                add_context={"model_description": _("Completed Course")},
+                add_context={"model_description": self.env._("Completed Course")},
                 context_record=record.channel_id,
             )
             mail_mail_values.append(email_values)

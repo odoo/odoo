@@ -1,4 +1,3 @@
-from odoo import _
 from odoo.exceptions import (
     AccessError,
     LockError,
@@ -31,12 +30,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except MissingError:
             raise
         except AccessError as e:
-            raise ValidationError(_("The access token is invalid.")) from e
+            raise ValidationError(request.env._("The access token is invalid.")) from e
         except LockError as e:
-            raise UserError(_("Payment is already being processed.")) from e
+            raise UserError(request.env._("Payment is already being processed.")) from e
 
         if order_sudo.state == "cancel":
-            raise ValidationError(_("The order has been cancelled."))
+            raise ValidationError(request.env._("The order has been cancelled."))
 
         order_sudo._check_cart_is_ready_to_be_paid()
 
@@ -54,11 +53,13 @@ class PaymentPortal(payment_portal.PaymentPortal):
         compare_amounts = order_sudo.currency_id.compare_amounts
         if compare_amounts(kwargs["amount"], order_sudo.amount_total):
             raise ValidationError(
-                _("The cart has been updated. Please refresh the page.")
+                request.env._("The cart has been updated. Please refresh the page.")
             )
         if compare_amounts(order_sudo.amount_paid, order_sudo.amount_total) == 0:
             raise UserError(
-                _("The cart has already been paid. Please refresh the page.")
+                request.env._(
+                    "The cart has already been paid. Please refresh the page."
+                )
             )
 
         if delay_token_charge := kwargs.get("flow") == "token":

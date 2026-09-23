@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -21,7 +21,7 @@ class SaleOrder(models.Model):
                 product=product,
                 gelato=bool(product.gelato_product_uid),
             )
-            return 0, _(
+            return 0, self.env._(
                 "The product %(product_name)s cannot be added to the cart as it requires separate"
                 " shipping. Please place your order for the current cart first.",
                 product_name=product.name,

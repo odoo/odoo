@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -107,7 +107,7 @@ class ResPartner(models.Model):
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "website_slides.slide_channel_partner_action"
         )
-        action["display_name"] = _("Courses")
+        action["display_name"] = self.env._("Courses")
         action["domain"] = [("member_status", "!=", "invited")]
         if len(self) == 1 and self.is_company:
             action["domain"] = Domain.AND(

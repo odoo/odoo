@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -29,7 +29,7 @@ class WebsiteVisitor(models.Model):
         )
         if not self._can_use_sms_composer():
             raise UserError(
-                _(
+                self.env._(
                     "There are no contact and/or no phone or mobile numbers linked to this visitor."
                 )
             )
@@ -38,7 +38,7 @@ class WebsiteVisitor(models.Model):
         compose_ctx = dict(self.env.context)
         compose_ctx.update(**visitor_composer_ctx)
         return {
-            "name": _("Send SMS"),
+            "name": self.env._("Send SMS"),
             "type": "ir.actions.act_window",
             "res_model": "sms.composer",
             "view_mode": "form",

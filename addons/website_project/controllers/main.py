@@ -1,4 +1,4 @@
-from odoo import Command, _
+from odoo import Command
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.text import nl2br, nl2br_enclose
@@ -28,8 +28,8 @@ class WebsiteForm(form.WebsiteForm):
         if model_name != "project.task":
             return res
         task = request.env["project.task"].sudo().browse(res)
-        custom = custom.replace("email_from", _("Email"))
-        custom_label = nl2br_enclose(_("Other Information"), "h4")
+        custom = custom.replace("email_from", request.env._("Email"))
+        custom_label = nl2br_enclose(request.env._("Other Information"), "h4")
         default_field = model_sudo.website_form_default_field_id
         default_field_data = values.get(default_field.name, "")
         default_field_content = nl2br_enclose(

@@ -5,7 +5,7 @@ from random import randint
 
 from lxml import etree, html
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import MissingError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -76,7 +76,7 @@ class WebsiteSnippetFilter(models.Model):
                     filter=record.id,
                 )
                 raise ValidationError(
-                    _("Either action_server_id or filter_id must be provided.")
+                    self.env._("Either action_server_id or filter_id must be provided.")
                 )
 
     @api.constrains("limit")
@@ -89,7 +89,7 @@ class WebsiteSnippetFilter(models.Model):
                     filter=record.id,
                     limit=record.limit,
                 )
-                raise ValidationError(_("The limit must be between 1 and 16."))
+                raise ValidationError(self.env._("The limit must be between 1 and 16."))
 
     @api.constrains("field_names")
     def _check_field_names(self):
@@ -97,7 +97,7 @@ class WebsiteSnippetFilter(models.Model):
             for field_name in record.field_names.split(","):
                 if not field_name.strip():
                     raise ValidationError(
-                        _("Empty field name in “%s”", record.field_names)
+                        self.env._("Empty field name in “%s”", record.field_names)
                     )
 
     def _render(
@@ -378,7 +378,7 @@ class WebsiteSnippetFilter(models.Model):
                 elif field_widget in ("integer", "float"):
                     sample[field_name] = index
                 else:
-                    sample[field_name] = _("Sample %s", index + 1)
+                    sample[field_name] = self.env._("Sample %s", index + 1)
         return sample
 
     def _get_hardcoded_sample(self, model):

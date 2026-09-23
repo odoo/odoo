@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class EventTypeTicket(models.Model):
@@ -10,7 +10,7 @@ class EventTypeTicket(models.Model):
     # description
     name = fields.Char(
         translate=True,
-        default=lambda self: _("Registration"),
+        default=lambda self: self.env._("Registration"),
         required=True,
     )
     description = fields.Text(

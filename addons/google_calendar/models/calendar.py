@@ -4,7 +4,7 @@ from uuid import uuid4
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -156,7 +156,7 @@ class CalendarEvent(models.Model):
             for event in self
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "The following event can only be updated by the organizer "
                     "according to the event permissions set on Google Calendar."
                 )
@@ -211,7 +211,7 @@ class CalendarEvent(models.Model):
         name = (
             google_event.summary
             or (related_event and related_event.name)
-            or _("(No title)")
+            or self.env._("(No title)")
         )
         values = {
             "name": name,
@@ -336,7 +336,9 @@ class CalendarEvent(models.Model):
                 "email" if reminder.get("method") == "email" else "notification"
             )
             alarm_type_label = (
-                _("Email") if alarm_type == "email" else _("Notification")
+                self.env._("Email")
+                if alarm_type == "email"
+                else self.env._("Notification")
             )
 
             minutes = reminder.get("minutes", 0)
@@ -350,7 +352,7 @@ class CalendarEvent(models.Model):
                 if minutes % (60 * 24) == 0:
                     interval = "days"
                     duration = minutes / 60 / 24
-                    name = _(
+                    name = self.env._(
                         "%(reminder_type)s - %(duration)s Days",
                         reminder_type=alarm_type_label,
                         duration=duration,
@@ -358,7 +360,7 @@ class CalendarEvent(models.Model):
                 elif minutes % 60 == 0:
                     interval = "hours"
                     duration = minutes / 60
-                    name = _(
+                    name = self.env._(
                         "%(reminder_type)s - %(duration)s Hours",
                         reminder_type=alarm_type_label,
                         duration=duration,
@@ -366,7 +368,7 @@ class CalendarEvent(models.Model):
                 else:
                     interval = "minutes"
                     duration = minutes
-                    name = _(
+                    name = self.env._(
                         "%(reminder_type)s - %(duration)s Minutes",
                         reminder_type=alarm_type_label,
                         duration=duration,

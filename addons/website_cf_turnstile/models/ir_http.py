@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -38,14 +38,18 @@ class IrHttp(models.AbstractModel):
             return
         _debug.logic("turnstile_refused", verdict=turnstile_result)
         if turnstile_result == "wrong_secret":
-            raise ValidationError(_("The Cloudflare turnstile private key is invalid."))
+            raise ValidationError(
+                self.env._("The Cloudflare turnstile private key is invalid.")
+            )
         if turnstile_result == "wrong_token":
-            raise ValidationError(_("The CloudFlare human validation failed."))
+            raise ValidationError(self.env._("The CloudFlare human validation failed."))
         if turnstile_result == "timeout":
-            raise UserError(_("Your request has timed out, please retry."))
+            raise UserError(self.env._("Your request has timed out, please retry."))
         if turnstile_result == "bad_request":
-            raise UserError(_("The request is invalid or malformed."))
-        raise UserError(_("Suspicious activity detected by Turnstile CAPTCHA."))
+            raise UserError(self.env._("The request is invalid or malformed."))
+        raise UserError(
+            self.env._("Suspicious activity detected by Turnstile CAPTCHA.")
+        )
 
     @api.model
     def _get_turnstile_verdict(self, ip_addr, token, action=False):

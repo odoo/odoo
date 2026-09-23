@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.web import urljoin as url_join
 from odoo.tools import mute_logger
 from odoo.tools.translate import html_translate
@@ -21,7 +21,7 @@ class HrJob(models.Model):
         )
 
     def _default_job_details(self):
-        return _("""
+        return self.env._("""
             <span class="text-muted small">Time to Answer</span>
             <h6>2 open days</h6>
             <span class="text-muted small">Process</span>

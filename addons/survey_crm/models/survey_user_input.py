@@ -1,6 +1,6 @@
 from markupsafe import Markup, escape
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class SurveyUser_Input(models.Model):
@@ -75,13 +75,15 @@ class SurveyUser_Input(models.Model):
             participant_name = (
                 input_lead_values["user_nickname"]
                 or input_lead_values["public_user_mail"]
-                or _("New")
+                or self.env._("New")
             )
         lead_contact_name = username or input_lead_values["user_nickname"]
-        lead_title = _(
+        lead_title = self.env._(
             "%(participant_name)s %(category_name)s results",
             participant_name=participant_name,
-            category_name=_("live session") if self.is_session_answer else _("survey"),
+            category_name=self.env._("live session")
+            if self.is_session_answer
+            else self.env._("survey"),
         )
 
         lead_values = {
@@ -111,7 +113,9 @@ class SurveyUser_Input(models.Model):
                 lambda line: not line.skipped
             )
             if len(input_lines_not_skipped) == 0:
-                answers = [Markup(" — <i>%(skipped)s</i>") % {"skipped": _("Skipped")}]
+                answers = [
+                    Markup(" — <i>%(skipped)s</i>") % {"skipped": self.env._("Skipped")}
+                ]
             for input_line_index, input_line in enumerate(input_lines_not_skipped):
                 if question.question_type == "char_box":
                     if not user_nickname and question.save_as_nickname:
@@ -149,7 +153,7 @@ class SurveyUser_Input(models.Model):
                         Markup(
                             "<i><b>%(comment)s</b></i> — %(comment_answer)s"
                             % {
-                                "comment": _("Comment"),
+                                "comment": self.env._("Comment"),
                                 "comment_answer": escape(
                                     input_line._get_answer_value()
                                 ).replace("\n", line_break_indented_markuped),
@@ -183,7 +187,7 @@ class SurveyUser_Input(models.Model):
                             "line_break_indented_markuped": line_break_indented_markuped
                             if multiple_answers or len(input_lines_not_skipped) == 1
                             else "",
-                            "comment": _("Comment"),
+                            "comment": self.env._("Comment"),
                             "answer": escape(
                                 str(input_line._get_answer_value())
                             ).replace("\n", line_break_indented_markuped),
@@ -234,7 +238,7 @@ class SurveyUser_Input(models.Model):
             )
 
         description = Markup("<div>%(answers)s:</div><ul>%(survey_answers)s</ul>") % {
-            "answers": _("Answers"),
+            "answers": self.env._("Answers"),
             "survey_answers": Markup("").join(html_input_lines),
         }
         return {

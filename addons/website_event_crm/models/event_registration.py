@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, models
+from odoo import models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -37,7 +37,7 @@ class EventRegistration(models.Model):
         )
         return Markup("%s%s<br/>%s") % (
             reg_description,
-            _("Questions"),
+            self.env._("Questions"),
             Markup("<br/>").join(answer_descriptions),
         )
 

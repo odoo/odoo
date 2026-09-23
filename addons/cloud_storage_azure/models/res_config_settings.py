@@ -1,6 +1,6 @@
 from datetime import UTC, datetime, timedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -90,7 +90,7 @@ class ResConfigSettings(models.TransientModel):
         )
         if upload_response.status_code != 201:
             raise ValidationError(
-                _(
+                self.env._(
                     "The connection string is not allowed to upload blobs to the container.\n%s",
                     str(upload_response.text),
                 )
@@ -108,7 +108,7 @@ class ResConfigSettings(models.TransientModel):
         )
         if download_response.status_code != 200:
             raise ValidationError(
-                _(
+                self.env._(
                     "The connection string is not allowed to download blobs from the container.\n%s",
                     str(download_response.text),
                 )
@@ -133,7 +133,7 @@ class ResConfigSettings(models.TransientModel):
         )
         if cr.fetchone():
             raise UserError(
-                _(
+                self.env._(
                     "Some Azure attachments are in use, please migrate their cloud storages before disable this module"
                 )
             )
