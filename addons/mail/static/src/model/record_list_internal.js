@@ -70,8 +70,15 @@ export class RecordListInternal {
             store._.ADD_QUEUE("onAdd", self.owner, self.name, record);
         }
     }
-    /** @param {R[]|any[]} data */
-    assign(data) {
+    /**
+     * @param {R[]|any[]} data
+     * @param {Object} [options={}]
+     * @param {Object<string, import("./field_version").WriteDate>} [options.versionByLocalId]
+     *   Write date of the last history entry that mentioned a given record, whether it
+     *   ended up present or removed (e.g. from a REPLACE regenerated from
+     *   ManyFieldVersion history). Used as a fallback version for the echo below.
+     */
+    assign(data, { versionByLocalId } = {}) {
         const self = this;
         const recordList = this.recordList;
         const store = recordList._store;
@@ -82,24 +89,25 @@ export class RecordListInternal {
             // save before clear to not push mutated recordlist that is empty
             const vals = [...collection];
             const oldRecords = [...recordList].map((recordProxy) => recordProxy._raw);
+            const TargetModel = recordList._store[self.getTargetModel()];
             const newRecords = vals.map((val) =>
-                self.insert(val, function recordListAssignInsert(record) {
-                    if (record.notIn(oldRecords)) {
-                        record._.uses.add(recordList);
-                        store._.ADD_QUEUE("onAdd", self.owner, self.name, record);
-                    }
-                })
+                self.insert(
+                    val,
+                    function recordListAssignInsert(record) {
+                        if (record.notIn(oldRecords)) {
+                            record._.uses.add(recordList);
+                            store._.ADD_QUEUE("onAdd", self.owner, self.name, record);
+                        }
+                    },
+                    { fallbackVersion: versionByLocalId?.[TargetModel.localId(val)] }
+                )
             );
-            const inverse = self.getInverse();
             for (const oldRecord of oldRecords) {
                 if (oldRecord.notIn(newRecords)) {
                     oldRecord._.uses.delete(recordList);
                     store._.ADD_QUEUE("onDelete", self.owner, self.name, oldRecord);
-                    if (inverse) {
-                        store._.updateFields(oldRecord, {
-                            [inverse]: [["DELETE", self.owner]],
-                        });
-                    }
+                    const version = versionByLocalId?.[oldRecord.localId];
+                    self.echoInverseIfAny(oldRecord, "DELETE", { version });
                 }
             }
             self.data.set(newRecords);
@@ -142,6 +150,29 @@ export class RecordListInternal {
         return this.owner.Model._.fieldsTargetModel.get(this.name);
     }
     /**
+     * Echo a command on this list onto its inverse field, if it has one.
+     *
+     * @param {Record|any} val
+     * @param {"ADD"|"DELETE"|"ADD.noinv"|"DELETE.noinv"} cmd
+     * @param {Object} [options={}]
+     * @param {boolean} [options.bypassUpdateFields=false]
+     * @param {import("./field_version").WriteDate} [options.version] Version to echo.
+     *   Defaults to the field's own last known write date, for a local mutation that
+     *   has no version of its own (e.g. direct list manipulation from client code).
+     */
+    echoInverseIfAny(val, cmd, { bypassUpdateFields = false, version } = {}) {
+        const inverse = this.getInverse();
+        if (!inverse) {
+            return;
+        }
+        version ??= this.owner._.fieldsVersion.get(this.name)?.lastWriteDate;
+        if (bypassUpdateFields) {
+            (isRecord(val) ? val._proxy : val)[inverse] = [[cmd, this.owner, version]];
+            return;
+        }
+        this.recordList._store._.updateFields(val, { [inverse]: [[cmd, this.owner, version]] });
+    }
+    /**
      * @param {R|any} val
      * @param {(R) => void} [fn] function that is called in-between preinsert and
      *   insert. Preinsert only inserted what's needed to make record, while
@@ -153,10 +184,12 @@ export class RecordListInternal {
      *   Important to match the inverse. Most of the time it's "ADD", that is when
      *   inserting the relation the inverse should be added. Exception when the insert
      *   comes from deletion, we want to "DELETE".
+     * @param {import("./field_version").WriteDate} [fallbackVersion] Version to echo when
+     *   `val` carries none of its own (e.g. a many2many value, or one from a REPLACE
+     *   baseline).
      */
-    insert(val, fn, { inv = true, mode = "ADD" } = {}) {
+    insert(val, fn, { inv = true, mode = "ADD", fallbackVersion } = {}) {
         const recordList = this.recordList;
-        const inverse = this.getInverse();
         const targetModel = this.getTargetModel();
         if (typeof val !== "object") {
             if (Array.isArray(recordList._store[targetModel].id)) {
@@ -169,10 +202,11 @@ export class RecordListInternal {
             // single-id data
             val = { [recordList._store[targetModel].id]: val };
         }
-        if (inverse && inv) {
-            // special command to call addNoinv/deleteNoInv, to prevent infinite loop
-            const target = isRecord(val) && val._raw === val ? val._proxy : val;
-            target[inverse] = [[mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", this.owner]];
+        if (inv) {
+            this.echoInverseIfAny(val, mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", {
+                bypassUpdateFields: true, // Prevent infinite loop for addNoinv/deleteNoInv.
+                version: val?.__version__ ?? fallbackVersion,
+            });
         }
         /** @type {R} */
         let newRecordProxy;
@@ -256,20 +290,11 @@ export class RecordListInternal {
                         oldRecord._.uses.delete(recordList);
                     }
                     store._.ADD_QUEUE("onDelete", self.owner, self.name, oldRecord);
-                    const inverse = self.getInverse();
-                    if (inverse) {
-                        store._.updateFields(oldRecord, {
-                            [inverse]: [["DELETE", self.owner]],
-                        });
-                    }
+                    self.echoInverseIfAny(oldRecord, "DELETE");
                     if (newRecord) {
                         newRecord._.uses.add(recordList);
                         store._.ADD_QUEUE("onAdd", self.owner, self.name, newRecord);
-                        if (inverse) {
-                            store._.updateFields(newRecord, {
-                                [inverse]: [["ADD", self.owner]],
-                            });
-                        }
+                        self.echoInverseIfAny(newRecord, "ADD");
                     }
                 });
             } else if (name === "length") {

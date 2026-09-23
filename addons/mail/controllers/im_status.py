@@ -14,4 +14,5 @@ class ImStatusController(http.Controller):
         Store(bus_channel=self.env.user, bus_subchannel="presence").add(
             self.env.user,
             "_store_manual_im_status_fields",
+            version=self.env.user._get_im_status_version(),
         )
