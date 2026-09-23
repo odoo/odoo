@@ -2275,7 +2275,9 @@ class IrUiView(models.Model):
         )
         parent_name_manager = node_info["name_manager"] if node_info else None
 
-        model_groups &= self.env["ir.model.access"]._get_groups_with_access(model_name)
+        model_groups &= group_definitions.from_ids(
+            self.env["ir.access"]._group_ids_with_access(model_name, "read")
+        )
 
         model = self.env[model_name]
         if not translate:

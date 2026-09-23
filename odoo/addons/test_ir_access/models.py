@@ -72,3 +72,28 @@ class TestIrAccessDelegatedComputed(models.Model):
         super()._create_parent_records(data_list)
         for data in data_list:
             data["stored"]["held_id"] = data["stored"].pop("item_id")
+
+
+class TestIrAccessGuarded(models.Model):
+    _name = "test_ir_access.guarded"
+    _description = "Readable where its category is, by the model's own guard"
+
+    name = fields.Char()
+    category_id = fields.Many2one(comodel_name="test_ir_access.category")
+
+    @api.model
+    def _access_guard(self, operation):
+        guard = super()._access_guard(operation)
+        if operation == "read":
+            return guard & Domain("category_id", "access", "read")
+        return guard
+
+
+class TestIrAccessOwned(models.Model):
+    _name = "test_ir_access.owned"
+    _description = "Follows the access of the item that owns it"
+    _inherit = ["mixin.owner.access"]
+    _access_owner_field = "item_id"
+
+    name = fields.Char()
+    item_id = fields.Many2one(comodel_name="test_ir_access.item")

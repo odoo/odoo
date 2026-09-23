@@ -516,12 +516,12 @@ def _warn_models_without_access_rules(
     )
     lines = [
         f"The models {models} have no access rules in module {module_name}, consider adding some, like:",
-        "id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink",
+        "id,name,model_id/id,group_id/id,kind,operation,domain",
     ]
     for model in models:
         xmlid = model.replace(".", "_")
         lines.append(
-            f"{module_name}.access_{xmlid},access_{xmlid},{module_name}.model_{xmlid},base.group_user,1,0,0,0"
+            f"access_{xmlid},{model},model_{xmlid},base.group_user,permission,r,"
         )
     _logger.warning("\n".join(lines))
 

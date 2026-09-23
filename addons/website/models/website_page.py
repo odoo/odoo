@@ -471,11 +471,10 @@ class WebsitePage(models.Model):
         )
         results = most_specific_pages.filtered(lambda page: page.id in candidate_ids)
 
-        # The reader's record rules do not change between two pages, so they are
+        # The reader's access does not change between two pages, so it is
         # resolved once for the whole candidate set rather than per page.
-        Rule = self.env["ir.rule"].sudo(False)
-        page_rule_domain = Rule._get_domain_accessible_records("website.page", "read")
-        view_rule_domain = Rule._get_domain_accessible_records("ir.ui.view", "read")
+        page_rule_domain = self.env["website.page"].sudo(False)._access_domain("read")
+        view_rule_domain = self.env["ir.ui.view"].sudo(False)._access_domain("read")
         search_pattern = None
         if search and with_description:
             terms = "|".join(re.escape(term) for term in search.split())

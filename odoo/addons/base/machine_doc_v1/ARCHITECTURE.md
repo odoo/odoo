@@ -23,9 +23,9 @@ High-level structure, data flow, and component organization for `odoo/addons/bas
 │                                                                      │
 │  ┌─────────────────┐  ┌───────────────────┐  ┌────────────────────┐  │
 │  │ Model Registry  │  │ Access Control    │  │ Partner/User       │  │
-│  │ ir.model        │  │ ir.model.access   │  │ res.partner        │  │
-│  │ ir.model.fields │  │ ir.rule           │  │ res.users          │  │
-│  │ ir.model.data   │  │ res.groups        │  │ res.company        │  │
+│  │ ir.model        │  │ ir.access         │  │ res.partner        │  │
+│  │ ir.model.fields │  │ res.groups        │  │ res.users          │  │
+│  │ ir.model.data   │  │                   │  │ res.company        │  │
 │  └────────┬────────┘  └────────┬──────────┘  └────────┬───────────┘  │
 │           │                    │                      │              │
 │  ┌────────┴────────┐  ┌────────┴──────────┐  ┌─────────┴──────────┐  │
@@ -70,7 +70,7 @@ access control, and ORM extensions that those controllers depend on.
 odoo/addons/base/
 ├── __manifest__.py              # Module metadata + asset/data file declarations
 ├── __init__.py                  # Imports models, report, wizard + post_init hook
-├── models/                      # 114 Python model files (core ORM infrastructure)
+├── models/                      # 112 Python model files (core ORM infrastructure)
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
 │   ├── ir_access.py                 #   ir.access: permissions and guards with domains, the decision of every model
@@ -107,7 +107,6 @@ odoo/addons/base/
 │   ├── ir_job.py                    #   Background job queue + channels
 │   ├── ir_logging.py                #   Server/client log storage
 │   ├── ir_model.py                  #   Model registry + ir.model.inherit
-│   ├── ir_model_access.py           #   ir.model.access (model-level ACL)
 │   ├── ir_model_common.py           #   Shared helpers for the ir.model family (xmlids, upserts, access errors)
 │   ├── ir_model_data.py             #   XML ID registry (external identifiers)
 │   ├── ir_model_fields.py           #   Field metadata registry
@@ -124,7 +123,6 @@ odoo/addons/base/
 │   ├── ir_qweb_assets_import_map.py #   ir.qweb extension: the page's ESM import map
 │   ├── ir_qweb_assets_served_libs.py #   ir.qweb extension: vendored libraries served to the page
 │   ├── ir_qweb_fields.py            #   QWeb field widgets (~20 type formatters)
-│   ├── ir_rule.py                   #   Record-level access rules (domain-based)
 │   ├── ir_sequence.py               #   Auto-incrementing sequences (standard/no-gap)
 │   ├── ir_ui_menu.py                #   Menu tree (hierarchy, visibility, icons)
 │   ├── ir_ui_view.py                #   View definitions (arch, inheritance, validation)
@@ -201,7 +199,7 @@ odoo/addons/base/
 ├── tests/                       # 146 Python test files + test assets
 │   ├── common.py                #   Base test classes (demo user, portal user)
 │   └── test_*.py                #   Test modules -- counts in TEST_TAGS.md, derived by factcheck.sh
-├── views/                       # 39 XML view definition files
+├── views/                       # 38 XML view definition files
 ├── data/                        # 21 data files (XML, CSV, SQL, JSON)
 ├── security/                    # ir.access.csv + groups and access-row XML
 ├── rng/                         # RelaxNG schemas (view validation)
@@ -220,7 +218,7 @@ registry, access control, UI framework, scheduling, and module system.
 | Category | Models | Purpose |
 |----------|--------|---------|
 | Model Registry | ir.model, ir.model.inherit, ir.model.fields, ir.model.fields.selection | Schema introspection, custom model/field creation |
-| Access Control | ir.model.access, ir.rule, ir.model.constraint, ir.model.relation | ACL rules, record rules, DB constraints |
+| Access Control | ir.access, ir.model.constraint, ir.model.relation | Permissions and guards, DB constraints |
 | Data Registry | ir.model.data | XML ID ↔ record ID mapping |
 | UI Framework | ir.ui.view, ir.ui.view.custom, ir.ui.menu, ir.asset | Views, menus, asset bundles |
 | Actions | ir.actions.actions, ir.actions.act_window, ir.actions.act_url, ir.actions.client, ir.actions.act_window_close, ir.actions.todo | All action types for navigation |
@@ -285,10 +283,10 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 
 | Category | Count |
 |----------|-------|
-| Python (models) | 114 |
+| Python (models) | 112 |
 | Python (wizards) | 11 |
 | Python (tests) | 146 |
-| XML (views) | 39 |
+| XML (views) | 38 |
 | Data files | 21 |
 | XML (reports) | 0 |
 | XML (wizard views) | 8 |

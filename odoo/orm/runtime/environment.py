@@ -40,7 +40,6 @@ if typing.TYPE_CHECKING:
         IrCronProtocol,
         IrDefaultProtocol,
         IrFieldsConverterProtocol,
-        IrModelAccessProtocol,
         IrModelConstraintProtocol,
         IrModelDataProtocol,
         IrModelFieldsProtocol,
@@ -49,7 +48,6 @@ if typing.TYPE_CHECKING:
         IrModelProtocol,
         IrModelRelationProtocol,
         IrModuleModuleProtocol,
-        IrRuleProtocol,
         IrUiViewProtocol,
         ResCompanyProtocol,
         ResCountryProtocol,
@@ -196,11 +194,6 @@ class Environment(Mapping[str, "BaseModel"]):
 
     @typing.overload
     def __getitem__(  # type: ignore[overload-overlap]
-        self, model_name: typing.Literal["ir.model.access"]
-    ) -> IrModelAccessProtocol: ...
-
-    @typing.overload
-    def __getitem__(  # type: ignore[overload-overlap]
         self, model_name: typing.Literal["ir.model.constraint"]
     ) -> IrModelConstraintProtocol: ...
 
@@ -233,11 +226,6 @@ class Environment(Mapping[str, "BaseModel"]):
     def __getitem__(  # type: ignore[overload-overlap]
         self, model_name: typing.Literal["ir.module.module"]
     ) -> IrModuleModuleProtocol: ...
-
-    @typing.overload
-    def __getitem__(  # type: ignore[overload-overlap]
-        self, model_name: typing.Literal["ir.rule"]
-    ) -> IrRuleProtocol: ...
 
     @typing.overload
     def __getitem__(  # type: ignore[overload-overlap]

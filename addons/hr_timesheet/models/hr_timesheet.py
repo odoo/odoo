@@ -595,7 +595,7 @@ class AccountAnalyticLine(models.Model):
     def _timesheet_get_portal_domain(self):
         if self.env.user.has_group("hr_timesheet.group_hr_timesheet_user"):
             _debug.logic("portal_domain", by="timesheet_user", user=self.env.user)
-            return self.env["ir.rule"]._get_domain_accessible_records(self._name)
+            return Domain("id", "access", "read")
         _debug.logic("portal_domain", by="portal_partner", user=self.env.user)
         commercial_partner_id = self.env.user.partner_id.commercial_partner_id.id
         accessible_projects = (

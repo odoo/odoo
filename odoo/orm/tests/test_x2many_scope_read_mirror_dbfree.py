@@ -63,33 +63,38 @@ class Tag(models.Model):
     name = fields.Char()
 
 
-class IrModelAccess(models.AbstractModel):
-    _name = "ir.model.access"
-    _module = _MOD + "_access"
-    _description = "ir.model.access (test stub)"
+class IrAccessOpen(models.AbstractModel):
+    _name = "ir.access"
+    _module = _MOD + "_access_open"
+    _description = "ir.access (test stub, no row narrows anything)"
 
-    def check(self, model, mode="read", raise_exception=True):
-        return True
+    def _policy_signature(self):
+        return (self.env.uid, *self._get_access_context())
 
+    def _get_access_context(self):
+        company_ids = self.env.context.get("allowed_company_ids")
+        yield tuple(company_ids) if company_ids else company_ids
 
-class IrRuleOpen(models.AbstractModel):
-    _name = "ir.rule"
-    _module = _MOD + "_rules_open"
-    _description = "ir.rule (test stub, no rule narrows anything)"
-
-    def _get_domain_accessible_records(self, model_name, mode="read"):
-        return Domain.TRUE
+    def _bound_access_rows(self, model_name, operation):
+        return [Domain.TRUE], []
 
 
-class IrRuleOnLines(models.AbstractModel):
-    _name = "ir.rule"
-    _module = _MOD + "_rules_lines"
-    _description = "ir.rule (test stub, secret lines are hidden from reads)"
+class IrAccessOnLines(models.AbstractModel):
+    _name = "ir.access"
+    _module = _MOD + "_access_lines"
+    _description = "ir.access (test stub, secret lines are hidden from reads)"
 
-    def _get_domain_accessible_records(self, model_name, mode="read"):
-        if (model_name, mode) == ("mirror.line", "read"):
-            return Domain("secret", "=", False)
-        return Domain.TRUE
+    def _policy_signature(self):
+        return (self.env.uid, *self._get_access_context())
+
+    def _get_access_context(self):
+        company_ids = self.env.context.get("allowed_company_ids")
+        yield tuple(company_ids) if company_ids else company_ids
+
+    def _bound_access_rows(self, model_name, operation):
+        if (model_name, operation) == ("mirror.line", "read"):
+            return [Domain("secret", "=", False)], []
+        return [Domain.TRUE], []
 
 
 def _slots(env, field):
@@ -106,7 +111,7 @@ def _user_env(env):
 
 class TestCreatePrimesEveryScope:
     def test_a_created_record_holds_its_empty_x2many_for_the_superuser_too(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOpen) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOpen) as env:
             as_user = _user_env(env)["mirror.order"]
             order = as_user.create({"name": "o"})
             line_ids = order._fields["line_ids"]
@@ -120,7 +125,7 @@ class TestCreatePrimesEveryScope:
 
 class TestAUserReadFillsTheSuperuserSlot:
     def test_when_no_rule_narrows_the_comodel(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOpen) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOpen) as env:
             order = env["mirror.order"].create({"name": "o"})
             lines = env["mirror.line"].create(
                 [{"order_id": order.id, "value": 1}, {"order_id": order.id, "value": 2}]
@@ -134,7 +139,7 @@ class TestAUserReadFillsTheSuperuserSlot:
             }
 
     def test_a_many2many_read_fills_it_as_well(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOpen) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOpen) as env:
             tags = env["mirror.tag"].create([{"name": "a"}, {"name": "b"}])
             order = env["mirror.order"].create({"name": "o", "tag_ids": tags.ids})
             env.invalidate_all()
@@ -144,7 +149,7 @@ class TestAUserReadFillsTheSuperuserSlot:
             assert _slots(env, field)[env.get_cache_key(field)] == {order.id: tags._ids}
 
     def test_not_when_a_rule_narrows_what_the_user_sees(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOnLines) as env:
             order = env["mirror.order"].create({"name": "o"})
             shown, hidden = env["mirror.line"].create(
                 [
@@ -161,7 +166,7 @@ class TestAUserReadFillsTheSuperuserSlot:
             assert order.sudo().line_ids._ids == (shown.id, hidden.id)
 
     def test_a_value_the_superuser_already_holds_is_kept(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOpen) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOpen) as env:
             order = env["mirror.order"].create({"name": "o"})
             line = env["mirror.line"].create({"order_id": order.id, "value": 1})
             env.invalidate_all()
@@ -181,7 +186,7 @@ class TestTheWriterSlotListsWhatTheWriterWrote:
         # the writer's slot appends what the writer wrote, judged by nobody:
         # judging would cost the comodel's read check on every write, and the
         # writer's own write is visible to the writer inside its transaction
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOnLines) as env:
             as_user = _user_env(env)["mirror.order"]
             order = as_user.create({"name": "o"})
             shown = (
@@ -204,7 +209,7 @@ class TestTheWriterSlotListsWhatTheWriterWrote:
             assert order.line_ids == shown
 
     def test_a_line_the_creator_may_read_stays_in_its_slot(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOnLines) as env:
             as_user = _user_env(env)["mirror.order"]
             order = as_user.create(
                 {"name": "o", "line_ids": [(0, 0, {"value": 1}), (0, 0, {"value": 2})]}
@@ -216,7 +221,7 @@ class TestTheWriterSlotListsWhatTheWriterWrote:
             assert len(order.line_ids) == 2
 
     def test_a_computed_inverse_is_scoped_by_its_reader_and_recomputes_for_sudo(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOnLines) as env:
             as_user = _user_env(env)["mirror.order"]
             order = as_user.create({"name": "o"})
             held = order._fields["held_ids"]
@@ -248,7 +253,7 @@ class TestABatchJudgesNoScope:
     def test_a_superuser_batch_over_many_hosts_evicts_the_user_scope(self, monkeypatch):
         # _message_log_batch: N messages on N threads, created under sudo,
         # while the user's slot holds every thread's x2many
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOnLines) as env:
             as_user = _user_env(env)["mirror.order"]
             orders = as_user.create([{"name": f"o{i}"} for i in range(10)])
             calls = _count_access_filters(monkeypatch)
@@ -270,7 +275,7 @@ class TestABatchJudgesNoScope:
             assert orders[0].with_env(as_user.env).line_ids == lines[0]
 
     def test_a_user_batch_over_many_hosts_appends_to_its_own_scope(self, monkeypatch):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOnLines) as env:
             as_user = _user_env(env)["mirror.order"]
             orders = as_user.create([{"name": f"o{i}"} for i in range(10)])
             calls = _count_access_filters(monkeypatch)
@@ -297,7 +302,7 @@ class TestABatchJudgesNoScope:
 
 class TestAWriteToARuleFieldEvictsTheScopesThatReadThroughIt:
     def test_hiding_a_line_evicts_the_user_slot_and_keeps_the_superuser_slot(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOnLines) as env:
             as_user = _user_env(env)["mirror.order"]
             order = as_user.create({"name": "o"})
             line = (
@@ -319,7 +324,7 @@ class TestAWriteToARuleFieldEvictsTheScopesThatReadThroughIt:
             assert order.line_ids == line
 
     def test_a_write_to_a_field_no_rule_tests_keeps_every_slot(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOnLines) as env:
             as_user = _user_env(env)["mirror.order"]
             order = as_user.create({"name": "o"})
             line = (
@@ -336,14 +341,14 @@ class TestAWriteToARuleFieldEvictsTheScopesThatReadThroughIt:
 
 class TestAStoredMany2manyWriteCachesTheComodelOrder:
     def test_with_the_sort_keys_in_memory_the_slot_reads_as_a_fetch_would(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOpen) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOpen) as env:
             b, a = env["mirror.tag"].create([{"name": "b"}, {"name": "a"}])
             order = env["mirror.order"].create({"name": "o"})
             order.write({"tag_ids": [Command.set([b.id, a.id])]})
             assert order.tag_ids._ids == (a.id, b.id)
 
     def test_without_the_sort_keys_the_slot_keeps_the_written_order(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOpen) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOpen) as env:
             b, a = env["mirror.tag"].create([{"name": "b"}, {"name": "a"}])
             order = env["mirror.order"].create({"name": "o"})
             env.flush_all()
@@ -361,7 +366,7 @@ class TestAComputeAssigningThroughSudoAnswersItsReader:
     # writes `line.sudo().field = value`, which lands in the superuser slot
 
     def test_the_reader_slot_takes_what_its_own_compute_assigned_under_sudo(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOnLines) as env:
             order = env["mirror.order"].create({"name": "o"})
             shown, _hidden = env["mirror.line"].create(
                 [
@@ -379,7 +384,7 @@ class TestAComputeAssigningThroughSudoAnswersItsReader:
             }
 
     def test_a_value_the_superuser_slot_held_before_is_not_adopted(self):
-        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+        with model_test_env(Order, Line, Tag, IrAccessOnLines) as env:
             order = env["mirror.order"].create({"name": "o"})
             hidden = env["mirror.line"].create(
                 {"order_id": order.id, "value": 2, "secret": True}

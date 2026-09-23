@@ -522,7 +522,33 @@ class IrAccess(models.Model):
                     xmlid=f"{old.module}.{old.name}",
                 )
             )
+        self._check_guard_scope_stated(data_list)
         return super()._load_records(data_list, update)
+
+    def _check_guard_scope_stated(self, data_list: list[dict]) -> None:
+        # a guard on a group defaults to binding every principal, which a file
+        # naming a group almost never means (marin's CSV row did exactly this)
+        everyone = self.env.ref("base.group_everyone", raise_if_not_found=False)
+        for data in data_list:
+            values = data["values"]
+            if values.get("kind") != "guard" or "guard_scope" in values:
+                continue
+            group_id = values.get("group_id")
+            if not group_id or (everyone and group_id == everyone.id):
+                continue
+            raise ValidationError(
+                self.env._(
+                    "%(file)s: the guard %(xmlid)s is on a group other than "
+                    "Everyone but does not say whom it binds. State its "
+                    "guard_scope: 'members' binds that group's members, "
+                    "'everyone' binds every user (a CSV row that needs it goes "
+                    "to security/ir_access.xml).",
+                    file=self.env.context.get("install_filename")
+                    or self.env.context.get("install_module")
+                    or "",
+                    xmlid=data.get("xml_id") or values.get("name"),
+                )
+            )
 
     def write(self, vals: dict[str, Any]) -> bool:
         _debug.lifecycle("write", count=len(self), fields=list(vals))
@@ -541,7 +567,8 @@ class IrAccess(models.Model):
     def _clear_access_caches(self) -> None:
         self.env.flush_all()
         self.env.invalidate_all()
-        self.env.registry.clear_cache("stable")
+        # views bake the groups a model is readable by into their cached arch
+        self.env.registry.clear_cache("stable", "templates")
 
     def customize(self) -> dict[str, Any]:
         self.check_singleton()
@@ -557,10 +584,21 @@ class IrAccess(models.Model):
             "res_id": access.id,
         }
 
+    @api.model
     def _eval_context(self) -> dict[str, Any]:
-        # the rules' own context, which modules extend (website adds the
-        # current website): the rows synthesized from them are evaluated in it
-        return {**self.env["ir.rule"]._eval_context(), "time": time}
+        # modules extend it (website adds the current website); the user comes
+        # with an empty context, so a domain reads the same in every context
+        return {
+            "user": self.env.user.with_context({}),
+            "company_ids": self.env.companies.ids,
+            "company_id": self.env.company.id,
+            "time": time,
+        }
+
+    def _get_access_context(self) -> Iterator[Any]:
+        # the context values the evaluation of a domain depends on
+        company_ids = self.env.context.get("allowed_company_ids")
+        yield tuple(company_ids) if isinstance(company_ids, list) else company_ids
 
     def _get_unloaded_module_scope(self) -> tuple[int, str | None] | None:
         return unloaded_module_scope(self.env)
@@ -570,7 +608,7 @@ class IrAccess(models.Model):
         return (
             env.uid,
             env.user._get_group_ids(),
-            tuple(env["ir.rule"]._get_context_values_in_domains()),
+            tuple(self._get_access_context()),
             unloaded_module_scope(env),
         )
 
@@ -611,30 +649,165 @@ class IrAccess(models.Model):
         infos = self._access_infos(accesses)
         # a model with its own table under a table-inheritance root is bound by
         # the root's rows too, as the rows are read through the root's table
-        bound_by = self.env["ir.rule"]._get_model_names_bound_by_rules
         for model_name in list(self.env.registry.models):
-            for other in bound_by(model_name)[1:]:
+            for other in self._get_models_bound_by(model_name)[1:]:
                 infos[model_name] = infos.get(model_name, ()) + infos.get(other, ())
         if cycle := self._access_cycle(infos):
             raise ValueError(self._access_cycle_message(cycle))
         _debug.perf.count("accesses_loaded", rows=len(accesses), models=len(infos))
         return frozendict(infos)
 
-    def _get_groups_with_access(self, model_name: str, operation: str) -> Any:
+    def _get_models_bound_by(self, model_name: str) -> list[str]:
+        # a model with its own table under a table-inheritance root is bound by
+        # the root's rows too, as its records are read through the root's table
+        registry = self.env.registry
+        model_cls = registry.get(model_name)
+        root = getattr(model_cls, "_table_inheritance_root", "")
+        if not root or model_cls._table == root:
+            return [model_name]
+        return [model_name] + [
+            name
+            for name in registry.model_names_by_inheritance_root.get(root, ())
+            if registry[name]._table == root
+        ]
+
+    def _bound_access_rows(
+        self, model_name: str, operation: str
+    ) -> tuple[list[Domain], list[Domain]]:
+        # the domains of the permissions the principal's groups hold and of the
+        # guards that bind it, for one model and operation
         letter = self._operation_letter(operation)
-        group_ids = {
-            row.group_id
+        group_ids = set(self.env.user._get_group_ids())
+        permissions: list[Domain] = []
+        guards: list[Domain] = []
+        eval_context = None
+        for row in self._get_all_access().get(model_name, ()):
+            if letter not in row.operation:
+                continue
+            binds = row.kind == "guard" and row.guard_scope == "everyone"
+            if not binds and row.group_id not in group_ids:
+                continue
+            domain = row.domain
+            if not isinstance(domain, Domain):
+                if eval_context is None:
+                    eval_context = self._eval_context()
+                domain = Domain(safe_eval(domain, eval_context))
+            (permissions if row.kind == "permission" else guards).append(domain)
+        return permissions, guards
+
+    def _get_groups_with_access(self, model_name: str, operation: str) -> Any:
+        # the groups whose members may perform the operation on some records of
+        # the model: a permission's group or a group implying it, for which the
+        # 'access' conditions of the row, the guards binding it, the model's own
+        # guard and every delegated parent can all hold
+        return (
+            self.env["res.groups"]
+            .sudo()
+            .browse(sorted(self._group_ids_with_access(model_name, operation)))
+        )
+
+    @tools.ormcache("model_name", "operation", cache="stable")
+    def _group_ids_with_access(self, model_name: str, operation: str) -> frozenset[int]:
+        letter = self._operation_letter(operation)
+        implying = self._group_ids_implying()
+        every_group = frozenset(implying)
+        model = self.env[model_name].sudo()
+        rows = [
+            row
             for row in self._get_all_access().get(model_name, ())
-            if row.kind == "permission" and letter in row.operation
-        }
-        return self.env["res.groups"].sudo().browse(sorted(group_ids))
+            if letter in row.operation
+        ]
+        groups: set[int] = set()
+        for row in rows:
+            if row.kind == "permission":
+                groups |= implying.get(row.group_id, frozenset()) & (
+                    self._group_ids_satisfying(model, self._row_access_domain(row))
+                )
+        for row in rows:
+            if row.kind == "guard":
+                allowed = self._group_ids_satisfying(
+                    model, self._row_access_domain(row)
+                )
+                if row.guard_scope == "members":
+                    allowed |= every_group - implying.get(row.group_id, frozenset())
+                groups &= allowed
+        groups &= self._group_ids_satisfying(model, model._access_guard(operation))
+        if model._inherits_rules:
+            for parent_model_name, field_name in model._inherits.items():
+                if operation == "create" and not model._fields[field_name].store:
+                    continue
+                groups &= self._group_ids_with_access(parent_model_name, operation)
+        return frozenset(groups)
+
+    @tools.ormcache(cache="stable")
+    def _group_ids_implying(self) -> frozendict:
+        groups = self.env["res.groups"].sudo().with_context(active_test=False)
+        return frozendict(
+            {
+                group.id: frozenset(group.all_implied_by_ids.ids) | {group.id}
+                for group in groups.search([])
+            }
+        )
+
+    def _row_access_domain(self, row: AccessInfo) -> Domain:
+        # what a group needs of a row is only its 'access' conditions, the rest
+        # can hold for some records whatever the group; a text domain is read
+        # only when it can hold such a condition
+        if isinstance(row.domain, Domain):
+            return row.domain
+        if not ACCESS_OPERATOR_RE.search(row.text):
+            return Domain.TRUE
+        try:
+            return Domain(safe_eval(row.domain, self._eval_context()))
+        except Exception:
+            _logger.warning("Access %s: its domain does not evaluate", row.id)
+            return Domain.TRUE
+
+    def _group_ids_satisfying(
+        self, model: models.BaseModel, domain: Domain
+    ) -> frozenset[int]:
+        every_group = frozenset(self._group_ids_implying())
+
+        def combine(domain: Domain) -> frozenset[int]:
+            if domain.is_true():
+                return every_group
+            if domain.is_false():
+                return frozenset()
+            if isinstance(domain, DomainCondition):
+                comodel_name = (
+                    model._name
+                    if domain.field_expr == "id"
+                    else model._fields[domain.field_expr].comodel_name
+                )
+                return self._group_ids_with_access(comodel_name, domain.value)
+            operator = getattr(domain, "OPERATOR", None)
+            if operator == "|":
+                return frozenset().union(*map(combine, domain.children))
+            if operator == "&":
+                result = every_group
+                for child in domain.children:
+                    result &= combine(child)
+                return result
+            if operator == "!":
+                return every_group - combine(domain.child)
+            return every_group
+
+        return combine(
+            domain.map_conditions(
+                lambda condition: (
+                    condition if condition.operator == "access" else Domain.TRUE
+                )
+            )
+        )
 
     def _group_names_with_access(self, model_name: str, operation: str) -> list[str]:
+        # a group implying another group of the list adds nothing to read
+        groups = self._get_groups_with_access(model_name, operation)
+        shown = groups.filtered(
+            lambda group: not ((group.all_implied_ids - group) & groups)
+        )
         names = sorted(
-            (
-                (group.privilege_id.name or None, group.name)
-                for group in self._get_groups_with_access(model_name, operation)
-            ),
+            ((group.privilege_id.name or None, group.name) for group in shown),
             key=lambda pair: (pair[0] is None, pair[0] or "", pair[1]),
         )
         return [
@@ -694,12 +867,16 @@ class IrAccess(models.Model):
             "If you really, really need access, perhaps you can win over your "
             "friendly administrator with a batch of freshly baked cookies."
         )
-        failing = self._get_failed_accesses(records, operation)
+        debug = (
+            self.env.user.has_group("base.group_no_one")
+            and self.env.user._is_internal()
+        )
         display_records = records[:6].sudo()
+        failing = self._get_failed_accesses(records, operation)
         company_related = any("company_id" in row.text for row in failing)
         context = None
         if company_related:
-            resolution_info, context = self.env["ir.rule"]._get_company_resolution_info(
+            resolution_info, context = self._get_company_resolution_info(
                 display_records, resolution_info
             )
 
@@ -715,10 +892,7 @@ class IrAccess(models.Model):
                 )
             return f"{description}, {record.display_name} ({model_name}: {record.id})"
 
-        if (
-            self.env.user.has_group("base.group_no_one")
-            and self.env.user._is_internal()
-        ):
+        if debug:
             failing_records = "\n".join(
                 f"- {describe(record)}" for record in display_records
             )
@@ -734,9 +908,43 @@ class IrAccess(models.Model):
             exception.context = context
         return exception
 
+    def _get_company_resolution_info(
+        self, display_records: Any, resolution_info: str
+    ) -> tuple[str, dict | None]:
+        context = None
+        suggested_companies = display_records._get_redirect_suggested_company()
+        _debug.logic(
+            "access_error_company_hint",
+            uid=self.env.uid,
+            suggested=len(suggested_companies) if suggested_companies else 0,
+            reachable=bool(suggested_companies)
+            and suggested_companies in self.env.user.company_ids,
+        )
+        if suggested_companies and len(suggested_companies) != 1:
+            resolution_info += self.env._(
+                "\n\nNote: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!"
+            )
+        elif suggested_companies and suggested_companies in self.env.user.company_ids:
+            context = {
+                "suggested_company": {
+                    "id": suggested_companies.id,
+                    "display_name": suggested_companies.display_name,
+                }
+            }
+            resolution_info += self.env._(
+                "\n\nThis seems to be a multi-company issue, you might be able to access the record by switching to the company: %s.",
+                suggested_companies.display_name,
+            )
+        elif suggested_companies:
+            resolution_info += self.env._(
+                "\n\nThis seems to be a multi-company issue, but you do not have access to the proper company to access the record anyhow."
+            )
+        return resolution_info, context
+
     def _blame(self, failing: list[AccessInfo]) -> list[str]:
         accesses = sorted(
-            {row.id: row for row in failing}.values(), key=lambda row: row.id
+            {(row.id, row.name): row for row in failing}.values(),
+            key=lambda row: (row.id == 0, row.id, row.name),
         )
         return [
             self.env._(
@@ -746,8 +954,12 @@ class IrAccess(models.Model):
         ]
 
     def _get_failed_accesses(self, records: Any, operation: str) -> list[AccessInfo]:
+        # the rows, the model's own guard and the delegated parents' rows that
+        # refuse some of the records: permissions fail together (they add up),
+        # each guard fails on its own
         letter = self._operation_letter(operation)
-        model = records.browse().sudo().with_context(active_test=False)
+        user_model = records.browse()
+        model = user_model.sudo().with_context(active_test=False)
         group_ids = set(self.env.user._get_group_ids())
         eval_context = self._eval_context()
 
@@ -758,12 +970,13 @@ class IrAccess(models.Model):
 
         # counted in SQL: evaluating in Python would fill the cache of the
         # records' prefetch batch with values the principal may not read
-        ids = set(records.ids)
+        ids = list(dict.fromkeys(id_ for id_ in records._ids if id_))
+
+        def admitted(target: models.BaseModel, domain: Domain, among: list) -> set:
+            return set(target.search(domain & Domain("id", "in", among))._ids)
 
         def admits_all(domain: Domain) -> bool:
-            return model.search_count(domain & Domain("id", "in", list(ids))) == len(
-                ids
-            )
+            return len(admitted(model, domain, ids)) == len(ids)
 
         def holds(row: AccessInfo) -> bool:
             return row.group_id in group_ids
@@ -774,7 +987,7 @@ class IrAccess(models.Model):
             if letter in row.operation
         ]
         permissions = [row for row in rows if row.kind == "permission" and holds(row)]
-        failing = []
+        failing: list[AccessInfo] = []
         if not admits_all(Domain.OR(domain_of(row) for row in permissions)):
             failing.extend(permissions)
         failing.extend(
@@ -784,4 +997,57 @@ class IrAccess(models.Model):
             and (row.guard_scope == "everyone" or holds(row))
             and not admits_all(domain_of(row))
         )
+        own = user_model._access_guard(operation)
+        if not own.is_true() and not admits_all(own):
+            failing.append(
+                AccessInfo(
+                    0,
+                    0,
+                    "guard",
+                    "everyone",
+                    letter,
+                    own,
+                    self.env._("the condition of %(model)s itself", model=model._name),
+                    str(own),
+                )
+            )
+        if model._inherits_rules:
+            policy = self.env.registry.access_policy
+            for parent_model_name, field_name in model._inherits.items():
+                if operation == "create" and not model._fields[field_name].store:
+                    continue
+                parent_ids = list(dict.fromkeys(model.browse(ids)[field_name]._ids))
+                parent = (
+                    self.env[parent_model_name].sudo().with_context(active_test=False)
+                )
+                parent_domain = policy.security_domain(
+                    self.env, parent_model_name, operation
+                )
+                allowed = admitted(parent, parent_domain, parent_ids)
+                refused = [id_ for id_ in parent_ids if id_ not in allowed]
+                if not refused:
+                    continue
+                through = self.env._(
+                    "through %(field)s, %(model)s",
+                    field=field_name,
+                    model=parent_model_name,
+                )
+                parent_failing = self._get_failed_accesses(
+                    self.env[parent_model_name].browse(refused), operation
+                ) or [
+                    AccessInfo(
+                        0,
+                        0,
+                        "permission",
+                        "everyone",
+                        letter,
+                        Domain.FALSE,
+                        self.env._("no permission"),
+                        "",
+                    )
+                ]
+                failing.extend(
+                    row._replace(name=f"{row.name} ({through})")
+                    for row in parent_failing
+                )
         return failing

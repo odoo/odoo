@@ -196,10 +196,9 @@ class MailMessage(models.Model):
 
     @api.model
     def _get_readable_message_ids(self, model_ids: dict[str, dict]) -> set:
-        IrModelAccess = self.env["ir.model.access"]
         allowed_ids = set()
         for doc_model, doc_dict in model_ids.items():
-            if not IrModelAccess.check(doc_model, "read", False):
+            if doc_model not in self.env or not self.env[doc_model].has_access("read"):
                 _debug.logic(
                     "model_unreadable", model=doc_model, documents=len(doc_dict)
                 )

@@ -7,8 +7,7 @@ from psycopg.errors import UntranslatableCharacter
 from odoo import fields, models
 from odoo.fields import Command
 from odoo.orm.model_test_env import (
-    InMemoryAccessRightsNotSupported,
-    InMemoryRecordRulesNotSupported,
+    InMemoryAccessNotSupported,
     InMemorySqlNotSupported,
     ModelRegistry,
     model_test_env,
@@ -1107,16 +1106,14 @@ class TestBackendDifferential(TransactionCase):
 
         self._diff((CalendarTest,), script, "date boundaries")
 
-    def test_divergence_record_rules_need_an_ir_rule_model(self):
+    def test_divergence_access_needs_an_ir_access_model(self):
         registry = _isolated_registry(TestOrmFoo)
         with model_test_env(registry=registry) as env_a:
-            with self.assertRaises(InMemoryRecordRulesNotSupported):
-                _ = env_a["ir.rule"]
-            # the isolated registry has neither ir.model.access nor ir.rule: the
-            # ACL marker fires first, the rule marker would fire right after
-            with self.assertRaises(InMemoryAccessRightsNotSupported):
+            with self.assertRaises(InMemoryAccessNotSupported):
+                _ = env_a["ir.access"]
+            with self.assertRaises(InMemoryAccessNotSupported):
                 env_a(user=2, su=False)["test_orm.foo"].search([])
-        self.assertIn("ir.rule", self.env.registry)
+        self.assertIn("ir.access", self.env.registry)
 
     def test_divergence_raw_sql_fails_loud(self):
         registry = _isolated_registry(TestOrmFoo)

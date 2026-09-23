@@ -517,8 +517,6 @@ def _repoint_model_ids(cr, old_model):
         "ir_model_constraint",
         "ir_model_relation",
         "ir_model_inherit",
-        "ir_model_access",
-        "ir_rule",
         "ir_access",
     }
     cr.execute(
@@ -639,25 +637,16 @@ def _move_registry_rows(cr, old_model, old_table, renamed):
     if not row:
         return
     old_model_id = row[0]
-    for table in ("ir_rule", "ir_model_access", "ir_access"):
-        cr.execute(
-            SQL(
-                """
-                DELETE FROM ir_model_data d USING %s r
-                 WHERE d.res_id = r.id AND d.model = %s AND r.model_id = %s
-                """,
-                SQL.identifier(table),
-                table.replace("_", ".", 1).replace("model_access", "model.access"),
-                old_model_id,
-            )
+    cr.execute(
+        SQL(
+            """
+            DELETE FROM ir_model_data d USING ir_access r
+             WHERE d.res_id = r.id AND d.model = 'ir.access' AND r.model_id = %s
+            """,
+            old_model_id,
         )
-        cr.execute(
-            SQL(
-                "DELETE FROM %s WHERE model_id = %s",
-                SQL.identifier(table),
-                old_model_id,
-            )
-        )
+    )
+    cr.execute(SQL("DELETE FROM ir_access WHERE model_id = %s", old_model_id))
     cr.execute(
         SQL(
             "DELETE FROM ir_model_data WHERE model = 'ir.model' AND res_id = %s",

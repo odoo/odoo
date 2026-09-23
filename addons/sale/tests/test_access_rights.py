@@ -65,7 +65,7 @@ class TestAccessRights(SaleCommon, MailCommon):
             "Sales manager should be able to delete the SO",
         )
 
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_access_sales_person(self):
         SaleOrder = self.env["sale.order"].with_user(self.sale_user2)
         so_as_salesperson = SaleOrder.browse(self.sale_order.id)
@@ -108,7 +108,7 @@ class TestAccessRights(SaleCommon, MailCommon):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer.action_send_and_print()
 
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_access_portal_user(self):
         SaleOrder = self.env["sale.order"].with_user(self.user_portal)
         so_as_portal_user = SaleOrder.browse(self.sale_order.id)

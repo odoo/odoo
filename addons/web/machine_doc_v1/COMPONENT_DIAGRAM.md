@@ -582,7 +582,7 @@ All 37 files under `static/src/model/relational_model/` are listed.
 | PY | `controllers/export_writers.py` | 405 | XLSX formatting, grouped export |
 
 **Key invariants to check**:
-- Export respects `ir.rule` security domains
+- Export respects `ir.access` security domains
 - CSV values escaped to prevent formula injection (`=`, `+`, `-`, `@`)
 - Field nesting depth bounded (prevent infinite recursion on circular relations)
 - XLSX writer handles special characters in sheet/cell names

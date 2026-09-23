@@ -46,19 +46,11 @@ class ResGroups(models.Model):
         help="Number of users having this group (implicitly or explicitly)",
     )
 
-    model_access = fields.One2many(
-        comodel_name="ir.model.access",
+    access_ids = fields.One2many(
+        comodel_name="ir.access",
         inverse_name="group_id",
-        string="Access Controls",
+        string="Accesses",
         copy=True,
-    )
-    rule_groups = fields.Many2many(
-        comodel_name="ir.rule",
-        relation="rule_group_rel",
-        column1="group_id",
-        column2="rule_group_id",
-        string="Rules",
-        domain="[('global', '=', False)]",
     )
     menu_access = fields.Many2many(
         comodel_name="ir.ui.menu",
@@ -305,7 +297,7 @@ class ResGroups(models.Model):
         res = super().write(vals)
 
         if self.ids:
-            self.env["ir.model.access"].call_cache_clearing_methods()
+            self.env["ir.access"]._clear_access_caches()
             self.env.registry.clear_cache("groups")
             _debug.lifecycle("groups_cache_cleared", groups=self.ids, by="write")
 
@@ -453,14 +445,14 @@ class ResGroups(models.Model):
     def create(self, vals_list: list[ValuesType]) -> Self:
         groups = super().create(vals_list)
         _debug.lifecycle("create", count=len(groups))
-        self.env["ir.model.access"].call_cache_clearing_methods()
+        self.env["ir.access"]._clear_access_caches()
         self.env.registry.clear_cache("groups")
         return groups
 
     def unlink(self) -> bool:
         _debug.lifecycle("unlink", count=len(self))
         res = super().unlink()
-        self.env["ir.model.access"].call_cache_clearing_methods()
+        self.env["ir.access"]._clear_access_caches()
         self.env.registry.clear_cache("groups")
         return res
 

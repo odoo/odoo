@@ -496,7 +496,7 @@ from the workspace root::
        "license": "LGPL-3",
        "depends": ["sale"],
        "data": [
-           "security/ir.model.access.csv",
+           "security/ir.access.csv",
            "views/sale_order_views.xml",
        ],
    }
@@ -585,15 +585,17 @@ order.
    * - Menus
      - ``views/ir_ui_menu_views.xml``
      - one file, every menuitem
-   * - Access rights
-     - ``security/ir.model.access.csv``
-     - always CSV
+   * - Access
+     - ``security/ir.access.csv``
+     - every ``ir.access`` row, permissions and guards; the loader takes the
+       model from the file stem, so dots
    * - Groups
      - ``security/res_groups.xml``
      -
-   * - Record rules
-     - ``security/ir_rule.xml``
-     - every ``ir.rule`` in one file
+   * - Access overrides
+     - ``security/ir_access.xml``
+     - only rows a CSV cannot say: a deactivation or an override of another
+       module's row
    * - Wizards
      - ``wizards/{model_name}.py`` + ``_views.xml``
      - includes ``res.config.settings`` (§1.1)
@@ -1004,8 +1006,8 @@ contract.
 **The word ``domain`` in a method name means a search ``Domain``** ``[review]``.
 A hostname, or a ``mail.alias.domain`` record, spells its own noun:
 ``_get_company_host``, ``_get_default_alias_domain``. A method named for what a
-domain *reads* is named for that: ``ir.rule``'s ``_get_domain_keys`` →
-``_get_context_keys_in_domains``. ``_get_domain_*`` is exempt from §2.4.4's
+domain *reads* is named for that: the context an access domain reads is
+``ir.access._get_access_context``. ``_get_domain_*`` is exempt from §2.4.4's
 head-first reordering: the prefix is the family.
 
 **A protocol namespace may open with a hook prefix when the continuation names no
@@ -2991,7 +2993,7 @@ so imports, RPC and ``create()`` bypass it.
 * Per-company scalar configuration uses ``company_dependent=True``.
 * Read the active company as ``self.env.company``; scope with
   ``with_company(company)``. Never hard-code a ``company_id``.
-* Company record rules use ``[("company_id", "in", company_ids + [False])]``
+* Company access domains use ``[("company_id", "in", company_ids + [False])]``
   (§10.8).
 
 .. code-block:: python
@@ -4418,7 +4420,7 @@ authenticated user, and it enforces no ACL on its own.
 ---------------
 
 * **Escalate as narrowly as possible** ``[review]``. ``with_user()`` and
-  ``with_company()`` keep ACLs and record rules enforced. Use ``sudo()`` only for
+  ``with_company()`` keep access rows enforced. Use ``sudo()`` only for
   cross-tenant or system operations.
 * **Whitelist fields before ``sudo().write(payload)`` on user input**
   ``[review]``.
@@ -4487,7 +4489,7 @@ for every value.
 **A related field into a sensitive model sets ``compute_sudo=False``, carries
 ``groups=``, or becomes an ACL-respecting compute** ``[review]``. Related fields
 default to ``compute_sudo=True``, so they read as superuser and bypass the
-reader's ACLs and record rules. Plain computes default to
+reader's access rows. Plain computes default to
 ``compute_sudo=store``.
 
 **A ``_search`` override that narrows visibility declares
@@ -4530,27 +4532,41 @@ field.
 10.8 Access control
 -------------------
 
-**Every new model ships explicit access rules** ``[review]``. A model with no
-``ir.model.access`` line is inaccessible or silently admin-only.
+**Every new model ships explicit access** ``[test_lint access_model_covered]``. A
+model no permission row names is readable by the superuser only.
 
-* **Grant the minimum ACL per (model, group) in
-  ``security/ir.model.access.csv``** ``[review]``. A user group typically gets
-  ``1,1,1,0`` and a manager group ``1,1,1,1``. **Never ship a group-less line.**
-  It grants every user, portal and public included. To grant portal or public
-  access, name ``base.group_portal`` / ``base.group_public``.
-* **Use record rules (``ir.rule``) when access depends on the record's data**
-  (owner, company, state) ``[review]``.
-
-  - A rule with no groups is global: it is AND-ed with every other rule.
-  - A rule with groups is ``composition="grant"`` by default. It is OR-ed with
-    the user's other grant rules, so it can only widen access. Adding one
-    silently disarms the restriction of every other grant rule for that group.
-  - **A rule that narrows a group's access declares ``composition="restrict"``.**
-    It is AND-ed for the group's members only, and no grant rule can widen it.
-  - Set ``perm_*`` to the modes the rule governs. With all four set, the rule
-    also governs creation, including records the ORM creates on the user's
-    behalf.
-
+* **Access is** ``ir.access`` **rows**, in ``security/ir.access.csv``:
+  ``id,name,model_id/id,group_id/id,kind,operation,domain``. Every row states its
+  ``kind`` and its ``operation`` (a subset of ``crud``)
+  ``[test_lint access_kind_explicit, access_rule_mode]``. Grant the minimum:
+  typically ``cru`` for a user group and ``crud`` for a manager group. The loader
+  refuses an ``ir.model.access`` CSV and an ``ir.rule`` record.
+* **A permission adds records**: the permissions a user's groups hold are OR-ed,
+  each limited to its ``domain`` (empty: every record). Adding a group never
+  takes a record away.
+* **A guard narrows**: its domain is AND-ed and no permission can widen it. A
+  guard binds everyone (``guard_scope`` ``everyone``, group
+  ``base.group_everyone``) or the members of its group only (``members``); a
+  guard of any other group says which, or the loader refuses it.
+* **A domain never reads the user's groups** in a way more groups narrow
+  ``[test_lint access_domain_no_group_test]``: membership is the row's group. Only
+  ``('x', 'in', user.all_group_ids.ids)`` and ``[] if user.has_group(...) else D``
+  are allowed. Every shipped domain names fields and operators the registry has
+  ``[test_lint access_domain_validated]``.
+* **A record that belongs to another** reads its access through the
+  ``'access'`` operator: ``[('order_id', 'access', 'read')]`` holds where the
+  user may read the order. Such conditions and ``_inherits`` delegation form no
+  cycle ``[test_lint access_delegation_acyclic]``.
+* **What a model requires in code** is its ``_access_guard(operation)``, a
+  ``Domain`` (usually an ``'access'`` condition) AND-ed with its rows. An
+  override of ``_check_access``, ``_has_field_access``, ``_access_domain`` or an
+  access-filtering ``_search`` outside base is counted
+  ``[test_lint access_check_override]`` and only shrinks.
+* **Ask the model, not the store**: ``records.has_access(op)``,
+  ``records.check_access(op)``, ``records._filtered_access(op)``, and
+  ``Model._access_domain(op)`` for the user's domain.
+* **A migration that edits access edits** ``ir.access``, through
+  ``ir_access_convert``'s helpers ``[test_lint test_access_migrations]``.
 * **Write multi-company rules as
   ``[("company_id", "in", company_ids + [False])]``** ``[review]``. Pair them with
   ``check_company=True`` on relational fields (§2.9.10).

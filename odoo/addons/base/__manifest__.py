@@ -1,6 +1,6 @@
 {
     "name": "Base",
-    "version": "1.99",
+    "version": "1.100",
     "category": "Hidden",
     "description": """
 The kernel of Odoo, needed for all installation.
@@ -34,7 +34,6 @@ The kernel of Odoo, needed for all installation.
         "views/ir_filters_views.xml",
         "views/ir_model_views.xml",
         "views/ir_attachment_views.xml",
-        "views/ir_rule_views.xml",
         "views/ir_access_views.xml",
         "views/ir_sequence_views.xml",
         "views/ir_ui_menu_views.xml",

@@ -7,7 +7,7 @@ from odoo.addons.website_forum.tests.common import KARMA, TestForumCommon
 
 
 class TestForumCRUD(TestForumCommon):
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_crud_rights(self):
         Post = self.env["forum.post"]
         Vote = self.env["forum.post.vote"]

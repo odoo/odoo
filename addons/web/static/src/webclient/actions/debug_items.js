@@ -162,11 +162,11 @@ function manageFilters({ action, env }) {
  * @param {{ accessRights: Record<string, any>, action: Action, env: import("@web/env").OdooEnv }} params
  * @returns {Record<string, any> | null}
  */
-function viewAccessRights({ accessRights, action, env }) {
-    if (!action.res_model || !accessRights.canSeeModelAccess) {
+function viewAccesses({ accessRights, action, env }) {
+    if (!action.res_model || !accessRights.canSeeAccesses) {
         return null;
     }
-    const description = _t("Access Rights");
+    const description = _t("Accesses");
     return {
         type: "item",
         description,
@@ -176,36 +176,10 @@ function viewAccessRights({ accessRights, action, env }) {
                 /** @type {string} */ (action.res_model),
             );
             await env.services.action.doAction(
-                modelScopedAction("ir.model.access", description, modelId),
+                modelScopedAction("ir.access", description, modelId),
             );
         },
         sequence: 350,
-        section: "security",
-    };
-}
-
-/**
- * @param {{ accessRights: Record<string, any>, action: Action, env: import("@web/env").OdooEnv }} params
- * @returns {Record<string, any> | null}
- */
-function viewRecordRules({ accessRights, action, env }) {
-    if (!action.res_model || !accessRights.canSeeRecordRules) {
-        return null;
-    }
-    const description = _t("Model Record Rules");
-    return {
-        type: "item",
-        description: _t("Record Rules"),
-        callback: async () => {
-            const modelId = await getModelId(
-                env,
-                /** @type {string} */ (action.res_model),
-            );
-            await env.services.action.doAction(
-                modelScopedAction("ir.rule", description, modelId),
-            );
-        },
-        sequence: 360,
         section: "security",
     };
 }
@@ -216,5 +190,4 @@ debugRegistry
     .add("viewFields", /** @type {any} */ (viewFields))
     .add("ViewModel", /** @type {any} */ (ViewModel))
     .add("manageFilters", /** @type {any} */ (manageFilters))
-    .add("viewAccessRights", /** @type {any} */ (viewAccessRights))
-    .add("viewRecordRules", /** @type {any} */ (viewRecordRules));
+    .add("viewAccesses", /** @type {any} */ (viewAccesses));

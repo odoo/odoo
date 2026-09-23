@@ -9,10 +9,12 @@ class DocumentsLink_To_Record_Wizard(models.TransientModel):
     _description = "Documents Link to Record"
 
     def _domain_model_id(self) -> list:
-        models = self.env["ir.model.access"]._get_models_allowed() - {
-            "document.document"
-        }
-        return [("model", "in", list(models)), ("is_mail_thread", "=", True)]
+        models = [
+            name
+            for name in self.env.registry
+            if name != "document.document" and self.env[name].has_access("read")
+        ]
+        return [("model", "in", models), ("is_mail_thread", "=", True)]
 
     @api.model
     def _selection_target_model(self) -> list:

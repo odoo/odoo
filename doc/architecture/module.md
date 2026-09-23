@@ -493,7 +493,7 @@ seam, not an import.**
 | `components/` ↔ runtime | `FieldCache`/`ComputeEngine` take callbacks for SQL and recompute, so the engine never imports `Environment` |
 | Layer 1 ↔ `BaseModel` | the model layer injects `BaseModel` into `orm/_recordset.py` via `set_base_model()`, so `fields/` and `domain/` recognise recordsets without importing Layer 2 |
 | CRUD ↔ persistence | the model mixins dispatch row I/O through `env.backend`; a locked or conditional column write goes through `env.backend.columns` (`fetch_and_add`, `try_write`), a sequence through `env.backend.sequences` |
-| ORM ↔ `addons/base` | six port objects on the registry, each the one file that names the base models it needs: `registry.metaschema` (ir.model, ir.model.fields, ir.model.constraint, ir.default, ir.model.data's load end), `registry.access_policy` (ir.access, with ir.model.access and ir.rule read as the rows they convert to), `registry.xmlids` (ir.model.data), `registry.file_store` (ir.attachment), `registry.settings` (ir.config_parameter), `registry.locale` (res.lang, decimal.precision). The in-memory `ModelRegistry` carries the same six |
+| ORM ↔ `addons/base` | six port objects on the registry, each the one file that names the base models it needs: `registry.metaschema` (ir.model, ir.model.fields, ir.model.constraint, ir.default, ir.model.data's load end), `registry.access_policy` (ir.access), `registry.xmlids` (ir.model.data), `registry.file_store` (ir.attachment), `registry.settings` (ir.config_parameter), `registry.locale` (res.lang, decimal.precision). The in-memory `ModelRegistry` carries the same six |
 | framework ↔ addon models | string key (`env["res.users"]`), never an import; eight such sites remain in the ORM outside the ports and are pinned (below) |
 | `ir.ui.view` ↔ view types | an addon that adds a view type registers an `ElementHandler` for its root tag (`addons/base/models/ir_ui_view_arch.py`) instead of inheriting the model; the pipeline stages stay on the model |
 
@@ -554,6 +554,7 @@ collected by the mixin through `registry.xmlids` and `registry.file_store` befor
 the first batch.
 
 The DB-free tier's safety marker is unchanged in what it protects: a registry
-without `ir.rule` raises `InMemoryRecordRulesNotSupported` the moment an
-access-checked search asks the policy for a domain; one handed an `ir.rule` class
-gets real filtering.
+without `ir.access` raises `InMemoryAccessNotSupported` the moment an
+access-checked read or search asks the policy for a principal's rows; one handed
+an `ir.access` class (base's own, or a stub answering `_bound_access_rows`) gets
+real filtering.

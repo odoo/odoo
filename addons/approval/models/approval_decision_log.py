@@ -1,8 +1,7 @@
 from odoo import SUPERUSER_ID, Command, api, fields, models
-from odoo.api import DomainType
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import SQL, Query
+from odoo.tools import SQL
 
 from . import approval_trace as trace
 
@@ -91,42 +90,12 @@ class ApprovalDecisionLog(models.Model):
         required=True,
     )
 
-    # A decision is readable exactly where its request is. An ir.rule cannot say
-    # that: rule domains are evaluated as superuser, so `request_id any []` would
-    # skip the request's own rules and expose every decision.
     @api.model
-    def _search(
-        self,
-        domain: DomainType,
-        offset: int = 0,
-        limit: int | None = None,
-        order: str | None = None,
-        *,
-        bypass_access: bool = False,
-        **kwargs,
-    ) -> Query:
-        if not (self.env.su or bypass_access):
-            domain = Domain(domain) & Domain(
-                "request_id", "in", self.env["approval.request"]._search([])
-            )
-        return super()._search(
-            domain, offset, limit, order, bypass_access=bypass_access, **kwargs
-        )
-
-    def _check_access(self, operation: str) -> tuple | None:
-        result = super()._check_access(operation)
-        if operation != "read" or not self or self.env.su:
-            return result
-        remaining = self - result[0] if result else self
-        requests = remaining.sudo().request_id.with_env(self.env)
-        hidden = requests - requests._filtered_access("read")
-        if not hidden:
-            return result
-        forbidden = remaining.filtered(lambda log: log.sudo().request_id in hidden)
-        denied = hidden._check_access("read")[1]
-        if result:
-            return result[0] + forbidden, result[1]
-        return forbidden, denied
+    def _access_guard(self, operation: str) -> Domain:
+        # a decision is readable exactly where its request is
+        if operation == "read":
+            return Domain("request_id", "access", "read")
+        return super()._access_guard(operation)
 
     def write(self, vals):
         if not self:

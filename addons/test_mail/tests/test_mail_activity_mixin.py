@@ -2568,7 +2568,7 @@ class TestNextActivityInvariants(TestActivityCommon):
         query = Model._search([], order="activity_state, my_activity_date_deadline")
         self.assertEqual(query.from_clause.code.count("GROUP BY res_id"), 2)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_next_activity_search_does_not_widen_access(self):
         """The next-activity subquery runs with bypass_access, mirroring
         activity_ids' bypass_search_access: the document governs access, and the

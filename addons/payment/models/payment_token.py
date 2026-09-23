@@ -19,7 +19,7 @@ class PaymentToken(models.Model):
     )
     company_id = fields.Many2one(
         related="provider_id.company_id",
-    )  # Indexed to speed-up ORM searches (from ir_rule or others).
+    )  # Indexed to speed-up ORM searches (from ir.access or others).
     payment_method_id = fields.Many2one(
         comodel_name="payment.method",
         readonly=True,

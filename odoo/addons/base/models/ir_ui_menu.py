@@ -190,7 +190,6 @@ class IrUiMenu(models.Model):
         )
         menu_ids = set(menus._ids)
         visible_ids = set()
-        access = self.env["ir.model.access"]
         no_action = access_denied = 0  # debuglog
         for menu in menus:
             action = menu.action
@@ -199,7 +198,9 @@ class IrUiMenu(models.Model):
                 continue
             model_fname = MODEL_BY_TYPE.get(action._name)
             gating_model = action[model_fname] if model_fname else None
-            if gating_model and not access.check(gating_model, "read", False):
+            if gating_model and not (
+                gating_model in self.env and self.env[gating_model].has_access("read")
+            ):
                 access_denied += 1  # debuglog
                 continue
             menu_id = menu.id

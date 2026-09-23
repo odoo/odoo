@@ -477,31 +477,6 @@ class TestDelegatedAccess(TestIrAccessCase):
 
 
 class TestRetiredAccessTables(TestIrAccessCase):
-    """ir.model.access and ir.rule stay only for the callers that still name
-    them: every access is an ir.access row, and base's 1.97 migration converted
-    what the two tables held."""
-
-    def test_an_access_line_cannot_be_created(self):
-        with self.assertRaisesRegex(UserError, "ir.access"):
-            self.env["ir.model.access"].create(
-                {
-                    "name": "acl",
-                    "model_id": self.env["ir.model"]._get_id(self.MODEL),
-                    "group_id": self.group1.id,
-                    "perm_read": True,
-                }
-            )
-
-    def test_a_record_rule_cannot_be_created(self):
-        with self.assertRaisesRegex(UserError, "ir.access"):
-            self.env["ir.rule"].create(
-                {
-                    "name": "rule",
-                    "model_id": self.env["ir.model"]._get_id(self.MODEL),
-                    "domain_force": "[]",
-                }
-            )
-
     def test_rows_do_not_load_while_an_id_still_names_an_old_record(self):
         self.env["ir.model.data"].create(
             {
@@ -524,6 +499,33 @@ class TestRetiredAccessTables(TestIrAccessCase):
         with self.assertRaisesRegex(UserError, r"-u base"):
             self.env["ir.access"]._load_records([data])
 
+    def test_a_group_guard_loaded_without_its_scope_is_refused(self):
+        def load(name, **values):
+            return self.env["ir.access"]._load_records(
+                [
+                    {
+                        "xml_id": f"test_ir_access.{name}",
+                        "values": {
+                            "name": "guard",
+                            "model_id": self.env["ir.model"]._get_id(self.MODEL),
+                            "kind": "guard",
+                            "operation": "u",
+                            "domain": "[('id', '=', 0)]",
+                            **values,
+                        },
+                    }
+                ]
+            )
+
+        with self.assertRaisesRegex(ValidationError, "does not say whom it binds"):
+            load("unscoped_guard", group_id=self.group1.id)
+        members = load("member_guard", group_id=self.group1.id, guard_scope="members")
+        self.assertEqual(members.guard_scope, "members")
+        everyone = load(
+            "everyone_guard", group_id=self.env.ref("base.group_everyone").id
+        )
+        self.assertEqual(everyone.guard_scope, "everyone")
+
     def test_the_failing_guard_is_blamed_by_name(self):
         self.make_access(group=self.group1, operation="ru")
         self.make_guard("only mario", records=self.mario, operation="u")
@@ -532,3 +534,113 @@ class TestRetiredAccessTables(TestIrAccessCase):
             self.assertAccessError(r"Blame the following accesses:\s*- only mario"),
         ):
             self.luigi.check_access("write")
+
+
+class TestGroupsWithAccess(TestIrAccessCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.carol = cls.env["res.users"].create(
+            {
+                "login": "carol",
+                "name": "Carol",
+                "group_ids": [
+                    Command.set((cls.env.ref("base.group_user") + cls.group3).ids)
+                ],
+            }
+        )
+
+    def groups(self, model, operation="read"):
+        groups = self.env["ir.access"]._get_groups_with_access(model, operation)
+        return groups & (self.group1 + self.group2 + self.group3)
+
+    def test_a_row_through_the_access_operator_needs_the_pointed_access(self):
+        self.make_access(
+            group=self.group1, domain=str([("category_id", "access", "read")])
+        )
+        self.make_access(group=self.group2, model="test_ir_access.category")
+        self.assertFalse(self.groups(self.MODEL))
+        with self.assertAccessError("No group currently allows this operation"):
+            self.env[self.MODEL].with_user(self.carol).check_access("read")
+
+        self.make_access(group=self.group1, model="test_ir_access.category")
+        self.assertEqual(self.groups(self.MODEL), self.group1)
+        with self.assertAccessError(
+            r"allowed for the following groups:\s*- Group 1\s*Contact"
+        ):
+            self.env[self.MODEL].with_user(self.carol).check_access("read")
+
+    def test_the_model_s_own_guard_needs_its_access_too(self):
+        self.make_access(group=self.group1, model="test_ir_access.guarded")
+        self.make_access(group=self.group2, model="test_ir_access.category")
+        self.assertFalse(self.groups("test_ir_access.guarded"))
+        self.make_access(group=self.group1, model="test_ir_access.category")
+        self.assertEqual(self.groups("test_ir_access.guarded"), self.group1)
+
+    def test_a_delegated_parent_needs_its_access_too(self):
+        self.make_access(group=self.group1, model="test_ir_access.delegated")
+        self.make_access(group=self.group2)
+        self.assertFalse(self.groups("test_ir_access.delegated"))
+        self.make_access(group=self.group1)
+        self.assertEqual(self.groups("test_ir_access.delegated"), self.group1)
+
+
+class TestFailedAccesses(TestIrAccessCase):
+    def test_the_delegated_parent_s_rows_are_blamed(self):
+        children = self.env["test_ir_access.delegated"].create(
+            [{"item_id": record.id} for record in self.mario + self.bowser]
+        )
+        self.make_access(group=self.group1, model="test_ir_access.delegated")
+        self.make_access("only mario items", records=self.mario, group=self.group1)
+        forbidden = children[1].with_user(self.user)
+        with (
+            self.debug_mode(),
+            self.assertAccessError(
+                r"Blame the following accesses:\s*"
+                r"- only mario items \(through item_id, test_ir_access\.item\)"
+            ),
+        ):
+            forbidden.check_access("read")
+
+    def test_the_model_s_own_guard_is_blamed(self):
+        hidden = self.env["test_ir_access.category"].create({"name": "Hidden"})
+        record = self.env["test_ir_access.guarded"].create(
+            {"name": "g", "category_id": hidden.id}
+        )
+        self.make_access(group=self.group1, model="test_ir_access.guarded")
+        self.make_access(
+            group=self.group1,
+            model="test_ir_access.category",
+            domain="[('name', '!=', 'Hidden')]",
+        )
+        with (
+            self.debug_mode(),
+            self.assertAccessError(
+                r"Blame the following accesses:\s*"
+                r"- the condition of test_ir_access\.guarded itself"
+            ),
+        ):
+            record.with_user(self.user).check_access("read")
+
+
+class TestOwnerThroughTheAccessOperator(TestIrAccessCase):
+    def test_an_owned_record_follows_its_many2one_owner(self):
+        owned = self.env["test_ir_access.owned"].create(
+            [
+                {"name": "of mario", "item_id": self.mario.id},
+                {"name": "of bowser", "item_id": self.bowser.id},
+                {"name": "of nobody"},
+            ]
+        )
+        of_mario, of_bowser, of_nobody = owned
+        self.make_access(group=self.group1, model="test_ir_access.owned")
+        self.make_access(records=self.mario, group=self.group1)
+        as_user = self.env["test_ir_access.owned"].with_user(self.user)
+        self.assertTrue(as_user._access_owner_delegates())
+        self.assertEqual(
+            as_user.search([("id", "in", owned.ids)]),
+            (of_mario + of_nobody).with_user(self.user),
+        )
+        of_mario.with_user(self.user).check_access("read")
+        with self.assertAccessError():
+            of_bowser.with_user(self.user).check_access("read")

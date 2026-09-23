@@ -128,7 +128,7 @@ class TestDocumentsMulticompany(TransactionCaseDocuments):
         if message_items:
             raise AssertionError(" - ".join(message_items))
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_company_access_simple(self):
         self.assertEqual(self.folder_b.access_internal, "view")
         self.folder_b.company_id = self.company_allowed
@@ -181,7 +181,7 @@ class TestDocumentsMulticompany(TransactionCaseDocuments):
                 user_permissions = docs.with_user(user).mapped("user_permission")
                 self.assertListEqual(user_permissions, expected_user_permissions)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_company_access_admin(self):
         ALL_DOCUMENTS = list(range(6))
         cases = [
@@ -193,7 +193,7 @@ class TestDocumentsMulticompany(TransactionCaseDocuments):
         ]
         self._test_company_with_user(cases, self.admin_user)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_company_access_admin_no_active_test(self):
         ALL_DOCUMENTS = list(range(6))
         cases = [
@@ -207,7 +207,7 @@ class TestDocumentsMulticompany(TransactionCaseDocuments):
             cases, self.admin_user.with_context(active_test=False)
         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_company_access_manager(self):
         cases = [
             (
@@ -242,7 +242,7 @@ class TestDocumentsMulticompany(TransactionCaseDocuments):
         ]
         self._test_company_with_user(cases, self.document_manager)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_company_access_internal(self):
         cases = [
             (
@@ -265,7 +265,7 @@ class TestDocumentsMulticompany(TransactionCaseDocuments):
         ]
         self._test_company_with_user(cases, self.internal_user)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_company_access_portal(self):
         cases = [
             (
@@ -288,7 +288,7 @@ class TestDocumentsMulticompany(TransactionCaseDocuments):
         ]
         self._test_company_with_user(cases, self.portal_user)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_company_shortcut_mismatch(self):
         docs = self._make_test_documents(self.company_allowed.id, self.internal_user)
         member_view_link_edit = docs[4]

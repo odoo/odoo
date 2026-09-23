@@ -89,7 +89,7 @@ class MessageAccessCommon(MailCommon, HttpCase):
 
 @tagged("mail_message", "security", "post_install", "-at_install")
 class TestMailMessageAccess(MessageAccessCommon):
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_assert_initial_values(self):
         """Just ensure tests data"""
         for record in (
@@ -219,7 +219,7 @@ class TestMailMessageAccess(MessageAccessCommon):
     #  - notified of parent message
     # ------------------------------------------------------------
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_create(self):
         """Test 'group_user' creation rules"""
         # prepare 'notified of parent' condition
@@ -401,7 +401,7 @@ class TestMailMessageAccess(MessageAccessCommon):
                             }
                         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_create_portal(self):
         """Test group_portal creation rules"""
         # prepare 'notified of parent' condition
@@ -526,7 +526,7 @@ class TestMailMessageAccess(MessageAccessCommon):
                 )
             )
 
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_access_create_public(self):
         """Public can never create messages"""
         for record in [
@@ -1057,7 +1057,7 @@ class TestMailMessageAccess(MessageAccessCommon):
                 if msg_vals:
                     msg.write(original_vals)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_write_envelope(self):
         """Test updating message envelope require some privileges"""
         message = self.record_internal.with_user(self.user_employee).message_ids[0]
@@ -1077,7 +1077,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             }
         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_write_portal_notification(self):
         """Test updating message notification content as portal user"""
         self.record_followers.message_subscribe(self.user_portal.partner_id.ids)
@@ -1090,7 +1090,7 @@ class TestMailMessageAccess(MessageAccessCommon):
         with self.assertRaises(AccessError):
             message.with_user(self.user_portal_2).read(["subject"])
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_write_portal_envelope(self):
         """A portal author edits the content of its message, never its envelope"""
         message = self.record_portal.with_user(self.user_portal).message_post(
@@ -1339,7 +1339,7 @@ class TestMessageSubModelAccess(MessageAccessCommon):
         # Test: Employee has access to attachment, ok because they can read message
         attachment.with_user(self.user_employee).read(["name", "datas"])
 
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_mail_follower(self):
         """Read access check on sub entities of mail.message"""
         internal_record = self.record_internal.with_user(self.user_employee)
@@ -1360,7 +1360,7 @@ class TestMessageSubModelAccess(MessageAccessCommon):
             {"partner_id": self.user_admin.partner_id.id}
         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_mail_notification(self):
         """Limit update of notifications for internal users"""
         internal_record = self.record_internal.with_user(self.user_admin)
@@ -1393,7 +1393,7 @@ class TestMessageSubModelAccess(MessageAccessCommon):
         with self.assertRaises(AccessError):
             notif_own.write({"res_partner_id": self.user_admin.partner_id.id})
 
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_mail_notification_portal(self):
         """In any case, portal should not modify notifications"""
         with self.assertRaises(AccessError):

@@ -388,15 +388,15 @@ class TestVehicleInheritsWhatBindsAnAsset(TransactionCase):
         self.assertIn(mine, visible)
         self.assertNotIn(theirs, visible)
 
-    def test_the_root_rules_are_the_ones_a_subtype_answers_to(self):
-        Rule = self.env["ir.rule"]
+    def test_the_root_rows_are_the_ones_a_subtype_answers_to(self):
+        Access = self.env["ir.access"]
 
         self.assertEqual(
-            Rule._get_model_names_bound_by_rules("resource.asset.vehicle"),
+            Access._get_models_bound_by("resource.asset.vehicle"),
             ["resource.asset.vehicle", "resource.asset"],
         )
         self.assertEqual(
-            Rule._get_model_names_bound_by_rules("resource.asset"),
+            Access._get_models_bound_by("resource.asset"),
             ["resource.asset"],
             "a rule written for one subtype must not narrow its siblings",
         )

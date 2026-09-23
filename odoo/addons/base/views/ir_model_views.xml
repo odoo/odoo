@@ -92,37 +92,24 @@
                                 groups="base.group_no_one"
                                 target="new" />
                         </page>
-                        <page name="access_rights" string="Access Rights">
-                            <field name="access_ids">
-                                <list
-                                    string="Access Rights"
-                                    editable="top"
-                                    decoration-warning="not group_id and (perm_read or perm_write or perm_create or perm_unlink)">
+                        <page name="access_rights" string="Accesses">
+                            <field
+                                name="access_ids"
+                                context="{'default_kind': 'permission'}">
+                                <list string="Accesses" editable="top">
                                     <field name="name" />
                                     <field name="group_id" />
-                                    <field name="perm_read" />
-                                    <field name="perm_write" />
-                                    <field name="perm_create" />
-                                    <field name="perm_unlink" />
-                                </list>
-                            </field>
-                        </page>
-                        <page name="record_rules" string="Record Rules">
-                            <field name="rule_ids">
-                                <list
-                                    string="Record Rules"
-                                    editable="top"
-                                    decoration-info="not groups">
-                                    <field name="name" />
                                     <field
-                                        name="groups"
-                                        widget="many2many_tags"
-                                        options="{'no_create':True}" />
-                                    <field name="domain_force" />
-                                    <field name="perm_read" />
-                                    <field name="perm_write" />
-                                    <field name="perm_create" />
-                                    <field name="perm_unlink" />
+                                        name="kind"
+                                        widget="badge"
+                                        decoration-success="kind == 'permission'"
+                                        decoration-warning="kind == 'guard'" />
+                                    <field name="guard_scope" optional="hide" />
+                                    <field name="domain" />
+                                    <field name="for_read" />
+                                    <field name="for_write" />
+                                    <field name="for_create" />
+                                    <field name="for_unlink" />
                                 </list>
                             </field>
                         </page>
@@ -607,113 +594,6 @@ for record in self:
         <field name="name">ManyToMany Relations</field>
         <field name="res_model">ir.model.relation</field>
         <field name="view_id" ref="view_model_relation_list" />
-    </record>
-
-    <record id="ir_access_view_tree" model="ir.ui.view">
-        <field name="name">ir.model.access.view.list</field>
-        <field name="model">ir.model.access</field>
-        <field name="arch" type="xml">
-            <list
-                string="Access Rights"
-                decoration-warning="not group_id and (perm_read or perm_write or perm_create or perm_unlink)">
-                <field name="name" />
-                <field name="model_id" />
-                <field name="group_id" />
-                <field name="perm_read" />
-                <field name="perm_write" />
-                <field name="perm_create" />
-                <field name="perm_unlink" />
-            </list>
-        </field>
-    </record>
-
-    <record id="ir_access_view_tree_edition" model="ir.ui.view">
-        <field name="name">ir.model.access.view.list.edition</field>
-        <field name="model">ir.model.access</field>
-        <field name="inherit_id" ref="ir_access_view_tree" />
-        <field name="mode">primary</field>
-        <field name="arch" type="xml">
-            <list position="attributes">
-                <attribute name="editable">top</attribute>
-            </list>
-        </field>
-    </record>
-
-    <record id="ir_access_view_form" model="ir.ui.view">
-        <field name="model">ir.model.access</field>
-        <field name="arch" type="xml">
-            <form string="Access Rights">
-                <sheet>
-                    <div class="alert alert-warning text-center" role="alert">
-                        Please note that modifications will be applied for all users of the
-                        specified group
-                    </div>
-                    <group col="4">
-                        <field name="name" />
-                        <field name="model_id" />
-                        <field name="group_id" />
-                        <field name="active" widget="boolean_toggle" />
-                    </group>
-                    <group string="Access" col="4">
-                        <field name="perm_read" />
-                        <field name="perm_write" />
-                        <field name="perm_create" />
-                        <field name="perm_unlink" />
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="ir_access_view_search" model="ir.ui.view">
-        <field name="model">ir.model.access</field>
-        <field name="arch" type="xml">
-            <search string="Access Rights">
-                <field name="name" string="Access Rights" />
-                <filter
-                    name="global"
-                    string="Global"
-                    domain="[('group_id', '=', False)]" />
-                <separator />
-                <filter
-                    name="full_access"
-                    string="Full Access"
-                    domain="[('perm_read', '=', True), ('perm_write', '=', True), ('perm_create', '=', True), ('perm_unlink', '=', True)]" />
-                <filter
-                    name="read_access"
-                    string="Read Access"
-                    domain="[('perm_read', '=', True)]" />
-                <filter
-                    name="write_access"
-                    string="Write Access"
-                    domain="[('perm_write', '=', True)]" />
-                <separator />
-                <filter
-                    name="inactive"
-                    string="Archived"
-                    domain="[('active', '=', False)]" />
-                <field name="model_id" />
-                <field name="group_id" />
-                <group col="11" colspan="11" groups="base.group_no_one">
-                    <filter
-                        name="group"
-                        string="Group"
-                        context="{'group_by': 'group_id'}" />
-                    <filter
-                        name="group_by_object"
-                        string="Model"
-                        context="{'group_by': 'model_id'}" />
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <record id="ir_access_act" model="ir.actions.act_window">
-        <field name="name">Access Rights</field>
-        <field name="res_model">ir.model.access</field>
-        <field name="path">access-rights</field>
-        <field name="view_id" ref="ir_access_view_tree_edition" />
-        <field name="search_view_id" ref="ir_access_view_search" />
     </record>
 
 </odoo>

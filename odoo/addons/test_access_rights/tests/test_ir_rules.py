@@ -225,7 +225,7 @@ class TestRules(TransactionCase):
         self.assertNotIn(
             new_record,
             forbidden_records,
-            "NewId must not be reported as forbidden by ir.rule",
+            "NewId must not be reported as forbidden by an access row",
         )
 
         filtered = mixed_bad._filtered_access("read")

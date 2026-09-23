@@ -513,7 +513,7 @@ class AccountReturn(models.Model):
     @api.depends("company_ids")
     def _compute_show_companies(self):
         for record in self:
-            # Use _get_company_ids() instead of company_ids: ir.rule filters records out during
+            # Use _get_company_ids() instead of company_ids: access rows filter records out during
             # cache insertion, so cached values may differ from those in the database and users
             # with branch-only access would see company_ids without the parent company.
             record.show_companies = (

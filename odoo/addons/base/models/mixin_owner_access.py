@@ -5,6 +5,7 @@ from collections import defaultdict
 
 from odoo import api, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.libs.func import classproperty
 from odoo.tools.access_scan import (
     get_accessible_query,
@@ -76,9 +77,33 @@ class MixinOwnerAccess(models.AbstractModel):
             )
         )
 
+    @api.model
+    def _access_owner_delegates(self) -> bool:
+        # a many2one owner whose model states its whole access in ir.access is
+        # read through the 'access' operator; a many2one_reference owner, or a
+        # model that checks more in code, is scanned record by record
+        field = self._fields.get(self._access_owner_field)
+        if field is None or field.type != "many2one":
+            return False
+        comodel = type(self.env[field.comodel_name])
+        return comodel._check_access is models.BaseModel._check_access
+
+    @api.model
+    def _access_guard(self, operation: str) -> Domain:
+        guard = super()._access_guard(operation)
+        if not self._access_owner_delegates():
+            return guard
+        field = self._fields[self._access_owner_field]
+        owner = Domain(field.name, "=", False) | Domain(
+            field.name, "access", self._access_owner_operation(operation)
+        )
+        if field.comodel_name == "res.users":
+            owner |= Domain(field.name, "=", self.env.uid)
+        return guard & owner
+
     def _check_access(self, operation: str) -> tuple | None:
         result = super()._check_access(operation)
-        if not self or self.env.su:
+        if not self or self.env.su or self._access_owner_delegates():
             return result
         candidates = self - result[0] if result else self
         forbidden = candidates._access_forbidden_ids(
@@ -105,6 +130,8 @@ class MixinOwnerAccess(models.AbstractModel):
             return super()._search(
                 domain, offset, limit, stable_order(order), bypass_access=True, **kwargs
             )
+        if self._access_owner_delegates():
+            return super()._search(domain, offset, limit, order, **kwargs)
 
         def allowed(rows: list[tuple]) -> set[int]:
             owners = self._access_owner_rows(rows)

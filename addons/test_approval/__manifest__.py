@@ -11,7 +11,7 @@ Test - Base Approval
 against: it implements every hook the mixin delegates to the source document
 and records what it was called with. It lives here rather than in ``approval``
 so that no customer database carries its table, and it deliberately ships no
-``ir.model.access`` row -- the tests reach it as superuser or as a manager, and
+``ir.access`` row -- the tests reach it as superuser or as a manager, and
 a plain internal user must not reach it at all.
     """,
     "author": "AgroMarin",

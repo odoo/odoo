@@ -4,8 +4,7 @@ declare module "registries" {
 
     interface AccessRights {
         canEditView: boolean;
-        canSeeRecordRules: boolean;
-        canSeeModelAccess: boolean;
+        canSeeAccesses: boolean;
     }
 
     interface DebugRegistryItemShapeParams {

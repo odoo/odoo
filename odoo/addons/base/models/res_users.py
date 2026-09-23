@@ -460,16 +460,10 @@ class ResUsers(models.Model):
     )
 
     accesses_count = fields.Integer(
-        string="# Access Rights",
+        string="# Accesses",
         compute="_compute_access_counts",
         compute_sudo=True,
-        help="Number of access rights that apply to the current user",
-    )
-    rules_count = fields.Integer(
-        string="# Record Rules",
-        compute="_compute_access_counts",
-        compute_sudo=True,
-        help="Number of record rules that apply to the current user",
+        help="Number of accesses (permissions and guards) that apply to the current user",
     )
     groups_count = fields.Integer(
         string="# Groups",
@@ -843,32 +837,20 @@ class ResUsers(models.Model):
     def _compute_access_counts(self) -> None:
         all_groups = self.all_group_ids
         accesses_per_group = dict.fromkeys(all_groups.ids, 0)
-        rules_per_group: dict[int, set[int]] = {gid: set() for gid in all_groups.ids}
         if all_groups:
-            for group, count in self.env["ir.model.access"]._read_group(
+            for group, count in self.env["ir.access"]._read_group(
                 [("group_id", "in", all_groups.ids)], ["group_id"], ["__count"]
             ):
                 accesses_per_group[group.id] = count
-            for rule in self.env["ir.rule"].search_fetch(
-                [("groups", "in", all_groups.ids)], ["groups"]
-            ):
-                for group_id in rule.groups.ids:
-                    if group_id in rules_per_group:
-                        rules_per_group[group_id].add(rule.id)
-
         _debug.perf.count(
             "access_counts_computed",
             users=len(self),
             groups=len(all_groups),
             accesses=sum(accesses_per_group.values()),
-            rules=len(set().union(*rules_per_group.values())),
         )
         for user in self:
             group_ids = user.all_group_ids.ids
             user.accesses_count = sum(accesses_per_group[gid] for gid in group_ids)
-            user.rules_count = len(
-                set().union(*(rules_per_group[g] for g in group_ids))
-            )
             user.groups_count = len(group_ids)
 
     @api.depends("res_users_settings_ids")
@@ -1097,7 +1079,7 @@ class ResUsers(models.Model):
 
         if "group_ids" in vals and self.ids:
             _debug.logic("write_cache_cleared", reason="group_ids")
-            self.env["ir.model.access"].call_cache_clearing_methods()
+            self.env["ir.access"]._clear_access_caches()
         elif self._get_fields_invalidation() & vals.keys():
             _debug.logic("write_cache_cleared", reason="invalidating_fields")
             self.env.registry.clear_cache()
@@ -1611,24 +1593,12 @@ class ResUsers(models.Model):
     def action_show_accesses(self) -> dict[str, Any]:
         self.check_singleton()
         return {
-            "name": self.env._("Access Rights"),
+            "name": self.env._("Accesses"),
             "view_mode": "list,form",
-            "res_model": "ir.model.access",
+            "res_model": "ir.access",
             "type": "ir.actions.act_window",
             "context": {"create": False, "delete": False},
-            "domain": [("id", "in", self.all_group_ids.model_access.ids)],
-            "target": "current",
-        }
-
-    def action_show_rules(self) -> dict[str, Any]:
-        self.check_singleton()
-        return {
-            "name": self.env._("Record Rules"),
-            "view_mode": "list,form",
-            "res_model": "ir.rule",
-            "type": "ir.actions.act_window",
-            "context": {"create": False, "delete": False},
-            "domain": [("id", "in", self.all_group_ids.rule_groups.ids)],
+            "domain": [("group_id", "in", self.all_group_ids.ids)],
             "target": "current",
         }
 

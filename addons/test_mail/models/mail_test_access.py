@@ -5,7 +5,7 @@ class MailTestAccess(models.Model):
     """Test access on mail models without depending on real models like channel
     or partner which have their own set of ACLs. Public, portal and internal
     have access to this model depending on 'access' field, allowing to check
-    ir.rule usage."""
+    ir.access usage."""
 
     _description = "Mail Access Test"
     _name = "mail.test.access"

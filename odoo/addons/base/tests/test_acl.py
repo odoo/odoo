@@ -3,8 +3,8 @@ from contextlib import contextmanager
 from lxml import etree
 
 from odoo import Command
-from odoo.exceptions import AccessError, UserError
-from odoo.tools.convert import xml_import
+from odoo.exceptions import AccessError
+from odoo.tools.convert import convert_csv_import, xml_import
 from odoo.tools.misc import mute_logger
 
 from odoo.addons.base.tests.common import (
@@ -257,9 +257,7 @@ class TestACL(TransactionCaseWithUserDemo):
         self.assertTrue("email" in views["models"]["res.partner"]["fields"])
 
 
-class TestIrRule(TransactionCaseWithUserDemo):
-    """What ir.rule tested, on the ir.access rows the rules became."""
-
+class TestAccessRows(TransactionCaseWithUserDemo):
     def _partner_rows(self, **domain):
         return self.env["ir.access"].search(
             [("model_id.model", "=", "res.partner")]
@@ -290,7 +288,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
             self.env.flush_all()
         self.assertEqual(partners[3].comment, "<p>note 3</p>")
 
-    def test_ir_rule(self):
+    def test_permissions_and_guards_on_partners(self):
         group_user = self.env.ref("base.group_user")
         partners_demo = self.env["res.partner"].with_user(self.user_demo)
 
@@ -332,20 +330,19 @@ class TestIrRule(TransactionCaseWithUserDemo):
         self._partner_rows(kind="guard").unlink()
         self.assertTrue(partners_demo.search([]), "Demo user should see some partners.")
 
-    def test_ir_rule_superuser_bypass(self):
+    def test_the_superuser_is_bound_by_no_row(self):
         make_guard_row(self.env, "res.partner", "[('id', '=', False)]")
-        su_rule = self.env(su=True)["ir.rule"]
         self.assertTrue(
-            su_rule._get_domain_accessible_records("res.partner", "read").is_true(),
-            "Superuser domain must be unrestricted (Domain.TRUE).",
+            self.env(su=True)["res.partner"].search_count([]),
+            "The superuser must read past every guard.",
         )
-        demo_rule = self.env(user=self.user_demo)["ir.rule"]
-        self.assertFalse(
-            demo_rule._get_domain_accessible_records("res.partner", "read").is_true(),
-            "Demo user domain must be restricted by the guard.",
+        self.assertEqual(
+            self.env(user=self.user_demo)["res.partner"].search_count([]),
+            0,
+            "The demo user must be bound by the guard.",
         )
 
-    def test_ir_rule_get_rules_modes(self):
+    def test_a_row_binds_only_its_operations(self):
         partner = self.env["res.partner"].create({"name": "unlink-only guard"})
         make_guard_row(self.env, "res.partner", "[('id', '=', False)]", operation="d")
         demo_partner = partner.with_user(self.user_demo)
@@ -379,7 +376,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
             .get("res.partner", ())
         }
 
-    def test_ir_rule_of_the_module_being_loaded_applies_to_its_own_files(self):
+    def test_a_row_of_the_module_being_loaded_applies_to_its_own_files(self):
         self._restricting_row_from("a_module_being_loaded", "test_rule_own_files")
         demo_partner = self.env(user=self.user_demo)["res.partner"]
 
@@ -399,7 +396,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
                 "the rows that module ships",
             )
 
-    def test_ir_rule_domain_computed_while_loading_does_not_outlive_the_module_loading(
+    def test_a_domain_computed_while_loading_does_not_outlive_the_module_loading(
         self,
     ):
         self._restricting_row_from("a_module_being_loaded", "test_rule_generation")
@@ -415,7 +412,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
                     "served once it is",
                 )
 
-    def test_ir_rule_from_an_unloaded_module_is_skipped_while_loading(self):
+    def test_a_row_from_an_unloaded_module_is_skipped_while_loading(self):
         row = self._restricting_row_from(
             "a_module_this_registry_has_not_loaded", "test_rule_from_a_later_module"
         )
@@ -434,7 +431,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
             )
             self.assertIn(hand_written.id, self._partner_row_ids())
 
-    def test_ir_rule_domain_computed_while_loading_is_not_reused_after(self):
+    def test_a_domain_computed_while_loading_is_not_reused_after(self):
         self._restricting_row_from(
             "a_module_this_registry_has_not_loaded", "test_rule_cache_key_on_init"
         )
@@ -454,7 +451,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
             )
 
     @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
-    def test_ir_rule_access_error_message(self):
+    def test_the_debug_access_error_names_the_blamed_row(self):
         partner = self.env["res.partner"].create({"name": "T3 partner"})
         make_guard_row(
             self.env,
@@ -476,16 +473,16 @@ class TestIrRule(TransactionCaseWithUserDemo):
                 return True
             return original_has_group(user, group_ext_id)
 
-        rule_env = self.env(user=self.user_demo)["ir.rule"]
+        access = self.env(user=self.user_demo)["ir.access"]
         self.patch(UserCls, "has_group", fake_has_group)
-        exception = rule_env._prepare_access_error("read", partner_demo)
+        exception = access._make_record_access_error(partner_demo, "read")
         self.assertIn(
             "test_rule_t3_deny",
             str(exception),
             "Debug access-error message should name the blamed row.",
         )
 
-    def test_a_grant_rule_widens_what_another_grant_rule_denied(self):
+    def test_a_permission_widens_what_another_permission_denied(self):
         # permissions are OR-ed: one admitting nothing, and the user's own
         # see-all rows switched off, deny; another admitting everything allows
         group_user = self.env.ref("base.group_user")
@@ -499,7 +496,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
         make_access_row(self.env, "res.partner", group_user, name="allow everything")
         partner.with_user(self.user_demo).check_access("read")
 
-    def test_a_restrict_rule_is_not_widened_by_a_grant_rule(self):
+    def test_a_member_guard_is_not_widened_by_a_permission(self):
         group_user = self.env.ref("base.group_user")
         partner = self.env["res.partner"].create({"name": "composition partner"})
         make_access_row(self.env, "res.partner", group_user, name="allow everything")
@@ -518,7 +515,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
         )
         self.assertEqual([row.name for row in blamed], ["deny for members"])
 
-    def test_a_restrict_rule_binds_only_its_own_group(self):
+    def test_a_member_guard_binds_only_its_own_group(self):
         partner = self.env["res.partner"].create({"name": "composition partner"})
         make_guard_row(
             self.env,
@@ -539,26 +536,55 @@ class TestIrRule(TransactionCaseWithUserDemo):
         self.assertFalse(demo_window.has_access("read"))
 
 
-class TestIrModelAccess(TransactionCaseWithUserDemo):
-    def test_invalid_access_mode(self):
-        Access = self.env["ir.model.access"]
+class TestIrAccess(TransactionCaseWithUserDemo):
+    def test_invalid_access_operation(self):
         with self.assertRaises(ValueError):
-            Access._get_models_allowed("foo")
+            self.env["res.partner"]._access_domain("foo")
         with self.assertRaises(ValueError):
-            Access.group_names_with_access("res.partner", "foo")
+            self.env["ir.access"]._group_names_with_access("res.partner", "foo")
         with self.assertRaises(ValueError):
-            Access._get_groups_with_access("res.partner", "foo")
+            self.env["ir.access"]._get_groups_with_access("res.partner", "foo")
 
-    def test_an_access_line_is_created_as_an_ir_access_row(self):
-        model_partner = self.env.ref("base.model_res_partner")
-        with self.assertRaisesRegex(UserError, "ir.access"):
-            self.env["ir.model.access"].create(
-                {"name": "acl", "model_id": model_partner.id, "perm_read": True}
+    def test_the_access_lines_and_rules_are_gone(self):
+        self.assertNotIn("ir.model.access", self.env)
+        self.assertNotIn("ir.rule", self.env)
+        self.env.cr.execute(
+            "SELECT relname FROM pg_class WHERE relname = ANY(%s)",
+            [["ir_model_access", "ir_rule", "rule_group_rel"]],
+        )
+        self.assertEqual(self.env.cr.fetchall(), [])
+        self.assertFalse(
+            self.env["ir.model.data"].search_count(
+                [("model", "in", ("ir.model.access", "ir.rule"))]
             )
-        with self.assertRaisesRegex(UserError, "ir.access"):
-            self.env["ir.rule"].create(
-                {"name": "rule", "model_id": model_partner.id, "domain_force": "[]"}
+        )
+
+    def test_old_format_access_data_is_refused_at_the_door(self):
+        csv_content = (
+            b"id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,"
+            b"perm_unlink\nacl,acl,base.model_res_partner,base.group_user,1,0,0,0\n"
+        )
+        with self.assertRaisesRegex(
+            ValueError,
+            r"a_module: security/ir.model.access.csv ships ir.model.access data.*"
+            r"ship security/ir.access.csv.*ir_access_convert",
+        ):
+            convert_csv_import(
+                self.env, "a_module", "security/ir.model.access.csv", csv_content
             )
+        doc = etree.fromstring(
+            '<odoo><record id="a_rule" model="ir.rule">'
+            '<field name="name">rule</field></record></odoo>'
+        )
+        importer = xml_import(self.env, "a_module", {}, "init")
+        importer.xml_filename = "security/rules.xml"
+        with self.assertRaises(Exception) as caught:
+            importer.parse(doc)
+        self.assertRegex(
+            str(caught.exception.__cause__ or caught.exception),
+            r"a_module: security/rules.xml ships ir.rule data.*"
+            r"ship security/ir.access.csv",
+        )
 
     def test_create_omitted_group_warns(self):
         with self.assertLogs(
@@ -578,8 +604,7 @@ class TestIrModelAccess(TransactionCaseWithUserDemo):
         )
         self.assertEqual(row.group_id, self.env.ref("base.group_everyone"))
 
-    def test_cache_clearing_invalidates_both_acl_caches(self):
-        Access = self.env["ir.model.access"]
+    def test_cache_clearing_invalidates_both_access_caches(self):
         registry = self.env.registry
         caches = registry.ormcache_lrus
 
@@ -591,63 +616,35 @@ class TestIrModelAccess(TransactionCaseWithUserDemo):
             ]
 
         registry.clear_all_caches()
-        Access._get_models_allowed("read")
-        Access._get_groups_with_access("res.partner", "read")
+        self.env(user=self.user_demo)["res.partner"]._access_domain("read")
+        self.env["ir.access"]._get_groups_with_access("res.partner", "read")
+        self.env["res.partner"].with_user(self.user_demo).get_view(view_type="form")
         self.assertTrue(
-            cached("default", "_get_models_allowed"),
-            "_get_models_allowed should populate the 'default' bucket.",
+            caches["templates"].snapshot,
+            "get_view should populate the 'templates' bucket.",
         )
         self.assertTrue(
-            cached("stable", "_get_groups_with_access"),
-            "_get_groups_with_access should populate the 'stable' bucket.",
+            cached("default", "_access_domain"),
+            "_access_domain should populate the 'default' bucket.",
+        )
+        self.assertTrue(
+            cached("stable", "_group_ids_with_access"),
+            "_group_ids_with_access should populate the 'stable' bucket.",
         )
 
-        Access.call_cache_clearing_methods()
+        self.env["ir.access"]._clear_access_caches()
         self.assertFalse(
-            cached("default", "_get_models_allowed"),
-            "_get_models_allowed (default bucket) must be invalidated.",
+            cached("default", "_access_domain"),
+            "_access_domain (default bucket) must be invalidated.",
         )
         self.assertFalse(
-            cached("stable", "_get_groups_with_access"),
-            "_get_groups_with_access (stable bucket) must be invalidated.",
+            cached("stable", "_group_ids_with_access"),
+            "_group_ids_with_access (stable bucket) must be invalidated.",
         )
-
-    def test_allowed_models_cache_shared_across_same_group_users(self):
-        self.addCleanup(self.env.registry.clear_cache)
-        group_user = self.env.ref("base.group_user")
-        user_a, user_b = self.env["res.users"].create(
-            [
-                {
-                    "name": f"acl cache twin {letter}",
-                    "login": f"acl_cache_twin_{letter}",
-                    "group_ids": [Command.set(group_user.ids)],
-                }
-                for letter in "ab"
-            ]
-        )
-        self.assertEqual(user_a._get_group_ids(), user_b._get_group_ids())
-        Access = self.env["ir.model.access"]
-        allowed_a = Access.with_user(user_a)._get_models_allowed("read")
-        allowed_b = Access.with_user(user_b)._get_models_allowed("read")
-        self.assertIs(
-            allowed_a,
-            allowed_b,
-            "Same-group users must share one _get_models_allowed cache entry.",
-        )
-        self.assertIsNot(
-            allowed_a, Access.with_user(user_a)._get_models_allowed("write")
-        )
-
-    def test_check_unknown_model_warns(self):
-        Access = self.env["ir.model.access"].with_user(self.user_demo)
-        with self.assertLogs(
-            "odoo.addons.base.models.ir_model_access", level="WARNING"
-        ) as log_cm:
-            result = Access.check("no.such.model", "read", raise_exception=False)
-        self.assertFalse(result, "Access to an unknown model must be denied.")
-        self.assertTrue(
-            any("no.such.model" in msg for msg in log_cm.output),
-            "Unknown model must be logged at WARNING.",
+        self.assertFalse(
+            caches["templates"].snapshot,
+            "views cache the groups a model is readable by: the 'templates' "
+            "bucket must be invalidated.",
         )
 
     def test_group_names_with_access_localized_ordering(self):
@@ -663,8 +660,8 @@ class TestIrModelAccess(TransactionCaseWithUserDemo):
         for group in (group_a, group_b):
             make_access_row(self.env, model_partner.model, group, operation="r")
 
-        Access = self.env["ir.model.access"].with_context(lang="fr_FR")
-        names = Access.group_names_with_access("res.partner", "read")
+        Access = self.env["ir.access"].with_context(lang="fr_FR")
+        names = Access._group_names_with_access("res.partner", "read")
         ours = [n for n in names if n in ("ZZZ_zulu", "ZZZ_mike")]
         self.assertEqual(
             ours,
@@ -673,7 +670,7 @@ class TestIrModelAccess(TransactionCaseWithUserDemo):
         )
 
 
-class TestIrModelAccessWhileLoading(TransactionCaseWithUserDemo):
+class TestAccessWhileLoading(TransactionCaseWithUserDemo):
     MODEL = "ir.config_parameter"
     MODULE = "a_module_being_loaded"
 
@@ -686,22 +683,21 @@ class TestIrModelAccessWhileLoading(TransactionCaseWithUserDemo):
             operation="r",
             xmlid=f"{self.MODULE}.test_acl_from_a_loading_module",
         )
-        self.access = self.env(user=self.user_demo)["ir.model.access"]
+        self.model = self.env(user=self.user_demo)[self.MODEL]
 
     def _allowed(self, **context):
-        return self.access.with_context(**context)._get_models_allowed("read")
+        return self.model.with_context(**context).has_access("read")
 
     def test_acl_from_an_unloaded_module_is_skipped_while_loading(self):
         with registry_loading(self.env.registry, False):
-            self.assertIn(self.MODEL, self._allowed())
+            self.assertTrue(self._allowed())
         with registry_loading(self.env.registry, True):
-            self.assertNotIn(self.MODEL, self._allowed())
+            self.assertFalse(self._allowed())
 
     def test_acl_of_the_module_being_loaded_applies_to_its_own_files(self):
         with registry_loading(self.env.registry, True):
-            self.assertNotIn(self.MODEL, self._allowed(install_module="another_module"))
-            self.assertIn(
-                self.MODEL,
+            self.assertFalse(self._allowed(install_module="another_module"))
+            self.assertTrue(
                 self._allowed(install_module=self.MODULE),
                 "A `uid=` record in a module's own data or demo files must be "
                 "granted what that module's access rows grant",
@@ -728,35 +724,18 @@ class TestIrModelAccessWhileLoading(TransactionCaseWithUserDemo):
         self,
     ):
         with registry_loading(self.env.registry, True):
-            self.assertNotIn(self.MODEL, self._allowed())
+            self.assertFalse(self._allowed())
             with module_marked_loaded(self.env.registry, self.MODULE):
-                self.assertIn(
-                    self.MODEL,
+                self.assertTrue(
                     self._allowed(),
                     "An answer computed before a module was loaded must not be "
                     "served once it is",
                 )
 
 
-class TestIrModelAccessUnknownModel(TransactionCaseWithUserDemo):
-    def test_unknown_model_raises_clear_error(self):
-        Access = self.env["ir.model.access"].with_user(self.user_demo)
-        with self.assertRaises(ValueError) as capture:
-            Access.check("no.such.model")
-        self.assertIn("no.such.model", str(capture.exception))
-
-    @mute_logger("odoo.addons.base.models.ir_model_access")
-    def test_unknown_model_lenient_path_returns_false(self):
-        Access = self.env["ir.model.access"].with_user(self.user_demo)
-        self.assertFalse(Access.check("no.such.model", raise_exception=False))
-
-    def test_unknown_model_superuser_short_circuit(self):
-        self.assertTrue(self.env["ir.model.access"].sudo().check("no.such.model"))
-
-
-class TestIrModelAccessCacheInvalidation(TransactionCaseWithUserDemo):
-    # res.partner.tag: its access is ACL lines only, whereas res.partner also
-    # holds ir.access permissions an ACL write cannot revoke
+class TestAccessCacheInvalidation(TransactionCaseWithUserDemo):
+    # res.partner.tag: its permissions carry no domain, whereas res.partner also
+    # holds permissions a write to one row cannot revoke
     def _granting_rows(self, model_name, user, mode="write"):
         group_ids = set(user._get_group_ids())
         return (
@@ -775,45 +754,44 @@ class TestIrModelAccessCacheInvalidation(TransactionCaseWithUserDemo):
 
     def test_revoke_takes_effect_in_the_writing_worker(self):
         admin = self.env.ref("base.user_admin")
-        Access = self.env(user=admin.id)["ir.model.access"]
+        Tag = self.env(user=admin.id)["res.partner.tag"]
         rows = self._granting_rows("res.partner.tag", admin)
         self.assertTrue(rows, "expected admin to hold a write row on res.partner.tag")
         self.env.flush_all()
         self.env.registry.clear_cache()
-        self.assertIn("res.partner.tag", Access._get_models_allowed("write"))
+        self.assertTrue(Tag.has_access("write"))
 
         rows.with_user(admin).write({"for_write": False})
 
-        self.assertNotIn(
-            "res.partner.tag",
-            Access._get_models_allowed("write"),
+        self.assertFalse(
+            Tag.has_access("write"),
             "revoking a model's row must take effect in the worker that revoked it",
         )
 
     def test_grant_takes_effect_in_the_writing_worker(self):
         admin = self.env.ref("base.user_admin")
-        Access = self.env(user=admin.id)["ir.model.access"]
+        Tag = self.env(user=admin.id)["res.partner.tag"]
         rows = self._granting_rows("res.partner.tag", admin)
         rows.with_user(admin).write({"for_write": False})
         self.env.registry.clear_cache()
-        self.assertNotIn("res.partner.tag", Access._get_models_allowed("write"))
+        self.assertFalse(Tag.has_access("write"))
 
         rows.with_user(admin).write({"for_write": True})
 
-        self.assertIn("res.partner.tag", Access._get_models_allowed("write"))
+        self.assertTrue(Tag.has_access("write"))
 
     def test_unlink_takes_effect_in_the_writing_worker(self):
         admin = self.env.ref("base.user_admin")
-        Access = self.env(user=admin.id)["ir.model.access"]
+        Tag = self.env(user=admin.id)["res.partner.tag"]
         rows = self._granting_rows("res.partner.tag", admin, mode="unlink")
         self.assertTrue(rows, "expected admin to hold an unlink row on res.partner.tag")
         self.env.flush_all()
         self.env.registry.clear_cache()
-        self.assertIn("res.partner.tag", Access._get_models_allowed("unlink"))
+        self.assertTrue(Tag.has_access("unlink"))
 
         rows.with_user(admin).unlink()
 
-        self.assertNotIn("res.partner.tag", Access._get_models_allowed("unlink"))
+        self.assertFalse(Tag.has_access("unlink"))
 
 
 class TestResGroupsCacheInvalidation(TransactionCaseWithUserDemo):

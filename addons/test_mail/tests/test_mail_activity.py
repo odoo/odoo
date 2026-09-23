@@ -4302,7 +4302,7 @@ class TestActivityFilingIsAnActionOnTheDocument(TestActivityCommon):
                 "domain": "[('create_uid', '=', user.id)]",
             }
         )
-        # The rule is rolled back with the class, but `ir.rule._get_domain_accessible_records`
+        # The row is rolled back with the class, but `_access_domain`
         # is an ormcache on the *registry*, which a rollback does not touch --
         # so without this the entries computed while the rule existed outlive it
         # and decide access for whatever class runs next. Measured: three

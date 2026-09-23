@@ -805,11 +805,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
         domain = Domain.AND([domain or [], [("has_template_ancestor", "=", False)]])
         if not su and Task.has_access("read"):
-            domain &= Domain(
-                request.env["ir.rule"]._get_domain_accessible_records(
-                    Task._name, "read"
-                )
-            )
+            domain &= Domain("id", "access", "read")
         Task_sudo = Task.sudo()
         milestone_domain = (
             domain

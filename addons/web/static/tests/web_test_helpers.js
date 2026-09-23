@@ -8,13 +8,12 @@ import { loadFullCalendar } from "@web/core/lib/fullcalendar";
 
 import * as _fields from "./_framework/mock_server/mock_fields.js";
 import * as _models from "./_framework/mock_server/mock_model.js";
+import { IrAccess } from "./_framework/mock_server/mock_models/ir_access.js";
 import { IrAttachment } from "./_framework/mock_server/mock_models/ir_attachment.js";
 import { IrHttp } from "./_framework/mock_server/mock_models/ir_http.js";
 import { IrModel } from "./_framework/mock_server/mock_models/ir_model.js";
-import { IrModelAccess } from "./_framework/mock_server/mock_models/ir_model_access.js";
 import { IrModelFields } from "./_framework/mock_server/mock_models/ir_model_fields.js";
 import { IrModuleCategory } from "./_framework/mock_server/mock_models/ir_module_category.js";
-import { IrRule } from "./_framework/mock_server/mock_models/ir_rule.js";
 import { IrUiView } from "./_framework/mock_server/mock_models/ir_ui_view.js";
 import { ResCompany } from "./_framework/mock_server/mock_models/res_company.js";
 import { ResCountry } from "./_framework/mock_server/mock_models/res_country.js";
@@ -233,12 +232,11 @@ export const models = _models;
 export const webModels = {
     HomeMenuBadge,
     IrHttp,
+    IrAccess,
     IrAttachment,
     IrModel,
-    IrModelAccess,
     IrModelFields,
     IrModuleCategory,
-    IrRule,
     IrUiView,
     ResCompany,
     ResCountry,

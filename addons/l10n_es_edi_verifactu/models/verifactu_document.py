@@ -128,7 +128,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         readonly=True,
         required=True,
     )
-    # Note: Noone has write access of any kind to the model 'verifactu.document' (see ir.model.access.csv)
+    # Note: Noone has write access of any kind to the model 'verifactu.document' (see ir.access.csv)
     json_attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="JSON Attachment",

@@ -181,11 +181,13 @@ mod = pathlib.Path(sys.argv[1])
 MODEL = "model_res_partner_age_range"
 LEAF = "res_partner_age_range_menu"
 
-with (mod / "security/ir.model.access.csv").open() as fh:
+with (mod / "security/ir.access.csv").open() as fh:
     writers = {
-        row["group_id:id"]
+        row["group_id/id"]
         for row in csv.DictReader(fh)
-        if MODEL in row["model_id:id"] and row["perm_write"] == "1"
+        if MODEL in row["model_id/id"]
+        and row["kind"] == "permission"
+        and "u" in row["operation"]
     }
 if not writers:
     print("BAD|no group is granted write on the cohorts; this check is blind")
@@ -210,7 +212,7 @@ for name in chain:
     for writer in sorted(writers - allowed):
         print(
             "BAD|menu %s is gated on %s, which does not admit %s -- the group "
-            "ir.model.access.csv grants write on the cohorts is drawn no screen "
+            "ir.access.csv grants write on the cohorts is drawn no screen "
             "to exercise it" % (name, declared, writer)
         )
 print("OK|%d menus on the cohort path admit %s" % (len(chain), sorted(writers)))

@@ -56,7 +56,7 @@ authentication.
 
 ## 4. A missing record often 404s *only* because of the slug rebuild
 
-`check_access` runs `ir.rule` against the id without ever checking that it
+`check_access` runs the `ir.access` domain against the id without ever checking that it
 exists. On a model with no record rules, nothing detects a missing record —
 except `_pre_dispatch`'s canonical-URL rebuild, which reads `display_name` and
 raises `MissingError`.

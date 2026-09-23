@@ -239,7 +239,7 @@ Model metadata registry — one record per ORM model.
 - `field_id` (One2many → ir.model.fields, required)
 - `inherited_model_ids` (Many2many, computed)
 - `state` (Selection) — `manual` (Studio) or `base` (code-defined)
-- `access_ids` (One2many → ir.model.access), `rule_ids` (One2many → ir.rule)
+- `access_ids` (One2many → ir.access) — the model's permissions and guards (the form's Accesses tab)
 - `abstract` (Boolean), `transient` (Boolean)
 - `modules` (Char, computed) — Installed modules defining this model
 - `count` (Integer, computed) — Total records
@@ -323,10 +323,9 @@ One row says who may do what to which records: a `permission` adds its
 domain's records to what its group reaches (permissions are OR-ed), a `guard`
 is AND-ed and no permission widens it. Every model reads its access from these
 rows, which modules ship in `security/ir.access.csv`; a model under a
-table-inheritance root is bound by the root's rows too. `ir.model.access` and
-`ir.rule` hold no rows and refuse new ones; their APIs
-(`ir.model.access.check`, `ir.rule._get_domain_accessible_records`, the error
-builders) answer the same decision.
+table-inheritance root is bound by the root's rows too. The access lines and
+record rules it replaced are gone with their tables (base 1.100); a caller asks
+the model: `has_access`, `check_access`, `_filtered_access`, `_access_domain`.
 
 **Fields:**
 - `name` (Char, required), `active` (Boolean, default=True), `note` (Html)
@@ -342,30 +341,18 @@ builders) answer the same decision.
 - `_check_domain()` — a domain validates against the registry, reads the user's groups only in ways more groups can only widen, and closes no `'access'` cycle
 - `_load_records()` — refuses while `ir.model.data` still maps an external id to an access line or a rule: base's 1.97 migration has not run
 - `customize()` — archive a module's row and open an editable copy
-- `_make_model_access_error()`, `_make_record_access_error()` — the AccessError texts, with the failing rows in debug mode
+- `_bound_access_rows(model_name, operation)` — the permission and guard domains that bind the current principal (what `registry.access_policy` asks)
+- `_eval_context()`, `_get_access_context()` — what a domain is evaluated with, and the context values it depends on (website extends both)
+- `_get_models_bound_by(model_name)` — the model and, under a table-inheritance root, the root whose rows bind it
+- `_get_groups_with_access(model_name, operation)` — the groups (and the groups implying them) for which some record is reachable: their permissions' `'access'` conditions, the guards, the model's `_access_guard` and every delegated parent resolved (ormcache stable, `_group_ids_with_access`)
+- `_make_model_access_error()`, `_make_record_access_error()` — the AccessError texts: the groups that would allow, and in debug mode the failing rows, the model's own guard and the delegated parent's rows
+- `_get_failed_accesses(records, operation)` — the rows that refuse some of the records
+- `_clear_access_caches()` — what a write to a row, a group or a user's groups calls
 
-### models/ir_model_access.py
+### models/ir_model_reflection.py
 
-Contains the access-control model. The constraint- and relation-reflection
-models live in `models/ir_model_reflection.py` (re-exported from `ir_model.py`
+The constraint- and relation-reflection models (re-exported from `ir_model.py`
 for backward compatibility).
-
-#### IrModelAccess — `ir.model.access` (`_name`)
-
-Model-level access control lists.
-
-**Fields:**
-- `name` (Char, required, indexed), `active` (Boolean, default=True)
-- `model_id` (Many2one → ir.model, required, indexed)
-- `group_id` (Many2one → res.groups, indexed) — NULL = global access
-- `perm_read`, `perm_write`, `perm_create`, `perm_unlink` (Boolean)
-
-**Key Methods:**
-- `check(model, mode, raise_exception)` — Check current user has access (asks the model's `_access_allowed`: the ir.access decision)
-- `_get_groups_with_access(model_name, access_mode)` — Group expression of the groups holding a permission (ormcache)
-- `_get_models_allowed(mode)` — Models on which the current user holds a permission (ormcache)
-- `group_names_with_access(model_name, access_mode)` — Visible group names with access
-- `_prepare_access_error(model, mode)` — Build detailed AccessError message (ir.access's)
 
 #### IrModelConstraint — `ir.model.constraint` (`_name`)
 
@@ -426,29 +413,6 @@ table, the xmlid builders (`model_xmlid`, `field_xmlid`, `selection_xmlid`,
 `query_update`, `select_en`, `upsert_en`) and the registry helpers
 (`prepare_compute`, `mark_modified`, `reload_schema`). Re-exports
 `MODULE_UNINSTALL_FLAG` for downstream modules.
-
----
-
-## Access Control
-
-### models/ir_rule.py
-
-#### IrRule — `ir.rule` (`_name`)
-
-Record-level access rules — domain-based filtering per model/group/operation.
-
-**Fields:**
-- `name` (Char), `active` (Boolean, default=True)
-- `model_id` (Many2one → ir.model, required, indexed)
-- `groups` (Many2many → res.groups) — NULL = global rule
-- `domain_force` (Text) — Rule domain expression
-- `perm_read`, `perm_write`, `perm_create`, `perm_unlink` (Boolean, default=True)
-
-**Key Methods:**
-- `_get_domain_accessible_records(model_name, mode)` — The ir.access record domain for the current user (`_access_domain`, which ormcaches it); FALSE without a permission
-- `_get_rules(model_name, mode)` — Get applicable rules
-- `_get_failing(for_records, mode)` — Get rules failing on specific records
-- `_eval_context()` — Build safe_eval context (user, company_ids, company_id)
 
 ---
 
@@ -2140,8 +2104,7 @@ Quick lookup — file → model → primary role:
 | `ir_http.py` | ir.http | HTTP routing/auth/dispatch |
 | `ir_logging.py` | ir.logging | Server/client logs |
 | `ir_model.py` | ir.model, ir.model.inherit | Model registry + inheritance |
-| `ir_access.py` | ir.access | Permissions and guards with domains (opt-in per model) |
-| `ir_model_access.py` | ir.model.access | Model-level ACL |
+| `ir_access.py` | ir.access | Permissions and guards: every model's access |
 | `ir_model_reflection.py` | ir.model.constraint, ir.model.relation | DB constraint/relation tracking for uninstall |
 | `ir_model_data.py` | ir.model.data | XML ID registry |
 | `ir_model_common.py` | helpers (non-ORM) | xmlid builders, reflection upserts, access errors |
@@ -2156,7 +2119,6 @@ Quick lookup — file → model → primary role:
 | `ir_qweb.py` | ir.qweb | Template engine |
 | `ir_qweb_fields.py` | ir.qweb.field (+ 21 subclasses) | Template field formatters |
 | `ir_qweb_assets.py` | ir.qweb (extension) | Asset nodes, ESM bundles, esbuild circuit |
-| `ir_rule.py` | ir.rule | Record-level access rules |
 | `ir_sequence.py` | ir.sequence, .date_range | Auto-incrementing sequences |
 | `ir_ui_menu.py` | ir.ui.menu | Menu hierarchy |
 | `ir_ui_view.py` | ir.ui.view | View definitions + inheritance |

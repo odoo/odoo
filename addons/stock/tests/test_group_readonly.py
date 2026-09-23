@@ -106,13 +106,20 @@ class TestStockGroupReadonly(TransactionCase):
         self.assertIn(self.group_readonly, self.user_manager.all_group_ids)
 
     def test_readonly_readable_is_a_subset_of_user_readable(self):
-        access = self.env["ir.model.access"]
-        ours = access.search([("group_id", "=", self.group_readonly.id)])
-        as_user = access.with_user(self.user_stock)
+        ours = self.env["ir.access"].search(
+            [
+                ("group_id", "=", self.group_readonly.id),
+                ("kind", "=", "permission"),
+                ("for_read", "=", True),
+            ]
+        )
+        self.assertTrue(ours, "the readonly tier holds no read permission")
         offenders = [
             row.model_id.model
             for row in ours
-            if not as_user.check(row.model_id.model, "read", False)
+            if not self.env[row.model_id.model]
+            .with_user(self.user_stock)
+            .has_access("read")
         ]
         self.assertFalse(
             offenders,
@@ -163,11 +170,20 @@ class TestStockGroupReadonly(TransactionCase):
         for model in ("stock.picking", "stock.move", "stock.quant"):
             as_readonly = self.env[model].with_user(self.user_readonly)
             self.assertIsInstance(as_readonly.search_count([]), int)
-            access = self.env["ir.model.access"].with_user(self.user_readonly)
-            self.assertTrue(access.check(model, "read", False), model)
-            self.assertFalse(access.check(model, "write", False), model)
-            self.assertFalse(access.check(model, "create", False), model)
-            self.assertFalse(access.check(model, "unlink", False), model)
+            self.assertTrue(
+                self.env[model].with_user(self.user_readonly).has_access("read"), model
+            )
+            self.assertFalse(
+                self.env[model].with_user(self.user_readonly).has_access("write"), model
+            )
+            self.assertFalse(
+                self.env[model].with_user(self.user_readonly).has_access("create"),
+                model,
+            )
+            self.assertFalse(
+                self.env[model].with_user(self.user_readonly).has_access("unlink"),
+                model,
+            )
 
     def test_readonly_cannot_write_a_picking(self):
         picking_type = self.env["stock.picking.type"].search(
@@ -188,11 +204,11 @@ class TestStockGroupReadonly(TransactionCase):
             picking.with_user(self.user_readonly).write({"note": "nope"})
 
     def test_models_read_through_base_group_user_stay_readable(self):
-        access = self.env["ir.model.access"].with_user(self.user_readonly)
         lost = [
             model
             for model in READ_VIA_BASE_GROUP_USER
-            if model in self.env and not access.check(model, "read", False)
+            if model in self.env
+            and not self.env[model].with_user(self.user_readonly).has_access("read")
         ]
         self.assertFalse(
             lost,
@@ -201,9 +217,11 @@ class TestStockGroupReadonly(TransactionCase):
         )
 
     def test_readonly_can_run_the_read_only_report_wizards(self):
-        access = self.env["ir.model.access"].with_user(self.user_readonly)
         for model in READ_ONLY_WIZARDS:
-            self.assertTrue(access.check(model, "create", False), model)
+            self.assertTrue(
+                self.env[model].with_user(self.user_readonly).has_access("create"),
+                model,
+            )
 
         history = self.env["stock.quantity.history"].with_user(self.user_readonly)
         action = history.create({}).action_view_products_at_date()
@@ -230,10 +248,14 @@ class TestStockGroupReadonly(TransactionCase):
             )
 
     def test_readonly_cannot_reach_the_write_wizards(self):
-        access = self.env["ir.model.access"].with_user(self.user_readonly)
         for model in WRITE_WIZARDS:
-            self.assertFalse(access.check(model, "read", False), model)
-            self.assertFalse(access.check(model, "create", False), model)
+            self.assertFalse(
+                self.env[model].with_user(self.user_readonly).has_access("read"), model
+            )
+            self.assertFalse(
+                self.env[model].with_user(self.user_readonly).has_access("create"),
+                model,
+            )
 
     def test_readonly_sees_the_patched_menus(self):
         menus = self.env["ir.ui.menu"].with_user(self.user_readonly).load_menus(False)

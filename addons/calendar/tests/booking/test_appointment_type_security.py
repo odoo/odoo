@@ -12,7 +12,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 @tagged("security")
 class TestAppointmentTypeSecurity(AppointmentSecurityCommon):
     @users("apt_manager")
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_appointment_type_access_apt_manager(self):
         """Test security access to appointment.type for the group_appointment_manager.
         Can read / write / create / unlink any appointment type.
@@ -28,7 +28,7 @@ class TestAppointmentTypeSecurity(AppointmentSecurityCommon):
         self.env["appointment.type"].create({"name": "Test Create"})
 
     @users("apt_user")
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_appointment_type_access_apt_user(self):
         """Test security access to appointment.type for the group_appointment_user.
         Can create an appointment type.
@@ -84,7 +84,7 @@ class TestAppointmentTypeSecurity(AppointmentSecurityCommon):
         created_apt.unlink()
 
     @users("internal_user")
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_appointment_type_access_internal_user(self):
         """Test security access to appointment.type for the base.group_user.
         Can read an appointment type that:
@@ -123,7 +123,7 @@ class TestAppointmentTypeSecurity(AppointmentSecurityCommon):
                     appointment_type.unlink()
 
     @users("public_user")
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_appointment_type_access_public_user(self):
         """Test security access to appointment.type for the base.group_public.
         Can't read / write / create / unlink any appointment type.
@@ -177,7 +177,7 @@ class TestAppointmentTypeSecurity(AppointmentSecurityCommon):
         )
 
     @users("public_user")
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_appointment_type_image_access_public_user(self):
         """Test that base.group_public users can access every appointment type image
         even though they don't have read access on the appointment.type model.

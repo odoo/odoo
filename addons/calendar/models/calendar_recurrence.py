@@ -63,7 +63,7 @@ class CalendarRecurrence(models.Model):
             return
         hidden = self._privacy_hidden()
         if hidden:
-            raise self.env["ir.rule"]._prepare_access_error("write", hidden[0])
+            raise self.env["ir.access"]._make_record_access_error(hidden[0], "write")
 
     @api.model_create_multi
     def create(self, vals_list):

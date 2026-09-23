@@ -8,7 +8,7 @@ from odoo.addons.calendar.tests.booking.common import AppointmentSecurityCommon
 @tagged("post_install", "-at_install", "security")
 class TestAppointmentInviteSecurity(AppointmentSecurityCommon):
     @users("apt_manager")
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_appointment_invite_access_apt_manager(self):
         """Test security access to appointment.invite for the group_appointment_manager.
         Can read / write / create / unlink any share link.
@@ -25,7 +25,7 @@ class TestAppointmentInviteSecurity(AppointmentSecurityCommon):
         )
 
     @users("apt_user")
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_appointment_invite_access_apt_user(self):
         """Test security access to appointment.invite for the group_appointment_user.
         Can create a share link.
@@ -60,7 +60,7 @@ class TestAppointmentInviteSecurity(AppointmentSecurityCommon):
         test_share_link.unlink()
 
     @users("internal_user")
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_appointment_invite_access_internal_user(self):
         """Test security access to appointment.invite for the base.group_user.
         Can create a share link.

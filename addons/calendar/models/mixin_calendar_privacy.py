@@ -81,7 +81,7 @@ class MixinCalendarPrivacy(models.AbstractModel):
     ):
         """Fold the privacy domain into every search unless access is bypassed.
 
-        Neither predicate above can be expressed as an ``ir.rule``: the
+        Neither predicate above can be expressed as an ``ir.access`` domain: the
         default-privacy branch has to read ``res.users.settings`` through
         ``sudo()``, which a static domain cannot do.
 

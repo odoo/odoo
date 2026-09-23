@@ -797,9 +797,8 @@ class TestCrudTargetsAreCheckedWithoutGroups(ServerActionCase):
                 ],
             }
         )
-        Access = cls.env["ir.model.access"].with_user(cls.user)
-        assert Access.check("res.partner", "write", False)
-        assert not Access.check("res.users", "create", False)
+        assert cls.env["res.partner"].with_user(cls.user).has_access("write")
+        assert not cls.env["res.users"].with_user(cls.user).has_access("create")
         cls.users_model = cls.env["ir.model"]._get("res.users")
 
     def test_an_ungated_create_needs_create_access_on_its_target(self):

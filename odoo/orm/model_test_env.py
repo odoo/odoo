@@ -23,7 +23,7 @@ from .models import AbstractModel, MetaModel, Model
 from .primitives import SUPERUSER_ID
 from .runtime._registry_fields import _RegistryFieldsMixin
 from .runtime._registry_models import _RegistryModelsMixin
-from .runtime.access_policy import HOSTED_ACCESS_POLICY
+from .runtime.access_policy import ACCESS_POLICY
 from .runtime.environment import Environment
 from .runtime.filestore import FILE_STORE
 from .runtime.locale import LOCALE, Locale
@@ -45,11 +45,7 @@ class InMemorySqlNotSupported(NotImplementedError):
     pass
 
 
-class InMemoryRecordRulesNotSupported(NotImplementedError):
-    pass
-
-
-class InMemoryAccessRightsNotSupported(NotImplementedError):
+class InMemoryAccessNotSupported(NotImplementedError):
     pass
 
 
@@ -352,7 +348,7 @@ class InMemoryCursor(BaseCursor):
 class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
     _lock: threading.RLock = threading.RLock()
     metaschema = META_SCHEMA
-    access_policy = HOSTED_ACCESS_POLICY
+    access_policy = ACCESS_POLICY
     xmlids = XMLIDS
     file_store = FILE_STORE
     settings = SYSTEM_SETTINGS
@@ -407,33 +403,25 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
         try:
             return super().__getitem__(model_name)
         except KeyError:
-            if model_name == "ir.rule":
-                raise InMemoryRecordRulesNotSupported(
-                    "ModelRegistry (DB-free model_test_env) has no 'ir.rule' "
-                    "model: record rules are NOT enforced in this tier -- an "
-                    "access-checked search asks registry.access_policy for the "
-                    "ir.rule domain and there is none to answer. A security-adjacent "
-                    "assertion would go green here while production filters "
-                    "records. Use a DB-backed TransactionCase to test record-"
-                    "rule behaviour, or pass your own ir.rule model class to "
-                    "model_test_env(...): the in-memory backend applies the "
-                    "domain it returns."
-                ) from None
-            if model_name == "ir.model.access":
-                raise InMemoryAccessRightsNotSupported(
-                    "ModelRegistry (DB-free model_test_env) has no "
-                    "'ir.model.access' model: access rights are NOT enforced in "
-                    "this tier -- a read, write, create or unlink by a user "
-                    "other than the superuser asks registry.access_policy whether "
-                    "the model allows it and there is no ACL to answer. Use a "
-                    "DB-backed TransactionCase to test access rights, or pass "
-                    "your own ir.model.access model class to model_test_env(...)."
+            if model_name == "ir.access":
+                raise InMemoryAccessNotSupported(
+                    "ModelRegistry (DB-free model_test_env) has no 'ir.access' "
+                    "model: access is NOT enforced in this tier -- a read, "
+                    "search, write, create or unlink by a user other than the "
+                    "superuser asks registry.access_policy, which asks ir.access "
+                    "for the permissions and guards that bind the user, and "
+                    "there is none to answer. A security-adjacent assertion "
+                    "would go green here while production filters records. Use "
+                    "a DB-backed TransactionCase, host base's models, or pass "
+                    "your own ir.access model class to model_test_env(...): the "
+                    "in-memory backend applies the rows its _bound_access_rows "
+                    "returns."
                 ) from None
             raise
 
     def __contains__(self, model_name: object) -> bool:
-        # Mapping's default asks __getitem__, whose miss on ir.rule and
-        # ir.model.access is a NotImplementedError, not a KeyError
+        # Mapping's default asks __getitem__, whose miss on ir.access is a
+        # NotImplementedError, not a KeyError
         return model_name in self.models
 
     def record_xmlids_written(self, xml_ids: Iterable[str]) -> None:

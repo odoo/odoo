@@ -5103,12 +5103,13 @@ class TestDefaultView(ViewCase):
         )
         self.env["ir.logging"].get_view(view_type="form")
 
-        self.env["ir.model.access"].create(
+        self.env["ir.access"].create(
             {
                 "name": "log readers",
                 "model_id": self.env["ir.model"]._get_id("ir.logging"),
                 "group_id": group.id,
-                "perm_read": True,
+                "kind": "permission",
+                "operation": "r",
             }
         )
 
@@ -7191,14 +7192,11 @@ class ViewModifiers(ViewCase):
 
     @mute_logger("odoo.addons.base.models.ir_ui_view")
     def test_17_attrs_groups_validation(self):
-        IrModelAccess = type(self.env["ir.model.access"])
-        system_only = (
-            self.env["res.groups"]._get_group_definitions().parse("base.group_system")
-        )
+        system_only = frozenset(self.env.ref("base.group_system").ids)
         self.patch(
-            IrModelAccess,
-            "_get_groups_with_access",
-            lambda _self, _model_name, access_mode="read": system_only,
+            type(self.env["ir.access"]),
+            "_group_ids_with_access",
+            lambda _self, _model_name, _operation: system_only,
         )
         test_group = self.env["res.groups"].create({"name": "test_group"})
         self.env["ir.model.data"].create(

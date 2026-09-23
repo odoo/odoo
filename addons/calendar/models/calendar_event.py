@@ -1760,7 +1760,9 @@ class CalendarEvent(models.Model):
         if not self.env.su:
             for event in self:
                 if event._check_private_event_conditions():
-                    raise self.env["ir.rule"]._prepare_access_error("write", event)
+                    raise self.env["ir.access"]._make_record_access_error(
+                        event, "write"
+                    )
 
     def _check_private_event_conditions(self):
         """Checks if the event is private, returning True if the conditions match and False otherwise."""
@@ -1786,7 +1788,7 @@ class CalendarEvent(models.Model):
     def _privacy_restricted_fnames(self, fnames):
         """Return the real, non-public field names among `fnames`.
 
-        A private event is not hidden as a *record* (the employee ir.rule is
+        A private event is not hidden as a *record* (the employee access row is
         ``[(1, '=', 1)]``); its sensitive *field values* are masked after
         fetching (see `_fetch_query`). Any code path that lets a non-participant
         observe a private field's value some other way — a search domain, an

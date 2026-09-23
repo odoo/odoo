@@ -74,36 +74,34 @@ class Tag(models.Model):
     )
 
 
-class IrModelAccess(models.AbstractModel):
-    _name = "ir.model.access"
+class IrAccess(models.AbstractModel):
+    _name = "ir.access"
     _module = _MOD + "_access"
-    _description = "ir.model.access (test stub)"
+    _description = "ir.access (test stub): secret lines and tags are hidden from user reads, a line of another company too"
 
-    def check(self, model, mode="read", raise_exception=True):
-        return True
+    def _policy_signature(self):
+        return (self.env.uid, *self._get_access_context())
 
+    def _get_access_context(self):
+        company_ids = self.env.context.get("allowed_company_ids")
+        yield tuple(company_ids) if company_ids else company_ids
 
-class IrRule(models.AbstractModel):
-    _name = "ir.rule"
-    _module = _MOD + "_rules"
-    _description = (
-        "ir.rule (test stub): secret lines and tags are hidden from user reads, "
-        "a line of another company too"
-    )
-
-    def _get_domain_accessible_records(self, model_name, mode="read"):
-        if mode != "read":
-            return Domain.TRUE
+    def _bound_access_rows(self, model_name, operation):
+        if operation != "read":
+            return [Domain.TRUE], []
         if model_name == "inv.tag":
-            return Domain("secret", "=", False)
+            return [Domain("secret", "=", False)], []
         if model_name == "inv.line":
-            return Domain("secret", "=", False) & (
-                Domain("company_id", "=", False)
-                | Domain("company_id", "in", self.env.companies.ids)
-            )
-        return Domain.TRUE
+            return [
+                Domain("secret", "=", False)
+                & (
+                    Domain("company_id", "=", False)
+                    | Domain("company_id", "in", self.env.companies.ids)
+                )
+            ], []
+        return [Domain.TRUE], []
 
-    def _prepare_access_error(self, operation, records):
+    def _make_record_access_error(self, records, operation):
         return AccessError(f"{operation} denied on {records}")
 
 
@@ -183,7 +181,7 @@ def _check_invariant(env, scopes, orders, log):
 def _walk(seed, steps):
     rng = random.Random(seed)
     log = []
-    with model_test_env(Order, Line, Tag, IrModelAccess, IrRule) as env:
+    with model_test_env(Order, Line, Tag, IrAccess) as env:
         c1, c2 = env["res.company"].create([{"name": "c1"}, {"name": "c2"}])
         companies = {"c1": c1, "c2": c2}
         two, three = env["res.users"].create(

@@ -97,13 +97,9 @@ class IrModel(models.Model):
         readonly=True,
     )
     access_ids = fields.One2many(
-        comodel_name="ir.model.access",
+        comodel_name="ir.access",
         inverse_name="model_id",
-    )
-    rule_ids = fields.One2many(
-        comodel_name="ir.rule",
-        inverse_name="model_id",
-        string="Record Rules",
+        string="Accesses",
     )
     abstract = fields.Boolean(string="Abstract Model")
     transient = fields.Boolean(string="Transient Model")

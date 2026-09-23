@@ -51,10 +51,10 @@ class TestWebRouter(TransactionCase):
                 (None, self.env.ref("base.action_res_users"), user.id),
                 (user.id, get_action(self.env, "res.partner"), user.partner_id.id),
             ],
-            f"users/{user.id}/ir.model.access/ir.model.access/146": [
+            f"users/{user.id}/ir.access/ir.access/146": [
                 (None, self.env.ref("base.action_res_users"), user.id),
-                (user.id, self.env.ref("base.ir_access_act"), None),
-                (user.id, self.env.ref("base.ir_access_act"), 146),
+                (user.id, self.env.ref("base.action_ir_access"), None),
+                (user.id, self.env.ref("base.action_ir_access"), 146),
             ],
         }
         for path, triples in matrix.items():

@@ -790,6 +790,14 @@ _EXPRESSION_SOURCES = (
         bindings={"user": "res.users"},
     ),
     _Source(
+        "ir_access",
+        ("domain",),
+        "model_id",
+        True,
+        paths=frozenset({"domain"}),
+        bindings={"user": "res.users"},
+    ),
+    _Source(
         "base_automation",
         ("filter_domain", "filter_pre_domain"),
         "model_id",

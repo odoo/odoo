@@ -459,11 +459,7 @@ class ProductProduct(models.Model):
         "seller_ids.product_id",
     )
     def _compute_code(self):
-        read_access = self.env["ir.model.access"].check(
-            "product.supplierinfo",
-            "read",
-            False,
-        )
+        read_access = self.env["product.supplierinfo"].has_access("read")
         partner_id = self.env.context.get("partner_id")
         for product in self:
             product.code = product.default_code

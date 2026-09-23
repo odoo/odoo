@@ -12,8 +12,8 @@ class One2manyReadGroupingCase(TransactionCase):
         for record in records:
             lines = record.env[field.comodel_name].search(
                 field.get_comodel_domain(record)
-                & records.env["ir.rule"]._get_domain_accessible_records(
-                    field.comodel_name, "read"
+                & records.env.registry.access_policy.record_domain(
+                    records.env, field.comodel_name, "read"
                 )
             )
             one_by_one[record.id] = [

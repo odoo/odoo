@@ -135,7 +135,7 @@ so category names are unique per company, archived rows included.
 | `allow_self_approval` | Boolean | No | Yes | Whether the request owner may also decide; off, no step stages them. Off by default; categories existing at 19.0.2.1.0 were migrated to on |
 | `allowed_user_ids` | Many2many(`res.users`) | Yes | No | Gate request creation; also the `restricted_users` read audience |
 | `allowed_group_ids` | Many2many(`res.groups`) | Yes | No | Gate request creation; also the `restricted_groups` read audience |
-| `privacy_visibility` | Selection(private/restricted_users/restricted_groups/employees) | Yes | Yes | **default="private"**, tracking. Additive READ audience (ir.rule based) — the default adds NO audience beyond requester/approvers/delegates/managers |
+| `privacy_visibility` | Selection(private/restricted_users/restricted_groups/employees) | Yes | Yes | **default="private"**, tracking. Additive READ audience (ir.access based) — the default adds NO audience beyond requester/approvers/delegates/managers |
 | `approval_minimum` | Integer | Yes | Yes | default=1, tracking. A request's minimum when none of the category's steps applies, and the minimum of a pool step `_add_approver` creates |
 | `approval_type` | Selection([general]) | Yes | No | tracking, extensible |
 | `target_model` | Selection([]) | Yes | No | tracking, extensible |
@@ -1220,7 +1220,7 @@ closure with it. Read their fields in those modules.
 | Model | `approval.decision.log` |
 | File | `models/approval_decision_log.py` |
 | Order | `date desc, id desc` |
-| Access | Internal users read it (ACL); `_search` and `_check_access` derive visibility from the request, so whoever may read the request may read what was decided about it and nothing else. No `ir.rule`: rule domains are evaluated as superuser, so `request_id any []` would skip the request's own rules. The web client reads `approval.request.decision_log_ids`' columns as the user, which is why the ACL is needed despite the field's `compute_sudo` |
+| Access | Internal users read it (a permission row); `_access_guard` adds `('request_id', 'access', 'read')`, so whoever may read the request may read what was decided about it and nothing else, in every search, read and access-error message. The web client reads `approval.request.decision_log_ids`' columns as the user, which is why the permission is needed despite the field's `compute_sudo` |
 
 | Field | Type | Notes |
 |-------|------|-------|

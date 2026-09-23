@@ -41,4 +41,20 @@
         <field name="operation">crud</field>
     </record>
 
+    <record id="access_guarded_system" model="ir.access">
+        <field name="name">guarded: administrators</field>
+        <field name="model_id" ref="model_test_ir_access_guarded" />
+        <field name="group_id" ref="base.group_system" />
+        <field name="kind">permission</field>
+        <field name="operation">crud</field>
+    </record>
+
+    <record id="access_owned_system" model="ir.access">
+        <field name="name">owned: administrators</field>
+        <field name="model_id" ref="model_test_ir_access_owned" />
+        <field name="group_id" ref="base.group_system" />
+        <field name="kind">permission</field>
+        <field name="operation">crud</field>
+    </record>
+
 </odoo>

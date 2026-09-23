@@ -55,9 +55,9 @@ test("a model predicate is honoured", () => {
     );
     fire("ir.ui.view", "write");
     fire("res.partner", "write");
-    fire("ir.rule", "unlink");
+    fire("ir.access", "unlink");
     dispose();
-    expect(seen).toEqual(["ir.ui.view", "ir.rule"]);
+    expect(seen).toEqual(["ir.ui.view", "ir.access"]);
 });
 
 test("a server rejection is SKIPPED: the transaction rolled back", () => {

@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 MODEL_ACCESS = TransactionMemo(
     "ir_ui_view_model_access",
-    invalidated_by=("res.users", "res.groups", "ir.model.access"),
+    invalidated_by=("res.users", "res.groups", "ir.access"),
 )
 
 

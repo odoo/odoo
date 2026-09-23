@@ -52,7 +52,9 @@ class TestEveryModel(TransactionCase):
                     model.onchange({}, [], fields_spec)
 
     def test_form_new_record(self):
-        allowed_models = set(self.env["ir.model.access"]._get_models_allowed("create"))
+        allowed_models = {
+            name for name in self.env.registry if self.env[name].has_access("create")
+        }
         allowed_models -= IGNORE_MODEL_NAMES_NEW_FORM
 
         for model_name, model in self.env.items():

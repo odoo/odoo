@@ -7,6 +7,6 @@ access_res_partner_attribute_line_user,res.partner.attribute.line user,model_res
 access_partner_tier_user,partner.tier user,model_partner_tier,base.group_user,permission,r,
 access_partner_tier_manager,partner.tier manager,model_partner_tier,group_partner_scoring_manager,permission,cud,
 access_partner_score_line_user,partner.score.line user,model_partner_score_line,base.group_user,permission,r,
-rule_partner_score_line_follows_partner,partner.score.line: follow the partner,model_partner_score_line,base.group_everyone,guard,crud,"[('subject_id', 'any', user.with_user(user).env['ir.rule']._get_domain_accessible_records('res.partner', 'read'))]"
-rule_res_partner_attribute_line_follows_partner,res.partner.attribute.line: follow the partner,model_res_partner_attribute_line,base.group_everyone,guard,crud,"[('partner_id', 'any', user.with_user(user).env['ir.rule']._get_domain_accessible_records('res.partner', 'read'))]"
+rule_partner_score_line_follows_partner,partner.score.line: follow the partner,model_partner_score_line,base.group_everyone,guard,crud,"[('subject_id', 'access', 'read')]"
+rule_res_partner_attribute_line_follows_partner,res.partner.attribute.line: follow the partner,model_res_partner_attribute_line,base.group_everyone,guard,crud,"[('partner_id', 'access', 'read')]"
 rule_partner_tier_company,partner.tier: multi-company,model_partner_tier,base.group_everyone,guard,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"

@@ -96,7 +96,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         )
         self.assertNotIn("hidden-secret-name", str(capture.exception))
 
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_access_type_internal(self):
         self.assertEqual(self.folder_a.access_internal, "view")
         self._assert_no_members(self.folder_a)
@@ -156,7 +156,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
             )
         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_from_documents_access(self):
         self.assertEqual(self.folder_a.access_internal, "view")
         self.assertEqual(self.folder_a.access_via_link, "none")
@@ -197,7 +197,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self._assert_raises_check_access_rule(folder_a_as_internal)
         folder_a_as_portal.check_access("write")
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_from_past_access(self):
         self.folder_a.access_via_link = "view"
         self.folder_a.access_internal = "none"
@@ -350,7 +350,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.assertEqual(folder_a6.access_internal, "none")
         self.assertEqual(folder_a6.access_via_link, "view")
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_owner(self):
         self.folder_a.write({"access_via_link": "none", "access_internal": "none"})
         self._assert_no_members(self.folder_a)
@@ -361,7 +361,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.folder_a.with_user(self.doc_user).check_access("read")
         self.folder_a.with_user(self.doc_user).check_access("write")
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_documents_access_cu(self):
         secret = self.env["document.document"].create(
             {
@@ -442,7 +442,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         with self.assertRaises(AccessError):
             access.with_user(self.doc_user).expiration_date = datetime.datetime.now()
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_users_drive_is_private(self):
         self.folder_a.write(
             {
@@ -500,7 +500,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.folder_a.action_update_access_rights(access_internal="view")
         test_authorized_users(self.document_manager)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def _settled_caches(self):
         """Start every pinned block below from ONE known cache state.
 
@@ -801,7 +801,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
             set((self.folder_b + self.document_gif).mapped("access_via_link")), {"view"}
         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_action_update_access_rights_sudo(self):
         self.folder_a.write(
             {
@@ -949,7 +949,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
                 active_model="document.document", active_id=document.id
             ).run()
 
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_create_document_access(self):
         with self.assertRaises(AccessError):
             self.folder_a.with_user(self.internal_user).name = "test"
@@ -1012,7 +1012,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
                 }
             )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_restrict_write_on_pinned_folders(self):
         self.assertFalse(self.folder_a.folder_id)
         self.folder_a.owner_id = False
@@ -1048,7 +1048,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.folder_a.with_user(self.document_manager).folder_id = False
         self.folder_a.with_user(self.document_manager).owner_id = self.document_manager
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_pin_folder_create(self):
         folder = self.env["document.document"].create(
             {
@@ -1070,7 +1070,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
                 }
             )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_pin_folder_folder_id(self):
         self.assertFalse(self.folder_a.folder_id)
 
@@ -1156,7 +1156,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
                 default={"user_folder_id": "COMPANY"}
             )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_unlink_with_children(self):
         self.folder_a.action_update_access_rights(access_internal="edit")
         self.folder_a_a.action_update_access_rights(access_internal="none")
@@ -1166,7 +1166,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.folder_a.with_user(self.internal_user).unlink()
         self.assertFalse(self.folder_a_a.exists())
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_archiving_with_children(self):
         self.folder_a.action_update_access_rights(access_internal="edit")
         self.folder_a_a.action_update_access_rights(access_internal="none")
@@ -1176,7 +1176,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.folder_a.with_user(self.internal_user).action_archive()
         self.assertFalse(self.folder_a_a.active)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_expiration(self):
         self._assert_no_members(self.folder_a)
         self.folder_a.action_update_access_rights(
@@ -1197,7 +1197,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self._assert_raises_check_access_rule(folder_a_as_portal, "read")
         self._assert_raises_check_access_rule(first_child_as_portal, "read")
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_via_link_from_parent_folder(self):
         self._assert_no_members(self.folder_b)
         self.folder_b.action_update_access_rights(
@@ -1309,7 +1309,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
             "file.gif",
         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_access_rights_shortcuts_and_discoverability(self):
         self._assert_no_members(self.folder_b)
         self.folder_b.folder_id = self.folder_a.id
@@ -1601,7 +1601,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.assertEqual(shortcut.with_user(self.internal_user).user_permission, "none")
         self.assertEqual(shortcut.with_user(self.internal_user).user_permission, "none")
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     @users("documents@example.com")
     def test_access_rights_shortcuts_propagation(self):
         target = self.env["document.document"].create(
@@ -1768,7 +1768,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         with self.assertRaises(UserError):
             self.folder_a.owner_id = self.portal_user
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_copy_document_access(self):
         IN_ONE_DAY = fields.Datetime.now() + datetime.timedelta(days=1)
         documents = self.document_gif | self.document_txt
@@ -1900,7 +1900,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         with self.assertRaises(ValidationError):
             self.folder_b.with_user(self.portal_user).copy()
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_deleting_in_non_edit_folder(self):
         folder = (
             self.env["document.document"]
@@ -2018,7 +2018,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
             "Previous owner should not have gained rights on folder content",
         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_embedded_action(self):
         self.folder_a.action_update_access_rights(
             access_internal="edit",
@@ -2067,7 +2067,7 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
                 self.internal_user
             ).action_execute_embedded_action(embedded_action.id)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_embedded_action_shortcut_folder(self):
         self.folder_a.action_update_access_rights(
             access_internal="edit",

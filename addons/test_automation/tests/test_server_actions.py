@@ -321,7 +321,9 @@ class TestAvailableModelsNeverWiden(TransactionCase):
 
     def test_no_state_offers_a_model_base_would_not(self):
         Action = self.env["ir.actions.server"]
-        allowed = set(self.env["ir.model.access"]._get_models_allowed())
+        allowed = {
+            name for name in self.env.registry if self.env[name].has_access("read")
+        }
         model = self.env["ir.model"]._get("mail.test.lead")
 
         for state, _label in Action._fields["state"].selection:

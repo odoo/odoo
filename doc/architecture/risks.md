@@ -96,8 +96,8 @@ files through the loader's own converter -- the one left, `ir_module_module.xml`
 names categories `Module.update_list()` creates from manifests, which is the
 loader's job and not a file's. `orm/tests/test_host_base_dbfree.py` (about 30 s,
 most of it the currency and country files) pins the result: 162 ACL rows, 37
-rules, an internal user reading 3 partners and refused an `ir.model.access`
-row, a portal user reading its own, an act_window read through
+rules, an internal user reading 3 partners and refused an `ir.access` row, a
+portal user reading its own, an act_window read through
 `ir.actions.actions`. **A module's own test classes run on it** (2026-09-22): `InMemoryCase`
 (`odoo/tests/in_memory_case.py`) is a `TransactionCase` that overrides one
 method, `_open_class_transaction` -- the whole of what binds a case to a

@@ -45,7 +45,7 @@ three is a localisation.
         "certificate",
     ],
     "data": [
-        "security/ir_rule.xml",
+        "security/ir_access.xml",
         "security/ir.access.csv",
         "views/exchange_channel_views.xml",
         "views/exchange_transmission_views.xml",

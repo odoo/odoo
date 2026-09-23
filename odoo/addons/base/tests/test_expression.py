@@ -3289,13 +3289,12 @@ class TestMany2many(TransactionCase):
 
     def test_regular(self):
         group = self.env.ref("base.group_user")
-        # the relation outlives the rules it held; its query shape is the point
-        rule_name = "a rule name"
+        view_name = "a view name"
 
         self.User.search([("all_group_ids", "in", group.ids)], order="id")
         self.User.search([("group_ids.name", "like", group.name)], order="id")
         self.User.search(
-            [("group_ids.rule_groups.name", "like", rule_name)], order="id"
+            [("group_ids.view_access.name", "like", view_name)], order="id"
         )
 
         with self.assertQueries(
@@ -3362,12 +3361,12 @@ class TestMany2many(TransactionCase):
                     SELECT "res_groups"."id"
                     FROM "res_groups"
                     WHERE EXISTS (
-                        SELECT 1 FROM "rule_group_rel" AS "res_groups__rule_groups"
-                        WHERE "res_groups__rule_groups"."group_id" = "res_groups"."id"
-                        AND "res_groups__rule_groups"."rule_group_id" IN (
-                            SELECT "ir_rule"."id"
-                            FROM "ir_rule"
-                            WHERE "ir_rule"."name" LIKE %s
+                        SELECT 1 FROM "ir_ui_view_group_rel" AS "res_groups__view_access"
+                        WHERE "res_groups__view_access"."group_id" = "res_groups"."id"
+                        AND "res_groups__view_access"."view_id" IN (
+                            SELECT "ir_ui_view"."id"
+                            FROM "ir_ui_view"
+                            WHERE "ir_ui_view"."name" LIKE %s
                         )
                     )
                 )
@@ -3377,7 +3376,7 @@ class TestMany2many(TransactionCase):
             ]
         ):
             self.User.search(
-                [("group_ids.rule_groups.name", "like", rule_name)], order="id"
+                [("group_ids.view_access.name", "like", view_name)], order="id"
             )
 
     def test_regular_in_false(self):

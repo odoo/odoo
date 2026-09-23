@@ -1057,9 +1057,9 @@ class TestProductAuditFixes(ProductCommon):
         )
 
     def _warm_caches(self, template):
-        self.env["ir.rule"]._get_domain_accessible_records("product.template", "read")
-        self.env["ir.rule"]._get_domain_accessible_records("res.partner", "read")
-        self.env["ir.model.access"].check("product.template", "read", False)
+        self.env["product.template"]._access_domain("read")
+        self.env["res.partner"]._access_domain("read")
+        self.env["product.template"]._access_allowed("read")
         template._get_first_possible_variant_id()
 
     def test_variant_cache_invalidation_spares_unrelated_caches(self):

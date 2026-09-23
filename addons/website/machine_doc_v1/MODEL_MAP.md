@@ -197,7 +197,7 @@ are the editor RPCs. `save(value, xpath)` diverts writes to the specific view.
 | `models.py` | `base` | `_can_return_content()` allows serving a field's content when the record is `website_published`. |
 | `ir_model_data.py` | `ir.model.data` | `_process_end_unlink_record` cascade-unlinks theme `copy_ids` on theme uninstall. |
 | `ir_qweb_fields.py` | `ir.qweb.field.contact` + `ir.qweb.field.html` | Extra contact render options; injects the form signature into `<form>` in rendered HTML. |
-| `ir_rule.py` | `ir.rule` | Injects `website` into eval context (frontend only) + `website_id` into the domain cache key. |
+| `ir_access.py` | `ir.access` | Injects `website` into eval context (frontend only) + `website_id` into the domain cache key. |
 | `ir_ui_menu.py` | `ir.ui.menu` | `load_menus_root` — with `force_action` ctx, forces backend actions from web_menus. |
 | `ir_module_module.py` | `ir.module.module` | **The theme install/upgrade/remove engine** (see below). |
 
@@ -314,7 +314,7 @@ Quick lookup — file → model → role.
 | models.py | `base` | EXT | `_can_return_content` for published records |
 | ir_model_data.py | `ir.model.data` | EXT | Cascade-unlink theme copies on uninstall |
 | ir_qweb_fields.py | `ir.qweb.field.contact` + `.html` | EXT×2 | Contact options; form signature in HTML |
-| ir_rule.py | `ir.rule` | EXT | website in eval context + cache key |
+| ir_access.py | `ir.access` | EXT | website in eval context + cache key |
 | ir_ui_menu.py | `ir.ui.menu` | EXT | force_action backend menu loading |
 | ir_module_module.py | `ir.module.module` | EXT | Theme install/upgrade/remove engine |
 | theme_models.py | `theme.ir.asset` / `theme.ir.ui.view` / `theme.ir.attachment` / `theme.website.menu` / `theme.website.page` / `theme.utils` | NEW×5 + ABSTRACT | Theme staging + copy-to-base |

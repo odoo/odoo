@@ -54,6 +54,24 @@ type IdRef = dict[str, int | Literal[False]]
 class ParseError(Exception): ...
 
 
+# the two models ir.access replaced (base 1.97 converted them, 1.100 dropped them)
+RETIRED_ACCESS_MODELS = frozenset({"ir.model.access", "ir.rule"})
+
+
+def _refuse_retired_access_model(model: str | None, module: str, fname: str) -> None:
+    if model not in RETIRED_ACCESS_MODELS:
+        return
+    _debug.logic("convert.retired_access_model", module=module, file=fname, model=model)
+    raise ValueError(
+        f"Module {module}: {fname} ships {model} data, a model that no longer "
+        f"exists. Access is ir.access rows: ship security/ir.access.csv "
+        f"(id,name,model_id/id,group_id/id,kind,operation,domain) instead, "
+        f"and list it in the manifest; "
+        f"odoo/addons/base/models/ir_access_convert.py converts the old lines "
+        f"and rules."
+    )
+
+
 def _check_model_name(f_model: str | None) -> str:
     if not f_model:
         raise ValueError('Define an attribute model="..." in your .XML file!')
@@ -617,6 +635,7 @@ class xml_import:
         self, rec: etree._Element, extra_vals: dict[str, Any] | None = None
     ) -> tuple[str, int] | None:
         rec_model = rec.get("model")
+        _refuse_retired_access_model(rec_model, self.module, self.xml_filename or "")
         env = self.get_env(rec)
         rec_id = rec.get("id", "")
 
@@ -1055,6 +1074,7 @@ def convert_csv_import(
     env = env(context=dict(env.context, lang=None))
     filename = Path(fname).stem
     model = filename.split("-")[0]
+    _refuse_retired_access_model(model, module, fname)
     reader = csv.reader(
         io.StringIO(csvcontent.decode("utf-8-sig")), quotechar='"', delimiter=","
     )

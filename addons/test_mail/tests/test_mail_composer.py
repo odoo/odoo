@@ -1855,7 +1855,7 @@ class TestComposerInternals(TestMailComposer):
     @users("user_rendering_restricted")
     @mute_logger(
         "odoo.tests",
-        "odoo.addons.base.models.ir_rule",
+        "odoo.addons.base.models.ir_access",
         "odoo.addons.mail.models.mail_mail",
         "odoo.models.unlink",
     )

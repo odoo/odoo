@@ -757,8 +757,9 @@ class TestIrActionsBindingAccess(TransactionCase):
         self.env.registry.clear_cache()
 
     def test_unreadable_model_yields_no_bindings(self):
-        Access = self.env["ir.model.access"].with_user(self.portal)
-        self.assertFalse(Access.check("ir.module.module", "read", False))
+        self.assertFalse(
+            self.env["ir.module.module"].with_user(self.portal).has_access("read")
+        )
         self.assertEqual(
             self.env["ir.actions.actions"]
             .with_user(self.portal)
@@ -2316,9 +2317,8 @@ class TestIrActionsTargetModelWriteInvalidatesBindings(TransactionCase):
                 "group_ids": [(6, 0, [cls.env.ref("base.group_user").id])],
             }
         )
-        Access = cls.env["ir.model.access"].with_user(cls.user)
-        assert Access.check("res.partner", "read", False)
-        assert not Access.check("ir.config_parameter", "read", False)
+        assert cls.env["res.partner"].with_user(cls.user).has_access("read")
+        assert not cls.env["ir.config_parameter"].with_user(cls.user).has_access("read")
 
     def _visible(self, bucket):
         self.env.flush_all()

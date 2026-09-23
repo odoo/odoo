@@ -308,7 +308,7 @@ which has its own bus notification logic separate from `_send_gamification_notif
 | skill.node | read | full CRUD | — | — |
 | skill.node.unlock | read | full CRUD | — | — |
 
-### Row-Level Rules (ir.rule)
+### Row-Level Rules (ir.access)
 
 | Rule XML ID | Model | Effect |
 |-------------|-------|--------|

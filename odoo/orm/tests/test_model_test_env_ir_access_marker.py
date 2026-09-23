@@ -1,13 +1,10 @@
 import pytest
 
 from odoo import fields, models
-from odoo.orm.model_test_env import (
-    InMemoryAccessRightsNotSupported,
-    InMemoryRecordRulesNotSupported,
-    model_test_env,
-)
+from odoo.orm.domain import Domain
+from odoo.orm.model_test_env import InMemoryAccessNotSupported, model_test_env
 
-_MOD = "test_ir_rule_marker"
+_MOD = "test_ir_access_marker"
 
 
 class Widget(models.Model):
@@ -19,42 +16,45 @@ class Widget(models.Model):
     name = fields.Char()
 
 
-class IrRuleStub(models.AbstractModel):
-    _name = "ir.rule"
-    _description = "ir.rule (caller stub)"
+class IrAccessStub(models.AbstractModel):
+    _name = "ir.access"
+    _description = "ir.access (caller stub)"
     _register = False
     _module = None
 
-    def _get_domain_accessible_records(self, model_name, mode="read"):
-        return []
+    def _bound_access_rows(self, model_name, operation):
+        return [Domain.TRUE], []
 
 
-def test_env_ir_rule_access_raises_loud_marker():
+def test_env_ir_access_raises_loud_marker():
     with model_test_env(Widget) as env:
-        with pytest.raises(InMemoryRecordRulesNotSupported) as excinfo:
-            env["ir.rule"]
+        with pytest.raises(InMemoryAccessNotSupported) as excinfo:
+            env["ir.access"]
         message = str(excinfo.value)
-        assert "record rules are NOT enforced" in message
+        assert "access is NOT enforced" in message
         assert "access_policy" in message
         assert "TransactionCase" in message
-        with pytest.raises(InMemoryRecordRulesNotSupported):
-            env.registry["ir.rule"]
+        with pytest.raises(InMemoryAccessNotSupported):
+            env.registry["ir.access"]
 
 
 def test_membership_probes_stay_false_and_quiet():
     with model_test_env(Widget) as env:
-        assert "ir.rule" not in env
-        assert "ir.rule" not in env.registry
+        assert "ir.access" not in env
+        assert "ir.access" not in env.registry
         with pytest.raises(KeyError):
             env.registry["no.such.model"]
 
 
-def test_caller_provided_ir_rule_model_is_served():
-    with model_test_env(Widget, IrRuleStub) as env:
-        assert "ir.rule" in env.registry
-        rule_model = env["ir.rule"]
-        assert rule_model._name == "ir.rule"
-        assert rule_model._get_domain_accessible_records("irm.widget", "read") == []
+def test_caller_provided_ir_access_model_is_served():
+    with model_test_env(Widget, IrAccessStub) as env:
+        assert "ir.access" in env.registry
+        access_model = env["ir.access"]
+        assert access_model._name == "ir.access"
+        assert access_model._bound_access_rows("irm.widget", "read") == (
+            [Domain.TRUE],
+            [],
+        )
 
 
 def test_harness_crud_untouched_by_marker():
@@ -114,7 +114,7 @@ def test_an_access_check_by_a_plain_user_raises_the_loud_marker():
     with model_test_env(Report) as env:
         user = env["res.users"].create({"name": "u", "login": "u"})
         report = env["marker.report"].create({"name": "r"})
-        with pytest.raises(InMemoryAccessRightsNotSupported) as excinfo:
+        with pytest.raises(InMemoryAccessNotSupported) as excinfo:
             report.with_user(user).read(["name"])
-        assert "access rights are NOT enforced" in str(excinfo.value)
+        assert "access is NOT enforced" in str(excinfo.value)
         assert "TransactionCase" in str(excinfo.value)

@@ -54,12 +54,7 @@ class MrpWorkorder(models.Model):
     def _read_group_workcenter_id(self, workcenters, domain):
         workcenter_ids = self.env.context.get("default_workcenter_id")
         if not workcenter_ids:
-            search_domain = self.env["ir.rule"]._get_domain_accessible_records(
-                workcenters._name
-            )
-            workcenter_ids = workcenters.sudo()._search(
-                search_domain, order=workcenters._order
-            )
+            workcenter_ids = workcenters._search([], order=workcenters._order)
         return workcenters.browse(workcenter_ids)
 
     is_late = fields.Boolean(

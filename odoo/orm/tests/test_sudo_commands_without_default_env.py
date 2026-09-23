@@ -53,24 +53,22 @@ class OpenHost(models.Model):
     line_ids = fields.One2many("s.open.line", "host_id")
 
 
-class IrModelAccess(models.AbstractModel):
-    _name = "ir.model.access"
+class IrAccess(models.AbstractModel):
+    _name = "ir.access"
     _module = _MOD + "_access"
-    _description = "ir.model.access (test stub): everything allowed"
+    _description = "ir.access (test stub): everything allowed"
 
-    def check(self, model, mode="read", raise_exception=True):
-        return True
+    def _policy_signature(self):
+        return (self.env.uid, *self._get_access_context())
 
+    def _get_access_context(self):
+        company_ids = self.env.context.get("allowed_company_ids")
+        yield tuple(company_ids) if company_ids else company_ids
 
-class IrRule(models.AbstractModel):
-    _name = "ir.rule"
-    _module = _MOD + "_rules"
-    _description = "ir.rule (test stub): no record rules"
+    def _bound_access_rows(self, model_name, operation):
+        return [Domain.TRUE], []
 
-    def _get_domain_accessible_records(self, model_name, mode="read"):
-        return Domain.TRUE
-
-    def _prepare_access_error(self, operation, records):
+    def _make_record_access_error(self, records, operation):
         return AccessError(f"{operation} denied on {records}")
 
 
@@ -165,7 +163,7 @@ class TestSudoCommandsWithoutDefaultEnv(unittest.TestCase):
             )
 
     def test_the_transactions_own_user_keeps_its_uid_end_to_end(self):
-        with model_test_env(*self.MODELS, IrModelAccess, IrRule) as env:
+        with model_test_env(*self.MODELS, IrAccess) as env:
             user = env["res.users"].create({"name": "writer"})
             host = env["s.guard.host"].create({"name": "h"})
             env.flush_all()

@@ -387,10 +387,10 @@ class TestHasGroup(TransactionCase):
         )
 
         populate_cache()
-        self.env["ir.model.access"].call_cache_clearing_methods()
+        self.env["ir.access"]._clear_access_caches()
         self.assertFalse(
             self.registry.ormcache_lrus["default"],
-            "call_cache_clearing_methods() must invalidate user._has_group cache",
+            "_clear_access_caches() must invalidate user._has_group cache",
         )
 
     def test_has_group_with_new_id(self):

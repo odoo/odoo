@@ -561,7 +561,11 @@ class IrActionsServer(models.Model):
                     (
                         "model",
                         "in",
-                        list(self.env["ir.model.access"]._get_models_allowed()),
+                        [
+                            name
+                            for name in self.env.registry
+                            if self.env[name].has_access("read")
+                        ],
                     )
                 ]
             )

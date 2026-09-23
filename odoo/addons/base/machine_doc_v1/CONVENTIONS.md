@@ -21,7 +21,7 @@ with these directly; they power the framework.
 | `ir.actions` | Navigation actions | ir.actions.act_window, ir.actions.server |
 | `ir.ui` | UI definitions | ir.ui.view, ir.ui.menu |
 | `ir.cron` | Scheduling | ir.cron, ir.cron.trigger |
-| `ir.rule` | Access control | ir.rule, ir.model.access |
+| `ir.access` | Access control | ir.access |
 | `ir.config_parameter` | Configuration | Key-value system parameters |
 
 ### `res.*` — Resource
@@ -100,9 +100,9 @@ def _get_groups_with_access(self, model_name, access_mode="read"): ...
 def _get_xmlid_target(self, xmlid): ...
 
 
-# Cached by model name — cleared on rule changes
-@tools.ormcache("self.env.uid", "self.env.su", "model_name", "mode")
-def _get_domain_accessible_records(self, model_name, mode="read"): ...
+# Cached by the principal's signature — cleared by any write to ir.access
+@ormcache("operation", "self.env.registry.access_policy.access_signature(self.env)")
+def _access_domain(self, operation): ...
 ```
 
 **Cache invalidation**: Most cached methods are invalidated via `clear_caches()` in
@@ -115,8 +115,8 @@ A cache that varies by context names the keys it reads, e.g.
 
 ### Three Layers
 
-1. **Model ACL** (`ir.model.access`) — CRUD permissions per model per group
-2. **Record Rules** (`ir.rule`) — Domain-based record filtering per group per operation
+1. **Permissions** (`ir.access`, `kind = permission`) — what a group may reach per model and operation, limited by a domain; OR-ed
+2. **Guards** (`ir.access`, `kind = guard`) — domains AND-ed for everyone or for a group's members; no permission widens them
 3. **Field Groups** (`groups=` on fields) — Field visibility per group
 
 ### Group Implications
@@ -268,7 +268,7 @@ ir.actions.report._render_qweb_pdf(docids, data)
 
 - **42% of test files have no `@tagged` decorator** — they run in all phases by default
 - **58% use `@tagged`** — typically `@tagged('post_install', '-at_install', 'feature_tag')`
-- `post_install` always travels with `-at_install`; 283 classes carry it
+- `post_install` always travels with `-at_install`; 284 classes carry it
 - The three figures above are derived by `factcheck.sh` from `_test_inventory.py`
 
 See `machine_doc_v1/TEST_TAGS.md` for full reference.
@@ -286,7 +286,7 @@ See `machine_doc_v1/TEST_TAGS.md` for full reference.
    on module upgrade. This is correct for user-modified data but can cause confusion
    when fixing data bugs.
 
-4. **Cache invalidation** — `ir.rule`, `ir.model.access`, `ir.model.data`, `res.groups`
+4. **Cache invalidation** — `ir.access`, `ir.model.data`, `res.groups`
    all use heavy caching. Changes to these models require `clear_caches()` or the
    change won't take effect until server restart.
 

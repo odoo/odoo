@@ -466,10 +466,7 @@ class IrActionsActions(models.Model):
 
     @api.model
     def get_bindings(self, model_name: str) -> dict[str, list[dict[str, Any]]]:
-        Access = self.env["ir.model.access"]
-        if model_name not in self.env or not Access.check(
-            model_name, mode="read", raise_exception=False
-        ):
+        if model_name not in self.env or not self.env[model_name].has_access("read"):
             _debug.logic(
                 "bindings_refused",
                 model=model_name,
@@ -597,9 +594,7 @@ class IrActionsActions(models.Model):
             return "groups"
         if opens_model and (
             opens_model not in self.env
-            or not self.env["ir.model.access"].check(
-                opens_model, mode="read", raise_exception=False
-            )
+            or not self.env[opens_model].has_access("read")
         ):
             return "model"
         return ""

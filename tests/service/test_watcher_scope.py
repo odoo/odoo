@@ -13,7 +13,7 @@ def _tree(root):
         "mod/models/a.py",
         "mod/views/v.xml",
         "mod/data/d.xml",
-        "mod/security/ir.model.access.csv",
+        "mod/security/ir.access.csv",
         "mod/static/src/x.js",
         "mod/wizard/sub/w.py",
         "mod/i18n/es.po",

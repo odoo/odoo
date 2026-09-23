@@ -209,8 +209,9 @@ assert_doc_cites "$groups groups" "the security group count"
 if grep -rq '_name = "approval.test.document"' "$MOD/models/"
 then bad "index.md says approval.test.document lives in test_approval; this module declares it"
 else ok; fi
-if grep -q '^access_.*model_approval_test_document' "$MOD/security/ir.model.access.csv"
-then bad "index.md says approval.test.document has NO ACL row here; it has one"
+[ -f "$MOD/security/ir.access.csv" ] && ok || bad "security/ir.access.csv is gone; the check below reads nothing"
+if grep -q ',model_approval_test_document,' "$MOD/security/ir.access.csv"
+then bad "index.md says approval.test.document has NO access row here; it has one"
 else ok; fi
 
 # The state machine the docs describe, read off the source rather than retyped.

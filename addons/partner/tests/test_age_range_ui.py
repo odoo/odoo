@@ -55,7 +55,7 @@ class TestPartnerAgeRangeUi(TransactionCase):
     def test_a_partner_manager_is_drawn_the_menu_the_acl_grants(self):
         """The group the ACL empowers must be the group the menu tree admits.
 
-        ``ir.model.access.csv`` gives ``base.group_partner_manager``
+        ``ir.access.csv`` gives ``base.group_partner_manager``
         create/write/unlink on the cohorts. While Configuration was gated on
         ``base.group_system`` that right reached no screen: the branch was
         pruned for exactly the group it was written for, and a manager saw a

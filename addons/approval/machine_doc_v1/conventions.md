@@ -6,7 +6,7 @@
 
 | Layer | What It Checks | Bypass |
 |-------|---------------|--------|
-| 1. `ir.rule` (SQL) | Row-level filtering (read/write/create/unlink domains) | Sudo bypasses |
+| 1. `ir.access` (SQL) | Row-level filtering (read/write/create/unlink domains) | Sudo bypasses |
 | 2. Python CRUD access (`_check_access_*`) | WHO can perform the operation | Sudo or managers (the sync engine runs under sudo). Non-manager approvers may write only delegation and decision-note fields on their own row — never `state`/`sequence`/`required` |
 | 3. Python business rules (`_check_business_rules_*`, `_check_locked_fields`) | WHAT states allow the operation | Sudo-proof on the request: `_check_locked_fields` (`_LOCKED_FIELDS` half) and `_check_no_forged_computed_fields` bind everyone. On `approval.approver`, create and unlink are equally sudo-proof — their only exemption is `env.su` **plus** the `approver_ids_computation` context — but `_check_business_rules_write` returns early on `env.su` alone, because the workflow itself writes `flow_state` and the decision stamps under sudo |
 

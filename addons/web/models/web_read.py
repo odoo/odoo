@@ -508,12 +508,7 @@ class Base(models.AbstractModel):
 
         if field_spec.get("order"):
             field_context = field.context or {}
-            if not (
-                co_records
-                and co_records.env["ir.model.access"].check(
-                    co_records._name, "read", raise_exception=False
-                )
-            ):
+            if not (co_records and co_records.browse().has_access("read")):
                 co_records = co_records.browse()
             else:
                 try:
@@ -538,9 +533,7 @@ class Base(models.AbstractModel):
                     values[field_name], key=order_key.__getitem__
                 )
         elif "fields" in field_spec:
-            if co_records and co_records.env["ir.model.access"].check(
-                co_records._name, "read", raise_exception=False
-            ):
+            if co_records and co_records.browse().has_access("read"):
                 accessible = co_records.with_context(
                     active_test=False
                 )._filtered_access("read")

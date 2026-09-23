@@ -243,17 +243,16 @@ class TestRenameModel(TransactionCase):
 class TestRenameInStoredExpressions(TransactionCase):
     def _rule(self, model, domain):
         self.env.cr.execute(
-            "INSERT INTO ir_rule (name, model_id, domain_force, composition, active) "
+            "INSERT INTO ir_access (name, model_id, group_id, kind, guard_scope, "
+            "operation, domain, active) "
             "VALUES ('probe', (SELECT id FROM ir_model WHERE model = %s), %s, "
-            "'or', true) RETURNING id",
-            (model, domain),
+            "'guard', 'everyone', 'r', %s, true) RETURNING id",
+            (model, self.env.ref("base.group_everyone").id, domain),
         )
         return self.env.cr.fetchone()[0]
 
     def _domain(self, rule_id):
-        self.env.cr.execute(
-            "SELECT domain_force FROM ir_rule WHERE id = %s", (rule_id,)
-        )
+        self.env.cr.execute("SELECT domain FROM ir_access WHERE id = %s", (rule_id,))
         return self.env.cr.fetchone()[0]
 
     def test_a_bare_name_needs_a_model_unless_it_is_unique(self):

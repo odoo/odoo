@@ -10,7 +10,6 @@ from . import mixin_owner_access
 from . import report_config
 from . import ir_model_fields_selection
 from . import ir_model_reflection
-from . import ir_model_access
 from . import ir_access
 from . import ir_model_data
 from . import ir_sequence
@@ -54,7 +53,6 @@ from . import ir_autovacuum
 
 from . import ir_filters
 from . import ir_default
-from . import ir_rule
 from . import ir_config_parameter
 
 

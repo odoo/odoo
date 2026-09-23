@@ -11,24 +11,20 @@ debugRegistry.addValidation((entry) => entry instanceof Registry);
 /**
  * @typedef {Object} AccessRights
  * @property {boolean} canEditView
- * @property {boolean} canSeeRecordRules
- * @property {boolean} canSeeModelAccess
+ * @property {boolean} canSeeAccesses
  */
 
 /** @returns {Promise<AccessRights>} */
 const getAccessRights = async () => {
     const rightsToCheck = {
         "ir.ui.view": "write",
-        "ir.rule": "read",
-        "ir.model.access": "read",
+        "ir.access": "read",
     };
     const proms = Object.entries(rightsToCheck).map(([model, operation]) =>
         user.checkAccessRight(model, operation),
     );
-    const [canEditView, canSeeRecordRules, canSeeModelAccess] =
-        await Promise.all(proms);
-    const accessRights = { canEditView, canSeeRecordRules, canSeeModelAccess };
-    return accessRights;
+    const [canEditView, canSeeAccesses] = await Promise.all(proms);
+    return { canEditView, canSeeAccesses };
 };
 
 class DebugContext {

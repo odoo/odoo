@@ -40,31 +40,29 @@ class Line(models.Model):
             line.hidden = line.value < 0
 
 
-class IrModelAccess(models.AbstractModel):
-    _name = "ir.model.access"
+class IrAccess(models.AbstractModel):
+    _name = "ir.access"
     _module = _MOD + "_access"
-    _description = "ir.model.access (test stub): everything allowed"
+    _description = "ir.access (test stub): hidden lines are unreadable"
 
-    def check(self, model, mode="read", raise_exception=True):
-        return True
+    def _policy_signature(self):
+        return (self.env.uid, *self._get_access_context())
 
+    def _get_access_context(self):
+        company_ids = self.env.context.get("allowed_company_ids")
+        yield tuple(company_ids) if company_ids else company_ids
 
-class IrRule(models.AbstractModel):
-    _name = "ir.rule"
-    _module = _MOD + "_rules"
-    _description = "ir.rule (test stub): hidden lines are unreadable"
+    def _bound_access_rows(self, model_name, operation):
+        if operation == "read" and model_name == "sre.line":
+            return [Domain("hidden", "=", False)], []
+        return [Domain.TRUE], []
 
-    def _get_domain_accessible_records(self, model_name, mode="read"):
-        if mode == "read" and model_name == "sre.line":
-            return Domain("hidden", "=", False)
-        return Domain.TRUE
-
-    def _prepare_access_error(self, operation, records):
+    def _make_record_access_error(self, records, operation):
         return AccessError(f"{operation} denied on {records}")
 
 
 def test_a_recompute_of_the_rule_field_evicts_the_user_slot():
-    with model_test_env(Order, Line, IrModelAccess, IrRule) as env:
+    with model_test_env(Order, Line, IrAccess) as env:
         user = env["res.users"].create({"name": "u"})
         order = env["sre.order"].create({"name": "o"})
         keep = env["sre.line"].create({"order_id": order.id, "value": 1})
@@ -87,7 +85,7 @@ def test_a_recompute_of_the_rule_field_evicts_the_user_slot():
 
 
 def test_a_recompute_that_hides_nothing_still_matches_the_search():
-    with model_test_env(Order, Line, IrModelAccess, IrRule) as env:
+    with model_test_env(Order, Line, IrAccess) as env:
         user = env["res.users"].create({"name": "u"})
         order = env["sre.order"].create({"name": "o"})
         line = env["sre.line"].create({"order_id": order.id, "value": -3})

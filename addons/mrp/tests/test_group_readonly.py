@@ -129,11 +129,10 @@ class TestMrpGroupReadonly(TransactionCase):
         )
 
     def test_models_read_through_base_group_user_stay_readable(self):
-        access = self.env["ir.model.access"].with_user(self.user_readonly)
         lost = [
             model
             for model in READ_VIA_BASE_GROUP_USER
-            if not access.check(model, "read", False)
+            if not self.env[model].with_user(self.user_readonly).has_access("read")
         ]
         self.assertFalse(lost, "the readonly tier lost read on: %s" % lost)
 

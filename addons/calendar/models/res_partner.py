@@ -72,7 +72,7 @@ class ResPartner(models.Model):
                 ["parent_id"],
             )
 
-            query = self.env["calendar.event"]._search([])  # ir.rules will be applied
+            query = self.env["calendar.event"]._search([])  # access rows apply
             meeting_data = self.env.execute_query(
                 SQL(
                     """

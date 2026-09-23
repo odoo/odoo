@@ -1,6 +1,20 @@
 from odoo.modules.module import get_module_path, load_script
 from odoo.tests import TransactionCase, new_test_user, tagged
 
+OLD_TABLES = """
+    CREATE TABLE IF NOT EXISTS ir_model_access (
+        id serial PRIMARY KEY, name varchar, model_id int, group_id int,
+        active boolean, perm_read boolean, perm_write boolean,
+        perm_create boolean, perm_unlink boolean
+    );
+    CREATE TABLE IF NOT EXISTS ir_rule (
+        id serial PRIMARY KEY, name varchar, model_id int, domain_force text,
+        composition varchar, active boolean, global boolean, perm_read boolean,
+        perm_write boolean, perm_create boolean, perm_unlink boolean
+    );
+    CREATE TABLE IF NOT EXISTS rule_group_rel (rule_group_id int, group_id int);
+"""
+
 
 @tagged("post_install", "-at_install")
 class TestIrAccessMigration(TransactionCase):
@@ -12,6 +26,8 @@ class TestIrAccessMigration(TransactionCase):
             "base_1_97_pre_migrate_ir_access_rows",
         )
         cls.model = cls.env["ir.model"]._get("res.partner.industry")
+        # the tables 1.97 read are gone since 1.100: the test builds what it reads
+        cls.env.cr.execute(OLD_TABLES)
         cls.user = new_test_user(
             cls.env, login="migrated_probe", groups="base.group_user"
         )
@@ -129,3 +145,74 @@ class TestIrAccessMigration(TransactionCase):
             [("module", "=", "base"), ("name", "=", "res_users_log_rule")]
         )
         self.assertEqual((data.res_id, data.noupdate), (row.id, False))
+
+
+@tagged("post_install", "-at_install")
+class TestOldAccessTablesDropped(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.script = load_script(
+            f"{get_module_path('base')}/migrations/1.100/end-migrate_old_access_tables.py",
+            "base_1_100_end_migrate_old_access_tables",
+        )
+        cls.model = cls.env["ir.model"]._get("res.partner.industry")
+        cls.env.cr.execute(OLD_TABLES)
+
+    def _relations(self):
+        self.env.cr.execute(
+            "SELECT relname FROM pg_class WHERE relname = ANY(%s) ORDER BY relname",
+            [["ir_model_access", "ir_rule", "rule_group_rel"]],
+        )
+        return [name for [name] in self.env.cr.fetchall()]
+
+    def test_the_tables_and_the_models_metadata_go(self):
+        self.env.cr.execute(
+            """
+            INSERT INTO ir_model (model, name, state, "order")
+            VALUES ('ir.rule', '{"en_US": "Record Rule"}', 'base', 'id')
+            RETURNING id
+            """
+        )
+        [model_id] = self.env.cr.fetchone()
+        self.env.cr.execute(
+            "INSERT INTO ir_model_data (module, name, model, res_id, noupdate) "
+            "VALUES ('base', 'model_ir_rule', 'ir.model', %s, false)",
+            [model_id],
+        )
+        self.assertEqual(
+            self._relations(), ["ir_model_access", "ir_rule", "rule_group_rel"]
+        )
+        self.script.migrate(self.env.cr, "1.98")
+        self.assertEqual(self._relations(), [])
+        self.env.cr.execute("SELECT count(*) FROM ir_model WHERE model = 'ir.rule'")
+        self.assertEqual(self.env.cr.fetchone(), (0,))
+        self.env.cr.execute(
+            "SELECT count(*) FROM ir_model_data WHERE name = 'model_ir_rule'"
+        )
+        self.assertEqual(self.env.cr.fetchone(), (0,))
+
+    def test_a_line_written_after_the_conversion_is_converted_not_lost(self):
+        self.env.cr.execute(
+            """
+            INSERT INTO ir_model_access (name, model_id, group_id, active, perm_read,
+                                         perm_write, perm_create, perm_unlink)
+            VALUES ('probe late line', %s, %s, true, true, false, false, false)
+            """,
+            [self.model.id, self.env.ref("base.group_user").id],
+        )
+        self.env.flush_all()
+        self.script.migrate(self.env.cr, "1.98")
+        self.env.invalidate_all()
+        row = self.env["ir.access"].search([("name", "=", "probe late line")])
+        self.assertEqual(
+            (row.kind, row.operation, row.group_id),
+            ("permission", "r", self.env.ref("base.group_user")),
+        )
+        self.assertEqual(self._relations(), [])
+
+    def test_a_fresh_install_has_nothing_to_do(self):
+        self.script.migrate(self.env.cr, None)
+        self.assertEqual(
+            self._relations(), ["ir_model_access", "ir_rule", "rule_group_rel"]
+        )

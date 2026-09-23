@@ -140,12 +140,10 @@ answers themselves -- may this model be touched, which records may this user
 read -- come from `registry.access_policy`, the one object that names the
 access models. On a database registry every model is decided from `ir.access`
 rows (`_access_domain`: the permissions the principal's groups hold, OR-ed, AND
-the guards that bind it, AND each delegated parent); modules ship them in
-`security/ir.access.csv`, and `ir.model.access` and `ir.rule` hold no rows and
-refuse new ones. The in-memory registry asks whichever `ir.model.access` and
-`ir.rule` classes it hosts, and base's own end in the same decision. Both storage
-backends ask the port, so record rules filter an in-memory search as they filter
-a PostgreSQL one.
+the guards that bind it, AND each delegated parent, AND the model's own
+`_access_guard`); modules ship them in `security/ir.access.csv`. Every registry
+asks the `ir.access` model it hosts -- the in-memory one base's own or a test's
+stub -- so the rows filter an in-memory search as they filter a PostgreSQL one.
 
 Superuser is not a bypass flag: `sudo()` returns an environment whose `su` is
 part of the `(cr, uid, su, context)` interning key. Two recordsets differing

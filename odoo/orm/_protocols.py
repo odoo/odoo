@@ -136,6 +136,12 @@ class IrAccessProtocol(RecordsetProtocol, Protocol):
 
     def _policy_signature(self) -> tuple: ...
 
+    def _get_access_context(self) -> Any: ...
+
+    def _bound_access_rows(
+        self, model_name: str, operation: str
+    ) -> tuple[list[Domain], list[Domain]]: ...
+
     def _make_model_access_error(
         self, model_name: str, operation: str
     ) -> AccessError: ...
@@ -143,22 +149,6 @@ class IrAccessProtocol(RecordsetProtocol, Protocol):
     def _make_record_access_error(
         self, records: Any, operation: str
     ) -> AccessError: ...
-
-
-class IrModelAccessProtocol(RecordsetProtocol, Protocol):
-    def check(
-        self, model: str, mode: str = "read", raise_exception: bool = True
-    ) -> bool: ...
-
-    def _prepare_access_error(self, model: str, mode: str) -> AccessError: ...
-
-
-class IrRuleProtocol(RecordsetProtocol, Protocol):
-    def _get_domain_accessible_records(
-        self, model_name: str, mode: str = "read"
-    ) -> Domain: ...
-
-    def _prepare_access_error(self, operation: str, records: Any) -> AccessError: ...
 
 
 class IrDefaultProtocol(RecordsetProtocol, Protocol):
@@ -321,7 +311,6 @@ FRAMEWORK_MODEL_PROTOCOLS: dict[str, type] = {
     "ir.access": IrAccessProtocol,
     "ir.fields.converter": IrFieldsConverterProtocol,
     "ir.model": IrModelProtocol,
-    "ir.model.access": IrModelAccessProtocol,
     "ir.model.constraint": IrModelConstraintProtocol,
     "ir.model.data": IrModelDataProtocol,
     "ir.model.fields": IrModelFieldsProtocol,
@@ -329,7 +318,6 @@ FRAMEWORK_MODEL_PROTOCOLS: dict[str, type] = {
     "ir.model.inherit": IrModelInheritProtocol,
     "ir.model.relation": IrModelRelationProtocol,
     "ir.module.module": IrModuleModuleProtocol,
-    "ir.rule": IrRuleProtocol,
     "ir.ui.view": IrUiViewProtocol,
     "res.company": ResCompanyProtocol,
     "res.country": ResCountryProtocol,

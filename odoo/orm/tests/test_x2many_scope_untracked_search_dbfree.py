@@ -46,26 +46,24 @@ class Block(models.Model):
     line_id = fields.Many2one("unt.line")
 
 
-class IrModelAccess(models.AbstractModel):
-    _name = "ir.model.access"
+class IrAccess(models.AbstractModel):
+    _name = "ir.access"
     _module = _MOD + "_access"
-    _description = "ir.model.access (test stub)"
+    _description = "ir.access (test stub): no row narrows anything"
 
-    def check(self, model, mode="read", raise_exception=True):
-        return True
+    def _policy_signature(self):
+        return (self.env.uid, *self._get_access_context())
 
+    def _get_access_context(self):
+        company_ids = self.env.context.get("allowed_company_ids")
+        yield tuple(company_ids) if company_ids else company_ids
 
-class IrRule(models.AbstractModel):
-    _name = "ir.rule"
-    _module = _MOD + "_rules"
-    _description = "ir.rule (test stub): no rule"
-
-    def _get_domain_accessible_records(self, model_name, mode="read"):
-        return Domain.TRUE
+    def _bound_access_rows(self, model_name, operation):
+        return [Domain.TRUE], []
 
 
 def test_a_write_on_what_an_undeclared_search_reads_empties_the_user_slot():
-    with model_test_env(Box, Line, Block, IrModelAccess, IrRule) as env:
+    with model_test_env(Box, Line, Block, IrAccess) as env:
         user = env["res.users"].create({"name": "reader"})
         box = env["unt.box"].create({"name": "box"})
         first, second = env["unt.line"].create(

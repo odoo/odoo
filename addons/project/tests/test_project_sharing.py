@@ -445,7 +445,7 @@ class TestProjectSharing(TestProjectSharingCommon):
             "The portal user can access to project sharing feature of the portal project.",
         )
 
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_create_task_in_project_sharing(self) -> None:
         Task = self.env["project.task"].with_context(
             {
@@ -658,7 +658,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertEqual(task.color, 4)
         self.assertEqual(task.tag_ids, self.task_tag)
 
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_access")
     def test_edit_task_in_project_sharing(self) -> None:
         with self.assertRaises(
             AccessError,

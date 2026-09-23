@@ -74,9 +74,8 @@ class TestSecurityRules(TransactionCase):
 
     def test_the_rule_domain_outlives_the_request_that_built_it(self):
         """The domain is cached for the registry's life, so it must hold no Query."""
-        rules = self.env["ir.rule"].with_user(self.outsider)
         for model in ("partner.score.line", "res.partner.attribute.line"):
-            domain = rules._get_domain_accessible_records(model, "read")
+            domain = self.env[model].with_user(self.outsider)._access_domain("read")
             self.assertFalse(
                 [c for c in domain.iter_conditions() if isinstance(c.value, Query)],
                 f"the {model} rule caches a Query, and its cursor is closed by the "

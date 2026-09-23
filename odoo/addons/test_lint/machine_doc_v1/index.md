@@ -35,7 +35,10 @@ copies of a related value still to convert, and
 `lint_company_field_outside_config`, the fields still bolted onto
 `res.company` outside base instead of an application's `mixin.company.config`
 model, and `lint_hand_rolled_range`, the numeric min/max pairs declared outside
-`mixin.band` -- the three AST rules with a floor. `lint_receiver_fail_open` carried one
+`mixin.band` -- the three AST rules with a floor. `access_check_override` counts
+the overrides outside base that still decide access in code instead of in
+ir.access rows or `_access_guard` (the owners held by a many2one_reference, until
+P4); it only shrinks. `lint_receiver_fail_open` carried one
 for the six hours between the rule's rewrite and the last family's conversion. Everything else -- every other AST rule,
 every XML rule, the manifest and record-order gates -- is a hard zero. `n-plus-one-query` reached
 zero on 2026-09-12 by reading each of its 295 sites: a loop over the records

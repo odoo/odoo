@@ -71,7 +71,7 @@ class PaymentProvider(models.Model):
         "are only visible on manage forms.",
     )
     company_id = fields.Many2one(
-        # Indexed to speed-up ORM searches (from ir_rule or others)
+        # Indexed to speed-up ORM searches (from ir.access or others)
         comodel_name="res.company",
         default=lambda self: self.env.company.id,
         index=True,

@@ -212,6 +212,11 @@ class AccessMixin(_ModelStubs):
             return self, functools.partial(
                 policy.model_denied_error, env, self._name, operation
             )
+        elif not self._ids:
+            # the model-level question asked on an empty recordset: nothing to
+            # remember per record, and a loop over the registry registers no
+            # watch per model
+            return None
         elif cache:
             verdicts = memo.read_verdicts(env, self._name)
             verdicts[0] = True
@@ -331,7 +336,17 @@ class AccessMixin(_ModelStubs):
         )
         if not permissions:
             return Domain.FALSE
-        return Domain.OR(permissions) & Domain.AND(guards + parents)
+        return Domain.OR(permissions) & Domain.AND(
+            [*guards, *parents, self._access_guard(operation)]
+        )
+
+    @api.model
+    def _access_guard(self, operation: str) -> Domain:
+        # what the model itself requires of every principal beside its rows,
+        # typically an 'access' condition on the record it belongs to; read
+        # with the rows, it is what the model-level answer, the searches and
+        # the error that names the groups that would be allowed all see
+        return Domain.TRUE
 
     def _note_readable(self) -> None:
         # the records a user's search or fetch returned passed the read rules

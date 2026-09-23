@@ -325,7 +325,7 @@ class TestDiscussChannelAccess(MailCommon):
                         self.assertRaises(AccessError),
                         mute_logger("odoo.db"),
                         mute_logger("odoo.addons.base.models.ir_model"),
-                        mute_logger("odoo.addons.base.models.ir_rule"),
+                        mute_logger("odoo.addons.base.models.ir_access"),
                         mute_logger("odoo.models.unlink"),
                     ):
                         self._execute_action_channel(
@@ -393,7 +393,7 @@ class TestDiscussChannelAccess(MailCommon):
                         self.assertRaises(AccessError),
                         mute_logger("odoo.db"),
                         mute_logger("odoo.addons.base.models.ir_model"),
-                        mute_logger("odoo.addons.base.models.ir_rule"),
+                        mute_logger("odoo.addons.base.models.ir_access"),
                         mute_logger("odoo.models.unlink"),
                     ):
                         try:

@@ -153,28 +153,24 @@
                         <page name="views" string="Views">
                             <field name="view_access" groups="base.group_system" />
                         </page>
-                        <page name="access_rights" string="Access Rights">
-                            <field name="model_access">
-                                <list string="Access Rights" editable="top">
+                        <page name="access_rights" string="Accesses">
+                            <field
+                                name="access_ids"
+                                context="{'default_kind': 'permission'}">
+                                <list string="Accesses" editable="top">
                                     <field name="name" />
                                     <field name="model_id" />
-                                    <field name="perm_read" />
-                                    <field name="perm_write" />
-                                    <field name="perm_create" />
-                                    <field name="perm_unlink" />
-                                </list>
-                            </field>
-                        </page>
-                        <page name="record_rules" string="Record Rules">
-                            <field name="rule_groups">
-                                <list string="Record Rules" editable="top">
-                                    <field name="name" />
-                                    <field name="model_id" />
-                                    <field name="domain_force" />
-                                    <field name="perm_read" />
-                                    <field name="perm_write" />
-                                    <field name="perm_create" />
-                                    <field name="perm_unlink" />
+                                    <field
+                                        name="kind"
+                                        widget="badge"
+                                        decoration-success="kind == 'permission'"
+                                        decoration-warning="kind == 'guard'" />
+                                    <field name="guard_scope" optional="hide" />
+                                    <field name="domain" />
+                                    <field name="for_read" />
+                                    <field name="for_write" />
+                                    <field name="for_create" />
+                                    <field name="for_unlink" />
                                 </list>
                             </field>
                         </page>

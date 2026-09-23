@@ -1266,14 +1266,11 @@ class TestDeviceLogGC(TransactionCase):
 
 class TestAccessesCount(UsersCommonCase):
     def test_counts_match_relational_reads(self):
-        # the counters still read the retired access lines and rules, which
-        # base's 1.97 migration emptied: they agree with the relations and
-        # count nothing until they read ir.access
         user = self.user_internal
         groups = user.all_group_ids
         self.assertEqual(user.groups_count, len(groups))
-        self.assertEqual(user.accesses_count, len(groups.model_access))
-        self.assertEqual(user.rules_count, len(groups.rule_groups))
+        self.assertEqual(user.accesses_count, len(groups.access_ids))
+        self.assertTrue(user.accesses_count)
 
 
 class TestWriteCacheInvalidation(UsersCommonCase):

@@ -39,7 +39,7 @@ class PaymentTransaction(models.Model):
         string="Provider Code",
     )
     company_id = fields.Many2one(
-        # Indexed to speed-up ORM searches (from ir_rule or others)
+        # Indexed to speed-up ORM searches (from ir.access or others)
         related="provider_id.company_id",
     )
     payment_method_id = fields.Many2one(
