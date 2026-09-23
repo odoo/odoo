@@ -2242,6 +2242,31 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_changed_price_with_lots', login="accountman")
 
+    def test_settled_line_price_is_not_crossed_out(self):
+        """
+        The french module crosses out the price when the cashier changed it. The
+        price of a settled line comes from the sale order, so it must not be
+        crossed out.
+        """
+        if not self.env["ir.module.module"].search([("name", "=", "l10n_fr_pos_cert"), ("state", "=", "installed")]):
+            self.skipTest("l10n_fr_pos_cert module is required for this test")
+        self.main_pos_config.company_id.sudo().country_id = self.env.ref('base.fr')
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'lst_price': 100.0,
+            'taxes_id': False,
+        })
+        self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'price_unit': product.lst_price,
+            })],
+        })
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settled_line_price_is_not_crossed_out', login="accountman")
+
     def test_advance_payment_with_extra_lines(self):
         so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
