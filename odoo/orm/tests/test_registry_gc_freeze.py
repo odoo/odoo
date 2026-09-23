@@ -81,3 +81,30 @@ def test_a_registry_evicted_for_capacity_thaws_the_heap():
         Registry.registries.count = count
         for db_name, registry in saved.items():
             Registry.registries[db_name] = registry
+
+
+def test_a_frozen_registry_evicted_for_capacity_is_collected():
+    import gc
+    import weakref
+
+    saved = Registry.registries.snapshot
+    count = Registry.registries.count
+    try:
+        Registry.registries.clear()
+        Registry.registries.count = 1
+        victim = object.__new__(Registry)
+        object.__setattr__(victim, "_cycle", [victim])
+        alive = weakref.ref(victim)
+        Registry.registries[DB] = victim
+        del victim
+        gc.freeze()
+        with patch.object(reg_mod, "remove_counters"):
+            Registry.registries[DB + "_next"] = object.__new__(Registry)
+        gc.collect()
+        assert alive() is None
+    finally:
+        gc.unfreeze()
+        Registry.registries.clear()
+        Registry.registries.count = count
+        for db_name, registry in saved.items():
+            Registry.registries[db_name] = registry
