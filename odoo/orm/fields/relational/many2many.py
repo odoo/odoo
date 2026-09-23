@@ -496,7 +496,10 @@ class Many2many(_RelationalMulti):
             records_commands_list, comodel, old_relation, new_relation
         )
 
-        if not model.env.su:
+        if self.store and not model.env.su:
+            # a field with no table of its own writes no link row: the values
+            # it puts in cache are a computed projection of a stored field,
+            # which is checked where it is written
             _debug.logic(
                 "field.many2many.new_links_access_checked",
                 model=self.model_name,

@@ -229,9 +229,11 @@ class MailTemplate(models.Model):
         domain=[("abstract", "=", False)],
         ondelete="cascade",
     )
-    model = fields.Char(
+    model = fields.Char(  # noqa: E8529  the column carries mail.template's own read check: computed, related_sudo makes every reader of it bypass the ACL
         related="model_id.model",
         string="Related Document Model",
+        store=True,
+        index=True,
         readonly=True,
     )
     subject = fields.Char(

@@ -203,9 +203,20 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
                 test_phone_records - test_phone_records[:5],
             ),
             ("101", test_phone_records[1], test_phone_records - test_phone_records[1]),
-            # not ilike is not the inverse with formatting but hey, that's not easy to do
-            ("+32475", test_phone_records[5:8], test_phone_records),
-            ("0032475", test_phone_records[5:8], test_phone_records),
+            # the sanitized form is searched beside the raw one, so a prefix
+            # short enough to match every +32475… number says nothing: these
+            # two carry the prefix far enough to name the records that hold it,
+            # and the duplicates that share their number row
+            (
+                "+32475110",
+                test_phone_records[5:8] + self.dupes,
+                test_phone_records - test_phone_records[5:8] - self.dupes,
+            ),
+            (
+                "0032475110",
+                test_phone_records[5:8] + self.dupes,
+                test_phone_records - test_phone_records[5:8] - self.dupes,
+            ),
         ]:
             # test ilike search
             with self.subTest(source=source, operator="ilike"):

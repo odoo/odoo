@@ -426,7 +426,8 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         # 21 -> 22: a company's report layout is a report.config row (odoo
         # 361b8d3c6d7c); rendering the report reads it once, found and filled
         # in one query by `mixin.company.config._for_each`.
-        with self.with_user(self.user_employee.login), self.assertQueryCount(22):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.with_user(self.user_employee.login), self.assertQueryCount(23):
             mail_id = self.test_template_wreports.with_env(self.env).send_mail(
                 self.test_record.id
             )
@@ -458,7 +459,8 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         # 149 -> 150 for the same one query as test_template_send_email_wreport
         # above: the tracked `phone_ids` relation read. Same delta, same cause.
         # 51 -> 52: the report.config read, as above.
-        with self.with_user(self.user_employee.login), self.assertQueryCount(52):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.with_user(self.user_employee.login), self.assertQueryCount(53):
             template = self.test_template_wreports.with_env(self.env)
             mails_sudo = template.send_mail_batch(self.test_records_batch.ids)
 

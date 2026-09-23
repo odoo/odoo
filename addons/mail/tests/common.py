@@ -2381,6 +2381,12 @@ class MailCommon(MailCase):
                     "email": "test.admin@test.example.com",
                     "name": "Mitchell Admin",
                     "notification_type": "inbox",
+                }
+            )
+            # the number belongs to the partner: a command list on the user's
+            # related phone_ids has no stored field to land on and is dropped
+            cls.partner_admin.write(
+                {
                     "phone_ids": [
                         Command.create({"number": "0455135790", "type": "landline"})
                     ],

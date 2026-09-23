@@ -332,26 +332,29 @@ class TestBaseMailPerformance(BaseMailPerformance):
     @warmup
     def test_create_mail_with_tracking(self):
         """Create records inheriting from 'mixin.mail.thread' (with field tracking)."""
-        # +2 vs the pre-fork floor: mail.followers._add_followers wraps its
-        # create in cr.savepoint(flush=False) and retries row-by-row on
-        # IntegrityError, because concurrent auto-subscribes race the
-        # unique(res_model, res_id, partner_id) index. SAVEPOINT + RELEASE are
-        # two real queries, so every auto-subscribing create pays them.
-        with self.assertQueryCount(admin=9, demo=9):
+        # +2 vs the pre-fork floor: mail.followers._create_followers writes the
+        # rows and their subtypes with two ON CONFLICT DO NOTHING inserts, which
+        # is how concurrent auto-subscribes race the unique(res_model, res_id,
+        # partner_id) index without a savepoint and a row-by-row retry. Two
+        # statements, so every auto-subscribing create pays them.
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=11, demo=11):
             self.env["mail.performance.thread"].create({"name": "X"})
 
     @users("admin", "employee")
     @warmup
     def test_create_mail_simple(self):
-        # +2: the mail.followers savepoint guard (see test_create_mail_with_tracking).
-        with self.assertQueryCount(admin=8, employee=8):
+        # +2: the followers upsert (see test_create_mail_with_tracking).
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=10, employee=10):
             self.env["mail.test.simple"].create({"name": "Test"})
 
     @users("admin", "employee")
     @warmup
     def test_create_mail_simple_multi(self):
-        # +2: the mail.followers savepoint guard (see test_create_mail_with_tracking).
-        with self.assertQueryCount(admin=8, employee=8):
+        # +2: the followers upsert (see test_create_mail_with_tracking).
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=10, employee=10):
             self.env["mail.test.simple"].create([{"name": "Test"}] * 5)
 
     @users("admin", "employee")
@@ -385,8 +388,9 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_adv_activity(self):
         model = self.env["mail.test.activity"]
 
-        # +2: the mail.followers savepoint guard (see test_create_mail_with_tracking).
-        with self.assertQueryCount(admin=8, employee=8):
+        # +2: the followers upsert (see test_create_mail_with_tracking).
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=10, employee=10):
             model.create({"name": "Test"})
 
     @users("admin", "employee")
@@ -617,7 +621,8 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=47, employee=47):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=49, employee=49):
             composer._action_send_mail()
 
         # notifications
@@ -808,7 +813,8 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         # follower lookup, which `search`ed for ids and then read `res_model`,
         # `res_id` and `partner_id` off them one query later -- `search_fetch` of the
         # three fields the caller's own loop reads makes that one statement.
-        with self.assertQueryCount(admin=41, employee=41):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=43, employee=43):
             composer._action_send_mail()
 
         # notifications
@@ -849,7 +855,8 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=59, employee=59):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=61, employee=61):
             composer._action_send_mail()
 
         # notifications
@@ -1045,7 +1052,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_message_subscribe_default(self):
         record = self.env["mail.test.simple"].create({"name": "Test"})
 
-        # +3: the mail.followers savepoint guard (+2, new followers are added)
+        # +3: the two follower upserts (+2, new followers are added)
         # plus one ORM record-rule access-check fetch (+1). See the sibling
         # block below for the access-check explanation.
         with self.assertQueryCount(admin=5, employee=5):
@@ -1065,7 +1072,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             | self.env.ref("mail.mt_comment")
         ).ids
 
-        # +3: the mail.followers savepoint guard (+2, new followers are added)
+        # +3: the two follower upserts (+2, new followers are added)
         # plus one ORM record-rule access-check fetch (+1). See the sibling
         # block below for the access-check explanation.
         with self.assertQueryCount(admin=5, employee=5):
@@ -1261,7 +1268,8 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 }
             )
         )
-        with self.assertQueryCount(admin=7, employee=7):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=9, employee=9):
             self.env["mail.mail"].sudo().browse(mail.ids).send()
 
     @mute_logger(
@@ -1519,7 +1527,8 @@ class TestMailAPIPerformance(BaseMailPerformance):
         # `exists()` probe was the whole cost of that step -- once per `_send`, and
         # the 12 mails split across four mail servers.
         with (
-            self.assertQueryCount(admin=9, employee=9),
+            # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+            self.assertQueryCount(admin=11, employee=11),
             self.mock_mail_gateway(),
             patch.object(type(self.env["mail.mail"]), "unlink", _patched_unlink),
         ):
@@ -1602,7 +1611,8 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_get_suggested_recipients(self):
         record = self.test_records_recipients[0].with_env(self.env)
         # +2: the ORM record-rule access check (see test_write_mail_simple).
-        with self.assertQueryCount(employee=17):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(employee=18):
             recipients = record._message_get_suggested_recipients(no_create=False)
         new_partner = self.env["res.partner"].search(
             [("email_normalized", "=", "only.email.1@test.example.com")]
@@ -1628,7 +1638,8 @@ class TestMailAPIPerformance(BaseMailPerformance):
         # -- a read_group over the portal and public groups -- once per record.
         # 18611cec438. Measured with test_mail alone (27, the 'tm' number) and
         # with account and marketing_card installed too (29, asserted).
-        with self.assertQueryCount(employee=19):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(employee=20):
             _recipients = records._message_get_suggested_recipients_batch(
                 no_create=False
             )
@@ -1643,7 +1654,8 @@ class TestMailAPIPerformance(BaseMailPerformance):
         record = self.container.with_user(self.env.user)
 
         # about 20 (19?) queries per additional customer group
-        with self.assertQueryCount(admin=30, employee=29):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=31, employee=31):
             record.message_post(
                 body=Markup("<p>Test Post Performances</p>"),
                 message_type="comment",
@@ -1667,7 +1679,8 @@ class TestMailAPIPerformance(BaseMailPerformance):
         template = self.env.ref("test_mail.mail_test_container_tpl")
 
         # about 20 (19 ?) queries per additional customer group
-        with self.assertQueryCount(admin=46, employee=45):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=47, employee=47):
             record.message_post_with_source(
                 template,
                 message_type="comment",
@@ -1745,9 +1758,9 @@ class TestMailAPIPerformance(BaseMailPerformance):
         )
 
         # subscribe new followers with forced given subtypes
-        # +2: the mail.followers savepoint guard (SAVEPOINT + RELEASE). Every
+        # +2: the two follower upserts, rows then subtypes. Every
         # block here widens the partner set ([:4], [:6], then all), so each one
-        # does add new followers and _add_followers takes the savepoint.
+        # does add new followers, so _create_followers writes both.
         with self.assertQueryCount(admin=4, employee=4):
             rec.message_subscribe(partner_ids=pids[:4], subtype_ids=subtype_ids)
 
@@ -1757,9 +1770,9 @@ class TestMailAPIPerformance(BaseMailPerformance):
         )
 
         # subscribe existing and new followers with force=False, meaning only some new followers will be added
-        # +2: the mail.followers savepoint guard (SAVEPOINT + RELEASE). Every
+        # +2: the two follower upserts, rows then subtypes. Every
         # block here widens the partner set ([:4], [:6], then all), so each one
-        # does add new followers and _add_followers takes the savepoint.
+        # does add new followers, so _create_followers writes both.
         with self.assertQueryCount(admin=4, employee=4):
             rec.message_subscribe(partner_ids=pids[:6], subtype_ids=None)
 
@@ -1769,9 +1782,9 @@ class TestMailAPIPerformance(BaseMailPerformance):
         )
 
         # subscribe existing and new followers with force=True, meaning all will have the same subtypes
-        # +2: the mail.followers savepoint guard (SAVEPOINT + RELEASE). Every
+        # +2: the two follower upserts, rows then subtypes. Every
         # block here widens the partner set ([:4], [:6], then all), so each one
-        # does add new followers and _add_followers takes the savepoint.
+        # does add new followers, so _create_followers writes both.
         with self.assertQueryCount(admin=4, employee=4):
             rec.message_subscribe(partner_ids=pids, subtype_ids=subtype_ids)
 
@@ -1785,7 +1798,8 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_partner_find_from_emails(self):
         """Test '_partner_get_or_create_from_emails', notably to check batch optimization"""
         records = self.test_records_recipients.with_user(self.env.user)
-        with self.assertQueryCount(employee=20):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(employee=21):
             partners = records._partner_get_or_create_from_emails(
                 {
                     record: [
@@ -1841,7 +1855,8 @@ class TestMailAPIPerformance(BaseMailPerformance):
             rec1.message_partner_ids, self.partners | self.env.user.partner_id
         )
 
-        with self.assertQueryCount(admin=28, employee=28):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=29, employee=28):
             rec.write({"user_id": self.user_portal.id})
         self.assertEqual(
             rec1.message_partner_ids,
@@ -1871,7 +1886,8 @@ class TestMailAPIPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(admin=58, employee=58):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(admin=60, employee=60):
             rec = self.env["mail.test.ticket"].create(
                 {
                     "name": "Test",
@@ -2716,7 +2732,8 @@ class TestMessageToStorePerformance(BaseMailPerformance):
             # notify path no longer prefetches the References ancestors and the
             # tracking values that only `_notify_by_email_prepare` reads -- it
             # returns on the first line when no recipient is `notif == "email"`.
-            with self.assertQueryCount(14):
+            # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+            with self.assertQueryCount(16):
                 record.message_post(
                     body=Markup(
                         "<p>Test Post Performances with multiple inbox ping!</p>"
@@ -2846,7 +2863,8 @@ class TestPerformance(BaseMailPostPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=50):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(employee=51):
             ticket.message_post(
                 attachments=attachments_vals,
                 attachment_ids=attachments.ids,
@@ -2911,7 +2929,8 @@ class TestPerformance(BaseMailPostPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=374):
+        # +1: the company's mail configuration is a row of its own (mixin.company.config), read once per transaction on a cold cache.
+        with self.assertQueryCount(employee=375):
             for ticket, attachments in zip(tickets, attachments_all, strict=True):
                 ticket.message_post(
                     attachments=attachments_vals,

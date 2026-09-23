@@ -44,6 +44,20 @@ class TestMessageController(HttpCaseWithUserDemo):
         cls.guest = cls.env["mail.guest"].create({"name": "Guest"})
         cls.channel._add_members(guests=cls.guest)
 
+    def assertStoreAttachments(self, actual, expected, message):
+        # a module downstream of mail may add keys of its own through
+        # _to_store_defaults (mail_speech adds can_transcribe), so compare the
+        # payload mail itself owns rather than assert nothing else is installed
+        self.assertEqual(len(actual), len(expected), message)
+        self.assertEqual(
+            [
+                {key: value for key, value in payload.items() if key in owned}
+                for payload, owned in zip(actual, expected, strict=True)
+            ],
+            expected,
+            message,
+        )
+
     @mute_logger("odoo.addons.http_routing.models.ir_http", "odoo.http")
     def test_channel_message_attachments(self):
         self.authenticate(None, None)
@@ -93,32 +107,31 @@ class TestMessageController(HttpCaseWithUserDemo):
         )
         self.assertEqual(res2.status_code, 200)
         data1 = res2.json()["result"]
-        self.assertEqual(
+        expected_attachment = [
+            {
+                "checksum": False,
+                "create_date": fields.Datetime.to_string(
+                    self.attachments[0].create_date
+                ),
+                "file_size": 0,
+                "has_thumbnail": False,
+                "id": self.attachments[0].id,
+                "mimetype": "application/octet-stream",
+                "name": "File 1",
+                "ownership_token": self.attachments[0]._get_ownership_token(),
+                "raw_access_token": self.attachments[0]._get_raw_access_token(),
+                "res_name": "Test channel",
+                "res_model": self.attachments[0].res_model,
+                "thread": {"id": self.channel.id, "model": "discuss.channel"},
+                "thumbnail_access_token": self.attachments[0]._get_thumbnail_token(),
+                "voice_ids": [],
+                "type": "binary",
+                "url": False,
+            },
+        ]
+        self.assertStoreAttachments(
             data1["store_data"]["ir.attachment"],
-            [
-                {
-                    "checksum": False,
-                    "create_date": fields.Datetime.to_string(
-                        self.attachments[0].create_date
-                    ),
-                    "file_size": 0,
-                    "has_thumbnail": False,
-                    "id": self.attachments[0].id,
-                    "mimetype": "application/octet-stream",
-                    "name": "File 1",
-                    "ownership_token": self.attachments[0]._get_ownership_token(),
-                    "raw_access_token": self.attachments[0]._get_raw_access_token(),
-                    "res_name": "Test channel",
-                    "res_model": self.attachments[0].res_model,
-                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
-                    "thumbnail_access_token": self.attachments[
-                        0
-                    ]._get_thumbnail_token(),
-                    "voice_ids": [],
-                    "type": "binary",
-                    "url": False,
-                },
-            ],
+            expected_attachment,
             "guest should be allowed to add attachment with token when posting message",
         )
         res3 = self.url_open(
@@ -163,7 +176,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         )
         self.assertEqual(res4.status_code, 200)
         data2 = res4.json()["result"]
-        self.assertEqual(
+        self.assertStoreAttachments(
             data2["ir.attachment"],
             [
                 {

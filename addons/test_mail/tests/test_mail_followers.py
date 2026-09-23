@@ -2282,11 +2282,12 @@ class UnfollowLinkTest(MailCommon, HttpCase):
     def _test_tampered_unfollow_url(self, record, unfollow_url, partner):
         """Test that tampered urls doesn't work.
 
-        Test that:
-        - when the following parameters are altered, the browsing the URL returns
-        a 403 and doesn't unsubscribe the partner.
-        - when trying to use the same URL with another partner, it also returns a
-        403 and doesn't unsubscribe the other partner.
+        The link is a receiver route (auth="receiver"), so the inbound gate
+        answers before the controller does: 401 when it resolves the subject
+        and the signature does not verify, 404 when the tampered value names no
+        record it can resolve. Which of the two a tampered id draws depends on
+        whether that id exists, so both count as refused here. Either way the
+        partner stays subscribed.
         """
         for param, value in (
             ("token", "0000000000000000000000000000000000000000"),
@@ -2299,7 +2300,7 @@ class UnfollowLinkTest(MailCommon, HttpCase):
                     unfollow_url, **{param: value}
                 )
                 response = self.url_open(tampered_unfollow_url)
-                self.assertEqual(response.status_code, 403)
+                self.assertIn(response.status_code, (401, 404))
                 self.assertIn(partner, record.message_partner_ids)
 
     def _test_unfollow_url(self, record, unfollow_url, partner):

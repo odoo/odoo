@@ -1203,11 +1203,15 @@ class TestDetachedCopyIsolation(TransactionCase):
             copied, _Session()
         )
 
+        # the two are prepared a moment apart, so their Date headers differ
+        # whenever the second ticks between them, as does the MIME boundary
         boundary = re.compile(rb"===============\d+==")
-        self.assertEqual(
-            boundary.sub(b"B", in_place.as_bytes()),
-            boundary.sub(b"B", prepared.as_bytes()),
-        )
+        date = re.compile(rb"Date: [^\r\n]+")
+
+        def stamped_alike(message):
+            return date.sub(b"Date: D", boundary.sub(b"B", message.as_bytes()))
+
+        self.assertEqual(stamped_alike(in_place), stamped_alike(prepared))
 
 
 @tagged("post_install", "-at_install")

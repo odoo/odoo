@@ -40,10 +40,17 @@ class MailAliasDomain(models.Model):
         required=True,
         help="Email domain e.g. 'example.com' in 'odoo@example.com'",
     )
-    company_ids: ResCompany = fields.One2many(
-        comodel_name="res.company",
+    config_ids = fields.One2many(
+        comodel_name="mail.config",
         inverse_name="alias_domain_id",
+        string="Mail Configurations",
+    )
+    company_ids: ResCompany = fields.Many2many(
+        comodel_name="res.company",
         string="Companies",
+        compute="_compute_company_ids",
+        inverse="_inverse_company_ids",
+        search="_search_company_ids",
         help="Companies using this domain as default for sending mails",
     )
     sequence = fields.Integer(default=10)
@@ -81,6 +88,30 @@ class MailAliasDomain(models.Model):
         "UNIQUE(catchall_alias, name)",
         "Catchall emails should be unique",
     )
+
+    @api.depends("config_ids.company_id")
+    def _compute_company_ids(self) -> None:
+        # the company's domain lives on its mail.config, so the companies using
+        # a domain are the owners of the configurations that name it: a
+        # one2many on res.company would hang off a field that is no longer a
+        # column, and the ORM could neither fill nor invalidate it
+        for domain in self:
+            domain.company_ids = domain.config_ids.company_id.sorted("id")
+
+    def _inverse_company_ids(self) -> None:
+        Config = self.env["mail.config"]
+        for domain in self:
+            using = domain.config_ids.company_id
+            if added := domain.company_ids - using:
+                Config.sudo()._for_each(added).alias_domain_id = domain.id
+            if dropped := using - domain.company_ids:
+                Config.sudo()._for_each(dropped).alias_domain_id = False
+
+    def _search_company_ids(self, operator, value):
+        configs = (
+            self.env["mail.config"].sudo().search([("company_id", operator, value)])
+        )
+        return [("id", "in", configs.alias_domain_id.ids)]
 
     @api.depends("bounce_alias", "name")
     def _compute_bounce_email(self) -> None:
