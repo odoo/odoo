@@ -152,9 +152,12 @@
     }
 }
 
-.o_datetime_picker .o_day_of_week_cell,
-.o_datetime_picker .o_week_number_cell {
-    background-color: $o-gray-100 !important;
+.o_datetime_picker {
+    --DateTimePicker__day-week-cell-bg: #{fade-currentColor(6%)};
+    --DateTimePicker__day-selected-color: #{$primary-text-emphasis};
+    --DateTimePicker__day-selected-bg: #{$primary-bg-subtle};
+    --DateTimePicker__day-range-bg: #{mix($primary, $primary-bg-subtle, 25%)};
+    --DateTimePicker__date-cell-border-color-active: #{fade-currentColor(60%)};
 }
 
 body:not(.editor_enable) .s_website_form[data-vcss="001"] {
