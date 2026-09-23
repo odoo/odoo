@@ -72,7 +72,7 @@ class MailTrackMixin(models.AbstractModel):
         self.env.cr.precommit.add(self._track_finalize)
 
         initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
-        for record in self.sudo().filtered(lambda r: r.id):  # be sure to compute initial values whatever current user ACLs
+        for record in self.sudo().filtered(lambda r: r.id)._fallback_lang():  # be sure to compute initial values whatever current user ACLs
             record_values = initial_values.setdefault(record.id, {})
             if record_values is not None:  # None means tracking was disabled for this record
                 for fname in tracked_fnames:
