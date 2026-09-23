@@ -7826,6 +7826,20 @@ test("field (with help) tooltip in non debug mode", async function () {
 });
 
 test.tags("desktop");
+test("field (with help) tooltip displays the label of the arch", async function () {
+    Foo._fields.foo.help = "This is a foo field";
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `<list><field name="foo" string="Custom"/></list>`,
+    });
+    await hover(`th[data-name="foo"] div`);
+    await runAllTimers();
+    expect(`.o-tooltip`).toHaveCount(1);
+    expect(`.o-tooltip`).toHaveText("Custom\nThis is a foo field");
+});
+
+test.tags("desktop");
 test(`no tooltip on a column header if its label is entirely displayed`, async () => {
     await mountView({
         resModel: "foo",
