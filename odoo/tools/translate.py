@@ -515,7 +515,10 @@ def html_term_converter(value: str) -> str:
 
 
 def get_text_content(term: str) -> str:
-    content = html.fromstring(term).text_content()
+    try:
+        content = html.fromstring(term).text_content()
+    except etree.ParserError:
+        return ""
     return " ".join(content.split())
 
 
@@ -560,6 +563,9 @@ html_translate = TranslationDialect(
 
 FIELD_TRANSLATE["html_translate"] = html_translate
 FIELD_TRANSLATE["xml_translate"] = xml_translate
+
+
+_POSITIONAL_PLACEHOLDER = re.compile(r"%(?!\()")
 
 
 def _is_iterable_arg(value: object) -> bool:
@@ -632,7 +638,9 @@ def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> 
         else:
             args = tuple(translate_arg(v) for v in args)
     try:
-        if isinstance(args, dict) and "%(" not in translation:
+        if isinstance(args, dict) and _POSITIONAL_PLACEHOLDER.search(
+            translation.replace("%%", "")
+        ):
             msg = "translation uses positional placeholders but args is a mapping"
             raise TypeError(msg)
         return translation % args
