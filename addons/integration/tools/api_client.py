@@ -1046,7 +1046,7 @@ class OutboundAPIClient:
             return {}
         by_provenance = {
             key: (
-                "***REDACTED***"
+                redact.MASK
                 if str(key).lower() in self._credential_header_names
                 else value
             )

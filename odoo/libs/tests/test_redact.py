@@ -1,4 +1,5 @@
 import re
+import time
 
 import pytest
 
@@ -96,3 +97,115 @@ class TestFindSecretShapes:
 
     def test_nothing_is_reported_for_ordinary_notes(self):
         assert redact.find_secret_shapes("rotate every quarter") == []
+
+
+class TestLeaksClosed:
+    @pytest.mark.parametrize("scheme", ["Bearer", "Basic", "Digest"])
+    def test_the_credential_after_an_authorization_scheme_is_masked(self, scheme):
+        masked = redact.mask_text(f"Authorization: {scheme} eyJhbGciOi.payload.sig")
+        assert "eyJhbGciOi" not in masked
+        assert masked == f"Authorization: {scheme} {redact.MASK}"
+
+    def test_a_bearer_token_without_a_label_is_masked(self):
+        masked = redact.mask_text("vendor echoed Bearer abcdefghijkl123 back")
+        assert "abcdefghijkl123" not in masked
+        assert "Bearer" in masked
+
+    def test_a_quoted_json_key_does_not_shield_its_value(self):
+        masked = redact.mask_text(
+            '{"password": "hunter 2", "api_key": "k", "u": "ann"}'
+        )
+        assert "hunter" not in masked
+        assert '"k"' not in masked
+        assert '"u": "ann"' in masked
+
+    def test_a_quoted_value_cut_off_by_truncation_is_masked(self):
+        assert "hunter" not in redact.mask_text('{"password": "hunter2')
+
+    def test_a_suffixed_secret_key_is_masked(self):
+        masked = redact.mask_text("aws_secret_access_key=AbC123 secret_key=x9")
+        assert "AbC123" not in masked
+        assert "x9" not in masked
+
+    def test_a_url_fragment_loses_its_secret_pairs(self):
+        masked = redact.mask_url("https://x.invalid/cb#access_token=abc123&state=s")
+        assert "abc123" not in masked
+        assert "state=s" in masked
+
+    def test_a_masked_url_keeps_its_own_encoding(self):
+        assert redact.mask_url("https://h.invalid/p?q=a%20b&token=x") == (
+            f"https://h.invalid/p?q=a%20b&token={redact.MASK}"
+        )
+
+    @pytest.mark.parametrize(
+        "pem",
+        [
+            "-----BEGIN PRIVATE KEY-----\nMIIE\n-----END PRIVATE KEY-----",
+            "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIE\n-----END ENCRYPTED PRIVATE KEY-----",
+        ],
+    )
+    def test_a_pkcs8_private_key_is_found_and_masked(self, pem):
+        assert redact.find_secret_shapes(pem) == ["private_key_pem"]
+        assert "MIIE" not in redact.mask_text(pem)
+
+    @pytest.mark.parametrize(
+        "secret",
+        [
+            "sk-proj-" + "a" * 40,
+            "sk-ant-api03-" + "b" * 80,
+            "sk_live_" + "c" * 24,
+        ],
+    )
+    def test_a_prefixed_vendor_key_is_found_and_masked(self, secret):
+        assert secret not in redact.mask_text(f"key {secret} rejected")
+        assert redact.find_secret_shapes(secret)
+
+
+class TestKeyBoundaries:
+    @pytest.mark.parametrize("key", ["author", "author_id", "oauth_provider_name"])
+    def test_a_word_that_merely_contains_auth_is_not_sensitive(self, key):
+        assert not redact.is_sensitive_key(key)
+
+    @pytest.mark.parametrize(
+        "key", ["auth", "x-auth", "authToken", "AuthHeader", "accessToken", "apiKey"]
+    )
+    def test_auth_as_a_word_and_camel_case_secrets_are_sensitive(self, key):
+        assert redact.is_sensitive_key(key)
+
+    def test_an_author_label_in_text_keeps_its_value(self):
+        assert redact.mask_text("author: Bob") == "author: Bob"
+
+    def test_a_token_count_is_not_a_token(self):
+        assert redact.mask_text("prompt_tokens: 120") == "prompt_tokens: 120"
+
+
+class TestDataLeaves:
+    def test_a_string_leaf_is_masked_as_text(self):
+        data = {"message": "password=hunter2", "url": "https://h.invalid/?token=abc"}
+        masked = redact.mask_data(data)
+        assert "hunter2" not in masked["message"]
+        assert "abc" not in masked["url"]
+
+    def test_a_name_value_pair_is_masked_by_its_name(self):
+        data = [{"name": "api_key", "value": "sk-live-xyz"}, {"name": "q", "value": 1}]
+        assert redact.mask_data(data) == [
+            {"name": "api_key", "value": redact.MASK},
+            {"name": "q", "value": 1},
+        ]
+
+    def test_header_tuples_are_walked(self):
+        data = [("Authorization", "Bearer abc"), ("Accept", "text/plain")]
+        assert redact.mask_data(data) == [
+            ("Authorization", redact.MASK),
+            ("Accept", "text/plain"),
+        ]
+
+    def test_a_set_of_strings_is_walked(self):
+        assert redact.mask_data({"token=abc"}) == {f"token={redact.MASK}"}
+
+
+def test_a_key_followed_by_a_run_of_separators_is_linear():
+    start = time.perf_counter()
+    redact.mask_text("password" + "_" * 5000 + "!")
+    redact.mask_text("secret" + "-_" * 5000 + "!")
+    assert time.perf_counter() - start < 1.0
