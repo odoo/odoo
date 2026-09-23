@@ -369,7 +369,7 @@ export class AnalyticDistribution extends Component {
         if (this.props.force_applicability) {
             args['applicability'] = this.props.force_applicability;
         }
-        const existing_account_ids = Object.keys(record.data[this.props.name]).map((k) => k.split(",")).flat().map((i) => parseInt(i));
+        const existing_account_ids = Object.keys(record.data[this.props.name]).map((k) => k.split(",")).flat().map((i) => parseInt(i)).filter(Boolean);
         if (existing_account_ids.length) {
             args['existing_account_ids'] = existing_account_ids;
         }
