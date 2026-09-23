@@ -137,8 +137,6 @@ Defaults, from `odoo/tools/config.py`:
 | `limit_request` | `65536` | requests a worker serves before it is recycled |
 | `limit_memory_soft` | `2048 MB` | RSS above this stops the worker *after* the current request; the only memory limit the process enforces |
 | `limit_memory_soft_gevent` | `None` | overrides `limit_memory_soft` on the `WebsocketServer` path only |
-| `limit_memory_hard` | `2560 MB` | **deprecated, enforced by nothing in-process** — see below |
-| `limit_memory_hard_gevent` | `None` | the `WebsocketServer` twin of the row above, and enforced by nothing for the same reason |
 | `limit_time_cpu` | `60 s` | CPU time per request |
 | `limit_time_real` | `120 s` | wall time per request |
 | `limit_time_real_cron` | `-1` | wall time per cron job; `-1` defers to `limit_time_real` |
@@ -155,18 +153,16 @@ current request. A fourth site reads the value for an unrelated purpose:
 `lifecycle.py::_limit_resident_registries` divides it by the average registry
 size to bound how many registries are held at once.
 
-`limit_memory_hard` is read **nowhere in `odoo/service/`**. There is no
-in-process `RLIMIT_AS`: the allocator and the thread stacks reserve multi-GB of
-never-resident virtual address space, which that rlimit counts and RSS does
-not. `config.py`'s help says "Deprecated/not enforced in-process" and directs
-the hard cap to a cgroup v2 limit on the systemd unit (`MemoryMax=` with
-`MemorySwapMax=0`).
+`limit_memory_hard` and `limit_memory_hard_gevent` are **retired options**: no
+in-process `RLIMIT_AS` enforced them, because the allocator and the thread
+stacks reserve multi-GB of never-resident virtual address space, which that
+rlimit counts and RSS does not. A config file or command line that still names
+them loads, with a warning that they are ignored. The hard cap is a cgroup v2
+limit on the systemd unit (`MemoryMax=` with `MemorySwapMax=0`).
 
-A deployment sized on the 512 MB between the two has **no** hard ceiling unless
-the unit file supplies one: past the soft limit a worker finishes its request and
-exits, and a single request that allocates without bound is bounded by the OOM
-killer, not by Odoo. A number that reads as a guarantee because it has a default and a row in a
-table.
+A deployment has **no** hard ceiling unless the unit file supplies one: past the
+soft limit a worker finishes its request and exits, and a single request that
+allocates without bound is bounded by the OOM killer, not by Odoo.
 
 A deployment whose steady-state RSS is near the soft limit recycles constantly
 and pays a registry rebuild each time. `limit_request` exists because a

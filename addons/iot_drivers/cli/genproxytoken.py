@@ -27,7 +27,6 @@ class GenProxyToken(Command):
         # parsed argv the dispatcher had already consumed.
         args, _ = self.parser.parse_known_args(cmdargs)
         if args.config:
-            # `config.rcfile` is the pre-19.0 spelling; its setter warns.
             config["config"] = args.config
         token = self.generate_token(length=args.token_length)
         config["proxy_access_token"] = pbkdf2_sha512_hash(token)

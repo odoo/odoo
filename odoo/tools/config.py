@@ -12,15 +12,15 @@ import warnings
 from collections.abc import Callable, Iterator
 from os.path import expandvars, normcase
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
 import odoo
 from odoo import release
 from odoo.db.settings import PoolSettings
 from odoo.db.settings import provide as _provide_pool_settings
+from odoo.libs.collections import frozendict
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.filesystem import appdirs
-from odoo.libs.func import classproperty
 from odoo.libs.password import CryptContext
 
 if TYPE_CHECKING:
@@ -37,10 +37,14 @@ _debug = DebugLog(__name__)
 
 optparse._ = str  # type: ignore[attr-defined]
 
-ALL_DEV_MODE = ["access", "assets", "qweb", "reload", "xml"]
+ALL_DEV_MODE = ("access", "assets", "qweb", "reload", "xml")
 _MODULE_MAP_OPTIONS = frozenset({"init", "update"})
-DEFAULT_SERVER_WIDE_MODULES = ["base", "rpc", "web"]
-REQUIRED_SERVER_WIDE_MODULES = ["base", "web"]
+DEFAULT_SERVER_WIDE_MODULES = ("base", "rpc", "web")
+REQUIRED_SERVER_WIDE_MODULES = ("base", "web")
+_RETIRED_OPTIONS = frozenset(
+    {"csv_internal_sep", "limit_memory_hard", "limit_memory_hard_gevent", "reportgz"}
+)
+_RETIRED_CLI_OPTIONS = frozenset({"--limit-memory-hard", "--limit-memory-hard-gevent"})
 
 
 class _Empty:
@@ -69,42 +73,45 @@ class _OdooOption(optparse.Option):
         "smtp_ssl",
     )
 
-    @classproperty
-    def TYPE_CHECKER(self):
+    @classmethod
+    def bind(cls, config: Any) -> type[_OdooOption]:
         checkers = {
             "int": lambda _option, _opt, value: int(value),
             "float": lambda _option, _opt, value: float(value),
             "string": lambda _option, _opt, value: str(value),
             "choice": optparse.check_choice,
-            "bool": self.config._parse_bool,
-            "path": self.config._parse_path,
-            "comma": self.config._parse_comma,
-            "addons_path": self.config._parse_addons_path,
-            "upgrade_path": self.config._parse_upgrade_path,
-            "pre_upgrade_scripts": self.config._parse_scripts,
-            "smtp_ssl": self.config._check_smtp_ssl,
+            "bool": config._parse_bool,
+            "path": config._parse_path,
+            "comma": config._parse_comma,
+            "addons_path": config._parse_addons_path,
+            "upgrade_path": config._parse_upgrade_path,
+            "pre_upgrade_scripts": config._parse_scripts,
+            "smtp_ssl": config._check_smtp_ssl,
         }
-        return {
+        type_checker = {
             **{name: _accept_none(check) for name, check in checkers.items()},
-            "without_demo": self.config._parse_without_demo,
+            "without_demo": config._parse_without_demo,
         }
-
-    @classproperty
-    def TYPE_FORMATTER(self):
-        return {
-            "int": self.config._format_string,
-            "float": self.config._format_string,
-            "string": self.config._format_string,
-            "choice": self.config._format_string,
-            "bool": self.config._format_string,
-            "path": self.config._format_string,
-            "comma": self.config._format_list,
-            "addons_path": self.config._format_list,
-            "upgrade_path": self.config._format_list,
-            "pre_upgrade_scripts": self.config._format_list,
-            "smtp_ssl": self.config._format_string,
-            "without_demo": self.config._format_without_demo,
+        type_formatter = {
+            **dict.fromkeys(
+                ("int", "float", "string", "choice", "bool", "path", "smtp_ssl"),
+                config._format_string,
+            ),
+            **dict.fromkeys(
+                ("comma", "addons_path", "upgrade_path", "pre_upgrade_scripts"),
+                config._format_list,
+            ),
+            "without_demo": config._format_without_demo,
         }
+        return type(
+            "OdooOption",
+            (cls,),
+            {
+                "config": config,
+                "TYPE_CHECKER": type_checker,
+                "TYPE_FORMATTER": type_formatter,
+            },
+        )
 
     def __init__(self, *opts: str, **attrs: Any) -> None:
         self.my_default = attrs.pop("my_default", None)
@@ -270,6 +277,11 @@ class _CountingDict(dict[str, Any]):
         self._bump()
         return result
 
+    def __ior__(self, other: Any) -> Self:  # type: ignore[override,misc]
+        super().__ior__(other)
+        self._bump()
+        return self
+
 
 class configmanager:
     def __init__(self) -> None:
@@ -312,26 +324,8 @@ class configmanager:
         except SystemExit, ValueError:
             pass
 
-    @property
-    def rcfile(self) -> str:
-        self._warn(
-            "Since 19.0, use odoo.tools.config['config'] instead",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return self["config"]
-
-    @rcfile.setter
-    def rcfile(self, rcfile: str) -> None:
-        self._warn(
-            f"Since 19.0, use odoo.tools.config['config'] = {rcfile!r} instead",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        self._override_options["config"] = rcfile
-
     def _prepare_cli_parser(self) -> optparse.OptionParser:
-        OdooOption = type("OdooOption", (_OdooOption,), {"config": self})
+        OdooOption = _OdooOption.bind(self)
         FileOnlyOption = type("FileOnlyOption", (_FileOnlyOption, OdooOption), {})
         PosixOnlyOption = type("PosixOnlyOption", (_PosixOnlyOption, OdooOption), {})
 
@@ -366,7 +360,13 @@ class configmanager:
                 file_exportable=False,
             )
         )
-        parser.add_option(FileOnlyOption(dest="csv_internal_sep", my_default=","))
+        parser.add_option(
+            FileOnlyOption(
+                dest="db_replica_password",
+                my_default=None,
+                env_name="PGPASSWORD_REPLICA",
+            )
+        )
         parser.add_option(
             FileOnlyOption(
                 dest="default_productivity_apps",
@@ -429,9 +429,6 @@ class configmanager:
                 my_default="http://services.odoo.com/publisher-warranty/",
                 file_exportable=False,
             )
-        )
-        parser.add_option(
-            FileOnlyOption(dest="reportgz", action="store_true", my_default=False)
         )
         parser.add_option(
             FileOnlyOption(
@@ -612,7 +609,7 @@ class configmanager:
             dest="server_wide_modules",
             type="comma",
             metavar="MODULE,...",
-            my_default=DEFAULT_SERVER_WIDE_MODULES,
+            my_default=list(DEFAULT_SERVER_WIDE_MODULES),
             help="Comma-separated list of server-wide modules.",
         )
         group.add_option(
@@ -1073,15 +1070,6 @@ class configmanager:
             env_name="PGUSER_REPLICA",
             help="specify the replica database user, when it differs from the "
             "primary's. Empty (default) reuses db_user",
-        )
-        group.add_option(
-            "--db_replica_password",
-            dest="db_replica_password",
-            my_default=None,
-            env_name="PGPASSWORD_REPLICA",
-            cli_loadable=False,
-            help="specify the replica database password, when it differs from "
-            "the primary's. Empty (default) reuses db_password",
         )
         group.add_option(
             "--db_sslmode",
@@ -1548,30 +1536,6 @@ class configmanager:
         )
         group.add_option(
             PosixOnlyOption(
-                "--limit-memory-hard",
-                dest="limit_memory_hard",
-                my_default=2560 * 1024 * 1024,
-                help="Deprecated/not enforced in-process (default 2560MiB): the "
-                "in-process RLIMIT_AS was removed because the allocator/gevent "
-                "reserve multi-GB of never-resident virtual space. Set the hard "
-                "cap with a cgroup v2 limit on the systemd unit (MemoryMax= + "
-                "MemorySwapMax=0) instead; see --limit-memory-soft for recycling.",
-                type="int",
-            )
-        )
-        group.add_option(
-            PosixOnlyOption(
-                "--limit-memory-hard-gevent",
-                dest="limit_memory_hard_gevent",
-                my_default=None,
-                help="Deprecated/not enforced in-process (see --limit-memory-hard "
-                "for the rationale and the cgroup v2 alternative). Defaults to "
-                "`--limit-memory-hard`.",
-                type="int",
-            )
-        )
-        group.add_option(
-            PosixOnlyOption(
                 "--limit-time-cpu",
                 dest="limit_time_cpu",
                 my_default=60,
@@ -1661,15 +1625,6 @@ class configmanager:
 
         if os.name == "nt":
             rcfilepath = str(Path(str(Path(sys.argv[0]).resolve().parent), "odoo.conf"))
-        elif Path(rcfilepath := str(Path("~/.odoorc").expanduser())).is_file():
-            pass
-        elif Path(
-            rcfilepath := str(Path("~/.openerp_serverrc").expanduser())
-        ).is_file():
-            self._warn(
-                "Since ages ago, the ~/.openerp_serverrc file has been replaced by ~/.odoorc",
-                DeprecationWarning,
-            )
         else:
             rcfilepath = "~/.odoorc"
         self._default_options["config"] = self._normalize(rcfilepath)
@@ -1739,8 +1694,25 @@ class configmanager:
         )
         return opt
 
+    def _drop_retired_cli_options(self, args: list[str]) -> list[str]:
+        kept = []
+        skip_value = False
+        for arg in args:
+            if skip_value:
+                skip_value = False
+                continue
+            name = arg.partition("=")[0]
+            if name in _RETIRED_CLI_OPTIONS:
+                self._log(
+                    logging.WARNING, "option %s is retired and ignored; remove it", name
+                )
+                skip_value = "=" not in arg
+                continue
+            kept.append(arg)
+        return kept
+
     def _parse_config(self, args: list[str] | None = None) -> optparse.Values:
-        args = list(args) if args else []
+        args = self._drop_retired_cli_options(list(args) if args else [])
         for arg_no, arg in enumerate(args):
             if option := self.optional_options.get(arg):
                 if arg_no == len(args) - 1 or args[arg_no + 1].startswith("-"):
@@ -1785,7 +1757,12 @@ class configmanager:
         )
 
         if opt.save:
-            self.save()
+            try:
+                self.save()
+            except OSError as exc:
+                self.parser.error(
+                    f"couldn't save the configuration to {self['config']!r}: {exc}"
+                )
 
         return opt
 
@@ -1816,7 +1793,7 @@ class configmanager:
         environ = os.environ
         for option_name, option in self.options_index.items():
             env_name = option.env_name
-            if env_name and env_name in environ:
+            if env_name and environ.get(env_name):
                 try:
                     self._env_options[option_name] = self.parse(
                         option_name, environ[env_name]
@@ -1826,15 +1803,14 @@ class configmanager:
                         f"Invalid value for environment variable {env_name} "
                         f"(option {option_name!r}): {exc}"
                     ) from exc
-        if environ.get("OPENERP_SERVER"):
-            self._warn(
-                "Since ages ago, the OPENERP_SERVER environment variable has been replaced by ODOO_RC",
-                DeprecationWarning,
-            )
         _debug.lifecycle(
             "config.env_options_loaded",
             options=sorted(self._env_options),
-            legacy_openerp_server="OPENERP_SERVER" in environ,
+            empty=sorted(
+                option.env_name
+                for option in self.options_index.values()
+                if option.env_name and environ.get(option.env_name) == ""
+            ),
         )
 
     def _load_cli_options(self, opt: optparse.Values) -> None:
@@ -1882,7 +1858,9 @@ class configmanager:
 
     def _postprocess_server_wide_modules(self) -> None:
         if not self["server_wide_modules"]:
-            self._runtime_options["server_wide_modules"] = DEFAULT_SERVER_WIDE_MODULES
+            self._runtime_options["server_wide_modules"] = list(
+                DEFAULT_SERVER_WIDE_MODULES
+            )
         missing = [
             mod
             for mod in REQUIRED_SERVER_WIDE_MODULES
@@ -1896,9 +1874,10 @@ class configmanager:
                     mod,
                     self.options_index["server_wide_modules"],
                 )
-            self._runtime_options["server_wide_modules"] = (
-                missing + self["server_wide_modules"]
-            )
+            self._runtime_options["server_wide_modules"] = [
+                *missing,
+                *self["server_wide_modules"],
+            ]
         _debug.logic(
             "config.server_wide_modules",
             modules=self["server_wide_modules"],
@@ -1930,11 +1909,9 @@ class configmanager:
                 "explicitly."
             )
             init_modules = [m for m in init_modules if m != "all"]
-        self._runtime_options["init"] = dict.fromkeys(init_modules, True)
-        self._runtime_options["update"] = (
-            {"base": True}
-            if "all" in self["update"]
-            else dict.fromkeys(self["update"], True)
+        self._runtime_options["init"] = frozendict(dict.fromkeys(init_modules, True))
+        self._runtime_options["update"] = frozendict(
+            dict.fromkeys(["base"] if "all" in self["update"] else self["update"], True)
         )
         _debug.logic(
             "config.init_update",
@@ -1965,7 +1942,7 @@ class configmanager:
                 _debug.logic("config.dev_mode.replica_inferred_from_empty_host")
 
         if "all" in self["dev_mode"]:
-            self._runtime_options["dev_mode"] = self["dev_mode"] + ALL_DEV_MODE
+            self._runtime_options["dev_mode"] = [*self["dev_mode"], *ALL_DEV_MODE]
         _debug.logic(
             "config.dev_mode",
             modes=self["dev_mode"],
@@ -2038,6 +2015,14 @@ class configmanager:
             ).items():
                 if deprecated_value is EMPTY:
                     continue
+                if isinstance(deprecated_value, str):
+                    try:
+                        deprecated_value = self.parse(new_option_name, deprecated_value)
+                    except (ValueError, optparse.OptionValueError) as exc:
+                        self.parser.error(
+                            f"invalid value for the deprecated option "
+                            f"{old_option_name!r} in the {source_name}: {exc}"
+                        )
                 default_value = self._default_options[new_option_name]
                 current_value = self[new_option_name]
 
@@ -2059,9 +2044,7 @@ class configmanager:
                         "safely be removed.",
                     )
                 elif current_value == default_value:
-                    self._runtime_options[new_option_name] = self.parse(
-                        new_option_name, deprecated_value
-                    )
+                    self._runtime_options[new_option_name] = deprecated_value
                     self._warn(
                         f"The {old_option_name!r} option found in the "
                         f"{source_name} is a deprecated alias to "
@@ -2280,14 +2263,6 @@ class configmanager:
             format_func = option_class.TYPE_FORMATTER[option.type]
         return format_func(value)
 
-    def load(self) -> None:
-        self._warn(
-            "Since 19.0, use config._load_file_options instead",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        self._load_file_options(self["config"])
-
     def _server_wide_owners(self, p: configparser.RawConfigParser) -> list[str]:
         for options in (self._cli_options, self._env_options):
             if options.get("server_wide_modules"):
@@ -2342,6 +2317,16 @@ class configmanager:
                 if name == "without_demo":
                     name = "with_demo"
                     value = str(self._parse_without_demo(None, "without_demo", value))
+                if name in _RETIRED_OPTIONS:
+                    self._log(
+                        logging.WARNING,
+                        "option %r in the config file at %s is retired and "
+                        "ignored; remove it",
+                        name,
+                        rcfile,
+                    )
+                    skipped += 1  # debuglog
+                    continue
                 option = self.options_index.get(name)
                 if not option:
                     owner = next((m for m in owners if name.startswith(f"{m}_")), None)
@@ -2366,7 +2351,10 @@ class configmanager:
                     )
                     skipped += 1  # debuglog
                     continue
-                if value == "" and option.type in _TYPES_WITHOUT_AN_EMPTY_VALUE:
+                if value == "" and (
+                    option.type in _TYPES_WITHOUT_AN_EMPTY_VALUE
+                    or (option.type == "path" and self._default_options.get(name))
+                ):
                     _debug.logic(
                         "config.file.option_skipped", option=name, reason="empty_unset"
                     )
@@ -2437,21 +2425,12 @@ class configmanager:
             keys=None if keys is None else len(keys),
         )
 
-        try:
-            if not rc_exists and not Path(self["config"]).parent.exists():
-                Path(str(Path(self["config"]).parent)).mkdir(0o700, parents=True)
-            try:
-                cfg_path = Path(self["config"])
-                with open(
-                    cfg_path, "w", encoding="utf-8", opener=_open_private
-                ) as file:
-                    os.fchmod(file.fileno(), 0o600)
-                    p.write(file)
-            except OSError as exc:
-                sys.stderr.write(f"ERROR: couldn't write the config file: {exc}\n")
-
-        except OSError as exc:
-            sys.stderr.write(f"ERROR: couldn't create the config directory: {exc}\n")
+        cfg_path = Path(self["config"])
+        if not rc_exists and not cfg_path.parent.exists():
+            cfg_path.parent.mkdir(0o700, parents=True)
+        with open(cfg_path, "w", encoding="utf-8", opener=_open_private) as file:
+            os.fchmod(file.fileno(), 0o600)
+            p.write(file)
 
     @property
     def generation(self) -> int:
@@ -2476,7 +2455,9 @@ class configmanager:
         if isinstance(value, str) and key in self.options_index:
             value = self.parse(key, value)
         if key in _MODULE_MAP_OPTIONS and isinstance(value, (list, tuple, set)):
-            value = dict.fromkeys(value, True)
+            value = frozendict(dict.fromkeys(value, True))
+        elif key in _MODULE_MAP_OPTIONS and isinstance(value, dict):
+            value = frozendict(value)
         self._override_options[key] = value
         _debug.lifecycle(
             "config.override_set", option=key, known=key in self.options_index

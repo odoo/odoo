@@ -7961,7 +7961,8 @@ Every new model ships explicit access rules ``[review]``. A model with no
 * ``dbfilter`` set; ``server_wide_modules`` minimal (the 19.0 default is
   ``base,rpc,web``).
 * ``workers > 0``, with ``limit_time_cpu`` / ``limit_time_real`` /
-  ``limit_memory_soft`` / ``limit_memory_hard`` / ``limit_request`` tuned.
+  ``limit_memory_soft`` / ``limit_request`` tuned, and the hard memory cap set
+  by the service manager (cgroup ``MemoryMax=``), not by Odoo.
 * ``db_sslmode = require`` or ``verify-full`` -- the default ``prefer`` does
   **not** enforce TLS to PostgreSQL.
 * ``gevent_port`` set for websockets and longpolling (``longpolling_port`` was

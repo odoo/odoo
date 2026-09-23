@@ -71,11 +71,9 @@ class TestConfigManager(TransactionCase):
             {
                 "admin_passwd": "admin",
                 "bin_path": "",
-                "csv_internal_sep": ",",
                 "default_productivity_apps": False,
                 "proxy_access_token": "",
                 "publisher_warranty_url": "http://services.odoo.com/publisher-warranty/",
-                "reportgz": False,
                 "websocket_rate_limit_burst": 10,
                 "websocket_rate_limit_delay": 0.2,
                 "websocket_keep_alive_timeout": 3600,
@@ -182,8 +180,6 @@ class TestConfigManager(TransactionCase):
                 "workers": 0,
                 "limit_memory_soft": 2048 * 1024 * 1024,
                 "limit_memory_soft_gevent": None,
-                "limit_memory_hard": 2560 * 1024 * 1024,
-                "limit_memory_hard_gevent": None,
                 "limit_time_cpu": 60,
                 "limit_time_real": 120,
                 "limit_time_real_cron": -1,
@@ -200,11 +196,9 @@ class TestConfigManager(TransactionCase):
             {
                 "admin_passwd": "Tigrou007",
                 "bin_path": "",
-                "csv_internal_sep": "@",
                 "default_productivity_apps": False,
                 "proxy_access_token": "",
                 "publisher_warranty_url": "http://example.com",
-                "reportgz": True,
                 "websocket_rate_limit_burst": 1,
                 "websocket_rate_limit_delay": 2.0,
                 "websocket_keep_alive_timeout": 600,
@@ -311,8 +305,6 @@ class TestConfigManager(TransactionCase):
                 "workers": 92,
                 "limit_memory_soft": 1048576,
                 "limit_memory_soft_gevent": 1048577,
-                "limit_memory_hard": 1048578,
-                "limit_memory_hard_gevent": 1048579,
                 "limit_time_cpu": 60,
                 "limit_time_real": 61,
                 "limit_time_real_cron": 62,
@@ -327,12 +319,24 @@ class TestConfigManager(TransactionCase):
             if Path("/tmp/odoo").is_dir()
             else "no such directory"
         )
+        retired = [
+            f"WARNING:odoo.tools.config:option {option!r} in the config file at "
+            f"{config_path} is retired and ignored; remove it"
+            for option in (
+                "csv_internal_sep",
+                "reportgz",
+                "limit_memory_hard",
+                "limit_memory_hard_gevent",
+            )
+        ]
         self.assertEqual(
             capture.output,
             [
+                *retired[:2],
                 f"WARNING:odoo.tools.config:option addons_path, {addons_reason} '/tmp/odoo', skipped",
                 "WARNING:odoo.tools.config:option upgrade_path, no such directory '/tmp/upgrade', skipped",
                 "WARNING:odoo.tools.config:option pre_upgrade_scripts, no such file '/tmp/pre-custom.py', skipped",
+                *retired[2:],
             ],
         )
 
@@ -383,7 +387,6 @@ class TestConfigManager(TransactionCase):
             {
                 "admin_passwd": "admin",
                 "config": config_path,
-                "csv_internal_sep": ",",
                 "db_host": "",
                 "db_minconn": 0,
                 "db_maxconn": 64,
@@ -426,7 +429,6 @@ class TestConfigManager(TransactionCase):
                 "pidfile": "",
                 "proxy_mode": False,
                 "proxy_hops": 1,
-                "reportgz": False,
                 "screencasts": "",
                 "screenshots": "/tmp/odoo_tests",
                 "server_wide_modules": ["base", "web"],
@@ -467,8 +469,6 @@ class TestConfigManager(TransactionCase):
                 "workers": 0,
                 "limit_memory_soft": 2048 * 1024 * 1024,
                 "limit_memory_soft_gevent": None,
-                "limit_memory_hard": 2560 * 1024 * 1024,
-                "limit_memory_hard_gevent": None,
                 "limit_time_cpu": 60,
                 "limit_time_real": 120,
                 "limit_time_real_cron": -1,
@@ -525,9 +525,18 @@ class TestConfigManager(TransactionCase):
                 for option in options
             ]
 
+        def retired(option):
+            return [
+                (
+                    f"WARNING:odoo.tools.config:option {option!r} in the config "
+                    f"file at {config_path} is retired and ignored; remove it"
+                )
+            ]
+
         self.assertEqual(
             capture.output,
             missing("demo", "geoip_database", "osv_memory_age_limit")
+            + retired("csv_internal_sep")
             + falsy(
                 "db_host",
                 "db_name",
@@ -536,7 +545,11 @@ class TestConfigManager(TransactionCase):
                 "db_user",
                 "email_from",
                 "from_filter",
-                "log_db",
+            )
+            + retired("limit_memory_hard")
+            + falsy("log_db")
+            + retired("reportgz")
+            + falsy(
                 "smtp_password",
                 "smtp_ssl_certificate_filename",
                 "smtp_ssl_private_key_filename",
@@ -570,6 +583,8 @@ class TestConfigManager(TransactionCase):
         self.assertEqual(
             capture.output,
             [
+                "WARNING:odoo.tools.config:option --limit-memory-hard is retired and ignored; remove it",
+                "WARNING:odoo.tools.config:option --limit-memory-hard-gevent is retired and ignored; remove it",
                 "WARNING:odoo.tools.config:test file '/tmp/file-file' cannot be found",
             ],
         )
@@ -578,11 +593,9 @@ class TestConfigManager(TransactionCase):
             {
                 "admin_passwd": "admin",
                 "bin_path": "",
-                "csv_internal_sep": ",",
                 "default_productivity_apps": False,
                 "proxy_access_token": "",
                 "publisher_warranty_url": "http://services.odoo.com/publisher-warranty/",
-                "reportgz": False,
                 "websocket_rate_limit_burst": 10,
                 "websocket_rate_limit_delay": 0.2,
                 "websocket_keep_alive_timeout": 3600,
@@ -694,8 +707,6 @@ class TestConfigManager(TransactionCase):
                 "workers": 92,
                 "limit_memory_soft": 1048576,
                 "limit_memory_soft_gevent": 1048577,
-                "limit_memory_hard": 1048578,
-                "limit_memory_hard_gevent": 1048579,
                 "limit_time_cpu": 60,
                 "limit_time_real": 61,
                 "limit_time_real_cron": 62,
@@ -721,11 +732,9 @@ class TestConfigManager(TransactionCase):
             {
                 "admin_passwd": "admin",
                 "bin_path": "",
-                "csv_internal_sep": ",",
                 "default_productivity_apps": False,
                 "proxy_access_token": "",
                 "publisher_warranty_url": "http://services.odoo.com/publisher-warranty/",
-                "reportgz": False,
                 "websocket_rate_limit_burst": 10,
                 "websocket_rate_limit_delay": 0.2,
                 "websocket_keep_alive_timeout": 3600,
@@ -835,8 +844,6 @@ class TestConfigManager(TransactionCase):
                 "workers": 92,
                 "limit_memory_soft": 1048576,
                 "limit_memory_soft_gevent": 1048577,
-                "limit_memory_hard": 1048578,
-                "limit_memory_hard_gevent": 1048579,
                 "limit_time_cpu": 60,
                 "limit_time_real": 61,
                 "limit_time_real_cron": 62,

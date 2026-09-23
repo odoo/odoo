@@ -285,8 +285,13 @@ def test_only_the_master_creates_the_configured_databases(monkeypatch, evented):
     monkeypatch.setattr(odoo, "evented", evented)
     calls = []
     init = {}
+
+    def start(*args, **kwargs):
+        init.update(config["init"])
+        return 0
+
     with (
-        config.patch(db_name=["one", "two"], init=init, stop_after_init=True),
+        config.patch(db_name=["one", "two"], init={}, stop_after_init=True),
         patch.object(cli_server, "warn_running_as_root"),
         patch.object(cli_server, "check_db_user_not_postgres"),
         patch.object(cli_server, "report_configuration"),
@@ -294,7 +299,7 @@ def test_only_the_master_creates_the_configured_databases(monkeypatch, evented):
         patch.object(cli_server, "write_pid_file"),
         patch.object(cli_server.config, "parse_config"),
         patch.object(cli_server.db, "create_empty_database", calls.append),
-        patch.object(cli_server.server, "start", return_value=0),
+        patch.object(cli_server.server, "start", start),
         pytest.raises(SystemExit) as exit_info,
     ):
         cli_server.run_server([])

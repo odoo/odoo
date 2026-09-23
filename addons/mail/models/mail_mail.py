@@ -1681,7 +1681,7 @@ class MailMail(models.Model):
             _debug.logic("send_fatal", mail=self.id, kind="memory")
             _logger.exception(
                 "MemoryError while processing mail with ID %r and Msg-Id %r. "
-                "Consider raising the --limit-memory-hard startup option",
+                "Consider raising the worker's memory limit",
                 self.id,
                 self.message_id,
             )
