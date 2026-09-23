@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import email.message
 import socket
 import threading
 import time
@@ -250,9 +251,11 @@ class GuardedAdapter(HTTPAdapter):
                 response=response,
             )
         iter_content: Callable[..., Iterator[typing.Any]] = response.iter_content
-        too_slow = ResponseTooSlow(
-            f"the response took longer than {self.max_seconds}s", response=response
-        )
+
+        def too_slow() -> ResponseTooSlow:
+            return ResponseTooSlow(
+                f"the response took longer than {self.max_seconds}s", response=response
+            )
 
         def capped(
             chunk_size: int | None = 1, decode_unicode: bool = False
@@ -269,17 +272,17 @@ class GuardedAdapter(HTTPAdapter):
                             response=response,
                         )
                     if watchdog is not None and watchdog.fired.is_set():
-                        raise too_slow
+                        raise too_slow()
                     yield chunk
             except requests.exceptions.RequestException:
                 if watchdog is not None and watchdog.fired.is_set():
-                    raise too_slow from None
+                    raise too_slow() from None
                 raise
             finally:
                 if watchdog is not None:
                     watchdog.cancel()
             if watchdog is not None and watchdog.fired.is_set():
-                raise too_slow
+                raise too_slow()
 
         response.iter_content = capped  # type: ignore[method-assign]
         return response
@@ -400,8 +403,11 @@ class GuardedXmlRpcTransport(xmlrpc.client.Transport):
             timeout=self._timeout,
         )
         if not response.ok:
+            headers = email.message.Message()
+            for name, value in response.headers.items():
+                headers[name] = value
             raise xmlrpc.client.ProtocolError(
-                url, response.status_code, response.reason, dict(response.headers)
+                url, response.status_code, response.reason, headers
             )
         del verbose
         parser, unmarshaller = self.getparser()
