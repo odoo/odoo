@@ -150,8 +150,11 @@ class IrFieldsConverter(models.AbstractModel):
         return ImportPolicy.REPORT
 
     @api.model
-    def _get_field_path_for_error(self, field: str, value: Any) -> list[str]:
-        field_path = [*(self.env.context.get("parent_fields_hierarchy") or []), field]
+    def _get_field_path_for_error(self, field_name: str, value: Any) -> list[str]:
+        field_path = [
+            *(self.env.context.get("parent_fields_hierarchy") or []),
+            field_name,
+        ]
         while isinstance(value, list) and value:
             record = value[0]
             if (

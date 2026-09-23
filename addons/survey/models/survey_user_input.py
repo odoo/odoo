@@ -934,7 +934,7 @@ class SurveyUser_Input(models.Model):
 
         if answers:
             if question._filter_foreign_answer_ids(
-                answers.keys(), field="matrix_row_ids"
+                answers.keys(), field_name="matrix_row_ids"
             ):
                 raise ValidationError(
                     _("This answer is not a valid choice for this question.")

@@ -1067,7 +1067,7 @@ class MixinMailRender(models.AbstractModel):
 
     def _render_field(
         self,
-        field: str,
+        field_name: str,
         res_ids: list[int],
         engine: str = "inline_template",
         compute_lang: bool = False,
@@ -1076,9 +1076,9 @@ class MixinMailRender(models.AbstractModel):
         add_context: dict | None = None,
         options: dict | None = None,
     ) -> dict:
-        if field not in self:
+        if field_name not in self:
             raise ValueError(
-                f"Cannot render {field!r}: it is not a field of {self._name}."
+                f"Cannot render {field_name!r}: it is not a field of {self._name}."
             )
         self.check_singleton()
         if res_ids_lang:
@@ -1094,7 +1094,7 @@ class MixinMailRender(models.AbstractModel):
         else:
             templates_res_ids = {self.env.context.get("lang"): (self, res_ids)}
 
-        template_field = self._fields[field]
+        template_field = self._fields[field_name]
         engine = getattr(template_field, "render_engine", None) or engine
         render_options = {
             **(getattr(template_field, "render_options", None) or {}),
@@ -1104,7 +1104,7 @@ class MixinMailRender(models.AbstractModel):
             "render_field",
             model=self._name,
             record=self.id,
-            field=field,
+            field=field_name,
             engine=engine,
             records=len(res_ids),
             lang_by="given"
@@ -1121,7 +1121,7 @@ class MixinMailRender(models.AbstractModel):
             res_id: rendered
             for (template, tpl_res_ids) in templates_res_ids.values()
             for res_id, rendered in template._render_template(
-                template[field],
+                template[field_name],
                 template.render_model,
                 tpl_res_ids,
                 engine=engine,

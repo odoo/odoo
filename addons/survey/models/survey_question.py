@@ -1061,7 +1061,7 @@ class SurveyQuestion(models.Model):
     def _check_answer_matrix(self, answers: dict[str, list[int]]) -> dict[int, str]:
         if answers:
             if foreign := self._filter_foreign_answer_ids(
-                answers.keys(), field="matrix_row_ids"
+                answers.keys(), field_name="matrix_row_ids"
             ):
                 return {self.id: self._answer_not_ours_error(foreign)}
             submitted_columns = [
@@ -1081,10 +1081,10 @@ class SurveyQuestion(models.Model):
         return {}
 
     def _filter_foreign_answer_ids(
-        self, answer_ids: Any, field: str = "suggested_answer_ids"
+        self, answer_ids: Any, field_name: str = "suggested_answer_ids"
     ) -> list[Any]:
         self.check_singleton()
-        own_ids = set(self[field].ids)
+        own_ids = set(self[field_name].ids)
         foreign = []
         for answer_id in answer_ids:
             if not answer_id:

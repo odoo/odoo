@@ -360,12 +360,12 @@ class ResLang(models.Model):
             for code, data in self._get_active_by_field("code").items()
         ]
 
-    @tools.ormcache("field", cache="stable")
-    def _get_active_by_field(self, field: str) -> LangDataDict:
-        if field not in self.CACHED_FIELDS:
-            _debug.logic("active_by_field_refused", field=field)
-            raise UserError(_('Field "%s" is not cached', field))
-        if field == "code":
+    @tools.ormcache("field_name", cache="stable")
+    def _get_active_by_field(self, field_name: str) -> LangDataDict:
+        if field_name not in self.CACHED_FIELDS:
+            _debug.logic("active_by_field_refused", field=field_name)
+            raise UserError(_('Field "%s" is not cached', field_name))
+        if field_name == "code":
             langs = (
                 self.sudo()
                 .with_context(active_test=True)
@@ -378,9 +378,12 @@ class ResLang(models.Model):
                     for lang in langs
                 }
             )
-        _debug.perf.count("active_langs_reindexed", field=field)
+        _debug.perf.count("active_langs_reindexed", field=field_name)
         return LangDataDict(
-            {data[field]: data for data in self._get_active_by_field("code").values()}
+            {
+                data[field_name]: data
+                for data in self._get_active_by_field("code").values()
+            }
         )
 
     def action_unarchive(self) -> bool:

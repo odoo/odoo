@@ -57,8 +57,8 @@ class FleetVehicleSendMail(models.TransientModel):
             }
 
         if self.template_id:
-            subjects = self._render_field(field="subject", res_ids=self.vehicle_ids.ids)
-            bodies = self._render_field(field="body", res_ids=self.vehicle_ids.ids)
+            subjects = self._render_field("subject", res_ids=self.vehicle_ids.ids)
+            bodies = self._render_field("body", res_ids=self.vehicle_ids.ids)
         else:
             subjects = {vehicle.id: self.subject for vehicle in self.vehicle_ids}
             bodies = {vehicle.id: self.body for vehicle in self.vehicle_ids}

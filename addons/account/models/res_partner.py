@@ -836,25 +836,25 @@ class ResPartner(models.Model):
             )
 
     @_debug.perf.timed
-    def _increase_rank(self, field: str, n: int = 1):
-        assert field in ("customer_rank", "supplier_rank")
+    def _increase_rank(self, field_name: str, n: int = 1):
+        assert field_name in ("customer_rank", "supplier_rank")
         if not self:
             return
         postcommit = self.env.cr.postcommit
         data = postcommit.data.setdefault(
-            f"account.res.partner.increase_rank.{field}", defaultdict(int)
+            f"account.res.partner.increase_rank.{field_name}", defaultdict(int)
         )
         already_registered = bool(data)
         for record in self.sudo():
-            if record[field] and record.id:
+            if record[field_name] and record.id:
                 data[record.id] += n
             else:
-                record[field] += n
+                record[field_name] += n
 
         _debug.logic(
             "rank_increase_routed",
             partners=self,
-            field=field,
+            field=field_name,
             n=n,
             deferred=len(data),
             already_registered=already_registered,
@@ -864,7 +864,9 @@ class ResPartner(models.Model):
             return
 
         _debug.lifecycle(
-            "_increase_rank_registered_postcommit", field=field, data_count=len(data)
+            "_increase_rank_registered_postcommit",
+            field=field_name,
+            data_count=len(data),
         )
 
         @postcommit.add
@@ -880,14 +882,14 @@ class ResPartner(models.Model):
                                    AS increments(id, value)
                              WHERE partner.id = increments.id
                             """,
-                            column=SQL.identifier(field),
+                            column=SQL.identifier(field_name),
                             ids=list(data),
                             values=list(data.values()),
                         )
                     )
                     _debug.pipeline(
                         "rank_increments_flushed",
-                        field=field,
+                        field=field_name,
                         partners=len(data),
                         rows=cr.rowcount,
                     )
@@ -895,7 +897,7 @@ class ResPartner(models.Model):
             except Exception:
                 _logger.warning(
                     "Cannot update %s for %s partner(s); the increments are lost.",
-                    field,
+                    field_name,
                     len(data),
                     exc_info=True,
                 )

@@ -3401,7 +3401,7 @@ class ProjectTask(models.Model):
     def _search_on_comodel(
         self,
         domain: list,
-        field: str,
+        field_name: str,
         comodel: str,
         additional_domain: list | None = None,
     ) -> list | bool:
@@ -3445,15 +3445,15 @@ class ProjectTask(models.Model):
             lambda field_to_check: (
                 field_to_check
                 in [
-                    field,
-                    f"{field}.id",
-                    f"{field}.name",
+                    field_name,
+                    f"{field_name}.id",
+                    f"{field_name}.name",
                 ]
             ),
             {
-                field: "name",
-                f"{field}.id": "id",
-                f"{field}.name": "name",
+                field_name: "name",
+                f"{field_name}.id": "id",
+                f"{field_name}.name": "name",
             },
         )
         if filtered_domain.is_true():

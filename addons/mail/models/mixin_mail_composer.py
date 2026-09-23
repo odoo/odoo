@@ -58,16 +58,16 @@ class MixinMailComposer(models.AbstractModel):
     can_edit_body = fields.Boolean(compute="_compute_can_edit_body")
 
     def _copy_from_template(
-        self, field: str, is_empty: Callable[[typing.Any], bool] | None = None
+        self, field_name: str, is_empty: Callable[[typing.Any], bool] | None = None
     ) -> None:
-        template_field = self._get_template_field(field)
+        template_field = self._get_template_field(field_name)
         for record in self:
             if not record.template_id:
-                record[field] = False
+                record[field_name] = False
                 continue
             value = record.template_id[template_field]
             if not (is_empty(value) if is_empty else not value):
-                record[field] = value
+                record[field_name] = value
 
     @api.depends("template_id")
     def _compute_subject(self) -> None:
@@ -110,30 +110,30 @@ class MixinMailComposer(models.AbstractModel):
                 record.is_mail_template_editor or not record.template_id
             )
 
-    def _get_template_field(self, field: str) -> str:
-        if field not in self._fields:
-            raise ValueError(f"{self._name} has no field {field!r} to render")
-        template_field = self._template_field_counterparts.get(field, field)
+    def _get_template_field(self, field_name: str) -> str:
+        if field_name not in self._fields:
+            raise ValueError(f"{self._name} has no field {field_name!r} to render")
+        template_field = self._template_field_counterparts.get(field_name, field_name)
         if template_field not in self.env["mail.template"]._fields:
             raise ValueError(
-                f"{self._name}.{field} has no counterpart on mail.template"
+                f"{self._name}.{field_name} has no counterpart on mail.template"
             )
         return template_field
 
-    def _is_value_from_template(self, field: str) -> bool:
+    def _is_value_from_template(self, field_name: str) -> bool:
         self.check_singleton()
         if not self.template_id:
             return False
-        if field == "body":
+        if field_name == "body":
             return self.body_has_template_value
-        value = self[field]
-        template_value = self.template_id[self._get_template_field(field)]
+        value = self[field_name]
+        template_value = self.template_id[self._get_template_field(field_name)]
         return value == template_value or not (value or template_value)
 
-    def _is_template_value_render_required(self, field: str) -> bool:
+    def _is_template_value_render_required(self, field_name: str) -> bool:
         self.check_singleton()
         return (
-            field == "body"
+            field_name == "body"
             and not self.is_mail_template_editor
             and not self.can_edit_body
         )
@@ -149,7 +149,7 @@ class MixinMailComposer(models.AbstractModel):
 
     def _render_field(
         self,
-        field: str,
+        field_name: str,
         res_ids: list[int],
         engine: str = "inline_template",
         compute_lang: bool = False,
@@ -161,7 +161,7 @@ class MixinMailComposer(models.AbstractModel):
         self.check_singleton()
         if not self.template_id:
             return super()._render_field(
-                field,
+                field_name,
                 res_ids,
                 engine=engine,
                 compute_lang=compute_lang,
@@ -171,18 +171,18 @@ class MixinMailComposer(models.AbstractModel):
                 options=options,
             )
 
-        template_field = self._get_template_field(field)
-        from_template = self._is_value_from_template(field)
+        template_field = self._get_template_field(field_name)
+        from_template = self._is_value_from_template(field_name)
         translation_asked = bool(compute_lang or set_lang)
 
-        if self._is_template_value_render_required(field) or (
+        if self._is_template_value_render_required(field_name) or (
             translation_asked and from_template
         ):
             _debug.logic(
                 "composer_field_render",
                 model=self._name,
                 record=self.id,
-                field=field,
+                field=field_name,
                 by="template",
                 template=self.template_id.id,
                 translation=translation_asked,
@@ -209,12 +209,12 @@ class MixinMailComposer(models.AbstractModel):
             "composer_field_render",
             model=self._name,
             record=self.id,
-            field=field,
+            field=field_name,
             by="composer",
             bypass=from_template and not self.is_mail_template_editor,
         )
         return super(MixinMailComposer, record)._render_field(
-            field,
+            field_name,
             res_ids,
             engine=engine,
             compute_lang=compute_lang,
