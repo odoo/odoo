@@ -95,7 +95,7 @@ class PopulateContext:
             for index in indexes:
                 try:
                     with model.env.cr.savepoint():
-                        model.env.cr.execute(index["definition"])
+                        model.env.cr.execute(index["definition"])  # noqa: E8501  pg_indexes.indexdef, read back from the catalog
                 except Exception:
                     _logger.exception(
                         "Could not restore index %s on %s; the table is left "
