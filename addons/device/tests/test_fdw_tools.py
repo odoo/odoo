@@ -151,6 +151,31 @@ class TestFdwGuardsOnARegularTable(DeviceTransactionCase):
             [(f"trg_res_company_fdw_no_delete_{LOG_TABLE}", "res_company")],
         )
 
+    def test_guards_left_by_a_rename_of_the_log_table_are_stale(self):
+        # A rename carries the log's guards along under the old name, and a
+        # referenced table keeps a guard naming a log table that is gone.
+        self.env.cr.execute(
+            f"""
+            CREATE FUNCTION old_log_fdw_fk_check() RETURNS trigger
+            LANGUAGE plpgsql AS $$ BEGIN RETURN NEW; END $$;
+            CREATE TRIGGER trg_old_log_fdw_fk_check BEFORE INSERT
+            ON {LOG_TABLE} FOR EACH ROW EXECUTE FUNCTION old_log_fdw_fk_check();
+            CREATE FUNCTION device_device_fdw_no_delete_old_log() RETURNS trigger
+            LANGUAGE plpgsql AS $$ BEGIN RETURN OLD; END $$;
+            CREATE TRIGGER trg_device_device_fdw_no_delete_old_log BEFORE DELETE
+            ON device_device FOR EACH ROW
+            EXECUTE FUNCTION device_device_fdw_no_delete_old_log();
+            """
+        )
+        references = fdw.checked_references(self.env["device.data.log"])
+        self.assertCountEqual(
+            fdw.stale_guard_triggers(self.env.cr, LOG_TABLE, references),
+            [
+                ("trg_old_log_fdw_fk_check", LOG_TABLE),
+                ("trg_device_device_fdw_no_delete_old_log", "device_device"),
+            ],
+        )
+
 
 class TestGcOrdersLocalWritesFirst(DeviceTransactionCase):
     """Pointers are cleared before the rows go, never after.

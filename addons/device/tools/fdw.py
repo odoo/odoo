@@ -321,12 +321,15 @@ def _installs_existing_trigger(cr, statement: str) -> bool:
 
 
 def stale_guard_triggers(cr, table: str, references) -> list[tuple[str, str]]:
-    """Delete guards for references the model no longer checks.
+    """Return the guard triggers the model no longer installs.
 
-    A reference dropped from _fdw_checked_references leaves its
-    <ref>_fdw_no_delete_<table> trigger behind, and that trigger still
-    queries the log table's old column on every delete of the referenced row.
+    :param str table: the log table name
+    :param list references: ``checked_references`` output
+    :return: ``(trigger, table it is on)`` pairs to drop
+    :rtype: list
     """
+    # A reference dropped from _fdw_checked_references leaves its
+    # <ref>_fdw_no_delete_<table> trigger behind, still querying the log.
     wanted = {
         f"trg_{ref_table}_fdw_no_delete_{table}" for _c, ref_table, _r in references
     }
@@ -338,4 +341,33 @@ def stale_guard_triggers(cr, table: str, references) -> list[tuple[str, str]]:
             f"trg\\_%\\_fdw\\_no\\_delete\\_{table}",
         )
     )
-    return [(name, rel) for name, rel in cr.fetchall() if name not in wanted]
+    stale = [(name, rel) for name, rel in cr.fetchall() if name not in wanted]
+    # A renamed log table keeps its guards under the old name, and their
+    # bodies still name the old tables: its insert check fails every insert
+    # and its pointer guard every delete. Same for a no-delete guard on a
+    # referenced table whose log table no longer exists.
+    cr.execute(
+        SQL(
+            "SELECT t.tgname, c.relname FROM pg_trigger t"
+            " JOIN pg_class c ON c.oid = t.tgrelid"
+            " WHERE NOT t.tgisinternal AND c.relname = %s"
+            " AND (t.tgname LIKE %s OR t.tgname LIKE %s)"
+            " AND t.tgname NOT IN %s",
+            table,
+            "trg\\_%\\_fdw\\_fk\\_check",
+            "trg\\_%\\_fdw\\_unlink\\_pointer",
+            (f"trg_{table}_fdw_fk_check", f"trg_{table}_fdw_unlink_pointer"),
+        )
+    )
+    stale.extend((name, rel) for name, rel in cr.fetchall())
+    cr.execute(
+        SQL(
+            "SELECT t.tgname, c.relname FROM pg_trigger t"
+            " JOIN pg_class c ON c.oid = t.tgrelid"
+            " WHERE NOT t.tgisinternal AND t.tgname LIKE %s"
+            " AND to_regclass(split_part(t.tgname, '_fdw_no_delete_', 2)) IS NULL",
+            "trg\\_%\\_fdw\\_no\\_delete\\_%",
+        )
+    )
+    stale.extend((name, rel) for name, rel in cr.fetchall() if (name, rel) not in stale)
+    return stale
