@@ -4,6 +4,8 @@ from odoo import Command, fields
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.tests import Form, TransactionCase, new_test_user
 
+from odoo.addons.base.tests.common import converted_reach
+
 
 class TestCommonTimesheet(TransactionCase):
     @classmethod
@@ -258,6 +260,30 @@ class TestTimesheet(TestCommonTimesheet):
             self.user_employee2,
             "Changing timesheet employee should change the related user",
         )
+
+    def test_analytic_accounting_reaches_no_timesheet_line(self):
+        plain = self.env["account.analytic.line"].create(
+            {
+                "name": "Plain cost line",
+                "amount": -10,
+                self.analytic_plan._column_name(): self.analytic_account.id,
+            }
+        )
+        accountant = new_test_user(
+            self.env,
+            login="analytic_accountant",
+            groups="base.group_user,analytic.group_analytic_accounting",
+        )
+        scope = plain | self.timesheet
+        self.assertEqual(
+            scope.with_user(accountant).search([("id", "in", scope.ids)]), plain
+        )
+        for operation in ("read", "write", "unlink"):
+            with self.subTest(operation=operation):
+                reached = converted_reach(
+                    self.env, "account.analytic.line", accountant, operation
+                )
+                self.assertEqual(reached & scope, plain)
 
     def test_create_unlink_project(self):
         non_tracked_project = self.env["project.project"].create(

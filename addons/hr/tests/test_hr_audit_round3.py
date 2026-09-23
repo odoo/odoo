@@ -10,6 +10,7 @@ from odoo.fields import Domain
 from odoo.tests import tagged
 
 from .common import TestHrCommon
+from odoo.addons.base.tests.common import converted_reach
 
 
 @tagged("post_install", "-at_install")
@@ -280,6 +281,36 @@ class TestHrAuditRound3(TestHrCommon):
         self.assertEqual(Bank.search([*scope, ("employee_id", "=", False)]), plain)
         self.assertFalse(Bank.search([*scope, ("employee_id", "!=", False)]))
         self.assertFalse(Bank.search([*scope, ("employee_id", "=", employee.id)]))
+
+    def test_contact_creation_does_not_reach_employee_bank_accounts(self):
+        partner = self.env["res.partner"].create({"name": "R3 Creator Plain"})
+        plain = self.env["res.partner.bank.account"].create(
+            {"acc_number": "R3PMG0001", "partner_id": partner.id}
+        )
+        employee = self.Employee.create({"name": "R3 Creator Banked"})
+        banked = self.env["res.partner.bank.account"].create(
+            {"acc_number": "R3PMG0002", "partner_id": employee.partner_id.id}
+        )
+        creator = self.env["res.users"].create(
+            {
+                "name": "R3 Contact Creator",
+                "login": "r3_contact_creator",
+                "group_ids": [
+                    (4, self.env.ref("base.group_user").id),
+                    (4, self.env.ref("base.group_partner_manager").id),
+                ],
+            }
+        )
+        scope = plain | banked
+        self.assertEqual(
+            scope.with_user(creator).search([("id", "in", scope.ids)]), plain
+        )
+        for operation in ("read", "write", "unlink"):
+            with self.subTest(operation=operation):
+                reached = converted_reach(
+                    self.env, "res.partner.bank.account", creator, operation
+                )
+                self.assertEqual(reached & scope, plain)
 
     def test_bank_account_search_matches_its_own_compute(self):
         employee = self.Employee.create({"name": "R3 Two Accounts"})

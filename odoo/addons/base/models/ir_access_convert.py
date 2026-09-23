@@ -606,3 +606,131 @@ def convert(
         for row in converter.convert()
     ]
     return rows, converter.report
+
+
+_PERM_COLUMNS = ("perm_read", "perm_write", "perm_create", "perm_unlink")
+
+
+def _xmlids(cr: Any) -> dict[tuple[str, int], str]:
+    cr.execute(
+        """
+        SELECT DISTINCT ON (d.model, d.res_id) d.model, d.res_id,
+               d.module || '.' || d.name
+          FROM ir_model_data d
+         WHERE d.model IN ('res.groups', 'ir.model.access', 'ir.rule')
+         ORDER BY d.model, d.res_id, d.id
+        """
+    )
+    return {(model, res_id): xmlid for model, res_id, xmlid in cr.fetchall()}
+
+
+def group_keys(cr: Any, group_ids: Iterable[int]) -> frozenset[str]:
+    xmlids = _xmlids(cr)
+    return frozenset(
+        xmlids.get(("res.groups", group_id)) or f"res.groups#{group_id}"
+        for group_id in group_ids
+    ) | {GROUP_EVERYONE}
+
+
+def reach(
+    rows: Iterable[Mapping[str, Any]], operation: str, groups: frozenset[str]
+) -> Effective:
+    return _Converter.new_effective(rows, operation, groups)
+
+
+def read_database(
+    cr: Any, models: Iterable[str] | None = None
+) -> tuple[
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    dict[str, set[str]],
+    dict[str, set[str]],
+]:
+    wanted = sorted(models) if models is not None else None
+    xmlids = _xmlids(cr)
+
+    def group_key(group_id: int) -> str:
+        return xmlids.get(("res.groups", group_id)) or f"res.groups#{group_id}"
+
+    cr.execute(
+        """
+        SELECT a.id, a.name, m.model, a.group_id, a.active,
+               a.perm_read, a.perm_write, a.perm_create, a.perm_unlink
+          FROM ir_model_access a
+          JOIN ir_model m ON m.id = a.model_id
+         WHERE %s::text[] IS NULL OR m.model = ANY(%s::text[])
+         ORDER BY a.id
+        """,
+        (wanted, wanted),
+    )
+    acl_lines = []
+    for row in cr.fetchall():
+        access_id, name, model, group_id, active, *perms = row
+        perms = dict(zip(_PERM_COLUMNS, perms, strict=True))
+        acl_lines.append(
+            {
+                "id": access_id,
+                "xmlid": xmlids.get(("ir.model.access", access_id)),
+                "name": name,
+                "model": model,
+                "group": group_key(group_id) if group_id else None,
+                "active": active,
+                **perms,
+            }
+        )
+    cr.execute(
+        """
+        SELECT r.id, r.name, m.model, r.domain_force, r.composition, r.active,
+               r.perm_read, r.perm_write, r.perm_create, r.perm_unlink,
+               ARRAY(SELECT g.group_id FROM rule_group_rel g
+                      WHERE g.rule_group_id = r.id ORDER BY g.group_id)
+          FROM ir_rule r
+          JOIN ir_model m ON m.id = r.model_id
+         WHERE %s::text[] IS NULL OR m.model = ANY(%s::text[])
+         ORDER BY r.id
+        """,
+        (wanted, wanted),
+    )
+    rules = []
+    for row in cr.fetchall():
+        rule_id, name, model, domain, composition, active, *perms, group_ids = row
+        perms = dict(zip(_PERM_COLUMNS, perms, strict=True))
+        rules.append(
+            {
+                "id": rule_id,
+                "xmlid": xmlids.get(("ir.rule", rule_id)),
+                "name": name,
+                "model": model,
+                "domain_force": domain,
+                "composition": composition,
+                "active": active,
+                "groups": [group_key(group_id) for group_id in group_ids],
+                **perms,
+            }
+        )
+    cr.execute("SELECT gid, hid FROM res_groups_implied_rel")
+    implications: dict[str, set[str]] = defaultdict(set)
+    for group_id, implied_id in cr.fetchall():
+        implications[group_key(group_id)].add(group_key(implied_id))
+    cr.execute(
+        """
+        SELECT m.name, d.name
+          FROM ir_module_module m
+          JOIN ir_module_module_dependency d ON d.module_id = m.id
+         WHERE m.state = 'installed'
+        """
+    )
+    direct: dict[str, set[str]] = defaultdict(set)
+    for module, dependency in cr.fetchall():
+        direct[module].add(dependency)
+    module_deps: dict[str, set[str]] = {}
+    for module in direct:
+        seen = {module}
+        todo = [module]
+        while todo:
+            for dependency in direct.get(todo.pop(), ()):
+                if dependency not in seen:
+                    seen.add(dependency)
+                    todo.append(dependency)
+        module_deps[module] = seen
+    return acl_lines, rules, dict(implications), module_deps

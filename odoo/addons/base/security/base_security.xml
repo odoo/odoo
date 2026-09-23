@@ -293,6 +293,15 @@
         <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
     </record>
 
+    <record id="res_partner_identifier_rule_partner_manager" model="ir.rule">
+        <field
+            name="name">res.partner.identifier: contact creation reaches own identifiers, and types not marked confidential</field>
+        <field name="model_id" ref="base.model_res_partner_identifier" />
+        <field
+            name="domain_force">['|', ('partner_id', '=', user.partner_id.id), ('type_id.confidential', '=', False)]</field>
+        <field name="groups" eval="[Command.link(ref('base.group_partner_manager'))]" />
+    </record>
+
     <record id="phone_number_portal_public_rule" model="ir.rule">
         <field
             name="name">phone.number: portal/public: read a number my commercial partner holds</field>

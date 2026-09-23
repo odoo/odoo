@@ -1,5 +1,9 @@
 from odoo import Command
+from odoo.fields import Domain
 from odoo.tests.common import HttpCase, TransactionCase, new_test_user
+from odoo.tools.safe_eval import safe_eval
+
+from odoo.addons.base.models import ir_access_convert
 
 DISABLED_MAIL_CONTEXT = {
     "tracking_disable": True,
@@ -8,6 +12,33 @@ DISABLED_MAIL_CONTEXT = {
     "mail_notrack": True,
     "no_reset_password": True,
 }
+
+
+def converted_reach(env, model_name, user, operation="read"):
+    env.flush_all()
+    acl_lines, rules, implications, module_deps = ir_access_convert.read_database(
+        env.cr, [model_name]
+    )
+    rows, _report = ir_access_convert.convert(
+        acl_lines, rules, implications, module_deps=module_deps
+    )
+    letter = {"create": "c", "read": "r", "write": "u", "unlink": "d"}[operation]
+    groups = ir_access_convert.group_keys(env.cr, user.all_group_ids.ids)
+    effective = ir_access_convert.reach(rows, letter, groups)
+    records = env[model_name].with_user(user).sudo()
+    if effective.grants is None:
+        return records.browse()
+    context = env["ir.rule"].with_user(user)._eval_context()
+
+    def parse(text):
+        return Domain(safe_eval(text, context)) if text else Domain.TRUE
+
+    return records.search(
+        Domain.AND(
+            [parse(guard) for guard in effective.guards]
+            + [Domain.OR(parse(grant) for grant in effective.grants)]
+        )
+    )
 
 
 class BaseCommon(TransactionCase):

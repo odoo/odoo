@@ -2,6 +2,8 @@ from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
+from odoo.addons.base.tests.common import converted_reach
+
 
 @tagged("post_install", "-at_install")
 class TestIdentifierConfidentiality(TransactionCase):
@@ -70,6 +72,61 @@ class TestIdentifierConfidentiality(TransactionCase):
                 [("type_id", "=", self.public_type.id)]
             ),
         )
+
+
+@tagged("post_install", "-at_install")
+class TestIdentifierContactCreation(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        secret_type = cls.env["res.partner.identifier.type"].create(
+            {"name": "Social Security", "code": "SSN_T", "confidential": True}
+        )
+        public_type = cls.env["res.partner.identifier.type"].create(
+            {"name": "Supplier Code", "code": "SUPPLIER_T"}
+        )
+        cls.creator = cls.env["res.users"].create(
+            {
+                "name": "Contact Creator",
+                "login": "identifier_contact_creator",
+                "group_ids": [
+                    (4, cls.env.ref("base.group_user").id),
+                    (4, cls.env.ref("base.group_partner_manager").id),
+                ],
+            }
+        )
+        other = cls.env["res.partner"].create({"name": "Another Person"})
+        Identifier = cls.env["res.partner.identifier"]
+        cls.own_secret = Identifier.create(
+            {
+                "partner_id": cls.creator.partner_id.id,
+                "type_id": secret_type.id,
+                "value": "S-1",
+            }
+        )
+        cls.other_public = Identifier.create(
+            {"partner_id": other.id, "type_id": public_type.id, "value": "P-2"}
+        )
+        cls.other_secret = Identifier.create(
+            {"partner_id": other.id, "type_id": secret_type.id, "value": "S-2"}
+        )
+        cls.scope = cls.own_secret | cls.other_public | cls.other_secret
+
+    def test_contact_creation_does_not_read_confidential_identifiers(self):
+        visible = self.scope.with_user(self.creator).search(
+            [("id", "in", self.scope.ids)]
+        )
+        self.assertEqual(visible, self.own_secret | self.other_public)
+
+    def test_the_converted_permission_keeps_contact_creation_scoped(self):
+        for operation in ("read", "write", "unlink"):
+            with self.subTest(operation=operation):
+                reached = converted_reach(
+                    self.env, "res.partner.identifier", self.creator, operation
+                )
+                self.assertEqual(
+                    reached & self.scope, self.own_secret | self.other_public
+                )
 
 
 @tagged("post_install", "-at_install")
