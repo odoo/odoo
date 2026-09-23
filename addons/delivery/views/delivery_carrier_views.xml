@@ -81,7 +81,7 @@
                             </div>
                         </button>
                         <button name="toggle_debug"
-                                invisible="delivery_type == 'fixed' or delivery_type == 'base_on_rule' or debug_logging"
+                                invisible="delivery_type == 'in_house' or debug_logging"
                                 class="oe_stat_button"
                                 type="object" icon="code">
                             <div class="o_stat_info o_field_widget">
@@ -89,7 +89,7 @@
                             </div>
                         </button>
                         <button name="toggle_debug"
-                                invisible="delivery_type == 'fixed' or delivery_type == 'base_on_rule' or not debug_logging"
+                                invisible="delivery_type == 'in_house' or not debug_logging"
                                 class="oe_stat_button"
                                 type="object" icon="code">
                             <div class="o_stat_info o_field_widget">
@@ -98,7 +98,12 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <div class="oe_title" name="title">
+                    <field name="provider_icon"
+                            widget="image_url"
+                            class="oe_avatar"
+                            options="{'size': [90, 90]}"
+                            invisible="not provider_icon"/>
+                    <div class="oe_title clearfix" name="title">
                         <label for="name" string="Delivery Method"/>
                         <h1>
                             <field name="name" placeholder="e.g. UPS Express"/>
@@ -110,32 +115,38 @@
                             <field name="company_id" invisible="1"/>
                             <field name="prod_environment" invisible="1"/>
                             <field name="debug_logging" invisible="1"/>
-                            <label for="delivery_type"/>
-                            <div>
-                                <field name="delivery_type" />
-                                <button string="Install more Providers" name="install_more_provider" type="object" class="oe_link oe_edit_only"/>
-                            </div>
-                            <field name="allow_cash_on_delivery" invisible="not supports_cash_on_delivery"/>
-                            <field name="integration_level" widget="radio" invisible="delivery_type == 'fixed' or delivery_type == 'base_on_rule'"/>
-                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                        </group>
-                        <group name="delivery_details">
+                            <field name="available_delivery_types" invisible="1"/>
+                            <field name="delivery_type"
+                                    widget="dynamic_selection"
+                                    options="{'available_field': 'available_delivery_types'}"/>
+                            <field name="integration_level" widget="radio" invisible="delivery_type == 'in_house'"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="fixed_price"
                                     widget="monetary"
                                     class="oe_inline"
-                                    invisible="delivery_type != 'fixed'"/>
+                                    invisible="delivery_type != 'in_house'"/>
                             <field name="margin"
                                     string="Margin on Rate"
                                     widget="percentage"
                                     class="oe_inline"
-                                    invisible="delivery_type == 'fixed'"/>
+                                    invisible="delivery_type == 'in_house'"/>
+                            <field name="margin"
+                                    string="Margin on Rate"
+                                    widget="percentage"
+                                    class="oe_inline"
+                                    invisible="delivery_type != 'in_house'"
+                                    groups="base.group_no_one"/>
                             <field name="fixed_margin"
                                     string="Additional margin"
                                     widget="monetary"
-                                    invisible="delivery_type == 'fixed'"/>
-                            <label for="free_over" invisible="delivery_type == 'base_on_rule'"/>
-                            <div name="free_over_amount" invisible="delivery_type == 'base_on_rule'">
+                                    invisible="delivery_type == 'in_house'"/>
+                            <field name="fixed_margin"
+                                    string="Additional margin"
+                                    widget="monetary"
+                                    invisible="delivery_type != 'in_house'"
+                                    groups="base.group_no_one"/>
+                            <label for="free_over"/>
+                            <div name="free_over_amount">
                                 <field name="free_over"/>
                                 <field name="amount"
                                         widget="monetary"
@@ -143,14 +154,7 @@
                                         invisible="not free_over"
                                         required="free_over"/>
                             </div>
-                            <field name="product_id" context="{
-                                'default_type': 'service',
-                                'default_sale_ok': False,
-                                'default_purchase_ok': False,
-                                'default_invoice_policy': 'order',
-                            }"/>
-                            <field name="tracking_url" placeholder="i.e. https://ekartlogistics.com/shipmenttrack/&lt;shipmenttrackingnumber&gt;" invisible="delivery_type not in ('fixed', 'base_on_rule')"/>
-                            <field name="invoice_policy" widget="radio" invisible="delivery_type in ('fixed', 'base_on_rule') or integration_level == 'rate'"/>
+                            <field name="invoice_policy" widget="radio" invisible="delivery_type == 'in_house' or integration_level == 'rate'"/>
                             <field name="supports_shipping_insurance" invisible="1"/>
                             <label for="shipping_insurance" String="Shipping Insurance" invisible="not supports_shipping_insurance"/>
                             <div invisible="not supports_shipping_insurance">
@@ -159,59 +163,89 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="pricing" string="Pricing" invisible="delivery_type != 'base_on_rule'">
+                        <page name="pricing" string="Pricing Rules" invisible="delivery_type != 'in_house'">
                             <group name="general">
-                                <field name="price_rule_ids" nolabel="1"/>
+                                <field name="price_rule_ids" nolabel="1" class="o_delivery_carrier_list_no_header">
+                                    <list>
+                                        <control>
+                                            <create string="Add a rule"/>
+                                        </control>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                    </list>
+                                </field>
                             </group>
                         </page>
-                        <page string="Availability" name="destination">
-                            <group col="1">
-                                <p name="availability_description">
-                                    Filling this form allows you to make the delivery method available according to the content of the order or its destination.
-                                </p>
-                                <group>
-                                    <group name="country_details" string="Destination">
-                                        <field name="country_ids"
-                                                widget="many2many_tags"
-                                                options="{'no_open': True, 'no_create': True}"/>
-                                        <field name="state_ids"
-                                                widget="many2many_tags"
-                                                domain="[('country_id', 'in', country_ids)]"
-                                                readonly="not country_ids"
-                                                force_save="1"
-                                                options="{'no_create': True}"/>
-                                        <field name="zip_prefix_ids"
-                                                widget="many2many_tags"
-                                                readonly="not country_ids"
-                                                force_save="1"
-                                                options="{'no_create_edit': True}"/>
-                                    </group>
-                                    <group name="content" string="Content">
-                                        <label for="max_weight"/>
-                                        <div name="max_weight_row" class="o_row">
-                                            <field name="max_weight" class="oe_inline"/>
-                                            <field name="weight_uom_name"/>
-                                        </div>
-                                        <label for="max_volume"/>
-                                        <div name="max_volume_row" class="o_row">
-                                            <field name="max_volume" class="oe_inline"/>
-                                            <field name="volume_uom_name"/>
-                                        </div>
-                                        <field name="must_have_tag_ids"
-                                                widget="many2many_tags"
-                                                options="{'no_open': True, 'no_create': True}"/>
-                                        <field name="excluded_tag_ids"
-                                                widget="many2many_tags"
-                                                options="{'no_open': True, 'no_create': True}"/>
-                                    </group>
+                        <page string="Restrictions" name="destination">
+                            <group>
+                                <group name="country_details" string="Destination">
+                                    <field name="country_ids"
+                                            widget="many2many_tags"
+                                            placeholder="All countries"
+                                            options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="state_ids"
+                                            widget="many2many_tags"
+                                            placeholder="All states"
+                                            domain="[('country_id', 'in', country_ids)]"
+                                            readonly="not country_ids"
+                                            force_save="1"
+                                            options="{'no_create': True}"/>
+                                    <field name="zip_prefix_ids"
+                                            widget="many2many_tags"
+                                            placeholder="All zip"
+                                            readonly="not country_ids"
+                                            force_save="1"
+                                            options="{'no_create_edit': True}"/>
+                                    <field name="pricelist_ids"
+                                            widget="many2many_tags"
+                                            placeholder="All pricelists"
+                                            groups="product.group_product_pricelist"
+                                            options="{'no_open': True, 'no_create': True}"/>
                                 </group>
-                                <p name="country_warning" class="fst-italic" invisible="country_ids">
-                                    Please select a country before choosing a state or a zip prefix.
-                                </p>
+                                <group name="content" string="Content">
+                                    <label for="max_weight"/>
+                                    <div name="max_weight_row" class="o_row">
+                                        <field name="max_weight" class="oe_inline"/>
+                                        <field name="weight_uom_name"/>
+                                    </div>
+                                    <label for="max_volume"/>
+                                    <div name="max_volume_row" class="o_row">
+                                        <field name="max_volume" class="oe_inline"/>
+                                        <field name="volume_uom_name"/>
+                                    </div>
+                                    <field name="must_have_tag_ids"
+                                            widget="many2many_tags"
+                                            options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="excluded_tag_ids"
+                                            widget="many2many_tags"
+                                            options="{'no_open': True, 'no_create': True}"/>
+                                </group>
                             </group>
                         </page>
-                        <page string="Description" name="description">
-                            <field name="carrier_description" placeholder="Delivery method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."/>
+                        <page string="Configuration" name="configuration">
+                            <group name="configuration_columns">
+                                <group name="configuration_details">
+                                    <field name="product_id" context="{
+                                        'default_type': 'service',
+                                        'default_sale_ok': False,
+                                        'default_purchase_ok': False,
+                                        'default_invoice_policy': 'order',
+                                    }"/>
+                                    <field name="allow_cash_on_delivery" invisible="not supports_cash_on_delivery"/>
+                                    <field name="tracking_url" placeholder="i.e. https://ekartlogistics.com/shipmenttrack/&lt;shipmenttrackingnumber&gt;" invisible="delivery_type != 'in_house'"/>
+                                </group>
+                                <group name="availability_details">
+                                    <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
+                                </group>
+                            </group>
+                            <group string="Description" name="description_details">
+                                <field
+                                    colspan="2"
+                                    name="carrier_description"
+                                    nolabel="1"
+                                    placeholder="Delivery method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."
+                                />
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -239,11 +273,5 @@
             </p>
         </field>
     </record>
-
-    <menuitem id="sale_menu_action_delivery_carrier_form"
-        name="Deliveries"
-        action="action_delivery_carrier_form"
-        parent="sale.menu_sale_config"
-        sequence="25"/>
 
 </odoo>

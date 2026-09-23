@@ -129,12 +129,12 @@ class StockMoveLine(models.Model):
             # avoid (duplicate) costs for products
             raise UserError(self.env._("You cannot pack products into the same package when they have different carriers (i.e. check that all of their transfers have a carrier assigned and are using the same carrier)."))
 
-        # As we pass the `delivery_type` ('fixed' or 'base_on_rule' by default) in a key that
+        # As we pass the `delivery_type` ('in_house' by default) in a key that
         # corresponds to the `package_carrier_type` (defaults to 'none'), we do a conversion.
         # No need to convert for other carriers as the `delivery_type` and
         # `package_carrier_type` will be the same in these cases.
         package_carrier_type = self.carrier_id.delivery_type
-        if package_carrier_type in ['fixed', 'base_on_rule']:
+        if package_carrier_type == 'in_house':
             package_carrier_type = 'none'
         return package_carrier_type
 

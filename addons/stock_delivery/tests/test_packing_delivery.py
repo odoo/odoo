@@ -43,7 +43,7 @@ class TestPackingDelivery(TestPackingCommon):
         })
         cls.test_carrier = cls.env['delivery.carrier'].create({
             'name': 'Test carrier',
-            'delivery_type': 'fixed',
+            'delivery_type': 'in_house',
             'product_id': test_carrier_product.id,
         })
 
@@ -243,7 +243,7 @@ class TestPackingDelivery(TestPackingCommon):
 
         # Mock carrier delivery method
         with patch(
-            'odoo.addons.stock_delivery.models.delivery_carrier.DeliveryCarrier.fixed_send_shipping',
+            'odoo.addons.stock_delivery.models.delivery_carrier.DeliveryCarrier.in_house_send_shipping',
             return_value=[{'exact_price': 0, 'tracking_number': "666"}]
         ):
             picking_ship.send_to_shipper()
@@ -265,7 +265,7 @@ class TestPackingDelivery(TestPackingCommon):
         })
         test_carrier = self.env['delivery.carrier'].create({
             'name': 'Another Test carrier',
-            'delivery_type': 'fixed',
+            'delivery_type': 'in_house',
             'product_id': another_test_carrier_product.id,
         })
 

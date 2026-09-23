@@ -28,13 +28,13 @@ class TestSaleOrder(WebsiteSaleCommon):
         delivery_1, delivery_2 = self.env["delivery.carrier"].create([
             {
                 "name": "Delivery 1",
-                "delivery_type": "fixed",
+                "delivery_type": "in_house",
                 "product_id": product_delivery_1.id,
                 "is_published": True,
             },
             {
                 "name": "Delivery 2",
-                "delivery_type": "fixed",
+                "delivery_type": "in_house",
                 "product_id": product_delivery_2.id,
                 "is_published": True,
             },
