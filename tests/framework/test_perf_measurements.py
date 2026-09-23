@@ -30,6 +30,7 @@ def test_residual_wall_and_cpu_are_separate_measurements(monkeypatch):
         "cpu_ms": 1,
         "sql_ms": 20,
         "non_sql_ms": 80,
+        "non_sql_ms_median": 80,
         "statements": 1,
         "statements_min": 1,
         "statements_max": 1,

@@ -92,10 +92,11 @@ def measure(
     *,
     repeat: int,
     rounds: int = 5,
-    clock: Callable[[], float] = time.perf_counter,
+    clock: Callable[[], float] | None = None,
 ) -> dict[str, float]:
     if repeat < 1 or rounds < 1:
         raise ValueError("repeat and rounds must be positive")
+    clock = clock or time.perf_counter
     fn()
     fn()
     samples = []
