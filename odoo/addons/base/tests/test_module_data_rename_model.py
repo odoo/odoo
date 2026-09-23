@@ -291,7 +291,7 @@ class TestRenameInStoredExpressions(TransactionCase):
         rule_id = self._rule(
             "res.partner",
             "[('probe_flag', '=', True), ('parent_id.probe_flag', '=', True), "
-            "('user_id.probe_flag', '=', user.probe_flag)]",
+            "('country_id.probe_flag', '=', True)]",
         )
         rename_in_stored_expressions(
             self.env.cr, "probe_flag", "probe_new_flag", model="res.partner"
@@ -299,7 +299,64 @@ class TestRenameInStoredExpressions(TransactionCase):
         self.assertEqual(
             self._domain(rule_id),
             "[('probe_new_flag', '=', True), ('parent_id.probe_new_flag', '=', True), "
-            "('user_id.probe_flag', '=', user.probe_flag)]",
+            "('country_id.probe_flag', '=', True)]",
+        )
+
+    def test_a_field_users_read_through_their_partner_follows_the_partner(self):
+        # res.users _inherits res.partner: a partner field is the user's too,
+        # under the same name, whether reached by a path or by `user`
+        rule_id = self._rule(
+            "res.partner",
+            "[('user_id.probe_flag', '=', user.probe_flag)]",
+        )
+        rename_in_stored_expressions(
+            self.env.cr, "probe_flag", "probe_new_flag", model="res.partner"
+        )
+        self.assertEqual(
+            self._domain(rule_id),
+            "[('user_id.probe_new_flag', '=', user.probe_new_flag)]",
+        )
+
+    def test_user_in_a_rule_reads_the_current_user(self):
+        rule_id = self._rule(
+            "res.partner",
+            "[('parent_id', '=', user.partner_id.parent_id.id), "
+            "('parent_id.name', '!=', False)]",
+        )
+        rename_in_stored_expressions(
+            self.env.cr, "parent_id", "parent_probe_id", model="res.partner"
+        )
+        self.assertEqual(
+            self._domain(rule_id),
+            "[('parent_probe_id', '=', user.partner_id.parent_probe_id.id), "
+            "('parent_probe_id.name', '!=', False)]",
+        )
+
+    def test_a_group_by_of_three_names_is_walked_and_a_value_is_not(self):
+        self.env.cr.execute(
+            "INSERT INTO ir_filters (name, model_id, domain, context, sort, action_id) "
+            "VALUES ('{\"en_US\": \"probe\"}', 'res.partner', %s, %s, %s, NULL) "
+            "RETURNING id",
+            (
+                "[('state', 'in', ('probe_flag', 'x', 'y'))]",
+                "{'group_by': ['date:year', 'date:month', 'probe_flag']}",
+                '["name", "date", "probe_flag desc"]',
+            ),
+        )
+        filter_id = self.env.cr.fetchone()[0]
+        rename_in_stored_expressions(
+            self.env.cr, "probe_flag", "probe_new_flag", model="res.partner"
+        )
+        self.env.cr.execute(
+            "SELECT domain, context, sort FROM ir_filters WHERE id = %s", (filter_id,)
+        )
+        self.assertEqual(
+            self.env.cr.fetchone(),
+            (
+                "[('state', 'in', ('probe_flag', 'x', 'y'))]",
+                "{'group_by': ['date:year', 'date:month', 'probe_new_flag']}",
+                '["name", "date", "probe_new_flag desc"]',
+            ),
         )
 
     def test_another_models_rule_reaching_the_field_through_a_path_follows(self):

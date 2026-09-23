@@ -239,6 +239,128 @@ class TestFieldRenameInAStoredDomain(unittest.TestCase):
             '["salesman_id desc"]',
         )
 
+    def test_a_three_name_list_that_is_no_condition_is_walked_element_wise(self):
+        comodels = {**COMODELS, ("account.move.line", "move_id"): "account.move"}
+        for source, expected in (
+            (
+                "{'group_by': ['date:year', 'date:month', 'account_id']}",
+                "{'group_by': ['date:year', 'date:month', 'general_account_id']}",
+            ),
+            (
+                '["date desc", "move_id", "account_id"]',
+                '["date desc", "move_id", "general_account_id"]',
+            ),
+            (
+                "[('account_id', 'in', [1, 2]), ('balance', '!=', 0)]",
+                "[('general_account_id', 'in', [1, 2]), ('balance', '!=', 0)]",
+            ),
+        ):
+            with self.subTest(source=source):
+                self.assertEqual(
+                    _FieldRename(
+                        "account_id",
+                        "general_account_id",
+                        "account.move.line",
+                        comodels,
+                    ).expression(
+                        source,
+                        names=None,
+                        strings="account.move.line",
+                        leaves="account.move.line",
+                    ),
+                    expected,
+                )
+
+    def test_a_three_string_value_is_a_value_and_not_a_condition(self):
+        domain = "[('state', 'in', ('user_id', 'x', 'y'))]"
+        self.assertEqual(
+            self.rename(domain, "user_id", "salesman_id", "sale.order", "sale.order"),
+            domain,
+        )
+
+    def test_a_subdomain_reads_the_comodel_of_its_path(self):
+        domain = "[('order_line', 'any', [('order_id', '=', 1)])]"
+        self.assertEqual(
+            self.rename(domain, "order_id", "sale_id", "sale.order", "sale.order"),
+            domain,
+        )
+        self.assertEqual(
+            self.rename(domain, "order_id", "sale_id", "sale.order.line", "sale.order"),
+            "[('order_line', 'any', [('sale_id', '=', 1)])]",
+        )
+
+
+DELEGATIONS = {"res.users": (("partner_id", "res.partner"),)}
+USER = {"user": "res.users"}
+
+
+class TestFieldRenameThroughBoundNamesAndDelegation(unittest.TestCase):
+    def rename(self, source, old, new, model, row_model, related=None):
+        comodels = {
+            **COMODELS,
+            ("res.users", "employee_id"): "hr.employee",
+            ("hr.employee", "parent_id"): "hr.employee",
+            ("sale.order", "user_id"): "res.users",
+        }
+        return _FieldRename(old, new, model, comodels, DELEGATIONS, related).expression(
+            source, names=None, strings=row_model, leaves=row_model, bindings=USER
+        )
+
+    def test_user_in_a_rule_is_the_current_user(self):
+        self.assertEqual(
+            self.rename(
+                "[('id', '=', user.employee_id.parent_id.id)]",
+                "parent_id",
+                "manager_id",
+                "hr.employee",
+                "hr.employee",
+            ),
+            "[('id', '=', user.employee_id.manager_id.id)]",
+        )
+
+    def test_user_is_never_renamed_as_a_field(self):
+        self.assertEqual(
+            self.rename(
+                "[('user', '=', user.id)]",
+                "user",
+                "owner",
+                "hr.employee",
+                "hr.employee",
+            ),
+            "[('owner', '=', user.id)]",
+        )
+
+    def test_a_field_delegated_through_inherits_follows_its_owner(self):
+        domain = "[('user_id.probe_flag', '=', user.probe_flag)]"
+        renamed = "[('user_id.probe_new', '=', user.probe_new)]"
+        for related in (None, {"res.users": "partner_id.probe_flag"}):
+            with self.subTest(related=related):
+                self.assertEqual(
+                    self.rename(
+                        domain,
+                        "probe_flag",
+                        "probe_new",
+                        "res.partner",
+                        "sale.order",
+                        related,
+                    ),
+                    renamed,
+                )
+
+    def test_a_field_of_its_own_shadows_the_delegated_one(self):
+        domain = "[('user_id.probe_flag', '=', user.probe_flag)]"
+        self.assertEqual(
+            self.rename(
+                domain,
+                "probe_flag",
+                "probe_new",
+                "res.partner",
+                "sale.order",
+                {"res.users": None},
+            ),
+            domain,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

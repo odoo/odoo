@@ -21,6 +21,7 @@ from odoo.db.schema import (
 )
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import SQL
+from odoo.orm.domain.constants import ACCEPTED_CONDITION_OPERATORS, SUBDOMAIN_OPERATORS
 
 if TYPE_CHECKING:
     from typing import Protocol
@@ -693,6 +694,8 @@ class _Source(NamedTuple):
     # a name after a dot is a field of another model; the rest is Python over
     # variables (`record.x`, `object.x`) whose model nothing states
     paths: frozenset[str] = frozenset()
+    # the variables the evaluation binds to a record of a model
+    bindings: Mapping[str, str] = {}
 
 
 _EXPRESSION_SOURCES = (
@@ -726,6 +729,7 @@ _EXPRESSION_SOURCES = (
         "res_model",
         False,
         paths=frozenset({"domain", "context"}),
+        bindings={"user": "res.users"},
     ),
     _Source(
         "ir_rule",
@@ -733,6 +737,7 @@ _EXPRESSION_SOURCES = (
         "model_id",
         True,
         paths=frozenset({"domain_force"}),
+        bindings={"user": "res.users"},
     ),
     _Source(
         "base_automation",
@@ -740,6 +745,15 @@ _EXPRESSION_SOURCES = (
         "model_id",
         True,
         paths=frozenset({"filter_domain", "filter_pre_domain"}),
+        bindings={"user": "res.users"},
+    ),
+    _Source(
+        "automation_rule",
+        ("filter_domain", "filter_pre_domain"),
+        "model_id",
+        True,
+        paths=frozenset({"filter_domain", "filter_pre_domain"}),
+        bindings={"user": "res.users"},
     ),
     _Source(
         "ir_embedded_actions",
@@ -773,6 +787,8 @@ _EXPRESSION_ATTRIBUTES = frozenset(
 )
 _DOMAIN_ATTRIBUTES = frozenset({"attrs", "domain", "filter_domain"})
 _UNKNOWN_MODEL = object()
+_NO_ROW = object()
+_VALUE = object()
 
 
 def _existing_columns(cr: BaseCursor, table: str, columns: Iterable[str]) -> list[str]:
@@ -781,18 +797,24 @@ def _existing_columns(cr: BaseCursor, table: str, columns: Iterable[str]) -> lis
 
 class _FieldRename:
     # One field renamed on one model (`model` None: wherever the name is read),
-    # with the relational graph a pre-migration reads from ir_model_fields.
+    # with the relational graph a pre-migration reads from ir_model_fields and
+    # the `_inherits` delegations through which another model reads the field.
     def __init__(
         self,
         old: str,
         new: str,
         model: str | None,
         comodels: Mapping[tuple[str, str], str],
+        delegations: Mapping[str, tuple[tuple[str, str], ...]] | None = None,
+        related: Mapping[str, str | None] | None = None,
     ) -> None:
         self.old = old
         self.new = new
         self.model = model
         self.comodels = comodels
+        self.delegations = delegations or {}
+        # the `related` of each model's own row for the name, when it has one
+        self.related = related or {}
         self.word = re.compile(r"\b%s\b" % re.escape(old))
         self.first = re.compile(r"(?<![\w.])%s\b" % re.escape(old))
         # a field of one model, spelled bare: every read of it is resolved to
@@ -800,26 +822,60 @@ class _FieldRename:
         self.precise = model is not None and "." not in old
 
     def comodel(self, model: Any, name: str | None) -> Any:
-        if model is _UNKNOWN_MODEL or not name:
+        return self._comodel(model, name, set())
+
+    def _comodel(self, model: Any, name: str | None, seen: set) -> Any:
+        if model is _UNKNOWN_MODEL or not name or model in seen:
             return _UNKNOWN_MODEL
+        seen.add(model)
         found = self.comodels.get((model, name))
         # the field row may already carry either spelling, depending on whether
         # rename_field ran first
         if found is None and name in (self.old, self.new):
             other = self.new if name == self.old else self.old
             found = self.comodels.get((model, other))
-        return _UNKNOWN_MODEL if found is None else found
+        if found is not None:
+            return found
+        for _link, parent in self.delegations.get(model, ()):
+            if (found := self._comodel(parent, name, seen)) is not _UNKNOWN_MODEL:
+                return found
+        return _UNKNOWN_MODEL
 
     def is_target(self, model: Any) -> bool:
         return self.model is None or model == self.model
+
+    def holds(self, model: Any) -> bool:
+        # whether the renamed field is `model`'s own, or reaches it through an
+        # `_inherits` link that `model` does not shadow with a field of its own
+        return self._holds(model, set())
+
+    def _holds(self, model: Any, seen: set) -> bool:
+        if self.is_target(model):
+            return True
+        if model is _UNKNOWN_MODEL or model in seen:
+            return False
+        seen.add(model)
+        own = self.related.get(model, _NO_ROW)
+        return any(
+            own in (_NO_ROW, f"{link}.{self.old}", f"{link}.{self.new}")
+            and self._holds(parent, seen)
+            for link, parent in self.delegations.get(model, ())
+        )
+
+    def reads(self, model: Any, name: str) -> bool:
+        return name == self.old and self.holds(model)
+
+    def walk(self, path: str, root: Any) -> Any:
+        current = root
+        for segment in path.split("."):
+            current = self.comodel(current, segment)
+        return current
 
     def rename_path(self, path: str, root: Any, separator: str = ".") -> str:
         current = root
         segments = []
         for segment in path.split(separator):
-            segments.append(
-                self.new if segment == self.old and current == self.model else segment
-            )
+            segments.append(self.new if self.reads(current, segment) else segment)
             current = self.comodel(current, segment)
         return separator.join(segments)
 
@@ -831,30 +887,41 @@ class _FieldRename:
         strings: Any,
         parent: Any = _UNKNOWN_MODEL,
         leaves: Any = None,
+        bindings: Mapping[str, str] | None = None,
     ) -> str:
         if self.old not in source:
             return source
-        edits = _ExpressionEdits(self, names, strings, parent, leaves).run(source)
+        edits = _ExpressionEdits(
+            self, names, strings, parent, leaves, bindings or {}
+        ).run(source)
         if edits is None:
             _debug.logic("module_data.expression_unparsed", old=self.old)
-            return self.first.sub(self.new, source) if strings == self.model else source
+            return self.first.sub(self.new, source) if self.holds(strings) else source
         return edits
 
 
 class _ExpressionEdits:
     # Rewrites one Python expression by the spans its AST gives, so a name is
     # renamed only where it reads a field of the renamed model: a bare name
-    # reads `names`, `parent.x` reads `parent`, `a.b` reads b on a's comodel, a
-    # domain leaf's path walks from `leaves`, and a string elsewhere
+    # reads `names`, `parent.x` reads `parent`, a bound variable (`user` in a
+    # rule) reads its model, `a.b` reads b on a's comodel, a domain leaf's path
+    # walks from `leaves` and its value is a value, and a string elsewhere
     # (`'group_by': 'user_id'`) names a field of `strings` by its first segment.
     def __init__(
-        self, rename: _FieldRename, names: Any, strings: Any, parent: Any, leaves: Any
+        self,
+        rename: _FieldRename,
+        names: Any,
+        strings: Any,
+        parent: Any,
+        leaves: Any,
+        bindings: Mapping[str, str],
     ) -> None:
         self.rename = rename
         self.names = names
         self.strings = strings
         self.parent = parent
         self.leaves = leaves
+        self.bindings = bindings
         self.edits: list[tuple[int, int, bytes]] = []
         self.source = b""
         self.starts: list[int] = []
@@ -888,25 +955,40 @@ class _ExpressionEdits:
     def visit(self, node: ast.AST) -> None:
         rename = self.rename
         if isinstance(node, ast.Name):
-            if node.id == rename.old and self.names == rename.model:
+            if node.id not in self.bindings and rename.reads(self.names, node.id):
                 start, end = self.span(node)
                 self.edits.append((start, end, rename.new.encode()))
         elif isinstance(node, ast.Attribute):
             self.visit_attribute(node)
         elif self.leaves is not None and _is_leaf(node):
             assert isinstance(node, (ast.List, ast.Tuple))
-            path = node.elts[0]
-            assert isinstance(path, ast.Constant)
+            path, operator, value = node.elts
+            assert isinstance(path, ast.Constant) and isinstance(operator, ast.Constant)
             self.literal(path, rename.rename_path(path.value, self.leaves))
-            for value in node.elts[1:]:
-                if not isinstance(value, ast.Constant):
-                    self.visit(value)
+            subdomain = operator.value.lower() in SUBDOMAIN_OPERATORS
+            self.visit_value(
+                value, rename.walk(path.value, self.leaves) if subdomain else None
+            )
         elif isinstance(node, ast.Constant):
-            if isinstance(node.value, str) and self.strings == rename.model:
+            if (
+                isinstance(node.value, str)
+                and self.strings is not _VALUE
+                and rename.holds(self.strings)
+            ):
                 self.literal(node, rename.first.sub(rename.new, node.value))
         else:
             for child in ast.iter_child_nodes(node):
                 self.visit(child)
+
+    def visit_value(self, node: ast.AST, leaves: Any) -> None:
+        # a leaf's value is a value: its strings name nothing, and only a
+        # subdomain (`any`) holds leaves again, read from the path's comodel
+        saved = self.strings, self.leaves
+        self.strings, self.leaves = _VALUE, leaves
+        try:
+            self.visit(node)
+        finally:
+            self.strings, self.leaves = saved
 
     def visit_attribute(self, node: ast.Attribute) -> None:
         rename = self.rename
@@ -920,11 +1002,13 @@ class _ExpressionEdits:
             return
         if base.id == "parent":
             current = self.parent
+        elif base.id in self.bindings:
+            current = self.bindings[base.id]
         else:
             self.visit(base)
             current = rename.comodel(self.names, base.id)
         for link in reversed(chain):
-            if link.attr == rename.old and current == rename.model:
+            if rename.reads(current, link.attr):
                 _start, end = self.span(link)
                 self.edits.append((end - len(link.attr), end, rename.new.encode()))
             current = rename.comodel(current, link.attr)
@@ -943,11 +1027,17 @@ class _ExpressionEdits:
 
 
 def _is_leaf(node: ast.AST) -> bool:
+    # a condition is a path and an operator the ORM knows: a three-string list
+    # that is not one (`['date:year', 'date:month', 'account_id']`) is a list
+    if not isinstance(node, (ast.List, ast.Tuple)) or len(node.elts) != 3:
+        return False
+    path, operator, _value = node.elts
     return (
-        isinstance(node, (ast.List, ast.Tuple))
-        and len(node.elts) == 3
-        and isinstance(node.elts[0], ast.Constant)
-        and isinstance(node.elts[0].value, str)
+        isinstance(path, ast.Constant)
+        and isinstance(path.value, str)
+        and isinstance(operator, ast.Constant)
+        and isinstance(operator.value, str)
+        and operator.value.lower() in ACCEPTED_CONDITION_OPERATORS
     )
 
 
@@ -967,7 +1057,7 @@ def rename_in_view_arches(
     )
     if not cr.fetchone():
         return 0
-    return _rename_in_views(cr, _FieldRename(old, new, model, _relational_comodels(cr)))
+    return _rename_in_views(cr, _field_rename(cr, old, new, model))
 
 
 def _rename_in_views(cr: BaseCursor, rename: _FieldRename) -> int:
@@ -1005,6 +1095,52 @@ def _rename_in_views(cr: BaseCursor, rename: _FieldRename) -> int:
     return rewritten
 
 
+def _field_rename(
+    cr: BaseCursor, old: str, new: str, model: str | None
+) -> _FieldRename:
+    return _FieldRename(
+        old,
+        new,
+        model,
+        _relational_comodels(cr),
+        _delegations(cr),
+        _own_related(cr, old, new),
+    )
+
+
+def _delegations(cr: BaseCursor) -> dict[str, tuple[tuple[str, str], ...]]:
+    if not column_exists(cr, "ir_model_inherit", "parent_field_id"):
+        return {}
+    cr.execute(
+        SQL(
+            """
+            SELECT child.model, link.name, parent.model
+              FROM ir_model_inherit inherit
+              JOIN ir_model child ON child.id = inherit.model_id
+              JOIN ir_model parent ON parent.id = inherit.parent_id
+              JOIN ir_model_fields link ON link.id = inherit.parent_field_id
+             ORDER BY inherit.id
+            """
+        )
+    )
+    delegations: dict[str, list[tuple[str, str]]] = defaultdict(list)
+    for child, link, parent in cr.fetchall():
+        delegations[child].append((link, parent))
+    return {child: tuple(links) for child, links in delegations.items()}
+
+
+def _own_related(cr: BaseCursor, old: str, new: str) -> dict[str, str | None]:
+    if "." in old or not column_exists(cr, "ir_model_fields", "related"):
+        return {}
+    cr.execute(
+        SQL(
+            "SELECT model, related FROM ir_model_fields WHERE name = ANY(%s)",
+            [old, new],
+        )
+    )
+    return dict(cr.fetchall())
+
+
 def _relational_comodels(cr: BaseCursor) -> dict[tuple[str, str], str]:
     cr.execute(
         SQL(
@@ -1039,14 +1175,13 @@ class _Scope(NamedTuple):
 
 def _rename_in_node(node: etree._Element, scope: _Scope, rename: _FieldRename) -> bool:
     renamed = False
-    in_scope = rename.is_target(scope.model)
     for attribute, value in node.attrib.items():
         if not value or rename.old not in value:
             continue
         if attribute == "expr":
             rewritten = _rename_in_xpath(value, scope, rename)[0]
         elif attribute in ("name", "for") and node.tag in ("field", "label"):
-            rewritten = rename.new if in_scope and value == rename.old else value
+            rewritten = rename.new if rename.reads(scope.model, value) else value
         elif attribute in _EXPRESSION_ATTRIBUTES or attribute.startswith("decoration-"):
             rewritten = _rename_in_attribute(node, attribute, value, scope, rename)
         else:
@@ -1141,7 +1276,7 @@ def _rename_in_xpath(
     for match in _XPATH_NAME.finditer(expr):
         name = match.group(1) if match.group(1) is not None else match.group(2)
         start, end = match.span(1) if match.group(1) is not None else match.span(2)
-        if rewrite and name == rename.old and rename.is_target(current.model):
+        if rewrite and rename.reads(current.model, name):
             pieces.append(expr[last:start])
             pieces.append(rename.new)
             last = end
@@ -1178,7 +1313,7 @@ def rename_in_stored_expressions(
     if model is None and "." not in old and not unique:
         raise ValueError(f"{old!r} is a bare field name and needs model= to scope it")
 
-    rename = _FieldRename(old, new, model, _relational_comodels(cr))
+    rename = _field_rename(cr, old, new, model)
     rewritten = _rename_in_views(cr, rename)
     tables = set(
         get_tables_existing(cr, [source.table for source in _EXPRESSION_SOURCES])
@@ -1287,7 +1422,13 @@ def _rename_paths(
         for column, value in zip(columns, values, strict=True):
             if not value:
                 continue
-            renamed = rename.expression(value, names=None, strings=model, leaves=model)
+            renamed = rename.expression(
+                value,
+                names=None,
+                strings=model,
+                leaves=model,
+                bindings=source.bindings,
+            )
             if renamed != value:
                 changes[column] = renamed
         if not changes:

@@ -104,6 +104,18 @@ class TestRenameInViewArches(TransactionCase):
     def test_a_path_segment_after_a_dot_is_the_comodels(self):
         view = self._view(
             "res.partner",
+            "<form><field name='country_id' invisible='not country_id.name'/>"
+            "<field name='name'/></form>",
+        )
+        rename_in_stored_expressions(self.env.cr, "name", "label", model="res.partner")
+        arch = self._arch(view)
+        self.assertIn("not country_id.name", arch)
+        self.assertIn('name="label"', arch)
+
+    def test_a_comodel_that_delegates_to_the_model_reads_the_renamed_field(self):
+        # res.users _inherits res.partner, so user_id.comment is the partner's
+        view = self._view(
+            "res.partner",
             "<form><field name='user_id' invisible='not user_id.comment'/>"
             "<field name='comment'/></form>",
         )
@@ -111,5 +123,5 @@ class TestRenameInViewArches(TransactionCase):
             self.env.cr, "comment", "notes", model="res.partner"
         )
         arch = self._arch(view)
-        self.assertIn("not user_id.comment", arch)
+        self.assertIn("not user_id.notes", arch)
         self.assertIn('name="notes"', arch)
