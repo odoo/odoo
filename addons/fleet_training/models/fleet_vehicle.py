@@ -1,5 +1,7 @@
 from datetime import date
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -22,6 +24,7 @@ class FleetVehicle(models.Model):
     model_year = fields.Integer(string="Model Year")
     seats = fields.Integer(default=5)
     acquisition_date = fields.Date()
+    insurance_expiry_date = fields.Date(string="Insurance Expiry")
     active = fields.Boolean(default=True)
     notes = fields.Text()
 
@@ -81,6 +84,30 @@ class FleetVehicle(models.Model):
         for vehicle in self:
             if vehicle.seats <= 0:
                 raise ValidationError(self.env._("A vehicle must have at least one seat."))
+
+    @api.model
+    def _cron_check_insurance_expiry(self):
+        """Schedule a reminder activity for vehicles whose insurance expires within 30 days."""
+        deadline = fields.Date.context_today(self) + relativedelta(days=30)
+        expiring_vehicles = self.search([
+            ('insurance_expiry_date', '!=', False),
+            ('insurance_expiry_date', '<=', deadline),
+        ])
+        activity_type = self.env.ref('mail.mail_activity_data_todo')
+        for vehicle in expiring_vehicles:
+            already_reminded = vehicle.activity_ids.filtered(
+                lambda a: a.activity_type_id == activity_type and a.summary == "Renew vehicle insurance"
+            )
+            if not already_reminded:
+                vehicle.activity_schedule(
+                    'mail.mail_activity_data_todo',
+                    date_deadline=vehicle.insurance_expiry_date,
+                    summary="Renew vehicle insurance",
+                    note=self.env._(
+                        "Insurance for %(vehicle)s expires on %(date)s.",
+                        vehicle=vehicle.name, date=vehicle.insurance_expiry_date,
+                    ),
+                )
 
     def action_set_maintenance(self):
         self.state = 'maintenance'
