@@ -146,6 +146,38 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         self.assertTrue(specific_page.arch != oe_structure_layout, "Specific homepage view should have been changed")
         self.assertEqual(len(specific_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 1, "oe_structure view should have been created on the specific tree")
 
+    def test_html_editor_changed_by(self):
+        page = self.env['website.page'].create({
+            'name': 'Changed Target',
+            'type': 'qweb',
+            'arch': """
+                <t t-call="website.layout">
+                    <div id="changed_target" class="original">changed target</div>
+                </t>
+            """,
+            'key': 'test.changed_target',
+            'website_id': self.env.ref('base.default_website').id,
+            'is_published': True,
+            'url': '/changed_target',
+        })
+        inherited_view = self.env['ir.ui.view'].create({
+            'name': 'Add Class',
+            'type': 'qweb',
+            'key': 'test.add_class',
+            'inherit_id': page.view_id.id,
+            'arch': """
+                <data>
+                    <xpath expr="//div[@id='changed_target']" position="attributes">
+                        <attribute name="class" add="class_added" separator=" "/>
+                    </xpath>
+                </data>
+            """,
+        })
+        inherited_view_arch = inherited_view.arch
+        self.start_tour(self.env['website'].get_client_action_url('/changed_target'), 'html_editor_changed_by', login='admin')
+        self.assertIn('target_edit', page.view_id.arch)
+        self.assertEqual(inherited_view.arch, inherited_view_arch, "The inherited view should be untouched")
+
     def test_html_editor_scss(self):
         self.user_demo.write({
             'group_ids': [(6, 0, [

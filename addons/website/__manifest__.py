@@ -434,6 +434,7 @@
             ('include', 'website.website_builder_assets'),
             'website/static/tests/mock_server/**/*',
             'website/static/tests/*',
+            'website/static/tests/components/**/*',
         ],
         'web.assets_unit_tests_setup': [
             'html_builder/static/src/utils/scrolling.js',
