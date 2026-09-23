@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def rename_tag(cr, old_tag, new_tag):
     cr.execute(
         """UPDATE ir_model_data

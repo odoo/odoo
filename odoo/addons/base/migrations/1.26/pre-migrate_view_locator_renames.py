@@ -15,7 +15,7 @@ RENAMES = {
 }
 
 
-def migrate(cr: "Cursor", version: str | None) -> None:
+def migrate(cr: Cursor, version: str | None) -> None:
     if not version:
         return
 

@@ -67,7 +67,7 @@ def migrate(cr, version):
         # A trailing condition is ANDed with everything before it, whatever
         # operators that part uses, so appending is safe for any domain.
         base = "today" if ttype == "date" else "now"
-        conditions.append((field_name, "<=", "%s -%d%s" % (base, delta, suffix)))
+        conditions.append((field_name, "<=", f"{base} -{delta:d}{suffix}"))
         cr.execute(
             "UPDATE data_recycle_model SET domain = %s WHERE id = %s",
             (repr(conditions), rule_id),

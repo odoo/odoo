@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 REBUILT_RELATIONS = ("sale_order_line_product_document_rel",)
 
 
-def migrate(cr: "Cursor", version: str | None) -> None:
+def migrate(cr: Cursor, version: str | None) -> None:
     if not version:
         return
 

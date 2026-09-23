@@ -1,6 +1,7 @@
 import csv
 import logging
 import os
+from pathlib import Path
 
 import psycopg.types.json
 
@@ -107,7 +108,7 @@ def _read_targets(env, board_ids):
         targets.update(dict(cr.fetchall()))
     path = os.environ.get(MAPPING_ENV)
     if path and path != "none":
-        with open(path, newline="", encoding="utf-8") as handle:
+        with Path(path).open(newline="", encoding="utf-8") as handle:
             for row in csv.DictReader(handle):
                 if row.get("resource_asset_id", "").strip():
                     targets[int(row["account_asset_id"])] = int(

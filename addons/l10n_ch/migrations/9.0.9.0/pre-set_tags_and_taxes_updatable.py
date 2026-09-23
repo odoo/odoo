@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo.modules.registry import Registry
 
 

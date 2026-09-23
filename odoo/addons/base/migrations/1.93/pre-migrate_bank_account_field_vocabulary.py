@@ -121,7 +121,7 @@ def _rewrite_qweb_arches(cr, old, new):
     field so called, so there is no namesake to damage. That is the precondition
     the helper cannot assume and this migration can.
     """
-    pattern = r"\y%s\y" % old
+    pattern = rf"\y{old}\y"
     cr.execute(
         SQL(
             "UPDATE ir_ui_view SET arch_db = regexp_replace(arch_db::text, %s, %s, 'g')::jsonb "

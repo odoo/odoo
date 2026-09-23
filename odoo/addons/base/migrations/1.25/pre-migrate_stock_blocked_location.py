@@ -16,7 +16,7 @@ DROPPED_VIEWS = (
 )
 
 
-def migrate(cr: "Cursor", version: str | None) -> None:
+def migrate(cr: Cursor, version: str | None) -> None:
     if not version:
         return
     if not _is_installed(cr):
@@ -27,12 +27,12 @@ def migrate(cr: "Cursor", version: str | None) -> None:
     _drop_module(cr)
 
 
-def _is_installed(cr: "Cursor") -> bool:
+def _is_installed(cr: Cursor) -> bool:
     cr.execute("SELECT 1 FROM ir_module_module WHERE name = %s", (ABSORBED,))
     return bool(cr.fetchone())
 
 
-def _drop_inherited_views(cr: "Cursor") -> None:
+def _drop_inherited_views(cr: Cursor) -> None:
     cr.execute(
         """
         DELETE FROM ir_ui_view
@@ -51,7 +51,7 @@ def _drop_inherited_views(cr: "Cursor") -> None:
     _logger.info("stock_blocked_location: dropped %d inherited view(s)", dropped)
 
 
-def _rehome_model_data(cr: "Cursor") -> None:
+def _rehome_model_data(cr: Cursor) -> None:
     cr.execute(
         """
         DELETE FROM ir_model_data d
@@ -68,7 +68,7 @@ def _rehome_model_data(cr: "Cursor") -> None:
     _logger.info("stock_blocked_location: re-homed %d xml id(s) to stock", cr.rowcount)
 
 
-def _rehome_reflection(cr: "Cursor") -> None:
+def _rehome_reflection(cr: Cursor) -> None:
     for table, unique_by in (
         ("ir_model_constraint", "name"),
         ("ir_model_relation", "name"),
@@ -97,7 +97,7 @@ def _rehome_reflection(cr: "Cursor") -> None:
         )
 
 
-def _drop_module(cr: "Cursor") -> None:
+def _drop_module(cr: Cursor) -> None:
     cr.execute("DELETE FROM ir_module_module_dependency WHERE name = %s", (ABSORBED,))
     cr.execute("DELETE FROM ir_module_module_exclusion WHERE name = %s", (ABSORBED,))
     cr.execute(

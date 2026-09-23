@@ -9,7 +9,7 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 
-def migrate(cr: "Cursor", version: str | None) -> None:
+def migrate(cr: Cursor, version: str | None) -> None:
     if not version:
         return
     env = api.Environment(cr, api.SUPERUSER_ID, {})

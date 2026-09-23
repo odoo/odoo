@@ -44,7 +44,7 @@ NEW_ID = "button_documents_before"
 MODELS = ("product.template", "product.product")
 
 
-def migrate(cr: "Cursor", version: str | None) -> None:
+def migrate(cr: Cursor, version: str | None) -> None:
     if not version:
         return
 

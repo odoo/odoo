@@ -23,11 +23,8 @@ def migrate(cr, version):
         return
     columns = list(COLUMNS)
     cr.execute(
-        "SELECT id, %s FROM hr_employee WHERE %s"
-        % (
-            ", ".join(columns),
-            " OR ".join("%s IS NOT NULL" % column for column in columns),
-        )
+        f"SELECT id, {', '.join(columns)} FROM hr_employee WHERE "
+        + " OR ".join(f"{column} IS NOT NULL" for column in columns)
     )
     rows = cr.fetchall()
     if rows:
@@ -65,6 +62,6 @@ def migrate(cr, version):
             skipped,
         )
     cr.execute(
-        "ALTER TABLE hr_employee %s"
-        % ", ".join("DROP COLUMN IF EXISTS %s" % column for column in columns)
+        "ALTER TABLE hr_employee "
+        + ", ".join(f"DROP COLUMN IF EXISTS {column}" for column in columns)
     )

@@ -85,7 +85,7 @@ def migrate(cr, version):
              GROUP BY stale.id
              ORDER BY max(stale.depth) DESC
             """,
-            (model, "name=['\"]%s['\"]" % field),
+            (model, f"name=['\"]{field}['\"]"),
         )
         rows = cr.fetchall()
         doomed = []

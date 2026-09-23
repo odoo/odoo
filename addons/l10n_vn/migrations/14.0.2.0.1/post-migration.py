@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import SUPERUSER_ID, api
 
 FIXED_ACCOUNTS_MAP = {"5221": "5211", "5222": "5212", "5223": "5213"}

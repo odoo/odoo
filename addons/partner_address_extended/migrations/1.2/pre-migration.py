@@ -37,11 +37,10 @@ def migrate(cr, version):
         """
         UPDATE res_partner partner
            SET city_id = mapping.keeper
-          FROM (VALUES %s) AS mapping(dup, keeper)
+          FROM unnest(%s::int[], %s::int[]) AS mapping(dup, keeper)
          WHERE partner.city_id = mapping.dup
-        """
-        % ",".join(["(%s,%s)"] * len(duplicates)),
-        [value for pair in duplicates for value in pair],
+        """,
+        ([dup for dup, _keeper in duplicates], [keeper for _dup, keeper in duplicates]),
     )
     repointed = cr.rowcount
 

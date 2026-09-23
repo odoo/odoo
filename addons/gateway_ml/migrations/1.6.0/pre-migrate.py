@@ -31,8 +31,8 @@ def migrate(cr, version):
     )
     for (indexname,) in cr.fetchall():
         cr.execute(
-            "ALTER INDEX %s RENAME TO %s"
-            % (indexname, indexname.replace("service_id", "endpoint_id"))
+            f"ALTER INDEX {indexname} RENAME TO "
+            f"{indexname.replace('service_id', 'endpoint_id')}"
         )
 
     _logger.info(

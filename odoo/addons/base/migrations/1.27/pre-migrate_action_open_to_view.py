@@ -111,14 +111,14 @@ ORPHANED_MODULES = (
 )
 
 
-def migrate(cr: "Cursor", version: str | None) -> None:
+def migrate(cr: Cursor, version: str | None) -> None:
     if not version:
         return
     _rename_actions(cr)
     _drop_orphaned_views(cr)
 
 
-def _rename_actions(cr: "Cursor") -> None:
+def _rename_actions(cr: Cursor) -> None:
     renamed = 0
     for old, new in RENAMES.items():
         cr.execute(
@@ -139,7 +139,7 @@ def _rename_actions(cr: "Cursor") -> None:
     )
 
 
-def _drop_orphaned_views(cr: "Cursor") -> None:
+def _drop_orphaned_views(cr: Cursor) -> None:
     cr.execute(
         """
         DELETE FROM ir_ui_view

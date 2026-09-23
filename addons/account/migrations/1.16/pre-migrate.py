@@ -58,9 +58,9 @@ def migrate(cr, version):
     )
     if collisions := cr.fetchall():
         raise ValueError(
-            "account_reports cannot fold into account: %s xmlid(s) name different records "
-            "in each, rename them before upgrading -- %s"
-            % (len(collisions), ", ".join(f"{m}:{n}" for m, n in collisions[:20]))
+            f"account_reports cannot fold into account: {len(collisions)} xmlid(s) name "
+            "different records in each, rename them before upgrading -- "
+            + ", ".join(f"{m}:{n}" for m, n in collisions[:20])
         )
 
     # Repoint, never delete. An xmlid whose module no longer declares it is reaped and the

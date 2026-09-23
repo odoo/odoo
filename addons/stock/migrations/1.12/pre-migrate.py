@@ -29,7 +29,7 @@ CODE_COLUMNS = (
 )
 
 
-def migrate(cr: "Cursor", version: str | None) -> None:
+def migrate(cr: Cursor, version: str | None) -> None:
     if not version:
         return
     for table, column in CODE_COLUMNS:
@@ -39,12 +39,12 @@ def migrate(cr: "Cursor", version: str | None) -> None:
             _rewrite(cr, table, column, old, new)
 
 
-def _table_exists(cr: "Cursor", table: str) -> bool:
+def _table_exists(cr: Cursor, table: str) -> bool:
     cr.execute("SELECT to_regclass(%s) IS NOT NULL", (table,))
     return bool(cr.fetchone()[0])
 
 
-def _rewrite(cr: "Cursor", table: str, column: str, old: str, new: str) -> None:
+def _rewrite(cr: Cursor, table: str, column: str, old: str, new: str) -> None:
     pattern = rf"\m{old}\M"
     cr.execute(
         f"UPDATE {table} SET {column} = regexp_replace({column}, %s, %s, 'g')"

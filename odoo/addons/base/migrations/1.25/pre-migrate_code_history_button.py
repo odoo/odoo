@@ -10,7 +10,7 @@ OLD = "action_open_code_history"
 NEW = "action_view_code_history"
 
 
-def migrate(cr: "Cursor", version: str | None) -> None:
+def migrate(cr: Cursor, version: str | None) -> None:
     if not version:
         return
 
