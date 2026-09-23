@@ -150,7 +150,7 @@
                         </div>
                         <span t-if="this.state.selectedType" class="me-2 o_configurator_show"> for my</span>
                     </div>
-                    <div t-att-class="this.state.selectedType ? '' : 'opacity-0'" class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 o_configurator_show">
+                    <div t-att-class="this.state.selectedType ? '' : 'invisible'" class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 o_configurator_show">
                         <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
                         <label class="o_configurator_industry_wrapper me-2" t-custom-ref="industrySelection">
                             <AutoComplete
@@ -168,7 +168,7 @@
                         <span> business</span>
                         <span t-if="this.state.selectedIndustry" class="o_configurator_show">,</span>
                     </div>
-                    <div t-att-class="this.state.selectedType and this.state.selectedIndustry ? '' : 'opacity-0'" class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
+                    <div t-att-class="this.state.selectedType and this.state.selectedIndustry ? '' : 'invisible'" class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
                         <span>with a </span>
                         <div t-attf-class="dropdown d-inline-block o_configurator_purpose_dd {{this.state.selectedPositioning ? 'o_step_completed' : 'o_step_todo'}}"
                             t-on-focusout="this.onDropdownFocusout">
