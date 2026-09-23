@@ -105,7 +105,7 @@ class AccountDebitNote(models.TransientModel):
             "debit_origin_id": move.id,
             "move_type": type,
         }
-        if not self.copy_lines or move.move_type in [("in_refund", "out_refund")]:
+        if not self.copy_lines or move.move_type in ("in_refund", "out_refund"):
             default_values["line_ids"] = [(5, 0, 0)]
         return default_values
 
