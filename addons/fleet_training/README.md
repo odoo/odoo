@@ -529,3 +529,59 @@ a driver with `partner_id` set to it, and confirm (as a Fleet user)
 `partner.fleet_training_driver_count == 1`. Then confirm the safety guard: as
 a plain internal user with no Fleet Training group, reading that same field on
 *any* partner returns `0` with no error — never an `AccessError`.
+
+---
+
+## Chapter 13 — Interact With Other Modules
+
+**Concept.** A module can depend on and build on another app's models and
+views, not just `base`. `depends: ['base', 'mail']` pulls in Odoo's messaging
+framework; inheriting `mail.thread`/`mail.activity.mixin` gets a model a
+**chatter** (message log, followers, activities) for free; extending another
+app's model *and* its view (Chapter 12's `res.partner` model extension, now
+paired with a view extension) is how two independently-developed modules
+compose into one coherent experience.
+
+**Why?** A fleet app that can't show *why* a vehicle's status changed, or let
+someone leave a note on a specific vehicle, is missing basic auditability.
+Rather than build messaging/activities from scratch, `fleet_training` reuses
+`mail` — exactly what real Odoo apps do.
+
+**Where?**
+- [`__manifest__.py`](__manifest__.py) — `depends: ['base', 'mail']`
+- [`models/fleet_vehicle.py`](models/fleet_vehicle.py) — `_inherit = ['mail.thread', 'mail.activity.mixin']`, `tracking=True` on `state`/`driver_id`
+- [`views/fleet_vehicle_views.xml`](views/fleet_vehicle_views.xml) — `<chatter/>`
+- [`views/res_partner_views.xml`](views/res_partner_views.xml) — smart button, via `inherit_id="base.view_partner_form"`
+
+**Code explanation.** `_inherit = ['mail.thread', 'mail.activity.mixin']`
+alongside the model's own `_name` is *both* mechanisms from Chapter 12 at
+once: it extends this module's own model with capabilities defined in another
+module. `tracking=True` on a field makes every value change auto-logged in the
+chatter as soon as the change is committed. `<chatter reload_on_post="True"/>`
+is Odoo 20's one-line replacement for the old hand-built `oe_chatter` div. The
+`res.partner` form gets a new smart button via `inherit_id` + an `xpath`-free
+`position="inside"` on the existing `button_box` — the same view-inheritance
+idea used for models, applied to XML. Its `icon="directions_car"` uses Odoo
+20's Material Symbols icon set (a plain name, no CSS class) — the same icon
+name core's own `fleet` module uses for its equivalent smart button; the old
+FontAwesome `class="fa fa-car"` style is deprecated in 20.0 and flagged by
+`test_lint`.
+
+**Fleet functionality.** Every vehicle now has a full activity/message log;
+changing its status or reassigning its driver is automatically recorded with
+who/when/old→new value; the Contacts app can jump straight from a contact to
+their linked fleet drivers via a new smart button.
+
+**What changed.** Manifest depends on `mail`; `models/fleet_vehicle.py`
+(mixin + `tracking=True`); `views/fleet_vehicle_views.xml` (`<chatter/>`);
+added `views/res_partner_views.xml`.
+
+**Testing.** Upgrade the module (a much larger dependency graph installs -
+`mail` and everything it needs - verified clean). In the shell: create a
+vehicle, **commit**, then write a new `state` - a tracking message with the
+old→new value appears in `message_ids` (tracking only fires across a
+transaction boundary, not within the same transaction as the record's own
+creation - by design, to avoid a noisy "created, then immediately changed"
+double-log). In the UI: change a vehicle's status and see it logged in the
+chatter; open a driver's linked contact and click the new "Fleet Drivers"
+smart button.

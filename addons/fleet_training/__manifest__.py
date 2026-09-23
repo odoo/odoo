@@ -14,7 +14,7 @@ on top of a realistic Fleet Management use case.
 """,
     'author': "Odoo Training",
     'license': 'LGPL-3',
-    'depends': ['base'],
+    'depends': ['base', 'mail'],
     'data': [
         'security/fleet_training_groups.xml',
         'security/ir.access.csv',
@@ -22,6 +22,7 @@ on top of a realistic Fleet Management use case.
         'views/fleet_vehicle_menus.xml',
         'views/fleet_driver_views.xml',
         'views/fleet_category_views.xml',
+        'views/res_partner_views.xml',
     ],
     'application': True,
 }
