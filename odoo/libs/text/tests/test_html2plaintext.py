@@ -86,3 +86,9 @@ class TestNonTextContent(unittest.TestCase):
 class TestLoneSurrogate(unittest.TestCase):
     def test_a_lone_surrogate_does_not_raise(self):
         self.assertIn("x", html2plaintext("a\ud800b<p>x</p>"))
+
+
+class TestLinkReferencesAndSpaces(unittest.TestCase):
+    def test_a_link_with_markup_is_followed_by_its_reference(self):
+        text = html2plaintext('<p><a href="http://x">click <b>here</b></a></p>')
+        self.assertTrue(text.startswith("click *here* [1]"), text)

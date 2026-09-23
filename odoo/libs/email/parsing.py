@@ -10,7 +10,6 @@ import idna
 from odoo.libs.debug_log import DebugLog
 
 __all__ = [
-    "address_pattern",
     "email_addr_escapes_re",
     "email_anonymize",
     "email_domain_extract",
@@ -49,7 +48,7 @@ single_email_re = re.compile(
     r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$""", re.VERBOSE
 )
 mail_header_msgid_re = re.compile(r"<[^<>]+>")
-address_pattern = re.compile(r'([^" ,<@]+@[^>" ,]+)')
+_address_pattern = re.compile(r'([^" ,<@]+@[^>" ,]+)')
 email_addr_escapes_re = re.compile(r'[\\"]')
 _HEADER_CONTROL_RE = re.compile(r"[\x00-\x1f\x7f]")
 _FOLDING_WHITESPACE_RE = re.compile(r"[\r\n\t ]+")
@@ -58,7 +57,7 @@ _FOLDING_WHITESPACE_RE = re.compile(r"[\r\n\t ]+")
 def extract_rfc2822_addresses(text: str) -> list[str]:
     if not text:
         return []
-    candidates = address_pattern.findall(text)
+    candidates = _address_pattern.findall(text)
     valid_addresses = []
     for c in candidates:
         with contextlib.suppress(idna.IDNAError):

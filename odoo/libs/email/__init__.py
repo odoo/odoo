@@ -4,7 +4,6 @@ from .parsing import (
     single_email_re,
     mail_header_msgid_re,
     email_addr_escapes_re,
-    address_pattern,
     email_split_tuples,
     email_split,
     email_split_and_format,
@@ -25,7 +24,6 @@ from .parsing import (
 )
 
 __all__ = [
-    "address_pattern",
     "email_addr_escapes_re",
     "email_anonymize",
     "email_domain_extract",

@@ -83,6 +83,9 @@ def nl2br(string: str) -> Markup:
 
 
 def nl2br_enclose(string: str, enclosure_tag: str = "div") -> Markup:
+    if not _SIMPLE_TAG_RE.match(enclosure_tag):
+        msg = f"Invalid enclosure_tag: {enclosure_tag!r}"
+        raise ValueError(msg)
     return Markup("<{enclosure_tag}>{converted}</{enclosure_tag}>").format(
         enclosure_tag=enclosure_tag,
         converted=nl2br(string),
@@ -544,6 +547,9 @@ def html_normalize(
     return src.replace("\xa0", "&nbsp;")
 
 
+_sanitize_logger = logging.getLogger(__name__ + ".html_sanitize")
+
+
 @overload
 def html_sanitize(
     src: None,
@@ -588,8 +594,6 @@ def html_sanitize(
 ) -> markupsafe.Markup | None:
     if not src:
         return src
-
-    logger = logging.getLogger(__name__ + ".html_sanitize")
 
     def sanitize_handler(doc: etree._Element, prestrip: bool = False) -> etree._Element:
         if prestrip and sanitize_tags:
@@ -639,7 +643,9 @@ def html_sanitize(
     except etree.ParserError:
         if not silent:
             raise
-        logger.warning("ParserError obtained when sanitizing %r", src, exc_info=True)
+        _sanitize_logger.warning(
+            "ParserError obtained when sanitizing %r", src, exc_info=True
+        )
         sanitized = "<p>ParserError when sanitizing</p>"
     except Exception:
         if not silent:
@@ -655,7 +661,7 @@ def html_sanitize(
             except Exception:
                 sanitized = None
         if sanitized is None:
-            logger.warning(
+            _sanitize_logger.warning(
                 "unknown error obtained when sanitizing %r", src, exc_info=True
             )
             sanitized = "<p>Unknown error when sanitizing</p>"
@@ -788,10 +794,12 @@ def _number_references(tree: etree._Element) -> list[str]:
     for link in tree.findall(".//a"):
         if url := link.get("href"):
             link.tag = "span"
-            label = link.text or ""
-            link.text = (
-                f"{label} [{next(linkrefs)}]" if label else f"[{next(linkrefs)}]"
-            )
+            reference = f"[{next(linkrefs)}]"
+            if len(link):
+                last = link[-1]
+                last.tail = f"{last.tail or ''} {reference}"
+            else:
+                link.text = f"{link.text} {reference}" if link.text else reference
             url_index.append(url)
 
     for img in tree.findall(".//img"):

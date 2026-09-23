@@ -17,7 +17,7 @@ from typing import Literal
 
 
 def split_refs(value: str) -> list[str]:
-    return [ref.strip() for ref in value.split(",")]
+    return [ref for part in value.split(",") if (ref := part.strip())]
 
 
 def remove_accents(input_str: str) -> str:
@@ -37,12 +37,10 @@ def is_encodable(value: str, charset: str = "ascii") -> bool:
     return True
 
 
-def human_size(sz: float | str) -> str | Literal[False]:
+def human_size(sz: float) -> str | Literal[False]:
     if not sz:
         return False
     units = ("bytes", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb")
-    if isinstance(sz, str):
-        sz = len(sz)
     s, i = float(sz), 0
     while s >= 1024 and i < len(units) - 1:
         s /= 1024

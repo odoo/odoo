@@ -9,7 +9,7 @@ from .strings import (
     mod10r,
     get_flag,
 )
-from .address import street_split, ADDRESS_REGEX
+from .address import street_split
 from .arabic_reshaper import reshape
 from .html import (
     HTML_NEWLINES_REGEX,
@@ -41,7 +41,6 @@ from .html import (
 )
 
 __all__ = [
-    "ADDRESS_REGEX",
     "HTML_NEWLINES_REGEX",
     "HTML_TAGS_REGEX",
     "HTML_TAG_URL_REGEX",

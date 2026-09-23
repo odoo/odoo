@@ -14,3 +14,13 @@ class TestGetFlag(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_split_refs_skips_the_empty_item_a_trailing_comma_leaves():
+    from odoo.libs.text.strings import split_refs
+
+    assert split_refs("") == []
+    assert split_refs("base.group_user, ,base.group_system,") == [
+        "base.group_user",
+        "base.group_system",
+    ]

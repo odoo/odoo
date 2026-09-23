@@ -271,3 +271,13 @@ class TestReplaceLocalLinksReadsTheStyleAttribute(unittest.TestCase):
             ),
             '<td style="background:url(https://h.com/i/1)" data-oe-style="color:red">',
         )
+
+
+class TestNl2brEncloseValidatesItsTag(unittest.TestCase):
+    def test_a_tag_that_is_not_a_name_is_refused(self):
+        from odoo.libs.text.html import nl2br_enclose
+
+        self.assertEqual(str(nl2br_enclose("a\nb", "p")), "<p>a<br>\nb</p>")
+        for tag in ("p onclick=x", "p><script", ""):
+            with self.subTest(tag=tag), self.assertRaises(ValueError):
+                nl2br_enclose("x", tag)
