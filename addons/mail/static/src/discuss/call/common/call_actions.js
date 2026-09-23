@@ -14,6 +14,7 @@ import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settin
 import { RecordingDialog } from "@mail/discuss/call/common/recording_dialog";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { MicrophoneWarning } from "@mail/discuss/call/common/microphone_warning";
+import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 import { Component, useEffect } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -90,6 +91,8 @@ export const muteAction = {
 registerCallAction("mute", muteAction);
 /** @type {CallActionDefinition} */
 export const quickActionSettings = {
+    // Self's talking bars stand in for the chevron until hovered, as in the call menu.
+    btnClass: "o-discuss-quickVoiceSettings",
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
     dropdownComponent: QuickVoiceSettings,
     dropdownMenuClass: ({ owner }) =>
@@ -98,7 +101,13 @@ export const quickActionSettings = {
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
     dropdownTrigger: true,
+    extraContentComponent: TalkingAudioBars,
+    // Only self's session in this very call: the call preview shows the button before joining.
+    extraContentComponentProps: ({ channel, store }) => ({
+        session: channel?.eq(store.rtc.channel) ? store.rtc.selfSession : undefined,
+    }),
     icon: "keyboard_arrow_up",
+    iconClass: "o-discuss-quickVoiceSettings-chevron",
     name: _t("Voice Settings"),
     sequence: 15,
     sequenceGroup: 100,

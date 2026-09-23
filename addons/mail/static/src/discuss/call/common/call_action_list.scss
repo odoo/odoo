@@ -84,3 +84,29 @@ $o-call-menu-item-padding: 9px 12px;
         padding-bottom: map-get($spacers, 2);
     }
 }
+
+.o-discuss-quickVoiceSettings:has(.o-discuss-TalkingAudioBars) {
+    .o-discuss-TalkingAudioBars {
+        position: absolute;
+        inset: 0;
+        height: auto;
+        pointer-events: none;
+    }
+
+    .o-discuss-TalkingAudioBars-audioBar {
+        background-color: currentColor !important;
+    }
+
+    .o-discuss-quickVoiceSettings-chevron {
+        opacity: 0;
+    }
+
+    &:hover, &.show {
+        .o-discuss-quickVoiceSettings-chevron {
+            opacity: 1;
+        }
+        .o-discuss-TalkingAudioBars {
+            opacity: 0;
+        }
+    }
+}
