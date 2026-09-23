@@ -6,7 +6,7 @@ import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { animationFrame } from "@odoo/hoot-mock";
 import { execCommand } from "../_helpers/userCommands";
-import { press } from "@odoo/hoot-dom";
+import { press, waitFor } from "@odoo/hoot-dom";
 import { getContent } from "../_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
@@ -288,4 +288,18 @@ test("should format inside of content editable boundary (setFontSize)", async ()
         contentAfter:
             '<div contenteditable="false"><p>a<span contenteditable="true"><span style="font-size: 36px;">[b]</span></span>c</p></div>',
     });
+});
+
+test("should set exact font size along with responsive one", async () => {
+    const { el } = await setupEditor("<p>[abc]</p>");
+    await waitFor('[name="font_size"]');
+    const input = el.ownerDocument
+        .querySelector('[name="font_size"] iframe')
+        .contentDocument.querySelector("input");
+    input.value = "10";
+    input.dispatchEvent(new Event("input"));
+    await waitFor("span.o_rfs");
+    expect(el.querySelector("span").getAttribute("style")).toInclude(
+        `font-size: 10px; font-size: clamp(`
+    );
 });
