@@ -1,5 +1,5 @@
 from .ordered_set import FrozenOrderedSet, OrderedSet, LastOrderedSet
-from .frozen_dict import frozendict, freehash
+from .frozen_dict import frozendict
 from .misc import Collector, StackMap, ReversedIterable
 from .mappings import ConstantMapping, ReadonlyDict, DotDict, submap
 
@@ -13,7 +13,6 @@ __all__ = [
     "ReadonlyDict",
     "ReversedIterable",
     "StackMap",
-    "freehash",
     "frozendict",
     "submap",
 ]

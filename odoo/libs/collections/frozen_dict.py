@@ -1,4 +1,4 @@
-__all__ = ["freehash", "frozendict"]
+__all__ = ["frozendict"]
 
 from collections.abc import Iterable, Mapping
 from typing import Any, NoReturn

@@ -50,3 +50,16 @@ class TestStackMapLen(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestDotDictProtocols(unittest.TestCase):
+    def test_a_dunder_probe_sees_no_attribute(self):
+        import markupsafe
+
+        from odoo.libs.collections import DotDict
+
+        value = DotDict(a=1)
+        self.assertFalse(hasattr(value, "__html__"))
+        self.assertEqual(str(markupsafe.escape(value)), "{&#39;a&#39;: 1}")
+        self.assertEqual(value.a, 1)
+        self.assertIsNone(value.missing)

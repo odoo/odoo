@@ -46,5 +46,9 @@ def submap[K, T](mapping: Mapping[K, T], keys: Iterable[K]) -> Mapping[K, T]:
 
 class DotDict(dict):
     def __getattr__(self, attrib: str) -> Any:
+        # a protocol probe (markupsafe's __html__, copy's __deepcopy__) must
+        # see the attribute as absent, not as a None it would call
+        if attrib.startswith("__") and attrib.endswith("__"):
+            raise AttributeError(attrib)
         val = self.get(attrib)
         return DotDict(val) if isinstance(val, dict) else val
