@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
-import { CONTOUR_VARIANTS, DIRECTION_VARIANTS, INDIRECT_CSS_PROPERTY_VALUES } from "../core/utils";
+import { CONTOUR_VARIANTS, DIRECTION_VARIANTS, HORIZONTAL_DIRECTION_VARIANTS, INDIRECT_CSS_PROPERTY_VALUES, VERTICAL_DIRECTION_VARIANTS } from "../core/utils";
 import { StyleInfo } from "../core/style_models";
 import { Rules } from "../core/rules_models";
 
@@ -119,6 +119,15 @@ export class BorderPlugin extends Plugin {
         for (const side of DIRECTION_VARIANTS) {
             for (const feature of CONTOUR_VARIANTS) {
                 const propertyName = `border-${side}-${feature}`;
+                const propertyValue = computedStyle.getPropertyValue(propertyName);
+                if (propertyValue) {
+                    styleInfo.setProperty(propertyName, propertyValue);
+                }
+            }
+        }
+        for (const vSide of VERTICAL_DIRECTION_VARIANTS) {
+            for (const hSide of HORIZONTAL_DIRECTION_VARIANTS) {
+                const propertyName = `border-${vSide}-${hSide}-radius`;
                 const propertyValue = computedStyle.getPropertyValue(propertyName);
                 if (propertyValue) {
                     styleInfo.setProperty(propertyName, propertyValue);

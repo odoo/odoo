@@ -6,12 +6,16 @@ import { DIMENSIONS } from "../core/utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { ElementLayout } from "../core/render_models";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export class MsoPlugin extends Plugin {
     static id = "mso";
     static dependencies = ["border", "measurementSnapshot", "rules", "spacing"];
     resources = {
-        element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
+        element_layout_analysis_processors: [
+            this.analyzeElementWithBackgroundLayout.bind(this),
+            this.analyzeButtonLayout.bind(this),
+        ],
         refine_layout_processors: [
             this.addVmlWrapper.bind(this),
             withSequence(DEFAULT_SPACING_SEQUENCE + 1, this.addTableWrapper.bind(this)),
@@ -28,7 +32,7 @@ export class MsoPlugin extends Plugin {
     // hybrid-fluid strategy => inline-block => wrapped in table for MSO
     // buttons
     // badges (all native inline-block elements)
-    analyzeElementLayout(defaultEmailNodeArguments, { referenceNode }) {
+    analyzeElementWithBackgroundLayout(defaultEmailNodeArguments, { referenceNode }) {
         if (
             referenceNode.nodeType !== Node.ELEMENT_NODE ||
             !referenceNode.matches(`[style*="background-image"]`)
@@ -53,15 +57,54 @@ export class MsoPlugin extends Plugin {
         return defaultEmailNodeArguments;
     }
 
+    analyzeButtonLayout(defaultEmailNodeArguments, { referenceNode }) {
+        // if (referenceNode.nodeType !== Node.ELEMENT_NODE) {
+        //     return defaultEmailNodeArguments;
+        // }
+        // const computedStyle = this.getComputedStyle(referenceNode);
+        // const display = computedStyle.getPropertyValue("display");
+        // const backgroundColor = computedStyle.getPropertyValue("background-color");
+
+        // if (
+        //     !display.includes("inline") ||
+        //     (!this.hasVisibleBorder(referenceNode) && !backgroundColor) ||
+        //     selectElements(referenceNode, "img").length > 0
+        // ) {
+        //     return defaultEmailNodeArguments;
+        // }
+        // const color = computedStyle.getPropertyValue("color");
+        
+
+        // inline-block or inline element, with border or background-color
+        // check if alone or not on its line (if alone => rectangle with background,
+        // not alone => set color as background color and remove background color)
+        // detect interesting elements
+        // extract relevant data for rendering, don't build yet
+        // add the same topdown constraint as for background
+        // at refinement time, check if vmlwrapper is not forbidden => build
+        // if forbidden => set color to background-color, remove background-color
+        // (alternative VML solution, not a rectangle, but the same element without background)
+        return defaultEmailNodeArguments;
+    }
+
+    addVmlLayouts(layout, vmlLayouts) {
+        if (vmlLayouts.prefix) {
+            layout.prefixLayouts.push(vmlLayouts.prefix);
+        }
+        if (vmlLayouts.suffix) {
+            layout.suffixLayouts.push(vmlLayouts.suffix);
+        }
+    }
+
     addVmlWrapper(layout, { emailNode }) {
         const { analysis } = emailNode;
         if (analysis.facts.isVmlWrapperForbidden || !analysis.facts.vmlWrapperLayouts) {
-            // TODO EGGMAIL: implement fallback for enclosed vml rectangles?
-            // to investigate
+            if (analysis.facts.vmlFallbackLayouts) {
+                this.addVmlLayouts(layout, analysis.facts.vmlFallbackLayouts);
+            }
             return layout;
         }
-        layout.prefixLayouts.push(analysis.facts.vmlWrapperLayouts.prefix);
-        layout.suffixLayouts.push(analysis.facts.vmlWrapperLayouts.suffix);
+        this.addVmlLayouts(layout, analysis.facts.vmlWrapperLayouts);
         return layout;
     }
 
