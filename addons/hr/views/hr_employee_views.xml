@@ -135,7 +135,7 @@
                         <div class="d-flex flex-column flex-md-row align-items-center gap-3" name="employee_photo_and_info">
                             <div class="o_employee_avatar">
                                 <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
-                                <field name="image_1920" widget="image" options="{'size': [128,158], 'zoom': true, 'preview_image':'avatar_128', 'img_class': 'border rounded h-100 object-fit-contain'}"/>
+                                <field name="image_1920" widget="image" options="{'size': [128,158], 'zoom': true, 'img_class': 'o_employee_avatar_img border rounded'}"/>
                                 <field name="show_hr_icon_display" invisible="1" />
                             </div>
                             <group class="d-flex flex-column gap-md-0 w-100">
@@ -633,7 +633,7 @@
                         <t t-name="card" class="flex-row">
                             <aside class="o_card_aside_full">
                                 <t t-if="record.image_1024.raw_value">
-                                    <field name="image_1024" widget="background_image" options="{'zoom': true, 'zoom_delay': 1000, 'preview_image':'image_128'}" class="d-block position-relative"/>
+                                    <field name="image_1024" widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}" class="d-block position-relative"/>
                                 </t>
                                 <t t-elif="record.image_128.raw_value">
                                     <field name="avatar_128" widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}" class="d-block position-relative"/>
