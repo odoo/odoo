@@ -71,12 +71,6 @@ def json_default(obj: object) -> object:
     return _convert(obj)
 
 
-def orjson_default(obj: object) -> object:
-    if isinstance(obj, lazy):
-        value = obj._value
-        return value if _is_native(value) else _convert(value)
-    return _convert(obj)
-
-
-def _is_native(value: object) -> bool:
-    return value is None or isinstance(value, (str, int, float, bool, list, dict))
+# orjson hands whatever a default returns back to the encoder, which calls the
+# default again for anything it cannot encode natively, so one policy serves both.
+orjson_default = json_default

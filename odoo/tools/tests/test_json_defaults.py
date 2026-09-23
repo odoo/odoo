@@ -1,10 +1,11 @@
 import dataclasses
 import datetime
+import json
 import unittest
 
 from odoo.libs.collections import ReadonlyDict
 from odoo.libs.func import lazy
-from odoo.tools.json import json_default, orjson_default
+from odoo.tools.json import fast_dumps, json_default, orjson_default
 
 
 @dataclasses.dataclass
@@ -33,19 +34,26 @@ class TestConversionPolicyIsShared(unittest.TestCase):
             with self.subTest(default=fn.__name__):
                 self.assertEqual(fn(_Point()), {"x": 1, "y": 2})
 
-    def test_a_lazy_is_unwrapped_by_both(self):
-        for name, value in CASES.items():
+    def test_a_lazy_encodes_like_its_value_through_both_encoders(self):
+        cases = {**CASES, "tuple": (1, 2), "set": {3}, "native": [1, {"a": None}]}
+        for name, value in cases.items():
             with self.subTest(case=name):
-                wrapped = lazy(lambda v=value: v)
-                self.assertEqual(orjson_default(wrapped), orjson_default(value))
-                self.assertEqual(
-                    json_default(json_default(wrapped)), json_default(value)
-                )
+                expected = json.loads(json.dumps({"a": value}, default=json_default))
+                for wrapped in (value, lazy(lambda v=value: v)):
+                    self.assertEqual(
+                        json.loads(fast_dumps({"a": wrapped}, default=orjson_default)),
+                        expected,
+                    )
+                    self.assertEqual(
+                        json.loads(json.dumps({"a": wrapped}, default=json_default)),
+                        expected,
+                    )
 
-    def test_a_lazy_over_a_native_value_is_returned_as_is(self):
-        for native in (5, "s", 1.5, True, None, [1], {"a": 1}):
-            with self.subTest(value=native):
-                self.assertEqual(orjson_default(lazy(lambda v=native: v)), native)
+    def test_a_lazy_tuple_is_an_array_not_its_repr(self):
+        self.assertEqual(
+            fast_dumps({"a": lazy(lambda: (1, 2))}, default=orjson_default),
+            '{"a":[1,2]}',
+        )
 
     def test_an_unknown_object_still_falls_back_to_str(self):
         class Opaque:
