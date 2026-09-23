@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="access_category_system" model="ir.access">
+        <field name="name">category: administrators</field>
+        <field name="model_id" ref="model_test_ir_access_category" />
+        <field name="group_id" ref="base.group_system" />
+        <field name="kind">permission</field>
+        <field name="operation">crud</field>
+    </record>
+
+    <record id="access_item_system" model="ir.access">
+        <field name="name">item: administrators</field>
+        <field name="model_id" ref="model_test_ir_access_item" />
+        <field name="group_id" ref="base.group_system" />
+        <field name="kind">permission</field>
+        <field name="operation">crud</field>
+    </record>
+
+    <record id="access_node_system" model="ir.access">
+        <field name="name">node: administrators</field>
+        <field name="model_id" ref="model_test_ir_access_node" />
+        <field name="group_id" ref="base.group_system" />
+        <field name="kind">permission</field>
+        <field name="operation">crud</field>
+    </record>
+
+    <record id="access_delegated_system" model="ir.access">
+        <field name="name">delegated: administrators</field>
+        <field name="model_id" ref="model_test_ir_access_delegated" />
+        <field name="group_id" ref="base.group_system" />
+        <field name="kind">permission</field>
+        <field name="operation">crud</field>
+    </record>
+
+    <record id="access_delegated_computed_system" model="ir.access">
+        <field name="name">delegated_computed: administrators</field>
+        <field name="model_id" ref="model_test_ir_access_delegated_computed" />
+        <field name="group_id" ref="base.group_system" />
+        <field name="kind">permission</field>
+        <field name="operation">crud</field>
+    </record>
+
+</odoo>
