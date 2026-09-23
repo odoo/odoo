@@ -25,7 +25,7 @@ import unicodedata
 import warnings
 import zlib
 from collections import defaultdict
-from collections.abc import Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible
+from collections.abc import Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible, Set as AbstractSet
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
 from functools import lru_cache, reduce, wraps
@@ -1031,6 +1031,16 @@ class OrderedSet[T](MutableSet[T]):
             return NotImplemented
         other = set(other)
         return self._from_iterable(value for value in self if value in other)
+
+    def __sub__(self, other):
+        # preserve order of this set
+        if isinstance(other, OrderedSet):
+            other = other._map
+        elif not isinstance(other, AbstractSet):
+            if not isinstance(other, Iterable):
+                return NotImplemented
+            other = set(other)
+        return self._from_iterable(value for value in self if value not in other)
 
     def add(self, elem):
         self._map[elem] = None
