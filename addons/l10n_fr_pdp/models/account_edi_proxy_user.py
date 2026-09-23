@@ -376,6 +376,7 @@ class AccountEdiProxyClientUser(models.Model):
                 bodies={move.id: log_message for move in reference_moves},
             )
             return
+        response_info = dict(zip(reference_moves, response.get('messages')))
         responses = self.env['account.peppol.response'].create([
             {
                 'peppol_message_uuid': message['message_uuid'],
@@ -390,7 +391,7 @@ class AccountEdiProxyClientUser(models.Model):
                 'pdp_issue_date': issue_time,
                 'pdp_flow_number': '2',
             }
-            for message, move in zip(response.get('messages'), reference_moves)
+            for move, message in response_info.items()
             if message.get('message_uuid')
         ])
 
@@ -407,7 +408,7 @@ class AccountEdiProxyClientUser(models.Model):
         )
         message_bodies = {
             **{move.id: sent_message for move in sent_moves},
-            **{move.id: unsent_message for move in unsent_moves},
+            **{move.id: unsent_message + (Markup('<br/>') + error if (error := response_info.get(move, {}).get('error', {}).get('message')) else "") for move in unsent_moves},
         }
         reference_moves._message_log_batch(bodies=message_bodies)
 
