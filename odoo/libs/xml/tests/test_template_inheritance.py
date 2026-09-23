@@ -48,10 +48,17 @@ class TestLocateNode:
             locate_node(arch, spec)
 
     @pytest.mark.parametrize(
-        "expr", ["name(/*)", "//field/@name", "count(//field)", "//field/text()"]
+        "expr",
+        [
+            "name(/*)",
+            "//field/@name",
+            "count(//field)",
+            "//field/text()",
+            "//comment()",
+        ],
     )
     def test_xpath_selecting_a_value_is_refused(self, expr):
-        arch = etree.fromstring("<form><field name='a'>t</field></form>")
+        arch = etree.fromstring("<form><!-- c --><field name='a'>t</field></form>")
         spec = etree.fromstring(f'<xpath expr="{expr}" position="replace"/>')
         with pytest.raises(XPathExpressionError, match="must select elements"):
             locate_node(arch, spec)

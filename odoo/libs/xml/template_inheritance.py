@@ -132,7 +132,8 @@ def locate_node(arch: etree._Element, spec: etree._Element) -> etree._Element | 
             ) from e
         nodes = xPath(arch)
         if not isinstance(nodes, list) or not all(
-            isinstance(node, etree._Element) for node in nodes
+            isinstance(node, etree._Element) and isinstance(node.tag, str)
+            for node in nodes
         ):
             _debug.logic(
                 "template_inheritance.xpath_not_nodes",
