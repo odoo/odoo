@@ -37,10 +37,7 @@ class AccountMove(models.Model):
     l10n_rs_edi_attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="eFaktura XML Attachment",
-        compute=lambda self: self._compute_linked_attachment_id(
-            "l10n_rs_edi_attachment_id", "l10n_rs_edi_attachment_file"
-        ),
-        depends=["l10n_rs_edi_attachment_file"],
+        compute="_compute_l10n_rs_edi_attachment_id",
     )
 
     l10n_rs_edi_state = fields.Selection(
@@ -83,6 +80,12 @@ class AccountMove(models.Model):
         string="Purchase Invoice Id",
         copy=False,
     )
+
+    @api.depends("l10n_rs_edi_attachment_file")
+    def _compute_l10n_rs_edi_attachment_id(self):
+        self._compute_linked_attachment_id(
+            "l10n_rs_edi_attachment_id", "l10n_rs_edi_attachment_file"
+        )
 
     @api.depends("country_code", "move_type")
     def _compute_show_delivery_date(self):

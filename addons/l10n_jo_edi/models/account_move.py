@@ -56,10 +56,7 @@ class AccountMove(models.Model):
     l10n_jo_edi_xml_attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="Jordan E-Invoice XML",
-        compute=lambda self: self._compute_linked_attachment_id(
-            "l10n_jo_edi_xml_attachment_id", "l10n_jo_edi_xml_attachment_file"
-        ),
-        depends=["l10n_jo_edi_xml_attachment_file"],
+        compute="_compute_l10n_jo_edi_xml_attachment_id",
         help="Jordan: e-invoice XML.",
     )
     reversed_entry_id = fields.Many2one(tracking=True)
@@ -77,6 +74,12 @@ class AccountMove(models.Model):
         tracking=True,
         help="Invoice Types as per the Income and Sales Tax Department for JoFotara",
     )
+
+    @api.depends("l10n_jo_edi_xml_attachment_file")
+    def _compute_l10n_jo_edi_xml_attachment_id(self):
+        self._compute_linked_attachment_id(
+            "l10n_jo_edi_xml_attachment_id", "l10n_jo_edi_xml_attachment_file"
+        )
 
     @api.depends("country_code", "move_type")
     def _compute_l10n_jo_edi_is_needed(self):

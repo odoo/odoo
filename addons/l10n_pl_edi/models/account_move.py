@@ -66,10 +66,7 @@ class AccountMove(models.Model):
     l10n_pl_edi_attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="KSeF Attachment",
-        compute=lambda self: self._compute_linked_attachment_id(
-            "l10n_pl_edi_attachment_id", "l10n_pl_edi_attachment_file"
-        ),
-        depends=["l10n_pl_edi_attachment_file"],
+        compute="_compute_l10n_pl_edi_attachment_id",
     )
     l10n_pl_edi_upo_file = fields.Binary(
         attachment=True,
@@ -78,10 +75,7 @@ class AccountMove(models.Model):
     l10n_pl_edi_upo_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="UPO Attachment",
-        compute=lambda self: self._compute_linked_attachment_id(
-            "l10n_pl_edi_upo_id", "l10n_pl_edi_upo_file"
-        ),
-        depends=["l10n_pl_edi_upo_file"],
+        compute="_compute_l10n_pl_edi_upo_id",
     )
 
     _l10n_pl_edi_number_company_id_move_type_uniq = models.UniqueIndex(
@@ -89,6 +83,16 @@ class AccountMove(models.Model):
         "WHERE l10n_pl_edi_number IS NOT NULL AND company_id IS NOT NULL",
         "The KSeF number must be unique per company per move_type",
     )
+
+    @api.depends("l10n_pl_edi_attachment_file")
+    def _compute_l10n_pl_edi_attachment_id(self):
+        self._compute_linked_attachment_id(
+            "l10n_pl_edi_attachment_id", "l10n_pl_edi_attachment_file"
+        )
+
+    @api.depends("l10n_pl_edi_upo_file")
+    def _compute_l10n_pl_edi_upo_id(self):
+        self._compute_linked_attachment_id("l10n_pl_edi_upo_id", "l10n_pl_edi_upo_file")
 
     def _l10n_pl_edi_check_mandatory_fields(self):
         errors = {}

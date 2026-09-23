@@ -13,11 +13,14 @@ class AccountReport(models.AbstractModel):
 
     filter_analytic_groupby = fields.Boolean(
         string="Analytic Group By",
-        compute=lambda x: x._compute_report_option_filter("filter_analytic_groupby"),
-        depends=["root_report_id", "section_main_report_ids"],
+        compute="_compute_filter_analytic_groupby",
         store=True,
         readonly=False,
     )
+
+    @api.depends("root_report_id", "section_main_report_ids")
+    def _compute_filter_analytic_groupby(self):
+        self._compute_report_option_filter("filter_analytic_groupby")
 
     def _get_options_initializers_forced_sequence_map(self):
         """Force _init_options_analytic_groupby to run between the column headers and the columns."""

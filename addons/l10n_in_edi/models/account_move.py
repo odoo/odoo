@@ -40,10 +40,7 @@ class AccountMove(models.Model):
     l10n_in_edi_attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="E-Invoice(IN) Attachment",
-        compute=lambda self: self._compute_linked_attachment_id(
-            "l10n_in_edi_attachment_id", "l10n_in_edi_attachment_file"
-        ),
-        depends=["l10n_in_edi_attachment_file"],
+        compute="_compute_l10n_in_edi_attachment_id",
     )
     l10n_in_edi_attachment_file = fields.Binary(
         string="E-Invoice(IN) File",
@@ -69,6 +66,12 @@ class AccountMove(models.Model):
     )
 
     # E-Invoice compute
+    @api.depends("l10n_in_edi_attachment_file")
+    def _compute_l10n_in_edi_attachment_id(self):
+        self._compute_linked_attachment_id(
+            "l10n_in_edi_attachment_id", "l10n_in_edi_attachment_file"
+        )
+
     def _compute_l10n_in_edi_content(self):
         for move in self:
             move.l10n_in_edi_content = (

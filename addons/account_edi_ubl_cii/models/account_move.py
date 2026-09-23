@@ -23,10 +23,7 @@ class AccountMove(models.Model):
     ubl_cii_xml_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="Attachment",
-        compute=lambda self: self._compute_linked_attachment_id(
-            "ubl_cii_xml_id", "ubl_cii_xml_file"
-        ),
-        depends=["ubl_cii_xml_file"],
+        compute="_compute_ubl_cii_xml_id",
     )
     ubl_cii_xml_file = fields.Binary(
         string="UBL/CII File",
@@ -41,6 +38,10 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE
     # -------------------------------------------------------------------------
+
+    @api.depends("ubl_cii_xml_file")
+    def _compute_ubl_cii_xml_id(self):
+        self._compute_linked_attachment_id("ubl_cii_xml_id", "ubl_cii_xml_file")
 
     @api.depends("ubl_cii_xml_file")
     def _compute_filename(self):

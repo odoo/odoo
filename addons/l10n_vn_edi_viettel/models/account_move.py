@@ -100,10 +100,7 @@ class AccountMove(models.Model):
     l10n_vn_edi_sinvoice_file_id = fields.Many2one(
         comodel_name="ir.attachment",
         export_string_translation=False,
-        compute=lambda self: self._compute_linked_attachment_id(
-            "l10n_vn_edi_sinvoice_file_id", "l10n_vn_edi_sinvoice_file"
-        ),
-        depends=["l10n_vn_edi_sinvoice_file"],
+        compute="_compute_l10n_vn_edi_sinvoice_file_id",
         copy=False,
         readonly=True,
     )
@@ -116,10 +113,7 @@ class AccountMove(models.Model):
     l10n_vn_edi_sinvoice_xml_file_id = fields.Many2one(
         comodel_name="ir.attachment",
         export_string_translation=False,
-        compute=lambda self: self._compute_linked_attachment_id(
-            "l10n_vn_edi_sinvoice_xml_file_id", "l10n_vn_edi_sinvoice_xml_file"
-        ),
-        depends=["l10n_vn_edi_sinvoice_xml_file"],
+        compute="_compute_l10n_vn_edi_sinvoice_xml_file_id",
         copy=False,
         readonly=True,
     )
@@ -132,10 +126,7 @@ class AccountMove(models.Model):
     l10n_vn_edi_sinvoice_pdf_file_id = fields.Many2one(
         comodel_name="ir.attachment",
         export_string_translation=False,
-        compute=lambda self: self._compute_linked_attachment_id(
-            "l10n_vn_edi_sinvoice_pdf_file_id", "l10n_vn_edi_sinvoice_pdf_file"
-        ),
-        depends=["l10n_vn_edi_sinvoice_pdf_file"],
+        compute="_compute_l10n_vn_edi_sinvoice_pdf_file_id",
         copy=False,
         readonly=True,
     )
@@ -176,6 +167,24 @@ class AccountMove(models.Model):
         string="Revered Entry SInvoice Number",  # Need string here to avoid same label warning
         export_string_translation=False,
     )
+
+    @api.depends("l10n_vn_edi_sinvoice_file")
+    def _compute_l10n_vn_edi_sinvoice_file_id(self):
+        self._compute_linked_attachment_id(
+            "l10n_vn_edi_sinvoice_file_id", "l10n_vn_edi_sinvoice_file"
+        )
+
+    @api.depends("l10n_vn_edi_sinvoice_xml_file")
+    def _compute_l10n_vn_edi_sinvoice_xml_file_id(self):
+        self._compute_linked_attachment_id(
+            "l10n_vn_edi_sinvoice_xml_file_id", "l10n_vn_edi_sinvoice_xml_file"
+        )
+
+    @api.depends("l10n_vn_edi_sinvoice_pdf_file")
+    def _compute_l10n_vn_edi_sinvoice_pdf_file_id(self):
+        self._compute_linked_attachment_id(
+            "l10n_vn_edi_sinvoice_pdf_file_id", "l10n_vn_edi_sinvoice_pdf_file"
+        )
 
     @api.depends("l10n_vn_edi_invoice_state")
     def _compute_show_reset_to_draft_button(self):

@@ -201,10 +201,7 @@ class L10nInEwaybill(models.Model):
     # Attachment
     attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
-        compute=lambda self: self._compute_linked_attachment_id(
-            "attachment_id", "attachment_file"
-        ),
-        depends=["attachment_file"],
+        compute="_compute_attachment_id",
     )
     attachment_file = fields.Binary(
         attachment=True,
@@ -212,6 +209,10 @@ class L10nInEwaybill(models.Model):
     )
 
     # ------------Generic compute methods to be overriden in l10n_in_ewaybill_stock module---------------
+
+    @api.depends("attachment_file")
+    def _compute_attachment_id(self):
+        self._compute_linked_attachment_id("attachment_id", "attachment_file")
 
     def _get_ewaybill_dependencies(self):
         return ["account_move_id"]

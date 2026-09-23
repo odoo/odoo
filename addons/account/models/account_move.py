@@ -300,6 +300,12 @@ class AccountMove(models.Model):
     _mailing_enabled = True
     _operation_checkpoints = {"action_post": "_post_check_business_rules"}
 
+    @api.depends("invoice_pdf_report_file")
+    def _compute_invoice_pdf_report_id(self):
+        self._compute_linked_attachment_id(
+            "invoice_pdf_report_id", "invoice_pdf_report_file"
+        )
+
     @property
     def _sequence_monthly_regex(self):
         return (
@@ -1058,10 +1064,7 @@ class AccountMove(models.Model):
     invoice_pdf_report_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="PDF Attachment",
-        compute=lambda self: self._compute_linked_attachment_id(
-            "invoice_pdf_report_id", "invoice_pdf_report_file"
-        ),
-        depends=["invoice_pdf_report_file"],
+        compute="_compute_invoice_pdf_report_id",
     )
     invoice_pdf_report_file = fields.Binary(
         string="PDF File",

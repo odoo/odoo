@@ -135,6 +135,10 @@ class AccountReport(models.Model):
         ondelete={"coa": "set always"},
     )
 
+    @api.depends("root_report_id")
+    def _compute_allow_account_audit_status_on_lines(self):
+        self._compute_report_option_filter("allow_account_audit_status_on_lines")
+
     @api.constrains("availability_condition", "chart_template")
     def _check_availability_condition_chart_template(self):
         for record in self:
@@ -236,10 +240,7 @@ class AccountReport(models.Model):
 
     # Account Audit Status
     allow_account_audit_status_on_lines = fields.Boolean(
-        compute=lambda x: x._compute_report_option_filter(
-            "allow_account_audit_status_on_lines"
-        ),
-        depends=["root_report_id"],
+        compute="_compute_allow_account_audit_status_on_lines",
         precompute=True,
         store=True,
         readonly=False,

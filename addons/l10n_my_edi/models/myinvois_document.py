@@ -70,10 +70,7 @@ class MyInvoisDocument(models.Model):
     myinvois_file_id = fields.Many2one(
         comodel_name="ir.attachment",
         export_string_translation=False,
-        compute=lambda self: self._compute_linked_attachment_id(
-            "myinvois_file_id", "myinvois_file"
-        ),
-        depends=["myinvois_file"],
+        compute="_compute_myinvois_file_id",
         copy=False,
     )
     myinvois_file = fields.Binary(
@@ -158,6 +155,10 @@ class MyInvoisDocument(models.Model):
     # --------------------------------
     # Compute, inverse, search methods
     # --------------------------------
+
+    @api.depends("myinvois_file")
+    def _compute_myinvois_file_id(self):
+        self._compute_linked_attachment_id("myinvois_file_id", "myinvois_file")
 
     @api.depends("myinvois_issuance_date")
     def _compute_name(self):

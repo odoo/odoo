@@ -14,6 +14,10 @@ from odoo.addons.l10n_tw_edi_ecpay.utils import call_ecpay_api, transfer_time
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    @api.depends("l10n_tw_edi_file")
+    def _compute_l10n_tw_edi_file_id(self):
+        self._compute_linked_attachment_id("l10n_tw_edi_file_id", "l10n_tw_edi_file")
+
     @api.model
     def _receiver_for_ecpay_allowance(self, invoice_id=None, **path_args):
         return self.sudo().browse(invoice_id).exists()
@@ -38,10 +42,7 @@ class AccountMove(models.Model):
     l10n_tw_edi_file_id = fields.Many2one(
         comodel_name="ir.attachment",
         export_string_translation=False,
-        compute=lambda self: self._compute_linked_attachment_id(
-            "l10n_tw_edi_file_id", "l10n_tw_edi_file"
-        ),
-        depends=["l10n_tw_edi_file"],
+        compute="_compute_l10n_tw_edi_file_id",
         copy=False,
     )
     l10n_tw_edi_file = fields.Binary(

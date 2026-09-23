@@ -311,10 +311,7 @@ class AccountMove(models.Model):
     l10n_es_edi_facturae_xml_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="Facturae Attachment",
-        compute=lambda self: self._compute_linked_attachment_id(
-            "l10n_es_edi_facturae_xml_id", "l10n_es_edi_facturae_xml_file"
-        ),
-        depends=["l10n_es_edi_facturae_xml_file"],
+        compute="_compute_l10n_es_edi_facturae_xml_id",
     )
     l10n_es_edi_facturae_xml_file = fields.Binary(
         string="Facturae File",
@@ -391,6 +388,12 @@ class AccountMove(models.Model):
         store=True,
         readonly=False,
     )
+
+    @api.depends("l10n_es_edi_facturae_xml_file")
+    def _compute_l10n_es_edi_facturae_xml_id(self):
+        self._compute_linked_attachment_id(
+            "l10n_es_edi_facturae_xml_id", "l10n_es_edi_facturae_xml_file"
+        )
 
     def _auto_init(self):
         # Create compute stored field l10n_es_edi_facturae_reason_code and
