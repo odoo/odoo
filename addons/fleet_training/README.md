@@ -379,3 +379,43 @@ via `env.ref('fleet_training.action_fleet_training_vehicle_send_maintenance').wi
 and confirm the same. In the UI: open a vehicle, click the header buttons, and
 from the Vehicles list select several rows and use Action > Send to
 Maintenance.
+
+---
+
+## Chapter 10 — Constraints
+
+**Concept.** Two ways to enforce data validity: a **SQL constraint**
+(`models.Constraint`) — a database-level `CHECK`/`UNIQUE` rule, fast and
+airtight but limited to what SQL can express; and a **Python constraint**
+(`@api.constrains(...)` + raising `ValidationError`) — runs in Python after a
+create/write, can express arbitrary business logic, but only what the ORM
+enforces (not raw SQL/other DB clients).
+
+**Why?** Some rules are naturally set-based ("no two vehicles share a plate" —
+a `UNIQUE` index is the correct, race-condition-proof tool). Others need real
+logic ("a model year has to be plausible") that SQL alone can't express cleanly
+— that's what `@api.constrains` is for.
+
+**Where?** [`models/fleet_vehicle.py`](models/fleet_vehicle.py) —
+`_license_plate_unique`, `_check_model_year`, `_check_seats`
+
+**Code explanation.** `_license_plate_unique = models.Constraint('unique(license_plate)', "...")`
+is Odoo 20's declarative replacement for the old `_sql_constraints` list of
+tuples — same idea (an actual PostgreSQL `UNIQUE` constraint on the table), new
+syntax. `@api.constrains('model_year')` re-runs `_check_model_year` every time
+`model_year` is written; it raises `ValidationError` (which the ORM turns into
+a rollback + a user-facing error) for anything before 1980 or more than a year
+in the future. `_check_seats` rejects zero/negative seat counts the same way.
+
+**Fleet functionality.** The fleet's data is now self-protecting: duplicate
+license plates, implausible model years, and zero-seat vehicles are all
+rejected at the source instead of silently corrupting reports later.
+
+**What changed.** Updated `models/fleet_vehicle.py` with the constraint and two
+`@api.constrains` methods.
+
+**Testing.** Upgrade the module. In the shell, inside savepoints: creating a
+second vehicle with an already-used `license_plate` raises `UniqueViolation`
+(SQL); creating one with `model_year=1900` or `seats=0` raises
+`ValidationError` (Python) — all three verified. In the UI, try the same from
+the vehicle form and see the corresponding error dialog.
