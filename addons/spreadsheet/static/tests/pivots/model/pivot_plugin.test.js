@@ -472,7 +472,7 @@ test("fetch metadata only once per model", async function () {
 });
 
 test("An error is displayed if the pivot has invalid model", async function () {
-    const { model, env, pivotId } = await createSpreadsheetWithPivot({
+    const { model, pivotId } = await createSpreadsheetWithPivot({
         mockRPC: async function (route, { model, method, kwargs }) {
             if (model === "unknown" && method === "fields_get") {
                 throw makeServerError({ code: 404 });
@@ -480,7 +480,7 @@ test("An error is displayed if the pivot has invalid model", async function () {
         },
     });
     const pivot = model.getters.getPivotCoreDefinition(pivotId);
-    env.model.dispatch("UPDATE_PIVOT", {
+    model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
             ...pivot,

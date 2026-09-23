@@ -2,8 +2,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { expect, test } from "@odoo/hoot";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { createBasicChart, updateChart } from "@spreadsheet/../tests/helpers/commands";
-import { mountSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { createModelAndMountSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
 
 defineSpreadsheetModels();
 
@@ -12,13 +11,9 @@ defineSpreadsheetModels();
  */
 
 const chartId = "uuid1";
-const serverData = /** @type {ServerData} */ ({});
 
 test("info icon is on the chart when it has an annotation", async function () {
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    const fixture = await mountSpreadsheet(model);
+    const { model, fixture } = await createModelAndMountSpreadsheet();
     createBasicChart(model, chartId);
     updateChart(model, chartId, {
         annotationText: "test",

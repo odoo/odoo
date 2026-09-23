@@ -120,7 +120,7 @@ describe("Pivot custom groups", () => {
                 if (method === "formatted_read_grouping_sets") {
                     expect.step(kwargs.order);
                 }
-            }
+            },
         });
         expect.verifySteps(["foo,bar"]);
         updatePivot(model, pivotId, {
@@ -151,7 +151,7 @@ describe("Pivot custom groups", () => {
             A6: "table",         B6: "",             C6: "50.00",        D6: "50.00",
             A7: "Total",         B7: "131.00",       C7: "150.00",       D7: "281.00",
         });
-        expect.verifySteps(["product_id asc"])
+        expect.verifySteps(["product_id asc"]);
     });
 
     test("Custom groups handle None values", async function () {
@@ -312,7 +312,7 @@ describe("Pivot custom groups", () => {
 
 describe("Pivot custom groups menu items", () => {
     test("Can add custom groups from the menu items", async function () {
-        const { model, pivotId, env } = await createSpreadsheetWithPivot();
+        const { model, pivotId, env } = await createSpreadsheetWithPivot({ createMockApp: true });
         updatePivot(model, pivotId, {
             columns: [{ fieldName: "product_id" }],
             rows: [],
@@ -337,7 +337,7 @@ describe("Pivot custom groups menu items", () => {
     });
 
     test("Grouping a mix of ungrouped an grouped values creates a new group and removes the old one", async function () {
-        const { model, pivotId, env } = await createSpreadsheetWithPivot();
+        const { model, pivotId, env } = await createSpreadsheetWithPivot({ createMockApp: true });
         updatePivot(model, pivotId, {
             columns: [{ fieldName: "product_id" }],
             rows: [],
@@ -369,7 +369,7 @@ describe("Pivot custom groups menu items", () => {
     });
 
     test("Can merge existing group with other values with menu items", async function () {
-        const { model, pivotId, env } = await createSpreadsheetWithPivot();
+        const { model, pivotId, env } = await createSpreadsheetWithPivot({ createMockApp: true });
         updatePivot(model, pivotId, {
             columns: [{ fieldName: "Product2", order: "asc" }],
             rows: [],
@@ -397,7 +397,7 @@ describe("Pivot custom groups menu items", () => {
     });
 
     test("Can remove existing groups with menu items", async function () {
-        const { model, pivotId, env } = await createSpreadsheetWithPivot();
+        const { model, pivotId, env } = await createSpreadsheetWithPivot({ createMockApp: true });
         updatePivot(model, pivotId, {
             columns: [{ fieldName: "Product2", order: "asc" }, { fieldName: "product_id" }],
             rows: [],

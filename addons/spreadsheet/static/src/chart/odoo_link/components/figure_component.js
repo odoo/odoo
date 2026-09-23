@@ -14,10 +14,10 @@ function inSection(ctx, mouseY, sectionY, sectionFont) {
 
 patch(spreadsheet.components.ScorecardChart.prototype, {
     async navigateToOdooLink(newWindow) {
-        await navigateToOdoolinkFromChart(this.env, this.props.chartId, newWindow);
+        await navigateToOdoolinkFromChart(this.spEnv, this.props.chartId, newWindow);
     },
     get hasOdooLink() {
-        return this.env.model.getters.getChartOdooLink(this.props.chartId) !== undefined;
+        return this.model().getters.getChartOdooLink(this.props.chartId) !== undefined;
     },
     getEventTargetSection(ev) {
         const canvasRect = this.canvas().getBoundingClientRect();
@@ -41,29 +41,29 @@ patch(spreadsheet.components.ScorecardChart.prototype, {
         }
     },
     async onClick(ev, isMiddleClick) {
-        if (!this.env.model.getters.isDashboard() || ![0, 1].includes(ev.button)) {
+        if (!this.model().getters.isDashboard() || ![0, 1].includes(ev.button)) {
             return;
         }
         const section = this.getEventTargetSection(ev);
         if (section === "KEY" || section === "BASELINE") {
-            const def = this.env.model.getters.getChartDefinition(this.props.chartId);
+            const def = this.model().getters.getChartDefinition(this.props.chartId);
             const positionString = section === "KEY" ? def.keyValue : def.baseline;
             if (positionString && !isFormula(positionString)) {
                 return;
             }
-            const range = this.env.model.getters.getRangeFromSheetXC(
-                this.env.model.getters.getActiveSheetId(),
+            const range = this.model().getters.getRangeFromSheetXC(
+                this.model().getters.getActiveSheetId(),
                 positionString.slice(1)
             );
             let position = undefined;
             if (!range.invalidSheetName && range.sheetId) {
                 position = { col: range.zone.left, row: range.zone.top, sheetId: range.sheetId };
             }
-            if (position && SEE_RECORD_LIST_VISIBLE(position, this.env.model.getters)) {
-                await SEE_RECORD_LIST(position, this.env, isMiddleClick);
+            if (position && SEE_RECORD_LIST_VISIBLE(position, this.model().getters)) {
+                await SEE_RECORD_LIST(position, this.spEnv, isMiddleClick);
                 return;
-            } else if (position && SEE_RECORDS_PIVOT_VISIBLE(position, this.env.model.getters)) {
-                await SEE_RECORDS_PIVOT(position, this.env, isMiddleClick);
+            } else if (position && SEE_RECORDS_PIVOT_VISIBLE(position, this.model().getters)) {
+                await SEE_RECORDS_PIVOT(position, this.spEnv, isMiddleClick);
                 return;
             }
         }
@@ -72,7 +72,7 @@ patch(spreadsheet.components.ScorecardChart.prototype, {
         }
     },
     onMouseMove(ev) {
-        if (!this.env.model.getters.isDashboard()) {
+        if (!this.model().getters.isDashboard()) {
             return;
         }
         const section = this.getEventTargetSection(ev);
@@ -83,23 +83,23 @@ patch(spreadsheet.components.ScorecardChart.prototype, {
         this.currentSection = section;
         this.currentHighlight = undefined;
         if (section === "KEY" || section === "BASELINE") {
-            const def = this.env.model.getters.getChartDefinition(this.props.chartId);
+            const def = this.model().getters.getChartDefinition(this.props.chartId);
             const positionString = section === "KEY" ? def.keyValue : def.baseline;
             if (positionString && !isFormula(positionString)) {
                 return;
             }
-            const range = this.env.model.getters.getRangeFromSheetXC(
-                this.env.model.getters.getActiveSheetId(),
+            const range = this.model().getters.getRangeFromSheetXC(
+                this.model().getters.getActiveSheetId(),
                 positionString.slice(1)
             );
             let position = undefined;
             if (!range.invalidSheetName && range.sheetId) {
                 position = { col: range.zone.left, row: range.zone.top, sheetId: range.sheetId };
             }
-            if (position && SEE_RECORD_LIST_VISIBLE(position, this.env.model.getters)) {
+            if (position && SEE_RECORD_LIST_VISIBLE(position, this.model().getters)) {
                 tooltip = section === "KEY" ? _t("Go to Key record") : _t("Go to Baseline record");
                 this.currentHighlight = this.currentSection;
-            } else if (position && SEE_RECORDS_PIVOT_VISIBLE(position, this.env.model.getters)) {
+            } else if (position && SEE_RECORDS_PIVOT_VISIBLE(position, this.model().getters)) {
                 tooltip =
                     section === "KEY" ? _t("Go to Key records") : _t("Go to Baseline records");
                 this.currentHighlight = this.currentSection;
@@ -126,7 +126,7 @@ patch(spreadsheet.components.ScorecardChart.prototype, {
         }
     },
     get runtime() {
-        const runtime = this.env.model.getters.getChartRuntime(this.props.chartId);
+        const runtime = this.model().getters.getChartRuntime(this.props.chartId);
         if (this.currentHighlight === "KEY") {
             runtime.keyHighlight = true;
             runtime.baselineHighlight = false;
@@ -143,13 +143,13 @@ patch(spreadsheet.components.ScorecardChart.prototype, {
 
 patch(spreadsheet.components.GaugeChartComponent.prototype, {
     async navigateToOdooLink(newWindow) {
-        await navigateToOdoolinkFromChart(this.env, this.props.chartId, newWindow);
+        await navigateToOdoolinkFromChart(this.spEnv, this.props.chartId, newWindow);
     },
     get hasOdooLink() {
-        return this.env.model.getters.getChartOdooLink(this.props.chartId) !== undefined;
+        return this.model().getters.getChartOdooLink(this.props.chartId) !== undefined;
     },
     async onClick() {
-        if (this.env.model.getters.isDashboard() && this.hasOdooLink) {
+        if (this.model().getters.isDashboard() && this.hasOdooLink) {
             await this.navigateToOdooLink();
         }
     },

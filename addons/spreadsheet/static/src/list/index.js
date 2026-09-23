@@ -52,12 +52,12 @@ cellMenuRegistry.add(
         name: _t("See record"),
         sequence: 200,
         execute: async (env, isMiddleClick) => {
-            const position = env.model.getters.getActivePosition();
+            const position = env.model().getters.getActivePosition();
             await SEE_RECORD_LIST(position, env, isMiddleClick);
         },
         isVisible: (env) => {
-            const position = env.model.getters.getActivePosition();
-            return SEE_RECORD_LIST_VISIBLE(position, env.model.getters);
+            const position = env.model().getters.getActivePosition();
+            return SEE_RECORD_LIST_VISIBLE(position, env.model().getters);
         },
         icon: "o-spreadsheet-Icon.SEE_RECORDS",
     })
