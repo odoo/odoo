@@ -19,12 +19,7 @@ export class Loom extends AbstractThirdPartyVideo {
             linkedParams: ["hide_share", "hide_title", "hide_owner", "hide_speed"],
             reversed: true,
         },
-        hideFullscreen: {
-            default: false,
-            type: BooleanInt,
-            params: ["fullscreen"],
-            reversed: true,
-        },
+        isVertical: { default: false, type: Boolean },
     };
     /**
      * Returns the embed url for a loom video.
@@ -52,6 +47,6 @@ export class Loom extends AbstractThirdPartyVideo {
         embed: "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002",
         Params: "loom.com/share/e5b8c04bca094dd8a5507925ab887002?autoplay=1&t=62",
         embedParams:
-            "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002?autoplay=1&t=62s&hide_share=1&hideEmbedTopBar=0&hide_title=0&hide_owner=1&hide_speed=1&fullscreen=1",
+            "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002?autoplay=1&t=62s&hide_share=1&hideEmbedTopBar=0&hide_title=0&hide_owner=1&hide_speed=1",
     };
 }

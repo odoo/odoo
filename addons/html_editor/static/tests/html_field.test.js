@@ -279,6 +279,29 @@ test("html field in readonly with embedded components", async () => {
     expect.verifySteps(["destroyed"]);
 });
 
+test("html field in readonly with an embedded YouTube playlist", async () => {
+    const list = "playlistId";
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<div data-embedded="video" data-embedded-props='{"platform":"youtube","videoId":"","params":{"list":"${list}"}}'></div>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" readonly="1" options="{'embedded_components': True}"/>
+            </form>`,
+    });
+    expect(`[name="txt"] [data-embedded="video"] iframe`).toHaveAttribute(
+        "data-src",
+        `https://www.youtube.com/embed/videoseries?list=${list}`
+    );
+});
+
 test("html field in readonly with embedded components and editable descendants", async () => {
     const Wrapper = EmbeddedWrapperMixin("editable");
     // patchWithCleanup Array => cleanup keeps the last array entry set to undefined,

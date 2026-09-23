@@ -6,7 +6,7 @@ export class Youtube extends AbstractThirdPartyVideo {
     static name = "YouTube";
 
     static urlMatcher =
-        /^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtu\.be\/|youtube(-nocookie)?\.com\/(?:embed\/|v\/|shorts\/|live\/|watch\?v=|watch\?.+&v=))(?<id>(?:\w|-){11})\S*$/i;
+        /^(?:https?:\/\/)?(?:www\.|m\.)?(?:(?:youtu\.be\/|youtube(-nocookie)?\.com\/(?:embed\/(?!videoseries)|v\/|shorts\/|live\/|watch\?v=|watch\?.+&v=))(?<id>(?:\w|-){11})|youtube(?:-nocookie)?\.com\/(?:playlist|embed\/videoseries)\?(?:\S*&)?list=[\w-]+)\S*$/i;
 
     static optionsConfig = {
         startFrom: { default: 0, type: Number, params: ["start", "t"] },
@@ -18,6 +18,7 @@ export class Youtube extends AbstractThirdPartyVideo {
         isVertical: { default: false, type: Boolean },
         noCookie: { default: false, type: Boolean },
         playlist: { default: "", type: String, linkedParams: ["playlist"] },
+        list: { default: "", type: String, params: ["list"] },
         enableJsApi: { default: false, type: BooleanInt, params: ["enablejsapi"] },
         showRelatedVideos: { default: true, type: BooleanInt, params: ["rel"] },
     };
@@ -34,7 +35,10 @@ export class Youtube extends AbstractThirdPartyVideo {
             options.playlist = videoId;
         }
         const params = encodeOptionsToParams(options, Youtube.optionsConfig);
-        return `https://www.youtube${noCookie}.com/embed/${videoId}${params ? "?" + params : ""}`;
+        // "videoseries" is the embed path of a playlist without a video.
+        return `https://www.youtube${noCookie}.com/embed/${videoId || "videoseries"}${
+            params ? "?" + params : ""
+        }`;
     }
     /**
      * Returns the url for the thumbnail image of the video.
@@ -43,17 +47,20 @@ export class Youtube extends AbstractThirdPartyVideo {
      * @return {string} url
      */
     static getThumbnailUrl(videoId) {
-        return `https://img.youtube.com/vi/${videoId}/0.jpg`;
+        return videoId && `https://img.youtube.com/vi/${videoId}/0.jpg`;
     }
     /**
      * @override
      * @param {URL} url
+     * @param {RegExpExecArray} urlMatch
      */
-    static getCustomUrlOptions(url) {
+    static getCustomUrlOptions(url, urlMatch) {
         return {
             noCookie: url.hostname.includes("youtube-nocookie"),
             enableJsApi: true, // Always enable js api.
             showRelatedVideos: false, // Always disable related videos.
+            // A private or deleted playlist (e.g. "list=WL") makes the video unavailable.
+            ...(urlMatch.groups.id && { list: "" }),
         };
     }
 
@@ -74,6 +81,8 @@ export class Youtube extends AbstractThirdPartyVideo {
         minified: "youtu.be/xCvFZrrQq7k",
         noCookie: "https://www.youtube-nocookie.com/watch?v=xCvFZrrQq7k",
         embed: "https://www.youtube.com/embed/xCvFZrrQq7k",
+        playlist: "https://www.youtube.com/playlist?list=playlistId",
+        embedPlaylist: "https://www.youtube.com/embed/videoseries?si=AbCdEfGh123&list=playlistId",
         params: "https://www.youtube.com/watch?v=xCvFZrrQq7k&t=62&autoplay=1&loop=1&controls=0&fs=0",
         embedParams:
             "https://www.youtube.com/embed/xCvFZrrQq7k?start=62&autoplay=1&loop=1&controls=0&fs=0",
