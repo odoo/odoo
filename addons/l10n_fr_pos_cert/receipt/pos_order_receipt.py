@@ -37,7 +37,5 @@ class PosOrderReceipt(models.AbstractModel):
             # `event_ticket_id` field is provided by `pos_event`, so it may not exist.
             and not (hasattr(line, 'event_ticket_id') and line.event_ticket_id)
             and line.product_id not in loyalty_trigger_products
-            # `sale_order_origin_id` field is provided by `pos_sale`, so it may not exist.
-            and not (hasattr(line, 'sale_order_origin_id') and line.sale_order_origin_id)
             and line.product_id != discount_product
         )
