@@ -1025,10 +1025,11 @@ class HrLeave(models.Model):
                     else:
                         employees = self.mapped('employee_id')
                     self._check_double_validation_rules(employees, values['state'])
+            employee = self.env['hr.employee'].browse(employee_id) or self.employee_id
             if 'date_from' in values:
-                values['request_date_from'] = values['date_from']
+                values['request_date_from'] = datetime.date(values['date_from'].astimezone(ZoneInfo(employee.tz)))
             if 'date_to' in values:
-                values['request_date_to'] = values['date_to']
+                values['request_date_to'] = datetime.date(values['date_to'].astimezone(ZoneInfo(employee.tz)))
         result = super().write(values)
 
         # If the dates of a validated leave were changed, amend the resource calendar leave dates
