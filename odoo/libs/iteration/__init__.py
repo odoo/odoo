@@ -1,7 +1,6 @@
 from .grouping import groupby, unique, partition
 from .sorting import topological_sort, merge_sequences
 from .sentinel import Sentinel, SENTINEL, PENDING
-from .slicing import split_every
 
 __all__ = [
     "PENDING",
@@ -10,7 +9,6 @@ __all__ = [
     "groupby",
     "merge_sequences",
     "partition",
-    "split_every",
     "topological_sort",
     "unique",
 ]
