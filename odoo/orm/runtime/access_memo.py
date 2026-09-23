@@ -12,6 +12,7 @@ from odoo.tools.query import Query
 from ..constants import READ_GROUP_NUMBER_GRANULARITY
 from ..domain import Domain, DomainBool, DomainCondition, DomainNary, DomainNot
 from ..domain.constants import SUBDOMAIN_OPERATORS
+from ..domain.optimizations import access_condition_target
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterator
@@ -59,6 +60,10 @@ def _collect_condition(
     field = _collect_path(model, condition.field_expr, facts, depth)
     if field is False:
         return False
+    if condition.operator == "access":
+        return field is not None and _collect_access(
+            model, field, condition, facts, depth
+        )
     value = condition.value
     if isinstance(value, Domain):
         subdomain = value
@@ -69,6 +74,24 @@ def _collect_condition(
     if field is None or not field.relational:
         return False
     return _collect_domain(model.env[field.comodel_name], subdomain, facts, depth + 1)
+
+
+def _collect_access(
+    model: BaseModel,
+    field: Field,
+    condition: DomainCondition,
+    facts: set,
+    depth: int,
+) -> bool:
+    # what the pointed-to model's security domain reads decides the condition
+    if depth >= _MAX_DEPTH:
+        return False
+    owner = model.env[field.model_name]
+    target = DomainCondition(field.name, "access", condition.value)
+    comodel_name, operation = access_condition_target(target, owner)
+    env = owner.sudo(False).env
+    domain = env.registry.access_policy.security_domain(env, comodel_name, operation)
+    return _collect_domain(env[comodel_name], domain, facts, depth + 1)
 
 
 def _collect_path(

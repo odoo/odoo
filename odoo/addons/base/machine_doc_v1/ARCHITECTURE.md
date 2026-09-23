@@ -70,9 +70,10 @@ access control, and ORM extensions that those controllers depend on.
 odoo/addons/base/
 ├── __manifest__.py              # Module metadata + asset/data file declarations
 ├── __init__.py                  # Imports models, report, wizard + post_init hook
-├── models/                      # 112 Python model files (core ORM infrastructure)
+├── models/                      # 113 Python model files (core ORM infrastructure)
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
+│   ├── ir_access.py                 #   ir.access: permissions and guards with domains, for models that opt in
 │   ├── ir_access_convert.py         #   ir.model.access + ir.rule to ir.access rows, with the audit report (pure)
 │   ├── ir_actions_act_url.py        #   URL action
 │   ├── ir_actions_act_window.py     #   Window actions (open views on a model)
@@ -199,7 +200,7 @@ odoo/addons/base/
 ├── tests/                       # 144 Python test files + test assets
 │   ├── common.py                #   Base test classes (demo user, portal user)
 │   └── test_*.py                #   Test modules -- counts in TEST_TAGS.md, derived by factcheck.sh
-├── views/                       # 38 XML view definition files
+├── views/                       # 39 XML view definition files
 ├── data/                        # 21 data files (XML, CSV, SQL, JSON)
 ├── security/                    # ir.model.access.csv + groups and record-rule XML
 ├── rng/                         # RelaxNG schemas (view validation)
@@ -283,10 +284,10 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 
 | Category | Count |
 |----------|-------|
-| Python (models) | 112 |
+| Python (models) | 113 |
 | Python (wizards) | 11 |
 | Python (tests) | 144 |
-| XML (views) | 38 |
+| XML (views) | 39 |
 | Data files | 21 |
 | XML (reports) | 0 |
 | XML (wizard views) | 8 |

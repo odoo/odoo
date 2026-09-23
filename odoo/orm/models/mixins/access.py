@@ -7,11 +7,13 @@ from typing import Self
 
 from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
+from odoo.tools import ormcache
 from odoo.tools.misc import unquote
 from odoo.tools.translate import LazyTranslate, _
 
 from ... import decorators as api
 from ...domain import Domain
+from ...domain.constants import ACCESS_OPERATIONS
 from ...fields.base import call_hook
 from ...helpers import to_record_ids
 from ...primitives import NO_ACCESS
@@ -258,6 +260,57 @@ class AccessMixin(_ModelStubs):
             )
 
         return None
+
+    @api.model
+    @ormcache("operation", "self.env.registry.access_policy.access_signature(self.env)")
+    def _access_domain(self, operation: str) -> Domain:
+        # the records the principal may perform the operation on, from
+        # ir.access: the OR of the permissions its groups hold, AND every guard
+        # that binds it (all principals, or the members of the guard's group),
+        # AND what each delegated parent allows through the delegate
+        if operation not in ACCESS_OPERATIONS:
+            raise ValueError(
+                f"Invalid access operation {operation!r}: expected one of "
+                f"{ACCESS_OPERATIONS}."
+            )
+        env = self.env
+        policy = env.registry.access_policy
+        parents: list[Domain] = []
+        if self._inherits_rules:
+            for parent_model_name, parent_field_name in self._inherits.items():
+                delegate = self._fields[parent_field_name]
+                if not delegate.store and operation == "create":
+                    # a computed delegate is settled after the row is inserted;
+                    # the parent's own create checked the parent's access
+                    continue
+                if not (delegate.store or delegate.search or delegate.related):
+                    raise ValueError(
+                        f"{delegate} delegates {self._name} to {parent_model_name} "
+                        f"without a column or a search: the parent's access "
+                        f"cannot bind through it. Give it a search method, or "
+                        f"set _inherits_rules = False and state what replaces it."
+                    )
+                parent_domain = policy.security_domain(
+                    env, parent_model_name, operation
+                )
+                if parent_domain.is_false():
+                    return Domain.FALSE
+                if not parent_domain.is_true():
+                    parents.append(Domain(parent_field_name, "any", parent_domain))
+
+        permissions, guards = policy.bound_access_rows(env, self._name, operation)
+        _debug.logic(
+            "access.domain_computed",
+            model=self._name,
+            operation=operation,
+            uid=env.uid,
+            permissions=len(permissions),
+            guards=len(guards),
+            parents=len(parents),
+        )
+        if not permissions:
+            return Domain.FALSE
+        return Domain.OR(permissions) & Domain.AND(guards + parents)
 
     def _note_readable(self) -> None:
         # the records a user's search or fetch returned passed the read rules

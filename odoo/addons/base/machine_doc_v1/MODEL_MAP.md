@@ -315,6 +315,32 @@ Selection field options.
 
 ---
 
+### models/ir_access.py
+
+#### IrAccess — `ir.access` (`_name`)
+
+One row says who may do what to which records: a `permission` adds its
+domain's records to what its group reaches (permissions are OR-ed), a `guard`
+is AND-ed and no permission widens it. A model reads its access from these rows
+only when it declares `_access_store = "ir.access"`; every other model still
+answers from `ir.model.access` and `ir.rule` (`registry.access_policy` routes
+per model).
+
+**Fields:**
+- `name` (Char, required), `active` (Boolean, default=True), `note` (Html)
+- `model_id` (Many2one → ir.model, required, indexed)
+- `group_id` (Many2one → res.groups, required, indexed) — a row created without one is `base.group_everyone`'s
+- `kind` (Selection permission/guard, required), `guard_scope` (Selection everyone/members, default everyone)
+- `operation` (Selection, a subset of `crud`, required), `domain` (Char)
+- `for_read`, `for_write`, `for_create`, `for_unlink` (Boolean, stored computes of `operation`, with inverse)
+- `is_standard` (Boolean, computed, searchable) — the row comes from a module
+
+**Key Methods:**
+- `_get_all_access()` — every active row by model, literal domains pre-parsed (ormcache stable); refuses a cycle of `'access'` conditions
+- `_check_domain()` — a domain validates against the registry, never tests the user's groups, and closes no `'access'` cycle
+- `customize()` — archive a module's row and open an editable copy
+- `_make_model_access_error()`, `_make_record_access_error()` — the AccessError texts, with the failing rows in debug mode
+
 ### models/ir_model_access.py
 
 Contains the access-control model. The constraint- and relation-reflection
@@ -2085,6 +2111,7 @@ Quick lookup — file → model → primary role:
 | `ir_http.py` | ir.http | HTTP routing/auth/dispatch |
 | `ir_logging.py` | ir.logging | Server/client logs |
 | `ir_model.py` | ir.model, ir.model.inherit | Model registry + inheritance |
+| `ir_access.py` | ir.access | Permissions and guards with domains (opt-in per model) |
 | `ir_model_access.py` | ir.model.access | Model-level ACL |
 | `ir_model_reflection.py` | ir.model.constraint, ir.model.relation | DB constraint/relation tracking for uninstall |
 | `ir_model_data.py` | ir.model.data | XML ID registry |

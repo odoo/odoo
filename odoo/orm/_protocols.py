@@ -127,6 +127,24 @@ class IrModelConstraintProtocol(RecordsetProtocol, Protocol):
     def _reflect_constraints(self, model_names: list[str]) -> None: ...
 
 
+class IrAccessProtocol(RecordsetProtocol, Protocol):
+    def _operation_letter(self, operation: str) -> str: ...
+
+    def _get_all_access(self) -> Any: ...
+
+    def _eval_context(self) -> dict[str, Any]: ...
+
+    def _policy_signature(self) -> tuple: ...
+
+    def _make_model_access_error(
+        self, model_name: str, operation: str
+    ) -> AccessError: ...
+
+    def _make_record_access_error(
+        self, records: Any, operation: str
+    ) -> AccessError: ...
+
+
 class IrModelAccessProtocol(RecordsetProtocol, Protocol):
     def check(
         self, model: str, mode: str = "read", raise_exception: bool = True
@@ -273,6 +291,8 @@ class ResUsersProtocol(RecordsetProtocol, Protocol):
 
     def _get_company_ids(self) -> tuple[int, ...]: ...
 
+    def _get_group_ids(self) -> tuple[int, ...]: ...
+
     def _has_group(self, group_ext_id: str) -> bool: ...
 
     def _is_admin(self) -> bool: ...
@@ -298,6 +318,7 @@ FRAMEWORK_MODEL_PROTOCOLS: dict[str, type] = {
     "ir.config_parameter": IrConfigParameterProtocol,
     "ir.cron": IrCronProtocol,
     "ir.default": IrDefaultProtocol,
+    "ir.access": IrAccessProtocol,
     "ir.fields.converter": IrFieldsConverterProtocol,
     "ir.model": IrModelProtocol,
     "ir.model.access": IrModelAccessProtocol,

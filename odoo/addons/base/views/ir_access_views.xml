@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ir_access_search" model="ir.ui.view">
+        <field name="model">ir.access</field>
+        <field name="arch" type="xml">
+            <search string="Accesses">
+                <field name="name" />
+                <field name="model_id" />
+                <field name="group_id" />
+                <field name="domain" />
+                <filter
+                    name="permissions"
+                    string="Permissions"
+                    domain="[('kind', '=', 'permission')]" />
+                <filter
+                    name="guards"
+                    string="Guards"
+                    domain="[('kind', '=', 'guard')]" />
+                <separator />
+                <filter name="read" string="Read" domain="[('for_read', '=', True)]" />
+                <filter
+                    name="write"
+                    string="Update"
+                    domain="[('for_write', '=', True)]" />
+                <filter
+                    name="create"
+                    string="Create"
+                    domain="[('for_create', '=', True)]" />
+                <filter
+                    name="unlink"
+                    string="Delete"
+                    domain="[('for_unlink', '=', True)]" />
+                <separator />
+                <filter
+                    name="standard"
+                    string="From a module"
+                    domain="[('is_standard', '=', True)]" />
+                <filter
+                    name="custom"
+                    string="Customized"
+                    domain="[('is_standard', '=', False)]" />
+                <separator />
+                <filter
+                    name="inactive"
+                    string="Archived"
+                    domain="[('active', '=', False)]" />
+                <group>
+                    <filter
+                        name="group_by_model"
+                        string="Model"
+                        context="{'group_by': 'model_id'}" />
+                    <filter
+                        name="group_by_group"
+                        string="Group"
+                        context="{'group_by': 'group_id'}" />
+                    <filter
+                        name="group_by_kind"
+                        string="Kind"
+                        context="{'group_by': 'kind'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_ir_access_list" model="ir.ui.view">
+        <field name="model">ir.access</field>
+        <field name="arch" type="xml">
+            <list string="Accesses">
+                <field name="name" />
+                <field name="model_id" />
+                <field name="group_id" />
+                <field
+                    name="kind"
+                    widget="badge"
+                    decoration-success="kind == 'permission'"
+                    decoration-warning="kind == 'guard'" />
+                <field name="guard_scope" invisible="kind != 'guard'" />
+                <field name="domain" />
+                <field name="for_read" width="85px" />
+                <field name="for_write" width="85px" />
+                <field name="for_create" width="85px" />
+                <field name="for_unlink" width="85px" />
+                <field name="is_standard" optional="hide" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ir_access_form" model="ir.ui.view">
+        <field name="model">ir.access</field>
+        <field name="arch" type="xml">
+            <form string="Access">
+                <header>
+                    <button
+                        name="customize"
+                        type="object"
+                        string="Customize"
+                        help="Archive this access and edit a copy of it, so that updating its module keeps the change."
+                        invisible="not is_standard" />
+                </header>
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        invisible="active"
+                        bg_color="text-bg-danger" />
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1><field name="name" /></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model_id" />
+                            <field name="group_id" />
+                            <field name="kind" widget="radio" />
+                            <field name="guard_scope" invisible="kind != 'guard'" />
+                            <field name="is_standard" />
+                        </group>
+                        <group string="Operations">
+                            <field name="for_read" />
+                            <field name="for_write" />
+                            <field name="for_create" />
+                            <field name="for_unlink" />
+                        </group>
+                    </group>
+                    <separator string="Domain" />
+                    <field name="domain" />
+                    <separator string="Note" />
+                    <field name="note" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ir_access" model="ir.actions.act_window">
+        <field name="name">Accesses</field>
+        <field name="res_model">ir.access</field>
+        <field name="path">accesses</field>
+        <field name="view_id" ref="view_ir_access_list" />
+        <field name="search_view_id" ref="view_ir_access_search" />
+    </record>
+
+</odoo>

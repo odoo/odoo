@@ -27,8 +27,10 @@ STANDARD_CONDITION_OPERATORS: Final[frozenset[str]] = frozenset(
 )
 
 EXTENDED_CONDITION_OPERATORS: Final[frozenset[str]] = frozenset(
-    ("=?", "<>", "==", "=", "!=", "parent_of", "child_of")
+    ("=?", "<>", "==", "=", "!=", "parent_of", "child_of", "access")
 )
+
+ACCESS_OPERATIONS: Final[tuple[str, ...]] = ("read", "write", "create", "unlink")
 
 CONDITION_OPERATORS: Final[frozenset[str]] = (
     STANDARD_CONDITION_OPERATORS | EXTENDED_CONDITION_OPERATORS
@@ -107,6 +109,7 @@ TRUE_LEAF: Final[tuple[int, str, int]] = (1, "=", 1)
 FALSE_LEAF: Final[tuple[int, str, int]] = (0, "=", 1)
 
 __all__ = [
+    "ACCESS_OPERATIONS",
     "CONDITION_OPERATORS",
     "EXTENDED_CONDITION_OPERATORS",
     "FALSE_LEAF",

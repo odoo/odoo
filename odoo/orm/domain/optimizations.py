@@ -29,6 +29,7 @@ from .ast import (
 )
 from .constants import (
     ACCEPTED_CONDITION_OPERATORS,
+    ACCESS_OPERATIONS,
     INVERSE_OPERATOR,
     LIKE_CONDITION_OPERATORS,
     NEGATIVE_CONDITION_OPERATORS,
@@ -848,6 +849,55 @@ def _get_domain_parent_of(comodel: BaseModel, parent: str) -> OrderedSet:
             parent_ids.update(comodel._ids)
             comodel = comodel[parent].filtered(lambda p: p.id not in parent_ids)
     return parent_ids
+
+
+def access_condition_target(
+    condition: DomainCondition, model: BaseModel
+) -> tuple[str, str]:
+    field = condition._get_field(model)
+    if condition.field_expr != field.name:
+        raise condition._prepare_condition_error(
+            "The 'access' operator takes a field of the model, not a path"
+        )
+    if field.name == "id":
+        comodel_name = model._name
+    elif field.is_many2one and field.comodel_name:
+        comodel_name = field.comodel_name
+    else:
+        raise condition._prepare_condition_error(
+            "The 'access' operator works only for many2one and 'id' fields"
+        )
+    if condition.value not in ACCESS_OPERATIONS:
+        raise condition._prepare_condition_error(
+            "The 'access' operator takes one of %s", ", ".join(ACCESS_OPERATIONS)
+        )
+    return comodel_name, condition.value
+
+
+@operator_optimization(["access"], OptimizationLevel.DYNAMIC_VALUES)
+def _optimize_access(condition: DomainCondition, model: BaseModel) -> Domain:
+    # the condition holds when the principal may perform the operation on the
+    # record the field points to: it reads that model's security domain for
+    # the user, never the superuser the check itself may run as
+    comodel_name, operation = access_condition_target(condition, model)
+    env = model.sudo(False).env
+    domain = env.registry.access_policy.security_domain(env, comodel_name, operation)
+    _debug.logic(
+        "domain.access.resolved",
+        model=model._name,
+        field=condition.field_expr,
+        comodel=comodel_name,
+        operation=operation,
+        uid=env.uid,
+        verdict="none" if domain.is_false() else "all" if domain.is_true() else "some",
+    )
+    if domain.is_false():
+        return _FALSE_DOMAIN
+    if condition.field_expr == "id":
+        return domain
+    if domain.is_true():
+        return DomainCondition(condition.field_expr, "!=", False)
+    return DomainCondition(condition.field_expr, "any!", domain)
 
 
 @operator_optimization(["any", "not any"], level=OptimizationLevel.FULL)
