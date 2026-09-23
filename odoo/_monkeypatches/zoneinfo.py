@@ -151,6 +151,10 @@ class ZoneInfo(zoneinfo.ZoneInfo):
         z._unpickle = None
         return z
 
+    @property
+    def zone(self):
+        return self.key
+
 
 def patch_module():
     zoneinfo.ZoneInfo = ZoneInfo
