@@ -1,13 +1,14 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onWillRender, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { Domain } from "@web/core/domain";
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { fieldLog } from "@web/core/utils/asset_log";
 import { omit } from "@web/core/utils/collections/objects";
+import { useComputed } from "@web/core/utils/computed";
 import { getClassNameFromDecoration } from "@web/core/utils/decorations";
 import { useRenderCounter } from "@web/core/utils/render_instrumentation";
 import { getFieldContext } from "@web/model/relational_model";
@@ -352,9 +353,6 @@ export class Field extends Component {
     static template = "web.Field";
     static props = fieldProps;
 
-    /** @type {{ readonly: boolean, required: boolean, invalid: boolean, empty: boolean }} */
-    _visualFeedback;
-
     /** @type {(record?: any) => any[] | undefined} */
     dynamicDomain;
 
@@ -379,21 +377,31 @@ export class Field extends Component {
                 ).toList();
             }
         };
-        onWillRender(() => {
-            this._visualFeedback = fieldVisualFeedback(
-                this.field,
-                this.props.record,
+        this.visualFeedback = useComputed(
+            (track) =>
+                fieldVisualFeedback(
+                    this.field,
+                    track(this.props.record),
+                    this.props.name,
+                    this.props.fieldInfo || {},
+                ),
+            () => [this.props.record, this.props.name, this.props.fieldInfo],
+        );
+        this.computedTooltip = useComputed(
+            () => this.computeTooltip(),
+            () => [
+                this.props.showTooltip,
+                this.props.record.fields,
                 this.props.name,
-                this.props.fieldInfo || {},
-            );
-            this._tooltip = this.computeTooltip();
-        });
+                this.props.fieldInfo,
+            ],
+        );
     }
 
     /** @returns {Record<string, boolean>} */
     get classNames() {
         const { class: _class, fieldInfo, record } = this.props;
-        const { readonly, required, invalid, empty } = this._visualFeedback;
+        const { readonly, required, invalid, empty } = this.visualFeedback();
         const classNames = {
             o_field_widget: true,
             o_readonly_modifier: readonly,
@@ -441,7 +449,7 @@ export class Field extends Component {
         let propsFromNode = {};
         if (this.props.fieldInfo) {
             let fieldInfo = this.props.fieldInfo;
-            readonly = readonly || this._visualFeedback.readonly;
+            readonly = readonly || this.visualFeedback().readonly;
 
             if (this.field.extractProps) {
                 if (this.props.attrs) {
@@ -473,7 +481,7 @@ export class Field extends Component {
                         );
                     },
                     domain: this.dynamicDomain,
-                    required: this._visualFeedback.required,
+                    required: this.visualFeedback().required,
                     readonly: readonly,
                 };
                 propsFromNode = this.field.extractProps(fieldInfo, dynamicInfo);
@@ -509,6 +517,6 @@ export class Field extends Component {
 
     /** @returns {string | false} */
     get tooltip() {
-        return /** @type {string | false} */ (this._tooltip);
+        return this.computedTooltip();
     }
 }

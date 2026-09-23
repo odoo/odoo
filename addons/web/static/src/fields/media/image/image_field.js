@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { onWillRender, status, useState } from "@odoo/owl";
+import { status, useState } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { FileUploader } from "@web/core/file_upload/file_handler";
 import { DateTime } from "@web/core/l10n/luxon";
@@ -75,19 +75,16 @@ export class ImageField extends FieldComponent {
     notification;
     /** @type {import("services").ServiceFactories["orm"]} */
     orm;
-    /** @type {{ isValid: boolean }} */
+    /** @type {{ failedVersionId: number | null }} */
     state;
-    /** @type {Map<string, string>} */
-    urlCache;
 
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.isMobile = isMobileOS();
         this.state = useState({
-            isValid: true,
+            failedVersionId: null,
         });
-        this.urlCache = new Map();
 
         if (this.fieldType === "many2one" && !this.props.previewImage) {
             throw new Error(
@@ -96,32 +93,55 @@ export class ImageField extends FieldComponent {
         }
         const field = this.field.definition;
         const isDottedRelated = field.related?.includes(".");
-        this.uniqueId = this.props.record.data.write_date;
-        let resId = this.props.record.resId;
-        let value = this.field.value;
-        const valueChanged = (value, nextValue) =>
-            this.fieldType === "many2one"
-                ? value?.id !== nextValue?.id ||
+        this.bustsCacheOnValueChange = isDottedRelated || this.fieldType === "many2one";
+    }
+
+    /**
+     * The image the field currently shows: its cache-busting key, its urls,
+     * and whether it failed to load are all tied to one record and value.
+     *
+     * @returns {{ id: number, resId: any, value: any, uniqueId: any, urls: Map<string, string> }}
+     */
+    get imageVersion() {
+        const { record } = this.props;
+        const value = fieldHandleFor(record, this.props.name).value;
+        const current = this._imageVersion;
+        if (
+            current &&
+            current.resId === record.resId &&
+            !this.valueChanged(current.value, value)
+        ) {
+            return current;
+        }
+        this._imageVersion = {
+            id: (current?.id ?? 0) + 1,
+            resId: record.resId,
+            value,
+            uniqueId:
+                current &&
+                current.resId === record.resId &&
+                this.bustsCacheOnValueChange
+                    ? DateTime.now()
+                    : record.data.write_date,
+            urls: new Map(),
+        };
+        return this._imageVersion;
+    }
+
+    /**
+     * @param {any} value
+     * @param {any} nextValue
+     */
+    valueChanged(value, nextValue) {
+        return this.fieldType === "many2one"
+            ? value?.id !== nextValue?.id ||
                   value?.display_name !== nextValue?.display_name
-                : value !== nextValue;
-        onWillRender(() => {
-            const { record } = this.props;
-            const nextValue = fieldHandleFor(record, this.props.name).value;
-            if (record.resId !== resId) {
-                this.uniqueId = record.data.write_date;
-                this.urlCache.clear();
-                this.state.isValid = true;
-            } else if (valueChanged(value, nextValue)) {
-                this.urlCache.clear();
-                this.state.isValid = true;
-                this.uniqueId =
-                    isDottedRelated || this.fieldType === "many2one"
-                        ? DateTime.now()
-                        : record.data.write_date;
-            }
-            resId = record.resId;
-            value = nextValue;
-        });
+            : value !== nextValue;
+    }
+
+    /** @returns {boolean} */
+    get isValid() {
+        return this.state.failedVersionId !== this.imageVersion.id;
     }
 
     get imgAlt() {
@@ -142,7 +162,7 @@ export class ImageField extends FieldComponent {
     }
 
     get rawCacheKey() {
-        return this.uniqueId;
+        return this.imageVersion.uniqueId;
     }
 
     get sizeStyle() {
@@ -181,11 +201,12 @@ export class ImageField extends FieldComponent {
     }
 
     getUrl(imageFieldName) {
-        if (!this.field.value || !this.state.isValid) {
+        if (!this.field.value || !this.isValid) {
             return IMAGE_PLACEHOLDER;
         }
-        if (!this.props.reload && this.urlCache.has(imageFieldName)) {
-            return /** @type {string} */ (this.urlCache.get(imageFieldName));
+        const { urls } = this.imageVersion;
+        if (!this.props.reload && urls.has(imageFieldName)) {
+            return /** @type {string} */ (urls.get(imageFieldName));
         }
         const url =
             this.fieldType === "many2one"
@@ -201,16 +222,16 @@ export class ImageField extends FieldComponent {
                       field: imageFieldName,
                       unique: this.rawCacheKey,
                   });
-        this.urlCache.set(imageFieldName, url);
+        urls.set(imageFieldName, url);
         return url;
     }
     onFileRemove() {
-        this.state.isValid = true;
+        this.state.failedVersionId = null;
         this.field.update(false);
     }
     async onFileUploaded(info) {
         const record = this.props.record;
-        this.state.isValid = true;
+        this.state.failedVersionId = null;
         try {
             if (this.props.convertToWebp) {
                 info = await convertUploadToWebp(info);
@@ -233,7 +254,7 @@ export class ImageField extends FieldComponent {
         this.field.update(info.data);
     }
     onLoadFailed() {
-        this.state.isValid = false;
+        this.state.failedVersionId = this.imageVersion.id;
     }
 }
 

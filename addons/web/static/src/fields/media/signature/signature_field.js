@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { onWillRender, useState } from "@odoo/owl";
+import { useState } from "@odoo/owl";
 import { SignatureDialog } from "@web/components/signature/signature_dialog";
 import { getSignatureDefaultName } from "@web/components/signature/signature_name";
 import { _t } from "@web/core/translation";
@@ -38,7 +38,7 @@ export class SignatureField extends FieldComponent {
     displaySignatureRatio;
     /** @type {import("services").ServiceFactories["notification"]} */
     notification;
-    /** @type {{ isValid: boolean }} */
+    /** @type {{ failedFor: { resId: any, value: any } | null }} */
     state;
 
     setup() {
@@ -47,19 +47,19 @@ export class SignatureField extends FieldComponent {
         this.dialogService = useService("dialog");
         this.notification = useService("notification");
         this.state = useState({
-            isValid: true,
+            failedFor: null,
         });
-        let resId = this.props.record.resId;
-        let value = this.value;
-        onWillRender(() => {
-            const { record } = this.props;
-            const nextValue = fieldHandleFor(record, this.props.name).value;
-            if (record.resId !== resId || value !== nextValue) {
-                this.state.isValid = true;
-            }
-            resId = record.resId;
-            value = nextValue;
-        });
+    }
+
+    /** @returns {boolean} */
+    get isValid() {
+        const failed = this.state.failedFor;
+        const { record } = this.props;
+        return !(
+            failed &&
+            failed.resId === record.resId &&
+            failed.value === fieldHandleFor(record, this.props.name).value
+        );
     }
 
     /** @returns {string} */
@@ -70,7 +70,7 @@ export class SignatureField extends FieldComponent {
     /** @returns {string} */
     get url() {
         const { name, previewImage, record } = this.props;
-        if (this.state.isValid && this.value) {
+        if (this.isValid && this.value) {
             return binaryImageSrc(this.value, {
                 model: record.resModel,
                 resId: record.resId,
@@ -135,7 +135,11 @@ export class SignatureField extends FieldComponent {
     }
 
     onLoadFailed() {
-        this.state.isValid = false;
+        const { record } = this.props;
+        this.state.failedFor = {
+            resId: record.resId,
+            value: fieldHandleFor(record, this.props.name).value,
+        };
         this.notification.add(_t("Could not display the selected image"), {
             type: "danger",
         });

@@ -16,7 +16,7 @@ export class ContactImageField extends ImageField {
      * @returns {string}
      */
     getUrl(imageFieldName) {
-        if (this.props.previewImage && (!this.field.value || !this.state.isValid)) {
+        if (this.props.previewImage && (!this.field.value || !this.isValid)) {
             const previewData = this.props.record.data[imageFieldName];
             if (previewData) {
                 const url = binaryImageSrc(previewData, {
@@ -34,7 +34,7 @@ export class ContactImageField extends ImageField {
     /** @returns {string} */
     get imgClass() {
         let classes = super.imgClass;
-        if (!this.field.value || !this.state.isValid) {
+        if (!this.field.value || !this.isValid) {
             classes += " opacity-100 opacity-25-hover";
         }
         return classes;
@@ -42,7 +42,7 @@ export class ContactImageField extends ImageField {
 
     /** @returns {boolean} */
     get containsValidImage() {
-        return this.field.value && this.state.isValid;
+        return this.field.value && this.isValid;
     }
 }
 

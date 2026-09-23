@@ -3,7 +3,6 @@
 
 import {
     onWillDestroy,
-    onWillRender,
     onWillUpdateProps,
     useEffect,
     useRef,
@@ -37,26 +36,18 @@ export class PdfViewerField extends FieldComponent {
     iframeViewerPdfRef;
     /** @type {import("services").ServiceFactories["notification"]} */
     notification;
-    /** @type {{ isValid: boolean; objectUrl: string }} */
+    /** @type {{ failedResId: any; objectUrl: string; objectUrlResId: any }} */
     state;
 
     setup() {
         this.notification = useService("notification");
         this.action = useAction();
         this.state = useState({
-            isValid: true,
+            failedResId: null,
             objectUrl: "",
+            objectUrlResId: null,
         });
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
-        let lastResId = this.props.record.resId;
-        onWillRender(() => {
-            const resId = this.props.record.resId;
-            if (lastResId && resId !== lastResId) {
-                this.setObjectUrl("");
-                this.state.isValid = true;
-            }
-            lastResId = resId;
-        });
         onWillUpdateProps((nextProps) => {
             if (nextProps.readonly) {
                 this.setObjectUrl("");
@@ -81,11 +72,37 @@ export class PdfViewerField extends FieldComponent {
             URL.revokeObjectURL(this.state.objectUrl);
         }
         this.state.objectUrl = objectUrl;
+        this.state.objectUrlResId = this.props.record.resId;
+    }
+
+    /**
+     * Whether a key recorded for `resId` still applies: moving to another
+     * record drops it, saving the new record it was made on does not.
+     *
+     * @param {any} resId
+     */
+    isCurrentRecord(resId) {
+        return resId === false || resId === this.props.record.resId;
+    }
+
+    /** @returns {string} */
+    get objectUrl() {
+        return this.isCurrentRecord(this.state.objectUrlResId)
+            ? this.state.objectUrl
+            : "";
+    }
+
+    /** @returns {boolean} */
+    get isValid() {
+        return (
+            this.state.failedResId === null ||
+            !this.isCurrentRecord(this.state.failedResId)
+        );
     }
 
     get urlFile() {
         return (
-            this.state.objectUrl ||
+            this.objectUrl ||
             url("/web/content", {
                 model: this.props.record.resModel,
                 field: this.props.name,
@@ -95,10 +112,10 @@ export class PdfViewerField extends FieldComponent {
     }
 
     get url() {
-        if (!this.state.isValid || !this.field.value) {
+        if (!this.isValid || !this.field.value) {
             return null;
         }
-        if (!this.state.objectUrl && !this.props.record.resId) {
+        if (!this.objectUrl && !this.props.record.resId) {
             return null;
         }
         const page = this.props.record.data[`${this.props.name}_page`] || 1;
@@ -116,7 +133,7 @@ export class PdfViewerField extends FieldComponent {
     }
 
     onFileRemove() {
-        this.state.isValid = true;
+        this.state.failedResId = null;
         this.setObjectUrl("");
         this.update(/** @type {any} */ ({}));
     }
@@ -130,13 +147,13 @@ export class PdfViewerField extends FieldComponent {
     }
 
     onFileUploaded({ name, data, objectUrl }) {
-        this.state.isValid = true;
+        this.state.failedResId = null;
         this.setObjectUrl(objectUrl);
         this.update({ name, data });
     }
 
     onLoadFailed() {
-        this.state.isValid = false;
+        this.state.failedResId = this.props.record.resId;
         this.notification.add(_t("Could not display the selected pdf"), {
             type: "danger",
         });
