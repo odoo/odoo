@@ -6,27 +6,23 @@ from io import BytesIO
 from pathlib import Path
 from stat import S_ISDIR, S_ISREG
 from typing import Any, ClassVar
+from urllib.parse import urlsplit
 from zlib import adler32
 
+from werkzeug.exceptions import NotFound
 from werkzeug.utils import send_file as _send_file
 
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import file_path
 
-from .constants import STATIC_CACHE_LONG
+from .constants import STATIC_CACHE, STATIC_CACHE_LONG
 from .core import request
 from .settings import current as current_settings
-from .wrappers import Response, _Response
+from .wrappers import Response, _Response, sanitize_download_name
 
 _debug = DebugLog(__name__)
 
-_HEADER_UNSAFE = dict.fromkeys([*range(32), 127], "_")
-
-
-def _sanitize_download_name(name: str | None) -> str | None:
-    if name is None:
-        return None
-    return name.translate(_HEADER_UNSAFE)
+_REDIRECT_SCHEMES = frozenset({"", "http", "https"})
 
 
 class Stream:
@@ -97,6 +93,11 @@ class Stream:
 
     @classmethod
     def from_binary_field(cls, record: Any, field_name: str) -> Stream:
+        # Under bin_size a binary field answers its human size ("12.50 Kb"),
+        # which the raw-bytes fallback below would serve as the file.
+        record = record.with_context(
+            bin_size=False, **{f"bin_size_{field_name}": False}
+        )
         data = record[field_name] or b""
         if isinstance(data, str):
             data = data.encode()
@@ -151,16 +152,17 @@ class Stream:
 
     def _prepare_url_redirect(self) -> Any:
         url = self._get_required_attribute("url")
-        _debug.logic(
-            "http.stream.url_redirect",
-            code=302 if self.max_age is not None else 301,
-            max_age=self.max_age,
-        )
-        if self.max_age is not None:
-            res = request.redirect(url, code=302, local=False)
-            res.headers["Cache-Control"] = f"max-age={self.max_age}"
-            return res
-        return request.redirect(url, code=301, local=False)
+        scheme = urlsplit(url).scheme.lower()
+        if scheme not in _REDIRECT_SCHEMES:
+            _debug.logic("http.stream.url_redirect_refused", scheme=scheme)
+            raise NotFound
+        # Not a 301: browsers keep a permanent redirect forever, and an
+        # attachment's url can be edited; a cached 302 expires.
+        max_age = STATIC_CACHE if self.max_age is None else self.max_age
+        _debug.logic("http.stream.url_redirect", max_age=max_age, scheme=scheme)
+        res = request.redirect(url, code=302, local=False)
+        res.headers["Cache-Control"] = f"max-age={max_age}"
+        return res
 
     def _prepare_path_response(self, send_file_kwargs: dict[str, Any]) -> Any:
         path = self._get_required_attribute("path")
@@ -208,7 +210,9 @@ class Stream:
         send_file_kwargs = {
             "mimetype": self.mimetype,
             "as_attachment": as_attachment,
-            "download_name": _sanitize_download_name(self.download_name),
+            "download_name": None
+            if self.download_name is None
+            else sanitize_download_name(self.download_name),
             "conditional": self.conditional,
             "etag": self.etag,
             "last_modified": self.last_modified,

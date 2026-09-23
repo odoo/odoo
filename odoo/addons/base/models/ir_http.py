@@ -9,7 +9,6 @@ from typing import Any
 import werkzeug.routing
 import werkzeug.utils
 from werkzeug.datastructures import WWWAuthenticate
-from werkzeug.routing.converters import NumberConverter
 
 import odoo
 from odoo import api, http, models, tools
@@ -88,11 +87,6 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         return ",".join(str(i) for i in value.ids)
 
 
-class SignedIntConverter(NumberConverter):
-    regex = r"-?\d+"
-    num_convert = int
-
-
 class IrHttp(models.AbstractModel):
     _name = "ir.http"
     _description = "HTTP Routing"
@@ -152,7 +146,7 @@ class IrHttp(models.AbstractModel):
         return {
             "model": ModelConverter,
             "models": ModelsConverter,
-            "int": SignedIntConverter,
+            "int": http.SignedIntConverter,
         }
 
     @classmethod

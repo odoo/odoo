@@ -367,3 +367,36 @@ def test_every_operation_states_which_door_it_is():
     )
     doors = {path: item["get"]["x-odoo-auth"] for path, item in doc["paths"].items()}
     assert doors == {"/open": "public", "/key": "bearer", "/hook": "receiver"}
+
+
+def test_a_pass_through_override_keeps_its_parents_response_schema():
+    from odoo.http.controller import Controller
+    from odoo.http.routing import _generate_routing_rules, route
+
+    saved = {k: list(v) for k, v in Controller.children_classes.items()}
+    try:
+
+        class Parent(Controller):
+            @route("/answer", type="json2", auth="none")
+            def answer(self) -> dict[str, int]:
+                return {"n": 1}
+
+        class Child(Parent):
+            @route()
+            def answer(self, **kw):
+                return super().answer(**kw)
+
+        Parent.__module__ = "odoo.addons.ma.controllers"
+        Child.__module__ = "odoo.addons.mb.controllers"
+        Controller.children_classes.clear()
+        Controller.children_classes["ma"].append(Parent)
+        Controller.children_classes["mb"].append(Child)
+        doc = prepare_openapi_from_map(
+            prepare_routing_map(_generate_routing_rules(["ma", "mb"], False))
+        )
+    finally:
+        Controller.children_classes.clear()
+        Controller.children_classes.update(saved)
+    ok = doc["paths"]["/answer"]["post"]["responses"]["200"]
+    schema = ok["content"]["application/json"]["schema"]
+    assert schema.get("type") == "object", schema

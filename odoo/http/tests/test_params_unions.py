@@ -1,6 +1,7 @@
 import dataclasses
 from typing import Annotated, Literal, TypedDict
 
+import jsonschema
 import pytest
 from werkzeug.exceptions import BadRequest
 
@@ -116,8 +117,15 @@ def test_a_nullable_union_gains_a_null_variant_not_the_removed_nullable_keyword(
     body = doc["paths"]["/pay"]["post"]["requestBody"]["content"]["application/json"]
     schema = body["schema"]["properties"]["payment"]
     assert "nullable" not in schema, "OpenAPI 3.1 removed the 3.0 keyword"
-    assert schema["oneOf"][-1] == {"type": "null"}
-    assert schema["discriminator"] == {"propertyName": "kind"}
+    union, null = schema["oneOf"]
+    assert null == {"type": "null"}
+    assert "discriminator" not in schema, "null carries no tag"
+    assert union["discriminator"] == {"propertyName": "kind"}
+    assert all("kind" in member["properties"] for member in union["oneOf"])
+    jsonschema.validate(None, schema)
+    jsonschema.validate({"kind": "wire", "iban": "X"}, schema)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"kind": "cash"}, schema)
 
 
 def test_the_union_is_documented_as_one_of_with_its_discriminator():

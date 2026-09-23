@@ -1,5 +1,6 @@
 from datetime import UTC, datetime, timedelta
 from email.utils import parsedate_to_datetime
+from types import SimpleNamespace
 
 import pytest
 from werkzeug.test import EnvironBuilder
@@ -61,3 +62,33 @@ def test_form_limits_reach_werkzeug_and_unknown_attributes_raise():
     assert (wrapped.max_form_parts, wrapped.max_form_memory_size) == (5, 7)
     with pytest.raises(AttributeError):
         httprequest.max_form_part = 5
+
+
+class _BinaryRecord:
+    _name = "x.model"
+    _log_access = False
+
+    def __init__(self, context=None):
+        self.context = context or {}
+        self.env = _BinaryEnv()
+
+    def with_context(self, **overrides):
+        return _BinaryRecord({**self.context, **overrides})
+
+    def __getitem__(self, name):
+        if self.context.get("bin_size") or self.context.get(f"bin_size_{name}"):
+            return b"12.50 Kb"
+        return b"raw file bytes"
+
+
+class _BinaryEnv:
+    user = SimpleNamespace(_is_public=lambda: False)
+
+    def __getitem__(self, model):
+        return SimpleNamespace(_get_content_checksum=lambda data: "etag")
+
+
+def test_a_bin_size_context_never_streams_the_size_as_the_file():
+    for context in ({"bin_size": True}, {"bin_size_datas": True}):
+        stream = Stream.from_binary_field(_BinaryRecord(context), "datas")
+        assert stream.data == b"raw file bytes", context

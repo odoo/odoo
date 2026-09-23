@@ -6,7 +6,6 @@ from werkzeug.exceptions import BadRequest
 
 from odoo.http._params import (
     ParamSpec,
-    _get_param_spec_fields,
     coerce_params,
     get_param_specs,
 )
@@ -16,21 +15,29 @@ def _spec(fn):
     return get_param_specs(fn)
 
 
-def test_resolve_param_spec_fields_optional_forms_are_equivalent():
+def test_the_three_optional_spellings_build_one_spec():
     optional = typing.Optional  # noqa: TID251  legacy spelling under test
     union = typing.Union  # noqa: TID251  legacy spelling under test
-    assert _get_param_spec_fields(int | None) == (int, None, True)
-    assert _get_param_spec_fields(optional[int]) == (int, None, True)
-    assert _get_param_spec_fields(union[int, None]) == (int, None, True)
-    assert _get_param_spec_fields(int | str) == (None, None, False)
+
+    def ep(
+        self, a: int | None, b: optional[int], c: union[int, None], d: int | str
+    ): ...
+
+    specs = _spec(ep)
+    assert specs["a"] == specs["b"] == specs["c"] == ParamSpec(int, None, True, True)
+    assert "d" not in specs, "a two-type union is not coerced"
 
 
-def test_resolve_param_spec_fields_list_forms():
+def test_list_forms():
     legacy_list = list
-    assert _get_param_spec_fields(list) == (list, None, False)
-    assert _get_param_spec_fields(list[int]) == (list, int, False)
-    assert _get_param_spec_fields(legacy_list[int]) == (list, int, False)
-    assert _get_param_spec_fields(list[dict]) == (list, None, False)
+
+    def ep(self, a: list, b: list[int], c: legacy_list[int], d: list[dict]): ...
+
+    specs = _spec(ep)
+    assert (specs["a"].target, specs["a"].item) == (list, None)
+    assert (specs["b"].target, specs["b"].item) == (list, int)
+    assert (specs["c"].target, specs["c"].item) == (list, int)
+    assert (specs["d"].target, specs["d"].item) == (list, None)
 
 
 def test_build_specs_skips_unannotated_and_unsupported():

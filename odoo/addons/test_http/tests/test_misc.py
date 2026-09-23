@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 from werkzeug.datastructures import MultiDict
+from werkzeug.http import parse_options_header
 from werkzeug.test import EnvironBuilder
 from werkzeug.wrappers import Request
 
@@ -512,11 +513,11 @@ class TestContentDisposition(BaseCase):
             ("foo'bar.xls", "foo%27bar.xls", "Single-quote sign"),
             ("foo%bar.xls", "foo%25bar.xls", "Percent sign"),
         ]
-        for filename, pct_encoded, hint in assertions:
+        for filename, _pct_encoded, hint in assertions:
             self.assertEqual(
-                prepare_content_disposition_header(filename),
-                f"attachment; filename*=UTF-8''{pct_encoded}",
-                f"{hint} should be percent encoded",
+                parse_options_header(prepare_content_disposition_header(filename)),
+                ("attachment", {"filename": filename}),
+                f"{hint} must survive the header",
             )
 
 

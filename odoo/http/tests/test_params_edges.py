@@ -122,3 +122,39 @@ def test_a_tag_that_is_not_a_scalar_is_a_bad_request(tag):
     specs = get_param_specs(ep)
     with pytest.raises(BadRequest):
         coerce_params({"pay": {"kind": tag, "number": "4"}}, specs)
+
+
+@pytest.mark.parametrize("value", [2, -1, 7, 1.0])
+def test_a_boolean_takes_no_integer_but_zero_and_one(value):
+    def ep(self, flag: bool): ...
+
+    with pytest.raises(BadRequest):
+        coerce_params({"flag": value}, get_param_specs(ep))
+
+
+def test_zero_and_one_are_booleans():
+    def ep(self, flag: bool): ...
+
+    specs = get_param_specs(ep)
+    assert coerce_params({"flag": 1}, specs) == {"flag": True}
+    assert coerce_params({"flag": 0}, specs) == {"flag": False}
+
+
+def test_an_empty_form_input_is_none_for_an_optional_number():
+    def ep(
+        self, n: int | None = None, x: float | None = None, s: str | None = None
+    ): ...
+
+    specs = get_param_specs(ep)
+    assert coerce_params({"n": "", "x": "", "s": ""}, specs) == {
+        "n": None,
+        "x": None,
+        "s": "",
+    }
+
+
+def test_an_empty_form_input_is_still_refused_for_a_required_number():
+    def ep(self, n: int): ...
+
+    with pytest.raises(BadRequest):
+        coerce_params({"n": ""}, get_param_specs(ep))

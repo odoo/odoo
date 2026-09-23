@@ -126,15 +126,16 @@ def _apply_constraints(schema: dict[str, Any], spec: ParamSpec) -> dict[str, Any
 
 def param_spec_to_schema(spec: ParamSpec) -> dict[str, Any]:
     if spec.variants is not None:
-        one_of = [param_spec_to_schema(v) for v in spec.variants.values()]
-        if spec.allow_none:
-            # OpenAPI 3.1 dropped the 3.0 `nullable` keyword; null is a
-            # oneOf variant (the discriminator only applies to the objects).
-            one_of.append({"type": "null"})
-        return {
-            "oneOf": one_of,
+        union = {
+            "oneOf": [param_spec_to_schema(v) for v in spec.variants.values()],
             "discriminator": {"propertyName": spec.discriminator},
         }
+        if not spec.allow_none:
+            return union
+        # OpenAPI 3.1 dropped the 3.0 `nullable` keyword, and every member of
+        # a discriminated oneOf must carry the tag, which null cannot: null is
+        # the alternative to the whole union, not one of its variants.
+        return {"oneOf": [union, {"type": "null"}]}
     if spec.fields is not None:
         schema = _prepare_object_schema(spec.fields)
     elif spec.constraints is not None:
@@ -274,19 +275,36 @@ def prepare_openapi_operation(
                         "schema": param_spec_to_schema(spec),
                     }
                 )
-        elif specs:
-            required = [name for name, spec in specs.items() if spec.required]
-            body: dict[str, Any] = {
-                "type": "object",
-                "properties": {n: param_spec_to_schema(s) for n, s in specs.items()},
-            }
-            if required:
-                body["required"] = required
-            if route_type == "jsonrpc":
-                body = _prepare_jsonrpc_envelope_schema(body)
-            operation["requestBody"] = {
-                "content": {"application/json": {"schema": body}}
-            }
+        else:
+            if route_type == "json2" and method.upper() in ("GET", "HEAD"):
+                # A body on GET is unusual enough that clients send the query
+                # string, which json2 reads too; objects cannot travel there.
+                for name, spec in list(specs.items()):
+                    if spec.fields is None and spec.variants is None:
+                        parameters.append(
+                            {
+                                "name": name,
+                                "in": "query",
+                                "required": spec.required,
+                                "schema": param_spec_to_schema(spec),
+                            }
+                        )
+                        del specs[name]
+            if specs:
+                required = [name for name, spec in specs.items() if spec.required]
+                body: dict[str, Any] = {
+                    "type": "object",
+                    "properties": {
+                        n: param_spec_to_schema(s) for n, s in specs.items()
+                    },
+                }
+                if required:
+                    body["required"] = required
+                if route_type == "jsonrpc":
+                    body = _prepare_jsonrpc_envelope_schema(body)
+                operation["requestBody"] = {
+                    "content": {"application/json": {"schema": body}}
+                }
         operation["responses"]["400"] = {"description": "Invalid request parameters"}
 
     if route_type in ("jsonrpc", "json2"):
@@ -431,11 +449,28 @@ def prepare_openapi_document(
     return document
 
 
+def _get_documented_handler(endpoint: Any) -> typing.Callable:
+    # A pass-through override (`return super().x(**kw)`) usually drops the
+    # return annotation; the contract is the nearest one that states it.
+    handler = getattr(endpoint, "original_endpoint", endpoint)
+    bound = getattr(endpoint, "func", None)
+    owner = getattr(bound, "__self__", None)
+    name = getattr(bound, "__name__", None)
+    if owner is None or name is None:
+        return handler
+    for cls in type(owner).__mro__:
+        candidate = cls.__dict__.get(name)
+        original = getattr(candidate, "original_endpoint", None)
+        if original is not None and get_response_schema(original) is not None:
+            return original
+    return handler
+
+
 def iter_map_routes(routing_map: Any) -> typing.Iterator[RouteInfo]:
     for rule in routing_map.iter_rules():
         endpoint = rule.endpoint
         routing = getattr(endpoint, "routing", {})
-        handler = getattr(endpoint, "original_endpoint", endpoint)
+        handler = _get_documented_handler(endpoint)
         yield RouteInfo(
             rule=rule.rule,
             methods=frozenset(rule.methods or ()),

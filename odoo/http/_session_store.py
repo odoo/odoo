@@ -129,7 +129,10 @@ class SessionStore(ABC):
         if not self.is_valid_key(sid):
             _debug.logic("http.session.get", sid=sid[:8], found=False, invalid_key=True)
             return self.new()
-        with self._lock(sid), _debug.perf("http.session.read", sid=sid[:8]) as span:
+        # Lock-free: every write replaces a session atomically under the stripe
+        # lock, so a reader sees one whole version; only discarding a corrupt
+        # one takes the lock (see _discard_corrupt).
+        with _debug.perf("http.session.read", sid=sid[:8]) as span:
             stored = self._read(sid)
             span.set(found=stored is not None)
         if stored is None:
@@ -144,6 +147,33 @@ class SessionStore(ABC):
             "http.session.get", sid=sid[:8], found=not session.is_new, uid=session.uid
         )
         return session
+
+    def _discard_corrupt(self, sid: str, payload: bytes) -> None:
+        with self._lock(sid):
+            if self._read_payload(sid) == payload:
+                self._unlink(sid)
+                _debug.logic("http.session.corrupt_discarded", sid=sid[:8])
+            else:
+                _debug.logic("http.session.corrupt_superseded", sid=sid[:8])
+
+    def _read_payload(self, sid: str) -> bytes | None:
+        raise NotImplementedError
+
+    def _decode(self, sid: str, payload: bytes) -> dict[str, Any] | None:
+        try:
+            data = _loads(payload)
+            if not isinstance(data, dict):
+                raise TypeError(f"session payload is {type(data).__name__}, not dict")
+        except Exception as exc:
+            _logger.warning(
+                "Corrupt session %r; discarding it.", sid[:8], exc_info=True
+            )
+            _debug.logic(
+                "http.session.read_corrupt", sid=sid[:8], error=type(exc).__name__
+            )
+            self._discard_corrupt(sid, payload)
+            return None
+        return data
 
     def _save_unlocked(self, session: Session) -> None:
         with _debug.perf(
@@ -329,13 +359,6 @@ class SessionStore(ABC):
         )
 
     def rotate(self, session: Session, env: Any, soft: bool = False) -> None:
-        if soft and session.rotation is None:
-            with self._lock(session.sid):
-                recent = self.get(session.sid)
-                if "next_sid" in recent:
-                    _debug.logic("http.session.rotate", strategy="adopt_before_stage")
-                    self._adopt_live_successor(session, recent)
-                    return
         self.stage_rotation(session, env, soft)
         assert session.rotation is not None
         original, soft = session.rotation
@@ -425,6 +448,8 @@ class SessionStore(ABC):
         for key in ("session_token", "create_time", "gc_previous_sessions"):
             if key in peer:
                 session[key] = peer[key]
+            else:
+                session.pop(key, None)
         session.pop("next_sid", None)
         session.pop("deletion_time", None)
         session.rotation = None
@@ -496,23 +521,23 @@ class FilesystemSessionStore(SessionStore):
             with path.open("rb") as handle:
                 payload = handle.read()
                 mtime = os.fstat(handle.fileno()).st_mtime
-            data = _loads(payload)
-            if not isinstance(data, dict):
-                raise TypeError(f"session payload is {type(data).__name__}, not dict")
-        except OSError:
+        except FileNotFoundError, NotADirectoryError:
             _debug.logic("http.session.read_missing", sid=sid[:8])
             return None
-        except Exception as exc:
-            _logger.warning(
-                "Corrupt session file %r; discarding it.", str(path), exc_info=True
-            )
-            _debug.logic(
-                "http.session.read_corrupt", sid=sid[:8], error=type(exc).__name__
-            )
-            with contextlib.suppress(OSError):
-                path.unlink()
+        except OSError as exc:
+            # EIO, EACCES...: the session may well exist, so answering "none"
+            # would hand out a fresh anonymous one -- a logout -- and make every
+            # later save of it read as a revocation.
+            _debug.logic("http.session.read_failed", sid=sid[:8], errno=exc.errno)
+            raise SessionStorageError(f"cannot read session {sid[:8]}: {exc}") from exc
+        data = self._decode(sid, payload)
+        return None if data is None else (data, mtime)
+
+    def _read_payload(self, sid: str) -> bytes | None:
+        try:
+            return Path(self.get_session_filename(sid)).read_bytes()
+        except FileNotFoundError, NotADirectoryError:
             return None
-        return data, mtime
 
     def _write(self, session: Session, durable: bool) -> None:
         filename = Path(self.get_session_filename(session.sid))
@@ -629,7 +654,12 @@ class MemorySessionStore(SessionStore):
         if entry is None:
             return None
         payload, mtime = entry
-        return _loads(payload), mtime
+        data = self._decode(sid, payload)
+        return None if data is None else (data, mtime)
+
+    def _read_payload(self, sid: str) -> bytes | None:
+        entry = self._entries.get(sid)
+        return None if entry is None else entry[0]
 
     def _write(self, session: Session, durable: bool) -> None:
         self._entries[session.sid] = (_dumps_bytes(dict(session)), time.time())
@@ -669,6 +699,13 @@ class MemorySessionStore(SessionStore):
             self._entries.clear()
 
 
+_SCHEMA_LOCK_KEY = int.from_bytes(
+    hashlib.blake2b(b"odoo.http_session.schema", digest_size=8).digest(),
+    "big",
+    signed=True,
+)
+
+
 def _advisory_lock_key(stripe: str) -> int:
     digest = hashlib.blake2b(stripe.encode("ascii"), digest_size=8).digest()
     return int.from_bytes(digest, "big", signed=True)
@@ -697,12 +734,15 @@ class PostgresSessionStore(SessionStore):
     def _ensure_schema(self, cr: Any) -> bool:
         if self._schema_ready:
             return False
+        # Two workers' first transactions would race CREATE TABLE IF NOT
+        # EXISTS into a unique violation on pg_type.
+        cr.execute("SELECT pg_advisory_xact_lock(%s)", (_SCHEMA_LOCK_KEY,))
         cr.execute(_SESSION_TABLE_DDL)
         cr.execute(_SESSION_INDEX_DDL)
         return True
 
     @contextlib.contextmanager
-    def _cursor(self) -> Iterator[Any]:
+    def _cursor(self, *, locking: bool = True) -> Iterator[Any]:
         held = getattr(self._local, "cursor", None)
         if held is not None:
             yield held
@@ -716,7 +756,8 @@ class PostgresSessionStore(SessionStore):
                 # committed and fail to serialize its own update. The advisory
                 # lock is this store's serialization; READ COMMITTED lets the
                 # locked section see what the previous holder wrote.
-                cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
+                if locking:
+                    cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
                 schema_created = self._ensure_schema(cr)
                 yield cr
                 cr.commit()
@@ -769,24 +810,20 @@ class PostgresSessionStore(SessionStore):
                     self._local.cursor = None
 
     def _read(self, sid: str) -> tuple[dict[str, Any], float | None] | None:
-        with self._cursor() as cr:
+        with self._cursor(locking=False) as cr:
             cr.execute("SELECT payload, mtime FROM http_session WHERE sid = %s", (sid,))
             row = cr.fetchone()
-            if row is None:
-                return None
-            payload, mtime = row
-            try:
-                data = _loads(bytes(payload))
-                if not isinstance(data, dict):
-                    raise TypeError(f"session payload is {type(data).__name__}")
-            except Exception as exc:
-                _logger.warning("Corrupt session row %r; discarding it.", sid[:8])
-                _debug.logic(
-                    "http.session.read_corrupt", sid=sid[:8], error=type(exc).__name__
-                )
-                cr.execute("DELETE FROM http_session WHERE sid = %s", (sid,))
-                return None
-            return data, mtime
+        if row is None:
+            return None
+        payload, mtime = row
+        data = self._decode(sid, bytes(payload))
+        return None if data is None else (data, mtime)
+
+    def _read_payload(self, sid: str) -> bytes | None:
+        with self._cursor() as cr:
+            cr.execute("SELECT payload FROM http_session WHERE sid = %s", (sid,))
+            row = cr.fetchone()
+        return None if row is None else bytes(row[0])
 
     def _write(self, session: Session, durable: bool) -> None:
         with self._cursor() as cr:
@@ -840,9 +877,28 @@ class PostgresSessionStore(SessionStore):
     def vacuum(self, max_lifetime: int = SESSION_LIFETIME) -> None:
         threshold = time.time() - max_lifetime
         with self._cursor() as cr:
-            cr.execute("DELETE FROM http_session WHERE mtime < %s", (threshold,))
-            removed = cr.rowcount
-        _debug.perf.count("http.session.vacuum", removed=removed, postgres=True)
+            cr.execute(
+                "SELECT DISTINCT left(sid, 2) FROM http_session WHERE mtime < %s",
+                (threshold,),
+            )
+            stripes = [row[0] for row in cr.fetchall()]
+        removed = 0
+        # Stripe by stripe under the lock every save holds, as the filesystem
+        # vacuum does: a save that read a session cannot then write it back
+        # after the vacuum removed it without seeing the removal.
+        for stripe in stripes:
+            with (
+                self._lock(stripe.ljust(_SESSION_KEY_LENGTH, "_")),
+                self._cursor() as cr,
+            ):
+                cr.execute(
+                    "DELETE FROM http_session WHERE left(sid, 2) = %s AND mtime < %s",
+                    (stripe, threshold),
+                )
+                removed += cr.rowcount
+        _debug.perf.count(
+            "http.session.vacuum", removed=removed, stripes=len(stripes), postgres=True
+        )
 
     def clear(self) -> None:
         with self._cursor() as cr:

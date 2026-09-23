@@ -1,6 +1,5 @@
-from urllib.parse import unquote_plus
-
 from psycopg import IntegrityError
+from werkzeug.http import parse_options_header
 
 from odoo.exceptions import ValidationError
 from odoo.tests import HttpCase
@@ -100,6 +99,5 @@ class TestResources(common.SlidesCase, HttpCase):
                 content_disposition = self.url_open(resource.download_url).headers[
                     "Content-Disposition"
                 ]
-                filename_star = content_disposition.split("; ")[-1]
-                filename_star = filename_star.removeprefix("""filename*=UTF-8''""")
-                self.assertEqual(unquote_plus(filename_star), expected_download_name)
+                _disposition, options = parse_options_header(content_disposition)
+                self.assertEqual(options["filename"], expected_download_name)

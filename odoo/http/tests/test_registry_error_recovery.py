@@ -4,7 +4,7 @@ from unittest import mock
 
 import pytest
 import werkzeug.datastructures
-from werkzeug.exceptions import InternalServerError, NotFound
+from werkzeug.exceptions import InternalServerError, NotFound, ServiceUnavailable
 
 from odoo.http import application, constants
 from odoo.http.exceptions import RegistryError, get_error_response
@@ -49,24 +49,39 @@ def _request(path="/whatever", args=None):
 
 
 @pytest.mark.parametrize(
-    ("db_absent", "transient", "durable"),
-    [
-        (True, False, True),
-        (True, True, True),
-        (False, False, True),
-        (False, True, False),
-        (None, False, False),
-        (None, True, False),
-    ],
+    ("db_absent", "transient"), [(True, False), (True, True), (False, False)]
 )
-def test_only_a_durable_failure_may_persist_the_logout(db_absent, transient, durable):
+def test_a_database_that_is_gone_is_served_without_one(db_absent, transient):
     this, httprequest = _request()
     exc = RegistryError("boom", db_absent=db_absent, transient=transient)
 
     assert _recover(this, httprequest, exc) == "nodb"
     assert this.db is None
     assert this.session.logged_out is True
-    assert this.session.can_save is durable, (db_absent, transient)
+    assert this.session.can_save is True
+
+
+@pytest.mark.parametrize(
+    ("db_absent", "transient"), [(False, True), (None, False), (None, True)]
+)
+@pytest.mark.parametrize(
+    ("mimetype", "routing_type"),
+    [("", "http"), ("application/json", "json2")],
+)
+def test_a_database_out_of_reach_for_now_is_a_503_that_keeps_the_session(
+    db_absent, transient, mimetype, routing_type
+):
+    this, httprequest = _request()
+    httprequest.mimetype = mimetype
+    exc = RegistryError("boom", db_absent=db_absent, transient=transient)
+
+    with pytest.raises(ServiceUnavailable) as raised:
+        _recover(this, httprequest, exc)
+
+    assert raised.value.retry_after == constants.REGISTRY_RETRY_AFTER
+    assert this.db == "db", "nothing was served without the database"
+    assert this.session.logged_out is False
+    assert this.dispatcher.routing_type == routing_type
 
 
 @pytest.fixture

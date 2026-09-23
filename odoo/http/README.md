@@ -67,6 +67,16 @@ client sent, else a fresh token) that every log line of the request carries as
 depending on the request path and the presence of a database. Also responsible
 for logging any error and encapsulating it in an HTTP error response.
 
+When the database cannot be reached (`RegistryError`), the entry point tells a
+database that is gone from one that is out of reach for now. Gone (not in the
+catalogue, or failing for a non-transient reason): the session is logged out
+and the request is served database-free, a select-db path rerouted without its
+`?db=`. Out of reach for now (a connection or pool failure on a database the
+catalogue still lists): `503 Service Unavailable` with `Retry-After`, the
+session untouched, the body in the dispatcher the request's media type picks.
+The no-database routing map uses the same signed `int` converter as the
+database maps (`SignedIntConverter`, owned here and imported by `base`).
+
 **`Request._serve_static`** — streams an already-resolved file via
 `Stream.prepare_response`. It does **not** resolve the path: `Application.get_static_file_path`
 does, before the request reaches here, with `file_path()` plus a
@@ -164,8 +174,13 @@ their immediate persistence path.
 Read-only promotion is allowed only before commit, while the original cursor
 is open. A postcommit SQL error propagates without replaying the handler.
 
-The filesystem store serializes read/merge/write and revocation with stable
-lock stripes shared by processes. A loaded session whose file has disappeared
+The filesystem store serializes merge/write and revocation with stable lock
+stripes shared by processes; a plain read takes no lock, since every write
+replaces a session atomically, and a read that finds a corrupt session discards
+it only under the lock and only if the corrupt bytes it read are still there.
+A read that fails for any reason but absence (EIO, EACCES) is a
+`SessionStorageError` — an `OSError`, the one storage error every backend
+raises — never "no such session", which would hand out a fresh anonymous one. A loaded session whose file has disappeared
 cannot recreate that file. Saves merge changes against the loaded snapshot,
 preserving independent top-level and nested dictionary edits; conflicting
 edits to the same scalar or list still use the last writer. Rotation writes the
@@ -257,7 +272,7 @@ the request (the bus websocket). `FilesystemSessionStore` (stripe `flock`s share
 | `_retry.py` | serving | `RequestRetryParticipant`: restores the session and rewinds uploads (`rewind_uploaded_files`) when `retrying()` replays a handler; passed explicitly by the request |
 | `openapi.py` | features | `prepare_openapi_document`: an OpenAPI `3.1.0` document generated from the routing map — path and query parameters, JSON bodies with object schemas for dataclass and TypedDict parameters, `enum` / `minimum` / `maximum` / `pattern` from the constraints, `oneOf` with a `discriminator` for a discriminated union, and for `jsonrpc`/`json2` routes the response schema read from the handler's return annotation (`get_response_schema`), or `{}` — any JSON value — when there is none, inside the `{jsonrpc, id, result}` envelope for `jsonrpc` |
 | `_params.py` | features | `ParamSpec` and the annotation-driven coercion behind `@route(typed=True)`: primitives, `list[...]`, `X | None`, `Literal[...]` and `Enum` choices, `Annotated[T, Range(ge=, le=)]` and `Annotated[str, Pattern(regex)]` constraints checked after coercion, and `@dataclass` or `TypedDict` types built field by field from a JSON object (unknown or missing required fields are a 400 naming the field; a class with an uncoercible field, or a recursive one, is left uncoerced; a constraint on an object or a list is declined). A union of object types is coerced when `Annotated[A | B, Discriminator("kind")]` names a field each member pins to one `Literal` value; the tag picks the variant and the variant validates the rest. An undiscriminated union stays uncoerced |
-| `geoip.py` | features | `GeoIP` lookup exposed on the request (`_GeoIPNull` when unavailable) |
+| `geoip.py` | features | `GeoIP` lookup exposed on the request (`_GeoIPNull` when unavailable). The readers behind it (`Application.geoip_city_db` / `geoip_country_db`) re-stat their file at most once a minute and reopen it when the path, inode or mtime moved, so a `geoipupdate` refresh or a database added after boot is picked up without a restart |
 | `settings.py` | foundation | `HttpSettings`: the frozen snapshot of every option the serving tier reads (`dbfilter`, `db_name`, `dev_mode`, `x_sendfile`, `data_dir`, `server_wide_modules`, the GeoIP paths, `proxy_mode`/`proxy_hops`, `session_store`/`session_db` — validated: an unknown backend, or `postgres` without a database, refuses at the first read), `from_config` to build one, and the slot (`current`, `installed`, `override`) the package reads it through. The slot holds no snapshot in production: `current()` derives one from the live option dict, memoised on `config.generation` — a counter every write to any option layer moves, and one that answers a fresh object while a test has swapped `config.options` for a plain mapping — so a key written after boot still reaches the serving tier at the cost of one derivation, and a test that wants a fixed view installs its own |
 | `constants.py` | foundation | Package-wide constants, `prepare_allow_header`, and the session and select-db path registries with their `is_select_db_path` predicate |
 | `exceptions.py` | foundation | the HTTP exception vocabulary addon code raises — werkzeug's `NotFound`, `Forbidden`, `BadRequest`, `Unauthorized`, `HTTPException`, `abort` and the rest, re-exported so a controller never imports werkzeug — plus `RegistryError`, `SessionExpiredException`, `is_http_answer` (a 4xx is an answer, never a debugger case), and `get_error_response`/`set_error_response` — the only sanctioned way to read and write the `error_response` an exception carries |

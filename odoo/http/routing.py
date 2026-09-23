@@ -11,6 +11,7 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Any, NamedTuple, cast
 
 import werkzeug.routing
+import werkzeug.routing.converters
 
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import submap
@@ -67,6 +68,11 @@ def register_routing_parameters(*names: str) -> None:
 
 class RouteDefinitionError(ValueError):
     pass
+
+
+class SignedIntConverter(werkzeug.routing.converters.NumberConverter):
+    regex = r"-?\d+"
+    num_convert = int
 
 
 class LazyCompiledBuilder:
@@ -464,11 +470,15 @@ def _prepare_route_fragment(
     parent_readonly = merged_routing.setdefault("readonly", default_mode)
     child_readonly = fragment.get("readonly")
     if child_readonly not in (None, parent_readonly) and not callable(child_readonly):
+        if callable(parent_readonly):
+            parent_mode = f"readonly when {parent_readonly.__qualname__}() says so"
+        else:
+            parent_mode = "readonly" if parent_readonly else "read/write"
         _logger.warning(
             "The endpoint %s made the route %s although its parent was defined as %s. Setting the route read/write.",
             f"{controller_cls.__module__}.{controller_cls.__name__}.{submethod.__name__}",
             "readonly" if child_readonly else "read/write",
-            "readonly" if parent_readonly else "read/write",
+            parent_mode,
         )
         _debug.logic(
             "http.route.readonly_conflict",

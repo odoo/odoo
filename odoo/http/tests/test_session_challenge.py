@@ -129,7 +129,7 @@ def test_failed_peer_adoption_restores_identity(store, monkeypatch, operation):
         if operation == "save":
             store.save(late)
         else:
-            store.rotate(late, None, soft=True)
+            store.rotate(late, token_env(), soft=True)
     assert late.sid == original_sid
     assert late["cart"] == 42
     assert late.session_token == f"7:{original_sid}"

@@ -109,3 +109,42 @@ def test_vacuum_and_missing_identifiers_over_the_table(stores):
     assert not first.get(kept.sid).is_new
     missing = first.get_missing_session_identifiers([kept.sid[:42], gone.sid[:42]])
     assert missing == {gone.sid[:42]}
+
+
+def test_first_use_schema_creation_is_serialised_across_stores(stores):
+    import threading
+
+    first, _second = stores
+    with first._cursor() as cr:
+        cr.execute("DROP TABLE IF EXISTS http_session")
+    barrier = threading.Barrier(4)
+    errors = []
+
+    def create():
+        store = _store()
+        barrier.wait()
+        try:
+            store.save(store.new())
+        except Exception as exc:
+            errors.append(exc)
+
+    threads = [threading.Thread(target=create) for _ in range(4)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert errors == []
+
+
+def test_vacuum_removes_only_stale_rows(stores):
+    first, _second = stores
+    fresh, stale = first.new(), first.new()
+    first.save(fresh)
+    first.save(stale)
+    with first._cursor() as cr:
+        cr.execute(
+            "UPDATE http_session SET mtime = mtime - 7200 WHERE sid = %s", (stale.sid,)
+        )
+    first.vacuum(max_lifetime=3600)
+    assert not first.get(fresh.sid).is_new
+    assert first.get(stale.sid).is_new

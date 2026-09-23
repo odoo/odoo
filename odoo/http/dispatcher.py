@@ -246,6 +246,22 @@ class Dispatcher(ABC):
         ):
             return endpoint(**self.request.params)
 
+    def _collect_list_params(
+        self,
+        endpoint: Endpoint,
+        sources: collections.abc.Iterable[Any],
+        taken: collections.abc.Container[str],
+    ) -> None:
+        # A MultiDict spreads into params with its first value; a typed list
+        # parameter repeated in the query or form keeps every value.
+        for name in getattr(endpoint, "typed_list_params", None) or ():
+            if name in taken:
+                continue
+            values = [value for source in sources for value in source.getlist(name)]
+            if len(values) > 1:
+                self.request.params[name] = values
+                _debug.logic("http.dispatch.list_param", param=name, values=len(values))
+
     @abstractmethod
     def prepare_error_response(self, exc: Exception) -> Response | HTTPException:
         pass
@@ -266,23 +282,10 @@ class HttpDispatcher(Dispatcher):
 
     def dispatch(self, endpoint: Endpoint, args: dict[str, Any]) -> Any:
         self.request.params = self.request.get_http_params() | args
-
-        list_params = getattr(endpoint, "typed_list_params", None)
-        if list_params:
-            httprequest = self.request.httprequest
-            for name in list_params:
-                if name in args:
-                    continue
-                values = (
-                    httprequest.args.getlist(name)
-                    + httprequest.form.getlist(name)
-                    + httprequest.files.getlist(name)
-                )
-                if len(values) > 1:
-                    self.request.params[name] = values
-                    _debug.logic(
-                        "http.dispatch.list_param", param=name, values=len(values)
-                    )
+        httprequest = self.request.httprequest
+        self._collect_list_params(
+            endpoint, (httprequest.args, httprequest.form, httprequest.files), args
+        )
 
         if self.request.httprequest.method not in SAFE_HTTP_METHODS:
             csrf_required = endpoint.routing.get("csrf", True)
@@ -532,11 +535,11 @@ class Json2Dispatcher(Dispatcher):
                     f"{type(self.jsonrequest).__name__!r})."
                 )
                 raise werkzeug.exceptions.BadRequest(e)
-        self.request.params = {
-            **httprequest.args,
-            **(self.jsonrequest or {}),
-            **args,
-        }
+        body = self.jsonrequest or {}
+        self.request.params = {**httprequest.args, **body, **args}
+        self._collect_list_params(
+            endpoint, (httprequest.args,), body.keys() | args.keys()
+        )
         if "context" in self.request.params:
             self.request.params["context"] = strip_authority_keys(
                 self.request.params["context"], door="json2"

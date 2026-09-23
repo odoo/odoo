@@ -18,6 +18,7 @@ from odoo.http._session_store import (
 from odoo.http.constants import STORED_SESSION_BYTES, prepare_default_session
 from odoo.http.request_class import Request
 from odoo.http.session import Session, _coerce_session_value
+from odoo.http.tests._wsgi import FakeUsers
 from odoo.http.wrappers import HTTPRequest
 
 
@@ -216,6 +217,9 @@ def _interrupted_peer_rotation(store, session):
     return next_sid
 
 
+_TOKEN_ENV = {"res.users": FakeUsers()}
+
+
 def test_soft_rotation_does_not_adopt_a_sid_with_no_file(store):
     session = store.new()
     session["uid"] = 2
@@ -229,7 +233,7 @@ def test_soft_rotation_does_not_adopt_a_sid_with_no_file(store):
     from odoo.http.exceptions import SessionExpiredException
 
     with pytest.raises(SessionExpiredException):
-        store.rotate(concurrent, env=None, soft=True)
+        store.rotate(concurrent, env=_TOKEN_ENV, soft=True)
 
     assert concurrent.sid == old_sid
     landed = store.get(concurrent.sid)
@@ -251,7 +255,7 @@ def test_soft_rotation_adopts_once_the_peer_file_lands(store):
     store.save(peer_final)
 
     concurrent = store.get(old_sid)
-    store.rotate(concurrent, env=None, soft=True)
+    store.rotate(concurrent, env=_TOKEN_ENV, soft=True)
 
     assert concurrent.sid == next_sid, "the peer's rotation must be adopted"
     assert not store.get(next_sid).is_new
@@ -545,3 +549,62 @@ def test_a_postgres_storage_failure_is_the_storage_error_every_backend_raises(
     ):
         store.save(session)
     assert isinstance(caught.value, OSError), "_persist_session catches OSError"
+
+
+def test_an_unreadable_session_file_is_a_storage_error_not_a_logout(store):
+    session = _anon(store)
+    path = pathlib.Path(store.get_session_filename(session.sid))
+    path.chmod(0)
+    try:
+        if os.access(path, os.R_OK):
+            pytest.skip("running with privileges that ignore file modes")
+        with pytest.raises(SessionStorageError):
+            store.get(session.sid)
+        session["later"] = 1
+        with pytest.raises(SessionStorageError):
+            store.save(session)
+    finally:
+        path.chmod(0o600)
+
+
+def test_a_read_takes_no_lock(store):
+    session = _anon(store)
+    with mock.patch.object(store, "_lock", side_effect=AssertionError("locked")):
+        assert not store.get(session.sid).is_new
+
+
+def test_a_corrupt_session_is_discarded(store):
+    session = _anon(store)
+    pathlib.Path(store.get_session_filename(session.sid)).write_bytes(b"{not json")
+    assert store.get(session.sid).is_new
+    assert not pathlib.Path(store.get_session_filename(session.sid)).exists()
+
+
+def test_a_corrupt_read_superseded_by_a_write_keeps_the_new_file(store):
+    session = _anon(store)
+    path = pathlib.Path(store.get_session_filename(session.sid))
+    path.write_bytes(b"{not json")
+    real_discard = store._discard_corrupt
+
+    def write_lands_first(sid, payload):
+        session["fixed"] = True
+        store._write(session, False)
+        real_discard(sid, payload)
+
+    with mock.patch.object(store, "_discard_corrupt", write_lands_first):
+        assert store.get(session.sid).is_new
+    assert store.get(session.sid)["fixed"] is True, (
+        "the discard must only remove the corrupt version it read"
+    )
+
+
+def test_adopting_a_collected_peer_drops_the_stale_collection_flag(store):
+    session = _anon(store)
+    store.rotate(session, env=None, soft=True)
+    successor = store.get(session.sid)
+    del successor["gc_previous_sessions"]
+    store.save(successor)
+    stale = store.get(session.sid)
+    stale["gc_previous_sessions"] = True
+    store._adopt_rotation(stale, store.get(session.sid))
+    assert "gc_previous_sessions" not in stale

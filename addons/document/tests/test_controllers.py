@@ -12,6 +12,7 @@ from freezegun import freeze_time
 from PIL import Image
 from reportlab.pdfgen import canvas
 from urllib3.util import parse_url
+from werkzeug.http import parse_options_header
 
 from odoo import Command, fields, http
 from odoo.tests.common import RecordCapturer, tagged
@@ -1166,8 +1167,8 @@ class TestDocumentsControllers(HttpCaseWithUserDemo, MockEmail):
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(
-            res.headers.get("Content-Disposition"),
-            "attachment; filename*=UTF-8''file.zip",
+            parse_options_header(res.headers.get("Content-Disposition")),
+            ("attachment", {"filename": "file.zip"}),
         )
         with BytesIO(res.content) as resfile, zipfile.ZipFile(resfile) as reszip:
             self.assertEqual(
@@ -1200,8 +1201,8 @@ class TestDocumentsControllers(HttpCaseWithUserDemo, MockEmail):
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(
-            res.headers.get("Content-Disposition"),
-            "attachment; filename*=UTF-8''file.zip",
+            parse_options_header(res.headers.get("Content-Disposition")),
+            ("attachment", {"filename": "file.zip"}),
         )
         with BytesIO(res.content) as resfile, zipfile.ZipFile(resfile) as reszip:
             self.assertEqual(reszip.namelist(), ["public-file.png"])

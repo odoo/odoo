@@ -3,6 +3,7 @@ from __future__ import annotations
 import annotationlib
 import dataclasses
 import enum
+import functools
 import inspect
 import logging
 import math
@@ -81,6 +82,12 @@ def _get_choices_spec(
     )
 
 
+@functools.cache
+def _compile_pattern(pattern: str) -> re.Pattern[str]:
+    # Keyed by the patterns route annotations declare, never by request data.
+    return re.compile(pattern)
+
+
 def _split_annotated(
     annotation: Any,
 ) -> tuple[Any, Constraints | None, str | None]:
@@ -95,7 +102,7 @@ def _split_annotated(
             ge = marker.ge if marker.ge is not None else ge
             le = marker.le if marker.le is not None else le
         elif isinstance(marker, Pattern):
-            re.compile(marker.regex)
+            _compile_pattern(marker.regex)
             pattern = marker.regex
         elif isinstance(marker, Discriminator):
             discriminator = marker.field
@@ -242,25 +249,23 @@ def _get_spec(
                 pattern=constraints.pattern if constraints else None,
             )
         return base._replace(allow_none=base.allow_none or optional, constraints=merged)
-    choices_spec = _get_choices_spec(annotation, False, required)
+    choices_spec = _get_choices_spec(inner, False, required)
     if choices_spec is not None:
         return choices_spec
-    target, item, allow_none = _get_param_spec_fields(annotation)
+    target, item = _get_primitive_target(inner)
     if target is list and item is None:
-        inner, _ = _unwrap_optional(annotation)
         args = typing.get_args(inner)
         if args and _get_object_members(args[0]) is not None:
             item_fields = _get_dataclass_fields(args[0], seen)
             if item_fields is None:
                 return None
-            return ParamSpec(list, args[0], allow_none, required, None, item_fields)
+            return ParamSpec(list, args[0], False, required, None, item_fields)
     if target is not None:
-        return ParamSpec(target, item, allow_none, required)
-    inner, allow_none = _unwrap_optional(annotation)
+        return ParamSpec(target, item, False, required)
     fields = _get_dataclass_fields(inner, seen)
     if fields is None:
         return None
-    return ParamSpec(inner, None, allow_none, required, fields, None)
+    return ParamSpec(inner, None, False, required, fields, None)
 
 
 def _is_orderable(base: ParamSpec, constraints: Constraints) -> bool:
@@ -273,30 +278,16 @@ def _is_orderable(base: ParamSpec, constraints: Constraints) -> bool:
     )
 
 
-def _get_param_spec_fields(
-    annotation: Any,
-) -> tuple[type | None, type | None, bool]:
-    allow_none = False
-    if isinstance(annotation, types.UnionType):
-        args = typing.get_args(annotation)
-        allow_none = type(None) in args
-        non_none = [a for a in args if a is not type(None)]
-        if len(non_none) != 1:
-            return None, None, allow_none
-        annotation = non_none[0]
-
-    origin = typing.get_origin(annotation)
+def _get_primitive_target(annotation: Any) -> tuple[type | None, type | None]:
     if annotation is list:
-        return list, None, allow_none
-    if origin is list:
+        return list, None
+    if typing.get_origin(annotation) is list:
         item_args = typing.get_args(annotation)
         item = item_args[0] if item_args else None
-        if item not in _PRIMITIVES:
-            item = None
-        return list, item, allow_none
+        return list, item if item in _PRIMITIVES else None
     if annotation in _PRIMITIVES:
-        return annotation, None, allow_none
-    return None, None, allow_none
+        return annotation, None
+    return None, None
 
 
 def get_param_specs(
@@ -377,7 +368,7 @@ def _coerce_bool(name: str, value: Any) -> bool:
             return True
         if token in _FALSE_TOKENS:
             return False
-    if isinstance(value, int):
+    if isinstance(value, int) and value in (0, 1):
         return bool(value)
     raise ParameterError(f"parameter {name!r} must be a boolean")
 
@@ -450,6 +441,19 @@ def _coerce_object(name: str, value: Any, spec: ParamSpec) -> Any:
         raise ParameterError(f"parameter {name!r} is invalid: {exc}") from exc
 
 
+def _is_blankable(spec: ParamSpec) -> bool:
+    return (
+        spec.fields is None
+        and spec.variants is None
+        and spec.target not in (str, bool, list)
+        and not (
+            spec.constraints is not None
+            and spec.constraints.choices is not None
+            and "" in spec.constraints.choices
+        )
+    )
+
+
 def _check_constraints(name: str, value: Any, constraints: Constraints) -> None:
     if constraints.choices is not None and value not in constraints.choices:
         raise ParameterError(
@@ -459,9 +463,9 @@ def _check_constraints(name: str, value: Any, constraints: Constraints) -> None:
         raise ParameterError(f"parameter {name!r} must be >= {constraints.ge}")
     if constraints.le is not None and value > constraints.le:
         raise ParameterError(f"parameter {name!r} must be <= {constraints.le}")
-    if constraints.pattern is not None and not re.fullmatch(
-        constraints.pattern, str(value)
-    ):
+    if constraints.pattern is not None and not _compile_pattern(
+        constraints.pattern
+    ).fullmatch(str(value)):
         raise ParameterError(f"parameter {name!r} must match {constraints.pattern!r}")
 
 
@@ -505,6 +509,9 @@ def _coerce_union(name: str, value: Any, spec: ParamSpec) -> Any:
 
 
 def _coerce_value(name: str, value: Any, spec: ParamSpec) -> Any:
+    if value == "" and spec.allow_none and _is_blankable(spec):
+        # An empty form input: "no value", not a malformed number.
+        return None
     if value is None:
         if spec.allow_none:
             return None

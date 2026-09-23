@@ -1,7 +1,9 @@
 import contextlib
 import functools
 import logging
+import math
 import threading
+import time
 from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any
@@ -13,6 +15,7 @@ from werkzeug.exceptions import (
     InternalServerError,
     MethodNotAllowed,
     NotFound,
+    ServiceUnavailable,
 )
 from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
 from werkzeug.wrappers import Response as WerkzeugResponse
@@ -34,13 +37,17 @@ from ._session_store import (
     prepare_session_dir,
 )
 from .constants import (
+    REGISTRY_RETRY_AFTER,
     REJECTED_HTTP_METHODS,
     STATIC_ALLOWED_METHODS,
     is_select_db_path,
     prepare_allow_header,
 )
 from .core import _request_stack, request
-from .dispatcher import is_debugger_handover_required
+from .dispatcher import (
+    get_dispatcher_for_unmatched_route,
+    is_debugger_handover_required,
+)
 from .exceptions import (
     RegistryError,
     SessionExpiredException,
@@ -49,7 +56,7 @@ from .exceptions import (
 )
 from .geoip import geoip2, maxminddb
 from .request_class import Request
-from .routing import _generate_routing_rules, prepare_routing_map
+from .routing import SignedIntConverter, _generate_routing_rules, prepare_routing_map
 from .session import Session
 from .settings import current as current_settings
 from .wrappers import (
@@ -113,7 +120,53 @@ class _locked_cached_property(functools.cached_property):
         return val
 
 
+class _GeoIPReaderSlot:
+    # The MaxMind files are refreshed in place (geoipupdate): look again at
+    # most this often, and reopen when the path, inode or mtime moved.
+    RECHECK_SECONDS = 60.0
+
+    def __init__(self, kind: str) -> None:
+        self.kind = kind
+        self._lock = threading.Lock()
+        self._reader: Any = None
+        self._identity: tuple[Any, ...] | None = None
+        self._checked_at = -math.inf
+
+    def get(self, app: Application, path: str) -> Any:
+        now = time.monotonic()
+        identity = self._identity
+        if (
+            identity is not None
+            and identity[0] == path
+            and now - self._checked_at < self.RECHECK_SECONDS
+        ):
+            return self._reader
+        with self._lock:
+            try:
+                st = Path(path).stat()
+            except OSError:
+                current: tuple[Any, ...] = (path,)
+            else:
+                current = (path, st.st_ino, st.st_mtime_ns)
+            if current != self._identity:
+                _debug.lifecycle(
+                    "http.geoip.reader_reloaded",
+                    db=self.kind,
+                    first=self._identity is None,
+                )
+                # The previous reader is left to the garbage collector: a
+                # lookup running in another thread may still hold it.
+                self._reader = app._open_geoip_reader(self.kind, path)
+                self._identity = current
+            self._checked_at = now
+            return self._reader
+
+
 class Application:
+    def __init__(self) -> None:
+        self._geoip_city = _GeoIPReaderSlot("city")
+        self._geoip_country = _GeoIPReaderSlot("country")
+
     def initialize(self) -> None:
         module_manager.initialize_sys_path()
         from odoo.service.server import load_server_wide_modules
@@ -176,7 +229,8 @@ class Application:
             return prepare_routing_map(
                 _generate_routing_rules(
                     ["", *current_settings().server_wide_modules], nodb_only=True
-                )
+                ),
+                converters={"int": SignedIntConverter},
             )
 
     @_locked_cached_property
@@ -227,13 +281,13 @@ class Application:
         _debug.lifecycle("http.geoip.db_opened", db=kind, path=path)
         return reader
 
-    @_locked_cached_property
-    def geoip_city_db(self):
-        return self._open_geoip_reader("city", current_settings().geoip_city_db)
+    @property
+    def geoip_city_db(self) -> Any:
+        return self._geoip_city.get(self, current_settings().geoip_city_db)
 
-    @_locked_cached_property
-    def geoip_country_db(self):
-        return self._open_geoip_reader("country", current_settings().geoip_country_db)
+    @property
+    def geoip_country_db(self) -> Any:
+        return self._geoip_country.get(self, current_settings().geoip_country_db)
 
     def update_standard_headers(self, response: WerkzeugResponse | Response) -> None:
         headers = response.headers
@@ -288,11 +342,6 @@ class Application:
     def _recover_from_registry_error(
         self, request: Request, httprequest: HTTPRequest, exc: RegistryError
     ) -> Any:
-        _logger.warning(
-            "Database or registry unusable, trying without",
-            exc_info=exc.__cause__,
-        )
-        request.db = None
         durable = exc.db_absent is True or (
             exc.db_absent is False and not exc.transient
         )
@@ -305,7 +354,26 @@ class Application:
             select_db_path=is_select_db_path(httprequest.path),
         )
         if not durable:
-            request.session.can_save = False
+            # The database is there but out of reach for now (pool exhausted,
+            # server restarting): say so and when to retry, keep the session.
+            # Serving the database-free router instead answered "database not
+            # found" or the selector for a database that exists.
+            _logger.warning(
+                "Database %r unreachable for now; answering 503",
+                request.db,
+                exc_info=exc.__cause__,
+            )
+            request.dispatcher = get_dispatcher_for_unmatched_route(request)(request)
+            raise ServiceUnavailable(
+                "The database is temporarily unavailable. Try again shortly.",
+                retry_after=REGISTRY_RETRY_AFTER,
+            ) from exc
+        _logger.warning(
+            "Database %r is gone; serving without a database",
+            request.db,
+            exc_info=exc.__cause__,
+        )
+        request.db = None
         request.session.logout()
         if is_select_db_path(httprequest.path):
             args_nodb = request.httprequest.args.copy()

@@ -222,11 +222,22 @@ class TestHttpStatic(TestHttpStaticCommon):
     def test_static07_attachment_external_url(self):
         res = self.db_url_open("/web/content/test_http.rickroll")
         res.raise_for_status()
-        self.assertEqual(res.status_code, 301)
+        self.assertEqual(
+            res.status_code, 302, "an editable url is no permanent redirect"
+        )
+        self.assertEqual(
+            res.headers.get("Cache-Control"), f"max-age={http.STATIC_CACHE}"
+        )
         self.assertURLEqual(
             res.headers.get("Location"),
             "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
         )
+
+    def test_static07_attachment_url_with_a_foreign_scheme_is_not_followed(self):
+        attachment = self.env.ref("test_http.rickroll").sudo()
+        attachment.url = "javascript:alert(1)"
+        res = self.db_url_open(f"/web/content/{attachment.id}")
+        self.assertEqual(res.status_code, 404)
 
     def test_static08_binary_field(self):
         earth = self.env.ref("test_http.earth")

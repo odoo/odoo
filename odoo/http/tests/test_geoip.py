@@ -1,3 +1,6 @@
+from pathlib import Path
+from unittest import mock
+
 from odoo.http.geoip import _GEOIP_NULL, _GeoIPNull
 
 
@@ -129,3 +132,54 @@ def test_the_application_opens_no_reader_for_a_corrupt_database(tmp_path):
     with settings.override(geoip_city_db=str(corrupt), geoip_country_db=str(corrupt)):
         assert app.geoip_city_db is None
         assert app.geoip_country_db is None
+
+
+def test_a_reader_is_reopened_when_its_file_is_replaced(tmp_path, monkeypatch):
+    from odoo.http import settings
+    from odoo.http.application import Application, _GeoIPReaderSlot
+
+    path = tmp_path / "city.mmdb"
+    path.write_bytes(b"v1")
+    opened = []
+    app = Application()
+    monkeypatch.setattr(
+        app, "_open_geoip_reader", lambda kind, p: opened.append(p) or len(opened)
+    )
+    monkeypatch.setattr(_GeoIPReaderSlot, "RECHECK_SECONDS", 0.0)
+    with settings.override(geoip_city_db=str(path)):
+        assert app.geoip_city_db == 1
+        assert app.geoip_city_db == 1, "an unchanged file is not reopened"
+        replacement = tmp_path / "new.mmdb"
+        replacement.write_bytes(b"v2")
+        replacement.replace(path)
+        assert app.geoip_city_db == 2, "geoipupdate's rename is picked up"
+
+
+def test_a_database_added_after_boot_is_picked_up(tmp_path, monkeypatch):
+    from odoo.http import settings
+    from odoo.http.application import Application, _GeoIPReaderSlot
+
+    path = tmp_path / "late.mmdb"
+    app = Application()
+    monkeypatch.setattr(
+        app,
+        "_open_geoip_reader",
+        lambda kind, p: "reader" if Path(p).exists() else None,
+    )
+    monkeypatch.setattr(_GeoIPReaderSlot, "RECHECK_SECONDS", 0.0)
+    with settings.override(geoip_city_db=str(path)):
+        assert app.geoip_city_db is None
+        path.write_bytes(b"db")
+        assert app.geoip_city_db == "reader"
+
+
+def test_a_lookup_between_rechecks_costs_no_stat(tmp_path, monkeypatch):
+    from odoo.http import settings
+    from odoo.http.application import Application
+
+    app = Application()
+    monkeypatch.setattr(app, "_open_geoip_reader", lambda kind, p: "reader")
+    with settings.override(geoip_city_db=str(tmp_path / "x.mmdb")):
+        app.geoip_city_db
+        with mock.patch("odoo.http.application.Path.stat", side_effect=AssertionError):
+            assert app.geoip_city_db == "reader"

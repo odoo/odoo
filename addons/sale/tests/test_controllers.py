@@ -3,6 +3,7 @@ from unittest.mock import patch
 from urllib.parse import parse_qs, urlsplit
 
 from markupsafe import Markup
+from werkzeug.http import parse_options_header
 
 from odoo import Command
 from odoo.exceptions import AccessError, UserError
@@ -541,8 +542,8 @@ class TestSalesControllers(HttpCase, SaleCommon):
         )
         self.assertEqual(req.status_code, 200)
         self.assertEqual(
-            req.headers["content-disposition"],
-            f"inline; filename*=UTF-8''Quotation_{portal_so.name}.pdf",
+            parse_options_header(req.headers["content-disposition"]),
+            ("inline", {"filename": f"Quotation_{portal_so.name}.pdf"}),
         )
 
         req = self.url_open(
@@ -551,8 +552,8 @@ class TestSalesControllers(HttpCase, SaleCommon):
         )
         self.assertEqual(req.status_code, 200)
         self.assertEqual(
-            req.headers["content-disposition"],
-            f"attachment; filename*=UTF-8''Quotation_{portal_so.name}.pdf",
+            parse_options_header(req.headers["content-disposition"]),
+            ("attachment", {"filename": f"Quotation_{portal_so.name}.pdf"}),
         )
 
     def _viewed_message_count(self, order):

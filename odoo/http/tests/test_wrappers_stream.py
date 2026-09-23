@@ -91,6 +91,9 @@ def test_from_binary_field_accepts_a_str_field_value():
         def __getitem__(self, _name):
             return "aGVsbG8="
 
+        def with_context(self, **_overrides):
+            return self
+
         class env:
             class _Attachment:
                 @staticmethod

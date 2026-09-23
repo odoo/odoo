@@ -1,10 +1,12 @@
 import logging
+import unicodedata
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, Self
 from urllib.parse import quote as url_quote
 
 import werkzeug.datastructures
 import werkzeug.exceptions
+import werkzeug.http
 import werkzeug.wrappers
 from werkzeug.exceptions import HTTPException
 
@@ -24,13 +26,32 @@ _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 
+_HEADER_UNSAFE = dict.fromkeys([*range(32), 127], "_")
+
+
+def sanitize_download_name(name: str) -> str:
+    return name.translate(_HEADER_UNSAFE)
+
+
 def prepare_content_disposition_header(
     filename: str, disposition_type: str = "attachment"
 ) -> str:
     if disposition_type not in ("attachment", "inline"):
         e = f"Invalid disposition_type: {disposition_type!r}"
         raise ValueError(e)
-    return f"{disposition_type}; filename*=UTF-8''{url_quote(filename, safe='')}"
+    # werkzeug's send_file spelling: a plain filename when it is ASCII, else
+    # an ASCII fallback beside the RFC 5987 form a client that knows it reads.
+    filename = sanitize_download_name(filename)
+    try:
+        filename.encode("ascii")
+    except UnicodeEncodeError:
+        simple = unicodedata.normalize("NFKD", filename)
+        simple = simple.encode("ascii", "ignore").decode("ascii")
+        quoted = url_quote(filename, safe="!#$&+-.^_`|~")
+        names = {"filename": simple, "filename*": f"UTF-8''{quoted}"}
+    else:
+        names = {"filename": filename}
+    return werkzeug.http.dump_options_header(disposition_type, names)
 
 
 def _prepare_request_property_accessors(attr: str) -> tuple[Any, Any]:

@@ -1,3 +1,5 @@
+from unittest import mock
+
 import werkzeug.routing
 
 from odoo.http import prepare_routing_map
@@ -59,3 +61,21 @@ def test_converters_are_handed_to_the_map():
 def test_an_empty_rule_set_still_builds_a_usable_map():
     routing_map = prepare_routing_map([])
     assert list(routing_map.iter_rules()) == []
+
+
+def test_the_nodb_map_reads_a_negative_int_as_the_db_map_does():
+    from odoo.http.routing import SignedIntConverter
+
+    routing_map = werkzeug.routing.Map(converters={"int": SignedIntConverter})
+    routing_map.add(werkzeug.routing.Rule("/n/<int:n>", endpoint="n"))
+    assert routing_map.bind("localhost").match("/n/-3") == ("n", {"n": -3})
+
+
+def test_the_application_builds_its_nodb_map_with_the_signed_int_converter():
+    from odoo.http.application import Application
+    from odoo.http.routing import SignedIntConverter
+
+    app = Application()
+    with mock.patch("odoo.http.application._generate_routing_rules", return_value=[]):
+        routing_map = app.nodb_routing_map
+    assert routing_map.converters["int"] is SignedIntConverter

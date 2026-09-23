@@ -125,6 +125,10 @@ class Probe(Controller):
         request.env.cr.postcommit.add(lambda: POSTCOMMIT_RAN.append(True))
         return "committed"
 
+    @route("/probe/json2-ids", type="json2", auth="none", methods=["GET"], typed=True)
+    def json2_ids(self, ids: list[int]):
+        return {"ids": ids}
+
     @route("/probe/boom", auth="public", methods=["GET"])
     def boom(self):
         raise RuntimeError("controller bug")
@@ -488,3 +492,41 @@ def test_a_session_store_outage_after_commit_spares_the_response_and_later_hooks
     assert served.status_code == 200, served.body
     assert served.body == b"committed"
     assert ran == [True], "a hook registered after the session's must still run"
+
+
+def test_a_repeated_query_parameter_reaches_a_json2_list_whole(harness):
+    served = harness.serve(environ("/probe/json2-ids", query="ids=1&ids=2&ids=3"))
+    assert served.status_code == 200, served.body
+    assert json.loads(served.body) == {"ids": [1, 2, 3]}
+
+
+@pytest.mark.parametrize(
+    ("catalogue", "path", "status"),
+    [([_wsgi.DB], "/probe/json2", 503), ([], "/probe/public", 404)],
+    ids=["listed", "gone"],
+)
+def test_an_unreachable_database_is_a_503_only_while_it_still_exists(
+    harness, catalogue, path, status
+):
+    from unittest import mock
+
+    import psycopg
+
+    def refuse(*args, **kwargs):
+        raise psycopg.OperationalError("connection refused")
+
+    with (
+        mock.patch.object(harness.registry, "cursor", refuse),
+        mock.patch("odoo.http._serve.list_dbs", return_value=catalogue),
+        mock.patch("odoo.http._serve.Registry.clear_database_state"),
+        mock.patch("odoo.http._serve.close_db"),
+    ):
+        served = harness.serve(
+            environ(path, "POST", body=b"{}", content_type="application/json")
+            if path == "/probe/json2"
+            else environ(path)
+        )
+    assert served.status_code == status, served.body
+    if status == 503:
+        assert served.header("Retry-After") == "5"
+        assert json.loads(served.body)["status"] == 503
