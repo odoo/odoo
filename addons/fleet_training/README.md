@@ -793,3 +793,50 @@ the 10-day vehicle gets an activity; run it again and confirm the count stays
 at 1 (no duplicate). In the UI: Settings > Technical > Automation > Scheduled
 Actions shows "Fleet Training: Insurance Expiry Reminder" and can be triggered
 manually.
+
+---
+
+## Chapter 19 — Demo Data & Final Cleanup
+
+**Concept.** The `demo` key in the manifest (as opposed to `data`) loads
+sample records only when a database is created *with* demo data - it's
+sandboxed from `data`, which always loads, so uninstalling/reinstalling never
+depends on throwaway sample content being present.
+
+**Why?** A training session needs the app to look alive the moment it's
+installed, not empty. Realistic data also makes every earlier chapter's
+feature demonstrable immediately (a vehicle already "In Maintenance" to show
+the ribbon, one already assigned to show the driver relation, one with
+insurance expiring soon to trigger the cron on demand).
+
+**Where?** [`demo/fleet_training_demo.xml`](demo/fleet_training_demo.xml)
+
+**Code explanation.** 3 categories, 2 tags, 3 drivers and 4 vehicles (Tata
+Nexon, Mahindra XUV700, Hyundai Creta, Toyota Innova Crysta) covering all 3
+statuses and different categories, plus 2 maintenance records. Dates use
+`eval` with `DateTime`/`relativedelta` (both available in the XML data eval
+context) so acquisition/insurance dates stay relative to "today" instead of
+going stale. The whole file is wrapped in `noupdate="1"` - standard for demo
+data - so users can freely edit or delete these records without a module
+upgrade silently reverting them.
+
+**Fleet functionality.** Installing with demo data now gives a fully populated
+Fleet Training app: assigned and unassigned vehicles, one in maintenance, one
+with insurance expiring in 20 days (ready to demo the cron on demand), driver
+assignments, tags, and maintenance history - every feature from Chapters 1–18
+has something real to show immediately.
+
+**What changed.** Added `demo/fleet_training_demo.xml`; manifest `demo` key.
+
+**Testing.** Fresh install with `--without-demo=False`: confirmed no errors;
+in the shell, confirmed all 4 vehicles, 3 drivers (each with
+`vehicle_count == 1`), categories/tags resolve correctly, and running
+`_cron_check_insurance_expiry()` schedules exactly one activity (on the
+Nexon, which expires in 20 days).
+
+---
+
+This closes the module: **15 chapters map directly to Server Framework 101**,
+plus **4 chapters that grow it into a genuinely usable application**
+(maintenance records, a wizard, a scheduled action, and demo data). See the
+concept-to-code table and suggested live-demo flow below.

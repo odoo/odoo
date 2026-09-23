@@ -29,5 +29,8 @@ on top of a realistic Fleet Management use case.
         'views/fleet_vehicle_analysis_views.xml',
         'data/ir_cron_data.xml',
     ],
+    'demo': [
+        'demo/fleet_training_demo.xml',
+    ],
     'application': True,
 }
