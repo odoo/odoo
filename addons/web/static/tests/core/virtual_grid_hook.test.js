@@ -61,10 +61,16 @@ class TestGridItem extends Component {
 class TestGridComponent extends Component {
     static components = { TestGridItem };
     static template = xml`
-        <div class="scrollable" t-ref="this.scrollableRef" style="${CONTAINER_STYLE}" t-att-dir="this.direction">
+        <div
+            t-if="this.render()"
+            class="scrollable"
+            t-ref="this.scrollableRef"
+            style="${CONTAINER_STYLE}"
+            t-att-dir="this.direction"
+        >
             <div class="inner" style="height: ${ROW_COUNT * ITEM_HEIGHT}px; width: ${
-                COLUMN_COUNT * ITEM_WIDTH
-            }px;">
+        COLUMN_COUNT * ITEM_WIDTH
+    }px;">
                 <t t-foreach="this.virtualRows()" t-as="row" t-key="row">
                     <t t-foreach="this.virtualColumns()" t-as="col" t-key="col">
                         <TestGridItem row="row" col="col" />
@@ -77,6 +83,7 @@ class TestGridComponent extends Component {
     props = useProps();
     direction = localization.direction;
 
+    render = signal(true);
     scrollableRef = signal.ref();
     virtualGrid = useVirtualGrid({
         ...this.props,
@@ -397,4 +404,47 @@ test("horizontal scroll in RTL", async () => {
 
     expect(virtualGrid.firstColumn()).toBe(180);
     expect(virtualGrid.lastColumn()).toBe(199);
+});
+
+test("renders correctly after the ref has been detached and reattached", async () => {
+    // FIXME: initialScroll doesn't make sense: the hook should adapt to the actual
+    // scroll position instead.
+    const { render, virtualGrid } = await mountWithCleanup(TestGridComponent, {
+        props: {
+            initialScroll: { top: 2000 },
+        },
+    });
+
+    expect(".scrollable").toHaveCount(1);
+    expect(virtualGrid.firstRow()).toEqual(35);
+    expect(virtualGrid.lastRow()).toEqual(49);
+    expect(virtualGrid.firstColumn()).toEqual(0);
+    expect(virtualGrid.lastColumn()).toEqual(19);
+
+    await scroll(".scrollable", { top: 5000, left: 2000 });
+    await animationFrame();
+
+    expect(virtualGrid.firstRow()).toEqual(95);
+    expect(virtualGrid.lastRow()).toEqual(109);
+    expect(virtualGrid.firstColumn()).toEqual(30);
+    expect(virtualGrid.lastColumn()).toEqual(59);
+
+    render.set(false);
+    await animationFrame();
+
+    expect(".scrollable").not.toHaveCount();
+    expect(virtualGrid.firstRow()).toEqual(95); // didn't change
+    expect(virtualGrid.lastRow()).toEqual(109); // didn't change
+    expect(virtualGrid.firstColumn()).toEqual(30); // didn't change
+    expect(virtualGrid.lastColumn()).toEqual(59); // didn't change
+
+    render.set(true);
+    await animationFrame();
+
+    expect(".scrollable").toHaveCount(1);
+    // FIXME: initial scroll is lost here, this is wrong
+    expect(virtualGrid.firstRow()).toEqual(95);
+    expect(virtualGrid.lastRow()).toEqual(109);
+    expect(virtualGrid.firstColumn()).toEqual(30);
+    expect(virtualGrid.lastColumn()).toEqual(59);
 });
