@@ -216,7 +216,9 @@ export class Call extends Component {
             }
         }
         // Keep a pin or presentation focused, or retain the last speaker when the call is quiet.
-        const focused = this.channel.activeRtcSession || this.spotlightSession;
+        // Self is only retained while alone: whoever joins takes the stage over.
+        const active = this.channel.activeRtcSession;
+        const focused = active?.notEq(this.rtc.selfSession) ? active : this.spotlightSession;
         return focused ? [focused] : [];
     }
 
