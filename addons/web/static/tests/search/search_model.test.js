@@ -864,6 +864,19 @@ test("toggle a custom option in a date filter with a domain", async () => {
     ]);
 });
 
+test("reload with a different global groupBy", async () => {
+    const model = await createSearchModel({ groupBy: ["foo"] });
+    expect(model.groupBy).toEqual(["foo"]);
+
+    await model.reload({
+        context: {},
+        domain: [],
+        groupBy: ["bar"],
+        orderBy: [],
+    });
+    expect(model.groupBy).toEqual(["bar"]);
+});
+
 test("toggle a groupBy", async () => {
     const model = await createSearchModel({
         searchViewArch: `
