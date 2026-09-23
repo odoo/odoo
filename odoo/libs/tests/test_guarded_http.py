@@ -1,7 +1,9 @@
+import contextlib
 import gzip
 import http.server
 import re
 import socket
+import socketserver
 import threading
 import time
 from collections.abc import Callable
@@ -345,3 +347,220 @@ class TestXmlRpcProxy:
             proxy.version()
 
         assert server.seen == []
+
+
+class _ForwardProxy(socketserver.ThreadingTCPServer):
+    daemon_threads = True
+    allow_reuse_address = True
+    request_lines: list[str]
+    authorizations: list[str]
+
+    @property
+    def server_port(self) -> int:
+        return self.server_address[1]
+
+
+class _ForwardProxyHandler(socketserver.StreamRequestHandler):
+    server: _ForwardProxy
+
+    def handle(self):
+        request_line = self.rfile.readline().decode("latin-1").strip()
+        while (line := self.rfile.readline()) not in (b"\r\n", b"\n", b""):
+            name, _, value = line.decode("latin-1").partition(":")
+            if name.lower() == "proxy-authorization":
+                self.server.authorizations.append(value.strip())
+        self.server.request_lines.append(request_line)
+        method, target, _version = request_line.split(" ", 2)
+        if method != "CONNECT":
+            body = b"via proxy"
+            self.wfile.write(
+                b"HTTP/1.1 200 OK\r\nContent-Length: %d\r\nConnection: close\r\n\r\n%s"
+                % (len(body), body)
+            )
+            return
+        host, _, port = target.rpartition(":")
+        upstream = socket.create_connection((host.strip("[]"), int(port)), timeout=5)
+        self.wfile.write(b"HTTP/1.1 200 Connection established\r\n\r\n")
+        self.wfile.flush()
+
+        def pump(source, sink):
+            with contextlib.suppress(OSError):
+                while chunk := source.recv(65536):
+                    sink.sendall(chunk)
+            with contextlib.suppress(OSError):
+                sink.shutdown(socket.SHUT_WR)
+
+        back = threading.Thread(target=pump, args=(upstream, self.connection))
+        back.start()
+        pump(self.connection, upstream)
+        back.join(5)
+        upstream.close()
+
+
+@pytest.fixture
+def forward_proxy():
+    proxy = _ForwardProxy(("127.0.0.1", 0), _ForwardProxyHandler)
+    proxy.request_lines = []
+    proxy.authorizations = []
+    thread = threading.Thread(target=proxy.serve_forever, args=(0.05,), daemon=True)
+    thread.start()
+    try:
+        yield proxy
+    finally:
+        proxy.shutdown()
+        proxy.server_close()
+
+
+@pytest.fixture
+def tls_server(tmp_path):
+    import datetime
+    import ssl
+
+    from cryptography import x509
+    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives.asymmetric import ec
+    from cryptography.x509.oid import NameOID
+
+    key = ec.generate_private_key(ec.SECP256R1())
+    name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "service.test")])
+    now = datetime.datetime.now(datetime.UTC)
+    certificate = (
+        x509.CertificateBuilder()
+        .subject_name(name)
+        .issuer_name(name)
+        .public_key(key.public_key())
+        .serial_number(x509.random_serial_number())
+        .not_valid_before(now - datetime.timedelta(days=1))
+        .not_valid_after(now + datetime.timedelta(days=1))
+        .add_extension(
+            x509.SubjectAlternativeName([x509.DNSName("service.test")]), critical=False
+        )
+        .add_extension(x509.BasicConstraints(ca=True, path_length=None), critical=True)
+        .sign(key, hashes.SHA256())
+    )
+    cert_file = tmp_path / "cert.pem"
+    key_file = tmp_path / "key.pem"
+    cert_file.write_bytes(certificate.public_bytes(serialization.Encoding.PEM))
+    key_file.write_bytes(
+        key.private_bytes(
+            serialization.Encoding.PEM,
+            serialization.PrivateFormat.PKCS8,
+            serialization.NoEncryption(),
+        )
+    )
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.load_cert_chain(cert_file, key_file)
+    server_names = []
+    context.sni_callback = lambda sock, server_name, ctx: server_names.append(
+        server_name
+    )
+    httpd = _Server(("127.0.0.1", 0), _Handler)
+    httpd.seen = []
+    httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
+    httpd.server_names = server_names
+    httpd.ca_file = str(cert_file)
+    thread = threading.Thread(target=httpd.serve_forever, args=(0.05,), daemon=True)
+    thread.start()
+    try:
+        yield httpd
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+
+
+def rebinding_resolver(first, then):
+    answers = [first]
+
+    def resolve(host, port, *args, **kwargs):
+        address = answers.pop() if answers else then
+        return resolver_for({host: [address]})(host, port)
+
+    return resolve
+
+
+class TestEgressProxy:
+    def test_https_through_the_proxy_tunnels_to_the_checked_address(
+        self, forward_proxy, tls_server
+    ):
+        session = session_for(
+            resolver=rebinding_resolver("127.0.0.1", then="10.0.0.9"),
+            proxy=f"http://127.0.0.1:{forward_proxy.server_port}",
+        )
+        response = session.get(
+            f"https://service.test:{tls_server.server_port}/ok",
+            verify=tls_server.ca_file,
+        )
+        assert response.content == b"hello"
+        assert forward_proxy.request_lines == [
+            f"CONNECT 127.0.0.1:{tls_server.server_port} HTTP/1.1"
+        ]
+        assert tls_server.server_names == ["service.test"]
+        assert tls_server.seen == [("/ok", f"service.test:{tls_server.server_port}")]
+
+    def test_http_through_the_proxy_names_the_checked_address(self, forward_proxy):
+        session = session_for(
+            resolver=rebinding_resolver("127.0.0.1", then="10.0.0.9"),
+            proxy=f"http://127.0.0.1:{forward_proxy.server_port}",
+        )
+        response = session.get("http://service.test:8080/x?q=1")
+        assert response.content == b"via proxy"
+        assert forward_proxy.request_lines == [
+            "GET http://127.0.0.1:8080/x?q=1 HTTP/1.1"
+        ]
+
+    def test_a_refused_destination_never_reaches_the_proxy(self, forward_proxy):
+        session = session_for(
+            resolver=resolver_for({"service.test": ["10.0.0.9"]}),
+            proxy=f"http://127.0.0.1:{forward_proxy.server_port}",
+        )
+        with pytest.raises(guarded_http.RefusedDestination):
+            session.get("http://service.test/x")
+        assert forward_proxy.request_lines == []
+
+    def test_credentials_in_the_proxy_url_authenticate_both_schemes(
+        self, forward_proxy, tls_server
+    ):
+        session = session_for(
+            proxy=f"http://user:pw@127.0.0.1:{forward_proxy.server_port}"
+        )
+        session.get("http://service.test:8080/x")
+        session.get(
+            f"https://service.test:{tls_server.server_port}/ok",
+            verify=tls_server.ca_file,
+        )
+        assert forward_proxy.authorizations == ["Basic dXNlcjpwdw=="] * 2
+
+    @pytest.mark.parametrize("variable", ["HTTP_PROXY", "http_proxy", "ALL_PROXY"])
+    def test_the_environment_proxy_is_not_used(self, server, monkeypatch, variable):
+        monkeypatch.setenv(variable, "http://127.0.0.1:9")
+        response = session_for().get(f"http://service.test:{server.server_port}/ok")
+        assert response.content == b"hello"
+
+    def test_a_plain_session_mounting_the_adapter_ignores_the_environment_proxy(
+        self, server, monkeypatch
+    ):
+        monkeypatch.setenv("HTTP_PROXY", "http://127.0.0.1:9")
+        session = requests.Session()
+        session.mount(
+            "http://",
+            guarded_http.GuardedAdapter(
+                LOOPBACK_ONLY, resolver=resolver_for({"service.test": ["127.0.0.1"]})
+            ),
+        )
+        response = session.get(f"http://service.test:{server.server_port}/ok")
+        assert response.content == b"hello"
+
+    def test_the_process_proxy_is_the_default_route(self, forward_proxy, monkeypatch):
+        monkeypatch.setattr(guarded_http, "_egress_proxy", None)
+        guarded_http.configure_egress_proxy(
+            f"http://127.0.0.1:{forward_proxy.server_port}"
+        )
+        session_for().get("http://service.test:8080/x")
+        assert forward_proxy.request_lines == ["GET http://127.0.0.1:8080/x HTTP/1.1"]
+
+    @pytest.mark.parametrize(
+        "url", ["socks5://p:1080", "proxy.example:3128", "http://"]
+    )
+    def test_a_proxy_that_is_not_an_http_url_is_refused(self, url):
+        with pytest.raises(ValueError, match="egress proxy"):
+            guarded_http.configure_egress_proxy(url)

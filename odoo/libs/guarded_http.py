@@ -9,7 +9,6 @@ import xmlrpc.client
 
 import requests
 from requests.adapters import HTTPAdapter
-from requests.utils import select_proxy
 from urllib3.exceptions import MaxRetryError, NewConnectionError
 from urllib3.util import parse_url
 
@@ -26,11 +25,14 @@ __all__ = [
     "DEFAULT_MAX_BYTES",
     "DEFAULT_MAX_REDIRECTS",
     "DEFAULT_TIMEOUT",
+    "ENVIRONMENT_PROXY_VARIABLES",
     "GuardedAdapter",
     "GuardedSession",
     "RefusedDestination",
     "ResponseTooLarge",
     "ResponseTooSlow",
+    "configure_egress_proxy",
+    "egress_proxy",
     "guarded_session",
 ]
 
@@ -39,6 +41,42 @@ DEFAULT_MAX_BYTES = 32 * 1024 * 1024
 DEFAULT_MAX_REDIRECTS = 5
 
 _DEFAULT_PORTS = {"http": 80, "https": 443}
+
+# The proxy variables requests would read from the environment. A guarded
+# session never does: a proxy resolves the name again, after the check, so it
+# is declared once for the process and reached with the checked address.
+ENVIRONMENT_PROXY_VARIABLES = (
+    "HTTP_PROXY",
+    "HTTPS_PROXY",
+    "ALL_PROXY",
+    "http_proxy",
+    "https_proxy",
+    "all_proxy",
+)
+
+_egress_proxy: str | None = None
+
+
+def configure_egress_proxy(url: str | None) -> None:
+    global _egress_proxy  # noqa: PLW0603 one process-wide egress route
+    if url:
+        parts = parse_url(url)
+        if parts.scheme not in ("http", "https") or not parts.host:
+            raise ValueError(
+                f"the egress proxy must be an http:// or https:// URL, got {url!r}"
+            )
+    _egress_proxy = url or None
+
+
+def egress_proxy() -> str | None:
+    return _egress_proxy
+
+
+class _Configured:
+    pass
+
+
+_CONFIGURED = _Configured()
 
 
 class RefusedDestination(requests.exceptions.InvalidURL, netguard.DestinationRefused):
@@ -71,6 +109,7 @@ class GuardedAdapter(HTTPAdapter):
         timeout: float | tuple[float, float] = DEFAULT_TIMEOUT,
         max_bytes: int | None = DEFAULT_MAX_BYTES,
         max_seconds: float | None = None,
+        proxy: str | _Configured | None = _CONFIGURED,
         **kwargs: typing.Any,
     ) -> None:
         self.policy = policy
@@ -78,7 +117,14 @@ class GuardedAdapter(HTTPAdapter):
         self.timeout = timeout
         self.max_bytes = max_bytes
         self.max_seconds = max_seconds
+        self._proxy = proxy
         super().__init__(**kwargs)
+
+    @property
+    def proxy(self) -> str | None:
+        if isinstance(self._proxy, _Configured):
+            return _egress_proxy
+        return self._proxy
 
     def send(  # type: ignore[override]
         self,
@@ -93,17 +139,17 @@ class GuardedAdapter(HTTPAdapter):
         addresses = request.__dict__.pop("netguard_addresses", None)
         if addresses is None:
             addresses = self._check(request)
+        # the route is the adapter's own: whatever proxies requests merged in
+        # (the environment's, a caller's) would re-resolve the checked name
+        del proxies
         options = {
             "stream": stream,
             "timeout": self.timeout if timeout is None else timeout,
             "verify": verify,
             "cert": cert,
-            "proxies": proxies,
+            "proxies": {},
         }
-        if select_proxy(request.url or "", proxies):
-            response = super().send(request, **options)
-        else:
-            response = self._send_pinned(request, addresses, options)
+        response = self._send_pinned(request, addresses, options)
         return self._capped(response, started)
 
     def _check(self, request: PreparedRequest) -> tuple[IPAddress, ...]:
@@ -156,10 +202,11 @@ class GuardedAdapter(HTTPAdapter):
         proxies: dict[str, str] | None = None,
         cert: typing.Any = None,
     ) -> typing.Any:
+        del proxies
         address = getattr(request, "netguard_address", None)
-        if address is None or select_proxy(request.url or "", proxies):
+        if address is None:
             return super().get_connection_with_tls_context(
-                request, verify, proxies=proxies, cert=cert
+                request, verify, proxies={}, cert=cert
             )
         host_params, pool_kwargs = self.build_connection_pool_key_attributes(
             request, verify, cert
@@ -169,9 +216,21 @@ class GuardedAdapter(HTTPAdapter):
         if host_params.get("scheme") == "https":
             pool_kwargs["assert_hostname"] = name
             pool_kwargs["server_hostname"] = name
-        return self.poolmanager.connection_from_host(
-            **host_params, pool_kwargs=pool_kwargs
-        )
+        # through a proxy the checked address is still the destination: a
+        # CONNECT to it for https, an absolute-form request line naming it for
+        # http (request_url), with TLS and the Host header on the name
+        manager = self.proxy_manager_for(self.proxy) if self.proxy else self.poolmanager
+        return manager.connection_from_host(**host_params, pool_kwargs=pool_kwargs)
+
+    def request_url(self, request: PreparedRequest, proxies: typing.Any) -> str:
+        del proxies
+        address = getattr(request, "netguard_address", None)
+        parts = parse_url(request.url or "")
+        if address is None or not self.proxy or parts.scheme != "http":
+            return super().request_url(request, {})
+        host = f"[{address}]" if ":" in str(address) else str(address)
+        port = parts.port or _DEFAULT_PORTS["http"]
+        return f"http://{host}:{port}{request.path_url}"
 
     def _capped(self, response: Response, started: float) -> Response:
         limit = self.max_bytes
@@ -256,6 +315,21 @@ def _start_watchdog(response: Response, deadline: float | None) -> _Watchdog | N
 
 
 class GuardedSession(requests.Session):
+    def merge_environment_settings(  # type: ignore[override]
+        self,
+        url: str | None,
+        proxies: typing.Any,
+        stream: typing.Any,
+        verify: typing.Any,
+        cert: typing.Any,
+    ) -> dict[str, typing.Any]:
+        # the environment still names the CA bundle and netrc, never a proxy
+        settings = super().merge_environment_settings(
+            url, proxies, stream, verify, cert
+        )
+        settings["proxies"] = {}
+        return settings
+
     def send(self, request: PreparedRequest, **kwargs: typing.Any) -> Response:  # type: ignore[override]
         adapter = self.get_adapter(url=request.url or "")
         if isinstance(adapter, GuardedAdapter):

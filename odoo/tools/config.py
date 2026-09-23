@@ -1354,6 +1354,17 @@ class configmanager:
             "Also disable access to the database manager and selector, "
             "so be sure to set a proper --database parameter first",
         )
+        group.add_option(
+            "--egress-proxy",
+            dest="egress_proxy",
+            my_default="",
+            help="Forward proxy for outbound HTTP(S) requests, as http://host:port "
+            "(credentials may go in the URL). Checked requests reach it with the "
+            "address they checked, a CONNECT to that address for https and an "
+            "absolute URL naming it for http, so the proxy never resolves the name "
+            "again. The HTTP_PROXY, HTTPS_PROXY and ALL_PROXY environment "
+            "variables are not read for these requests.",
+        )
         parser.add_option_group(group)
 
     def _add_advanced_dev(self, group: optparse.OptionGroup) -> None:
@@ -1680,6 +1691,7 @@ class configmanager:
                     stacklevel=2,
                 )
         self._warn_deprecated_options()
+        self._warn_ignored_proxy_environment()
         self._flush_log_and_warn_entries()
         modules.module.initialize_sys_path()
         _debug.lifecycle(
@@ -1993,6 +2005,32 @@ class configmanager:
         self._postprocess_init_update()
         self._postprocess_dev_mode()
         self._postprocess_test_options()
+        self._postprocess_egress_proxy()
+
+    def _postprocess_egress_proxy(self) -> None:
+        from odoo.libs import guarded_http
+
+        try:
+            guarded_http.configure_egress_proxy(self["egress_proxy"] or None)
+        except ValueError as error:
+            self.parser.error(str(error))
+
+    def _warn_ignored_proxy_environment(self) -> None:
+        from odoo.libs import guarded_http
+
+        ignored = [
+            variable
+            for variable in guarded_http.ENVIRONMENT_PROXY_VARIABLES
+            if os.environ.get(variable)
+        ]
+        if ignored:
+            self._log(
+                logging.WARNING,
+                "%s set in the environment: outbound requests do not use an "
+                "environment proxy; set egress_proxy in the configuration to route "
+                "them through one",
+                ", ".join(ignored),
+            )
 
     def _warn_deprecated_options(self) -> None:
         if self["http_enable"] and not self.http_socket_activation:
