@@ -2,7 +2,7 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/fields/standard_field_props";
 
-import { Component, onWillRender, toRaw } from "@odoo/owl";
+import { Component, toRaw } from "@odoo/owl";
 
 export class LoyaltyDataField extends Component {
     static template = "sale_loyalty.LoyaltyDataField";
@@ -10,14 +10,9 @@ export class LoyaltyDataField extends Component {
         ...standardFieldProps,
     };
 
-    setup() {
-        onWillRender(() => this.formatData());
-    }
-
-    formatData() {
+    get LoyaltyCardData() {
         const LoyaltyCardData = this.props.record.data[this.props.name];
-        this.LoyaltyCardData =
-            Object.keys(LoyaltyCardData).length && toRaw(LoyaltyCardData);
+        return Object.keys(LoyaltyCardData).length && toRaw(LoyaltyCardData);
     }
 }
 

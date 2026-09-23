@@ -1,11 +1,5 @@
 /** @odoo-module native */
-import {
-    Component,
-    onWillRender,
-    useExternalListener,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 
 export const TABLE_TYPES = {
     Id: "id",
@@ -34,10 +28,6 @@ export class DocTable extends Component {
         this.isHovering = false;
         this.hideTimeout = null;
         this.requestAnim = null;
-
-        onWillRender(() => {
-            this.items = this.computeItems();
-        });
 
         useExternalListener(window, "click", (event) => {
             if (
@@ -111,6 +101,10 @@ export class DocTable extends Component {
             clearTimeout(this.hideTimeout);
         }
         this.isHovering = true;
+    }
+
+    get items() {
+        return this.computeItems();
     }
 
     computeItems() {

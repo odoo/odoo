@@ -2,7 +2,6 @@
 import {
     Component,
     onPatched,
-    onWillRender,
     onWillUpdateProps,
     toRaw,
     useRef,
@@ -95,9 +94,8 @@ export class TaxTotalsComponent extends Component {
     };
 
     setup() {
-        this.totals = {};
+        this._totals = {};
         this._rawTotals = undefined;
-        onWillRender(() => this.formatData(this.props));
     }
 
     get readonly() {
@@ -130,16 +128,24 @@ export class TaxTotalsComponent extends Component {
         this.props.record.update({ [this.props.name]: changes });
     }
 
+    get totals() {
+        return this.formatData(this.props);
+    }
+
+    /**
+     * @param {any} props
+     * @returns {any} the totals the component shows and edits: a copy of the
+     *     record's value, made again only when that value changes
+     */
     formatData(props) {
         const raw = toRaw(props.record.data[this.props.name]);
-        if (raw === this._rawTotals) {
-            return;
+        if (raw !== this._rawTotals) {
+            this._rawTotals = raw;
+            if (raw) {
+                this._totals = JSON.parse(JSON.stringify(raw));
+            }
         }
-        this._rawTotals = raw;
-        if (!raw) {
-            return;
-        }
-        this.totals = JSON.parse(JSON.stringify(raw));
+        return this._totals;
     }
 }
 

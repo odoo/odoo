@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { Component, onWillRender } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
@@ -53,31 +53,33 @@ export class QtyAtDateWidget extends Component {
             position: "top",
         });
         this.orm = useService("orm");
-        this.calcData = {};
-        onWillRender(() => {
-            this.initCalcData();
-        });
+        this._calcData = {};
+    }
+
+    get calcData() {
+        this.initCalcData();
+        return this._calcData;
     }
 
     initCalcData() {
         const { data } = this.props.record;
         if (data.date_planned) {
             if (data.state === "done") {
-                this.calcData.will_be_fulfilled =
+                this._calcData.will_be_fulfilled =
                     data.qty_free_today >= data.qty_to_transfer;
             } else {
-                this.calcData.will_be_fulfilled =
+                this._calcData.will_be_fulfilled =
                     data.qty_available_virtual_at_date >= data.qty_to_transfer;
             }
-            this.calcData.will_be_late =
+            this._calcData.will_be_late =
                 data.date_planned_forecast &&
                 data.date_planned_forecast > data.date_planned;
             if (data.state === "draft") {
-                this.calcData.forecasted_issue =
-                    !this.calcData.will_be_fulfilled && !data.is_mto;
+                this._calcData.forecasted_issue =
+                    !this._calcData.will_be_fulfilled && !data.is_mto;
             } else {
-                this.calcData.forecasted_issue =
-                    !this.calcData.will_be_fulfilled || this.calcData.will_be_late;
+                this._calcData.forecasted_issue =
+                    !this._calcData.will_be_fulfilled || this._calcData.will_be_late;
             }
         }
     }

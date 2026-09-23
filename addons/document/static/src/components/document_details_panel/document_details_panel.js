@@ -1,4 +1,5 @@
 /** @odoo-module native */
+import { useComputed } from "@web/core/utils/computed";
 import { humanSize } from "@web/core/utils/format/binary";
 import { _t } from "@web/core/translation";
 import { ModelSelector } from "@web/components/model_selector";
@@ -13,13 +14,7 @@ import { DocumentsDetailsMany2ManyTagsField } from "@document/views/fields/docum
 import { DocumentsDetailsMany2OneField } from "@document/views/fields/document_details_many2one/document_details_many2one_field";
 import { DocumentsTypeIcon } from "@document/views/fields/document_type_icon/document_type_icon";
 
-import {
-    Component,
-    onWillRender,
-    onWillUpdateProps,
-    status,
-    useState,
-} from "@odoo/owl";
+import { Component, onWillUpdateProps, status, useState } from "@odoo/owl";
 
 export class DocumentsDetailsPanel extends Component {
     static components = {
@@ -43,9 +38,10 @@ export class DocumentsDetailsPanel extends Component {
         this.documentService = useService("document.document");
         this.orm = useService("orm");
         this.dialog = useService("dialog");
-        onWillRender(() => {
-            this.record = wrapAsDetailsPanelRecord(this.props.record);
-        });
+        this.detailsRecord = useComputed(
+            () => wrapAsDetailsPanelRecord(this.props.record),
+            () => [this.props.record],
+        );
 
         this.state = useState({
             resModel: this.props.record.data.res_model,
@@ -62,6 +58,10 @@ export class DocumentsDetailsPanel extends Component {
             this.state.resModel = nextProps.record.data.res_model;
             this.state.resModelName = nextProps.record.data.res_model_name || "";
         });
+    }
+
+    get record() {
+        return this.detailsRecord();
     }
 
     async openLinkedRecord() {
