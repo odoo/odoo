@@ -8,7 +8,6 @@ patch(PosOrderline.prototype, {
             !this.is_reward_line &&
             !this.isTipLine() &&
             !this._isGiftCardOrEWalletLine &&
-            !this.sale_order_origin_id &&
             !this.event_ticket_id &&
             (!this.config.module_pos_discount ||
                 this.product_id.id !== this.config.discount_product_id?.id)

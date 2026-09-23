@@ -134,7 +134,7 @@ patch(PosStore.prototype, {
                     product_id: line.product_id,
                     qty: line.product_uom_qty,
                     price_unit: line.price_unit,
-                    price_type: "manual",
+                    price_type: "automatic",
                     tax_ids: taxes.map((tax) => ["link", tax]),
                     sale_order_origin_id: sale_order,
                     sale_order_line_id: line,

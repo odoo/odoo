@@ -18,7 +18,7 @@ test("showOldUnitPrice", async () => {
     line.is_reward_line = false;
 
     line.sale_order_origin_id = 1;
-    expect(line.showOldUnitPrice).toBe(false);
+    expect(line.showOldUnitPrice).toBe(true);
     line.sale_order_origin_id = false;
 
     line.event_ticket_id = 1;
