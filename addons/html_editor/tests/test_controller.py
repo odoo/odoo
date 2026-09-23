@@ -107,6 +107,14 @@ class TestController(HttpCase):
         self.assertEqual(200, response.status_code, "Expect response")
         self.assertIn(f"fill:{expected};", response.content.decode("utf-8"))
 
+        response = self.url_open(url + "?c1=rgb(29.2125984252,%2020,%2046)")
+        self.assertEqual(200, response.status_code, "Dart Sass writes decimal channels")
+        self.assertIn(
+            "fill:rgb(29.2125984252, 20, 46);", response.content.decode("utf-8")
+        )
+        response = self.url_open(url + "?c1=rgb(1.2.3,%204,%205)")
+        self.assertEqual(400, response.status_code, "Expect a malformed colour refused")
+
         url = "/html_editor/shape/illustration/noslug"
         attachment["url"] = url
 

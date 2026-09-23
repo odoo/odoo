@@ -99,7 +99,8 @@ class HTML_Editor(http.Controller):
         svg_options = {}
         bundle_css = None
         regex_hex = r"#[0-9A-F]{6,8}"
-        regex_rgba = r"rgba?\(\d{1,3}, ?\d{1,3}, ?\d{1,3}(?:, ?[0-9.]{1,4})?\)"
+        channel = r"\d{1,3}(?:\.\d+)?"
+        regex_rgba = rf"rgba?\({channel}, ?{channel}, ?{channel}(?:, ?[0-9.]{{1,4}})?\)"
         for key, value in options.items():
             colorMatch = re.match(r"^c([1-5])$", key)
             if colorMatch:
