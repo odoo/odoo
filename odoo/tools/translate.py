@@ -1226,7 +1226,7 @@ class PoFileWriter:
             "%s"
             % (
                 odoo.release.description,
-                "".join("\t* %s\n" % m for m in modules),
+                "".join("\t* %s\n" % m for m in sorted(modules)),
             )
         )
         now = datetime.now(UTC).strftime("%Y-%m-%d %H:%M+0000")
@@ -1279,7 +1279,7 @@ class PoFileWriter:
 
 class TarFileWriter:
     def __init__(self, target: IO[bytes], lang: str | None) -> None:
-        self.tar = tarfile.open(fileobj=target, mode="w|gz")  # noqa: SIM115  instance-owned, closed in write_rows
+        self.target = target
         self.lang = lang
 
     def write_rows(self, rows: Iterable) -> None:
@@ -1288,21 +1288,21 @@ class TarFileWriter:
             module = row[0]
             rows_by_module[module].append(row)
 
-        for mod, modrows in rows_by_module.items():
-            with io.BytesIO() as buf:
-                po = PoFileWriter(buf, lang=self.lang)
-                po.write_rows(modrows)
-                buf.seek(0)
+        with tarfile.open(fileobj=self.target, mode="w|gz") as tar:
+            for mod, modrows in rows_by_module.items():
+                with io.BytesIO() as buf:
+                    po = PoFileWriter(buf, lang=self.lang)
+                    po.write_rows(modrows)
+                    buf.seek(0)
 
-                ext = "po" if self.lang else "pot"
-                info = tarfile.TarInfo(
-                    str(Path(mod, "i18n", f"{self.lang or mod}.{ext}"))
-                )
-                info.size = buf.getbuffer().nbytes
+                    ext = "po" if self.lang else "pot"
+                    info = tarfile.TarInfo(
+                        str(Path(mod, "i18n", f"{self.lang or mod}.{ext}"))
+                    )
+                    info.size = buf.getbuffer().nbytes
 
-                self.tar.addfile(info, fileobj=buf)
+                    tar.addfile(info, fileobj=buf)
 
-        self.tar.close()
         _debug.pipeline(
             "translate.tar_written", lang=self.lang, modules=len(rows_by_module)
         )
@@ -1762,10 +1762,13 @@ class TranslationModuleReader(TranslationReader):
         self._export_translatable_records()
         self._export_translatable_resources()
 
+    def _selected_modules(self) -> list[str]:
+        if "all" in self._modules:
+            return list(self._installed_modules)
+        return list(self._modules)
+
     def _export_translatable_records(self) -> None:
-        modules = (
-            self._installed_modules if "all" in self._modules else list(self._modules)
-        )
+        modules = self._selected_modules()
         xml_defined: set[tuple] = set()
         with _debug.perf(
             "translate.export_datafile_scan", cr=self._cr, modules=len(modules)
@@ -1998,9 +2001,13 @@ class TranslationModuleReader(TranslationReader):
                 if not recursive:
                     break
 
+        self._export_attachment_translations()
+
+    def _export_attachment_translations(self) -> None:
         IrModuleModule = self.env["ir.module.module"]
+        modules = self._selected_modules()
         before = len(self._to_translate)  # debuglog
-        for module in self._modules:
+        for module in modules:
             for translation in IrModuleModule._extract_resource_attachment_translations(
                 module, self._lang
             ):
@@ -2008,7 +2015,7 @@ class TranslationModuleReader(TranslationReader):
         _debug.perf.count(
             "translate.export_attachment_terms",
             lang=self._lang,
-            modules=len(self._modules),
+            modules=len(modules),
             terms=len(self._to_translate) - before,
         )
 
