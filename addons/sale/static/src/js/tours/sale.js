@@ -2,6 +2,7 @@ import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
+import { searchOrCreateMany2X } from "@web_tour/tour_scenarios";
 
 registry.category("web_tour.tours").add("sale_tour", {
     steps: () => [
@@ -72,15 +73,15 @@ registry.category("web_tour.tours").add("sale_tour", {
         {
             trigger: ".o_sale_order",
         },
-        ...stepUtils.searchOrCreateMany2X(
-            ".o_field_res_partner_many2one[name='partner_id'] input",
-            "customer",
-            "Agrolait",
-            {
+        ...searchOrCreateMany2X({
+            trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
+            label: "customer",
+            searchText: "Agrolait",
+            fields: {
                 name: "Agrolait",
                 email: "agrolait@example.com",
-            }
-        ),
+            },
+        }),
         // as we are creating product on the fly in next step, which is not supported in sol_label_text
         {
             isActive: ["desktop"],
@@ -120,17 +121,17 @@ registry.category("web_tour.tours").add("sale_tour", {
             isActive: ["mobile"],
             trigger: ".modal .o_form_button_save",
         },
-        ...stepUtils.searchOrCreateMany2X(
-            `
+        ...searchOrCreateMany2X({
+            trigger: `
                 .o_field_widget[name='product_id'] input,
                 .o_field_widget[name='product_template_id'] input
             `,
-            "product",
-            "DESK0001",
-            {
+            label: "product",
+            searchText: "DESK0001",
+            fields: {
                 name: "DESK0001",
-            }
-        ),
+            },
+        }),
         {
             isActive: ["desktop"],
             trigger: "[data-icon='arrow_forward']", // Wait for product creation
