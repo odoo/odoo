@@ -1,7 +1,6 @@
 import collections
 import contextlib
 import datetime
-import ipaddress
 import logging
 import time
 import uuid
@@ -23,6 +22,7 @@ from odoo.exceptions import (
 )
 from odoo.fields import Command, Domain
 from odoo.http import DEFAULT_LANG, request
+from odoo.libs import netguard
 from odoo.libs.datetime import all_timezones
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.json import dumps as json_dumps
@@ -54,10 +54,7 @@ _RELATION_ONLY_COMMANDS = frozenset(
 
 
 def _is_private_address(source: str | None) -> bool:
-    try:
-        return ipaddress.ip_address(source).is_private
-    except ValueError:
-        return False
+    return netguard.classify_peer(source) in netguard.LOCAL_SCOPES
 
 
 def _is_jsonable(o: object) -> bool:

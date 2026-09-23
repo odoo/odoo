@@ -18,6 +18,8 @@ class TestDatabaseMasterPassword(TransactionCase):
             "203.0.113.7",
             "::ffff:203.0.113.7",
             "2001:db8::1",
+            "2002:7f00:1::",
+            "64:ff9b::7f00:1",
             "",
             None,
             "not-an-ip",

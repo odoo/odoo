@@ -248,3 +248,29 @@ class TestCheckUrl:
             netguard.check_url(
                 "http://example.test:99999/", policy=netguard.PUBLIC_ONLY
             )
+
+
+class TestClassifyPeer:
+    @pytest.mark.parametrize(
+        ("address", "scope"),
+        [
+            ("127.0.0.1", Scope.LOOPBACK),
+            ("::1", Scope.LOOPBACK),
+            ("::ffff:127.0.0.1", Scope.LOOPBACK),
+            ("::ffff:10.0.0.1", Scope.PRIVATE),
+            ("fe80::1%eth0", Scope.LINK_LOCAL),
+            ("100.64.1.1", Scope.SHARED),
+            ("8.8.8.8", Scope.PUBLIC),
+        ],
+    )
+    def test_a_peer_is_classified_by_its_own_address(self, address, scope):
+        assert netguard.classify_peer(address) is scope
+
+    @pytest.mark.parametrize("address", ["2002:7f00:1::", "64:ff9b::7f00:1"])
+    def test_a_tunnelled_source_is_not_read_through(self, address):
+        assert netguard.classify_peer(address) is not Scope.LOOPBACK
+        assert netguard.classify_peer(address) not in netguard.LOCAL_SCOPES
+
+    @pytest.mark.parametrize("address", [None, "", "garbage"])
+    def test_an_unreadable_peer_has_no_scope(self, address):
+        assert netguard.classify_peer(address) is None

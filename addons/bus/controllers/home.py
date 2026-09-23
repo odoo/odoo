@@ -1,16 +1,12 @@
-import ipaddress
-
 from odoo import SUPERUSER_ID, _
 from odoo.http import request
+from odoo.libs import netguard
 
 from odoo.addons.web.controllers.home import Home as WebHome
 
 
 def _is_private_address(remote_addr):
-    try:
-        return ipaddress.ip_address(remote_addr).is_private
-    except ValueError:
-        return False
+    return netguard.classify_peer(remote_addr) in netguard.LOCAL_SCOPES
 
 
 def _admin_password_warn(uid):

@@ -15,6 +15,7 @@ if typing.TYPE_CHECKING:
     Resolver = Callable[..., Sequence[tuple[typing.Any, ...]]]
 
 __all__ = [
+    "LOCAL_SCOPES",
     "PRIVATE_ALLOWED",
     "PUBLIC_ONLY",
     "Destination",
@@ -22,10 +23,10 @@ __all__ = [
     "Policy",
     "Scope",
     "UnresolvableDestination",
-    "check_address",
     "check_host",
     "check_url",
     "classify",
+    "classify_peer",
     "resolve",
 ]
 
@@ -110,7 +111,35 @@ def _unwrap(address: IPAddress) -> IPAddress:
 
 
 def classify(address: str | IPAddress) -> Scope:
-    ip = _unwrap(_as_address(address))
+    return _classify_ip(_unwrap(_as_address(address)))
+
+
+# where a peer sits on our side of the network: a trust hint, never a gate
+LOCAL_SCOPES = frozenset(
+    {Scope.LOOPBACK, Scope.PRIVATE, Scope.SHARED, Scope.LINK_LOCAL}
+)
+
+
+def classify_peer(address: str | IPAddress | None) -> Scope | None:
+    # The scope of a peer that connected to us, for a trust decision. Only an
+    # IPv4-mapped address is unwrapped (a dual-stack socket's own spelling):
+    # a 6to4, Teredo or NAT64 source is chosen by the remote end, so reading
+    # the IPv4 inside it would let 2002:7f00:1:: pass for loopback.
+    if not address:
+        return None
+    try:
+        ip = _as_address(address)
+    except ValueError:
+        return None
+    if isinstance(ip, ipaddress.IPv6Address):
+        if ip.scope_id is not None:
+            ip = ipaddress.IPv6Address(ip.packed)
+        if ip.ipv4_mapped is not None:
+            ip = ip.ipv4_mapped
+    return _classify_ip(ip)
+
+
+def _classify_ip(ip: IPAddress) -> Scope:
     if ip in _METADATA_ADDRESSES or (
         ip in _NAT64_LOCAL_USE
         and ipaddress.IPv4Address(int(ip) & 0xFFFFFFFF) in _METADATA_ADDRESSES
@@ -182,7 +211,7 @@ class Destination:
     addresses: tuple[IPAddress, ...]
 
 
-def check_address(address: str | IPAddress, *, policy: Policy) -> IPAddress:
+def _check_address(address: str | IPAddress, *, policy: Policy) -> IPAddress:
     ip = _as_address(address)
     if not policy.permits(ip):
         raise DestinationRefused(
@@ -240,11 +269,11 @@ def check_host(
     if not name:
         raise DestinationRefused("the destination has no host")
     if _literal(name) is None and _is_localhost_name(name):
-        check_address("127.0.0.1", policy=policy)
+        _check_address("127.0.0.1", policy=policy)
     addresses = resolve(name, port, resolver=resolver)
     for address in addresses:
         try:
-            check_address(address, policy=policy)
+            _check_address(address, policy=policy)
         except DestinationRefused as error:
             if _literal(name) is not None:
                 raise

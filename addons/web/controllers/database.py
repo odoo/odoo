@@ -1,6 +1,5 @@
 import datetime
 import functools
-import ipaddress
 import logging
 import os
 import pathlib
@@ -23,6 +22,7 @@ from odoo.http import (
     prepare_content_disposition_header,
     request,
 )
+from odoo.libs import netguard
 from odoo.service import db
 from odoo.service.db import DBNAME_PATTERN
 from odoo.tools.misc import file_open, str2bool
@@ -70,12 +70,7 @@ def _check_db_name(name: str) -> None:
 
 
 def _is_loopback(addr: str | None) -> bool:
-    try:
-        ip = ipaddress.ip_address(addr)
-    except ValueError, TypeError:
-        return False
-    mapped = getattr(ip, "ipv4_mapped", None)
-    return (mapped or ip).is_loopback
+    return netguard.classify_peer(addr) is netguard.Scope.LOOPBACK
 
 
 DATABASE_MANAGER_TEMPLATES = {
