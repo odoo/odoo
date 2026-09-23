@@ -12,6 +12,10 @@
                 <field name="model_year"/>
                 <field name="seats"/>
                 <field name="age_years"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'available'"
+                       decoration-info="state == 'assigned'"
+                       decoration-warning="state == 'maintenance'"/>
             </list>
         </field>
     </record>
@@ -21,6 +25,13 @@
         <field name="model">fleet_training.vehicle</field>
         <field name="arch" type="xml">
             <form string="Vehicle">
+                <header>
+                    <button name="action_set_maintenance" type="object" string="Send to Maintenance"
+                            class="btn-secondary" invisible="state == 'maintenance'"/>
+                    <button name="action_set_available" type="object" string="Mark Available"
+                            class="btn-secondary" invisible="state != 'maintenance'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="available,assigned,maintenance"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <label for="name"/>
@@ -62,7 +73,9 @@
                 <field name="category_id"/>
                 <filter name="filter_inactive" string="Archived" domain="[('active', '=', False)]"/>
                 <filter name="filter_unassigned" string="Unassigned" domain="[('driver_id', '=', False)]"/>
+                <filter name="filter_maintenance" string="In Maintenance" domain="[('state', '=', 'maintenance')]"/>
                 <group>
+                    <filter name="group_by_state" string="Status" domain="[]" context="{'group_by': 'state'}"/>
                     <filter name="group_by_model_year" string="Model Year" domain="[]" context="{'group_by': 'model_year'}"/>
                     <filter name="group_by_category" string="Category" domain="[]" context="{'group_by': 'category_id'}"/>
                     <filter name="group_by_driver" string="Driver" domain="[]" context="{'group_by': 'driver_id'}"/>

@@ -332,3 +332,50 @@ a driver with no phone on file now visibly warns the user in the form.
 number of years; set its `driver_id` to a driver with no phone and call
 `_onchange_driver_id()` — confirm it returns the warning dict. In the UI: pick
 a driver with no phone on a vehicle form and see the warning dialog appear.
+
+---
+
+## Chapter 9 — Ready For Some Action?
+
+**Concept.** A **button** in a view with `type="object"` calls a plain Python
+method on the model (`name="method_name"`) when clicked, passing the current
+record(s) as `self`. A **server action** (`ir.actions.server`) is the same
+idea, but launched from the list view's Action (gear) menu on a selection of
+records instead of from a single record's form, via `binding_model_id`.
+
+**Why?** Not every operation should be a raw field edit — "send this vehicle to
+maintenance" is a business action with a name and a single place to add
+side-effects later (chapter 13 will make it also log to the chatter). Buttons
+and server actions are how Odoo exposes such actions to users, on one record or
+on a bulk selection, without writing any JavaScript.
+
+**Where?**
+- [`models/fleet_vehicle.py`](models/fleet_vehicle.py) — `state` field, `action_set_maintenance`, `action_set_available`
+- [`views/fleet_vehicle_views.xml`](views/fleet_vehicle_views.xml) — header buttons + statusbar, badge/filter/group-by for `state`
+- [`views/fleet_vehicle_menus.xml`](views/fleet_vehicle_menus.xml) — the bulk server action
+
+**Code explanation.** `state` is a `Selection` field with a `statusbar` widget
+in the form header, driven entirely by two plain methods that just reassign
+`self.state`. `invisible="state == 'maintenance'"` on a button is a view-level
+condition (no Python involved) that hides "Send to Maintenance" once already
+there. The `ir.actions.server` record has `state = "code"` and a one-line
+`code` field: `records` is a magic variable bound to the selected recordset
+when the action runs from a list view.
+
+**Fleet functionality.** Every vehicle now has a status (Available / Assigned /
+In Maintenance) shown as a colored badge in the list and a statusbar in the
+form; a single vehicle can be sent to/back from maintenance via header
+buttons, and several vehicles at once via "Send to Maintenance" in the list's
+Action menu. The search view can filter "In Maintenance" and group by status.
+
+**What changed.** Updated `models/fleet_vehicle.py` (`state`,
+`action_set_maintenance`, `action_set_available`); updated
+`views/fleet_vehicle_views.xml` (header, badge, filter, group-by); updated
+`views/fleet_vehicle_menus.xml` (server action).
+
+**Testing.** Upgrade the module. In the shell: create a vehicle, call
+`action_set_maintenance()` and confirm `state` changes; run the server action
+via `env.ref('fleet_training.action_fleet_training_vehicle_send_maintenance').with_context(active_model=..., active_ids=[...]).run()`
+and confirm the same. In the UI: open a vehicle, click the header buttons, and
+from the Vehicles list select several rows and use Action > Send to
+Maintenance.
