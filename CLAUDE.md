@@ -21,7 +21,7 @@ Diverged from upstream past the point where merging or cherry-picking between th
 
 **No branch carries protection as of 2026-09-01 — direct pushes are allowed.** Feature branches and PRs stay preferred for planned work; never force-push a shared branch.
 
-**Rebase, never merge.** A feature branch is updated by rebasing it onto `19.0-marin`, and syncing is `git pull --rebase`. No merge commits. Rebase before pushing — rewriting an already-pushed branch needs a force-push, which is a separate confirmed action. Workspace rule: `~/Odoo/CLAUDE.md` §Rebasing.
+**Rebase, never merge.** A feature branch is updated by rebasing it onto `19.0-marin`, and syncing is `git pull --rebase`. No merge commits. Rebase before pushing — rewriting an already-pushed branch needs a force-push, which is a separate confirmed action. Rules: `doc/coding_guidelines.rst` §7.3, and *Rebasing* in `~/Odoo/agromarin-knowledge/config/general-context.md`.
 
 ## Checkout Requirements
 
