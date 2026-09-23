@@ -234,6 +234,30 @@ def _replace_inner(
             break
 
 
+_TERM_OPEN_BEFORE = frozenset(" \t\n(")
+_TERM_CLOSE_AFTER = frozenset(" \t\n)")
+
+
+def _remove_python_term(value: str, term: str, separator: str) -> str:
+    for pattern, term_first in (
+        (f"({term}) {separator} ", True),
+        (f" {separator} ({term})", False),
+        (f"{term} {separator} ", True),
+        (f" {separator} {term}", False),
+    ):
+        index = value.find(pattern)
+        while index != -1:
+            end = index + len(pattern)
+            if (
+                (index == 0 or value[index - 1] in _TERM_OPEN_BEFORE)
+                if term_first
+                else (end == len(value) or value[end] in _TERM_CLOSE_AFTER)
+            ):
+                return value[:index] + value[end:]
+            index = value.find(pattern, index + 1)
+    return value
+
+
 def _prepare_python_attribute_value(
     attribute: str, value: str, add: str, remove: str, separator: str | None
 ) -> str:
@@ -247,16 +271,7 @@ def _prepare_python_attribute_value(
         if re.fullmatch(rf"\(*{re.escape(remove)}\)*", value):
             value = ""
         else:
-            for pattern in (
-                f"({remove}) {separator} ",
-                f" {separator} ({remove})",
-                f"{remove} {separator} ",
-                f" {separator} {remove}",
-            ):
-                index = value.find(pattern)
-                if index != -1:
-                    value = value[:index] + value[index + len(pattern) :]
-                    break
+            value = _remove_python_term(value, remove, separator)
     if add:
         value = f"({value}) {separator} ({add})" if value else add
     return value

@@ -98,3 +98,44 @@ class TestRootReplace:
 
         with pytest.raises(ValueError, match="needs an element"):
             apply_inheritance_specs(arch, spec)
+
+
+class TestAttributeRemoveKeepsTermBoundaries:
+    @pytest.mark.parametrize(
+        ("original", "remove", "separator", "expected"),
+        [
+            ("data or b", "a", "or", "data or b"),
+            (
+                "other_state == 'done' or x",
+                "state == 'done'",
+                "or",
+                "other_state == 'done' or x",
+            ),
+            ("f(a) or x", "a", "or", "f(a) or x"),
+            ("x or ab", "a", "or", "x or ab"),
+            ("id == 11 or x", "1", "or", "id == 11 or x"),
+            ("id == 11 or 1 or x", "1", "or", "id == 11 or x"),
+            ("x or state == 'done'", "state == 'done'", "or", "x"),
+            ("1 or not name", "1", "or", "not name"),
+            (
+                "(((id == 1) and (id == 2)) and (id == 3)) and (id == 4)",
+                "id == 2",
+                "and",
+                "(((id == 1)) and (id == 3)) and (id == 4)",
+            ),
+            (
+                "(((id == 1) and (id == 2)) and (id == 3)) and (id == 4)",
+                "id == 3",
+                "and",
+                "(((id == 1) and (id == 2))) and (id == 4)",
+            ),
+            (
+                "(id == 1) and (id == 2) and (id == 3)",
+                "id == 2",
+                "and",
+                "(id == 1) and (id == 3)",
+            ),
+        ],
+    )
+    def test_only_a_whole_term_is_removed(self, original, remove, separator, expected):
+        assert _apply(original, remove=remove, separator=separator) == expected
