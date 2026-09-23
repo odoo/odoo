@@ -342,14 +342,12 @@ class TestConfigManager(TransactionCase):
 
     @unittest.skipIf(os.name != "posix", "this test is POSIX only")
     def test_03_save_default_options(self):
-        with file_open_temporary_directory(self.env) as temp_dir:
+        with file_open_temporary_directory() as temp_dir:
             config_path = f"{temp_dir}/save.conf"
             self.config._parse_config(["--config", config_path, "--save"])
             with (
-                file_open(config_path, env=self.env) as config_file,
-                file_open(
-                    "base/tests/config/save_posix.conf", env=self.env
-                ) as save_file,
+                file_open(config_path) as config_file,
+                file_open("base/tests/config/save_posix.conf") as save_file,
             ):
                 config_content = config_file.read().rstrip()
                 save_content = save_file.read().format(
@@ -361,7 +359,7 @@ class TestConfigManager(TransactionCase):
                 self.assertEqual(config_content.splitlines(), save_content.splitlines())
 
     def test_03b_save_tightens_permissions_on_resave(self):
-        with file_open_temporary_directory(self.env) as temp_dir:
+        with file_open_temporary_directory() as temp_dir:
             config_path = f"{temp_dir}/save_perms.conf"
             cfg = Path(config_path)
             self.config._parse_config(["--config", config_path, "--save"])

@@ -8,6 +8,7 @@ import re
 from contextlib import contextmanager
 from functools import wraps
 from itertools import count
+from pathlib import Path
 from unittest import SkipTest, TestCase
 from unittest.mock import ANY, patch
 
@@ -1509,11 +1510,20 @@ class AccountTestInvoicingCommon(ProductCommon):
 
         return new_root
 
-    def _get_test_file_path(self, file_name: str, subfolder=""):
+    def _get_test_file_path(
+        self, file_name: str, subfolder="", *, check_exists: bool = True
+    ):
         optional_subfolder = f"{subfolder}/" if subfolder else ""
         return file_path(
-            f"{self.test_module}/tests/test_files/{optional_subfolder}{file_name}"
+            f"{self.test_module}/tests/test_files/{optional_subfolder}{file_name}",
+            check_exists=check_exists,
         )
+
+    @staticmethod
+    def _save_test_file(path: str, content: bytes) -> None:
+        target = Path(path)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
 
     @classmethod
     def _apply_json_ignore_schema(cls, data, ignore_schema):
@@ -1540,14 +1550,18 @@ class AccountTestInvoicingCommon(ProductCommon):
                     cls._apply_json_ignore_schema(data[i], ignore_schema[i])
 
     def assert_json(self, content_to_assert: dict | list, test_name: str, subfolder=""):
-        json_path = self._get_test_file_path(f"{test_name}.json", subfolder=subfolder)
+        saving = "SAVE_JSON" in config["test_tags"]
+        json_path = self._get_test_file_path(
+            f"{test_name}.json", subfolder=subfolder, check_exists=not saving
+        )
         content_to_assert = json.loads(json.dumps(content_to_assert))
         if json_ignore_schema := self._get_json_ignore_schema(subfolder):
             self._apply_json_ignore_schema(content_to_assert, json_ignore_schema)
 
-        if "SAVE_JSON" in config["test_tags"]:
-            with file_open(json_path, "w") as f:
-                f.write(json.dumps(content_to_assert, indent=4))
+        if saving:
+            self._save_test_file(
+                json_path, json.dumps(content_to_assert, indent=4).encode()
+            )
             _logger.info("Saved the generated JSON content to %s", json_path)
         else:
             with file_open(json_path, "rb") as f:
@@ -1561,13 +1575,16 @@ class AccountTestInvoicingCommon(ProductCommon):
         subfolder="",
     ):
         file_name = f"{test_name}.xml"
-        test_file_path = self._get_test_file_path(file_name, subfolder=subfolder)
+        saving = "SAVE_XML" in config["test_tags"]
+        test_file_path = self._get_test_file_path(
+            file_name, subfolder=subfolder, check_exists=not saving
+        )
         if isinstance(xml_element, str):
             xml_element = xml_element.encode()
         if isinstance(xml_element, bytes):
             xml_element = etree.fromstring(xml_element)
 
-        if "SAVE_XML" in config["test_tags"]:
+        if saving:
             etree.indent(xml_element, space="\t")
             with patch.object(re, "fullmatch", lambda _arg1, _arg2: True):
                 save_test_file(
@@ -1595,11 +1612,11 @@ class AccountTestInvoicingCommon(ProductCommon):
             xml_element = etree.fromstring(canonicalized_xml_str)
             xml_element = self._rebuild_xml_with_sorted_namespaces(xml_element)
 
-            with file_open(test_file_path, "wb") as f:
-                f.write(
-                    etree.tostring(xml_element, pretty_print=True, encoding="UTF-8")
-                )
-                _logger.info("Saved the generated XML content to %s", file_name)
+            self._save_test_file(
+                test_file_path,
+                etree.tostring(xml_element, pretty_print=True, encoding="UTF-8"),
+            )
+            _logger.info("Saved the generated XML content to %s", file_name)
         else:
             with file_open(test_file_path, "rb") as f:
                 expected_xml_str = f.read()

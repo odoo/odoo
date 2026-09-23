@@ -2049,7 +2049,7 @@ class TranslationImporter:
     ) -> None:
         with (
             suppress(FileNotFoundError),
-            file_open(filepath, mode="rb", env=self.env) as fileobj,
+            file_open(filepath, mode="rb") as fileobj,
         ):
             if self.verbose:
                 _logger.info(

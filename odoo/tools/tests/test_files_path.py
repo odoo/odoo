@@ -5,7 +5,7 @@ import unittest
 import unittest.mock
 from pathlib import Path
 
-from odoo.tools.files import _addons_dir_paths, clear_caches, file_path
+from odoo.tools.files import _addons_dir_paths, clear_caches, file_open, file_path
 
 import odoo.addons
 
@@ -101,6 +101,28 @@ class TestFilePathContainment(unittest.TestCase):
         with _AddonsRoot():
             with self.assertRaises(FileNotFoundError):
                 file_path("mymod/static/nope.txt")
+
+
+class TestFileOpenModes(unittest.TestCase):
+    def test_exclusive_creation_is_refused_up_front(self):
+        with _AddonsRoot() as r:
+            for name in ("mymod/static/ok.txt", "mymod/static/new.txt"):
+                for mode in ("x", "xb", "x+"):
+                    with self.subTest(name=name, mode=mode):
+                        with self.assertRaises(ValueError):
+                            file_open(name, mode)
+            self.assertFalse((r.addons / "mymod" / "static" / "new.txt").exists())
+            self.assertEqual(
+                (r.addons / "mymod" / "static" / "ok.txt").read_text(), "ok"
+            )
+
+    def test_an_existing_file_can_still_be_rewritten(self):
+        with _AddonsRoot() as r:
+            with file_open("mymod/static/ok.txt", "w") as f:
+                f.write("new")
+            self.assertEqual(
+                (r.addons / "mymod" / "static" / "ok.txt").read_text(), "new"
+            )
 
 
 class TestFilePathExtensionFilter(unittest.TestCase):

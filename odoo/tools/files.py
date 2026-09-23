@@ -2,7 +2,6 @@ import functools
 import os
 import sys
 import tempfile
-import typing
 from collections.abc import Generator
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -27,17 +26,6 @@ def _addons_dir_paths(addons_dir: str) -> tuple[Path, Path]:
     return parent_path, parent_path.resolve()
 
 
-@functools.lru_cache(maxsize=1)
-def _root_path(root: str) -> str:
-    return str(Path(root).resolve())
-
-
-if typing.TYPE_CHECKING:
-    from odoo.api import Environment
-else:
-    Environment = typing.Any
-
-
 def file_open_temporary_paths() -> tuple[str, ...]:
     return _temporary_paths.get()
 
@@ -45,7 +33,6 @@ def file_open_temporary_paths() -> tuple[str, ...]:
 def file_path(
     file_path: str,
     filter_ext: tuple[str, ...] = ("",),
-    env: Environment | None = None,
     *,
     check_exists: bool = True,
 ) -> str:
@@ -69,7 +56,6 @@ def clear_caches() -> None:
     )
     _file_path_resolved.cache_clear()
     _addons_dir_paths.cache_clear()
-    _root_path.cache_clear()
 
 
 def _file_path_uncached(
@@ -100,7 +86,7 @@ def _file_path_uncached(
     else:
         addons_paths = [
             *odoo.addons.__path__,
-            _root_path(config.root_path),
+            config.root_path,
             *_temporary_paths.get(),
         ]
 
@@ -160,11 +146,15 @@ def file_open(
     name: str,
     mode: str = "r",
     filter_ext: tuple[str, ...] = (),
-    env: Environment | None = None,
 ) -> IO[Any]:
-    writing = any(m in mode for m in ("w", "x", "a"))
+    if "x" in mode:
+        raise ValueError(
+            f"file_open() opens files that already exist, which mode {mode!r} "
+            "refuses; create the file first, then reopen it in 'w'."
+        )
+    writing = "w" in mode or "a" in mode
     try:
-        path = file_path(name, filter_ext=filter_ext, env=env, check_exists=False)
+        path = file_path(name, filter_ext=filter_ext, check_exists=False)
     except FileNotFoundError:
         if not writing:
             raise

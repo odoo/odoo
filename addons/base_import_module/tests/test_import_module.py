@@ -757,25 +757,23 @@ class TestImportModule(odoo.tests.TransactionCase):
         files = [("foo/__manifest__.py", self.manifest_content(name="foo"))]
         with (
             ZipFile(self.archive(files), "r") as zip_files,
-            file_open_temporary_directory(self.env) as tmp_dir,
-            file_open_temporary_directory(self.env) as other_tmp_dir,
+            file_open_temporary_directory() as tmp_dir,
+            file_open_temporary_directory() as other_tmp_dir,
         ):
             zip_files.extract("foo/__manifest__.py", tmp_dir)
             zip_files.extract("foo/__manifest__.py", other_tmp_dir)
             self.assertIn(
                 '"name": "foo"',
-                file_open(tmp_dir + "/foo/__manifest__.py", "r", env=self.env).read(),
+                file_open(tmp_dir + "/foo/__manifest__.py", "r").read(),
             )
             self.assertIn(
                 '"name": "foo"',
-                file_open(
-                    other_tmp_dir + "/foo/__manifest__.py", "r", env=self.env
-                ).read(),
+                file_open(other_tmp_dir + "/foo/__manifest__.py", "r").read(),
             )
             tmp_folder = tmp_dir
         self.assertFalse(file_open_temporary_paths())
         with self.assertRaises(FileNotFoundError):
-            file_open(tmp_folder + "/foo/__manifest__.py", "r", env=self.env)
+            file_open(tmp_folder + "/foo/__manifest__.py", "r")
 
     def test_check_zip_dependencies(self):
         files = [("foo/__manifest__.py", self.manifest_content(data=["data.xml"]))]

@@ -161,7 +161,7 @@ class IrModuleModule(models.Model):
             icon_path = terp.get_raw_value("icon") or str(
                 Path(terp.name) / "static/description/icon.png"
             )
-            file_path(icon_path, env=self.env, check_exists=True)
+            file_path(icon_path, check_exists=True)
             values["icon"] = "/" + icon_path
         except OSError:
             pass  # keep the default icon
@@ -317,7 +317,7 @@ class IrModuleModule(models.Model):
 
         for full_path in static_files:
             url_path = url_paths[full_path]
-            with file_open(full_path, "rb", env=self.env) as fp:
+            with file_open(full_path, "rb") as fp:
                 data = base64.b64encode(fp.read())
             values = {
                 "name": Path(url_path).name,
@@ -380,7 +380,7 @@ class IrModuleModule(models.Model):
 
         for entry in entries:
             lang = langs[entry]
-            with file_open(str(entry), "rb", env=self.env) as fp:
+            with file_open(str(entry), "rb") as fp:
                 raw = fp.read()
             # store as binary ir.attachment
             values = {
@@ -652,7 +652,7 @@ class IrModuleModule(models.Model):
                         _("File '%s' exceed maximum allowed file size", zf.filename)
                     )
 
-            with file_open_temporary_directory(self.env) as module_dir:
+            with file_open_temporary_directory() as module_dir:
                 extracted_total_size = 0
 
                 def _extract(zip_info):

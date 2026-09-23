@@ -151,10 +151,10 @@ def _eval_xml_markup(self: Any, node: etree._Element, t: str) -> str:
 def _eval_xml_literal(self: Any, node: etree._Element, env: Environment, t: str) -> Any:
     if node.get("file"):
         if t == "base64":
-            with file_open(node.get("file"), "rb", env=env) as f:
+            with file_open(node.get("file"), "rb") as f:
                 return base64.b64encode(f.read())
 
-        with file_open(node.get("file"), env=env) as f:
+        with file_open(node.get("file")) as f:
             data = f.read()
     else:
         data = node.text or ""
@@ -1000,7 +1000,7 @@ def convert_file(
         noupdate=noupdate,
         idrefs=None if idref is None else len(idref),
     )
-    with file_open(pathname, "rb", env=env) as fp:
+    with file_open(pathname, "rb") as fp:
         if ext == ".csv":
             convert_csv_import(env, module, pathname, fp.read(), idref, mode, noupdate)
         elif ext == ".sql":

@@ -388,12 +388,12 @@ class Manifest(Mapping[str, typing.Any]):
     @staticmethod
     def _from_path(path: str, env: typing.Any = None) -> Manifest | None:
         if env is not None:
-            return Manifest._parse_from_path(path, env)
+            return Manifest._parse_from_path(path)
         signature = _get_manifest_stat(path)
         cached = Manifest._parse_cache.get(path)
         if cached is not None and cached[0] == signature:
             return cached[1]
-        manifest = Manifest._parse_from_path(path, None)
+        manifest = Manifest._parse_from_path(path)
         Manifest._parse_cache[path] = (signature, manifest)
         if signature is not None:
             _debug.perf.count(
@@ -405,10 +405,10 @@ class Manifest(Mapping[str, typing.Any]):
         return manifest
 
     @staticmethod
-    def _parse_from_path(path: str, env: typing.Any) -> Manifest | None:
+    def _parse_from_path(path: str) -> Manifest | None:
         for manifest_name in MANIFEST_NAMES:
             try:
-                with tools.file_open(str(Path(path, manifest_name)), env=env) as f:
+                with tools.file_open(str(Path(path, manifest_name))) as f:
                     manifest_content = ast.literal_eval(f.read())
             except OSError:
                 pass

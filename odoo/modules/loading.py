@@ -206,7 +206,7 @@ def _load_tracked_file(
     stored_files: dict,
     stale_files: set[str],
 ) -> dict:
-    with tools.file_open(f"{package.name}/{filename}", "rb", env=env) as fp:
+    with tools.file_open(f"{package.name}/{filename}", "rb") as fp:
         content = fp.read()
     digest, dynamic = _get_data_file_digest_and_dynamic_flag(filename, content)
     registry = env.registry

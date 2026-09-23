@@ -53,7 +53,6 @@ class TestSwappingTheAddonsPath(unittest.TestCase):
         for cache in (
             files._file_path_resolved,
             files._addons_dir_paths,
-            files._root_path,
         ):
             with self.subTest(cache=cache.__wrapped__.__name__):
                 self.assertEqual(cache.cache_info().currsize, 0)
