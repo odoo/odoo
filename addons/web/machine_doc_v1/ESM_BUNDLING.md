@@ -157,7 +157,7 @@ non-ESM bundle" stub and neither raises when it is the wrong one:
 - `secondary_import_map_includes` — the child **is** compiled, and this is the only
   key that populates `secondary_parents`, the mapping that makes esbuild `--alias`
   the child's shared specifiers onto `odoo.loader.modules` shims
-  (`esbuild_stubs.stub_aliases`).
+  (`esbuild_stubs.mirror_aliases`).
   Required whenever the satellite must drive the parent's *live* instances, e.g. a
   tour calling `patchWithCleanup(browser, …)` against an already-running app.
 

@@ -98,21 +98,6 @@ def write_stubs(
     return written
 
 
-def write_stub_mirror(
-    stub_root: Path,
-    stubs: dict[str, str],
-    alias_flags: list[str],
-    odoo_root: Path,
-) -> list[str]:
-    addon_roots, occupied, must_be_real = stub_layout(stubs, alias_flags, odoo_root)
-    return [
-        f"--alias:{spec}={stub_path}"
-        for spec, stub_path in write_stubs(
-            stub_root, stubs, addon_roots, occupied, must_be_real
-        )
-    ]
-
-
 def mirror_aliases(
     native_modules: list,
     alias_flags: list[str],
@@ -166,24 +151,3 @@ def mirror_aliases(
     return kept + [f"--alias:@{addon}={path}" for addon, path in mirrored.items()], (
         mirrored
     )
-
-
-def stub_aliases(
-    alias_flags: list[str],
-    secondary_parent_stubs: dict[str, str] | None,
-    tmp_dir: str,
-    odoo_root: Path,
-) -> list[str]:
-    if not secondary_parent_stubs:
-        return alias_flags
-    stub_flags = write_stub_mirror(
-        Path(tmp_dir) / "stubs", secondary_parent_stubs, alias_flags, odoo_root
-    )
-    if not stub_flags:
-        return alias_flags
-    stubbed = {flag.removeprefix("--alias:").partition("=")[0] for flag in stub_flags}
-    return [
-        flag
-        for flag in alias_flags
-        if flag.removeprefix("--alias:").partition("=")[0] not in stubbed
-    ] + stub_flags

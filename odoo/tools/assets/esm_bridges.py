@@ -275,6 +275,7 @@ class BridgeShimManager:
         ext_lib_names: set[str],
         provided: frozenset[str] | set[str],
         modules: Sequence[NativeModuleLike] | None = None,
+        resolver: _BridgeExportResolver | None = None,
     ) -> tuple[dict[str, set[str]], set[str]]:
         # esbuild follows an alias into the source file of any specifier we do
         # not stub, so a helper the page does not provide is inlined with its
@@ -285,7 +286,8 @@ class BridgeShimManager:
         discovered, ext_seen = self._discover_bridge_specifiers(
             native_specifiers, ext_lib_names, modules
         )
-        resolver = _BridgeExportResolver(external_libs(), self.bundle_name)
+        if resolver is None:
+            resolver = _BridgeExportResolver(external_libs(), self.bundle_name)
         ignored = native_specifiers | {"@odoo/owl"} | ext_lib_names
         queue = [spec for spec in discovered if spec not in provided]
         visited: set[str] = set()
@@ -371,9 +373,12 @@ class BridgeShimManager:
         return bridge_map
 
     def _prepare_bridge_map(
-        self, discovered: Mapping[str, set[str]]
+        self,
+        discovered: Mapping[str, set[str]],
+        resolver: _BridgeExportResolver | None = None,
     ) -> tuple[dict[str, str], int]:
-        resolver = _BridgeExportResolver(external_libs(), self.bundle_name)
+        if resolver is None:
+            resolver = _BridgeExportResolver(external_libs(), self.bundle_name)
         shims_by_spec: dict[str, str] = {}
         star_fallback = 0
         for specifier, kinds in sorted(discovered.items()):
@@ -405,13 +410,20 @@ class BridgeShimManager:
         # second registry registration and a second class
         if modules is None:
             modules = self.native_modules
+        # one resolver for the walk and the export surfaces: a helper both
+        # reach is read and lexed once
+        resolver = _BridgeExportResolver(external_libs(), self.bundle_name)
         discovered, _ext = self._discover_reachable_specifiers(
-            native_specifiers, set(external_libs()), provided, modules=modules
+            native_specifiers,
+            set(external_libs()),
+            provided,
+            modules=modules,
+            resolver=resolver,
         )
         bridged = {
             spec: kinds for spec, kinds in discovered.items() if spec in provided
         }
-        bridge_map, star_fallback = self._prepare_bridge_map(bridged)
+        bridge_map, star_fallback = self._prepare_bridge_map(bridged, resolver)
         per_file = set(discovered) - set(bridged)
         log_event(
             _bridge_log,

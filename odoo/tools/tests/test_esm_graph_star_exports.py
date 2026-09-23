@@ -126,5 +126,45 @@ class TestInvalidatingTheRegistryForgetsWhichFilesExist(unittest.TestCase):
             )
 
 
+class TestPageProvidedBridgesReadEachSourceOnce(unittest.TestCase):
+    SOURCES = {
+        "x/static/src/helper.js": "export const help = 1;\n",
+        "x/static/src/face.js": 'export * from "@x/helper";\n',
+    }
+
+    def test_a_helper_both_the_walk_and_the_surface_reach_is_read_once(self):
+        reads = []
+
+        def file_path(rel):
+            if rel not in self.SOURCES:
+                raise FileNotFoundError(rel)
+            reads.append(rel)
+            return rel
+
+        consumer = _module(
+            "@y/page",
+            "/y/static/src/page.js",
+            'import "@x/helper";\nimport { help } from "@x/face";\n',
+        )
+        manager = esm_bridges.BridgeShimManager(None, "y.bundle", [consumer])
+        with (
+            mock.patch.object(esm_graph, "file_path", file_path),
+            mock.patch.object(esm_graph, "_static_file_exists", return_value=True),
+            mock.patch.object(
+                esm_graph.Path, "read_text", lambda path, **_kw: self.SOURCES[str(path)]
+            ),
+            mock.patch.object(esm_bridges, "external_libs", return_value={}),
+            mock.patch.object(
+                manager, "_persist_bridge_shims", side_effect=lambda shims: shims
+            ),
+        ):
+            bridges, per_file = manager.prepare_page_provided_bridges(
+                {"@y/page"}, frozenset({"@x/face"})
+            )
+        self.assertIn("_m.help;", bridges["@x/face"])
+        self.assertEqual(per_file, {"@x/helper"})
+        self.assertEqual(reads.count("x/static/src/helper.js"), 1)
+
+
 if __name__ == "__main__":
     unittest.main()

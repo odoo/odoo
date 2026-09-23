@@ -34,10 +34,11 @@ def _build_probe_stub_mirror(tmp, files, stubs):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content)
     stub_root = odoo_root / "stubs"
-    flags = esbuild_stubs.write_stub_mirror(
-        stub_root, stubs, ["--alias:@probe=./addons/probe/static/src"], odoo_root
+    layout = esbuild_stubs.stub_layout(
+        stubs, ["--alias:@probe=./addons/probe/static/src"], odoo_root
     )
-    return stub_root, src_root, {f.split("=")[0]: f.split("=", 1)[1] for f in flags}
+    written = esbuild_stubs.write_stubs(stub_root, stubs, *layout)
+    return stub_root, src_root, {f"--alias:{spec}": str(path) for spec, path in written}
 
 
 class TestSecondaryStubMirror(BaseCase):
