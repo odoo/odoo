@@ -58,7 +58,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
             lambda: test_leads._handle_salesmen_assignment(
                 user_ids=user_ids, team_id=team_id
             ),
-            user_sales_manager=59,
+            user_sales_manager=60,
         )
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert)
@@ -220,12 +220,14 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
 
         self.assertQueryCountWarm(mass_convert, user_sales_manager=887)
 
+        salesmen = self.assign_users.sorted()
+        self.assertEqual(salesmen[0], self.user_sales_leads_convert)
         self.assertEqual(set(test_leads.mapped("type")), {"opportunity"})
         self.assertEqual(len(test_leads.partner_id), len(test_leads))
-        self.assertEqual(test_leads.team_id, self.sales_team_1)
-        self.assertEqual(test_leads[0::3].user_id, self.user_sales_manager)
-        self.assertEqual(test_leads[1::3].user_id, self.user_sales_leads_convert)
-        self.assertEqual(test_leads[2::3].user_id, self.user_sales_salesman)
+        self.assertEqual(test_leads.team_id, self.sales_team_convert)
+        self.assertEqual(test_leads[0::3].user_id, salesmen[0])
+        self.assertEqual(test_leads[1::3].user_id, salesmen[1])
+        self.assertEqual(test_leads[2::3].user_id, salesmen[2])
 
     @users("user_sales_manager")
     def test_mass_convert_w_salesmen(self):
@@ -251,10 +253,10 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
 
         mass_convert.action_mass_convert()
 
+        salesmen = self.assign_users.sorted()
         for idx, lead in enumerate(self.leads - self.lead_w_email_lost):
             self.assertEqual(lead.type, "opportunity")
-            assigned_user = self.assign_users[idx % len(self.assign_users)]
-            self.assertEqual(lead.user_id, assigned_user)
+            self.assertEqual(lead.user_id, salesmen[idx % len(salesmen)])
 
     @users("user_sales_manager")
     def test_mass_convert_with_original_and_duplicate_selected(self):

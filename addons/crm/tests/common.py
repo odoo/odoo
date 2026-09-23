@@ -52,14 +52,17 @@ class TestCrmCommon(TestSalesCommon, MailCase):
     def assertQueryCountWarm(self, fn, **budgets):
         """Count the queries of ``fn`` after one rolled-back rehearsal.
 
-        The rehearsal fills the registry caches the operation reads (record
-        rules, group membership, defaults), which a fresh process fills on
+        The rehearsal starts from the same empty record cache as the counted
+        run, so it takes the same path and fills the registry caches that path
+        reads (record rules, group membership, defaults, the company's
+        configuration rows), which a fresh process fills on
         first use with ten to twenty queries that belong to no code under
         test and vary with the installed module set. The random state is
         restored so a seeded draw in ``fn`` is the one the test asserts.
         """
         state = random.getstate()
         self.env.flush_all()
+        self.env.invalidate_all()
         with suppress(_WarmUp), self.env.cr.savepoint():
             fn()
             raise _WarmUp
