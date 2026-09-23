@@ -18,6 +18,7 @@ on top of a realistic Fleet Management use case.
     'data': [
         'security/fleet_training_groups.xml',
         'security/ir.access.csv',
+        'views/fleet_vehicle_views.xml',
         'views/fleet_vehicle_menus.xml',
     ],
     'application': True,

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_training_vehicle_view_list" model="ir.ui.view">
+        <field name="name">fleet_training.vehicle.list</field>
+        <field name="model">fleet_training.vehicle</field>
+        <field name="arch" type="xml">
+            <list string="Vehicles">
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="model_year"/>
+                <field name="seats"/>
+                <field name="acquisition_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="fleet_training_vehicle_view_form" model="ir.ui.view">
+        <field name="name">fleet_training.vehicle.form</field>
+        <field name="model">fleet_training.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Fleet-001"/></h1>
+                    </div>
+                    <group>
+                        <group string="Identification">
+                            <field name="license_plate"/>
+                            <field name="vin_sn"/>
+                            <field name="color"/>
+                        </group>
+                        <group string="Specifications">
+                            <field name="model_year"/>
+                            <field name="seats"/>
+                            <field name="acquisition_date"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="fleet_training_vehicle_view_search" model="ir.ui.view">
+        <field name="name">fleet_training.vehicle.search</field>
+        <field name="model">fleet_training.vehicle</field>
+        <field name="arch" type="xml">
+            <search string="Search Vehicles">
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="vin_sn"/>
+                <filter name="filter_inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_by_model_year" string="Model Year" domain="[]" context="{'group_by': 'model_year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>
