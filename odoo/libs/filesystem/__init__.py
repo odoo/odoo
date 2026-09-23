@@ -21,7 +21,6 @@ from .samples import (
     XML,
     ZIP,
 )
-from .which import which
 
 __all__ = [
     "BMP",
@@ -43,5 +42,4 @@ __all__ = [
     "guess_mimetype",
     "mimetypes",
     "osutil",
-    "which",
 ]

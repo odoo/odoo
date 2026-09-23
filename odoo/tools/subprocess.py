@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 import sys
 import threading
 import traceback
@@ -7,7 +8,6 @@ from typing import Any
 
 from odoo.libs.datetime import real_time
 from odoo.libs.debug_log import DebugLog
-from odoo.libs.filesystem import which
 
 from .config import config
 
@@ -19,23 +19,24 @@ def get_executable_path(name: str) -> str:
     path = os.environ.get("PATH", os.defpath).split(os.pathsep)
     if config["bin_path"]:
         path.append(config["bin_path"])
-    executable = which(name, path=os.pathsep.join(path))
+    executable = shutil.which(name, path=os.pathsep.join(path))
     _debug.logic(
         "subprocess.executable_resolved",
         name=name,
         path=executable,
         bin_path=config["bin_path"] or None,
     )
+    if executable is None:
+        raise FileNotFoundError(f"Command `{name}` not found.")
     return executable
 
 
 def get_pg_tool_path(name: str) -> str:
     path = config["pg_path"] or None
-    try:
-        executable = which(name, path=path)
-    except OSError:
+    executable = shutil.which(name, path=path)
+    if executable is None:
         _debug.logic("subprocess.pg_tool_missing", name=name, pg_path=path)
-        raise FileNotFoundError(f"Command `{name}` not found.") from None
+        raise FileNotFoundError(f"Command `{name}` not found.")
     _debug.logic("subprocess.pg_tool_resolved", name=name, path=executable)
     return executable
 

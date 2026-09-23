@@ -255,7 +255,6 @@ UNPROMOTED_SUBMODULE_EXPORTS: dict[str, set[str]] = {
         "is_running_as_nt_service",
         "zip_dir",
     },
-    "filesystem/which.py": {"which_files"},
 }
 
 

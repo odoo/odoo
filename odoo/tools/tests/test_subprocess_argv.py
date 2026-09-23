@@ -1,3 +1,6 @@
+import os
+import pathlib
+import tempfile
 import unittest
 from unittest import mock
 
@@ -86,6 +89,15 @@ class TestToolLookup(unittest.TestCase):
     def test_find_in_path_raises_for_a_missing_executable(self):
         with self.assertRaises(OSError):
             get_executable_path("odoo-no-such-binary-xyz")
+
+    def test_a_directory_named_like_the_command_is_not_the_command(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            (pathlib.Path(tmp) / "odoo-dir-not-a-binary").mkdir()
+            with (
+                mock.patch.dict(os.environ, {"PATH": tmp}),
+                self.assertRaises(FileNotFoundError),
+            ):
+                get_executable_path("odoo-dir-not-a-binary")
 
     def test_find_pg_tool_raises_filenotfound(self):
         with self.assertRaises(FileNotFoundError):
