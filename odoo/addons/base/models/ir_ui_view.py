@@ -1252,17 +1252,22 @@ class IrUiView(models.Model):
     def unlink(self) -> bool:
         if not self:
             return True
-        if self.env.context.get("_force_unlink", False) and self.inherit_children_ids:
+        views = self
+        children = self.env.context.get("_force_unlink") and (
+            views.inherit_children_ids - views
+        )
+        if children:
             _debug.lifecycle(
                 "unlink.children_forced",
-                views=len(self),
-                children=len(self.inherit_children_ids),
+                views=len(views),
+                children=len(children),
             )
-            self.inherit_children_ids.unlink()
+            children.unlink()
+            views = views.exists()
         self.env.registry.clear_cache("templates")
-        candidates = self._view_modes_without_default()
-        _debug.lifecycle("unlink", count=len(self), view_modes=len(candidates))
-        res = super(IrUiView, self._sorted_children_first()).unlink()
+        candidates = views._view_modes_without_default()
+        _debug.lifecycle("unlink", count=len(views), view_modes=len(candidates))
+        res = super(IrUiView, views._sorted_children_first()).unlink()
         self.env["ir.actions.act_window"]._remove_view_modes_without_views(candidates)
         return res
 

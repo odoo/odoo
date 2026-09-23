@@ -6089,6 +6089,19 @@ class TestViewUnlink(ViewCase):
             (root | child | grandchild).unlink()
         self.assertFalse((root | child | grandchild).exists())
 
+    def test_forced_unlink_of_a_set_holding_parent_and_descendants(self):
+        root, child, grandchild = self._create_chain()
+        outsider = self.View.create(
+            {
+                "name": "outsider",
+                "type": "qweb",
+                "inherit_id": child.id,
+                "arch": '<xpath expr="//p" position="before"><p class="d"/></xpath>',
+            }
+        )
+        (root | grandchild).with_context(_force_unlink=True).unlink()
+        self.assertFalse((root | child | grandchild | outsider).exists())
+
 
 class TestValidationTools(common.BaseCase):
     def test_get_expression_identities(self):
