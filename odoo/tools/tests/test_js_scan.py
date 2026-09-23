@@ -1,3 +1,4 @@
+import sys
 import unittest
 from unittest import mock
 
@@ -5,6 +6,9 @@ from rjsmin import jsmin
 
 from odoo.tools.assets import esm_bridges, esm_graph
 from odoo.tools.assets.js_scan import has_nested_template_literal, scrub
+
+from odoo.addons.base.models.assetsbundle import assets
+from odoo.addons.base.models.assetsbundle.assets import JavascriptAsset
 
 
 class TestNestedTemplateLiteral(unittest.TestCase):
@@ -39,6 +43,26 @@ class TestNestedTemplateLiteral(unittest.TestCase):
 
     def test_an_unterminated_literal_is_left_to_esbuild(self):
         self.assertTrue(has_nested_template_literal("const a = `x ${y}"))
+
+    def test_nesting_deeper_than_the_recursion_limit_is_still_scanned(self):
+        depth = sys.getrecursionlimit()
+        source = "const a = " + "`${" * depth + "1" + "}`" * depth + ";\nconst b = 2;"
+        self.assertTrue(has_nested_template_literal(source))
+        self.assertEqual(scrub(source), 'const a = "";\nconst b = 2;')
+
+    def test_the_minifier_hands_deep_nesting_to_esbuild(self):
+        depth = sys.getrecursionlimit()
+        source = "const a = " + "`${" * depth + "1" + "}`" * depth + ";"
+        asset = JavascriptAsset.__new__(JavascriptAsset)
+        asset.url = "/probe/deep.js"
+        with (
+            mock.patch.object(JavascriptAsset, "content", source),
+            mock.patch.object(JavascriptAsset, "name", "deep.js"),
+            mock.patch.object(JavascriptAsset, "with_header", lambda _self, c: c),
+            mock.patch.object(assets, "minify_js", return_value="min") as esbuild,
+        ):
+            self.assertEqual(asset.minify(), "min")
+        esbuild.assert_called_once()
 
 
 class TestScrub(unittest.TestCase):

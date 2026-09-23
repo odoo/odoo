@@ -91,13 +91,40 @@ class _Scanner:
             i += 1
         return None
 
-    def code(self, pos: int, *, until_brace: bool = False) -> int:
+    def run(self) -> None:
+        # an explicit stack, not recursion: a source nesting substitutions
+        # deeper than the interpreter's recursion limit is still scanned
         src, n = self.src, len(self.src)
-        braces = 0
-        while True:
+        code_frames: list[int] = [0]
+        template_starts: list[int] = []
+        in_template: list[bool] = [False]
+        pos = 0
+        while in_template:
+            if in_template[-1]:
+                match = _TEMPLATE_STOP_RE.search(src, pos)
+                if match is None:
+                    # an unterminated literal is not something to minify by hand
+                    self.nested = True
+                    pos = n
+                elif (token := match.group()) == "${":
+                    self.depth += 1
+                    code_frames.append(0)
+                    in_template.append(False)
+                    pos = match.end()
+                    continue
+                elif token != "`":
+                    pos = match.end()
+                    continue
+                else:
+                    pos = match.end()
+                in_template.pop()
+                self._opaque("template", template_starts.pop(), pos)
+                continue
             match = _CODE_STOP_RE.search(src, pos)
             if match is None:
-                return n
+                pos = n
+                self._close_code_frame(code_frames, in_template)
+                continue
             i = match.start()
             char = src[i]
             if char in "\"'":
@@ -108,9 +135,9 @@ class _Scanner:
             elif char == "`":
                 if self.depth:
                     self.nested = True
-                end = self.template(i)
-                self._opaque("template", i, end)
-                pos = end
+                template_starts.append(i)
+                in_template.append(True)
+                pos = i + 1
             elif char == "/":
                 follower = src[i + 1 : i + 2]
                 if follower == "/":
@@ -129,39 +156,27 @@ class _Scanner:
                 else:
                     pos = i + 1
             elif char == "{":
-                braces += 1
+                code_frames[-1] += 1
                 pos = i + 1
-            elif until_brace and not braces:
-                return i + 1
+            elif len(in_template) > 1 and not code_frames[-1]:
+                pos = i + 1
+                self._close_code_frame(code_frames, in_template)
             else:
-                braces = max(braces - 1, 0)
+                code_frames[-1] = max(code_frames[-1] - 1, 0)
                 pos = i + 1
 
-    def template(self, pos: int) -> int:
-        src, n = self.src, len(self.src)
-        pos += 1
-        while True:
-            match = _TEMPLATE_STOP_RE.search(src, pos)
-            if match is None:
-                # an unterminated literal is not something to minify by hand
-                self.nested = True
-                return n
-            token = match.group()
-            if token == "`":
-                return match.end()
-            if token == "${":
-                self.depth += 1
-                try:
-                    pos = self.code(match.end(), until_brace=True)
-                finally:
-                    self.depth -= 1
-            else:
-                pos = match.end()
+    def _close_code_frame(
+        self, code_frames: list[int], in_template: list[bool]
+    ) -> None:
+        code_frames.pop()
+        in_template.pop()
+        if in_template:
+            self.depth -= 1
 
 
 def scan(src: str) -> tuple[list[Span], bool]:
     scanner = _Scanner(src)
-    scanner.code(0)
+    scanner.run()
     return scanner.spans, scanner.nested
 
 
