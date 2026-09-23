@@ -46,10 +46,13 @@ def test_access_token_is_base64_of_org_tax_ts():
 # --- SM4 primitive ----------------------------------------------------------
 
 def test_sm4_known_vector_single_block():
-    """Standard SM4 FIPS test vector: key == plaintext == 0123...3210."""
+    """GB/T 32907-2016 example vector: key == plaintext == 0123...3210."""
     block = bytes.fromhex('0123456789abcdeffedcba9876543210')
-    ct = env.sm4_encrypt(block, block)  # exactly one block, no padding added
-    assert ct.hex() == '681edf34d206965e86b3e94f536e4246'
+    ct = env.sm4_encrypt(block, block)
+    # PKCS5 always appends a full block of padding to a 16-byte input, so the
+    # vector is the first block and the second one is the padding.
+    assert ct[:16].hex() == '681edf34d206965e86b3e94f536e4246'
+    assert len(ct) == 32
     assert env.sm4_decrypt(ct, block) == block
 
 
@@ -66,15 +69,15 @@ def test_sm4_roundtrip_with_padding():
 def test_hmac_matches_doc_vector():
     """Doc 6.2: HMACSHA256('航天信息股份有限公司', key='12345678') -> BB2D...F625."""
     key = b'12345678'
-    msg = '航天信息股份有限公司'.encode('utf-8')
-    import hmac as _hmac, hashlib
+    # sign() hashes the concatenation of the six envelope fields, so feed the
+    # doc's message in as one of them and leave the rest empty.
     assert env.sign(
-        interface_code='', zip_code='', encrypt_code='', access_token='',
-        datagram='', signtype='', key=key,
-    ).lower() == _hmac.new(key, msg, hashlib.sha256).hexdigest()
-    # and the doc's published value
-    assert _hmac.new(key, msg, hashlib.sha256).hexdigest().upper() == \
-        'BB2DBF98C94988269586CBDF83A5AABC8F65ABBCA9A931B11DAFFDC6A3D0F625'
+        interface_code='航天信息股份有限公司', zip_code='', encrypt_code='',
+        access_token='', datagram='', signtype='', key=key,
+    ) == 'BB2DBF98C94988269586CBDF83A5AABC8F65ABBCA9A931B11DAFFDC6A3D0F625'
+    # and the concatenation order is the one the vendor signs
+    assert env.sign('a', 'b', 'c', 'd', 'e', 'f', key) == \
+        env.sign('abcdef', '', '', '', '', '', key)
 
 
 # --- full envelope round-trip (all zipCode variants) ------------------------
@@ -88,7 +91,7 @@ def test_envelope_roundtrip(zip_code):
     assert req['encryptCode'] == '1'
     assert req['signtype'] == 'HMacSHA256'
     # simulate the server side: verify + decrypt
-    inner = env.verify_and_decrypt(req, IDENTITY, PLATFORM)
+    inner = env.verify_and_decrypt(dict(req, code='1000'), IDENTITY, PLATFORM)
     assert inner == payload
 
 
@@ -96,7 +99,7 @@ def test_autocompress_over_10k_uses_zip2():
     payload = {'blob': 'x' * 20000}
     req = env.build_request('ele.encrypt.invoiceIssue', payload, IDENTITY, PLATFORM, TAX_NO, timestamp=TS)
     assert req['zipCode'] == '2'
-    assert env.verify_and_decrypt(req, IDENTITY, PLATFORM) == payload
+    assert env.verify_and_decrypt(dict(req, code='1000'), IDENTITY, PLATFORM) == payload
 
 
 def test_small_payload_defaults_to_zip0():
