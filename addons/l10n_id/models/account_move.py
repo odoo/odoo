@@ -1,5 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
+from datetime import timedelta
+
 from odoo import fields, models, _
+from odoo.exceptions import ValidationError
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
@@ -12,6 +18,9 @@ class AccountMove(models.Model):
         Adds information about which invoice is triggering the creation of the QR-Code, so that we can link both together.
         """
         # EXTENDS account
+        # Once the invoice has been paid, no QR-Code is generated to avoid a second payment.
+        if any(self.sudo().l10n_id_qris_transaction_ids.mapped('paid')):
+            return None
         return super(
             AccountMove,
             self.with_context(qris_model="account.move", qris_model_id=str(self.id)),
@@ -44,6 +53,24 @@ class AccountMove(models.Model):
             ('l10n_id_qris_transaction_ids', '!=', False)
         ])
         return invoices._l10n_id_update_payment_status()
+
+    def _l10n_id_portal_update_qris_status(self):
+        """ Check the QR codes that can still be paid (valid 30 minutes), polled by the portal invoice page.
+
+        :return: True if the invoice was paid with one of these QR codes
+        """
+        self.ensure_one()
+        time_limit = fields.Datetime.now() - timedelta(seconds=2100)
+        transactions = self.sudo().l10n_id_qris_transaction_ids.filtered(lambda t: t.qris_creation_datetime >= time_limit)
+        if transactions and self.payment_state == 'not_paid':
+            try:
+                statuses = transactions._l10n_id_get_qris_qr_statuses()
+            except ValidationError:
+                # QRIS being unreachable must not prevent the customer from accessing the invoice
+                _logger.warning("QRIS status check failed for invoice %s", self.id, exc_info=True)
+                return False
+            self._l10n_id_process_invoices({self.id: statuses})
+        return any(transactions.mapped('paid'))
 
     def _l10n_id_update_payment_status(self):
         """ Starts by fetching the QR statuses for the invoices in self, then update said invoices based on the statuses """
@@ -95,6 +122,9 @@ class AccountMove(models.Model):
                     message = _("This invoice was paid using QRIS.")
                 paid_invoices |= invoice
                 paid_messages[invoice.id] = message
+
+        # The payment could be registered concurrently (portal, cron or manual action), avoid registering it twice.
+        paid_invoices = paid_invoices.try_lock_for_update().filtered(lambda inv: inv.payment_state == 'not_paid')
 
         # Update paid invoices
         if paid_invoices:
