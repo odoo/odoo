@@ -5,6 +5,7 @@ from markupsafe import Markup
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import Form, HttpCase, tagged, users
 from odoo.tools import convert_file, mute_logger
+from odoo.tools.translate import TranslationImporter, get_po_paths
 
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 
@@ -727,6 +728,24 @@ class TestMailTemplateReset(MailCommon):
         )
 
         self.assertFalse(mail_template.subject, "Subject should be set to False")
+
+    def test_resetting_a_template_reads_the_real_translation_files(self):
+        # the other reset tests replace load_file; this one keeps it, so a
+        # signature the reset no longer matches fails here
+        self._load("mail", "tests/test_mail_template.xml")
+        self.env["res.lang"]._activate_lang("fr_FR")
+        self.env["mail.template"]._override_translation_term(
+            "mail", ["mail.mail_template_test"]
+        )
+
+    def test_an_empty_xmlid_filter_loads_nothing(self):
+        self.env["res.lang"]._activate_lang("fr_FR")
+        po_path = next(get_po_paths("mail", "fr_FR"))
+        for xmlids, loaded in ((None, True), (set(), False)):
+            with self.subTest(xmlids=xmlids):
+                importer = TranslationImporter(self.env.cr)
+                importer.load_file(po_path, "fr_FR", xmlids=xmlids)
+                self.assertEqual(bool(importer.model_translations), loaded)
 
     def test_mail_template_reset_translation(self):
         self._load("mail", "tests/test_mail_template.xml")

@@ -2045,6 +2045,7 @@ class TranslationImporter:
         self,
         filepath: str,
         lang: str,
+        xmlids: Collection[str] | None = None,
         module: str | None = None,
     ) -> None:
         with (
@@ -2058,13 +2059,14 @@ class TranslationImporter:
                     lang,
                 )
             fileformat = Path(filepath).suffix[1:].lower()
-            self.load(fileobj, fileformat, lang, module=module)
+            self.load(fileobj, fileformat, lang, xmlids=xmlids, module=module)
 
     def load(
         self,
         fileobj: IO[bytes],
         fileformat: str,
         lang: str,
+        xmlids: Collection[str] | None = None,
         module: str | None = None,
     ) -> None:
         if self.verbose:
@@ -2088,7 +2090,7 @@ class TranslationImporter:
                 module=module,
                 file=getattr(fileobj, "name", None),
             ):
-                self._load(reader, lang)
+                self._load(reader, lang, xmlids)
         except OSError as exc:
             _logger.exception(
                 "couldn't read translation file %s [lang: %s][format: %s]",
@@ -2104,7 +2106,14 @@ class TranslationImporter:
                 error=type(exc).__name__,
             )
 
-    def _load(self, reader: Iterable[dict], lang: str) -> None:
+    def _load(
+        self,
+        reader: Iterable[dict],
+        lang: str,
+        xmlids: Collection[str] | None = None,
+    ) -> None:
+        # a set, even empty, is a filter: nothing outside it is loaded
+        wanted = None if xmlids is None else set(xmlids)
         valid_langs = get_base_langs(lang)
         rows = sorted(
             reader,
@@ -2137,6 +2146,9 @@ class TranslationImporter:
                 skipped["field"] += 1  # debuglog
                 continue
             xmlid = module_name + "." + row["imd_name"]
+            if wanted is not None and xmlid not in wanted:
+                skipped["xmlid"] += 1  # debuglog
+                continue
             if row.get("type") == "model" and field.translate is True:
                 self.model_translations[model_name][field_name][xmlid][lang] = row[
                     "value"

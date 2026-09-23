@@ -1,6 +1,8 @@
+import csv
 import unittest
 
 from odoo.tools.i18n import format_list
+from odoo.tools.misc import file_open
 
 
 class TestFormatList(unittest.TestCase):
@@ -56,6 +58,28 @@ class TestFormatList(unittest.TestCase):
                 )
                 self.assertIn("3 ft", out)
                 self.assertIn("7 in", out)
+
+    def test_every_style_renders_in_every_shipped_language(self):
+        # a locale may define a style only in part (es_MX `unit-short` has an
+        # `end` and no `start`); such a style falls back instead of raising
+        with file_open("base/data/res.lang.csv") as handle:
+            codes = [row["code"] for row in csv.DictReader(handle)]
+        styles = (
+            "standard",
+            "standard-short",
+            "or",
+            "or-short",
+            "unit",
+            "unit-short",
+            "unit-narrow",
+        )
+        for code in codes:
+            for style in styles:
+                with self.subTest(code=code, style=style):
+                    out = format_list(
+                        None, ["a", "b", "c"], style=style, lang_code=code
+                    )
+                    self.assertTrue(all(item in out for item in "abc"))
 
     def test_unparseable_lang_code_still_renders(self):
         self.assertIn("a", format_list(None, ["a", "b"], lang_code="not_a_locale"))

@@ -17,12 +17,11 @@ def _load_file(
     self,
     filepath,
     lang,
-    xmlids=None,
     module=None,
     original=TranslationImporter.load_file,
 ):
     self.imported_langs.add(lang)
-    return original(self, filepath, lang, xmlids=xmlids, module=module)
+    return original(self, filepath, lang, module=module)
 
 
 @standalone("all_l10n")

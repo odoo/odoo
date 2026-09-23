@@ -27,6 +27,10 @@ def format_list(
     locale = babel_locale_parse(
         lang_code or (get_lang(env).code if env is not None else "en_US")
     )
-    if style not in locale.list_patterns:
-        style = "standard"
-    return lists.format_list([str(el) for el in lst], style, locale)
+    items = [str(el) for el in lst]
+    try:
+        return lists.format_list(items, style, locale)
+    except KeyError, ValueError:
+        # an unknown style is a ValueError; a style the locale defines only in
+        # part (es_MX `unit-short` has an `end` and no `start`) is a KeyError
+        return lists.format_list(items, "standard", locale)
