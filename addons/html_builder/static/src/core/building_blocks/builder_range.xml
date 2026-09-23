@@ -37,6 +37,7 @@
             preview.bind="this.previewInput"
             clampValue.bind="this.clampValueForInput"
             selectTextOnFocus="true"
+            onKeydown.bind="this.onKeydownNumber"
             min="this.props.min"
             max="this.props.max"
             step="this.step"
