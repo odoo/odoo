@@ -285,6 +285,25 @@ export class TablePlugin extends Plugin {
             }
         });
         this.onMousemove = this.onMousemove.bind(this);
+
+        // A previous version set the width and margin on tbody, move them back.
+        this.editable.querySelectorAll("table").forEach((table) => {
+            // A previous version removed both properties from the table when it moved
+            // them, so a table that still has one of them was never migrated.
+            if (table.style.width || table.style.marginLeft) {
+                return;
+            }
+            const tBody = table.tBodies[0];
+            if (!tBody) {
+                return;
+            }
+            for (const property of ["width", "margin-left"]) {
+                if (tBody.style[property]) {
+                    table.style[property] = tBody.style[property];
+                    removeStyle(tBody, property);
+                }
+            }
+        });
     }
 
     processTableResizeTargets(item, neighbor, position, defaultMinSize) {
