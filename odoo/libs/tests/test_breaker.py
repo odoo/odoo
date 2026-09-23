@@ -74,21 +74,26 @@ class TestOpening(unittest.TestCase):
 
 class TestProbing(unittest.TestCase):
     def setUp(self):
-        self.breaker = CircuitBreaker(max_cooldown=1200, initial_cooldown=0.0)
+        self.breaker = CircuitBreaker(max_cooldown=1200, initial_cooldown=60)
+
+    def _trip_and_elapse(self, failures=1):
+        for _ in range(failures):
+            self.breaker.record_failure()
+        self.breaker._opened_at -= 61
 
     def test_the_window_elapsing_admits_a_probe(self):
-        self.breaker.record_failure()
+        self._trip_and_elapse()
         self.assertTrue(self.breaker.acquire_attempt())
 
     def test_only_one_caller_probes(self):
-        self.breaker.record_failure()
+        self._trip_and_elapse()
         self.assertEqual(sum(1 for _ in range(50) if self.breaker.acquire_attempt()), 1)
 
     def test_a_successful_probe_closes_and_resets_the_backoff(self):
-        for _ in range(3):
-            self.breaker.record_failure()
-        self.assertTrue(self.breaker.acquire_attempt())
-        self.breaker.record_success()
+        self._trip_and_elapse(3)
+        probe = self.breaker.acquire_attempt()
+        self.assertTrue(probe)
+        self.breaker.record_success(probe)
         self.assertTrue(self.breaker.closed)
         self.breaker.record_failure()
         self.assertEqual(self.breaker.failures, 1, "the backoff must start over")
@@ -114,6 +119,56 @@ class TestProbing(unittest.TestCase):
         self.assertTrue(
             breaker.acquire_attempt(), "an abandoned probe must be reclaimable"
         )
+
+
+class TestAttemptTickets(unittest.TestCase):
+    def setUp(self):
+        self.breaker = CircuitBreaker(max_cooldown=1200, initial_cooldown=60)
+
+    def test_a_call_started_before_the_trip_does_not_touch_the_probe(self):
+        late = self.breaker.acquire_attempt()
+        self.breaker.record_failure(self.breaker.acquire_attempt())
+        self.breaker._opened_at -= 61
+        probe = self.breaker.acquire_attempt()
+        self.assertTrue(probe and probe.probe)
+        self.breaker.record_failure(late)
+        self.assertAlmostEqual(self.breaker.cooldown_remaining, 0, delta=1)
+        self.assertIsNone(
+            self.breaker.acquire_attempt(), "the probe is still in flight"
+        )
+        self.breaker.record_failure(probe)
+        self.assertAlmostEqual(self.breaker.cooldown_remaining, 120, delta=2)
+
+    def test_a_late_success_from_before_the_trip_does_not_close(self):
+        late = self.breaker.acquire_attempt()
+        self.breaker.record_failure(self.breaker.acquire_attempt())
+        self.breaker.record_success(late)
+        self.assertFalse(self.breaker.closed)
+
+    def test_an_abandoned_probe_reporting_late_is_ignored(self):
+        self.breaker.record_failure()
+        self.breaker._opened_at -= 61
+        first = self.breaker.acquire_attempt()
+        self.breaker._probing_since -= 61
+        second = self.breaker.acquire_attempt()
+        self.assertTrue(second)
+        self.breaker.record_failure(first)
+        self.assertIsNone(self.breaker.acquire_attempt())
+        self.breaker.record_success(second)
+        self.assertTrue(self.breaker.closed)
+
+    def test_a_failure_from_before_a_recovery_does_not_count_after_it(self):
+        breaker = CircuitBreaker(
+            max_cooldown=1200, initial_cooldown=60, failure_threshold=2
+        )
+        late = breaker.acquire_attempt()
+        breaker.record_failure()
+        breaker.record_failure()
+        breaker._opened_at -= 61
+        breaker.record_success(breaker.acquire_attempt())
+        breaker.record_failure(late)
+        breaker.record_failure(breaker.acquire_attempt())
+        self.assertTrue(breaker.closed, "one current failure is below threshold")
 
 
 class TestConcurrentPileOn(unittest.TestCase):
@@ -156,6 +211,11 @@ class TestSnapshot(unittest.TestCase):
 
 
 class TestConstruction(unittest.TestCase):
+    def test_a_non_positive_first_step_is_rejected(self):
+        for cooldown in (0.0, -1.0):
+            with self.subTest(cooldown=cooldown), self.assertRaises(ValueError):
+                CircuitBreaker(max_cooldown=1200, initial_cooldown=cooldown)
+
     def test_a_ceiling_below_the_first_step_is_rejected(self):
         with self.assertRaises(ValueError):
             CircuitBreaker(max_cooldown=0.5, initial_cooldown=1.0)

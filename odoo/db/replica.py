@@ -188,7 +188,8 @@ class ReplicaRouter:
         if not (self.lag.is_replica_usable() or sample_due):
             _debug.logic("replica.skipped", reason="lagging", lag=self.lag.last_lag)
             return None
-        if not self.breaker.acquire_attempt():
+        attempt = self.breaker.acquire_attempt()
+        if attempt is None:
             _debug.logic(
                 "replica.skipped",
                 reason="breaker_open",
@@ -198,7 +199,7 @@ class ReplicaRouter:
         try:
             cr = replica.cursor(borrow_timeout=REPLICA_BORROW_TIMEOUT, fail_fast=True)
         except (psycopg.OperationalError, PoolError) as e:
-            self.breaker.record_failure()
+            self.breaker.record_failure(attempt)
             _debug.lifecycle(
                 "replica.cursor_failed",
                 error=type(e).__name__,
@@ -216,7 +217,7 @@ class ReplicaRouter:
         if not self.breaker.closed:
             _debug.lifecycle("replica.recovered", trips=self.breaker.trips)
             _logger.info("Replica reachable again, resuming readonly cursors")
-        self.breaker.record_success()
+        self.breaker.record_success(attempt)
         if sample_due and self.lag.acquire_sample_interval():
             self._sample_lag(cr)
         if self.lag.is_replica_usable():

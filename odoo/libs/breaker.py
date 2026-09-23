@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import threading
 from collections import deque
+from dataclasses import dataclass
 from time import monotonic
 
 from odoo.libs.debug_log import DebugLog
 
-__all__ = ["CircuitBreaker"]
+__all__ = ["Attempt", "CircuitBreaker"]
 
 _INITIAL_COOLDOWN = 1.0
 _debug = DebugLog(__name__)
@@ -14,9 +15,16 @@ _debug = DebugLog(__name__)
 _PROBE_ABANDON_AFTER = 60.0
 
 
+@dataclass(frozen=True, slots=True)
+class Attempt:
+    generation: int
+    probe: bool
+
+
 class CircuitBreaker:
     __slots__ = (
         "_cooldown",
+        "_generation",
         "_lock",
         "_open",
         "_opened_at",
@@ -38,6 +46,10 @@ class CircuitBreaker:
         failure_threshold: int = 1,
         failure_window: float | None = None,
     ) -> None:
+        if not initial_cooldown > 0:
+            raise ValueError(
+                f"initial_cooldown must be positive, got {initial_cooldown}"
+            )
         if max_cooldown < initial_cooldown:
             raise ValueError(
                 f"max_cooldown ({max_cooldown}) must be >= "
@@ -59,6 +71,7 @@ class CircuitBreaker:
         self._cooldown = 0.0
         self._opened_at = 0.0
         self._probing_since = 0.0
+        self._generation = 0
         self.failures = 0
         self.trips = 0
         _debug.lifecycle(
@@ -83,10 +96,10 @@ class CircuitBreaker:
             return 0.0
         return max(0.0, self._opened_at + self._cooldown - monotonic())
 
-    def acquire_attempt(self) -> bool:
+    def acquire_attempt(self) -> Attempt | None:
         with self._lock:
             if not self._open:
-                return True
+                return Attempt(self._generation, probe=False)
             now = monotonic()
             if now - self._opened_at < self._cooldown:
                 _debug.logic(
@@ -94,22 +107,39 @@ class CircuitBreaker:
                     reason="cooldown",
                     remaining_s=self._opened_at + self._cooldown - now,
                 )
-                return False
+                return None
             if self._probing_since and now - self._probing_since < _PROBE_ABANDON_AFTER:
                 _debug.logic(
                     "breaker.attempt_rejected",
                     reason="probe_in_flight",
                     probing_s=now - self._probing_since,
                 )
-                return False
+                return None
             self._probing_since = now
+            self._generation += 1
             _debug.logic(
                 "breaker.probe", cooldown=self._cooldown, failures=self.failures
             )
-            return True
+            return Attempt(self._generation, probe=True)
 
-    def record_success(self) -> None:
+    def _is_stale_locked(self, attempt: Attempt | None, outcome: str) -> bool:
+        if attempt is None or attempt.generation == self._generation:
+            return False
+        _debug.logic(
+            "breaker.stale_outcome",
+            outcome=outcome,
+            probe=attempt.probe,
+            attempt_generation=attempt.generation,
+            generation=self._generation,
+        )
+        return True
+
+    def record_success(self, attempt: Attempt | None = None) -> None:
         with self._lock:
+            if self._open and self._is_stale_locked(attempt, "success"):
+                return
+            if self._open:
+                self._generation += 1
             if _debug.lifecycle.enabled and self._open:
                 _debug.lifecycle(
                     "breaker.closed", failures=self.failures, trips=self.trips
@@ -131,9 +161,11 @@ class CircuitBreaker:
             recent.popleft()
         return len(recent) >= self.failure_threshold
 
-    def record_failure(self) -> None:
+    def record_failure(self, attempt: Attempt | None = None) -> None:
         with self._lock:
             self.failures += 1
+            if self._is_stale_locked(attempt, "failure"):
+                return
             if not self._open:
                 if not self._threshold_reached_locked(monotonic()):
                     _debug.logic(
@@ -147,6 +179,7 @@ class CircuitBreaker:
                 self._cooldown = self.initial_cooldown
                 self._opened_at = monotonic()
                 self._probing_since = 0.0
+                self._generation += 1
                 self.trips += 1
                 _debug.lifecycle(
                     "breaker.opened", cooldown=self._cooldown, trips=self.trips
@@ -162,6 +195,7 @@ class CircuitBreaker:
                 self._cooldown = min(self._cooldown * 2, self.max_cooldown)
                 self._opened_at = monotonic()
                 self._probing_since = 0.0
+                self._generation += 1
                 _debug.logic(
                     "breaker.cooldown_extended",
                     cooldown=self._cooldown,

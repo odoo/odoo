@@ -9,6 +9,7 @@ from odoo import api, fields, models
 from odoo.db import get_or_create_row
 from odoo.exceptions import ValidationError
 from odoo.libs import redact
+from odoo.libs.breaker import Attempt
 
 from ..tools.api_client import is_private_host
 from ..tools.connection_gate import (
@@ -436,13 +437,13 @@ class IntegrationConnection(models.Model):
         send = session.request
 
         def request(*args, **kwargs):
-            connection._admit_call()
+            attempt = connection._admit_call()
             try:
                 response = send(*args, **kwargs)
             except requests.RequestException as error:
-                connection._settle_call(error=error)
+                connection._settle_call(error=error, attempt=attempt)
                 raise
-            connection._settle_call(response=response)
+            connection._settle_call(response=response, attempt=attempt)
             return response
 
         session.request = request
@@ -469,9 +470,10 @@ class IntegrationConnection(models.Model):
             operation_timeout=timeout,
         )
 
-    def _admit_call(self) -> None:
+    def _admit_call(self) -> Attempt:
         self.check_singleton()
-        if not breaker_for(self.env, self).acquire_attempt():
+        attempt = breaker_for(self.env, self).acquire_attempt()
+        if attempt is None:
             raise CircuitOpen(
                 self.env._(
                     "%(connection)s is paused after repeated failures; it will be "
@@ -509,13 +511,19 @@ class IntegrationConnection(models.Model):
                     window=self.budget_window_seconds,
                 )
             )
+        return attempt
 
-    def _settle_call(self, response=None, error: BaseException | None = None) -> None:
+    def _settle_call(
+        self,
+        response=None,
+        error: BaseException | None = None,
+        attempt: Attempt | None = None,
+    ) -> None:
         self.check_singleton()
         breaker = breaker_for(self.env, self)
         was_closed = breaker.closed
         if is_failure(response, error):
-            breaker.record_failure()
+            breaker.record_failure(attempt)
             if was_closed and not breaker.closed:
                 self._queue_circuit_values(
                     {
@@ -529,7 +537,7 @@ class IntegrationConnection(models.Model):
                     }
                 )
             return
-        breaker.record_success()
+        breaker.record_success(attempt)
         if not was_closed:
             self._queue_circuit_values(
                 {"circuit_state": "closed", "last_success_at": fields.Datetime.now()}

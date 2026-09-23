@@ -370,7 +370,7 @@ class OutboundAPIClient:
                 return cached
 
         self.service.sudo()._check_before_request(self.company_id)
-        self.admit()
+        attempt = self.admit()
 
         self._update_request_kwargs(url, kwargs)
         self._check_credential_host(url, kwargs)
@@ -379,7 +379,7 @@ class OutboundAPIClient:
 
         try:
             _logger.info("API Request: %s %s", method, redact.mask_url(url))
-            response = self._send(method, url, kwargs)
+            response = self._send(method, url, kwargs, attempt)
 
             elapsed_ms = (datetime.now() - start_time).total_seconds() * 1000
 
@@ -864,19 +864,19 @@ class OutboundAPIClient:
 
     def admit(self):
         try:
-            self.connection._admit_call()
+            return self.connection._admit_call()
         except BudgetSpent as error:
             raise RateLimitError(str(error)) from error
         except CircuitOpen as error:
             raise CircuitOpenError(str(error)) from error
 
-    def _send(self, method, url, kwargs):
+    def _send(self, method, url, kwargs, attempt=None):
         try:
             response = self.session.request(method=method, url=url, **kwargs)
         except requests.RequestException as error:
-            self.connection._settle_call(error=error)
+            self.connection._settle_call(error=error, attempt=attempt)
             raise
-        self.connection._settle_call(response=response)
+        self.connection._settle_call(response=response, attempt=attempt)
         return response
 
     def zeep_transport(self, url, timeout=30):
@@ -1133,20 +1133,20 @@ def _zeep_transport_class():
 
         def _load_remote_data(self, url):
             client = self._api_client
-            client.admit()
+            attempt = client.admit()
             try:
                 response = self.session.get(url, timeout=self.load_timeout)
             except requests.RequestException as error:
-                client.connection._settle_call(error=error)
+                client.connection._settle_call(error=error, attempt=attempt)
                 raise
-            client.connection._settle_call(response=response)
+            client.connection._settle_call(response=response, attempt=attempt)
             with closing(response):
                 response.raise_for_status()
                 return response.content
 
         def post(self, address, message, headers):
             client = self._api_client
-            client.admit()
+            attempt = client.admit()
             started = datetime.now()
             error = None
             response = None
@@ -1154,13 +1154,13 @@ def _zeep_transport_class():
                 response = super().post(address, message, headers)
             except requests.RequestException as exc:
                 error = exc
-                client.connection._settle_call(error=exc)
+                client.connection._settle_call(error=exc, attempt=attempt)
                 raise
             except Exception as exc:
                 error = exc
                 raise
             else:
-                client.connection._settle_call(response=response)
+                client.connection._settle_call(response=response, attempt=attempt)
                 return response
             finally:
                 try:
