@@ -205,3 +205,41 @@ vehicles can be created and edited through the UI, no code required.
 
 **Testing.** Upgrade the module, refresh the browser, open the Fleet Training
 app from the Apps grid, click Vehicles, and create a record from the UI.
+
+---
+
+## Chapter 6 — Basic Views
+
+**Concept.** Views are `ir.ui.view` records whose `arch` is an XML architecture
+tree. The three workhorses are **list** (rows/columns), **form** (one record,
+laid out with `<sheet>`/`<group>`) and **search** (filters and group-by options
+available above a list).
+
+**Why?** Hand-writing the layout lets you show only the relevant fields, group
+them logically, and give users fast filters — instead of the raw, unordered
+auto-generated view from Chapter 5.
+
+**Where?** [`views/fleet_vehicle_views.xml`](views/fleet_vehicle_views.xml)
+
+**Code explanation.** The list view picks 5 columns instead of every field. The
+form view wraps everything in `<sheet>`, puts `name` in the title area (the
+common "record name as `<h1>`" pattern), and uses two side-by-side `<group>`
+blocks inside an outer `<group>` for a two-column layout. The search view adds
+a text-searchable `name`/`license_plate`/`vin_sn`, an `Archived` filter (records
+with `active = False` are hidden by default — this is what makes the `active`
+field from Chapter 3 actually useful), and a "group by Model Year" filter.
+
+**Odoo 20 note.** The list view's root tag is `<list>`, not the legacy `<tree>` -
+consistent with the `view_mode` change in Chapter 5.
+
+**Fleet functionality.** Vehicles now have a proper, readable form and list
+layout, and can be searched, archived/unarchived, and grouped by model year.
+
+**What changed.** Added `views/fleet_vehicle_views.xml`; manifest loads it
+before the menu file (the action needs the views to exist... actually the
+views just need to exist by the time the action is *used*, but loading order
+here keeps the module's data files in a natural reading order).
+
+**Testing.** Upgrade the module, open Fleet Training > Vehicles: confirm the
+list shows the 5 chosen columns, the form shows the two-column layout, and the
+search bar's filter dropdown offers "Archived" and "Model Year" group-by.
