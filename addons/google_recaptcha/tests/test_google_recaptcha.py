@@ -268,3 +268,70 @@ class TestGoogleRecaptcha(TransactionCase):
                 "10.0.0.1", False, action="login"
             )
         self.assertEqual(verdict, "wrong_token")
+
+    def test_success_without_a_score_is_not_human(self):
+        """A scoreless success must not be read as score 0 (R01).
+
+        Google v3 always scores a successful verification. A success with no
+        score means the response is not the one this code reads -- a v2 site
+        key, say -- and `result.get("score", False)` used to let that through
+        as the number 0, which is accepted at a threshold of 0.
+        """
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
+        self.icp.set_param("enable_recaptcha", "True")
+        for threshold in ("0.7", "0.0"):
+            with self.subTest(min_score=threshold):
+                self.icp.set_param("recaptcha_min_score", threshold)
+                verdict = self._verify_token(
+                    json_result={"success": True, "action": "login"}
+                )
+                self.assertNotEqual(
+                    verdict,
+                    "is_human",
+                    "a response carrying no score was accepted as human",
+                )
+
+    def test_success_without_a_score_logs_no_invented_score(self):
+        """The log must not state a score Google never sent."""
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
+        self.icp.set_param("enable_recaptcha", "True")
+        self.icp.set_param("recaptcha_min_score", "0.7")
+        with (
+            self._mocked_verify(json_result={"success": True, "action": "login"}),
+            self.assertLogs(MODULE, level="WARNING") as captured,
+        ):
+            self.env["ir.http"]._get_recaptcha_verdict(
+                "10.0.0.1", "a-token", action="login"
+            )
+        self.assertNotIn("0.000000", "".join(captured.output))
+
+    def test_scored_responses_are_unchanged(self):
+        """The guard must not disturb a normal v3 response."""
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
+        self.icp.set_param("enable_recaptcha", "True")
+        self.icp.set_param("recaptcha_min_score", "0.7")
+        self.assertEqual(
+            self._verify_token(
+                json_result={"success": True, "score": 0.9, "action": "login"}
+            ),
+            "is_human",
+        )
+        self.assertEqual(
+            self._verify_token(
+                json_result={"success": True, "score": 0.1, "action": "login"}
+            ),
+            "is_bot",
+        )
+        self.assertEqual(
+            self._verify_token(
+                json_result={"success": True, "score": 0.0, "action": "login"}
+            ),
+            "is_bot",
+            "an explicit score of 0 is still a real score",
+        )

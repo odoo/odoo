@@ -119,7 +119,21 @@ class IrHttp(models.AbstractModel):
             return "bad_request"
 
         if res_success:
-            score = result.get("score", False)
+            if "score" not in result:
+                # v3 always scores a successful verification, so a success with
+                # no score means the response is not the one this code reads --
+                # a v2 site key, an API change, something in the middle. It used
+                # to fall through as `False`, which compares as 0: harmless at
+                # the default threshold, accepted as human at a threshold of 0,
+                # and in both cases logged as a score of 0.000000 that Google
+                # never sent.
+                logger.warning(
+                    "Trial captcha verification for ip address %s returned no score; "
+                    "treating as a failure.",
+                    ip_addr,
+                )
+                return "bad_request"
+            score = result["score"]
             if score < min_score:
                 logger.warning(
                     "Trial captcha verification for ip address %s failed with score %f.",
