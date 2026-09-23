@@ -797,6 +797,7 @@ export function useClickableBuilderComponent(props) {
 
     async function callApply(applySpecs, isPreviewing) {
         await env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
+        await env.selectionCustomInputContext?.customInputClean(isPreviewing);
         const cleans = inheritedActionIds
             .map((actionId) => env.dependencyManager.get(actionId).cleanSelectedItem)
             .filter(Boolean);
@@ -1019,6 +1020,37 @@ function handleBuilderActionError(error, env, editingElement) {
 }
 
 /**
+ * Handles inputs that set custom values when selectable items are used.
+ *
+ * @param {[Object]} [actions] The input actions to clean.
+ */
+export function useSelectionCustomInputContext(actions) {
+    const env = useEnv();
+    const getAction = env.editor.shared.builderActions.getAction;
+
+    function customInputClean(isPreviewing) {
+        const proms = [];
+        for (const action of actions) {
+            for (const editingElement of env.getEditingElements()) {
+                proms.push(
+                    getAction(action.actionId).clean?.({
+                        isPreviewing,
+                        editingElement,
+                        params: convertParamToObject(action.actionParam),
+                        dependencyManager: env.dependencyManager,
+                    })
+                );
+            }
+        }
+        return Promise.all(proms);
+    }
+
+    useSubEnv({
+        selectionCustomInputContext: { customInputClean },
+    });
+}
+
+/**
  * @param {DefaultBuilderProps} props
  * @param {{
  *  defaultValue?: any;
@@ -1041,6 +1073,9 @@ export function useInputBuilderComponent(
      */
     async function callApply(applySpecs, isPreviewing) {
         const proms = [];
+        // In some cases, an input can clear its linked selection when adding a
+        // custom value (see `BuilderNumberSelect`).
+        await env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
         for (const applySpec of applySpecs) {
             proms.push(
                 applySpec.action.apply({
