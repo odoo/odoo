@@ -626,3 +626,41 @@ the form's Print menu or in bulk from the list.
 - confirmed it returns real PDF bytes (wkhtmltopdf is installed in this
 environment). In the UI: open a vehicle, Print > Vehicle Info Sheet, confirm
 the PDF downloads with the right data.
+
+---
+
+## Chapter 15 — The Final Word
+
+**Concept.** This closes the official Server Framework 101 roadmap. Its own
+"final word" is mostly conceptual (recap + pointers to Backend Framework 102,
+JS framework, and testing) — so this chapter pairs that wrap-up with one more
+genuinely useful, low-effort view type: **pivot** and **graph** views, built
+from fields already defined in earlier chapters, to turn the vehicle list into
+an actual fleet dashboard.
+
+**Why?** Everything from Chapter 1 to 14 - models, security, views,
+relations, computed fields, actions, constraints, inheritance, mail, reports -
+is the complete toolkit for a real Odoo app. Pivot/graph views cost almost
+nothing once the underlying fields exist, and they're what turns "a list of
+vehicles" into "an overview a fleet manager actually wants to look at."
+
+**Where?** [`views/fleet_vehicle_analysis_views.xml`](views/fleet_vehicle_analysis_views.xml)
+
+**Code explanation.** The pivot view groups vehicles by `category_id` (rows)
+and `state` (columns), measuring `seats` and `age_years` — both fields already
+existed (Chapters 3 and 8). The graph view charts the same two dimensions as a
+bar chart. Neither needed a single new field or method.
+
+**Fleet functionality.** Fleet Training > Reporting > Fleet Analysis gives a
+pivot table and bar chart of the fleet by category and status - a genuine
+"dashboard" view, assembled entirely from Chapters already covered.
+
+**What changed.** Added `views/fleet_vehicle_analysis_views.xml`.
+
+**Testing.** Upgrade the module; open Reporting > Fleet Analysis and confirm
+the pivot table and bar chart render with real data.
+
+**Where the core tutorial ends, this project keeps going** — the chapters
+below aren't in Server Framework 101, but were explicitly asked for to make
+this a genuinely usable app: more models (maintenance/fuel), a wizard
+(TransientModel), and a scheduled action (`ir.cron`).
