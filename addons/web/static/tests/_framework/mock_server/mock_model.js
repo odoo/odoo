@@ -275,6 +275,33 @@ function isEmptyValue(value) {
  * @param {Model | null} previous
  * @param {typeof Model} constructor
  */
+/**
+ * @param {any} definition
+ * @param {any} constructor
+ */
+function adoptSubclass(definition, constructor) {
+    const own = createRawInstance(constructor);
+    const inherited = createRawInstance(Object.getPrototypeOf(constructor));
+    const declaredHere = (/** @type {any} */ a, /** @type {any} */ b) =>
+        JSON.stringify(a) !== JSON.stringify(b);
+    Object.setPrototypeOf(definition, constructor.prototype);
+    for (const [key] of INHERITED_PRIMITIVE_KEYS) {
+        if (!isEmptyValue(own[key]) && declaredHere(own[key], inherited[key])) {
+            definition[key] = own[key];
+        }
+    }
+    for (const [key] of INHERITED_OBJECT_KEYS) {
+        for (const [subKey, value] of Object.entries(own[key])) {
+            if (declaredHere(value, inherited[key]?.[subKey])) {
+                definition[key][subKey] = value;
+            }
+        }
+    }
+    if (!definition._records.length && own._records.length) {
+        assignArray(definition._records, deepCopy(own._records));
+    }
+}
+
 function getModelDefinition(previous, constructor) {
     const model = createRawInstance(constructor);
     model._name ||= constructor.getModelName(model);
@@ -1467,7 +1494,11 @@ export class Model extends Array {
 
     static get definition() {
         this.definitionGetter ||= createJobScopedGetter(getModelDefinition);
-        return this.definitionGetter(this);
+        const definition = this.definitionGetter(this);
+        if (!(definition instanceof this)) {
+            adoptSubclass(definition, this);
+        }
+        return definition;
     }
 
     static get _description() {

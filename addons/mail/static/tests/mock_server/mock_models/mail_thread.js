@@ -668,7 +668,7 @@ export class MailThread extends models.ServerModel {
 
         if (request_list.includes("activities") && model.has_activities) {
             res["activities"] = mailDataHelpers.Store.many(
-                MailActivity.browse(thread.activity_ids),
+                MailActivity._filter([["id", "in", thread.activity_ids]]),
             );
         }
         if (request_list.includes("attachments")) {
