@@ -48,6 +48,22 @@ def test_leading_double_slash_collapses_so_path_cannot_become_protocol_relative(
     )
 
 
+@pytest.mark.parametrize(
+    ("target", "path"),
+    [
+        (b"/%2Fevil.example/x", "/evil.example/x"),
+        (b"/%2f%2fevil.example", "/evil.example"),
+        (b"/%2F/%2Fevil.example", "/evil.example"),
+    ],
+)
+def test_an_encoded_double_slash_collapses_too(target, path):
+    assert parse(b"GET " + target + b" HTTP/1.1\r\nHost: x\r\n\r\n").path == path
+
+
+def test_an_encoded_nul_in_the_path_is_refused():
+    assert rejects(b"GET /a%00b HTTP/1.1\r\nHost: x\r\n\r\n") == HTTPStatus.BAD_REQUEST
+
+
 def test_fragment_is_ignored():
     head = parse(b"GET /a?b=1#frag HTTP/1.1\r\nHost: x\r\n\r\n")
     assert (head.path, head.query) == ("/a", "b=1")

@@ -199,6 +199,23 @@ def test_a_chunked_upload_is_decoded(server):
     assert (body["len"], body["terminated"], body["content_length"]) == (5, True, None)
 
 
+@pytest.mark.parametrize(
+    "framing",
+    [b"Content-Length: 5, 5\r\n", b"Content-Length: 5\r\nContent-Length: 5\r\n"],
+)
+def test_a_repeated_content_length_reaches_the_application_as_one_number(
+    server, framing
+):
+    raw = _talk(
+        server.server_port,
+        b"POST /c HTTP/1.1\r\nHost: h\r\n"
+        + framing
+        + b"Connection: close\r\n\r\nhello",
+    )
+    body = _json_body(raw)
+    assert (body["len"], body["content_length"]) == (5, "5")
+
+
 def test_content_length_with_chunked_is_decoded_as_chunked_and_closed(server):
     raw = _talk(
         server.server_port,

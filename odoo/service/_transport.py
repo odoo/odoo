@@ -292,15 +292,16 @@ def prepare_wsgi_environ(
             continue
         key = name.upper().replace("-", "_")
         if key == "CONTENT_LENGTH":
-            if head.chunked:
-                continue
-        elif key != "CONTENT_TYPE":
+            continue
+        if key != "CONTENT_TYPE":
             key = f"HTTP_{key}"
             if key in environ:
                 value = f"{environ[key]},{value}"
         environ[key] = value
     if identity.exposes_socket:
         environ["odoo.socket"] = conn.sock
+    if head.content_length is not None:
+        environ["CONTENT_LENGTH"] = str(head.content_length)
     if head.host is not None:
         environ["HTTP_HOST"] = head.host
     if head.chunked:

@@ -110,6 +110,26 @@ def test_chunked_line_and_trailer_limits():
         reader.read()
 
 
+def test_an_overlong_chunk_line_is_refused_when_it_arrives_whole():
+    wire = b"5;" + b"e" * 60_000 + b"\r\nhello\r\n0\r\n\r\n"
+    reader = ChunkedReader(source(wire), BodyLimits(max_chunk_line=4096))
+    with pytest.raises(BodyError, match="too long"):
+        reader.read()
+
+
+def test_a_chunk_line_at_the_limit_is_accepted():
+    wire = b"5;" + b"e" * 28 + b"\r\nhello\r\n0\r\n\r\n"
+    reader = ChunkedReader(source(wire), BodyLimits(max_chunk_line=32))
+    assert reader.read() == b"hello"
+
+
+def test_drain_discards_no_more_than_its_budget_and_one_byte():
+    src = source(b"x" * 65536)
+    reader = LengthReader(src, 65536)
+    assert not reader.drain(max_bytes=100, deadline=time.monotonic() + 5)
+    assert reader.bytes_read == 101
+
+
 def test_drain_respects_byte_and_time_budgets():
     reader = LengthReader(source(*[b"x" * 1000] * 10), 10_000)
     assert not reader.drain(max_bytes=2_000, deadline=time.monotonic() + 5)

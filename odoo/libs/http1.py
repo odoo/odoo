@@ -224,9 +224,16 @@ def _split_target(method: bytes, target: bytes) -> tuple[bytes, bytes, str | Non
         raise _bad("unsupported request-target form")
     rest = rest.partition(b"#")[0]
     path, _, query = rest.partition(b"?")
-    if path.startswith(b"//"):
-        path = b"/" + path.lstrip(b"/")
     return path, query, authority
+
+
+def _decode_path(path: bytes) -> str:
+    decoded = unquote_to_bytes(path)
+    if b"\x00" in decoded:
+        raise _bad("NUL in request path")
+    if decoded.startswith(b"//"):
+        decoded = b"/" + decoded.lstrip(b"/")
+    return decoded.decode("latin-1")
 
 
 def _parse_expectation(values: list[str], version: tuple[int, int]) -> bool:
@@ -273,7 +280,7 @@ def parse_request_head(raw: bytes, limits: HeadLimits) -> RequestHead:
         target=target.decode("latin-1"),
         version=version,
         headers=tuple(fields),
-        path=unquote_to_bytes(path).decode("latin-1"),
+        path=_decode_path(path),
         query=query.decode("latin-1"),
         host=host,
         content_length=content_length,
@@ -307,6 +314,8 @@ class BufferedSource:
     def take_line(self, limit: int) -> bytes:
         while True:
             end = self.buffer.find(b"\n")
+            if end > limit:
+                raise BodyError("chunk framing line too long")
             if end >= 0:
                 line = bytes(self.buffer[: end + 1])
                 del self.buffer[: end + 1]
@@ -393,7 +402,7 @@ class _BodyReader(io.RawIOBase):
         while not self.exhausted:
             if discarded > max_bytes or time.monotonic() > deadline:
                 return False
-            discarded += len(self.read(65536))
+            discarded += len(self.read(min(65536, max_bytes - discarded + 1)))
         return True
 
 
