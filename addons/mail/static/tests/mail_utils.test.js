@@ -263,3 +263,11 @@ test("inlineElement copies rel and target attributes from links", () => {
         '<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a>'
     );
 });
+
+test("inlineHtml keeps only the text of JS-handled links", () => {
+    expect(
+        inlineHtml(
+            markup`<a href="#" data-oe-type="highlight" data-oe-id="1">Pinned.</a> <a href="#" data-oe-type="pin-menu">See all.</a>`
+        ).toString()
+    ).toBe("Pinned. See all.");
+});
