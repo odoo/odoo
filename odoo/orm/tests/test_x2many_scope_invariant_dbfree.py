@@ -246,17 +246,23 @@ def _walk(seed, steps):
             _check_invariant(env, scopes, orders, log)
 
 
+_READ_FIELDS = {
+    "read_lines": "line_ids",
+    "read_tags": "tag_ids",
+    "read_total": "total",
+    "read_positive": "positive_line_ids",
+    "read_any": "any_line_ids",
+}
+
+
 def _apply(op, name, scope_env, order, orders, tags, rng, env, company_ids):
     def lines_of(order):
         return scope_env["inv.line"].search([("order_id", "=", order.id)])
 
+    if op in _READ_FIELDS:
+        _ = order[_READ_FIELDS[op]]
+        return
     match op:
-        case "read_lines":
-            _ = order.line_ids
-        case "read_tags":
-            _ = order.tag_ids
-        case "read_total":
-            _ = order.total
         case "create_line":
             secret = name == "sudo" and rng.random() < 0.3
             companies = (
@@ -292,10 +298,6 @@ def _apply(op, name, scope_env, order, orders, tags, rng, env, company_ids):
             if name == "sudo":
                 if line := lines_of(order)[:1]:
                     line.write({"secret": not line.secret})
-        case "read_positive":
-            _ = order.positive_line_ids
-        case "read_any":
-            _ = order.any_line_ids
         case "move_company":
             # a user may move a line it reads to a company it belongs to
             if line := lines_of(order)[:1]:

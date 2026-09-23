@@ -39,6 +39,7 @@ from .constants import (
 if typing.TYPE_CHECKING:
     from collections.abc import Collection
 
+    from ..fields import Field
     from ..models import BaseModel
 
 _logger = logging.getLogger("odoo.domains")
@@ -687,17 +688,7 @@ def _optimize_hierarchy(condition: DomainCondition, model: BaseModel) -> Domain:
     if value is True:
         raise condition._prepare_condition_error("True is not a valid hierarchy value")
     field = condition._get_field(model)
-    if field.is_many2one:
-        comodel = model.env[field.comodel_name].with_context(active_test=False)
-    elif field.is_x2many:
-        comodel = model.env[field.comodel_name].with_context(**field.context)
-    elif field.name == "id":
-        comodel = model
-    else:
-        raise condition._prepare_condition_error(
-            f"Cannot execute {condition.operator} for {field}, works only for relational fields"
-        )
-    comodel_sudo = comodel.sudo().with_context(active_test=False)
+    comodel = _get_hierarchy_comodel(condition, model, field)
     parent = comodel._parent_name
     if comodel._name == model._name:
         if condition.field_expr != "id":
@@ -709,41 +700,9 @@ def _optimize_hierarchy(condition: DomainCondition, model: BaseModel) -> Domain:
             f"Cannot execute {condition.operator} through {comodel._name}.{parent}: "
             f"no such field; set _parent_name on the model or name the many2one"
         )
-    if isinstance(value, (int, str)):
-        value = [value]
-    elif not isinstance(value, COLLECTION_TYPES):
-        raise condition._prepare_condition_error(
-            f"Value of type {type(value)} is not supported"
-        )
-    if any(isinstance(v, bool) for v in value):
-        if any(v is True for v in value):
-            raise condition._prepare_condition_error(
-                "True is not a valid hierarchy value"
-            )
-        value = [v for v in value if v is not False]
-    coids, other_values = partition(lambda v: isinstance(v, int), value)
-    search_domain: Domain = _FALSE_DOMAIN
-    if field.is_many2many:
-        # the roots of a many2many hierarchy pass through the comodel's
-        # search, which keeps the active ones the user may read; as the
-        # superuser that is the active flag alone, answered from the cache
-        # when the rows are known (a multi-company rule asks for the
-        # user's companies on every access check)
-        active_roots = _active_roots_without_search(comodel, coids)
-        if active_roots is None:
-            search_domain |= DomainCondition("id", "in", coids)
-            coids = []
-        else:
-            coids = active_roots
-    if other_values:
-        search_domain |= Domain.OR(
-            Domain("display_name", "ilike", v) for v in other_values
-        )
-    if search_domain.is_false():
-        if not comodel.env.su:
-            comodel.browse().check_access("read")
-    else:
-        coids += comodel.search(search_domain, order="id").ids
+    coids = _get_hierarchy_root_ids(
+        comodel, field, _get_hierarchy_values(condition, value)
+    )
     if not coids:
         _debug.logic(
             "domain.hierarchy.no_roots",
@@ -752,6 +711,7 @@ def _optimize_hierarchy(condition: DomainCondition, model: BaseModel) -> Domain:
             operator=condition.operator,
         )
         return _FALSE_DOMAIN
+    comodel_sudo = comodel.sudo().with_context(active_test=False)
     result = hierarchy(comodel_sudo.browse(coids), parent)
     if _debug.logic.enabled:
         _debug.logic(
@@ -774,6 +734,64 @@ def _optimize_hierarchy(condition: DomainCondition, model: BaseModel) -> Domain:
             return result
         return DomainCondition(field.name, "any!", result)
     return DomainCondition(field.name, "in", result)
+
+
+def _get_hierarchy_comodel(
+    condition: DomainCondition, model: BaseModel, field: Field
+) -> BaseModel:
+    if field.is_many2one:
+        return model.env[field.comodel_name].with_context(active_test=False)
+    if field.is_x2many:
+        return model.env[field.comodel_name].with_context(**field.context)
+    if field.name == "id":
+        return model
+    raise condition._prepare_condition_error(
+        f"Cannot execute {condition.operator} for {field}, works only for relational fields"
+    )
+
+
+def _get_hierarchy_values(
+    condition: DomainCondition, value: typing.Any
+) -> list[int | str]:
+    if isinstance(value, (int, str)):
+        value = [value]
+    elif not isinstance(value, COLLECTION_TYPES):
+        raise condition._prepare_condition_error(
+            f"Value of type {type(value)} is not supported"
+        )
+    if any(v is True for v in value):
+        raise condition._prepare_condition_error("True is not a valid hierarchy value")
+    return [v for v in value if v is not False]
+
+
+def _get_hierarchy_root_ids(
+    comodel: BaseModel, field: Field, values: list[int | str]
+) -> list[int]:
+    coids = [v for v in values if isinstance(v, int)]
+    other_values = [v for v in values if not isinstance(v, int)]
+    search_domain: Domain = _FALSE_DOMAIN
+    if field.is_many2many:
+        # the roots of a many2many hierarchy pass through the comodel's
+        # search, which keeps the active ones the user may read; as the
+        # superuser that is the active flag alone, answered from the cache
+        # when the rows are known (a multi-company rule asks for the
+        # user's companies on every access check)
+        active_roots = _active_roots_without_search(comodel, coids)
+        if active_roots is None:
+            search_domain |= DomainCondition("id", "in", coids)
+            coids = []
+        else:
+            coids = active_roots
+    if other_values:
+        search_domain |= Domain.OR(
+            Domain("display_name", "ilike", v) for v in other_values
+        )
+    if search_domain.is_false():
+        if not comodel.env.su:
+            comodel.browse().check_access("read")
+    else:
+        coids += comodel.search(search_domain, order="id").ids
+    return coids
 
 
 def _active_roots_without_search(comodel: BaseModel, coids: list) -> list | None:

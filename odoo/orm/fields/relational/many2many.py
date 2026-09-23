@@ -287,24 +287,9 @@ class Many2many(_RelationalMulti):
         store: bool,
         created: bool = False,
     ) -> None:
-        for record in records:
-            ids = tuple(new_relation[record.id])
-            if store and not _is_cache_order_stable(comodel, ids):
-                # a stored slot reads as a fetch would: in the comodel's order
-                # when the sort keys are in memory, else in the commands'
-                # order; a computed value keeps the order its compute produced
-                sorted_ids = comodel.browse(ids)._sorted_by_ids(comodel._order, False)
-                if _debug.logic.enabled and sorted_ids is None:
-                    _debug.logic(
-                        "field.many2many.written_unsorted",
-                        model=self.model_name,
-                        field=self.name,
-                        record=record.id,
-                        ids=len(ids),
-                    )
-                if sorted_ids is not None:
-                    ids = sorted_ids
-            self._update_cache(record, ids, created=created)
+        self._update_cache_relation(
+            records, comodel, new_relation, store=store, created=created
+        )
         # Two fields of one model may read the same relation table the same
         # way round, one of them through a domain (product.product's variant
         # values beside its attribute values). A write through one changes
@@ -316,41 +301,7 @@ class Many2many(_RelationalMulti):
         if siblings:
             records.invalidate_recordset(siblings)
 
-        modified_corecord_ids = set()
-
         pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
-        if pairs:
-            if store:
-                records.env.backend.link_m2m_pairs(
-                    records, *self._get_relation_columns(), pairs
-                )
-
-            y_to_xs: defaultdict[typing.Any, typing.Any] = defaultdict(OrderedSet)
-            for x, y in pairs:
-                y_to_xs[y].add(x)
-                modified_corecord_ids.add(y)
-            for invf in records.pool.field_inverses[self]:
-                invf = typing.cast("_RelationalMulti", invf)
-                domain = invf.get_comodel_domain(comodel.browse(list(y_to_xs)))
-                valid_ids = set(records.filtered_domain(domain)._ids)
-                if not valid_ids:
-                    continue
-                inv_cache = invf._get_cache(comodel.env)
-                linked_by_y = {
-                    y: tuple(x for x in xs if x in valid_ids)
-                    for y, xs in y_to_xs.items()
-                }
-                invf._sync_added_to_other_scopes(comodel.env, linked_by_y)
-                for y, linked in linked_by_y.items():
-                    corecord = comodel.browse((y,))
-                    ids0 = inv_cache.get(corecord.id, SENTINEL)
-                    if ids0 is SENTINEL:
-                        if corecord.id:
-                            continue
-                        ids0 = ()
-                    ids1 = tuple(unique(itertools.chain(ids0, linked)))
-                    invf._update_cache(corecord, ids1, keep_other_scopes=True)
-
         unlink_pairs = [
             (x, y) for x, ys in old_relation.items() for y in ys - new_relation[x]
         ]
@@ -363,30 +314,23 @@ class Many2many(_RelationalMulti):
             unlinked=len(unlink_pairs),
             store=store,
         )
-        pairs = unlink_pairs
+        modified_corecord_ids: set[int] = set()
         if pairs:
-            y_to_xs = defaultdict(set)
-            for x, y in pairs:
-                y_to_xs[y].add(x)
-                modified_corecord_ids.add(y)
-
             if store:
-                records.env.backend.unlink_m2m_pairs(
+                records.env.backend.link_m2m_pairs(
                     records, *self._get_relation_columns(), pairs
                 )
-
-            for invf in records.pool.field_inverses[self]:
-                invf = typing.cast("_RelationalMulti", invf)
-                inv_cache = invf._get_cache(comodel.env)
-                for y, xs in y_to_xs.items():
-                    corecord = comodel.browse((y,))
-                    invf._sync_other_scopes(comodel.env, y, removed=xs)
-                    try:
-                        ids0 = inv_cache[corecord.id]
-                        ids1 = tuple(id_ for id_ in ids0 if id_ not in xs)
-                        invf._update_cache(corecord, ids1, keep_other_scopes=True)
-                    except KeyError:
-                        pass
+            modified_corecord_ids |= self._update_inverse_cache_linked(
+                records, comodel, pairs
+            )
+        if unlink_pairs:
+            if store:
+                records.env.backend.unlink_m2m_pairs(
+                    records, *self._get_relation_columns(), unlink_pairs
+                )
+            modified_corecord_ids |= self._update_inverse_cache_unlinked(
+                records, comodel, unlink_pairs
+            )
 
         if modified_corecord_ids:
             corecords = comodel.browse(modified_corecord_ids)
@@ -405,6 +349,89 @@ class Many2many(_RelationalMulti):
                     if invf.model_name == self.comodel_name
                 ]
             )
+
+    def _update_cache_relation(
+        self,
+        records: BaseModel,
+        comodel: BaseModel,
+        new_relation: dict,
+        *,
+        store: bool,
+        created: bool,
+    ) -> None:
+        for record in records:
+            ids = tuple(new_relation[record.id])
+            if store and not _is_cache_order_stable(comodel, ids):
+                # a stored slot reads as a fetch would: in the comodel's order
+                # when the sort keys are in memory, else in the commands'
+                # order; a computed value keeps the order its compute produced
+                sorted_ids = comodel.browse(ids)._sorted_by_ids(comodel._order, False)
+                if _debug.logic.enabled and sorted_ids is None:
+                    _debug.logic(
+                        "field.many2many.written_unsorted",
+                        model=self.model_name,
+                        field=self.name,
+                        record=record.id,
+                        ids=len(ids),
+                    )
+                if sorted_ids is not None:
+                    ids = sorted_ids
+            self._update_cache(record, ids, created=created)
+
+    def _update_inverse_cache_linked(
+        self,
+        records: BaseModel,
+        comodel: BaseModel,
+        pairs: list[tuple[int, int]],
+    ) -> set[int]:
+        y_to_xs: defaultdict[typing.Any, typing.Any] = defaultdict(OrderedSet)
+        for x, y in pairs:
+            y_to_xs[y].add(x)
+        for invf in records.pool.field_inverses[self]:
+            invf = typing.cast("_RelationalMulti", invf)
+            domain = invf.get_comodel_domain(comodel.browse(list(y_to_xs)))
+            valid_ids = set(records.filtered_domain(domain)._ids)
+            if not valid_ids:
+                continue
+            inv_cache = invf._get_cache(comodel.env)
+            linked_by_y = {
+                y: tuple(x for x in xs if x in valid_ids) for y, xs in y_to_xs.items()
+            }
+            invf._sync_added_to_other_scopes(comodel.env, linked_by_y)
+            for y, linked in linked_by_y.items():
+                corecord = comodel.browse((y,))
+                ids0 = inv_cache.get(corecord.id, SENTINEL)
+                if ids0 is SENTINEL:
+                    if corecord.id:
+                        continue
+                    ids0 = ()
+                ids1 = tuple(unique(itertools.chain(ids0, linked)))
+                invf._update_cache(corecord, ids1, keep_other_scopes=True)
+        return set(y_to_xs)
+
+    def _update_inverse_cache_unlinked(
+        self,
+        records: BaseModel,
+        comodel: BaseModel,
+        pairs: list[tuple[int, int]],
+    ) -> set[int]:
+        y_to_xs: defaultdict[int, set[int]] = defaultdict(set)
+        for x, y in pairs:
+            y_to_xs[y].add(x)
+
+        for invf in records.pool.field_inverses[self]:
+            invf = typing.cast("_RelationalMulti", invf)
+            inv_cache = invf._get_cache(comodel.env)
+            for y, xs in y_to_xs.items():
+                corecord = comodel.browse((y,))
+                invf._sync_other_scopes(comodel.env, y, removed=xs)
+                try:
+                    ids0 = inv_cache[corecord.id]
+                    ids1 = tuple(id_ for id_ in ids0 if id_ not in xs)
+                    invf._update_cache(corecord, ids1, keep_other_scopes=True)
+                except KeyError:
+                    pass
+        return set(y_to_xs)
 
     def _write_real_apply_commands(
         self,

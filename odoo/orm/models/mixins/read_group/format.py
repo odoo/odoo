@@ -36,6 +36,26 @@ if typing.TYPE_CHECKING:
 
 _debug = DebugLog(__name__)
 
+_FOLD_COUNTS: dict[str, typing.Callable[[list], int]] = {
+    "count": len,
+    "count_distinct": lambda values: len(set(values)),
+}
+_FOLD_VALUES: dict[str, typing.Callable[[list], typing.Any]] = {
+    "sum": sum,
+    "avg": lambda values: sum(values) / len(values),
+    "min": min,
+    "max": max,
+    "bool_and": all,
+    "bool_or": any,
+}
+
+
+def _sorted_distinct(values: typing.Iterable) -> list:
+    distinct = set(values)
+    has_none = None in distinct
+    distinct.discard(None)
+    return [*sorted(distinct), *([None] if has_none else [])]
+
 
 class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
     __slots__ = ()
@@ -188,33 +208,17 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
                         else amount
                     )
                 return total
-            if func in ("array_agg", "array_agg_distinct"):
-                values = [value_of(r) for r in records]
-                if func == "array_agg_distinct":
-                    distinct = set(values)
-                    has_none = None in distinct
-                    distinct.discard(None)
-                    values = [*sorted(distinct), *([None] if has_none else [])]
-                return values or empty_value
+            if func == "array_agg":
+                return [value_of(r) for r in records] or empty_value
+            if func == "array_agg_distinct":
+                return _sorted_distinct(value_of(r) for r in records) or empty_value
             values = present(records)
-            if func == "count":
-                return len(values)
-            if func == "count_distinct":
-                return len(set(values))
+            if func in _FOLD_COUNTS:
+                return _FOLD_COUNTS[func](values)
             if not values:
                 return empty_value
-            if func == "sum":
-                return sum(values)
-            if func == "avg":
-                return sum(values) / len(values)
-            if func == "min":
-                return min(values)
-            if func == "max":
-                return max(values)
-            if func == "bool_and":
-                return all(values)
-            if func == "bool_or":
-                return any(values)
+            if func in _FOLD_VALUES:
+                return _FOLD_VALUES[func](values)
             raise ValueError(f"Aggregate method {func!r} cannot fold {field}")
 
         return (fold(ids) for ids in raw_values)
