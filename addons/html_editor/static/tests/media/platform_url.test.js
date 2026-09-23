@@ -40,3 +40,34 @@ for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
         }
     });
 }
+
+test("a vimeo url keeps its privacy hash and start time", () => {
+    mockFetch(() => '{"data": "mockFetch api result data"}');
+    for (const [url, embedUrl] of [
+        // An unlisted video needs its hash to play.
+        [
+            "https://vimeo.com/795669787/0763fdb816",
+            "https://player.vimeo.com/video/795669787?h=0763fdb816",
+        ],
+        [
+            "https://player.vimeo.com/video/795669787?h=0763fdb816",
+            "https://player.vimeo.com/video/795669787?h=0763fdb816",
+        ],
+        // Vimeo shares the start time in the fragment, in hours, minutes and seconds.
+        [
+            "https://player.vimeo.com/video/395399735#t=1m2s",
+            "https://player.vimeo.com/video/395399735#t=62",
+        ],
+        [
+            "https://player.vimeo.com/video/395399735#t=1h2m3s",
+            "https://player.vimeo.com/video/395399735#t=3723",
+        ],
+        [
+            "https://vimeo.com/395399735?autoplay=1#t=62",
+            "https://player.vimeo.com/video/395399735?autoplay=1&muted=1#t=62",
+        ],
+    ]) {
+        const urlData = PLATFORMS.vimeo.getVideoUrlData(PLATFORMS.vimeo.isValidVideoUrl(url));
+        expect(urlData.embedUrl).toBe(embedUrl);
+    }
+});
