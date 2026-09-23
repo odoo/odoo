@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onWillRender, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 import { TimePicker } from "@web/components/time_picker/time_picker";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { useLifecycleLog } from "@web/core/debug/logger_hooks";
@@ -344,10 +344,6 @@ export class DateTimePicker extends Component {
     maxDate;
     /** @type {DateTime} */
     minDate;
-    /** @type {NullableDateTime[]} */
-    selectedRange;
-    /** @type {any[] | undefined} */
-    _gridKey;
 
     get activePrecisionLevel() {
         return PRECISION_LEVELS.get(this.state.precision);
@@ -365,11 +361,8 @@ export class DateTimePicker extends Component {
         useLifecycleLog(log);
         /** @type {PrecisionLevel[]} */
         this.allowedPrecisionLevels = [];
-        /** @type {Item[]} */
-        this.items = [];
-        /** @type {Item[]} */
-        this._grid = [];
-        this.title = "";
+        /** @type {{ key?: any[], title?: string | string[], grid?: Item[] }} */
+        this.gridMemo = {};
         this.shouldAdjustFocusDate = false;
 
         this.state = useState({
@@ -385,8 +378,6 @@ export class DateTimePicker extends Component {
 
         this.onPropsUpdated(this.props);
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
-
-        onWillRender(() => this.onWillRender());
     }
 
     /** @param {DateTimePickerProps} props */
@@ -438,12 +429,12 @@ export class DateTimePicker extends Component {
         });
     }
 
-    onWillRender() {
-        const { focusedDateIndex, range, showWeekNumbers } = this.props;
-        const { focusDate, hoveredDate } = this.state;
+    /** @returns {{ title: string | string[], grid: Item[] }} */
+    get gridState() {
+        const { showWeekNumbers } = this.props;
+        const { focusDate } = this.state;
         const precision = this.activePrecisionLevel;
-
-        const gridKey = [
+        const key = [
             focusDate?.ts,
             precision,
             this.minDate?.ts,
@@ -451,32 +442,45 @@ export class DateTimePicker extends Component {
             showWeekNumbers,
             today().ts,
         ];
-        if (
-            !this._gridKey ||
-            gridKey.some((value, index) => value !== this._gridKey[index])
-        ) {
+        const memo = this.gridMemo;
+        if (!memo.key || key.some((value, index) => value !== memo.key?.[index])) {
             log.logic("rebuildGrid", () => ({
                 precision: this.state.precision,
                 focusDate: focusDate?.toISODate(),
             }));
-            this._gridKey = gridKey;
-            this.title = precision.getTitle(focusDate);
-            this._grid = precision.getItems(focusDate, {
+            memo.key = key;
+            memo.title = precision.getTitle(focusDate);
+            memo.grid = precision.getItems(focusDate, {
                 maxDate: this.maxDate,
                 minDate: this.minDate,
                 showWeekNumbers,
             });
         }
-        this.items = this.decorateGrid(this._grid);
+        return { title: memo.title ?? "", grid: memo.grid ?? [] };
+    }
 
-        this.selectedRange = [...this.values];
+    get title() {
+        return this.gridState.title;
+    }
+
+    /** @returns {Item[]} */
+    get items() {
+        return this.decorateGrid(this.gridState.grid);
+    }
+
+    /** @returns {NullableDateTime[]} */
+    get selectedRange() {
+        const { focusedDateIndex, range } = this.props;
+        const { hoveredDate } = this.state;
+        const selectedRange = [...this.values];
         if (
             range &&
             focusedDateIndex > 0 &&
             (!this.values[1] || hoveredDate > this.values[0])
         ) {
-            this.selectedRange[1] = hoveredDate;
+            selectedRange[1] = hoveredDate;
         }
+        return selectedRange;
     }
 
     /**
