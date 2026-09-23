@@ -13,7 +13,7 @@ Quick reference for running targeted subsets of `addons/web/tests/`.
 | `web_http` | HttpCase (url_open, no browser) | 144 tests | ~5 min |
 | `web_tour` | HttpCase (start_tour/browser_js) | 7 tests | ~2 min |
 | `web_js` | Full JS suites (HOOT) | 37 tests | ~1-2 hr † |
-| `addon_js` | HOOT suites of addons with no runner of their own | 101 tests | depends on the DB's module set |
+| `addon_js` | HOOT suites of addons with no runner of their own | 102 tests | depends on the DB's module set |
 | `web_perf` | Query count regression (@warmup) | 26 tests | ~2 min |
 | `web_benchmark` | Statistical timing (run_benchmark) | 8 tests | ~5 min |
 | `click_all` | Click-everywhere (-standard) | 2 tests (TestMenusAdmin, TestMenusDemo) | ~1+ hr |

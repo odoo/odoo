@@ -239,6 +239,8 @@ negative for every rule, so no rule can go vacuous unnoticed.
 
 Static OWL templates are not data files: `test_owl_templates.py` scans every XML file under an addon's static tree and every tagged `xml` template in addon JS (the vendored lib tree and o_spreadsheet excluded) for `t-esc` -- the attribute, an `<attribute name="t-esc">` operation or an `@t-esc` XPath -- as the hard-zero gate `owl_t_esc`, ahead of OWL 3 removing the directive.
 
+`test_owl3_api.py` counts, in every addon's `static/src` outside the vendored trees and with JS comments stripped, the bare calls of the four OWL 2 APIs that OWL 3 removes: `owl_on_rendered` (`onRendered(`), `owl_on_will_render` (`onWillRender(`), `owl_this_render` (`this.render(`) and `owl_use_component` (`useComponent(`). A method that only shares the name, such as `props.comp.onRendered`, is not counted. Each is an exact ratchet whose floor is in `floors.json`, lowered as the OWL 3 migration removes the sites.
+
 | rule | what it catches |
 |---|---|
 | `attributes-spec-child` | an element other than `<attribute>` under `position="attributes"`. `_apply_attributes` iterates `spec.iter("attribute")`, so a `<field>` there is never added and a `<t t-if>` around an attribute guards nothing -- `website_sale` applied its accordion classes on mobile because of one. |
