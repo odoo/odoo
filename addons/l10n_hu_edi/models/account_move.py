@@ -623,7 +623,7 @@ class AccountMove(models.Model):
 
         # Batch by company, with max 100 invoices per batch.
         for __, batch_company in groupby(invoices_sorted, lambda m: m.company_id):
-            for batch in itertools.batched(batch_company, 100):
+            for batch in itertools.batched(batch_company, 100, strict=False):
                 self.env["account.move"].union(*batch)._l10n_hu_edi_upload_single_batch(
                     connection
                 )
@@ -993,7 +993,7 @@ class AccountMove(models.Model):
         """Send a cancellation request for all invoices in `self`."""
         # Batch by company, with max 100 annulment requests per batch.
         for __, batch_company in groupby(self, lambda m: m.company_id):
-            for batch in itertools.batched(batch_company, 100):
+            for batch in itertools.batched(batch_company, 100, strict=False):
                 self.env["account.move"].union(
                     *batch
                 )._l10n_hu_edi_request_cancel_single_batch(connection, code, reason)

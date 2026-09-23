@@ -59,7 +59,9 @@ class MyInvoisConsolidateInvoiceWizard(models.TransientModel):
             # We now know the amount of lines; we want to create one consolidated invoice per 100 lines.
             consolidated_invoice_vals = []
             for config, lines in lines_per_config.items():
-                for line_batch in itertools.batched(lines, MAX_LINE_COUNT_PER_INVOICE):
+                for line_batch in itertools.batched(
+                    lines, MAX_LINE_COUNT_PER_INVOICE, strict=False
+                ):
                     orders = self.env["pos.order"].union(*line_batch)
                     consolidated_invoice_vals.append(
                         {

@@ -826,7 +826,7 @@ class MyInvoisDocument(models.Model):
         # MyInvois only supports up to 100 document per submission. To avoid timing out on big batches, we split it client side.
         for proxy_user, records_to_send in records_per_proxy_users.items():
             for batch_ids in itertools.batched(
-                records_to_send.ids, SUBMISSION_MAX_SIZE
+                records_to_send.ids, SUBMISSION_MAX_SIZE, strict=False
             ):
                 batch = self.env["myinvois.document"].browse(batch_ids)
                 batch_result = proxy_user._l10n_my_edi_contact_proxy(
