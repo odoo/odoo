@@ -98,9 +98,13 @@ and `tests/perf` (`./gates.sh --perf-counts` in CI, `--perf` for local timing;
 installs `base` and the four-module set
 `sale,purchase,stock,account` into two scratch databases and reads the ORM's
 cost on them: statements per `res.partner` create, batch create, write loop,
-batch write and `search_fetch`, per `sale.order` create and create+confirm, as
+batch write and `search_fetch`, per `sale.order` create and create+confirm, and
+per order entry by a salesman through the form (`odoo.tests.Form`: the
+onchanges for a customer and three lines, the save, the confirmation; its time
+is the server's, `_bench.ServerClock`, not the form emulation's), as
 **exact ratchets** for every measured operation, residual wall time — wall minus
-driver, median of rounds — and the warm `Registry loaded in` as **one-sided
+driver, the fastest of the rounds, the median kept beside it — and the warm
+`Registry loaded in` as **one-sided
 floors** with a 25 % tolerance
 (`ODOO_PERF_TOLERANCE`), plus the in-memory tier's cost per create and per
 stored compute. The floors are `tests/perf/floors.json`, one machine's,
