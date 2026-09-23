@@ -12,7 +12,7 @@ def _xdg_dirs(variable: str, default: str) -> list[str]:
     # the XDG base-directory spec: an unset or empty variable takes the
     # default, and a relative entry is invalid and ignored
     entries = [
-        entry.rstrip(os.sep)
+        entry.rstrip(os.sep) or os.sep
         for entry in (os.getenv(variable) or "").split(os.pathsep)
         if Path(entry).is_absolute()
     ]

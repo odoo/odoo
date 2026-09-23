@@ -36,6 +36,9 @@ class TestXdgDataDirs(unittest.TestCase):
     def test_site_dirs_take_the_first_absolute_entry(self):
         self.assertEqual(self._site("rel:/opt/share/:/usr/share"), "/opt/share/Odoo")
 
+    def test_the_root_directory_stays_absolute(self):
+        self.assertEqual(self._user("/"), "/Odoo")
+
     def test_empty_site_dirs_are_the_default(self):
         self.assertEqual(self._site(""), "/usr/local/share/Odoo")
 
