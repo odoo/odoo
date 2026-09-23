@@ -282,6 +282,7 @@ class MailGroupMessage(models.Model):
             )
 
     def _moderate_send_reject_email(self, subject, comment):
+        mail_vals_list = []
         for message in self:
             if not message.email_from:
                 continue
@@ -290,7 +291,7 @@ class MailGroupMessage(models.Model):
                 Markup("<div>%s</div>") % comment, message.body, plaintext=False
             )
             body_html = self.env["mixin.mail.render"]._replace_local_links(body_html)
-            self.env["mail.mail"].sudo().create(
+            mail_vals_list.append(
                 {
                     "author_id": self.env.user.partner_id.id,
                     "auto_delete": True,
@@ -303,3 +304,4 @@ class MailGroupMessage(models.Model):
                     "state": "outgoing",
                 }
             )
+        self.env["mail.mail"].sudo().create(mail_vals_list)

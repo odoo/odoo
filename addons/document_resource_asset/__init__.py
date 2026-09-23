@@ -34,6 +34,7 @@ def _document_resource_asset_post_init(env):
         (setting.kind_id.id, setting.company_id.id)
         for setting in settings.search([("kind_id", "=", vehicle.id)])
     }
+    vals_list = []
     for company_id, centralize, folder_id in cr.fetchall():
         if (vehicle.id, company_id) in taken:
             continue
@@ -42,7 +43,7 @@ def _document_resource_asset_post_init(env):
             [company_id],
         )
         tag_ids = [row[0] for row in cr.fetchall()]
-        settings.create(
+        vals_list.append(
             {
                 "kind_id": vehicle.id,
                 "company_id": company_id,
@@ -51,3 +52,4 @@ def _document_resource_asset_post_init(env):
                 "tag_ids": [Command.set(tag_ids)],
             }
         )
+    settings.create(vals_list)

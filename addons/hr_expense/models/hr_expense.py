@@ -1913,14 +1913,13 @@ class HrExpense(models.Model):
         _debug.lifecycle(
             "approve", expenses=self, approving=expenses_to_approve, checked=check
         )
-        for expense in expenses_to_approve:
-            expense.write(
-                {
-                    "review_state": "approved",
-                    "manager_id": self.env.user.id,
-                    "approval_date": fields.Datetime().now(),
-                }
-            )
+        expenses_to_approve.write(
+            {
+                "review_state": "approved",
+                "manager_id": self.env.user.id,
+                "approval_date": fields.Datetime().now(),
+            }
+        )
         self.update_activities_and_mails()
 
     def _do_reset_approval(self):

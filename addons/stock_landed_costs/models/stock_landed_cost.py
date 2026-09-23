@@ -230,12 +230,16 @@ class StockLandedCost(models.Model):
             total_volume = 0.0
             total_line = 0.0
             all_val_line_values = cost.get_valuation_lines()
+            adjustment_vals_list = []
             for val_line_values in all_val_line_values:
-                for cost_line in cost.cost_lines:
-                    val_line_values.update(
-                        {"cost_id": cost.id, "cost_line_id": cost_line.id}
-                    )
-                    self.env["stock.valuation.adjustment.lines"].create(val_line_values)
+                adjustment_vals_list.extend(
+                    {
+                        **val_line_values,
+                        "cost_id": cost.id,
+                        "cost_line_id": cost_line.id,
+                    }
+                    for cost_line in cost.cost_lines
+                )
                 total_qty += val_line_values.get("quantity", 0.0)
                 total_weight += val_line_values.get("weight", 0.0)
                 total_volume += val_line_values.get("volume", 0.0)
@@ -244,6 +248,7 @@ class StockLandedCost(models.Model):
                 total_cost += cost.currency_id.round(former_cost)
 
                 total_line += 1
+            self.env["stock.valuation.adjustment.lines"].create(adjustment_vals_list)
 
             for line in cost.cost_lines:
                 value_split = 0.0

@@ -143,11 +143,12 @@ class AccountMove(models.Model):
 
         invoices.write({"l10n_eg_signing_time": fields.Datetime.now()})
 
+        attachment_vals_list = []
         for invoice in invoices:
             eta_invoice = self.env[
                 "account.edi.format"
             ]._l10n_eg_eta_prepare_eta_invoice(invoice)
-            self.env["ir.attachment"].create(
+            attachment_vals_list.append(
                 {
                     "name": _("ETA_INVOICE_DOC_%s", invoice.name),
                     "res_id": invoice.id,
@@ -162,7 +163,8 @@ class AccountMove(models.Model):
                     ),
                 }
             )
-            invoice.invalidate_recordset(fnames=["l10n_eg_eta_json_doc_file"])
+        self.env["ir.attachment"].create(attachment_vals_list)
+        invoices.invalidate_recordset(fnames=["l10n_eg_eta_json_doc_file"])
         return drive_id.action_sign_invoices(invoices)
 
     def action_get_eta_invoice_pdf(self):

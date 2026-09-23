@@ -475,7 +475,7 @@ class ProductMergeWizard(models.TransientModel):
         accessible = self.env["product.template"].search([("id", "in", all_ids)])
         accessible_set = set(accessible.ids)
 
-        counter = 0
+        line_vals_list = []
         for min_id, aggr_ids in groups:
             template_ids = [
                 tmpl_id for tmpl_id in aggr_ids if tmpl_id in accessible_set
@@ -488,14 +488,15 @@ class ProductMergeWizard(models.TransientModel):
             if len(template_ids) < 2:
                 continue
 
-            self.env["product.merge.line"].create(
+            line_vals_list.append(
                 {
                     "wizard_id": self.id,
                     "min_id": min_id,
                     "aggr_ids": template_ids,
                 }
             )
-            counter += 1
+        self.env["product.merge.line"].create(line_vals_list)
+        counter = len(line_vals_list)
 
         self.write({"state": "selection", "number_group": counter})
 
