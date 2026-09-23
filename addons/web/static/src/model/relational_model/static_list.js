@@ -60,16 +60,12 @@ function copyRecordData(record, copyFields = []) {
                 });
                 break;
             }
-            case "many2one":
-            case "many2one_reference":
-            case "reference":
-                data[name] = value && Object.assign({}, value);
-                break;
             case "one2many":
                 // Not supported => that field is left empty
                 break;
             default:
-                data[name] = value;
+                // record.data is in client side format, it must be serialized for the server
+                data[name] = record._formatServerValue(record.fields[name].type, value);
         }
     }
     return data;
