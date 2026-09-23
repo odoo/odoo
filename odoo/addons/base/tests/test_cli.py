@@ -1065,7 +1065,7 @@ class TestCommand(BaseCase):
             mock.patch.object(server_mod, "write_pid_file"),
             mock.patch.object(server_mod.db, "create_empty_database"),
             mock.patch.object(server_mod.server, "start", return_value=0),
-            mock.patch.dict(config._runtime_options, {"init": {}}, clear=False),
+            config.patch(init={}),
             isolated_config(),
         ):
             config._runtime_options["db_name"] = ["freshdb"]
