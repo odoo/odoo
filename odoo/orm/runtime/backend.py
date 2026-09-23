@@ -1024,17 +1024,18 @@ class PostgresBackend:
                     sql = _get_fetch_term(model, field, query)
                 sql_terms.append(sql)
 
-            # this SELECT reads these rows and no other: their dirty values
-            # are written here, and the query then flushes only what else it
-            # reads. A pending compute is not flushed by a fetch: the row's
-            # value stays pending and is computed when it is read
+            # a pending compute is not flushed by a fetch: the row's value
+            # stays pending and is computed when it is read
             select = query.select(*sql_terms)
             if model._ids:
-                # a fetch of known rows: their dirty values are written here,
-                # and the query then flushes only what else it reads. A
-                # search_fetch keeps its flush: the WHERE reads every row
-                model._flush_if_dirty(column_fields)
+                # a fetch of known rows writes only the fetched columns whose
+                # term asks for a flush: a plain column's dirty value already
+                # wins over the SELECT's in the cache. A search_fetch keeps
+                # its flush: the WHERE reads every row
                 fetched_columns = set(column_fields)
+                model._flush_if_dirty(
+                    [f for f in select.to_flush if f in fetched_columns]
+                )
                 select = select.with_to_flush(
                     [f for f in select.to_flush if f not in fetched_columns]
                 )
