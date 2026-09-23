@@ -163,6 +163,10 @@ export class AttendeeCalendarModel extends CalendarModel {
         const includesPrimaryCalendar = primaryCalendarFilter?.active ?? false;
         const filterDomains = [['|', ["calendar_id", "in", activeCalendarIds], ["partner_ids", "in", activePartnerIds]]];
 
+        if (!calendarFilters.length && !partnerFilters.length) {
+            return domain;
+        }
+
         // If the primary calendar is checked, include events the user
         // is attending which are not in any of their calendars.
         if (includesPrimaryCalendar) {
