@@ -79,3 +79,22 @@ class TestDatabaseMasterPassword(TransactionCase):
                 insecure=True, remote_addr="127.0.0.1", master_pwd=""
             )
         self.assertEqual(calls, [])
+
+    def test_an_unwritable_config_still_lets_the_promotion_hold(self):
+        fake_request = MagicMock()
+        fake_request.httprequest.remote_addr = "127.0.0.1"
+        with (
+            patch.object(
+                odoo.tools.config, "is_valid_admin_password", return_value=True
+            ),
+            patch.object(odoo.tools.config, "set_admin_password") as set_password,
+            patch("odoo.addons.web.controllers.database.request", fake_request),
+            patch(
+                "odoo.addons.web.controllers.database.dispatch_rpc",
+                side_effect=PermissionError("read-only conf"),
+            ),
+            self.assertLogs(CONTROLLER_LOGGER, "WARNING") as capture,
+        ):
+            Database._handle_insecure_password(object(), "new-strong-pw")
+        set_password.assert_called_once_with("new-strong-pw")
+        self.assertIn("could not be written", capture.output[-1])

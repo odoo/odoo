@@ -113,6 +113,28 @@ class TestStrippedSysArgv(unittest.TestCase):
         argv = ["odoo-bin", "--without-demo", "False", "-d", "db"]
         self.assertEqual(strip(argv), argv)
 
+    def test_reinit_does_not_survive_a_reload(self):
+        self.assertEqual(
+            strip(["odoo-bin", "-d", "db", "--reinit", "web", "--dev", "reload"]),
+            ["odoo-bin", "-d", "db", "--dev", "reload"],
+        )
+
+    def test_a_retired_option_is_read_the_way_the_parser_reads_it(self):
+        # the parser drops `--limit-memory-hard 5` before it reads the rest, so
+        # the stripped argv must parse to what the original parsed to
+        argv = [
+            "odoo-bin",
+            "--without-d",
+            "--limit-memory-hard",
+            "5",
+            "--save",
+            "-d",
+            "db",
+        ]
+        original = vars(config._parse_config(argv[1:]))
+        stripped = vars(config._parse_config(strip(argv)[1:]))
+        self.assertEqual(stripped, original)
+
     def test_everything_after_a_double_dash_is_positional(self):
         self.assertEqual(
             strip(["odoo-bin", "-d", "db", "--", "-u", "x"]),

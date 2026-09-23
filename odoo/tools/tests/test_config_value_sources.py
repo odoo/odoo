@@ -75,6 +75,13 @@ class TestAnEmptyValueIsUnset(_Case):
         self.assertTrue(config["data_dir"])
         self.assertEqual(config["data_dir"], config._default_options["data_dir"])
 
+    def test_an_empty_geoip_or_screenshots_path_still_switches_it_off(self):
+        from_file = self.parse(["-c", self.conf("geoip_city_db =\nscreenshots =\n")])
+        from_env = self.parse(env={"ODOO_GEOIP_CITY_DB": ""})
+        self.assertEqual(from_file["geoip_city_db"], "")
+        self.assertEqual(from_file["screenshots"], "")
+        self.assertEqual(from_env["geoip_city_db"], "")
+
     def test_an_empty_path_without_a_default_still_reads_empty(self):
         config = self.parse(["-c", self.conf("pidfile =\n")])
         self.assertEqual(config["pidfile"], "")

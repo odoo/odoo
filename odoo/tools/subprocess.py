@@ -67,7 +67,7 @@ def exec_pg_environ() -> dict[str, str]:
 
 
 _STRIPPED_DESTS = frozenset(
-    {"save", "init", "update", "overwrite_existing_translations"}
+    {"save", "init", "update", "reinit", "overwrite_existing_translations"}
 )
 
 
@@ -125,7 +125,9 @@ def stripped_sys_argv(*strip_args: str) -> list[str]:
         raise ValueError(msg)
     dests = _STRIPPED_DESTS | {parser.get_option(s).dest for s in strip_args}
 
-    args = sys.argv[:]
+    # the parser drops a retired option and its value before it reads the rest;
+    # the argv read here must be the one the parser read
+    args = sys.argv[:1] + config._without_retired_cli_options(sys.argv[1:])[0]
     kept = args[:1]
     i = 1
     while i < len(args):

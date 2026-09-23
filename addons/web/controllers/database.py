@@ -131,7 +131,17 @@ class Database(http.Controller):
             "submitted from loopback (%s).",
             remote_addr,
         )
-        dispatch_rpc("db", "change_admin_password", ["admin", master_pwd])
+        try:
+            dispatch_rpc("db", "change_admin_password", ["admin", master_pwd])
+        except OSError:
+            # a read-only config file (a mounted, root-owned conf) must not block
+            # the operation the promotion only prepares: it holds for this process
+            odoo.tools.config.set_admin_password(master_pwd)
+            _logger.warning(
+                "The promoted master password could not be written to %s; it "
+                "holds until this server restarts.",
+                odoo.tools.config["config"],
+            )
 
     def _render_template(self, **d) -> str:
         d.setdefault("manage", True)

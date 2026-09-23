@@ -200,6 +200,16 @@ SMTP_SSL_MODES = ("starttls_strict", "starttls", "ssl_strict", "ssl")
 _TYPES_WITHOUT_AN_EMPTY_VALUE = frozenset(
     {"int", "float", "bool", "choice", "smtp_ssl", "without_demo"}
 )
+# a path whose empty value is not "off" but a relative path under the cwd; every
+# other empty path (geoip databases, screenshots, the config file) means "none"
+_PATHS_WITHOUT_AN_EMPTY_VALUE = frozenset({"data_dir"})
+
+
+def _empty_is_unset(name: str, option: Any) -> bool:
+    return (
+        option.type in _TYPES_WITHOUT_AN_EMPTY_VALUE
+        or name in _PATHS_WITHOUT_AN_EMPTY_VALUE
+    )
 
 
 def _accept_none(check: Callable[..., Any]) -> Callable[..., Any]:
@@ -1706,8 +1716,10 @@ class configmanager:
         )
         return opt
 
-    def _drop_retired_cli_options(self, args: list[str]) -> list[str]:
-        kept = []
+    @staticmethod
+    def _without_retired_cli_options(args: list[str]) -> tuple[list[str], list[str]]:
+        kept: list[str] = []
+        dropped: list[str] = []
         skip_value = False
         for arg in args:
             if skip_value:
@@ -1715,12 +1727,18 @@ class configmanager:
                 continue
             name = arg.partition("=")[0]
             if name in _RETIRED_CLI_OPTIONS:
-                self._log(
-                    logging.WARNING, "option %s is retired and ignored; remove it", name
-                )
+                dropped.append(name)
                 skip_value = "=" not in arg
                 continue
             kept.append(arg)
+        return kept, dropped
+
+    def _drop_retired_cli_options(self, args: list[str]) -> list[str]:
+        kept, dropped = self._without_retired_cli_options(args)
+        for name in dropped:
+            self._log(
+                logging.WARNING, "option %s is retired and ignored; remove it", name
+            )
         return kept
 
     def _parse_config(self, args: list[str] | None = None) -> optparse.Values:
@@ -1805,16 +1823,19 @@ class configmanager:
         environ = os.environ
         for option_name, option in self.options_index.items():
             env_name = option.env_name
-            if env_name and environ.get(env_name):
-                try:
-                    self._env_options[option_name] = self.parse(
-                        option_name, environ[env_name]
-                    )
-                except (ValueError, optparse.OptionValueError) as exc:
-                    raise ValueError(
-                        f"Invalid value for environment variable {env_name} "
-                        f"(option {option_name!r}): {exc}"
-                    ) from exc
+            if not env_name or env_name not in environ:
+                continue
+            if environ[env_name] == "" and _empty_is_unset(option_name, option):
+                continue
+            try:
+                self._env_options[option_name] = self.parse(
+                    option_name, environ[env_name]
+                )
+            except (ValueError, optparse.OptionValueError) as exc:
+                raise ValueError(
+                    f"Invalid value for environment variable {env_name} "
+                    f"(option {option_name!r}): {exc}"
+                ) from exc
         _debug.lifecycle(
             "config.env_options_loaded",
             options=sorted(self._env_options),
@@ -2392,10 +2413,7 @@ class configmanager:
                     )
                     skipped += 1  # debuglog
                     continue
-                if value == "" and (
-                    option.type in _TYPES_WITHOUT_AN_EMPTY_VALUE
-                    or (option.type == "path" and self._default_options.get(name))
-                ):
+                if value == "" and _empty_is_unset(name, option):
                     _debug.logic(
                         "config.file.option_skipped", option=name, reason="empty_unset"
                     )
