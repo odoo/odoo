@@ -1580,7 +1580,11 @@ export function makeActionManager(env, router = _router) {
             const embeddedActionsOrder =
                 user.settings.embedded_actions_config_ids?.[embeddedActionsKey]
                     ?.embedded_actions_order;
-            const embeddedActionId = embeddedActionsOrder?.[0];
+            const activeView = env.services.action.currentController?.view?.type;
+            const embeddedActionId =
+                activeView === "form" && embeddedActionsOrder?.length > 2
+                    ? embeddedActionsOrder[1]
+                    : embeddedActionsOrder?.[0];
             const embeddedAction = action.embedded_action_ids?.find(
                 (embeddedAction) => embeddedAction.id === embeddedActionId
             );
