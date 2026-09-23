@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { Component, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
@@ -47,6 +47,7 @@ test("removeTopClasses controls the border-top class", async () => {
     class Parent extends Component {
         static template = xml`<OrderWidget removeTopClasses="this.props.removeTopClasses"/>`;
         static components = { OrderWidget };
+        props = useProps({ removeTopClasses: t.boolean() });
     }
 
     await mountWithCleanup(Parent, { props: { removeTopClasses: false } });
