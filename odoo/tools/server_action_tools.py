@@ -5,9 +5,8 @@ import json as jsonlib
 import re
 from typing import Any
 
-import pytz
-
 from odoo.exceptions import UserError
+from odoo.libs.datetime import localize_standard, timezone
 from odoo.libs.sql.utils import escape_psql
 
 DATETIME = re.compile(r"^(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2})(?::\d{2})?)?$")
@@ -84,8 +83,8 @@ class ServerActionTools:
             ) from error
         if not local:
             return naive
-        zone = pytz.timezone(tz or self._env.user.tz or "UTC")
-        return zone.localize(naive).astimezone(pytz.UTC).replace(tzinfo=None)
+        zone = timezone(tz or self._env.user.tz or "UTC")
+        return localize_standard(naive, zone).astimezone(dt.UTC).replace(tzinfo=None)
 
     def lines(self, rows: Any, extra: str = "unit") -> list[dict[str, Any]]:
         parsed = []

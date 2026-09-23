@@ -13,7 +13,6 @@ from odoo.libs.numbers import (
     float_is_zero,
     float_repr,
     float_round,
-    float_split,
     float_split_str,
 )
 from odoo.libs.parse_version import parse_version
@@ -163,7 +162,6 @@ __all__ = [
     "float_is_zero",
     "float_repr",
     "float_round",
-    "float_split",
     "float_split_str",
     "formatLang",
     "format_amount",

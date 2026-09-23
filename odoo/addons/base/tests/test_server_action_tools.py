@@ -66,6 +66,14 @@ class TestServerActionTools(TransactionCase):
         with self.assertRaises(UserError):
             self.tools.datetime("mañana")
 
+    def test_a_local_datetime_on_a_dst_edge_reads_standard_time(self):
+        for local, utc in (
+            ("2026-11-01 01:30", datetime.datetime(2026, 11, 1, 6, 30)),
+            ("2026-03-08 02:30", datetime.datetime(2026, 3, 8, 7, 30)),
+        ):
+            with self.subTest(local=local):
+                self.assertEqual(self.tools.datetime(local, tz="America/New_York"), utc)
+
     def test_lines_and_json_objects(self):
         self.assertEqual(
             self.tools.lines(["Urea | 2 | kg", "Glifosato | x", "", " | 3"]),

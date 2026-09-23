@@ -6,7 +6,6 @@ from typing import Any
 from dateutil.relativedelta import relativedelta
 
 from odoo.libs.datetime import (
-    TIME_UNIT_SELECTION,
     WEEKDAY_NUMBER,
     Anchor,
     TimeUnit,
@@ -29,7 +28,6 @@ from odoo.libs.datetime import (
     previous_anchor,
     start_of,
     subtract,
-    time_to_float,
     time_unit_selection,
     to_timezone,
     utc,
@@ -69,7 +67,6 @@ _SHORT_DATE_UNIT = {
 }
 
 __all__ = [
-    "TIME_UNIT_SELECTION",
     "WEEKDAY_NUMBER",
     "Anchor",
     "TimeUnit",
@@ -93,7 +90,6 @@ __all__ = [
     "previous_anchor",
     "start_of",
     "subtract",
-    "time_to_float",
     "time_unit_selection",
     "to_timezone",
     "utc",

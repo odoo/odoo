@@ -7,7 +7,6 @@ from odoo.tools import (
     float_is_zero,
     float_repr,
     float_round,
-    float_split,
     float_split_str,
 )
 
@@ -294,15 +293,6 @@ class TestFloatPrecision(TransactionCase):
         try_split(42, ("42", "00"), float_split_str)
         try_split(0.1, ("0", "10"), float_split_str)
         try_split(13.0, ("13", ""), float_split_str, rounding=0)
-
-        try_split(2.674, (2, 67), float_split)
-        try_split(2.675, (2, 68), float_split)
-        try_split(-2.675, (-2, 68), float_split)
-        try_split(0.001, (0, 0), float_split)
-        try_split(-0.001, (0, 0), float_split)
-        try_split(42, (42, 0), float_split)
-        try_split(0.1, (0, 10), float_split)
-        try_split(13.0, (13, 0), float_split, rounding=0)
 
     def test_rounding_invalid(self):
         with self.assertRaises(ValueError):
