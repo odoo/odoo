@@ -7,7 +7,6 @@ from typing import Any
 
 from lxml import etree
 from psycopg.errors import LockNotAvailable, ReadOnlySqlTransaction
-from psycopg.pq import TransactionStatus
 from rjsmin import jsmin as _rjsmin
 
 from odoo import SUPERUSER_ID, api, models, tools
@@ -1993,10 +1992,7 @@ class IrQweb(models.AbstractModel):
         # publish two current builds. The isolation level is the transaction's
         # first statement or PostgreSQL refuses it ("must be called before any
         # query"), so the lock timeout comes after it
-        # a test cursor shares the test's transaction, which has run queries
-        # already: its isolation cannot change, and asking would be an error
-        if cr.connection.info.transaction_status == TransactionStatus.IDLE:
-            cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
+        cr.use_read_committed()
         if lock_timeout:
             cr.execute("SELECT set_config('lock_timeout', %s, true)", (lock_timeout,))
         started = time.monotonic()

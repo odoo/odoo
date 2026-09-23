@@ -1,9 +1,9 @@
 import json
 import logging
-from datetime import datetime
 from urllib.parse import urlencode, urlsplit
 
 import requests
+import werkzeug.http
 
 from odoo import _, api, fields, models
 
@@ -215,12 +215,10 @@ class MicrosoftService(models.AbstractModel):
                 # Some answers return empty content
                 response = (res.content and res.json()) or {}
 
-            try:
-                ask_time = datetime.strptime(
-                    res.headers.get("date"), "%a, %d %b %Y %H:%M:%S %Z"
-                )
-            except:
-                pass
+            # An HTTP date is English whatever LC_TIME says; strptime's %a/%b
+            # are not, and failed silently under a non-English locale.
+            if server_time := werkzeug.http.parse_date(res.headers.get("date")):
+                ask_time = server_time.replace(tzinfo=None)
         except requests.HTTPError as error:
             if error.response.status_code in RESOURCE_NOT_FOUND_STATUSES:
                 status = error.response.status_code

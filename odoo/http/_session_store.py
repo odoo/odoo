@@ -757,7 +757,7 @@ class PostgresSessionStore(SessionStore):
                 # lock is this store's serialization; READ COMMITTED lets the
                 # locked section see what the previous holder wrote.
                 if locking:
-                    cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
+                    cr.use_read_committed()
                 schema_created = self._ensure_schema(cr)
                 yield cr
                 cr.commit()

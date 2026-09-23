@@ -923,6 +923,25 @@ class TestLoginCooldown(TransactionCase):
                 pass
 
     @mute_logger("odoo.addons.base.models.res_users")
+    def test_a_failure_is_counted_under_a_test_cursor(self):
+        # HttpCase runs the registry in test mode: the ledger's own cursor then
+        # shares a transaction that has run queries, where the isolation level
+        # can no longer be set. No assertRaises: its savepoint would roll back
+        # the ledger's write along with the failed login.
+        self.registry_enter_test_mode()
+        users = self.env["res.users"]
+        refused = False
+        with patch(self._REQUEST, self._request("9.9.9.9")):
+            try:
+                with users._assert_can_auth(user=self.env.uid):
+                    raise AccessDenied
+            except AccessDenied:
+                refused = True
+        self.assertTrue(refused)
+        failures, _last = users._get_login_failure_state("9.9.9.9")
+        self.assertEqual(failures, 1)
+
+    @mute_logger("odoo.addons.base.models.res_users")
     def test_cooldown_with_non_numeric_login(self):
         users = self.env["res.users"]
         login = "bob@example.com"

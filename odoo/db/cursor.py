@@ -194,6 +194,16 @@ class BaseCursor:
         @property
         def connection(self) -> psycopg.Connection: ...
 
+    def use_read_committed(self) -> bool:
+        # PostgreSQL takes the isolation level only as a transaction's first
+        # statement. A test cursor shares the test's transaction, which has run
+        # queries already; it keeps that transaction's level.
+        if self.connection.info.transaction_status != _TX_IDLE:
+            _debug.logic("cursor.read_committed_skipped", reason="transaction_open")
+            return False
+        self.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
+        return True
+
     def savepoint(self, flush: bool = True) -> Savepoint:
         if getattr(self, "in_pipeline", False):
             _debug.logic(

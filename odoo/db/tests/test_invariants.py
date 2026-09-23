@@ -1203,3 +1203,22 @@ class TestStatementTimeoutIsOwnedByTheCursor(unittest.TestCase):
             cr._obj.executed,
             ["SELECT 1", self._SET, "SET LOCAL statement_timeout = '500ms'"],
         )
+
+
+class TestReadCommittedIsATransactionsFirstStatement(unittest.TestCase):
+    def _cursor(self, status):
+        cr = mock.Mock(spec=["connection", "execute"])
+        cr.connection = _FakeConn(transaction_status=status)
+        return cr
+
+    def test_a_fresh_transaction_is_switched(self):
+        cr = self._cursor(cursor._TX_IDLE)
+        self.assertTrue(cursor.BaseCursor.use_read_committed(cr))
+        cr.execute.assert_called_once_with(
+            "SET TRANSACTION ISOLATION LEVEL READ COMMITTED"
+        )
+
+    def test_a_transaction_already_running_keeps_its_level(self):
+        cr = self._cursor(psycopg.pq.TransactionStatus.INTRANS)
+        self.assertFalse(cursor.BaseCursor.use_read_committed(cr))
+        cr.execute.assert_not_called()

@@ -1,10 +1,9 @@
-import contextlib
 import json
 import logging
-from datetime import datetime
 from urllib.parse import urlencode, urlsplit
 
 import requests
+import werkzeug.http
 
 from odoo import _, api, fields, models
 
@@ -197,10 +196,10 @@ class GoogleService(models.AbstractModel):
             else:
                 response = res.json()
 
-            with contextlib.suppress(ValueError):
-                ask_time = datetime.strptime(
-                    res.headers.get("date", ""), "%a, %d %b %Y %H:%M:%S %Z"
-                )
+            # An HTTP date is English whatever LC_TIME says; strptime's %a/%b
+            # are not, and failed silently under a non-English locale.
+            if server_time := werkzeug.http.parse_date(res.headers.get("date")):
+                ask_time = server_time.replace(tzinfo=None)
         except requests.HTTPError as error:
             if error.response.status_code in (204, 404):
                 status = error.response.status_code

@@ -1,8 +1,7 @@
-from datetime import UTC, datetime
 from unittest.mock import patch
 
 from werkzeug.datastructures import ResponseCacheControl
-from werkzeug.http import parse_cache_control_header
+from werkzeug.http import parse_cache_control_header, parse_date
 
 import odoo
 from odoo.http import Session
@@ -10,8 +9,6 @@ from odoo.tools import config, reset_cached_properties
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.test_http.utils import MemoryGeoipResolver, MemorySessionStore
-
-HTTP_DATETIME_FORMAT = "%a, %d %b %Y %H:%M:%S GMT"
 
 
 class TestHttpBase(HttpCaseWithUserDemo):
@@ -79,4 +76,6 @@ class TestHttpBase(HttpCaseWithUserDemo):
         )
 
     def parse_http_expires(self, expires):
-        return datetime.strptime(expires, HTTP_DATETIME_FORMAT).replace(tzinfo=UTC)
+        parsed = parse_date(expires)
+        assert parsed is not None, expires
+        return parsed

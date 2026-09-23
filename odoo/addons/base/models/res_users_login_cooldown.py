@@ -60,7 +60,7 @@ class LoginCooldown:
         with self.registry.cursor() as cr:
             # a concurrent failure from the same source must be counted, not
             # lost to a snapshot taken before its row was committed
-            cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
+            cr.use_read_committed()
             cr.execute(
                 SQL(
                     """

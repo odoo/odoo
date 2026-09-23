@@ -6,6 +6,7 @@ from unittest.mock import patch
 from urllib.parse import urlsplit
 
 from freezegun import freeze_time
+from werkzeug.http import http_date
 
 from odoo import api, http
 from odoo.tests import RecordCapturer, new_test_user, tagged
@@ -13,7 +14,7 @@ from odoo.tools import config, file_open
 from odoo.tools.image import image_process
 from odoo.tools.misc import submap
 
-from .test_common import HTTP_DATETIME_FORMAT, TestHttpBase
+from .test_common import TestHttpBase
 
 
 class TestHttpStaticCommon(TestHttpBase):
@@ -708,7 +709,7 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         res_last_modified = self.nodb_url_open(
             "/test_http/static/src/img/gizeh.png",
             headers={
-                "If-Modified-Since": datetime.now(UTC).strftime(HTTP_DATETIME_FORMAT),
+                "If-Modified-Since": http_date(datetime.now(UTC)),
             },
         )
         res_last_modified.raise_for_status()
@@ -741,7 +742,7 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         res_last_modified = self.db_url_open(
             "/web/image/test_http.gizeh_png?unique=1",
             headers={
-                "If-Modified-Since": now.strftime(HTTP_DATETIME_FORMAT),
+                "If-Modified-Since": http_date(now),
             },
         )
         res_last_modified.raise_for_status()
