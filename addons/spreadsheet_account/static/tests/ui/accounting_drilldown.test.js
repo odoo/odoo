@@ -38,7 +38,7 @@ test("Create drill down domain", async () => {
     };
     mockService("action", fakeActionService);
 
-    const { model } = await createModelWithDataSource({
+    const { model, env } = await createModelWithDataSource({
         serverData,
         mockRPC: async function (route, args) {
             if (args.method === "spreadsheet_move_line_action") {
@@ -57,8 +57,6 @@ test("Create drill down domain", async () => {
             }
         },
     });
-    const env = model.config.custom.env;
-    env.model = model;
     setCellContent(model, "A1", `=ODOO.BALANCE("100", 2020)`);
     setCellContent(model, "A2", `=ODOO.BALANCE("100", 0)`);
     setCellContent(model, "A3", `=ODOO.BALANCE("100", 2020, , , FALSE)`);
@@ -89,7 +87,7 @@ test("Create drill down domain", async () => {
 
 test("Create drill down domain when month date is a reference", async () => {
     mockService("action", { doAction: () => {} });
-    const { model } = await createModelWithDataSource({
+    const { model, env } = await createModelWithDataSource({
         serverData,
         mockRPC: async function (route, args) {
             if (args.method === "spreadsheet_move_line_action") {
@@ -110,8 +108,6 @@ test("Create drill down domain when month date is a reference", async () => {
             }
         },
     });
-    const env = model.config.custom.env;
-    env.model = model;
     setCellContent(model, "A1", "02/2024");
     setCellContent(model, "A2", '=ODOO.BALANCE("100", A1)');
     await waitForDataLoaded(model);
@@ -122,7 +118,7 @@ test("Create drill down domain when month date is a reference", async () => {
 
 test("Create drill down domain when date uses a non-standard locale", async () => {
     mockService("action", { doAction: () => {} });
-    const { model } = await createModelWithDataSource({
+    const { model, env } = await createModelWithDataSource({
         serverData,
         mockRPC: async function (route, args) {
             if (args.method === "spreadsheet_move_line_action") {
@@ -144,8 +140,6 @@ test("Create drill down domain when date uses a non-standard locale", async () =
             }
         },
     });
-    const env = model.config.custom.env;
-    env.model = model;
     const myLocale = { ...DEFAULT_LOCALE, dateFormat: "d/mmm/yyyy" };
     model.dispatch("UPDATE_LOCALE", { locale: myLocale });
     setCellContent(model, "A1", '=ODOO.BALANCE("100", DATE(2002, 2, 1))');
