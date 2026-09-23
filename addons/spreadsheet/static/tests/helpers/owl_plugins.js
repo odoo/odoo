@@ -52,10 +52,11 @@ class PluginParent extends Component {
     props = useProps({
         providedPlugins: types.array(),
         registerCallback: types.function(),
+        configPlugins: types.object(),
     });
 
     setup() {
-        providePlugins(this.props.providedPlugins);
+        providePlugins(this.props.providedPlugins, this.props.configPlugins);
 
         const scope = useScope();
         const getPlugin = createGetPluginFunctionFromScope(scope);
@@ -65,7 +66,7 @@ class PluginParent extends Component {
     }
 }
 
-export function makeOwlPluginManager(providedPlugins) {
+export function makeOwlPluginManager(providedPlugins, configPlugins = {}) {
     const app = new App({ test: true, translateFn: _t });
 
     let getPlugin = undefined;
@@ -74,12 +75,13 @@ export function makeOwlPluginManager(providedPlugins) {
 
     app.createRoot(PluginParent, {
         props: {
-            providedPlugins: providedPlugins,
+            providedPlugins,
             registerCallback: (params) => {
                 getPlugin = params.getPlugin;
                 scope = params.scope;
                 container = params.container;
             },
+            configPlugins,
         },
     });
 

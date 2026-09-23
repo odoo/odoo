@@ -1,6 +1,6 @@
 import { getFixture } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Spreadsheet } from "@odoo/o-spreadsheet";
+import { Spreadsheet, hooks } from "@odoo/o-spreadsheet";
 import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
 import {
     getMockEnv,
@@ -14,6 +14,9 @@ import { loadBundle } from "@web/core/assets";
 import { WebClient } from "@web/webclient/webclient";
 import { getDashboardServerData } from "./data";
 import { DashboardLoader } from "../../src/bundle/dashboard_action/dashboard_loader_service";
+
+const { useSpreadsheetEnv } = hooks;
+
 /**
  * @param {object} params
  * @param {object} [params.serverData]
@@ -27,8 +30,8 @@ export async function createSpreadsheetDashboard(params = {}) {
     patchWithCleanup(Spreadsheet.prototype, {
         setup() {
             super.setup();
-            model = this.env.model;
-            env = this.env;
+            model = this.model();
+            env = useSpreadsheetEnv();
         },
     });
 

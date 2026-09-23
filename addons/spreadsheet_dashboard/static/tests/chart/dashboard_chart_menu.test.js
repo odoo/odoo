@@ -73,6 +73,7 @@ test("Click on chart in dashboard mode redirect to the datasource action", async
     const { model, pivotId } = await createSpreadsheetWithPivot({
         serverData,
         actionXmlId: "menuAction2",
+        createMockApp: false,
     });
     const fixture = await mountSpreadsheet(model);
 
@@ -126,6 +127,7 @@ test("Click on chart element in dashboard mode do not redirect twice", async fun
     const { model, pivotId } = await createSpreadsheetWithPivot({
         serverData,
         actionXmlId: "menuAction2",
+        createMockApp: false,
     });
     const fixture = await mountSpreadsheet(model);
     const chartId = insertChartInSpreadsheet(model, "pie");
@@ -155,7 +157,7 @@ test("Click on chart element in dashboard mode do not redirect twice", async fun
 });
 
 test("Can click on a chart with no odoo link", async function () {
-    const { model } = await createSpreadsheetWithPivot({ serverData });
+    const { model } = await createSpreadsheetWithPivot({ serverData, createMockApp: false });
     await mountSpreadsheet(model);
     createBasicChart(model, chartId);
     await animationFrame();
@@ -176,6 +178,7 @@ test("Clicking on a scorecard or gauge redirects to the linked datasource", asyn
     const { model, pivotId } = await createSpreadsheetWithPivot({
         serverData,
         actionXmlId: "menuAction2",
+        createMockApp: false,
     });
     await mountSpreadsheet(model);
     createScorecardChart(model, "scorecardId");
@@ -208,6 +211,7 @@ test("Middle-click on chart in dashboard mode open the linked datasource in a ne
     const { model, pivotId } = await createSpreadsheetWithPivot({
         serverData,
         actionXmlId: "menuAction2",
+        createMockApp: false,
     });
     await mountSpreadsheet(model);
 
@@ -241,7 +245,7 @@ test("Clicking on the carousel header doesn't redirect to its chart's linked men
         doAction: async (actionRequest) => expect.step(actionRequest),
     });
 
-    const { model } = await createModelWithDataSource({ serverData });
+    const { model } = await createModelWithDataSource({ serverData, createMockApp: false });
     await mountSpreadsheet(model);
     createBasicChart(model, chartId);
     const sheetId = model.getters.getActiveSheetId();
