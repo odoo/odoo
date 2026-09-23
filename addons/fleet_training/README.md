@@ -120,3 +120,52 @@ end-to-end:
 ./odoo-bin shell -d fleet_training_demo --addons-path=addons,odoo/addons --no-http
 >>> env['fleet_training.vehicle'].create({'name': 'Fleet-001', 'license_plate': 'KA01AB1234', 'model_year': 2022})
 ```
+
+---
+
+## Chapter 4 — Security: A Brief Introduction
+
+**Concept.** Odoo restricts *who* can do *what* through **groups**
+(`res.groups`) and **access records**. A user's rights are the union of the
+groups they belong to; every group grants operations on models via `ir.access`
+rows that reference it.
+
+**Why?** Data access has to be declarative and additive, not scattered `if
+user.is_admin` checks in code — a new group can grant more without touching a
+single line of business logic, and the same model can serve read-only users and
+full managers from the same codebase.
+
+**Where?**
+- [`security/fleet_training_groups.xml`](security/fleet_training_groups.xml) — the `Fleet User` / `Fleet Manager` groups
+- [`security/ir.access.csv`](security/ir.access.csv) — which group can do what on `fleet_training.vehicle`
+
+**Code explanation.** `Fleet User` implies `base.group_user` (an internal
+employee) and gets `cru` (create, read, update — no delete). `Fleet Manager`
+implies `Fleet User` (so a manager automatically has everything a user has) and
+gets `crud` (full control, including delete). Both groups are declared under one
+`res.groups.privilege` record — this is the Odoo 20 mechanism that makes them
+mutually-exclusive radio choices on a user's form (a user is either a User or a
+Manager for this app, not both at once — `implied_ids` is what actually grants
+the *combined* rights).
+
+**Odoo 20 note.** `res.groups` no longer has a `category_id` field directly:
+grouping/display in the Settings > Users form now goes through
+`res.groups.privilege`, which itself points to the `ir.module.category`. This
+replaced the older direct `category_id` on the group itself.
+
+**Fleet functionality.** Two roles now exist for the app. A plain `Fleet User`
+can register and edit vehicles but not remove them; only a `Fleet Manager` can
+delete a vehicle record — protecting fleet history from accidental data loss.
+(A domain-based **restriction** — the modern replacement for `ir.rule` — is
+introduced later in Chapter 7 once drivers exist, so it can restrict on something
+meaningful: a driver seeing only their own assigned vehicle.)
+
+**What changed.** Added `security/fleet_training_groups.xml`; rewrote
+`security/ir.access.csv` to grant `cru` to Fleet User and `crud` to Fleet
+Manager instead of blanket access; manifest loads the groups file before the
+access file (groups must exist before rows can reference them).
+
+**Testing.** Upgrade the module, then in Settings > Users & Companies > Users,
+open a test user and confirm "Fleet Training" now shows the User/Manager choice
+under Other. As a Fleet User (no Manager), attempting `unlink()` on a vehicle
+from the shell raises an `AccessError`; as a Fleet Manager it succeeds.
