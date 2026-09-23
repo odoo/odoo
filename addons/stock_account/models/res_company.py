@@ -20,6 +20,9 @@ class ResCompany(models.Model):
         account_move = self._close_stock_valuation(at_date=at_date, auto_post=auto_post)
         if not account_move:
             raise UserError(_("Everything is correctly closed"))
+        return self._stock_valuation_move_action(account_move)
+
+    def _stock_valuation_move_action(self, account_move):
         return {
             "type": "ir.actions.act_window",
             "name": _("Journal Items"),

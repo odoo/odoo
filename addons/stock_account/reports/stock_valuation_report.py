@@ -218,7 +218,7 @@ class StockValuationReportHandler(models.AbstractModel):
         return memo[key]
 
     def _section_result(self, section, options, current_groupby):
-        if current_groupby not in (None, "account_id"):
+        if current_groupby not in (None, "account_id", "account_code"):
             raise NotImplementedError(
                 f"the stock valuation report groups by account only, not {current_groupby}"
             )
@@ -239,6 +239,14 @@ class StockValuationReportHandler(models.AbstractModel):
                 }
                 for line in data["lines"]
             }
+        if current_groupby == "account_code":
+            by_code = defaultdict(lambda: {"value": 0, "debit": 0, "credit": 0})
+            accounts = self.env["account.account"].browse(by_account)
+            for account in accounts:
+                totals = by_code[account.code]
+                for key, amount in by_account[account.id].items():
+                    totals[key] += amount
+            return list(by_code.items())
         if current_groupby:
             return list(by_account.items())
         return {"value": data["value"], "debit": 0, "credit": 0}
@@ -298,9 +306,21 @@ class StockValuationReportHandler(models.AbstractModel):
     def action_generate_entry(self, options):
         date = self._valuation_date(options)
         company = self.env.company
-        if date:
-            return company.action_close_stock_valuation(date)
-        return company.action_close_stock_valuation()
+        company.check_singleton()
+        account_move = company._close_stock_valuation(at_date=date or None)
+        if not account_move:
+            # the button answers "nothing to close" as a notice, not an error:
+            # a report's actions run on any company, a closed one included
+            return {
+                "type": "ir.actions.client",
+                "tag": "display_notification",
+                "params": {
+                    "message": _("Everything is correctly closed"),
+                    "type": "info",
+                    "sticky": False,
+                },
+            }
+        return company._stock_valuation_move_action(account_move)
 
     def execute_action(self, options, params=None):
         report = self.env["report.formula"].browse(options["report_id"])
