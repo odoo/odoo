@@ -253,7 +253,9 @@ class ResUsers(models.Model):
                 without_image = self.env['hr.employee'].sudo().search(employee_domain + [('image_1920', '=', False)])
                 with_image = self.env['hr.employee'].sudo().search(employee_domain + [('image_1920', '!=', False)])
                 without_image.write(employee_values)
-                with_image.write(employee_values)
+                employee_values.pop('image_1920')
+                if employee_values:
+                    with_image.write(employee_values)
             else:
                 employees = self.env['hr.employee'].sudo().search(employee_domain)
                 if employees:
