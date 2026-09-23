@@ -54,6 +54,7 @@ DEFAULT_PDF_DATETIME_FORMAT = "D:%Y%m%d%H%M%S+00'00'"
 REGEX_SUBTYPE_UNFORMATED = re.compile(r"^\w+/[\w-]+$")
 REGEX_SUBTYPE_FORMATED = re.compile(r"^/\w+#2F[\w-]+$")
 PDFA_ID_NAMESPACE = "http://www.aiim.org/pdfa/ns/id/"
+_PDF_HEADER = re.compile(rb"%PDF-\d+\.\d+")
 RDF_NAMESPACE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 
 
@@ -409,9 +410,10 @@ class OdooPdfFileWriter(BrandedFileWriter):
         self._reader = reader
         stream = reader.stream
         stream.seek(0)
-        header = stream.readline(32).rstrip(b"\r\n")
-        if header.startswith(b"%PDF-"):
-            self._header = header
+        # the version token alone: a line may end in CR only, and the binary
+        # comment after it is no part of the header
+        if header := _PDF_HEADER.match(stream.read(32)):
+            self._header = header[0]
         self.is_pdfa = self._declares_pdfa(reader)
         if self._ID is None:
             self._set_id(reader.trailer.get("/ID", None))
@@ -424,9 +426,11 @@ class OdooPdfFileWriter(BrandedFileWriter):
 
     @staticmethod
     def _declares_pdfa(reader: PdfReader) -> bool:
+        # metadata that cannot be read (an unknown filter, a missing decoder,
+        # malformed XML) declares nothing, and must not fail the clone
         try:
             xmp = reader.xmp_metadata
-        except errors.PyPdfError as exc:
+        except Exception as exc:
             _debug.logic("pdf.xmp_unreadable", error=type(exc).__name__)
             return False
         if xmp is None:

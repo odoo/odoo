@@ -208,3 +208,22 @@ class TestPdfaConversionKeepsWeasyPrintText(unittest.TestCase):
         self.assertEqual(self._widths(converted), self._widths(source))
         text = PdfReader(io.BytesIO(converted)).pages[0].extract_text()
         self.assertIn(self.TEXT, " ".join(text.split()))
+
+
+class TestCloningSurvivesOddSources(unittest.TestCase):
+    def test_a_header_ending_in_a_bare_carriage_return(self):
+        data = _plain_pdf()
+        assert data.startswith(b"%PDF-")
+        first_newline = data.index(b"\n")
+        writer = _clone(data[:first_newline] + b"\r" + data[first_newline + 1 :])
+        self.assertEqual(writer._header, data[:first_newline])
+
+    def test_unreadable_metadata_declares_nothing(self):
+        with mock.patch.object(
+            PdfReader,
+            "xmp_metadata",
+            new_callable=mock.PropertyMock,
+            side_effect=NotImplementedError("unsupported filter"),
+        ):
+            writer = _clone(_plain_pdf(xmp=_XMP_PDFA_ELEMENT))
+        self.assertFalse(writer.is_pdfa)
