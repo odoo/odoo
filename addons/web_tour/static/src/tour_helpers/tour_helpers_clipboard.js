@@ -1,7 +1,10 @@
 import { patch } from "@web/core/utils/patch";
 import { TourHelpers } from "./tour_helpers";
 
-const originalClipboardWriteText = window.navigator.clipboard.writeText;
+// `navigator.clipboard` is only exposed in a secure context,
+// so writeText might be undefined in local dev.
+const clipboard = window.navigator.clipboard;
+const originalClipboardWriteText = clipboard?.writeText;
 
 patch(TourHelpers.prototype, {
     /**
@@ -16,7 +19,9 @@ patch(TourHelpers.prototype, {
      *  run: "allowClipboardWrite",
      */
     allowClipboardWrite() {
-        window.navigator.clipboard.writeText = () => Promise.resolve();
+        if (clipboard) {
+            clipboard.writeText = () => Promise.resolve();
+        }
     },
 
     /**
@@ -25,6 +30,8 @@ patch(TourHelpers.prototype, {
      *  run: "restoreClipboardWrite",
      */
     restoreClipboardWrite() {
-        window.navigator.clipboard.writeText = originalClipboardWriteText;
+        if (clipboard) {
+            clipboard.writeText = originalClipboardWriteText;
+        }
     },
 });
