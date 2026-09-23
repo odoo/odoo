@@ -19,7 +19,8 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, mockUserAgent, test } from "@odoo/hoot";
+import { Message } from "@mail/core/common/message";
+import { describe, expect, mockUserAgent, rightClick, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 
 import { range } from "@web/core/utils/numbers";
@@ -28,6 +29,7 @@ import {
     defineActions,
     getService,
     mockService,
+    patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
 
@@ -693,15 +695,30 @@ test("chatter updating", async () => {
 });
 
 test("chatter message actions appear only after saving the form", async () => {
+    patchWithCleanup(Message.prototype, {
+        onContextMenu() {
+            expect.step("Message.onContextMenu");
+            super.onContextMenu(...arguments);
+        },
+        onOpenRightClickMenu() {
+            expect.step("Message.onOpenRightClickMenu");
+            super.onOpenRightClickMenu(...arguments);
+        },
+    });
     await start();
     await openFormView("res.partner");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-actions", { count: 0 });
+    await rightClick(".o-mail-Message");
+    await expect.waitForSteps(["Message.onContextMenu"]);
     await click(".o_form_button_save");
     await click("button:text('Send message')");
     await insertText(".o-mail-Composer-input", "hey");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-actions");
+    await rightClick(".o-mail-Message");
+    await contains(".o_popover .o-mail-ActionList");
+    await expect.waitForSteps(["Message.onContextMenu", "Message.onOpenRightClickMenu"]);
 });
 
 test("post message on draft record", async () => {

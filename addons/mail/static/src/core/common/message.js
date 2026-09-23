@@ -515,7 +515,7 @@ export class Message extends Component {
             // Mobile OS long press is handled with useLongPress()
             return;
         }
-        if (ev.composedPath()[0].closest("a") || !this.props.hasActions || this.isEditing) {
+        if (!this.hasActions || ev.composedPath()[0].closest("a")) {
             return;
         }
         if (!this.rightClickMenu.open(ev)) {
@@ -659,6 +659,10 @@ export class Message extends Component {
             !this.message.isSubjectSimilarToThreadName &&
             !this.message.isSubjectDefault
         );
+    }
+
+    get hasActions() {
+        return this.props.hasActions && this.message.hasActions && !this.isEditing;
     }
 }
 
