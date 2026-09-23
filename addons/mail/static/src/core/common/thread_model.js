@@ -646,12 +646,16 @@ export class Thread extends Record {
         }
         this.isLoaded = false;
         this.scrollTop = undefined;
+        let receivedMessages;
         try {
             this.phantomMessages = this.messages;
-            this.messages = await this.fetchMessages({
+            const knownMessages = [...this.messages];
+            const fetched = await this.fetchMessages({
                 fetchParams: { around: messageId },
                 routeParams,
             });
+            receivedMessages = this.messages.filter((message) => message.notIn(knownMessages));
+            this.messages = fetched;
             this.phantomMessages = [];
         } catch {
             this.isLoaded = true;
@@ -673,6 +677,13 @@ export class Thread extends Record {
             }
         }
         this._enrichMessagesWithTransient();
+        if (!this.loadNewer) {
+            const missingMessages = receivedMessages.filter((message) =>
+                message.notIn(this.messages)
+            );
+            this.messages.push(...missingMessages);
+            this.messages.sort((m1, m2) => m1.id - m2.id);
+        }
     }
 
     async markAllMessagesAsRead() {
