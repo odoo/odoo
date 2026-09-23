@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
+import { searchOrCreateMany2X } from "@web_tour/tour_scenarios";
 
 import PurchaseAdditionalTourSteps from "@purchase/js/tours/purchase_steps";
 
@@ -44,15 +45,15 @@ registry.category("web_tour.tours").add("purchase_tour", {
             content: _t("Let's create your first request for quotation."),
             run: "click",
         },
-        ...stepUtils.searchOrCreateMany2X(
-            ".o_field_res_partner_many2one[name='partner_id'] input",
-            "vendor",
-            "Azure Interior",
-            {
+        ...searchOrCreateMany2X({
+            trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
+            label: "vendor",
+            searchText: "Azure Interior",
+            fields: {
                 name: "Azure Interior",
                 email: "azure.interior@example.com",
-            }
-        ),
+            },
+        }),
         {
             isActive: ["desktop"],
             trigger: ".o_field_x2many_list_row_add > button",
@@ -65,17 +66,17 @@ registry.category("web_tour.tours").add("purchase_tour", {
             content: _t("Add some products or services to your quotation."),
             run: "click",
         },
-        ...stepUtils.searchOrCreateMany2X(
-            `
+        ...searchOrCreateMany2X({
+            trigger: `
                 .o_field_widget[name='product_id'] input,
                 .o_field_widget[name='product_template_id'] input
             `,
-            "product",
-            "DESK0001",
-            {
+            label: "product",
+            searchText: "DESK0001",
+            fields: {
                 name: "DESK0001",
-            }
-        ),
+            },
+        }),
         {
             isActive: ["desktop"],
             trigger: "div.o_field_widget[name='product_qty'] input ",

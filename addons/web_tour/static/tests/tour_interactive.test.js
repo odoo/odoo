@@ -742,6 +742,51 @@ test("Tour don't backward when dropdown loading", async () => {
     expect(".o_tour_pointer_tip").toHaveCount(0);
 });
 
+test("edit step on autocomplete input is not consumed by the first keystroke", async () => {
+    Tour._records = [{ name: "create_tour" }];
+    registry.category("web_tour.tours").add("create_tour", {
+        steps: () => [
+            {
+                trigger: ".o-autocomplete--input",
+                run: "edit Zorro",
+            },
+            {
+                trigger: ".o_m2o_dropdown_option_create_edit a",
+                run: "click",
+            },
+            {
+                trigger: ".modal-content button.btn-primary",
+                run: "click",
+            },
+        ],
+    });
+
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+
+    onRpc("product", "web_name_search", () => []);
+
+    getService("tour_service").startTour("create_tour", { mode: "manual" });
+    await waitFor(".o_tour_pointer_tip");
+
+    await contains(".o-autocomplete--input").click();
+    await contains(".o-autocomplete--input").fill("Zorro", { confirm: false });
+    await animationFrame();
+    expect(".o-autocomplete--input").toHaveValue("Zorro");
+
+    await waitFor(".o_m2o_dropdown_option_create_edit a");
+    await contains(".o_m2o_dropdown_option_create_edit a").click();
+    await animationFrame();
+
+    await waitFor(".modal-content button.btn-primary");
+    expect(".o_tour_pointer_tip").toHaveCount(1);
+});
+
 test("Don't backward when action manager is busy", async () => {
     Tour._records = [{ name: "tour1" }];
     registry.category("web_tour.tours").add("tour1", {

@@ -68,6 +68,7 @@ Odoo Web tours.
             'web_tour/static/src/tour_recorder/tour_recorder_plugin.js',
             'web_tour/static/src/tour_recorder/tour_recorder_command_provider.js',
             'web_tour/static/src/tour_utils.js',
+            'web_tour/static/src/tour_scenarios.js',
             'web_tour/static/src/widgets/onboarding_item.js',
             'web_tour/static/src/widgets/onboarding_item.xml',
         ],

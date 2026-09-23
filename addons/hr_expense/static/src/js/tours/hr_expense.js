@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { stepUtils } from "@web_tour/tour_utils";
+import { searchOrCreateMany2X } from "@web_tour/tour_scenarios";
 
 import { markup } from "@odoo/owl";
 
@@ -101,21 +102,12 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     content: _t("Save the employee profile."),
     run: "click",
 },
-{
+...searchOrCreateMany2X({
     trigger: '.o_form_view .o_field_widget[name="product_id"] input',
-    content: _t("Enter a name then choose a product and configure the amount of your expense."),
-    run: "edit Meals",
-},
-{
-    isActive: ["desktop"],
-    trigger: '.o_field_widget[name="product_id"] .dropdown-item:contains("Meals")',
-    run: "click",
-},
-{
-    isActive: ["mobile"],
-    trigger: '.o_dialog .o_kanban_record:contains("Meals")',
-    run: "click",
-},
+    label: "product",
+    searchText: "Meals",
+    selectExisting: true,
+}),
 {
     trigger: '.o_form_view .o_field_widget[name="total_amount_currency"] input',
     content: _t("Enter the total amount of the expense."),
