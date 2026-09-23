@@ -197,7 +197,7 @@ odoo/addons/base/
 │   ├── reset_view_arch.py           #   Reset view to original arch (soft/hard)
 │   ├── server_action_history.py     #   Server-action run history (diff + restore)
 │   └── wizard_ir_model_menu_create.py #   Create menu item for custom model
-├── tests/                       # 144 Python test files + test assets
+├── tests/                       # 143 Python test files + test assets
 │   ├── common.py                #   Base test classes (demo user, portal user)
 │   └── test_*.py                #   Test modules -- counts in TEST_TAGS.md, derived by factcheck.sh
 ├── views/                       # 39 XML view definition files
@@ -286,7 +286,7 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 |----------|-------|
 | Python (models) | 113 |
 | Python (wizards) | 11 |
-| Python (tests) | 144 |
+| Python (tests) | 143 |
 | XML (views) | 39 |
 | Data files | 21 |
 | XML (reports) | 0 |

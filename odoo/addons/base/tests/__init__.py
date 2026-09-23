@@ -69,7 +69,6 @@ from . import test_field_description_audit
 from . import test_report_paperformat_audit
 from . import test_menu
 from . import test_misc
-from . import test_mixin_profiler
 from . import test_module
 from . import test_module_data_rename_model
 from . import test_module_data_remove_xmlid_records
