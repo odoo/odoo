@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { click, waitFor } from "@odoo/hoot-dom";
+import { dummyBase64Img } from "@html_builder/../tests/helpers";
+import { contains, dataURItoBlob, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilderWithSnippet,
@@ -54,4 +55,30 @@ test("Drop Whatsapp snippet and verify snippet options", async () => {
     // Color
     await contains("[data-class-action='no_icon_color'] input").click();
     expect(":iframe .s_whatsapp .s_whatsapp_fab").toHaveClass("no_icon_color");
+});
+
+test("Replacing the agent avatar stores an attachment URL", async () => {
+    const avatarUrl = "/web/image/1-abcdef/agent.webp";
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/image/hoot.png",
+            public: true,
+        },
+    ]);
+    onRpc("/html_editor/get_image_info", () => ({
+        attachment: { id: 1 },
+        original: { id: 1, image_src: "/web/image/hoot.png", mimetype: "image/png" },
+    }));
+    onRpc("/web/image/hoot.png", () => dataURItoBlob(dummyBase64Img + "A".repeat(1000)));
+    onRpc("/html_editor/modify_image/1", () => ({ original: avatarUrl }));
+
+    await setupWebsiteBuilderWithSnippet("s_whatsapp", { loadIframeBundles: true });
+    await contains(":iframe .s_whatsapp").click();
+    await contains("[data-action-id='replaceAgentAvatar']").click();
+    await click(".o_existing_attachment_cell .o_button_area");
+    await waitFor(":iframe .s_whatsapp[data-agent-avatar-src^='/web/image/']");
+    expect(":iframe .s_whatsapp").toHaveAttribute("data-agent-avatar-src", avatarUrl);
 });
