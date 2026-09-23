@@ -762,6 +762,7 @@
                                     <field name="project_sharing_portal_user_ids" invisible="1"/>
                                     <field name="user_ids" widget="many2many_avatar_user" class="ms-auto"/>
                                     <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
+                                    <t t-call="menu"/>
                                 </footer>
                             </main>
                             <widget name="subtask_kanban_list"/>

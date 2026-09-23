@@ -176,8 +176,22 @@ export class CardCompiler extends ViewCompiler {
      * @returns {Element}
      */
     compileTCall(el, params) {
-        const compiled = this.compileGenericNode(el, params);
         const tname = el.getAttribute("t-call");
+        if (tname === "menu") {
+            // renders the whole record menu (dropdown toggler + items) where it is called
+            const compiled = createElement("t", {
+                "t-call": "{{ __comp__.constructor.menuTemplate }}",
+                "t-call-context": "__comp__.this",
+            });
+            // t-call-context replaces the scope, so t-set params are passed as t-call attributes
+            for (const child of el.children) {
+                if (child.hasAttribute("t-set") && child.hasAttribute("t-value")) {
+                    compiled.setAttribute(child.getAttribute("t-set"), child.getAttribute("t-value"));
+                }
+            }
+            return compiled;
+        }
+        const compiled = this.compileGenericNode(el, params);
         if (tname in this.templates) {
             compiled.setAttribute("t-call", `{{__comp__.templates[${toStringExpression(tname)}]}}`);
         }
