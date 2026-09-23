@@ -279,6 +279,40 @@ patch(PosStore.prototype, {
             extra_tax_data: soLine.extra_tax_data,
         };
     },
+    getSaleOrderBaseLines(saleOrder) {
+        const baseLines = [];
+        for (const saleOrderLine of saleOrder.order_line.filter((soLine) => !soLine.display_type)) {
+            if (saleOrderLine.is_downpayment) {
+                saleOrderLine.product_uom_qty = -1;
+            }
+            baseLines.push(
+                accountTaxHelpers.prepare_base_line_for_taxes_computation(
+                    saleOrderLine,
+                    this.prepareSoBaseLineForTaxesComputationExtraValues(saleOrder, saleOrderLine)
+                )
+            );
+        }
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, this.company);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, this.company);
+        return baseLines;
+    },
+    getDownPaymentBaseAmount(baseLines) {
+        const fixedBaseLines = accountTaxHelpers.dispatch_taxes_into_new_base_lines(
+            baseLines,
+            this.company,
+            (baseLine, taxData) => !accountTaxHelpers.can_be_discounted(taxData.tax)
+        );
+        const baseLinesAggregatedValues = accountTaxHelpers.aggregate_base_lines_tax_details(
+            fixedBaseLines,
+            (baseLine, taxData) => true
+        );
+        const valuesPerGroupingKey =
+            accountTaxHelpers.aggregate_base_lines_aggregated_values(baseLinesAggregatedValues);
+        return Object.values(valuesPerGroupingKey).reduce(
+            (total, values) => total + values.base_amount_currency + values.tax_amount_currency,
+            0
+        );
+    },
 
     async downPaymentSO(saleOrder, isPercentage) {
         const colorClassMap = {
@@ -290,6 +324,9 @@ patch(PosStore.prototype, {
             "-": "o_colorlist_item_numpad_color_3",
         };
 
+        const baseAmount = isPercentage
+            ? this.getDownPaymentBaseAmount(this.getSaleOrderBaseLines(saleOrder))
+            : 0;
         const payload = await makeAwaitable(this.dialog, NumberPopup, {
             title: _t("Down Payment"),
             subtitle: _t("Due balance: %s", this.env.utils.formatCurrency(saleOrder.amount_unpaid)),
@@ -301,9 +338,7 @@ patch(PosStore.prototype, {
             formatDisplayedValue: (x) => (isPercentage ? `% ${x}` : x),
             feedback: (buffer) =>
                 isPercentage && buffer
-                    ? `(${this.env.utils.formatCurrency(
-                          (saleOrder.amount_unpaid * parseFloat(buffer)) / 100
-                      )})`
+                    ? `(${this.env.utils.formatCurrency((baseAmount * parseFloat(buffer)) / 100)})`
                     : "",
         });
         if (!payload) {
@@ -334,38 +369,9 @@ patch(PosStore.prototype, {
             return;
         }
         const saleOrderLines = saleOrder.order_line.filter((soLine) => !soLine.display_type);
-        const baseLines = [];
-        for (const saleOrderLine of saleOrderLines) {
-            if (saleOrderLine.is_downpayment) {
-                saleOrderLine.product_uom_qty = -1;
-            }
-            baseLines.push(
-                accountTaxHelpers.prepare_base_line_for_taxes_computation(
-                    saleOrderLine,
-                    this.prepareSoBaseLineForTaxesComputationExtraValues(saleOrder, saleOrderLine)
-                )
-            );
-        }
-        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, this.company);
-        accountTaxHelpers.round_base_lines_tax_details(baseLines, this.company);
+        const baseLines = this.getSaleOrderBaseLines(saleOrder);
         if (isPercentage) {
-            const percentage = amount / 100.0;
-            amount = baseLines.length ? saleOrder.amount_unpaid : 0.0;
-            const fixedBaseLines = accountTaxHelpers.dispatch_taxes_into_new_base_lines(
-                baseLines,
-                this.company,
-                (baseLine, taxData) => !accountTaxHelpers.can_be_discounted(taxData.tax)
-            );
-            const baseLinesAggregatedValues = accountTaxHelpers.aggregate_base_lines_tax_details(
-                fixedBaseLines,
-                (baseLine, taxData) => true
-            );
-            const valuesPerGroupingKey =
-                accountTaxHelpers.aggregate_base_lines_aggregated_values(baseLinesAggregatedValues);
-            const fixedBaseLinesTotal = Object.values(valuesPerGroupingKey).map(
-                (v) => v.base_amount_currency + v.tax_amount_currency
-            );
-            amount = fixedBaseLinesTotal * percentage;
+            amount = (this.getDownPaymentBaseAmount(baseLines) * amount) / 100.0;
         }
 
         const downPaymentProduct = this.config.down_payment_product_id;
