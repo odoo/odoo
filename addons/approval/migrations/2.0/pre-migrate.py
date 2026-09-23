@@ -37,7 +37,7 @@ def migrate(cr, version):
 
     Re-pointing the external ids first means `approval_analytics` updates the
     records that are already there rather than creating second copies. Without
-    it the end-of-load vacuum leaves the old `ir.rule` rows behind and the
+    it the end-of-load vacuum leaves the old access rows behind and the
     database ends up with two identical multi-company rules per report view.
     """
     cr.execute(

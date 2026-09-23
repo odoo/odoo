@@ -1,4 +1,8 @@
-from odoo.tools import SQL
+import logging
+
+from odoo.addons.base.models.ir_access_convert import rewrite_converted_domain
+
+_logger = logging.getLogger(__name__)
 
 
 def migrate(cr, version):
@@ -6,14 +10,10 @@ def migrate(cr, version):
         return
     # the rule gave POS managers every crm.team, which held sales teams only;
     # on team.team the same domain would reach every application's teams
-    cr.execute(
-        SQL(
-            """
-            UPDATE ir_rule r SET domain_force = %s
-              FROM ir_model_data d
-             WHERE d.module = 'pos_sale' AND d.name = 'pos_sale_rule_pos_channel_pos_manager'
-               AND d.model = 'ir.rule' AND d.res_id = r.id
-            """,
-            "[('use_sale', '=', True)]",
-        )
+    rewrite_converted_domain(
+        cr,
+        "pos_sale",
+        "pos_sale_rule_pos_channel_pos_manager",
+        "[('use_sale', '=', True)]",
+        logger=_logger,
     )

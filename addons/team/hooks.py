@@ -1,3 +1,5 @@
+import logging
+
 from odoo.db.schema import column_exists, table_exists
 from odoo.tools.module_data import (
     remove_xmlid_records,
@@ -6,12 +8,24 @@ from odoo.tools.module_data import (
     rename_model,
 )
 
+from odoo.addons.base.models.ir_access_convert import delete_converted_rows
+
+_logger = logging.getLogger(__name__)
+
 SALES_TEAM_RULES = (
     "sale_team_comp_rule",
     "crm_team_member_comp_rule",
     "crm_team_member_rule_personal",
     "crm_team_member_rule_all",
 )
+
+
+def _remove_sales_team_rules(cr):
+    remove_xmlid_records(cr, "sale_team", SALES_TEAM_RULES)
+    # base 1.97 converted a rule with several groups into one row per group,
+    # `<rule>_<group>`, and those rows carry no external id of the rule itself
+    for name in SALES_TEAM_RULES:
+        delete_converted_rows(cr, "sale_team", name, logger=_logger)
 
 
 def pre_init_hook(env):
@@ -38,7 +52,7 @@ def pre_init_hook(env):
         ("crm_team_id", "team_id"),
     ):
         rename_in_stored_expressions(cr, old, new, unique=True)
-    remove_xmlid_records(cr, "sale_team", SALES_TEAM_RULES)
+    _remove_sales_team_rules(cr)
     # crm's mixin.mail.alias made alias_id required on every crm.team; teams
     # created before crm moves that alias onto team.alias must not need one
     if column_exists(cr, "team_team", "alias_id"):

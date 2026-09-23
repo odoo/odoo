@@ -1,6 +1,17 @@
 import logging
 
+from odoo.addons.base.models.ir_access_convert import rewrite_converted_domain
+
 _logger = logging.getLogger(__name__)
+
+REQUEST_DOMAIN = (
+    "[\n"
+    "                '|', '|',\n"
+    "                ('request_owner_id', '=', user.id),\n"
+    "                ('approver_ids.user_id', '=', user.id),\n"
+    "                ('approver_ids.delegate_id', '=', user.id)\n"
+    "            ]"
+)
 
 
 def migrate(cr, version):
@@ -29,55 +40,26 @@ def migrate(cr, version):
     )
     secret_dropped = cr.rowcount
 
-    cr.execute(
-        """
-        UPDATE ir_rule r
-        SET domain_force = %s,
-            name = %s
-        FROM ir_model_data d
-        WHERE d.res_id = r.id
-          AND d.model = 'ir.rule'
-          AND d.module = 'approval'
-          AND d.name = 'approval_request_user_read'
-        """,
+    for name, label in (
         (
-            (
-                "[\n"
-                "                '|', '|',\n"
-                "                ('request_owner_id', '=', user.id),\n"
-                "                ('approver_ids.user_id', '=', user.id),\n"
-                "                ('approver_ids.delegate_id', '=', user.id)\n"
-                "            ]"
-            ),
+            "approval_request_user_read",
             "Approval Request: user read own or approver or delegate",
         ),
-    )
-    cr.execute(
-        """
-        UPDATE ir_rule r
-        SET domain_force = %s,
-            name = %s
-        FROM ir_model_data d
-        WHERE d.res_id = r.id
-          AND d.model = 'ir.rule'
-          AND d.module = 'approval'
-          AND d.name = 'approval_request_user_write'
-        """,
         (
-            (
-                "[\n"
-                "                '|', '|',\n"
-                "                ('request_owner_id', '=', user.id),\n"
-                "                ('approver_ids.user_id', '=', user.id),\n"
-                "                ('approver_ids.delegate_id', '=', user.id)\n"
-                "            ]"
-            ),
+            "approval_request_user_write",
             "Approval Request: user write own or approver or delegate",
         ),
-    )
-    _logger.info(
-        "t22503: refreshed approval.request user read/write ir.rule with delegate path."
-    )
+    ):
+        rewrite_converted_domain(cr, "approval", name, REQUEST_DOMAIN, logger=_logger)
+        cr.execute(
+            """
+            UPDATE ir_access a SET name = %s
+              FROM ir_model_data d
+             WHERE d.model = 'ir.access' AND d.res_id = a.id
+               AND d.module = 'approval' AND d.name = %s
+            """,
+            (label, name),
+        )
 
     cr.execute(
         """

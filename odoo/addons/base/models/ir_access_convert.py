@@ -1,3 +1,4 @@
+import csv
 import io
 import itertools
 import re
@@ -5,7 +6,12 @@ import tokenize
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
+
+from lxml import etree
+
+from odoo.modules.module import get_module_path
 
 GROUP_EVERYONE = "base.group_everyone"
 EXCLUSIVE_GROUPS = frozenset(
@@ -901,3 +907,232 @@ def read_database(
                     todo.append(dependency)
         module_deps[module] = seen
     return acl_lines, rules, dict(implications), module_deps
+
+
+# A migration that edited an access line or a record rule reads ir.access now:
+# base's pre-migrate converts both tables before any other module migrates, so
+# a script still aimed at ir_rule or ir_model_access changes nothing. A rule
+# became one row under its own external id, plus `<name>_<group>` rows for its
+# other groups; every row carries the rule's domain as normalize_domain wrote it.
+
+
+def converted_row_ids(cr: Any, module: str, name: str) -> list[int]:
+    cr.execute(
+        """
+        SELECT d.res_id FROM ir_model_data d
+         WHERE d.model = 'ir.access' AND d.module = %s
+           AND (d.name = %s OR d.name LIKE %s)
+        """,
+        [module, name, name.replace("_", r"\_") + r"\_%"],
+    )
+    return [res_id for [res_id] in cr.fetchall()]
+
+
+def rewrite_converted_domain(
+    cr: Any,
+    module: str,
+    name: str,
+    new_domain: str,
+    old_domain: str | None = None,
+    *,
+    logger: Any = None,
+) -> int:
+    ids = converted_row_ids(cr, module, name)
+    new = normalize_domain(new_domain)
+    if not ids:
+        changed = 0
+    elif old_domain is None:
+        cr.execute(
+            "UPDATE ir_access SET domain = %s WHERE id = ANY(%s) "
+            "AND coalesce(domain, '') != %s",
+            [new or None, ids, new],
+        )
+        changed = cr.rowcount
+    else:
+        old = normalize_domain(old_domain)
+        cr.execute(
+            "UPDATE ir_access SET domain = %s WHERE id = ANY(%s) "
+            "AND coalesce(domain, '') = %s",
+            [new or None, ids, old],
+        )
+        changed = cr.rowcount
+    if logger:
+        logger.info(
+            "%s.%s: %s of %s converted access row(s) rewritten%s",
+            module,
+            name,
+            changed,
+            len(ids),
+            "" if changed or not ids else " (the domain was not the old one)",
+        )
+    return changed
+
+
+def replace_in_converted_domains(
+    cr: Any, module: str, old: str, new: str, *, logger: Any = None
+) -> int:
+    cr.execute(
+        """
+        UPDATE ir_access a SET domain = replace(a.domain, %s, %s)
+          FROM ir_model_data d
+         WHERE d.model = 'ir.access' AND d.res_id = a.id AND d.module = %s
+           AND a.domain LIKE %s
+        """,
+        [old, new, module, f"%{old}%"],
+    )
+    if logger:
+        logger.info(
+            "%s: %s access row(s) now read %r for %r", module, cr.rowcount, new, old
+        )
+    return cr.rowcount
+
+
+def delete_converted_rows(
+    cr: Any, module: str, name: str, *, logger: Any = None
+) -> int:
+    ids = converted_row_ids(cr, module, name)
+    if ids:
+        cr.execute(
+            "DELETE FROM ir_model_data WHERE model = 'ir.access' AND res_id = ANY(%s)",
+            [ids],
+        )
+        cr.execute("DELETE FROM ir_access WHERE id = ANY(%s)", [ids])
+    if logger:
+        logger.info("%s.%s: %s converted access row(s) deleted", module, name, len(ids))
+    return len(ids)
+
+
+def move_access_group(
+    cr: Any, old_group_id: int, new_group_id: int | None, *, logger: Any = None
+) -> int:
+    # the rows of a group that goes: onto the group that replaces it, or gone
+    # with it; a row the new group already holds under the same model,
+    # operation, kind and domain is not duplicated
+    if new_group_id:
+        cr.execute(
+            """
+            DELETE FROM ir_access old
+             WHERE old.group_id = %s
+               AND EXISTS (
+                   SELECT 1 FROM ir_access new
+                    WHERE new.group_id = %s AND new.model_id = old.model_id
+                      AND new.operation = old.operation AND new.kind = old.kind
+                      AND coalesce(new.domain, '') = coalesce(old.domain, ''))
+            """,
+            [old_group_id, new_group_id],
+        )
+        merged = cr.rowcount
+        cr.execute(
+            "UPDATE ir_access SET group_id = %s WHERE group_id = %s",
+            [new_group_id, old_group_id],
+        )
+        moved = cr.rowcount
+    else:
+        cr.execute("DELETE FROM ir_access WHERE group_id = %s", [old_group_id])
+        merged, moved = cr.rowcount, 0
+    if logger:
+        logger.info(
+            "group %s: %s access row(s) moved to %s, %s dropped",
+            old_group_id,
+            moved,
+            new_group_id,
+            merged,
+        )
+    return moved + merged
+
+
+def read_shipped_access_rows(modules: Iterable[str]) -> dict[str, dict[str, str]]:
+    # the rows the modules' security files ship, by external id, as read from
+    # disk: kind, group, operation and the model's external id
+    rows: dict[str, dict[str, str]] = {}
+    for module in sorted(modules):
+        path = get_module_path(module)
+        if not path:
+            continue
+
+        def qualify(ref: str | None, module: str = module) -> str:
+            return "" if not ref else ref if "." in ref else f"{module}.{ref}"
+
+        csv_path = Path(path, "security", "ir.access.csv")
+        if csv_path.is_file():
+            with csv_path.open(newline="", encoding="utf-8") as stream:
+                for line in csv.DictReader(stream):
+                    rows[qualify(line["id"])] = {
+                        "kind": line.get("kind") or "",
+                        "group": qualify(line.get("group_id/id")),
+                        "operation": line.get("operation") or "",
+                        "model": qualify(line.get("model_id/id")),
+                    }
+        xml_path = Path(path, "security", "ir_access.xml")
+        if xml_path.is_file():
+            for record in etree.parse(str(xml_path)).iter("record"):
+                fields = {f.get("name"): f for f in record.iter("field")}
+                if "kind" not in fields or "." in record.get("id"):
+                    continue
+                text = {name: (f.text or "") for name, f in fields.items()}
+                ref = {name: f.get("ref") for name, f in fields.items()}
+                rows[qualify(record.get("id"))] = {
+                    "kind": text["kind"],
+                    "group": qualify(ref.get("group_id")),
+                    "operation": text.get("operation", ""),
+                    "model": qualify(ref.get("model_id")),
+                }
+    return rows
+
+
+def noupdate_shortfalls(
+    cr: Any, shipped: Mapping[str, Mapping[str, str]], modules: Iterable[str]
+) -> list[tuple[str, str, str]]:
+    # a noupdate row keeps the database's operations; where its file grants more
+    # and nothing else will grant the difference once the upgrade has dropped
+    # the converted rows no file ships, that operation is granted to nobody
+    modules = set(modules)
+    cr.execute(
+        """
+        SELECT d.module || '.' || d.name, m.model
+          FROM ir_model_data d
+          JOIN ir_model m ON m.id = d.res_id
+         WHERE d.model = 'ir.model'
+        """
+    )
+    model_of_ref = dict(cr.fetchall())
+    cr.execute(
+        """
+        SELECT a.id, m.model, a.kind, a.operation,
+               d.module, d.module || '.' || d.name, d.noupdate
+          FROM ir_access a
+          JOIN ir_model m ON m.id = a.model_id
+          LEFT JOIN ir_model_data d ON d.model = 'ir.access' AND d.res_id = a.id
+         WHERE a.active
+        """
+    )
+    grants: dict[str, list[tuple[int | None, str]]] = defaultdict(list)
+    candidates = []
+    present = set()
+    for row_id, model, kind, operation, module, xmlid, noupdate in cr.fetchall():
+        file_row = shipped.get(xmlid) if xmlid else None
+        present.add(xmlid)
+        if file_row is not None and not noupdate:
+            kind, operation = file_row["kind"], file_row["operation"]
+        elif file_row is None and xmlid and not noupdate and module in modules:
+            continue
+        if kind == "permission":
+            grants[model].append((row_id, operation))
+        if noupdate and file_row is not None and file_row["kind"] == "permission":
+            candidates.append((xmlid, row_id, model, operation, file_row["operation"]))
+    for xmlid, file_row in shipped.items():
+        model = model_of_ref.get(file_row["model"])
+        if xmlid not in present and model and file_row["kind"] == "permission":
+            grants[model].append((None, file_row["operation"]))
+    shortfalls = []
+    for xmlid, row_id, model, operation, file_operation in candidates:
+        missing = "".join(
+            op
+            for op in "crud"
+            if op in file_operation
+            and op not in operation
+            and not any(op in ops for other, ops in grants[model] if other != row_id)
+        )
+        if missing:
+            shortfalls.append((xmlid, model, missing))
+    return sorted(shortfalls)

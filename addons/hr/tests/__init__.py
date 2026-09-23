@@ -38,3 +38,4 @@ from . import test_version_structure_type
 from . import test_first_contract_date
 from . import test_self_personal_information
 from . import test_employee_bank_account_access
+from . import test_migrations

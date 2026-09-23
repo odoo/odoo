@@ -102,7 +102,7 @@ def _rename_registry_rows(cr):
         UPDATE ir_model_data
            SET name = {RENAMED.format("name")}
          WHERE {MATCHES.format("name")}
-           AND model IN ('ir.model', 'ir.model.fields', 'ir.model.access', 'ir.ui.view')
+           AND model IN ('ir.model', 'ir.model.fields', 'ir.access', 'ir.ui.view')
         """
     )
 

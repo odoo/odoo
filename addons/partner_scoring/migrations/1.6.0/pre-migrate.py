@@ -24,8 +24,7 @@ METHODS = {
 XMLID_MODELS = (
     "ir.ui.view",
     "ir.actions.act_window",
-    "ir.rule",
-    "ir.model.access",
+    "ir.access",
     "ir.ui.menu",
 )
 

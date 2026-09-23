@@ -1,5 +1,7 @@
 import logging
 
+from odoo.addons.base.models.ir_access_convert import move_access_group
+
 _logger = logging.getLogger(__name__)
 
 FROM_MODULE = "api_gateway"
@@ -111,48 +113,20 @@ def _group_id(cr, name):
 
 
 def _carry_grants(cr, old_id, new_id):
-    """Move the old group's ACL and record-rule rows onto the new group.
+    """Move the old group's access rows onto the new group.
 
     1.7.0 deleted them, on the assumption that the new group already grants
     whatever the old one did. For `integration.service` that holds; for
     `api.credential.wizard` it does not, and `group_api_gateway_admin` carries
     the only grant on it that is not `base.group_system`. Deleting a group's
-    ACL rows narrows access whether or not its members moved -- a group confers
+    rows narrows access whether or not its members moved -- a group confers
     nothing by itself, so membership arriving intact is not the same as access
     arriving intact.
 
-    A row is dropped only where the new group already covers that model or rule,
-    which is a genuine duplicate rather than a grant.
+    A row is dropped only where the new group already holds the same one, which
+    is a genuine duplicate rather than a grant.
     """
-    cr.execute(
-        """
-        DELETE FROM ir_model_access old
-         WHERE old.group_id = %s
-           AND EXISTS (SELECT 1 FROM ir_model_access new
-                        WHERE new.group_id = %s AND new.model_id = old.model_id)
-        """,
-        (old_id, new_id),
-    )
-    cr.execute(
-        "UPDATE ir_model_access SET group_id = %s WHERE group_id = %s",
-        (new_id, old_id),
-    )
-    acls = cr.rowcount
-    cr.execute(
-        """
-        DELETE FROM rule_group_rel old
-         WHERE old.group_id = %s
-           AND EXISTS (SELECT 1 FROM rule_group_rel new
-                        WHERE new.group_id = %s
-                          AND new.rule_group_id = old.rule_group_id)
-        """,
-        (old_id, new_id),
-    )
-    cr.execute(
-        "UPDATE rule_group_rel SET group_id = %s WHERE group_id = %s",
-        (new_id, old_id),
-    )
-    return acls, cr.rowcount
+    return move_access_group(cr, old_id, new_id, logger=_logger), 0
 
 
 def _carry_implied_reach(cr, old_id, new_id):
@@ -239,7 +213,7 @@ def _merge_groups(cr):
             (old_name,),
         )
         _logger.info(
-            "19.0.1.22.0: merged %s into %s -- members, ACL rows, record rules "
+            "19.0.1.22.0: merged %s into %s -- members, access rows, record rules "
             "and implied reach all carried",
             old_name,
             new_name,

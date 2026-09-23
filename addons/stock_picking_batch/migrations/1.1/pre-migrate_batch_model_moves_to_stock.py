@@ -4,8 +4,8 @@ _logger = logging.getLogger(__name__)
 
 MOVED_RECORDS = [
     ("model_stock_picking_batch", "ir.model"),
-    ("access_stock_picking_batch", "ir.model.access"),
-    ("stock_picking_batch_multicompany_rule", "ir.rule"),
+    ("access_stock_picking_batch", "ir.access"),
+    ("stock_picking_batch_multicompany_rule", "ir.access"),
     ("mt_batch_state", "mail.message.subtype"),
     ("seq_picking_batch", "ir.sequence"),
     ("seq_picking_wave", "ir.sequence"),

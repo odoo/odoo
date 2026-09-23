@@ -27,7 +27,7 @@ def migrate(cr, version: str | None) -> None:
     _update_ir_model_fields(cr)
 
     _update_ir_filters(cr)
-    _update_ir_rules(cr)
+    _update_access_domains(cr)
     _update_server_actions(cr)
 
     _drop_orphaned_stage_id_from_user_rel(cr)
@@ -544,24 +544,24 @@ def _update_ir_filters(cr) -> None:
     _logger.info("ir_filters: %d total updates", total)
 
 
-def _update_ir_rules(cr) -> None:
+def _update_access_domains(cr) -> None:
     total = 0
 
     for model, old_field, new_field in _FILTER_FIELD_RENAMES:
         cr.execute(
             """
-            UPDATE ir_rule r
-            SET domain_force = replace(r.domain_force, %s, %s)
+            UPDATE ir_access r
+            SET domain = replace(r.domain, %s, %s)
             FROM ir_model m
             WHERE r.model_id = m.id
               AND m.model = %s
-              AND r.domain_force LIKE %s
+              AND r.domain LIKE %s
         """,
             (old_field, new_field, model, f"%{old_field}%"),
         )
         if cr.rowcount:
             _logger.info(
-                "ir_rule.domain_force: %s → %s on %s (%d rows)",
+                "ir_access.domain: %s → %s on %s (%d rows)",
                 old_field,
                 new_field,
                 model,
@@ -572,25 +572,25 @@ def _update_ir_rules(cr) -> None:
     for old_state, new_state in _FILTER_STATE_RENAMES:
         cr.execute(
             """
-            UPDATE ir_rule r
-            SET domain_force = replace(r.domain_force, %s, %s)
+            UPDATE ir_access r
+            SET domain = replace(r.domain, %s, %s)
             FROM ir_model m
             WHERE r.model_id = m.id
               AND m.model = 'project.task'
-              AND r.domain_force LIKE %s
+              AND r.domain LIKE %s
         """,
             (old_state, new_state, f"%{old_state}%"),
         )
         if cr.rowcount:
             _logger.info(
-                "ir_rule.domain_force: state %s → %s (%d rows)",
+                "ir_access.domain: state %s → %s (%d rows)",
                 old_state,
                 new_state,
                 cr.rowcount,
             )
             total += cr.rowcount
 
-    _logger.info("ir_rule: %d total updates", total)
+    _logger.info("ir_access: %d total updates", total)
 
 
 def _update_server_actions(cr) -> None:

@@ -49,3 +49,4 @@ from . import test_fixture_models
 from . import test_migration_versions
 from . import test_field_declarations
 from . import test_owl_templates
+from . import test_access_migrations

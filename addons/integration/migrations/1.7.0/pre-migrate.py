@@ -1,5 +1,7 @@
 import logging
 
+from odoo.addons.base.models.ir_access_convert import move_access_group
+
 _logger = logging.getLogger(__name__)
 
 _GROUP_MERGES = (
@@ -52,13 +54,12 @@ def _merge_groups(cr):
         )
         carried += cr.rowcount
 
-        cr.execute("DELETE FROM ir_model_access WHERE group_id = %s", (old_id,))
+        move_access_group(cr, old_id, None, logger=_logger)
         cr.execute(
             "DELETE FROM res_groups_implied_rel WHERE gid = %s OR hid = %s",
             (old_id, old_id),
         )
         cr.execute("DELETE FROM res_groups_users_rel WHERE gid = %s", (old_id,))
-        cr.execute("DELETE FROM rule_group_rel WHERE group_id = %s", (old_id,))
         cr.execute("DELETE FROM res_groups WHERE id = %s", (old_id,))
         cr.execute(
             """

@@ -1,10 +1,15 @@
+import logging
+
+from odoo.addons.base.models.ir_access_convert import rewrite_converted_domain
+
+_logger = logging.getLogger(__name__)
+
+
 def migrate(cr, version):
-    cr.execute("""
-        UPDATE ir_rule r
-           SET domain_force = '[(1, "=", 1)]'
-          FROM ir_model_data d
-         WHERE d.res_id = r.id
-           AND d.model = 'ir.rule'
-           AND d.module = 'hr_timesheet_attendance'
-           AND d.name = 'hr_timesheet_attendance_report_rule_approver'
-    """)
+    rewrite_converted_domain(
+        cr,
+        "hr_timesheet_attendance",
+        "hr_timesheet_attendance_report_rule_approver",
+        '[(1, "=", 1)]',
+        logger=_logger,
+    )

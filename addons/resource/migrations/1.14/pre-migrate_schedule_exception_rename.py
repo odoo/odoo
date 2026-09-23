@@ -4,8 +4,7 @@ from odoo.tools.module_data import rename_model
 RECORD_MODELS = (
     "ir.ui.view",
     "ir.actions.act_window",
-    "ir.rule",
-    "ir.model.access",
+    "ir.access",
     "ir.ui.menu",
 )
 

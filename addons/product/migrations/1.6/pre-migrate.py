@@ -11,12 +11,12 @@ MOVED_XMLIDS = (
     ("res.groups", "group_product_cost_readonly", "group_product_cost_readonly"),
     ("res.groups", "group_product_cost_manager", "group_product_cost_manager"),
     (
-        "ir.model.access",
+        "ir.access",
         "access_product_template_cost_manager",
         "access_product_template_cost_manager",
     ),
     (
-        "ir.model.access",
+        "ir.access",
         "access_product_product_cost_manager",
         "access_product_product_cost_manager",
     ),

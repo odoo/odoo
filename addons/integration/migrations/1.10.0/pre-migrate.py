@@ -1,5 +1,7 @@
 import logging
 
+from odoo.addons.base.models.ir_access_convert import replace_in_converted_domains
+
 _logger = logging.getLogger(__name__)
 
 _COLUMNS = {
@@ -116,20 +118,10 @@ def _rename_in_stored_arch(cr):
                     column,
                 )
 
-    cr.execute(
-        """
-        UPDATE ir_rule r
-           SET domain_force = replace(r.domain_force, 'service_id', 'endpoint_id')
-          FROM ir_model_data d
-         WHERE d.model = 'ir.rule'
-           AND d.res_id = r.id
-           AND d.module = ANY(%s)
-           AND r.domain_force LIKE '%%service_id%%'
-        """,
-        (list(_MODULES),),
-    )
-    if cr.rowcount:
-        _logger.info("19.0.1.10.0: rewrote %s record rule domain(s).", cr.rowcount)
+    for module in _MODULES:
+        replace_in_converted_domains(
+            cr, module, "service_id", "endpoint_id", logger=_logger
+        )
 
 
 def migrate(cr, version):

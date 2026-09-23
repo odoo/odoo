@@ -15,6 +15,10 @@ engine applied. One exception: where the module's file ships the same external
 id as another kind of row or for another group (a noupdate rule whose group
 link was lost reads as a global rule), the rows the file derives beside it do
 not fit the database's row, so that row is left for the file to update.
+A noupdate row that keeps fewer operations than its file grants, where the
+difference was carried by a converted row no file ships (so `_process_end` drops
+it), would leave that operation to nobody: each such row is named in a warning,
+for the module's own migration to hand over (sign 1.2 does, for its managers).
 
 A line or rule an administrator switched off becomes a switched-off row on its
 own, not paired with anything: switching it on again is a decision about the
@@ -28,22 +32,18 @@ and a module that auto-installs with both ships the row where one exists);
 `lost` must read 0.
 """
 
-import csv
 import logging
-import os
 from collections import Counter
-
-from lxml import etree
-
-from odoo.modules.module import get_module_path
 
 from odoo.addons.base.models.ir_access_convert import (
     GROUP_EVERYONE,
     PERM_OF_OPERATION,
     convert,
     normalize_domain,
+    noupdate_shortfalls,
     operation_string,
     read_database,
+    read_shipped_access_rows,
 )
 
 _logger = logging.getLogger(__name__)
@@ -100,50 +100,6 @@ def _inactive_rows(acl_lines, rules, implications, module_deps) -> list[dict]:
     for row in rows:
         row["active"] = False
     return rows
-
-
-class _ShippedRows:
-    # the (kind, group) of the rows a module's security files ship, read from
-    # disk on demand
-    def __init__(self, modules):
-        self.modules = set(modules)
-        self.cache: dict[str, dict[str, tuple[str, str]]] = {}
-
-    def row(self, module: str, name: str) -> tuple[str, str] | None:
-        if module not in self.modules:
-            return None
-        if module not in self.cache:
-            self.cache[module] = self._read(module)
-        return self.cache[module].get(name)
-
-    def _read(self, module: str) -> dict[str, tuple[str, str]]:
-        rows: dict[str, tuple[str, str]] = {}
-        path = get_module_path(module)
-        if not path:
-            return rows
-
-        def qualify(ref: str) -> str:
-            return ref if "." in ref else f"{module}.{ref}"
-
-        csv_path = os.path.join(path, "security", "ir.access.csv")
-        if os.path.isfile(csv_path):
-            with open(csv_path, newline="", encoding="utf-8") as stream:
-                for line in csv.DictReader(stream):
-                    rows[line["id"]] = (line["kind"], qualify(line["group_id/id"]))
-        xml_path = os.path.join(path, "security", "ir_access.xml")
-        if os.path.isfile(xml_path):
-            for record in etree.parse(xml_path).iter("record"):
-                fields = {f.get("name"): f for f in record.iter("field")}
-                if (
-                    "kind" in fields
-                    and "group_id" in fields
-                    and "." not in record.get("id")
-                ):
-                    rows[record.get("id")] = (
-                        fields["kind"].text,
-                        qualify(fields["group_id"].get("ref")),
-                    )
-        return rows
 
 
 def _ensure_ir_access_table(cr) -> None:
@@ -253,7 +209,7 @@ def migrate(cr, version):
         "DELETE FROM ir_model_data WHERE model IN ('ir.model.access', 'ir.rule')"
     )
     created = Counter()
-    files = _ShippedRows(module_deps)
+    shipped = read_shipped_access_rows(module_deps)
     reshaped: list[str] = []
     for row in rows:
         ops = row["operation"]
@@ -298,8 +254,8 @@ def migrate(cr, version):
         taken.add(xmlid)
         module, _dot, name = xmlid.partition(".")
         noupdate = bool(row["noupdate"])
-        if noupdate and (shipped := files.row(module, name)) is not None:
-            if shipped != (row["kind"], row["group"]):
+        if noupdate and (file_row := shipped.get(xmlid)) is not None:
+            if (file_row["kind"], file_row["group"]) != (row["kind"], row["group"]):
                 noupdate = False
                 reshaped.append(xmlid)
         cr.execute(
@@ -315,6 +271,16 @@ def migrate(cr, version):
             "which ships them as another kind or for another group: %s",
             len(reshaped),
             ", ".join(sorted(reshaped)),
+        )
+    for xmlid, model, missing in noupdate_shortfalls(cr, shipped, module_deps):
+        _logger.warning(
+            "ir.access conversion: noupdate row %s on %s keeps the database's "
+            "operations, and %s, which its module's file grants, is granted by no "
+            "other row once the rows no file ships are dropped: a migration of the "
+            "module must hand it over",
+            xmlid,
+            model,
+            missing,
         )
     cr.execute("DELETE FROM rule_group_rel")
     cr.execute("DELETE FROM ir_rule")

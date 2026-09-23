@@ -20,6 +20,8 @@ guarded so a database already holding the right domain is left alone.
 
 import logging
 
+from odoo.addons.base.models.ir_access_convert import rewrite_converted_domain
+
 _logger = logging.getLogger(__name__)
 
 MODULE = "hr"
@@ -35,18 +37,4 @@ def migrate(cr, version):
     """
     if not version:
         return
-    cr.execute(
-        """
-        UPDATE ir_rule rule
-           SET domain_force = %s
-          FROM ir_model_data data
-         WHERE data.model = 'ir.rule'
-           AND data.res_id = rule.id
-           AND data.module = %s
-           AND data.name = %s
-           AND rule.domain_force IS DISTINCT FROM %s
-        """,
-        (CORRECT, MODULE, NAME, CORRECT),
-    )
-    if cr.rowcount:
-        _logger.info("hr: repaired %s.%s onto partner_id", MODULE, NAME)
+    rewrite_converted_domain(cr, MODULE, NAME, CORRECT, logger=_logger)

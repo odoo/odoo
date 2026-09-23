@@ -1,19 +1,18 @@
+import logging
+
+from odoo.addons.base.models.ir_access_convert import rewrite_converted_domain
+
+_logger = logging.getLogger(__name__)
+
+
 def migrate(cr, version):
-    cr.execute(
-        """
-        UPDATE ir_rule r
-           SET domain_force = %s
-          FROM ir_model_data d
-         WHERE d.model = 'ir.rule'
-           AND d.module = 'hr'
-           AND d.name = 'ir_rule_hr_contract_multi_company'
-           AND d.res_id = r.id
-           AND r.domain_force = %s
-        """,
-        [
-            "[('company_id', 'in', company_ids + [False])]",
-            "[('company_id', 'in', company_ids)]",
-        ],
+    rewrite_converted_domain(
+        cr,
+        "hr",
+        "ir_rule_hr_contract_multi_company",
+        "[('company_id', 'in', company_ids + [False])]",
+        "[('company_id', 'in', company_ids)]",
+        logger=_logger,
     )
     cr.execute(
         """

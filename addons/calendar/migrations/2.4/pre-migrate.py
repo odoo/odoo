@@ -33,7 +33,7 @@ SOURCES = (
     ("ir_ui_view", "arch_db", True),
     ("ir_ui_view", "arch_prev", False),
     ("ir_act_server", "code", False),
-    ("ir_rule", "domain_force", False),
+    ("ir_access", "domain", False),
     ("ir_filters", "domain", False),
     ("ir_filters", "context", False),
     ("ir_act_window", "domain", False),

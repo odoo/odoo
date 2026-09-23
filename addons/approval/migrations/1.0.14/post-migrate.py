@@ -1,5 +1,7 @@
 import logging
 
+from odoo.addons.base.models.ir_access_convert import rewrite_converted_domain
+
 _logger = logging.getLogger(__name__)
 
 NEW_DOMAIN = (
@@ -15,20 +17,6 @@ NEW_DOMAIN = (
 
 
 def migrate(cr, version):
-    cr.execute(
-        """
-        UPDATE ir_rule
-        SET domain_force = %s
-        WHERE id = (
-            SELECT res_id FROM ir_model_data
-            WHERE module = 'approval' AND name = 'approval_approver_user_read'
-              AND model = 'ir.rule'
-        )
-        """,
-        (NEW_DOMAIN,),
+    rewrite_converted_domain(
+        cr, "approval", "approval_approver_user_read", NEW_DOMAIN, logger=_logger
     )
-    if cr.rowcount:
-        _logger.info(
-            "19.0.1.0.14: widened approval_approver_user_read domain for "
-            "co-approver delegates.",
-        )

@@ -59,10 +59,7 @@ def migrate(cr, version):
     # `_process_end` cannot sweep those afterwards: it removes a record and then
     # its xmlid, and by then the record is already gone. So drop the xmlids while
     # the ids are still resolvable.
-    for model, table in (
-        ("ir.rule", "ir_rule"),
-        ("ir.model.access", "ir_model_access"),
-    ):
+    for model, table in (("ir.access", "ir_access"),):
         cr.execute(
             f"""
             DELETE FROM ir_model_data
@@ -95,7 +92,7 @@ def migrate(cr, version):
                 AND res_id IN (SELECT id FROM ir_model WHERE model = 'product.document')
         """
     )
-    # The ir_model_fields, ir_model_access and ir_rule ROWS cascade from here;
+    # The ir_model_fields and ir_access ROWS cascade from here;
     # their xmlids were dropped above, while their ids still resolved.
     cr.execute("DELETE FROM ir_model WHERE model = 'product.document'")
     _carry_references_over(cr)

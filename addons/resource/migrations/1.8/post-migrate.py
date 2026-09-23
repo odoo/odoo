@@ -1,5 +1,7 @@
 import logging
 
+from odoo.addons.base.models.ir_access_convert import rewrite_converted_domain
+
 _logger = logging.getLogger(__name__)
 
 # Both rules live in a `noupdate="1"` block, so no upgrade has ever rewritten
@@ -24,17 +26,14 @@ def migrate(cr, version):
         return
 
     for xmlid, name, domain in REPAIRS:
+        rewrite_converted_domain(cr, "resource", xmlid, domain, logger=_logger)
         cr.execute(
             """
-            UPDATE ir_rule
-            SET domain_force = %s, name = %s
-            WHERE id = (
-                SELECT res_id FROM ir_model_data
-                WHERE module = 'resource' AND name = %s AND model = 'ir.rule'
-            )
-              AND (domain_force IS DISTINCT FROM %s OR name IS DISTINCT FROM %s)
+            UPDATE ir_access a SET name = %s
+              FROM ir_model_data d
+             WHERE d.model = 'ir.access' AND d.res_id = a.id
+               AND d.module = 'resource' AND d.name = %s
+               AND a.name IS DISTINCT FROM %s
             """,
-            (domain, name, xmlid, domain, name),
+            (name, xmlid, name),
         )
-        if cr.rowcount:
-            _logger.info("19.0.1.8: realigned ir.rule resource.%s with source.", xmlid)

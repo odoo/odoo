@@ -33,7 +33,7 @@ _logger = logging.getLogger(__name__)
 # (table, column) pairs holding a domain as a text literal.
 _DOMAIN_COLUMNS = (
     ("ir_filters", "domain"),
-    ("ir_rule", "domain_force"),
+    ("ir_access", "domain"),
     ("ir_act_window", "domain"),
     ("ir_act_server", "value"),
 )

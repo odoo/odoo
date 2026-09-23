@@ -1,3 +1,10 @@
+import logging
+
+_logger = logging.getLogger(__name__)
+
+RULES = ["tax_group_comp_rule", "tax_comp_rule", "tax_rep_comp_rule"]
+
+
 def migrate(cr, version):
     if not version:
         return
@@ -8,8 +15,9 @@ def migrate(cr, version):
         UPDATE ir_model_data
            SET module = 'account_tax'
          WHERE module = 'account'
-           AND model = 'ir.rule'
-           AND name = ANY(%s)
+           AND model = 'ir.access'
+           AND (name = ANY(%s) OR name LIKE ANY(%s))
         """,
-        [["tax_group_comp_rule", "tax_comp_rule", "tax_rep_comp_rule"]],
+        [RULES, [name.replace("_", r"\_") + r"\_%" for name in RULES]],
     )
+    _logger.info("%s converted access row(s) re-homed to account_tax", cr.rowcount)

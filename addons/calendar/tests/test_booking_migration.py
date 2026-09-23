@@ -300,3 +300,31 @@ class TestBookingCapacityMigration(TransactionCase):
                 migrate(self.cr, "19.0.1.1")
                 resource.invalidate_recordset(["capacity"])
                 self.assertEqual(resource.capacity, expected)
+
+
+@tagged("post_install", "-at_install")
+class TestBookingStoredExpressionMigration(TransactionCase):
+    def test_a_converted_access_row_follows_the_resource(self):
+        script = runpy.run_path(
+            str(Path(__file__).parents[1] / "migrations/2.4/pre-migrate.py")
+        )
+        row = self.env["ir.access"].create(
+            {
+                "name": "booked resources",
+                "model_id": self.env["ir.model"]._get_id("calendar.event"),
+                "kind": "guard",
+                "operation": "r",
+                "domain": "[('user_id', '=', user.id)]",
+            }
+        )
+        # what base 1.97 left of a rule a database carried before the merge:
+        # ir_rule is not read any more, so only the ir.access row can be renamed
+        self.cr.execute(
+            "UPDATE ir_access SET domain = %s WHERE id = %s",
+            ["[('appointment_resource_ids.user_id', '=', user.id)]", row.id],
+        )
+
+        script["_rewrite_stored_expressions"](self.cr)
+
+        row.invalidate_recordset(["domain"])
+        self.assertEqual(row.domain, "[('resource_ids.user_id', '=', user.id)]")

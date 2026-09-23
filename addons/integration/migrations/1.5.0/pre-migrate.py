@@ -95,10 +95,7 @@ def _rename_model_rows(cr):
     for table, column in (
         ("ir_act_window", "res_model"),
         ("ir_ui_view", "model"),
-        ("ir_rule", "model_id"),
     ):
-        if column == "model_id":
-            continue
         cr.execute("SELECT to_regclass(%s)", (table,))
         if not cr.fetchone()[0]:
             continue
