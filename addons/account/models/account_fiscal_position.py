@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -327,14 +327,14 @@ class AccountFiscalPosition(models.Model):
     def _onchange_country_id(self):
         if self.country_id:
             self.zip_from = self.zip_to = False
-            self.state_ids = [(5,)]
+            self.state_ids = [Command.clear()]
             self.states_count = len(self.country_id.state_ids)
 
     @api.onchange("country_group_id")
     def _onchange_country_group_id(self):
         if self.country_group_id:
             self.zip_from = self.zip_to = False
-            self.state_ids = [(5,)]
+            self.state_ids = [Command.clear()]
 
     def _inverse_vat_territory(self):
         for record in self:

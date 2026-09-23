@@ -1,3 +1,5 @@
+from odoo import Command
+
 from . import models
 
 
@@ -5,7 +7,7 @@ def post_init(env):
     type_ids_ref = env.ref(
         "hr_timesheet.internal_project_default_stage", raise_if_not_found=False
     )
-    type_ids = [(4, type_ids_ref.id)] if type_ids_ref else []
+    type_ids = [Command.link(type_ids_ref.id)] if type_ids_ref else []
     companies = env["res.company"].search(
         [
             "|",

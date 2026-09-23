@@ -1991,7 +1991,7 @@ class MixinMailThread(models.AbstractModel):
             relinked=len(filtered_attachment_ids),
             internal=self.env.user._is_internal(),
         )
-        return [(4, att_id) for att_id in attachment_ids]
+        return [Command.link(att_id) for att_id in attachment_ids]
 
     def _get_body_attachment_markers(self, fragments: list) -> tuple[set, set]:
         body_cids, body_filenames = set(), set()
@@ -2115,7 +2115,7 @@ class MixinMailThread(models.AbstractModel):
                     attach_cid_mapping[cid] = (attachment.id, token)
                 if name:
                     attach_name_mapping[name] = (attachment.id, token)
-                m2m_attachment_ids.append((4, attachment.id))
+                m2m_attachment_ids.append(Command.link(attachment.id))
 
             _debug.pipeline(
                 "attachments_for_post",
@@ -2908,7 +2908,7 @@ class MixinMailThread(models.AbstractModel):
         for values in values_list:
             create_values = dict(values)
             create_values["partner_ids"] = [
-                (4, pid) for pid in (create_values.get("partner_ids") or [])
+                Command.link(pid) for pid in (create_values.get("partner_ids") or [])
             ]
             create_values_list.append(create_values)
 
@@ -3994,7 +3994,9 @@ class MixinMailThread(models.AbstractModel):
         additional_values: dict | None = None,
     ) -> dict:
         final_mail_values = dict(mail_values)
-        final_mail_values["recipient_ids"] = [(4, pid) for pid in recipient_ids]
+        final_mail_values["recipient_ids"] = [
+            Command.link(pid) for pid in recipient_ids
+        ]
         if additional_values:
             final_mail_values.update(additional_values)
         return final_mail_values

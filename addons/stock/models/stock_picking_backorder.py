@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import Command, models
 from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
@@ -36,7 +36,7 @@ class StockPickingBackorder(models.Model):
             "context": dict(
                 self.env.context,
                 default_show_transfers=show_transfers,
-                default_pick_ids=[(4, p.id) for p in self],
+                default_pick_ids=[Command.link(p.id) for p in self],
             ),
         }
 

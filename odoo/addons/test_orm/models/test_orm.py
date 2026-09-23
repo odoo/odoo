@@ -1152,7 +1152,7 @@ class TestOrmOne2many(models.Model):
                     line.count += 1
                     break
             else:
-                record.line_ids = [(0, 0, {"name": record.name})]
+                record.line_ids = [Command.create({"name": record.name})]
 
 
 class TestOrmOne2manyLine(models.Model):

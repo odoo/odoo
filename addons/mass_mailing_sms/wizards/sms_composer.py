@@ -95,7 +95,7 @@ class SmsComposer(models.TransientModel):
             sms_values.update(
                 {
                     "mailing_id": self.mailing_id.id,
-                    "mailing_trace_ids": [(0, 0, trace_values)],
+                    "mailing_trace_ids": [Command.create(trace_values)],
                 }
             )
         return result

@@ -364,7 +364,7 @@ class ResCompany(models.Model):
                     "account_type": sales_tax_accounts[0].account_type,
                     "company_ids": [Command.link(self.id)],
                     "tag_ids": [
-                        (4, tag.id, 0) for tag in sales_tax_accounts[0].tag_ids
+                        Command.link(tag.id) for tag in sales_tax_accounts[0].tag_ids
                     ],
                 }
             )

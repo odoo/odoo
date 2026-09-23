@@ -29,7 +29,7 @@ class MailingContact(models.Model):
                 and isinstance(list_ids, (list, tuple))
             ):
                 res["subscription_ids"] = [
-                    (0, 0, {"list_id": list_id}) for list_id in list_ids
+                    Command.create({"list_id": list_id}) for list_id in list_ids
                 ]
         return res
 
@@ -163,7 +163,7 @@ class MailingContact(models.Model):
                     if len(subscription) == 3
                 ]
                 for list_id in set(default_list_ids) - set(current_list_ids):
-                    subscription_ids.append((0, 0, {"list_id": list_id}))
+                    subscription_ids.append(Command.create({"list_id": list_id}))
                 vals["subscription_ids"] = subscription_ids
 
         records = super(
@@ -198,7 +198,7 @@ class MailingContact(models.Model):
     def add_to_list(self, name, list_id):
         name, email = tools.parse_contact_from_email(name)
         contact = self.create(
-            {"name": name, "email": email, "list_ids": [(4, list_id)]}
+            {"name": name, "email": email, "list_ids": [Command.link(list_id)]}
         )
         return contact.id, contact.display_name
 

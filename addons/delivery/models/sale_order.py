@@ -314,7 +314,7 @@ class SaleOrder(models.Model):
             # base_order/models/order_line_amount_mixin.py).
             "product_qty": 1,
             "product_id": carrier.product_id.id,
-            "tax_ids": [(6, 0, taxes_ids)],
+            "tax_ids": [Command.set(taxes_ids)],
             "is_delivery": True,
         }
         if carrier.free_over and self.currency_id.is_zero(price_unit):

@@ -1045,7 +1045,7 @@ class DocumentsDocument(models.Model):
                 record.id,
             ):
                 snapshot.write({"res_model": "document.document", "res_id": record.id})
-            record.previous_attachment_ids = [(4, snapshot.id, False)]
+            record.previous_attachment_ids = [Command.link(snapshot.id)]
             _debug.logic("versioned", by="content_copy", document=record)
 
     def _write_version_existing(
@@ -1080,8 +1080,8 @@ class DocumentsDocument(models.Model):
                     {"res_model": "document.document", "res_id": record.id}
                 )
             if attachment_id in record.previous_attachment_ids.ids:
-                record.previous_attachment_ids = [(3, attachment_id, False)]
-            record.previous_attachment_ids = [(4, record.attachment_id.id, False)]
+                record.previous_attachment_ids = [Command.unlink(attachment_id)]
+            record.previous_attachment_ids = [Command.link(record.attachment_id.id)]
             _debug.logic("versioned", by="attachment_swap", document=record)
             return "swap"
         if "attachment_id" in vals and not attachment_id:
@@ -1097,7 +1097,7 @@ class DocumentsDocument(models.Model):
             # copy of it: nothing is overwriting it here, so the copy
             # the branch below makes would archive a duplicate and leave
             # the original dangling.
-            record.previous_attachment_ids = [(4, record.attachment_id.id, False)]
+            record.previous_attachment_ids = [Command.link(record.attachment_id.id)]
             _debug.logic("versioned", by="detach", document=record)
             return "detach"
         if writes_content:

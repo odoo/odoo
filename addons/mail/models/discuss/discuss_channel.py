@@ -449,7 +449,7 @@ class DiscussChannel(models.Model):
                     set(partner_ids + [self.env.user.partner_id.id])
                 )
             vals["channel_member_ids"] = membership_ids_cmd + [
-                (0, 0, {"partner_id": pid})
+                Command.create({"partner_id": pid})
                 for pid in partner_ids_to_add
                 if pid not in membership_pids
             ]

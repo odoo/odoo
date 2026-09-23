@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.tools import convert
 
 
@@ -55,7 +55,7 @@ class PosConfig(models.Model):
 
     def write(self, vals):
         if "module_pos_restaurant" in vals and vals["module_pos_restaurant"] is False:
-            vals["floor_ids"] = [(5, 0, 0)]
+            vals["floor_ids"] = [Command.clear()]
 
         if ("module_pos_restaurant" in vals and not vals["module_pos_restaurant"]) or (
             "iface_tipproduct" in vals and not vals["iface_tipproduct"]
@@ -72,7 +72,7 @@ class PosConfig(models.Model):
             main_floor = self.env["restaurant.floor"].create(
                 {
                     "name": pos_config.company_id.name,
-                    "pos_config_ids": [(4, pos_config.id)],
+                    "pos_config_ids": [Command.link(pos_config.id)],
                 }
             )
             self.env["restaurant.table"].create(
@@ -127,11 +127,11 @@ class PosConfig(models.Model):
         if floor_main := self.env.ref(
             "pos_restaurant.floor_main", raise_if_not_found=False
         ):
-            config_floors += [(4, floor_main.id)]
+            config_floors += [Command.link(floor_main.id)]
         if floor_patio := self.env.ref(
             "pos_restaurant.floor_patio", raise_if_not_found=False
         ):
-            config_floors += [(4, floor_patio.id)]
+            config_floors += [Command.link(floor_patio.id)]
         config.update({"floor_ids": config_floors})
         config._load_bar_demo_data(with_demo_data)
         return {"config_id": config.id}
@@ -190,7 +190,7 @@ class PosConfig(models.Model):
                 "module_pos_restaurant": True,
                 "use_presets": bool(presets),
                 "default_preset_id": presets[0] if presets else False,
-                "available_preset_ids": [(6, 0, presets)],
+                "available_preset_ids": [Command.set(presets)],
             }
         )
         self.env["ir.model.data"]._update_xmlids(
@@ -222,11 +222,11 @@ class PosConfig(models.Model):
         if floor_main := self.env.ref(
             "pos_restaurant.floor_main", raise_if_not_found=False
         ):
-            config_floors += [(4, floor_main.id)]
+            config_floors += [Command.link(floor_main.id)]
         if floor_patio := self.env.ref(
             "pos_restaurant.floor_patio", raise_if_not_found=False
         ):
-            config_floors += [(4, floor_patio.id)]
+            config_floors += [Command.link(floor_patio.id)]
         config.update({"floor_ids": config_floors})
         config._load_restaurant_demo_data(with_demo_data)
         existing_session = self.env.ref(

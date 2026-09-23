@@ -4,7 +4,7 @@ import typing
 
 from markupsafe import Markup
 
-from odoo import models
+from odoo import Command, models
 from odoo.exceptions import UserError
 from odoo.tools import html2plaintext
 
@@ -45,5 +45,5 @@ class MailMessage(models.Model):
             res_model=self._name,
             res_id=self.id,
         )
-        self.sudo().attachment_ids = [(4, attachment.id)]
+        self.sudo().attachment_ids = [Command.link(attachment.id)]
         return attachment

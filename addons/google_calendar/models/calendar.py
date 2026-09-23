@@ -296,8 +296,7 @@ class CalendarEvent(models.Model):
             if email in attendees_by_emails:
                 # Update existing attendees
                 attendee_commands += [
-                    (
-                        1,
+                    Command.update(
                         attendees_by_emails[email].id,
                         {"state": google_attendee.get("responseStatus")},
                     )
@@ -311,24 +310,22 @@ class CalendarEvent(models.Model):
                 else:
                     continue
                 attendee_commands += [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "state": google_attendee.get("responseStatus"),
                             "partner_id": partner.id,
-                        },
+                        }
                     )
                 ]
-                partner_commands += [(4, partner.id)]
+                partner_commands += [Command.link(partner.id)]
                 if google_attendee.get("displayName") and not partner.name:
                     partner.name = google_attendee.get("displayName")
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees but only if it does not correspond to the current user.
             email = tools.email_normalize(odoo_attendee.email)
             if email not in emails and email != self.env.user.email:
-                attendee_commands += [(2, odoo_attendee.id)]
-                partner_commands += [(3, odoo_attendee.partner_id.id)]
+                attendee_commands += [Command.delete(odoo_attendee.id)]
+                partner_commands += [Command.unlink(odoo_attendee.partner_id.id)]
         return attendee_commands, partner_commands
 
     @api.model
@@ -348,7 +345,7 @@ class CalendarEvent(models.Model):
                 limit=1,
             )
             if alarm:
-                commands += [(4, alarm.id)]
+                commands += [Command.link(alarm.id)]
             else:
                 if minutes % (60 * 24) == 0:
                     interval = "days"
@@ -375,15 +372,13 @@ class CalendarEvent(models.Model):
                         duration=duration,
                     )
                 commands += [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "duration": duration,
                             "interval": interval,
                             "name": name,
                             "alarm_type": alarm_type,
-                        },
+                        }
                     )
                 ]
         return commands

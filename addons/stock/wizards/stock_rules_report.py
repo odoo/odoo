@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 
 from ..tools import debug_log as dbg
 
@@ -42,7 +42,7 @@ class StockRulesReport(models.TransientModel):
             )
             if not warehouse_id:
                 self.env["stock.warehouse"]._raise_missing_warehouse()
-            res["warehouse_ids"] = [(6, 0, [warehouse_id])]
+            res["warehouse_ids"] = [Command.set([warehouse_id])]
         return res
 
     def _prepare_report_data(self):

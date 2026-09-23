@@ -1,6 +1,6 @@
 import logging
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 
 from ..tools import debug_log as dbg
 from odoo.addons.point_of_sale.models.pos_config import format_epson_certified_domain
@@ -630,7 +630,7 @@ class ResConfigSettings(models.TransientModel):
                 )
             else:
                 res_config.pos_default_fiscal_position_id = False
-                res_config.pos_fiscal_position_ids = [(5, 0, 0)]
+                res_config.pos_fiscal_position_ids = [Command.clear()]
 
     @api.depends("pos_iface_tipproduct", "pos_config_id")
     def _compute_pos_tip_product_id(self):

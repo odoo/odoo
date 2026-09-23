@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import Command, _, api, models
 
 
 class AppointmentType(models.Model):
@@ -76,7 +76,7 @@ class AppointmentType(models.Model):
             "is_date_first": False,
             "event_videocall_source": False,
             "show_avatars": True,
-            "staff_user_ids": [(6, 0, [self.env.user.id])],
+            "staff_user_ids": [Command.set([self.env.user.id])],
         }
 
     @api.model
@@ -90,13 +90,11 @@ class AppointmentType(models.Model):
             "location_id": False,
             "name": _("Video Call"),
             "question_ids": [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "title": _("Describe what you need"),
                         "question_type": "text_box",
-                    },
+                    }
                 )
             ],
             "show_avatars": False,
@@ -116,9 +114,7 @@ class AppointmentType(models.Model):
             "min_schedule_hours": 1.0,
             "name": _("Table"),
             "question_ids": [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "title": _(
                             "Do you have any dietary preferences or restrictions ?"
@@ -127,30 +123,26 @@ class AppointmentType(models.Model):
                             "e.g. Vegetarian, Lactose Intolerant, ..."
                         ),
                         "question_type": "text_box",
-                    },
+                    }
                 )
             ],
             "resource_ids": [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "name": _("Table %s", number),
                         "capacity": capacity,
-                    },
+                    }
                 )
                 for number, capacity in enumerate([2, 2, 4, 6], start=1)
             ],
             "manage_capacity": True,
             "slot_ids": [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "weekday": str(weekday),
                         "start_hour": start_hour,
                         "end_hour": end_hour,
-                    },
+                    }
                 )
                 for (start_hour, end_hour) in [(12, 14.5), (19, 0)]
                 for weekday in range(2, 7)
@@ -173,12 +165,10 @@ class AppointmentType(models.Model):
             "min_schedule_hours": 1.0,
             "name": _("Book a Resource"),
             "resource_ids": [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "name": _("Resource %s", number),
-                    },
+                    }
                 )
                 for number in range(1, 5)
             ],

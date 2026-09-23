@@ -1824,9 +1824,7 @@ class AccountDepreciationBoard(models.Model):
     def _get_disposal_moves(self, invoice_lines_list, date_disposal):
 
         def get_line(name, asset, amount, account, is_sale):
-            return (
-                0,
-                0,
+            return Command.create(
                 {
                     "name": name,
                     "account_id": account.id,
@@ -1848,7 +1846,7 @@ class AccountDepreciationBoard(models.Model):
                             asset.company_id.account_config_id.loss_account_id,
                         )
                     ),
-                },
+                }
             )
 
         move_ids = []

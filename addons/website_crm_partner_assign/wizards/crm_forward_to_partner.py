@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -52,7 +52,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
                 partner_id = partner_assigned_dict.get(lead.id) or False
                 partner = self.env["res.partner"].browse(partner_id)
                 res["assignation_lines"].append(
-                    (0, 0, self._convert_to_assignation_line(lead, partner))
+                    Command.create(self._convert_to_assignation_line(lead, partner))
                 )
         return res
 

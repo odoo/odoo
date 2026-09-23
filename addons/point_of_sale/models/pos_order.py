@@ -742,7 +742,7 @@ class PosOrder(models.Model):
             "discount": line_values["discount"],
             "price_unit": line_values["price_unit"],
             "name": line_values["name"],
-            "tax_ids": [(6, 0, line_values["tax_ids"].ids)],
+            "tax_ids": [Command.set(line_values["tax_ids"].ids)],
             "product_uom_id": line_values["uom_id"].id,
             "extra_tax_data": self.env["account.tax"]._export_base_line_extra_tax_data(
                 line_values
@@ -1771,7 +1771,7 @@ class PosOrder(models.Model):
             "account_id": base_line_vals["account_id"].id,
             "partner_id": base_line_vals["partner_id"].id,
             "currency_id": base_line_vals["currency_id"].id,
-            "tax_ids": [(6, 0, base_line_vals["tax_ids"].ids)],
+            "tax_ids": [Command.set(base_line_vals["tax_ids"].ids)],
             "tax_tag_ids": update_base_line_vals["tax_tag_ids"],
             "amount_currency": amount_currency,
             "balance": balance,
@@ -2029,7 +2029,7 @@ class PosOrder(models.Model):
                         order=self.name,
                         session=self.session_id.name,
                     ),
-                    "line_ids": [(0, 0, aml_value) for aml_value in move_lines],
+                    "line_ids": [Command.create(aml_value) for aml_value in move_lines],
                     "reversed_pos_order_id": self.id,
                 }
             )

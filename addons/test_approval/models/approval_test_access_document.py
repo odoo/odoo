@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import Command, fields, models
 
 
 class ApprovalTestAccessDocument(models.Model):
@@ -35,4 +35,4 @@ class ApprovalTestAccessDocument(models.Model):
 
     def _grant_access(self, partner, role=False):
         field = "editor_partner_ids" if role == "edit" else "viewer_partner_ids"
-        self.sudo().write({field: [(4, partner.id)]})
+        self.sudo().write({field: [Command.link(partner.id)]})

@@ -4,7 +4,7 @@ from urllib.parse import urlencode as url_encode
 from babel.dates import format_date, format_datetime
 from werkzeug.exceptions import BadRequest, Forbidden
 
-from odoo import fields, http
+from odoo import Command, fields, http
 from odoo.http import prepare_content_disposition_header, request, route
 from odoo.libs.datetime import timezone as get_timezone
 from odoo.tools.misc import get_lang
@@ -314,7 +314,7 @@ class CalendarController(http.Controller):
             emails_str, limit=GUEST_LIMIT
         )
         if guests:
-            event_sudo.write({"partner_ids": [(4, pid.id, False) for pid in guests]})
+            event_sudo.write({"partner_ids": [Command.link(pid.id) for pid in guests]})
         return None
 
     @route(

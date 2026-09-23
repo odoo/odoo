@@ -155,7 +155,7 @@ class WebsiteForm(form.WebsiteForm):
         if is_lead_model and visitor_sudo and result:
             lead_sudo = request.env["crm.lead"].browse(result).sudo()
             if lead_sudo.exists():
-                vals = {"lead_ids": [(4, result)]}
+                vals = {"lead_ids": [Command.link(result)]}
                 if not visitor_sudo.lead_ids and not visitor_sudo.partner_id:
                     vals["name"] = lead_sudo.contact_name
                 _debug.lifecycle(

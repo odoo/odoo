@@ -1418,7 +1418,7 @@ class AccountPaymentRegister(models.TransientModel):
                     )
                 )
 
-            res["line_ids"] = [(6, 0, available_lines.ids)]
+            res["line_ids"] = [Command.set(available_lines.ids)]
 
         return res
 
@@ -1649,13 +1649,11 @@ class AccountPaymentRegister(models.TransientModel):
                         payment.move_id.write(
                             {
                                 "line_ids": [
-                                    (
-                                        1,
+                                    Command.update(
                                         debit_lines[0].id,
                                         {"debit": debit_lines[0].debit + delta_balance},
                                     ),
-                                    (
-                                        1,
+                                    Command.update(
                                         credit_lines[0].id,
                                         {
                                             "credit": credit_lines[0].credit

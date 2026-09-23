@@ -5,7 +5,7 @@ from functools import wraps
 
 from dateutil.parser import parse
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.db import BaseCursor
 from odoo.fields import Domain
 from odoo.modules.registry import Registry
@@ -248,7 +248,7 @@ class MixinMicrosoftCalendarSync(models.AbstractModel):
                 to_create_values += [dict(value, need_sync_m=False)]
 
             new_calendar_recurrence["calendar_event_ids"] = [
-                (0, 0, to_create_value) for to_create_value in to_create_values
+                Command.create(to_create_value) for to_create_value in to_create_values
             ]
             new_recurrence_odoo = (
                 self.env["calendar.recurrence"]

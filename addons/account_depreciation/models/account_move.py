@@ -366,11 +366,9 @@ class AccountMove(models.Model):
             "date": depreciation_date,
             "journal_id": asset.depreciation_journal_id.id,
             "line_ids": [
-                (0, 0, depreciation_line(asset.account_depreciation_id, False)),
-                (
-                    0,
-                    0,
-                    depreciation_line(asset.account_depreciation_expense_id, True),
+                Command.create(depreciation_line(asset.account_depreciation_id, False)),
+                Command.create(
+                    depreciation_line(asset.account_depreciation_expense_id, True)
                 ),
             ],
             "depreciation_board_id": asset.id,

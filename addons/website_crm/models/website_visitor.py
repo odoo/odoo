@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 
@@ -91,7 +91,9 @@ class WebsiteVisitor(models.Model):
             _debug.lifecycle(
                 "leads_reassigned", visitor=self, target=target, leads=self.lead_ids
             )
-            target.write({"lead_ids": [(4, lead.id) for lead in self.lead_ids]})
+            target.write(
+                {"lead_ids": [Command.link(lead.id) for lead in self.lead_ids]}
+            )
 
         return super()._merge_visitor(target)
 

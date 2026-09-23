@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import Command, _, api, models
 
 
 class LoyaltyProgram(models.Model):
@@ -17,13 +17,11 @@ class LoyaltyProgram(models.Model):
                 default=0,
             )
             res["loyalty"]["reward_ids"].append(
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "reward_type": "shipping",
                         "required_points": highest_points + 1,
-                    },
+                    }
                 )
             )
         return res
@@ -42,13 +40,11 @@ class LoyaltyProgram(models.Model):
         res = super()._prepare_program_template_vals()
         if "promotion" in res:
             res["promotion"]["reward_ids"] = [
-                (5, 0, 0),
-                (
-                    0,
-                    0,
+                Command.clear(),
+                Command.create(
                     {
                         "reward_type": "shipping",
-                    },
+                    }
                 ),
             ]
         return res

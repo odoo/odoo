@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import Command, fields, models
 from odoo.exceptions import UserError
 
 from .exchange_transmission import _OPEN_STATES
@@ -39,7 +39,7 @@ class MixinExchangeSubject(models.AbstractModel):
                 by_reference[reference] = recordset.ids
         for record in self:
             found = by_reference.get(f"{record._name},{record.id}", [])
-            record.transmission_ids = [(6, 0, found)]
+            record.transmission_ids = [Command.set(found)]
             record.count_transmission = len(found)
 
     def _compute_exchange_state(self):

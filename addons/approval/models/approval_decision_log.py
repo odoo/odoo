@@ -1,4 +1,4 @@
-from odoo import SUPERUSER_ID, api, fields, models
+from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.api import DomainType
 from odoo.exceptions import UserError
 from odoo.fields import Domain
@@ -192,7 +192,7 @@ class ApprovalRequest(models.Model):
                 {
                     "request_id": self.id,
                     "approver_id": row.id if row is not None else False,
-                    "step_ids": [(6, 0, steps.ids)] if steps else False,
+                    "step_ids": [Command.set(steps.ids)] if steps else False,
                     "verdict": verdict,
                     "user_id": acting.id,
                     "principal_id": principal.id

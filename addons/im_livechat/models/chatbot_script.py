@@ -145,7 +145,7 @@ class ChatbotScript(models.Model):
                 clone_step.write(
                     {
                         "triggering_answer_ids": [
-                            (4, answer.id)
+                            Command.link(answer.id)
                             for answer in [
                                 answers_map[original_answer]
                                 for original_answer in original_step.triggering_answer_ids

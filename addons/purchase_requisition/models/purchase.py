@@ -112,7 +112,7 @@ class PurchaseOrder(models.Model):
                 price_unit=line.price_unit,
                 taxes_ids=taxes_ids,
             )
-            order_lines.append((0, 0, order_line_values))
+            order_lines.append(Command.create(order_line_values))
         self.line_ids = order_lines
 
     def action_confirm(self):

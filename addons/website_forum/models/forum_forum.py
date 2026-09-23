@@ -3,7 +3,7 @@ from operator import itemgetter
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import html_translate
 
@@ -504,7 +504,9 @@ class ForumForum(models.Model):
                 if tag_ids:
                     existing_keep.append(tag_ids.id)
                 elif user.exists() and user.karma >= self.karma_tag_create and tag_name:
-                    post_tags.append((0, 0, {"name": tag_name, "forum_id": self.id}))
+                    post_tags.append(
+                        Command.create({"name": tag_name, "forum_id": self.id})
+                    )
             else:
                 existing_keep.append(int(tag_id_or_new_name))
         post_tags.insert(0, [6, 0, existing_keep])

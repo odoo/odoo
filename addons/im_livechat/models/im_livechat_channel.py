@@ -21,7 +21,7 @@ class Im_LivechatChannel(models.Model):
     _rating_satisfaction_days = 14
 
     def _default_user_ids(self):
-        return [(6, 0, [self.env.uid])]
+        return [Command.set([self.env.uid])]
 
     def _default_button_text(self):
         return _("Need help? Chat with us.")

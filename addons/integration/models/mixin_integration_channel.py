@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -139,4 +139,4 @@ class MixinIntegrationChannel(models.AbstractModel):
                 logs_by_ref[ref] = recordset.ids
         for record in self:
             ref = f"{record._name},{record.id}"
-            record.event_log_ids = [(6, 0, logs_by_ref.get(ref, []))]
+            record.event_log_ids = [Command.set(logs_by_ref.get(ref, []))]

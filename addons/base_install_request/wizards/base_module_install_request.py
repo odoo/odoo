@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -32,7 +32,7 @@ class BaseModuleInstallRequest(models.Model):
     @api.depends("module_id")
     def _compute_user_ids(self):
         users = self.env.ref("base.group_system").all_user_ids
-        self.user_ids = [(6, 0, users.ids)]
+        self.user_ids = [Command.set(users.ids)]
 
     def action_send_request(self):
         self.check_singleton()

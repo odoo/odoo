@@ -896,7 +896,7 @@ class SlideChannel(models.Model):
         for vals in vals_list:
             if not vals.get("channel_partner_ids") and not self.env.is_superuser():
                 vals["channel_partner_ids"] = [
-                    (0, 0, {"partner_id": self.env.user.partner_id.id})
+                    Command.create({"partner_id": self.env.user.partner_id.id})
                 ]
             if not is_html_empty(vals.get("description")) and is_html_empty(
                 vals.get("description_short")

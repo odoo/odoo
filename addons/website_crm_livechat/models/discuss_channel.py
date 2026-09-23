@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import Command, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -17,6 +17,6 @@ class DiscussChannel(models.Model):
                 visitor=visitor_sudo,
                 country_from_visitor=not lead.country_id,
             )
-            visitor_sudo.write({"lead_ids": [(4, lead.id)]})
+            visitor_sudo.write({"lead_ids": [Command.link(lead.id)]})
             lead.country_id = lead.country_id or visitor_sudo.country_id
         return lead

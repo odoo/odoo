@@ -1,6 +1,6 @@
 from werkzeug.exceptions import Forbidden
 
-from odoo import _, fields, http
+from odoo import Command, _, fields, http
 from odoo.exceptions import ValidationError
 from odoo.http import request, route
 
@@ -56,9 +56,7 @@ class AppointmentCalendarView(http.Controller):
                 "name": _("%(name)s - My availabilities", name=request.env.user.name),
                 "category": "custom",
                 "slot_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "start_datetime": fields.Datetime.from_string(
                                 slot.get("start")
@@ -68,7 +66,7 @@ class AppointmentCalendarView(http.Controller):
                             ),
                             "allday": slot.get("allday"),
                             "slot_type": "unique",
-                        },
+                        }
                     )
                     for slot in slots
                 ],
@@ -104,11 +102,9 @@ class AppointmentCalendarView(http.Controller):
 
         appointment_type.write(
             {
-                "slot_ids": [(5, 0, 0)]
+                "slot_ids": [Command.clear()]
                 + [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "allday": slot.get("allday"),
                             "end_datetime": fields.Datetime.from_string(
@@ -118,7 +114,7 @@ class AppointmentCalendarView(http.Controller):
                             "start_datetime": fields.Datetime.from_string(
                                 slot.get("start")
                             ),
-                        },
+                        }
                     )
                     for slot in slots
                 ],

@@ -1,7 +1,7 @@
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 
 
 class EventLeadRule(models.Model):
@@ -152,7 +152,8 @@ class EventLeadRule(models.Model):
                                     "description": "%s<br/>%s"
                                     % (lead.description, additionnal_description),
                                     "registration_ids": [
-                                        (4, reg.id) for reg in group_registrations
+                                        Command.link(reg.id)
+                                        for reg in group_registrations
                                     ],
                                 }
                             )

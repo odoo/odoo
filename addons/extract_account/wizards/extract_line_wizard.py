@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -110,16 +110,14 @@ class ExtractLineWizard(models.TransientModel):
             "read_total": (result.get("total") or {}).get("value") or 0.0,
             "read_untaxed_total": _read_untaxed_total(result),
             "line_ids": [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "sequence": index * 10,
                         "read_index": index,
                         "read_by": envelope.get("source") or "",
                         "confidence": envelope.get("confidence") or 0.0,
                         **move._extract_line_seed(line),
-                    },
+                    }
                 )
                 for index, line in enumerate(lines)
             ],
@@ -147,9 +145,7 @@ class ExtractLineWizard(models.TransientModel):
         move.write(
             {
                 "invoice_line_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "name": line.description,
                             "quantity": line.quantity,
@@ -159,7 +155,7 @@ class ExtractLineWizard(models.TransientModel):
                                 if line.product_id
                                 else {}
                             ),
-                        },
+                        }
                     )
                     for line in accepted
                 ]

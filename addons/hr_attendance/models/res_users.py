@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import Command, models
 
 
 class ResUsers(models.Model):
@@ -13,5 +13,5 @@ class ResUsers(models.Model):
         officers_to_remove_ids = self - attendance_officers
         if officers_to_remove_ids:
             self.env.ref("hr_attendance.group_hr_attendance_officer").user_ids = [
-                (3, user.id) for user in officers_to_remove_ids
+                Command.unlink(user.id) for user in officers_to_remove_ids
             ]

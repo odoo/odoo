@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -72,7 +72,7 @@ class MailActivity(models.Model):
                 "owner_id": activity.activity_type_id.default_user_id.id
                 or (self.env.user.id if self.env.user.active else False),
                 "folder_id": activity.activity_type_id.folder_id.id,
-                "tag_ids": [(6, 0, activity.activity_type_id.tag_ids.ids)],
+                "tag_ids": [Command.set(activity.activity_type_id.tag_ids.ids)],
                 "name": activity.summary or activity.res_name or "upload file request",
                 "request_activity_id": activity.id,
             }
@@ -189,7 +189,7 @@ class MailActivity(models.Model):
                     "folder_id": next_activity_type.folder_id.id
                     if next_activity_type.folder_id
                     else existing_document.folder_id.id,
-                    "tag_ids": [(6, 0, next_activity_type.tag_ids.ids)],
+                    "tag_ids": [Command.set(next_activity_type.tag_ids.ids)],
                     "name": vals["summary"],
                 }
             )

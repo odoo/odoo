@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import Command, fields, models
 
 
 class CrmLead(models.Model):
@@ -35,7 +35,7 @@ class CrmLead(models.Model):
         self.sudo().write(
             {
                 "registration_ids": [
-                    (4, registration.id)
+                    Command.link(registration.id)
                     for registration in opportunities.sudo().registration_ids
                 ]
             }

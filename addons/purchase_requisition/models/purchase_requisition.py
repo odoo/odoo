@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -474,7 +474,7 @@ class PurchaseRequisitionLine(models.Model):
             "product_uom_id": self.product_uom_id.id,
             "product_qty": product_qty,
             "price_unit": price_unit,
-            "tax_ids": [(6, 0, taxes_ids)],
+            "tax_ids": [Command.set(taxes_ids)],
             "date_commitment": date_commitment,
             "analytic_distribution": self.analytic_distribution,
         }

@@ -692,7 +692,7 @@ class MailMessage(models.Model):
                     return match.group(3)
                 else:
                     attachment.generate_access_token()
-                    commands.append((4, attachment.id))
+                    commands.append(Command.link(attachment.id))
                     data_to_url[key] = [
                         "/web/image/%s?access_token=%s"
                         % (attachment.id, attachment.access_token),

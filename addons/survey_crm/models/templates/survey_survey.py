@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import Command, _, api, models
 
 
 class SurveySurvey(models.Model):
@@ -29,9 +29,7 @@ class SurveySurvey(models.Model):
             "progression_mode": "number",
             "questions_layout": "page_per_question",
             "question_and_page_ids": [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "title": _(
                             "Let's start with a basic question. What's your email address?"
@@ -40,41 +38,31 @@ class SurveySurvey(models.Model):
                         "constr_mandatory": True,
                         "validation_email": True,
                         "save_as_email": True,
-                    },
+                    }
                 ),
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "title": _("What is the size of your company?"),
                         "question_type": "simple_choice",
                         "constr_mandatory": True,
                         "suggested_answer_ids": [
-                            (
-                                0,
-                                0,
+                            Command.create(
                                 {
                                     "value": _("1-10 employees"),
-                                },
+                                }
                             ),
-                            (
-                                0,
-                                0,
-                                {"value": _("11-100 employees"), "generate_lead": True},
+                            Command.create(
+                                {"value": _("11-100 employees"), "generate_lead": True}
                             ),
-                            (
-                                0,
-                                0,
+                            Command.create(
                                 {
                                     "value": _("100+ employees"),
-                                },
+                                }
                             ),
                         ],
-                    },
+                    }
                 ),
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "title": _(
                             "Which of the following best describes your main goal?"
@@ -82,32 +70,24 @@ class SurveySurvey(models.Model):
                         "question_type": "simple_choice",
                         "constr_mandatory": True,
                         "suggested_answer_ids": [
-                            (
-                                0,
-                                0,
+                            Command.create(
                                 {
                                     "value": _("Improving efficiency"),
                                     "generate_lead": True,
-                                },
+                                }
                             ),
-                            (
-                                0,
-                                0,
+                            Command.create(
                                 {
                                     "value": _("Reducing costs"),
-                                },
+                                }
                             ),
-                            (
-                                0,
-                                0,
-                                {"value": _("Expanding sales"), "generate_lead": True},
+                            Command.create(
+                                {"value": _("Expanding sales"), "generate_lead": True}
                             ),
                         ],
-                    },
+                    }
                 ),
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "title": _(
                             "Who will make the final decision on this purchase?"
@@ -115,24 +95,20 @@ class SurveySurvey(models.Model):
                         "question_type": "simple_choice",
                         "constr_mandatory": True,
                         "suggested_answer_ids": [
-                            (0, 0, {"value": _("Me"), "generate_lead": True}),
-                            (
-                                0,
-                                0,
+                            Command.create({"value": _("Me"), "generate_lead": True}),
+                            Command.create(
                                 {
                                     "value": _("My Manager/Executive"),
                                     "generate_lead": True,
-                                },
+                                }
                             ),
-                            (
-                                0,
-                                0,
+                            Command.create(
                                 {
                                     "value": _("A team/committee"),
-                                },
+                                }
                             ),
                         ],
-                    },
+                    }
                 ),
             ],
         }

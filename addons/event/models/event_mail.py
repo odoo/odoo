@@ -4,7 +4,7 @@ from itertools import batched
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import api, fields, models, modules
+from odoo import Command, api, fields, models, modules
 from odoo.tools.rendering_tools import QWebError
 from odoo.tools.translate import _
 
@@ -219,7 +219,8 @@ class EventMail(models.Model):
             self.write(
                 {
                     "mail_slot_ids": [
-                        (0, 0, {"event_slot_id": slot.id}) for slot in missing_slots
+                        Command.create({"event_slot_id": slot.id})
+                        for slot in missing_slots
                     ]
                 }
             )

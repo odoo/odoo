@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 
 from ..tools import debug_log as dbg
 
@@ -37,7 +37,7 @@ class StockBackorderConfirmation(models.TransientModel):
         res = super().default_get(fields)
         if "backorder_confirmation_line_ids" in fields and res.get("pick_ids"):
             res["backorder_confirmation_line_ids"] = [
-                (0, 0, {"to_backorder": True, "picking_id": pick_id})
+                Command.create({"to_backorder": True, "picking_id": pick_id})
                 for pick_id in res["pick_ids"][0][2]
             ]
         return res

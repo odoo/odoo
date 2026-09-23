@@ -3,7 +3,7 @@ import logging
 from collections.abc import Collection
 from datetime import datetime, timedelta
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -227,7 +227,7 @@ class WebsiteVisitor(models.Model):
                 visitor.id,
                 {"page_count": 0, "visitor_page_count": 0, "page_ids": set()},
             )
-            visitor.sudo().page_ids = [(6, 0, visitor_info["page_ids"])]
+            visitor.sudo().page_ids = [Command.set(visitor_info["page_ids"])]
             visitor.visitor_page_count = visitor_info["visitor_page_count"]
             visitor.page_count = visitor_info["page_count"]
 

@@ -1,4 +1,4 @@
-from odoo import api, models
+from odoo import Command, api, models
 
 
 class AccountJournal(models.Model):
@@ -10,7 +10,9 @@ class AccountJournal(models.Model):
 
         if company.account_config_id.account_fiscal_country_id.code == "DE":
             tag_ids = res.get("tag_ids", [])
-            tag_ids.append((4, self.env.ref("l10n_de.tag_de_asset_bs_B_IV").id))
+            tag_ids.append(
+                Command.link(self.env.ref("l10n_de.tag_de_asset_bs_B_IV").id)
+            )
             res["tag_ids"] = tag_ids
 
         return res

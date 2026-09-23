@@ -426,7 +426,9 @@ class EventEvent(models.Model):
                         question.id not in questions_tokeep_ids
                     )
                 )
-                command = [(3, question.id) for question in questions_toremove]
+                command = [
+                    Command.unlink(question.id) for question in questions_toremove
+                ]
             else:
                 command = [(5, 0)]
             event.question_ids = command

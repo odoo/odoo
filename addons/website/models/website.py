@@ -444,7 +444,11 @@ class Website(models.Model):
             )
             _debug.lifecycle("multi_website_group_implied", groups=groups)
             groups.write(
-                {"implied_ids": [(4, self.env.ref("website.group_multi_website").id)]}
+                {
+                    "implied_ids": [
+                        Command.link(self.env.ref("website.group_multi_website").id)
+                    ]
+                }
             )
 
         return websites

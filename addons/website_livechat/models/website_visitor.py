@@ -96,7 +96,7 @@ class WebsiteVisitor(models.Model):
                         website.name,
                     )
                 )
-        self.website_id.channel_id.write({"user_ids": [(4, self.env.user.id)]})
+        self.website_id.channel_id.write({"user_ids": [Command.link(self.env.user.id)]})
         discuss_channel_vals_list = []
         for visitor in self:
             operator = self.env.user
@@ -150,8 +150,8 @@ class WebsiteVisitor(models.Model):
     def _merge_visitor(self, target):
         target.discuss_channel_ids |= self.discuss_channel_ids
         self.discuss_channel_ids.channel_partner_ids = [
-            (3, self.env.ref("base.public_partner").id),
-            (4, target.partner_id.id),
+            Command.unlink(self.env.ref("base.public_partner").id),
+            Command.link(target.partner_id.id),
         ]
         return super()._merge_visitor(target)
 

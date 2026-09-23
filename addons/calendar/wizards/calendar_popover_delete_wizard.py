@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 
 
 class CalendarPopoverDeleteWizard(models.TransientModel):
@@ -111,7 +111,7 @@ class CalendarPopoverDeleteWizard(models.TransientModel):
             email_values={
                 "subject": self.subject,
                 "body_html": self.body,
-                "partner_ids": [(6, 0, self.recipient_ids.ids)],
+                "partner_ids": [Command.set(self.recipient_ids.ids)],
             },
         )
         return self.action_delete()

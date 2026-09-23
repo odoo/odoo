@@ -129,13 +129,11 @@ class CalendarRecurrence(models.Model):
                 self.calendar_event_ids.write(
                     {
                         "attendee_ids": [
-                            (
-                                0,
-                                0,
+                            Command.create(
                                 {
                                     "state": google_attendee.get("responseStatus"),
                                     "partner_id": partner.id,
-                                },
+                                }
                             )
                         ]
                     }
@@ -251,7 +249,7 @@ class CalendarRecurrence(models.Model):
                 # The event google_id will be recalculated once the recurrence is created
                 base_event.write(dict(base_values, google_id=False))
             vals["base_event_id"] = base_event.id
-            vals["calendar_event_ids"] = [(4, base_event.id)]
+            vals["calendar_event_ids"] = [Command.link(base_event.id)]
             # event_tz is written on event in Google but on recurrence in Odoo
             vals["event_tz"] = gevent.start.get("timeZone")
             attendee_values[base_event.id] = {

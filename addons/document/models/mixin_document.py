@@ -35,7 +35,7 @@ class MixinDocuments(models.AbstractModel):
                 "company_id": folder.company_id.id,
                 "owner_id": owner.id if owner.active else False,
                 "partner_id": self._get_document_partner().id,
-                "tag_ids": [(6, 0, self._get_document_tags().ids)],
+                "tag_ids": [Command.set(self._get_document_tags().ids)],
             } | access_rights_vals
             _debug.pipeline(
                 "document_vals_built",
@@ -99,7 +99,8 @@ class MixinDocuments(models.AbstractModel):
                         "partner_id", related_record._get_document_partner().id
                     ),
                     "tag_ids": pre_vals.get(
-                        "tag_ids", [(6, 0, related_record._get_document_tags().ids)]
+                        "tag_ids",
+                        [Command.set(related_record._get_document_tags().ids)],
                     ),
                 }
                 | {

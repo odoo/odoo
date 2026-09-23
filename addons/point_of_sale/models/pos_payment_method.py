@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from ..tools import debug_log as dbg
@@ -345,7 +345,7 @@ class PosPaymentMethod(models.Model):
                 vals[name] = False
 
     def copy_data(self, default=None):
-        default = dict(default or {}, config_ids=[(5, 0, 0)])
+        default = dict(default or {}, config_ids=[Command.clear()])
         vals_list = super().copy_data(default=default)
 
         for pm, vals in zip(self, vals_list, strict=False):

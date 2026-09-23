@@ -916,7 +916,7 @@ class ProductTemplate(models.Model):
             {
                 "product_tmpl_id": self.id,
                 "product_template_attribute_value_ids": [
-                    (6, 0, combination._without_no_variant_attributes().ids)
+                    Command.set(combination._without_no_variant_attributes().ids)
                 ],
             }
         )

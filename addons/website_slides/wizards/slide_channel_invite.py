@@ -1,7 +1,7 @@
 import logging
 import re
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -111,13 +111,13 @@ class SlideChannelInvite(models.TransientModel):
             slide_channel_partner.id
         ]
         mail_values = {
-            "attachment_ids": [(4, att.id) for att in self.attachment_ids],
+            "attachment_ids": [Command.link(att.id) for att in self.attachment_ids],
             "author_id": self.env.user.partner_id.id,
             "auto_delete": self.template_id.auto_delete if self.template_id else True,
             "body_html": body,
             "email_from": self.env.user.email_formatted,
             "model": None,
-            "recipient_ids": [(4, slide_channel_partner.partner_id.id)],
+            "recipient_ids": [Command.link(slide_channel_partner.partner_id.id)],
             "res_id": None,
             "subject": subject,
         }

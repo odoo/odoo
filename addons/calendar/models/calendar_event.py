@@ -1136,12 +1136,10 @@ class CalendarEvent(models.Model):
                 continue
 
             values["activity_ids"] = [
-                (
-                    0,
-                    0,
+                Command.create(
                     self._prepare_meeting_activity_vals(
                         values, meeting_activity_type[0]
-                    ),
+                    )
                 )
             ]
 
@@ -1172,7 +1170,7 @@ class CalendarEvent(models.Model):
         quick-created event have an organizer.
         """
         default_partners_ids = defaults.get("partner_ids") or (
-            [(4, self.env.user.partner_id.id)]
+            [Command.link(self.env.user.partner_id.id)]
         )
         return [
             dict(
@@ -2238,7 +2236,7 @@ class CalendarEvent(models.Model):
         self.check_singleton()
         partner = self.env["res.partner"].browse(partner_id)
         if partner not in self.partner_ids:
-            self.write({"partner_ids": [(4, partner.id)]})
+            self.write({"partner_ids": [Command.link(partner.id)]})
 
     # The two vocabularies a delete policy arrives in: the form view sends the
     # `recurrence_update` selection, the delete wizard its own `delete` field.
@@ -2491,7 +2489,7 @@ class CalendarEvent(models.Model):
                     dict(
                         values,
                         base_event_id=event.id,
-                        calendar_event_ids=[(4, event.id)],
+                        calendar_event_ids=[Command.link(event.id)],
                     )
                 ]
             elif future:

@@ -48,7 +48,7 @@ class CrmIapLeadHelpers(models.Model):
         lead_vals = {
             "type": lead_type,
             "team_id": team_id,
-            "tag_ids": [(6, 0, tag_ids)],
+            "tag_ids": [Command.set(tag_ids)],
             "user_id": user_id,
             "reveal_id": company_data.get("duns")
             or company_data.get("clearbit_id", ""),

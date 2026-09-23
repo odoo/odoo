@@ -1171,7 +1171,7 @@ class WebsiteSlides(WebsiteProfile):
         if not tag:
             return {"error": _("No tag to add.")}
 
-        tag.sudo().write({"channel_ids": [(4, channel.id, 0)]})
+        tag.sudo().write({"channel_ids": [Command.link(channel.id)]})
 
         return {"url": "/slides/%s" % (request.env["ir.http"]._slug(channel))}
 
@@ -1540,16 +1540,14 @@ class WebsiteSlides(WebsiteProfile):
             "survey_id": slide.survey_id.id,
             "question_type": "simple_choice",
             "suggested_answer_ids": [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "sequence": answer["sequence"],
                         "value": answer["text_value"],
                         "is_correct": answer["is_correct"],
                         "answer_score": 1.0 if answer["is_correct"] else 0.0,
                         "comment": answer["comment"],
-                    },
+                    }
                 )
                 for answer in answer_ids
             ],

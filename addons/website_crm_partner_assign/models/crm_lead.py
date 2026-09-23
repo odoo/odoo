@@ -143,7 +143,7 @@ class CrmLead(models.Model):
                     False,
                 )
                 if tag_to_add:
-                    lead.write({"tag_ids": [(4, tag_to_add.id, False)]})
+                    lead.write({"tag_ids": [Command.link(tag_to_add.id)]})
                 continue
             lead.update_geo_location(lead.partner_latitude, lead.partner_longitude)
             partner = self.env["res.partner"].browse(partner_id)
@@ -303,9 +303,9 @@ class CrmLead(models.Model):
                 "website_crm_partner_assign.tag_portal_lead_is_spam", False
             )
             if tag_spam and tag_spam not in self.sudo().tag_ids:
-                values["tag_ids"] = [(4, tag_spam.id, False)]
+                values["tag_ids"] = [Command.link(tag_spam.id)]
         if partner_ids:
-            values["partner_declined_ids"] = [(4, p, 0) for p in partner_ids.ids]
+            values["partner_declined_ids"] = [Command.link(p) for p in partner_ids.ids]
         self.sudo().write(values)
 
     def update_lead_portal(self, values):
@@ -407,7 +407,7 @@ class CrmLead(models.Model):
             "partner_assigned_id": user.commercial_partner_id.id,
         }
         if tag_own:
-            values["tag_ids"] = [(4, tag_own.id, False)]
+            values["tag_ids"] = [Command.link(tag_own.id)]
 
         lead = self.create(values)
         lead.update_salesman_of_assigned_partner()

@@ -2155,11 +2155,12 @@ class MrpProduction(models.Model):
                         lambda m: m.state != "cancel" and m.product_qty
                     )
                 vals["move_finished_ids"] = [
-                    (0, 0, move_vals) for move_vals in move_finished_ids.copy_data()
+                    Command.create(move_vals)
+                    for move_vals in move_finished_ids.copy_data()
                 ]
             if not default or "move_raw_ids" not in default:
                 vals["move_raw_ids"] = [
-                    (0, 0, move_vals)
+                    Command.create(move_vals)
                     for move_vals in production.move_raw_ids.filtered(
                         lambda m: m.product_qty
                     ).copy_data()
@@ -3067,9 +3068,7 @@ class MrpProduction(models.Model):
         lines = []
         for order, product_id, consumed_qty, expected_qty in consumption_issues:
             lines.append(
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "mrp_production_id": order.id,
                         "product_id": product_id.id,
@@ -3077,7 +3076,7 @@ class MrpProduction(models.Model):
                         "product_uom_id": product_id.uom_id.id,
                         "product_consumed_qty_uom": consumed_qty,
                         "product_expected_qty_uom": expected_qty,
-                    },
+                    }
                 )
             )
         ctx.update(
@@ -3107,7 +3106,7 @@ class MrpProduction(models.Model):
     def _prepare_action_backorder_wizard(self, quantity_issues):
         ctx = self.env.context.copy()
         lines = [
-            (0, 0, {"mrp_production_id": order.id, "to_backorder": True})
+            Command.create({"mrp_production_id": order.id, "to_backorder": True})
             for order in quantity_issues
         ]
         ctx.update(

@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -125,14 +125,12 @@ class TestUnstoredInheritsChild(models.Model):
     def _compute_test_unstored_inherits_shared_line_ids(self):
         for record in self:
             record.test_unstored_inherits_shared_line_ids = [
-                (5, 0, 0),
-                (
-                    0,
-                    0,
+                Command.clear(),
+                Command.create(
                     {
                         "name": record.contract_name,
                         "test_unstored_inherits_child_id": record.id,
-                    },
+                    }
                 ),
             ]
 

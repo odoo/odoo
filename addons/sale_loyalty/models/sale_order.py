@@ -864,13 +864,11 @@ class SaleOrder(models.Model):
             self.sudo().with_context(tracking_disable=True).write(
                 {
                     "coupon_point_ids": [
-                        (
-                            0,
-                            0,
+                        Command.create(
                             {
                                 "coupon_id": coupon.id,
                                 "points": points,
-                            },
+                            }
                         )
                         for coupon, points in coupon_points.items()
                     ]

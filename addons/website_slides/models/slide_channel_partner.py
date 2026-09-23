@@ -277,7 +277,9 @@ class SlideChannelPartner(models.Model):
                 author_id=record.channel_id.user_id.partner_id.id
                 or self.env.company.partner_id.id,
                 auto_delete=True,
-                recipient_ids=[(4, pid) for pid in email_values["partner_ids"]],
+                recipient_ids=[
+                    Command.link(pid) for pid in email_values["partner_ids"]
+                ],
             )
             email_values["body_html"] = template._render_encapsulate(
                 "mail.mail_notification_light",

@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -66,7 +66,7 @@ class MrpProduction(models.Model):
                     product_id, qty, product_id.uom_id
                 )
                 move["additional"] = True
-                production.move_raw_ids = [(0, 0, move)]
+                production.move_raw_ids = [Command.create(move)]
                 production.move_raw_ids.filtered(
                     lambda m, product_id=product_id: m.product_id == product_id
                 )[:1].move_line_ids = lines

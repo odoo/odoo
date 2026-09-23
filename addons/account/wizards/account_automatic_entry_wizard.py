@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from markupsafe import Markup, escape
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_repr
@@ -225,7 +225,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         move_line_ids = self.env["account.move.line"].browse(
             self.env.context["active_ids"]
         )
-        res["move_line_ids"] = [(6, 0, move_line_ids.ids)]
+        res["move_line_ids"] = [Command.set(move_line_ids.ids)]
 
         if any(move.state != "posted" for move in move_line_ids.mapped("move_id")):
             raise UserError(
@@ -494,7 +494,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                     "Transfer entry to %s",
                     self.destination_account_id.display_name or "",
                 ),
-                "line_ids": [(0, 0, line) for line in line_vals],
+                "line_ids": [Command.create(line) for line in line_vals],
             }
         ]
 
@@ -518,9 +518,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
 
         if date == "new_date":
             return [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "name": name,
                         "debit": reported_debit,
@@ -530,11 +528,9 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                         "account_id": aml.account_id.id,
                         "partner_id": aml.partner_id.id,
                         "analytic_distribution": aml.analytic_distribution,
-                    },
+                    }
                 ),
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "name": name,
                         "debit": reported_credit,
@@ -544,13 +540,11 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                         "account_id": accrual_account.id,
                         "partner_id": aml.partner_id.id,
                         "analytic_distribution": aml.analytic_distribution,
-                    },
+                    }
                 ),
             ]
         return [
-            (
-                0,
-                0,
+            Command.create(
                 {
                     "name": name,
                     "debit": reported_credit,
@@ -560,11 +554,9 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                     "account_id": aml.account_id.id,
                     "partner_id": aml.partner_id.id,
                     "analytic_distribution": aml.analytic_distribution,
-                },
+                }
             ),
-            (
-                0,
-                0,
+            Command.create(
                 {
                     "name": name,
                     "debit": reported_debit,
@@ -574,7 +566,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                     "account_id": accrual_account.id,
                     "partner_id": aml.partner_id.id,
                     "analytic_distribution": aml.analytic_distribution,
-                },
+                }
             ),
         ]
 

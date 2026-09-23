@@ -1,3 +1,5 @@
+from odoo import Command
+
 from . import models
 
 
@@ -46,6 +48,6 @@ def _document_resource_asset_post_init(env):
                 "company_id": company_id,
                 "centralize": bool(centralize),
                 "folder_id": folder_id,
-                "tag_ids": [(6, 0, tag_ids)],
+                "tag_ids": [Command.set(tag_ids)],
             }
         )

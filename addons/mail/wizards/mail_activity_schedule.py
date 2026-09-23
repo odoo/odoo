@@ -5,7 +5,7 @@ from typing import Literal
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
@@ -363,8 +363,8 @@ class MailActivitySchedule(models.TransientModel):
 
                         schedule_line_values_list.append(schedule_line_values)
 
-            scheduler.plan_schedule_line_ids = [(5,)] + [
-                (0, 0, values) for values in schedule_line_values_list
+            scheduler.plan_schedule_line_ids = [Command.clear()] + [
+                Command.create(values) for values in schedule_line_values_list
             ]
 
     def _plan_preview_record(self) -> models.BaseModel:

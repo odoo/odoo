@@ -4,7 +4,7 @@ from datetime import UTC
 
 from dateutil.relativedelta import MO, SU, relativedelta
 
-from odoo import _, api, exceptions, fields, models
+from odoo import Command, _, api, exceptions, fields, models
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
 from odoo.libs.intervals import Intervals
@@ -103,7 +103,7 @@ class HrEmployee(models.Model):
             "hr_attendance.group_hr_attendance_officer", raise_if_not_found=False
         )
         group_updates = [
-            (4, vals["attendance_manager_id"])
+            Command.link(vals["attendance_manager_id"])
             for vals in vals_list
             if officer_group and vals.get("attendance_manager_id")
         ]
@@ -124,7 +124,9 @@ class HrEmployee(models.Model):
                 if officers_group and not officer.has_group(
                     "hr_attendance.group_hr_attendance_officer"
                 ):
-                    officer.sudo().write({"group_ids": [(4, officers_group.id)]})
+                    officer.sudo().write(
+                        {"group_ids": [Command.link(officers_group.id)]}
+                    )
 
         res = super().write(vals)
         if old_officers:

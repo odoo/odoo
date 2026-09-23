@@ -2,7 +2,7 @@ from datetime import UTC
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.fields import Domain
 from odoo.tools.misc import clean_context
 
@@ -238,7 +238,7 @@ class CalendarRecurrence(models.Model):
                 **values,
                 **recurrence_values,
                 "base_event_id": event.id,
-                "calendar_event_ids": [(6, 0, detached_events.ids)],
+                "calendar_event_ids": [Command.set(detached_events.ids)],
                 "repeat_number": max(repeat_number, 1),
             }
         )

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.date_utils import get_timedelta, time_unit_selection
@@ -80,7 +80,7 @@ class DocumentsRequest_Wizard(models.TransientModel):
             {
                 "name": self.name,
                 "folder_id": self.folder_id.id,
-                "tag_ids": [(6, 0, self.tag_ids.ids if self.tag_ids else [])],
+                "tag_ids": [Command.set(self.tag_ids.ids if self.tag_ids else [])],
                 "partner_id": self.partner_id.id if self.partner_id else False,
                 "requestee_partner_id": self.requestee_id.id,
                 "res_model": self.res_model,

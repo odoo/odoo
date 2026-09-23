@@ -8,7 +8,7 @@ from urllib.parse import unquote
 import qrcode
 import qrcode.image.svg
 
-from odoo import _, api, fields, models, service
+from odoo import Command, _, api, fields, models, service
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 
@@ -129,15 +129,13 @@ class PosConfig(models.Model):
 
             if not vals.get("self_ordering_image_home_ids"):
                 vals["self_ordering_image_home_ids"] = [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "name": image_name,
                             "type": "url",
                             "url": f"/pos_self_order/static/img/{image_name}",
                             "res_model": "pos.config",
-                        },
+                        }
                     )
                     for image_name in [
                         "landing_01.jpg",
@@ -148,15 +146,13 @@ class PosConfig(models.Model):
 
             if is_new and not vals.get("self_ordering_image_background_ids"):
                 vals["self_ordering_image_background_ids"] = [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "name": "background.jpg",
                             "type": "url",
                             "url": "/pos_self_order/static/img/kiosk_background.jpg",
                             "res_model": "pos.config",
-                        },
+                        }
                     )
                 ]
 
@@ -176,7 +172,7 @@ class PosConfig(models.Model):
                     {
                         "name": _("Order Now"),
                         "url": f"/pos-self/{record.id}/products",
-                        "pos_config_ids": [(4, record.id)],
+                        "pos_config_ids": [Command.link(record.id)],
                     }
                 )
 

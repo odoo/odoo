@@ -495,11 +495,11 @@ class WebsiteEventController(http.Controller):
                 }
 
             if answer_values and not int(registration_index):
-                general_answer_ids.append((0, 0, answer_values))
+                general_answer_ids.append(Command.create(answer_values))
             elif answer_values:
                 registrations.setdefault(registration_index, {}).setdefault(
                     "registration_answer_ids", []
-                ).append((0, 0, answer_values))
+                ).append(Command.create(answer_values))
 
             if question_type in (
                 "name",

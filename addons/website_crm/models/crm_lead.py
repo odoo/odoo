@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -59,7 +59,7 @@ class CrmLead(models.Model):
     def _merge_get_fields_specific(self):
         fields_info = super()._merge_get_fields_specific()
         fields_info["visitor_ids"] = lambda fname, leads: [
-            (6, 0, leads.visitor_ids.ids)
+            Command.set(leads.visitor_ids.ids)
         ]
         return fields_info
 

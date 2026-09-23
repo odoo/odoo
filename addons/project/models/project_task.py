@@ -1449,7 +1449,7 @@ class ProjectTask(models.Model):
             attachment_ids = attachments_by_task.get(task.id, [])
             message_attachment_ids = task.mapped("message_ids.attachment_ids").ids
             task.attachment_ids = [
-                (6, 0, list(set(attachment_ids) - set(message_attachment_ids)))
+                Command.set(list(set(attachment_ids) - set(message_attachment_ids)))
             ]
 
     @dbg.timed

@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, fields, models
+from odoo import Command, _, fields, models
 from odoo.tools.misc import file_open
 
 
@@ -126,7 +126,7 @@ class MailComposeMessage(models.TransientModel):
             mail_values.update(
                 {
                     "mailing_id": self.mass_mailing_id.id,
-                    "mailing_trace_ids": [(0, 0, trace_values_all[res_id])]
+                    "mailing_trace_ids": [Command.create(trace_values_all[res_id])]
                     if res_id in trace_values_all
                     else False,
                 }
@@ -174,7 +174,7 @@ class MailComposeMessage(models.TransientModel):
     def _prepare_mailing_values(self):
         now = fields.Datetime.now()
         return {
-            "attachment_ids": [(6, 0, self.attachment_ids.ids)],
+            "attachment_ids": [Command.set(self.attachment_ids.ids)],
             "body_html": self.body,
             "campaign_id": self.campaign_id.id,
             "mailing_model_id": self.env["ir.model"]._get(self.model).id,

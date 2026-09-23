@@ -417,7 +417,7 @@ class StockRule(models.Model):
             "company_id": procurement.company_id.id,
             "move_dest_ids": (
                 values.get("move_dest_ids")
-                and [(4, x.id) for x in values["move_dest_ids"]]
+                and [Command.link(x.id) for x in values["move_dest_ids"]]
             )
             or False,
             "user_id": False,

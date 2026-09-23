@@ -187,7 +187,9 @@ class PrivacyLookupWizard(models.TransientModel):
         self.env.flush_all()
         self.env.cr.execute(query)
         results = self.env.cr.dictfetchall()
-        self.line_ids = [(5, 0, 0)] + [(0, 0, reference) for reference in results]
+        self.line_ids = [Command.clear()] + [
+            Command.create(reference) for reference in results
+        ]
         return self.action_view_lines()
 
     def _post_log(self):

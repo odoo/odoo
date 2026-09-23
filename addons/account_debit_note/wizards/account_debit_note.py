@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
@@ -66,7 +66,7 @@ class AccountDebitNote(models.TransientModel):
                     "You can make a debit note only for a Customer Invoice, a Customer Credit Note, a Vendor Bill or a Vendor Credit Note."
                 )
             )
-        res["move_ids"] = [(6, 0, move_ids.ids)]
+        res["move_ids"] = [Command.set(move_ids.ids)]
         return res
 
     @api.depends("move_ids")
@@ -106,7 +106,7 @@ class AccountDebitNote(models.TransientModel):
             "move_type": type,
         }
         if not self.copy_lines or move.move_type in ("in_refund", "out_refund"):
-            default_values["line_ids"] = [(5, 0, 0)]
+            default_values["line_ids"] = [Command.clear()]
         return default_values
 
     def create_debit(self):

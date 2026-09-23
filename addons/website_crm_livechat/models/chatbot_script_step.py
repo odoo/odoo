@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import Command, _, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -13,7 +13,9 @@ class ChatbotScriptStep(models.Model):
             values["name"] = _(
                 "%s's New Lead", discuss_channel.livechat_visitor_id.display_name
             )
-            values["visitor_ids"] = [(4, discuss_channel.livechat_visitor_id.id)]
+            values["visitor_ids"] = [
+                Command.link(discuss_channel.livechat_visitor_id.id)
+            ]
             _debug.logic(
                 "chatbot_lead_named_after_visitor",
                 channel=discuss_channel,

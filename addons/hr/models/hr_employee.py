@@ -3507,7 +3507,7 @@ class HrEmployee(models.Model):
                 )
                 continue
             if former.tag_ids:
-                party.sudo().tag_ids = [(4, tag.id) for tag in former.tag_ids]
+                party.sudo().tag_ids = [Command.link(tag.id) for tag in former.tag_ids]
             dbg.lifecycle.debug(
                 "[employee:%s] former party %s archived, %d tag(s) carried to %s",
                 employee.id,

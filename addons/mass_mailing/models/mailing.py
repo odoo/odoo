@@ -96,7 +96,7 @@ class MailingMailing(models.Model):
             ):
                 mailing_list = self.env["mailing.list"].search([], limit=2)
                 if len(mailing_list) == 1:
-                    vals["contact_list_ids"] = [(6, 0, [mailing_list.id])]
+                    vals["contact_list_ids"] = [Command.set([mailing_list.id])]
         return vals
 
     @api.model
@@ -1150,7 +1150,7 @@ class MailingMailing(models.Model):
             action["context"] = {
                 "default_mailing_list_ids": self.contact_list_ids[0].ids,
                 "default_subscription_ids": [
-                    (0, 0, {"list_id": self.contact_list_ids[0].id})
+                    Command.create({"list_id": self.contact_list_ids[0].id})
                 ],
             }
         action["domain"] = [("list_ids", "in", self.contact_list_ids.ids)]
@@ -1537,7 +1537,7 @@ class MailingMailing(models.Model):
                 if user_partner == odoobot
                 else user_partner.id,
                 "attachment_ids": [
-                    (4, attachment.id) for attachment in mailing.attachment_ids
+                    Command.link(attachment.id) for attachment in mailing.attachment_ids
                 ],
                 "body": mailing._prepend_preview(
                     mailing.body_html or "", mailing.preview
@@ -1545,7 +1545,9 @@ class MailingMailing(models.Model):
                 "composition_mode": "mass_mail",
                 "email_from": mailing.email_from,
                 "mail_server_id": mailing.mail_server_id.id,
-                "mailing_list_ids": [(4, l.id) for l in mailing.contact_list_ids],
+                "mailing_list_ids": [
+                    Command.link(l.id) for l in mailing.contact_list_ids
+                ],
                 "mass_mailing_id": mailing.id,
                 "model": mailing.mailing_model_real,
                 "reply_to_force_new": mailing.reply_to_mode == "new",

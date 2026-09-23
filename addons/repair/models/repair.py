@@ -830,9 +830,7 @@ class RepairOrder(models.Model):
                     "picked": True,
                     "picking_id": False,
                     "move_line_ids": [
-                        (
-                            0,
-                            0,
+                        Command.create(
                             {
                                 "product_id": repair.product_id.id,
                                 "lot_id": repair.lot_id.id,
@@ -846,9 +844,9 @@ class RepairOrder(models.Model):
                                 "company_id": repair.company_id.id,
                                 "location_dest_id": repair.product_location_dest_id.id,
                                 "consume_line_ids": [
-                                    (6, 0, repair.move_ids.move_line_ids.ids)
+                                    Command.set(repair.move_ids.move_line_ids.ids)
                                 ],
-                            },
+                            }
                         )
                     ],
                     "repair_id": repair.id,

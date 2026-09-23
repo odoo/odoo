@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 
@@ -314,7 +314,7 @@ class LunchOrder(models.Model):
                 toppings = self._extract_toppings(values)
                 if change_topping:
                     self.invalidate_model(["topping_ids_2", "topping_ids_3"])
-                    values["topping_ids_1"] = [(6, 0, toppings)]
+                    values["topping_ids_1"] = [Command.set(toppings)]
                 matching_lines = self._get_matching_lines(
                     {
                         "user_id": values.get("user_id", line.user_id.id),

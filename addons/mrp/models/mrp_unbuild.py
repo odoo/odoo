@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare
@@ -391,7 +391,7 @@ class MrpUnbuild(models.Model):
             lambda ml: ml.quantity > 0
         )
         consume_moves.mapped("move_line_ids").write(
-            {"produce_line_ids": [(6, 0, produced_move_line_ids.ids)]}
+            {"produce_line_ids": [Command.set(produced_move_line_ids.ids)]}
         )
         _debug.lifecycle("unbuild_done", unbuild=self.id, mo=self.mo_id)
         if self.mo_id:

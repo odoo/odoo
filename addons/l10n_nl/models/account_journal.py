@@ -1,4 +1,4 @@
-from odoo import api, models
+from odoo import Command, api, models
 
 
 class AccountJournal(models.Model):
@@ -14,7 +14,7 @@ class AccountJournal(models.Model):
             # of the Dutch financial reports.
             account_vals.setdefault("tag_ids", [])
             account_vals["tag_ids"].append(
-                (4, self.env.ref("l10n_nl.account_tag_25").id)
+                Command.link(self.env.ref("l10n_nl.account_tag_25").id)
             )
 
         return account_vals

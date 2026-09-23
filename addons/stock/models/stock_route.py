@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import TransactionMemo
 
@@ -186,7 +186,7 @@ class StockRoute(models.Model):
     @api.onchange("warehouse_selectable")
     def _onchange_warehouse_selectable(self):
         if not self.warehouse_selectable:
-            self.warehouse_ids = [(5, 0, 0)]
+            self.warehouse_ids = [Command.clear()]
 
     def _is_valid_resupply_route_for_product(self, product):
         return False

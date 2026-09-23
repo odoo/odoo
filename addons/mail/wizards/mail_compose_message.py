@@ -1257,7 +1257,9 @@ class MailComposeMessage(models.TransientModel):
                 recipient_ids_all = set(mail_values.pop("partner_ids", [])) | set(
                     self.partner_ids.ids
                 )
-                mail_values["recipient_ids"] = [(4, pid) for pid in recipient_ids_all]
+                mail_values["recipient_ids"] = [
+                    Command.link(pid) for pid in recipient_ids_all
+                ]
 
             reply_to = reply_to_values.get(res_id)
             if not reply_to and email_mode:

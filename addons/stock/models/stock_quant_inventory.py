@@ -4,7 +4,7 @@ from ast import literal_eval
 
 from markupsafe import escape
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import SQL
@@ -571,9 +571,7 @@ class StockQuantInventory(models.Model):
             "is_inventory": True,
             "picked": True,
             "move_line_ids": [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "product_id": self.product_id.id,
                         "product_uom_id": self.product_uom_id.id,
@@ -587,7 +585,7 @@ class StockQuantInventory(models.Model):
                             package_dest_id.id if package_dest_id else False
                         ),
                         "owner_id": self.owner_id.id,
-                    },
+                    }
                 )
             ],
         }

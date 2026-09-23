@@ -568,7 +568,7 @@ class EventTrackController(http.Controller):
                     ],
                     "contact_email": contact.email,
                     "event_id": event.id,
-                    "tag_ids": [(6, 0, valid_tag_indices)],
+                    "tag_ids": [Command.set(valid_tag_indices)],
                     "description": plaintext2html(post["description"]),
                     "partner_biography": plaintext2html(post["partner_biography"]),
                     "user_id": False,

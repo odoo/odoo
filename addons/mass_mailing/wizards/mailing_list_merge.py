@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -16,7 +16,7 @@ class MailingListMerge(models.TransientModel):
             src_list_ids = self.env.context.get("active_ids")
             res.update(
                 {
-                    "src_list_ids": [(6, 0, src_list_ids)],
+                    "src_list_ids": [Command.set(src_list_ids)],
                 }
             )
         if not res.get("dest_list_id") and "dest_list_id" in fields:

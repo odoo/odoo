@@ -401,7 +401,7 @@ class WebsiteForm(http.Controller):
             attachment_id = request.env["ir.attachment"].sudo().create(attachment_value)
             if attachment_id and not custom_field:
                 record_sudo = record.sudo()
-                value = [(4, attachment_id.id)]
+                value = [Command.link(attachment_id.id)]
                 if record_sudo._fields[file.field_name].type == "many2one":
                     value = attachment_id.id
                 record_sudo[file.field_name] = value
@@ -421,10 +421,10 @@ class WebsiteForm(http.Controller):
             and orphan_attachment_ids
         ):
             record._message_log(
-                attachment_ids=[(6, 0, orphan_attachment_ids)],
+                attachment_ids=[Command.set(orphan_attachment_ids)],
                 body=Markup(_("<p>Attached files: </p>")),
                 message_type="comment",
             )
         elif model_name == "mail.mail" and orphan_attachment_ids:
             for attachment_id_id in orphan_attachment_ids:
-                record.attachment_ids = [(4, attachment_id_id)]
+                record.attachment_ids = [Command.link(attachment_id_id)]

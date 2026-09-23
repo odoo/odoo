@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -33,7 +33,7 @@ class ResCompany(models.Model):
         step_ids_ref = self.env.ref(
             "hr_timesheet.internal_project_default_stage", raise_if_not_found=False
         )
-        step_ids = [(4, step_ids_ref.id)] if step_ids_ref else []
+        step_ids = [Command.link(step_ids_ref.id)] if step_ids_ref else []
         for company in self:
             company = company.with_company(company)
             results += [
@@ -43,13 +43,11 @@ class ResCompany(models.Model):
                     "company_id": company.id,
                     "workflow_step_ids": step_ids,
                     "task_ids": [
-                        (
-                            0,
-                            0,
+                        Command.create(
                             {
                                 "name": name,
                                 "company_id": company.id,
-                            },
+                            }
                         )
                         for name in [_("Training"), _("Meeting")]
                     ],

@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
@@ -578,9 +578,11 @@ class CalendarEvent(models.Model):
             )
         elif self.env.user.partner_id.email not in emails:
             commands_attendee += [
-                (0, 0, {"state": "accepted", "partner_id": self.env.user.partner_id.id})
+                Command.create(
+                    {"state": "accepted", "partner_id": self.env.user.partner_id.id}
+                )
             ]
-            commands_partner += [(4, self.env.user.partner_id.id)]
+            commands_partner += [Command.link(self.env.user.partner_id.id)]
         partners = self.env[
             "mixin.mail.thread"
         ]._partner_get_or_create_from_emails_single(emails, no_create=False)
@@ -603,21 +605,21 @@ class CalendarEvent(models.Model):
             if email in attendees_by_emails:
                 # Update existing attendees
                 commands_attendee += [
-                    (1, attendees_by_emails[email].id, {"state": state})
+                    Command.update(attendees_by_emails[email].id, {"state": state})
                 ]
             elif partner:
                 # Create new attendees
                 commands_attendee += [
-                    (0, 0, {"state": state, "partner_id": partner.id})
+                    Command.create({"state": state, "partner_id": partner.id})
                 ]
-                commands_partner += [(4, partner.id)]
+                commands_partner += [Command.link(partner.id)]
                 if attendee_info.get("emailAddress").get("name") and not partner.name:
                     partner.name = attendee_info.get("emailAddress").get("name")
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
             if odoo_attendee.email not in emails:
-                commands_attendee += [(2, odoo_attendee.id)]
-                commands_partner += [(3, odoo_attendee.partner_id.id)]
+                commands_attendee += [Command.delete(odoo_attendee.id)]
+                commands_partner += [Command.unlink(odoo_attendee.partner_id.id)]
         return commands_attendee, commands_partner
 
     @api.model
@@ -636,7 +638,7 @@ class CalendarEvent(models.Model):
                 limit=1,
             )
             if alarm and alarm not in event_id.alarm_ids:
-                reminders_commands = [(4, alarm.id)]
+                reminders_commands = [Command.link(alarm.id)]
             elif not alarm:
                 if minutes == 0:
                     interval = "minutes"
@@ -667,15 +669,13 @@ class CalendarEvent(models.Model):
                         duration=duration,
                     )
                 reminders_commands = [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "duration": duration,
                             "interval": interval,
                             "name": name,
                             "alarm_type": "notification",
-                        },
+                        }
                     )
                 ]
 
@@ -683,7 +683,7 @@ class CalendarEvent(models.Model):
                 lambda a: a.alarm_type == "notification" and a.id != alarm.id
             )
             if alarm_to_rm:
-                reminders_commands += [(3, a.id) for a in alarm_to_rm]
+                reminders_commands += [Command.unlink(a.id) for a in alarm_to_rm]
 
         else:
             event_id = self.browse(microsoft_event.odoo_id(self.env))
@@ -691,7 +691,7 @@ class CalendarEvent(models.Model):
                 lambda a: a.alarm_type == "notification"
             )
             if alarm_to_rm:
-                reminders_commands = [(3, a.id) for a in alarm_to_rm]
+                reminders_commands = [Command.unlink(a.id) for a in alarm_to_rm]
         return reminders_commands
 
     def _get_attendee_status_o2m(self, attendee):

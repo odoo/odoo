@@ -1,4 +1,4 @@
-from odoo import _, models, modules
+from odoo import Command, _, models, modules
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -37,7 +37,7 @@ class StockPicking(models.Model):
         _debug.pipeline("sms_warn_wizard_open", pickings=self)
         view = self.env.ref("stock_sms.view_confirm_stock_sms")
         wiz = self.env["confirm.stock.sms"].create(
-            {"pick_ids": [(4, p.id) for p in self]}
+            {"pick_ids": [Command.link(p.id) for p in self]}
         )
         return {
             "name": _("SMS"),

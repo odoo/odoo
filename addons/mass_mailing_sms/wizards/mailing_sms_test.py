@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from markupsafe import Markup
 
-from odoo import _, fields, models
+from odoo import Command, _, fields, models
 from odoo.libs.web import urljoin as url_join
 
 
@@ -41,7 +41,7 @@ class MailingSmsTest(models.TransientModel):
             "res_id": record.id,
             "sms_code": trace_code,
             "sms_number": sms_number,
-            "sms_tracker_ids": [(0, 0, {"sms_uuid": sms_uuid})],
+            "sms_tracker_ids": [Command.create({"sms_uuid": sms_uuid})],
             "trace_type": "sms",
         }
         unsubscribe_info = self.env["sms.composer"]._get_unsubscribe_info(

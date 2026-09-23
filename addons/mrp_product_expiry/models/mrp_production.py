@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import Command, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -37,7 +37,7 @@ class MrpProduction(models.Model):
         context = dict(self.env.context)
         context.update(
             {
-                "default_lot_ids": [(6, 0, expired_lot_ids)],
+                "default_lot_ids": [Command.set(expired_lot_ids)],
                 "default_production_ids": self.ids,
             }
         )

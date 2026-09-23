@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 
@@ -138,7 +138,7 @@ class CrmLead(models.Model):
             "default_origin": self.name,
             "default_source_id": self.source_id.id,
             "default_company_id": self.company_id.id or self.env.company.id,
-            "default_tag_ids": [(6, 0, self.tag_ids.ids)],
+            "default_tag_ids": [Command.set(self.tag_ids.ids)],
         }
         if self.team_id:
             quotation_context["default_team_id"] = self.team_id.id
@@ -149,7 +149,7 @@ class CrmLead(models.Model):
     def _merge_get_fields_specific(self):
         fields_info = super()._merge_get_fields_specific()
         fields_info["order_ids"] = lambda fname, leads: [
-            (4, order.id) for order in leads.order_ids
+            Command.link(order.id) for order in leads.order_ids
         ]
         return fields_info
 

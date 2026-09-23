@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 
 
 class CrmMergeOpportunity(models.TransientModel):
@@ -18,7 +18,7 @@ class CrmMergeOpportunity(models.TransientModel):
                     .filtered(lambda opp: opp.won_status != "won")
                     .ids
                 )
-                result["opportunity_ids"] = [(6, 0, opp_ids)]
+                result["opportunity_ids"] = [Command.set(opp_ids)]
 
         return result
 
