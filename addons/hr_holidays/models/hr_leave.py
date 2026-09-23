@@ -825,10 +825,11 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     else:
                         employees = self.mapped('employee_id')
                     self._check_double_validation_rules(employees, values['state'])
+            employee = self.env['hr.employee'].browse(employee_id) or self.employee_id
             if 'date_from' in values:
-                values['request_date_from'] = values['date_from']
+                values['request_date_from'] = datetime.date(values['date_from'].astimezone(pytz.timezone(employee.tz)))
             if 'date_to' in values:
-                values['request_date_to'] = values['date_to']
+                values['request_date_to'] = datetime.date(values['date_to'].astimezone(pytz.timezone(employee.tz)))
         result = super(HolidaysRequest, self).write(values)
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
