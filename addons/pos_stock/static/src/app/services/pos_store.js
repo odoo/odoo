@@ -49,7 +49,7 @@ patch(PosStore.prototype, {
                 related_lines
             );
             related_lines
-                .filter((line) => line.price_type !== "manual")
+                .filter((line) => line.price_type === "original")
                 .forEach((line) => line.setUnitPrice(price));
         } else if (values.product_id.tracking === "serial") {
             selectedOrderline.setPackLotLines({
