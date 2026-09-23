@@ -1097,6 +1097,127 @@ test("Minimize button leaves the meeting view like pressing Escape", async () =>
     expect(rtc.isFullscreen).toBe(false);
 });
 
+/**
+ * @param {Object} pyEnv
+ * @param {number} channelId
+ * @param {string} name
+ */
+function createCallParticipant(pyEnv, channelId, name) {
+    const channelMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name }),
+    });
+    const sessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: channelMemberId,
+        channel_id: channelId,
+    });
+    return { channelMemberId, sessionId };
+}
+
+async function openMeetingView() {
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='wide-view']");
+    await contains(".o-mail-Meeting.o-fullscreen");
+}
+
+test("Leaving the meeting view brings the Discuss call back to its tiles", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    createCallParticipant(pyEnv, channelId, "Alice");
+    createCallParticipant(pyEnv, channelId, "Bob");
+    await start();
+    const store = getService("mail.store");
+    store.settings.callLayout = CALL_GRID_LAYOUT.SPOTLIGHT;
+    await openDiscuss(channelId);
+    await click("[title='Join Call']");
+    await contains(".o-discuss-CallParticipantCard", { count: 3 });
+    await openMeetingView();
+    await contains(".o-mail-Meeting .o-discuss-CallParticipantCard", { count: 1 });
+    await press("escape"); // leave meeting view
+    await contains(".o-mail-Meeting", { count: 0 });
+    await contains(".o-mail-Discuss .o-discuss-CallParticipantCard", { count: 3 });
+    expect(store.rtc.channel.activeRtcSession).toBe(undefined);
+});
+
+test("Leaving the meeting view keeps the pinned participant focused", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { sessionId: aliceSessionId } = createCallParticipant(pyEnv, channelId, "Alice");
+    createCallParticipant(pyEnv, channelId, "Bob");
+    await start();
+    const store = getService("mail.store");
+    store.settings.callLayout = CALL_GRID_LAYOUT.SPOTLIGHT;
+    await openDiscuss(channelId);
+    await click("[title='Join Call']");
+    await contains(".o-discuss-CallParticipantCard", { count: 3 });
+    await openMeetingView();
+    const channel = store.rtc.channel;
+    channel.pin(channel.rtc_session_ids.find((session) => session.id === aliceSessionId));
+    await press("escape"); // leave meeting view
+    await contains(".o-mail-Meeting", { count: 0 });
+    await contains(".o-mail-Discuss .o-discuss-CallParticipantCard[aria-label='Alice']");
+    await contains(".o-mail-Discuss .o-discuss-CallParticipantCard[aria-label='Bob']", {
+        count: 0,
+    });
+    expect(channel.activeRtcSession.id).toBe(aliceSessionId);
+});
+
+test("Leaving the meeting view keeps a shared screen focused", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const channelMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name: "Streamer" }),
+    });
+    createCallParticipant(pyEnv, channelId, "Bob");
+    const env = await start();
+    const store = getService("mail.store");
+    const network = await makeMockRtcNetwork({ env, channelId });
+    const streamerRemote = network.makeMockRemote(channelMemberId);
+    await openDiscuss(channelId);
+    await click("[title='Join Call']");
+    await streamerRemote.updateConnectionState("connected");
+    await contains(".o-discuss-CallParticipantCard", { count: 3 });
+    await openMeetingView();
+    await streamerRemote.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
+    await contains(".o-mail-Meeting .o-discuss-CallParticipantCard[aria-label='Streamer'] video");
+    await press("escape"); // leave meeting view
+    await contains(".o-mail-Meeting", { count: 0 });
+    await contains(".o-mail-Discuss .o-discuss-CallParticipantCard[aria-label='Streamer'] video");
+    await contains(".o-mail-Discuss .o-discuss-CallParticipantCard[aria-label='Bob']", {
+        count: 0,
+    });
+    expect(store.rtc.channel.activeRtcSession.mainVideoStreamType).toBe("screen");
+});
+
+test("Leaving the meeting view auto-focuses the participant video in a chat window", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
+    pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: serverState.partnerId,
+    });
+    const channelMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name: "Batman" }),
+    });
+    setupChatHub({ opened: [channelId] });
+    const env = await start();
+    const network = await makeMockRtcNetwork({ env, channelId });
+    const mockedRemote = network.makeMockRemote(channelMemberId);
+    await click("[title='Join Call']");
+    await contains(".o-discuss-CallParticipantCard", { count: 2 });
+    await mockedRemote.updateConnectionState("connected");
+    await openMeetingView();
+    await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
+    await contains(".o-mail-Meeting .o-discuss-CallParticipantCard[aria-label='Batman'] video");
+    await press("escape"); // leave meeting view
+    await contains(".o-mail-Meeting", { count: 0 });
+    await contains(".o-mail-ChatWindow .o-discuss-CallParticipantCard[aria-label='Batman'] video");
+    await contains(".o-mail-ChatWindow .o-discuss-CallParticipantCard", { count: 1 });
+});
+
 test("Systray icon shows latest action", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

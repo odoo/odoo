@@ -3000,6 +3000,15 @@ export const rtcService = {
             },
             { immediate: true, initialRun: false }
         );
+        rtc.onChange(
+            () => [store.meetingViewOpened],
+            function onChangeMeetingViewOpened(meetingViewOpened) {
+                if (!meetingViewOpened) {
+                    rtc.channel?.resetCallFocus();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
         rtc.fullscreen = services["mail.fullscreen"];
         rtc.onChange(
             () => [rtc.fullscreen.id],
