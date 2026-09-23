@@ -216,24 +216,21 @@ class TestProjectAccessMigration(TestProjectCommon):
         )
 
     def test_follower_based_rules_are_reloaded_and_stay_noupdate(self):
+        # what base 1.97 leaves of an old database's noupdate rule: a row that
+        # keeps the rule's flag, which the data file then does not reach
         rule = self.env.ref("project.project_public_members_rule")
-        rule.domain_force = "[('message_partner_ids', 'in', [user.partner_id.id])]"
+        rule.domain = "[('message_partner_ids', 'in', [user.partner_id.id])]"
+        xmlid = self.env["ir.model.data"].search(
+            [("module", "=", "project"), ("name", "=", "project_public_members_rule")]
+        )
+        xmlid.noupdate = True
         self.env.flush_all()
 
         self.script.migrate(self.env.cr, "19.0.1.24")
         self.env.invalidate_all()
 
-        self.assertIn("user_has_access", rule.domain_force)
-        self.assertTrue(
-            self.env["ir.model.data"]
-            .search(
-                [
-                    ("module", "=", "project"),
-                    ("name", "=", "project_public_members_rule"),
-                ]
-            )
-            .noupdate
-        )
+        self.assertIn("user_has_access", rule.domain)
+        self.assertTrue(xmlid.noupdate)
 
     def test_fresh_install_is_noop(self):
         shared = self.env["project.project"].create(

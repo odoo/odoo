@@ -237,7 +237,7 @@ class TestSaleGroupReadonly(TransactionCase):
 
     def test_every_acl_row_grants_something(self) -> None:
         group_user = self.env.ref("base.group_user")
-        access = self.env["ir.model.access"]
+        access = self.env["ir.access"]
         module_model = self.env["ir.module.module"]
         closures = {}
         dead = []
@@ -254,7 +254,9 @@ class TestSaleGroupReadonly(TransactionCase):
                 [
                     ("model_id", "=", row.model_id.id),
                     ("group_id", "=", group_user.id),
-                    ("perm_read", "=", True),
+                    ("kind", "=", "permission"),
+                    ("for_read", "=", True),
+                    ("domain", "!=", "[(0, '=', 1)]"),
                 ]
             )
             granting_modules = {
@@ -281,13 +283,13 @@ class TestSaleGroupReadonly(TransactionCase):
         writable = [
             row.model_id.model
             for row in self._tier_acl_rows()
-            if row.perm_write or row.perm_create or row.perm_unlink
+            if row.for_write or row.for_create or row.for_unlink
         ]
         self.assertFalse(writable, f"these rows are not read-only: {sorted(writable)}")
 
     def _tier_acl_rows(self):
-        rows = self.env["ir.model.access"].search(
-            [("group_id", "=", self.group_readonly.id)]
+        rows = self.env["ir.access"].search(
+            [("group_id", "=", self.group_readonly.id), ("kind", "=", "permission")]
         )
         self.assertTrue(rows, "the tier must grant something")
         return rows

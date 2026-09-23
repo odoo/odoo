@@ -277,7 +277,7 @@ which has its own bus notification logic separate from `_send_gamification_notif
 
 ## Security Model
 
-### Access Control (ir.model.access.csv)
+### Access Control (ir.access.csv)
 
 | Model | Employee (group_user) | Manager (group_erp_manager) | Portal | Public |
 |-------|----------------------|----------------------------|--------|--------|

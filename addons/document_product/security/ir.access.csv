@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+document_product_config_rule_company_group_user,document_product.config: the reader's companies,model_document_product_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+document_product_config_rule_erp_manager,document_product.config: every company for an access-rights manager,model_document_product_config,base.group_erp_manager,permission,r,
+document_product_config_rule_erp_manager_group_system,document_product.config: every company for an access-rights manager,model_document_product_config,base.group_system,permission,cud,

@@ -10,8 +10,7 @@
         "l10n_es",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_es_edi_verifactu_security.xml",
+        "security/ir.access.csv",
         "wizards/account_move_reversal_views.xml",
         "views/account_move_views.xml",
         "views/account_tax_views.xml",

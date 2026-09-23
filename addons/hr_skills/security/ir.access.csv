@@ -1,0 +1,29 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+hr_resume_rule_employee_hr_user,Resume: HR user: all,model_hr_resume_line,hr.group_hr_user,permission,cud,
+hr_resume_rule_employee,Resume: employee: read all,model_hr_resume_line,base.group_user,permission,r,
+hr_skills_rule_employee_update,Resume: employee: create/write/unlink own,model_hr_resume_line,base.group_user,permission,cud,"[('employee_id.user_id','=',user.id)]"
+access_hr_resume_line_type,hr.resume.line.type,model_hr_resume_line_type,hr.group_hr_user,permission,cud,
+access_hr_resume_line_type_employee,hr.resume.line.type.employee,model_hr_resume_line_type,base.group_user,permission,r,
+access_hr_skill_type,hr.skill.type,model_hr_skill_type,hr.group_hr_user,permission,cud,
+access_hr_skill_type_employee,hr.skill.type.employee,model_hr_skill_type,base.group_user,permission,r,
+access_hr_skill_level,hr.skill.level,model_hr_skill_level,hr.group_hr_user,permission,cud,
+access_hr_skill_level_employee,hr.skill.level.employee,model_hr_skill_level,base.group_user,permission,r,
+access_hr_skill,hr.skill,model_hr_skill,hr.group_hr_user,permission,cud,
+access_hr_skill_employee,hr.skill.employee,model_hr_skill,base.group_user,permission,r,
+hr_skill_rule_hr_user,Employee skill: HR user: all,model_hr_employee_skill,hr.group_hr_user,permission,cud,
+hr_skill_rule_employee,Employee skill: employee: read all,model_hr_employee_skill,base.group_user,permission,r,
+hr_skill_rule_employee_update,Employee skill: employee: create/write/unlink own,model_hr_employee_skill,base.group_user,permission,cud,"[('employee_id.user_id','=',user.id)]"
+hr_employee_skill_report_hr_user,Employee Skill Report: HR user,model_hr_employee_skill_report,hr.group_hr_user,permission,r,
+hr_employee_certification_report_hr_user,Employee Certification Report: HR user,model_hr_employee_certification_report,hr.group_hr_user,permission,r,
+hr_employee_certification_report_manager,Employee Certification Report: employee's manager,model_hr_employee_certification_report,base.group_user,permission,r,"['|', ('employee_id', 'child_of', user.employee_ids.ids), ('has_department_manager_access', '=', True)]"
+hr_employee_skill_report_manager,Employee Skill Report: employee's manager,model_hr_employee_skill_report,base.group_user,permission,r,"['|', ('employee_id', 'child_of', user.employee_ids.ids), ('has_department_manager_access', '=', True)]"
+hr_employee_skill_history_report_hr_user,Employee Skill History Report: HR user,model_hr_employee_skill_history_report,hr.group_hr_user,permission,r,
+hr_employee_skill_history_report_manager,Employee Skill History Report: employee's manager,model_hr_employee_skill_history_report,base.group_user,permission,r,"['|', ('employee_id', 'child_of', user.employee_ids.ids), ('has_department_manager_access', '=', True)]"
+access_hr_job_skill,hr.job.skill,model_hr_job_skill,hr.group_hr_user,permission,cud,
+access_hr_job_skill_employee,hr.job.skill.employee,model_hr_job_skill,base.group_user,permission,r,
+access_hr_employee_cv_wizard,access_hr_employee_cv_wizard,model_hr_employee_cv_wizard,base.group_user,permission,cru,
+hr_employee_certification_report_multicompany,Employee Certification Report: Multi-Company Rule,model_hr_employee_certification_report,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+hr_employee_skill_report_multicompany,Employee Skill Report: Multi-Company Rule,model_hr_employee_skill_report,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+hr_skill_rule_multicompany,Employee skill: Multi-Company Rule,model_hr_employee_skill,base.group_everyone,guard,crud,"[('employee_id.company_id', 'in', company_ids + [False])]"
+hr_resume_rule_multicompany,Resume: Multi-Company Rule,model_hr_resume_line,base.group_everyone,guard,crud,"[('employee_id.company_id', 'in', company_ids + [False])]"
+hr_employee_skill_history_report_multicompany,Employee Skill History Report: Multi-Company Rule,model_hr_employee_skill_history_report,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

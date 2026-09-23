@@ -32,7 +32,7 @@ depends on this module and adds the ledger to each model -- the ``tax_tags`` and
         "web",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/pdf_export_templates.xml",
     ],
     "assets": {

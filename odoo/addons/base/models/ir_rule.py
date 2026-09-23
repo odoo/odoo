@@ -3,7 +3,7 @@ from typing import Any, Self
 
 from odoo import _, api, fields, models
 from odoo.api import ValuesType
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.safe_eval import safe_eval
@@ -238,11 +238,15 @@ class IrRule(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
-        res = super().create(vals_list)
-        _debug.lifecycle("create", count=len(res))
-        self.env.flush_all()
-        self.env.registry.clear_cache("stable")
-        return res
+        if not vals_list:
+            return self.browse()
+        raise UserError(
+            _(
+                "Record rules are ir.access rows now: create a permission or a "
+                "guard row of ir.access (a module ships it in "
+                "security/ir.access.csv) instead of an ir.rule."
+            )
+        )
 
     def write(self, vals: dict[str, Any]) -> bool:
         _debug.lifecycle("write", count=len(self), fields=list(vals))

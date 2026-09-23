@@ -850,11 +850,15 @@ class TestSaleMrpKitBom(BaseCommon):
     def test_sale_kit_qty_change(self):
 
         mrp_bom_model = self.env["ir.model"]._get("mrp.bom")
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "No one allowed to access BoMs",
                 "model_id": mrp_bom_model.id,
-                "domain_force": [(0, "=", 1)],
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "crud",
+                # hides every record; a FALSE guard would deny the model instead
+                "domain": "[('id', '<', 0)]",
             }
         )
 

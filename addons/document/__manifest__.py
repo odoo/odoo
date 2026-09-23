@@ -22,7 +22,7 @@ the Studio automation upsell.
     ],
     "data": [
         "security/security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/mail_template_data.xml",
         "data/mail_activity_type_data.xml",
         "data/document_tag_data.xml",

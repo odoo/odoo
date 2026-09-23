@@ -1,0 +1,3 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+document_compliance_report_rule_not_employee,Compliance Report: employee rows are for HR officers,document_compliance.model_document_compliance_report,document.group_documents_manager,permission,r,"[('entity_type', '!=', 'hr.employee')]"
+document_compliance_report_rule_hr_officer,Compliance Report: employee rows for HR officers,document_compliance.model_document_compliance_report,hr.group_hr_user,permission,r,"[('entity_type', '=', 'hr.employee')]"

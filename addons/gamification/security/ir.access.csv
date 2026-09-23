@@ -1,0 +1,74 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+goal_user_visibility_group_gamification_user,User can only see his/her goals or goal from the same challenge in board visibility,model_gamification_goal,group_gamification_user,permission,ru,"[ '|', ('user_id','=',user.id), '&', ('challenge_id.user_ids','in',user.id), ('challenge_id.visibility_mode','=','ranking')]"
+goal_gamification_manager_visibility,Manager can see any goal,model_gamification_goal,group_gamification_manager,permission,ru,
+goal_manager,Goal Manager,model_gamification_goal,group_gamification_manager,permission,cd,
+goal_user_visibility_group_portal,User can only see his/her goals or goal from the same challenge in board visibility,model_gamification_goal,base.group_portal,permission,ru,"[ '|', ('user_id','=',user.id), '&', ('challenge_id.user_ids','in',user.id), ('challenge_id.visibility_mode','=','ranking')]"
+goal_definition_employee,Goal Definition Employee,model_gamification_goal_definition,group_gamification_user,permission,r,
+goal_definition_manager,Goal Definition Manager,model_gamification_goal_definition,group_gamification_manager,permission,cud,
+goal_definition_portal,Goal Definition Portal,model_gamification_goal_definition,base.group_portal,permission,r,
+challenge_employee,Goal Challenge Employee,model_gamification_challenge,group_gamification_user,permission,r,
+challenge_manager,Goal Challenge Manager,model_gamification_challenge,group_gamification_manager,permission,cud,
+challenge_portal,Goal Challenge Portal,model_gamification_challenge,base.group_portal,permission,r,
+challenge_line_employee,Challenge Line Employee,model_gamification_challenge_line,group_gamification_user,permission,r,
+challenge_line_manager,Challenge Line Manager,model_gamification_challenge_line,group_gamification_manager,permission,cud,
+challenge_line_portal,Challenge Line Portal,model_gamification_challenge_line,base.group_portal,permission,r,
+badge_employee,Badge Employee,model_gamification_badge,group_gamification_user,permission,r,
+gamification_badge_rule_manager_edit,Badge: manager: edit all,model_gamification_badge,group_gamification_manager,permission,cud,
+badge_portal,Badge Portal,model_gamification_badge,base.group_portal,permission,r,
+badge_public,Badge Public,model_gamification_badge,base.group_public,permission,r,
+badge_user_employee_c,Badge-user Employee,model_gamification_badge_user,group_gamification_user,permission,c,
+badge_user_visibility,Badge grants respect profile visibility,model_gamification_badge_user,group_gamification_user,permission,r,"[ '|', ('user_id', '=', user.id), ('user_id.gamification_visibility', '!=', 'private')]"
+badge_user_manager_cud,Badge-user Manager,model_gamification_badge_user,group_gamification_manager,permission,cud,
+badge_user_visibility_group_gamification_manager,Badge grants respect profile visibility,model_gamification_badge_user,group_gamification_manager,permission,r,"[ '|', ('user_id', '=', user.id), ('user_id.gamification_visibility', '!=', 'private')]"
+badge_user_portal,Badge-user Portal,model_gamification_badge_user,base.group_portal,permission,r,
+badge_user_public,Badge-user Public,model_gamification_badge_user,base.group_public,permission,r,
+gamification_karma_rank_access_public,gamification.karma.rank.access.all,model_gamification_karma_rank,base.group_public,permission,r,
+gamification_karma_rank_access_portal,gamification.karma.rank.access.all,model_gamification_karma_rank,base.group_portal,permission,r,
+gamification_karma_rank_access_employee,gamification.karma.rank.access.all,model_gamification_karma_rank,group_gamification_user,permission,r,
+gamification_karma_rank_access_manager,gamification.karma.rank.access.manager,model_gamification_karma_rank,group_gamification_manager,permission,cud,
+gamification_karma_tracking_access_all,gamification.karma.tracking.access.all,model_gamification_karma_tracking,base.group_everyone,permission,r,"[(0, '=', 1)]"
+gamification_karma_tracking_access_user_manager,gamification.karma.tracking.access.user.manager,model_gamification_karma_tracking,base.group_system,permission,crud,
+streak_type_employee,Streak Type Employee,model_gamification_streak_type,group_gamification_user,permission,r,
+streak_type_manager,Streak Type Manager,model_gamification_streak_type,group_gamification_manager,permission,cud,
+streak_employee,Streak Employee,model_gamification_streak,group_gamification_user,permission,r,
+streak_manager,Streak Manager,model_gamification_streak,group_gamification_manager,permission,cud,
+kudos_category_employee,Kudos Category Employee,model_gamification_kudos_category,group_gamification_user,permission,r,
+kudos_category_manager,Kudos Category Manager,model_gamification_kudos_category,group_gamification_manager,permission,cud,
+kudos_employee,Kudos Employee,model_gamification_kudos,group_gamification_user,permission,cr,
+kudos_user_write,Users can only modify their own kudos,model_gamification_kudos,group_gamification_user,permission,u,"[('sender_id', '=', user.id)]"
+kudos_manager,Kudos Manager,model_gamification_kudos,group_gamification_manager,permission,d,
+kudos_user_write_group_gamification_manager,Users can only modify their own kudos,model_gamification_kudos,group_gamification_manager,permission,u,"[('sender_id', '=', user.id)]"
+achievement_employee,Achievement Employee,model_gamification_achievement,group_gamification_user,permission,r,
+achievement_manager,Achievement Manager,model_gamification_achievement,group_gamification_manager,permission,cud,
+achievement_unlock_visibility,Achievement unlocks respect profile visibility,model_gamification_achievement_unlock,group_gamification_user,permission,r,"[ '|', ('user_id', '=', user.id), ('user_id.gamification_visibility', '!=', 'private')]"
+achievement_unlock_manager,Achievement Unlock Manager,model_gamification_achievement_unlock,group_gamification_manager,permission,cud,
+achievement_unlock_visibility_group_gamification_manager,Achievement unlocks respect profile visibility,model_gamification_achievement_unlock,group_gamification_manager,permission,r,"[ '|', ('user_id', '=', user.id), ('user_id.gamification_visibility', '!=', 'private')]"
+team_employee,Team Employee,model_gamification_team,group_gamification_user,permission,r,
+team_manager,Team Manager,model_gamification_team,group_gamification_manager,permission,cud,
+engagement_snapshot_employee,Engagement Snapshot Employee,model_gamification_engagement_snapshot,group_gamification_user,permission,r,
+engagement_snapshot_manager,Engagement Snapshot Manager,model_gamification_engagement_snapshot,group_gamification_manager,permission,cud,
+activity_visibility,Activity feed respects profile visibility and company,model_gamification_activity,group_gamification_user,permission,r,"[ '&', ('company_id', 'in', company_ids), '|', ('user_id', '=', user.id), ('user_id.gamification_visibility', '!=', 'private')]"
+activity_manager,Activity Feed Manager,model_gamification_activity,group_gamification_manager,permission,cud,
+activity_visibility_group_gamification_manager,Activity feed respects profile visibility and company,model_gamification_activity,group_gamification_manager,permission,r,"[ '&', ('company_id', 'in', company_ids), '|', ('user_id', '=', user.id), ('user_id.gamification_visibility', '!=', 'private')]"
+mentorship_own_only,Users only see mentorships they take part in,model_gamification_mentorship,group_gamification_user,permission,cru,"[ '|', ('mentor_id','=',user.id), ('mentee_id','=',user.id)]"
+mentorship_manager_rule,Managers see every mentorship,model_gamification_mentorship,group_gamification_manager,permission,crud,
+quest_employee,Quest Employee,model_gamification_quest,group_gamification_user,permission,r,
+quest_manager,Quest Manager,model_gamification_quest,group_gamification_manager,permission,cud,
+quest_step_employee,Quest Step Employee,model_gamification_quest_step,group_gamification_user,permission,r,
+quest_step_manager,Quest Step Manager,model_gamification_quest_step,group_gamification_manager,permission,cud,
+quest_enrollment_own_only,Users only see and edit their own quest enrolments,model_gamification_quest_enrollment,group_gamification_user,permission,cru,"[('user_id', '=', user.id)]"
+quest_enrollment_manager_rule,Managers see every quest enrolment,model_gamification_quest_enrollment,group_gamification_manager,permission,crud,
+quest_step_completion_own_only,Users only see their own quest step completions,model_gamification_quest_step_completion,group_gamification_user,permission,r,"[('enrollment_id.user_id', '=', user.id)]"
+quest_step_completion_manager_rule,Managers see every quest step completion,model_gamification_quest_step_completion,group_gamification_manager,permission,crud,
+season_employee,Season Employee,model_gamification_season,group_gamification_user,permission,r,
+season_manager,Season Manager,model_gamification_season,group_gamification_manager,permission,cud,
+skill_tree_employee,Skill Tree Employee,model_gamification_skill_tree,group_gamification_user,permission,r,
+skill_tree_manager,Skill Tree Manager,model_gamification_skill_tree,group_gamification_manager,permission,cud,
+skill_node_employee,Skill Node Employee,model_gamification_skill_node,group_gamification_user,permission,r,
+skill_node_manager,Skill Node Manager,model_gamification_skill_node,group_gamification_manager,permission,cud,
+skill_node_unlock_employee,Skill Node Unlock Employee,model_gamification_skill_node_unlock,group_gamification_user,permission,r,
+skill_node_unlock_manager,Skill Node Unlock Manager,model_gamification_skill_node_unlock,group_gamification_manager,permission,cud,
+access_gamification_goal_wizard,access.gamification.goal.wizard,model_gamification_goal_wizard,group_gamification_user,permission,cru,
+access_gamification_badge_user_wizard,access.gamification.badge.user.wizard,model_gamification_badge_user_wizard,group_gamification_user,permission,cru,
+goal_global_multicompany,Multicompany rule on challenges,model_gamification_goal,base.group_everyone,guard,crud,"[('user_id.company_id', 'in', company_ids)]"
+engagement_snapshot_multicompany,Engagement snapshots are company-scoped,model_gamification_engagement_snapshot,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"

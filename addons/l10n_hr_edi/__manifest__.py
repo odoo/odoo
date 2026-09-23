@@ -17,7 +17,7 @@ e-invoicing for Croatia
     "data": [
         "data/cron.xml",
         "data/l10n_hr.kpd.category.csv",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/l10n_hr_tax_category.xml",
         "views/account_journal_views.xml",
         "views/account_move_views.xml",

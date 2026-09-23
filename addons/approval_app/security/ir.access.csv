@@ -1,0 +1,6 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_approval_template,access_approval_template,model_approval_template,base.group_user,permission,r,
+access_approval_template_manager,access_approval_template,model_approval_template,approval.group_approval_manager,permission,cud,
+access_approval_document_requirement,access_approval_document_requirement,model_approval_document_requirement,base.group_user,permission,r,
+access_approval_document_requirement_manager,access_approval_document_requirement,model_approval_document_requirement,approval.group_approval_manager,permission,cud,
+approval_template_rule,Approval Template: multi-company,model_approval_template,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

@@ -85,7 +85,7 @@ Master Data:
         "ar",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/l10n_latam_identification_type_data.xml",
         "data/l10n_ar_afip_responsibility_type_data.xml",
         "data/uom_uom_data.xml",

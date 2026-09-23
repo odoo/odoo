@@ -137,16 +137,14 @@ class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
         (invoice_1 + invoice_2).ref = False
         self.assertRecordValues(invoice_2, [{"duplicated_ref_ids": invoice_1.ids}])
 
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "hide invoice_1",
                 "model_id": self.env["ir.model"]._get_id("account.move"),
-                "domain_force": f"[('id', '!=', {invoice_1.id})]",
-                "groups": [],
-                "perm_read": True,
-                "perm_write": False,
-                "perm_create": False,
-                "perm_unlink": False,
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "r",
+                "domain": f"[('id', '!=', {invoice_1.id})]",
             }
         )
 

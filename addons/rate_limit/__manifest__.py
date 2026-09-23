@@ -10,8 +10,7 @@
         "base",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/ir_rule.xml",
+        "security/ir.access.csv",
         "data/ir_cron.xml",
         "views/rate_limit_bucket_views.xml",
         "views/rate_limit_menus.xml",

@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_data_recycle_model_group_system,access_data_recycle_model_group_system,model_data_recycle_model,base.group_system,permission,crud,
+access_data_recycle_record_group_system,access_data_recycle_record_group_system,model_data_recycle_record,base.group_system,permission,crud,
+data_recycle_record_multi_company,Data Recycle Record multi company rule,model_data_recycle_record,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

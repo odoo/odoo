@@ -70,12 +70,14 @@ class TestWebReadRelational(common.TransactionCase):
         )
         self.env.flush_all()
 
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "test hide secret partners",
                 "model_id": self.env["ir.model"]._get("res.partner").id,
-                "domain_force": "[('name', 'not ilike', 'ZZSECRET')]",
-                "groups": [],
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "crud",
+                "domain": "[('name', 'not ilike', 'ZZSECRET')]",
             }
         )
         user = self.env["res.users"].create(
@@ -105,12 +107,14 @@ class TestWebReadRelational(common.TransactionCase):
         child = Partner.create({"name": "Child", "parent_id": secret.id})
         self.env.flush_all()
 
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "test hide secret parents",
                 "model_id": self.env["ir.model"]._get("res.partner").id,
-                "domain_force": "[('name', 'not ilike', 'ZZSECRET')]",
-                "groups": [],
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "crud",
+                "domain": "[('name', 'not ilike', 'ZZSECRET')]",
             }
         )
         user = self.env["res.users"].create(

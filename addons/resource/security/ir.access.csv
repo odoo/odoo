@@ -1,0 +1,25 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_resource_calendar_user,resource.calendar.user,model_resource_calendar,base.group_user,permission,r,
+access_resource_calendar_system,resource.calendar.system,model_resource_calendar,base.group_system,permission,cud,
+access_resource_calendar_attendance_user,resource.calendar.attendance.user,model_resource_calendar_attendance,base.group_user,permission,r,
+access_resource_calendar_attendance_system,resource.calendar.attendance.system,model_resource_calendar_attendance,base.group_system,permission,cud,
+access_resource_resource,resource.resource,model_resource_resource,base.group_system,permission,cud,
+access_resource_resource_all,resource.resource all,model_resource_resource,base.group_user,permission,r,
+resource_schedule_exception_rule_group_user_create,resource.schedule.exception: employee reads own or global,model_resource_schedule_exception,base.group_user,permission,r,"['|', ('resource_id', '=', False), ('resource_id.user_id', 'in', [False, user.id])]"
+resource_schedule_exception_rule_group_user_modify,resource.schedule.exception: employee modifies own,model_resource_schedule_exception,base.group_user,permission,cud,"[('resource_id.user_id', '=', user.id)]"
+resource_schedule_exception_rule_group_admin_modify,resource.schedule.exception: admin modifies any,model_resource_schedule_exception,base.group_erp_manager,permission,cud,
+resource_schedule_exception_rule_group_user_create_group_system,resource.schedule.exception: employee reads own or global,model_resource_schedule_exception,base.group_system,permission,r,"['|', ('resource_id', '=', False), ('resource_id.user_id', 'in', [False, user.id])]"
+access_resource_reservation_user,resource.reservation.user,model_resource_reservation,base.group_user,permission,r,
+access_resource_reservation_system,resource.reservation.system,model_resource_reservation,base.group_system,permission,cud,
+access_resource_role_user,resource.role.user,model_resource_role,base.group_user,permission,r,
+access_resource_role_system,resource.role.system,model_resource_role,base.group_system,permission,cud,
+access_resource_assignment_user,resource.assignment.user,model_resource_assignment,base.group_user,permission,r,
+access_resource_assignment_system_cud,resource.assignment.system,model_resource_assignment,base.group_system,permission,cud,
+access_resource_time_type_user,resource.time.type.user,model_resource_time_type,base.group_user,permission,r,
+access_resource_time_type_system,resource.time.type.system,model_resource_time_type,base.group_system,permission,cud,
+access_resource_config_user,resource.config user,model_resource_config,base.group_user,permission,r,
+access_resource_config_manager,resource.config manager,model_resource_config,base.group_system,permission,cud,
+resource_resource_multi_company,resource.resource multi-company,model_resource_resource,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+resource_schedule_exception_rule_multi_company,resource.schedule.exception: multi-company rule,model_resource_schedule_exception,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+resource_reservation_rule_multi_company,resource.reservation: multi-company rule,model_resource_reservation,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+resource_assignment_rule_multi_company,resource.assignment: multi-company rule,model_resource_assignment,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

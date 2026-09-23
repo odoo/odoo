@@ -380,12 +380,15 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         bot = Partner.create({"name": "Bottom", "parent_id": med.id})
 
         accessible = top + bot
-        self.env["ir.rule"].search([]).unlink()
-        self.env["ir.rule"].create(
+        self.env["ir.access"].search([("kind", "=", "guard")]).unlink()
+        self.env["ir.access"].create(
             {
                 "name": "partners rule",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": self.env["ir.model"]._get("res.partner").id,
-                "domain_force": str([("id", "in", accessible.ids)]),
+                "domain": str([("id", "in", accessible.ids)]),
             }
         )
 
@@ -1409,13 +1412,16 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         other = Model.create({"name": "other"})
         partners = parent1 + parent2 + child1 + child2 + other
 
-        self.env["ir.rule"].search([]).unlink()
-        self.env["ir.rule"].create(
+        self.env["ir.access"].search([("kind", "=", "guard")]).unlink()
+        self.env["ir.access"].create(
             [
                 {
                     "name": "partners rule",
+                    "kind": "guard",
+                    "group_id": self.env.ref("base.group_everyone").id,
+                    "operation": "crud",
                     "model_id": self.env["ir.model"]._get("res.partner").id,
-                    "domain_force": str([("id", "not in", parent1.ids)]),
+                    "domain": str([("id", "not in", parent1.ids)]),
                 }
             ]
         )
@@ -1712,13 +1718,16 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
     def test_filtered_domain_any_bypass_access(self):
         Partner = self.env["res.partner"].with_user(self.env.ref("base.user_admin"))
         private_child = self.partners.child_ids[0]
-        self.env["ir.rule"].search([]).unlink()
-        self.env["ir.rule"].create(
+        self.env["ir.access"].search([("kind", "=", "guard")]).unlink()
+        self.env["ir.access"].create(
             [
                 {
                     "name": "partners rule",
+                    "kind": "guard",
+                    "group_id": self.env.ref("base.group_everyone").id,
+                    "operation": "crud",
                     "model_id": self.env["ir.model"]._get("res.partner").id,
-                    "domain_force": str([("id", "!=", private_child.id)]),
+                    "domain": str([("id", "!=", private_child.id)]),
                 }
             ]
         )
@@ -2283,18 +2292,24 @@ class TestQueries(TransactionCase):
     def test_access_rules(self):
         skip_if_dev_mode("xml")
         Model = self.env["res.users"].with_user(self.env.ref("base.user_admin"))
-        self.env["ir.rule"].search([]).unlink()
-        self.env["ir.rule"].create(
+        self.env["ir.access"].search([("kind", "=", "guard")]).unlink()
+        self.env["ir.access"].create(
             [
                 {
                     "name": "users rule",
+                    "kind": "guard",
+                    "group_id": self.env.ref("base.group_everyone").id,
+                    "operation": "crud",
                     "model_id": self.env["ir.model"]._get("res.users").id,
-                    "domain_force": str([("id", "=", 1)]),
+                    "domain": str([("id", "=", 1)]),
                 },
                 {
                     "name": "partners rule",
+                    "kind": "guard",
+                    "group_id": self.env.ref("base.group_everyone").id,
+                    "operation": "crud",
                     "model_id": self.env["ir.model"]._get("res.partner").id,
-                    "domain_force": str([("id", "=", 1)]),
+                    "domain": str([("id", "=", 1)]),
                 },
             ]
         )
@@ -2321,13 +2336,18 @@ class TestQueries(TransactionCase):
         PartnerCateg = self.env["res.partner.tag"]
 
         model_id = self.env["ir.model"]._get("res.partner.tag").id
-        self.env["ir.rule"].search([("model_id", "=", model_id)]).unlink()
-        self.env["ir.rule"].create(
+        self.env["ir.access"].search(
+            [("model_id", "=", model_id), ("kind", "=", "guard")]
+        ).unlink()
+        self.env["ir.access"].create(
             [
                 {
                     "name": "categ childs rule",
+                    "kind": "guard",
+                    "group_id": self.env.ref("base.group_everyone").id,
+                    "operation": "crud",
                     "model_id": model_id,
-                    "domain_force": str(
+                    "domain": str(
                         [
                             (
                                 "child_ids",
@@ -2339,8 +2359,11 @@ class TestQueries(TransactionCase):
                 },
                 {
                     "name": "categ rule",
+                    "kind": "guard",
+                    "group_id": self.env.ref("base.group_everyone").id,
+                    "operation": "crud",
                     "model_id": model_id,
-                    "domain_force": str([("parent_id.name", "ilike", "public")]),
+                    "domain": str([("parent_id.name", "ilike", "public")]),
                 },
             ]
         )
@@ -2427,18 +2450,24 @@ class TestQueries(TransactionCase):
     def test_access_rules_active_test_neg(self):
         skip_if_dev_mode("xml")
         Model = self.env["res.partner"].with_user(self.env.ref("base.user_admin"))
-        self.env["ir.rule"].search([]).unlink()
-        self.env["ir.rule"].create(
+        self.env["ir.access"].search([("kind", "=", "guard")]).unlink()
+        self.env["ir.access"].create(
             [
                 {
                     "name": "partner users rule",
+                    "kind": "guard",
+                    "group_id": self.env.ref("base.group_everyone").id,
+                    "operation": "crud",
                     "model_id": self.env["ir.model"]._get("res.partner").id,
-                    "domain_force": str(["!", ("user_ids.login", "not like", "%@%")]),
+                    "domain": str(["!", ("user_ids.login", "not like", "%@%")]),
                 },
                 {
                     "name": "partners rule",
+                    "kind": "guard",
+                    "group_id": self.env.ref("base.group_everyone").id,
+                    "operation": "crud",
                     "model_id": self.env["ir.model"]._get("res.partner").id,
-                    "domain_force": str(["!", ("write_uid.login", "!=", "John")]),
+                    "domain": str(["!", ("write_uid.login", "!=", "John")]),
                 },
             ]
         )
@@ -2930,8 +2959,11 @@ class TestMany2one(TransactionCase):
 class TestOne2many(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.env["ir.rule"].search(
-            [("model_id.model", "=", "res.partner.bank.account")]
+        self.env["ir.access"].search(
+            [
+                ("model_id.model", "=", "res.partner.bank.account"),
+                ("domain", "!=", False),
+            ]
         ).active = False
         self.Partner = self.env["res.partner"].with_context(active_test=False)
         self.partner = self.Partner.create(
@@ -3257,12 +3289,13 @@ class TestMany2many(TransactionCase):
 
     def test_regular(self):
         group = self.env.ref("base.group_user")
-        rule = group.rule_groups[0]
+        # the relation outlives the rules it held; its query shape is the point
+        rule_name = "a rule name"
 
         self.User.search([("all_group_ids", "in", group.ids)], order="id")
         self.User.search([("group_ids.name", "like", group.name)], order="id")
         self.User.search(
-            [("group_ids.rule_groups.name", "like", rule.name)], order="id"
+            [("group_ids.rule_groups.name", "like", rule_name)], order="id"
         )
 
         with self.assertQueries(
@@ -3344,7 +3377,7 @@ class TestMany2many(TransactionCase):
             ]
         ):
             self.User.search(
-                [("group_ids.rule_groups.name", "like", rule.name)], order="id"
+                [("group_ids.rule_groups.name", "like", rule_name)], order="id"
             )
 
     def test_regular_in_false(self):

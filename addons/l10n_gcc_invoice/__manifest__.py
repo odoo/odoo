@@ -11,7 +11,7 @@ Adds Arabic as a secondary language on your invoice, credit note, debit note, ve
         "account",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/report_invoice.xml",
         "views/res_config_settings_views.xml",
     ],

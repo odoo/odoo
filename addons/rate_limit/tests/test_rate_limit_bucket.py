@@ -92,7 +92,7 @@ class TestRateLimitBucket(TransactionCase):
         self.assertFalse(remaining)
 
     def test_bucket_company_rule(self):
-        rule = self.env["ir.rule"].search(
+        rule = self.env["ir.access"].search(
             [
                 ("model_id.model", "=", "rate.limit.bucket"),
                 ("name", "ilike", "multi-company"),

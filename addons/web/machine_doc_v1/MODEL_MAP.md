@@ -290,7 +290,7 @@ A named bundle of report design tokens (a *skin*), orthogonal to `report.layout`
 
 ### models/properties_base_definition.py — PropertiesBaseDefinition (`_inherit = 'properties.base.definition'`)
 
-Model is **defined upstream in `base`**; web only extends it. The `ir.model.access.csv` in `security/` correctly does not grant access here.
+Model is **defined upstream in `base`**; web only extends it. The `ir.access.csv` in `security/` correctly does not grant access here.
 
 **Key Methods:**
 - `get_properties_base_definition(model_name, field_name)` — `@api.model`. ACL-checked retrieval of property field definitions. Returns the `web_search_read` result **dict** (`{"length", "records"}`) on `properties.base.definition` — annotated `-> dict[str, Any]`; a singular dict, not a list.
@@ -439,7 +439,7 @@ plus arrival time and the reporting session)
   120/60s rate limit could add ~172k rows a day. Registered via
   `data/web_js_error_data.xml`.
 
-The ACL is `1,0,0,1` for `base.group_system` (`security/ir.model.access.csv`):
+The access row is `rd` for `base.group_system` (`security/ir.access.csv`):
 read and `unlink` granted, `write`/`create` denied — the controller writes
 through `sudo()`.
 

@@ -308,14 +308,15 @@ class TestDoc(HttpCaseWithUserDemo):
     def test_an_acl_write_invalidates_a_cache_group_the_key_tracks(self):
         """First half of the staleness guarantee: the ORM tells us.
 
-        An ``ir.model.access`` write invalidates a cache group; if that group
+        An ``ir.access`` write invalidates a cache group; if that group
         is not one the key is built from, a reader who has just lost access to
         a model keeps being served a document that still lists it.
         """
         self.env.registry.cache_invalidated.clear()
-        self.env["ir.model.access"].sudo().search(
-            [("model_id.model", "=", "res.country")], limit=1
-        ).write({"perm_read": False})
+        self.env["ir.access"].sudo().search(
+            [("model_id.model", "=", "res.country"), ("kind", "=", "permission")],
+            limit=1,
+        ).write({"active": False})
         self.env.flush_all()
         self.assertTrue(
             set(self.env.registry.cache_invalidated) & set(ACCESS_CACHE_SEQUENCES),

@@ -1,0 +1,6 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_l10n_ro_edi_document_readonly,access_l10n_ro_edi_document_readonly,model_l10n_ro_edi_document,base.group_user,permission,r,
+access_l10n_ro_edi_document_group_invoice,access_l10n_ro_edi_document_group_invoice,model_l10n_ro_edi_document,account.group_account_invoice,permission,cud,
+l10n_ro_edi_config_rule_company_group_user,l10n_ro_edi.config: the reader's companies,model_l10n_ro_edi_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+l10n_ro_edi_config_rule_erp_manager,l10n_ro_edi.config: every company for an access-rights manager,model_l10n_ro_edi_config,base.group_erp_manager,permission,r,
+l10n_ro_edi_config_rule_erp_manager_group_system,l10n_ro_edi.config: every company for an access-rights manager,model_l10n_ro_edi_config,base.group_system,permission,cud,

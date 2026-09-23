@@ -25,7 +25,7 @@ Help your customers with this chat, and analyse their feedback.
     ],
     "data": [
         "security/im_livechat_channel_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/mail_templates.xml",
         "data/im_livechat_channel_data.xml",
         "data/im_livechat_chatbot_data.xml",

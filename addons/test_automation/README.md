@@ -512,7 +512,7 @@ test_automation/
 │   ├── automation_lead_test.py     # Primary test model
 │   └── test_automation_project.py  # Secondary test model
 ├── security/
-│   └── ir.model.access.csv     # Access rights
+│   └── ir.access.csv           # Access rows
 ├── tests/
 │   ├── __init__.py
 │   ├── test_flow.py            # 27 tests - Basic automation flow

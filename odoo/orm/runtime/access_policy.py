@@ -10,9 +10,6 @@ if typing.TYPE_CHECKING:
     from .._typing import ModelLike
     from .environment import Environment
 
-ANY_GROUP = 0
-
-
 class AccessPolicy:
     __slots__ = ()
 
@@ -56,11 +53,6 @@ class AccessPolicy:
     ) -> Exception:
         return env["ir.rule"]._prepare_access_error(operation, records)
 
-    def legacy_access(self, env: Environment) -> typing.Any:
-        # the ir.model.access lines and ir.rule records the decision synthesizes
-        # rows from, read through whichever models the registry hosts
-        return env["ir.access"]._read_legacy_records()
-
     def access_signature(self, env: Environment) -> tuple:
         return env["ir.access"]._policy_signature()
 
@@ -78,9 +70,7 @@ class AccessPolicy:
         for row in store._get_all_access().get(model_name, ()):
             if letter not in row.operation:
                 continue
-            binds = row.group_id == ANY_GROUP or (
-                row.kind == "guard" and row.guard_scope == "everyone"
-            )
+            binds = row.kind == "guard" and row.guard_scope == "everyone"
             if not binds and row.group_id not in group_ids:
                 continue
             domain = row.domain
@@ -119,9 +109,6 @@ class IrAccessPolicy(AccessPolicy):
         self, env: Environment, operation: str, records: ModelLike
     ) -> Exception:
         return env["ir.access"]._make_record_access_error(records, operation)
-
-    def legacy_access(self, env: Environment) -> typing.Any:
-        return env["ir.access"]._read_legacy_tables()
 
 
 # a database registry decides every model from ir.access; an in-memory one

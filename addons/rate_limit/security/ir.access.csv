@@ -1,0 +1,3 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_rate_limit_bucket_admin,rate.limit.bucket admin,model_rate_limit_bucket,base.group_system,permission,crud,
+rate_limit_bucket_company_rule,Rate Limit Bucket: Multi-company,model_rate_limit_bucket,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

@@ -156,12 +156,14 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
 
     def test_recursive_current_website(self):
         Website = self.env["website"]
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Recursion Test",
                 "model_id": self.env.ref("website.model_website").id,
-                "domain_force": [(1, "=", 1)],
-                "groups": [],
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "crud",
+                "domain": repr([(1, "=", 1)]),
             }
         )
         self.env.registry.clear_cache()

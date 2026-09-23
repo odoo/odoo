@@ -1392,12 +1392,16 @@ class TestMrpAuditFixes(TestMrpCommon):
             name="Audit Kit Ruled Reader",
             groups="stock.group_stock_user",
         )
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Audit: no quant is visible",
                 "model_id": self.env["ir.model"]._get_id("stock.quant"),
-                "domain_force": "[(0, '=', 1)]",
-                "groups": [Command.link(self.quick_ref("stock.group_stock_user").id)],
+                "group_id": self.quick_ref("stock.group_stock_user").id,
+                "kind": "guard",
+                "guard_scope": "members",
+                "operation": "crud",
+                # hides every quant; a FALSE guard would deny the model instead
+                "domain": "[('id', '<', 0)]",
             }
         )
 

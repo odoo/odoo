@@ -21,29 +21,4 @@
         <field name="domain">[('ml_provider_ids', '!=', False)]</field>
     </record>
 
-    <record id="gateway_ml_config_rule_company" model="ir.rule">
-        <field name="name">gateway_ml.config: the reader's companies</field>
-        <field name="model_id" ref="model_gateway_ml_config" />
-        <field name="global" eval="False" />
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-        <field
-            name="groups"
-            eval="[Command.set([ref('base.group_user'), ref('base.group_portal'), ref('base.group_public')])]" />
-    </record>
-
-    <record id="gateway_ml_config_rule_erp_manager" model="ir.rule">
-        <field
-            name="name">gateway_ml.config: every company for an access-rights manager</field>
-        <field name="model_id" ref="model_gateway_ml_config" />
-        <field name="global" eval="False" />
-        <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[Command.set([ref('base.group_erp_manager')])]" />
-    </record>
-
-    <record id="gateway_ml_policy_rule_company" model="ir.rule">
-        <field name="name">gateway.ml.policy: the reader's companies</field>
-        <field name="model_id" ref="model_gateway_ml_policy" />
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
 </odoo>

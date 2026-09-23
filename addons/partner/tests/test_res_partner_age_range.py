@@ -561,14 +561,13 @@ class TestPartnerAgeRangeClassificationRights(TransactionCase):
         cls.cohort = cls.AgeRange.create(
             {"name": "Reachable by anyone", "min_value": 1970, "max_value": 1980}
         )
-        cls.env["ir.model.access"].create(
+        cls.env["ir.access"].create(
             {
                 "name": "res.partner portal write (test fixture)",
                 "model_id": cls.env["ir.model"]._get_id("res.partner"),
                 "group_id": cls.env.ref("base.group_portal").id,
-                "perm_read": True,
-                "perm_write": True,
-                "perm_create": True,
+                "kind": "permission",
+                "operation": "cru",
             }
         )
         cls.env.registry.clear_cache()

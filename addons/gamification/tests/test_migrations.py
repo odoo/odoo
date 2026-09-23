@@ -12,24 +12,6 @@ class TestPostMigrate11(common.TransactionCase):
     cursor would test nothing.
     """
 
-    # The rules the data file cannot re-point on -u, because
-    # security/gamification_security.xml opens with <odoo noupdate="1">.
-    REPOINTED = {
-        "gamification.goal_user_visibility": (
-            "gamification.group_gamification_user",
-            "base.group_portal",
-        ),
-        "gamification.goal_gamification_manager_visibility": (
-            "gamification.group_gamification_manager",
-        ),
-        "gamification.kudos_user_write": ("gamification.group_gamification_user",),
-        "gamification.mentorship_own_only": ("gamification.group_gamification_user",),
-        "gamification.mentorship_manager_rule": (
-            "gamification.group_gamification_manager",
-        ),
-        "gamification.activity_visibility": ("gamification.group_gamification_user",),
-    }
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -38,47 +20,20 @@ class TestPostMigrate11(common.TransactionCase):
             "gamification_1_1_post_migrate",
         )
 
-    def _revert_to_base_tiers(self):
-        """Put the pre-t24520 groups back on the seven rules.
-
-        Reproduces what an existing database looks like the moment the upgrade
-        starts: the data file has been skipped as noupdate, so the rules still
-        carry the base.* groups.
-        """
-        old_groups = {
-            "gamification.group_gamification_user": "base.group_user",
-            "gamification.group_gamification_manager": "base.group_erp_manager",
-        }
-        for rule_xmlid, group_xmlids in self.REPOINTED.items():
-            ids = [
-                self.env.ref(old_groups.get(xmlid, xmlid)).id for xmlid in group_xmlids
-            ]
-            self.env.ref(rule_xmlid).groups = [Command.set(ids)]
-
-    def test_post_migrate_repoints_rules(self):
-        """Every noupdate rule ends up on the app tier it belongs to."""
-        self._revert_to_base_tiers()
+    def test_post_migrate_leaves_the_converted_rows_alone(self):
+        """base 1.97 turned the noupdate rules into ir.access rows: the script
+        finds rows, not rules, and must neither fail nor rewrite them."""
+        data = self.env["ir.model.data"].search(
+            [("module", "=", "gamification"), ("model", "=", "ir.access")]
+        )
+        rows = self.env["ir.access"].browse(data.mapped("res_id"))
+        before = {row: (row.group_id, row.operation, row.domain) for row in rows}
 
         self.script.migrate(self.env.cr, "19.0.1.0")
 
-        for rule_xmlid, group_xmlids in self.REPOINTED.items():
-            with self.subTest(rule=rule_xmlid):
-                expected = self.env["res.groups"].browse(
-                    [self.env.ref(x).id for x in group_xmlids]
-                )
-                self.assertEqual(self.env.ref(rule_xmlid).groups, expected)
-
-    def test_post_migrate_is_idempotent(self):
-        """Running the script twice leaves the same groups, not duplicates."""
-        self._revert_to_base_tiers()
-
-        self.script.migrate(self.env.cr, "19.0.1.0")
-        first_pass = {xmlid: self.env.ref(xmlid).groups for xmlid in self.REPOINTED}
-        self.script.migrate(self.env.cr, "19.0.1.0")
-
-        for rule_xmlid, groups in first_pass.items():
-            with self.subTest(rule=rule_xmlid):
-                self.assertEqual(self.env.ref(rule_xmlid).groups, groups)
+        self.assertEqual(
+            {row: (row.group_id, row.operation, row.domain) for row in rows}, before
+        )
 
     def test_post_migrate_cleans_root_menu_groups(self):
         """The root ends up on the app tier alone, with no base.group_no_one left.
@@ -96,16 +51,3 @@ class TestPostMigrate11(common.TransactionCase):
         self.script.migrate(self.env.cr, "19.0.1.0")
 
         self.assertEqual(root.group_ids, app_group)
-
-    def test_post_migrate_survives_a_hand_deleted_rule(self):
-        """A rule someone removed by hand is skipped, not an upgrade failure."""
-        self._revert_to_base_tiers()
-        self.env.ref("gamification.kudos_user_write").unlink()
-
-        self.script.migrate(self.env.cr, "19.0.1.0")
-
-        survivor = self.env.ref("gamification.mentorship_own_only")
-        self.assertEqual(
-            survivor.groups,
-            self.env.ref("gamification.group_gamification_user"),
-        )

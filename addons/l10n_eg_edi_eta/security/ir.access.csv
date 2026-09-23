@@ -1,0 +1,8 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_l10n_eg_edi_activity_type,access_l10n_eg_edi_activity_type,model_l10n_eg_edi_activity_type,base.group_user,permission,r,
+access_l10n_eg_edi_uom_code,access_l10n_eg_edi_uom_code,model_l10n_eg_edi_uom_code,base.group_user,permission,r,
+access_l10n_eg_edi_eta_thumb_drive,access_l10n_eg_edi_eta_thumb_drive,model_l10n_eg_edi_thumb_drive,account.group_account_manager,permission,crud,
+l10n_eg_edi_eta_config_rule_company_group_user,l10n_eg_edi_eta.config: the reader's companies,model_l10n_eg_edi_eta_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+l10n_eg_edi_eta_config_rule_erp_manager,l10n_eg_edi_eta.config: every company for an access-rights manager,model_l10n_eg_edi_eta_config,base.group_erp_manager,permission,r,
+l10n_eg_edi_eta_config_rule_erp_manager_group_system,l10n_eg_edi_eta.config: every company for an access-rights manager,model_l10n_eg_edi_eta_config,base.group_system,permission,cud,
+eta_thumb_drive_modify_own,Only see/modify own thumb drive,model_l10n_eg_edi_thumb_drive,base.group_everyone,guard,crud,"[('user_id', '=', user.id)]"

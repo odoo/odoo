@@ -30,8 +30,7 @@ routes and decides without one.
         "approval",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/ir_rule.xml",
+        "security/ir.access.csv",
         "views/approval_category_views.xml",
         "views/approval_request_views.xml",
         "views/approval_template_views.xml",

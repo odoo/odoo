@@ -9,8 +9,7 @@
         "calendar",
     ],
     "data": [
-        "security/security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "wizards/homework_location_wizard.xml",
     ],
     "assets": {

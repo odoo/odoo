@@ -32,8 +32,7 @@ By default, the audit trail is enabled for GoBD compliance.
         "de",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_de_security.xml",
+        "security/ir.access.csv",
         "data/account_account_tags_data.xml",
         "views/account_view.xml",
         "views/res_company_views.xml",

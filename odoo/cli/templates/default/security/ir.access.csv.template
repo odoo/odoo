@@ -1,0 +1,6 @@
+{%- set snake_name = name|snake -%}
+{%- set id = "access_%s_%s"|format(snake_name, snake_name) -%}
+{%- set name = "%s.%s"|format(snake_name, snake_name) -%}
+{%- set model_id = "model_%s_%s"|format(snake_name, snake_name) -%}
+id,name,model_id/id,group_id/id,kind,operation,domain
+{{ id }},{{ name }},{{ model_id }},base.group_user,permission,crud,

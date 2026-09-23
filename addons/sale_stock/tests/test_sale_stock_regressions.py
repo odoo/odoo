@@ -170,9 +170,14 @@ class TestSaleStockRegressions(TestSaleStockCommon):
     def test_delay_report_is_scoped_to_the_company(self):
         self.assertIn("company_id", self.env["customer.delay.report"]._fields)
         rules = (
-            self.env["ir.rule"]
+            self.env["ir.access"]
             .sudo()
-            .search([("model_id.model", "=", "customer.delay.report")])
+            .search(
+                [
+                    ("model_id.model", "=", "customer.delay.report"),
+                    ("kind", "=", "guard"),
+                ]
+            )
         )
         self.assertTrue(rules, "no record rule scopes the report to a company")
 

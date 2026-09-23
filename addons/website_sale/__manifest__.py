@@ -16,8 +16,8 @@
         "sale_team",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/ir_rules.xml",
+        "security/ir.access.csv",
+        "security/ir_access.xml",
         "security/res_groups.xml",
         "data/data.xml",
         "data/mail_template_data.xml",

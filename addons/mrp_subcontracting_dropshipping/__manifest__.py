@@ -12,8 +12,7 @@ This bridge module allows to manage subcontracting with the dropshipping module.
         "stock_dropshipping",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/mrp_subcontracting_dropshipping_security.xml",
+        "security/ir.access.csv",
         "data/mrp_subcontracting_dropshipping_data.xml",
         "views/purchase_order_views.xml",
     ],

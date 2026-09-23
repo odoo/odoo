@@ -1523,15 +1523,13 @@ class TestRemoteCallSurface(TransactionCase):
                 "group_ids": [(6, 0, [cls.env.ref("base.group_user").id])],
             }
         )
-        cls.env["ir.model.access"].create(
+        cls.env["ir.access"].create(
             {
                 "name": "ir_mail_server read for the audit",
                 "model_id": cls.env["ir.model"]._get_id("ir.mail_server"),
                 "group_id": cls.env.ref("base.group_user").id,
-                "perm_read": True,
-                "perm_write": False,
-                "perm_create": False,
-                "perm_unlink": False,
+                "kind": "permission",
+                "operation": "r",
             }
         )
         cls.env.registry.clear_cache()

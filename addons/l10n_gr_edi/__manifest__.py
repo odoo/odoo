@@ -21,8 +21,7 @@
     "data": [
         "data/exchange_data.xml",
         "data/template.xml",
-        "security/ir.model.access.csv",
-        "security/l10n_gr_edi_security.xml",
+        "security/ir.access.csv",
         "views/account_fiscal_position_views.xml",
         "views/account_move_views.xml",
         "views/account_tax_views.xml",

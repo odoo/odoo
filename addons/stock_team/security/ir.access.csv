@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+team_team_rule_stock_manager,Inventory teams: Inventory Administrators,team.model_team_team,stock.group_stock_manager,permission,cud,"[('use_stock', '=', True)]"
+team_member_rule_personal_group_stock_manager,Team Members: own teams,team.model_team_member,stock.group_stock_manager,permission,r,"['|', ('team_id.user_id', '=', user.id), ('team_id', 'in', user.team_ids.ids)]"
+team_member_rule_stock_manager,Inventory team members: Inventory Administrators,team.model_team_member,stock.group_stock_manager,permission,cud,"[('team_id.use_stock', '=', True)]"
+team_alias_rule_stock_manager,Inventory team aliases: Inventory Administrators,team.model_team_alias,stock.group_stock_manager,permission,cud,"[('team_id.use_stock', '=', True)]"

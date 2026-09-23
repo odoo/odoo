@@ -10,7 +10,7 @@
         "base",
     ],
     "data": [
-        "ir.model.access.csv",
+        "security/ir.access.csv",
         "demo_data.xml",
     ],
 }

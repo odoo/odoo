@@ -110,22 +110,27 @@ class TestPrivateAddressAccess(TransactionCase):
         """
         self.assertFalse(self._finds_home(self.officer))
 
-    def test_a_restrictive_group_rule_on_res_partner_still_denies(self):
+    def test_a_restrictive_group_guard_on_res_partner_still_denies(self):
         """The property the first draft of this fix destroyed.
 
-        Group rules OR. A permissive `base.group_user` rule on res.partner --
+        Permissions OR. A permissive `base.group_user` row on res.partner --
         which is what "let the subject see their own private address" looks
-        like when it is group-scoped -- ORs away every other group-scoped
-        restriction. Making the rule global is what keeps this true, and this
-        test states it from the hr side because hr is where private rows exist.
+        like when it is group-scoped -- would OR away nothing a guard states:
+        a restriction on a group's members is a guard, and no permission
+        lifts it. This test states it from the hr side because hr is where
+        private rows exist.
         """
         ordinary = self.env["res.partner"].create({"name": "Ordinary Contact"})
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "deny everything to internal users",
                 "model_id": self.env.ref("base.model_res_partner").id,
-                "domain_force": "[('id', '=', False)]",
-                "groups": [(6, 0, [self.env.ref("base.group_user").id])],
+                "group_id": self.env.ref("base.group_user").id,
+                "kind": "guard",
+                "guard_scope": "members",
+                "operation": "crud",
+                # hides every row; a FALSE guard would deny the model instead
+                "domain": "[('id', '<', 0)]",
             }
         )
         self.env.flush_all()
@@ -160,21 +165,23 @@ class TestPrivateAddressAccess(TransactionCase):
         self.assertEqual(len(home), 1)
         self.assertEqual(home[0]["street"], "12 Rue Confidentielle")
 
-    def test_hr_ships_no_rule_of_its_own_on_res_partner(self):
+    def test_hr_ships_no_read_of_its_own_on_res_partner(self):
         """Pins the decision in the class docstring against a well-meant re-add."""
-        rules = self.env["ir.rule"].search(
-            [("model_id", "=", self.env.ref("base.model_res_partner").id)]
+        reads = self.env["ir.access"].search(
+            [
+                ("model_id", "=", self.env.ref("base.model_res_partner").id),
+                ("for_read", "=", True),
+            ]
         )
         from_hr = self.env["ir.model.data"].search(
             [
-                ("model", "=", "ir.rule"),
+                ("model", "=", "ir.access"),
                 ("module", "=", "hr"),
-                ("res_id", "in", rules.ids),
+                ("res_id", "in", reads.ids),
             ]
         )
         self.assertFalse(
             from_hr.mapped("name"),
-            "hr must not add an ir.rule to res.partner: a group rule cannot "
-            "lift base's global one, and a permissive one weakens every other "
-            "group-scoped rule on the model.",
+            "hr must not add a read of res.partner: no permission lifts base's "
+            "guard on private addresses, and a permissive one only widens.",
         )

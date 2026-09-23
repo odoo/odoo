@@ -12,8 +12,7 @@
         "hr_attendance",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/hr_timesheet_attendance_report_security.xml",
+        "security/ir.access.csv",
         "reports/hr_timesheet_attendance_report_view.xml",
         "views/hr_timesheet_attendance_menus.xml",
     ],

@@ -1,0 +1,8 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_scorecard_user,scorecard user,model_scorecard,base.group_user,permission,r,
+access_scorecard_manager,scorecard manager,model_scorecard,group_scoring_manager,permission,cud,
+access_scorecard_dimension_user,scorecard.dimension user,model_scorecard_dimension,base.group_user,permission,r,
+access_scorecard_dimension_manager,scorecard.dimension manager,model_scorecard_dimension,group_scoring_manager,permission,cud,
+access_scorecard_dimension_band_user,scorecard.dimension.band user,model_scorecard_dimension_band,base.group_user,permission,r,
+access_scorecard_dimension_band_manager,scorecard.dimension.band manager,model_scorecard_dimension_band,group_scoring_manager,permission,cud,
+rule_scorecard_company,scorecard: multi-company,model_scorecard,base.group_everyone,guard,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"

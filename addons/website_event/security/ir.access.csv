@@ -1,0 +1,29 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+ir_rule_event_question_answer_event_user,Event Question Answer: event user: read all,event.model_event_question_answer,event.group_event_registration_desk,permission,r,
+event_event_public_group_public,Event: public/portal: published read,model_event_event,base.group_public,permission,r,"[('website_published', '=', True)]"
+event_event_public_group_portal,Event: public/portal: published read,model_event_event,base.group_portal,permission,r,"[('website_published', '=', True)]"
+access_event_event_employee,event.event,model_event_event,base.group_user,permission,r,
+ir_rule_event_event_ticket_public_group_public,Event Ticket: public/portal: published read,event.model_event_event_ticket,base.group_public,permission,r,"[('event_id.website_published', '=', True)]"
+ir_rule_event_event_ticket_public_group_portal,Event Ticket: public/portal: published read,event.model_event_event_ticket,base.group_portal,permission,r,"[('event_id.website_published', '=', True)]"
+access_event_event_ticket_employee,event.event.ticket,event.model_event_event_ticket,base.group_user,permission,r,
+ir_rule_event_slot_public_group_public,Event Slot: public/portal: published read,event.model_event_slot,base.group_public,permission,r,"[('event_id.website_published', '=', True)]"
+ir_rule_event_slot_public_group_portal,Event Slot: public/portal: published read,event.model_event_slot,base.group_portal,permission,r,"[('event_id.website_published', '=', True)]"
+access_event_event_slot_employee,event.slot,event.model_event_slot,base.group_user,permission,r,
+access_event_tag_category_public,event.tag.category,event.model_event_tag_category,base.group_public,permission,r,
+access_event_tag_category_portal,event.tag.category,event.model_event_tag_category,base.group_portal,permission,r,
+access_event_tag_category_employee,event.tag.category,event.model_event_tag_category,base.group_user,permission,r,
+ir_rule_event_tag_public_group_public,Event Tag: public/portal: color = published and category = published,event.model_event_tag,base.group_public,permission,r,"[('category_id.website_published', '=', True), ('color', '!=', False), ('color', '!=', 0)]"
+ir_rule_event_tag_public_group_portal,Event Tag: public/portal: color = published and category = published,event.model_event_tag,base.group_portal,permission,r,"[('category_id.website_published', '=', True), ('color', '!=', False), ('color', '!=', 0)]"
+access_event_tag_employee,event.tag,event.model_event_tag,base.group_user,permission,r,
+access_website_event_menu_public,website.event.menu,model_website_event_menu,base.group_public,permission,r,
+access_website_event_menu_portal,website.event.menu,model_website_event_menu,base.group_portal,permission,r,
+access_website_event_menu_employee,website.event.menu,model_website_event_menu,base.group_user,permission,r,
+access_website_event_menu_user,website.event.menu.user,model_website_event_menu,event.group_event_user,permission,cud,
+ir_rule_website_visitor_registration_desk,Website Visitor: registration desk: event visitors only,model_website_visitor,event.group_event_registration_desk,permission,ru,"[('event_registration_ids', '!=', False)]"
+ir_rule_event_question_published_group_public,Event Question: not event groups: event published read,event.model_event_question,base.group_public,permission,r,"[('event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_published_group_portal,Event Question: not event groups: event published read,event.model_event_question,base.group_portal,permission,r,"[('event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_published_group_user,Event Question: not event groups: event published read,event.model_event_question,base.group_user,permission,r,"[('event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_event_user,Event Question: event user: read all,event.model_event_question,event.group_event_registration_desk,permission,r,
+ir_rule_event_question_answer_published_group_public,Event Question Answer: not event groups: event published read,event.model_event_question_answer,base.group_public,permission,r,"[('question_id.event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_answer_published_group_portal,Event Question Answer: not event groups: event published read,event.model_event_question_answer,base.group_portal,permission,r,"[('question_id.event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_answer_published_group_user,Event Question Answer: not event groups: event published read,event.model_event_question_answer,base.group_user,permission,r,"[('question_id.event_ids', 'any', [('is_published', '=', True)])]"

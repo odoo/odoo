@@ -22,8 +22,7 @@ E-invoice implementation
         },
     },
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_it_edi_security.xml",
+        "security/ir.access.csv",
         "data/account.account.tag.csv",
         "data/invoice_it_simplified_template.xml",
         "data/invoice_it_template.xml",

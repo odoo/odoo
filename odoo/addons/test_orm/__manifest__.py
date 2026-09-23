@@ -11,8 +11,7 @@
         "web_tour",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/test_orm_security.xml",
+        "security/ir.access.csv",
         "views/test_orm_views.xml",
         "data/test_orm_data.xml",
         "views/test_orm_menus.xml",

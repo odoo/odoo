@@ -2,6 +2,8 @@ from odoo import Command, fields
 from odoo.exceptions import AccessError
 from odoo.tests import common, new_test_user
 
+from odoo.addons.base.tests.common import make_access_row
+
 
 class TestPrivateReadGroup(common.TransactionCase):
     @classmethod
@@ -1065,28 +1067,9 @@ class TestPrivateReadGroup(common.TransactionCase):
     def test_groupby_many2many_field_access(self):
         Task = self.env["test_read_group.task"]
         Task.create({"name": "Super Mario Bros."})
-        Model = self.env["ir.model"]
-        Access = self.env["ir.model.access"]
         group_user = self.env.ref("base.group_user")
-        Access.create(
-            [
-                {
-                    "name": "test task read",
-                    "model_id": Model._get("test_read_group.task").id,
-                    "group_id": group_user.id,
-                    "perm_read": True,
-                    "perm_write": False,
-                    "perm_create": False,
-                    "perm_unlink": False,
-                },
-                {
-                    "name": "test user read",
-                    "model_id": Model._get("test_read_group.user").id,
-                    "group_id": group_user.id,
-                    "perm_read": True,
-                },
-            ]
-        )
+        for model in ("test_read_group.task", "test_read_group.user"):
+            make_access_row(self.env, model, group_user, operation="r")
         task_as_user = Task.with_user(self.base_user)
 
         task_as_user._read_group([], groupby=["user_ids"], aggregates=["__count"])
@@ -1188,11 +1171,14 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
         users_model = self.env["ir.model"]._get(mario._name)
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Only The Lone Wanderer allowed",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": users_model.id,
-                "domain_force": [("id", "=", mario.id)],
+                "domain": str([("id", "=", mario.id)]),
             }
         )
         tasks = tasks.with_user(self.base_user)
@@ -1603,11 +1589,14 @@ class TestPrivateReadGroup(common.TransactionCase):
         self.assertTrue(field_info["bar_base_ids"]["groupable"])
 
         related_base_model = self.env["ir.model"]._get("test_read_group.related_base")
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Only The Lone Wanderer allowed",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": related_base_model.id,
-                "domain_force": str([("id", "=", 161)]),
+                "domain": str([("id", "=", 161)]),
             }
         )
 
@@ -1704,11 +1693,14 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
         users_model = self.env["ir.model"]._get(RelatedFoo._name)
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Only The Lone Wanderer allowed",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": users_model.id,
-                "domain_force": [("id", "in", foos[1:].ids)],
+                "domain": str([("id", "in", foos[1:].ids)]),
             }
         )
         RelatedBase = RelatedBase.with_user(self.base_user)
@@ -1799,11 +1791,14 @@ class TestPrivateReadGroup(common.TransactionCase):
             RelatedBase._read_group([], ["foo_id.bar_name"], ["__count"])
 
         users_model = self.env["ir.model"]._get(RelatedFoo._name)
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Only The Lone Wanderer allowed",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": users_model.id,
-                "domain_force": [("id", "in", foos[1:].ids)],
+                "domain": str([("id", "in", foos[1:].ids)]),
             }
         )
 

@@ -10,8 +10,8 @@
         "hr",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/document_compliance_hr_security.xml",
+        "security/ir.access.csv",
+        "security/ir_access.xml",
     ],
     "auto_install": True,
 }

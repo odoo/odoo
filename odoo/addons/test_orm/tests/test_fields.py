@@ -23,7 +23,11 @@ from odoo.tools import float_repr, html_sanitize, human_size, mute_logger
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.base.models.ir_model_common import MODULE_UNINSTALL_FLAG
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.base.tests.common import (
+    TransactionCaseWithUserDemo,
+    make_access_row,
+    make_guard_row,
+)
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 
 
@@ -431,14 +435,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         user1 = User.create({"name": "Aaaah", "login": "a"})
         user2 = User.create({"name": "Boooh", "login": "b"})
         user3 = User.create({"name": "Crrrr", "login": "c"})
-        self.env["ir.rule"].create(
-            {
-                "model_id": self.env["ir.model"]
-                .search([("model", "=", "res.users")])
-                .id,
-                "domain_force": "[('id', '!=', %d)]" % user2.id,
-            }
-        )
+        make_guard_row(self.env, "res.users", "[('id', '!=', %d)]" % user2.id)
         self.env.invalidate_all()
         users = (user1 + user2 + user3).with_user(self.user_demo)
         user1, user2, user3 = users
@@ -656,12 +653,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             [{"message": message.id}] * 101,
         )
 
-        self.env["ir.rule"].create(
-            {
-                "model_id": self.env["ir.model"]._get_id("test_orm.emailmessage"),
-                "groups": [self.env.ref("base.group_user").id],
-                "domain_force": str([("active", "=", False)]),
-            }
+        make_guard_row(
+            self.env,
+            "test_orm.emailmessage",
+            str([("active", "=", False)]),
+            "base.group_user",
         )
 
         message.with_user(self.user_demo).unlink()
@@ -954,7 +950,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env.flush_all()
 
         access = self.env.ref("test_orm.access_test_orm_compute_unassigned")
-        access.perm_read = False
+        access.for_read = False
         self.env.flush_all()
 
         records = records.with_user(self.user_demo)
@@ -1631,14 +1627,9 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         )
         self.env["ir.default"].set("test_orm.company", "tag_id", tag0.id)
 
-        accesses = self.env["ir.model.access"].search(
-            [("model_id.model", "=", "ir.default")]
-        )
-        accesses.write(
-            dict.fromkeys(
-                ["perm_read", "perm_write", "perm_create", "perm_unlink"], False
-            )
-        )
+        self.env["ir.access"].search(
+            [("model_id.model", "=", "ir.default"), ("kind", "=", "permission")]
+        ).active = False
 
         record = self.env["test_orm.company"].create(
             {
@@ -1712,12 +1703,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         record.with_user(user0).foo = "yes we can"
 
         self.assertTrue(user0._is_internal())
-        self.env["ir.rule"].create(
-            {
-                "model_id": self.env["ir.model"]._get_id(record._name),
-                "groups": [self.env.ref("base.group_user").id],
-                "domain_force": str([("id", "!=", record.id)]),
-            }
+        make_guard_row(
+            self.env, record._name, str([("id", "!=", record.id)]), "base.group_user"
         )
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = "forbidden"
@@ -2149,20 +2136,14 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_32_prefetch_missing_error(self):
         Discussion = self.env["test_orm.discussion"]
 
-        self.env["ir.model.access"].create(
-            {
-                "name": "demo",
-                "model_id": self.env["ir.model"]._get(Discussion.categories._name).id,
-                "group_id": self.env.ref("base.group_user").id,
-                "perm_read": True,
-            }
+        make_access_row(
+            self.env, Discussion.categories._name, "base.group_user", operation="r"
         )
-        self.env["ir.rule"].create(
-            {
-                "model_id": self.env["ir.model"]._get(Discussion._name).id,
-                "groups": [self.env.ref("base.group_user").id],
-                "domain_force": "[('name', '!=', 'Super Secret discution')]",
-            }
+        make_guard_row(
+            self.env,
+            Discussion._name,
+            "[('name', '!=', 'Super Secret discution')]",
+            "base.group_user",
         )
 
         records = Discussion.with_user(self.user_demo).create(
@@ -2557,7 +2538,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     @mute_logger("odoo.addons.base.models.ir_model")
     def test_41_new_related(self):
         access = self.env.ref("test_orm.access_discussion")
-        access.write({"perm_read": False})
+        access.write({"for_read": False})
 
         env = self.env(user=self.user_demo)
         self.assertEqual(env.user.login, "demo")
@@ -2572,7 +2553,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     @mute_logger("odoo.addons.base.models.ir_model")
     def test_42_new_related(self):
         access = self.env.ref("test_orm.access_discussion")
-        access.write({"perm_read": False})
+        access.write({"for_read": False})
 
         env = self.env(user=self.user_demo)
         self.assertEqual(env.user.login, "demo")
@@ -3504,10 +3485,14 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             record_user.invalidate_recordset(["tags"])
             record_user.read(["tags"])
 
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
+                "name": "rule",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": self.env["ir.model"]._get(record._name).id,
-                "domain_force": "[('id', '=', %d)]" % record.id,
+                "domain": "[('id', '=', %d)]" % record.id,
             }
         )
 
@@ -3518,10 +3503,14 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             record_user.invalidate_recordset(["tags"])
             record_user.read(["tags"])
 
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
+                "name": "rule",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": self.env["ir.model"]._get(record._name).id,
-                "domain_force": "[('id', '!=', %d)]" % record.id,
+                "domain": "[('id', '!=', %d)]" % record.id,
             }
         )
 
@@ -3548,10 +3537,14 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         line = move.line_ids
         self.assertEqual(move.quantity, 42)
 
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
+                "name": "rule",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": self.env["ir.model"]._get(line._name).id,
-                "domain_force": "[('move_id.quantity', '>=', 0)]",
+                "domain": "[('move_id.quantity', '>=', 0)]",
             }
         )
 
@@ -4813,11 +4806,14 @@ class TestParentStore(TransactionCaseWithUserDemo):
             self.assertEqual(cat.depth, 2)
 
     def test_with_ir_rule_behavior(self):
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "category rule",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": self.env["ir.model"]._get("test_orm.category").id,
-                "domain_force": str([("id", "in", self.cats(3).ids)]),
+                "domain": str([("id", "in", self.cats(3).ids)]),
             }
         )
 

@@ -3548,12 +3548,15 @@ class TestStockValuation(TestStockValuationCommon):
 
         self.assertEqual(product.total_value, 110)
 
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Forbid Quant Access of Location B for Inventory Users",
                 "model_id": self.env["ir.model"]._get_id("stock.quant"),
-                "domain_force": f"[('location_id', '!=', {location_b.id})]",
-                "groups": [Command.set(self.env.ref("stock.group_stock_user").ids)],
+                "group_id": self.env.ref("stock.group_stock_user").id,
+                "kind": "guard",
+                "guard_scope": "members",
+                "operation": "crud",
+                "domain": f"[('location_id', '!=', {location_b.id})]",
             }
         )
 

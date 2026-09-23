@@ -339,14 +339,16 @@ class TestTransientWizardIsolation(TransactionCase):
         for model in wizards:
             with self.subTest(model=model):
                 rules = (
-                    self.env["ir.rule"].sudo().search([("model_id.model", "=", model)])
+                    self.env["ir.access"]
+                    .sudo()
+                    .search([("model_id.model", "=", model), ("domain", "!=", False)])
                 )
                 self.assertTrue(
                     rules,
                     f"{model} is a TransientModel reachable by id and has no"
                     " record rule scoping it to its creator",
                 )
-                self.assertIn("create_uid", "".join(rules.mapped("domain_force")))
+                self.assertIn("create_uid", "".join(rules.mapped("domain")))
 
 
 @tagged("post_install", "-at_install")

@@ -15,8 +15,7 @@
         "views/project_workflow_step_views.xml",
         "views/project_project_views.xml",
         "views/project_task_views.xml",
-        "security/ir.model.access.csv",
-        "security/project_sms_security.xml",
+        "security/ir.access.csv",
     ],
     "auto_install": True,
 }

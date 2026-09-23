@@ -18,7 +18,7 @@ It is primarily used for EDIs that might need a special city code.
         "partner",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/partner_address_extended.xml",
         "views/res_city_view.xml",
         "views/res_country_view.xml",

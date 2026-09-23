@@ -43,7 +43,7 @@ Python source.**
 | `ir.model.relation` | many2many join tables |
 | `ir.model.constraint` | SQL constraints the ORM created and therefore may drop |
 | `ir.model.inherit` | the resolved inheritance graph |
-| `ir.model.access` | model-level permissions |
+| `ir.access` | permissions and guards, per model, group and operation |
 | `ir.ui.view` | view architecture, as XML in a column |
 | `ir.module.module` | which modules are installed **in this database** |
 

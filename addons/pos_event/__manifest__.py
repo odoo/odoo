@@ -10,7 +10,7 @@
         "event_product",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/point_of_sale_data.xml",
         "data/event_product_data.xml",
         "views/event_registration_views.xml",

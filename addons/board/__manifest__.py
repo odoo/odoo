@@ -16,7 +16,7 @@ Allows users to create custom dashboard.
         "spreadsheet_dashboard",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/board_views.xml",
         "views/board_menus.xml",
     ],

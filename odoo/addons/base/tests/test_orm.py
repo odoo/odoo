@@ -5,6 +5,8 @@ from odoo.exceptions import AccessError, LockError
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.base.tests.common import make_guard_row
+
 
 class TestORM(TransactionCase):
     @mute_logger("odoo.models")
@@ -59,7 +61,7 @@ class TestORM(TransactionCase):
             _ = record.display_name
             record.unlink()
 
-    @mute_logger("odoo.models", "odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.models", "odoo.addons.base.models.ir_access")
     def test_access_filtered_records(self):
         p1 = self.env["res.partner"].create({"name": "W"})
         p2 = self.env["res.partner"].create({"name": "Y"})
@@ -72,12 +74,11 @@ class TestORM(TransactionCase):
         )
 
         partner_model = self.env["ir.model"].search([("model", "=", "res.partner")])
-        self.env["ir.rule"].create(
-            {
-                "name": "Y is invisible",
-                "domain_force": [("id", "!=", p1.id)],
-                "model_id": partner_model.id,
-            }
+        make_guard_row(
+            self.env,
+            partner_model.model,
+            str([("id", "!=", p1.id)]),
+            name="Y is invisible",
         )
 
         partners = self.env["res.partner"].with_user(user).search([])
@@ -578,12 +579,11 @@ class TestReadFormatMany2oneBatch(TransactionCase):
                 {"name": "batch visible child", "parent_id": visible.id},
             ]
         )
-        self.env["ir.rule"].create(
-            {
-                "name": "hide the secret batch parent",
-                "model_id": self.env["ir.model"]._get_id("res.partner"),
-                "domain_force": [("id", "!=", secret.id)],
-            }
+        make_guard_row(
+            self.env,
+            "res.partner",
+            str([("id", "!=", secret.id)]),
+            name="hide the secret batch parent",
         )
         user = self.env["res.users"].create(
             {

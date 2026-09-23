@@ -155,7 +155,7 @@ partner_menu_root                        Contacts (the app)
 ```
 
 **The branch is gated on the group the ACL empowers, not on the administrator.**
-`security/ir.model.access.csv` grants `base.group_partner_manager` create/write/unlink on
+`security/ir.access.csv` grants `base.group_partner_manager` create/write/unlink on
 the cohorts, and `base`'s own ACL grants that same group write on tags, states, country
 groups and banks. While Configuration was `base.group_system` every one of those rights
 reached no screen. The two entries a manager may only *read* — Industries and Identifier

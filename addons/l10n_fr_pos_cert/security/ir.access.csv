@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_l10n_fr_pos_cert_account_sale_closing_user,l10n_fr_pos_cert.account.sale.closing.user,model_account_sale_closing,base.group_user,permission,r,
+access_l10n_fr_pos_cert_config_user,l10n_fr_pos_cert.config user,model_l10n_fr_pos_cert_config,base.group_user,permission,r,
+access_l10n_fr_pos_cert_config_manager,l10n_fr_pos_cert.config manager,model_l10n_fr_pos_cert_config,base.group_system,permission,cud,
+account_sale_closing_multi_company,Sale Closing multi-company,model_account_sale_closing,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"

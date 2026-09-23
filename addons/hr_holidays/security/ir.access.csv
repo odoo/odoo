@@ -1,0 +1,54 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+resource_leaves_base_user,Time Off Resources: Approver,resource.model_resource_schedule_exception,base.group_user,permission,r,"[('resource_id', '=', False)]"
+resource_leaves_holidays_user,Time Off Resources: All Approver,resource.model_resource_schedule_exception,group_hr_holidays_user,permission,crud,"[ '|', ('resource_id', '=', False), ('resource_id.employee_id', '!=', False), ]"
+resource_leaves_base_user_group_system,Time Off Resources: Approver,resource.model_resource_schedule_exception,base.group_system,permission,r,"[('resource_id', '=', False)]"
+hr_leave_rule_manager,Time Off Administrator,model_hr_leave,group_hr_holidays_manager,permission,cu,
+hr_leave_rule_employee_update_group_hr_holidays_user,Time Off base.group_user create/write,model_hr_leave,group_hr_holidays_user,permission,cu,"[ '|', '&', ('employee_id.user_id', '=', user.id), ('state', 'not in', ['validate', 'validate1']), '&', ('validation_type', 'in', ['manager', 'both', 'no_validation']), ('employee_id.leave_manager_id', '=', user.id), ]"
+hr_leave_rule_responsible_update_group_hr_holidays_user,Time Off Responsible create/write,model_hr_leave,group_hr_holidays_user,permission,cu,"[ '|', '&', ('employee_id.user_id', '=', user.id), ('state', '!=', 'validate'), ('employee_id.leave_manager_id', '=', user.id), ]"
+hr_leave_rule_user_read,Time Off All Approver read/unlink,model_hr_leave,group_hr_holidays_user,permission,rd,
+hr_leave_rule_officer_update,Time Off All Approver create/write,model_hr_leave,group_hr_holidays_user,permission,cu,"[ '|', '&', ('employee_id.user_id', '=', user.id), ('state', '!=', 'validate'), '|', ('employee_id.user_id', '!=', user.id), ('employee_id.user_id', '=', False) ]"
+hr_leave_rule_employee,Time Off base.group_user read,model_hr_leave,base.group_user,permission,r,"[('employee_id.user_id', '=', user.id)]"
+hr_leave_rule_employee_update,Time Off base.group_user create/write,model_hr_leave,base.group_user,permission,cu,"[ '|', '&', ('employee_id.user_id', '=', user.id), ('state', 'not in', ['validate', 'validate1']), '&', ('validation_type', 'in', ['manager', 'both', 'no_validation']), ('employee_id.leave_manager_id', '=', user.id), ]"
+hr_leave_rule_employee_unlink,Time Off base.group_user unlink,model_hr_leave,base.group_user,permission,d,"[('employee_id.user_id', '=', user.id), ('state', 'in', ['confirm', 'validate1'])]"
+hr_leave_rule_responsible_read,Time Off Responsible read,model_hr_leave,group_hr_holidays_responsible,permission,r,"[ ('employee_id.leave_manager_id', '=', user.id), ]"
+hr_leave_rule_responsible_update,Time Off Responsible create/write,model_hr_leave,group_hr_holidays_responsible,permission,cu,"[ '|', '&', ('employee_id.user_id', '=', user.id), ('state', '!=', 'validate'), ('employee_id.leave_manager_id', '=', user.id), ]"
+hr_leave_allocation_rule_manager,Allocations: administrator: no limit,model_hr_leave_allocation,group_hr_holidays_manager,permission,cud,
+hr_leave_allocation_rule_employee_update_group_hr_holidays_user,Allocations: base.group_user create/write,model_hr_leave_allocation,group_hr_holidays_user,permission,cu,"[ '|', '&', ('employee_id.user_id', '=', user.id), ('state', '=', 'confirm'), '&', ('validation_type', 'in', ['manager', 'both', 'no_validation']), ('employee_id.leave_manager_id', '=', user.id), ]"
+hr_leave_allocation_rule_responsible_update_group_hr_holidays_user,Allocations: Responsible: create/write,model_hr_leave_allocation,group_hr_holidays_user,permission,cu,"[ '|', '&', ('employee_id.user_id', '=', user.id), ('state', '!=', 'validate'), ('employee_id.leave_manager_id', '=', user.id), ]"
+hr_leave_allocation_rule_officer_read,Allocations: see all time off: read all,model_hr_leave_allocation,group_hr_holidays_user,permission,r,
+hr_leav_allocation_rule_employee_unlink_group_hr_holidays_user,Allocations base.group_user unlink,model_hr_leave_allocation,group_hr_holidays_user,permission,d,"[('employee_id.user_id', '=', user.id), ('state', '=', 'confirm')]"
+hr_leave_allocation_rule_officer_update,Allocations: holiday user: create/write,model_hr_leave_allocation,group_hr_holidays_user,permission,cud,"[ '|', '&', ('employee_id.user_id', '=', user.id), ('state', '!=', 'validate'), '|', ('employee_id.user_id', '!=', user.id), ('employee_id.user_id', '=', False) ]"
+hr_leave_allocation_rule_employee,Allocations: employee: read own,model_hr_leave_allocation,base.group_user,permission,r,"[ '|', ('employee_id.leave_manager_id', '=', user.id), ('employee_id.user_id', '=', user.id), ]"
+hr_leave_allocation_rule_employee_update,Allocations: base.group_user create/write,model_hr_leave_allocation,base.group_user,permission,cu,"[ '|', '&', ('employee_id.user_id', '=', user.id), ('state', '=', 'confirm'), '&', ('validation_type', 'in', ['manager', 'both', 'no_validation']), ('employee_id.leave_manager_id', '=', user.id), ]"
+hr_leave_allocation_rule_responsible_update,Allocations: Responsible: create/write,model_hr_leave_allocation,group_hr_holidays_responsible,permission,cu,"[ '|', '&', ('employee_id.user_id', '=', user.id), ('state', '!=', 'validate'), ('employee_id.leave_manager_id', '=', user.id), ]"
+hr_leav_allocation_rule_employee_unlink,Allocations base.group_user unlink,model_hr_leave_allocation,base.group_user,permission,d,"[('employee_id.user_id', '=', user.id), ('state', '=', 'confirm')]"
+access_hr_holidays_status_manager,hr.holidays.status manager,model_hr_leave_type,group_hr_holidays_manager,permission,cud,
+access_hr_holidays_status_employee,hr.holidays.status employee,model_hr_leave_type,base.group_user,permission,r,
+hr_leave_report_rule_group_user,Time Off Summary / Report: Internal User,model_hr_leave_report,base.group_user,permission,r,"[('has_department_manager_access', '=', True)]"
+hr_leave_report_rule_group_holiday_user,Time Off Summary / Report: All Approver,model_hr_leave_report,group_hr_holidays_user,permission,r,
+resource_schedule_exception_rule_group_user_create_group_hr_holidays_user,resource.schedule.exception: employee reads own or global,resource.model_resource_schedule_exception,group_hr_holidays_user,permission,r,"['|', ('resource_id', '=', False), ('resource_id.user_id', 'in', [False, user.id])]"
+resource_schedule_exception_rule_group_user_modify_group_hr_holidays_user,resource.schedule.exception: employee modifies own,resource.model_resource_schedule_exception,group_hr_holidays_user,permission,cud,"[('resource_id.user_id', '=', user.id)]"
+resource_leaves_base_user_group_hr_holidays_user,Time Off Resources: Approver,resource.model_resource_schedule_exception,group_hr_holidays_user,permission,r,"[('resource_id', '=', False)]"
+access_calendar_event_type_manager,calendar.event.type.manager,calendar.model_calendar_event_type,group_hr_holidays_manager,permission,cud,
+access_mail_activity_type_holidays_manager,mail.activity.type.holidays.manager,mail.model_mail_activity_type,group_hr_holidays_manager,permission,cud,
+access_hr_holidays_summary_employee,access.hr.holidays.summary.employee,model_hr_holidays_summary_employee,group_hr_holidays_user,permission,cru,
+access_hr_leave_report_calendar,access_hr_leave_report_calendar,model_hr_leave_report_calendar,base.group_user,permission,r,
+access_hr_leave_employee_type_report_manager,access_hr_leave_employee_type_report_manager,model_hr_leave_employee_type_report,group_hr_holidays_manager,permission,ru,
+access_hr_leave_accrual_plan_user,hr.leave.accrual.plan.user,model_hr_leave_accrual_plan,group_hr_holidays_user,permission,r,
+access_hr_leave_accrual_level_user,hr.leave.accrual.level.user,model_hr_leave_accrual_level,group_hr_holidays_user,permission,r,
+access_hr_leave_accrual_plan_manager,hr.leave.accrual.plan.manager,model_hr_leave_accrual_plan,group_hr_holidays_manager,permission,cud,
+access_hr_leave_accrual_level_manager,hr.leave.accrual.level.manager,model_hr_leave_accrual_level,group_hr_holidays_manager,permission,cud,
+access_hr_holidays_cancel_leave,access_hr_holidays_cancel_leave,model_hr_holidays_cancel_leave,base.group_user,permission,crud,
+access_hr_leave_mandatory_day_user,access_hr_holidays_mandatory_day_user,model_hr_leave_mandatory_day,base.group_user,permission,r,
+access_hr_leave_mandatory_day_manager,access_hr_holidays_mandatory_day_manager,model_hr_leave_mandatory_day,group_hr_holidays_manager,permission,cud,
+access_hr_leave_generate_multi_wizard,access_hr_leave_generate_multi_wizard,model_hr_leave_generate_multi_wizard,group_hr_holidays_responsible,permission,crud,
+access_hr_leave_allocation_generate_multi_wizard,access_hr_leave_allocation_generate_multi_wizard,model_hr_leave_allocation_generate_multi_wizard,group_hr_holidays_responsible,permission,crud,
+access_load_public_holiday_wizard,access_load_public_holiday_wizard,model_load_public_holiday_wizard,group_hr_holidays_responsible,permission,crud,
+access_load_public_holiday_wizard_line,access_load_public_holiday_wizard_line,model_load_public_holiday_wizard_line,group_hr_holidays_responsible,permission,crud,
+hr_leave_rule_multicompany,Time Off: multi company global rule,model_hr_leave,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+hr_leave_allocation_rule_multicompany,Time Off: multi company global rule,model_hr_leave_allocation,base.group_everyone,guard,crud,"[ '|', ('employee_id', '=', False), ('employee_id.company_id', 'in', company_ids), ('holiday_status_id.company_id', 'in', company_ids + [False]) ]"
+hr_holidays_status_rule_multi_company,Time Off multi company rule,model_hr_leave_type,base.group_everyone,guard,crud,"[ '|', ('company_id', 'in', company_ids), '&', ('company_id', '=', False), ('country_id', 'in', user.env.companies.country_id.ids + [False]) ]"
+hr_leave_accrual_plan_rule_multi_company,Accrual plan multi company rule,model_hr_leave_accrual_plan,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+hr_leave_mandatory_day_rule_multi_company,Mandatory Day: multi company rule,model_hr_leave_mandatory_day,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+hr_leave_report_calendar_rule_multi_company,Time Off Report Calendar: multi company global rule,model_hr_leave_report_calendar,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+hr_leave_report_rule_multi_company,Time Off Report: multi company global rule,model_hr_leave_report,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

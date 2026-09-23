@@ -23,7 +23,7 @@ their own ``iot_*`` modules, so installing one never drags an application in.
         "wizards/add_iot_box_views.xml",
         "wizards/select_printers_views.xml",
         "security/iot_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/iot_views.xml",
         "views/iot_menus.xml",
     ],

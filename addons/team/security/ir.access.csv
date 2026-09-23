@@ -1,0 +1,10 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_team_user,team user,model_team_team,base.group_user,permission,r,
+team_team_rule_team_manager,Teams: Teams Administrators,model_team_team,group_team_manager,permission,cud,
+team_member_rule_personal,Team Members: own teams,model_team_member,base.group_user,permission,r,"['|', ('team_id.user_id', '=', user.id), ('team_id', 'in', user.team_ids.ids)]"
+team_member_rule_all,Team Members: all,model_team_member,group_team_manager,permission,crud,
+access_team_alias_user,team.alias user,model_team_alias,base.group_user,permission,r,
+team_alias_rule_team_manager,Team Aliases: Teams Administrators,model_team_alias,group_team_manager,permission,cud,
+team_comp_rule,Team multi-company,model_team_team,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+team_member_comp_rule,Team Member multi-company,model_team_member,base.group_everyone,guard,crud,"[('team_id.company_id', 'in', company_ids + [False])]"
+team_alias_comp_rule,Team Alias multi-company,model_team_alias,base.group_everyone,guard,crud,"[('team_id.company_id', 'in', company_ids + [False])]"

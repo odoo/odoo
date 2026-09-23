@@ -61,14 +61,21 @@ class TestIrActionsReach(TransactionCase):
     def _readers_of(self, model):
         if model not in self.env or self.env[model]._transient:
             return set()
-        rules = (
-            self.env["ir.model.access"]
+        rows = (
+            self.env["ir.access"]
             .sudo()
-            .search([("model_id.model", "=", model), ("perm_read", "=", True)])
+            .search(
+                [
+                    ("model_id.model", "=", model),
+                    ("kind", "=", "permission"),
+                    ("for_read", "=", True),
+                ]
+            )
         )
-        if any(not rule.group_id for rule in rules):
+        everyone = self.env.ref("base.group_everyone")
+        if any(row.group_id == everyone for row in rows):
             return set()
-        return {rule.group_id.id for rule in rules}
+        return {row.group_id.id for row in rows}
 
     def _action_id(self, name):
         try:

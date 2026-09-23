@@ -100,11 +100,14 @@ class TestDictation(SpeechCase):
 
     def test_dictating_into_a_record_needs_to_read_it(self):
         private = self.env["res.partner"].create({"name": "Hidden", "active": True})
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "nobody reads Hidden",
                 "model_id": self.env.ref("base.model_res_partner").id,
-                "domain_force": f"[('id', '!=', {private.id})]",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "crud",
+                "domain": f"[('id', '!=', {private.id})]",
             }
         )
         with self.assertRaises(AccessError):

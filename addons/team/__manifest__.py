@@ -16,7 +16,7 @@ documents at the team directly.
     ],
     "data": [
         "security/team_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/team_views.xml",
         "views/team_member_views.xml",
         "views/team_menus.xml",

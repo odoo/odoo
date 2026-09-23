@@ -18,7 +18,8 @@
     ],
     "data": [
         "security/point_of_sale_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
+        "security/ir_access.xml",
         "data/default_barcode_patterns.xml",
         "data/digest_data.xml",
         "data/pos_note_data.xml",

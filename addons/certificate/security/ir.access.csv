@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_certificate_admin_crud,certificate.access_certificate,model_certificate_certificate,base.group_system,permission,crud,
+access_key_admin_crud,certificate.access_key,model_certificate_key,base.group_system,permission,crud,
+certificate_rule_company,Certificate multi-company,model_certificate_certificate,base.group_everyone,guard,crud,"['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]"
+key_rule_company,Key multi-company,model_certificate_key,base.group_everyone,guard,crud,"['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]"

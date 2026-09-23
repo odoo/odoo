@@ -51,6 +51,11 @@ def migrate(cr, version):
             # A hand-deleted rule is not an upgrade failure: skip it and say so.
             _logger.warning("t24520: rule %s not found, skipped", rule_xmlid)
             continue
+        if rule._name != "ir.rule":
+            # base 1.97 turned the rule into ir.access rows, one per group; the
+            # data file ships the app tier's rows under their own ids
+            _logger.info("t24520: %s is an ir.access row, skipped", rule_xmlid)
+            continue
         # Hard ref for the groups: they are loaded by the same -u that runs this
         # script, so a missing one means a broken upgrade and must fail loudly.
         group_ids = [env.ref(xmlid).id for xmlid in group_xmlids]

@@ -1,0 +1,11 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_resource_asset_log_user,resource.asset.log.user,model_resource_asset_log,resource_asset.group_asset_user,permission,cru,
+access_resource_asset_log_manager,resource.asset.log.manager,model_resource_asset_log,resource_asset.group_asset_manager,permission,d,
+access_resource_asset_kind_position_user,resource.asset.kind.position.user,model_resource_asset_kind_position,base.group_user,permission,r,
+access_resource_asset_kind_position_manager,resource.asset.kind.position.manager,model_resource_asset_kind_position,resource_asset.group_asset_manager,permission,cud,
+access_resource_asset_part_user,resource.asset.part.user,model_resource_asset_part,resource_asset.group_asset_user,permission,crud,
+access_resource_asset_part_flag_user,resource.asset.part.flag.user,model_resource_asset_part_flag,resource_asset.group_asset_user,permission,r,
+access_resource_asset_part_clear_manager,resource.asset.part.clear.manager,model_resource_asset_part_clear,resource_asset.group_asset_manager,permission,crud,
+resource_asset_log_rule_multi_company,resource.asset.log: multi-company rule,model_resource_asset_log,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+resource_asset_part_rule_multi_company,resource.asset.part: multi-company rule,model_resource_asset_part,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+resource_asset_part_flag_rule_multi_company,resource.asset.part.flag: multi-company rule,model_resource_asset_part_flag,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

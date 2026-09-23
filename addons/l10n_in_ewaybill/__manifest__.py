@@ -23,9 +23,7 @@ Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-c
         "in",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_in_ewaybill_security.xml",
-        "security/ir_rules.xml",
+        "security/ir.access.csv",
         "data/ewaybill_type_data.xml",
         "views/l10n_in_ewaybill_views.xml",
         "views/account_move_views.xml",

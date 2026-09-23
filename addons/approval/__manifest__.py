@@ -46,8 +46,7 @@ activities to a substitute for a dated window; escalation reminds by priority.
     ],
     "data": [
         "security/res_groups.xml",
-        "security/ir_rule.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/ir_config_parameter_data.xml",
         "data/res_users_data.xml",
         "data/mail_activity_type_data.xml",

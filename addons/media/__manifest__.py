@@ -35,7 +35,7 @@ timeline with transcripts; the ``media_timeline`` widget plays, and speech's
         "web",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/media_segment_views.xml",
     ],
     "assets": {

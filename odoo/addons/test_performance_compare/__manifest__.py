@@ -27,6 +27,6 @@ See ``README.md`` for the full A/B runbook.
         "base",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
     ],
 }

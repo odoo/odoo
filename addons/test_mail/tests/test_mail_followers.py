@@ -332,15 +332,13 @@ class BaseFollowersTest(MailCommon):
             )
         )
         # portal sharing hands share users write access on shared records
-        self.env["ir.model.access"].sudo().create(
+        self.env["ir.access"].sudo().create(
             {
                 "group_id": self.env.ref("base.group_portal").id,
                 "model_id": self.env["ir.model"]._get("mail.test.simple").id,
                 "name": "portal write on mail.test.simple",
-                "perm_create": False,
-                "perm_read": True,
-                "perm_unlink": False,
-                "perm_write": True,
+                "kind": "permission",
+                "operation": "ru",
             }
         )
         subscribed = self.partner_employee

@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_uom_code_user,access_uom_code_user,model_l10n_id_efaktur_coretax_uom_code,base.group_user,permission,r,
+access_product_code_user,access_product_code_user,model_l10n_id_efaktur_coretax_product_code,base.group_user,permission,r,
+access_efaktur_document_user,access.efkatur.document.user,model_l10n_id_efaktur_coretax_document,account.group_account_invoice,permission,crud,
+efaktur_document_multi_company,E-Faktur document multi-company,model_l10n_id_efaktur_coretax_document,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"

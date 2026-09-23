@@ -20,7 +20,7 @@ This is the latest Indonesian Odoo localisation necessary to run Odoo accounting
         "id",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/ir_cron.xml",
         "views/account_move_views.xml",
         "views/res_bank.xml",

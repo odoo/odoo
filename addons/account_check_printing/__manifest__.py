@@ -14,7 +14,7 @@ The check settings are located in the accounting journals configuration page.
         "account",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/account_check_printing_data.xml",
         "views/account_journal_views.xml",
         "views/account_payment_views.xml",

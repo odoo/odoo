@@ -55,8 +55,7 @@ model attribute::
         "web",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/date_range_security.xml",
+        "security/ir.access.csv",
         "data/ir_cron_data.xml",
         "views/date_range_type_views.xml",
         "views/date_range_views.xml",

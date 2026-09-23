@@ -27,7 +27,7 @@ Main Features
     ],
     "data": [
         "security/fleet_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/fleet_cars_data.xml",
         "data/fleet_data.xml",
         "views/product_template_views.xml",

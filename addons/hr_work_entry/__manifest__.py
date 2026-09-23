@@ -10,8 +10,7 @@
         "hr",
     ],
     "data": [
-        "security/hr_work_entry_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/hr_work_entry_type_data.xml",
         "data/ir_cron_data.xml",
         "views/hr_work_entry_views.xml",

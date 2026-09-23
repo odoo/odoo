@@ -100,8 +100,7 @@ False everywhere and the actions say so rather than failing at a vendor call.
         "bus",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/speech_security.xml",
+        "security/ir.access.csv",
         "views/ir_attachment_views.xml",
         "views/media_segment_views.xml",
         "views/speech_vocabulary_views.xml",

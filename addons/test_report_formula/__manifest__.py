@@ -21,6 +21,6 @@ its first test asserts that.
         "spreadsheet_report_formula",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
     ],
 }

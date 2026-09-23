@@ -1,0 +1,37 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_documents_access_base_group_portal,documents_access_base_group_portal,model_document_access,base.group_portal,permission,r,
+access_documents_access_base_group_user,documents_access_base_group_user,model_document_access,base.group_user,permission,crud,
+access_documents_attachment_base_group_portal,documents_attachment_base_group_portal,model_document_document,base.group_portal,permission,cr,
+documents_document_write_base_rule_group_portal,Documents.document: write+unlink base rule,model_document_document,base.group_portal,permission,ud,"[ ('user_permission', '=', 'edit'), '|', ('type', '!=', 'folder'), '|', ('owner_id', '!=', False), ('folder_id', '!=', False) ]"
+access_documents_attachment_base_group_user,documents_attachment_base_group_user,model_document_document,base.group_user,permission,cr,
+documents_document_write_base_rule_group_user,Documents.document: write+unlink base rule,model_document_document,base.group_user,permission,ud,"[ ('user_permission', '=', 'edit'), '|', ('type', '!=', 'folder'), '|', ('owner_id', '!=', False), ('folder_id', '!=', False) ]"
+documents_document_write_manager_rule,Documents.document: write+unlink manager rule,model_document_document,group_documents_manager,permission,ud,"[('user_permission', '=', 'edit')]"
+documents_tag_rule_portal,"Tag portal: Read access to the tags of the documents the user has access
+            to",model_document_tag,base.group_portal,permission,r,"[('document_ids.user_permission', '!=', 'none')]"
+access_documents_tag_base_group_user,documents_tag_base_group_user,model_document_tag,base.group_user,permission,r,
+access_documents_tag_group_manager,documents_tag_group_manager,model_document_tag,group_documents_manager,permission,cud,
+access_documents_access_tracking_base_group_system,documents_access_tracking_base_group_system,model_document_access_tracking,base.group_system,permission,crud,
+access_documents_access_log_group_manager,documents_access_log_group_manager,model_document_access_log,group_documents_manager,permission,r,
+access_documents_access_log_base_group_system,documents_access_log_base_group_system,model_document_access_log,base.group_system,permission,rd,
+access_documents_request_wizard,access.documents.request_wizard,model_document_request_wizard,group_documents_user,permission,cru,
+access_document_type_base_group_user,document_type_base_group_user,model_document_type,base.group_user,permission,r,
+access_document_type_group_manager,document_type_group_manager,model_document_type,group_documents_manager,permission,cud,
+access_documents_link_to_record_wizard,access.documents.link_to_record_wizard,model_document_link_to_record_wizard,group_documents_user,permission,cru,
+mail_plan_rule_group_document_manager_document,Manager can manage document plans,mail.model_mail_activity_plan,group_documents_manager,permission,cud,"[('res_model', '=', 'document.document')]"
+mail_plan_template_rule_group_document_manager_document,Manager can manage document plan templates,mail.model_mail_activity_plan_template,group_documents_manager,permission,cud,"[('plan_id.res_model', '=', 'document.document')]"
+access_documents_sharing_user,access.documents.sharing.user,model_document_sharing,base.group_user,permission,cru,
+access_documents_sharing_access_user,access.documents.sharing.access.user,model_document_sharing_access,base.group_user,permission,cru,
+access_documents_operation_portal,documents_operation_portal,model_document_operation,base.group_portal,permission,cru,
+access_documents_operation_user,documents_operation_user,model_document_operation,base.group_user,permission,cru,
+documents_document_global_rule,Documents.document: global read rule,model_document_document,base.group_everyone,guard,r,"[('user_permission', '!=', 'none')]"
+documents_document_global_create_rule,Documents.document: global create rule,model_document_document,base.group_everyone,guard,c,"[ '|', ('folder_id.user_permission', '=', 'edit'), ('folder_id', '=', False), ]"
+documents_document_global_write_rule,Documents.document: global write rule,model_document_document,base.group_everyone,guard,u,"[('user_permission', '=', 'edit')]"
+documents_access_global_rule_read,Documents.access: global read rule,model_document_access,base.group_everyone,guard,r,"[('document_id.user_permission', '!=', 'none')]"
+documents_access_global_rule_write,Documents.access: global write rule,model_document_access,base.group_everyone,guard,cud,"[('document_id.user_permission', '=', 'edit')]"
+documents_access_log_rule_read,Documents.access.log: read what you can reach,model_document_access_log,base.group_everyone,guard,r,"[('document_id.user_permission', '!=', 'none')]"
+document_type_comp_rule,Document Type: multi-company,model_document_type,base.group_everyone,guard,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+document_operation_rwu,Documents Operation Rule,model_document_operation,base.group_everyone,guard,ru,"[('create_uid', '=', user.id)]"
+document_sharing_rw,Documents Sharing Rule,model_document_sharing,base.group_everyone,guard,ru,"[('create_uid', '=', user.id)]"
+document_sharing_access_rw,Documents Sharing Access Rule,model_document_sharing_access,base.group_everyone,guard,ru,"[('create_uid', '=', user.id)]"
+document_request_wizard_rw,Documents Request Wizard Rule,model_document_request_wizard,base.group_everyone,guard,ru,"[('create_uid', '=', user.id)]"
+document_link_to_record_wizard_rw,Documents Link to Record Wizard Rule,model_document_link_to_record_wizard,base.group_everyone,guard,ru,"[('create_uid', '=', user.id)]"

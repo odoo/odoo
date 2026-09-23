@@ -13,7 +13,7 @@ supposed to do
         "web",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/menu.xml",
     ],
 }

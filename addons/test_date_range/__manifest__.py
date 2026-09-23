@@ -9,6 +9,6 @@
         "date_range",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
     ],
 }

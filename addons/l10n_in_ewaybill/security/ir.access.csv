@@ -1,0 +1,9 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_l10n_in_ewaybill,access_l10n_in_ewaybill,model_l10n_in_ewaybill,account.group_account_invoice,permission,cud,
+access_l10n_in_ewaybill_type,access_l10n_in_ewaybill_type,model_l10n_in_ewaybill_type,account.group_account_invoice,permission,r,
+access_l10n_in_ewaybill_cancel,access_l10n_in_ewaybill_cancel,model_l10n_in_ewaybill_cancel,account.group_account_invoice,permission,crud,
+view_l10n_in_ewaybill,view_l10n_in_ewaybill,model_l10n_in_ewaybill,base.group_user,permission,r,
+l10n_in_ewaybill_config_rule_company_group_user,l10n_in_ewaybill.config: the reader's companies,model_l10n_in_ewaybill_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+l10n_in_ewaybill_config_rule_erp_manager,l10n_in_ewaybill.config: every company for an access-rights manager,model_l10n_in_ewaybill_config,base.group_erp_manager,permission,r,
+l10n_in_ewaybill_config_rule_erp_manager_group_system,l10n_in_ewaybill.config: every company for an access-rights manager,model_l10n_in_ewaybill_config,base.group_system,permission,cud,
+l10n_in_ewaybill_comp_rule,L10nIn Ewaybill multi-company,model_l10n_in_ewaybill,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"

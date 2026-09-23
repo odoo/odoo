@@ -15,7 +15,7 @@ This module enables users to create E-waybill from Inventory App without generat
         "l10n_in_ewaybill",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/ewaybill_type_data.xml",
         "views/l10n_in_ewaybill_views.xml",
         "views/stock_picking_views.xml",

@@ -19,7 +19,7 @@ in l10n_pl in 19.4
         "l10n_pl",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/account_payment_view.xml",
         "wizards/account_payment_register_views.xml",
     ],

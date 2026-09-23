@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+team_team_rule_mrp_manager,Manufacturing teams: Manufacturing Administrators,team.model_team_team,mrp.group_mrp_manager,permission,cud,"[('use_mrp', '=', True)]"
+team_member_rule_personal_group_mrp_manager,Team Members: own teams,team.model_team_member,mrp.group_mrp_manager,permission,r,"['|', ('team_id.user_id', '=', user.id), ('team_id', 'in', user.team_ids.ids)]"
+team_member_rule_mrp_manager,Manufacturing team members: Manufacturing Administrators,team.model_team_member,mrp.group_mrp_manager,permission,cud,"[('team_id.use_mrp', '=', True)]"
+team_alias_rule_mrp_manager,Manufacturing team aliases: Manufacturing Administrators,team.model_team_alias,mrp.group_mrp_manager,permission,cud,"[('team_id.use_mrp', '=', True)]"

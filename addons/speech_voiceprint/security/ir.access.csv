@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+rule_speech_voiceprint_own,Voiceprint: own,model_speech_voiceprint,base.group_user,permission,r,"[('user_id', '=', user.id)]"
+rule_speech_voiceprint_hr,Voiceprint: the officer's companies,model_speech_voiceprint,hr.group_hr_user,permission,crud,"[('company_id', 'in', company_ids)]"
+rule_speech_voiceprint_own_group_hr_user,Voiceprint: own,model_speech_voiceprint,hr.group_hr_user,permission,crud,"[('user_id', '=', user.id)]"
+rule_speech_voiceprint_own_group_system,Voiceprint: own,model_speech_voiceprint,base.group_system,permission,crud,"[('user_id', '=', user.id)]"

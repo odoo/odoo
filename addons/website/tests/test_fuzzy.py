@@ -41,11 +41,14 @@ class TestFuzzy(TransactionCase):
         user = new_test_user(self.env, login="fuzzy_reader", groups="base.group_user")
         eligible = self.env["res.partner"].create({"name": "marigold"})
         excluded = self.env["res.partner"].create({"name": "mariglod"})
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Fuzzy candidate access regression",
                 "model_id": self.env["ir.model"]._get_id("res.partner"),
-                "domain_force": repr([("id", "!=", excluded.id)]),
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "crud",
+                "domain": repr([("id", "!=", excluded.id)]),
             }
         )
         records = (eligible | excluded).with_user(user)

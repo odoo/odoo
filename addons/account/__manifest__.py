@@ -33,7 +33,6 @@ You could use this simplified accounting in case you work with an (external) acc
     },
     "data": [
         "security/account_security.xml",
-        "security/ir.model.access.csv",
         "data/account_data.xml",
         "data/digest_data.xml",
         "views/account_report.xml",
@@ -126,7 +125,7 @@ You could use this simplified accounting in case you work with an (external) acc
         "wizards/account_auto_reconcile_wizard_views.xml",
         "wizards/account_reconcile_wizard_views.xml",
         "views/account_reconcile_menus.xml",
-        "security/account_reports_security.xml",
+        "security/ir.access.csv",
         "data/pdf_export_templates_ledger.xml",
         "data/customer_reports_pdf_export_templates.xml",
         "data/balance_sheet.xml",

@@ -16,8 +16,7 @@
         "l10n_hu",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_hu_edi_security.xml",
+        "security/ir.access.csv",
         "data/uom.uom.csv",
         "data/account_cash_rounding.xml",
         "data/template_requests.xml",

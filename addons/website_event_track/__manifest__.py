@@ -9,8 +9,7 @@
         "website_event",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/event_track_security.xml",
+        "security/ir.access.csv",
         "data/mail_template_data.xml",
         "data/mail_templates.xml",
         "data/mail_message_subtype_data.xml",

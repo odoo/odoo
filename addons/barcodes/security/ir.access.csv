@@ -1,0 +1,8 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_barcode_nomenclature_user,barcode.nomenclature.user,model_barcode_nomenclature,base.group_user,permission,r,
+access_barcode_nomenclature_manager,barcode.nomenclature.manager,model_barcode_nomenclature,base.group_erp_manager,permission,cud,
+access_barcode_rule_user,barcode.rule.user,model_barcode_rule,base.group_user,permission,r,
+access_barcode_rule_manager,barcode.rule.manager,model_barcode_rule,base.group_erp_manager,permission,cud,
+barcodes_config_rule_company_group_user,barcodes.config: the reader's companies,model_barcodes_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+barcodes_config_rule_erp_manager,barcodes.config: every company for an access-rights manager,model_barcodes_config,base.group_erp_manager,permission,r,
+barcodes_config_rule_erp_manager_group_system,barcodes.config: every company for an access-rights manager,model_barcodes_config,base.group_system,permission,cud,

@@ -11,8 +11,7 @@
     ],
     "data": [
         "data/mrp_subcontracting_data.xml",
-        "security/mrp_subcontracting_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/mrp_bom_views.xml",
         "views/res_partner_views.xml",
         "views/stock_warehouse_views.xml",

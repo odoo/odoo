@@ -400,11 +400,14 @@ class TestReportPoSOrder(TestPoSCommon):
         )
         order.with_user(user).check_access("read")
         invoice.with_user(user).check_access("read")
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Deny this invoice even when its POS order is readable",
                 "model_id": self.env["ir.model"]._get_id("account.move"),
-                "domain_force": repr([("id", "!=", invoice.id)]),
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "crud",
+                "domain": repr([("id", "!=", invoice.id)]),
             }
         )
 

@@ -31,8 +31,7 @@ Spanish charts of accounts (PGCE 2008).
         "es",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_es_security.xml",
+        "security/ir.access.csv",
         "data/account.account.tag.csv",
         "data/res_partner_data.xml",
         "data/res_country_group.xml",

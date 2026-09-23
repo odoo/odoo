@@ -23,8 +23,7 @@ The following topics are covered by this module:
         "sale",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/repair_security.xml",
+        "security/ir.access.csv",
         "wizards/stock_warn_insufficient_qty_views.xml",
         "views/product_views.xml",
         "views/stock_move_views.xml",

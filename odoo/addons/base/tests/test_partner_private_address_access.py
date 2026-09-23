@@ -112,10 +112,11 @@ class TestPrivateAddressAccess(TransactionCase):
 
     def test_the_rule_is_global_and_must_stay_global(self):
         rule = self.env.ref("base.res_partner_private_address_rule")
-        self.assertTrue(rule["global"])
-        self.assertFalse(rule.groups)
+        self.assertEqual(rule.kind, "guard")
+        self.assertEqual(rule.guard_scope, "everyone")
+        self.assertEqual(rule.group_id, self.env.ref("base.group_everyone"))
 
     def test_the_domain_names_parent_id_rather_than_child_of(self):
         rule = self.env.ref("base.res_partner_private_address_rule")
-        self.assertIn("parent_id", rule.domain_force)
-        self.assertNotIn("child_of", rule.domain_force)
+        self.assertIn("parent_id", rule.domain)
+        self.assertNotIn("child_of", rule.domain)

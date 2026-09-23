@@ -83,7 +83,7 @@ Top-level layout of `addons/web/` (detailed maps are separate docs):
 | `static/tests/` | 813 `.js` (incl. 747 `*.test.js` Hoot suites), mirroring the `static/src/` tree | `TEST_TAGS.md` |
 | `tests/` | 68 Python test files (`test_*.py`) | `TEST_TAGS.md` |
 | `machine_doc_v1/` | This directory: `COMPONENT_DIAGRAM.md` (18 audit areas) · `FLOW_DIAGRAM.md` (14 sequence diagrams) · `LAZY_VIEW_LOADING.md` · `VIEW_TEARDOWN_COST.md` (both decision records: investigated, not pursued) · `LIST_EDIT_RENDER_COST.md` (decision record: row-level waste fixed, renderer-level amplification measured and not pursued) · the maps below · `factcheck.sh` | — |
-| `views/` · `data/` · `security/` · `i18n/` | XML templates, data fixtures, `ir.model.access.csv`, translations | — |
+| `views/` · `data/` · `security/` · `i18n/` | XML templates, data fixtures, `ir.access.csv`, translations | — |
 
 The `static/src/` JS layers are summarized in **JavaScript Architecture** below; the full per-directory layer + responsibility map is in `DIRECTORY_MAP.md`.
 
@@ -397,7 +397,7 @@ The manifest uses 24 `remove` tuples to strip files from parent bundles, plus `a
 
 ### Module metadata (`__manifest__.py`)
 - `depends: ["base"]` · `auto_install: True` · `bootstrap: True` (loaded during server bootstrap, before regular addons)
-- `data:` — 19 XML/CSV files (`webclient_templates.xml`, `report_templates.xml`, `web_menus.xml`, `ir.model.access.csv`, `web_cwv_metric_views.xml`, `web_cwv_metric_data.xml`, …)
+- `data:` — 19 XML/CSV files (`webclient_templates.xml`, `report_templates.xml`, `web_menus.xml`, `ir.access.csv`, `web_cwv_metric_views.xml`, `web_cwv_metric_data.xml`, …)
 - `external_dependencies`: none declared (vobject imported inline in `res_partner.py`); no demo data
 
 ## Asset Bundles

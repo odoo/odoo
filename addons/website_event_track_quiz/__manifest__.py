@@ -12,7 +12,7 @@
         "website_event_track",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/event_leaderboard_templates.xml",
         "views/event_quiz_views.xml",
         "views/event_quiz_question_views.xml",

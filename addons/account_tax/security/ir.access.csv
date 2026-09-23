@@ -1,0 +1,10 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_account_tax_group,account.tax.group,model_account_tax_group,base.group_user,permission,r,
+access_account_tax_group_manager,account.tax.group.manager,model_account_tax_group,base.group_system,permission,cud,
+access_account_tax,account.tax,model_account_tax,base.group_user,permission,r,
+access_account_tax_manager,account.tax.manager,model_account_tax,base.group_system,permission,cud,
+access_account_tax_repartition_line,account.tax.repartition.line,model_account_tax_repartition_line,base.group_user,permission,r,
+access_account_tax_repartition_line_manager,account.tax.repartition.line.manager,model_account_tax_repartition_line,base.group_system,permission,cud,
+tax_group_comp_rule,Tax group multi-company,model_account_tax_group,base.group_everyone,guard,crud,"[('company_ids', 'parent_of', company_ids)]"
+tax_comp_rule,Tax multi-company,model_account_tax,base.group_everyone,guard,crud,"[('company_ids', 'parent_of', company_ids)]"
+tax_rep_comp_rule,Tax Repartition multi-company,model_account_tax_repartition_line,base.group_everyone,guard,crud,"[('company_ids', 'parent_of', company_ids)]"

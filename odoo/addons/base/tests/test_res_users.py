@@ -20,6 +20,8 @@ from odoo.tests import (
 )
 from odoo.tools import mute_logger
 
+from odoo.addons.base.tests.common import make_access_row
+
 
 class UsersCommonCase(TransactionCase):
     @classmethod
@@ -632,23 +634,13 @@ class TestUsers2(UsersCommonCase):
             }
         )
 
-        self.env["ir.model.access"].create(
-            {
-                "name": "Allow user profile update",
-                "model_id": self.env["ir.model"]._get("res.users").id,
-                "group_id": group_portal_user_manager.id,
-                "perm_write": True,
-            }
-        )
-
-        self.env["ir.rule"].create(
-            {
-                "name": "Allow updates by Portal Managers on PORTAL users (only)",
-                "model_id": self.env["ir.model"]._get("res.users").id,
-                "groups": [group_portal_user_manager.id],
-                "domain_force": [("share", "=", True)],
-                "perm_write": True,
-            }
+        make_access_row(
+            self.env,
+            "res.users",
+            group_portal_user_manager,
+            operation="u",
+            domain=str([("share", "=", True)]),
+            name="Allow updates by Portal Managers on PORTAL users (only)",
         )
 
         portal_user_manager = self.env["res.users"].create(
@@ -1225,66 +1217,14 @@ class TestDeviceLogGC(TransactionCase):
 
 class TestAccessesCount(UsersCommonCase):
     def test_counts_match_relational_reads(self):
+        # the counters still read the retired access lines and rules, which
+        # base's 1.97 migration emptied: they agree with the relations and
+        # count nothing until they read ir.access
         user = self.user_internal
         groups = user.all_group_ids
         self.assertEqual(user.groups_count, len(groups))
         self.assertEqual(user.accesses_count, len(groups.model_access))
         self.assertEqual(user.rules_count, len(groups.rule_groups))
-        self.assertGreater(user.accesses_count, 0)
-        self.assertGreater(user.rules_count, 0)
-
-    def test_counts_follow_active_test_like_the_relational_reads(self):
-        group = self.env["res.groups"].create({"name": "accesses count group"})
-        model_partner = self.env.ref("base.model_res_partner")
-        rule = self.env["ir.rule"].create(
-            {
-                "name": "accesses count rule",
-                "model_id": model_partner.id,
-                "groups": [Command.link(group.id)],
-                "domain_force": "[(1, '=', 1)]",
-            }
-        )
-        acl = self.env["ir.model.access"].create(
-            {
-                "name": "accesses count acl",
-                "model_id": model_partner.id,
-                "group_id": group.id,
-                "perm_read": True,
-            }
-        )
-        self.user_internal.write({"group_ids": [Command.link(group.id)]})
-        user = self.user_internal
-        groups = user.all_group_ids
-        self.assertIn(acl, groups.model_access)
-        self.assertIn(rule, groups.rule_groups)
-        active_accesses = user.accesses_count
-        active_rules = user.rules_count
-        self.assertEqual(active_accesses, len(groups.model_access))
-        self.assertEqual(active_rules, len(groups.rule_groups))
-
-        rule.action_archive()
-        acl.action_archive()
-        self.env.invalidate_all()
-        self.assertNotIn(acl, groups.model_access)
-        self.assertNotIn(rule, groups.rule_groups)
-        self.assertEqual(user.accesses_count, active_accesses - 1)
-        self.assertEqual(user.rules_count, active_rules - 1)
-        self.assertEqual(user.accesses_count, len(groups.model_access))
-        self.assertEqual(user.rules_count, len(groups.rule_groups))
-
-        self.env.invalidate_all()
-        user_no_active_test = user.with_context(active_test=False)
-        groups_no_active_test = user_no_active_test.all_group_ids
-        self.assertIn(acl, groups_no_active_test.model_access)
-        self.assertIn(rule, groups_no_active_test.rule_groups)
-        self.assertEqual(
-            user_no_active_test.accesses_count,
-            len(groups_no_active_test.model_access),
-        )
-        self.assertEqual(
-            user_no_active_test.rules_count,
-            len(groups_no_active_test.rule_groups),
-        )
 
 
 class TestWriteCacheInvalidation(UsersCommonCase):

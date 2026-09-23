@@ -1,0 +1,8 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_hr_work_entry_officer,access_hr_work_entry_officer,model_hr_work_entry,hr.group_hr_user,permission,crud,
+access_hr_work_entry_system,access_hr_work_entry_system,model_hr_work_entry,base.group_system,permission,crud,
+access_hr_work_entry_type_officer,access_hr_work_entry_type_officer,model_hr_work_entry_type,hr.group_hr_user,permission,r,
+access_hr_work_entry_type_manager,access_hr_work_entry_type_manager,model_hr_work_entry_type,hr.group_hr_manager,permission,cud,
+access_hr_work_entry_regeneration_wizard,access_hr_work_entry_regeneration_wizard,model_hr_work_entry_regeneration_wizard,hr.group_hr_manager,permission,crud,
+ir_rule_hr_work_entry_type_multi_company,HR Work Entry: Multi Company,model_hr_work_entry_type,base.group_everyone,guard,crud,"[('country_id', 'in', user.env.companies.mapped('country_id').ids + [False])]"
+ir_rule_hr_work_entry_multi_company,HR Work Entry Contract: Multi Company,model_hr_work_entry,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"

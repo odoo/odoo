@@ -74,7 +74,7 @@ odoo/addons/base/
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
 │   ├── ir_access.py                 #   ir.access: permissions and guards with domains, the decision of every model
-│   ├── ir_access_convert.py         #   ir.model.access + ir.rule to ir.access rows, with the audit report (pure)
+│   ├── ir_access_convert.py         #   access lines + rules to ir.access rows, module-aware, with the audit report (pure)
 │   ├── ir_actions_act_url.py        #   URL action
 │   ├── ir_actions_act_window.py     #   Window actions (open views on a model)
 │   ├── ir_actions_act_window_close.py #   Close-window action
@@ -197,12 +197,12 @@ odoo/addons/base/
 │   ├── reset_view_arch.py           #   Reset view to original arch (soft/hard)
 │   ├── server_action_history.py     #   Server-action run history (diff + restore)
 │   └── wizard_ir_model_menu_create.py #   Create menu item for custom model
-├── tests/                       # 143 Python test files + test assets
+├── tests/                       # 144 Python test files + test assets
 │   ├── common.py                #   Base test classes (demo user, portal user)
 │   └── test_*.py                #   Test modules -- counts in TEST_TAGS.md, derived by factcheck.sh
 ├── views/                       # 39 XML view definition files
 ├── data/                        # 21 data files (XML, CSV, SQL, JSON)
-├── security/                    # ir.model.access.csv + groups and record-rule XML
+├── security/                    # ir.access.csv + groups and access-row XML
 ├── rng/                         # RelaxNG schemas (view validation)
 ├── static/                      # CSS, JS, images, test assets
 ├── i18n/                        # Translations (.po)
@@ -286,7 +286,7 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 |----------|-------|
 | Python (models) | 113 |
 | Python (wizards) | 11 |
-| Python (tests) | 143 |
+| Python (tests) | 144 |
 | XML (views) | 39 |
 | Data files | 21 |
 | XML (reports) | 0 |

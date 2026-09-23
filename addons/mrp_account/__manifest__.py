@@ -22,7 +22,7 @@ If the automated inventory valuation is active, the necessary accounting entries
         "stock_account",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/product_views.xml",
         "views/mrp_production_views.xml",
         "views/analytic_account_views.xml",

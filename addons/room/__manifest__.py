@@ -11,7 +11,7 @@
     ],
     "data": [
         "security/room_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/room_data.xml",
         "views/resource_asset_views.xml",
         "views/calendar_event_views.xml",

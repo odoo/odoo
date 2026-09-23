@@ -12,7 +12,8 @@
     ],
     "data": [
         "security/resource_asset_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
+        "security/ir_access.xml",
         "data/mail_message_subtype_data.xml",
         "data/resource_asset_identifier_type_data.xml",
         "data/resource_asset_kind_data.xml",

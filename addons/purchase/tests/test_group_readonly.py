@@ -40,8 +40,8 @@ class TestPurchaseReadonlyGroup(TransactionCase):
     }
 
     def test_acl_configuration(self) -> None:
-        acls = self.env["ir.model.access"].search(
-            [("group_id", "=", self.group_readonly.id)]
+        acls = self.env["ir.access"].search(
+            [("group_id", "=", self.group_readonly.id), ("kind", "=", "permission")]
         )
 
         granted = set(acls.mapped("model_id.model"))
@@ -61,10 +61,10 @@ class TestPurchaseReadonlyGroup(TransactionCase):
                 )
 
         for acl in acls:
-            self.assertTrue(acl.perm_read, f"ACL {acl.name} should allow read")
-            self.assertFalse(acl.perm_write, f"ACL {acl.name} should block write")
-            self.assertFalse(acl.perm_create, f"ACL {acl.name} should block create")
-            self.assertFalse(acl.perm_unlink, f"ACL {acl.name} should block unlink")
+            self.assertTrue(acl.for_read, f"ACL {acl.name} should allow read")
+            self.assertFalse(acl.for_write, f"ACL {acl.name} should block write")
+            self.assertFalse(acl.for_create, f"ACL {acl.name} should block create")
+            self.assertFalse(acl.for_unlink, f"ACL {acl.name} should block unlink")
 
     def test_the_all_documents_rung_implies_readonly(self) -> None:
         user_all = self.env.ref("purchase.group_purchase_user_all")

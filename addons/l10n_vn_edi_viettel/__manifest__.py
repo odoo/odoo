@@ -20,8 +20,7 @@ Using SInvoice by Viettel
         "vn",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_vn_edi_viettel_security.xml",
+        "security/ir.access.csv",
         "views/account_move_views.xml",
         "views/res_config_settings_views.xml",
         "views/res_partner_views.xml",

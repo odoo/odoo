@@ -4,6 +4,8 @@ from odoo.fields import Command
 from odoo.tests import TransactionCase
 from odoo.tools.misc import mute_logger
 
+from odoo.addons.base.tests.common import make_access_row, make_guard_row
+
 
 class Feedback(TransactionCase):
     @classmethod
@@ -99,25 +101,13 @@ class TestACLFeedback(Feedback):
     def setUpClass(cls):
         super().setUpClass()
 
-        ACL = cls.env["ir.model.access"]
-        m = cls.env["ir.model"].search([("model", "=", "test_access_right.some_obj")])
-        ACL.search([("model_id", "=", m.id)]).unlink()
-        ACL.create(
-            {
-                "name": "read",
-                "model_id": m.id,
-                "group_id": cls.group1.id,
-                "perm_read": True,
-            }
-        )
-        ACL.create(
-            {
-                "name": "create-and-read",
-                "model_id": m.id,
-                "group_id": cls.group0.id,
-                "perm_read": True,
-                "perm_create": True,
-            }
+        model = "test_access_right.some_obj"
+        cls.env["ir.access"].search(
+            [("model_id.model", "=", model), ("kind", "=", "permission")]
+        ).unlink()
+        make_access_row(cls.env, model, cls.group1, operation="r", name="read")
+        make_access_row(
+            cls.env, model, cls.group0, operation="cr", name="create-and-read"
         )
         cls.record = cls.env["test_access_right.some_obj"].create({"val": 5})
         cls.env.flush_all()
@@ -182,19 +172,32 @@ class TestIRRuleFeedback(Feedback):
         cls.maxDiff = None
 
     def _make_rule(self, name, domain, global_=False, attr="write"):
+        letter = {"read": "r", "write": "u", "create": "c", "unlink": "d"}[attr]
+        if global_:
+            return make_guard_row(
+                self.env, self.model.model, domain, operation=letter, name=name
+            )
+        # a group's rule narrowed that group's access line for its operation:
+        # the line gives the operation up, and a permission with the domain
+        # takes its place; several of them are OR-ed as the rules were
         group = self.env.ref("base.group_user")
-        return self.env["ir.rule"].create(
-            {
-                "name": name,
-                "model_id": self.model.id,
-                "groups": [] if global_ else [Command.link(group.id)],
-                "domain_force": domain,
-                "perm_read": False,
-                "perm_write": False,
-                "perm_create": False,
-                "perm_unlink": False,
-                "perm_" + attr: True,
-            }
+        for row in self.env["ir.access"].search(
+            [
+                ("model_id", "=", self.model.id),
+                ("group_id", "=", group.id),
+                ("kind", "=", "permission"),
+                ("domain", "=", False),
+            ]
+        ):
+            if letter in row.operation:
+                row.write({f"for_{attr}": False})
+        return make_access_row(
+            self.env,
+            self.model.model,
+            group,
+            operation=letter,
+            domain=domain,
+            name=name,
         )
 
     def test_local(self):
@@ -225,7 +228,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -251,7 +254,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -277,7 +280,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 1
 
@@ -304,7 +307,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 1
 
@@ -331,7 +334,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -359,7 +362,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 2
 - rule 3
@@ -387,7 +390,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -403,16 +406,11 @@ If you really, really need access, perhaps you can win over your friendly admini
 
     def test_warn_company_no_company_field(self):
         ChildModel = self.env["test_access_right.child"].sudo()
-        self.env["ir.rule"].create(
-            {
-                "name": "rule 0",
-                "model_id": self.env["ir.model"]
-                .search([("model", "=", ChildModel._name)])
-                .id,
-                "groups": [],
-                "domain_force": '[("parent_id.company_id", "=", user.company_id.id)]',
-                "perm_read": True,
-            }
+        make_guard_row(
+            self.env,
+            ChildModel._name,
+            '[("parent_id.company_id", "=", user.company_id.id)]',
+            name="rule 0",
         )
         self.record.sudo().company_id = self.env["res.company"].create(
             {"name": "Brosse Inc."}
@@ -430,7 +428,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'read' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -461,7 +459,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'read' access to:
 - %s, %s (%s: %s, company=%s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.
@@ -517,7 +515,7 @@ Sorry, {self.user.name} (id={self.user.id}) doesn't have 'read' access to:
 - {record_1._description}, {record_1.display_name} ({record_1._name}: {record_1.id}, company={record_1.company_id.display_name})
 - {record_2._description}, {record_2.display_name} ({record_2._name}: {record_2.id}, company={record_2.company_id.display_name})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.

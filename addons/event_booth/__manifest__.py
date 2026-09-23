@@ -12,7 +12,7 @@ Create booths for your favorite event.
         "event",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/event_booth_category_views.xml",
         "views/event_type_booth_views.xml",
         "views/event_booth_views.xml",

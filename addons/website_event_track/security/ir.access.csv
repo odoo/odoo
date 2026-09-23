@@ -1,0 +1,20 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+event_track_public_group_public,Event Tracks: public/portal: published,model_event_track,base.group_public,permission,r,"[('website_published', '=', True)]"
+event_track_public_group_portal,Event Tracks: public/portal: published,model_event_track,base.group_portal,permission,r,"[('website_published', '=', True)]"
+access_event_track_employee,event.track,model_event_track,base.group_user,permission,r,
+access_event_track_user,event.track.user,model_event_track,event.group_event_user,permission,cu,
+access_event_track_manager,event.track.manager,model_event_track,event.group_event_manager,permission,d,
+ir_rule_event_track_tag_public_group_public,Event Track Tag: public/portal: color = published,model_event_track_tag,base.group_public,permission,r,"['&', ('color', '!=', False), ('color', '!=', 0)]"
+ir_rule_event_track_tag_public_group_portal,Event Track Tag: public/portal: color = published,model_event_track_tag,base.group_portal,permission,r,"['&', ('color', '!=', False), ('color', '!=', 0)]"
+access_event_track_tag_employee,event.track.tag,model_event_track_tag,base.group_user,permission,r,
+access_event_track_tag_user,event.track.tag.user,model_event_track_tag,event.group_event_user,permission,cu,
+access_event_track_tag_manager,event.track.tag.manager,model_event_track_tag,event.group_event_manager,permission,d,
+access_event_track_location_user,event.track.location.user,model_event_track_location,event.group_event_user,permission,cru,
+access_event_track_location_manager,event.track.location.manager,model_event_track_location,event.group_event_manager,permission,d,
+access_event_track_stage_public,event.track.stage,model_event_track_stage,base.group_public,permission,r,
+access_event_track_stage_portal,event.track.stage,model_event_track_stage,base.group_portal,permission,r,
+access_event_track_stage_employee,event.track.stage,model_event_track_stage,base.group_user,permission,r,
+access_event_track_stage_manager,event.track.stage.manager,model_event_track_stage,event.group_event_manager,permission,cud,
+access_event_track_visitor,event.track.visitor,model_event_track_visitor,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_event_track_visitor_manager,event.track.visitor.manager,model_event_track_visitor,event.group_event_manager,permission,crud,
+access_event_track_tag_category_user,event.track.tag.category.user,model_event_track_tag_category,event.group_event_user,permission,crud,

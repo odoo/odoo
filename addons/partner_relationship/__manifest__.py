@@ -45,7 +45,7 @@ Both are batched one query per degree, not one per record.
     ],
     "data": [
         "security/res_groups.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/res_partner_relation_type_data.xml",
         "views/res_partner_relation_type_views.xml",
         "views/res_partner_relation_views.xml",

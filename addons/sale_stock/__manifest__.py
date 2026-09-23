@@ -24,8 +24,7 @@ Preferences
         "base_order_stock",
     ],
     "data": [
-        "security/sale_stock_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "reports/sale_delivery_line_match_views.xml",
         "data/mail_templates.xml",
         "data/sale_stock_data.xml",

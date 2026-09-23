@@ -82,14 +82,14 @@ class TestResPartner(TransactionCase):
 
         # Test rule to see if ir.rules are applied
         calendar_event_model_id = self.env["ir.model"]._get("calendar.event").id
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "test_rule",
                 "model_id": calendar_event_model_id,
-                "domain_force": [("name", "not in", ["event_9", "event_10"])],
-                "perm_read": True,
-                "perm_create": False,
-                "perm_write": False,
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "rd",
+                "domain": "[('name', 'not in', ['event_9', 'event_10'])]",
             }
         )
         # create generally requires read -> prevented by above test rule

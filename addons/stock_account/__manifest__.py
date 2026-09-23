@@ -26,7 +26,7 @@ Dashboard / Reports for Warehouse Management includes:
     ],
     "data": [
         "security/stock_account_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/stock_account_data.xml",
         "views/account_account_views.xml",
         "views/stock_account_views.xml",

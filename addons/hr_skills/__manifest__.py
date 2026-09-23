@@ -16,8 +16,7 @@ This module introduces skills and resume management for employees.
         "hr",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/hr_skills_security.xml",
+        "security/ir.access.csv",
         "views/hr_views.xml",
         "views/hr_job_views.xml",
         "views/hr_job_skill_views.xml",

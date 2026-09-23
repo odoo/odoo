@@ -11,7 +11,7 @@
     ],
     "data": [
         "security/purchase_team_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/team_team_views.xml",
         "views/purchase_order_views.xml",
         "views/purchase_team_menus.xml",

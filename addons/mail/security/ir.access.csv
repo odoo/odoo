@@ -1,0 +1,93 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_fetchmail_server,fetchmail.server,model_fetchmail_server,base.group_system,permission,crud,
+access_ir_mail_server,ir.mail_server,model_ir_mail_server,base.group_system,permission,crud,
+access_mail_message_all,mail.message.all,model_mail_message,base.group_public,permission,r,
+access_mail_message_portal,mail.message.portal,model_mail_message,base.group_portal,permission,crud,
+access_mail_message_user,mail.message.user,model_mail_message,base.group_user,permission,crud,
+access_mail_message_scheduled_system,mail.message.scheduled.system,model_mail_message_schedule,base.group_system,permission,crud,
+access_mail_mail_system,mail.mail.system,model_mail_mail,base.group_system,permission,crud,
+access_mail_followers_user,mail.followers.user,model_mail_followers,base.group_user,permission,r,
+access_mail_followers_system,mail.followers.system,model_mail_followers,base.group_system,permission,cud,
+ir_rule_mail_notifications_group_portal,mail.notifications: group_portal: own entries,model_mail_notification,base.group_portal,permission,r,"['|', ('res_partner_id', '=', user.partner_id.id), ('author_id', '=', user.partner_id.id)]"
+access_mail_notification_user,mail.notification.user,model_mail_notification,base.group_user,permission,cr,
+ir_rule_mail_notifications_group_user,mail.notifications: group_user: write its own entries,model_mail_notification,base.group_user,permission,u,"[('res_partner_id', '=', user.partner_id.id)]"
+access_mail_notification_system, mail.notification.system,model_mail_notification,base.group_system,permission,d,
+ir_rule_mail_notifications_group_user_group_system,mail.notifications: group_user: write its own entries,model_mail_notification,base.group_system,permission,u,"[('res_partner_id', '=', user.partner_id.id)]"
+ir_rule_discuss_channel_all_group_public,discuss.channel: can access channels (as member or as group allowed),model_discuss_channel,base.group_public,permission,r,"[ ""|"", ""&"", (""channel_type"", ""!="", ""channel""), ""|"", (""is_member"", ""="", True), (""parent_channel_id.is_member"", ""="", True), ""&"", (""channel_type"", ""="", ""channel""), ""|"", (""group_public_id"", ""="", False), (""group_public_id"", ""in"", user.all_group_ids.ids), ]"
+ir_rule_discuss_channel_all_group_portal,discuss.channel: can access channels (as member or as group allowed),model_discuss_channel,base.group_portal,permission,r,"[ ""|"", ""&"", (""channel_type"", ""!="", ""channel""), ""|"", (""is_member"", ""="", True), (""parent_channel_id.is_member"", ""="", True), ""&"", (""channel_type"", ""="", ""channel""), ""|"", (""group_public_id"", ""="", False), (""group_public_id"", ""in"", user.all_group_ids.ids), ]"
+ir_rule_discuss_channel_all_group_user,discuss.channel: can access channels (as member or as group allowed),model_discuss_channel,base.group_user,permission,cru,"[ ""|"", ""&"", (""channel_type"", ""!="", ""channel""), ""|"", (""is_member"", ""="", True), (""parent_channel_id.is_member"", ""="", True), ""&"", (""channel_type"", ""="", ""channel""), ""|"", (""group_public_id"", ""="", False), (""group_public_id"", ""in"", user.all_group_ids.ids), ]"
+ir_rule_discuss_channel_group_system,discuss.channel: admin full access,model_discuss_channel,base.group_system,permission,crud,
+ir_rule_discuss_channel_member_is_self_all_group_public,discuss.channel.member: access their own entries,model_discuss_channel_member,base.group_public,permission,ud,"[ ('is_self', '=', True), ""|"", (""channel_id.channel_type"", ""!="", ""channel""), ""|"", (""channel_id.group_public_id"", ""="", False), (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids), ]"
+ir_rule_discuss_channel_member_read_all_group_public,discuss.channel.member: read members of accessible channels,model_discuss_channel_member,base.group_public,permission,r,"[ ""|"", ""&"", (""channel_id.channel_type"", ""!="", ""channel""), ""|"", (""channel_id.is_member"", ""="", True), (""channel_id.parent_channel_id.is_member"", ""="", True), ""&"", (""channel_id.channel_type"", ""="", ""channel""), ""|"", (""channel_id.group_public_id"", ""="", False), (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids), ]"
+ir_rule_discuss_channel_member_create_is_group_matching_all_group_public,discuss.channel.member: can join group restricted channels when group is matching,model_discuss_channel_member,base.group_public,permission,c,"[ ('is_self', '=', True), ('channel_id.channel_type', '=', 'channel'), '|', ('channel_id.group_public_id', '=', False), ('channel_id.group_public_id', 'in', user.all_group_ids.ids) ]"
+ir_rule_discuss_channel_member_is_self_all_group_portal,discuss.channel.member: access their own entries,model_discuss_channel_member,base.group_portal,permission,ud,"[ ('is_self', '=', True), ""|"", (""channel_id.channel_type"", ""!="", ""channel""), ""|"", (""channel_id.group_public_id"", ""="", False), (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids), ]"
+ir_rule_discuss_channel_member_read_all_group_portal,discuss.channel.member: read members of accessible channels,model_discuss_channel_member,base.group_portal,permission,r,"[ ""|"", ""&"", (""channel_id.channel_type"", ""!="", ""channel""), ""|"", (""channel_id.is_member"", ""="", True), (""channel_id.parent_channel_id.is_member"", ""="", True), ""&"", (""channel_id.channel_type"", ""="", ""channel""), ""|"", (""channel_id.group_public_id"", ""="", False), (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids), ]"
+ir_rule_discuss_channel_member_create_is_group_matching_all_group_portal,discuss.channel.member: can join group restricted channels when group is matching,model_discuss_channel_member,base.group_portal,permission,c,"[ ('is_self', '=', True), ('channel_id.channel_type', '=', 'channel'), '|', ('channel_id.group_public_id', '=', False), ('channel_id.group_public_id', 'in', user.all_group_ids.ids) ]"
+ir_rule_discuss_channel_member_is_self_all_group_user,discuss.channel.member: access their own entries,model_discuss_channel_member,base.group_user,permission,ud,"[ ('is_self', '=', True), ""|"", (""channel_id.channel_type"", ""!="", ""channel""), ""|"", (""channel_id.group_public_id"", ""="", False), (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids), ]"
+ir_rule_discuss_channel_member_read_all_group_user,discuss.channel.member: read members of accessible channels,model_discuss_channel_member,base.group_user,permission,r,"[ ""|"", ""&"", (""channel_id.channel_type"", ""!="", ""channel""), ""|"", (""channel_id.is_member"", ""="", True), (""channel_id.parent_channel_id.is_member"", ""="", True), ""&"", (""channel_id.channel_type"", ""="", ""channel""), ""|"", (""channel_id.group_public_id"", ""="", False), (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids), ]"
+ir_rule_discuss_channel_member_create_is_group_matching_all_group_user,discuss.channel.member: can join group restricted channels when group is matching,model_discuss_channel_member,base.group_user,permission,c,"[ ('is_self', '=', True), ('channel_id.channel_type', '=', 'channel'), '|', ('channel_id.group_public_id', '=', False), ('channel_id.group_public_id', 'in', user.all_group_ids.ids) ]"
+ir_rule_discuss_channel_member_create_is_group_matching_group_user,discuss.channel.member: internal users can invite others in group restricted channels when group is matching,model_discuss_channel_member,base.group_user,permission,c,"[ ('is_self', '=', False), ('channel_id.channel_type', '=', 'channel'), '|', ('channel_id.group_public_id', '=', False), ('channel_id.group_public_id', 'in', user.all_group_ids.ids) ]"
+ir_rule_discuss_channel_member_create_is_member_group_user,discuss.channel.member: internal users can invite others in channels they are member of,model_discuss_channel_member,base.group_user,permission,c,"[ ('is_self', '=', False), ('channel_id.channel_type', 'not in', ('channel', 'chat')), ('channel_id.is_member', '=', True) ]"
+ir_rule_discuss_channel_member_group_system,discuss.channel.member: admin can manipulate all entries,model_discuss_channel_member,base.group_system,permission,crud,
+access_discuss_channel_rtc_session_system,discuss.channel.rtc.session.system,model_discuss_channel_rtc_session,base.group_system,permission,crud,
+ir_rule_discuss_call_history_read_all_group_user,discuss.call.history: read call history of accessible channels,model_discuss_call_history,base.group_user,permission,r,"[ ""|"", ""&"", (""channel_id.channel_type"", ""!="", ""channel""), ""|"", (""channel_id.is_member"", ""="", True), (""channel_id.parent_channel_id.is_member"", ""="", True), ""&"", (""channel_id.channel_type"", ""="", ""channel""), ""|"", (""channel_id.group_public_id"", ""="", False), (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids), ]"
+ir_rule_discuss_call_history_read_all_group_public,discuss.call.history: read call history of accessible channels,model_discuss_call_history,base.group_public,permission,r,"[ ""|"", ""&"", (""channel_id.channel_type"", ""!="", ""channel""), ""|"", (""channel_id.is_member"", ""="", True), (""channel_id.parent_channel_id.is_member"", ""="", True), ""&"", (""channel_id.channel_type"", ""="", ""channel""), ""|"", (""channel_id.group_public_id"", ""="", False), (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids), ]"
+ir_rule_discuss_call_history_read_all_group_portal,discuss.call.history: read call history of accessible channels,model_discuss_call_history,base.group_portal,permission,r,"[ ""|"", ""&"", (""channel_id.channel_type"", ""!="", ""channel""), ""|"", (""channel_id.is_member"", ""="", True), (""channel_id.parent_channel_id.is_member"", ""="", True), ""&"", (""channel_id.channel_type"", ""="", ""channel""), ""|"", (""channel_id.group_public_id"", ""="", False), (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids), ]"
+access_res_role_user,res.role.user,model_res_role,base.group_user,permission,r,
+access_res_role_admin,res.role.admin,model_res_role,base.group_erp_manager,permission,cud,
+access_mail_alias_user,mail.alias.user,model_mail_alias,base.group_user,permission,r,
+access_mail_alias_system,mail.alias.system,model_mail_alias,base.group_system,permission,cud,
+access_mail_alias_domain_user,mail.alias.domain.user,model_mail_alias_domain,base.group_user,permission,r,
+access_mail_alias_domain_system,mail.alias.domain.system,model_mail_alias_domain,base.group_erp_manager,permission,cud,
+access_mail_gateway_allowed_system,mail.gateway.allowed.system,model_mail_gateway_allowed,base.group_system,permission,crud,
+access_mail_message_reaction_system,mail.message.reaction.system,model_mail_message_reaction,base.group_system,permission,crud,
+mail_message_subtype_rule_public_group_public,mail.message.subtype: portal/public: read public subtypes,model_mail_message_subtype,base.group_public,permission,r,"[('internal', '=', False)]"
+mail_message_subtype_rule_public_group_portal,mail.message.subtype: portal/public: read public subtypes,model_mail_message_subtype,base.group_portal,permission,r,"[('internal', '=', False)]"
+access_mail_message_subtype_user,mail.message.subtype.user,model_mail_message_subtype,base.group_user,permission,r,
+access_mail_message_subtype_system,mail.message.subtype.system,model_mail_message_subtype,base.group_system,permission,cud,
+access_mail_presence,mail.presence,model_mail_presence,base.group_system,permission,crud,
+access_mail_tracking_value_system,mail.tracking.value.system,model_mail_tracking_value,base.group_system,permission,crud,
+access_publisher_warranty_contract_all,publisher.warranty.contract.all,model_publisher_warranty_contract,base.group_system,permission,crud,
+access_mail_template,mail.template,model_mail_template,base.group_user,permission,r,
+mail_template_employee_rule,Employees can only modify templates they have created or been assigned,model_mail_template,base.group_user,permission,cud,"['|', ('create_uid', '=', user.id), ('user_id', '=', user.id)]"
+access_mail_template_editor,mail.template_editor,model_mail_template,group_mail_template_editor,permission,r,
+mail_template_editor_rule_group_mail_template_editor,Mail Template Editors - Edit All Templates,model_mail_template,group_mail_template_editor,permission,cud,
+access_mail_canned_reponse,mail.canned.response,model_mail_canned_response,base.group_user,permission,c,
+ir_rule_mail_canned_response_user_read,Canned response: User read: own or in groups,model_mail_canned_response,base.group_user,permission,r,"['|', ('create_uid', '=', user.id), ('group_ids', 'in', user.all_group_ids.ids)]"
+ir_rule_mail_canned_response_user_update,Canned response: User write/unlink: own only,model_mail_canned_response,base.group_user,permission,ud,"[('create_uid', '=', user.id)]"
+ir_rule_mail_canned_response_admin,Canned response: admin has all access on shared canned response,model_mail_canned_response,group_mail_canned_response_admin,permission,rud,"[('is_shared', '=', True)]"
+access_mail_activity_user,mail.activity.user,model_mail_activity,base.group_user,permission,cr,
+mail_activity_rule_user,mail.activity: user: also allow creator and assignee,model_mail_activity,base.group_user,permission,ud,"['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]"
+access_mail_activity_plan_user,mail.activity.plan.user,model_mail_activity_plan,base.group_user,permission,r,
+mail_activity_plan_rule_admin,Administrators can access all activity plans.,model_mail_activity_plan,base.group_system,permission,cud,
+access_mail_activity_plan_template_user,mail.activity.plan.template.user,model_mail_activity_plan_template,base.group_user,permission,r,
+mail_activity_plan_template_rule_admin,Administrators can access all activity plan templates.,model_mail_activity_plan_template,base.group_system,permission,cud,
+access_mail_activity_schedule_user,mail.activity.schedule.user,model_mail_activity_schedule,base.group_user,permission,cru,
+access_mail_activity_schedule_line_user,mail.activity.schedule.line.user,model_mail_activity_schedule_line,base.group_user,permission,cru,
+access_mail_activity_type_user,mail.activity.type.user,model_mail_activity_type,base.group_user,permission,r,
+access_mail_activity_type_system,mail.activity.type.system,model_mail_activity_type,base.group_system,permission,cud,
+access_mail_blacklist_system,access_mail_blacklist_system,model_mail_blacklist,base.group_system,permission,crud,
+access_mail_followers_edit,access.mail.followers.edit,model_mail_followers_edit,base.group_user,permission,cru,
+access_mail_compose_message,access.mail.compose.message,model_mail_compose_message,base.group_user,permission,cru,
+access_mail_template_preview,access.mail.template.preview,model_mail_template_preview,base.group_user,permission,cru,
+access_mail_blacklist_remove_system,acesss.mail.blacklist.remove.system,model_mail_blacklist_remove,base.group_system,permission,crud,
+access_mail_guest_user,mail.guest,model_mail_guest,base.group_user,permission,r,
+access_mail_guest_system,mail.guest,model_mail_guest,base.group_system,permission,cud,
+access_mail_ice_server_system,mail.ice.server.system,model_mail_ice_server,base.group_system,permission,crud,
+res_users_settings_volumes_rule_user,res.users.settings.volumes: access their own entries,model_res_users_settings_volumes,base.group_user,permission,crud,"[('user_setting_id.user_id', '=', user.id)]"
+res_users_settings_volumes_rule_admin,Administrators can access all User Settings volumes.,model_res_users_settings_volumes,base.group_system,permission,crud,
+access_mail_template_reset,access.mail.template.reset,model_mail_template_reset,group_mail_template_editor,permission,crud,
+ir_actions_report_access_user,ir.actions.report.access.user,base.model_ir_actions_report,base.group_user,permission,r,
+access_mail_link_preview_admin,mail.link.preview.admin,model_mail_link_preview,base.group_erp_manager,permission,crud,
+access_mail_message_link_preview_erp_manager,mail.link.preview.erp_manager,model_mail_message_link_preview,base.group_erp_manager,permission,crud,
+discuss_gif_favorite_user_rule,Discuss.gif.favorite: User access,model_discuss_gif_favorite,base.group_user,permission,crud,"[('create_uid', '=', user.id)]"
+discuss_gif_favorite_admin_rule,Discuss.gif.favorite: admin full access,model_discuss_gif_favorite,base.group_erp_manager,permission,crud,
+access_discuss_voice_metadata_user,discuss.voice.metadata.user,model_discuss_voice_metadata,base.group_system,permission,crud,
+access_mail_push_system,access.mail.push.system,model_mail_push,base.group_system,permission,crud,
+access_mail_push_device_system,access.mail.push.device.system,model_mail_push_device,base.group_system,permission,crud,
+access_mail_message_translation_system,mail.message.translation,model_mail_message_translation,base.group_system,permission,crud,
+access_mail_scheduled_message,access.mail.scheduled.message,model_mail_scheduled_message,base.group_user,permission,crud,
+access_mail_config_user,mail.config user,model_mail_config,base.group_user,permission,r,
+access_mail_config_erp_manager,mail.config erp manager,model_mail_config,base.group_erp_manager,permission,cud,
+mail_compose_message_rule,Mail Compose Message Rule,model_mail_compose_message,base.group_everyone,guard,ru,"[('create_uid', '=', user.id)]"
+ir_rule_mail_scheduled_message_user,mail.scheduled.message: group_user: write its own entries,model_mail_scheduled_message,base.group_everyone,guard,cu,"[('create_uid', '=', user.id)]"

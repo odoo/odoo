@@ -1707,11 +1707,14 @@ class TestFormattedReadGroup(common.TransactionCase):
         )
 
         users_model = self.env["ir.model"]._get(mario._name)
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Only The Lone Wanderer allowed",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": users_model.id,
-                "domain_force": [("id", "=", mario.id)],
+                "domain": str([("id", "=", mario.id)]),
             },
         )
 
@@ -2017,11 +2020,14 @@ class TestFormattedReadGroup(common.TransactionCase):
         self.assertTrue(field_info["bar_base_ids"]["groupable"])
 
         related_base_model = self.env["ir.model"]._get("test_read_group.related_base")
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Only The Lone Wanderer allowed",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": related_base_model.id,
-                "domain_force": str([("name", "!=", "A")]),
+                "domain": str([("name", "!=", "A")]),
             },
         )
 
@@ -2207,11 +2213,14 @@ class TestFormattedReadGroup(common.TransactionCase):
             )
 
         users_model = self.env["ir.model"]._get(RelatedFoo._name)
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Only The Lone Wanderer allowed",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": users_model.id,
-                "domain_force": [("id", "in", foos[1:].ids)],
+                "domain": str([("id", "in", foos[1:].ids)]),
             }
         )
         RelatedBase = RelatedBase.with_user(self.base_user)
@@ -2445,11 +2454,14 @@ class TestFormattedReadGroup(common.TransactionCase):
             RelatedBase.formatted_read_group([], ["foo_id.bar_name"], ["__count"])
 
         users_model = self.env["ir.model"]._get(RelatedFoo._name)
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Only The Lone Wanderer allowed",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": users_model.id,
-                "domain_force": [("id", "in", foos[1:].ids)],
+                "domain": str([("id", "in", foos[1:].ids)]),
             }
         )
 

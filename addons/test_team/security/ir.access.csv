@@ -1,0 +1,8 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_test_team_ticket_user,test.team.ticket user,model_test_team_ticket,base.group_user,permission,crud,
+team_rule_alpha_manager,Alpha teams: administrators,team.model_team_team,group_alpha_manager,permission,cud,"[('use_alpha', '=', True)]"
+team_member_rule_personal_group_alpha_manager,Team Members: own teams,team.model_team_member,group_alpha_manager,permission,r,"['|', ('team_id.user_id', '=', user.id), ('team_id', 'in', user.team_ids.ids)]"
+team_member_rule_alpha_manager,Alpha team members: administrators,team.model_team_member,group_alpha_manager,permission,cud,"[('team_id.use_alpha', '=', True)]"
+team_rule_beta_manager,Beta teams: administrators,team.model_team_team,group_beta_manager,permission,cud,"[('use_beta', '=', True)]"
+access_team_member_beta_manager,team.member beta manager,team.model_team_member,group_beta_manager,permission,cud,
+team_member_rule_personal_group_beta_manager,Team Members: own teams,team.model_team_member,group_beta_manager,permission,r,"['|', ('team_id.user_id', '=', user.id), ('team_id', 'in', user.team_ids.ids)]"

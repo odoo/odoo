@@ -39,8 +39,7 @@ no email.
         "mixin_report_sql",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/document_compliance_security.xml",
+        "security/ir.access.csv",
         "data/ir_cron_data.xml",
         "views/document_type_views.xml",
         "views/document_document_views.xml",

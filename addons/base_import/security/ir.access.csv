@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_base_import_mapping,base.import.mapping,model_base_import_mapping,base.group_user,permission,crud,
+access_base_import_import,base.import.import,model_base_import_import,base.group_user,permission,cru,
+base_import_import_own_records,base_import.import: own records only,model_base_import_import,base.group_everyone,guard,crud,"[('create_uid', '=', user.id)]"

@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_rating_user,rating.rating.user,model_rating_rating,base.group_user,permission,cru,
+access_rating_public,rating.rating.public,model_rating_rating,base.group_public,permission,r,"[(0, '=', 1)]"
+access_rating_portal,rating.rating.portal,model_rating_rating,base.group_portal,permission,r,"[(0, '=', 1)]"
+rating_rating_access_system,rating.rating.access.system,model_rating_rating,base.group_system,permission,d,

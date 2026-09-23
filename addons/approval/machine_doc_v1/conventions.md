@@ -20,7 +20,7 @@
 Both sit under the `res_groups_privilege_approvals` privilege
 (`security/res_groups.xml`).
 
-### ACL Summary (ir.model.access.csv)
+### ACL Summary (ir.access.csv)
 
 | Model | Internal User (group_user) | Manager (group_approval_manager) |
 |-------|---------------------------|----------------------------------|

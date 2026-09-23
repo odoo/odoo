@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_l10n_in_hr_leave_optional_holiday_user,access_l10n_in_hr_holidays_optional_day_user,model_l10n_in_hr_leave_optional_holiday,base.group_user,permission,r,
+access_l10n_in_hr_leave_optional_holiday_manager,access_l10n_in_hr_holidays_optional_day_manager,model_l10n_in_hr_leave_optional_holiday,hr_holidays.group_hr_holidays_manager,permission,cud,
+hr_leave_optional_holiday_rule_multi_company,Optional Holiday: multi company rule,model_l10n_in_hr_leave_optional_holiday,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

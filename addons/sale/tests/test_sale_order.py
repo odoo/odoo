@@ -1501,10 +1501,10 @@ class TestPortalRulePermFlags(SaleCommon):
         ):
             rule = self.env.ref(xmlid)
             with self.subTest(rule=xmlid):
-                self.assertTrue(rule.perm_read)
-                self.assertFalse(rule.perm_write)
-                self.assertFalse(rule.perm_create)
-                self.assertFalse(rule.perm_unlink)
+                self.assertTrue(rule.for_read)
+                self.assertFalse(rule.for_write)
+                self.assertFalse(rule.for_create)
+                self.assertFalse(rule.for_unlink)
 
 
 @tagged("post_install", "-at_install")

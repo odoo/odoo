@@ -17,8 +17,7 @@ This is the base module to manage the accounting chart for Estonia in Odoo.
         "ee",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_ee_security.xml",
+        "security/ir.access.csv",
         "data/account_tax_report_data.xml",
         "views/account_tax_form.xml",
     ],

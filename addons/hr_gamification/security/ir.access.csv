@@ -1,0 +1,11 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+goal_gamification_hr_user_visibility,HR Officer can see any goal,gamification.model_gamification_goal,hr.group_hr_user,permission,ru,
+hr_gamification_badge_base_user_owned_access,Base group user granted badge write/unlink access,gamification.model_gamification_badge_user,gamification.group_gamification_user,permission,crud,"[('create_uid', '=', user.id)]"
+hr_gamification_badge_base_user_not_owned_access,Base group user not granted badge write/unlink access,gamification.model_gamification_badge_user,gamification.group_gamification_user,permission,cr,"[('create_uid', '!=', user.id)]"
+hr_gamification_badge_group_hr_user_access,Officer: Manage all employees- Badge Access,gamification.model_gamification_badge_user,hr.group_hr_user,permission,crud,
+hr_gamification_badge_base_user_owned_access_group_gamification_manager,Base group user granted badge write/unlink access,gamification.model_gamification_badge_user,gamification.group_gamification_manager,permission,crud,"[('create_uid', '=', user.id)]"
+hr_gamification_badge_base_user_not_owned_access_group_gamification_manager,Base group user not granted badge write/unlink access,gamification.model_gamification_badge_user,gamification.group_gamification_manager,permission,cr,"[('create_uid', '!=', user.id)]"
+challenge_officer,Challenge Officer,gamification.model_gamification_challenge,hr.group_hr_user,permission,cud,
+challenge_line_officer,Challenge Line Officer,gamification.model_gamification_challenge_line,hr.group_hr_user,permission,cud,
+gamification_badge_rule_hr_user_edit,Badge: HR officer: edit all,gamification.model_gamification_badge,hr.group_hr_user,permission,cud,
+badge_user_visibility,Badge grants respect profile visibility,model_gamification_badge_user,gamification.group_gamification_user,permission,r,"[ '|', ('user_id', '=', user.id), ('user_id.gamification_visibility', '!=', 'private')]"

@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_repair_user,Repair user,model_repair_order,stock.group_stock_user,permission,crud,
+access_repair_tag_user,Repair Tags user,model_repair_tags,stock.group_stock_user,permission,crud,
+access_stock_warn_insufficient_qty_repair,access.stock.warn.insufficient.qty.repair,model_stock_warn_insufficient_qty_repair,stock.group_stock_user,permission,cru,
+repair_order_rule,repair order multi-company,model_repair_order,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"

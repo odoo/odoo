@@ -8,20 +8,18 @@ from typing import Any, Self
 
 from odoo import _, api, fields, models, tools
 from odoo.api import ValuesType
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain, DomainCondition
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, frozendict
 from odoo.tools.safe_eval import safe_eval, time
 
-from .ir_access_convert import GROUP_EVERYONE, synthesize
 from .ir_model_common import (
     ACCESS_ERROR_GROUPS,
     ACCESS_ERROR_HEADER,
     ACCESS_ERROR_NOGROUP,
     ACCESS_ERROR_RESOLUTION,
     ACCESS_MODES,
-    loaded_module_names,
     unloaded_module_domain,
     unloaded_module_scope,
 )
@@ -51,7 +49,6 @@ OPERATION_LETTER = {"create": "c", "read": "r", "write": "u", "unlink": "d"}
 # cycle check (an unrelated text is not evaluated, which a rule calling back
 # into the decision would turn into a recursion)
 ACCESS_OPERATOR_RE = re.compile(r"""['"]access['"]""")
-PERM_COLUMNS = ("perm_read", "perm_write", "perm_create", "perm_unlink")
 NON_STANDARD_MODULES = ("__export__", "__custom__", "studio_customization")
 GROUP_TESTS = frozenset(
     {
@@ -66,15 +63,7 @@ GROUP_TESTS = frozenset(
 )
 
 
-# the group of a row synthesized from a group-less access line or a global
-# rule: it binds every principal, as the line and the rule did, whether or not
-# the principal holds base.group_everyone
-ANY_GROUP = 0
-
-
 class AccessInfo(typing.NamedTuple):
-    # id is the ir.access row, 0 for a row synthesized from ir.model.access and
-    # ir.rule; rule_id is the rule such a row comes from, 0 for an access line
     id: int
     group_id: int
     kind: str
@@ -83,17 +72,6 @@ class AccessInfo(typing.NamedTuple):
     domain: Domain | str
     name: str = ""
     text: str = ""
-    rule_id: int = 0
-
-
-class LegacyAccess(typing.NamedTuple):
-    # (id, name, model, group_id, perm_read, perm_write, perm_create, perm_unlink)
-    acl_lines: list[tuple]
-    # (id, name, model, domain_force, composition, perm_read, perm_write,
-    #  perm_create, perm_unlink, group ids)
-    rules: list[tuple]
-    implications: list[tuple[int, int]]
-    everyone_id: int | None
 
 
 def parse_access_domain(text: str | None) -> Domain | str:
@@ -108,6 +86,58 @@ def parse_access_domain(text: str | None) -> Domain | str:
         return text
 
 
+def _monotone_group_reads(tree: ast.AST) -> set[int]:
+    # the two readings of the principal's groups that more groups can only
+    # widen: membership in the ids of the user's groups, and an exemption that
+    # drops the domain altogether for the members of a group
+    allowed: set[int] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.List, ast.Tuple)):
+            for index, item in enumerate(node.elts):
+                if not (
+                    isinstance(item, (ast.Tuple, ast.List))
+                    and len(item.elts) == 3
+                    and isinstance(item.elts[1], ast.Constant)
+                    and item.elts[1].value == "in"
+                ):
+                    continue
+                previous = node.elts[index - 1] if index else None
+                if isinstance(previous, ast.Constant) and previous.value == "!":
+                    continue
+                value = item.elts[2]
+                if (
+                    isinstance(value, ast.Attribute)
+                    and value.attr == "ids"
+                    and isinstance(value.value, ast.Attribute)
+                    and value.value.attr in ("all_group_ids", "group_ids")
+                ):
+                    allowed.add(id(value.value))
+        elif (
+            isinstance(node, ast.IfExp)
+            and isinstance(node.test, ast.Call)
+            and isinstance(node.test.func, ast.Attribute)
+            and node.test.func.attr == "has_group"
+            and _widens(node)
+        ):
+            allowed.add(id(node.test.func))
+    return allowed
+
+
+def _widens(node: ast.IfExp) -> bool:
+    # [] if member else D: the members are exempt; ['|', A] if member else []
+    # put before a domain: the members also reach A
+    if isinstance(node.body, ast.List) and not node.body.elts:
+        return True
+    return (
+        isinstance(node.orelse, ast.List)
+        and not node.orelse.elts
+        and isinstance(node.body, ast.List)
+        and bool(node.body.elts)
+        and isinstance(node.body.elts[0], ast.Constant)
+        and node.body.elts[0].value == "|"
+    )
+
+
 def domain_group_tests(domain: str) -> list[str]:
     # a domain that tests the principal's groups can make a group take records
     # away; the row's group is where membership is stated
@@ -115,11 +145,14 @@ def domain_group_tests(domain: str) -> list[str]:
         tree = ast.parse(domain.strip(), mode="eval")
     except SyntaxError:
         return []
+    allowed = _monotone_group_reads(tree)
     return sorted(
         {
             node.attr
             for node in ast.walk(tree)
-            if isinstance(node, ast.Attribute) and node.attr in GROUP_TESTS
+            if isinstance(node, ast.Attribute)
+            and node.attr in GROUP_TESTS
+            and id(node) not in allowed
         }
     )
 
@@ -470,6 +503,28 @@ class IrAccess(models.Model):
         self._clear_access_caches()
         return accesses
 
+    @api.model
+    def _load_records(self, data_list: list[dict], update: bool = False) -> Self:
+        # a module's rows reuse the external ids of the access lines and rules
+        # they were converted from; base's 1.97 migration moves those ids onto
+        # the rows before any module loads, so a database that still maps one
+        # to an old record has not run it
+        if old := (
+            self.env["ir.model.data"]
+            .sudo()
+            .search([("model", "in", ("ir.model.access", "ir.rule"))], limit=1)
+        ):
+            raise UserError(
+                _(
+                    "This database still holds access lines and record rules "
+                    "(%(xmlid)s among them), which base's 1.97 migration converts "
+                    "into ir.access rows. Upgrade base first (-u base), then the "
+                    "other modules.",
+                    xmlid=f"{old.module}.{old.name}",
+                )
+            )
+        return super()._load_records(data_list, update)
+
     def write(self, vals: dict[str, Any]) -> bool:
         _debug.lifecycle("write", count=len(self), fields=list(vals))
         self.env.flush_all()
@@ -542,208 +597,6 @@ class IrAccess(models.Model):
             )
         return {model_name: tuple(infos) for model_name, infos in result.items()}
 
-    def _read_legacy_tables(self) -> LegacyAccess:
-        loaded = loaded_module_names(self.env)
-
-        def applies(alias: str, model: str) -> SQL:
-            if loaded is None:
-                return SQL("TRUE")
-            return SQL(
-                "%s NOT IN (SELECT d.res_id FROM ir_model_data d "
-                "WHERE d.model = %s AND d.module != ALL(%s))",
-                SQL.identifier(alias, "id"),
-                model,
-                loaded,
-            )
-
-        self.env.cr.execute(
-            SQL(
-                """
-                SELECT
-                  (SELECT coalesce(json_agg(json_build_array(
-                              a.id, a.name, m.model, a.group_id, a.perm_read,
-                              a.perm_write, a.perm_create, a.perm_unlink)
-                              ORDER BY a.id), '[]'::json)
-                     FROM ir_model_access a JOIN ir_model m ON m.id = a.model_id
-                    WHERE a.active AND %s),
-                  (SELECT coalesce(json_agg(json_build_array(
-                              r.id, r.name, m.model, r.domain_force, r.composition,
-                              r.perm_read, r.perm_write, r.perm_create, r.perm_unlink,
-                              ARRAY(SELECT g.group_id FROM rule_group_rel g
-                                     WHERE g.rule_group_id = r.id
-                                     ORDER BY g.group_id))
-                              ORDER BY r.id), '[]'::json)
-                     FROM ir_rule r JOIN ir_model m ON m.id = r.model_id
-                    WHERE r.active AND %s),
-                  (SELECT coalesce(json_agg(json_build_array(i.gid, i.hid)
-                              ORDER BY i.gid, i.hid), '[]'::json)
-                     FROM res_groups_implied_rel i),
-                  (SELECT d.res_id FROM ir_model_data d
-                    WHERE d.model = 'res.groups' AND d.module = 'base'
-                      AND d.name = 'group_everyone')
-                """,
-                applies("a", "ir.model.access"),
-                applies("r", "ir.rule"),
-            )
-        )
-        acl_lines, rules, implications, everyone_id = self.env.cr.fetchone()
-        return LegacyAccess(
-            [tuple(line) for line in acl_lines],
-            [tuple(rule) for rule in rules],
-            [tuple(pair) for pair in implications],
-            everyone_id,
-        )
-
-    def _read_legacy_records(self) -> LegacyAccess:
-        env = self.env
-        lines = (
-            env["ir.model.access"]
-            .sudo()
-            .with_context(active_test=False)
-            .search(
-                Domain("active", "=", True)
-                & unloaded_module_domain(env, "ir.model.access"),
-                order="id",
-            )
-        )
-        rules = (
-            env["ir.rule"]
-            .sudo()
-            .with_context(active_test=False)
-            .search(
-                Domain("active", "=", True) & unloaded_module_domain(env, "ir.rule"),
-                order="id",
-            )
-        )
-        groups = env["res.groups"].sudo().with_context(active_test=False).search([])
-        everyone = env.ref("base.group_everyone", raise_if_not_found=False)
-        return LegacyAccess(
-            [
-                (
-                    line.id,
-                    line.name,
-                    line.model_id.model,
-                    line.group_id.id or None,
-                    line.perm_read,
-                    line.perm_write,
-                    line.perm_create,
-                    line.perm_unlink,
-                )
-                for line in lines
-            ],
-            [
-                (
-                    rule.id,
-                    rule.name or None,
-                    rule.model_id.model,
-                    rule.domain_force or None,
-                    rule.composition,
-                    rule.perm_read,
-                    rule.perm_write,
-                    rule.perm_create,
-                    rule.perm_unlink,
-                    sorted(rule.groups.ids),
-                )
-                for rule in rules
-            ],
-            sorted(
-                (group.id, implied_id)
-                for group in groups
-                for implied_id in group.implied_ids.ids
-            ),
-            everyone.id if everyone else None,
-        )
-
-    def _synthesized_access(self) -> dict[str, tuple[AccessInfo, ...]]:
-        # the rows convert() makes of the database's ir.model.access lines and
-        # ir.rule records, read beside the ir.access rows until those tables
-        # are converted: the same function S2 converts them with
-        legacy = self.env.registry.access_policy.legacy_access(self.env)
-        everyone_id = legacy.everyone_id
-
-        def key(group_id: int) -> str:
-            if group_id == everyone_id:
-                return GROUP_EVERYONE
-            return f"res.groups#{group_id}"
-
-        def group_of(group_key: str) -> int:
-            if group_key == GROUP_EVERYONE:
-                return ANY_GROUP
-            return int(group_key.partition("#")[2])
-
-        acl_lines: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
-        for line_id, name, model, group_id, *perms in legacy.acl_lines:
-            acl_lines[model].append(
-                {
-                    "id": line_id,
-                    "name": name,
-                    "model": model,
-                    "group": key(group_id) if group_id else None,
-                    **dict(zip(PERM_COLUMNS, perms, strict=True)),
-                }
-            )
-        rules: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
-        for rule_id, name, model, domain, composition, *rest in legacy.rules:
-            *perms, group_ids = rest
-            rules[model].append(
-                {
-                    "id": rule_id,
-                    "name": name,
-                    "model": model,
-                    "domain_force": domain,
-                    "composition": composition,
-                    "groups": [key(group_id) for group_id in group_ids],
-                    **dict(zip(PERM_COLUMNS, perms, strict=True)),
-                }
-            )
-        implications: defaultdict[str, set[str]] = defaultdict(set)
-        for group_id, implied_id in legacy.implications:
-            implications[key(group_id)].add(key(implied_id))
-
-        # a model with its own table under a table-inheritance root is bound by
-        # the root's access lines and rules too, as ir.rule has it
-        bound_by = self.env["ir.rule"]._get_model_names_bound_by_rules
-        registry = self.env.registry
-        for model_name in list(registry.models):
-            for other in bound_by(model_name)[1:]:
-                acl_lines[model_name].extend(
-                    {**line, "model": model_name} for line in acl_lines.get(other, ())
-                )
-                rules[model_name].extend(
-                    {**rule, "model": model_name} for rule in rules.get(other, ())
-                )
-
-        result: defaultdict[str, list[AccessInfo]] = defaultdict(list)
-        rows = synthesize(
-            [line for lines in acl_lines.values() for line in lines],
-            [rule for model_rules in rules.values() for rule in model_rules],
-            implications,
-        )
-        for row in rows:
-            if row["model"] not in registry:
-                continue
-            from_rule = row["from_rule"]
-            result[row["model"]].append(
-                AccessInfo(
-                    0,
-                    group_of(row["group"]),
-                    row["kind"],
-                    row["guard_scope"] or "everyone",
-                    row["operation"],
-                    parse_access_domain(row["domain"]),
-                    row["name"],
-                    row["domain"],
-                    int(from_rule.partition("#")[2]) if from_rule else 0,
-                )
-            )
-        _debug.perf.count(
-            "accesses_synthesized",
-            lines=len(legacy.acl_lines),
-            rules=len(legacy.rules),
-            rows=len(rows),
-        )
-        return {model_name: tuple(infos) for model_name, infos in result.items()}
-
     @api.model
     @tools.ormcache("self._get_unloaded_module_scope()", cache="stable")
     def _get_all_access(self) -> frozendict:
@@ -757,8 +610,12 @@ class IrAccess(models.Model):
             )
         )
         infos = self._access_infos(accesses)
-        for model_name, rows in self._synthesized_access().items():
-            infos[model_name] = infos.get(model_name, ()) + rows
+        # a model with its own table under a table-inheritance root is bound by
+        # the root's rows too, as the rows are read through the root's table
+        bound_by = self.env["ir.rule"]._get_model_names_bound_by_rules
+        for model_name in list(self.env.registry.models):
+            for other in bound_by(model_name)[1:]:
+                infos[model_name] = infos.get(model_name, ()) + infos.get(other, ())
         if cycle := self._access_cycle(infos):
             raise ValueError(self._access_cycle_message(cycle))
         _debug.perf.count("accesses_loaded", rows=len(accesses), models=len(infos))
@@ -771,7 +628,6 @@ class IrAccess(models.Model):
             for row in self._get_all_access().get(model_name, ())
             if row.kind == "permission" and letter in row.operation
         }
-        group_ids.discard(ANY_GROUP)
         return self.env["res.groups"].sudo().browse(sorted(group_ids))
 
     def _group_names_with_access(self, model_name: str, operation: str) -> list[str]:
@@ -880,30 +736,15 @@ class IrAccess(models.Model):
         return exception
 
     def _blame(self, failing: list[AccessInfo]) -> list[str]:
-        # a row synthesized from a rule is blamed as that rule, which is the
-        # record an administrator edits until the rules are converted
         accesses = sorted(
-            {row.id: row for row in failing if row.id}.values(), key=lambda row: row.id
+            {row.id: row for row in failing}.values(), key=lambda row: row.id
         )
-        rules = sorted(
-            {row.rule_id: row for row in failing if not row.id and row.rule_id}.items()
-        )
-        blame = []
-        if accesses:
-            blame.append(
-                _(
-                    "Blame the following accesses:\n%s",
-                    "\n".join(f"- {row.name}" for row in accesses),
-                )
+        return [
+            _(
+                "Blame the following accesses:\n%s",
+                "\n".join(f"- {row.name}" for row in accesses),
             )
-        if rules or not accesses:
-            blame.append(
-                _(
-                    "Blame the following rules:\n%s",
-                    "\n".join(f"- {row.name}" for _rule_id, row in rules),
-                )
-            )
-        return blame
+        ]
 
     def _get_failed_accesses(self, records: Any, operation: str) -> list[AccessInfo]:
         letter = self._operation_letter(operation)
@@ -926,7 +767,7 @@ class IrAccess(models.Model):
             )
 
         def holds(row: AccessInfo) -> bool:
-            return row.group_id in group_ids or row.group_id == ANY_GROUP
+            return row.group_id in group_ids
 
         rows = [
             row

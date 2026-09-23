@@ -10,7 +10,7 @@
         "resource_asset_stock",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/repair_views.xml",
     ],
     "auto_install": True,

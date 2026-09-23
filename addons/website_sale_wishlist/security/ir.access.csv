@@ -1,0 +1,6 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_product_wishlist_default,access_product_wishlist_default,model_product_wishlist,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_product_wishlist_public,access_product_wishlist_public,model_product_wishlist,base.group_public,permission,r,"[(0, '=', 1)]"
+product_wishlist_rule_group_portal,See own Wishlist,model_product_wishlist,base.group_portal,permission,crud,"[('partner_id','=', user.partner_id.id)]"
+product_wishlist_rule_group_user,See own Wishlist,model_product_wishlist,base.group_user,permission,crud,"[('partner_id','=', user.partner_id.id)]"
+all_product_wishlist_rule,See all wishlist,model_product_wishlist,sale.group_sale_manager,permission,crud,

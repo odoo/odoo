@@ -11,8 +11,7 @@
         "website_event",
     ],
     "data": [
-        "security/security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/event_sponsor_data.xml",
         "reports/website_event_exhibitor_reports.xml",
         "reports/website_event_exhibitor_templates.xml",

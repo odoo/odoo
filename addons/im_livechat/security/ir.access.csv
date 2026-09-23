@@ -1,0 +1,19 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+ir_rule_discuss_channel_im_livechat_group_user,discuss.channel: livechat users can read all livechat channels,mail.model_discuss_channel,im_livechat_group_user,permission,r,"[('channel_type', '=', 'livechat')]"
+ir_rule_discuss_channel_member_im_livechat_group_user,discuss.channel.member: livechat users can read all livechat channel members and can invite anyone,mail.model_discuss_channel_member,im_livechat_group_user,permission,cr,"[('channel_id.channel_type', '=', 'livechat')]"
+ir_rule_discuss_call_history_im_livechat_group_user,discuss.call.history: livechat users can access all call histories,mail.model_discuss_call_history,im_livechat_group_user,permission,r,"[('channel_id.channel_type', '=', 'livechat')]"
+access_livechat_channel_user,im_livechat.channel.user,model_im_livechat_channel,im_livechat_group_user,permission,r,
+access_livechat_channel_manager,im_livechat.channel.manager,model_im_livechat_channel,im_livechat_group_manager,permission,cud,
+access_livechat_support_report_channel,im_livechat.report.channel,model_im_livechat_report_channel,im_livechat_group_manager,permission,r,
+access_livechat_channel_rule_user,im_livechat.channel.rule,model_im_livechat_channel_rule,im_livechat_group_user,permission,cru,
+access_livechat_channel_rule_manager,im_livechat.channel.rule,model_im_livechat_channel_rule,im_livechat_group_manager,permission,d,
+access_livechat_expertise_internal_user,im_livechat.expertise.internal.user,model_im_livechat_expertise,base.group_user,permission,r,
+access_livechat_expertise_livechat_manager,im_livechat.expertise.manager,model_im_livechat_expertise,im_livechat_group_manager,permission,cud,
+access_livechat_conversation_tag_livechat_user,im_livechat.conversation.tag.livechat.user,model_im_livechat_conversation_tag,im_livechat_group_user,permission,cru,
+access_livechat_conversation_tag_livechat_manager,im_livechat.conversation.tag.livechat.manager,model_im_livechat_conversation_tag,im_livechat_group_manager,permission,d,
+access_chatbot_script_user,chatbot.script.user,model_chatbot_script,im_livechat_group_manager,permission,crud,
+access_chatbot_script_step_user,chatbot.script.step.user,model_chatbot_script_step,im_livechat_group_manager,permission,crud,
+access_chatbot_script_answer,chatbot.script.answer,model_chatbot_script_answer,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_chatbot_script_answer_user,chatbot.script.answer.user,model_chatbot_script_answer,im_livechat_group_manager,permission,crud,
+access_chatbot_message_user,chatbot.script.user,model_chatbot_message,im_livechat_group_manager,permission,crud,
+access_im_livechat_channel_member_history_user,im_livechat.channel.member.history,model_im_livechat_channel_member_history,im_livechat_group_user,permission,r,

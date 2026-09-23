@@ -30,7 +30,7 @@ Featuring
     ],
     "data": [
         "security/website_slides_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/gamification_karma_tracking_views.xml",
         "views/mail_activity_views.xml",
         "views/res_config_settings_views.xml",

@@ -11,8 +11,7 @@
     ],
     "data": [
         "data/sms_data.xml",
-        "security/ir.model.access.csv",
-        "security/sms_security.xml",
+        "security/ir.access.csv",
     ],
     "assets": {
         "web.assets_backend": [

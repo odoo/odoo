@@ -1,0 +1,10 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_registration_editor,access.registration.editor,model_registration_editor,sale.group_sale_salesman,permission,cru,
+access_registration_editor_line,access.registration.editor.line,model_registration_editor_line,sale.group_sale_salesman,permission,crud,
+access_event_event_configurator,access.event.event.configurator,model_event_event_configurator,sale.group_sale_salesman,permission,cru,
+access_event_sale_report_user,access.event.sale.report.user,model_event_sale_report,event.group_event_user,permission,r,
+access_event_registration_sale_readonly,event.registration.sale.readonly,event.model_event_registration,sale.group_sale_readonly,permission,r,
+access_event_event_sale_readonly,event.event.sale.readonly,event.model_event_event,sale.group_sale_readonly,permission,r,
+access_event_event_ticket_sale_readonly,event.event.ticket.sale.readonly,event.model_event_event_ticket,sale.group_sale_readonly,permission,r,
+access_event_type_sale_readonly,event.type.sale.readonly,event.model_event_type,sale.group_sale_readonly,permission,r,
+event_sale_report_comp_rule,Event Sales Report multi-company,model_event_sale_report,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

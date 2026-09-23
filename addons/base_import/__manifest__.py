@@ -37,8 +37,7 @@ Re-implement Odoo's file import system:
         },
     },
     "data": [
-        "security/ir.model.access.csv",
-        "security/base_import_security.xml",
+        "security/ir.access.csv",
     ],
     "assets": {
         "web.assets_backend": [

@@ -19,7 +19,6 @@ up their account to start sending SMS messages.
         "views/res_config_settings_views.xml",
         "views/sms_sms_views.xml",
         "wizards/sms_twilio_account_manage_views.xml",
-        "security/ir.model.access.csv",
-        "security/sms_twilio_security.xml",
+        "security/ir.access.csv",
     ],
 }

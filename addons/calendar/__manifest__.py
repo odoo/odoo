@@ -15,8 +15,6 @@
         "survey",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/calendar_security.xml",
         "data/calendar_cron.xml",
         "data/mail_template_data.xml",
         "data/calendar_data.xml",
@@ -37,8 +35,7 @@
         "data/booking/mail_template_data.xml",
         "data/booking/resource_calendar_data.xml",
         "security/booking/res_groups_data.xml",
-        "security/booking/ir_rule_data.xml",
-        "security/booking/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/booking/calendar_alarm_views.xml",
         "views/booking/calendar_event_views.xml",
         "views/booking/appointment_answer_input_views.xml",

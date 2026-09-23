@@ -235,11 +235,11 @@ class TestCommand(BaseCase):
             manifest = (mod / "__manifest__.py").read_text()
             self.assertIn("'name': \"MyModule\"", manifest)
 
-            acl = (mod / "security" / "ir.model.access.csv").read_text()
+            access = (mod / "security" / "ir.access.csv").read_text()
             self.assertIn(
                 "access_my_module_my_module,my_module.my_module,"
-                "model_my_module_my_module,base.group_user,1,1,1,1",
-                acl,
+                "model_my_module_my_module,base.group_user,permission,crud,",
+                access,
             )
 
             demo = (mod / "demo" / "demo.xml").read_text()

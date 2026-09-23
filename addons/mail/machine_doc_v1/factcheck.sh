@@ -585,7 +585,7 @@ assert_eq "channel.py's two auth=user routes (update_avatar + sub_channel/delete
 
 # XML totals. ARCHITECTURE.md claimed "~380"; the real module-wide total is 232 and its own
 # breakdown only ever summed to 224 (it omitted wizards/security/test XML).
-assert_eq "module-wide XML file count" "$(find "$MAIL" -name '*.xml' | wc -l)" "233"
+assert_eq "module-wide XML file count" "$(find "$MAIL" -name '*.xml' | wc -l)" "232"
 assert_eq "static OWL template XML" "$(find "$MAIL/static/src" -name '*.xml' | wc -l)" "165"
 assert_eq "views/ XML"   "$(find "$MAIL/views"  -name '*.xml' | wc -l)" "41"
 assert_eq "data/ XML"    "$(find "$MAIL/data"   -name '*.xml' | wc -l)" "15"

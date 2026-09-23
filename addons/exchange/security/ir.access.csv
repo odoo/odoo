@@ -1,0 +1,8 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_exchange_channel_internal,exchange.channel.internal,model_exchange_channel,base.group_user,permission,r,
+access_exchange_channel_manager,exchange.channel.manager,model_exchange_channel,integration.group_api_transport_manager,permission,cu,
+access_exchange_channel_admin,exchange.channel.admin,model_exchange_channel,integration.group_api_transport_admin,permission,d,
+access_exchange_transmission_internal,exchange.transmission.internal,model_exchange_transmission,base.group_user,permission,cru,
+access_exchange_transmission_admin,exchange.transmission.admin,model_exchange_transmission,integration.group_api_transport_admin,permission,d,
+rule_exchange_channel_company,Exchange Channel: Company isolation,model_exchange_channel,base.group_everyone,guard,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+rule_exchange_transmission_company,Exchange Transmission: Company isolation,model_exchange_transmission,base.group_everyone,guard,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"

@@ -18,8 +18,7 @@ Features include:
         "partner",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_tr_nilvera_einvoice_extended_security.xml",
+        "security/ir.access.csv",
         "data/l10n_tr_nilvera_einvoice_extended.tax.office.csv",
         "data/account_incoterms_data.xml",
         "data/ubl_tr_templates.xml",

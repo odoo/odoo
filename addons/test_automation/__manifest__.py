@@ -21,7 +21,7 @@ This module includes:
         "test_mail",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
     ],
     "assets": {
         "web.assets_tests": [

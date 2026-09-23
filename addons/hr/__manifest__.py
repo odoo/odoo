@@ -18,7 +18,8 @@
     ],
     "data": [
         "security/hr_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
+        "security/ir_access.xml",
         "data/approval_category_data.xml",
         "data/digest_data.xml",
         "data/res_partner_identifier_type_data.xml",

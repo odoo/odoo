@@ -1,3 +1,4 @@
+from collections import defaultdict
 from unittest.mock import patch
 
 from odoo.exceptions import AccessError
@@ -192,28 +193,40 @@ class TestAclParity(common.TransactionCase):
     } | {"gamification.karma.rank": (1, 1, 1, 1)}
 
     def _module_grants(self, group_xmlid):
-        """Return {model: perms} for this module's ACL rows on one group.
+        """Return {model: perms} for this module's permission rows on one group.
 
-        Scoped to ACL rows owned by ``gamification`` so a bridge module granting
+        Scoped to rows owned by ``gamification`` so a bridge module granting
         the same group elsewhere (hr_gamification does) cannot mask a regression.
+        An operation counts whatever the row's domain, as the access line it
+        was converted from granted it whatever the rules then narrowed, and
+        on a model the tier has a row for, the rows of the groups it implies
+        count too: the conversion does not repeat on the manager what the user
+        tier already grants.
 
         :param str group_xmlid: external id of the group to collect
         :rtype: dict[str, tuple[int, int, int, int]]
         """
         xmlids = self.env["ir.model.data"].search(
-            [("module", "=", "gamification"), ("model", "=", "ir.model.access")]
+            [("module", "=", "gamification"), ("model", "=", "ir.access")]
         )
         group = self.env.ref(group_xmlid)
-        acls = self.env["ir.model.access"].browse(xmlids.mapped("res_id"))
-        return {
-            acl.model_id.model: (
-                int(acl.perm_read),
-                int(acl.perm_write),
-                int(acl.perm_create),
-                int(acl.perm_unlink),
+        accesses = self.env["ir.access"].browse(xmlids.mapped("res_id"))
+        granting = accesses.filtered(
+            lambda access: (
+                access.kind == "permission" and access.domain != "[(0, '=', 1)]"
             )
-            for acl in acls
-            if acl.group_id == group
+        )
+        own = set(
+            granting.filtered(lambda a: a.group_id == group).model_id.mapped("model")
+        )
+        operations = defaultdict(set)
+        for access in granting:
+            model = access.model_id.model
+            if model in own and access.group_id in group.all_implied_ids:
+                operations[model].update(access.operation)
+        return {
+            model: tuple(int(letter in ops) for letter in "rucd")
+            for model, ops in operations.items()
         }
 
     def test_user_tier_grants_match_the_old_employee_rows(self):
@@ -234,17 +247,18 @@ class TestAclParity(common.TransactionCase):
         """The module owns its access tiers; no CSV row names base.* any more."""
         stale = {
             acl.model_id.model
-            for acl in self.env["ir.model.access"].browse(
+            for acl in self.env["ir.access"].browse(
                 self.env["ir.model.data"]
                 .search(
                     [
                         ("module", "=", "gamification"),
-                        ("model", "=", "ir.model.access"),
+                        ("model", "=", "ir.access"),
                     ]
                 )
                 .mapped("res_id")
             )
-            if acl.group_id
+            if acl.kind == "permission"
+            and acl.group_id
             in (
                 self.env.ref("base.group_user"),
                 self.env.ref("base.group_erp_manager"),

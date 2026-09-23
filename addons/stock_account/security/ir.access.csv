@@ -1,0 +1,11 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_account_journal_stock_manager,account.journal stock manager,account.model_account_journal,stock.group_stock_manager,permission,r,
+access_stock_product_value,product.value,model_product_value,stock.group_stock_manager,permission,cr,
+access_stock_picking_invoicing_payments_readonly,stock.picking,stock.model_stock_picking,account.group_account_readonly,permission,r,
+access_stock_picking_invoicing_payments,stock.picking,stock.model_stock_picking,account.group_account_invoice,permission,cu,
+access_stock_move_invoicing_payments_readonly,stock.move,model_stock_move,account.group_account_readonly,permission,r,
+access_stock_move_invoicing_payments,stock.move,model_stock_move,account.group_account_invoice,permission,cu,
+access_stock_avco_report_account_readonly,stock.avco.report,model_stock_avco_report,account.group_account_readonly,permission,r,
+access_stock_avco_report_stock_manager,stock.avco.report,model_stock_avco_report,stock.group_stock_manager,permission,r,
+stock_avco_report_rule,Stock Average Cost Report multi-company,model_stock_avco_report,base.group_everyone,guard,crud,"[('company_id','in', company_ids)]"
+product_value_rule,Product Value multi-company,model_product_value,base.group_everyone,guard,crud,"[('company_id','in', company_ids)]"

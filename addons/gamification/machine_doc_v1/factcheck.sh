@@ -168,8 +168,8 @@ for o in "${origins[@]}"; do
 done
 
 # Employees must not be able to write streaks — conventions.md §"What NOT to Do".
-if grep -qE '^streak_employee,[^,]*,[^,]*,[^,]*,1,0,0,0$' \
-        "$MOD/security/ir.model.access.csv"; then ok
+if grep -qE '^streak_employee,[^,]*,[^,]*,[^,]*,permission,r,$' \
+        "$MOD/security/ir.access.csv"; then ok
 else bad "conventions.md says gamification.streak is read-only for employees; the ACL changed"; fi
 
 # index.md "Not wired": quest steps' definition_id/target_goal must stay unread.

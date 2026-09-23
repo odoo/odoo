@@ -21,7 +21,7 @@ Also implements the removal strategy First Expiry First Out (FEFO) widely used, 
         "stock",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "security/stock_security.xml",
         "views/production_lot_views.xml",
         "views/product_category_views.xml",

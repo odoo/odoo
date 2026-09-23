@@ -21,8 +21,7 @@
         "tw",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_tw_edi_ecpay_security.xml",
+        "security/ir.access.csv",
         "views/res_config_setting_view.xml",
         "views/account_tax.xml",
         "views/account_move_view.xml",

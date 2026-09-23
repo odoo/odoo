@@ -13,8 +13,7 @@ social media configuration for any other module that might need it.
         "base",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/social_media_security.xml",
+        "security/ir.access.csv",
         "views/res_company_views.xml",
     ],
     "demo": [

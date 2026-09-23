@@ -593,11 +593,14 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
         ChainInherits = ChainInherits.with_user(self.base_user)
 
         inherits_model = self.env["ir.model"]._get(RelatedInherits._name)
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "AAAAAAA",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": inherits_model.id,
-                "domain_force": [("id", "in", inherits_records[1:].ids)],
+                "domain": str([("id", "in", inherits_records[1:].ids)]),
             }
         )
 

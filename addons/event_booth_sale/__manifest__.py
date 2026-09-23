@@ -13,7 +13,7 @@ Sell your event booths and track payments on sale orders.
         "event_sale",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/product_data.xml",
         "data/event_booth_category_data.xml",
         "views/sale_order_views.xml",

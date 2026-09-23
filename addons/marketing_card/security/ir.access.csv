@@ -1,0 +1,12 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_card_campaign_tag_user,card.campaign.tag.user,model_card_campaign_tag,marketing_card_group_user,permission,r,
+access_card_campaign_tag_manager,card.campaign.tag.manager,model_card_campaign_tag,marketing_card_group_manager,permission,cud,
+access_card_campaign_user,card.campaign.user,model_card_campaign,marketing_card_group_user,permission,cr,
+marketing_card_campaign_manager_own_rule,Manager may access and edit any card campaign,model_card_campaign,marketing_card_group_manager,permission,ud,
+marketing_card_campaign_user_owl_rule,Users may only edit their own card campaigns,model_card_campaign,marketing_card_group_user,permission,ud,"[('user_id', '=', user.id)]"
+access_card_template_user,card.template.user,model_card_template,marketing_card_group_user,permission,r,
+access_card_template_system,card.template.system,model_card_template,base.group_system,permission,crud,
+access_card_card_user,card.card.user,model_card_card,base.group_user,permission,cru,
+access_card_card_portal,card.card.portal,model_card_card,base.group_portal,permission,r,
+access_card_card_public,card.card.public,model_card_card,base.group_public,permission,r,
+access_card_card_manager,card.card.manager,model_card_card,marketing_card_group_manager,permission,d,

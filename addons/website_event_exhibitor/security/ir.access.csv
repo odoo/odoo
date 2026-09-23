@@ -1,0 +1,6 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_event_sponsor_type_manager,access.event.sponsor.type.manager,model_event_sponsor_type,event.group_event_manager,permission,crud,
+access_event_sponsor_manager,access.event.sponsor.manager,model_event_sponsor,event.group_event_manager,permission,cud,
+event_sponsor_rule_share_group_public,Event Sponsor: public/portal sponsor or published only,model_event_sponsor,base.group_public,permission,r,"[('website_published', '=', True)]"
+event_sponsor_rule_share_group_portal,Event Sponsor: public/portal sponsor or published only,model_event_sponsor,base.group_portal,permission,r,"[('website_published', '=', True)]"
+access_event_sponsor_public_employee,access.event.sponsor.public,model_event_sponsor,base.group_user,permission,r,

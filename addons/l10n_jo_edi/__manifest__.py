@@ -17,8 +17,7 @@
         "jo",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_jo_edi_security.xml",
+        "security/ir.access.csv",
         "views/account_move_views.xml",
         "views/report_invoice.xml",
         "views/res_config_settings_views.xml",

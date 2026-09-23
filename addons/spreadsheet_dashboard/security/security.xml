@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!--
-        duplicated for spreadsheetCellThreads in rule spreadsheet_dashboard_edition.ir_rule_spreadsheet_dashboard_threads
-        Please update aforemetioned the rule accordingly
-    -->
-    <record id="ir_rule_spreadsheet_dashboard" model="ir.rule">
-        <field name="name">Spreadsheet dashboard: groups</field>
-        <field name="model_id" ref="model_spreadsheet_dashboard" />
-        <field name="domain_force">[('group_ids', 'in', user.all_group_ids.ids)]</field>
-        <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
-    </record>
-
-    <record id="spreadsheet_dashboard_rule_company" model="ir.rule">
-        <field name="name">Dashboard multi-company</field>
-        <field name="model_id" ref="model_spreadsheet_dashboard" />
-        <field
-            name="domain_force">[('company_ids', 'in', company_ids + [False])]</field>
-    </record>
-
     <record id="res_groups_privilege_dashboard" model="res.groups.privilege">
         <field name="name">Dashboard</field>
         <field name="sequence">30</field>
@@ -33,22 +15,6 @@
         <field
             name="user_ids"
             eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]" />
-    </record>
-
-    <record id="spreadsheet_dashboard_rule_manager" model="ir.rule">
-        <field name="name">Spreadsheet dashboard: manager</field>
-        <field name="model_id" ref="model_spreadsheet_dashboard" />
-        <field name="domain_force">[(1, '=', 1)]</field>
-        <field
-            name="groups"
-            eval="[Command.link(ref('spreadsheet_dashboard.group_dashboard_manager'))]" />
-    </record>
-
-    <record id="spreadsheet_dashboard_share_create_uid_rule" model="ir.rule">
-        <field name="name">spreadsheet.dashboard.share: create uid</field>
-        <field name="model_id" ref="model_spreadsheet_dashboard_share" />
-        <field name="domain_force">[('create_uid', '=', user.id)]</field>
-        <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
     </record>
 
 </odoo>

@@ -35,8 +35,7 @@ enrolment; ``.threshold`` and ``.margin`` how sure a match must be.
         ],
     },
     "data": [
-        "security/ir.model.access.csv",
-        "security/speech_voiceprint_security.xml",
+        "security/ir.access.csv",
         "data/ir_config_parameter.xml",
         "views/speech_voiceprint_views.xml",
         "views/ir_attachment_views.xml",

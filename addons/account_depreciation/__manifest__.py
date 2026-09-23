@@ -17,8 +17,7 @@ Keeps track of depreciations, and creates corresponding journal entries.
         "resource_asset",
     ],
     "data": [
-        "security/account_asset_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/resource_asset_kind_data.xml",
         "wizards/asset_modify_views.xml",
         "views/account_account_views.xml",

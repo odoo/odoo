@@ -1,0 +1,7 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+ir_rule_crm_reveal_rule_all_group_sale_manager,CRM Reveal Rules: All Rules,model_crm_reveal_rule,sale.group_sale_manager,permission,cud,
+ir_rule_crm_reveal_rule_all,CRM Reveal Rules: All Rules,model_crm_reveal_rule,sale.group_sale_salesman_all_leads,permission,r,
+ir_rule_crm_reveal_rule_salesman,CRM Reveal Rules: Personal / Global Rules,model_crm_reveal_rule,sale.group_sale_salesman,permission,r,"['|', ('user_id', '=', user.id), ('user_id', '=', False)]"
+ir_rule_crm_reveal_view_all_group_sale_manager,CRM Reveal Views: All Views,model_crm_reveal_view,sale.group_sale_manager,permission,cud,
+ir_rule_crm_reveal_view_all,CRM Reveal Views: All Views,model_crm_reveal_view,sale.group_sale_salesman_all_leads,permission,r,
+ir_rule_crm_reveal_view_salesman,CRM Reveal Views: Personal / Global Views,model_crm_reveal_view,sale.group_sale_salesman,permission,r,"['|', ('reveal_rule_id.user_id', '=', user.id), ('reveal_rule_id.user_id', '=', False)]"

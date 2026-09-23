@@ -17,7 +17,7 @@ Maintenance orders and plans on assets and resources""",
     ],
     "data": [
         "security/maintenance.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/mail_activity_type_data.xml",
         "data/mail_message_subtype_data.xml",
         "views/maintenance_views.xml",

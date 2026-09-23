@@ -1629,15 +1629,14 @@ class TestDocumentsResName(TransactionCaseDocuments):
 
     def test_s4_res_name_hidden_for_inaccessible_record(self):
         secret = self.env["res.partner"].create({"name": "SECRET_AUDIT_PARTNER"})
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "hide secret audit partner",
                 "model_id": self.env["ir.model"]._get_id("res.partner"),
-                "domain_force": "[('name', '!=', 'SECRET_AUDIT_PARTNER')]",
-                "perm_read": True,
-                "perm_write": True,
-                "perm_create": False,
-                "perm_unlink": False,
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "ru",
+                "domain": "[('name', '!=', 'SECRET_AUDIT_PARTNER')]",
             }
         )
         doc = (

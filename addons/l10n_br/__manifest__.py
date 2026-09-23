@@ -60,8 +60,7 @@ Create electronic sales invoices with Avatax.
         "br",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_br_security.xml",
+        "security/ir.access.csv",
         "views/res_partner_views.xml",
         "data/account_tax_report_data.xml",
         "data/res_country_data.xml",

@@ -10,8 +10,7 @@
         "project",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/project_todo_security.xml",
+        "security/ir.access.csv",
         "data/todo_template.xml",
         "views/project_task_views.xml",
         "views/project_todo_menus.xml",

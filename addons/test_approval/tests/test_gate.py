@@ -60,13 +60,13 @@ class TestApprovalGate(ApprovalCommon):
         self.assertEqual(document.ship_count, 1)
 
     def _asked_by_owner(self):
-        access = self.env["ir.model.access"].create(
+        access = self.env["ir.access"].create(
             {
                 "name": "approval.test.gated requester",
                 "model_id": self.env["ir.model"]._get("approval.test.gated").id,
                 "group_id": self.env.ref("base.group_user").id,
-                "perm_read": True,
-                "perm_write": True,
+                "kind": "permission",
+                "operation": "ru",
             }
         )
         document = self._document()

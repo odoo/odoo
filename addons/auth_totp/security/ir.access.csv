@@ -1,0 +1,7 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_auth_totp_wizard,auth_totp wizard access rules,model_auth_totp_wizard,base.group_user,permission,crud,
+api_key_user_group_user,Users can read and delete their own keys,model_auth_totp_device,base.group_user,permission,r,"[('user_id', '=', user.id)]"
+api_key_admin,Administrators can view user keys to revoke them,model_auth_totp_device,base.group_system,permission,r,
+api_key_user_group_portal,Users can read and delete their own keys,model_auth_totp_device,base.group_portal,permission,r,"[('user_id', '=', user.id)]"
+access_auth_totp_rate_limit_log,access_auth_totp_rate_limit_log,model_auth_totp_rate_limit_log,base.group_user,permission,r,"[(0, '=', 1)]"
+rule_auth_totp_wizard,Users can only access their own wizard,model_auth_totp_wizard,base.group_everyone,guard,crud,"[('user_id', '=', user.id)]"

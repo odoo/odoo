@@ -7,6 +7,8 @@ from odoo.orm.domain import Domain
 from odoo.orm.fields.relational._base import PENDING_SCOPE_KEY
 from odoo.tests import TransactionCase, new_test_user, tagged
 
+from odoo.addons.base.tests.common import make_guard_row
+
 
 @tagged("post_install", "-at_install")
 class TestX2manyCacheScope(TransactionCase):
@@ -25,17 +27,14 @@ class TestX2manyCacheScope(TransactionCase):
                 {"name": "scope hidden", "parent_id": cls.parent.id},
             ]
         )
-        cls.env["ir.rule"].create(
-            {
-                "name": "scope: no hidden partners",
-                "model_id": cls.env["ir.model"]._get_id("res.partner"),
-                "domain_force": "[('name', 'not like', 'scope hidden')]",
-                "groups": [
-                    Command.link(cls.env.ref("base.group_user").id),
-                    Command.link(cls.env.ref("base.group_partner_manager").id),
-                ],
-            }
-        )
+        for group in ("base.group_user", "base.group_partner_manager"):
+            make_guard_row(
+                cls.env,
+                "res.partner",
+                "[('name', 'not like', 'scope hidden')]",
+                group,
+                name="scope: no hidden partners",
+            )
         cls.env.invalidate_all()
 
     def _as_user(self):
@@ -152,13 +151,12 @@ class TestX2manyScopeKey(TransactionCase):
             groups="base.group_user",
             company_ids=[Command.set((company_a | company_b).ids)],
         )
-        self.env["ir.rule"].create(
-            {
-                "name": "scope evict: companies by name",
-                "model_id": self.env["ir.model"]._get_id("res.company"),
-                "domain_force": "[('name', '!=', False)]",
-                "groups": [Command.link(self.env.ref("base.group_user").id)],
-            }
+        make_guard_row(
+            self.env,
+            "res.company",
+            "[('name', '!=', False)]",
+            "base.group_user",
+            name="scope evict: companies by name",
         )
         allowed = [company_a.id, company_b.id]
         env = self.env(user=user, context={"allowed_company_ids": allowed})
@@ -201,13 +199,12 @@ class TestX2manyScopeInvariant(TransactionCase):
             ("res.partner", "walk hidden"),
             ("res.partner.tag", "walk hidden"),
         ):
-            cls.env["ir.rule"].create(
-                {
-                    "name": f"walk: no hidden {model}",
-                    "model_id": cls.env["ir.model"]._get_id(model),
-                    "domain_force": f"[('name', 'not like', '{hidden}')]",
-                    "groups": [Command.link(cls.env.ref("base.group_user").id)],
-                }
+            make_guard_row(
+                cls.env,
+                model,
+                f"[('name', 'not like', '{hidden}')]",
+                "base.group_user",
+                name=f"walk: no hidden {model}",
             )
 
     def _scopes(self):

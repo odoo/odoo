@@ -322,12 +322,11 @@ Selection field options.
 One row says who may do what to which records: a `permission` adds its
 domain's records to what its group reaches (permissions are OR-ed), a `guard`
 is AND-ed and no permission widens it. Every model reads its access from these
-rows. Until `ir.model.access` and `ir.rule` are converted, `_get_all_access`
-also holds the rows `ir_access_convert.synthesize()` makes of them (read in one
-statement by `_read_legacy_tables`, or through the ORM by `_read_legacy_records`
-on the in-memory tier), so the old APIs (`ir.model.access.check`,
-`ir.rule._get_domain_accessible_records`, their error builders) answer the same
-decision.
+rows, which modules ship in `security/ir.access.csv`; a model under a
+table-inheritance root is bound by the root's rows too. `ir.model.access` and
+`ir.rule` hold no rows and refuse new ones; their APIs
+(`ir.model.access.check`, `ir.rule._get_domain_accessible_records`, the error
+builders) answer the same decision.
 
 **Fields:**
 - `name` (Char, required), `active` (Boolean, default=True), `note` (Html)
@@ -339,8 +338,9 @@ decision.
 - `is_standard` (Boolean, computed, searchable) — the row comes from a module
 
 **Key Methods:**
-- `_get_all_access()` — every active row by model, with the rows synthesized from `ir.model.access` and `ir.rule`, literal domains pre-parsed (ormcache stable, dropped by any write to the four tables or to a group); refuses a cycle of `'access'` conditions
-- `_check_domain()` — a domain validates against the registry, never tests the user's groups, and closes no `'access'` cycle
+- `_get_all_access()` — every active row by model, literal domains pre-parsed (ormcache stable, dropped by any write to the rows or to a group); refuses a cycle of `'access'` conditions
+- `_check_domain()` — a domain validates against the registry, reads the user's groups only in ways more groups can only widen, and closes no `'access'` cycle
+- `_load_records()` — refuses while `ir.model.data` still maps an external id to an access line or a rule: base's 1.97 migration has not run
 - `customize()` — archive a module's row and open an editable copy
 - `_make_model_access_error()`, `_make_record_access_error()` — the AccessError texts, with the failing rows in debug mode
 

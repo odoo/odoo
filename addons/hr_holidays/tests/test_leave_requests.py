@@ -3077,65 +3077,39 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             leave_form.holiday_status_id = self.holidays_type_1
 
     def test_calendar_event_create_access_rights(self):
-        self.env["ir.model.access"].create(
+        portal = self.env.ref("base.group_portal").id
+        self.env["ir.access"].create(
             [
                 {
                     "name": "Portal can read mail.activity.type",
                     "model_id": self.env.ref("mail.model_mail_activity_type").id,
-                    "group_id": self.env.ref("base.group_portal").id,
-                    "perm_read": True,
-                    "perm_create": False,
-                    "perm_write": False,
-                    "perm_unlink": False,
+                    "group_id": portal,
+                    "kind": "permission",
+                    "operation": "r",
                 },
-                {
-                    "name": "Portal can read mail.activity",
-                    "model_id": self.env.ref("mail.model_mail_activity").id,
-                    "group_id": self.env.ref("base.group_portal").id,
-                    "perm_read": True,
-                    "perm_create": False,
-                    "perm_write": False,
-                    "perm_unlink": False,
-                },
-                {
-                    "name": "Portal all CRUD on calendar.event",
-                    "model_id": self.env.ref("calendar.model_calendar_event").id,
-                    "group_id": self.env.ref("base.group_portal").id,
-                    "perm_read": True,
-                    "perm_create": True,
-                    "perm_write": True,
-                    "perm_unlink": True,
-                },
-                {
-                    "name": "Portal all CRUD on calendar.attendee",
-                    "model_id": self.env.ref("calendar.model_calendar_attendee").id,
-                    "group_id": self.env.ref("base.group_portal").id,
-                    "perm_read": True,
-                    "perm_create": True,
-                    "perm_write": True,
-                    "perm_unlink": True,
-                },
-            ]
-        )
-        self.env["ir.rule"].create(
-            [
                 {
                     "name": "Portal own mail activity",
                     "model_id": self.env.ref("mail.model_mail_activity").id,
-                    "groups": [(4, self.env.ref("base.group_portal").id)],
-                    "domain_force": "['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]",
+                    "group_id": portal,
+                    "kind": "permission",
+                    "operation": "r",
+                    "domain": "['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]",
                 },
                 {
                     "name": "Portal own calendar events",
                     "model_id": self.env.ref("calendar.model_calendar_event").id,
-                    "groups": [(4, self.env.ref("base.group_portal").id)],
-                    "domain_force": "[('partner_ids', 'in', user.partner_id.id)]",
+                    "group_id": portal,
+                    "kind": "permission",
+                    "operation": "crud",
+                    "domain": "[('partner_ids', 'in', user.partner_id.id)]",
                 },
                 {
                     "name": "Portal own calendar attendees",
                     "model_id": self.env.ref("calendar.model_calendar_attendee").id,
-                    "groups": [(4, self.env.ref("base.group_portal").id)],
-                    "domain_force": "[('partner_id', '=', user.partner_id.id)]",
+                    "group_id": portal,
+                    "kind": "permission",
+                    "operation": "crud",
+                    "domain": "[('partner_id', '=', user.partner_id.id)]",
                 },
             ]
         )

@@ -36,8 +36,7 @@ Key API:
         "product",
     ],
     "data": [
-        "security/account_tax_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
     ],
     "assets": {
         "web.assets_backend": [

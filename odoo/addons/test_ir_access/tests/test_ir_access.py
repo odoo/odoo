@@ -2,7 +2,7 @@ import re
 from contextlib import contextmanager
 
 from odoo import Command
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import TransactionCase
 from odoo.tools import mute_logger
 
@@ -272,14 +272,30 @@ class TestIrAccess(TestIrAccessCase):
 
     def test_a_domain_that_tests_the_user_s_groups_is_refused(self):
         for domain in (
-            "[('id', 'in', user.all_group_ids.ids)]",
             "[('id', '!=', user.has_group('base.group_system') and 0 or 1)]",
-            "[('val', 'in', user.group_ids.ids)]",
+            "[('val', 'not in', user.group_ids.ids)]",
+            "['!', ('id', 'in', user.all_group_ids.ids)]",
+            "[('id', '=', 0)] if user.has_group('base.group_system') else []",
         ):
             with (
                 self.subTest(domain=domain),
                 self.assertRaisesRegex(ValidationError, "tests the user's groups"),
             ):
+                self.make_access(group=self.group1, domain=domain)
+
+    def test_a_domain_that_only_widens_with_the_user_s_groups_is_accepted(self):
+        # membership in the ids of the user's groups, and a domain a group's
+        # members are exempt from, give more records to more groups
+        for domain in (
+            "[('id', 'in', user.all_group_ids.ids)]",
+            "[('val', 'in', user.group_ids.ids)]",
+            "[] if user.has_group('base.group_system') else [('id', '=', 0)]",
+            (
+                "(['|', ('id', '=', 1)] if user.has_group('base.group_system') else [])"
+                " + [('id', '=', 2)]"
+            ),
+        ):
+            with self.subTest(domain=domain):
                 self.make_access(group=self.group1, domain=domain)
 
     def test_an_invalid_domain_is_refused(self):
@@ -460,87 +476,59 @@ class TestDelegatedAccess(TestIrAccessCase):
             forbidden.with_user(self.user).check_access("read")
 
 
-class TestConvertedAccess(TestIrAccessCase):
-    """ir.model.access lines and ir.rule records are read as the ir.access rows
-    ir_access_convert makes of them, until the tables themselves are
-    converted."""
+class TestRetiredAccessTables(TestIrAccessCase):
+    """ir.model.access and ir.rule stay only for the callers that still name
+    them: every access is an ir.access row, and base's 1.97 migration converted
+    what the two tables held."""
 
-    def acl(self, group, perms="r"):
-        return self.env["ir.model.access"].create(
+    def test_an_access_line_cannot_be_created(self):
+        with self.assertRaisesRegex(UserError, "ir.access"):
+            self.env["ir.model.access"].create(
+                {
+                    "name": "acl",
+                    "model_id": self.env["ir.model"]._get_id(self.MODEL),
+                    "group_id": self.group1.id,
+                    "perm_read": True,
+                }
+            )
+
+    def test_a_record_rule_cannot_be_created(self):
+        with self.assertRaisesRegex(UserError, "ir.access"):
+            self.env["ir.rule"].create(
+                {
+                    "name": "rule",
+                    "model_id": self.env["ir.model"]._get_id(self.MODEL),
+                    "domain_force": "[]",
+                }
+            )
+
+    def test_rows_do_not_load_while_an_id_still_names_an_old_record(self):
+        self.env["ir.model.data"].create(
             {
-                "name": f"acl {group.name}",
-                "model_id": self.env["ir.model"]._get_id(self.MODEL),
-                "group_id": group.id,
-                "perm_read": "r" in perms,
-                "perm_write": "w" in perms,
-                "perm_create": "c" in perms,
-                "perm_unlink": "u" in perms,
+                "module": "test_ir_access",
+                "name": "an_unconverted_rule",
+                "model": "ir.rule",
+                "res_id": 1,
             }
         )
-
-    def rule(self, records, group=None, name="rule", **values):
-        return self.env["ir.rule"].create(
-            {
-                "name": name,
+        data = {
+            "xml_id": "test_ir_access.a_row_of_a_module_file",
+            "values": {
+                "name": "row",
                 "model_id": self.env["ir.model"]._get_id(self.MODEL),
-                "groups": [Command.set(group.ids)] if group else [],
-                "domain_force": str([("id", "in", records.ids)]),
-                **values,
-            }
-        )
+                "group_id": self.group1.id,
+                "kind": "permission",
+                "operation": "r",
+            },
+        }
+        with self.assertRaisesRegex(UserError, r"-u base"):
+            self.env["ir.access"]._load_records([data])
 
-    def test_an_access_line_is_a_permission_of_its_group(self):
-        self.assertFalse(self.model.has_access("read"))
-        self.acl(self.group3)
-        self.assertFalse(self.model.has_access("read"))
-        self.acl(self.group1)
-        self.assertAccess(self.records)
-
-    def test_a_group_s_rule_narrows_its_own_access_line_only(self):
-        self.acl(self.group1)
-        self.rule(self.mario, self.group1)
-        self.assertAccess(self.mario)
-        # the old engine OR-ed the grant rules of every group the user holds,
-        # so a second group with its own access line and no rule still read
-        # only Mario; converted, that line is a permission of its own
-        self.acl(self.group2)
-        self.assertAccess(self.records)
-
-    def test_a_global_rule_is_a_guard(self):
-        self.acl(self.group1)
-        self.acl(self.group2)
-        self.rule(self.records - self.bowser, name="no villains")
-        self.assertAccess(self.records - self.bowser)
-
-    def test_a_rule_written_after_load_changes_the_decision(self):
-        self.acl(self.group1)
-        self.assertAccess(self.records)
-        rule = self.rule(self.mario + self.luigi)
-        self.assertAccess(self.mario + self.luigi)
-        rule.domain_force = str([("id", "=", self.peach.id)])
-        self.assertAccess(self.peach)
-        rule.active = False
-        self.assertAccess(self.records)
-
-    def test_an_implication_written_after_load_changes_the_conversion(self):
-        self.acl(self.group1)
-        self.rule(self.mario, self.group3)
-        self.assertAccess(self.records)
-        self.group1.implied_ids = [Command.link(self.group3.id)]
-        self.assertAccess(self.mario)
-
-    def test_the_failing_rule_is_blamed_by_name(self):
-        self.acl(self.group1, "rw")
-        self.rule(self.mario, self.group1, name="only mario", perm_read=False)
+    def test_the_failing_guard_is_blamed_by_name(self):
+        self.make_access(group=self.group1, operation="ru")
+        self.make_guard("only mario", records=self.mario, operation="u")
         with (
             self.debug_mode(),
-            self.assertAccessError(r"Blame the following rules:\s*- only mario"),
+            self.assertAccessError(r"Blame the following accesses:\s*- only mario"),
         ):
             self.luigi.check_access("write")
-
-    def test_the_tables_and_the_records_read_alike(self):
-        self.acl(self.group1)
-        self.rule(self.mario, self.group1 + self.group2)
-        self.group1.implied_ids = [Command.link(self.group3.id)]
-        store = self.env["ir.access"]
-        self.assertEqual(store._read_legacy_tables(), store._read_legacy_records())

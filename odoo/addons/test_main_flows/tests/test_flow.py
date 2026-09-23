@@ -154,10 +154,13 @@ class TestUi(BaseTestUi):
             }
         )
 
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "multiCompany rule",
-                "domain_force": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
+                "domain": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
                 "model_id": self.env["ir.model"]._get("test.model_multicompany").id,
             }
         )

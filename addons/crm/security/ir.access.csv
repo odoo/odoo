@@ -1,0 +1,31 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+mail_plan_rule_group_sale_manager_lead,Manager can manage lead plans,mail.model_mail_activity_plan,sale.group_sale_manager,permission,cud,"[('res_model', '=', 'crm.lead')]"
+mail_plan_templates_rule_group_sale_manager_lead,Manager can manage lead plan templates,mail.model_mail_activity_plan_template,sale.group_sale_manager,permission,cud,"[('plan_id.res_model', '=', 'crm.lead')]"
+crm_rule_all_lead_group_sale_manager,All Leads,model_crm_lead,sale.group_sale_manager,permission,d,
+crm_rule_personal_lead,Personal Leads,model_crm_lead,sale.group_sale_salesman,permission,cru,"['|',('user_id','=',user.id),('user_id','=',False)]"
+crm_rule_all_lead,All Leads,model_crm_lead,sale.group_sale_salesman_all_leads,permission,cru,
+access_crm_stage,crm.stage,model_crm_stage,base.group_user,permission,r,
+access_crm_stage_manager,crm.stage,model_crm_stage,sale.group_sale_manager,permission,cud,
+access_res_partner,res.partner.crm.user,base.model_res_partner,sale.group_sale_salesman,permission,cu,
+access_res_partner_tag,res.partner.tag.crm.user,base.model_res_partner_tag,sale.group_sale_salesman,permission,cu,
+access_crm_lost_reason_manager,crm.lost.reason.manager,model_crm_lost_reason,sale.group_sale_manager,permission,cud,
+access_crm_lost_reason_user,crm.lost.reason.user,model_crm_lost_reason,base.group_user,permission,r,
+access_crm_activity_report_user,crm.activity.report.user,model_crm_activity_report,base.group_user,permission,r,"[(0, '=', 1)]"
+crm_activity_report_rule_all_activities,All Activities,model_crm_activity_report,sale.group_sale_salesman_all_leads,permission,r,
+crm_activity_report_rule_personal_activities,Personal Activities,model_crm_activity_report,sale.group_sale_salesman,permission,r,"['|',('user_id','=',user.id),('user_id','=',False)]"
+access_calendar_event_type_sale_manager,calendar.event.type.manager,calendar.model_calendar_event_type,sale.group_sale_manager,permission,cu,
+access_crm_lead_scoring_frequency,access_crm_lead_scoring_frequency,model_crm_lead_scoring_frequency,sale.group_sale_salesman,permission,r,
+access_crm_lead_scoring_frequency_system,access_crm_lead_scoring_frequency_system,model_crm_lead_scoring_frequency,base.group_system,permission,r,
+access_crm_lead_scoring_frequency_field,access_crm_lead_scoring_frequency_field,model_crm_lead_scoring_frequency_field,sale.group_sale_salesman,permission,r,
+access_crm_lead_scoring_frequency_field_system,access_crm_lead_scoring_frequency_field_system,model_crm_lead_scoring_frequency_field,base.group_system,permission,r,
+access_crm_lead_lost,access.crm.lead.lost,model_crm_lead_lost,sale.group_sale_salesman,permission,cru,
+access_crm_lead2opportunity_partner,access.crm.lead2opportunity.partner,model_crm_lead2opportunity_partner,sale.group_sale_salesman,permission,cru,
+access_crm_lead2opportunity_partner_mass,access.crm.lead2opportunity.partner.mass,model_crm_lead2opportunity_partner_mass,sale.group_sale_salesman,permission,cru,
+access_crm_merge_opportunity,access.crm.merge.opportunity,model_crm_merge_opportunity,sale.group_sale_salesman,permission,cru,
+crm_recurring_plan_access_manager,crm.recurring.plan.access.manager,model_crm_recurring_plan,sale.group_sale_manager,permission,cud,
+crm_recurring_plan_access_salesman,crm.recurring.plan.access.salesman,model_crm_recurring_plan,sale.group_sale_salesman,permission,r,
+crm_lead_pls_update_access_system,crm.lead.pls.update.access.system,model_crm_lead_pls_update,base.group_erp_manager,permission,crud,
+mail_plan_rule_group_sale_manager,Manager can manage sale order plans,mail.model_mail_activity_plan,sale.group_sale_manager,permission,cud,"[('res_model', '=', 'sale.order')]"
+mail_plan_template_rule_group_sale_manager,Manager can manage sale order plan templates,mail.model_mail_activity_plan_template,sale.group_sale_manager,permission,cud,"[('plan_id.res_model', '=', 'sale.order')]"
+crm_lead_company_rule,CRM Lead Multi-Company,model_crm_lead,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+crm_activity_report_rule_multi_company,CRM Lead Multi-Company,model_crm_activity_report,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

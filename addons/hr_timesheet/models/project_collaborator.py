@@ -7,14 +7,6 @@ class ProjectCollaborator(models.Model):
     @api.model
     def _update_project_sharing_portal_rules(self, active):
         super()._update_project_sharing_portal_rules(active)
-        access_timesheet_portal = self.env.ref(
-            "hr_timesheet.access_account_analytic_line_portal_user"
-        ).sudo()
-        if access_timesheet_portal.active != active:
-            access_timesheet_portal.write({"active": active})
-
-        timesheet_portal_ir_rule = self.env.ref(
-            "hr_timesheet.timesheet_line_rule_portal_user"
-        ).sudo()
-        if timesheet_portal_ir_rule.active != active:
-            timesheet_portal_ir_rule.write({"active": active})
+        access = self.env.ref("hr_timesheet.timesheet_line_rule_portal_user").sudo()
+        if access.active != active:
+            access.write({"active": active})

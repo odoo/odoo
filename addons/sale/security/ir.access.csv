@@ -1,0 +1,66 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+payment_token_salesman_rule,Access every payment token,payment.model_payment_token,group_sale_salesman,permission,r,
+access_account_analytic_account_salesman,account_analytic_account salesman,analytic.model_account_analytic_account,group_sale_salesman,permission,cu,
+account_invoice_send_single_rule_see_personal,Personal Invoice Send and Print (single mode),account.model_account_move_send_wizard,group_sale_salesman,permission,cru,"[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), ('move_id.invoice_user_id', 'in', (user.id, False))]"
+account_invoice_send_single_rule_see_all,All Invoice Send and Print (single mode),account.model_account_move_send_wizard,group_sale_salesman_all_leads,permission,cru,"[('move_id.move_type', 'in', ('out_invoice', 'out_refund'))]"
+account_invoice_send_batch_rule_see_personal,Personal Invoice Send and Print (batch mode),account.model_account_move_send_batch_wizard,group_sale_salesman,permission,cru,"[('move_ids.move_type', 'in', ('out_invoice', 'out_refund')), ('move_ids.invoice_user_id', 'in', (user.id, False))]"
+account_invoice_send_batch_rule_see_all,All Invoice Send and Print (batch mode),account.model_account_move_send_batch_wizard,group_sale_salesman_all_leads,permission,cru,"[('move_ids.move_type', 'in', ('out_invoice', 'out_refund'))]"
+access_sale_account_journal,account.journal sale order.user,account.model_account_journal,group_sale_salesman,permission,r,
+account_invoice_rule_see_personal,Personal Invoices,account.model_account_move,group_sale_salesman,permission,r,"[('move_type', 'in', ('out_invoice', 'out_refund')), ('invoice_user_id', 'in', (user.id, False))]"
+account_invoice_rule_see_all,All Invoices,account.model_account_move,group_sale_salesman_all_leads,permission,r,"[('move_type', 'in', ('out_invoice', 'out_refund'))]"
+account_invoice_line_rule_see_personal,Personal Invoice Lines,account.model_account_move_line,group_sale_salesman,permission,r,"[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), ('move_id.invoice_user_id', 'in', (user.id, False))]"
+account_invoice_line_rule_see_all,All Invoice Lines,account.model_account_move_line,group_sale_salesman_all_leads,permission,r,"[('move_id.move_type', 'in', ('out_invoice', 'out_refund'))]"
+access_account_partial_reconcile_salesman,account_partial_reconcile salesman,account.model_account_partial_reconcile,group_sale_salesman,permission,r,
+access_res_partner_sale_manager,res.partner.sale.manager,base.model_res_partner,group_sale_manager,permission,cu,
+access_mail_activity_type_sale_manager,mail.activity.type.sale.manager,mail.model_mail_activity_type,group_sale_manager,permission,cud,
+access_product_pricelist_sale_manager,product.pricelist salemanager,product.model_product_pricelist,group_sale_manager,permission,cud,
+access_product_pricelist_item_sale_manager,product.pricelist.item salemanager,product.model_product_pricelist_item,group_sale_manager,permission,cud,
+access_product_product_attribute_custom_value_sale_user,product.attribute.custom value salesman,product.model_product_attribute_custom_value,group_sale_salesman,permission,cud,
+sale_order_rule_portal,Portal Personal Quotations/Sales Orders,model_sale_order,base.group_portal,permission,r,"[('partner_id', 'child_of', [user.commercial_partner_id.id])]"
+access_sale_order_readonly,sale.order.accountant,model_sale_order,account.group_account_readonly,permission,r,
+access_sale_order_invoicing_payments,sale.order,model_sale_order,account.group_account_invoice,permission,u,
+sale_order_personal_rule,Personal Orders,model_sale_order,group_sale_salesman,permission,cru,"[('user_id', 'in', (user.id, False))]"
+sale_order_see_all_rule,All Orders,model_sale_order,group_sale_salesman_all_leads,permission,cu,
+sale_order_see_all_rule_group_sale_manager,All Orders,model_sale_order,group_sale_manager,permission,d,
+sale_order_line_rule_portal,Portal Sales Orders Line,model_sale_order_line,base.group_portal,permission,r,"[('partner_id', 'child_of', [user.commercial_partner_id.id])]"
+access_sale_order_line_readonly,sale.order.line accountant,model_sale_order_line,account.group_account_readonly,permission,r,
+access_sale_order_line_invoicing_payments,sale.order.line,model_sale_order_line,account.group_account_invoice,permission,u,
+sale_order_line_personal_rule,Personal Order Lines,model_sale_order_line,group_sale_salesman,permission,crud,"[('user_id', 'in', (user.id, False))]"
+sale_order_line_see_all,All Orders Lines,model_sale_order_line,group_sale_salesman_all_leads,permission,cud,
+sale_order_report_personal_rule,Personal Orders Analysis,model_sale_report,group_sale_salesman,permission,r,"[('user_id', 'in', (user.id, False))]"
+access_payment_link_wizard_sale,access.payment.link.wizard.sale,payment.model_payment_link_wizard,group_sale_salesman,permission,cru,
+access_sale_advance_payment_inv,access.sale.advance.payment.inv,model_sale_advance_payment_inv,group_sale_salesman,permission,cru,
+access_sale_mass_cancel_orders,access.sale.mass.cancel.orders,model_sale_mass_cancel_orders,group_sale_salesman,permission,cru,
+access_sale_order_discount,access_sale_order_discount,model_sale_order_discount,group_sale_salesman,permission,cru,
+mail_plan_rule_group_sale_manager,Manager can manage sale order plans,mail.model_mail_activity_plan,group_sale_manager,permission,cud,"[('res_model', '=', 'sale.order')]"
+mail_plan_template_rule_group_sale_manager,Manager can manage sale order plan templates,mail.model_mail_activity_plan_template,group_sale_manager,permission,cud,"[('plan_id.res_model', '=', 'sale.order')]"
+access_sale_invoice_line_match,sale.invoice.line.match user,model_sale_invoice_line_match,group_sale_salesman,permission,r,
+access_sale_invoice_line_match_readonly,sale.invoice.line.match readonly,model_sale_invoice_line_match,account.group_account_readonly,permission,r,
+access_sale_invoice_line_match_invoicing_payments,sale.invoice.line.match invoice,model_sale_invoice_line_match,account.group_account_invoice,permission,u,
+access_sale_invoice_match,sale.invoice.match user,model_sale_invoice_match,group_sale_salesman,permission,r,
+access_invoice_to_so_wizard,invoice.to.so.wizard user,model_invoice_to_so_wizard,group_sale_salesman,permission,cru,
+access_sale_order_line_price_history,access.sale.order.line.price.history,model_sale_order_line_price_history,group_sale_salesman,permission,crud,
+access_sale_order_line_price_history_line,access.sale.order.line.price.history.line,model_sale_order_line_price_history_line,group_sale_salesman,permission,crud,
+sale_order_rule_readonly,Read-only: all sales orders,model_sale_order,group_sale_readonly,permission,r,
+sale_order_line_rule_readonly,Read-only: all sales order lines,model_sale_order_line,group_sale_readonly,permission,r,
+sale_order_report_rule_readonly,Read-only: all sales analysis,model_sale_report,group_sale_readonly,permission,r,
+account_invoice_rule_readonly,Read-only: all customer invoices,account.model_account_move,group_sale_readonly,permission,r,"[('move_type', 'in', ('out_invoice', 'out_refund'))]"
+account_invoice_line_rule_readonly,Read-only: all customer invoice lines,account.model_account_move_line,group_sale_readonly,permission,r,"[('move_id.move_type', 'in', ('out_invoice', 'out_refund'))]"
+access_account_partial_reconcile_sale_readonly,account.partial.reconcile.sale.readonly,account.model_account_partial_reconcile,group_sale_readonly,permission,r,
+access_account_payment_sale_readonly,account.payment.sale.readonly,account.model_account_payment,group_sale_readonly,permission,r,
+access_sale_order_template,sale.order.template,model_sale_order_template,group_sale_salesman,permission,r,
+access_sale_order_template_manager,sale.order.template,model_sale_order_template,group_sale_manager,permission,cud,
+access_sale_order_template_system,sale.order.template,model_sale_order_template,base.group_system,permission,r,
+access_sale_order_template_line,sale.order.template.line,model_sale_order_template_line,group_sale_salesman,permission,r,
+access_sale_order_template_line_manager,sale.order.template.line,model_sale_order_template_line,group_sale_manager,permission,cud,
+sale_config_rule_company_group_user,sale.config: the reader's companies,model_sale_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+sale_config_rule_erp_manager,sale.config: every company for an access-rights manager,model_sale_config,base.group_erp_manager,permission,r,
+sale_config_rule_erp_manager_group_system,sale.config: every company for an access-rights manager,model_sale_config,base.group_system,permission,cud,
+sale_order_comp_rule,Sales Order multi-company,model_sale_order,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+sale_order_line_comp_rule,Sales Order Line multi-company,model_sale_order_line,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+sale_order_report_comp_rule,Sales Order Report multi-company,model_sale_report,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+sale_order_template_rule_company,Quotation Template multi-company,model_sale_order_template,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+sale_advance_payment_inv_rule,Sales Advance Payment Invoice Rule,model_sale_advance_payment_inv,base.group_everyone,guard,crud,"[('create_uid', '=', user.id)]"
+sale_mass_cancel_orders_rule,Sales Mass Cancel Orders: access only your own wizard,model_sale_mass_cancel_orders,base.group_everyone,guard,crud,"[('create_uid', '=', user.id)]"
+sale_order_line_price_history_rule,Sale Order Line Price History: access only your own wizard,model_sale_order_line_price_history,base.group_everyone,guard,crud,"[('create_uid', '=', user.id)]"
+sale_order_line_price_history_line_rule,Sale Order Line Price History Line: access only your own wizard,model_sale_order_line_price_history_line,base.group_everyone,guard,crud,"[('create_uid', '=', user.id)]"

@@ -113,16 +113,16 @@ class TestWizardIsolation(TransactionCaseDocuments):
         `literal_eval` cannot evaluate `user.id`, so it raised on exactly the
         rules being looked for and reported every wizard as unprotected.
         """
-        Rule = self.env["ir.rule"].sudo()
-        eval_context = Rule._eval_context()
+        Access = self.env["ir.access"].sudo()
+        eval_context = Access._eval_context()
         owned = set()
-        for rule in Rule.search([("active", "=", True)]):
-            if not rule.domain_force:
+        for rule in Access.search([("active", "=", True)]):
+            if not rule.domain:
                 continue
             leaves = []
             with contextlib.suppress(Exception):
                 # A rule this test cannot evaluate is not a rule it can credit.
-                leaves = safe_eval(rule.domain_force, dict(eval_context))
+                leaves = safe_eval(rule.domain, dict(eval_context))
             for leaf in leaves:
                 if (
                     isinstance(leaf, list | tuple)

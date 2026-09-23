@@ -1,0 +1,13 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_device_profile_user,device.profile user,model_device_profile,group_device_user,permission,r,
+access_device_profile_manager,device.profile manager,model_device_profile,group_device_manager,permission,cud,
+access_device_device_user,device.device user,model_device_device,group_device_user,permission,r,
+access_device_device_manager,device.device manager,model_device_device,group_device_manager,permission,cud,
+access_device_kind_user,device.kind user,model_device_kind,group_device_user,permission,r,
+access_device_kind_manager,device.kind manager,model_device_kind,group_device_manager,permission,cud,
+access_device_data_log_user,device.data.log user,model_device_data_log,group_device_user,permission,r,
+access_device_data_log_manager,device.data.log manager,model_device_data_log,group_device_manager,permission,cud,
+access_device_data_log_report_user,device.data.log.report user,model_device_data_log_report,group_device_user,permission,r,
+device_device_company_rule,Remote Device: multi-company,model_device_device,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+device_data_log_company_rule,Remote Data Point: multi-company,model_device_data_log,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+device_data_log_report_company_rule,Remote Data Log Report: multi-company,model_device_data_log_report,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

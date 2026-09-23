@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+ir_rule_event_booth_public_group_public,Event Booth: public/portal: published read,event_booth.model_event_booth,base.group_public,permission,r,"[('event_id.website_published', '=', True)]"
+ir_rule_event_booth_public_group_portal,Event Booth: public/portal: published read,event_booth.model_event_booth,base.group_portal,permission,r,"[('event_id.website_published', '=', True)]"
+access_event_booth_employee,event.booth.public,event_booth.model_event_booth,base.group_user,permission,r,
+access_event_booth_category_public,event.booth.category.public,event_booth.model_event_booth_category,base.group_public,permission,r,

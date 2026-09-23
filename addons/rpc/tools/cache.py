@@ -13,7 +13,7 @@ import hashlib
 INDEX_NAME_PREFIX = "odoo-doc-index-"
 
 #: The cache groups whose sequence gates what a user may see. `stable` is what
-#: an ``ir.model.access`` / ``ir.model.fields`` write moves and `groups` what a
+#: an ``ir.access`` / ``ir.model.fields`` write moves and `groups` what a
 #: ``res.groups`` write moves; between them they cover every input to the
 #: `has_access` / `_has_field_access` filtering the documents apply.
 #:

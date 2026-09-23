@@ -1,0 +1,7 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_peppol_registration,access.peppol.registration,model_peppol_registration,account.group_account_invoice,permission,crud,
+access_peppol_config_wizard,access.peppol.config.wizard,model_peppol_config_wizard,account.group_account_invoice,permission,crud,
+account_peppol_service_system,account_peppol.service,model_account_peppol_service,account.group_account_invoice,permission,crud,
+account_peppol_config_rule_company_group_user,account_peppol.config: the reader's companies,model_account_peppol_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+account_peppol_config_rule_erp_manager,account_peppol.config: every company for an access-rights manager,model_account_peppol_config,base.group_erp_manager,permission,r,
+account_peppol_config_rule_erp_manager_group_system,account_peppol.config: every company for an access-rights manager,model_account_peppol_config,base.group_system,permission,cud,

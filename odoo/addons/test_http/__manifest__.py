@@ -12,7 +12,7 @@
     ],
     "data": [
         "data.xml",
-        "ir.model.access.csv",
+        "security/ir.access.csv",
         "views.xml",
     ],
 }

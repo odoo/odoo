@@ -12,7 +12,7 @@
     ],
     "data": [
         "security/marketing_card_groups.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/card_card_templates.xml",
         "data/card_template_data.xml",
         "data/utm_source_data.xml",

@@ -39,7 +39,7 @@ answers False until it ends. ``action_analyse_speech`` runs it again.
         "extract_ai",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/gateway_ml_purpose_data.xml",
         "views/speech_commitment_views.xml",
         "views/speech_question_views.xml",

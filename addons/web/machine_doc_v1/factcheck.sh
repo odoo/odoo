@@ -422,8 +422,8 @@ cwv_model_registered=$(grep -c "from . import web_cwv_metric" "$WEB/models/__ini
 assert_eq "web_cwv_metric registered in models/__init__.py" "$cwv_model_registered" "1"
 cwv_views_in_manifest=$(grep -c "web_cwv_metric_views.xml" "$WEB/__manifest__.py" 2>/dev/null)
 assert_eq "cwv views XML registered in manifest" "$cwv_views_in_manifest" "1"
-cwv_acl=$(grep -c "model_web_cwv_metric" "$WEB/security/ir.model.access.csv" 2>/dev/null)
-assert_eq "cwv ACL row in ir.model.access.csv" "$cwv_acl" "1"
+cwv_acl=$(grep -c "model_web_cwv_metric" "$WEB/security/ir.access.csv" 2>/dev/null)
+assert_eq "cwv access row in ir.access.csv" "$cwv_acl" "1"
 
 # Phase 3: sampling + retention.
 # Anchored on `def ` like every neighbour here: the bare identifier also matched

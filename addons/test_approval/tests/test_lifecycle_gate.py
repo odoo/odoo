@@ -15,15 +15,13 @@ class TestLifecycleGate(ApprovalCommon):
             name=f"Lifecycle Gate Cat {self.id()}",
             approvers=[self.approver_1],
         )
-        self.env["ir.model.access"].create(
+        self.env["ir.access"].create(
             {
                 "name": "approval.test.lifecycle clerk",
                 "model_id": self.env["ir.model"]._get("approval.test.lifecycle").id,
                 "group_id": self.env.ref("base.group_user").id,
-                "perm_read": True,
-                "perm_write": True,
-                "perm_create": True,
-                "perm_unlink": True,
+                "kind": "permission",
+                "operation": "crud",
             }
         )
         self.clerk = self.owner_user

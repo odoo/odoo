@@ -11,7 +11,7 @@
         "point_of_sale",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/default_barcode_patterns.xml",
         "data/gift_card_data.xml",
         "views/loyalty_card_views.xml",

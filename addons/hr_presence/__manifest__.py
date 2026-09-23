@@ -23,8 +23,7 @@ email or SMS, log a note, or record the absence as time off.
         "sms",
     ],
     "data": [
-        "security/sms_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/hr_employee_views.xml",
         "data/mail_template_data.xml",
         "data/sms_data.xml",

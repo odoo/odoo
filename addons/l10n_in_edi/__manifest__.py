@@ -32,8 +32,7 @@ For the creation of API username and password please ref this document: <https:/
         "in",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_in_edi_security.xml",
+        "security/ir.access.csv",
         "views/account_move_views.xml",
         "views/edi_pdf_report.xml",
         "views/res_config_settings_views.xml",

@@ -12,8 +12,7 @@
         "fr",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_fr_hr_holidays_security.xml",
+        "security/ir.access.csv",
         "views/res_config_settings_views.xml",
         "views/l10n_fr_hr_holidays_menus.xml",
     ],

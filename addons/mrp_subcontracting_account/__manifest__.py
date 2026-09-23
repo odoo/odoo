@@ -12,8 +12,7 @@ This bridge module allows to manage subcontracting with valuation.
         "mrp_account",
     ],
     "data": [
-        "security/mrp_subcontracting_account_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
     ],
     "auto_install": True,
 }

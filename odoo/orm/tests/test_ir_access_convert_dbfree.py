@@ -1,7 +1,9 @@
 from odoo.addons.base.models.ir_access_convert import (
     GROUP_EVERYONE,
+    NOTHING,
     convert,
     normalize_domain,
+    reach,
 )
 
 OWN = "[('user_id', '=', user.id)]"
@@ -265,7 +267,6 @@ def test_unconvertible_sources_are_listed():
     rows, report = convert(
         [
             acl("sale.access_off", "sale.group_own", active=False),
-            acl("sale.access_none", "sale.group_own", ""),
             acl("sale.access_nomodel", "sale.group_own", model=None),
         ],
         [
@@ -278,7 +279,6 @@ def test_unconvertible_sources_are_listed():
     assert rows == []
     assert [u["source"] for u in report.unmapped] == [
         "sale.access_off",
-        "sale.access_none",
         "sale.access_nomodel",
         "sale.rule_off",
         "sale.rule_none",
@@ -305,35 +305,128 @@ def test_multi_group_rule_names_each_row_after_its_group():
     ]
 
 
-def test_row_lands_in_the_module_that_depends_on_the_other():
-    deps = {"sale": {"sale", "base"}, "sale_ext": {"sale_ext", "sale", "base"}}
+DEPS = {
+    "sale": {"sale", "base"},
+    "sale_ext": {"sale_ext", "sale", "base"},
+    "stock": {"stock", "base"},
+}
+
+
+def test_a_rule_of_a_module_the_line_does_not_load_makes_a_conditional_row():
+    # the line's module is installed without sale_ext: there its line sees
+    # all, and sale_ext deactivates that row where it restricts the group
     rows, report = convert(
         [acl("sale.access_order", "sale.group_own")],
         [rule("sale_ext.rule_own", ["sale.group_own"], OWN)],
         IMPLIED,
-        module_deps=deps,
+        module_deps=DEPS,
     )
-    assert [(row["xmlid"], row["module"]) for row in rows] == [
-        ("sale_ext.rule_own", "sale_ext")
+    assert [
+        (row["xmlid"], row["module"], row["operation"], row["domain"]) for row in rows
+    ] == [
+        ("sale.access_order_crud", "sale", "crud", ""),
+        ("sale_ext.rule_own", "sale_ext", "crud", OWN),
     ]
+    assert [row["deactivated_by"] for row in rows] == [["sale_ext"], []]
+    assert report.xmlid_map["sale.access_order"] == [
+        "sale.access_order_crud",
+        "sale_ext.rule_own",
+    ]
+
+
+def test_without_module_dependencies_every_rule_restricts_every_line():
+    # the database's own conversion: everything it holds is installed
+    rows, _report = convert(
+        [acl("sale.access_order", "sale.group_own")],
+        [rule("sale_ext.rule_own", ["sale.group_own"], OWN)],
+        IMPLIED,
+    )
+    assert shape(rows) == [("permission", None, "sale.group_own", "crud", OWN)]
+    assert all(not row["deactivated_by"] for row in rows)
+
+
+def test_row_lands_in_the_module_that_depends_on_the_other():
     rows, report = convert(
         [acl("sale_ext.access_order", "sale.group_own")],
         [rule("sale.rule_own", ["sale.group_own"], OWN)],
         IMPLIED,
-        module_deps=deps,
+        module_deps=DEPS,
     )
     assert [(row["xmlid"], row["module"]) for row in rows] == [
         ("sale_ext.rule_own", "sale_ext")
     ]
     assert not report.unmapped
+    assert not report.unplaced
+
+
+def test_a_pair_no_module_loads_with_both_is_left_unplaced():
     rows, report = convert(
         [acl("stock.access_order", "sale.group_own")],
         [rule("sale.rule_own", ["sale.group_own"], OWN)],
         IMPLIED,
-        module_deps={**deps, "stock": {"stock", "base"}},
+        module_deps=DEPS,
     )
-    assert rows[0]["module"] == "sale"
-    assert "do not depend on each other" in report.unmapped[0]["reason"]
+    assert [(row["xmlid"], row["deactivated_by"]) for row in rows] == [
+        ("stock.access_order_crud", ["sale"])
+    ]
+    assert report.unplaced == [
+        {
+            "acl": "stock.access_order",
+            "rule": "sale.rule_own",
+            "model": "sale.order",
+            "group": "sale.group_own",
+            "operation": "crud",
+        }
+    ]
+
+
+def test_names_depend_on_the_row_s_own_sources_only():
+    # the same rule and line name the same row whether or not a module that
+    # pairs the rule with another line is there
+    alone, _report = convert(
+        [acl("sale.access_order", "sale.group_own", "r")],
+        [rule("sale.rule_own", ["sale.group_own"], OWN, perms="r")],
+        IMPLIED,
+        module_deps=DEPS,
+    )
+    beside, _report = convert(
+        [
+            acl("sale.access_order", "sale.group_own", "r"),
+            acl("sale_ext.access_manager", "sale.group_manager", "r"),
+        ],
+        [rule("sale.rule_own", ["sale.group_own"], OWN, perms="r")],
+        IMPLIED,
+        module_deps=DEPS,
+    )
+    assert [row["xmlid"] for row in alone] == ["sale.rule_own"]
+    assert {row["xmlid"] for row in beside} >= {
+        "sale.rule_own",
+        "sale_ext.rule_own_group_manager",
+    }
+
+
+def test_a_line_that_grants_nothing_keeps_a_row_that_admits_nothing():
+    rows, report = convert([acl("sale.access_none", "sale.group_own", "")], [], IMPLIED)
+    assert shape(rows) == [("permission", None, "sale.group_own", "r", NOTHING)]
+    assert rows[0]["xmlid"] == "sale.access_none"
+    assert not report.unmapped
+    assert reach(rows, "r", frozenset({"sale.group_own"})).grants is None
+
+
+def test_a_fully_absorbed_line_maps_to_the_row_that_absorbed_it():
+    rows, report = convert(
+        [
+            acl("sale.access_order", "sale.group_own", "r"),
+            acl("sale.access_manager", "sale.group_manager", "r"),
+        ],
+        [],
+        IMPLIED,
+    )
+    assert [row["xmlid"] for row in rows] == ["sale.access_order"]
+    assert [row["xmlid"] for row in report.source_map["sale.access_manager"]] == [
+        "sale.access_order"
+    ]
+    assert report.xmlid_map["sale.access_manager"] == ["sale.access_order"]
 
 
 def test_see_all_row_absorbs_a_narrower_row_of_an_implying_group():
@@ -417,3 +510,33 @@ def test_exclusive_roles_are_never_combined():
     assert all(
         "group_user + base.group_portal" not in c["principal"] for c in report.changes
     )
+
+
+def test_a_rule_with_no_group_that_is_not_global_binds_nobody():
+    rows, report = convert(
+        [acl("approval.access_request", "sale.group_own")],
+        [
+            rule(
+                "approval.request_unlink",
+                [],
+                "[('state', '=', 'cancel')]",
+                "d",
+                **{"global": False},
+            )
+        ],
+        IMPLIED,
+    )
+    assert shape(rows) == [("permission", None, "sale.group_own", "crud", "")]
+    assert report.bound_nobody == ["approval.request_unlink"]
+    rows, _report = convert(
+        [acl("approval.access_request", "sale.group_own")],
+        [rule("approval.request_unlink", [], "[('state', '=', 'cancel')]", "d")],
+        IMPLIED,
+    )
+    assert (
+        "guard",
+        "everyone",
+        GROUP_EVERYONE,
+        "d",
+        "[('state', '=', 'cancel')]",
+    ) in shape(rows)

@@ -911,12 +911,15 @@ class TestReportGroupAccess(MultiArticleReportCase):
         return self.env["ir.actions.report"].with_user(self.plain_user)
 
     def _hide_partners_from_plain_user(self):
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "audit: hide the article partners",
                 "model_id": self.env["ir.model"]._get_id("res.partner"),
-                "domain_force": [("id", "not in", self.partners.ids)],
-                "groups": [(4, self.env.ref("base.group_user").id)],
+                "group_id": self.env.ref("base.group_user").id,
+                "kind": "guard",
+                "guard_scope": "members",
+                "operation": "crud",
+                "domain": repr([("id", "not in", self.partners.ids)]),
             }
         )
 

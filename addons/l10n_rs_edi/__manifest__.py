@@ -17,8 +17,7 @@ eFaktura E-invoice implementation for Serbia
         "rs",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_rs_edi_security.xml",
+        "security/ir.access.csv",
         "views/res_config_settings_views.xml",
         "views/account_move.xml",
         "views/res_partner_views.xml",

@@ -4291,16 +4291,15 @@ class TestActivityFilingIsAnActionOnTheDocument(TestActivityCommon):
         )
         cls.plain_model_id = cls.env["ir.model"]._get_id("mail.test.activity")
         # readable by every employee, writable only by whoever created it
-        cls.env["ir.rule"].create(
+        cls.env["ir.access"].create(
             {
                 "name": "filing: write your own mail.test.activity",
                 "model_id": cls.plain_model_id,
-                "domain_force": "[('create_uid', '=', user.id)]",
-                "groups": [(6, 0, [cls.env.ref("base.group_user").id])],
-                "perm_read": False,
-                "perm_write": True,
-                "perm_create": True,
-                "perm_unlink": True,
+                "group_id": cls.env.ref("base.group_user").id,
+                "kind": "guard",
+                "guard_scope": "members",
+                "operation": "cud",
+                "domain": "[('create_uid', '=', user.id)]",
             }
         )
         # The rule is rolled back with the class, but `ir.rule._get_domain_accessible_records`

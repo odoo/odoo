@@ -23,7 +23,6 @@ ones register on, so a suite proves the wiring without a key or a network call.
         "speech_analysis",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/speech_test_recording_rules.xml",
+        "security/ir.access.csv",
     ],
 }

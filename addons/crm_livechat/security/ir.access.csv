@@ -1,0 +1,3 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+ir_rule_discuss_channel_crm_lead,discuss.channel: sales users can read lead's origin channel,mail.model_discuss_channel,sale.group_sale_salesman,permission,r,"[(""has_crm_lead"", ""="", True)]"
+ir_rule_discuss_channel_member_crm_lead,discuss.channel.member: sales users can read/create members on lead's origin channel,mail.model_discuss_channel_member,sale.group_sale_salesman,permission,cr,"[(""channel_id.has_crm_lead"", ""="", True)]"

@@ -36,8 +36,7 @@ dimension or band edit notifies the subjects it governs.
     ],
     "data": [
         "security/res_groups_security.xml",
-        "security/ir.model.access.csv",
-        "security/ir_rule_security.xml",
+        "security/ir.access.csv",
         "data/ir_job_channel_data.xml",
         "views/scorecard_views.xml",
         "views/scoring_menus.xml",

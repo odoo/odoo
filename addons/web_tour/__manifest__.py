@@ -13,7 +13,7 @@ Odoo Web tours.
         "web",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/tour_views.xml",
         "views/web_tour_menus.xml",
     ],

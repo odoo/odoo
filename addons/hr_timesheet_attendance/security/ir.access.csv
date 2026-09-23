@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+hr_timesheet_attendance_report_rule_user,Timesheet attendance Report: User,model_hr_timesheet_attendance_report,hr_timesheet.group_hr_timesheet_user,permission,r,"[('employee_id', '=', user.employee_id.id)]"
+hr_timesheet_attendance_report_rule_approver,Timesheet attendance Report: Approver,model_hr_timesheet_attendance_report,hr_timesheet.group_hr_timesheet_approver,permission,r,
+hr_timesheet_attendance_report_restricted_company_rule,Restricted Timesheet attendance Record: multi-company,model_hr_timesheet_attendance_report,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

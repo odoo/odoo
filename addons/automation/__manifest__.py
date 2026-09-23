@@ -22,9 +22,7 @@ trigger an automatic reminder email.
         "sms",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/automation_runtime_rules.xml",
-        "security/automation_canvas_rules.xml",
+        "security/ir.access.csv",
         "data/ir_cron_data.xml",
         "data/digest_data.xml",
         "data/ir_sequence_data.xml",

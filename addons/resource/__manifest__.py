@@ -17,8 +17,7 @@ associated to every resource. It also manages the leaves of every resource.
     ],
     "data": [
         "data/resource_data.xml",
-        "security/ir.model.access.csv",
-        "security/resource_security.xml",
+        "security/ir.access.csv",
         "views/resource_reservation_views.xml",
         "views/resource_assignment_views.xml",
         "views/resource_resource_views.xml",

@@ -55,7 +55,7 @@ MQTT client nor a PLC library.
     ],
     "data": [
         "security/security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/ir_config_parameter_data.xml",
         "data/device_kind_data.xml",
         "data/ir_cron_data.xml",

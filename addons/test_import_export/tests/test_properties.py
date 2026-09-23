@@ -642,15 +642,7 @@ class TestPropertiesExportImport(HttpCase):
         model_id = self.env["ir.model"]._get_id(self.ModelDefinition._name)
 
         user = new_test_user(self.env, login="AAA", groups="base.group_system")
-        self.env["ir.model.access"].search([("model_id", "=", model_id)]).unlink()
-        self.env["ir.model.access"].create(
-            {
-                "name": "don't care",
-                "model_id": model_id,
-                "group_id": self.env.ref("base.group_system").id,
-                "perm_read": False,
-            }
-        )
+        self.env["ir.access"].search([("model_id", "=", model_id)]).unlink()
 
         values_list = [
             [

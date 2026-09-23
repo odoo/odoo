@@ -53,12 +53,12 @@ class TestCompanyConfig(TransactionCase):
         ]
 
     def test_every_configuration_model_is_scoped_by_a_company_rule(self):
-        Rule = self.env["ir.rule"].sudo()
+        Access = self.env["ir.access"].sudo()
         for Config in self._config_models():
             with self.subTest(model=Config._name):
-                rules = Rule.search([("model_id.model", "=", Config._name)])
+                rows = Access.search([("model_id.model", "=", Config._name)])
                 self.assertTrue(
-                    any("company_id" in rule.domain_force for rule in rules),
+                    any("company_id" in (row.domain or "") for row in rows),
                     f"{Config._name} ships no record rule on company_id",
                 )
 

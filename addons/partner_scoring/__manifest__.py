@@ -47,8 +47,7 @@ lead scoring (``crm.lead.scoring.frequency``).
     ],
     "data": [
         "security/res_groups_security.xml",
-        "security/ir.model.access.csv",
-        "security/ir_rule_security.xml",
+        "security/ir.access.csv",
         "data/ir_actions_server_data.xml",
         "data/scorecard_data.xml",
         "data/res_partner_attribute_data.xml",

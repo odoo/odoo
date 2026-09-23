@@ -10,7 +10,7 @@
         "point_of_sale",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/pos_order_views.xml",
     ],
     "assets": {

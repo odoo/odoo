@@ -20,8 +20,7 @@ Auto-complete partner companies' data
         },
     },
     "data": [
-        "security/ir.model.access.csv",
-        "security/partner_autocomplete_security.xml",
+        "security/ir.access.csv",
         "views/res_company_views.xml",
         "views/res_config_settings_views.xml",
         "data/iap_service_data.xml",

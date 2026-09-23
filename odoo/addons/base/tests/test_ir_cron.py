@@ -38,7 +38,7 @@ from odoo.addons.base.models.ir_cron import (
     IrCron,
     ReadyJob,
 )
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, make_guard_row
 
 
 def make_job(cron, **overrides):
@@ -1823,16 +1823,12 @@ class TestIrCronRunLoopContract(TransactionCase, CronMixinCase):
         )
 
     def test_direct_trigger_honours_record_rules(self):
-        self.env["ir.rule"].create(
-            {
-                "name": "no cron may be written",
-                "model_id": self.env["ir.model"]._get_id("ir.cron"),
-                "domain_force": "[(0, '=', 1)]",
-                "perm_read": False,
-                "perm_write": True,
-                "perm_create": False,
-                "perm_unlink": False,
-            }
+        make_guard_row(
+            self.env,
+            "ir.cron",
+            "[(0, '=', 1)]",
+            operation="u",
+            name="no cron may be written",
         )
         cron = self.cron.with_user(self.env.ref("base.user_admin"))
         with self.assertRaises(AccessError):

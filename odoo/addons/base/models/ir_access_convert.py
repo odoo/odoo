@@ -17,6 +17,8 @@ PERM_OF_OPERATION = {
     "d": "perm_unlink",
 }
 TRUE = ""
+# a line that grants nothing keeps its place, and its model keeps a row
+NOTHING = "[(0, '=', 1)]"
 _TRUE_DOMAIN_RE = re.compile(
     r"""^\s*(\[\s*\]|\[\s*\(\s*1\s*,\s*(["'])=\2\s*,\s*1\s*\)\s*\])\s*$"""
 )
@@ -56,6 +58,7 @@ def _flat(domain: str) -> str:
 @dataclass(slots=True)
 class ConversionReport:
     xmlid_map: dict[str, list[str]] = field(default_factory=dict)
+    source_map: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
     monotonicity: list[dict[str, Any]] = field(default_factory=list)
     changes: list[dict[str, Any]] = field(default_factory=list)
     see_all_beside_rules: list[dict[str, Any]] = field(default_factory=list)
@@ -63,6 +66,10 @@ class ConversionReport:
     mode_blind_rules: list[str] = field(default_factory=list)
     group_test_domains: list[str] = field(default_factory=list)
     unmapped: list[dict[str, Any]] = field(default_factory=list)
+    unplaced: list[dict[str, Any]] = field(default_factory=list)
+    redundant: set[str] = field(default_factory=set)
+    bound_nobody: list[str] = field(default_factory=list)
+    collisions: list[str] = field(default_factory=list)
 
 
 @dataclass(slots=True)
@@ -74,6 +81,7 @@ class _Acl:
     model: str
     group: str
     ops: frozenset[str]
+    noupdate: bool = False
 
 
 @dataclass(slots=True)
@@ -84,9 +92,11 @@ class _Rule:
     name: str
     model: str
     group: str | None
+    groups: tuple[str, ...]
     ops: frozenset[str]
     domain: str
     restrict: bool
+    noupdate: bool = False
 
 
 def normalize_domain(domain: str | None) -> str:
@@ -137,6 +147,7 @@ class _Converter:
         module_deps: Mapping[str, Iterable[str]] | None,
     ):
         self.report = ConversionReport()
+        self._absorbed: list[dict[str, Any]] = []
         self.module_deps = (
             {module: set(deps) for module, deps in module_deps.items()}
             if module_deps is not None
@@ -159,6 +170,14 @@ class _Converter:
     def _unmapped(self, key: str, reason: str) -> None:
         self.report.unmapped.append({"source": key, "reason": reason})
 
+    def _module(self, line: Mapping[str, Any]) -> str | None:
+        # a source belongs to a module only when that module is known to be
+        # loaded: an exported or hand-made record is always present
+        module = line.get("module") or _module_of(line.get("xmlid"))
+        if self.module_deps is not None and module not in self.module_deps:
+            return None
+        return module
+
     def _read_acl(self, index: int, line: Mapping[str, Any]) -> _Acl | None:
         key = line.get("xmlid") or f"ir.model.access#{line.get('id', index)}"
         if not line.get("active", True):
@@ -168,17 +187,15 @@ class _Converter:
             self._unmapped(key, "access line names no model")
             return None
         ops = frozenset(op for op, perm in PERM_OF_OPERATION.items() if line.get(perm))
-        if not ops:
-            self._unmapped(key, "access line grants no operation")
-            return None
         return _Acl(
             key=key,
             xmlid=line.get("xmlid"),
-            module=line.get("module") or _module_of(line.get("xmlid")),
+            module=self._module(line),
             name=line.get("name") or line["model"],
             model=line["model"],
             group=line.get("group") or GROUP_EVERYONE,
             ops=ops,
+            noupdate=bool(line.get("noupdate")),
         )
 
     def _read_rule(self, index: int, rule: Mapping[str, Any]) -> list[_Rule]:
@@ -207,34 +224,46 @@ class _Converter:
         domain = normalize_domain(rule.get("domain_force"))
         if _GROUP_TEST_RE.search(domain):
             self.report.group_test_domains.append(key)
-        groups = sorted(set(rule.get("groups") or ()))
+        groups = tuple(sorted(set(rule.get("groups") or ())))
+        if not groups and rule.get("global") is False:
+            # a rule whose groups were all deleted keeps global False, and a
+            # rule was selected by global OR one of the user's groups: it bound
+            # nobody
+            self.report.bound_nobody.append(key)
+            self._unmapped(key, "rule with no group that is not global binds nobody")
+            return []
         common = {
             "key": key,
             "xmlid": rule.get("xmlid"),
-            "module": rule.get("module") or _module_of(rule.get("xmlid")),
+            "module": self._module(rule),
             "name": rule.get("name") or rule["model"],
             "model": rule["model"],
+            "groups": groups,
             "ops": ops,
             "domain": domain,
             "restrict": composition == "restrict",
+            "noupdate": bool(rule.get("noupdate")),
         }
         if not groups:
             return [_Rule(group=None, **common)]
         return [_Rule(group=group, **common) for group in groups]
 
-    def _owner(self, acl: _Acl, rule: _Rule) -> str | None:
-        if acl.module == rule.module or self.module_deps is None:
-            return rule.module
-        if rule.module in self.module_deps.get(acl.module or "", ()):
-            return acl.module
-        if acl.module in self.module_deps.get(rule.module or "", ()):
-            return rule.module
-        self._unmapped(
-            f"{acl.key} + {rule.key}",
-            "access line and rule come from modules that do not depend on each "
-            "other; the row is placed in the rule's module",
-        )
-        return rule.module
+    def _loaded_with(self, module: str | None, other: str | None) -> bool:
+        # whether `other`'s records are loaded whenever `module`'s are
+        if self.module_deps is None or module is None or other is None:
+            return True
+        return other in self.module_deps.get(module, ())
+
+    def _owner(self, acl: _Acl, rule: _Rule) -> tuple[bool, str | None]:
+        if self.module_deps is None:
+            return True, rule.module
+        if acl.module is None or rule.module is None:
+            return True, None
+        if self._loaded_with(acl.module, rule.module):
+            return True, acl.module
+        if self._loaded_with(rule.module, acl.module):
+            return True, rule.module
+        return False, None
 
     def convert(self) -> list[dict[str, Any]]:
         rows: list[dict[str, Any]] = []
@@ -254,6 +283,7 @@ class _Converter:
             "name": name,
             "sources": list(sources),
             "guard_scope": None,
+            "conditional": (),
             **extra,
         }
 
@@ -264,27 +294,62 @@ class _Converter:
         rows: list[dict[str, Any]] = []
         produced: dict[tuple[str, str], set[str]] = defaultdict(set)
         for acl in acls:
-            closure = self.closure[acl.group]
-            unrestricted = {
-                op
-                for op in acl.ops
-                if not any(op in rule.ops and rule.group in closure for rule in grants)
-            }
-            if unrestricted:
+            if not acl.ops:
                 rows.append(
                     self._row(
                         "permission",
                         model,
                         acl.group,
-                        unrestricted,
+                        "r",
+                        NOTHING,
+                        acl.name,
+                        [acl.key],
+                        module=acl.module,
+                        base_xmlid=acl.xmlid,
+                        from_rule=None,
+                        noupdate=acl.noupdate,
+                    )
+                )
+                continue
+            closure = self.closure[acl.group]
+            restricting = [rule for rule in grants if rule.group in closure]
+            # an operation is restricted where a rule of the group's closure
+            # governs it; a rule of a module the line's module does not load
+            # restricts it only where that module is installed, so the line
+            # keeps that operation in a row the rule's module deactivates
+            always: set[str] = set()
+            modules_of: dict[str, set[str | None]] = defaultdict(set)
+            for rule in restricting:
+                for op in rule.ops & acl.ops:
+                    if self._loaded_with(acl.module, rule.module):
+                        always.add(op)
+                    else:
+                        modules_of[op].add(rule.module)
+            conditional: dict[tuple[str, ...], set[str]] = defaultdict(set)
+            for op, modules in modules_of.items():
+                if op not in always:
+                    conditional[tuple(sorted(modules))].add(op)
+            unrestricted = set(acl.ops) - always - set(modules_of)
+            for modules, ops in [((), unrestricted), *sorted(conditional.items())]:
+                if not ops:
+                    continue
+                rows.append(
+                    self._row(
+                        "permission",
+                        model,
+                        acl.group,
+                        ops,
                         TRUE,
                         acl.name,
                         [acl.key],
                         module=acl.module,
                         base_xmlid=acl.xmlid,
                         from_rule=None,
+                        conditional=modules,
+                        noupdate=acl.noupdate,
                     )
                 )
+            if unrestricted:
                 beside = sorted(
                     {rule.group for rule in grants if rule.ops & unrestricted} - closure
                 )
@@ -305,11 +370,24 @@ class _Converter:
                     group = rule.group
                 else:
                     continue
-                produced[rule.key, rule.group].update(rule.ops & acl.ops)
                 ops = (rule.ops & acl.ops) - unrestricted
                 if not ops:
+                    produced[rule.key, rule.group].update(rule.ops & acl.ops)
+                    self.report.redundant.add(rule.key)
                     continue
-                owner = self._owner(acl, rule)
+                placed, owner = self._owner(acl, rule)
+                if not placed:
+                    self.report.unplaced.append(
+                        {
+                            "acl": acl.key,
+                            "rule": rule.key,
+                            "model": model,
+                            "group": group,
+                            "operation": operation_string(ops),
+                        }
+                    )
+                    continue
+                produced[rule.key, rule.group].update(rule.ops & acl.ops)
                 rows.append(
                     self._row(
                         "permission",
@@ -322,6 +400,8 @@ class _Converter:
                         module=owner,
                         base_xmlid=rule.xmlid,
                         from_rule=rule.key,
+                        primary=rule.groups == (group,),
+                        noupdate=rule.noupdate,
                     )
                 )
         for rule in rules:
@@ -339,6 +419,8 @@ class _Converter:
                         base_xmlid=rule.xmlid,
                         from_rule=rule.key,
                         guard_scope="members" if rule.group else "everyone",
+                        primary=len(rule.groups) <= 1,
+                        noupdate=rule.noupdate,
                     )
                 )
                 continue
@@ -365,23 +447,29 @@ class _Converter:
                 row["domain"],
                 row["module"],
                 row["from_rule"],
+                row["conditional"],
             )
             if (kept := merged.get(key)) is None:
                 merged[key] = row
                 continue
             kept["ops"] |= row["ops"]
+            kept["noupdate"] = kept["noupdate"] or row["noupdate"]
             kept["sources"].extend(
                 s for s in row["sources"] if s not in kept["sources"]
             )
         rows = list(merged.values())
+        # a row deactivated where another module is installed neither absorbs
+        # nor is absorbed: it is not there in every install the other row is
         see_all = [
             (index, row, frozenset(row["ops"]))
             for index, row in enumerate(rows)
-            if row["kind"] == "permission" and row["domain"] == TRUE
+            if row["kind"] == "permission"
+            and row["domain"] == TRUE
+            and not row["conditional"]
         ]
         kept_rows = []
         for index, row in enumerate(rows):
-            if row["kind"] == "permission":
+            if row["kind"] == "permission" and not row["conditional"]:
                 for other_index, other, other_ops in see_all:
                     if other_index == index or not self._absorbs(other, row):
                         continue
@@ -392,6 +480,7 @@ class _Converter:
                         row["ops"] -= covered
                         row.setdefault("absorbed_by", []).append(other)
                 if not row["ops"]:
+                    self._absorbed.append(row)
                     continue
             kept_rows.append(row)
         return kept_rows
@@ -401,40 +490,53 @@ class _Converter:
             return False
         if see_all["module"] == row["module"]:
             return True
-        if self.module_deps is None:
+        if self.module_deps is None or see_all["module"] is None:
             return False
         return see_all["module"] in self.module_deps.get(row["module"] or "", ())
 
     def _name_rows(self, rows: list[dict[str, Any]]) -> None:
-        by_base: dict[str | None, list[dict[str, Any]]] = defaultdict(list)
+        # a row's external id depends on its own sources only, never on which
+        # other rows exist: the database's conversion and the data files'
+        # name the same row alike
         for row in rows:
-            by_base[row["base_xmlid"]].append(row)
-        taken: set[str] = set()
-        for base, group in sorted(by_base.items(), key=lambda item: item[0] or ""):
-            for row in group:
-                if base is None:
-                    row["xmlid"] = None
-                    continue
-                name = _local_name(base)
-                if len(group) > 1:
-                    name = f"{name}_{_local_name(row['group'])}"
-                module = row["module"] or _module_of(base)
-                xmlid = f"{module}.{name}" if module else name
-                candidate, index = xmlid, 2
-                while candidate in taken:
-                    candidate = f"{xmlid}_{index}"
+            base = row["base_xmlid"]
+            if base is None:
+                row["xmlid"] = None
+                continue
+            name = _local_name(base)
+            if row["from_rule"] is None:
+                if row["conditional"]:
+                    name = f"{name}_{operation_string(row['ops'])}"
+            elif not row.get("primary", True):
+                name = f"{name}_{_local_name(row['group'])}"
+            module = row["module"] or _module_of(base)
+            row["xmlid"] = f"{module}.{name}" if module else name
+        taken: dict[str, dict[str, Any]] = {}
+        for row in sorted(rows, key=lambda row: (row["xmlid"] or "", row["model"])):
+            xmlid = row["xmlid"]
+            if xmlid is None:
+                continue
+            if xmlid in taken:
+                self.report.collisions.append(xmlid)
+                index = 2
+                while f"{xmlid}_{index}" in taken:
                     index += 1
-                taken.add(candidate)
-                row["xmlid"] = candidate
+                row["xmlid"] = f"{xmlid}_{index}"
+            taken[row["xmlid"]] = row
         xmlid_map: dict[str, list[str]] = defaultdict(list)
-        for row in rows:
-            targets = [row] + row.get("absorbed_by", [])
+        source_map: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for row in [*rows, *self._absorbed]:
+            targets = ([row] if row["ops"] else []) + row.get("absorbed_by", [])
             for source in row["sources"]:
+                for target in targets:
+                    if all(target is not kept for kept in source_map[source]):
+                        source_map[source].append(target)
                 if "#" in source:
                     continue
                 for target in targets:
                     if target.get("xmlid") and target["xmlid"] not in xmlid_map[source]:
                         xmlid_map[source].append(target["xmlid"])
+        self.report.source_map = dict(source_map)
         self.report.xmlid_map = {
             source: sorted(targets) for source, targets in sorted(xmlid_map.items())
         }
@@ -463,7 +565,7 @@ class _Converter:
             if op not in row["operation"]:
                 continue
             if row["kind"] == "permission":
-                if row["group"] in groups:
+                if row["group"] in groups and row["domain"] != NOTHING:
                     grants.add(row["domain"])
             elif row["guard_scope"] == "everyone" or row["group"] in groups:
                 guards.add(row["domain"])
@@ -602,6 +704,8 @@ def convert(
             "operation": row["operation"],
             "domain": row["domain"],
             "sources": row["sources"],
+            "deactivated_by": list(row["conditional"]),
+            "noupdate": row["noupdate"],
         }
         for row in converter.convert()
     ]
@@ -646,6 +750,17 @@ def _xmlids(cr: Any) -> dict[tuple[str, int], str]:
     return {(model, res_id): xmlid for model, res_id, xmlid in cr.fetchall()}
 
 
+def _noupdate(cr: Any) -> set[tuple[str, int]]:
+    cr.execute(
+        """
+        SELECT d.model, d.res_id
+          FROM ir_model_data d
+         WHERE d.model IN ('ir.model.access', 'ir.rule') AND d.noupdate
+        """
+    )
+    return set(cr.fetchall())
+
+
 def group_keys(cr: Any, group_ids: Iterable[int]) -> frozenset[str]:
     xmlids = _xmlids(cr)
     return frozenset(
@@ -670,6 +785,7 @@ def read_database(
 ]:
     wanted = sorted(models) if models is not None else None
     xmlids = _xmlids(cr)
+    noupdate = _noupdate(cr)
 
     def group_key(group_id: int) -> str:
         return xmlids.get(("res.groups", group_id)) or f"res.groups#{group_id}"
@@ -693,6 +809,7 @@ def read_database(
             {
                 "id": access_id,
                 "xmlid": xmlids.get(("ir.model.access", access_id)),
+                "noupdate": ("ir.model.access", access_id) in noupdate,
                 "name": name,
                 "model": model,
                 "group": group_key(group_id) if group_id else None,
@@ -703,7 +820,7 @@ def read_database(
     cr.execute(
         """
         SELECT r.id, r.name, m.model, r.domain_force, r.composition, r.active,
-               r.perm_read, r.perm_write, r.perm_create, r.perm_unlink,
+               r.global, r.perm_read, r.perm_write, r.perm_create, r.perm_unlink,
                ARRAY(SELECT g.group_id FROM rule_group_rel g
                       WHERE g.rule_group_id = r.id ORDER BY g.group_id)
           FROM ir_rule r
@@ -715,17 +832,20 @@ def read_database(
     )
     rules = []
     for row in cr.fetchall():
-        rule_id, name, model, domain, composition, active, *perms, group_ids = row
+        rule_id, name, model, domain, composition, active, is_global, *rest = row
+        *perms, group_ids = rest
         perms = dict(zip(_PERM_COLUMNS, perms, strict=True))
         rules.append(
             {
                 "id": rule_id,
                 "xmlid": xmlids.get(("ir.rule", rule_id)),
+                "noupdate": ("ir.rule", rule_id) in noupdate,
                 "name": name,
                 "model": model,
                 "domain_force": domain,
                 "composition": composition,
                 "active": active,
+                "global": is_global,
                 "groups": [group_key(group_id) for group_id in group_ids],
                 **perms,
             }
@@ -738,13 +858,15 @@ def read_database(
         """
         SELECT m.name, d.name
           FROM ir_module_module m
-          JOIN ir_module_module_dependency d ON d.module_id = m.id
-         WHERE m.state = 'installed'
+          LEFT JOIN ir_module_module_dependency d ON d.module_id = m.id
+         WHERE m.state IN ('installed', 'to upgrade', 'to remove')
         """
     )
     direct: dict[str, set[str]] = defaultdict(set)
     for module, dependency in cr.fetchall():
-        direct[module].add(dependency)
+        direct.setdefault(module, set())
+        if dependency:
+            direct[module].add(dependency)
     module_deps: dict[str, set[str]] = {}
     for module in direct:
         seen = {module}

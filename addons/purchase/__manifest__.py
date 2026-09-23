@@ -14,9 +14,7 @@
     ],
     "data": [
         "security/res_groups.xml",
-        "security/ir_rule.xml",
-        "security/ir.model.access.csv",
-        "security/purchase_security.xml",
+        "security/ir.access.csv",
         "data/digest_data.xml",
         "data/template_data.xml",
         "data/ir_actions_report_data.xml",

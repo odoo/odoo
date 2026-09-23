@@ -10,7 +10,6 @@ from unittest.mock import Mock, patch
 from lxml import html
 from werkzeug.exceptions import Forbidden, NotFound
 
-from odoo import Command
 from odoo.exceptions import AccessDenied, UserError
 from odoo.tests import HttpCase, TransactionCase, new_test_user, tagged
 
@@ -662,12 +661,15 @@ class TestModelPageIntegrity(HttpCase):
                 self._render(record_slug=slug)
 
     def test_record_rules_apply_to_the_detail_page(self):
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Country directory restriction",
                 "model_id": self.env["ir.model"]._get_id("res.country"),
-                "domain_force": repr([("id", "!=", self.countries[0].id)]),
-                "groups": [Command.link(self.env.ref("base.group_public").id)],
+                "group_id": self.env.ref("base.group_public").id,
+                "kind": "guard",
+                "guard_scope": "members",
+                "operation": "crud",
+                "domain": repr([("id", "!=", self.countries[0].id)]),
             }
         )
         slug = self.env["ir.http"]._slug(self.countries[0])
@@ -696,12 +698,15 @@ class TestModelPageIntegrity(HttpCase):
         country = self.countries[0]
         name = country.name
         slug = self.env["ir.http"]._slug(country)
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Cold country restriction",
                 "model_id": self.env["ir.model"]._get_id("res.country"),
-                "domain_force": repr([("id", "!=", country.id)]),
-                "groups": [Command.link(self.env.ref("base.group_public").id)],
+                "group_id": self.env.ref("base.group_public").id,
+                "kind": "guard",
+                "guard_scope": "members",
+                "operation": "crud",
+                "domain": repr([("id", "!=", country.id)]),
             }
         )
         self.env.invalidate_all()

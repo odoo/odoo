@@ -14,21 +14,85 @@ DISABLED_MAIL_CONTEXT = {
 }
 
 
+def make_access_row(
+    env,
+    model_name,
+    group="base.group_everyone",
+    *,
+    kind="permission",
+    operation="crud",
+    domain=None,
+    guard_scope="everyone",
+    name=None,
+    xmlid=None,
+):
+    # an ir.access row a test ships as a module would, with its external id
+    # when the test is about the module it comes from
+    if isinstance(group, str):
+        group = env.ref(group)
+    row = (
+        env["ir.access"]
+        .sudo()
+        .create(
+            {
+                "name": name or f"{model_name}: {kind}",
+                "model_id": env["ir.model"]._get_id(model_name),
+                "group_id": group.id,
+                "kind": kind,
+                "guard_scope": guard_scope,
+                "operation": operation,
+                "domain": domain or False,
+            }
+        )
+    )
+    if xmlid:
+        module, _dot, local = xmlid.partition(".")
+        env["ir.model.data"].sudo().create(
+            {"module": module, "name": local, "model": "ir.access", "res_id": row.id}
+        )
+    return row.sudo(False)
+
+
+def make_guard_row(env, model_name, domain, group=None, *, operation="crud", **kwargs):
+    # a global rule's equivalent binds everyone; given a group, the guard binds
+    # its members only, which is what a rule narrowing that group meant
+    return make_access_row(
+        env,
+        model_name,
+        group or "base.group_everyone",
+        kind="guard",
+        guard_scope="members" if group else "everyone",
+        operation=operation,
+        domain=domain,
+        **kwargs,
+    )
+
+
 def converted_reach(env, model_name, user, operation="read"):
+    # what the ir.access rows of the model give the user, counted as the
+    # superuser from the rows themselves, beside the ORM's own answer
     env.flush_all()
-    acl_lines, rules, implications, module_deps = ir_access_convert.read_database(
-        env.cr, [model_name]
+    accesses = (
+        env["ir.access"]
+        .sudo()
+        .search([("model_id.model", "=", model_name), ("active", "=", True)])
     )
-    rows, _report = ir_access_convert.convert(
-        acl_lines, rules, implications, module_deps=module_deps
-    )
+    rows = [
+        {
+            "kind": access.kind,
+            "guard_scope": access.guard_scope,
+            "group": access.group_id.id,
+            "operation": access.operation,
+            "domain": ir_access_convert.normalize_domain(access.domain),
+        }
+        for access in accesses
+    ]
     letter = {"create": "c", "read": "r", "write": "u", "unlink": "d"}[operation]
-    groups = ir_access_convert.group_keys(env.cr, user.all_group_ids.ids)
-    effective = ir_access_convert.reach(rows, letter, groups)
+    effective = ir_access_convert.reach(rows, letter, frozenset(user.all_group_ids.ids))
     records = env[model_name].with_user(user).sudo()
     if effective.grants is None:
         return records.browse()
-    context = env["ir.rule"].with_user(user)._eval_context()
+    context = env["ir.access"].with_user(user)._eval_context()
 
     def parse(text):
         return Domain(safe_eval(text, context)) if text else Domain.TRUE

@@ -123,6 +123,17 @@ FIELD_ORDER: dict[str, list[str]] = {
         "perm_create",
         "perm_unlink",
     ],
+    "ir.access": [
+        "name",
+        "model_id",
+        "group_id",
+        "kind",
+        "guard_scope",
+        "active",
+        "operation",
+        "domain",
+        "note",
+    ],
     "ir.model.access": [
         "name",
         "model_id",

@@ -140,9 +140,9 @@ answers themselves -- may this model be touched, which records may this user
 read -- come from `registry.access_policy`, the one object that names the
 access models. On a database registry every model is decided from `ir.access`
 rows (`_access_domain`: the permissions the principal's groups hold, OR-ed, AND
-the guards that bind it, AND each delegated parent), which until the tables are
-converted include the rows `ir_access_convert` synthesizes from `ir.model.access`
-and `ir.rule`; the in-memory registry asks whichever `ir.model.access` and
+the guards that bind it, AND each delegated parent); modules ship them in
+`security/ir.access.csv`, and `ir.model.access` and `ir.rule` hold no rows and
+refuse new ones. The in-memory registry asks whichever `ir.model.access` and
 `ir.rule` classes it hosts, and base's own end in the same decision. Both storage
 backends ask the port, so record rules filter an in-memory search as they filter
 a PostgreSQL one.

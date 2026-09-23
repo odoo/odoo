@@ -56,7 +56,7 @@ Master Data:
         "ec",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/account_tax_report_data.xml",
         "data/res.bank.csv",
         "data/l10n_latam_identification_type_data.xml",

@@ -1,0 +1,54 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+purchase_order_personal_rule,Personal Purchase Orders,model_purchase_order,group_purchase_user,permission,crud,"[('user_id', 'in', (user.id, False))]"
+purchase_order_see_all_rule,All Purchase Orders,model_purchase_order,group_purchase_user_all,permission,cud,
+access_purchase_order_invoicing_payments_readonly,purchase.order,model_purchase_order,account.group_account_readonly,permission,r,
+access_purchase_order_invoicing_payments,purchase.order,model_purchase_order,account.group_account_invoice,permission,u,
+portal_purchase_order_user_rule,Portal Purchase Orders,model_purchase_order,base.group_portal,permission,r,"[('partner_id', 'child_of', [user.commercial_partner_id.id])]"
+purchase_order_line_personal_rule,Personal Purchase Order Lines,model_purchase_order_line,group_purchase_user,permission,crud,"[('user_id', 'in', (user.id, False))]"
+purchase_order_line_see_all_rule,All Purchase Order Lines,model_purchase_order_line,group_purchase_user_all,permission,cud,
+access_purchase_order_line_invoicing_payments_readonly,purchase.order.line,model_purchase_order_line,account.group_account_readonly,permission,r,
+access_purchase_order_line_invoicing_payments,purchase.order.line,model_purchase_order_line,account.group_account_invoice,permission,u,
+access_purchase_bill_line_match,purchase.bill.line.match user,model_purchase_bill_line_match,group_purchase_user,permission,r,
+access_purchase_bill_line_match_readonly,purchase.bill.line.match readonly,model_purchase_bill_line_match,account.group_account_readonly,permission,r,
+access_purchase_bill_line_match_invoicing_payments,purchase.bill.line.match invoice,model_purchase_bill_line_match,account.group_account_invoice,permission,u,
+access_bill_to_po_wizard,bill.to.po.wizard user,model_bill_to_po_wizard,group_purchase_user,permission,cru,
+portal_purchase_order_line_rule,Portal Purchase Order Lines,model_purchase_order_line,base.group_portal,permission,r,"[('partner_id', 'child_of', [user.commercial_partner_id.id])]"
+access_account_journal,account.journal,account.model_account_journal,group_purchase_user,permission,r,
+purchase_user_account_move_personal_rule,Personal Vendor Bills,account.model_account_move,group_purchase_user,permission,crud,"[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), ('invoice_user_id', 'in', (user.id, False))]"
+purchase_user_account_move_see_all_rule,All Vendor Bills,account.model_account_move,group_purchase_user_all,permission,crud,"[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]"
+purchase_user_account_move_line_personal_rule_group_purchase_manager,Personal Vendor Bill Lines,account.model_account_move_line,group_purchase_manager,permission,crud,"[('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), ('move_id.invoice_user_id', 'in', (user.id, False))]"
+purchase_user_account_move_line_see_all_rule_group_purchase_manager,All Vendor Bill Lines,account.model_account_move_line,group_purchase_manager,permission,crud,"[('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]"
+purchase_account_move_line_rule_readonly_group_purchase_manager,Read-only: all vendor bill lines,account.model_account_move_line,group_purchase_manager,permission,r,"[('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]"
+purchase_user_account_move_line_personal_rule,Personal Vendor Bill Lines,account.model_account_move_line,group_purchase_user,permission,cru,"[('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), ('move_id.invoice_user_id', 'in', (user.id, False))]"
+purchase_user_account_move_line_see_all_rule,All Vendor Bill Lines,account.model_account_move_line,group_purchase_user_all,permission,cru,"[('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]"
+access_account_analytic_line,account.analytic.line,account.model_account_analytic_line,group_purchase_user,permission,r,
+account_partial_reconcile,account.partial.reconcile.purchase.user,account.model_account_partial_reconcile,group_purchase_user,permission,r,
+access_res_partner_purchase_manager,res.partner.purchase.manager,base.model_res_partner,group_purchase_manager,permission,cu,
+access_product_supplierinfo_purchase_manager,product.supplierinfo purchase_manager,product.model_product_supplierinfo,group_purchase_manager,permission,cud,
+access_product_pricelist_item_purchase_manager,product.pricelist.item purchase_manager,product.model_product_pricelist_item,group_purchase_manager,permission,cud,
+access_purchase_bill_match,access_purchase_bill_match,model_purchase_bill_match,group_purchase_user,permission,r,
+access_purchase_mass_cancel_orders,access.purchase.mass.cancel.orders,model_purchase_mass_cancel_orders,group_purchase_user,permission,cru,
+purchase_report_personal_rule,Personal Orders Analysis,model_purchase_report,group_purchase_user,permission,r,"[('user_id', 'in', (user.id, False))]"
+access_srm_tag_purchase_user,srm.tag purchase_user,model_srm_tag,group_purchase_user,permission,cru,
+access_srm_tag_purchase_manager,srm.tag purchase_manager,model_srm_tag,group_purchase_manager,permission,d,
+access_purchase_order_line_price_history,access.purchase.order.line.price.history,model_purchase_order_line_price_history,group_purchase_user,permission,crud,
+access_purchase_order_line_price_history_line,access.purchase.order.line.price.history.line,model_purchase_order_line_price_history_line,group_purchase_user,permission,crud,
+purchase_order_rule_readonly,Read-only: all purchase orders,model_purchase_order,group_purchase_readonly,permission,r,
+purchase_order_line_rule_readonly,Read-only: all purchase order lines,model_purchase_order_line,group_purchase_readonly,permission,r,
+purchase_report_rule_readonly,Read-only: all purchase analysis,model_purchase_report,group_purchase_readonly,permission,r,
+access_purchase_bill_match_purchase_readonly,purchase.bill.match.purchase.readonly,model_purchase_bill_match,group_purchase_readonly,permission,r,
+access_purchase_bill_line_match_purchase_readonly,purchase.bill.line.match.purchase.readonly,model_purchase_bill_line_match,group_purchase_readonly,permission,r,
+purchase_account_move_rule_readonly,Read-only: all vendor bills,account.model_account_move,group_purchase_readonly,permission,r,"[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]"
+purchase_account_move_line_rule_readonly,Read-only: all vendor bill lines,account.model_account_move_line,group_purchase_readonly,permission,r,"[('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]"
+access_account_partial_reconcile_purchase_readonly,account.partial.reconcile.purchase.readonly,account.model_account_partial_reconcile,group_purchase_readonly,permission,r,
+access_account_analytic_line_purchase_readonly,account.analytic.line.purchase.readonly,analytic.model_account_analytic_line,group_purchase_readonly,permission,r,
+access_account_payment_purchase_readonly,account.payment.purchase.readonly,account.model_account_payment,group_purchase_readonly,permission,r,
+purchase_config_rule_company_group_user,purchase.config: the reader's companies,model_purchase_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+purchase_config_rule_erp_manager,purchase.config: every company for an access-rights manager,model_purchase_config,base.group_erp_manager,permission,r,
+purchase_config_rule_erp_manager_group_system,purchase.config: every company for an access-rights manager,model_purchase_config,base.group_system,permission,cud,
+purchase_order_comp_rule,Purchase Order multi-company,model_purchase_order,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+purchase_order_line_comp_rule,Purchase Order Line multi-company,model_purchase_order_line,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+purchase_order_report_comp_rule,Purchase Order Report multi-company,model_purchase_report,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+purchase_mass_cancel_orders_rule,Purchase Mass Cancel Orders: access only your own wizard,model_purchase_mass_cancel_orders,base.group_everyone,guard,crud,"[('create_uid', '=', user.id)]"
+purchase_bill_match_comp_rule,Purchases & Bills Union multi-company,model_purchase_bill_match,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+purchase_bill_line_match_comp_rule,Purchase Bill Line Match multi-company,model_purchase_bill_line_match,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

@@ -442,29 +442,23 @@ class TestMarketingCardSecurity(MarketingCardCommon):
     @mute_logger("odoo.addons.mail.models.mixin_mail_render")
     def test_campaign_field_paths(self):
         """Check that card updates are performed as the current user."""
-        # restrict reading from partner states (flush to apply new rule)
+        # card users stop reading partner states, administrators do not
         rules = (
-            self.env["ir.rule"]
+            self.env["ir.access"]
             .sudo()
             .create(
-                [
-                    {
-                        "name": "marketing card user read partner state",
-                        "domain_force": repr([(0, "=", 1)]),
-                        "groups": self.env.ref(
-                            "marketing_card.marketing_card_group_user"
-                        ).ids,
-                        "model_id": self.env["ir.model"]._get_id("res.country.state"),
-                        "perm_read": True,
-                    },
-                    {
-                        "name": "system user read partner state",
-                        "domain_force": repr([(1, "=", 1)]),
-                        "groups": self.env.ref("base.group_system").ids,
-                        "model_id": self.env["ir.model"]._get_id("res.country.state"),
-                        "perm_read": True,
-                    },
-                ]
+                {
+                    "name": "marketing card user read partner state",
+                    "model_id": self.env["ir.model"]._get_id("res.country.state"),
+                    "group_id": self.env.ref(
+                        "marketing_card.marketing_card_group_user"
+                    ).id,
+                    "kind": "guard",
+                    "guard_scope": "members",
+                    "operation": "r",
+                    "domain": "[] if user.has_group('base.group_system') "
+                    "else [('id', '<', 0)]",
+                }
             )
         )
         rules.flush_recordset()

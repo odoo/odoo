@@ -27,22 +27,4 @@
         <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]" />
     </record>
 
-    <record id="device_device_company_rule" model="ir.rule">
-        <field name="name">Remote Device: multi-company</field>
-        <field name="model_id" ref="model_device_device" />
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="device_data_log_company_rule" model="ir.rule">
-        <field name="name">Remote Data Point: multi-company</field>
-        <field name="model_id" ref="model_device_data_log" />
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="device_data_log_report_company_rule" model="ir.rule">
-        <field name="name">Remote Data Log Report: multi-company</field>
-        <field name="model_id" ref="model_device_data_log_report" />
-        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
-    </record>
-
 </odoo>

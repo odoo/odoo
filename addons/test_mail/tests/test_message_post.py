@@ -3096,12 +3096,13 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         """
         # a portal user can only post to a model whose _mail_post_access='read'
         container = self.env["mail.test.container"].create({"name": "OOO share probe"})
-        self.env["ir.model.access"].sudo().create(
+        self.env["ir.access"].sudo().create(
             {
                 "name": "portal read container (test)",
                 "model_id": self.env["ir.model"]._get("mail.test.container").id,
                 "group_id": self.env.ref("base.group_portal").id,
-                "perm_read": True,
+                "kind": "permission",
+                "operation": "r",
             }
         )
         container.message_subscribe(self.user_portal.partner_id.ids)

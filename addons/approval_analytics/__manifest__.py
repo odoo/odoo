@@ -32,8 +32,7 @@ the engine, not the reporting stack.
         "mixin_report_sql",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/ir_rule.xml",
+        "security/ir.access.csv",
         "views/approval_dashboard_views.xml",
         "views/approval_metrics_views.xml",
         "views/approver_performance_views.xml",

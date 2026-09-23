@@ -15,8 +15,7 @@ You can easily assign grade to members/partners, with a specific pricelist.
         "sale",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/partnership_security.xml",
+        "security/ir.access.csv",
         "data/res_partner_grade_data.xml",
         "views/res_config_settings_views.xml",
         "views/res_partner_views.xml",

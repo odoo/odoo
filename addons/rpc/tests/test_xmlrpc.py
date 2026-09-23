@@ -57,12 +57,13 @@ class TestXMLRPC(common.HttpCase):
 
     def test_xmlrpc_datetime(self):
         m = self.env.ref("base.model_res_device_log")
-        self.env["ir.model.access"].create(
+        self.env["ir.access"].create(
             {
                 "name": "w/e",
                 "model_id": m.id,
-                "perm_read": True,
-                "perm_create": True,
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "permission",
+                "operation": "cr",
             }
         )
 

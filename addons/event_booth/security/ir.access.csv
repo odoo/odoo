@@ -1,0 +1,9 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_event_booth_category,event.booth.category,model_event_booth_category,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_event_booth_category_desk,event.booth.category.desk,model_event_booth_category,event.group_event_registration_desk,permission,r,
+access_event_booth_category_manager,event.booth.category.manager,model_event_booth_category,event.group_event_manager,permission,cud,
+access_event_booth_all,event.booth.public,model_event_booth,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_event_booth_desk,event.booth.user,model_event_booth,event.group_event_registration_desk,permission,r,
+access_event_booth_user,event.booth.user,model_event_booth,event.group_event_user,permission,cud,
+access_event_type_booth_user,event.type.booth.user,model_event_type_booth,event.group_event_registration_desk,permission,r,
+access_event_type_booth_manager,event.type.booth.manager,model_event_type_booth,event.group_event_manager,permission,cud,

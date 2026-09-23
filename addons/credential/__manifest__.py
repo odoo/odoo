@@ -66,8 +66,7 @@ rotation.
     ],
     "data": [
         "security/credential_security.xml",
-        "security/ir.model.access.csv",
-        "security/ir_rule.xml",
+        "security/ir.access.csv",
         "data/credential_category_data.xml",
         "data/credential_category_field_data.xml",
         "data/ir_cron.xml",

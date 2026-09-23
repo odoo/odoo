@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+user_iap_account_group_system,User IAP Account,model_iap_account,base.group_system,permission,crud,"['|', ('company_ids', '=', False), ('company_ids', 'in', company_ids)]"
+user_iap_account,User IAP Account,model_iap_account,base.group_user,permission,cr,"['|', ('company_ids', '=', False), ('company_ids', 'in', company_ids)]"
+access_iap_service_manager,iap.service.manager,model_iap_service,base.group_system,permission,cud,
+access_iap_service_user,iap.service.user,model_iap_service,base.group_user,permission,r,

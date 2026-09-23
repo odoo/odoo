@@ -13,7 +13,7 @@ Convert employee's extra hours to leave allocations.
         "hr_holidays",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/hr_leave_allocation_views.xml",
         "views/hr_leave_type_views.xml",
         "views/hr_leave_views.xml",

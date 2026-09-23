@@ -1,0 +1,105 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_stock_warehouse_manager,stock.warehouse.manager,model_stock_warehouse,group_stock_manager,permission,cud,
+access_stock_warehouse_user,stock.warehouse.user,model_stock_warehouse,base.group_user,permission,r,
+access_stock_location_partner_manager,stock.location.partner.manager,model_stock_location,base.group_partner_manager,permission,r,
+access_stock_location_manager,stock.location.manager,model_stock_location,group_stock_manager,permission,cud,
+access_stock_location_all_user,stock.location.all.user,model_stock_location,base.group_user,permission,r,
+access_stock_picking_user,stock.picking user,model_stock_picking,group_stock_user,permission,cud,
+access_stock_picking_type_all,stock.picking.type all users,model_stock_picking_type,base.group_user,permission,r,
+access_stock_picking_type_manager,stock.picking.type manager,model_stock_picking_type,group_stock_manager,permission,cud,
+access_stock_lot_user_crud,stock.lot user,model_stock_lot,group_stock_user,permission,crud,
+access_stock_move_manager,stock.move manager,model_stock_move,group_stock_manager,permission,d,
+access_stock_move_user,stock.move user,model_stock_move,group_stock_user,permission,cu,
+access_product_pricelist_stock_manager,product.pricelist stock_manager,product.model_product_pricelist,group_stock_manager,permission,cud,
+access_product_group_res_partner_stock_manager,res_partner group_stock_manager,base.model_res_partner,group_stock_manager,permission,cu,
+access_stock_warehouse_orderpoint_system,stock.warehouse.orderpoint system,model_stock_warehouse_orderpoint,group_stock_manager,permission,cud,
+access_stock_quant_user,stock.quant user,model_stock_quant,group_stock_user,permission,cu,
+access_stock_quant_all,stock.quant all users,model_stock_quant,base.group_user,permission,r,
+access_stock_package_all,stock.package all users,model_stock_package,base.group_user,permission,r,
+access_stock_package_stock_user,stock.package stock user,model_stock_package,group_stock_user,permission,cud,
+access_stock_rule_stock_manager,stock_rule stock manager,model_stock_rule,group_stock_manager,permission,cud,
+access_stock_location_route_stock_manager,stock.route,model_stock_route,group_stock_manager,permission,cud,
+access_stock_location_route,stock.route,model_stock_route,base.group_user,permission,r,
+access_stock_rule_internal,stock.rule.flow internal,model_stock_rule,base.group_user,permission,r,
+access_stock_move_line_user,stock.move.line user,model_stock_move_line,group_stock_user,permission,cud,
+access_stock_move_line_all,stock.move.line all users,model_stock_move_line,base.group_user,permission,r,
+access_stock_putaway_all,stock.putaway.rule all users,model_stock_putaway_rule,base.group_user,permission,r,
+access_stock_putaway_manager,stock.putaway.rule all managers,model_stock_putaway_rule,group_stock_manager,permission,cud,
+access_stock_removal_all,product.removal all users,model_product_removal,base.group_user,permission,r,
+access_barcode_nomenclature_stock_manager,barcode.nomenclature.stock.manager,barcodes.model_barcode_nomenclature,group_stock_manager,permission,cud,
+access_barcode_rule_stock_manager,barcode.rule.stock.manager,barcodes.model_barcode_rule,group_stock_manager,permission,cud,
+access_stock_scrap_user,stock.scrap.user,model_stock_scrap,group_stock_user,permission,cu,
+access_stock_scrap_manager,stock.scrap.manager,model_stock_scrap,group_stock_manager,permission,d,
+access_stock_scrap_reason_tag_user,stock.scrap.reason.tag.user,model_stock_scrap_reason_tag,group_stock_user,permission,cu,
+access_stock_scrap_reason_tag_manager,stock.scrap.reason.tag.manager,model_stock_scrap_reason_tag,group_stock_manager,permission,d,
+access_product_attribute_manager,product.attribute manager,product.model_product_attribute,group_stock_manager,permission,cud,
+access_product_attribute_value_manager,product.attribute manager value,product.model_product_attribute_value,group_stock_manager,permission,cud,
+access_update_product_attribute_value_stock_manager,update.product.attribute.value,product.model_update_product_attribute_value,group_stock_manager,permission,cru,
+access_report_stock_quantity,access_report_stock_quantity,model_report_stock_quantity,base.group_user,permission,r,
+access_stock_return_picking_line,access.stock.return.picking.line,model_stock_return_picking_line,group_stock_user,permission,crud,
+access_stock_return_picking,access.stock.return.picking,model_stock_return_picking,group_stock_user,permission,cru,
+access_stock_backorder_confirmation_line,access.stock.backorder.confirmation.line,model_stock_backorder_confirmation_line,group_stock_user,permission,cru,
+access_stock_backorder_confirmation,access.stock.backorder.confirmation,model_stock_backorder_confirmation,group_stock_user,permission,cru,
+access_stock_warn_insufficient_qty_scrap,access.stock.warn.insufficient.qty.scrap,model_stock_warn_insufficient_qty_scrap,group_stock_user,permission,cru,
+access_product_replenish,access.product.replenish,model_product_replenish,group_stock_user,permission,cru,
+access_stock_package_destination,access.stock.package.destination,model_stock_package_destination,group_stock_user,permission,cru,
+access_stock_orderpoint_snooze,access_stock_orderpoint_snooze,model_stock_orderpoint_snooze,group_stock_user,permission,crud,
+access_stock_package_type_manager,access_stock_package_type_manager,model_stock_package_type,group_stock_manager,permission,cud,
+access_stock_storage_category_user,stock.storage.category.user,model_stock_storage_category,base.group_user,permission,r,
+access_stock_storage_category_manager,stock.storage.category.manager,model_stock_storage_category,group_stock_manager,permission,cud,
+access_stock_storage_category_capacity_user,stock.storage.category.capacity.user,model_stock_storage_category_capacity,base.group_user,permission,r,
+access_stock_storage_category_capacity_manager,stock.storage.category.capacity.manager,model_stock_storage_category_capacity,group_stock_manager,permission,cud,
+access_stock_inventory_conflict,stock.inventory.conflict,model_stock_inventory_conflict,group_stock_manager,permission,cru,
+access_stock_inventory_warning,stock.inventory.warning,model_stock_inventory_warning,group_stock_manager,permission,cru,
+access_stock_inventory_adjustment_name_user,stock.inventory.adjustment.name.user,model_stock_inventory_adjustment_name,group_stock_user,permission,cru,
+access_stock_request_count,stock.request.count,model_stock_request_count,group_stock_manager,permission,cru,
+access_stock_replenishment_info,stock.replenishment.info,model_stock_replenishment_info,group_stock_manager,permission,cru,
+access_stock_picking_label_type_user,picking.label.type.user,model_picking_label_type,group_stock_user,permission,cru,
+access_stock_lot_label_layout_user,lot.label.layout.user,model_lot_label_layout,group_stock_user,permission,cru,
+access_stock_replenish_option,stock.replenishment.option,model_stock_replenishment_option,group_stock_user,permission,cru,
+access_stock_quant_relocate,access.stock.quant.relocate,model_stock_quant_relocate,group_stock_manager,permission,cru,
+access_stock_package_history_user,access_stock_package_history_user,model_stock_package_history,group_stock_user,permission,cu,
+access_stock_put_in_pack_user,acess.stock.put.in.pack.user,model_stock_put_in_pack,group_stock_user,permission,cru,
+access_stock_reference,access_stock_reference,model_stock_reference,base.group_user,permission,r,
+access_stock_reference_user,access_stock_reference_user,model_stock_reference,group_stock_user,permission,cu,
+access_stock_picking_stock_readonly,stock.picking.stock.readonly,model_stock_picking,group_stock_readonly,permission,r,
+access_stock_lot_stock_readonly,stock.lot.stock.readonly,model_stock_lot,group_stock_readonly,permission,r,
+access_stock_move_stock_readonly,stock.move.stock.readonly,model_stock_move,group_stock_readonly,permission,r,
+access_stock_scrap_stock_readonly,stock.scrap.stock.readonly,model_stock_scrap,group_stock_readonly,permission,r,
+access_stock_scrap_reason_tag_stock_readonly,stock.scrap.reason.tag.stock.readonly,model_stock_scrap_reason_tag,group_stock_readonly,permission,r,
+access_stock_warehouse_orderpoint_stock_readonly,stock.warehouse.orderpoint.stock.readonly,model_stock_warehouse_orderpoint,group_stock_readonly,permission,r,
+access_stock_package_type_stock_readonly,stock.package.type.stock.readonly,model_stock_package_type,group_stock_readonly,permission,r,
+access_stock_traceability_report_stock_readonly,stock.traceability.report.stock.readonly,model_stock_traceability_report,group_stock_readonly,permission,cru,
+access_stock_quantity_history_stock_readonly,stock.quantity.history.stock.readonly,model_stock_quantity_history,group_stock_readonly,permission,cru,
+access_stock_rules_report_stock_readonly,stock.rules.report.stock.readonly,model_stock_rules_report,group_stock_readonly,permission,cru,
+access_stock_package_history_stock_readonly,stock.package.history.stock.readonly,model_stock_package_history,group_stock_readonly,permission,r,
+access_stock_picking_batch,stock.picking.batch stock users,model_stock_picking_batch,group_stock_user,permission,crud,
+stock_config_rule_company_group_user,stock.config: the reader's companies,model_stock_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+stock_config_rule_erp_manager,stock.config: every company for an access-rights manager,model_stock_config,base.group_erp_manager,permission,r,
+stock_config_rule_erp_manager_group_system,stock.config: every company for an access-rights manager,model_stock_config,base.group_system,permission,cud,
+access_report_formula_stock_readonly,report.formula stock readonly,report_formula.model_report_formula,group_stock_readonly,permission,r,
+access_report_formula_line_stock_readonly,report.formula.line stock readonly,report_formula.model_report_formula_line,group_stock_readonly,permission,r,
+access_report_formula_expression_stock_readonly,report.formula.expression stock readonly,report_formula.model_report_formula_expression,group_stock_readonly,permission,r,
+access_report_formula_column_stock_readonly,report.formula.column stock readonly,report_formula.model_report_formula_column,group_stock_readonly,permission,r,
+stock_picking_rule,stock_picking multi-company,model_stock_picking,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+stock_picking_type_rule,Stock Operation Type multi-company,model_stock_picking_type,base.group_everyone,guard,crud,"[('company_id','in', company_ids)]"
+stock_picking_batch_rule,Stock Picking Batch multi-company,model_stock_picking_batch,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+stock_putaway_rule_rule,Putaway Rule multi-company,model_stock_putaway_rule,base.group_everyone,guard,crud,"[('company_id','in', company_ids)]"
+stock_production_lot_rule,Stock Production Lot multi-company,model_stock_lot,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+stock_warehouse_comp_rule,Warehouse multi-company,model_stock_warehouse,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+stock_location_comp_rule,Location multi-company,model_stock_location,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+stock_move_rule,stock_move multi-company,model_stock_move,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+stock_move_line_rule,stock_move_line multi-company,model_stock_move_line,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+stock_reference_comp_rule,stock_reference multi-company,model_stock_reference,base.group_everyone,guard,crud,"['|', ('move_ids', '=', False), ('move_ids.company_id', 'in', company_ids)]"
+stock_quant_rule,stock_quant multi-company,model_stock_quant,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+stock_warehouse_orderpoint_rule,stock_warehouse.orderpoint multi-company,model_stock_warehouse_orderpoint,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+product_pulled_flow_comp_rule,product_pulled_flow multi-company,model_stock_rule,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+stock_location_route_comp_rule,stock_route multi-company,model_stock_route,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+stock_package_comp_rule,stock_package multi-company,model_stock_package,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+stock_package_history_comp_rule,stock_package_history multi-company,model_stock_package_history,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+stock_scrap_company_rule,stock_scrap_company multi-company,model_stock_scrap,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+stock_picking_batch_comp_rule,stock_picking_batch multi-company,model_stock_picking_batch,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+report_stock_quantity_flow_comp_rule,report_stock_quantity_flow multi-company,model_report_stock_quantity,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+stock_storage_category_rule,stock_storage_category multi-company,model_stock_storage_category,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+stock_package_type_comp_rule,stock_package_type multi-company,model_stock_package_type,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+stock_storage_category_capacity_comp_rule,stock_storage_category_capacity multi-company,model_stock_storage_category_capacity,base.group_everyone,guard,crud,"[('storage_category_id.company_id', 'in', company_ids + [False])]"

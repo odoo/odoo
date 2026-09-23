@@ -418,13 +418,13 @@ class TestRosterVisibilityFollowsMembership(TestSalesCommon):
 class TestTeamWriteGrantsOutsideSales(TestSalesCommon):
     def test_a_sales_group_never_takes_a_team_write_grant_away(self):
         writers = self.env["res.groups"].create({"name": "Team writers"})
-        self.env["ir.model.access"].create(
+        self.env["ir.access"].create(
             {
                 "name": "team writers",
                 "model_id": self.env.ref("team.model_team_team").id,
                 "group_id": writers.id,
-                "perm_read": True,
-                "perm_write": True,
+                "kind": "permission",
+                "operation": "ru",
             }
         )
         writer = mail_new_test_user(self.env, login="team_writer", name="Team Writer")

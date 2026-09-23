@@ -1,0 +1,17 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_payment_link_wizard,access_payment_link_wizard,model_payment_link_wizard,base.group_user,permission,r,"[(0, '=', 1)]"
+payment_capture_wizard_user,payment.capture.wizard,model_payment_capture_wizard,base.group_user,permission,cru,
+payment_provider_system,payment.provider.system,model_payment_provider,base.group_system,permission,crud,
+payment_method_public,payment.method.all,model_payment_method,base.group_public,permission,r,
+payment_method_portal,payment.method.all,model_payment_method,base.group_portal,permission,r,
+payment_method_employee,payment.method.all,model_payment_method,base.group_user,permission,r,
+payment_method_system,payment.method.system,model_payment_method,base.group_system,permission,cud,
+payment_token_user_rule_group_public,Users can access only their own tokens,model_payment_token,base.group_public,permission,r,"[('partner_id', '=', user.partner_id.id)]"
+payment_token_user_rule_group_portal,Users can access only their own tokens,model_payment_token,base.group_portal,permission,r,"[('partner_id', '=', user.partner_id.id)]"
+payment_token_user_rule_group_user,Users can access only their own tokens,model_payment_token,base.group_user,permission,r,"[('partner_id', '=', user.partner_id.id)]"
+payment_token_user_rule_group_system,Users can access only their own tokens,model_payment_token,base.group_system,permission,crud,"[('partner_id', '=', user.partner_id.id)]"
+payment_transaction_system,payment.transaction.system,model_payment_transaction,base.group_system,permission,crud,
+payment_provider_company_rule,Access providers in own companies only,model_payment_provider,base.group_everyone,guard,crud,"[('company_id', 'parent_of', company_ids)]"
+transaction_company_rule,Access transactions in own companies only,model_payment_transaction,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+payment_token_company_rule,Access tokens in own companies only,model_payment_token,base.group_everyone,guard,crud,"[('company_id', 'parent_of', company_ids)]"
+payment_capture_wizard_rule,Payment Capture Wizard,model_payment_capture_wizard,base.group_everyone,guard,crud,"[('create_uid', '=', user.id)]"

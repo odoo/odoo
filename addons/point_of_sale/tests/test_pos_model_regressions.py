@@ -661,15 +661,14 @@ class TestPosModelRegressions(CommonPosTest):
         )
         ranked = [row[0] for row in self.pos_config_usd.get_limited_partners_loading()]
         self.assertEqual(ranked, partners[:3].ids)
-        self.env["ir.rule"].sudo().create(
+        self.env["ir.access"].sudo().create(
             {
                 "name": "Challenge hide first page",
                 "model_id": self.env["ir.model"]._get("res.partner").id,
-                "domain_force": repr([("id", "not in", partners[:3].ids)]),
-                "perm_read": True,
-                "perm_write": False,
-                "perm_create": False,
-                "perm_unlink": False,
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "r",
+                "domain": repr([("id", "not in", partners[:3].ids)]),
             }
         )
         first = self.env["res.partner"].get_new_partner(self.pos_config_usd.id, [], 0)[

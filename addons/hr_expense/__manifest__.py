@@ -32,7 +32,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
     ],
     "data": [
         "security/hr_expense_security.xml",
-        "security/ir.model.access.csv",
         "data/digest_data.xml",
         "data/mail_activity_type_data.xml",
         "data/approval_category_data.xml",
@@ -50,7 +49,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
         "views/product_product_views.xml",
         "views/hr_expense_views.xml",
         "views/mail_activity_views.xml",
-        "security/ir_rule.xml",
+        "security/ir.access.csv",
         "reports/hr_expense_report.xml",
         "views/account_move_views.xml",
         "views/account_payment_views.xml",

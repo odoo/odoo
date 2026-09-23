@@ -9,8 +9,7 @@
         "account",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/loyalty_security.xml",
+        "security/ir.access.csv",
         "reports/loyalty_report_templates.xml",
         "reports/loyalty_report.xml",
         "data/mail_template_data.xml",

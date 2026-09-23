@@ -11,8 +11,7 @@
         "mixin_encryption",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/certificate_security.xml",
+        "security/ir.access.csv",
         "views/certificate_views.xml",
         "views/key_views.xml",
         "views/action_menus.xml",

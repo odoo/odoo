@@ -15,8 +15,8 @@
     ],
     "data": [
         "security/project_security.xml",
-        "security/ir.model.access.csv",
-        "security/ir.model.access.xml",
+        "security/ir.access.csv",
+        "security/ir_access.xml",
         "data/digest_data.xml",
         "reports/project_task_burndown_chart_report_views.xml",
         "reports/project_cfd_report_views.xml",

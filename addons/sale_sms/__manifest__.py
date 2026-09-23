@@ -11,8 +11,7 @@
         "sms",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/security.xml",
+        "security/ir.access.csv",
     ],
     "auto_install": True,
 }

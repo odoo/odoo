@@ -10,7 +10,7 @@
     ],
     "data": [
         "data/microsoft_calendar_data.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "wizards/reset_account_views.xml",
         "views/res_config_settings_views.xml",
         "views/res_users_views.xml",

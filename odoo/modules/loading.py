@@ -430,25 +430,16 @@ def _warn_models_without_access_rules(
     concrete_models = [model for model in model_names if not registry[model]._abstract]
     if not concrete_models:
         return
-    if schema.table_exists(env.cr, "ir_access"):
-        env.cr.execute(
-            """
-            SELECT m.model FROM ir_model m
-            WHERE NOT EXISTS (SELECT 1 FROM ir_model_access a WHERE a.model_id = m.id)
-                AND NOT EXISTS (SELECT 1 FROM ir_access r WHERE r.model_id = m.id)
-                AND m.model = ANY(%s)
-            """,
-            [list(concrete_models)],
-        )
-    else:
-        env.cr.execute(
-            """
-            SELECT m.model FROM ir_model m
-            WHERE NOT EXISTS (SELECT 1 FROM ir_model_access a WHERE a.model_id = m.id)
-                AND m.model = ANY(%s)
-            """,
-            [list(concrete_models)],
-        )
+    if not schema.table_exists(env.cr, "ir_access"):
+        return
+    env.cr.execute(
+        """
+        SELECT m.model FROM ir_model m
+        WHERE NOT EXISTS (SELECT 1 FROM ir_access r WHERE r.model_id = m.id)
+            AND m.model = ANY(%s)
+        """,
+        [list(concrete_models)],
+    )
     models = [model for [model] in env.cr.fetchall()]
     if not models:
         return

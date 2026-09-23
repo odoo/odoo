@@ -14,12 +14,13 @@ class TestWebsiteControllerPage(HttpCase):
         super().setUpClass()
         cls.model = cls.env["ir.model"]._get("test.model.exposed")
 
-        cls.model_acl = cls.env["ir.model.access"].create(
+        cls.model_acl = cls.env["ir.access"].create(
             {
                 "name": "test acl expose",
                 "model_id": cls.model.id,
                 "group_id": cls.env.ref("website.website_page_controller_expose").id,
-                "perm_read": True,
+                "kind": "permission",
+                "operation": "r",
             }
         )
 
@@ -79,9 +80,13 @@ class TestWebsiteControllerPage(HttpCase):
         cls.exposed_records = cls.env[cls.model.model].create(records_to_create)
 
     def test_cannot_bypass_read_rights(self):
-        self.env["ir.model.access"].search(
-            [("model_id", "=", self.model.id)]
-        ).perm_read = False
+        self.env["ir.access"].search(
+            [
+                ("model_id", "=", self.model.id),
+                ("kind", "=", "permission"),
+                ("for_read", "=", True),
+            ]
+        ).active = False
 
         with self.assertRaises(AccessError) as cm:
             self.env["website.controller.page"].with_user(2).create(
@@ -116,12 +121,15 @@ class TestWebsiteControllerPage(HttpCase):
         rec_nodes = tree.xpath("//a[@class='test_record_listing']")
         self.assertEqual(len(rec_nodes), 2)
 
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "dummy",
                 "model_id": self.model.id,
-                "domain_force": "[('name', '=', 'test_partner_1')]",
-                "groups": self.env.ref("base.group_public"),
+                "group_id": self.env.ref("base.group_public").id,
+                "kind": "guard",
+                "guard_scope": "members",
+                "operation": "crud",
+                "domain": "[('name', '=', 'test_partner_1')]",
             }
         )
         response = self.url_open(

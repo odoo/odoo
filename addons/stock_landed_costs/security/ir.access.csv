@@ -1,0 +1,8 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_stock_landed_cost,stock.landed.cost,model_stock_landed_cost,stock.group_stock_manager,permission,crud,
+access_stock_landed_cost_lines,stock.landed.cost.lines,model_stock_landed_cost_lines,stock.group_stock_manager,permission,crud,
+access_stock_valuation_adjustment_lines,stock.valuation.adjustment.lines,model_stock_valuation_adjustment_lines,stock.group_stock_manager,permission,crud,
+access_stock_landed_cost_purchase_readonly,stock.landed.cost.purchase.readonly,model_stock_landed_cost,purchase.group_purchase_readonly,permission,r,
+access_stock_landed_cost_lines_purchase_readonly,stock.landed.cost.lines.purchase.readonly,model_stock_landed_cost_lines,purchase.group_purchase_readonly,permission,r,
+access_stock_valuation_adjustment_lines_purchase_readonly,stock.valuation.adjustment.lines.purchase.readonly,model_stock_valuation_adjustment_lines,purchase.group_purchase_readonly,permission,r,
+stock_landed_cost_rule,stock_landed_cost multi-company,model_stock_landed_cost,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"

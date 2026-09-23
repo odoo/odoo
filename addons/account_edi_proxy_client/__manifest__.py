@@ -18,8 +18,7 @@ Odoo database.
         "integration",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/account_edi_proxy_client_security.xml",
+        "security/ir.access.csv",
         "views/account_edi_proxy_user_views.xml",
         "views/account_edi_proxy_client_menus.xml",
     ],

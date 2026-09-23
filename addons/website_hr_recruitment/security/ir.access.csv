@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+hr_job_public,Job Positions: Public,hr.model_hr_job,base.group_public,permission,r,"[('website_published', '=', True)]"
+hr_job_portal,Job Positions: Portal,hr.model_hr_job,base.group_portal,permission,r,"[('website_published', '=', True)]"
+hr_department_public,Job department: Public,hr.model_hr_department,base.group_public,permission,r,"['|', ('jobs_ids.website_published', '=', True), ('child_ids', 'not in', [])]"

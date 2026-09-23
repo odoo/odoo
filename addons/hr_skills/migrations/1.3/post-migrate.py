@@ -1,8 +1,7 @@
+import csv
 import logging
 from collections import defaultdict
 from pathlib import Path
-
-from lxml import etree
 
 from odoo import SUPERUSER_ID, api
 from odoo.tools import SQL
@@ -17,22 +16,20 @@ RULES_REWRITTEN = (
     "hr_employee_certification_report_manager",
 )
 
-SECURITY = Path(__file__).resolve().parents[2] / "security" / "hr_skills_security.xml"
+SECURITY = Path(__file__).resolve().parents[2] / "security" / "ir.access.csv"
 
 
 def _rewrite_rules(env):
-    tree = etree.parse(str(SECURITY))
+    # the rules are noupdate, and base 1.97 turned them into ir.access rows
+    # that keep the flag: the data file does not reach them
+    with SECURITY.open(newline="", encoding="utf-8") as stream:
+        shipped = {row["id"]: row for row in csv.DictReader(stream)}
     for xmlid in RULES_REWRITTEN:
-        rule = env.ref(f"hr_skills.{xmlid}", raise_if_not_found=False)
-        if not rule:
+        access = env.ref(f"hr_skills.{xmlid}", raise_if_not_found=False)
+        if not access or access._name != "ir.access":
             continue
-        rule.write(
-            {
-                field.get("name"): field.text
-                for field in tree.find(f".//record[@id='{xmlid}']").iter("field")
-                if field.get("name") in ("name", "domain_force")
-            }
-        )
+        row = shipped[xmlid]
+        access.write({"name": row["name"], "domain": row["domain"] or False})
 
 
 def _normalize_resume_urls(cr):

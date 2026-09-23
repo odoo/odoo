@@ -19,13 +19,16 @@ class TestTestDocumentIsNotProductionSurface(ApprovalCommon):
                 {"name": "should not be reachable"},
             )
 
-    def test_the_test_document_has_no_acl_row_at_all(self):
-        acl = self.env["ir.model.access"].search(
-            [("model_id.model", "=", "approval.test.document")],
+    def test_the_test_document_has_no_access_row_at_all(self):
+        acl = self.env["ir.access"].search(
+            [
+                ("model_id.model", "=", "approval.test.document"),
+                ("kind", "=", "permission"),
+            ],
         )
         self.assertFalse(
             acl,
-            "approval.test.document must carry no ir.model.access row: this "
+            "approval.test.document must carry no ir.access permission: this "
             "module ships none, and the fixture is reached as superuser or "
             "as a manager. Found: %s" % acl.mapped("name"),
         )

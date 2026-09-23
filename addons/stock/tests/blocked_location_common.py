@@ -90,12 +90,13 @@ class BlockedLocationCase(TransactionCase):
             model = cls.env.ref(model_xmlid, raise_if_not_found=False)
             if not model:
                 continue
-            cls.env["ir.model.access"].create(
+            cls.env["ir.access"].create(
                 {
                     "name": f"vendor_test_{model_xmlid}",
                     "model_id": model.id,
                     "group_id": cls.vendor_group.id,
-                    "perm_read": True,
+                    "kind": "permission",
+                    "operation": "r",
                 },
             )
         cls.vendor_user = cls._create_user(

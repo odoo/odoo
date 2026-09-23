@@ -24,7 +24,7 @@ capabilities so portal pages can be rendered without the ``website`` module.
         "auth_signup",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/mail_templates.xml",
         "views/address_templates.xml",
         "views/mail_templates_public.xml",

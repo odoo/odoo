@@ -45,14 +45,13 @@ class TestAssetTableInheritanceRoot(TransactionCase):
         user = self.env["res.users"].create(
             {"name": "Root Only", "login": "root_only", "group_ids": [(4, group.id)]}
         )
-        self.env["ir.model.access"].create(
+        self.env["ir.access"].create(
             {
                 "name": "root only",
                 "model_id": self.env["ir.model"]._get_id("resource.asset"),
                 "group_id": group.id,
-                "perm_read": True,
-                "perm_write": True,
-                "perm_create": True,
+                "kind": "permission",
+                "operation": "cru",
             }
         )
         kind = self.env.ref("resource_asset.kind_property")

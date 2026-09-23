@@ -20,9 +20,7 @@
     "data": [
         "data/ir_cron.xml",
         "data/l10n_my_edi.industry_classification.csv",
-        "security/ir.model.access.csv",
-        "security/l10n_my_edi_security.xml",
-        "security/myinvois_security.xml",
+        "security/ir.access.csv",
         "views/account_move_view.xml",
         "views/account_tax_view.xml",
         "views/l10n_my_edi_industrial_classification_views.xml",

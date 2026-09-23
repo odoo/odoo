@@ -9,7 +9,7 @@
         "base",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "view.xml",
         "views/test_translation_import_menus.xml",
         "data/test_translation_import_data.xml",

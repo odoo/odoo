@@ -1,0 +1,45 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_approval_category,access_approval_category,model_approval_category,base.group_user,permission,r,
+approval_category_manager_write,Approval Category: approval manager writes all types,model_approval_category,group_approval_manager,permission,cud,
+access_approval_refusal_reason,access_approval_refusal_reason,model_approval_refusal_reason,base.group_user,permission,r,
+access_approval_refusal_reason_manager,access_approval_refusal_reason,model_approval_refusal_reason,group_approval_manager,permission,cud,
+access_approval_rule,access_approval_rule,model_approval_rule,base.group_user,permission,r,
+access_approval_rule_manager,access_approval_rule,model_approval_rule,group_approval_manager,permission,cud,
+approval_request_user_read,Approval Request: user read own or approver or delegate,model_approval_request,base.group_user,permission,r,"[ '|', '|', ('request_owner_id', '=', user.id), ('approver_ids.user_id', '=', user.id), ('approver_ids.delegate_id', '=', user.id) ]"
+approval_request_restricted_users_read,Approval Request: read for restricted users audience,model_approval_request,base.group_user,permission,r,"[ ('category_id.privacy_visibility', '=', 'restricted_users'), ('category_id.allowed_user_ids', 'in', [user.id]) ]"
+approval_request_restricted_groups_read,Approval Request: read for restricted groups audience,model_approval_request,base.group_user,permission,r,"[ ('category_id.privacy_visibility', '=', 'restricted_groups'), ('category_id.allowed_group_ids.all_user_ids', 'in', [user.id]) ]"
+approval_request_employees_read,Approval Request: read for all internal users,model_approval_request,base.group_user,permission,r,"[('category_id.privacy_visibility', '=', 'employees')]"
+approval_request_manager_read,Approval Request: manager read all,model_approval_request,group_approval_manager,permission,r,
+approval_request_user_write,Approval Request: user write own or approver or delegate,model_approval_request,base.group_user,permission,u,"[ '|', '|', ('request_owner_id', '=', user.id), ('approver_ids.user_id', '=', user.id), ('approver_ids.delegate_id', '=', user.id) ]"
+approval_request_user_create,Approval Request: user create own,model_approval_request,base.group_user,permission,c,"[('request_owner_id', '=', user.id)]"
+approval_request_user_unlink,Approval Request: user unlink own draft,model_approval_request,base.group_user,permission,d,"[ ('request_owner_id', '=', user.id), ('state', '=', 'new') ]"
+approval_request_manager_write,Approval Request: manager write/create all,model_approval_request,group_approval_manager,permission,cu,
+approval_request_manager_unlink,Approval Request: manager unlink draft only,model_approval_request,group_approval_manager,permission,d,"[('state', '=', 'new')]"
+approval_approver_user_read,"Approval Approver: user read own request, self, delegated, or co-approver",model_approval_approver,base.group_user,permission,r,"[ '|', '|', '|', '|', ('request_id.request_owner_id', '=', user.id), ('user_id', '=', user.id), ('delegate_id', '=', user.id), ('request_id.approver_ids.user_id', '=', user.id), ('request_id.approver_ids.delegate_id', '=', user.id) ]"
+approval_approver_restricted_users_read,Approval Approver: read for restricted users audience,model_approval_approver,base.group_user,permission,r,"[ ('request_id.category_id.privacy_visibility', '=', 'restricted_users'), ('request_id.category_id.allowed_user_ids', 'in', [user.id]) ]"
+approval_approver_restricted_groups_read,Approval Approver: read for restricted groups audience,model_approval_approver,base.group_user,permission,r,"[ ('request_id.category_id.privacy_visibility', '=', 'restricted_groups'), ('request_id.category_id.allowed_group_ids.all_user_ids', 'in', [user.id]) ]"
+approval_approver_employees_read,Approval Approver: read for all internal users,model_approval_approver,base.group_user,permission,r,"[('request_id.category_id.privacy_visibility', '=', 'employees')]"
+approval_approver_manager_read,Approval Approver: manager read all,model_approval_approver,group_approval_manager,permission,r,
+approval_approver_user_write,Approval Approver: user write own approver record,model_approval_approver,base.group_user,permission,u,"[ '|', ('user_id', '=', user.id), ('delegate_id', '=', user.id) ]"
+approval_approver_manager_write,Approval Approver: manager write all,model_approval_approver,group_approval_manager,permission,cud,
+approval_approver_user_create,Approval Approver: the owner adds and removes approvers of a new or cancelled request,model_approval_approver,base.group_user,permission,cd,"[('request_id.request_owner_id', '=', user.id), ('request_id.state', 'in', ('new', 'cancel'))]"
+approval_approver_user_unlink_own,Approval Approver: user removes an approver of a new request they own or are,model_approval_approver,base.group_user,permission,d,"['|', ('request_id.request_owner_id', '=', user.id), ('user_id', '=', user.id), ('request_id.state', '=', 'new')]"
+access_approval_decision_wizard,access_approval_decision_wizard,model_approval_decision_wizard,base.group_user,permission,crud,
+access_approval_delegate_wizard,access_approval_delegate_wizard,model_approval_delegate_wizard,base.group_user,permission,crud,
+access_approval_binding,access_approval_binding,model_approval_binding,base.group_user,permission,r,
+access_approval_binding_manager,access_approval_binding,model_approval_binding,group_approval_manager,permission,cud,
+access_approval_gate,access_approval_gate,model_approval_gate,base.group_user,permission,r,
+access_approval_gate_manager,access_approval_gate,model_approval_gate,group_approval_manager,permission,u,
+access_approval_observation,access_approval_observation,model_approval_observation,group_approval_manager,permission,r,
+access_approval_category_step,access_approval_category_step,model_approval_category_step,base.group_user,permission,r,
+access_approval_category_step_manager,access_approval_category_step,model_approval_category_step,group_approval_manager,permission,cud,
+access_approval_category_step_member,access_approval_category_step_member,model_approval_category_step_member,base.group_user,permission,r,
+access_approval_category_step_member_manager,access_approval_category_step_member,model_approval_category_step_member,group_approval_manager,permission,cud,
+access_approval_decision_log_user,approval.decision.log user,model_approval_decision_log,base.group_user,permission,r,
+approval_category_rule,Approval Category: multi-company,model_approval_category,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+approval_refusal_reason_rule,Approval Refusal Reason: multi-company,model_approval_refusal_reason,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+approval_request_rule,Approval Request: multi-company,model_approval_request,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+approval_approver_rule,Approval Approver: multi-company,model_approval_approver,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+approval_rule_rule,Approval Rule: multi-company,model_approval_rule,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+approval_category_step_rule,Approval Step: multi-company,model_approval_category_step,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+approval_category_step_member_rule,Approval Step Member: multi-company,model_approval_category_step_member,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

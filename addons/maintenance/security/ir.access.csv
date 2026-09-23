@@ -1,0 +1,16 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+maintenance_order_rule_user,Users are allowed to access their own maintenance orders,model_maintenance_order,base.group_user,permission,crud,"['|', '|', ('create_uid', '=', user.id), ('message_partner_ids', 'in', [user.partner_id.id]), ('user_id', '=', user.id)]"
+maintenance_order_rule_admin_user,Administrator of maintenance orders,model_maintenance_order,group_equipment_manager,permission,crud,
+access_maintenance_plan_user,maintenance.plan.user,model_maintenance_plan,base.group_user,permission,r,
+access_maintenance_plan_manager,maintenance.plan.manager,model_maintenance_plan,group_equipment_manager,permission,cud,
+team_team_rule_maintenance_manager,Maintenance teams: Maintenance Administrators,team.model_team_team,group_equipment_manager,permission,cud,"[('use_maintenance', '=', True)]"
+team_member_rule_personal_group_equipment_manager,Team Members: own teams,team.model_team_member,group_equipment_manager,permission,r,"['|', ('team_id.user_id', '=', user.id), ('team_id', 'in', user.team_ids.ids)]"
+team_member_rule_maintenance_manager,Maintenance team members: Maintenance Administrators,team.model_team_member,group_equipment_manager,permission,cud,"[('team_id.use_maintenance', '=', True)]"
+team_alias_rule_maintenance_manager,Maintenance team aliases: Maintenance Administrators,team.model_team_alias,group_equipment_manager,permission,cud,"[('team_id.use_maintenance', '=', True)]"
+access_mail_activity_type_equipment_manager,mail.activity.type.equipment.manager,mail.model_mail_activity_type,group_equipment_manager,permission,cud,
+access_resource_asset_part_maintenance_user,resource.asset.part.maintenance.user,resource_asset_product.model_resource_asset_part,base.group_user,permission,cru,
+access_resource_asset_part_flag_maintenance_user,resource.asset.part.flag.maintenance.user,resource_asset_product.model_resource_asset_part_flag,base.group_user,permission,r,
+access_maintenance_profile_user,maintenance.profile.user,model_maintenance_profile,base.group_user,permission,r,
+access_maintenance_profile_manager,maintenance.profile.manager,model_maintenance_profile,group_equipment_manager,permission,cud,
+maintenance_order_comp_rule,Maintenance Order Multi-company rule,model_maintenance_order,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+maintenance_plan_comp_rule,Maintenance Plan Multi-company rule,model_maintenance_plan,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"

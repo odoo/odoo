@@ -13,8 +13,7 @@ Display your booths on your website for the users to register.
         "event_booth",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/event_booth_security.xml",
+        "security/ir.access.csv",
         "views/event_type_views.xml",
         "views/event_event_views.xml",
         "views/event_booth_registration_templates.xml",

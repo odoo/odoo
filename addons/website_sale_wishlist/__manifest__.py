@@ -12,8 +12,7 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
         "website_sale",
     ],
     "data": [
-        "security/website_sale_wishlist_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/website_sale_wishlist_template.xml",
         "views/website_sale_wishlist_template_svg.xml",
     ],

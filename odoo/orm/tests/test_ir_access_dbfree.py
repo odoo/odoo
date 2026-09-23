@@ -125,13 +125,39 @@ def test_a_cycle_through_the_operator_is_refused(world):
 
 
 def test_a_domain_testing_the_user_s_groups_is_named():
-    assert domain_group_tests("[('id', 'in', user.all_group_ids.ids)]") == [
+    assert domain_group_tests("[('id', 'not in', user.all_group_ids.ids)]") == [
         "all_group_ids"
+    ]
+    assert domain_group_tests("['!', ('id', 'in', user.group_ids.ids)]") == [
+        "group_ids"
     ]
     assert domain_group_tests("[(1, '=', user.has_group('base.group_user'))]") == [
         "has_group"
     ]
+    assert domain_group_tests(
+        "[('id', '=', 0)] if user.has_group('base.group_user') else []"
+    ) == ["has_group"]
     assert domain_group_tests("[('user_id.group_ids', '!=', False)]") == []
+
+
+def test_a_domain_that_only_widens_with_the_user_s_groups_is_not_named():
+    # membership in the ids of the user's groups, and a domain the members
+    # of a group are exempt from, give more records to more groups
+    assert domain_group_tests("[('id', 'in', user.all_group_ids.ids)]") == []
+    assert domain_group_tests("[('group_ids', 'in', user.group_ids.ids)]") == []
+    assert (
+        domain_group_tests(
+            "[] if user.has_group('base.group_user') else [('id', '=', 0)]"
+        )
+        == []
+    )
+    assert (
+        domain_group_tests(
+            "(['|', ('id', '=', 1)] if user.has_group('base.group_user') else [])"
+            " + [('id', '=', 2)]"
+        )
+        == []
+    )
 
 
 def test_find_access_cycle():

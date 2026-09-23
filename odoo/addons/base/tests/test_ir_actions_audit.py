@@ -1690,7 +1690,7 @@ class TestIrActionsBindingAccessGate(TransactionCase):
         )
         cls.secret = cls.env["ir.model"]._get("ir.cron")
         cls.bound = cls.env["ir.model"]._get("res.partner")
-        cls.env["ir.model.access"].search([("model_id", "=", cls.secret.id)]).unlink()
+        cls.env["ir.access"].search([("model_id", "=", cls.secret.id)]).unlink()
 
     def _visible_names(self):
         self.env.flush_all()

@@ -10,7 +10,7 @@
         "mail",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/ir_cron.xml",
         "views/link_tracker_views.xml",
         "views/utm_campaign_views.xml",

@@ -1,0 +1,46 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_survey_all,survey.survey.all,model_survey_survey,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_survey_user,survey.survey.user,model_survey_survey,base.group_user,permission,r,"[(0, '=', 1)]"
+survey_survey_rule_survey_manager,Survey: manager: all,model_survey_survey,group_survey_manager,permission,crud,
+survey_survey_rule_survey_user,Survey: officer: unrestricted survey or in restricted users,model_survey_survey,group_survey_user,permission,crud,"[ '|', ('restrict_user_ids', 'in', user.id), ('restrict_user_ids', '=', False)]"
+access_survey_question_all,survey.question.all,model_survey_question,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_survey_question_user,survey.question.user,model_survey_question,base.group_user,permission,r,"[(0, '=', 1)]"
+survey_question_rule_survey_manager,Survey question: manager: all,model_survey_question,group_survey_manager,permission,crud,
+survey_question_rule_survey_user,Survey question: officer: unrestricted survey or in restricted users,model_survey_question,group_survey_user,permission,crud,"[ '|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]"
+access_survey_question_answer_all,survey.question.answer.all,model_survey_question_answer,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_survey_question_answer_user,survey.question.answer.user,model_survey_question_answer,base.group_user,permission,r,"[(0, '=', 1)]"
+survey_question_answer_rule_survey_manager,Survey question answer: manager: all,model_survey_question_answer,group_survey_manager,permission,crud,
+survey_question_answer_rule_survey_user,"Survey question answer: officer: unrestricted survey or in restricted
+            users",model_survey_question_answer,group_survey_user,permission,crud,"[ '|', '|', ('question_id.survey_id.restrict_user_ids', 'in', user.id), ('matrix_question_id.survey_id.restrict_user_ids', 'in', user.id), '|', ('question_id.survey_id.restrict_user_ids', '=', False), ('matrix_question_id.survey_id.restrict_user_ids', '=', False)]"
+access_survey_user_input_all,survey.user_input.all,model_survey_user_input,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_survey_user_input_user,survey.user_input.user,model_survey_user_input,base.group_user,permission,r,"[(0, '=', 1)]"
+survey_user_input_rule_survey_manager,Survey user input: manager: all non specialized surveys,model_survey_user_input,group_survey_manager,permission,crud,"[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]"
+survey_user_input_rule_survey_user,Survey user input: officer: unrestricted survey or in restricted users,model_survey_user_input,group_survey_user,permission,crud,"[ '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')), '|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]"
+survey_user_input_rule_detached_owner,Detached response: owner,model_survey_user_input,group_survey_user,permission,crud,"[('survey_id', '=', False), ('create_uid', '=', user.id)]"
+survey_user_input_rule_survey_user_group_survey_manager,Survey user input: officer: unrestricted survey or in restricted users,model_survey_user_input,group_survey_manager,permission,crud,"[ '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')), '|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]"
+survey_user_input_rule_detached_owner_group_survey_manager,Detached response: owner,model_survey_user_input,group_survey_manager,permission,crud,"[('survey_id', '=', False), ('create_uid', '=', user.id)]"
+access_survey_user_input_line_all,survey.user_input.line.all,model_survey_user_input_line,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_survey_user_input_line_user,survey.user_input.line.user,model_survey_user_input_line,base.group_user,permission,r,"[(0, '=', 1)]"
+survey_user_input_line_rule_survey_manager,Survey user input line: manager: all non specialized surveys,model_survey_user_input_line,group_survey_manager,permission,crud,"[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]"
+survey_user_input_line_rule_survey_user,"Survey user input line: officer: unrestricted survey or in restricted
+            users",model_survey_user_input_line,group_survey_user,permission,r,"[ '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')), '|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]"
+survey_user_input_line_rule_detached_owner,Detached response: owner,model_survey_user_input_line,group_survey_user,permission,r,"[('user_input_id.survey_id', '=', False), ('user_input_id.create_uid', '=', user.id)]"
+survey_user_input_line_rule_survey_user_group_survey_manager,"Survey user input line: officer: unrestricted survey or in restricted
+            users",model_survey_user_input_line,group_survey_manager,permission,crud,"[ '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')), '|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]"
+survey_user_input_line_rule_detached_owner_group_survey_manager,Detached response: owner,model_survey_user_input_line,group_survey_manager,permission,crud,"[('user_input_id.survey_id', '=', False), ('user_input_id.create_uid', '=', user.id)]"
+access_survey_tag_all,survey.tag.all,model_survey_tag,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_survey_tag_user,survey.tag.user,model_survey_tag,base.group_user,permission,r,"[(0, '=', 1)]"
+access_survey_tag_survey_user,survey.tag.survey.user,model_survey_tag,group_survey_user,permission,crud,
+access_survey_category_all,survey.category.all,model_survey_category,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_survey_category_user,survey.category.user,model_survey_category,base.group_user,permission,r,"[(0, '=', 1)]"
+access_survey_category_survey_user,survey.category.survey.user,model_survey_category,group_survey_user,permission,r,
+access_survey_category_survey_manager,survey.category.survey.manager,model_survey_category,group_survey_manager,permission,cud,
+access_gamification_badge_survey_user,gamification.badge.survey.user,model_gamification_badge,group_survey_user,permission,r,
+gamification_badge_rule_survey_user_edit,Badge: survey user: certification or unused badges,model_gamification_badge,group_survey_user,permission,cud,"['|', ('survey_ids', '!=', False), '&', ('challenge_ids', '=', False), ('owner_ids', '=', False)]"
+survey_quota_rule_survey_manager,Survey quota: manager: all,model_survey_quota,group_survey_manager,permission,crud,
+survey_quota_rule_survey_user,Survey quota: officer: unrestricted survey or in restricted users,model_survey_quota,group_survey_user,permission,crud,"[ '|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]"
+survey_invite_survey_user,Survey invite: officer: unrestricted or in restricted users,model_survey_invite,group_survey_user,permission,cru,"['|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]"
+survey_invite_survey_manager,Survey invite: manager: all,model_survey_invite,group_survey_manager,permission,cru,
+survey_followup_rule_rule_survey_manager,Survey follow-up rule: manager: all,model_survey_followup_rule,group_survey_manager,permission,crud,
+survey_followup_rule_rule_survey_user,"Survey follow-up rule: officer: unrestricted survey or in restricted
+            users",model_survey_followup_rule,group_survey_user,permission,crud,"[ '|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]"

@@ -1,0 +1,43 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+ir_rule_res_partner_bank_internal_users,HR: Prevent non HR officers from accessing employee bank accounts,base.model_res_partner_bank_account,base.group_user,permission,r,"[('partner_id.employee_ids', '=', False)]"
+ir_rule_res_partner_bank_employees,HR: Allow HR officers from accessing employee bank accounts,base.model_res_partner_bank_account,group_hr_user,permission,r,
+ir_rule_res_partner_bank_employees_manage,HR: HR officers manage employee bank accounts,base.model_res_partner_bank_account,group_hr_user,permission,cud,"[('partner_id.employee_ids', '!=', False)]"
+ir_rule_res_partner_bank_partner_manager,HR: contact creation does not reach employee bank accounts,base.model_res_partner_bank_account,base.group_partner_manager,permission,crud,"[('partner_id.employee_ids', '=', False)]"
+res_partner_identifier_rule_hr_user,res.partner.identifier: HR officers read every identifier,base.model_res_partner_identifier,group_hr_user,permission,r,
+access_hr_employee_user,hr.employee user,model_hr_employee,group_hr_user,permission,cud,
+access_hr_employee_internal_user,hr.employee internal user,model_hr_employee,base.group_user,permission,r,
+access_hr_employee_resource_user,resource.resource.user,resource.model_resource_resource,group_hr_user,permission,cud,
+access_hr_department_user,hr.department.user,model_hr_department,group_hr_user,permission,cud,
+access_hr_department_employee,hr.department.employee,model_hr_department,base.group_user,permission,r,
+access_hr_job_user,hr.job user,model_hr_job,group_hr_user,permission,cud,
+access_hr_job_employee,hr.job.employee,model_hr_job,base.group_user,permission,r,
+access_hr_departure_wizard,access.hr.departure.wizard,model_hr_departure_wizard,group_hr_user,permission,cru,
+access_hr_employee_bank_allocation_hr_user,hr.employee.bank.allocation hr user,model_hr_employee_bank_allocation,group_hr_user,permission,crud,
+access_hr_bank_account_allocation_wizard,access.hr.bank.account.allocation.wizard,model_hr_bank_account_allocation_wizard,group_hr_user,permission,cru,
+access_hr_bank_account_allocation_wizard_line,access.hr.bank.account.allocation.wizard.line,model_hr_bank_account_allocation_wizard_line,group_hr_user,permission,crud,
+access_hr_version_wizard,access.hr.version.wizard,model_hr_version_wizard,group_hr_user,permission,cru,
+access_hr_work_location_user,access_hr_work_location_user,model_hr_work_location,base.group_user,permission,r,
+access_hr_work_location_manager,access_hr_work_location_manager,model_hr_work_location,group_hr_manager,permission,cud,
+access_hr_departure_reason,access_hr_departure_reason_user,model_hr_departure_reason,group_hr_user,permission,crud,
+access_hr_contract_type_manager,hr.contract.type.manager,model_hr_contract_type,group_hr_user,permission,crud,
+access_hr_version_user,hr.version.user,model_hr_version,group_hr_user,permission,cud,
+access_hr_version_internal_user,hr.version internal user,model_hr_version,base.group_user,permission,r,
+mail_plan_rule_group_hr_manager,Manager can edit employee plan,mail.model_mail_activity_plan,group_hr_manager,permission,cud,"[('res_model', '=', 'hr.employee')]"
+mail_plan_templates_rule_group_hr_manager,Manager can edit employee plan template,mail.model_mail_activity_plan_template,group_hr_manager,permission,cud,"[('plan_id.res_model', '=', 'hr.employee')]"
+access_hr_payroll_structure_type_hr_contract_manager,hr.payroll.structure.type.contract.manager,model_hr_payroll_structure_type,group_hr_manager,permission,crud,
+access_hr_resource_calendar_user,hr.employee.resource.calendar.user,resource.model_resource_calendar,group_hr_user,permission,cud,
+access_hr_resource_calendar_attendance_user,hr.employee.resource.calendar.attendance.user,resource.model_resource_calendar_attendance,group_hr_user,permission,cud,
+access_res_partner_tag_hr_user,res.partner.tag hr user,base.model_res_partner_tag,group_hr_user,permission,cud,
+hr_employee_change_request_own_rule,A change request is its subject's,model_hr_employee_change_request,base.group_user,permission,cru,"[('employee_id.user_id', '=', user.id)]"
+hr_employee_change_request_hr_rule,An HR user reviews every change request,model_hr_employee_change_request,group_hr_user,permission,crud,
+hr_config_rule_company_group_user,hr.config: the reader's companies,model_hr_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+hr_config_rule_erp_manager,hr.config: every company for an access-rights manager,model_hr_config,base.group_erp_manager,permission,r,
+hr_config_rule_erp_manager_group_system,hr.config: every company for an access-rights manager,model_hr_config,base.group_system,permission,cud,
+hr_employee_comp_rule,Employee multi company rule,model_hr_employee,base.group_everyone,guard,crud,"['|', '|', '|', ('company_id', 'in', company_ids + [False]), ('parent_id.user_id', '=', user.id), ('id', '=', user.employee_id.parent_id.id), ('user_id', '=', user.id) ]"
+hr_dept_comp_rule,Department multi company rule,model_hr_department,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+hr_job_comp_rule,Job multi company rule,model_hr_job,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+hr_employee_bank_allocation_comp_rule,Salary allocation multi company rule,model_hr_employee_bank_allocation,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+ir_rule_hr_contract_type_multi_company,HR Contract Type: Multi Company,model_hr_contract_type,base.group_everyone,guard,crud,"['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.country_id.ids)]"
+ir_rule_hr_departure_reason_multi_company,Departure Reason: multi company,model_hr_departure_reason,base.group_everyone,guard,crud,"[('country_code', 'in', user.env.companies.mapped('country_code') + [False])]"
+ir_rule_hr_contract_multi_company,HR Contract: Multi Company,model_hr_version,base.group_everyone,guard,crud,"['|', '|', '|', ('company_id', 'in', company_ids + [False]), ('employee_id.parent_id.user_id', '=', user.id), ('employee_id', '=', user.employee_id.parent_id.id), ('employee_id.user_id', '=', user.id) ]"
+ir_rule_hr_payroll_structure_type_multi_company,HR Payroll Structure Type: Multi Company,model_hr_payroll_structure_type,base.group_everyone,guard,crud,"['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]"

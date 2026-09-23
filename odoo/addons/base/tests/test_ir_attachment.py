@@ -25,6 +25,7 @@ from odoo.addons.base.models.ir_attachment import SECURITY_FIELDS, IrAttachment
 from odoo.addons.base.tests.common import (
     TransactionCaseWithUserDemo,
     TransactionCaseWithUserPortal,
+    make_guard_row,
 )
 
 
@@ -2215,24 +2216,19 @@ class TestPermissions(TransactionCaseWithUserDemo):
         }
         a = self.attachment = self.Attachments.create(self.vals)
 
-        self.rule = (
-            self.env["ir.rule"]
-            .sudo()
-            .create(
-                {
-                    "name": "remove access to record %d" % record.id,
-                    "model_id": self.env["ir.model"]._get_id(record._name),
-                    "domain_force": "[('id', '!=', %s)]" % record.id,
-                    "perm_read": False,
-                }
-            )
-        )
+        self.rule = make_guard_row(
+            self.env,
+            record._name,
+            "[('id', '!=', %s)]" % record.id,
+            operation="cud",
+            name="remove access to record %d" % record.id,
+        ).sudo()
         self.env.flush_all()
         a.invalidate_recordset()
 
     def test_read_permission(self):
         _ = self.attachment.datas
-        self.rule.perm_read = True
+        self.rule.for_read = True
         self.attachment.invalidate_recordset()
         with self.assertRaises(AccessError):
             _ = self.attachment.datas
@@ -2254,7 +2250,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         self.assertNotEqual(SUPERUSER_ID, admin_user.id)
         _ = attachment_admin.with_user(admin_user).datas
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_field_read_permission(self):
         skip_if_dev_mode("xml")
         main_partner = self.env.ref("base.main_partner")
@@ -2356,7 +2352,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
             "read", attach_called, "field ACL must not be checked on ir.attachment"
         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_search_unbounded_model_fallback(self):
         public_att = self.Attachments.sudo().create({"name": "public", "public": True})
         admin_orphan = self.Attachments.with_user(SUPERUSER_ID).create(
@@ -2485,7 +2481,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         )
         self.assertIsNotNone(keyset, "the order-less scan must keep its keyset")
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_write_access_is_enforced_without_the_duplicate_check(self):
         outsider = (
             self.env["res.users"]
@@ -2514,7 +2510,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         self.assertEqual(mine.name, "mine")
         self.assertEqual(mine.raw, b"mine")
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_res_field_write_access(self):
         partner = self.user_demo.partner_id
         self.patch(
@@ -2543,7 +2539,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         with self.assertRaises(AccessError):
             existing.write({"res_field": "image_1920"})
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_res_model_write_retargets_res_field_and_is_gated(self):
         partner = self.user_demo.partner_id
         attachment = self.Attachments.create(
@@ -2565,9 +2561,13 @@ class TestPermissions(TransactionCaseWithUserDemo):
         self.assertEqual(attachment.res_model, "res.partner")
 
     def _revoke_model_read(self, model_name):
-        self.env["ir.model.access"].sudo().search(
-            [("model_id.model", "=", model_name), ("perm_read", "=", True)]
-        ).write({"perm_read": False})
+        self.env["ir.access"].sudo().search(
+            [
+                ("model_id.model", "=", model_name),
+                ("kind", "=", "permission"),
+                ("for_read", "=", True),
+            ]
+        ).active = False
         self.env.flush_all()
         self.env.registry.clear_cache()
         self.addCleanup(self.env.registry.clear_cache)
@@ -2584,7 +2584,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         ):
             return func()
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_scan_prefilter_agrees_with_the_unprefiltered_scan(self):
         view = self.env["ir.ui.view"].sudo().search([], limit=1)
         self.Attachments.sudo().create(
@@ -2617,7 +2617,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
                     ),
                 )
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_scan_prefilter_keeps_public_rows_of_an_unreadable_model(self):
         view = self.env["ir.ui.view"].sudo().search([], limit=1)
         public, private = self.Attachments.sudo().create(
@@ -2645,7 +2645,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         self.assertNotIn(private, found)
         self.assertEqual(public.raw, b"visible")
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_scan_prefilter_keeps_rows_with_no_res_model(self):
         mine = self.Attachments.create({"name": "mine-unlinked.txt", "raw": b"mine"})
         self.env.flush_all()
@@ -2716,7 +2716,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         self.assertFalse(backed.res_model)
         self.assertFalse(backed.res_field)
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_a_non_string_res_model_is_refused_not_crashed_on(self):
         partner = self.user_demo.partner_id
         for res_model in ([], ["res.partner"], {"a": 1}, 42, 0.5):
@@ -2859,7 +2859,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         )
 
     def test_with_write_permissions(self):
-        self.rule.perm_write = False
+        self.rule.for_write = False
         attachment = self.Attachments.create(self.vals)
         attachment.copy()
         attachment.write({"raw": b"test"})
@@ -3020,7 +3020,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
             "the unlinked row must stay owner-only, or this test proves nothing",
         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_search_by_unreadable_model_is_empty_not_an_error(self):
         forbidden = next(
             (

@@ -15,8 +15,7 @@ This module allows you to easily add extra costs on pickings and decide the spli
         "purchase_stock",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/stock_landed_cost_security.xml",
+        "security/ir.access.csv",
         "data/stock_landed_cost_data.xml",
         "views/account_move_views.xml",
         "views/product_views.xml",

@@ -11,7 +11,7 @@
     ],
     "data": [
         "security/mrp_team_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/team_team_views.xml",
         "views/mrp_production_views.xml",
         "views/mrp_team_menus.xml",

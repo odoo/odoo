@@ -29,8 +29,7 @@ can setup API keys to replace their main password.
         },
     },
     "data": [
-        "security/security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/ir_action_data.xml",
         "views/res_users_views.xml",
         "views/templates.xml",

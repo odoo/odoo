@@ -519,6 +519,7 @@ def _repoint_model_ids(cr, old_model):
         "ir_model_inherit",
         "ir_model_access",
         "ir_rule",
+        "ir_access",
     }
     cr.execute(
         """
@@ -638,7 +639,7 @@ def _move_registry_rows(cr, old_model, old_table, renamed):
     if not row:
         return
     old_model_id = row[0]
-    for table in ("ir_rule", "ir_model_access"):
+    for table in ("ir_rule", "ir_model_access", "ir_access"):
         cr.execute(
             SQL(
                 """

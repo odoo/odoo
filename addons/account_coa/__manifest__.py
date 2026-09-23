@@ -17,7 +17,7 @@ depend on.
         "base",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/account_account_views.xml",
         "views/account_account_tag_views.xml",
     ],

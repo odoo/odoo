@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="project_task_rule_portal_project_sharing" model="ir.access">
+            <field
+                name="name">Project/Task: portal users: collaborators with edit access create and edit tasks</field>
+            <field name="model_id" ref="model_project_task" />
+            <field name="group_id" ref="base.group_portal" />
+            <field name="kind">permission</field>
+            <field name="active" eval="False" />
+            <field name="operation">cu</field>
+            <field
+                name="domain">[ ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']), ('active', '=', True), ('project_id.collaborator_ids', 'any', [ ('partner_id', '=', user.partner_id.id), ('access_mode', 'in', ['edit', 'advanced_edit']), ]), ]</field>
+        </record>
+    </data>
+
+</odoo>

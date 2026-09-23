@@ -1,0 +1,6 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_snailmail_letter_user,snailmail.letter.user,model_snailmail_letter,base.group_user,permission,cru,
+access_snailmail_letter_system,snailmail.letter.system,model_snailmail_letter,base.group_system,permission,d,
+snailmail_config_rule_company_group_user,snailmail.config: the reader's companies,model_snailmail_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+snailmail_config_rule_erp_manager,snailmail.config: every company for an access-rights manager,model_snailmail_config,base.group_erp_manager,permission,r,
+snailmail_config_rule_erp_manager_group_system,snailmail.config: every company for an access-rights manager,model_snailmail_config,base.group_system,permission,cud,

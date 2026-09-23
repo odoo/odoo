@@ -1,13 +1,12 @@
 import logging
 from typing import Any, Self
 
-from odoo import api, fields, models, tools
+from odoo import _, api, fields, models, tools
 from odoo.api import ValuesType
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
 
-from .ir_access import ANY_GROUP
-from .ir_model_common import ACCESS_MODES, check_access_mode, unloaded_module_scope
+from .ir_model_common import check_access_mode, unloaded_module_scope
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -67,14 +66,6 @@ class IrModelAccess(models.Model):
                 "groups_with_access", model=model_name, mode=access_mode, result="empty"
             )
             return group_definitions.empty
-        if ANY_GROUP in group_ids:
-            _debug.logic(
-                "groups_with_access",
-                model=model_name,
-                mode=access_mode,
-                result="universe",
-            )
-            return group_definitions.universe
         _debug.logic(
             "groups_with_access",
             model=model_name,
@@ -97,7 +88,7 @@ class IrModelAccess(models.Model):
             if any(
                 row.kind == "permission"
                 and letter in row.operation
-                and (row.group_id in group_ids or row.group_id == ANY_GROUP)
+                and row.group_id in group_ids
                 for row in rows
             )
         )
@@ -166,19 +157,15 @@ class IrModelAccess(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
-        for vals in vals_list:
-            if not vals.get("group_id") and any(
-                vals.get(f"perm_{mode}") for mode in ACCESS_MODES
-            ):
-                _debug.logic("create.groupless_acl", name=vals.get("name"))
-                _logger.warning(
-                    "Rule %s has no group, this is a deprecated feature. Every access-granting rule should specify a group.",
-                    vals.get("name"),
-                )
-        records = super().create(vals_list)
-        _debug.lifecycle("create", count=len(records))
-        self.call_cache_clearing_methods()
-        return records
+        if not vals_list:
+            return self.browse()
+        raise UserError(
+            _(
+                "Access lines are ir.access rows now: create a permission row of "
+                "ir.access (a module ships it in security/ir.access.csv) instead of "
+                "an ir.model.access line."
+            )
+        )
 
     def write(self, vals: dict[str, Any]) -> bool:
         _debug.lifecycle("write", count=len(self), fields=list(vals))

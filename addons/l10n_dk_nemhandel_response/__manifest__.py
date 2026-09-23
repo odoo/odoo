@@ -15,7 +15,7 @@ When receiving a document, you will be able to send a rejection or approval of t
         "l10n_dk_nemhandel",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/account_move_views.xml",
         "views/nemhandel_response_views.xml",
         "views/res_partner_views.xml",

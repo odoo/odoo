@@ -11,7 +11,7 @@
         "purchase",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/base_order_test_data.xml",
         "data/base_order_test_action.xml",
     ],

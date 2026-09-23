@@ -13,7 +13,7 @@
         "mail",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/res_partner_age_range_views.xml",
         "views/res_partner_views.xml",
         "views/ir_ui_menu_views.xml",

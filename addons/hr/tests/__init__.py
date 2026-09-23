@@ -37,3 +37,4 @@ from . import test_hr_department_company_on_create
 from . import test_version_structure_type
 from . import test_first_contract_date
 from . import test_self_personal_information
+from . import test_employee_bank_account_access

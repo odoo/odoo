@@ -104,8 +104,8 @@ class TestMrpGroupReadonly(TransactionCase):
         self.assertIn(self.group_readonly, group_manager.all_implied_ids)
 
     def test_no_acl_row_targets_a_transient_model(self):
-        rows = self.env["ir.model.access"].search(
-            [("group_id", "=", self.group_readonly.id)]
+        rows = self.env["ir.access"].search(
+            [("group_id", "=", self.group_readonly.id), ("kind", "=", "permission")]
         )
         self.assertTrue(rows)
         transient = [

@@ -10,7 +10,7 @@
         "resource_asset_stock",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/stock_warehouse_views.xml",
         "views/stock_picking_views.xml",
         "views/resource_asset_part_views.xml",

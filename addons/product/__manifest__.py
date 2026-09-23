@@ -33,7 +33,7 @@ Print product labels with barcode.
         "data/product_data.xml",
         "data/product_uom_activate.xml",
         "security/product_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "wizards/product_label_layout_views.xml",
         "wizards/product_merge_views.xml",
         "wizards/update_product_attribute_value_views.xml",

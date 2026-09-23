@@ -8,8 +8,7 @@
         "hr",
     ],
     "data": [
-        "security/security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/hr_employee_views.xml",
         "views/res_users.xml",
     ],

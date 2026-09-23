@@ -15,8 +15,7 @@ This module integrates with the Kenyan G03 Tremol control unit device to the KRA
         "ke",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_ke_edi_tremol_security.xml",
+        "security/ir.access.csv",
         "views/account_move_view.xml",
         "views/report_invoice.xml",
         "views/res_config_settings_view.xml",

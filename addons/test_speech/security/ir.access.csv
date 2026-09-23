@@ -1,0 +1,6 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_speech_test_recording,speech.test.recording,model_speech_test_recording,base.group_user,permission,crud,
+access_speech_test_call_own_transcript,speech.test.call.with.own.transcript,model_speech_test_call_with_own_transcript,base.group_user,permission,crud,
+access_speech_test_meeting,speech.test.meeting,model_speech_test_meeting,base.group_user,permission,crud,
+speech_test_recording_rule_own,speech.test.recording: only its creator may write it,model_speech_test_recording,base.group_everyone,guard,ud,"[(""create_uid"", ""="", user.id)]"
+speech_test_meeting_rule_own,speech.test.meeting: only its creator may see it,model_speech_test_meeting,base.group_everyone,guard,crud,"[(""create_uid"", ""="", user.id)]"

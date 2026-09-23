@@ -1,0 +1,6 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_l10n_es_edi_tbai_document_readonly,access_l10n_es_edi_tbai_document,model_l10n_es_edi_tbai_document,base.group_user,permission,r,
+l10n_es_edi_tbai_config_rule_company_group_user,l10n_es_edi_tbai.config: the reader's companies,model_l10n_es_edi_tbai_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+l10n_es_edi_tbai_config_rule_erp_manager,l10n_es_edi_tbai.config: every company for an access-rights manager,model_l10n_es_edi_tbai_config,base.group_erp_manager,permission,r,
+l10n_es_edi_tbai_config_rule_erp_manager_group_system,l10n_es_edi_tbai.config: every company for an access-rights manager,model_l10n_es_edi_tbai_config,base.group_system,permission,cud,
+tbai_document_comp_rule,TicketBAI Document multi-company,model_l10n_es_edi_tbai_document,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"

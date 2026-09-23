@@ -10,7 +10,7 @@
     "data": [
         "wizards/privacy_lookup_wizard_views.xml",
         "views/privacy_log_views.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/ir_actions_server_data.xml",
         "views/privacy_lookup_menus.xml",
     ],

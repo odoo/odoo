@@ -53,8 +53,7 @@ amount_taxexc_invoiced, etc.) for drop-in adoption.
         "mixin_report_sql",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/base_order_security.xml",
+        "security/ir.access.csv",
         "views/res_partner_tag_views.xml",
     ],
     "assets": {

@@ -12,7 +12,7 @@ This module adds the batch transfer option in warehouse management
         "stock",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/stock_picking_batch_views.xml",
         "views/stock_picking_type_views.xml",
         "views/stock_move_line_views.xml",

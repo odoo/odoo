@@ -20,6 +20,7 @@ from odoo.addons.base.models import (
     ir_model_fields_selection,
 )
 from odoo.addons.base.models.ir_model_common import MODULE_UNINSTALL_FLAG, upsert_en
+from odoo.addons.base.tests.common import make_access_row
 
 
 class TestXMLID(TransactionCase):
@@ -1122,17 +1123,7 @@ class TestIrModelFields(TransactionCase):
                 "groups": [Command.set([group.id])],
             }
         )
-        self.env["ir.model.access"].create(
-            {
-                "name": "imf sec acl",
-                "model_id": model.id,
-                "group_id": self.env.ref("base.group_user").id,
-                "perm_read": True,
-                "perm_write": True,
-                "perm_create": True,
-                "perm_unlink": True,
-            }
-        )
+        make_access_row(self.env, model.model, "base.group_user", name="imf sec acl")
         self.env.flush_all()
         self.env.registry.setup_models(self.env.cr, [model.model])
 

@@ -10,35 +10,22 @@ class TestSecurity(common.TransactionCase):
         "hr.group_hr_user",
     )
 
-    def _module_acls(self):
+    def _module_accesses(self):
         xmlids = self.env["ir.model.data"].search(
-            [("module", "=", "hr_gamification"), ("model", "=", "ir.model.access")]
+            [("module", "=", "hr_gamification"), ("model", "=", "ir.access")]
         )
-        return self.env["ir.model.access"].browse(xmlids.mapped("res_id"))
+        return self.env["ir.access"].browse(xmlids.mapped("res_id"))
 
-    def _module_rules(self):
-        xmlids = self.env["ir.model.data"].search(
-            [("module", "=", "hr_gamification"), ("model", "=", "ir.rule")]
-        )
-        return self.env["ir.rule"].browse(xmlids.mapped("res_id"))
-
-    def test_no_acl_or_rule_still_points_at_base_group_user(self):
+    def test_no_access_still_points_at_base_group_user(self):
         base_group_user = self.env.ref("base.group_user")
         allowed = {self.env.ref(xmlid) for xmlid in self.ALLOWED_GROUPS}
 
-        acls = self._module_acls()
-        for acl in acls:
-            with self.subTest(acl=acl.name):
-                self.assertNotEqual(acl.group_id, base_group_user)
-                self.assertIn(acl.group_id, allowed)
-        self.assertEqual(len(acls), 5)
-
-        rules = self._module_rules()
-        for rule in rules:
-            with self.subTest(rule=rule.name):
-                self.assertNotIn(base_group_user, rule.groups)
-                self.assertTrue(set(rule.groups.ids) <= {g.id for g in allowed})
-        self.assertEqual(len(rules), 5)
+        accesses = self._module_accesses()
+        for access in accesses:
+            with self.subTest(access=access.name):
+                self.assertNotEqual(access.group_id, base_group_user)
+                self.assertIn(access.group_id, allowed)
+        self.assertEqual(len(accesses), 10)
 
 
 @tagged("post_install", "-at_install")

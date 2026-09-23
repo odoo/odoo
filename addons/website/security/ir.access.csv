@@ -1,0 +1,45 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+website_group_system_edit_all_views,Administration Settings: Manage all views,base.model_ir_ui_view,base.group_system,permission,cud,
+access_website_public_public,website.public,model_website,base.group_public,permission,r,
+access_website_public_portal,website.public,model_website,base.group_portal,permission,r,
+access_website_public_employee,website.public,model_website,base.group_user,permission,r,
+access_website_designer,website.website.designer,model_website,group_website_designer,permission,crud,
+access_website_menu_public,access_website_menu,model_website_menu,base.group_public,permission,r,
+access_website_menu_portal,access_website_menu,model_website_menu,base.group_portal,permission,r,
+access_website_menu_employee,access_website_menu,model_website_menu,base.group_user,permission,r,
+access_website_menu_designer,Web Menu Manager,model_website_menu,group_website_designer,permission,crud,
+access_website_rewrite,access_website_rewrite,model_website_rewrite,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_website_rewrite_designer,Web Rewrite Manager,model_website_rewrite,group_website_designer,permission,crud,
+access_website_page_designer,Web Page Manager,model_website_page,group_website_designer,permission,crud,
+access_website_controller_page_designer,Web Model Page Manager,model_website_controller_page,group_website_designer,permission,crud,
+website_page_controller_rule_public,website.controller.page: portal/public: read published pages,model_website_controller_page,website_page_controller_expose,permission,r,"[('website_published', '=', True)]"
+access_website_ir_ui_view_restricted_editor,access_website_ir_ui_view_restricted_editor,model_ir_ui_view,group_website_restricted_editor,permission,r,
+website_designer_edit_qweb,website_designer: Manage Website and qWeb view,model_ir_ui_view,group_website_designer,permission,cud,"[('type', '=', 'qweb')]"
+access_website_ir_asset_designer,access_website_ir_asset_designer,model_ir_asset,group_website_designer,permission,crud,
+access_seo_public_public,access_seo_public,model_mixin_website_seo_metadata,base.group_public,permission,r,
+access_seo_public_portal,access_seo_public,model_mixin_website_seo_metadata,base.group_portal,permission,r,
+access_seo_public_employee,access_seo_public,model_mixin_website_seo_metadata,base.group_user,permission,r,
+access_seo_designer,access_seo_designer,model_mixin_website_seo_metadata,group_website_designer,permission,crud,
+access_website_page_properties_public,access_website_page_properties,model_website_page_properties,base.group_public,permission,r,"[(0, '=', 1)]"
+access_website_page_properties_portal,access_website_page_properties,model_website_page_properties,base.group_portal,permission,r,"[(0, '=', 1)]"
+access_website_page_properties_employee,access_website_page_properties,model_website_page_properties,base.group_user,permission,r,
+access_website_page_properties_designer,access_website_page_properties,model_website_page_properties,group_website_designer,permission,crud,
+access_website_page_properties_base_public,access_website_page_properties_base,model_website_page_properties_base,base.group_public,permission,r,"[(0, '=', 1)]"
+access_website_page_properties_base_portal,access_website_page_properties_base,model_website_page_properties_base,base.group_portal,permission,r,"[(0, '=', 1)]"
+access_website_page_properties_base_employee,access_website_page_properties_base,model_website_page_properties_base,base.group_user,permission,r,
+access_website_page_properties_base_designer,access_website_page_properties_base,model_website_page_properties_base,group_website_designer,permission,crud,
+access_website_visitor_designer,access_website_visitor_designer,model_website_visitor,group_website_designer,permission,rud,
+access_website_track_designer,access_website_track_designer,model_website_track,group_website_designer,permission,crud,
+access_website_route_designer,access_website_designer_route,model_website_route,group_website_designer,permission,crud,
+access_theme_ir_ui_view,access_theme_ir_ui_view,model_theme_ir_ui_view,base.group_system,permission,crud,
+access_theme_ir_asset_group_system,theme_ir_asset_group_system,model_theme_ir_asset,base.group_system,permission,crud,
+access_theme_ir_attachment,access_theme_ir_attachment,model_theme_ir_attachment,base.group_system,permission,crud,
+access_theme_website_menu,access_theme_website_menu,model_theme_website_menu,base.group_system,permission,crud,
+access_theme_website_page,access_theme_website_page,model_theme_website_page,base.group_system,permission,crud,
+access_website_robots,access.website.robots,model_website_robots,group_website_designer,permission,cru,
+access_website_dynamic_filter_public,access_website_dynamic_filter,model_website_snippet_filter,base.group_everyone,permission,r,"[(0, '=', 1)]"
+access_website_dynamic_filter_system,access_website_dynamic_filter,model_website_snippet_filter,base.group_system,permission,crud,
+access_website_configurator_feature_designer,access_website_configurator_feature_designer,model_website_configurator_feature,group_website_designer,permission,crud,
+access_website_custom_blocked_third_party_domains,access_website_custom_blocked_third_party_domains,model_website_custom_blocked_third_party_domains,group_website_designer,permission,cru,
+access_website_technical_page,access_website_technical_page,model_website_technical_page,base.group_system,permission,r,
+website_menu,Website menu: group_ids,model_website_menu,base.group_everyone,guard,crud,"['|', ('group_ids', '=', False), ('group_ids', 'in', user.all_group_ids.ids)]"

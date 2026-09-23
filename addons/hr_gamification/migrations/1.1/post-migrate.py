@@ -22,5 +22,10 @@ def migrate(cr, version):
         if not rule:
             _logger.warning("t24520: rule %s not found, skipped", rule_xmlid)
             continue
+        if rule._name != "ir.rule":
+            # base 1.97 turned the rule into ir.access rows, one per group; the
+            # data file ships the app tier's rows under their own ids
+            _logger.info("t24520: %s is an ir.access row, skipped", rule_xmlid)
+            continue
         rule.groups = [Command.set([env.ref(x).id for x in group_xmlids])]
         _logger.info("t24520: rule %s re-pointed to %s", rule_xmlid, group_xmlids)

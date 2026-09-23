@@ -1,0 +1,11 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_iot_box_user,iot.box,model_iot_box,base.group_user,permission,r,
+access_iot_device_user,iot.device,model_iot_device,base.group_user,permission,r,
+access_iot_box_admin,iot.box,model_iot_box,group_iot_admin,permission,rud,
+access_iot_device_admin,iot.device,model_iot_device,group_iot_admin,permission,rud,
+access_iot_keyboard_layout,iot.keyboard.layout,model_iot_keyboard_layout,group_iot_admin,permission,rud,
+access_add_iot_box,access.add.iot.box,model_add_iot_box,group_iot_admin,permission,cru,
+access_iot_discovered_box,access.iot.discovered.box,model_iot_discovered_box,group_iot_admin,permission,cru,
+access_iot_select_printers_wizard_user,iot.select.printers.wizard,model_select_printers_wizard,base.group_user,permission,cru,
+iot_box_comp_rule,IoT Box multi company rule,model_iot_box,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+iot_device_comp_rule,IoT Device multi company rule,model_iot_device,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

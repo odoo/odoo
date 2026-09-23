@@ -14,6 +14,6 @@ The Romanian CIUS-RO format requires, in some case, the precise categorisation o
     "data": [
         "data/l10n_ro.cpv.code.csv",
         "views/product_views.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
     ],
 }

@@ -21,7 +21,7 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
         "data/facturae_templates.xml",
         "data/l10n_es_edi_facturae.ac_role_type.csv",
         "data/signature_templates.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/l10n_es_edi_facturae_views.xml",
         "views/res_partner_views.xml",
         "views/account_tax_views.xml",

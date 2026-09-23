@@ -1,0 +1,6 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_sms_twilio_number_system,access_sms_twilio_number_system,model_sms_twilio_number,base.group_system,permission,crud,
+access_sms_twilio_account_manage_system,access_sms_twilio_account_manage_system,model_sms_twilio_account_manage,base.group_system,permission,cru,
+sms_twilio_config_rule_company_group_user,sms_twilio.config: the reader's companies,model_sms_twilio_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+sms_twilio_config_rule_erp_manager,sms_twilio.config: every company for an access-rights manager,model_sms_twilio_config,base.group_erp_manager,permission,r,
+sms_twilio_config_rule_erp_manager_group_system,sms_twilio.config: every company for an access-rights manager,model_sms_twilio_config,base.group_system,permission,cud,

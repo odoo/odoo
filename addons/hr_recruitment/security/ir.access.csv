@@ -1,0 +1,30 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+hr_job_user_rule,User: All Job Positions,model_hr_job,group_hr_recruitment_user,permission,cud,
+hr_applicant_interviewer_rule,Applicant Interviewer,model_hr_applicant,group_hr_recruitment_interviewer,permission,ru,"[ '|', ('job_id.interviewer_ids', 'in', user.id), ('interviewer_ids', 'in', user.id), ]"
+hr_applicant_user_rule,User: All Applicants,model_hr_applicant,group_hr_recruitment_user,permission,crud,
+access_hr_talent_pool_interviewer,hr.talent.pool.interviewer,model_hr_talent_pool,group_hr_recruitment_interviewer,permission,r,
+hr_talent_pool_user_rule,User: All Talent Pools,model_hr_talent_pool,group_hr_recruitment_user,permission,cud,
+access_hr_recruitment_stage_interviewer,hr.recruitment.stage.interviewer,model_hr_recruitment_stage,group_hr_recruitment_interviewer,permission,r,
+access_hr_recruitment_stage_manager,hr.recruitment.stage.manager,model_hr_recruitment_stage,group_hr_recruitment_manager,permission,cud,
+access_hr_recruitment_degree,hr.recruitment.degree,model_hr_recruitment_degree,group_hr_recruitment_user,permission,crud,
+access_hr_recruitment_refuse_reason_interviewer,hr.applicant.refuse.reason.interviewer,model_hr_applicant_refuse_reason,group_hr_recruitment_interviewer,permission,r,
+access_hr_recruitment_refuse_reason,hr.applicant.refuse.reason,model_hr_applicant_refuse_reason,group_hr_recruitment_user,permission,cud,
+access_res_partner_hr_user,res.partner.user,base.model_res_partner,group_hr_recruitment_user,permission,cud,
+access_hr_recruitment_source_hr_officer,hr.recruitment.source,model_hr_recruitment_source,group_hr_recruitment_user,permission,cud,
+access_hr_recruitment_source_all,hr.recruitment.source,model_hr_recruitment_source,base.group_user,permission,r,
+access_hr_applicant_category,hr.applicant_category,model_hr_applicant_category,base.group_user,permission,cru,
+access_hr_applicant_category_manager,hr.applicant_category,model_hr_applicant_category,group_hr_recruitment_user,permission,d,
+access_calendar_event_type_hr_officer,calendar.event.type.officer,calendar.model_calendar_event_type,group_hr_recruitment_user,permission,cu,
+access_applicant_get_refuse_reason_interviewer,access.applicant.get.refuse.reason.interviewer,model_applicant_get_refuse_reason,group_hr_recruitment_interviewer,permission,cru,
+access_applicant_send_mail_interviewer,access.applicant.send.mail.interviewer,model_applicant_send_mail,group_hr_recruitment_interviewer,permission,cru,
+mail_plan_rule_group_hr_recruitment_manager_applicant,Manager can manage applicant plans,mail.model_mail_activity_plan,group_hr_recruitment_manager,permission,cud,"[('res_model', '=', 'hr.applicant')]"
+mail_plan_templates_rule_group_hr_recruitment_manager_applicant,Manager can manage applicant plan templates,mail.model_mail_activity_plan_template,group_hr_recruitment_manager,permission,cud,"[('plan_id.res_model', '=', 'hr.applicant')]"
+access_hr_job_platform,access.hr.job.platform,model_hr_job_platform,group_hr_recruitment_manager,permission,crud,
+access_talent_pool_add_applicants_interviewer,access.talent.pool.add.applicants.interviewer,model_talent_pool_add_applicants,group_hr_recruitment_interviewer,permission,r,"[(0, '=', 1)]"
+access_talent_pool_add_applicants,access.talent.pool.add.applicants,model_talent_pool_add_applicants,group_hr_recruitment_user,permission,crud,
+access_job_add_applicants_interviewer,access.job.add.applicants.interviewer,model_job_add_applicants,group_hr_recruitment_interviewer,permission,r,"[(0, '=', 1)]"
+access_job_add_applicants,access.job.add.applicants,model_job_add_applicants,group_hr_recruitment_user,permission,crud,
+hr_recruitment_config_rule_company_group_user,hr_recruitment.config: the reader's companies,model_hr_recruitment_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+hr_recruitment_config_rule_erp_manager,hr_recruitment.config: every company for an access-rights manager,model_hr_recruitment_config,base.group_erp_manager,permission,r,
+hr_recruitment_config_rule_erp_manager_group_system,hr_recruitment.config: every company for an access-rights manager,model_hr_recruitment_config,base.group_system,permission,cud,
+hr_applicant_comp_rule,Applicant multi company rule,model_hr_applicant,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

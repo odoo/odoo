@@ -16,6 +16,6 @@
     ],
     "data": [
         "security/spreadsheet_test_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
     ],
 }

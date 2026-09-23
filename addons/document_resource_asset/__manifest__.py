@@ -14,7 +14,7 @@ folder its documents land in, the tags they carry, and whether they are centrali
         "resource_asset",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/ir_actions_server_data.xml",
         "views/resource_asset_kind_views.xml",
         "views/resource_asset_views.xml",

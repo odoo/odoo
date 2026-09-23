@@ -9,8 +9,7 @@
         "web",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/barcodes_security.xml",
+        "security/ir.access.csv",
         "data/barcodes_data.xml",
         "views/barcodes_view.xml",
     ],

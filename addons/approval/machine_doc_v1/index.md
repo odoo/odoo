@@ -185,7 +185,7 @@ into `test_approvals.py`).
 |------|---------|
 | `res_groups.xml` | 2 groups — `group_approval_approver`, `group_approval_manager` — under one `res.groups.privilege` (`res_groups_privilege_approvals`) |
 | `ir_rule.xml` | Record rules: multi-company, ownership, per-category `privacy_visibility` read audiences |
-| `ir.model.access.csv` | ACL for every shipped model. The mixin's concrete test consumer is not one of them: `approval.test.document` lives in `test_approval`, which ships no ACL row for it |
+| `ir.access.csv` | Access rows for every shipped model. The mixin's concrete test consumer is not one of them: `approval.test.document` lives in `test_approval`, which ships no ACL row for it |
 
 ## Directory Structure
 

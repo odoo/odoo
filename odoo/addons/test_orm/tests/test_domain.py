@@ -403,11 +403,14 @@ class TestDomain(TransactionExpressionCase):
         self.assertTrue(Child._fields["link_sibling_id"].bypass_search_access)
 
         all_children = parent_1.child_ids | parent_2.child_ids
-        self.env["ir.rule"].sudo().create(
+        self.env["ir.access"].sudo().create(
             {
                 "name": "only quantity < 10",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": self.env["ir.model"]._get("test_orm.any.child").id,
-                "domain_force": [("quantity", "<", 10)],
+                "domain": str([("quantity", "<", 10)]),
             }
         )
         user = new_test_user(self.env, login="domain_any_bypass_user")
@@ -515,11 +518,14 @@ class TestDomain(TransactionExpressionCase):
         )
         self.assertEqual(res_search, parent_2 + parent_3)
 
-        self.env["ir.rule"].sudo().create(
+        self.env["ir.access"].sudo().create(
             {
                 "name": "quantity=1 is invisible",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": self.env["ir.model"]._get("test_orm.any.child").id,
-                "domain_force": [("quantity", "!=", 1)],
+                "domain": str([("quantity", "!=", 1)]),
             }
         )
         user = new_test_user(self.env, login="domain_o2m_bypass_user")

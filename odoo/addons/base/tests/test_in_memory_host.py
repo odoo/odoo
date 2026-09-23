@@ -93,7 +93,7 @@ class TestTheHostIsTheDbFreeTier(InMemoryCase):
         self.assertIsInstance(self.env.cr, InMemoryCursor)
         self.assertEqual(self.env.cr.dbname, ":memory:")
         self.assertGreater(len(self.registry.models), 140)
-        self.assertGreater(self.env["ir.model.access"].sudo().search_count([]), 150)
+        self.assertGreater(self.env["ir.access"].sudo().search_count([]), 150)
         self.assertEqual(self.env.ref("base.user_admin").login, "admin")
 
     def test_the_superuser_has_a_company_as_it_does_on_a_database(self):

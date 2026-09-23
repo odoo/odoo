@@ -11,7 +11,7 @@
         "loyalty",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/sale_loyalty_data.xml",
         "wizards/sale_loyalty_coupon_wizard_views.xml",
         "wizards/sale_loyalty_reward_wizard_views.xml",

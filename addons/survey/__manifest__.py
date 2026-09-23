@@ -32,7 +32,7 @@ sent mails with personal token for the invitation of the survey.
         "data/survey_tag_data.xml",
         "data/ir_cron_data.xml",
         "security/survey_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/survey_tag_views.xml",
         "views/survey_category_views.xml",
         "views/survey_survey_views.xml",

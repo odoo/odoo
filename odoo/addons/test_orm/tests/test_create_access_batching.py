@@ -1,5 +1,7 @@
 from odoo.tests import TransactionCase
 
+from odoo.addons.base.tests.common import make_guard_row
+
 
 class CreateAccessBatchingCase(TransactionCase):
     @classmethod
@@ -15,17 +17,13 @@ class CreateAccessBatchingCase(TransactionCase):
         cls.targets = cls.env["test_orm.bypass.target"].create(
             [{"name": f"t{i}"} for i in range(200)]
         )
-        cls.env["ir.rule"].create(
-            {
-                "name": "bypass target rule",
-                "model_id": cls.env["ir.model"]._get("test_orm.bypass.target").id,
-                "domain_force": "[('name', '!=', 'nope')]",
-                "groups": [(6, 0, [cls.env.ref("base.group_user").id])],
-                "perm_read": True,
-                "perm_write": False,
-                "perm_create": False,
-                "perm_unlink": False,
-            }
+        make_guard_row(
+            cls.env,
+            "test_orm.bypass.target",
+            "[('name', '!=', 'nope')]",
+            "base.group_user",
+            operation="r",
+            name="bypass target rule",
         )
         cls.env.flush_all()
 

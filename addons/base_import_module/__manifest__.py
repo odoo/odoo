@@ -14,7 +14,7 @@ for customization purpose.
         "web",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/base_import_module_view.xml",
         "views/ir_module_views.xml",
         "views/base_import_module_menus.xml",

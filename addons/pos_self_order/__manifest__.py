@@ -19,7 +19,7 @@
         },
     },
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/mail_template_data.xml",
         "data/preset_data.xml",
         "views/pos_self_order.index.xml",

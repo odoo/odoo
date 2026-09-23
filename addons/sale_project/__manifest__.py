@@ -16,8 +16,7 @@ This module allows to generate a project/task from sales orders.
         "project_account",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/sale_project_security.xml",
+        "security/ir.access.csv",
         "views/product_views.xml",
         "views/project_task_views.xml",
         "views/sale_order_line_views.xml",

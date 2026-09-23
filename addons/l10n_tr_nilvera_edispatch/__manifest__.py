@@ -13,7 +13,7 @@
         "tr",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/l10n_tr_nilvera_trailer_plate_views.xml",
         "views/res_partner_views.xml",
         "views/stock_picking_views.xml",

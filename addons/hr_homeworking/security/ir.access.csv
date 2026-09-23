@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+homeworking_own_rule_group_hr_user,homeworking: own,model_hr_employee_location,hr.group_hr_user,permission,crud,"[ ('employee_id', '=', user.employee_id.id) ]"
+homeworking_admin_rule,homeworking: admin,model_hr_employee_location,hr.group_hr_user,permission,crud,"[ ('company_id', 'in', company_ids) ]"
+homeworking_own_rule,homeworking: own,model_hr_employee_location,base.group_user,permission,crud,"[ ('employee_id', '=', user.employee_id.id) ]"

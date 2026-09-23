@@ -4,7 +4,7 @@
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "data": [
-        "ir.model.access.csv",
+        "security/ir.access.csv",
         "test_data.xml",
     ],
 }

@@ -17,7 +17,7 @@ It will install some main apps and will try to execute the most important action
         "account",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
     ],
     "assets": {
         "web.assets_tests": [

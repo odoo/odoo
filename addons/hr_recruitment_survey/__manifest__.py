@@ -15,8 +15,7 @@ to allow you to define interviews for different jobs.
         "hr_recruitment",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/hr_recruitment_survey_security.xml",
+        "security/ir.access.csv",
         "data/mail_template_data.xml",
         "views/hr_job_views.xml",
         "views/hr_applicant_views.xml",

@@ -1,0 +1,15 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_automation_config,automation.rule config,model_automation_rule,base.group_system,permission,crud,
+access_automation_runtime_user,automation.runtime.user,model_automation_runtime,base.group_user,permission,r,
+access_automation_runtime_system,automation.runtime.system,model_automation_runtime,base.group_system,permission,cud,
+access_automation_runtime_line_user,automation.runtime.line.user,model_automation_runtime_line,base.group_user,permission,r,
+access_automation_runtime_line_system,automation.runtime.line.system,model_automation_runtime_line,base.group_system,permission,cud,
+access_workflow_edge_user,workflow.edge.user,model_workflow_edge,base.group_user,permission,r,
+access_workflow_edge_system,workflow.edge.system,model_workflow_edge,base.group_system,permission,cud,
+access_automation_runtime_edge_user,automation.runtime.edge.user,model_automation_runtime_edge,base.group_user,permission,r,
+access_automation_runtime_edge_system,automation.runtime.edge.system,model_automation_runtime_edge,base.group_system,permission,cud,
+access_automation_canvas_viewport_user,automation.canvas.viewport.user,model_automation_canvas_viewport,base.group_user,permission,crud,
+automation_runtime_company_rule,Automation Runtime: multi-company,model_automation_runtime,base.group_everyone,guard,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+automation_runtime_line_company_rule,Automation Runtime Line: multi-company,model_automation_runtime_line,base.group_everyone,guard,crud,"['|', ('runtime_id.company_id', '=', False), ('runtime_id.company_id', 'in', company_ids)]"
+automation_runtime_edge_company_rule,Automation Runtime Edge: multi-company,model_automation_runtime_edge,base.group_everyone,guard,crud,"['|', ('runtime_id.company_id', '=', False), ('runtime_id.company_id', 'in', company_ids)]"
+automation_canvas_viewport_own_rule,Workflow Canvas Viewport: own rows only,model_automation_canvas_viewport,base.group_everyone,guard,crud,"[('user_id', '=', user.id)]"

@@ -15,8 +15,7 @@ Using this application you can manage Sales Teams with CRM and/or Sales
         "team",
     ],
     "data": [
-        "security/sale_team_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/team_team_data.xml",
         "data/mail_message_subtype_data.xml",
         "reports/account_invoice_report_views.xml",

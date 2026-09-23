@@ -60,14 +60,14 @@ class TestAccountGroupReadonly(TransactionCase):
             )
 
     def test_acl_rows_grant_read_only(self):
-        rows = self.env["ir.model.access"].search(
-            [("group_id", "=", self.group_readonly.id)]
+        rows = self.env["ir.access"].search(
+            [("group_id", "=", self.group_readonly.id), ("kind", "=", "permission")]
         )
         self.assertTrue(rows)
         writable = [
             row.model_id.model
             for row in rows
-            if row.perm_write or row.perm_create or row.perm_unlink
+            if row.for_write or row.for_create or row.for_unlink
         ]
         self.assertFalse(writable, f"these rows are not read-only: {sorted(writable)}")
 

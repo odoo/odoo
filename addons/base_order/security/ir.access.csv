@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+base_order_config_rule_company_group_user,base_order.config: the reader's companies,model_base_order_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+base_order_config_rule_erp_manager,base_order.config: every company for an access-rights manager,model_base_order_config,base.group_erp_manager,permission,r,
+base_order_config_rule_erp_manager_group_system,base_order.config: every company for an access-rights manager,model_base_order_config,base.group_system,permission,cud,

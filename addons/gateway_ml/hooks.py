@@ -45,7 +45,7 @@ _MOVED_RECORDS = {
         "action_ai_provider",
         "action_ai_use_case_tag",
     ],
-    "ir.model.access": [
+    "ir.access": [
         "access_ai_provider_user",
         "access_ai_provider_admin",
         "access_ai_provider_system",

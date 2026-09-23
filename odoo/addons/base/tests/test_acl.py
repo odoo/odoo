@@ -3,11 +3,15 @@ from contextlib import contextmanager
 from lxml import etree
 
 from odoo import Command
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools.convert import xml_import
 from odoo.tools.misc import mute_logger
 
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.base.tests.common import (
+    TransactionCaseWithUserDemo,
+    make_access_row,
+    make_guard_row,
+)
 
 
 @contextmanager
@@ -57,9 +61,13 @@ class TestACL(TransactionCaseWithUserDemo):
         self.env.registry.clear_cache("templates")
 
     def test_reading_every_field_leaves_out_an_x2many_whose_model_is_unreadable(self):
-        self.env["ir.model.access"].search(
-            [("model_id.model", "=", "res.partner.tag")]
-        ).perm_read = False
+        self.env["ir.access"].search(
+            [
+                ("model_id.model", "=", "res.partner.tag"),
+                ("kind", "=", "permission"),
+                ("for_read", "=", True),
+            ]
+        ).active = False
         partner = self.user_demo.partner_id
         demo_partner = partner.with_user(self.user_demo)
         self.assertFalse(
@@ -250,14 +258,21 @@ class TestACL(TransactionCaseWithUserDemo):
 
 
 class TestIrRule(TransactionCaseWithUserDemo):
+    """What ir.rule tested, on the ir.access rows the rules became."""
+
+    def _partner_rows(self, **domain):
+        return self.env["ir.access"].search(
+            [("model_id.model", "=", "res.partner")]
+            + [(name, "=", value) for name, value in domain.items()]
+        )
+
     def test_a_rule_evaluated_record_by_record_fetches_the_batch_once(self):
-        self.env["ir.rule"].create(
-            {
-                "name": "partners of a company",
-                "model_id": self.env.ref("base.model_res_partner").id,
-                "domain_force": "[('company_id', 'in', [False] + company_ids)]",
-                "groups": [Command.set(self.env.ref("base.group_user").ids)],
-            }
+        make_guard_row(
+            self.env,
+            "res.partner",
+            "[('company_id', 'in', [False] + company_ids)]",
+            self.env.ref("base.group_user"),
+            name="partners of a company",
         )
         partners = self.env["res.partner"].create(
             [{"name": f"rule batch {i}"} for i in range(60)]
@@ -265,8 +280,8 @@ class TestIrRule(TransactionCaseWithUserDemo):
         self.env.flush_all()
         self.env.invalidate_all()
         as_demo = partners.with_user(self.user_demo)
-        # the first write pays for the user, its groups, the rules and the
-        # batch's rows: every later write checks the rule on its one record,
+        # the first write pays for the user, its groups, the rows and the
+        # batch's rows: every later write checks the guard on its one record,
         # which keeps the batch's prefetch ids, so no row is fetched alone
         as_demo[0].write({"comment": "note 0"})
         with self.assertQueryCount(8):
@@ -276,182 +291,96 @@ class TestIrRule(TransactionCaseWithUserDemo):
         self.assertEqual(partners[3].comment, "<p>note 3</p>")
 
     def test_ir_rule(self):
-        model_res_partner = self.env.ref("base.model_res_partner")
         group_user = self.env.ref("base.group_user")
-
-        rule1 = self.env["ir.rule"].create(
-            {
-                "name": "test_rule1",
-                "model_id": model_res_partner.id,
-                "domain_force": False,
-                "groups": [Command.set(group_user.ids)],
-            }
-        )
-
         partners_demo = self.env["res.partner"].with_user(self.user_demo)
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
 
-        rule1.domain_force = "[(1,'=',1)]"
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        row1 = make_access_row(self.env, "res.partner", group_user, name="row1")
+        self.assertTrue(partners_demo.search([]), "Demo user should see some partner.")
+        row1.domain = "[(1,'=',1)]"
+        self.assertTrue(partners_demo.search([]), "Demo user should see some partner.")
+        row1.domain = "[]"
+        self.assertTrue(partners_demo.search([]), "Demo user should see some partner.")
 
-        rule1.domain_force = "[]"
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        row2 = make_access_row(self.env, "res.partner", group_user, name="row2")
+        row3 = make_access_row(self.env, "res.partner", group_user, name="row3")
+        self.assertTrue(partners_demo.search([]), "Demo user should see some partner.")
 
-        rule2 = self.env["ir.rule"].create(
-            {
-                "name": "test_rule2",
-                "model_id": model_res_partner.id,
-                "domain_force": False,
-                "groups": [Command.set(group_user.ids)],
-            }
-        )
+        self.env.ref(
+            "base.res_company_rule_employee"
+        ).domain = "[('id','in', company_ids)]"
+        self.assertTrue(partners_demo.search([]), "Demo user should see some partner.")
 
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
-
-        rule1.domain_force = "[(1,'=',1)]"
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
-
-        rule2.domain_force = "[(1,'=',1)]"
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
-
-        rule3 = self.env["ir.rule"].create(
-            {
-                "name": "test_rule3",
-                "model_id": model_res_partner.id,
-                "domain_force": False,
-                "groups": [Command.set(group_user.ids)],
-            }
-        )
-
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
-
-        rule3.domain_force = "[(1,'=',1)]"
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
-
-        global_rule = self.env.ref("base.res_company_rule_employee")
-        global_rule.domain_force = "[('id','in', company_ids)]"
-
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
-
-        rule2.domain_force = "[('id','=',False),('name','=',False)]"
-
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        # a permission only ever adds records: one that admits nothing takes
+        # nothing away from the others
+        row2.domain = "[('id','=',False),('name','=',False)]"
+        self.assertTrue(partners_demo.search([]), "Demo user should see some partner.")
 
         group_test = self.env["res.groups"].create(
+            {"name": "Test Group", "user_ids": [Command.set(self.user_demo.ids)]}
+        )
+        row3.write(
             {
-                "name": "Test Group",
-                "user_ids": [Command.set(self.user_demo.ids)],
+                "domain": "[('name','!=',False),('id','!=',False)]",
+                "group_id": group_test.id,
             }
         )
-
-        rule3.write(
-            {
-                "domain_force": "[('name','!=',False),('id','!=',False)]",
-                "groups": [Command.set(group_test.ids)],
-            }
-        )
-
-        partners = partners_demo.search([])
         self.assertTrue(
-            partners,
-            "Demo user should see partners even with the combined rules.",
+            partners_demo.search([]),
+            "Demo user should see partners even with the combined rows.",
         )
 
-        self.env["ir.rule"].search([("groups", "=", False)]).unlink()
-
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partners.")
+        self._partner_rows(kind="guard").unlink()
+        self.assertTrue(partners_demo.search([]), "Demo user should see some partners.")
 
     def test_ir_rule_superuser_bypass(self):
-        model_res_partner = self.env.ref("base.model_res_partner")
-        self.env["ir.rule"].create(
-            {
-                "name": "test_rule_su_bypass",
-                "model_id": model_res_partner.id,
-                "domain_force": "[('id', '=', False)]",
-            }
-        )
-
+        make_guard_row(self.env, "res.partner", "[('id', '=', False)]")
         su_rule = self.env(su=True)["ir.rule"]
-        self.assertFalse(
-            su_rule._get_rules("res.partner", "read"),
-            "Superuser must get no record rules (env.su bypass).",
-        )
         self.assertTrue(
             su_rule._get_domain_accessible_records("res.partner", "read").is_true(),
             "Superuser domain must be unrestricted (Domain.TRUE).",
         )
-
         demo_rule = self.env(user=self.user_demo)["ir.rule"]
-        self.assertTrue(
-            demo_rule._get_rules("res.partner", "read"),
-            "Demo user must get the global rule.",
-        )
         self.assertFalse(
             demo_rule._get_domain_accessible_records("res.partner", "read").is_true(),
-            "Demo user domain must be restricted by the global rule.",
+            "Demo user domain must be restricted by the guard.",
         )
 
     def test_ir_rule_get_rules_modes(self):
-        model_res_partner = self.env.ref("base.model_res_partner")
-        group_user = self.env.ref("base.group_user")
-        unlink_rule = self.env["ir.rule"].create(
-            {
-                "name": "test_rule_unlink_only",
-                "model_id": model_res_partner.id,
-                "domain_force": "[('id', '!=', False)]",
-                "groups": [Command.set(group_user.ids)],
-                "perm_read": False,
-                "perm_write": False,
-                "perm_create": False,
-                "perm_unlink": True,
-            }
-        )
-
-        demo_rule = self.env(user=self.user_demo)["ir.rule"]
-        self.assertIn(
-            unlink_rule,
-            demo_rule._get_rules("res.partner", "unlink"),
-            "Rule with only perm_unlink must appear for the 'unlink' mode.",
-        )
-        for mode in ("read", "write", "create"):
-            self.assertNotIn(
-                unlink_rule,
-                demo_rule._get_rules("res.partner", mode),
-                f"Unlink-only rule must not appear for the {mode!r} mode.",
+        partner = self.env["res.partner"].create({"name": "unlink-only guard"})
+        make_guard_row(self.env, "res.partner", "[('id', '=', False)]", operation="d")
+        demo_partner = partner.with_user(self.user_demo)
+        self.assertEqual(demo_partner._filtered_access("unlink"), demo_partner.browse())
+        for mode in ("read", "write"):
+            self.assertEqual(
+                demo_partner._filtered_access(mode),
+                demo_partner,
+                f"An unlink-only guard must not bind the {mode!r} mode.",
             )
-
         with self.assertRaises(ValueError):
-            demo_rule._get_rules("res.partner", "bogus")
+            self.env["ir.access"]._operation_letter("bogus")
 
     def _registry_loading(self, loading):
         return registry_loading(self.env.registry, loading)
 
-    def _restricting_rule_from(self, module, name):
-        rule = self.env["ir.rule"].create(
-            {
-                "name": name,
-                "model_id": self.env.ref("base.model_res_partner").id,
-                "domain_force": "[('id', '=', False)]",
-            }
+    def _restricting_row_from(self, module, name):
+        return make_guard_row(
+            self.env,
+            "res.partner",
+            "[('id', '=', False)]",
+            name=name,
+            xmlid=f"{module}.{name}",
         )
-        self.env["ir.model.data"].create(
-            {"module": module, "name": name, "model": "ir.rule", "res_id": rule.id}
-        )
-        return rule
+
+    def _partner_row_ids(self):
+        return {
+            row.id
+            for row in self.env(user=self.user_demo)["ir.access"]
+            ._get_all_access()
+            .get("res.partner", ())
+        }
 
     def test_ir_rule_of_the_module_being_loaded_applies_to_its_own_files(self):
-        self._restricting_rule_from("a_module_being_loaded", "test_rule_own_files")
+        self._restricting_row_from("a_module_being_loaded", "test_rule_own_files")
         demo_partner = self.env(user=self.user_demo)["res.partner"]
 
         with self._registry_loading(True):
@@ -467,13 +396,13 @@ class TestIrRule(TransactionCaseWithUserDemo):
                 ).search_count([]),
                 0,
                 "A record in the module's own data or demo files must be bound by "
-                "the rules that module ships",
+                "the rows that module ships",
             )
 
     def test_ir_rule_domain_computed_while_loading_does_not_outlive_the_module_loading(
         self,
     ):
-        self._restricting_rule_from("a_module_being_loaded", "test_rule_generation")
+        self._restricting_row_from("a_module_being_loaded", "test_rule_generation")
         demo_partner = self.env(user=self.user_demo)["res.partner"]
 
         with self._registry_loading(True):
@@ -487,61 +416,34 @@ class TestIrRule(TransactionCaseWithUserDemo):
                 )
 
     def test_ir_rule_from_an_unloaded_module_is_skipped_while_loading(self):
-        model_res_partner = self.env.ref("base.model_res_partner")
-        rule = self.env["ir.rule"].create(
-            {
-                "name": "test_rule_from_a_later_module",
-                "model_id": model_res_partner.id,
-                "domain_force": "[('id', '!=', False)]",
-            }
+        row = self._restricting_row_from(
+            "a_module_this_registry_has_not_loaded", "test_rule_from_a_later_module"
         )
-        self.env["ir.model.data"].create(
-            {
-                "module": "a_module_this_registry_has_not_loaded",
-                "name": "test_rule_from_a_later_module",
-                "model": "ir.rule",
-                "res_id": rule.id,
-            }
-        )
-        demo_rule = self.env(user=self.user_demo)["ir.rule"]
+        row.domain = "[('id', '!=', False)]"
 
         with self._registry_loading(False):
-            self.assertIn(rule, demo_rule._get_rules("res.partner", "read"))
+            self.assertIn(row.id, self._partner_row_ids())
 
         with self._registry_loading(True):
-            self.assertNotIn(rule, demo_rule._get_rules("res.partner", "read"))
-            hand_written = self.env["ir.rule"].create(
-                {
-                    "name": "test_rule_written_by_hand",
-                    "model_id": model_res_partner.id,
-                    "domain_force": "[('id', '!=', False)]",
-                }
+            self.assertNotIn(row.id, self._partner_row_ids())
+            hand_written = make_guard_row(
+                self.env,
+                "res.partner",
+                "[('id', '!=', False)]",
+                name="test_rule_written_by_hand",
             )
-            self.assertIn(hand_written, demo_rule._get_rules("res.partner", "read"))
+            self.assertIn(hand_written.id, self._partner_row_ids())
 
     def test_ir_rule_domain_computed_while_loading_is_not_reused_after(self):
-        model_res_partner = self.env.ref("base.model_res_partner")
-        rule = self.env["ir.rule"].create(
-            {
-                "name": "test_rule_cache_key_on_init",
-                "model_id": model_res_partner.id,
-                "domain_force": "[('id', '=', False)]",
-            }
-        )
-        self.env["ir.model.data"].create(
-            {
-                "module": "a_module_this_registry_has_not_loaded",
-                "name": "test_rule_cache_key_on_init",
-                "model": "ir.rule",
-                "res_id": rule.id,
-            }
+        self._restricting_row_from(
+            "a_module_this_registry_has_not_loaded", "test_rule_cache_key_on_init"
         )
         demo_partner = self.env(user=self.user_demo)["res.partner"]
 
         with self._registry_loading(True):
             self.assertTrue(
                 demo_partner.search_count([]),
-                "A rule from an unloaded module must not restrict during loading",
+                "A row from an unloaded module must not restrict during loading",
             )
 
         with self._registry_loading(False):
@@ -551,18 +453,15 @@ class TestIrRule(TransactionCaseWithUserDemo):
                 "The loading-time domain must not survive into a serving registry",
             )
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_ir_rule_access_error_message(self):
-        model_res_partner = self.env.ref("base.model_res_partner")
         partner = self.env["res.partner"].create({"name": "T3 partner"})
-
-        self.env["ir.rule"].create(
-            {
-                "name": "test_rule_t3_deny",
-                "model_id": model_res_partner.id,
-                "domain_force": "[('id', '=', False)]",
-                "groups": [Command.set(self._partner_readers().ids)],
-            }
+        make_guard_row(
+            self.env,
+            "res.partner",
+            "[('id', '=', False)]",
+            self.env.ref("base.group_user"),
+            name="test_rule_t3_deny",
         )
 
         partner_demo = partner.with_user(self.user_demo)
@@ -583,59 +482,61 @@ class TestIrRule(TransactionCaseWithUserDemo):
         self.assertIn(
             "test_rule_t3_deny",
             str(exception),
-            "Debug access-error message should name the blaming rule.",
-        )
-
-    def _partner_readers(self):
-        return self.env.ref("base.group_user") + self.env.ref(
-            "base.group_partner_manager"
-        )
-
-    def _partner_rule(self, name, domain, groups, composition="grant"):
-        return self.env["ir.rule"].create(
-            {
-                "name": name,
-                "model_id": self.env.ref("base.model_res_partner").id,
-                "domain_force": domain,
-                "groups": [Command.set(groups.ids)],
-                "composition": composition,
-            }
+            "Debug access-error message should name the blamed row.",
         )
 
     def test_a_grant_rule_widens_what_another_grant_rule_denied(self):
+        # permissions are OR-ed: one admitting nothing, and the user's own
+        # see-all rows switched off, deny; another admitting everything allows
         group_user = self.env.ref("base.group_user")
         partner = self.env["res.partner"].create({"name": "composition partner"})
-        # the rule narrows the access line of every group demo reads partners
-        # through: a group's rule no longer narrows another group's line (plan
-        # section 17, the monotone conversion), and demo is Contact Creation
-        self._partner_rule("deny", "[('id', '=', False)]", self._partner_readers())
+        self._partner_rows(kind="permission").active = False
+        make_access_row(
+            self.env, "res.partner", group_user, domain="[('id', '=', False)]"
+        )
         with self.assertRaises(AccessError):
             partner.with_user(self.user_demo).check_access("read")
-        self._partner_rule("allow everything", "[]", group_user)
+        make_access_row(self.env, "res.partner", group_user, name="allow everything")
         partner.with_user(self.user_demo).check_access("read")
 
     def test_a_restrict_rule_is_not_widened_by_a_grant_rule(self):
         group_user = self.env.ref("base.group_user")
         partner = self.env["res.partner"].create({"name": "composition partner"})
-        self._partner_rule("allow everything", "[]", group_user)
-        self._partner_rule(
-            "deny for members", "[('id', '=', False)]", group_user, "restrict"
+        make_access_row(self.env, "res.partner", group_user, name="allow everything")
+        make_guard_row(
+            self.env,
+            "res.partner",
+            "[('id', '=', False)]",
+            group_user,
+            name="deny for members",
         )
         demo_partner = partner.with_user(self.user_demo)
         with self.assertRaises(AccessError):
             demo_partner.check_access("read")
-        blamed = self.env(user=self.user_demo)["ir.rule"]._get_failing(
+        blamed = self.env(user=self.user_demo)["ir.access"]._get_failed_accesses(
             demo_partner, "read"
         )
-        self.assertEqual(blamed.mapped("name"), ["deny for members"])
+        self.assertEqual([row.name for row in blamed], ["deny for members"])
 
     def test_a_restrict_rule_binds_only_its_own_group(self):
-        group_system = self.env.ref("base.group_system")
         partner = self.env["res.partner"].create({"name": "composition partner"})
-        self._partner_rule(
-            "deny for admins only", "[('id', '=', False)]", group_system, "restrict"
+        make_guard_row(
+            self.env,
+            "res.partner",
+            "[('id', '=', False)]",
+            self.env.ref("base.group_system"),
+            name="deny for admins only",
         )
         partner.with_user(self.user_demo).check_access("read")
+
+    def test_a_row_on_a_table_inheritance_root_binds_its_subtypes(self):
+        # an action is read through the root table: a guard on the root binds
+        # a window action as it binds the root
+        window = self.env["ir.actions.act_window"].search([], limit=1)
+        demo_window = window.with_user(self.env.ref("base.user_admin"))
+        self.assertTrue(demo_window.has_access("read"))
+        make_guard_row(self.env, "ir.actions.actions", "[('id', '!=', %d)]" % window.id)
+        self.assertFalse(demo_window.has_access("read"))
 
 
 class TestIrModelAccess(TransactionCaseWithUserDemo):
@@ -648,39 +549,34 @@ class TestIrModelAccess(TransactionCaseWithUserDemo):
         with self.assertRaises(ValueError):
             Access._get_groups_with_access("res.partner", "foo")
 
-    @mute_logger("odoo.addons.base.models.ir_model_access", "odoo.db.cursor")
-    def test_create_missing_name_raises_field_error(self):
+    def test_an_access_line_is_created_as_an_ir_access_row(self):
         model_partner = self.env.ref("base.model_res_partner")
-        with self.assertRaises(Exception) as cm:
+        with self.assertRaisesRegex(UserError, "ir.access"):
             self.env["ir.model.access"].create(
-                [
-                    {
-                        "model_id": model_partner.id,
-                        "group_id": False,
-                        "perm_read": True,
-                    }
-                ]
+                {"name": "acl", "model_id": model_partner.id, "perm_read": True}
             )
-        self.assertNotIsInstance(
-            cm.exception, KeyError, "Missing 'name' must not raise KeyError."
-        )
+        with self.assertRaisesRegex(UserError, "ir.access"):
+            self.env["ir.rule"].create(
+                {"name": "rule", "model_id": model_partner.id, "domain_force": "[]"}
+            )
 
     def test_create_omitted_group_warns(self):
-        model_partner = self.env.ref("base.model_res_partner")
         with self.assertLogs(
-            "odoo.addons.base.models.ir_model_access", level="WARNING"
+            "odoo.addons.base.models.ir_access", level="WARNING"
         ) as log_cm:
-            self.env["ir.model.access"].create(
+            row = self.env["ir.access"].create(
                 {
-                    "name": "acl_no_group_omitted",
-                    "model_id": model_partner.id,
-                    "perm_read": True,
+                    "name": "row_no_group_omitted",
+                    "model_id": self.env.ref("base.model_res_partner").id,
+                    "kind": "permission",
+                    "operation": "r",
                 }
             )
         self.assertTrue(
             any("has no group" in msg for msg in log_cm.output),
-            "Omitting group_id on an access-granting ACL must warn.",
+            "Omitting group_id on a permission must warn.",
         )
+        self.assertEqual(row.group_id, self.env.ref("base.group_everyone"))
 
     def test_cache_clearing_invalidates_both_acl_caches(self):
         Access = self.env["ir.model.access"]
@@ -765,14 +661,7 @@ class TestIrModelAccess(TransactionCaseWithUserDemo):
         group_b.with_context(lang="fr_FR").name = "ZZZ_mike"
 
         for group in (group_a, group_b):
-            self.env["ir.model.access"].create(
-                {
-                    "name": f"acl_{group.name}",
-                    "model_id": model_partner.id,
-                    "group_id": group.id,
-                    "perm_read": True,
-                }
-            )
+            make_access_row(self.env, model_partner.model, group, operation="r")
 
         Access = self.env["ir.model.access"].with_context(lang="fr_FR")
         names = Access.group_names_with_access("res.partner", "read")
@@ -790,21 +679,12 @@ class TestIrModelAccessWhileLoading(TransactionCaseWithUserDemo):
 
     def setUp(self):
         super().setUp()
-        acl = self.env["ir.model.access"].create(
-            {
-                "name": "test_acl_from_a_loading_module",
-                "model_id": self.env["ir.model"]._get(self.MODEL).id,
-                "group_id": self.env.ref("base.group_user").id,
-                "perm_read": True,
-            }
-        )
-        self.env["ir.model.data"].create(
-            {
-                "module": self.MODULE,
-                "name": "test_acl_from_a_loading_module",
-                "model": "ir.model.access",
-                "res_id": acl.id,
-            }
+        make_access_row(
+            self.env,
+            self.MODEL,
+            "base.group_user",
+            operation="r",
+            xmlid=f"{self.MODULE}.test_acl_from_a_loading_module",
         )
         self.access = self.env(user=self.user_demo)["ir.model.access"]
 
@@ -877,61 +757,61 @@ class TestIrModelAccessUnknownModel(TransactionCaseWithUserDemo):
 class TestIrModelAccessCacheInvalidation(TransactionCaseWithUserDemo):
     # res.partner.tag: its access is ACL lines only, whereas res.partner also
     # holds ir.access permissions an ACL write cannot revoke
-    def _granting_acls(self, model_name, user, mode="write"):
+    def _granting_rows(self, model_name, user, mode="write"):
         group_ids = set(user._get_group_ids())
         return (
-            self.env["ir.model.access"]
+            self.env["ir.access"]
             .sudo()
             .search(
                 [
                     ("model_id", "=", self.env["ir.model"]._get(model_name).id),
-                    (f"perm_{mode}", "=", True),
+                    ("kind", "=", "permission"),
+                    (f"for_{mode}", "=", True),
                     ("active", "=", True),
                 ]
             )
-            .filtered(lambda a: not a.group_id or a.group_id.id in group_ids)
+            .filtered(lambda row: row.group_id.id in group_ids)
         )
 
     def test_revoke_takes_effect_in_the_writing_worker(self):
         admin = self.env.ref("base.user_admin")
         Access = self.env(user=admin.id)["ir.model.access"]
-        acls = self._granting_acls("res.partner.tag", admin)
-        self.assertTrue(acls, "expected admin to have a write ACL on res.partner.tag")
-
+        rows = self._granting_rows("res.partner.tag", admin)
+        self.assertTrue(rows, "expected admin to hold a write row on res.partner.tag")
         self.env.flush_all()
         self.env.registry.clear_cache()
         self.assertIn("res.partner.tag", Access._get_models_allowed("write"))
 
-        Access.browse(acls.ids).write({"perm_write": False})
+        rows.with_user(admin).write({"for_write": False})
 
         self.assertNotIn(
             "res.partner.tag",
             Access._get_models_allowed("write"),
-            "revoking a model ACL must take effect in the worker that revoked it",
+            "revoking a model's row must take effect in the worker that revoked it",
         )
 
     def test_grant_takes_effect_in_the_writing_worker(self):
         admin = self.env.ref("base.user_admin")
         Access = self.env(user=admin.id)["ir.model.access"]
-        acls = self._granting_acls("res.partner.tag", admin)
-        Access.browse(acls.ids).write({"perm_write": False})
+        rows = self._granting_rows("res.partner.tag", admin)
+        rows.with_user(admin).write({"for_write": False})
         self.env.registry.clear_cache()
         self.assertNotIn("res.partner.tag", Access._get_models_allowed("write"))
 
-        Access.browse(acls.ids).write({"perm_write": True})
+        rows.with_user(admin).write({"for_write": True})
 
         self.assertIn("res.partner.tag", Access._get_models_allowed("write"))
 
     def test_unlink_takes_effect_in_the_writing_worker(self):
         admin = self.env.ref("base.user_admin")
         Access = self.env(user=admin.id)["ir.model.access"]
-        acls = self._granting_acls("res.partner.tag", admin, mode="unlink")
-        self.assertTrue(acls, "expected admin to have an unlink ACL on res.partner.tag")
+        rows = self._granting_rows("res.partner.tag", admin, mode="unlink")
+        self.assertTrue(rows, "expected admin to hold an unlink row on res.partner.tag")
         self.env.flush_all()
         self.env.registry.clear_cache()
         self.assertIn("res.partner.tag", Access._get_models_allowed("unlink"))
 
-        Access.browse(acls.ids).unlink()
+        rows.with_user(admin).unlink()
 
         self.assertNotIn("res.partner.tag", Access._get_models_allowed("unlink"))
 

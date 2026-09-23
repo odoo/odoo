@@ -27,7 +27,7 @@ two yearly inspection windows under the Programa de Verificación Vehicular Obli
     ],
     "data": [
         "data/document_type_data.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/l10n_mx_fleet_emission_calendar_data.xml",
         "data/ir_cron_data.xml",
         "views/l10n_mx_fleet_emission_calendar_views.xml",

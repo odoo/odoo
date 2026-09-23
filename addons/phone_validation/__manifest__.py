@@ -31,7 +31,7 @@ records numbers. """,
         },
     },
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/phone_blacklist_views.xml",
         "views/res_partner_views.xml",
         "wizards/phone_blacklist_remove_view.xml",

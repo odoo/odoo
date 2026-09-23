@@ -13,7 +13,7 @@ The wizard to launch the report has several options to help you get the data you
         "account",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "wizards/product_margin_view.xml",
         "views/product_product_views.xml",
         "views/product_margin_menus.xml",

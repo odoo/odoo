@@ -16,8 +16,7 @@
     "data": [
         "data/cron.xml",
         "data/nemhandel_onboarding_tour.xml",
-        "security/ir.model.access.csv",
-        "security/l10n_dk_nemhandel_security.xml",
+        "security/ir.access.csv",
         "views/account_journal_dashboard_views.xml",
         "views/account_move_views.xml",
         "views/res_partner_views.xml",

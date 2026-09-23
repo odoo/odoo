@@ -12,8 +12,7 @@ Allow internal users requesting a module installation
         "mail",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/ir_rule.xml",
+        "security/ir.access.csv",
         "wizards/base_module_install_request_views.xml",
         "data/mail_template_data.xml",
         "data/mail_templates_module_install.xml",

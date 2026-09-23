@@ -11,28 +11,4 @@
         <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]" />
     </record>
 
-    <record id="team_rule_alpha_manager" model="ir.rule">
-        <field name="name">Alpha teams: administrators</field>
-        <field name="model_id" ref="team.model_team_team" />
-        <field name="domain_force">[('use_alpha', '=', True)]</field>
-        <field name="groups" eval="[Command.link(ref('group_alpha_manager'))]" />
-        <field name="perm_read" eval="False" />
-    </record>
-
-    <record id="team_rule_beta_manager" model="ir.rule">
-        <field name="name">Beta teams: administrators</field>
-        <field name="model_id" ref="team.model_team_team" />
-        <field name="domain_force">[('use_beta', '=', True)]</field>
-        <field name="groups" eval="[Command.link(ref('group_beta_manager'))]" />
-        <field name="perm_read" eval="False" />
-    </record>
-
-    <record id="team_member_rule_alpha_manager" model="ir.rule">
-        <field name="name">Alpha team members: administrators</field>
-        <field name="model_id" ref="team.model_team_member" />
-        <field name="domain_force">[('team_id.use_alpha', '=', True)]</field>
-        <field name="groups" eval="[Command.link(ref('group_alpha_manager'))]" />
-        <field name="perm_read" eval="False" />
-    </record>
-
 </odoo>

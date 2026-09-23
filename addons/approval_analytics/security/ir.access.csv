@@ -1,0 +1,9 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_approval_dashboard,access_approval_dashboard,model_approval_dashboard,base.group_user,permission,r,"[(0, '=', 1)]"
+access_approval_dashboard_manager,access_approval_dashboard,model_approval_dashboard,approval.group_approval_manager,permission,crud,
+access_approval_metrics,access_approval_metrics,model_approval_metrics,base.group_user,permission,r,"[(0, '=', 1)]"
+access_approval_metrics_manager,access_approval_metrics,model_approval_metrics,approval.group_approval_manager,permission,crud,
+access_approver_performance,access_approver_performance,model_approver_performance,base.group_user,permission,r,"[(0, '=', 1)]"
+access_approver_performance_manager,access_approver_performance,model_approver_performance,approval.group_approval_manager,permission,crud,
+approval_metrics_rule,Approval Metrics: multi-company,model_approval_metrics,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"
+approver_performance_rule,Approver Performance: multi-company,model_approver_performance,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"

@@ -1,0 +1,13 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_resource_asset_account_user,resource.asset.account.user,resource_asset.model_resource_asset,account.group_account_user,permission,ud,
+access_resource_asset_account_invoice,resource.asset.account.invoice,resource_asset.model_resource_asset,account.group_account_invoice,permission,c,
+access_account_depreciation_profile,account.depreciation.profile,model_account_depreciation_profile,account.group_account_readonly,permission,r,
+access_account_depreciation_profile_manager,account.depreciation.profile,model_account_depreciation_profile,account.group_account_user,permission,cud,
+access_asset_modify,asset.modify,model_asset_modify,account.group_account_user,permission,cru,
+access_account_asset_group,account.asset.group,model_account_asset_group,account.group_account_readonly,permission,r,
+access_account_asset_group_manager,account.asset.group,model_account_asset_group,account.group_account_manager,permission,cud,
+access_account_depreciation_board_readonly,account.depreciation.board.readonly,model_account_depreciation_board,account.group_account_readonly,permission,r,
+access_account_depreciation_board_user,account.depreciation.board.user,model_account_depreciation_board,account.group_account_user,permission,ud,
+access_account_depreciation_board_invoice,account.depreciation.board.invoice,model_account_depreciation_board,account.group_account_invoice,permission,c,
+account_depreciation_profile_multi_company_rule,Depreciation Profile multi-company,model_account_depreciation_profile,base.group_everyone,guard,crud,"[('company_id', 'parent_of', company_ids)]"
+account_asset_group_multi_company_rule,Account Asset Group multi-company,model_account_asset_group,base.group_everyone,guard,crud,"['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]"

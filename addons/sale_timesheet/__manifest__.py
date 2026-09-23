@@ -19,8 +19,8 @@ have real delivered quantities in sales orders.
     ],
     "data": [
         "data/sale_service_data.xml",
-        "security/ir.model.access.csv",
-        "security/sale_timesheet_security.xml",
+        "security/ir.access.csv",
+        "security/ir_access.xml",
         "views/account_invoice_views.xml",
         "views/sale_order_views.xml",
         "views/product_views.xml",

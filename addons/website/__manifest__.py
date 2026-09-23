@@ -27,7 +27,8 @@
     },
     "data": [
         "security/website_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
+        "security/ir_access.xml",
         "data/image_library.xml",
         "data/ir_asset.xml",
         "data/ir_cron_data.xml",

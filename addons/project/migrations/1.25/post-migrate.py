@@ -10,16 +10,20 @@ followers had becomes a grant of the same reach:
 * an internal user following any project becomes a team member, so a project
   that is or later turns private keeps admitting them.
 
-The record rules that read followers live in a ``noupdate`` block, so they are
-reloaded from ``security/project_security.xml`` onto ``user_has_access``; the
-project-sharing rule and ACL then follow whether any collaborator now exists.
+The record rules that read followers were ``noupdate``, and base 1.97 turns
+them into ir.access rows that keep the flag, so the rows project ships for them
+are reloaded from ``security/ir.access.csv`` onto ``user_has_access``; the
+project-sharing row then follows whether any collaborator now exists.
 """
 
+import csv
+import io
 import logging
 
 from odoo import SUPERUSER_ID, api
 from odoo.db.schema import column_exists
-from odoo.tools.convert import reload_records
+from odoo.tools import file_open
+from odoo.tools.convert import convert_csv_import, reload_records
 
 _logger = logging.getLogger(__name__)
 
@@ -40,6 +44,34 @@ RULES = (
     "milestone_visibility_rule",
     "project_milestone_rule_portal_project_sharing",
 )
+
+
+SHARING_ROW = "project_task_rule_portal_project_sharing"
+
+
+def _reload_rows(env, rules):
+    # a rule became one row per group it was paired with: its own id, or its
+    # id followed by the group's
+    with file_open("project/security/ir.access.csv") as stream:
+        reader = csv.reader(stream.read().splitlines())
+        header = next(reader)
+        rows = [
+            row
+            for row in reader
+            if row[0] in rules
+            or any(row[0].startswith(f"{rule}_group_") for rule in rules)
+        ]
+    output = io.StringIO(newline="")
+    writer = csv.writer(output, lineterminator="\n")
+    writer.writerows([header, *rows])
+    convert_csv_import(
+        env,
+        "project",
+        "security/ir.access.csv",
+        output.getvalue().encode(),
+        mode="init",
+        noupdate=True,
+    )
 
 
 def migrate(cr, version):
@@ -93,7 +125,8 @@ def migrate(cr, version):
     _logger.info("project: %s internal followers became team members", cr.rowcount)
 
     env = api.Environment(cr, SUPERUSER_ID, {})
-    reload_records(env, "project", "security/project_security.xml", RULES)
+    _reload_rows(env, set(RULES) - {SHARING_ROW})
+    reload_records(env, "project", "security/ir_access.xml", [SHARING_ROW])
     collaborators = env["project.collaborator"]
     collaborators._update_project_sharing_portal_rules(
         bool(collaborators.search_count([], limit=1))

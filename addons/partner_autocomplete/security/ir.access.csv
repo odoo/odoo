@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+partner_autocomplete_config_rule_company_group_user,partner_autocomplete.config: the reader's companies,model_partner_autocomplete_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+partner_autocomplete_config_rule_erp_manager,partner_autocomplete.config: every company for an access-rights manager,model_partner_autocomplete_config,base.group_erp_manager,permission,r,
+partner_autocomplete_config_rule_erp_manager_group_system,partner_autocomplete.config: every company for an access-rights manager,model_partner_autocomplete_config,base.group_system,permission,cud,

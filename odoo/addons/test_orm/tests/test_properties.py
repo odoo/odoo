@@ -12,6 +12,7 @@ from odoo.fields import Command, Domain
 from odoo.tests import Form, TransactionCase, users
 from odoo.tools import get_lang, mute_logger
 
+from odoo.addons.base.tests.common import make_guard_row
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 
 
@@ -1875,7 +1876,7 @@ class PropertiesCase(TestPropertiesMixin):
             ]
 
     @users("test")
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.fields")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.fields")
     def test_properties_field_many2many_filtering(self):
         tags = self.env["test_orm.multi.tag"].create(
             [{"name": f"Test Tag {i}"} for i in range(10)]
@@ -1898,15 +1899,12 @@ class PropertiesCase(TestPropertiesMixin):
             }
         )
 
-        self.env["ir.rule"].sudo().create(
-            {
-                "name": "test_rule_tags",
-                "model_id": self.env["ir.model"]._get("test_orm.multi.tag").id,
-                "domain_force": [("name", "not in", tags[5:].mapped("name"))],
-                "perm_read": True,
-                "perm_create": True,
-                "perm_write": True,
-            }
+        make_guard_row(
+            self.env,
+            "test_orm.multi.tag",
+            str([("name", "not in", tags[5:].mapped("name"))]),
+            operation="cru",
+            name="test_rule_tags",
         )
 
         self.env.invalidate_all()
@@ -2309,11 +2307,14 @@ class PropertiesCase(TestPropertiesMixin):
 
     @users("test")
     def test_properties_field_update_parent(self):
-        self.env["ir.rule"].sudo().create(
+        self.env["ir.access"].sudo().create(
             {
                 "name": "only discussion_1",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": self.env["ir.model"]._get("test_orm.message").id,
-                "domain_force": [("discussion", "=", self.discussion_1.id)],
+                "domain": str([("discussion", "=", self.discussion_1.id)]),
             }
         )
 

@@ -30,8 +30,7 @@ Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www
         "sk",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_sk_security.xml",
+        "security/ir.access.csv",
         "views/res_partner_views.xml",
         "views/res_company_views.xml",
         "views/report_invoice.xml",

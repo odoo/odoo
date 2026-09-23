@@ -18,7 +18,7 @@
     },
     "data": [
         "views/ldap_installer_views.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/res_config_settings_views.xml",
     ],
 }

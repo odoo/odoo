@@ -18,7 +18,7 @@
         "pe",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/account_tax_view.xml",
         "views/portal_address_templates.xml",
         "views/res_bank_view.xml",

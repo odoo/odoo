@@ -8,6 +8,8 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 
+from odoo.addons.base.tests.common import make_guard_row
+
 
 class TestRules(TransactionCase):
     @classmethod
@@ -19,26 +21,32 @@ class TestRules(TransactionCase):
         cls.categ = ObjCateg.create({"name": "Food"})
         cls.allowed = SomeObj.create({"val": 1, "categ_id": cls.categ.id})
         cls.forbidden = SomeObj.create({"val": -1, "categ_id": cls.categ.id})
-        cls.env["ir.rule"].create(
+        cls.env["ir.access"].create(
             {
                 "name": "Forbid negatives",
+                "kind": "guard",
+                "group_id": cls.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": cls.env.ref(
                     "test_access_rights.model_test_access_right_some_obj"
                 ).id,
-                "domain_force": "[('val', '>', 0)]",
+                "domain": "[('val', '>', 0)]",
             }
         )
-        cls.env["ir.rule"].create(
+        cls.env["ir.access"].create(
             {
                 "name": "See all categories",
+                "kind": "guard",
+                "group_id": cls.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": cls.env.ref(
                     "test_access_rights.model_test_access_right_some_obj"
                 ).id,
-                "domain_force": "[('categ_id', 'in', user.env['test_access_right.obj_categ'].search([]).ids)]",
+                "domain": "[('categ_id', 'in', user.env['test_access_right.obj_categ'].search([]).ids)]",
             }
         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_basic_access(self):
         env = self.env(user=self.env.ref("base.public_user"))
         allowed = self.allowed.with_env(env)
@@ -50,21 +58,18 @@ class TestRules(TransactionCase):
         with self.assertRaises(AccessError):
             self.assertEqual(forbidden.val, -1)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_group_rule(self):
         env = self.env(user=self.env.ref("base.public_user"))
         allowed = self.allowed.with_env(env)
         forbidden = self.forbidden.with_env(env)
 
-        self.env["ir.rule"].create(
-            {
-                "name": "Forbid public group",
-                "model_id": self.env.ref(
-                    "test_access_rights.model_test_access_right_some_obj"
-                ).id,
-                "groups": [Command.set([self.env.ref("base.group_public").id])],
-                "domain_force": "[(0, '=', 1)]",
-            }
+        make_guard_row(
+            self.env,
+            "test_access_right.some_obj",
+            "[(0, '=', 1)]",
+            "base.group_public",
+            name="Forbid public group",
         )
 
         (allowed + forbidden).invalidate_model(["val"])
@@ -182,18 +187,21 @@ class TestRules(TransactionCase):
         env = self.env(user=self.env.ref("base.public_user"))
         allowed = self.allowed.with_env(env)
         self.assertTrue(allowed.has_access("read"))
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Forbid small values",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": self.env.ref(
                     "test_access_rights.model_test_access_right_some_obj"
                 ).id,
-                "domain_force": "[('val', '>', 5)]",
+                "domain": "[('val', '>', 5)]",
             }
         )
         self.assertFalse(allowed.has_access("read"))
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_check_access_newid_bypasses_ir_rule(self):
         env = self.env(user=self.env.ref("base.public_user"))
         SomeObj = env["test_access_right.some_obj"]
@@ -287,11 +295,14 @@ class TestRules(TransactionCase):
         child = ChildModel.create([{"some_id": self.allowed.id}])
         self.env.flush_all()
 
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Forbid 0 value",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": self.env["ir.model"]._get("test_access_right.some_obj").id,
-                "domain_force": str([("val", "!=", 0)]),
+                "domain": str([("val", "!=", 0)]),
             }
         )
 
@@ -309,35 +320,27 @@ class TestRules(TransactionCase):
         self.assertEqual(search_result, ChildModel)
 
     def test_domain_constrains(self):
-
-        rule = self.env["ir.rule"].create(
-            {
-                "name": "Test record rule",
-                "model_id": self.env.ref(
-                    "test_access_rights.model_test_access_right_some_obj"
-                ).id,
-                "domain_force": [],
-            }
+        rule = make_guard_row(
+            self.env, "test_access_right.some_obj", "[]", name="Test record rule"
         )
         invalid_domains = [
             "A really bad domain!",
-            [(1, "!=", 1)],
-            [("non_existing_field", "=", "value")],
+            str([("non_existing_field", "=", "value")]),
         ]
 
         for domain in invalid_domains:
             with self.assertRaisesRegex(ValidationError, "Invalid domain"):
-                rule.domain_force = domain
+                rule.domain = domain
 
         valid_domains = [
             False,
-            [(1, "=", 1)],
-            [("val", "=", 12)],
+            str([(1, "=", 1)]),
+            str([("val", "=", 12)]),
         ]
         for domain in valid_domains:
-            rule.domain_force = domain
+            rule.domain = domain
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_ir_rule_cache_after_error(self):
         NB_RECORD = 14
         SomeObj = self.env["test_access_right.some_obj"]
@@ -371,7 +374,7 @@ class TestRules(TransactionCase):
             side_effect=IrAccess._get_failed_accesses,
         )
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_a_prefetch_batch_holding_an_unreadable_record_builds_no_rule_report(self):
         env = self.env(user=self.env.ref("base.public_user"))
         records = (
@@ -393,7 +396,7 @@ class TestRules(TransactionCase):
         self.assertNotIsInstance(caught.exception, PrefetchBatchDenied)
         self.assertEqual(get_failing.call_count, 1)
 
-    @mute_logger("odoo.addons.base.models.ir_rule")
+    @mute_logger("odoo.addons.base.models.ir_access")
     def test_a_prefetch_batch_of_x2many_values_with_an_unreadable_record(self):
         Container = self.env["test_access_right.container"]
         hidden, shown = Container.create(
@@ -402,13 +405,16 @@ class TestRules(TransactionCase):
                 {"some_ids": [Command.set(self.allowed.ids)]},
             ]
         )
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Hide one container",
+                "kind": "guard",
+                "group_id": self.env.ref("base.group_everyone").id,
+                "operation": "crud",
                 "model_id": self.env.ref(
                     "test_access_rights.model_test_access_right_container"
                 ).id,
-                "domain_force": f"[('id', '!=', {hidden.id})]",
+                "domain": f"[('id', '!=', {hidden.id})]",
             }
         )
         env = self.env(user=self.env.ref("base.public_user"))

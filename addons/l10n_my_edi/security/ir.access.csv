@@ -1,0 +1,11 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_l10n_my_edi_industry_classification_readonly,l10n_my_edi.industry_classification,model_l10n_my_edi_industry_classification,account.group_account_readonly,permission,r,
+access_l10n_my_edi_industry_classification_manager,l10n_my_edi.industry_classification,model_l10n_my_edi_industry_classification,account.group_account_manager,permission,cud,
+access_myinvois_consolidate_invoice_wizard_user,access_myinvois_consolidate_invoice_wizard_user,model_myinvois_consolidate_invoice_wizard,account.group_account_invoice,permission,crud,
+access_myinvois_document_status_update_wizard_invoice,l10n_my_edi.myinvois.document.status.update.wizard,model_myinvois_document_status_update_wizard,account.group_account_invoice,permission,crud,
+access_myinvois_document_readonly,l10n_my_edi.myinvois.document,model_myinvois_document,account.group_account_readonly,permission,r,
+access_myinvois_document_invoice,l10n_my_edi.myinvois.document,model_myinvois_document,account.group_account_invoice,permission,cud,
+l10n_my_edi_config_rule_company_group_user,l10n_my_edi.config: the reader's companies,model_l10n_my_edi_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+l10n_my_edi_config_rule_erp_manager,l10n_my_edi.config: every company for an access-rights manager,model_l10n_my_edi_config,base.group_erp_manager,permission,r,
+l10n_my_edi_config_rule_erp_manager_group_system,l10n_my_edi.config: every company for an access-rights manager,model_l10n_my_edi_config,base.group_system,permission,cud,
+myinvois_document_comp_rule,MyInvois Document,model_myinvois_document,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids)]"

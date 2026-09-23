@@ -1,0 +1,15 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+access_base_document_layout,access.base.document.layout,model_base_document_layout,base.group_system,permission,cru,
+res_users_settings_embedded_action_rule_user,res.users.settings.embedded.action: access their own entries,model_res_users_settings_embedded_action,base.group_user,permission,crud,"[('user_setting_id.user_id', '=', user.id)]"
+res_users_settings_embedded_action_rule_admin,Administrators can access all User Settings embedded actions,model_res_users_settings_embedded_action,base.group_system,permission,crud,
+access_web_cwv_metric_system,web.cwv.metric.system,model_web_cwv_metric,base.group_system,permission,rd,
+access_web_js_error_system,web.js.error.system,model_web_js_error,base.group_system,permission,rd,
+access_report_theme_all,report.theme.all,model_report_theme,base.group_user,permission,r,
+access_report_theme_system,report.theme.system,model_report_theme,base.group_system,permission,cud,
+access_ir_exports_group_system,ir_exports group_system,model_ir_exports,base.group_allow_export,permission,crud,
+access_ir_exports_line_group_system,ir_exports_line group_system,model_ir_exports_line,base.group_allow_export,permission,crud,
+access_report_layout,access_report_layout,model_report_layout,base.group_user,permission,r,
+access_report_layout_system,access_report_layout system,model_report_layout,base.group_system,permission,cud,
+web_config_rule_company_group_user,web.config: the reader's companies,model_web_config,base.group_user,permission,r,"[('company_id', 'in', company_ids)]"
+web_config_rule_erp_manager,web.config: every company for an access-rights manager,model_web_config,base.group_erp_manager,permission,r,
+web_config_rule_erp_manager_group_system,web.config: every company for an access-rights manager,model_web_config,base.group_system,permission,cud,

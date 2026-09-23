@@ -1,0 +1,26 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+rule_integration_exchange_company,Event Log: Company isolation,model_integration_exchange,group_api_transport_user,permission,r,"[('company_id', 'in', company_ids)]"
+rule_integration_exchange_company_group_api_transport_manager,Event Log: Company isolation,model_integration_exchange,group_api_transport_manager,permission,cru,"[('company_id', 'in', company_ids)]"
+rule_integration_exchange_company_group_api_transport_admin,Event Log: Company isolation,model_integration_exchange,group_api_transport_admin,permission,crud,"[('company_id', 'in', company_ids)]"
+rule_integration_service_read,Outbound Service: Global read,model_integration_service,group_api_transport_user,permission,r,
+access_integration_service_manager,integration.service.manager,model_integration_service,group_api_transport_manager,permission,cu,
+access_integration_service_admin,integration.service.admin,model_integration_service,group_api_transport_admin,permission,d,
+rule_integration_response_cache_company,Response Cache: Company isolation,model_integration_response_cache,group_api_transport_user,permission,r,"[('company_id', 'in', company_ids)]"
+rule_integration_response_cache_company_group_api_transport_manager,Response Cache: Company isolation,model_integration_response_cache,group_api_transport_manager,permission,rud,"[('company_id', 'in', company_ids)]"
+access_integration_service_system,integration.service system,model_integration_service,base.group_system,permission,crud,
+access_integration_connection_user,integration.connection.user,model_integration_connection,group_api_transport_user,permission,r,
+access_integration_connection_manager,integration.connection.manager,model_integration_connection,group_api_transport_manager,permission,cu,
+access_integration_connection_admin,integration.connection.admin,model_integration_connection,group_api_transport_admin,permission,d,
+access_integration_connection_system,integration.connection system,model_integration_connection,base.group_system,permission,crud,
+access_integration_receiver_user,integration.receiver.user,model_integration_receiver,group_api_transport_user,permission,r,
+access_integration_receiver_manager,integration.receiver.manager,model_integration_receiver,group_api_transport_manager,permission,cu,
+access_integration_receiver_admin,integration.receiver.admin,model_integration_receiver,group_api_transport_admin,permission,d,
+access_integration_receiver_system,integration.receiver system,model_integration_receiver,base.group_system,permission,crud,
+access_integration_egress_purpose_user,integration.egress.purpose.user,model_integration_egress_purpose,group_api_transport_user,permission,r,
+access_integration_stream_user,integration.stream.user,model_integration_stream,group_api_transport_user,permission,r,
+access_integration_stream_manager,integration.stream.manager,model_integration_stream,group_api_transport_manager,permission,cu,
+access_integration_stream_admin,integration.stream.admin,model_integration_stream,group_api_transport_admin,permission,d,
+access_integration_stream_outbox_user,integration.stream.outbox.user,model_integration_stream_outbox,group_api_transport_user,permission,r,
+access_integration_stream_outbox_manager,integration.stream.outbox.manager,model_integration_stream_outbox,group_api_transport_manager,permission,cud,
+rule_integration_receiver_company,Receiver: Company isolation,model_integration_receiver,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"
+rule_integration_connection_company,Connection: Company isolation,model_integration_connection,base.group_everyone,guard,crud,"[('company_id', 'in', company_ids + [False])]"

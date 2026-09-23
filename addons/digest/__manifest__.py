@@ -13,7 +13,7 @@ Send KPI Digests periodically
         "resource",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/digest_data.xml",
         "data/digest_tips_data.xml",
         "data/ir_cron_data.xml",

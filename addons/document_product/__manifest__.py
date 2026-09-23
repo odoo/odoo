@@ -15,8 +15,7 @@ option to send products' attachments to the documents app.
         "product",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/document_product_security.xml",
+        "security/ir.access.csv",
         "data/document_folder_data.xml",
         "data/document_tag_data.xml",
         "data/res_company_data.xml",

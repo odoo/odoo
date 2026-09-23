@@ -11,8 +11,7 @@
         "crm",
     ],
     "data": [
-        "security/event_crm_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/crm_lead_merge_template.xml",
         "data/ir_action_data.xml",
         "data/ir_cron_data.xml",

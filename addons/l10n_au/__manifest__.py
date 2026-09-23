@@ -23,8 +23,7 @@ Also:
         "au",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_au_security.xml",
+        "security/ir.access.csv",
         "data/account_tax_report_data.xml",
         "data/account_tax_template_data.xml",
         "data/bas_a.xml",

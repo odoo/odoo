@@ -11,7 +11,7 @@
     ],
     "data": [
         "security/stock_team_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/team_team_views.xml",
         "views/stock_picking_views.xml",
         "views/stock_team_menus.xml",

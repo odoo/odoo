@@ -15,7 +15,8 @@
     ],
     "data": [
         "security/hr_recruitment_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
+        "security/ir_access.xml",
         "data/digest_data.xml",
         "data/mail_message_subtype_data.xml",
         "data/mail_template_data.xml",

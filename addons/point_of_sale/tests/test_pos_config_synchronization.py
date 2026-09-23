@@ -100,15 +100,14 @@ class TestPosConfigSynchronization(TestPoSCommon):
     def test_read_access_loss_is_not_mistaken_for_physical_deletion(self):
         order = self._create_sync_order()
         ids = order.lines.ids
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "Hide synchronized line",
                 "model_id": self.env["ir.model"]._get_id("pos.order.line"),
-                "domain_force": repr([("id", "not in", ids)]),
-                "perm_read": True,
-                "perm_write": False,
-                "perm_create": False,
-                "perm_unlink": False,
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "r",
+                "domain": repr([("id", "not in", ids)]),
             }
         )
         result = self.basic_config.read_config_open_orders({}, {"pos.order.line": ids})
@@ -132,15 +131,14 @@ class TestPosConfigSynchronization(TestPoSCommon):
             }
         )
         order.account_move = move
-        self.env["ir.rule"].create(
+        self.env["ir.access"].create(
             {
                 "name": "No direct access to synchronized move",
                 "model_id": self.env["ir.model"]._get_id("account.move"),
-                "domain_force": repr([("id", "!=", move.id)]),
-                "perm_read": True,
-                "perm_write": False,
-                "perm_create": False,
-                "perm_unlink": False,
+                "group_id": self.env.ref("base.group_everyone").id,
+                "kind": "guard",
+                "operation": "r",
+                "domain": repr([("id", "!=", move.id)]),
             }
         )
         self.assertFalse(move._filtered_access("read"))

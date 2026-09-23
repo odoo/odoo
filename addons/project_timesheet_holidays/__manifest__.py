@@ -19,8 +19,7 @@ on leaves. Project and task can be configured company-wide.
     "data": [
         "views/res_config_settings_views.xml",
         "views/project_task_views.xml",
-        "security/ir.model.access.csv",
-        "security/project_timesheet_holidays_security.xml",
+        "security/ir.access.csv",
     ],
     "demo": [
         "demo/holiday_timesheets_demo.xml",

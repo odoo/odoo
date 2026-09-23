@@ -1,0 +1,17 @@
+id,name,model_id/id,group_id/id,kind,operation,domain
+team_member_rule_sale_all,Sales team members: All Documents,team.model_team_member,sale.group_sale_salesman_all_leads,permission,r,"[('team_id.use_sale', '=', True)]"
+account_invoice_send_single_rule_see_team,Team Invoice Send and Print (single mode),account.model_account_move_send_wizard,sale.group_sale_salesman_team,permission,cru,"[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('move_id.invoice_user_id', '=', False)]"
+account_invoice_send_batch_rule_see_team,Team Invoice Send and Print (batch mode),account.model_account_move_send_batch_wizard,sale.group_sale_salesman_team,permission,cru,"[('move_ids.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_ids.invoice_user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('move_ids.invoice_user_id', '=', False)]"
+account_invoice_rule_see_team,Team Invoices,account.model_account_move,sale.group_sale_salesman_team,permission,r,"[('move_type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('invoice_user_id', '=', False)]"
+account_invoice_line_rule_see_team,Team Invoice Lines,account.model_account_move_line,sale.group_sale_salesman_team,permission,r,"[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('move_id.invoice_user_id', '=', False)]"
+sale_order_team_rule,Team Orders,sale.model_sale_order,sale.group_sale_salesman_team,permission,cru,"['|', ('user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('user_id', '=', False)]"
+sale_order_line_team_rule,Team Order Lines,sale.model_sale_order_line,sale.group_sale_salesman_team,permission,crud,"['|', ('user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('user_id', '=', False)]"
+sale_order_report_team_rule,Team Orders Analysis,sale.model_sale_report,sale.group_sale_salesman_team,permission,r,"['|', ('user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('user_id', '=', False)]"
+team_team_rule_sale_manager,Sales teams: Sales Administrators,team.model_team_team,sale.group_sale_manager,permission,cud,"[('use_sale', '=', True)]"
+team_member_rule_personal_group_sale_manager,Team Members: own teams,team.model_team_member,sale.group_sale_manager,permission,r,"['|', ('team_id.user_id', '=', user.id), ('team_id', 'in', user.team_ids.ids)]"
+team_member_rule_sale_manager,Sales team members: Sales Administrators,team.model_team_member,sale.group_sale_manager,permission,cud,"[('team_id.use_sale', '=', True)]"
+team_member_rule_sale_all_group_sale_manager,Sales team members: All Documents,team.model_team_member,sale.group_sale_manager,permission,r,"[('team_id.use_sale', '=', True)]"
+team_alias_rule_sale_manager,Sales team aliases: Sales Administrators,team.model_team_alias,sale.group_sale_manager,permission,cud,"[('team_id.use_sale', '=', True)]"
+access_crm_tag_salesman,crm.tag salesman,model_crm_tag,sale.group_sale_salesman,permission,cru,
+access_crm_tag_manager,crm.tag manager,model_crm_tag,sale.group_sale_manager,permission,d,
+access_crm_tag_sale_readonly,crm.tag.sale.readonly,model_crm_tag,sale.group_sale_readonly,permission,r,

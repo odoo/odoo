@@ -16,8 +16,7 @@
         "it",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_it_edi_doi_security.xml",
+        "security/ir.access.csv",
         "data/invoice_it_template.xml",
         "views/l10n_it_edi_doi_declaration_of_intent_views.xml",
         "views/account_move_views.xml",

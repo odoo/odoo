@@ -11,7 +11,7 @@
     ],
     "data": [
         "security/security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/spreadsheet_dashboard_views.xml",
         "views/menu_views.xml",
         "data/dashboard.xml",

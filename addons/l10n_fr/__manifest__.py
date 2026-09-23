@@ -12,8 +12,7 @@
         "fr",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_fr_security.xml",
+        "security/ir.access.csv",
         "data/res_country_data.xml",
         "views/res_company_views.xml",
         "views/res_partner_views.xml",

@@ -147,8 +147,8 @@ Depends on ``integration`` alone.
     ],
     "data": [
         "security/api_ai_security.xml",
-        "security/ir.model.access.csv",
         "security/gateway_ml_security.xml",
+        "security/ir.access.csv",
         "data/ai_services_data.xml",
         "data/ai_use_case_tags_data.xml",
         "data/ai_providers_data.xml",

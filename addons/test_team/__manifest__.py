@@ -10,6 +10,6 @@
     ],
     "data": [
         "security/test_team_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
     ],
 }

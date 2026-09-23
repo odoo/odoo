@@ -90,9 +90,9 @@ class TestHttpWebJson_1(TestHttpBase):
         self.user_demo.group_ids += self.env.ref("sale.group_sale_salesman")
         self.url_open_json("/crm")
 
-        self.env["ir.model.access"].search(
-            [("model_id", "=", action_crm.model_id.id)]
-        ).perm_read = False
+        self.env["ir.access"].search(
+            [("model_id", "=", action_crm.model_id.id), ("kind", "=", "permission")]
+        ).active = False
 
         with self.assertLogs("odoo.http.application", "WARNING") as capture:
             res = self.url_open_json("/crm", expected_code=403)

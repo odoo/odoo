@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account.account_analytic_line_rule_billing_user" model="ir.access">
+        <field name="operation">crud</field>
+        <field name="domain">[('project_id', '=', False)]</field>
+    </record>
+
+    <record id="account.account_analytic_line_rule_readonly_user" model="ir.access">
+        <field name="domain">[('project_id', '=', False)]</field>
+    </record>
+
+</odoo>

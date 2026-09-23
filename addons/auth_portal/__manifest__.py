@@ -24,7 +24,7 @@ same kind of frontend interaction.
         "auth_passkey",
     ],
     "data": [
-        "security/security.xml",
+        "security/ir.access.csv",
         "views/templates.xml",
     ],
     "assets": {

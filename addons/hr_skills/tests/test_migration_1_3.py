@@ -136,22 +136,22 @@ class TestMigration13(SkillsCase):
         self.assertEqual(job_first.valid_to, date(2025, 5, 31))
 
     def test_the_report_rules_are_rewritten_from_the_data_file(self):
-        rules = self.env["ir.rule"].browse(
+        rules = self.env["ir.access"].browse(
             [
                 self.env.ref(f"hr_skills.{xmlid}").id
                 for xmlid in self.migration.RULES_REWRITTEN
             ]
         )
-        expected = {rule: (rule.name, rule.domain_force) for rule in rules}
-        rules.write({"name": "Stale", "domain_force": "[(0, '=', 1)]"})
+        expected = {rule: (rule.name, rule.domain) for rule in rules}
+        rules.write({"name": "Stale", "domain": "[(0, '=', 1)]"})
 
         self.migration._rewrite_rules(self.env)
 
         for rule, values in expected.items():
-            self.assertEqual((rule.name, rule.domain_force), values)
+            self.assertEqual((rule.name, rule.domain), values)
         self.assertIn(
             "child_of",
-            self.env.ref("hr_skills.hr_employee_skill_report_manager").domain_force,
+            self.env.ref("hr_skills.hr_employee_skill_report_manager").domain,
         )
 
     def test_open_certification_reminders_are_linked_by_their_summary(self):

@@ -94,19 +94,11 @@ class ProjectCollaborator(models.Model):
 
     @api.model
     def _update_project_sharing_portal_rules(self, active: bool) -> None:
-        access_project_sharing_portal = self.env.ref(
-            "project.access_project_sharing_task_portal"
-        ).sudo()
+        access = self.env.ref("project.project_task_rule_portal_project_sharing").sudo()
         dbg.logic.debug(
-            "_update_project_sharing_portal_rules(active=%s): access rule was %s",
+            "_update_project_sharing_portal_rules(active=%s): access was %s",
             active,
-            access_project_sharing_portal.active,
+            access.active,
         )
-        if access_project_sharing_portal.active != active:
-            access_project_sharing_portal.write({"active": active})
-
-        task_portal_ir_rule = self.env.ref(
-            "project.project_task_rule_portal_project_sharing"
-        ).sudo()
-        if task_portal_ir_rule.active != active:
-            task_portal_ir_rule.write({"active": active})
+        if access.active != active:
+            access.write({"active": active})

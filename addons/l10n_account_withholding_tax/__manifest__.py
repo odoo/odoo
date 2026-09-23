@@ -9,8 +9,7 @@
         "account",
     ],
     "data": [
-        "security/ir.model.access.csv",
-        "security/l10n_account_withholding_tax_security.xml",
+        "security/ir.access.csv",
         "views/account_payment_views.xml",
         "views/account_tax_views.xml",
         "views/report_payment_receipt_templates.xml",
