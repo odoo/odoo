@@ -13,6 +13,7 @@ from markupsafe import Markup
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
+from odoo.addons.hr_holidays.models.hr_work_entry_type import REQUEST_DURATIONS
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Date, Domain
 from odoo.tools.date_utils import convert_timezone, float_to_time, sum_intervals, time_to_float
@@ -265,16 +266,7 @@ class HrLeave(models.Model):
     is_striked = fields.Boolean('Striked', compute='_compute_is_hatched')
     has_mandatory_day = fields.Boolean(compute='_compute_has_mandatory_day')
     work_entry_type_increases_duration = fields.Char(compute='_compute_work_entry_type_increases_duration')
-    request_duration = fields.Selection(
-        [
-            ("full", "Full Day"),
-            ("am", "Morning"),
-            ("pm", "Afternoon"),
-            ("specific", "Specific"),
-        ],
-        default="full",
-        string="Duration",
-    )
+    request_duration = fields.Selection(REQUEST_DURATIONS, default="full", string="Duration")
     allowed_request_durations = fields.Json(compute="_compute_allowed_request_durations")
     # warning message
     dashboard_warning_message = fields.Char(compute='_compute_dashboard_warning_message')
@@ -320,13 +312,10 @@ class HrLeave(models.Model):
 
     @api.depends('company_id')
     def _compute_allowed_work_entry_type_ids(self):
+        types_by_country = self.env['hr.work.entry.type']._get_types_by_country(
+            self.company_id.country_id)
         for leave in self:
-            country = leave.company_id.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
-            leave.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+            leave.allowed_work_entry_type_ids = types_by_country[leave.company_id.country_id]
 
     @api.onchange('request_hour_from', 'request_hour_to')
     def _onchange_hours(self):
@@ -374,20 +363,16 @@ class HrLeave(models.Model):
                     leave.allocation_display_warning = self.env._(
                         "Only %(remaining)s day(s) available", remaining=float_round(remaining, precision_digits=2))
 
-    @api.depends("work_entry_type_request_unit", "last_several_days")
+    @api.depends("work_entry_type_id.request_unit", "last_several_days")
     def _compute_allowed_request_durations(self):
         for leave in self:
             leave.allowed_request_durations = leave._get_allowed_request_durations()
 
     def _get_allowed_request_durations(self):
         self.ensure_one()
-        if self.last_several_days or self.work_entry_type_request_unit == "day":
+        if self.last_several_days:
             return ["full"]
-        if self.work_entry_type_request_unit == "half_day":
-            return ["full", "am", "pm"]
-        if self.work_entry_type_request_unit == "hour":
-            return ["full", "am", "pm", "specific"]
-        return ["full"]
+        return self.work_entry_type_id._get_allowed_request_durations()
 
     @api.onchange("work_entry_type_id", "work_entry_type_request_unit", "last_several_days")
     def _onchange_request_duration_unit(self):
@@ -2490,6 +2475,7 @@ class HrLeave(models.Model):
         employee = self.env['hr.employee'].browse(employee_id) if employee_id else self.env.user.employee_id
         return employee.sudo(False)._get_unusual_days(date_from, date_to)
 
+    @api.model
     def _to_utc(self, date, hour, resource):
         # float_to_time carries the rounded minutes itself, but stops at 24h
         holiday_tz = ZoneInfo(resource.tz) if resource.tz else self.env.tz
