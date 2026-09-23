@@ -241,10 +241,12 @@ class TestReferenceCost:
                 PrefixList="x   ds "/>
           </ds:CanonicalizationMethod>
         </ds:SignedInfo>"""
-        seen = []
-        monkeypatch.setattr(
-            "odoo.libs.xml.dsig.canonicalize",
-            lambda node, **kw: seen.append(kw["inclusive_ns_prefixes"]) or b"",
-        )
+        seen: list[list[str]] = []
+
+        def canonicalize(node, **kw):
+            seen.append(kw["inclusive_ns_prefixes"])
+            return b""
+
+        monkeypatch.setattr("odoo.libs.xml.dsig.canonicalize", canonicalize)
         canonicalize_signed_info(etree.fromstring(doc.encode()))
         assert seen == [["x", "ds"]]

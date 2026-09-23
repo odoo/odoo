@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import contextlib
-import email.message
 import socket
 import threading
 import time
@@ -403,11 +402,8 @@ class GuardedXmlRpcTransport(xmlrpc.client.Transport):
             timeout=self._timeout,
         )
         if not response.ok:
-            headers = email.message.Message()
-            for name, value in response.headers.items():
-                headers[name] = value
             raise xmlrpc.client.ProtocolError(
-                url, response.status_code, response.reason, headers
+                url, response.status_code, response.reason, dict(response.headers)
             )
         del verbose
         parser, unmarshaller = self.getparser()

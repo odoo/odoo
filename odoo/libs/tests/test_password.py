@@ -86,4 +86,4 @@ class TestContextArgumentsAreChecked(unittest.TestCase):
         with self.assertRaises(TypeError):
             CryptContext().update(schemes=[1])
         with self.assertRaises(TypeError):
-            CryptContext(deprecated=42)
+            CryptContext(deprecated=42)  # type: ignore[arg-type]

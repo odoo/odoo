@@ -706,12 +706,12 @@ def _rename_module_references(cr: BaseCursor, rename: _ModuleRename) -> int:
             changes = {}
             for column, value in zip(columns, values, strict=True):
                 if isinstance(value, dict):
-                    renamed = {
+                    renamed_texts = {
                         lang: rename.in_text(text) if text else text
                         for lang, text in value.items()
                     }
-                    if renamed != value:
-                        changes[column] = Json(renamed)
+                    if renamed_texts != value:
+                        changes[column] = Json(renamed_texts)
                 elif value and (renamed := rename.in_text(value)) != value:
                     changes[column] = renamed
             if not changes:
@@ -1013,7 +1013,10 @@ class _ExpressionEdits:
         elif self.leaves is not None and _is_leaf(node):
             assert isinstance(node, (ast.List, ast.Tuple))
             path, operator, value = node.elts
-            assert isinstance(path, ast.Constant) and isinstance(operator, ast.Constant)
+            assert isinstance(path, ast.Constant) and isinstance(path.value, str)
+            assert isinstance(operator, ast.Constant) and isinstance(
+                operator.value, str
+            )
             self.literal(path, rename.rename_path(path.value, self.leaves))
             subdomain = operator.value.lower() in SUBDOMAIN_OPERATORS
             self.visit_value(
@@ -1064,7 +1067,7 @@ class _ExpressionEdits:
             current = rename.comodel(current, link.attr)
 
     def literal(self, node: ast.Constant, value: str) -> None:
-        if value == node.value:
+        if not isinstance(node.value, str) or value == node.value:
             return
         start, end = self.span(node)
         raw = self.source[start:end].decode()

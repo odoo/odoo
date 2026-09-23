@@ -105,7 +105,7 @@ _BARCODE_SIZES = {
 }
 
 
-def is_barcode_encoding_valid(barcode: str, encoding: str) -> bool:
+def is_barcode_encoding_valid(barcode: object, encoding: object) -> bool:
     if not isinstance(barcode, str) or not isinstance(encoding, str):
         return False
     encoding = encoding.lower()

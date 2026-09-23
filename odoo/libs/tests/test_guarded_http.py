@@ -338,8 +338,8 @@ class TestXmlRpcProxy:
             proxy.version()
         assert info.value.errcode == 503
         assert "user" not in info.value.url
-        assert info.value.headers["content-length"] == "0"
-        assert info.value.headers.get("CONTENT-LENGTH") == "0"
+        assert type(info.value.headers) is dict
+        assert info.value.headers["Content-Length"] == "0"
 
     def test_a_refused_destination_never_reaches_the_server(self, server):
         session = session_for(resolver=resolver_for({"evil.test": ["10.0.0.9"]}))

@@ -328,6 +328,7 @@ class TestUnsettledAttempts(unittest.TestCase):
         self.assertEqual(new.acquire_attempt(), None)
         new._opened_at -= 61
         probe = new.acquire_attempt()
+        assert probe is not None
         forged = type(probe)(probe.generation, probe=True, breaker=old._id)
         new.release(forged)
         self.assertIsNone(new.acquire_attempt(), "a foreign release freed the slot")
