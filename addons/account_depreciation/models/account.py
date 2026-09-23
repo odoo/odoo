@@ -27,6 +27,9 @@ class AccountAccount(models.Model):
     multiple_assets_per_line = fields.Boolean(
         string="Multiple Assets per Line",
         default=False,
+        compute="_compute_multiple_assets_per_line",
+        store=True,
+        readonly=False,
         tracking=True,
         help="Multiple asset items will be generated depending on the bill line quantity instead of 1 global asset.",
     )
@@ -39,12 +42,6 @@ class AccountAccount(models.Model):
                 "asset_non_current",
             )
 
-    @api.onchange("create_asset")
-    def _onchange_multiple_assets_per_line(self):
-        for record in self:
-            if record.create_asset == "no":
-                record.multiple_assets_per_line = False
-
     @api.depends("depreciation_profile_ids")
     def _compute_create_asset(self):
         for account in self:
@@ -52,3 +49,9 @@ class AccountAccount(models.Model):
                 account.create_asset = (
                     "draft" if account.depreciation_profile_ids else "no"
                 )
+
+    @api.depends("create_asset")
+    def _compute_multiple_assets_per_line(self):
+        for record in self:
+            if record.create_asset == "no":
+                record.multiple_assets_per_line = False

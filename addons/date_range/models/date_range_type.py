@@ -52,7 +52,12 @@ class DateRangeType(models.Model):
         "the 'index' variable.",
     )
     range_name_preview = fields.Char(compute="_compute_range_name_preview")
-    name_prefix = fields.Char(string="Range name prefix")
+    name_prefix = fields.Char(
+        string="Range name prefix",
+        compute="_compute_name_prefix",
+        store=True,
+        readonly=False,
+    )
     duration_count = fields.Integer(string="Duration")
     duration_unit = fields.Selection(selection=UNIT_SELECTION)
     autogeneration_date_start = fields.Date(
@@ -187,13 +192,14 @@ class DateRangeType(models.Model):
         for dr_type in self:
             dr_type.date_ranges_exist = bool(dr_type.date_range_ids)
 
-    @api.onchange("name_expr")
-    def onchange_name_expr(self):
+    @api.depends("name_expr")
+    def _compute_name_prefix(self):
         """Clear the name prefix when an expression is set, so only one applies."""
         # One-way only (prefix -> expression) to avoid wiping a hand-crafted
         # expression by accident; clearing the expression never restores the prefix.
-        if self.name_expr and self.name_prefix:
-            self.name_prefix = False
+        for range_type in self:
+            if range_type.name_expr and range_type.name_prefix:
+                range_type.name_prefix = False
 
     def write(self, vals):
         """Cascade archiving down to the type's ranges.

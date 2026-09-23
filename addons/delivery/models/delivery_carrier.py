@@ -95,6 +95,9 @@ class DeliveryCarrier(models.Model):
         string="Invoicing Policy",
         default="estimated",
         required=True,
+        compute="_compute_invoice_policy",
+        store=True,
+        readonly=False,
         help="Estimated Cost: the customer will be invoiced the estimated cost of the shipping.",
     )
 
@@ -189,10 +192,16 @@ class DeliveryCarrier(models.Model):
     can_generate_return = fields.Boolean(compute="_compute_can_generate_return")
     return_label_on_delivery = fields.Boolean(
         string="Generate Return Label",
+        compute="_compute_return_label_on_delivery",
+        store=True,
+        readonly=False,
         help="The return label is automatically generated at the delivery.",
     )
     get_return_label_from_portal = fields.Boolean(
         string="Return Label Accessible from Customer Portal",
+        compute="_compute_get_return_label_from_portal",
+        store=True,
+        readonly=False,
         help="The return label can be downloaded by the customer from the customer portal.",
     )
 
@@ -445,20 +454,23 @@ class DeliveryCarrier(models.Model):
         )
         return not self.max_volume or total_volume <= self.max_volume
 
-    @api.onchange("integration_level")
-    def _onchange_integration_level(self):
-        if self.integration_level == "rate":
-            self.invoice_policy = "estimated"
+    @api.depends("integration_level")
+    def _compute_invoice_policy(self):
+        for carrier in self:
+            if carrier.integration_level == "rate":
+                carrier.invoice_policy = "estimated"
 
-    @api.onchange("can_generate_return")
-    def _onchange_can_generate_return(self):
-        if not self.can_generate_return:
-            self.return_label_on_delivery = False
+    @api.depends("can_generate_return")
+    def _compute_return_label_on_delivery(self):
+        for carrier in self:
+            if not carrier.can_generate_return:
+                carrier.return_label_on_delivery = False
 
-    @api.onchange("return_label_on_delivery")
-    def _onchange_return_label_on_delivery(self):
-        if not self.return_label_on_delivery:
-            self.get_return_label_from_portal = False
+    @api.depends("return_label_on_delivery")
+    def _compute_get_return_label_from_portal(self):
+        for carrier in self:
+            if not carrier.return_label_on_delivery:
+                carrier.get_return_label_from_portal = False
 
     @api.onchange("country_ids")
     def _onchange_country_ids(self):

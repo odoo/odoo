@@ -264,34 +264,26 @@ class TestMailServerOnchangeEncryption(TransactionCase):
     def test_default_port_follows_encryption(self):
         server = self._new_server("none", 25)
         server.smtp_encryption = "ssl"
-        server._onchange_smtp_encryption()
         self.assertEqual(server.smtp_port, 465)
         server.smtp_encryption = "none"
-        server._onchange_smtp_encryption()
         self.assertEqual(server.smtp_port, 25)
         server.smtp_encryption = "ssl_strict"
-        server._onchange_smtp_encryption()
         self.assertEqual(server.smtp_port, 465)
         server.smtp_encryption = "starttls_strict"
-        server._onchange_smtp_encryption()
         self.assertEqual(server.smtp_port, 25)
 
     def test_custom_port_survives_toggle(self):
         server = self._new_server("none", 2525)
         server.smtp_encryption = "ssl"
-        server._onchange_smtp_encryption()
         self.assertEqual(server.smtp_port, 2525)
         server.smtp_encryption = "starttls"
-        server._onchange_smtp_encryption()
         self.assertEqual(server.smtp_port, 2525)
 
     def test_starttls_submission_port_survives_ssl_toggle(self):
         server = self._new_server("starttls", 587)
         server.smtp_encryption = "ssl_strict"
-        server._onchange_smtp_encryption()
         self.assertEqual(server.smtp_port, 587)
         server.smtp_encryption = "starttls"
-        server._onchange_smtp_encryption()
         self.assertEqual(server.smtp_port, 587)
 
 

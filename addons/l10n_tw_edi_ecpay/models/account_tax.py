@@ -59,6 +59,9 @@ class AccountTax(models.Model):
             ("8", "Duty free or non-output data"),
         ],
         string="Ecpay Special Tax Type",
+        compute="_compute_l10n_tw_edi_special_tax_type",
+        store=True,
+        readonly=False,
     )
 
     @api.depends("country_id", "amount")
@@ -69,8 +72,8 @@ class AccountTax(models.Model):
             else:
                 tax.l10n_tw_edi_tax_type = False
 
-    @api.onchange("l10n_tw_edi_tax_type")
-    def _onchange_l10n_tw_edi_tax_type(self):
+    @api.depends("l10n_tw_edi_tax_type")
+    def _compute_l10n_tw_edi_special_tax_type(self):
         for tax in self:
             if tax.l10n_tw_edi_tax_type not in ["3", "4"]:
                 tax.l10n_tw_edi_special_tax_type = False

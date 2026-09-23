@@ -363,6 +363,9 @@ class AccountTax(models.Model):
             ),
         ],
         string="Tax Exemption Reason Code",
+        compute="_compute_ubl_cii_tax_exemption_reason_code",
+        store=True,
+        readonly=False,
         help="The reason why the amount is exempted from VAT or why no VAT is being charged, used for electronic invoicing purposes.",
     )
     ubl_cii_requires_exemption_reason = fields.Boolean(
@@ -380,8 +383,8 @@ class AccountTax(models.Model):
                 "K",
             ]
 
-    @api.onchange("ubl_cii_requires_exemption_reason")
-    def _onchange_ubl_cii_tax_category_code(self):
+    @api.depends("ubl_cii_requires_exemption_reason")
+    def _compute_ubl_cii_tax_exemption_reason_code(self):
         for tax in self:
             if not tax.ubl_cii_requires_exemption_reason:
                 tax.ubl_cii_tax_exemption_reason_code = False

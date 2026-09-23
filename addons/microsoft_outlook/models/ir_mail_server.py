@@ -60,11 +60,11 @@ class IrMail_Server(models.Model):
                     )
                 )
 
-    @api.onchange("smtp_encryption")
-    def _onchange_smtp_encryption(self):
+    def _compute_smtp_port(self):
         """Keep the SMTP configuration of an Outlook server (e.g. its port) untouched."""
-        if self.smtp_authentication != "outlook":
-            super()._onchange_smtp_encryption()
+        super(
+            IrMail_Server, self.filtered(lambda s: s.smtp_authentication != "outlook")
+        )._compute_smtp_port()
 
     @api.onchange("smtp_authentication")
     def _onchange_smtp_authentication_outlook(self):

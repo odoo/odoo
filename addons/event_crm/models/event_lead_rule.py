@@ -77,6 +77,9 @@ class EventLeadRule(models.Model):
     lead_user_id = fields.Many2one(
         comodel_name="res.users",
         string="Salesperson",
+        compute="_compute_lead_user_id",
+        store=True,
+        readonly=False,
         help="Automatically assign the created leads to this Salesperson.",
     )
     lead_tag_ids = fields.Many2many(
@@ -85,10 +88,11 @@ class EventLeadRule(models.Model):
         help="Automatically add these tags to the created leads.",
     )
 
-    @api.onchange("lead_sales_team_id")
-    def _onchange_lead_sales_team_id(self):
-        if self.lead_sales_team_id and self.lead_sales_team_id.user_id:
-            self.lead_user_id = self.lead_sales_team_id.user_id
+    @api.depends("lead_sales_team_id")
+    def _compute_lead_user_id(self):
+        for rule in self:
+            if rule.lead_sales_team_id.user_id:
+                rule.lead_user_id = rule.lead_sales_team_id.user_id
 
     def _run_on_registrations(self, registrations):
         if not self:

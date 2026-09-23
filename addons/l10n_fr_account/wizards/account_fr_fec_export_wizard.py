@@ -34,6 +34,9 @@ class L10n_FrFecExportWizard(models.TransientModel):
         ],
         default="official",
         required=True,
+        compute="_compute_export_type",
+        store=True,
+        readonly=False,
     )
     excluded_journal_ids = fields.Many2many(
         comodel_name="account.journal",
@@ -41,10 +44,11 @@ class L10n_FrFecExportWizard(models.TransientModel):
         domain="[('company_id', 'parent_of', current_company_id)]",
     )
 
-    @api.onchange("test_file")
-    def _onchange_export_file(self):
-        if not self.test_file:
-            self.export_type = "official"
+    @api.depends("test_file")
+    def _compute_export_type(self):
+        for wizard in self:
+            if not wizard.test_file:
+                wizard.export_type = "official"
 
     def _get_domain_base(self):
         domain = [

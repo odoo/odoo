@@ -236,6 +236,9 @@ class IrMail_Server(models.Model):
     smtp_port = fields.Integer(
         string="SMTP Port",
         default=25,
+        compute="_compute_smtp_port",
+        store=True,
+        readonly=False,
         help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.",
     )
     smtp_authentication = fields.Selection(
@@ -1547,10 +1550,11 @@ class IrMail_Server(models.Model):
             "mail.server.personal.setup.grace.minutes", 1440
         )
 
-    @api.onchange("smtp_encryption")
-    def _onchange_smtp_encryption(self) -> None:
-        if self.smtp_encryption in IMPLICIT_TLS_ENCRYPTIONS:
-            if self.smtp_port == 25:
-                self.smtp_port = 465
-        elif self.smtp_port == 465:
-            self.smtp_port = 25
+    @api.depends("smtp_encryption")
+    def _compute_smtp_port(self) -> None:
+        for server in self:
+            if server.smtp_encryption in IMPLICIT_TLS_ENCRYPTIONS:
+                if server.smtp_port == 25:
+                    server.smtp_port = 465
+            elif server.smtp_port == 465:
+                server.smtp_port = 25

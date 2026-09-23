@@ -101,7 +101,12 @@ class DigestDigest(models.Model):
         default="daily",
         required=True,
     )
-    next_run_date = fields.Date(string="Next Mailing Date")
+    next_run_date = fields.Date(
+        string="Next Mailing Date",
+        compute="_compute_next_run_date",
+        store=True,
+        readonly=False,
+    )
     currency_id = fields.Many2one(
         related="company_id.currency_id",
         string="Currency",
@@ -180,9 +185,10 @@ class DigestDigest(models.Model):
             ]
         )
 
-    @api.onchange("periodicity")
-    def _onchange_periodicity(self):
-        self.next_run_date = self._get_next_run_date(self.periodicity)
+    @api.depends("periodicity")
+    def _compute_next_run_date(self):
+        for digest in self:
+            digest.next_run_date = digest._get_next_run_date(digest.periodicity)
 
     @api.model_create_multi
     def create(self, vals_list):
