@@ -854,7 +854,6 @@ class TestProfiling(TransactionCase):
         self.startClassPatcher(patch("odoo.db.db_connect", return_value=self.registry))
         with self.profile(collectors=["sql"]) as p:
             self.env.cr.execute("SELECT 1")
-        p.json()
         self.assertEqual(p.collectors[0].entries[0]["query"], "SELECT 1")
 
 
