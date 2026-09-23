@@ -115,8 +115,18 @@ export const formatsSpecs = {
         },
         hasStyle: (node) => node.style && node.style["font-size"],
         addStyle: (node, props) => {
-            node.style["font-size"] = props.size;
             removeClass(node, ...FONT_SIZE_CLASSES);
+            // strip any existing font-size declarations, then re-add both,
+            // pixelSize first so `size` wins when both are valid (fallback pattern)
+            const cleaned = node.style.cssText.replace(/font-size\s*:[^;]+;?/g, "").trim();
+            let styleValue = cleaned ? cleaned + " " : "";
+            if (props.pixelSize) {
+                styleValue += `font-size: ${props.pixelSize}; `;
+            }
+            if (props.size) {
+                styleValue += `font-size: ${props.size}; `;
+            }
+            node.setAttribute("style", styleValue.trim());
             node.classList.toggle("o_rfs", props.size && props.size.startsWith("clamp("));
         },
         removeStyle: (node) => {
