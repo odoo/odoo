@@ -86,3 +86,36 @@ class TestMemoryWatch(unittest.TestCase):
 
     def test_read_rss_is_positive(self):
         self.assertGreater(memory_watch.read_rss(), 0)
+
+
+class TestForkedWorkers(unittest.TestCase):
+    def test_a_forked_child_runs_its_own_watch(self):
+        import os
+        import pathlib
+        import subprocess
+        import sys
+        import textwrap
+
+        script = textwrap.dedent(
+            """
+            import os, threading
+            from odoo.libs import memory_watch
+            memory_watch.start_from_environ()
+            pid = os.fork()
+            if pid == 0:
+                names = [t.name for t in threading.enumerate()]
+                os._exit(0 if "odoo.memory_watch" in names else 3)
+            _, status = os.waitpid(pid, 0)
+            raise SystemExit(os.waitstatus_to_exitcode(status))
+            """
+        )
+        env = {**os.environ, memory_watch.STEP_VAR: "1000000"}
+        result = subprocess.run(
+            [sys.executable, "-c", script],
+            env=env,
+            cwd=pathlib.Path(memory_watch.__file__).parents[2],
+            capture_output=True,
+            timeout=60,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr.decode()[-500:])

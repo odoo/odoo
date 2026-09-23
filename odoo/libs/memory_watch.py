@@ -135,6 +135,13 @@ def _mib_from_environ(name: str) -> int:
 _started: list[MemoryWatch] = []
 
 
+def _restart_in_child() -> None:
+    # a forked worker inherits the watch but not its thread
+    for watch in _started:
+        watch._thread = None
+        watch.start()
+
+
 def start_from_environ() -> MemoryWatch | None:
     if _started:
         return _started[0]
@@ -144,5 +151,7 @@ def start_from_environ() -> MemoryWatch | None:
         return None
     watch = MemoryWatch(step or limit, limit)
     watch.start()
+    if not _started and hasattr(os, "register_at_fork"):
+        os.register_at_fork(after_in_child=_restart_in_child)
     _started.append(watch)
     return watch

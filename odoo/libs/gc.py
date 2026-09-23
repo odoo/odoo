@@ -4,6 +4,7 @@ import atexit
 import contextlib
 import gc
 import logging
+import threading
 from time import thread_time_ns as _gc_time
 from typing import TYPE_CHECKING, Any
 
@@ -114,19 +115,36 @@ def thaw() -> None:
     gc.unfreeze()
 
 
+# sections open in any thread since disabling_gc turned the collector off: the
+# collector is one per process, so the last section out turns it back on
+_sections = 0
+_sections_lock = threading.Lock()
+
+
 @contextlib.contextmanager
 def disabling_gc() -> Generator[bool]:
-    if not gc.isenabled():
+    global _sections  # noqa: PLW0603 one collector per process
+    with _sections_lock:
+        joined = bool(_sections) or gc.isenabled()
+        if joined:
+            if not _sections:
+                gc.disable()
+                _logger.debug("disabled, counts %s", gc.get_count())
+                _debug.lifecycle("gc.disabled", young=gc.get_count()[0])
+            _sections += 1
+    if not joined:
         _debug.logic("gc.disable_skipped", already_disabled=True)
         yield False
         return
-    gc.disable()
-    _logger.debug("disabled, counts %s", gc.get_count())
-    _debug.lifecycle("gc.disabled", young=gc.get_count()[0])
     try:
         yield True
     finally:
-        counts = gc.get_count()
-        gc.enable()
-        _logger.debug("enabled, counts %s", counts)
-        _debug.lifecycle("gc.enabled", young=counts[0], middle=counts[1], old=counts[2])
+        with _sections_lock:
+            _sections -= 1
+            if not _sections:
+                counts = gc.get_count()
+                gc.enable()
+                _logger.debug("enabled, counts %s", counts)
+                _debug.lifecycle(
+                    "gc.enabled", young=counts[0], middle=counts[1], old=counts[2]
+                )

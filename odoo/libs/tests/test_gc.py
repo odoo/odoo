@@ -156,3 +156,40 @@ class TestFreezeSurvivors(unittest.TestCase):
         gc.collect()
         self.assertIsNone(ref())
         self.assertEqual(gc.get_freeze_count(), 0)
+
+
+class TestDisablingGcAcrossThreads(unittest.TestCase):
+    def setUp(self):
+        was_enabled = gc.isenabled()
+        gc.enable()
+        self.addCleanup(gc.enable if was_enabled else gc.disable)
+
+    def test_the_collector_stays_off_until_the_last_section_closes(self):
+        import threading
+
+        first_in, second_in, first_out = (threading.Event() for _ in range(3))
+        seen = {}
+
+        def first():
+            with disabling_gc():
+                first_in.set()
+                second_in.wait(5)
+            first_out.set()
+
+        def second():
+            first_in.wait(5)
+            with disabling_gc() as active:
+                seen["active"] = active
+                second_in.set()
+                first_out.wait(5)
+                seen["enabled_inside"] = gc.isenabled()
+            seen["enabled_after"] = gc.isenabled()
+
+        threads = [threading.Thread(target=first), threading.Thread(target=second)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join(10)
+        self.assertEqual(
+            seen, {"active": True, "enabled_inside": False, "enabled_after": True}
+        )
