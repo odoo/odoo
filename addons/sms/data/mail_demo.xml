@@ -15,11 +15,11 @@
         <field name="body" type="html"><p>Hello! This is an example of user comment.</p></field>
         <field name="message_type">comment</field>
         <field name="subtype_id" ref="mail.mt_comment"/>
-        <field name="author_id" ref="base.partner_admin"/>
+        <field name="author_id" ref="base.partner_demo"/>
         <field name="date" eval="(DateTime.today() - timedelta(days=4)).strftime('%Y-%m-%d %H:%M:00')"/>
     </record>
     <record id="message_demo_partner_1_2_notif_0" model="mail.notification">
-        <field name="author_id" ref="base.partner_admin"/>
+        <field name="author_id" ref="base.partner_demo"/>
         <field name="mail_message_id" ref="message_demo_partner_1_1"/>
         <field name="res_partner_id" ref="base.res_partner_address_28"/>
         <field name="notification_type">email</field>
@@ -42,11 +42,11 @@
         <field name="body" type="html"><p>Hello! This is an example of another SMS with notifications and an unregistered account.</p></field>
         <field name="message_type">sms</field>
         <field name="subtype_id" ref="mail.mt_note"/>
-        <field name="author_id" ref="base.partner_admin"/>
+        <field name="author_id" ref="base.partner_demo"/>
         <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M:00')"/>
     </record>
     <record id="message_demo_partner_1_3_notif_0" model="mail.notification">
-        <field name="author_id" ref="base.partner_admin"/>
+        <field name="author_id" ref="base.partner_demo"/>
         <field name="mail_message_id" ref="message_demo_partner_1_3"/>
         <field name="res_partner_id" ref="base.res_partner_address_28"/>
         <field name="notification_type">sms</field>
@@ -75,11 +75,11 @@
         <field name="body" type="html"><p>Hello! This is an example of another SMS with notifications without credits.</p></field>
         <field name="message_type">sms</field>
         <field name="subtype_id" ref="mail.mt_note"/>
-        <field name="author_id" ref="base.partner_admin"/>
+        <field name="author_id" ref="base.partner_demo"/>
         <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M:00')"/>
     </record>
     <record id="message_demo_partner_1_5_notif_0" model="mail.notification">
-        <field name="author_id" ref="base.partner_admin"/>
+        <field name="author_id" ref="base.partner_demo"/>
         <field name="mail_message_id" ref="message_demo_partner_1_5"/>
         <field name="res_partner_id" ref="base.res_partner_address_16"/>
         <field name="notification_type">sms</field>
