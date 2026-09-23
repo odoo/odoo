@@ -437,7 +437,9 @@ the whole stack when logs are merged.
 > No `boot` category exists on either side — boot events surface through
 > `loader` (Python shim + JS inline) and `env` (JS service launcher).
 
-Event format (Python `log_event`): `event=<name> k1=v1 k2=v2`.
+Event format (Python `log_event`): `event=<name> k1=v1 k2=v2`, formatted as the
+debug log formats its events: a string that is empty or holds whitespace is
+written as its repr, a float with three decimals, a recordset as its model and ids.
 Event format (JS `assetLog`): `[asset.<category>] <...parts>` via `console.debug`.
 
 ## Debug toggles
