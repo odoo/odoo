@@ -1767,6 +1767,13 @@ class SaleOrderLine(models.Model):
                 self.product_id = False
                 self.name = ""
 
+    @api.onchange("label")
+    def _onchange_label(self):
+        """Immediately apply the label inverse to set the line name and prevent subsequent onchanges
+        from resetting it.
+        """
+        self._inverse_label()
+
     # === CRUD METHODS ===#
 
     @api.model_create_multi
