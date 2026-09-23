@@ -9,6 +9,7 @@ from odoo.tests import tagged, users
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import HttpCase
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 
 
@@ -123,6 +124,7 @@ class TestMessageController(HttpCase, MailCommon):
                 }
         if "documents.document" in self.env:
             attachments_fields["linked_document_id"] = self.attachments[0].linked_document_id.id
+        pop_store_version(data1["store_data"])
         self.assertEqual(
             data1["store_data"]["ir.attachment"],
             self._filter_attachments_fields(attachments_fields),
@@ -173,6 +175,7 @@ class TestMessageController(HttpCase, MailCommon):
         )
         self.assertEqual(res4.status_code, 200)
         data2 = res4.json()["result"]
+        pop_store_version(data2)
         self.assertEqual(
             data2["ir.attachment"],
             self._filter_attachments_fields(

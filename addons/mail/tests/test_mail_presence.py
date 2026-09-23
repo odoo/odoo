@@ -3,7 +3,6 @@
 import json
 
 from datetime import datetime, timedelta
-from freezegun import freeze_time
 
 from odoo.tests import HttpCase, new_test_user
 from ..models.mail_presence import PRESENCE_OUTDATED_TIMER
@@ -15,7 +14,7 @@ class TestMailPresence(HttpCase):
         user = new_test_user(self.env, login="bob_user")
         more_than_away_timer_ago = datetime.now() - timedelta(seconds=PRESENCE_OUTDATED_TIMER + 1)
         more_than_away_timer_ago = more_than_away_timer_ago.replace(microsecond=0)
-        with freeze_time(more_than_away_timer_ago):
+        with self.mock_datetime_and_now(more_than_away_timer_ago):
             self.env["mail.presence"]._update_presence(user)
         self.assertEqual(user.presence_ids.last_poll, more_than_away_timer_ago)
         self.env["mail.presence"]._gc_bus_presence()
