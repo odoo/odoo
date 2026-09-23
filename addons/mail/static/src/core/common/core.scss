@@ -463,3 +463,16 @@ a.o-discuss-mention {
     filter: drop-shadow(1px 1px 0px #000000b0);
 }
 
+.o_popover_card {
+    --card-bg: #{$popover-bg};
+    --card-border-color: #{$popover-border-color};
+    --card-border-radius: #{$popover-border-radius};
+    --card-border-width: 0;
+
+    overflow: hidden;
+
+    max-width: 380px;
+    @media screen  and (max-width: 480px) {
+        max-width: 90vw;
+    }
+}
