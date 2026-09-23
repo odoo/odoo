@@ -13,6 +13,7 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import {
+    assertSteps,
     click,
     contains,
     createFile,
@@ -20,6 +21,7 @@ import {
     dropFiles,
     insertText,
     scroll,
+    step,
 } from "@web/../tests/utils";
 
 QUnit.module("chatter");
@@ -126,6 +128,40 @@ QUnit.test("can post a note on a record thread", async (assert) => {
     await click(".o-mail-Composer button:enabled", { text: "Log" });
     await contains(".o-mail-Message");
     assert.verifySteps(["/mail/message/post"]);
+});
+
+QUnit.test("post with post_refresh keeps the changes of an invalid record", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const views = {
+        "res.partner,false,form": `
+            <form>
+                <sheet>
+                    <field name="name" required="1"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>`,
+    };
+    const { openFormView } = await start({
+        serverData: { views },
+        mockRPC(route, args) {
+            if (route === "/mail/message/post" || args.method === "web_read") {
+                step(args.method ?? route);
+            }
+        },
+    });
+    await openFormView("res.partner", partnerId);
+    await assertSteps(["web_read"]);
+    await insertText(".o_field_widget[name=name] input", "", { replace: true });
+    await click("button", { text: "Log note" });
+    await insertText(".o-mail-Composer-input", "hey");
+    await click(".o-mail-Composer button:enabled", { text: "Log" });
+    await contains(".o-mail-Message");
+    await contains(".o_notification", { text: "Invalid fields: Name" });
+    await contains(".o_field_invalid[name=name] input", { value: "" });
+    await assertSteps(["/mail/message/post"]);
 });
 
 QUnit.test("No attachment loading spinner when creating records", async () => {
