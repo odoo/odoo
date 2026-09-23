@@ -241,7 +241,7 @@ class PosOrder(models.Model):
         buyer_type = self._l10n_eg_edi_pos_get_buyer_type()
         buyer = {'type': buyer_type, 'paymentNumber': ''}
         if self.amount_total >= self.company_id._get_invoicing_threshold() or buyer_type != 'P':
-            buyer['id'] = (partner._get_additional_identifier('EG_NIN') if buyer_type == 'P' else partner.vat) or ''
+            buyer['id'] = partner._get_additional_identifier('EG_NIN' if buyer_type == 'P' else 'EG_FID') or ''
             buyer['name'] = partner.name or ''
         return buyer
 
@@ -411,10 +411,11 @@ class PosOrder(models.Model):
         elif any(line.qty < 0 for line in self.lines):
             errors.append(_("Negative quantities are only allowed on return orders created from the original receipt."))
 
+        buyer_identifier = 'EG_NIN' if self._l10n_eg_edi_pos_get_buyer_type() == 'P' else 'EG_FID'
         if not self.refunded_order_id and self.amount_total >= self.company_id._get_invoicing_threshold() and (
-            not self.partner_id or (self._l10n_eg_edi_pos_get_buyer_type() == 'P' and not self.partner_id._get_additional_identifier('EG_NIN'))
+            not self.partner_id or not self.partner_id._get_additional_identifier(buyer_identifier)
         ):
-            errors.append(_("As the Order Value is equal to or above 150,000 EGP, depending on the nature of the buyer, please either select an Individual Egypt Customer and fill in the \"Tax ID\" with their National ID or an Individual non-Egypt Customer."))
+            errors.append(_("As the Order Value is equal to or above 150,000 EGP, depending on the nature of the buyer, please either select an Individual Egypt Customer and fill in the \"Tax ID\" with their National ID or Foreign ID for an Individual non-Egypt Customer."))
         if branch and self.partner_id and branch.vat and self.partner_id.vat == branch.vat:
             errors.append(_("Cannot issue a receipt to a partner with the same VAT as the branch."))
         if branch and branch._check_l10n_eg_missing_address_data():
