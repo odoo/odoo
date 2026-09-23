@@ -25,16 +25,12 @@ if typing.TYPE_CHECKING:
 __all__ = [
     "PARSE_ERROR",
     "RST_INFO_FIELDS",
-    "InfoField",
     "Param",
     "Return",
     "Signature",
-    "iter_info_fields",
     "parse_signature",
-    "render_children_html",
     "render_docstring",
     "render_doctree_html",
-    "stringify_annotation",
     "to_doctree",
 ]
 
@@ -131,18 +127,18 @@ def render_doctree_html(tree: nodes.Node) -> str:
     return body.removesuffix(_HTML_DOC_TAIL).strip().decode()
 
 
-def render_children_html(tree: nodes.Element) -> str:
+def _render_children_html(tree: nodes.Element) -> str:
     return "".join(render_doctree_html(child) for child in tree.children)
 
 
-class InfoField(typing.NamedTuple):
+class _InfoField(typing.NamedTuple):
     kind: str | None
     name: str
     body: nodes.Element
     raw: str
 
 
-def iter_info_fields(doctree: nodes.document) -> Iterator[InfoField]:
+def _iter_info_fields(doctree: nodes.document) -> Iterator[_InfoField]:
     field_lists = [
         node for node in doctree if node.tagname in ("docinfo", "field_list")
     ]
@@ -151,17 +147,15 @@ def iter_info_fields(doctree: nodes.document) -> Iterator[InfoField]:
             field_name, field_body = field.children
             raw = str(field_name[0])
             kind, _, name = raw.partition(" ")
-            yield InfoField(RST_INFO_FIELDS.get(kind), name.strip(), field_body, raw)
+            yield _InfoField(RST_INFO_FIELDS.get(kind), name.strip(), field_body, raw)
         doctree.remove(field_list)
 
 
-def stringify_annotation(annotation: typing.Any) -> str | None:
+def _stringify_annotation(annotation: typing.Any) -> str | None:
     if annotation is EMPTY:
         return None
     if isinstance(annotation, str):
         return annotation
-    if hasattr(annotation, "__origin__"):
-        return str(annotation)
     if isinstance(annotation, type):
         return annotation.__name__
     return str(annotation)
@@ -190,7 +184,7 @@ class Param:
             name=parameter.name,
             kind=typing.cast("ParamKind", parameter.kind.name),
             default=parameter.default,
-            annotation=stringify_annotation(parameter.annotation),
+            annotation=_stringify_annotation(parameter.annotation),
             doc=None,
         )
 
@@ -225,7 +219,7 @@ class Return:
 
     @classmethod
     def from_inspect(cls, return_annotation: typing.Any) -> Return:
-        return cls(stringify_annotation(return_annotation), doc=None)
+        return cls(_stringify_annotation(return_annotation), doc=None)
 
     def as_dict(self) -> dict[str, typing.Any]:
         d: dict[str, typing.Any] = {}
@@ -318,7 +312,7 @@ def parse_signature(
     if parameters and parameters[0].name in ("self", "cls"):
         isign = isign.replace(parameters=parameters[1:])
 
-    return_annotation = stringify_annotation(isign.return_annotation)
+    return_annotation = _stringify_annotation(isign.return_annotation)
     if normalize_return is not None:
         return_annotation = normalize_return(return_annotation)
 
@@ -334,17 +328,17 @@ def parse_signature(
     )
 
     if documentation := (docstring if docstring is not None else method.__doc__):
-        enhance_signature_using_docstring(signature, documentation)
+        _enhance_signature_using_docstring(signature, documentation)
 
     return signature
 
 
-def enhance_signature_using_docstring(signature: Signature, docstring: str) -> None:
+def _enhance_signature_using_docstring(signature: Signature, docstring: str) -> None:
     doctree = to_doctree(inspect.cleandoc(docstring))
 
     fields = 0  # debuglog
     unmatched = 0  # debuglog
-    for field in iter_info_fields(doctree):
+    for field in _iter_info_fields(doctree):
         fields += 1  # debuglog
         if (
             field.kind in ("param", "type")
@@ -363,10 +357,10 @@ def enhance_signature_using_docstring(signature: Signature, docstring: str) -> N
                 if param := signature.parameters.get(name.strip()):
                     if not param.annotation:
                         param.annotation = annotation.strip()
-                    param.doc = render_children_html(field.body)
+                    param.doc = _render_children_html(field.body)
             case ("param", name):
                 if param := signature.parameters.get(name):
-                    param.doc = render_children_html(field.body)
+                    param.doc = _render_children_html(field.body)
             case ("type", name):
                 if not field.body.children:
                     _logger.warning(
@@ -375,7 +369,7 @@ def enhance_signature_using_docstring(signature: Signature, docstring: str) -> N
                 elif (param := signature.parameters.get(name)) and not param.annotation:
                     param.annotation = field.body.children[0].astext().strip()
             case ("returns", ""):
-                signature.return_.doc = render_children_html(field.body)
+                signature.return_.doc = _render_children_html(field.body)
             case ("rtype", ""):
                 if not field.body.children:
                     _logger.warning(
@@ -388,7 +382,7 @@ def enhance_signature_using_docstring(signature: Signature, docstring: str) -> N
                         field.body.children[0].astext().strip()
                     )
             case ("raises", exception):
-                signature.raise_[exception] = render_children_html(field.body)
+                signature.raise_[exception] = _render_children_html(field.body)
             case _:
                 _logger.warning(
                     PARSE_ERROR.format(docstring, f"cannot parse {field.raw}")

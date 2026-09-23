@@ -10,8 +10,6 @@ from docutils.writers.html4css1 import Writer
 
 __all__ = [
     "SAFE_SETTINGS",
-    "DropSystemMessages",
-    "HtmlDocumentWriter",
     "render_html",
 ]
 
@@ -23,7 +21,7 @@ SAFE_SETTINGS: typing.Final[dict[str, typing.Any]] = {
 }
 
 
-class DropSystemMessages(Transform):
+class _DropSystemMessages(Transform):
     default_priority = 870
 
     def apply(self) -> None:
@@ -31,16 +29,16 @@ class DropSystemMessages(Transform):
             node.parent.remove(node)
 
 
-class HtmlDocumentWriter(Writer):
+class _HtmlDocumentWriter(Writer):
     def get_transforms(self) -> list[type[Transform]]:
-        return [DropSystemMessages, writer_aux.Admonitions]
+        return [_DropSystemMessages, writer_aux.Admonitions]
 
 
 def render_html(source: str) -> tuple[str, str]:
     warnings = io.StringIO()
     html = publish_string(
         source=source,
-        writer=HtmlDocumentWriter(),
+        writer=_HtmlDocumentWriter(),
         settings_overrides={
             **SAFE_SETTINGS,
             "embed_stylesheet": False,
