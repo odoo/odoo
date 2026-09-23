@@ -200,3 +200,34 @@ class TestSmallHtmlHelpers(unittest.TestCase):
             prepend_html_content("<HTML><BODY><p>b</p></BODY></HTML>", "<p>c</p>"),
             "<HTML><BODY><p>c</p><p>b</p></BODY></HTML>",
         )
+
+
+class TestReplaceLocalLinks(unittest.TestCase):
+    def absolute(self, html: str) -> str:
+        from odoo.libs.text.html import replace_local_links
+
+        return replace_local_links(html, lambda: "https://h.com")
+
+    def test_a_single_quoted_attribute_is_rewritten(self):
+        self.assertEqual(
+            self.absolute("<img src='/web/image/1'>"),
+            "<img src='https://h.com/web/image/1'>",
+        )
+
+    def test_every_url_of_a_style_is_rewritten(self):
+        self.assertEqual(
+            self.absolute('<div style="background: url(/a.png), url(/b.png)">x</div>'),
+            '<div style="background: url(https://h.com/a.png), '
+            'url(https://h.com/b.png)">x</div>',
+        )
+
+    def test_a_protocol_relative_link_is_left_alone(self):
+        self.assertEqual(self.absolute('<a href="//evil/x">'), '<a href="//evil/x">')
+
+    def test_unclosed_tags_do_not_rescan_the_document(self):
+        import time
+
+        start = time.perf_counter()
+        for src in ("<a " * 20000, "<img " * 20000, '<div style="' * 20000):
+            self.absolute(src)
+        self.assertLess(time.perf_counter() - start, 1.0)

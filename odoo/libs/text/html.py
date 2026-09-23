@@ -913,20 +913,24 @@ def prepend_html_content(html_body: str, html_content: str | markupsafe.Markup) 
     return f"{html_body[:insert_index]}{stripped}{html_body[insert_index:]}"
 
 
-LOCAL_LINK_PATTERNS = (
-    re.compile(r"""(<(?:img|v:fill|v:image)(?=\s)[^>]*\ssrc=")(/(?!/)[^"]*)"""),
-    re.compile(r"""(<a(?=\s)[^>]*\shref=")(/(?!/)[^"]*)"""),
-    re.compile(r"""(<[\w-]+(?=\s)[^>]*\sbackground=")(/(?!/)[^"]*)"""),
+LOCAL_LINK_PATTERNS = tuple(
     re.compile(
-        r"""(                            # 1: the element up to the url, opening quote included
-            <[^>]+\bstyle=['"]           # an element carrying a style attribute
-            [^'"]+\burl\(                # whose style contains url(
-            (?:&\#34;|'|&quot;|&\#39;|")?  # the url may open with an (escaped) quote
-        )(                               # 2: the url itself
-            /(?!/)[^'")]*                # a local path; "//host" is not one
-        )""",
-        re.VERBOSE,
-    ),
+        rf"""(?P<head><{element}(?=\s)[^<>]*\s{attribute}=(?P<quote>["']))"""
+        r"""(?P<url>/(?!/)(?:(?!(?P=quote))[^<>])*)"""
+    )
+    for element, attribute in (
+        ("(?:img|v:fill|v:image)", "src"),
+        ("a", "href"),
+        (r"[\w-]+", "background"),
+    )
+)
+
+_STYLE_ATTRIBUTE = re.compile(
+    r"""(?P<head><[^<>]+\bstyle=(?P<quote>["']))(?P<style>(?:(?!(?P=quote))[^<>])*)"""
+)
+
+_STYLE_URL = re.compile(
+    r"""(?P<head>\burl\(\s*(?:&\#34;|&quot;|&\#39;|'|")?)(?P<url>/(?!/)[^'")]*)"""
 )
 
 
@@ -942,11 +946,15 @@ def replace_local_links(html_content: str, resolve_base_url: Callable[[], str]) 
         if base_url is None:
             base_url = resolve_base_url() or ""
         try:
-            return match.group(1) + urljoin(base_url, match.group(2))
+            return match["head"] + urljoin(base_url, match["url"])
         except ValueError:
-            return match.group(0)
+            return match[0]
+
+    def style_to_absolute(match: re.Match[str]) -> str:
+        return match["head"] + _STYLE_URL.sub(to_absolute, match["style"])
 
     for pattern in LOCAL_LINK_PATTERNS:
         html_content = pattern.sub(to_absolute, html_content)
+    html_content = _STYLE_ATTRIBUTE.sub(style_to_absolute, html_content)
 
     return wrapper(html_content)
