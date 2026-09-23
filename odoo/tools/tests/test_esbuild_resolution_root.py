@@ -4,7 +4,6 @@ import stat
 import tempfile
 import unittest
 from pathlib import Path
-from unittest import mock
 
 from odoo.tools import config
 from odoo.tools.assets.esbuild import EsbuildCompiler
@@ -20,9 +19,7 @@ class TestTheResolutionRootIsNotAPlantableTempDir(unittest.TestCase):
         self.evil = self.tmp / "evil_web"
         self.evil.mkdir()
         self.data_dir = self.tmp / "data"
-        patcher = mock.patch.dict(config.options, {"data_dir": str(self.data_dir)})
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        self.enterContext(config.patch(data_dir=str(self.data_dir)))
         self.private = self.tmp / "compile"
         self.private.mkdir()
 
@@ -72,7 +69,7 @@ class TestTheResolutionRootIsNotAPlantableTempDir(unittest.TestCase):
     def test_an_unwritable_data_dir_falls_back_to_the_compile_s_own_dir(self):
         blocker = self.tmp / "not_a_dir"
         blocker.write_text("")
-        with mock.patch.dict(config.options, {"data_dir": str(blocker)}):
+        with config.patch(data_dir=str(blocker)):
             node_path = self._node_path()
         self.assertTrue(node_path.is_relative_to(self.private))
         self.assertEqual(self._resolves_to(node_path), self.web_src.resolve())
