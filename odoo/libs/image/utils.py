@@ -241,6 +241,18 @@ class ImageProcess:
             return self._image.size
         return self._size
 
+    @property
+    def _pixels(self) -> PILImage:
+        image = self.image
+        assert image is not False, "an operation reached an image-less process"
+        return image
+
+    @property
+    def _dimensions(self) -> tuple[int, int]:
+        size = self.size
+        assert size is not None, "an operation reached an image-less process"
+        return size
+
     def validate(self) -> Self:
         if not self._decoded:
             self._decode_upright()
@@ -300,7 +312,7 @@ class ImageProcess:
             )
             return self.source
 
-        output_image = self.image
+        output_image = self._pixels
         opt: dict[str, Any] = {"output_format": output_format}
 
         if output_format == "PNG":
@@ -358,30 +370,32 @@ class ImageProcess:
         self, max_width: int = 0, max_height: int = 0, expand: bool = False
     ) -> Self:
         if self._image and (max_width or max_height):
-            w, h = self.size
+            w, h = self._dimensions
             asked_width = max_width or max(1, (w * max_height) // h)
             asked_height = max_height or max(1, (h * max_width) // w)
             if self._frame_wise:
                 if asked_width < w or asked_height < h:
                     self._extract_animated_frames()
-                    for frame in [self.image, *self.animated_frames]:
+                    for frame in [self._pixels, *self.animated_frames]:
                         frame.thumbnail((asked_width, asked_height), Resampling.LANCZOS)
                     self.operations_count += 1
                 return self
             if expand and (asked_width > w or asked_height > h):
-                self.image = self.image.resize((asked_width, asked_height))
+                self.image = self._pixels.resize((asked_width, asked_height))
                 self.operations_count += 1
                 return self
             # thumbnail only ever shrinks: a box the image fits is a no-op,
             # which needs no pixels
             if asked_width < w or asked_height < h:
-                self.image.thumbnail(
+                self._pixels.thumbnail(
                     (asked_width, asked_height),
                     Resampling.LANCZOS,
                     # Pillow's reduce() pre-step refuses the integer modes
-                    reducing_gap=None if self.image.mode in _UNREDUCIBLE_MODES else 2.0,
+                    reducing_gap=None
+                    if self._pixels.mode in _UNREDUCIBLE_MODES
+                    else 2.0,
                 )
-                if self.image.width != w or self.image.height != h:
+                if self._pixels.width != w or self._pixels.height != h:
                     self.operations_count += 1
         return self
 
@@ -393,7 +407,7 @@ class ImageProcess:
         center_y: float = 0.5,
     ) -> Self:
         if self._image and max_width and max_height:
-            w, h = self.size
+            w, h = self._dimensions
             if w / max_width > h / max_height:
                 new_w, new_h = w, (max_height * w) // max_width
             else:
@@ -413,14 +427,14 @@ class ImageProcess:
                 crop_box = (x_offset, h_offset, x_offset + new_w, h_offset + new_h)
                 if self._frame_wise:
                     self._extract_animated_frames()
-                    self.image = self.image.crop(crop_box)
+                    self.image = self._pixels.crop(crop_box)
                     self.animated_frames = [
                         frame.crop(crop_box) for frame in self.animated_frames
                     ]
                     self.operations_count += 1
                 else:
-                    self.image = self.image.crop(crop_box)
-                    if self.image.width != w or self.image.height != h:
+                    self.image = self._pixels.crop(crop_box)
+                    if self._pixels.width != w or self._pixels.height != h:
                         self.operations_count += 1
 
         return self.resize(max_width, max_height)
@@ -433,28 +447,28 @@ class ImageProcess:
                 randrange(32, 224, 24),
             )
         if self._image:
-            original = self.image
+            original = self._pixels
             if original.mode == "P":
                 original = original.convert("RGBA")
             self.image = Image.new("RGB", original.size)
-            self.image.paste(color, box=(0, 0) + original.size)
+            self._pixels.paste(color, box=(0, 0) + original.size)
             mask = original if original.mode in ("1", "L", "LA", "RGBA") else None
-            self.image.paste(original, mask=mask)
+            self._pixels.paste(original, mask=mask)
             self.operations_count += 1
         return self
 
     def add_padding(self, padding: int) -> Self:
         if self._image:
-            img_width, img_height = self.size
+            img_width, img_height = self._dimensions
             if 2 * padding >= min(img_width, img_height):
                 raise ValueError(
                     f"padding {padding} is too large for a "
                     f"{img_width}x{img_height} image"
                 )
-            self.image = self.image.resize(
+            self.image = self._pixels.resize(
                 (img_width - 2 * padding, img_height - 2 * padding)
             )
-            self.image = ImageOps.expand(self.image, border=padding)
+            self.image = ImageOps.expand(self._pixels, border=padding)
             self.operations_count += 1
         return self
 

@@ -150,9 +150,9 @@ class _Scanner:
                     end = n if end < 0 else end + 2
                     self._opaque("comment", i, end)
                     pos = end
-                elif self._regex_allowed(i) and (end := self._regex_end(i)):
-                    self._opaque("regex", i, end)
-                    pos = end
+                elif self._regex_allowed(i) and (regex_end := self._regex_end(i)):
+                    self._opaque("regex", i, regex_end)
+                    pos = regex_end
                 else:
                     pos = i + 1
             elif char == "{":

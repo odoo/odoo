@@ -127,7 +127,10 @@ def stripped_sys_argv(*strip_args: str) -> list[str]:
     if unknown:
         msg = f"Unknown option(s) to strip: {', '.join(unknown)}"
         raise ValueError(msg)
-    dests = _STRIPPED_DESTS | {parser.get_option(s).dest for s in strip_args}
+    options = [parser.get_option(s) for s in strip_args]
+    dests = _STRIPPED_DESTS | {
+        option.dest for option in options if option is not None and option.dest
+    }
 
     # the parser drops a retired option and its value before it reads the rest;
     # the argv read here must be the one the parser read

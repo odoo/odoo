@@ -152,6 +152,8 @@ class BaseCursor:
             self, log_exceptions: bool = True, query: Any = None
         ) -> AbstractContextManager[None]: ...
 
+        def in_failed_transaction(self) -> bool: ...
+
     def _before_statement(self) -> None:
         pass
 

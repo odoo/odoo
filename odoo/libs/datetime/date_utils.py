@@ -371,7 +371,11 @@ def date_range[D: (date, datetime)](
         msg = "Looks like step is null or negative"
         raise ValueError(msg)
 
-    if isinstance(start, datetime) and start.tzinfo is not None:
+    if (
+        isinstance(start, datetime)
+        and isinstance(end, datetime)
+        and start.tzinfo is not None
+    ):
         tz = start.tzinfo
         exact = _sub_day_timedelta(step)
         if exact is not None:

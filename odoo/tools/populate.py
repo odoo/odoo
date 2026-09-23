@@ -252,7 +252,7 @@ def _tree_members(model: Model) -> list[Model]:
         return [model]
     by_table: dict[str, Model] = {root: model}
     names = model.env.registry.model_names_by_inheritance_root.get(root, ())
-    members = [model.env[name] for name in names]
+    members = [typing.cast("Model", model.env[name]) for name in names]
     for member in sorted(
         members, key=lambda m: (m._table != m._name.replace(".", "_"), m._name)
     ):

@@ -290,6 +290,8 @@ def nodeattr2bool(node: etree._Element, attr: str, default: bool = False) -> boo
 
 
 class xml_import:
+    _installed_modules: frozenset[str] | None
+
     def get_env(
         self, node: etree._Element, eval_context: dict[str, Any] | None = None
     ) -> Environment:
@@ -959,7 +961,7 @@ class xml_import:
         self._noupdate = [noupdate]
         self._sequences: list[int | None] = [None]
         self.xml_filename = xml_filename
-        self._installed_modules: frozenset[str] | None = None
+        self._installed_modules = None
         self._tags: dict[str, Callable[[etree._Element], Any]] = {
             "record": self._tag_record,
             "delete": self._tag_delete,

@@ -22,6 +22,7 @@ from ._model_stubs import _ModelStubs
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterator
 
+    from ..._typing import BaseModel
     from ...fields import Field
 
 _lt = LazyTranslate("base")
@@ -272,7 +273,7 @@ class AccessMixin(_ModelStubs):
             return False
         if not any(c.operator == "access" for c in domain.iter_conditions()):
             return True
-        model = self.sudo()
+        model = typing.cast("BaseModel", self.sudo())
 
         def resolve(condition: DomainCondition) -> Domain:
             if condition.operator != "access":
