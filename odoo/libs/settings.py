@@ -28,8 +28,15 @@ class SettingsSlot[T]:
         self._memo: tuple[object, T] | None = None
         self._installed: T | None = None
 
-    def provide(self, source: Callable[[], T]) -> None:
+    def provide(
+        self,
+        source: Callable[[], T],
+        *,
+        version: Callable[[], object] | None = None,
+    ) -> None:
         self._source = source
+        self._version = version
+        self._memo = None
 
     @property
     def is_installed(self) -> bool:

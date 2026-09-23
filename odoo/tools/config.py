@@ -2633,4 +2633,10 @@ def _pool_settings() -> PoolSettings:
     return PoolSettings.from_config(config, evented=odoo.evented)
 
 
-_provide_pool_settings(_pool_settings)
+def _pool_settings_version() -> tuple[int, bool]:
+    return config.generation, bool(odoo.evented)
+
+
+# Memoised like odoo.http's slot: the pool reads these settings on every
+# connection lookup and database-list filter, several times per request.
+_provide_pool_settings(_pool_settings, version=_pool_settings_version)

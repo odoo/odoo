@@ -39,3 +39,15 @@ def test_an_installed_snapshot_wins_over_the_memo():
     with slot.installed(pinned):
         assert slot.current() is pinned
     assert slot.current() is derived
+
+
+def test_a_source_provided_later_with_a_version_is_memoised():
+    version = [0]
+    source = _Source()
+    slot = SettingsSlot("t")
+    slot.provide(source, version=lambda: version[0])
+    first = slot.current()
+    assert slot.current() is first
+    assert source.reads == 1
+    version[0] += 1
+    assert slot.current() is not first

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import logging
+import math
 import threading
 from time import monotonic
 
@@ -25,10 +26,14 @@ PROBE_CONNECT_TIMEOUT = 5
 def get_libpq_connect_timeout(deadline: float | None, cap: int) -> int:
     if deadline is None:
         return cap
-    remaining = int(deadline - monotonic())
-    if remaining < 1:
+    remaining = deadline - monotonic()
+    if remaining <= 0:
         return 0
-    return min(cap, remaining)
+    # libpq counts whole seconds: round up, so a budget with 0.9s left still
+    # tries once (at worst libpq's 2s floor) instead of refusing a connect
+    # that usually takes milliseconds -- which made any budget under 1s
+    # refuse every direct connection, startup's included.
+    return min(cap, math.ceil(remaining))
 
 
 class _InFlightProbe:

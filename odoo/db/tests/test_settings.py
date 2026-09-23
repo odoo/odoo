@@ -156,3 +156,20 @@ class TestTheSlot(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestTheProcessSlotIsMemoised(unittest.TestCase):
+    def test_a_read_without_a_config_write_derives_nothing(self):
+        from odoo.tools.config import config
+
+        first = pool_settings.current()
+        with patch.object(
+            PoolSettings, "from_config", side_effect=AssertionError("derived")
+        ):
+            self.assertIs(pool_settings.current(), first)
+        previous = config["db_maxconn"]
+        try:
+            config["db_maxconn"] = (previous or 64) + 1
+            self.assertEqual(pool_settings.current().maxconn, (previous or 64) + 1)
+        finally:
+            config["db_maxconn"] = previous

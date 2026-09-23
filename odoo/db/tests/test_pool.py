@@ -56,11 +56,14 @@ class TestBorrowBudgetHelpers(unittest.TestCase):
     def test_ample_budget_keeps_the_cap(self):
         self.assertEqual(get_libpq_connect_timeout(monotonic() + 60, 5), 5)
 
-    def test_tight_budget_shrinks_below_the_cap(self):
-        self.assertEqual(get_libpq_connect_timeout(monotonic() + 3.9, 5), 3)
+    def test_tight_budget_shrinks_below_the_cap_rounding_up(self):
+        self.assertEqual(get_libpq_connect_timeout(monotonic() + 3.9, 5), 4)
+
+    def test_a_sub_second_remainder_still_tries_once(self):
+        self.assertEqual(get_libpq_connect_timeout(monotonic() + 0.9, 5), 1)
 
     def test_exhausted_budget_returns_zero_not_a_libpq_forever(self):
-        for deadline in (monotonic() + 0.9, monotonic(), monotonic() - 10):
+        for deadline in (monotonic() - 0.001, monotonic() - 10):
             with self.subTest(deadline=deadline):
                 self.assertEqual(get_libpq_connect_timeout(deadline, 5), 0)
 
