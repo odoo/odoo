@@ -38,12 +38,10 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Wait for the drop down to disappear",
             trigger: 'div[name="model_id"] .o-autocomplete:not(:has(.ui-autocomplete))',
-            run: async () => {
-                // Ensure the system has registered a correct model value before
-                // we try to open the DPH.
-                // It seems that the autocomplete validation can be very slow.
-                await new Promise((r) => setTimeout(r, 200));
-            },
+        },
+        {
+            content: "Wait for the onchange of the model",
+            trigger: 'div[name="model_id"] .o_external_button',
         },
         {
             content: 'Retry insert # inside "Subject" input',
