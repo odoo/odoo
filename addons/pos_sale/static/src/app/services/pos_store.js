@@ -276,7 +276,9 @@ patch(PosStore.prototype, {
             tax_ids: soLine.tax_ids,
             partner_id: so.partner_id,
             product_id: soLine.product_id,
-            extra_tax_data: soLine.extra_tax_data,
+            extra_tax_data: soLine.is_downpayment
+                ? accountTaxHelpers.reverse_quantity_base_line_extra_tax_data(soLine.extra_tax_data)
+                : soLine.extra_tax_data,
         };
     },
     getSaleOrderBaseLines(saleOrder) {
