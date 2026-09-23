@@ -490,7 +490,8 @@ export class Message extends Component {
             !this.props.hasActions ||
             this.isEditing ||
             this.rightClickDropdownState.isOpen ||
-            this.isRightClickDropdownOngoingClose
+            this.isRightClickDropdownOngoingClose ||
+            this.env.inChatter?.disabled
         ) {
             return;
         }

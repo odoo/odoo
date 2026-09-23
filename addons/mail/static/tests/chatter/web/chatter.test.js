@@ -17,12 +17,14 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { Message } from "@mail/core/common/message";
+import { describe, expect, rightClick, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
 import {
     defineActions,
     getService,
     mockService,
+    patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
 
@@ -601,15 +603,26 @@ test("chatter updating", async () => {
 });
 
 test("chatter message actions appear only after saving the form", async () => {
+    patchWithCleanup(Message.prototype, {
+        showRightClickMessageActions() {
+            expect.step("Message.showRightClickMessageActions");
+            super.showRightClickMessageActions(...arguments);
+        },
+    });
     await start();
     await openFormView("res.partner");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-actions", { count: 0 });
+    await rightClick(".o-mail-Message");
+    expect.verifySteps([]);
     await click(".o_form_button_save");
     await click("button:text('Send message')");
     await insertText(".o-mail-Composer-input", "hey");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-actions");
+    await rightClick(".o-mail-Message");
+    await contains(".o_popover .o-mail-ActionList");
+    expect.verifySteps(["Message.showRightClickMessageActions"]);
 });
 
 test("post message on draft record", async () => {
