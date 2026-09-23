@@ -121,7 +121,9 @@ def locate_node(arch: etree._Element, spec: etree._Element) -> etree._Element | 
     if spec.tag == "xpath":
         expr = spec.get("expr")
         if not expr:
-            raise ValueError("Invalid xpath specification: missing 'expr' attribute")
+            raise XPathExpressionError(
+                "Invalid xpath specification: missing 'expr' attribute"
+            )
         try:
             xPath = _compile_xpath(expr)
         except etree.XPathSyntaxError as e:
@@ -129,6 +131,17 @@ def locate_node(arch: etree._Element, spec: etree._Element) -> etree._Element | 
                 f'Invalid Expression while parsing xpath "{expr}"'
             ) from e
         nodes = xPath(arch)
+        if not isinstance(nodes, list) or not all(
+            isinstance(node, etree._Element) for node in nodes
+        ):
+            _debug.logic(
+                "template_inheritance.xpath_not_nodes",
+                expr=expr,
+                result=type(nodes).__name__,
+            )
+            raise XPathExpressionError(
+                f'The xpath "{expr}" must select elements, not a value'
+            )
         if len(nodes) > 1:
             _debug.logic(
                 "template_inheritance.xpath_ambiguous", matches=len(nodes), expr=expr

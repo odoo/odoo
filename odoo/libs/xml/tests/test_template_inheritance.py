@@ -1,7 +1,11 @@
 import pytest
 from lxml import etree
 
-from odoo.libs.xml.template_inheritance import apply_inheritance_specs, locate_node
+from odoo.libs.xml.template_inheritance import (
+    XPathExpressionError,
+    apply_inheritance_specs,
+    locate_node,
+)
 
 
 def _apply(original: str, *, remove: str, separator: str = "and", add: str = "") -> str:
@@ -40,8 +44,24 @@ class TestLocateNode:
     def test_xpath_without_expr_raises_value_error(self):
         arch = etree.fromstring("<form><field name='a'/></form>")
         spec = etree.fromstring('<xpath position="replace"><p/></xpath>')
-        with pytest.raises(ValueError, match="missing 'expr'"):
+        with pytest.raises(XPathExpressionError, match="missing 'expr'"):
             locate_node(arch, spec)
+
+    @pytest.mark.parametrize(
+        "expr", ["name(/*)", "//field/@name", "count(//field)", "//field/text()"]
+    )
+    def test_xpath_selecting_a_value_is_refused(self, expr):
+        arch = etree.fromstring("<form><field name='a'>t</field></form>")
+        spec = etree.fromstring(f'<xpath expr="{expr}" position="replace"/>')
+        with pytest.raises(XPathExpressionError, match="must select elements"):
+            locate_node(arch, spec)
+        with pytest.raises(XPathExpressionError, match="must select elements"):
+            apply_inheritance_specs(arch, spec)
+
+    def test_xpath_selecting_nothing_locates_nothing(self):
+        arch = etree.fromstring("<form><field name='a'/></form>")
+        spec = etree.fromstring('<xpath expr="//group" position="replace"/>')
+        assert locate_node(arch, spec) is None
 
 
 class TestSpecQueue:
