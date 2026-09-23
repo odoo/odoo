@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools.urls import urljoin as url_join
 
 from odoo.addons.payment import utils as payment_utils

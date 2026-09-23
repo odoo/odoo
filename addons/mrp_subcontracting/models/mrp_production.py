@@ -67,9 +67,9 @@ class MrpProduction(models.Model):
                 )
                 move["additional"] = True
                 production.move_raw_ids = [(0, 0, move)]
-                production.move_raw_ids.filtered(lambda m: m.product_id == product_id)[
-                    :1
-                ].move_line_ids = lines
+                production.move_raw_ids.filtered(
+                    lambda m, product_id=product_id: m.product_id == product_id
+                )[:1].move_line_ids = lines
 
     def write(self, vals):
         if self.env.user._is_portal() and not self.env.su:
@@ -133,7 +133,7 @@ class MrpProduction(models.Model):
                     continue
                 if mo.product_tracking in ("lot", "serial"):
                     sbc_move_lines = sbc_move.move_line_ids.filtered(
-                        lambda m: m.lot_id == old_lot
+                        lambda m, old_lot=old_lot: m.lot_id == old_lot
                     )
                     sbc_move_line = sbc_move_lines[0]
                     sbc_move_line.quantity = mo.product_qty

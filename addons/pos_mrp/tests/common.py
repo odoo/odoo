@@ -5,12 +5,12 @@ from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 class CommonPosMrpTest(CommonPosTest):
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         super().setUpClass()
 
-        self.mrp_create_product_category(self)
-        self.mrp_edit_product_template(self)
-        self.mrp_create_bom(self)
+        cls.mrp_create_product_category(cls)
+        cls.mrp_edit_product_template(cls)
+        cls.mrp_create_bom(cls)
 
     def mrp_edit_product_template(self):
         self.product_product_kit_one = self.ten_dollars_no_tax.product_variant_id

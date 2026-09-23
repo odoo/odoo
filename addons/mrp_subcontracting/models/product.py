@@ -15,7 +15,7 @@ class ProductSupplierinfo(models.Model):
         for supplier in self:
             boms = supplier.product_id.variant_bom_ids
             boms |= supplier.product_tmpl_id.bom_ids.filtered(
-                lambda b: (
+                lambda b, supplier=supplier: (
                     not b.product_id
                     or b.product_id
                     in (

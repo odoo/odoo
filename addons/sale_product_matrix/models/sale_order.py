@@ -66,7 +66,7 @@ class SaleOrder(models.Model):
 
                 product = product_template._create_product_variant(combination)
                 order_lines = self.line_ids.filtered(
-                    lambda line: (
+                    lambda line, no_variant_attribute_values=no_variant_attribute_values, product=product: (
                         line.product_id.id == product.id
                         and line.product_no_variant_attribute_value_ids.ids
                         == no_variant_attribute_values.ids
@@ -157,7 +157,7 @@ class SaleOrder(models.Model):
                 for cell in row:
                     if not cell.get("name", False):
                         matching_lines = order_lines.filtered(
-                            lambda l: has_ptavs(l, cell["ptav_ids"])
+                            lambda l, cell=cell: has_ptavs(l, cell["ptav_ids"])
                         )
                         if matching_lines and not matching_lines.combo_item_id:
                             cell.update(
@@ -177,7 +177,9 @@ class SaleOrder(models.Model):
                 if (
                     len(
                         self.line_ids.filtered(
-                            lambda line: line.product_template_id == template
+                            lambda line, template=template: (
+                                line.product_template_id == template
+                            )
                         )
                     )
                     > 1

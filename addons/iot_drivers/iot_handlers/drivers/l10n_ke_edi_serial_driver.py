@@ -274,13 +274,12 @@ class TremolG03Controller(http.Controller):
                 )
             messages = json.loads(messages)
             device.message_number = 0
-            resp = json.dumps(
+            return json.dumps(
                 {
                     **device.send([msg.encode("cp1251") for msg in messages]),
                     "serial_number": serial_number,
                 }
             )
-            return resp
         else:
             return http.request.prepare_json_response(
                 {"status": "The fiscal device is not connected to the proxy server"}

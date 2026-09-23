@@ -124,7 +124,7 @@ class PosPaymentMethod(models.Model):
         if not self.env.su and not self.env.user.has_group(
             "point_of_sale.group_pos_user"
         ):
-            raise AccessDenied()
+            raise AccessDenied
 
         if self.use_payment_terminal != "qfpay":
             raise UserError(

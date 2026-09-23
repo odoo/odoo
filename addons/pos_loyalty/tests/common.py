@@ -5,11 +5,11 @@ from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 class CommonPosLoyaltyTest(CommonPosTest):
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         super().setUpClass()
 
-        self.loyalty_create_programs(self)
-        self.loyalty_create_rewards(self)
+        cls.loyalty_create_programs(cls)
+        cls.loyalty_create_rewards(cls)
 
     def loyalty_create_programs(self):
         self.four_20_dollars_one_free_program = self.env["loyalty.program"].create(

@@ -21,7 +21,7 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
         )
 
         if not order:
-            raise Unauthorized()
+            raise Unauthorized
 
         payment_method = pos_config.env["pos.payment.method"].browse(payment_method_id)
         razorpay_status_response = payment_method.razorpay_fetch_payment_status(
@@ -77,7 +77,7 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
         )
 
         if not order:
-            raise Unauthorized()
+            raise Unauthorized
 
         payment_method = pos_config.env["pos.payment.method"].browse(payment_method_id)
         razorpay_cancel_response = payment_method.razorpay_cancel_payment_request(

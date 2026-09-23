@@ -59,6 +59,7 @@ class TestRazorPayPoS(TestPointOfSaleHttpCommon):
                 "errorMessage": "The 'origP2pRequestId' field is required in the JSON payload.",
             }
             return response
+        return None
 
     def _send_status_response(self, response: Response, **kwargs):
         json_data = kwargs.get("json", {})
@@ -89,12 +90,14 @@ class TestRazorPayPoS(TestPointOfSaleHttpCommon):
                 "p2pRequestId": json_data.get("origP2pRequestId"),
                 "settlementStatus": "PENDING",
             }
+        return None
 
     def _cancel_response(self, response: Response, **kwargs):
         res = self._is_origP2pRequestId_present(kwargs.get("json", {}), response)
         if res:
             return res
         response.json = lambda: {"success": True}
+        return None
 
     def _refund_response(self, response: Response, **kwargs):
         response.json = lambda: {

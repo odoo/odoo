@@ -1,4 +1,4 @@
-from odoo import _, fields, models, service
+from odoo import fields, models, service
 from odoo.tools import urls
 
 from odoo.addons.payment.logging import get_payment_logger

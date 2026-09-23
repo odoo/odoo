@@ -80,7 +80,7 @@ class CtypesTerminalDriver(Driver):
         self.terminal_busy = False
 
         self._actions[""] = self._action_default
-        self.next_transaction_min_dt = datetime.datetime.min
+        self.next_transaction_min_dt = datetime.datetime.now()
 
     @classmethod
     def supported(cls, device):

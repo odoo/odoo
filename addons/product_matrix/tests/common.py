@@ -1,4 +1,4 @@
-from odoo.tests import common, tagged
+from odoo.tests import common
 
 
 class TestMatrixCommon(common.HttpCase):

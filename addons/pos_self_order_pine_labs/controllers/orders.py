@@ -21,7 +21,7 @@ class PosSelfOrderPineLabsController(PosSelfOrderController):
             or not payment_method.exists()
             or order.config_id.id != pos_config.id
         ):
-            raise NotFound()
+            raise NotFound
 
         pine_labs_status_response = payment_method.pine_labs_fetch_payment_status(
             payment_data
@@ -66,6 +66,6 @@ class PosSelfOrderPineLabsController(PosSelfOrderController):
             or not payment_method.exists()
             or order.config_id.id != pos_config.id
         ):
-            raise NotFound()
+            raise NotFound
 
         return payment_method.pine_labs_cancel_payment_request(payment_data)

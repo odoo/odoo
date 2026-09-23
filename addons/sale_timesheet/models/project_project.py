@@ -292,10 +292,12 @@ class ProjectProject(models.Model):
             if not timesheet_ids:
                 continue
             for employee_id in project.sale_line_employee_ids.filtered(
-                lambda l: l.project_id == project
+                lambda l, project=project: l.project_id == project
             ).employee_id:
                 sale_line_id = project.sale_line_employee_ids.filtered(
-                    lambda l: l.project_id == project and l.employee_id == employee_id
+                    lambda l, employee_id=employee_id, project=project: (
+                        l.project_id == project and l.employee_id == employee_id
+                    )
                 ).sale_line_id
                 _debug.lifecycle(
                     "timesheets_repointed",
@@ -304,7 +306,7 @@ class ProjectProject(models.Model):
                     line=sale_line_id,
                 )
                 timesheet_ids.filtered(
-                    lambda t: t.employee_id == employee_id
+                    lambda t, employee_id=employee_id: t.employee_id == employee_id
                 ).sudo().so_line = sale_line_id
 
     def action_view_timesheet(self):

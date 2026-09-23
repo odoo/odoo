@@ -101,4 +101,4 @@ class IrActionsReport(models.Model):
                     "Make sure you linked the report '%s' to the corresponding IoT printer device.",
                     report_ref,
                 )
-            )
+            ) from None

@@ -68,7 +68,8 @@ class PosConfig(models.Model):
 
     @api.onchange("minimal_employee_ids")
     def _onchange_minimal_employee_ids(self):
-        for employee in self.minimal_employee_ids:
+        employees = self.minimal_employee_ids
+        for employee in employees:
             if employee._is_pos_manager():
                 self.minimal_employee_ids -= employee
             elif employee in self.basic_employee_ids:
@@ -78,7 +79,8 @@ class PosConfig(models.Model):
 
     @api.onchange("basic_employee_ids")
     def _onchange_basic_employee_ids(self):
-        for employee in self.basic_employee_ids:
+        employees = self.basic_employee_ids
+        for employee in employees:
             if employee._is_pos_manager():
                 self.basic_employee_ids -= employee
             elif employee in self.advanced_employee_ids:
@@ -88,7 +90,8 @@ class PosConfig(models.Model):
 
     @api.onchange("advanced_employee_ids")
     def _onchange_advanced_employee_ids(self):
-        for employee in self.advanced_employee_ids:
+        employees = self.advanced_employee_ids
+        for employee in employees:
             if employee in self.basic_employee_ids:
                 self.basic_employee_ids -= employee
             if employee in self.minimal_employee_ids:

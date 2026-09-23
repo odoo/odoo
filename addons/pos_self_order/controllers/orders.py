@@ -229,7 +229,7 @@ class PosSelfOrderController(http.Controller):
         name,
         phone,
         street,
-        zip,
+        zip,  # noqa: A002 - the JSON-RPC key preset_info_popup.js posts; the parameter name is the route's wire contract
         city,
         country_id,
         state_id=None,
@@ -489,10 +489,7 @@ class PosSelfOrderController(http.Controller):
     def _is_config_unusable(self, pos_config_sudo, check_active_session=True):
         return (
             not pos_config_sudo
-            or (
-                pos_config_sudo.self_ordering_mode != "mobile"
-                and pos_config_sudo.self_ordering_mode != "kiosk"
-            )
+            or (pos_config_sudo.self_ordering_mode not in {"mobile", "kiosk"})
             or (check_active_session and not pos_config_sudo.has_active_session)
         )
 

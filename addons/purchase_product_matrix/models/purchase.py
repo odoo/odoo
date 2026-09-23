@@ -69,7 +69,7 @@ class PurchaseOrder(models.Model):
 
                 product = product_template._create_product_variant(combination)
                 order_lines = self.line_ids.filtered(
-                    lambda line: (
+                    lambda line, no_variant_attribute_values=no_variant_attribute_values, product=product: (
                         (line._origin or line).product_id == product
                         and (
                             line._origin or line
@@ -159,7 +159,7 @@ class PurchaseOrder(models.Model):
                 for cell in line:
                     if not cell.get("name", False):
                         line = order_lines.filtered(
-                            lambda line: has_ptavs(line, cell["ptav_ids"])
+                            lambda line, cell=cell: has_ptavs(line, cell["ptav_ids"])
                         )
                         if line:
                             cell.update({"qty": sum(line.mapped("product_qty"))})
@@ -175,7 +175,9 @@ class PurchaseOrder(models.Model):
                 if (
                     len(
                         self.line_ids.filtered(
-                            lambda line: line.product_template_id == template
+                            lambda line, template=template: (
+                                line.product_template_id == template
+                            )
                         )
                     )
                     > 1

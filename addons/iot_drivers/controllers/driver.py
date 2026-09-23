@@ -1,5 +1,5 @@
 import logging
-import os
+import pathlib
 import time
 from datetime import datetime
 from socket import gethostname
@@ -112,6 +112,7 @@ class DriverController(http.Controller):
             req["event"].clear()
             req["result"]["session_id"] = req["session_id"]
             return req["result"]
+        return None
 
     @route.iot_route("/iot_drivers/download_logs", type="http", cors="*", csrf=False)
     def download_logs(self):
@@ -120,11 +121,11 @@ class DriverController(http.Controller):
         """
         log_path = tools.config["logfile"] or "/var/log/odoo/odoo-server.log"
         try:
-            stat = os.stat(log_path)
+            stat = pathlib.Path(log_path).stat()
         except FileNotFoundError:
             raise InternalServerError(
                 "Log file has not been found. Check your Log file configuration."
-            )
+            ) from None
         check = adler32(log_path.encode())
         log_file_name = f"iot-odoo-{gethostname()}-{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
         # intentionally don't use Stream.from_path as the path used is not in the addons path

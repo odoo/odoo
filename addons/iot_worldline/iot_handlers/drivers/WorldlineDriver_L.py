@@ -195,6 +195,7 @@ class WorldlineDriver(CtypesTerminalDriver):
                 "terminal disconnected during transaction #%d", transaction_id
             )
             self.send_status(disconnected=True, request_data=transaction)
+        return None
 
     def cancelTransaction(self, transaction):
         # Force to wait before starting the transaction if necessary

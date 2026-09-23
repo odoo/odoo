@@ -1,7 +1,6 @@
 from werkzeug.exceptions import Unauthorized
 
 from odoo import fields, http
-from odoo.http import request
 from odoo.tools import float_is_zero
 
 from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
@@ -43,7 +42,7 @@ class PosSelfOrderControllerStripe(PosSelfOrderController):
         )
 
         if not order:
-            raise Unauthorized()
+            raise Unauthorized
 
         payment_method = pos_config.payment_method_ids.filtered(
             lambda p: p.id == payment_method_id

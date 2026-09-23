@@ -164,7 +164,9 @@ class StockMove(models.Model):
                 moves_todo = self.env.context.get("moves_todo")
                 not_todo_productions = (
                     active_productions.filtered(
-                        lambda p: p not in moves_todo.move_orig_ids.production_id
+                        lambda p, moves_todo=moves_todo: (
+                            p not in moves_todo.move_orig_ids.production_id
+                        )
                     )
                     if moves_todo
                     else active_productions
@@ -347,7 +349,9 @@ class StockMove(models.Model):
                     productions.action_assign()
                     if already_covered:
                         productions.move_raw_ids.filtered(
-                            lambda raw: raw.id in already_covered
+                            lambda raw, already_covered=already_covered: (
+                                raw.id in already_covered
+                            )
                         )._run_procurement(already_covered)
             else:
                 qty_by_lot = defaultdict(float)
@@ -358,7 +362,7 @@ class StockMove(models.Model):
                 mos_to_create = {}
                 for lot_id, ml_qty in qty_by_lot.items():
                     lot_mo = productions.filtered(
-                        lambda p: (
+                        lambda p, lot_id=lot_id: (
                             (p.lot_producing_ids and p.lot_producing_ids[0] == lot_id)
                             or (not lot_id and not p.lot_producing_ids)
                         )
@@ -392,7 +396,7 @@ class StockMove(models.Model):
 
                 productions = move._get_subcontract_production()
                 orphan_productions = productions.filtered(
-                    lambda p: (
+                    lambda p, qty_by_lot=qty_by_lot: (
                         (
                             p.lot_producing_ids
                             and p.lot_producing_ids[0] not in qty_by_lot

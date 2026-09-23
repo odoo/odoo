@@ -86,9 +86,8 @@ class ResConfigSettings(models.TransientModel):
             self.pos_self_ordering_default_language_id
             not in self.pos_self_ordering_available_language_ids
         ):
-            self.pos_self_ordering_available_language_ids = (
-                self.pos_self_ordering_available_language_ids
-                + self.pos_self_ordering_default_language_id
+            self.pos_self_ordering_available_language_ids += (
+                self.pos_self_ordering_default_language_id
             )
         if (
             not self.pos_self_ordering_default_language_id
@@ -107,9 +106,7 @@ class ResConfigSettings(models.TransientModel):
             cash_payment_methods = self.pos_payment_method_ids.filtered(
                 lambda x: x.is_cash_count
             )
-            self.pos_payment_method_ids = (
-                self.pos_payment_method_ids - cash_payment_methods
-            )
+            self.pos_payment_method_ids -= cash_payment_methods
         else:
             self.is_kiosk_mode = False
 
@@ -192,7 +189,7 @@ class ResConfigSettings(models.TransientModel):
                     )
                 )
 
-            for row_num, table in enumerate(table_ids, start=1):
+            for table in table_ids:
                 table_number = table.table_number
                 floor_name = table.floor_id.name
                 url = unquote(self.pos_config_id._get_self_order_url(table.id))
@@ -284,7 +281,9 @@ class ResConfigSettings(models.TransientModel):
                     {
                         "name": floor.get("name"),
                         "type": floor.get("type"),
-                        "table_rows": [list(b) for b in batched(floor["tables"], 3)],
+                        "table_rows": [
+                            list(b) for b in batched(floor["tables"], 3, strict=False)
+                        ],
                     }
                     for floor in self.pos_config_id._get_qr_code_data()
                 ],

@@ -282,6 +282,7 @@ class StockPicking(models.Model):
                     }
                 )
             return action
+        return None
 
     @api.model
     def get_action_click_graph(self):

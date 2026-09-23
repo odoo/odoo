@@ -57,8 +57,10 @@ def serial_connection(path, protocol, is_probing=False):
         else protocol.writeTimeout,  # longer timeouts for probing
     }
     connection = serial.Serial(path, **port_config)
-    yield connection
-    connection.close()
+    try:
+        yield connection
+    finally:
+        connection.close()
 
 
 class SerialDriver(Driver):
@@ -94,6 +96,7 @@ class SerialDriver(Driver):
         }
         self._set_name()
 
+    @staticmethod
     def _get_raw_response(connection):
         pass
 

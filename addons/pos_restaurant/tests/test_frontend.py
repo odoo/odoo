@@ -705,7 +705,7 @@ class TestFrontend(TestFrontendCommon):
         drinks_category = self.env["pos.category"].search(
             [("name", "=", "Drinks"), ("sequence", "=", 2)]
         )
-        product_1 = self.env["product.product"].create(
+        self.env["product.product"].create(
             {
                 "available_in_pos": True,
                 "list_price": 2.20,
@@ -714,7 +714,7 @@ class TestFrontend(TestFrontendCommon):
                 "pos_categ_ids": [(4, drinks_category.id)],
             }
         )
-        product_2 = self.env["product.product"].create(
+        self.env["product.product"].create(
             {
                 "available_in_pos": True,
                 "list_price": 2.20,

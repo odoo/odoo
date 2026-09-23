@@ -45,14 +45,16 @@ else:
     USR_LIB_PATH = "/usr/lib"
     try:
         subprocess.call(
-            [f"sudo cp {DEP_LIB_PATH}/{TIMAPI_DEPENDANCY_LIB_V} {USR_LIB_PATH}"],
-            shell=True,
+            ["sudo", "cp", f"{DEP_LIB_PATH}/{TIMAPI_DEPENDANCY_LIB_V}", USR_LIB_PATH]
         )
         subprocess.call(
             [
-                f"sudo ln -fs {USR_LIB_PATH}/{TIMAPI_DEPENDANCY_LIB_V} {USR_LIB_PATH}/{TIMAPI_DEPENDANCY_LIB}"
-            ],
-            shell=True,
+                "sudo",
+                "ln",
+                "-fs",
+                f"{USR_LIB_PATH}/{TIMAPI_DEPENDANCY_LIB_V}",
+                f"{USR_LIB_PATH}/{TIMAPI_DEPENDANCY_LIB}",
+            ]
         )
     except subprocess.CalledProcessError as e:
         _logger.error("Failed to link the TIM SDK dependent library: %s", e.output)

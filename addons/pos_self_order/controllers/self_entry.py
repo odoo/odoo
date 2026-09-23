@@ -60,8 +60,7 @@ class PosSelfKiosk(http.Controller):
         pos_config, _, _ = self._get_entry_config_and_table(
             config_id, access_token, table_identifier
         )
-        data = pos_config.load_data_params()
-        return data
+        return pos_config.load_data_params()
 
     def _get_entry_config_and_table(
         self, config_id=None, access_token=None, table_identifier=None
@@ -69,7 +68,7 @@ class PosSelfKiosk(http.Controller):
         table_sudo = False
 
         if not config_id or not config_id.isnumeric():
-            raise werkzeug.exceptions.NotFound()
+            raise werkzeug.exceptions.NotFound
 
         if access_token:
             config_access_token = True
@@ -90,7 +89,7 @@ class PosSelfKiosk(http.Controller):
             )
 
         if not pos_config_sudo or pos_config_sudo.self_ordering_mode == "nothing":
-            raise werkzeug.exceptions.NotFound()
+            raise werkzeug.exceptions.NotFound
 
         company = pos_config_sudo.company_id
         user = pos_config_sudo.self_ordering_default_user_id
@@ -105,7 +104,7 @@ class PosSelfKiosk(http.Controller):
         )
 
         if not pos_config:
-            raise werkzeug.exceptions.NotFound()
+            raise werkzeug.exceptions.NotFound
 
         if (
             pos_config

@@ -178,11 +178,10 @@ class PosPaymentMethod(models.Model):
         if not self.env.su and not self.env.user.has_group(
             "point_of_sale.group_pos_user"
         ):
-            raise AccessDenied()
+            raise AccessDenied
 
         latest_response = self.sudo().adyen_latest_response
-        latest_response = json.loads(latest_response) if latest_response else False
-        return latest_response
+        return json.loads(latest_response) if latest_response else False
 
     def proxy_adyen_request(self, data, operation=False):
         """Necessary because Adyen's endpoints don't have CORS enabled"""
@@ -190,7 +189,7 @@ class PosPaymentMethod(models.Model):
         if not self.env.su and not self.env.user.has_group(
             "point_of_sale.group_pos_user"
         ):
-            raise AccessDenied()
+            raise AccessDenied
         if not data:
             raise UserError(_("Invalid Adyen request"))
 

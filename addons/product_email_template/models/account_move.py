@@ -1,4 +1,4 @@
-from odoo import SUPERUSER_ID, api, models
+from odoo import SUPERUSER_ID, models
 
 
 class AccountMove(models.Model):

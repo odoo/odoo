@@ -1,7 +1,6 @@
 import logging
 
 from odoo import _, fields, models
-from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -65,6 +64,7 @@ class PaymentTransaction(models.Model):
         simulated_state = self.token_id.demo_simulated_state
         payment_data = {"reference": self.reference, "simulated_state": simulated_state}
         self._process("demo", payment_data)
+        return None
 
     def _send_capture_request(self):
         """Override of `payment` to simulate a capture request."""
@@ -77,6 +77,7 @@ class PaymentTransaction(models.Model):
             "manual_capture": True,  # Distinguish manual captures from regular one-step captures.
         }
         self._process("demo", payment_data)
+        return None
 
     def _send_void_request(self):
         """Override of `payment` to simulate a void request."""
@@ -85,6 +86,7 @@ class PaymentTransaction(models.Model):
 
         payment_data = {"reference": self.reference, "simulated_state": "cancel"}
         self._process("demo", payment_data)
+        return None
 
     def _send_refund_request(self):
         """Override of `payment` to simulate a refund."""
@@ -93,6 +95,7 @@ class PaymentTransaction(models.Model):
 
         payment_data = {"reference": self.reference, "simulated_state": "done"}
         self._process("demo", payment_data)
+        return None
 
     def _extract_amount_data(self, payment_data):
         """Override of `payment` to skip the amount validation for demo flows."""
@@ -137,6 +140,7 @@ class PaymentTransaction(models.Model):
             self._set_error(
                 _("You selected the following demo payment status: %s", state)
             )
+        return None
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

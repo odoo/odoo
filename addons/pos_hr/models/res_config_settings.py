@@ -39,7 +39,8 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange("pos_minimal_employee_ids")
     def _onchange_minimal_employee_ids(self):
-        for employee in self.pos_minimal_employee_ids:
+        employees = self.pos_minimal_employee_ids
+        for employee in employees:
             if employee.user_id._has_group("point_of_sale.group_pos_manager"):
                 self.pos_minimal_employee_ids -= employee
             elif employee in self.pos_basic_employee_ids:
@@ -49,7 +50,8 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange("pos_basic_employee_ids")
     def _onchange_basic_employee_ids(self):
-        for employee in self.pos_basic_employee_ids:
+        employees = self.pos_basic_employee_ids
+        for employee in employees:
             if employee.user_id._has_group("point_of_sale.group_pos_manager"):
                 self.pos_basic_employee_ids -= employee
             elif employee in self.pos_advanced_employee_ids:
@@ -59,7 +61,8 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange("pos_advanced_employee_ids")
     def _onchange_advanced_employee_ids(self):
-        for employee in self.pos_advanced_employee_ids:
+        employees = self.pos_advanced_employee_ids
+        for employee in employees:
             if employee in self.pos_basic_employee_ids:
                 self.pos_basic_employee_ids -= employee
             if employee in self.pos_minimal_employee_ids:

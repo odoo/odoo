@@ -46,3 +46,4 @@ class PosPaymentMethod(models.Model):
                 order._send_payment_result("Success")
         else:
             order._send_payment_result("fail")
+        return None

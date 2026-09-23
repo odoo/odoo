@@ -1,7 +1,6 @@
 import logging
 
 from odoo import http
-from odoo.http import request
 
 from odoo.addons.payment_adyen.controllers.main import AdyenController
 

@@ -297,7 +297,7 @@ class PrinterDriverBase(Driver, ABC):
             return True
         except escpos.exceptions.Error, OSError, AssertionError, TypeError:
             self.escpos_device = None
-            raise EscposNotAvailableError
+            raise EscposNotAvailableError from None
 
     def run(self):
         while True:

@@ -38,11 +38,8 @@ class ProductTemplate(models.Model):
 
         if self.env.context.get("pos_limited_loading", True):
             # Filter out products that can be loaded in the PoS but are not loaded yet
-            product_ids_to_hide = (
-                product_ids_to_hide
-                - product_ids_to_hide.filtered_domain(
-                    self._load_pos_data_domain(data, config)
-                )
+            product_ids_to_hide -= product_ids_to_hide.filtered_domain(
+                self._load_pos_data_domain(data, config)
             )
 
         config_data = data["pos.config"][0]

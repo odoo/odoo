@@ -191,7 +191,7 @@ class IoTController(IoTBoxLookup, http.Controller):
                 "No IoT Box found with identifier: '%s'. Request ignored",
                 iot_box_identifier,
             )
-            raise NotFound()
+            raise NotFound
 
         request.env["iot.channel"].send_message(
             {
@@ -389,7 +389,7 @@ class IoTLogController(IoTBoxLookup, http.Controller):
                 "line_formatted": split[1].decode("utf-8"),
             }
 
-        def log_current_level():
+        def log_current_level(log_level, log_lines):
             _iot_logger.log(
                 log_level,
                 "%s%s",
@@ -412,6 +412,6 @@ class IoTLogController(IoTBoxLookup, http.Controller):
             log_details, key=lambda log: log["levelno"]
         ):
             log_lines = [log_line["line_formatted"] for log_line in log_group]
-            log_current_level()
+            log_current_level(log_level, log_lines)
 
         return finish_request()

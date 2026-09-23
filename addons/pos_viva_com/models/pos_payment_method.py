@@ -288,6 +288,7 @@ class PosPaymentMethod(models.Model):
                     )
                 }
             )
+        return None
 
     def _send_notification(self, data):
         # Send a notification to the point of sale channel to indicate that the transaction are finish

@@ -1,6 +1,4 @@
 import uuid
-from collections.abc import Callable
-from typing import Dict, List, Optional
 
 from odoo import api, fields, models
 

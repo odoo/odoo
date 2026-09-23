@@ -118,13 +118,12 @@ class IotBoxOwlHomePage(http.Controller):
             if IS_RPI
             else Path().absolute().parent.joinpath("odoo.log")
         )
-        with Path(logs_path).open(encoding="utf-8") as file:
-            return http.request.prepare_json_response(
-                {
-                    "status": "success",
-                    "logs": file.read(),
-                }
-            )
+        return http.request.prepare_json_response(
+            {
+                "status": "success",
+                "logs": Path(logs_path).read_text(encoding="utf-8"),
+            }
+        )
 
     @route.iot_route("/iot_drivers/six_payment_terminal_clear", type="http", cors="*")
     def clear_six_terminal(self):
@@ -548,7 +547,7 @@ class IotBoxOwlHomePage(http.Controller):
     # Utils                                                      #
     # ---------------------------------------------------------- #
     def _get_iot_handlers_logger(self, handlers_name, iot_handler_folder_name):
-        handlers_loggers_level = dict()
+        handlers_loggers_level = {}
         for handler_name in handlers_name:
             handler_logger = self._get_iot_handler_logger(
                 handler_name, iot_handler_folder_name

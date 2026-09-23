@@ -1,7 +1,3 @@
-import json
-
-import requests
-
 from odoo import models
 
 TIMEOUT = 10

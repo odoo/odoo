@@ -365,7 +365,7 @@ class RepairOrder(models.Model):
             if repair.picking_id:
                 if repair.tracking in ["serial", "lot"] and repair.lot_id:
                     lot_move_lines = repair.picking_id.move_line_ids.filtered(
-                        lambda m: (
+                        lambda m, repair=repair: (
                             m.product_id == repair.product_id
                             and m.lot_id == repair.lot_id
                         )
@@ -373,7 +373,7 @@ class RepairOrder(models.Model):
                     repair.product_qty = sum(lot_move_lines.mapped("quantity"))
                 else:
                     product_moves = repair.picking_id.move_ids.filtered(
-                        lambda m: m.product_id == repair.product_id
+                        lambda m, repair=repair: m.product_id == repair.product_id
                     )
                     repair.product_qty = sum(product_moves.mapped("quantity"))
             else:
@@ -586,6 +586,7 @@ class RepairOrder(models.Model):
                     ),
                 },
             }
+        return None
 
     @api.model
     def default_get(self, fields):
@@ -712,17 +713,16 @@ class RepairOrder(models.Model):
                     ref_str=ref_str,
                 ),
             )
-        sale_order_values_list = []
-        for repair in self:
-            sale_order_values_list.append(
-                {
-                    "company_id": self.company_id.id,
-                    "partner_id": self.partner_id.id,
-                    "warehouse_id": self.picking_type_id.warehouse_id.id,
-                    "repair_order_ids": [Command.link(repair.id)],
-                    "origin": repair.name,
-                }
-            )
+        sale_order_values_list = [
+            {
+                "company_id": self.company_id.id,
+                "partner_id": self.partner_id.id,
+                "warehouse_id": self.picking_type_id.warehouse_id.id,
+                "repair_order_ids": [Command.link(repair.id)],
+                "origin": repair.name,
+            }
+            for repair in self
+        ]
         self.env["sale.order"].create(sale_order_values_list)
         # Add Sale Order Lines for 'add' move_ids
         self.move_ids._create_repair_sale_order_line()

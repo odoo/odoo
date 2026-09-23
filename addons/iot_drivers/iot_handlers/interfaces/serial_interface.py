@@ -9,10 +9,9 @@ class SerialInterface(Interface):
     allow_unsupported = True
 
     def get_devices(self):
-        serial_devices = {
+        return {
             port.device: {"identifier": port.device}
             for port in comports()
             if IS_WINDOWS or port.device != "/dev/ttyAMA10"
             # RPI 5 uses ttyAMA10 as a console serial port for system messages: odoo interprets it as scale -> avoid it
         }
-        return serial_devices

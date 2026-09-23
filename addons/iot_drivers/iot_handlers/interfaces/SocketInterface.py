@@ -1,7 +1,6 @@
+import contextlib
 import logging
 import socket
-
-from odoo import _
 
 from odoo.addons.iot_drivers.interface import Interface
 from odoo.addons.iot_drivers.main import iot_devices
@@ -59,13 +58,11 @@ class SocketInterface(Interface):
         # subsequent recv calls raising an OSError about a bad file descriptor.
         old_dev = socket_devices[addr].dev
         _logger.debug("Closing socket: %s", old_dev)
-        try:
-            # If the socket was already closed, a bad file descriptor OSError will be
-            # raised. This can happen if the IngenicoDriver thread initiated the
-            # disconnect itself.
+        # If the socket was already closed, a bad file descriptor OSError will be
+        # raised. This can happen if the IngenicoDriver thread initiated the
+        # disconnect itself.
+        with contextlib.suppress(OSError):
             old_dev.shutdown(socket.SHUT_RD)
-        except OSError:
-            pass
         old_dev.close()
 
         if driver_thread:

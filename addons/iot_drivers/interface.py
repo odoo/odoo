@@ -95,4 +95,4 @@ class Interface(Thread):
         try:
             super().start()
         except Exception:
-            _logger.exception("Interface %s could not be started", str(self))
+            _logger.exception("Interface %s could not be started", self)

@@ -1,7 +1,6 @@
 from unittest import skip
 
-from odoo.exceptions import UserError
-from odoo.tests import Form, tagged
+from odoo.tests import tagged
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import (
     ValuationReconciliationTestCommon,

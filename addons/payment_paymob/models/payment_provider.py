@@ -246,8 +246,7 @@ class PaymentProvider(models.Model):
         """
         self.check_singleton()
         api_prefix = const.API_MAPPING[self.paymob_account_country_id.code]
-        url = f"https://{api_prefix}.paymob.com"
-        return url
+        return f"https://{api_prefix}.paymob.com"
 
     def _prepare_request_headers(
         self, *args, is_refresh_token_request=False, is_client_request=False, **kwargs

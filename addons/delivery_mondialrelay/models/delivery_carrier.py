@@ -1,5 +1,4 @@
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 
 
 class DeliveryCarrier(models.Model):

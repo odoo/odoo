@@ -171,9 +171,11 @@ class PrinterDriver(PrinterDriverBase):
         for iface_id in ni.interfaces():
             iface_obj = ni.ifaddresses(iface_id)
             ifconfigs = iface_obj.get(ni.AF_INET, [])
-            for conf in ifconfigs:
-                if "addr" in conf and conf["addr"] not in ["127.0.0.1", "10.11.12.1"]:
-                    ips.append(conf["addr"])
+            ips.extend(
+                conf["addr"]
+                for conf in ifconfigs
+                if "addr" in conf and conf["addr"] not in ["127.0.0.1", "10.11.12.1"]
+            )
 
         return {
             "identifier": identifier,

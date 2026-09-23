@@ -48,13 +48,12 @@ class IotBox(models.Model):
     @api.model
     def _receiver_for_logs(self, **path_args):
         data = request.httprequest.get_data(cache=True)
-        if data.endswith(self.IOT_LOG_ELEMENT_SEPARATOR):
-            data = data[: -len(self.IOT_LOG_ELEMENT_SEPARATOR)]
+        data = data.removesuffix(self.IOT_LOG_ELEMENT_SEPARATOR)
         elements = data.split(self.IOT_LOG_ELEMENT_SEPARATOR)
         if len(elements) < 2 or not elements[0].startswith(
             self.IOT_LOG_IDENTIFIER_PREFIX
         ):
-            raise Acknowledged()
+            raise Acknowledged
         identifier = elements[0][len(self.IOT_LOG_IDENTIFIER_PREFIX) :]
         box = self.sudo().search(
             [("identifier", "=", identifier.decode(errors="replace"))], limit=1
@@ -67,7 +66,7 @@ class IotBox(models.Model):
                 user_agent=request.httprequest.headers.get("User-Agent"),
                 status_code=200,
             )
-            raise Acknowledged()
+            raise Acknowledged
         return box, {"log_elements": elements[1:], "purpose": "logs"}
 
     def _inbound_gate_owner(self):

@@ -1,4 +1,4 @@
-import xml.etree.ElementTree as ET
+from defusedxml.ElementTree import fromstring as defused_fromstring
 
 from odoo import fields, models
 
@@ -59,6 +59,5 @@ class PaymentProvider(models.Model):
         if self.code != "dpo":
             return super()._parse_response_content(response, **kwargs)
 
-        root = ET.fromstring(response.content.decode("utf-8"))
-        transaction_data = {element.tag: element.text for element in root}
-        return transaction_data
+        root = defused_fromstring(response.content.decode("utf-8"))
+        return {element.tag: element.text for element in root}

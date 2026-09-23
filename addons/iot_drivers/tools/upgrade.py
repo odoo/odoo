@@ -244,8 +244,7 @@ def update_packages():
     _logger.warning("Updating apt packages")
     if (
         subprocess.run(
-            f'sudo chroot /root_bypass_ramdisks /bin/bash -c "{commands}"',
-            shell=True,
+            ["sudo", "chroot", "/root_bypass_ramdisks", "/bin/bash", "-c", commands],
             check=False,
         ).returncode
         != 0

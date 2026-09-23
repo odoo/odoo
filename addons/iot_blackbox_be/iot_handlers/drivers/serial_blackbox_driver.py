@@ -162,8 +162,7 @@ class BlackBoxDriver(SerialDriver):
             byte = ord(character)
             lrc = (lrc + byte) & 0xFF
 
-        lrc = ((lrc ^ 0xFF) + 1) & 0xFF
-        return lrc
+        return ((lrc ^ 0xFF) + 1) & 0xFF
 
     def _box_id(self):
         return "BODO001" + helpers.get_identifier().upper()[-7:]

@@ -96,7 +96,7 @@ class StockMove(models.Model):
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
-        for move, vals in zip(self, vals_list):
+        for move, vals in zip(self, vals_list, strict=True):
             if "repair_id" in default or move.repair_id:
                 vals["sale_line_id"] = False
         return vals_list

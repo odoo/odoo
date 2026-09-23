@@ -35,7 +35,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     # VN
     "appota",
     "zalopay",
-    "vnptwallet"
+    "vnptwallet",
     # Brand payment methods.
     "visa",
     "mastercard",

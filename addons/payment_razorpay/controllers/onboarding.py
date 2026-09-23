@@ -43,7 +43,7 @@ class RazorpayController(Controller):
         # Verify the CSRF token.
         if not request.is_valid_csrf(csrf_token):
             _logger.warning("CSRF token verification failed.")
-            raise Forbidden()
+            raise Forbidden
 
         # Request and set the OAuth tokens on the provider.
         action = request.env.ref("payment.action_payment_provider")

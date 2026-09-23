@@ -9,6 +9,14 @@
     "depends": [
         "payment",
     ],
+    "external_dependencies": {
+        "python": [
+            "defusedxml",
+        ],
+        "apt": {
+            "defusedxml": "python3-defusedxml",
+        },
+    },
     "data": [
         "views/payment_dpo_templates.xml",
         "views/payment_provider_views.xml",

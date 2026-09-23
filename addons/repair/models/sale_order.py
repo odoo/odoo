@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 from odoo import _, api, fields, models
 from odoo.libs.debug_log import DebugLog
 
@@ -47,6 +45,7 @@ class SaleOrder(models.Model):
                 "view_mode": "list,form",
                 "domain": [("sale_order_id", "=", self.id)],
             }
+        return None
 
 
 class SaleOrderLine(models.Model):
@@ -113,7 +112,7 @@ class SaleOrderLine(models.Model):
                 and line.product_uom_id.compare(line.product_qty, 0) > 0
             ):
                 binded_ro_ids = line.order_id.sudo().repair_order_ids.filtered(
-                    lambda ro: (
+                    lambda ro, line=line: (
                         ro.sale_order_line_id.id == line.id and ro.state == "cancel"
                     )
                 )
@@ -147,7 +146,9 @@ class SaleOrderLine(models.Model):
         binded_ro_ids = self.env["repair.order"]
         for line in self:
             binded_ro_ids |= line.order_id.sudo().repair_order_ids.filtered(
-                lambda ro: ro.sale_order_line_id.id == line.id and ro.state != "done"
+                lambda ro, line=line: (
+                    ro.sale_order_line_id.id == line.id and ro.state != "done"
+                )
             )
         binded_ro_ids.action_repair_cancel()
 

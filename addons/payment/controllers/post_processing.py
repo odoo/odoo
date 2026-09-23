@@ -10,6 +10,10 @@ _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
 
 
+class PostProcessingRetryError(Exception):
+    pass
+
+
 class PaymentPostProcessing(http.Controller):
     """
     This controller is responsible for the monitoring and finalization of the post-processing of
@@ -62,13 +66,12 @@ class PaymentPostProcessing(http.Controller):
                 psycopg.IntegrityError,
             ):  # The database cursor could not be committed.
                 request.env.cr.rollback()  # Rollback and try later.
-                raise Exception("retry")
-            except Exception as e:
+                raise PostProcessingRetryError("retry") from None
+            except Exception:
                 request.env.cr.rollback()
                 _logger.exception(
-                    "Encountered an error while post-processing transaction with id %s:\n%s",
+                    "Encountered an error while post-processing transaction with id %s",
                     monitored_tx.id,
-                    e,
                 )
                 raise
 

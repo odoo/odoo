@@ -279,6 +279,7 @@ def get_mac_address():
             addr = netifaces.ifaddresses(interface).get(netifaces.AF_LINK)[0]["addr"]
             if addr != "00:00:00:00:00:00":
                 return addr
+    return None
 
 
 def get_path_nginx():
@@ -468,6 +469,7 @@ def read_file_first_line(filename):
     if path.exists():
         with path.open("r") as f:
             return f.readline().strip("\n")
+    return None
 
 
 def unlink_file(*filenames):
@@ -673,9 +675,9 @@ def _get_raspberry_pi_model():
     """
     if not IS_RPI:
         return -1
-    with Path("/proc/device-tree/model").open(encoding="utf-8") as model_file:
-        match = re.search(r"Pi (\d)", model_file.read())
-        return int(match[1]) if match else 0
+    model = Path("/proc/device-tree/model").read_text(encoding="utf-8")
+    match = re.search(r"Pi (\d)", model)
+    return int(match[1]) if match else 0
 
 
 raspberry_pi_model = _get_raspberry_pi_model()
