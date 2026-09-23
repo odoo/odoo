@@ -1,3 +1,4 @@
+import typing
 import unittest
 from types import SimpleNamespace
 from unittest import mock
@@ -27,13 +28,13 @@ class TestAStarCycleCachesOnlyWholeAnswers(unittest.TestCase):
         return names
 
     def test_a_module_walked_after_the_cycle_sees_every_name(self):
-        cache = {}
+        cache: dict[str, set[str]] = {}
         for spec in ("@x/a", "@x/b"):
             self.assertEqual(self._names(spec, cache), {"a", "b"})
         self.assertEqual(self._names("@x/c", cache), {"a", "b"})
 
     def test_a_cached_entry_is_never_a_partial_one(self):
-        cache = {}
+        cache: dict[str, set[str]] = {}
         for spec in ("@x/a", "@x/b", "@x/c"):
             self._names(spec, cache)
         for spec, names in cache.items():
@@ -57,7 +58,9 @@ class TestTheParentSelfBridgeResolvesAnIndexBesideItsFile(unittest.TestCase):
     )
 
     def test_a_star_through_an_index_reaches_its_siblings(self):
-        manager = esm_bridges.BridgeShimManager(None, "x.bundle", self.MODULES)
+        manager = esm_bridges.BridgeShimManager(
+            typing.cast("typing.Any", None), "x.bundle", self.MODULES
+        )
         with (
             mock.patch.object(
                 manager, "_persist_bridge_shims", side_effect=lambda shims: shims
@@ -146,7 +149,9 @@ class TestPageProvidedBridgesReadEachSourceOnce(unittest.TestCase):
             "/y/static/src/page.js",
             'import "@x/helper";\nimport { help } from "@x/face";\n',
         )
-        manager = esm_bridges.BridgeShimManager(None, "y.bundle", [consumer])
+        manager = esm_bridges.BridgeShimManager(
+            typing.cast("typing.Any", None), "y.bundle", [consumer]
+        )
         with (
             mock.patch.object(esm_graph, "file_path", file_path),
             mock.patch.object(esm_graph, "_static_file_exists", return_value=True),

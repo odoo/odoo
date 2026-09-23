@@ -1,5 +1,6 @@
 import io
 import tarfile
+import typing
 import unittest
 from unittest.mock import patch
 
@@ -39,7 +40,7 @@ class TestTarFileWriter(unittest.TestCase):
             )
 
     def test_archive_is_closed_when_a_row_fails(self):
-        opened = []
+        opened: list[typing.Any] = []
         real_open = tarfile.open
 
         def recording_open(*args, **kwargs):
@@ -66,7 +67,7 @@ class _FakeModules:
 class TestModuleReaderAttachmentTerms(unittest.TestCase):
     def _reader(self, modules):
         fake = _FakeModules()
-        reader = TranslationModuleReader.__new__(TranslationModuleReader)
+        reader: typing.Any = TranslationModuleReader.__new__(TranslationModuleReader)
         reader._cr = None
         reader._lang = "fr_FR"
         reader.env = {"ir.module.module": fake}

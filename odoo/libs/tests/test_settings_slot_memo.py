@@ -1,3 +1,5 @@
+import typing
+
 from odoo.libs.settings import SettingsSlot
 
 
@@ -44,7 +46,7 @@ def test_an_installed_snapshot_wins_over_the_memo():
 def test_a_source_provided_later_with_a_version_is_memoised():
     version = [0]
     source = _Source()
-    slot = SettingsSlot("t")
+    slot: SettingsSlot[typing.Any] = SettingsSlot("t")
     slot.provide(source, version=lambda: version[0])
     first = slot.current()
     assert slot.current() is first

@@ -325,5 +325,6 @@ def test_characters_xml_cannot_carry_are_dropped_from_text_and_attributes():
     from odoo.libs.xml.dict_to_xml import dict_to_xml
 
     element = dict_to_xml({"_tag": "n", "attr": "x\x01y￾", "_text": "a\ud800b\x0bc"})
+    assert element is not None
     assert element.get("attr") == "xy"
     assert element.text == "abc"

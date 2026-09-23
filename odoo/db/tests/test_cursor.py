@@ -239,7 +239,7 @@ class TestMetricsMixin(unittest.TestCase):
 
     def test_a_hook_removing_itself_does_not_skip_the_next(self):
         seen = []
-        hooks = []
+        hooks: list[typing.Callable[..., None]] = []
 
         def leaving(*_args):
             seen.append("leaving")

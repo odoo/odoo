@@ -1,4 +1,5 @@
 import csv
+import typing
 import unittest
 
 from odoo.tools.i18n import format_list
@@ -64,7 +65,7 @@ class TestFormatList(unittest.TestCase):
         # `end` and no `start`); such a style falls back instead of raising
         with file_open("base/data/res.lang.csv") as handle:
             codes = [row["code"] for row in csv.DictReader(handle)]
-        styles = (
+        styles: tuple[typing.Any, ...] = (
             "standard",
             "standard-short",
             "or",

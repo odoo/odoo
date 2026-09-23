@@ -288,6 +288,7 @@ class TestUnsettledAttempts(unittest.TestCase):
         breaker.record_failure()
         breaker._opened_at -= 61
         probe = breaker.acquire_attempt()
+        assert probe is not None
         self.assertTrue(probe.probe)
         self.assertIsNone(breaker.acquire_attempt())
         return breaker, probe

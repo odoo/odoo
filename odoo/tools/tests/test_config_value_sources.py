@@ -2,6 +2,7 @@ import contextlib
 import io
 import os
 import tempfile
+import typing
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -181,7 +182,7 @@ class TestSaveFailuresAreReported(_Case):
 
 class TestTypeTablesAreBuiltOnce(unittest.TestCase):
     def test_the_checker_and_formatter_are_the_same_object_on_every_read(self):
-        option_class = configmanager().parser.option_class
+        option_class: typing.Any = configmanager().parser.option_class
         self.assertIs(option_class.TYPE_CHECKER, option_class.TYPE_CHECKER)
         self.assertIs(option_class.TYPE_FORMATTER, option_class.TYPE_FORMATTER)
 

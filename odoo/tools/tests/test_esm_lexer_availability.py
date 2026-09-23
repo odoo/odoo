@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 import threading
 import time
+import typing
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
@@ -137,7 +138,9 @@ class TestACallerQueuedDuringAPauseWaitsItOut(unittest.TestCase):
             self.addCleanup(patcher.stop)
 
     def test_the_pause_is_read_again_once_the_lock_is_held(self):
-        self.worker._lock = _PausedByAnotherCaller(self.worker)
+        self.worker._lock = typing.cast(
+            "typing.Any", _PausedByAnotherCaller(self.worker)
+        )
         self.assertIsNone(self.worker.request("export const a = 1;"))
         self.assertEqual(self.spawns, 0)
 

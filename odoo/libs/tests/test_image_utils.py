@@ -205,17 +205,28 @@ def _with_orientation(orientation: int, size: tuple[int, int] = (8, 6)) -> bytes
     return _encode("JPEG", size, exif=exif.tobytes())
 
 
+def _decoded(data: bytes | bool | None) -> Image.Image:
+    assert isinstance(data, bytes)
+    return binary_to_image(data)
+
+
+def _upright_size(source: bytes) -> tuple[int, int]:
+    image = ImageProcess(source).image
+    assert image is not False
+    return image.size
+
+
 class TestResizeToOneSide(unittest.TestCase):
     def test_a_thin_image_asked_for_a_height_keeps_one_column(self):
         thin = _encode("PNG", (4, 1000))
-        resized = binary_to_image(image_process(thin, size=(0, 128)))
+        resized = _decoded(image_process(thin, size=(0, 128)))
         self.assertEqual(resized.size, (1, 128))
 
     def test_a_flat_image_asked_for_a_width_keeps_one_row(self):
         flat = _encode("PNG", (1000, 4))
         for crop in (None, "center"):
             with self.subTest(crop=crop):
-                resized = binary_to_image(image_process(flat, size=(128, 0), crop=crop))
+                resized = _decoded(image_process(flat, size=(128, 0), crop=crop))
                 self.assertEqual(resized.size, (128, 1))
 
 
@@ -247,8 +258,8 @@ class TestOrientation(unittest.TestCase):
         fix_orientation.assert_not_called()
 
     def test_a_rotated_image_is_still_turned_upright(self):
-        self.assertEqual(ImageProcess(_with_orientation(6)).image.size, (6, 8))
-        self.assertEqual(ImageProcess(_with_orientation(3)).image.size, (8, 6))
+        self.assertEqual(_upright_size(_with_orientation(6)), (6, 8))
+        self.assertEqual(_upright_size(_with_orientation(3)), (8, 6))
 
 
 class TestDecodeOnDemand(unittest.TestCase):
@@ -301,12 +312,12 @@ class TestDecodeOnDemand(unittest.TestCase):
             side_effect=ImageProcess._decode_upright,
         ) as decode:
             out = image_process(_encode("JPEG", (64, 48)), size=(32, 32))
-        self.assertEqual(binary_to_image(out).size, (32, 24))
+        self.assertEqual(_decoded(out).size, (32, 24))
         self.assertEqual(decode.call_count, 1)
 
     def test_an_exif_block_that_does_not_parse_is_upright_not_a_syntax_error(self):
         broken = _encode("PNG", (8, 6), exif=b"Exif\x00\x00garbage")
-        self.assertEqual(ImageProcess(broken).image.size, (8, 6))
+        self.assertEqual(_upright_size(broken), (8, 6))
         self.assertTrue(image_process(broken, size=(4, 4)))
 
 

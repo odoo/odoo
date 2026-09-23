@@ -1,3 +1,4 @@
+import typing
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
@@ -64,6 +65,10 @@ def _importer(env, module="probe"):
     return importer
 
 
+def _evaluated(env: typing.Any, node: etree._Element) -> typing.Any:
+    return _eval_xml(_importer(env), node, env)
+
+
 class TestOneSearchForFieldsAndValues(unittest.TestCase):
     def test_a_many2many_field_sets_every_match(self):
         env = _Env(
@@ -94,20 +99,20 @@ class TestOneSearchForFieldsAndValues(unittest.TestCase):
             '<value name="implied_ids" model="res.groups" search="[]"/>'
         )
         with self.assertLogs("odoo.tools.convert", "WARNING") as logs:
-            self.assertEqual(_eval_xml(_importer(env), node, env), 4)
+            self.assertEqual(_evaluated(env, node), 4)
         self.assertIn("matches 2 records", logs.output[0])
 
     def test_a_value_matching_nothing_is_false(self):
         env = _Env()
         node = etree.fromstring('<value model="res.groups" search="[]"/>')
-        self.assertIs(_eval_xml(_importer(env), node, env), False)
+        self.assertIs(_evaluated(env, node), False)
 
     def test_a_value_with_use_stands_for_that_column_of_its_match(self):
         env = _Env(found={"link.tracker.code": [3]}, rows={3: {"code": "a1b2"}})
         node = etree.fromstring(
             '<value model="link.tracker.code" search="[]" use="code"/>'
         )
-        self.assertEqual(_eval_xml(_importer(env), node, env), "a1b2")
+        self.assertEqual(_evaluated(env, node), "a1b2")
 
     def test_a_field_with_use_reads_that_column_of_every_match(self):
         env = _Env(
@@ -169,7 +174,9 @@ class TestConvertFileRefusal(unittest.TestCase):
             mock.patch.object(convert, "file_open", mock.mock_open(read_data=b"")),
             self.assertRaises(ValueError) as caught,
         ):
-            convert.convert_file(None, "probe", "data/probe.yaml", None)
+            convert.convert_file(
+                typing.cast("typing.Any", None), "probe", "data/probe.yaml", None
+            )
         self.assertEqual(
             caught.exception.args, ("Can't load unknown file type data/probe.yaml.",)
         )

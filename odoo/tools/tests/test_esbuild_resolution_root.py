@@ -34,6 +34,7 @@ class TestTheResolutionRootIsNotAPlantableTempDir(unittest.TestCase):
             self.odoo_root,
             str(self.private),
         )
+        assert node_path is not None
         return Path(node_path)
 
     def _resolves_to(self, node_path: Path) -> Path:
@@ -106,7 +107,7 @@ class TestARootInUseIsNeverReplaced(unittest.TestCase):
     def test_a_root_published_while_this_caller_staged_is_kept(self):
         published = self.base / "digest"
         write = esbuild._write_resolution_root
-        handed_out = []
+        handed_out: list[int] = []
 
         def peer_publishes_first(root_dir, roots):
             if root_dir != published and not handed_out:
@@ -122,7 +123,7 @@ class TestARootInUseIsNeverReplaced(unittest.TestCase):
         for stagger in (0.01, 0.0) * 3:
             base = Path(tempfile.mkdtemp(dir=self.base))
             barrier = threading.Barrier(callers)
-            outcomes = []
+            outcomes: list[str | tuple[int, bool]] = []
 
             def compile_with(delay, base=base, barrier=barrier, outcomes=outcomes):
                 barrier.wait()

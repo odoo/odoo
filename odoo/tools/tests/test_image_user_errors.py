@@ -20,6 +20,8 @@ def _bomb() -> bytes:
 
 
 class TestImageWrappersSpeakUserError(unittest.TestCase):
+    bomb: bytes
+
     @classmethod
     def setUpClass(cls):
         cls.bomb = _bomb()

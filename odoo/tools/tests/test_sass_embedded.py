@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 import threading
 import time
+import typing
 import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -204,6 +205,7 @@ class TestRelativeImportsResolveBesideTheImporter(unittest.TestCase):
             importer = OdooSassImporter(tmp)
             url = importer.canonicalize(Path(tmp).as_uri() + "/part", False)
             self.assertEqual(url, partial.resolve().as_uri())
+            assert url is not None
             self.assertEqual(importer.load(url), ("$x: 1;\n", "scss"))
 
 
@@ -256,7 +258,7 @@ class TestTheSingletonLifecycle(unittest.TestCase):
         if get_sass_path() is None:
             raise SassNotFoundError("sass is a required dependency of this fork")
         sass_embedded.get_sass_compiler().compile_string(".warm { a: b }")
-        result = {}
+        result: dict[str, typing.Any] = {}
 
         def compile_slowly():
             try:

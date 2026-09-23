@@ -138,7 +138,8 @@ class TestPgVarcharRejectsNonsense(unittest.TestCase):
 
 
 class TestSqlToFlushComposes(unittest.TestCase):
-    a, b = object(), object()
+    a: Any = object()
+    b: Any = object()
 
     def inner(self) -> Any:
         return SQL('"t"."x"', to_flush=self.a)
@@ -168,7 +169,9 @@ class TestSqlToFlushComposes(unittest.TestCase):
 
 
 class TestSqlJoinReportsEveryItemsFields(unittest.TestCase):
-    a, b, s = object(), object(), object()
+    a: Any = object()
+    b: Any = object()
+    s: Any = object()
 
     def test_a_field_inside_a_tuple_item_survives_either_branch(self):
         items = [(SQL("x", to_flush=self.a),), SQL("y", to_flush=self.b)]

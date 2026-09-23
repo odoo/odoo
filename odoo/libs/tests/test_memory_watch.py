@@ -49,6 +49,7 @@ class TestMemoryWatch(unittest.TestCase):
             watch.stop()
             watch.start()
         try:
+            assert watch._thread is not None
             self.assertTrue(watch._thread.is_alive())
         finally:
             watch.stop()

@@ -141,10 +141,13 @@ def test_a_reader_is_reopened_when_its_file_is_replaced(tmp_path, monkeypatch):
     path = tmp_path / "city.mmdb"
     path.write_bytes(b"v1")
     opened = []
+
+    def open_reader(kind, p):
+        opened.append(p)
+        return len(opened)
+
     app = Application()
-    monkeypatch.setattr(
-        app, "_open_geoip_reader", lambda kind, p: opened.append(p) or len(opened)
-    )
+    monkeypatch.setattr(app, "_open_geoip_reader", open_reader)
     monkeypatch.setattr(_GeoIPReaderSlot, "RECHECK_SECONDS", 0.0)
     with settings.override(geoip_city_db=str(path)):
         assert app.geoip_city_db == 1

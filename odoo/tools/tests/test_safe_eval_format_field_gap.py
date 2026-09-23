@@ -1,3 +1,4 @@
+import typing
 import unittest
 
 from odoo.tools.safe_eval import safe_eval
@@ -53,14 +54,15 @@ class TestFormatReflectionEscapeClosed(unittest.TestCase):
     def test_the_guard_cannot_be_rebound_by_the_expression(self):
         guard = "_odoo_guarded_format_receiver"
         template = '("{0." + d + "}")'
-        for mode, expr in (
+        cases: tuple[tuple[typing.Literal["eval", "exec"], str], ...] = (
             ("eval", f"(lambda {guard}: {template}.format(f))(str)"),
             ("eval", f"[{template}.format(f) for {guard} in [str]][0]"),
             ("eval", f"[({guard} := str), {template}.format(f)][1]"),
             ("exec", f"{guard} = str\nr = {template}.format(f)"),
             ("exec", f"def g():\n    global {guard}\n    {guard} = str\ng()"),
             ("exec", f"del {guard}"),
-        ):
+        )
+        for mode, expr in cases:
             with self.subTest(expr=expr), self.assertRaises(NameError):
                 safe_eval(expr, {"f": _victim, "d": "__globals__"}, mode=mode)
 

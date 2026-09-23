@@ -50,8 +50,8 @@ class TestLRURepr(unittest.TestCase):
 
 class TestLRUEviction(unittest.TestCase):
     def test_capacity_eviction_reports_the_evicted_pair(self):
-        evicted = []
-        lru = LRU(2, on_evict=lambda k, v: evicted.append((k, v)))
+        evicted: list[tuple[str, int]] = []
+        lru: LRU[str, int] = LRU(2, on_evict=lambda k, v: evicted.append((k, v)))
         lru["a"], lru["b"], lru["c"] = 1, 2, 3
         self.assertEqual(evicted, [("a", 1)])
 

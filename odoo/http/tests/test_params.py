@@ -20,7 +20,11 @@ def test_the_three_optional_spellings_build_one_spec():
     union = typing.Union  # noqa: TID251  legacy spelling under test
 
     def ep(
-        self, a: int | None, b: optional[int], c: union[int, None], d: int | str
+        self,
+        a: int | None,
+        b: optional[int],  # type: ignore[valid-type]
+        c: union[int, None],  # type: ignore[valid-type]
+        d: int | str,
     ): ...
 
     specs = _spec(ep)
@@ -31,7 +35,13 @@ def test_the_three_optional_spellings_build_one_spec():
 def test_list_forms():
     legacy_list = list
 
-    def ep(self, a: list, b: list[int], c: legacy_list[int], d: list[dict]): ...
+    def ep(
+        self,
+        a: list,
+        b: list[int],
+        c: legacy_list[int],  # type: ignore[valid-type]
+        d: list[dict],
+    ): ...
 
     specs = _spec(ep)
     assert (specs["a"].target, specs["a"].item) == (list, None)

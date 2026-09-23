@@ -3,6 +3,8 @@ import sys
 import threading
 import time
 import tracemalloc
+import types
+import typing
 import unittest
 import weakref
 from unittest import mock
@@ -107,7 +109,7 @@ class TestSamplerStop(unittest.TestCase):
         runner.join(2)
 
     def test_the_sampler_does_not_keep_the_process_alive(self):
-        collector = P.PeriodicCollector()
+        collector: typing.Any = P.PeriodicCollector()
         self.assertTrue(collector._BasePeriodicCollector__thread.daemon)
 
 
@@ -134,7 +136,7 @@ class TestHookListsSurviveAnEndingProfiler(unittest.TestCase):
                 self.addCleanup(setattr, thread, name, getattr(thread, name))
                 delattr(thread, name)
             else:
-                self.addCleanup(lambda n=name: vars(thread).pop(n, None))
+                self.addCleanup(vars(thread).pop, name, None)
 
     def test_a_profiler_hitting_its_limit_does_not_blind_a_nested_one(self):
         host = _MetricsHost()
@@ -214,7 +216,7 @@ class TestCurrentFrame(unittest.TestCase):
         self.addCleanup(thread.join, 5)
         self.addCleanup(release.set)
         started.wait(5)
-        frame = P.get_current_frame(thread)
+        frame: types.FrameType | None = P.get_current_frame(thread)
         names = []
         while frame is not None:
             names.append(frame.f_code.co_name)
