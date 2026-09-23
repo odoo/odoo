@@ -203,7 +203,7 @@
                                                     </t>
                                                 </td>
                                                 <td class=" text-center h6" t-if="barcode_col_exists">
-                                                    <span t-if="line.lot_id or line.lot_name" t-out="line.lot_id.name or line.lot_name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}">
+                                                    <span t-if="(line.lot_id or line.lot_name) and line.picking_id.picking_type_id.show_reserved_sns" t-out="line.lot_id.name or line.lot_name or line.lot_id" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}">
                                                         <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2 opacity-75 text-muted text-center">
                                                             (serial barcode)
                                                         </div>
