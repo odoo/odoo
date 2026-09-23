@@ -84,6 +84,16 @@ test("basic rendering", async () => {
     await contains(".o-discuss-CallActionList button", { count: 8 });
     await contains("button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
     await contains("button[aria-label='Voice Settings']");
+    // Self's talking bars stand in for the chevrons of the voice settings and the call menu.
+    await contains(
+        "button[aria-label='Voice Settings'] .o-discuss-TalkingAudioBars:not(.o-isTalking)"
+    );
+    await contains(
+        ".o-discuss-CallMenu-actionsAudioBars .o-discuss-TalkingAudioBars:not(.o-isTalking)"
+    );
+    Object.assign(getService("discuss.rtc").selfSession, { is_muted: false, isTalking: true });
+    await contains("button[aria-label='Voice Settings'] .o-discuss-TalkingAudioBars.o-isTalking");
+    await contains(".o-discuss-CallMenu-actionsAudioBars .o-discuss-TalkingAudioBars.o-isTalking");
     await contains(".o-discuss-CallActionList button[aria-label='Turn camera on']");
     await contains("button[aria-label='Video Settings']");
     await contains(".o-discuss-CallActionList button[aria-label='Share Screen']");
@@ -2325,6 +2335,33 @@ test("Adjust view: sidebar layout always shows the sidebar, even alone", async (
     await contains(".o-mail-Meeting");
     // Sidebar mode always shows the sidebar column, even with a single participant.
     await contains(".o-discuss-Call-sidebar");
+});
+
+test("Auto layout spotlights whoever joins a call, when self was alone in the call", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    const store = getService("mail.store");
+    store.settings.callLayout = "auto";
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
+    await contains(".o-mail-Meeting");
+    // Alone, self is the spotlight.
+    await contains(
+        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Mitchell Admin']"
+    );
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Bob" }),
+        }),
+        channel_id: channelId,
+    });
+    // Whoever joins takes the spotlight over. Without any video, self gets no inset.
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Bob']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']", { count: 0 });
 });
 
 test("confirm before switching calls", async () => {
