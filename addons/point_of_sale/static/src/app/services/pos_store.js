@@ -1024,7 +1024,7 @@ export class PosStore extends WithLazyGetterTrap {
                 related_lines
             );
             related_lines
-                .filter((line) => line.price_type !== "manual")
+                .filter((line) => line.price_type === "original")
                 .forEach((line) => line.setUnitPrice(price));
         }
 
