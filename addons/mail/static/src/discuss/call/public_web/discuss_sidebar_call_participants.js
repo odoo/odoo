@@ -7,7 +7,7 @@ import {
 } from "@mail/discuss/call/common/call_actions";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { useHover } from "@mail/utils/common/hooks";
-import { Component, onWillRender, useEffect, useState } from "@odoo/owl";
+import { Component, useEffect, useState } from "@odoo/owl";
 import { Dropdown, useDropdownState } from "@web/components/dropdown";
 import { _t } from "@web/core/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -37,9 +37,6 @@ export class DiscussSidebarCallParticipants extends Component {
         this.floating = useDropdownState();
         this.CALL_ICON_DEAFEN = CALL_ICON_DEAFEN;
         this.CALL_ICON_MUTED = CALL_ICON_MUTED;
-        /** @type {import("models").RtcSession[]} */
-        this.sessions = [];
-        onWillRender(() => this.computeSessions());
         useEffect(
             /**
              * @param {import("models").RtcSession|undefined} selfSession
@@ -71,9 +68,9 @@ export class DiscussSidebarCallParticipants extends Component {
         };
     }
 
-    computeSessions() {
-        const sessions = [...this.props.thread.rtc_session_ids];
-        this.sessions = sessions.sort((s1, s2) => {
+    /** @returns {import("models").RtcSession[]} */
+    get sessions() {
+        return [...this.props.thread.rtc_session_ids].sort((s1, s2) => {
             const persona1 = s1.channel_member_id?.persona;
             const persona2 = s2.channel_member_id?.persona;
             return (

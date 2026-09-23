@@ -4,7 +4,7 @@ import { ACTION_TAGS } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_patch";
-import { Component, onWillRender, toRaw, useRef } from "@odoo/owl";
+import { Component, toRaw, useRef } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -26,38 +26,39 @@ export class CallActionList extends Component {
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
         });
-        onWillRender(() => {
-            const partition = toRaw(this.callActions).partition;
-            const other = partition.other.filter(
+    }
+
+    get actions() {
+        const partition = toRaw(this.callActions).partition;
+        const other = partition.other.filter(
+            (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT),
+        );
+        const group2 = [];
+        for (const groupActions of partition.group) {
+            const filtered = groupActions.filter(
                 (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT),
             );
-            const group2 = [];
-            for (const groupActions of partition.group) {
-                const filtered = groupActions.filter(
-                    (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT),
-                );
-                const sequenceGroup = filtered[0].sequenceGroup;
-                const maxQuickActions = sequenceGroup === 200 ? 1 : 4;
-                const quickActions = filtered.slice(0, maxQuickActions);
-                const moreActions = filtered.slice(maxQuickActions);
-                const newGroup = moreActions?.length
-                    ? [
-                          ...quickActions,
-                          this.callActions.more(
-                              {
-                                  actions: moreActions,
-                                  dropdownMenuClass: "m-0 mb-1",
-                                  dropdownPosition: "top-end",
-                                  name: this.MORE,
-                              },
-                              sequenceGroup,
-                          ),
-                      ]
-                    : quickActions;
-                group2.push(newGroup);
-            }
-            this.actions = [...group2, other];
-        });
+            const sequenceGroup = filtered[0].sequenceGroup;
+            const maxQuickActions = sequenceGroup === 200 ? 1 : 4;
+            const quickActions = filtered.slice(0, maxQuickActions);
+            const moreActions = filtered.slice(maxQuickActions);
+            const newGroup = moreActions?.length
+                ? [
+                      ...quickActions,
+                      this.callActions.more(
+                          {
+                              actions: moreActions,
+                              dropdownMenuClass: "m-0 mb-1",
+                              dropdownPosition: "top-end",
+                              name: this.MORE,
+                          },
+                          sequenceGroup,
+                      ),
+                  ]
+                : quickActions;
+            group2.push(newGroup);
+        }
+        return [...group2, other];
     }
 
     get isPromotingFullscreen() {

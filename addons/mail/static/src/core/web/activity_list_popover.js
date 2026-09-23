@@ -2,7 +2,7 @@
 /** @odoo-module native */
 import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
 import { compareDatetime } from "@mail/utils/common/misc";
-import { Component, onWillRender, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps } from "@odoo/owl";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { useService } from "@web/core/utils/hooks";
 
@@ -40,31 +40,23 @@ export class ActivityListPopover extends Component {
             /** @param {{activityIds: number[]}} props */ (props) =>
                 this.updateFromProps(props).catch(() => {}),
         );
-        onWillRender(() => this.computeActivityBuckets());
     }
 
     computeActivityBuckets() {
         /** @type {import("models").Activity[]} */
-        this.activities = this.props.activityIds
+        const activities = this.props.activityIds
             .map((id) => this.store["mail.activity"].get(id))
             .filter(Boolean)
             .sort(
                 (a, b) =>
                     compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
             );
-        this.doneActivities = [];
-        this.overdueActivities = [];
-        this.plannedActivities = [];
-        this.todayActivities = [];
-        const buckets = {
-            done: this.doneActivities,
-            overdue: this.overdueActivities,
-            planned: this.plannedActivities,
-            today: this.todayActivities,
-        };
-        for (const activity of this.activities) {
+        /** @type {Record<string, import("models").Activity[]>} */
+        const buckets = { done: [], overdue: [], planned: [], today: [] };
+        for (const activity of activities) {
             buckets[activity.state]?.push(activity);
         }
+        return { activities, ...buckets };
     }
 
     onClickAddActivityButton() {

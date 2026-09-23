@@ -12,7 +12,6 @@ import {
     Component,
     onMounted,
     onPatched,
-    onWillRender,
     onWillUnmount,
     useRef,
     useState,
@@ -73,11 +72,6 @@ export class Call extends Component {
             columnCount: 0,
             overlay: false,
         });
-        /** @type {CardData|undefined} */
-        this.insetCard = undefined;
-        /** @type {CardData[]} */
-        this.visibleMainCards = [];
-        onWillRender(() => this.computeCards());
         this.store = useService("mail.store");
         this.callActions = useCallActions({ thread: () => this.channel });
         onMounted(() => {
@@ -132,20 +126,26 @@ export class Call extends Component {
         return this.props.thread || this.rtc.channel;
     }
 
-    computeCards() {
+    /** @returns {{ inset: CardData | undefined, main: CardData[] }} */
+    get cards() {
         const activeSession = this.channel.activeRtcSession;
         if (!activeSession) {
-            this.insetCard = undefined;
-            this.visibleMainCards = this.channel.visibleCards;
-            return;
+            return { inset: undefined, main: this.channel.visibleCards };
         }
         const type = activeSession.mainVideoStreamType;
-        if (type === "screen" || activeSession.is_screen_sharing_on) {
-            this.setInset(activeSession, type === "camera" ? "screen" : "camera");
-        } else {
-            this.insetCard = undefined;
-        }
-        this.visibleMainCards = [this.makeCard(activeSession, type)];
+        const inset =
+            type === "screen" || activeSession.is_screen_sharing_on
+                ? this.makeCard(activeSession, type === "camera" ? "screen" : "camera")
+                : undefined;
+        return { inset, main: [this.makeCard(activeSession, type)] };
+    }
+
+    get insetCard() {
+        return this.cards.inset;
+    }
+
+    get visibleMainCards() {
+        return this.cards.main;
     }
 
     /**
@@ -160,14 +160,6 @@ export class Call extends Component {
             type: videoType,
             videoStream: session.getStream(videoType),
         };
-    }
-
-    /**
-     * @param {import("models").RtcSession} session
-     * @param {"camera" | "screen"} [videoType]
-     */
-    setInset(session, videoType) {
-        this.insetCard = this.makeCard(session, videoType);
     }
 
     get hasCallNotifications() {

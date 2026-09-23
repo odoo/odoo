@@ -11,7 +11,6 @@ import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
 import {
     Component,
-    onWillRender,
     toRaw,
     useChildSubEnv,
     useRef,
@@ -64,7 +63,6 @@ export class ChatWindow extends Component {
         this.ui = useService("ui");
         this.contentRef = useRef("content");
         this.threadActions = useThreadActions({ thread: () => this.thread });
-        onWillRender(() => (this.partitionedActions = this.threadActions.partition));
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");
         this.isMobileOS = isMobileOS();
@@ -73,6 +71,10 @@ export class ChatWindow extends Component {
             closeActionPanel: () => this.threadActions.activeAction?.close(),
             messageHighlight: this.messageHighlight,
         });
+    }
+
+    get partitionedActions() {
+        return this.threadActions.partition;
     }
 
     get autofocusComposer() {

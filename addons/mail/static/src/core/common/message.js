@@ -15,7 +15,6 @@ import { useLongPress, useRegisterMessageRef } from "@mail/utils/common/hooks";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import {
     Component,
-    onWillRender,
     status,
     toRaw,
     useChildSubEnv,
@@ -140,7 +139,6 @@ export class Message extends Component {
             message: () => this.message,
             thread: () => this.props.thread,
         });
-        onWillRender(() => this.computeActions());
         this.shadowBody = useRef("shadowBody");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
@@ -267,17 +265,23 @@ export class Message extends Component {
         shadowRoot.appendChild(ellipsisStyle);
     }
 
+    /** @returns {{ moreAction: any, quickActions: any[], actions: any[] }} */
     computeActions() {
         const allActions = this.messageActions.actions;
-        const previousActions = this.lastComputedActions;
+        const key = [
+            ...allActions,
+            this.quickActionCount,
+            this.isAlignedRight,
+            this.message.threadAsNewest,
+        ];
+        const previous = this._computedActions;
         if (
-            previousActions &&
-            previousActions.length === allActions.length &&
-            previousActions.every((action, index) => action === allActions[index])
+            previous &&
+            previous.key.length === key.length &&
+            previous.key.every((part, index) => part === key[index])
         ) {
-            return;
+            return previous;
         }
-        this.lastComputedActions = allActions;
         const quickActions = allActions.slice(
             0,
             allActions.length > this.quickActionCount
@@ -306,9 +310,20 @@ export class Message extends Component {
         if (this.isAlignedRight) {
             actions.reverse();
         }
-        this.moreAction = moreAction;
-        this.quickActions = quickActions;
-        this.actions = actions;
+        this._computedActions = { key, moreAction, quickActions, actions };
+        return this._computedActions;
+    }
+
+    get moreAction() {
+        return this.computeActions().moreAction;
+    }
+
+    get quickActions() {
+        return this.computeActions().quickActions;
+    }
+
+    get actions() {
+        return this.computeActions().actions;
     }
 
     get attClass() {

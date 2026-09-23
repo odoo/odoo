@@ -2,7 +2,6 @@
 /** @odoo-module native */
 import { WebChatter } from "@mail/chatter/web/web_chatter";
 import { AttachmentView } from "@mail/core/common/attachment_view";
-import { onWillRender, useState } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -16,35 +15,30 @@ patch(FormRenderer.prototype, {
             Chatter: WebChatter,
         };
         this.highlightMessageId = router.current.highlight_message_id;
-        this.messagingState = useState({
-            /** @type {import("models").Thread} */
-            thread: undefined,
-        });
         if (this.env.services["mail.store"]) {
             this.mailStore = useService("mail.store");
         }
         this.uiService = useService("ui");
         this.mailPopoutService = useService("mail.popout");
-        onWillRender(() => this.syncMessagingThread());
+        /** @type {{ thread?: import("models").Thread }} */
+        this.messagingThreadMemo = {};
     },
-    syncMessagingThread() {
+    /** @returns {import("models").Thread | undefined} */
+    get messagingThread() {
         const { resId, resModel } = this.props.record;
         if (!this.mailStore || !resId) {
-            this.messagingState.thread = undefined;
-            return;
+            return undefined;
         }
-        const thread = this.messagingState.thread;
-        if (thread?.id === resId && thread.model === resModel) {
-            return;
+        const memo = this.messagingThreadMemo;
+        if (memo.thread?.id !== resId || memo.thread.model !== resModel) {
+            memo.thread = this.mailStore.Thread.insert({ id: resId, model: resModel });
         }
-        this.messagingState.thread = this.mailStore.Thread.insert({
-            id: resId,
-            model: resModel,
-        });
+        return memo.thread;
     },
+
     /** @returns {boolean} */
     hasFile() {
-        return (this.messagingState.thread?.attachmentsInWebClientView.length ?? 0) > 0;
+        return (this.messagingThread?.attachmentsInWebClientView.length ?? 0) > 0;
     },
     /**
      * @param {boolean} hasAttachmentContainer

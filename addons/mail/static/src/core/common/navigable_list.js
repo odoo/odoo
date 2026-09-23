@@ -3,14 +3,7 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { navigateIndex } from "@mail/utils/common/misc";
-import {
-    Component,
-    onWillRender,
-    useEffect,
-    useExternalListener,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/browser/hotkeys";
 import { makeLogger } from "@web/core/debug/debug_logger";
@@ -53,7 +46,6 @@ export class NavigableList extends Component {
         this.sortedOptions = [];
         /** @type {Map<Object, string>} */
         this.optionKeys = new Map();
-        onWillRender(() => this.computeSortedOptions());
 
         useExternalListener(window, "keydown", this.onKeydown, true);
         onExternalClick(
@@ -110,7 +102,13 @@ export class NavigableList extends Component {
         );
     }
 
-    computeSortedOptions() {
+    /**
+     * The options in display order and their keys, as the render shows them;
+     * the event handlers read the last rendered order.
+     *
+     * @returns {Object[]}
+     */
+    sortOptions() {
         this.sortedOptions = [...this.props.options].sort(
             /**
              * @param {Object} o1
@@ -128,6 +126,7 @@ export class NavigableList extends Component {
             usedKeys.add(key);
             this.optionKeys.set(option, key);
         }
+        return this.sortedOptions;
     }
 
     /**
