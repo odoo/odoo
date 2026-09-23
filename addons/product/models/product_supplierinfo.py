@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -187,7 +187,7 @@ class ProductSupplierinfo(models.Model):
     def get_import_templates(self):
         return [
             {
-                "label": _("Import Template for Vendor Pricelists"),
+                "label": self.env._("Import Template for Vendor Pricelists"),
                 "template": "/product/static/xls/product_supplierinfo.xls",
             }
         ]

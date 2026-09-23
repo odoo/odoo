@@ -8,7 +8,6 @@ from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_repr
 from odoo.tools.misc import OrderedSet
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -371,14 +370,14 @@ class PurchaseOrder(models.Model):
     def _add_picking_info(self, activity):
         validated_picking = self.picking_ids.filtered(lambda p: p.state == "done")
         if validated_picking:
-            message = _(
+            message = self.env._(
                 "Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.",
                 validated_picking[0].name,
             )
         elif not self.picking_ids:
-            message = _("Corresponding receipt not found.")
+            message = self.env._("Corresponding receipt not found.")
         else:
-            message = _(
+            message = self.env._(
                 "Those dates have been updated accordingly on the receipt %s.",
                 self.picking_ids[0].name,
             )
@@ -580,14 +579,14 @@ class PurchaseOrder(models.Model):
             if po.user_id == self.env.user:
                 my_otd_purchase_count += 1
 
-        result["global"]["otd"] = _(
+        result["global"]["otd"] = self.env._(
             "%(otd)s %%",
             otd=float_repr(
                 otd_purchase_count / len(purchases) * 100 if purchases else 100,
                 precision_digits=0,
             ),
         )
-        result["my"]["otd"] = _(
+        result["my"]["otd"] = self.env._(
             "%(otd)s %%",
             otd=float_repr(
                 (
@@ -630,7 +629,7 @@ class PurchaseOrder(models.Model):
     def _prepare_picking_vals(self):
         if not self.partner_id.property_stock_supplier.id:
             raise UserError(
-                _(
+                self.env._(
                     "You must set a Vendor Location for this partner %s",
                     self.partner_id.name,
                 ),
@@ -668,7 +667,7 @@ class PurchaseOrder(models.Model):
     def action_receipt_matching(self):
         self.check_singleton()
         return {
-            "name": _("Receipt Matching"),
+            "name": self.env._("Receipt Matching"),
             "type": "ir.actions.act_window",
             "res_model": "purchase.receipt.line.match",
             "views": [

@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.libs.numbers import float_round
 from odoo.tools.misc import groupby
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 
@@ -291,13 +290,15 @@ class StockMoveMerge(models.Model):
         self.check_singleton()
         if self.state in ("done", "cancel"):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot split a stock move that has been set to 'Done' or 'Cancel'.",
                 ),
             )
         if self.state == "draft":
             raise UserError(
-                _("You cannot split a draft move. It needs to be confirmed first."),
+                self.env._(
+                    "You cannot split a draft move. It needs to be confirmed first."
+                ),
             )
 
         if self.product_uom_id._is_zero_stored(qty, self.product_id.uom_id):

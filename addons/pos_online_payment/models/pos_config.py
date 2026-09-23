@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 
 
@@ -15,7 +15,7 @@ class PosConfig(models.Model):
                     opm_amount += 1
                     if opm_amount > 1:
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "A POS config cannot have more than one online payment method."
                             )
                         )
@@ -23,7 +23,7 @@ class PosConfig(models.Model):
                         config.id, error_if_invalid=True
                     ):
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "To use an online payment method in a POS config, it must have at least one published payment provider supporting the currency of that POS config."
                             )
                         )

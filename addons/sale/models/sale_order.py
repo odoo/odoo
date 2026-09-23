@@ -15,7 +15,6 @@ from odoo.tools import (
 )
 from odoo.tools.mail import html_keep_url
 from odoo.tools.misc import str2bool
-from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.sale import const
@@ -319,7 +318,7 @@ class SaleOrder(models.Model):
                     percent=order.prepayment_percent,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Prepayment percentage must be greater than 0% and at most 100%."
                     ),
                 )
@@ -462,7 +461,7 @@ class SaleOrder(models.Model):
                 and company.account_config_id.invoice_terms_html
             ):
                 baseurl = html_keep_url(order_company._get_note_url() + "/terms")
-                order.notes = _("Terms & Conditions: %s", baseurl)
+                order.notes = self.env._("Terms & Conditions: %s", baseurl)
                 _debug.logic("notes_computed", order=order, source="terms_url")
             elif not is_html_empty(company.account_config_id.invoice_terms):
                 order_ctx = order_company
@@ -673,7 +672,7 @@ class SaleOrder(models.Model):
         for order in self:
             if not order.company_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The company is required, please select one before making any other changes to the sale order.",
                     ),
                 )
@@ -751,8 +750,10 @@ class SaleOrder(models.Model):
             )
             return {
                 "warning": {
-                    "title": _("Warning for the change of your quotation's company"),
-                    "message": _(
+                    "title": self.env._(
+                        "Warning for the change of your quotation's company"
+                    ),
+                    "message": self.env._(
                         "Changing the company of an existing quotation might need some "
                         "manual adjustments in the details of the lines. You might "
                         "consider updating the prices.",
@@ -771,8 +772,8 @@ class SaleOrder(models.Model):
             _debug.logic("commitment_date_too_soon", order=self._origin)
             return {
                 "warning": {
-                    "title": _("Requested date is too soon."),
-                    "message": _(
+                    "title": self.env._("Requested date is too soon."),
+                    "message": self.env._(
                         "The delivery date is sooner than the expected date."
                         " You may be unable to honor the delivery date.",
                     ),
@@ -808,7 +809,7 @@ class SaleOrder(models.Model):
                         selected=len(selected_combo_items),
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The number of selected combo items must match the number of available combo choices.",
                         ),
                     )
@@ -894,7 +895,7 @@ class SaleOrder(models.Model):
         product_ids = self.line_ids.product_id.ids
         _debug.logic("invoice_matching_action", order=self, products=len(product_ids))
         return {
-            "name": _("Invoice Matching"),
+            "name": self.env._("Invoice Matching"),
             "type": "ir.actions.act_window",
             "res_model": "sale.invoice.line.match",
             "views": [
@@ -964,7 +965,9 @@ class SaleOrder(models.Model):
     def action_quotation_sent(self):
         if any(order.state != "draft" for order in self):
             _debug.logic("mark_sent_refused", orders=self, reason="not_draft")
-            raise UserError(_("Only draft orders can be marked as sent directly."))
+            raise UserError(
+                self.env._("Only draft orders can be marked as sent directly.")
+            )
 
         self.write({"sent": True})
         _debug.lifecycle("quotation_marked_sent", orders=self)
@@ -992,12 +995,12 @@ class SaleOrder(models.Model):
         self.check_singleton()
         self._recompute_prices()
         if self.pricelist_id:
-            message = _(
+            message = self.env._(
                 "Product prices have been recomputed according to pricelist %s.",
                 self.pricelist_id._get_html_link(),
             )
         else:
-            message = _("Product prices have been recomputed.")
+            message = self.env._("Product prices have been recomputed.")
         _debug.lifecycle("prices_updated", order=self, pricelist=self.pricelist_id)
         self.message_post(body=message)
 
@@ -1009,7 +1012,7 @@ class SaleOrder(models.Model):
         )
         if self.partner_id:
             self.message_post(
-                body=_(
+                body=self.env._(
                     "Product taxes have been recomputed according to fiscal position %s.",
                     (
                         self.fiscal_position_id._get_html_link()
@@ -1023,7 +1026,7 @@ class SaleOrder(models.Model):
     def action_view_discount_wizard(self):
         self.check_singleton()
         return {
-            "name": _("Discount"),
+            "name": self.env._("Discount"),
             "type": "ir.actions.act_window",
             "res_model": "sale.order.discount",
             "view_mode": "form",
@@ -1036,7 +1039,7 @@ class SaleOrder(models.Model):
                 "merge_refused", quotations=quotations, reason="fewer_than_two"
             )
             raise UserError(
-                _("Please select at least two quotations to merge."),
+                self.env._("Please select at least two quotations to merge."),
             )
 
     def _prepare_grouped_data(self, quotation):
@@ -1047,14 +1050,14 @@ class SaleOrder(models.Model):
         )
 
     def _get_merge_group_description(self):
-        return _("- Customer\n- Currency\n- Delivery address")
+        return self.env._("- Customer\n- Currency\n- Delivery address")
 
     def _merge_update_metadata_refs(self, target, sources):
         all_refs = [target.client_order_ref] + list(sources.mapped("client_order_ref"))
         target.client_order_ref = ", ".join(filter(None, all_refs))
 
     def _get_merge_result_name(self):
-        return _("Merged Quotations")
+        return self.env._("Merged Quotations")
 
     def _create_upsell_activity(self):
         self.activity_unlink(["mail.mail_activity_data_todo"])
@@ -1065,7 +1068,7 @@ class SaleOrder(models.Model):
             order.activity_schedule(
                 "mail.mail_activity_data_todo",
                 user_id=order.user_id.id or order.partner_id.user_id.id,
-                note=_(
+                note=self.env._(
                     "Upsell %(order)s for customer %(customer)s",
                     order=order_ref,
                     customer=customer_ref,
@@ -1109,7 +1112,7 @@ class SaleOrder(models.Model):
     @api.model
     def get_empty_list_help(self, help_message):
         self = self.with_context(
-            empty_list_help_document_name=_("sale order"),
+            empty_list_help_document_name=self.env._("sale order"),
         )
         return super().get_empty_list_help(help_message)
 
@@ -1120,7 +1123,7 @@ class SaleOrder(models.Model):
         return self.company_id.sale_config_id.quotation_validity_days
 
     def _get_confirmed_type_name(self):
-        return _("Sale Order")
+        return self.env._("Sale Order")
 
     def _get_display_name_suffix(self):
         if not self.env.context.get("sale_show_partner_name"):
@@ -1199,16 +1202,16 @@ class SaleOrder(models.Model):
             if self._has_to_be_signed():
                 if self._has_to_be_paid():
                     access_opt["title"] = (
-                        _("View Quotation")
+                        self.env._("View Quotation")
                         if is_tx_pending
-                        else _("Sign & Pay Quotation")
+                        else self.env._("Sign & Pay Quotation")
                     )
                 else:
-                    access_opt["title"] = _("Accept & Sign Quotation")
+                    access_opt["title"] = self.env._("Accept & Sign Quotation")
             elif self._has_to_be_paid() and not is_tx_pending:
-                access_opt["title"] = _("Accept & Pay Quotation")
+                access_opt["title"] = self.env._("Accept & Pay Quotation")
             elif self.state == "draft":
-                access_opt["title"] = _("View Quotation")
+                access_opt["title"] = self.env._("View Quotation")
             _debug.logic(
                 "portal_button",
                 order=self,
@@ -1461,7 +1464,7 @@ class SaleOrder(models.Model):
         return self.line_ids.filtered(lambda line: not line.display_type)
 
     def _get_nothing_to_invoice_error_message(self):
-        return _(
+        return self.env._(
             "Cannot create an invoice. No items are available to invoice.\n\n"
             "To resolve this issue, please ensure that:\n"
             "   \u2022 The products have been delivered before attempting to invoice them.\n"
@@ -1657,7 +1660,7 @@ class SaleOrder(models.Model):
         return self.env.lang
 
     def _get_import_template_label(self):
-        return _("Import Template for Quotations")
+        return self.env._("Import Template for Quotations")
 
     def _get_import_template_path(self):
         return "/sale/static/xls/quotations_import_template.xlsx"
@@ -1988,14 +1991,14 @@ class SaleOrder(models.Model):
             error_parts = []
             if confirmed_orders:
                 error_parts.append(
-                    _(
+                    self.env._(
                         "• Already confirmed: %s",
                         format_list(self.env, confirmed_orders.mapped("display_name")),
                     ),
                 )
             if cancelled_orders:
                 error_parts.append(
-                    _(
+                    self.env._(
                         "• Cancelled: %s",
                         format_list(self.env, cancelled_orders.mapped("display_name")),
                     ),
@@ -2007,7 +2010,7 @@ class SaleOrder(models.Model):
                 cancelled=cancelled_orders,
             )
             raise UserError(
-                _(
+                self.env._(
                     "Cannot confirm sale orders that are not in Quotation (draft) state:\n\n%s\n\n"
                     "Only orders in 'Quotation' state can be confirmed.",
                     "\n".join(error_parts),

@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_is_zero
@@ -160,7 +160,7 @@ class StockRule(models.Model):
                 Domain(literal_eval(rule.push_domain)).check(Move)
             except Exception as error:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The push applicability of rule %(rule)s is not a valid "
                         "domain on stock moves: %(error)s",
                         rule=rule.display_name,
@@ -174,7 +174,7 @@ class StockRule(models.Model):
             route = rule.route_id
             if route.company_id and rule.company_id != route.company_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Rule %(rule)s belongs to %(rule_company)s while the route belongs to %(route_company)s.",
                         rule=rule.display_name,
                         rule_company=rule.company_id.display_name,
@@ -187,7 +187,7 @@ class StockRule(models.Model):
         vals_list = super().copy_data(default=default)
         if "name" not in default:
             for rule, vals in zip(self, vals_list, strict=True):
-                vals["name"] = _("%s (copy)", rule.name)
+                vals["name"] = self.env._("%s (copy)", rule.name)
         return vals_list
 
     def copy_translations(self, new, excluded=()):
@@ -209,18 +209,18 @@ class StockRule(models.Model):
             self.picking_type_id = False
 
     def _get_message_labels(self):
-        source = (self.location_src_id and self.location_src_id.display_name) or _(
-            "Source Location"
-        )
+        source = (
+            self.location_src_id and self.location_src_id.display_name
+        ) or self.env._("Source Location")
         destination = (
             self.location_dest_id and self.location_dest_id.display_name
-        ) or _("Destination Location")
+        ) or self.env._("Destination Location")
         direct_destination = (
             self.picking_type_id
             and self.picking_type_id.default_location_dest_id != self.location_dest_id
             and self.picking_type_id.default_location_dest_id.display_name
         )
-        operation = (self.picking_type_id and self.picking_type_id.name) or _(
+        operation = (self.picking_type_id and self.picking_type_id.name) or self.env._(
             "Operation Type"
         )
         return source, destination, direct_destination, operation
@@ -235,30 +235,30 @@ class StockRule(models.Model):
                 and direct_destination
                 and not self.location_dest_from_rule
             ):
-                suffix = _(
+                suffix = self.env._(
                     "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination.",
                     destination=direct_destination,
                     operation=operation,
                 )
             if self.procure_method == "make_to_order" and self.location_src_id:
-                suffix += _(
+                suffix += self.env._(
                     "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it.",
                     source,
                 )
             if self.procure_method == "mts_else_mto" and self.location_src_id:
-                suffix += _(
+                suffix += self.env._(
                     "<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring the missing quantity in this location.",
                     source,
                 )
             message_dict = {
-                "pull": _(
+                "pull": self.env._(
                     "When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill the need. %(suffix)s",
                     destination=destination,
                     operation=operation,
                     source_location=source,
                     suffix=suffix,
                 ),
-                "push": _(
+                "push": self.env._(
                     "When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</b> are created to send them to <b>%(destination)s</b>.",
                     source_location=source,
                     operation=operation,
@@ -425,7 +425,7 @@ class StockRule(models.Model):
         source_errors = [
             (
                 procurement,
-                _(
+                self.env._(
                     "No source location defined on stock rule: %s!",
                     rule.display_name,
                 ),
@@ -586,7 +586,6 @@ class StockRule(models.Model):
             moves.partner_id = partner_id
 
     def _get_lead_days(self, product, **values):
-        _ = self.env._
         delays = defaultdict(float)
         delay_description = []
         bypass_delay_description = self.env.context.get("bypass_delay_description")
@@ -597,7 +596,10 @@ class StockRule(models.Model):
             delays["total_delay"] += sum(delaying_rules.mapped("delay"))
             if not bypass_delay_description:
                 delay_description = [
-                    (_("Delay on %s", rule.name), _("+ %d day(s)", rule.delay))
+                    (
+                        self.env._("Delay on %s", rule.name),
+                        self.env._("+ %d day(s)", rule.delay),
+                    )
                     for rule in delaying_rules
                 ]
         global_horizon_days = self.env["stock.warehouse.orderpoint"]._get_horizon_days(
@@ -607,7 +609,10 @@ class StockRule(models.Model):
             delays["horizon_time"] += global_horizon_days
             if not bypass_delay_description:
                 delay_description.append(
-                    (_("Time Horizon"), _("+ %d day(s)", global_horizon_days))
+                    (
+                        self.env._("Time Horizon"),
+                        self.env._("+ %d day(s)", global_horizon_days),
+                    )
                 )
         dbg.logic.debug(
             "_get_lead_days product=%s rules=%s -> %s",
@@ -672,7 +677,7 @@ class StockRule(models.Model):
         )
         for procurement, rule in zip(valid_procurements, rules, strict=True):
             if not rule:
-                error = _(
+                error = self.env._(
                     'No rule has been found to replenish "%(product)s" in "%(location)s".\nVerify the routes configuration on the product.',
                     product=procurement.product_id.display_name,
                     location=procurement.location_id.display_name,
@@ -698,7 +703,7 @@ class StockRule(models.Model):
                     procurement_errors.append(
                         (
                             procurement,
-                            _(
+                            self.env._(
                                 'The rule "%(rule)s" cannot replenish "%(product)s" in'
                                 ' "%(location)s": nothing in this database implements'
                                 " its “%(action)s” action. Install the module providing"

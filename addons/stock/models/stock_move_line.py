@@ -1,7 +1,7 @@
 from collections import Counter, defaultdict
 from typing import Any, NamedTuple
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import OrderedSet
@@ -299,14 +299,14 @@ class StockMoveLine(models.Model):
 
     @api.model
     def _get_negative_quantity_message(self):
-        return _("You can not enter negative quantities.")
+        return self.env._("You can not enter negative quantities.")
 
     @api.constrains("lot_id", "product_id")
     def _check_lot_product(self):
         for line in self:
             if line.lot_id and line.product_id != line.lot_id.sudo().product_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "This lot %(lot_name)s is incompatible with this product %(product_name)s",
                         lot_name=line.lot_id.name,
                         product_name=line.product_id.display_name,
@@ -513,7 +513,7 @@ class StockMoveLine(models.Model):
         for ml in self:
             if ml.state in ("done", "cancel"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Deleting product moves after the transfer is done?\n\n"
                         "That would be like going back in time to revert all operations triggered after this move. Who knows what the end result would be, So let's not do it.\n\n"
                         "Try changing the “done” quantity to 0 instead."
@@ -652,7 +652,7 @@ class StockMoveLine(models.Model):
         message = None
         siblings = self._get_similar_move_lines()
         if any(line._get_serial_name() == serial for line in siblings):
-            message = _(
+            message = self.env._(
                 "You cannot use the same serial number twice. Please correct the serial numbers encoded."
             )
         elif self.lot_id:
@@ -694,13 +694,13 @@ class StockMoveLine(models.Model):
                 )
             )
             if quants:
-                message = _(
+                message = self.env._(
                     "Serial number (%(serial_number)s) already exists in location(s): %(location_list)s. Please correct the serial number encoded.",
                     serial_number=serial,
                     location_list=quants.location_id.mapped("display_name"),
                 )
         if message:
-            res["warning"] = {"title": _("Warning"), "message": message}
+            res["warning"] = {"title": self.env._("Warning"), "message": message}
         return res
 
     def _get_serial_name(self):
@@ -724,7 +724,7 @@ class StockMoveLine(models.Model):
                 self.quantity_product_uom, self.product_id.uom_id
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can only process 1.0 %s of products with unique serial number.",
                         self.product_id.uom_id.name,
                     ),
@@ -870,7 +870,7 @@ class StockMoveLine(models.Model):
     def _prepare_archived_lots_error(self, product_lot_pairs):
         listed = "\n".join(
             sorted(
-                _(
+                self.env._(
                     " - %(lot)s, on %(product)s",
                     lot=lot.name,
                     product=product.display_name,
@@ -879,7 +879,7 @@ class StockMoveLine(models.Model):
             )
         )
         return UserError(
-            _(
+            self.env._(
                 "These Lot/Serial Numbers exist but are archived, so they cannot "
                 "receive stock:\n%(lots)s\n\n"
                 "Un-archive one to use it again, or enter a different number.",
@@ -895,7 +895,7 @@ class StockMoveLine(models.Model):
             for product_name in self.mapped("product_id.display_name")
         )
         raise UserError(
-            _(
+            self.env._(
                 "You need to supply a Lot/Serial Number for product:\n%(products)s",
                 products=products_list,
             ),
@@ -960,7 +960,7 @@ class StockMoveLine(models.Model):
         duplicated = sorted(name for name, count in serials.items() if count > 1)
         if duplicated:
             raise ValidationError(
-                _(
+                self.env._(
                     "A serial number identifies one unit, so it can appear on one move line "
                     "only. These are used more than once:\n%(serials)s",
                     serials="\n".join(f"- {name}" for name in duplicated),
@@ -1192,7 +1192,7 @@ class StockMoveLine(models.Model):
             for ml in self
         ):
             raise UserError(
-                _(
+                self.env._(
                     "A move line's product is its operation's. Change it there, or"
                     " replace the line."
                 )
@@ -1200,7 +1200,7 @@ class StockMoveLine(models.Model):
 
         if ("lot_id" in vals or "quant_id" in vals) and len(self.product_id) > 1:
             raise UserError(
-                _(
+                self.env._(
                     "Changing the Lot/Serial number for move lines with different products is not allowed."
                 ),
             )

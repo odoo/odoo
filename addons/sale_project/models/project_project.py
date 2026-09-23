@@ -6,7 +6,6 @@ from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
 from odoo.tools.misc import unquote
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -340,7 +339,7 @@ class ProjectProject(models.Model):
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order.line",
-            "name": _("%(name)s's Sales Order Items", name=self.name),
+            "name": self.env._("%(name)s's Sales Order Items", name=self.name),
             "context": {
                 "show_sale": True,
                 "link_to_project": self.id,
@@ -433,7 +432,7 @@ class ProjectProject(models.Model):
         if section_name in ["service_revenues", "materials"]:
             view_types = ["list", "kanban", "form"]
             action = {
-                "name": _("Sales Order Items"),
+                "name": self.env._("Sales Order Items"),
                 "type": "ir.actions.act_window",
                 "res_model": "sale.order.line",
                 "context": {"create": False, "edit": False},
@@ -466,7 +465,7 @@ class ProjectProject(models.Model):
 
         if section_name == "cost_of_goods_sold":
             return {
-                "name": _("Cost of Goods Sold Items"),
+                "name": self.env._("Cost of Goods Sold Items"),
                 "type": "ir.actions.act_window",
                 "res_model": "account.move.line",
                 "views": [[False, "list"], [False, "form"]],
@@ -514,7 +513,7 @@ class ProjectProject(models.Model):
         )
         invoice_ids = move_lines.move_id.ids
         action = {
-            "name": _("Invoices"),
+            "name": self.env._("Invoices"),
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "views": [[False, "list"], [False, "form"], [False, "kanban"]],
@@ -526,8 +525,8 @@ class ProjectProject(models.Model):
             },
             "help": "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>"
             % (
-                _("Create a customer invoice"),
-                _(
+                self.env._("Create a customer invoice"),
+                self.env._(
                     "Create invoices, register payments and keep track of the discussions with your customers."
                 ),
             ),
@@ -1266,7 +1265,7 @@ class ProjectProject(models.Model):
         )
         vendor_bill_ids = move_lines.move_id.ids
         action_window = {
-            "name": _("Vendor Bills"),
+            "name": self.env._("Vendor Bills"),
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "views": [[False, "list"], [False, "form"], [False, "kanban"]],
@@ -1277,8 +1276,8 @@ class ProjectProject(models.Model):
             },
             "help": "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>"
             % (
-                _("Create a vendor bill"),
-                _(
+                self.env._("Create a vendor bill"),
+                self.env._(
                     "Create invoices, register payments and keep track of the discussions with your vendors."
                 ),
             ),

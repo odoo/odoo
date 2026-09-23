@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import datetime, time
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -47,7 +47,7 @@ class StockWarehouseOrderpoint(models.Model):
         )
         if production:
             return self._prepare_action_replenishment_notification(
-                _("The following replenishment order has been generated"),
+                self.env._("The following replenishment order has been generated"),
                 production.name,
                 f"/odoo/action-mrp.action_mrp_production_form/{production.id}",
             )
@@ -412,7 +412,7 @@ class StockWarehouseOrderpoint(models.Model):
                 "orderpoint_refused", reason="product_is_kit", orderpoints=self
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "A product with a kit-type bill of materials can not have a reordering rule."
                 )
             )

@@ -1,6 +1,6 @@
 from lxml import etree
 
-from odoo import Command, _, models
+from odoo import Command, models
 from odoo.tools import html2plaintext
 from odoo.tools.xml_utils import dict_to_xml
 
@@ -391,7 +391,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
             line.pop("deferred_end_date", False)
             if not line.get("product_id"):
                 line_logs.append(
-                    _(
+                    self.env._(
                         "Could not retrieve the product named: %(name)s",
                         name=line["name"],
                     )

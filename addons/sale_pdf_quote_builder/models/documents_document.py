@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -40,7 +40,7 @@ class DocumentsDocument(models.Model):
                     "inside_document_rejected", document=doc, reason="not_a_file"
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "When attached inside a quote, the document must be a file, not a URL."
                     )
                 )
@@ -49,7 +49,7 @@ class DocumentsDocument(models.Model):
                     "inside_document_rejected", document=doc, reason="not_a_pdf"
                 )
                 raise ValidationError(
-                    _("Only PDF documents can be attached inside a quote.")
+                    self.env._("Only PDF documents can be attached inside a quote.")
                 )
             if doc.datas:
                 utils._check_document_not_encrypted(
@@ -82,7 +82,7 @@ class DocumentsDocument(models.Model):
     def action_view_pdf_form_fields(self):
         self.check_singleton()
         return {
-            "name": _("Form Fields"),
+            "name": self.env._("Form Fields"),
             "type": "ir.actions.act_window",
             "res_model": "sale.pdf.form.field",
             "view_mode": "list",

@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.fields import Command, Domain
 
 
@@ -199,11 +199,11 @@ class StockPicking(models.Model):
         pickings.write({"user_id": user_id})
         for pick in pickings:
             if user_id:
-                log_message = _(
+                log_message = self.env._(
                     "Assigned to %s Responsible", pick.batch_id._get_html_link()
                 )
             else:
-                log_message = _(
+                log_message = self.env._(
                     "Unassigned responsible from %s", pick.batch_id._get_html_link()
                 )
             pick.message_post(body=log_message)

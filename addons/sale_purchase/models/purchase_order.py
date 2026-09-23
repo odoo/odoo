@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 from .exception_activity import group_by_order, notify_orders_of_exception
@@ -34,7 +34,7 @@ class PurchaseOrder(models.Model):
         self.check_singleton()
         sale_orders = self._get_sale_orders()
         title = (
-            {"name": _("Sources Sale Orders %s", self.name)}
+            {"name": self.env._("Sources Sale Orders %s", self.name)}
             if len(sale_orders) > 1
             else {}
         )

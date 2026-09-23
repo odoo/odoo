@@ -1,4 +1,4 @@
-from odoo import Command, _, api, models
+from odoo import Command, api, models
 
 from odoo.addons.account.tools.import_file_type import CUSTOMIZATION_ID, findtext_equals
 
@@ -29,7 +29,7 @@ class PurchaseOrder(models.Model):
         return super()._get_edi_decoder(file_data, new)
 
     def _create_activity_set_details(self, body):
-        activity_message = _("Some information could not be imported:")
+        activity_message = self.env._("Some information could not be imported:")
         activity_message += body
         self.activity_schedule(
             "mail.mail_activity_data_todo",

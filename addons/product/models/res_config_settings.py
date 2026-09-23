@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -85,7 +85,7 @@ class ResConfigSettings(models.TransientModel):
             if active_pricelist:
                 return {
                     "warning": {
-                        "message": _(
+                        "message": self.env._(
                             "You are deactivating the pricelist feature. "
                             "Every active pricelist will be archived."
                         )

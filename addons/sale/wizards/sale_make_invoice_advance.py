@@ -1,4 +1,4 @@
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -131,7 +131,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     reason="not_positive",
                 )
                 raise UserError(
-                    _("The value of the down payment amount must be positive.")
+                    self.env._("The value of the down payment amount must be positive.")
                 )
             if wizard.advance_payment_method == "percentage" and wizard.amount > 100.0:
                 _debug.logic(
@@ -141,7 +141,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     reason="over_100_percent",
                 )
                 raise UserError(
-                    _("The percentage of the down payment cannot exceed 100%.")
+                    self.env._("The percentage of the down payment cannot exceed 100%.")
                 )
 
     def create_invoices(self):
@@ -157,7 +157,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def view_draft_invoices(self):
         return {
-            "name": _("Draft Invoices"),
+            "name": self.env._("Draft Invoices"),
             "type": "ir.actions.act_window",
             "view_mode": "list",
             "views": [(False, "list"), (False, "form")],
@@ -249,9 +249,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 subtype_xmlid="mail.mt_note",
             )
 
-            title = _("Down payment invoice")
+            title = self.env._("Down payment invoice")
             order.with_user(poster).message_post(
-                body=_("%s has been created", invoice._get_html_link(title=title)),
+                body=self.env._(
+                    "%s has been created", invoice._get_html_link(title=title)
+                ),
             )
 
             return invoice

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -61,7 +61,7 @@ class PosPaymentMethod(models.Model):
         )
         if error_if_invalid and len(providers_sudo) != len(valid_providers):
             raise ValidationError(
-                _(
+                self.env._(
                     "All payment providers configured for an online payment method must use the same currency as the Sales Journal, or the company currency if that is not set, of the POS config."
                 )
             )
@@ -89,7 +89,9 @@ class PosPaymentMethod(models.Model):
                 )
                 if other_online_pms:
                     raise ValidationError(
-                        _("The %s already has one online payment.", config.name)
+                        self.env._(
+                            "The %s already has one online payment.", config.name
+                        )
                     )
 
     def _is_write_forbidden(self, fields):
@@ -189,14 +191,14 @@ class PosPaymentMethod(models.Model):
             if not payment_method_id:
                 payment_method_id = self.env["pos.payment.method"].create(
                     {
-                        "name": _("Online Payment"),
+                        "name": self.env._("Online Payment"),
                         "is_online_payment": True,
                         "company_id": company_id,
                     }
                 )
                 if not payment_method_id:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Could not create an online payment method (company_id=%(company_id)d, pos_config_id=%(pos_config_id)d)",
                             company_id=company_id,
                             pos_config_id=pos_config_id,

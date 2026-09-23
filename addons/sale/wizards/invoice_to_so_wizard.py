@@ -1,4 +1,4 @@
-from odoo import Command, _, fields, models
+from odoo import Command, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -27,7 +27,9 @@ class InvoiceToSoWizard(models.TransientModel):
             _debug.logic(
                 "invoice_to_so_refused", wizard=self, reason="no_product_lines"
             )
-            raise UserError(_("There are no products to add to the Sales Order."))
+            raise UserError(
+                self.env._("There are no products to add to the Sales Order.")
+            )
         line_vals = lines_to_add._sale_prepare_order_line_values()
         if self.sale_order_id:
             new_order_lines = self.env["sale.order.line"].create(

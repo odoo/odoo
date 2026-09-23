@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.fields import Domain
 
 
@@ -24,7 +24,7 @@ class UomUom(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Packaging Barcodes"),
+            "name": self.env._("Packaging Barcodes"),
             "res_model": "product.uom",
             "view_mode": "list",
             "view_id": self.env.ref("product.product_uom_list_view").id,

@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -56,13 +56,13 @@ class RestaurantFloor(models.Model):
             [("config_id", "in", confs.ids), ("state", "!=", "closed")]
         )
         if opened_session and confs:
-            error_msg = _(
+            error_msg = self.env._(
                 "You cannot remove a floor that is used in a PoS session, close the session(s) first: \n"
             )
             for floor in self:
                 for session in opened_session:
                     if floor in session.config_id.floor_ids:
-                        error_msg += _(
+                        error_msg += self.env._(
                             "Floor: %(floor)s - PoS Config: %(config)s \n",
                             floor=floor.name,
                             config=session.config_id.name,
@@ -116,7 +116,7 @@ class RestaurantFloor(models.Model):
         )
         if draft_orders:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete a floor when orders are still in draft for this floor."
                 )
             )
@@ -214,7 +214,7 @@ class RestaurantTable(models.Model):
 
         if draft_orders_count > 0:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete a table when orders are still in draft for this table."
                 )
             )
@@ -230,7 +230,7 @@ class RestaurantTable(models.Model):
             [("config_id", "in", confs.ids), ("state", "!=", "closed")]
         )
         if opened_session:
-            error_msg = _(
+            error_msg = self.env._(
                 "You cannot remove a table that is used in a PoS session, close the session(s) first."
             )
             if confs:

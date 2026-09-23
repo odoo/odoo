@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -43,7 +43,7 @@ class ProviderGelato(models.Model):
             )
         else:
             _debug.logic("gelato_carriers_refused", reason="bad_source_type")
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         if is_gelato_order:
             return available_delivery_methods.filtered(
                 lambda m: m.delivery_type == "gelato"
@@ -92,7 +92,7 @@ class ProviderGelato(models.Model):
                 return {
                     "success": False,
                     "price": 0,
-                    "error_message": _(
+                    "error_message": self.env._(
                         "The delivery method is not available for this order."
                     ),
                 }

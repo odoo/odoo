@@ -6,7 +6,6 @@ from datetime import timedelta
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import OrderedSet
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 
@@ -260,9 +259,9 @@ class StockMoveForecast(models.Model):
 
     def _is_availability_matching_search(self, operator, value, comparison_date):
         if not value:
-            raise UserError(_("Search not supported without a value."))
+            raise UserError(self.env._("Search not supported without a value."))
         if operator not in ("=", "!=", "in", "not in"):
-            raise UserError(_("Operation not supported"))
+            raise UserError(self.env._("Operation not supported"))
         values = set(value) if isinstance(value, (list, tuple, set)) else {value}
         matched = self._get_availability_state(comparison_date) in values
         return matched == (operator in ("=", "in"))

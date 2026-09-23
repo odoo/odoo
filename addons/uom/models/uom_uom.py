@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Literal, Self
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.numbers import RoundingMethod, float_repr
 from odoo.tools import float_compare, float_is_zero, float_round
@@ -151,8 +151,8 @@ class UomUom(models.Model):
         ):
             return {
                 "warning": {
-                    "title": _("Warning for %s", self.name),
-                    "message": _(
+                    "title": self.env._("Warning for %s", self.name),
+                    "message": self.env._(
                         "Some critical fields have been modified on %s.\n"
                         "Note that existing data WON'T be updated by this change.\n\n"
                         "As units of measure impact the whole system, this may cause critical issues.\n"
@@ -173,7 +173,7 @@ class UomUom(models.Model):
                 and float_compare(uom.relative_factor, 1.0, precision_digits=12) != 0
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "The unit of measure %s has a conversion ratio but no reference unit."
                         " Either set a reference unit or keep a ratio of 1.",
                         uom.display_name,
@@ -206,14 +206,14 @@ class UomUom(models.Model):
         locked_uoms = (self | descendants)._filter_protected_uoms()
         if locked_uoms:
             raise UserError(
-                _(
+                self.env._(
                     "The following units of measure are used by the system and cannot be deleted: %s\nYou can archive them instead.",
                     ", ".join(locked_uoms.mapped("name")),
                 )
             )
         if descendants:
             raise UserError(
-                _(
+                self.env._(
                     "%(unit)s is the reference unit of %(dependent_units)s."
                     " Deleting it would delete those too. Delete them first, or"
                     " give them another reference unit.",
@@ -349,7 +349,7 @@ class UomUom(models.Model):
             if to_unit and not self._has_common_reference(to_unit):
                 if raise_if_failure:
                     raise UserError(
-                        _(
+                        self.env._(
                             "The unit of measure %(unit)s cannot be converted into %(other_unit)s"
                             " because they do not share a common reference unit.",
                             unit=self.name,
@@ -552,7 +552,7 @@ class UomUom(models.Model):
         if not self._has_common_reference(to_unit):
             if raise_if_failure:
                 raise UserError(
-                    _(
+                    self.env._(
                         "A price per %(unit)s cannot be converted into a price per"
                         " %(other_unit)s because they do not share a common"
                         " reference unit.",

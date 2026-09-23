@@ -1,4 +1,4 @@
-from odoo import Command, _, models, modules
+from odoo import Command, models, modules
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -40,7 +40,7 @@ class StockPicking(models.Model):
             {"pick_ids": [Command.link(p.id) for p in self]}
         )
         return {
-            "name": _("SMS"),
+            "name": self.env._("SMS"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "confirm.stock.sms",

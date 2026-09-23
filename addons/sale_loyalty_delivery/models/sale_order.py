@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
 
@@ -51,7 +51,7 @@ class SaleOrder(models.Model):
         max_discount = reward.discount_max_amount or float("inf")
         return [
             {
-                "name": _("Free Shipping - %s", reward.description),
+                "name": self.env._("Free Shipping - %s", reward.description),
                 "reward_id": reward.id,
                 "coupon_id": coupon.id,
                 "points_cost": reward.required_points

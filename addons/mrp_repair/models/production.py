@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class MrpProduction(models.Model):
@@ -26,7 +26,7 @@ class MrpProduction(models.Model):
         if self.repair_count == 1:
             action["res_id"] = repair_ids.id
         elif self.repair_count > 1:
-            action["name"] = _("Repair Source of %s", self.name)
+            action["name"] = self.env._("Repair Source of %s", self.name)
             action["views"] = [[False, "list"]]
             action["domain"] = [("id", "in", repair_ids.ids)]
         return action

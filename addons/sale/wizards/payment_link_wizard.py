@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -21,7 +21,7 @@ class PaymentLinkWizard(models.TransientModel):
         for wizard in self.filtered(lambda w: w.res_model == "sale.order"):
             sale_order = wizard.env["sale.order"].browse(wizard.res_id)
             if sale_order.state == "draft" and sale_order.require_payment:
-                wizard.confirmation_message = _(
+                wizard.confirmation_message = self.env._(
                     "This payment will confirm the quotation.",
                 )
                 _debug.logic("payment_link_confirms_order", order=sale_order)
@@ -32,7 +32,7 @@ class PaymentLinkWizard(models.TransientModel):
         for wizard in self.filtered(lambda w: w.res_model == "sale.order"):
             sale_order = wizard.env["sale.order"].browse(wizard.res_id)
             if sale_order.state == "draft" and wizard.amount < wizard.prepayment_amount:
-                wizard.warning_message = _(
+                wizard.warning_message = self.env._(
                     "The amount must be greater than the prepayment amount.",
                 )
                 _debug.logic(
@@ -43,7 +43,7 @@ class PaymentLinkWizard(models.TransientModel):
                 )
                 sale_wizards |= wizard
             if sale_order.is_expired:
-                wizard.warning_message = _("The sale order has expired.")
+                wizard.warning_message = self.env._("The sale order has expired.")
                 _debug.logic("payment_link_warning", order=sale_order, reason="expired")
                 sale_wizards |= wizard
         super(PaymentLinkWizard, self - sale_wizards)._compute_warning_message()

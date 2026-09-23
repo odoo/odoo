@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.json import scriptsafe as json_safe
@@ -52,7 +52,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         _debug.lifecycle("mondialrelay_carrier_confirm", wizards=self)
         if self.carrier_id.is_mondialrelay:
             if not self.mondialrelay_last_selected:
-                raise ValidationError(_("Please, choose a Parcel Point"))
+                raise ValidationError(self.env._("Please, choose a Parcel Point"))
             data = json_safe.loads(self.mondialrelay_last_selected)
             partner_shipping = self.order_id.partner_id._mondialrelay_search_or_create(
                 {

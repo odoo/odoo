@@ -4,7 +4,7 @@ import time
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools import OrderedSet
@@ -54,7 +54,9 @@ class AccountMove(models.Model):
             if not purchases:
                 continue
             refs = [purchase._get_html_link() for purchase in purchases]
-            message = _("This vendor bill has been created from: ") + Markup(",").join(
+            message = self.env._("This vendor bill has been created from: ") + Markup(
+                ","
+            ).join(
                 refs,
             )
             move.message_post(body=message)
@@ -76,7 +78,9 @@ class AccountMove(models.Model):
             diff_purchases = new_purchases - old_purchases[i]
             if diff_purchases:
                 refs = [purchase._get_html_link() for purchase in diff_purchases]
-                message = _("This vendor bill has been modified from: ") + Markup(
+                message = self.env._(
+                    "This vendor bill has been modified from: "
+                ) + Markup(
                     ",",
                 ).join(refs)
                 move.message_post(body=message)
@@ -241,7 +245,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Purchase Matching"),
+            "name": self.env._("Purchase Matching"),
             "res_model": "purchase.bill.line.match",
             "domain": [
                 (
@@ -400,7 +404,7 @@ class AccountMove(models.Model):
                         Command.create(
                             {
                                 "display_type": "line_section",
-                                "name": _("From Electronic Document"),
+                                "name": self.env._("From Electronic Document"),
                                 "sequence": -1,
                             },
                         ),
@@ -607,7 +611,7 @@ class AccountMove(models.Model):
                         Command.create(
                             {
                                 "display_type": "line_section",
-                                "name": _("From %s", purchase_order.name),
+                                "name": self.env._("From %s", purchase_order.name),
                             },
                         ),
                     ]

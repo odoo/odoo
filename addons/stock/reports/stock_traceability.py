@@ -1,6 +1,6 @@
 from collections import deque
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.tools import format_datetime
 
@@ -128,7 +128,7 @@ class StockTraceabilityReport(models.TransientModel):
         elif move_line.move_id.is_inventory:
             res_model = "stock.move"
             res_id = move_line.move_id.id
-            ref = _("Inventory Adjustment")
+            ref = self.env._("Inventory Adjustment")
         elif (
             move_line.move_id.location_dest_usage == "inventory"
             and move_line.move_id.scrap_id
@@ -317,19 +317,19 @@ class StockTraceabilityReportHandler(models.AbstractModel):
         return {
             "stock.move.line": [
                 {
-                    "name": _("Open Reference"),
+                    "name": self.env._("Open Reference"),
                     "action": "caret_option_open_traceability_reference",
                 },
                 {
-                    "name": _("Open Lot/Serial Number"),
+                    "name": self.env._("Open Lot/Serial Number"),
                     "action": "caret_option_open_traceability_lot",
                 },
                 {
-                    "name": _("Open Partner"),
+                    "name": self.env._("Open Partner"),
                     "action": "caret_option_open_traceability_partner",
                 },
                 {
-                    "name": _("Upstream and Downstream"),
+                    "name": self.env._("Upstream and Downstream"),
                     "action": "caret_option_open_traceability_stream",
                 },
             ],
@@ -424,18 +424,21 @@ class StockTraceabilityReportHandler(models.AbstractModel):
             "stock.traceability.report"
         ]._get_reference(move_line)
         record = self.env[res_model].browse(res_id) if res_model else move_line.browse()
-        return self._form_action(record, _("This operation has no reference to open."))
+        return self._form_action(
+            record, self.env._("This operation has no reference to open.")
+        )
 
     def caret_option_open_traceability_lot(self, options, params):
         move_line = self._clicked_move_line(options, params)
         return self._form_action(
-            move_line.lot_id, _("This operation moves no lot or serial number.")
+            move_line.lot_id,
+            self.env._("This operation moves no lot or serial number."),
         )
 
     def caret_option_open_traceability_partner(self, options, params):
         move_line = self._clicked_move_line(options, params)
         return self._form_action(
-            move_line.picking_partner_id, _("This operation has no partner.")
+            move_line.picking_partner_id, self.env._("This operation has no partner.")
         )
 
     def caret_option_open_traceability_stream(self, options, params):
@@ -443,7 +446,7 @@ class StockTraceabilityReportHandler(models.AbstractModel):
         return {
             "type": "ir.actions.client",
             "tag": "account_report",
-            "name": _("Traceability Report"),
+            "name": self.env._("Traceability Report"),
             "context": {
                 "report_id": options["report_id"],
                 "active_id": move_line.id,

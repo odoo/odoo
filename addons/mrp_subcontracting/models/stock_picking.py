@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
 
@@ -95,7 +95,7 @@ class StockPicking(models.Model):
         if len(productions) > 1:
             action.update(
                 {
-                    "name": _("Subcontracting MOs"),
+                    "name": self.env._("Subcontracting MOs"),
                     "views": [
                         (
                             self.env.ref(

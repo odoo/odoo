@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
@@ -35,7 +35,7 @@ class UomUom(models.Model):
                     "uom.write: ratio change on %s, checking stock usage",
                     dbg.rec(changed),
                 )
-                error_msg = _(
+                error_msg = self.env._(
                     "You cannot change the ratio of this unit of measure"
                     " as some products with this UoM have already been moved"
                     " or are currently reserved.",

@@ -3,7 +3,7 @@ from datetime import date, timedelta
 
 from psycopg.errors import UniqueViolation
 
-from odoo import _, fields, http
+from odoo import fields, http
 from odoo.exceptions import LockError
 from odoo.http import request
 from odoo.tools import escape_psql, file_open, format_amount, str2bool
@@ -221,9 +221,11 @@ class PosController(PortalAccount):
                     errors["date_order"] = " "
 
             if errors:
-                errors["generic"] = _("Please fill all the required fields.")
+                errors["generic"] = request.env._(
+                    "Please fill all the required fields."
+                )
             elif len(form_values["pos_reference"]) < 12:
-                errors["pos_reference"] = _(
+                errors["pos_reference"] = request.env._(
                     "The Ticket Number should be at least 12 characters long."
                 )
             else:
@@ -255,7 +257,7 @@ class PosController(PortalAccount):
                         "/pos/ticket/validate?access_token=%s" % (order.access_token)
                     )
                 else:
-                    errors["generic"] = _("No sale order found.")
+                    errors["generic"] = request.env._("No sale order found.")
 
         elif request.httprequest.method == "GET":
             if kwargs.get("order_uuid"):
@@ -322,7 +324,9 @@ class PosController(PortalAccount):
                 "[order:%s] ticket validation: order locked", pos_order.uuid
             )
             return request.prepare_response(
-                _("Some orders are already being invoiced. Please try again later."),
+                request.env._(
+                    "Some orders are already being invoiced. Please try again later."
+                ),
                 status=409,
                 headers=[
                     ("Retry-After", "1"),
@@ -443,7 +447,7 @@ class PosController(PortalAccount):
                 "invoice_required_fields": additional_invoice_fields,
                 "partner_required_fields": additional_partner_fields,
                 "access_token": access_token,
-                "invoice_sending_methods": {"email": _("by Email")},
+                "invoice_sending_methods": {"email": request.env._("by Email")},
                 **form_values,
             },
         )
@@ -524,7 +528,9 @@ class PosController(PortalAccount):
             if not value:
                 invalid_fields.add(field.name)
                 messages.append(
-                    _("The field %s must be filled.", field.field_description.lower())
+                    request.env._(
+                        "The field %s must be filled.", field.field_description.lower()
+                    )
                 )
                 continue
             try:
@@ -533,7 +539,7 @@ class PosController(PortalAccount):
             except TypeError, ValueError:
                 invalid_fields.add(field.name)
                 messages.append(
-                    _(
+                    request.env._(
                         "Please select a valid value for %s.",
                         field.field_description.lower(),
                     )

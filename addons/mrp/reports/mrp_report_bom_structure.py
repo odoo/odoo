@@ -2,7 +2,7 @@ import json
 from collections import OrderedDict, defaultdict
 from datetime import date, datetime, time, timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import (
@@ -162,13 +162,13 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         missing_qty = max(missing_qty, 0)
         if not missing_qty:
             return ""
-        return _(
+        return self.env._(
             "%(qty)s To %(route)s",
             qty=float_repr(
                 missing_qty,
                 self.env["decimal.precision"].get_precision("Product Unit"),
             ),
-            route=route_name or _("Order"),
+            route=route_name or self.env._("Order"),
         )
 
     @api.model
@@ -492,9 +492,11 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
         if level == 0:
             bom_report_line["status"] = (
-                _("%(qty)s Ready To Produce", qty=bom_report_line["producible_qty"])
+                self.env._(
+                    "%(qty)s Ready To Produce", qty=bom_report_line["producible_qty"]
+                )
                 if bom_report_line["producible_qty"] > 0
-                else _("No Ready To Produce")
+                else self.env._("No Ready To Produce")
             )
         elif status := self._get_missing_qty_status(
             bom_report_line["quantity"] - bom_report_line["quantity_available"],
@@ -828,7 +830,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             if planning := operations_planning.get(operation, None):
                 availability_state = "estimated"
                 availability_delay = (planning["date_end"].date() - date_today).days
-                availability_display = _(
+                availability_display = self.env._(
                     "Estimated %s", format_date(self.env, planning["date_end"])
                 ) + (
                     " [" + planning["workcenter"].name + "]"
@@ -848,7 +850,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                     "link_id": operation.id,
                     "link_model": "mrp.routing.workcenter",
                     "name": operation.name + " - " + operation.workcenter_id.name,
-                    "uom_name": _("Minutes"),
+                    "uom_name": self.env._("Minutes"),
                     "quantity": duration_expected,
                     "bom_cost": bom_cost,
                     "currency_id": company.currency_id.id,
@@ -947,10 +949,10 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         if data["operations"]:
             lines.append(
                 {
-                    "name": _("Operations"),
+                    "name": self.env._("Operations"),
                     "type": "operation",
                     "quantity": data["operations_time"],
-                    "uom": _("minutes"),
+                    "uom": self.env._("minutes"),
                     "bom_cost": data["operations_cost"],
                     "level": level,
                     "visible": parent_unfolded,
@@ -965,7 +967,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                         "name": operation["name"],
                         "type": "operation",
                         "quantity": operation["quantity"],
-                        "uom": _("minutes"),
+                        "uom": self.env._("minutes"),
                         "bom_cost": operation["bom_cost"],
                         "level": level + 1,
                         "availability_state": operation["availability_state"],
@@ -977,7 +979,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         if data["byproducts"]:
             lines.append(
                 {
-                    "name": _("Byproducts"),
+                    "name": self.env._("Byproducts"),
                     "type": "byproduct",
                     "uom": False,
                     "quantity": data["byproducts_total"],
@@ -1220,15 +1222,15 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
     def _format_date_display(self, state, delay):
         date_today = self.env.context.get("from_date", fields.Date.today())
         if state == "available":
-            return _("Available")
+            return self.env._("Available")
         if state == "unavailable":
-            return _("Not Available")
+            return self.env._("Not Available")
         if state == "expected":
-            return _(
+            return self.env._(
                 "Expected %s", format_date(self.env, date_today + timedelta(days=delay))
             )
         if state == "estimated":
-            return _(
+            return self.env._(
                 "Estimated %s",
                 format_date(self.env, date_today + timedelta(days=delay)),
             )

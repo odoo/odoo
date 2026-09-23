@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 BOM_OVERVIEW_CARETS = {
     "component": "product.product",
@@ -47,7 +47,7 @@ class MrpBomOverviewReportHandler(models.AbstractModel):
         options["unfold_all"] = previous_options.get("unfold_all", True)
         options["buttons"].append(
             {
-                "name": _("Manufacture"),
+                "name": self.env._("Manufacture"),
                 "sequence": 5,
                 "action": "action_manufacture_from_bom",
                 "always_show": True,
@@ -57,8 +57,11 @@ class MrpBomOverviewReportHandler(models.AbstractModel):
     def _caret_options_initializer(self):
         return {
             "product.product": [
-                {"name": _("Open Product"), "action": "caret_option_open_record"},
-                {"name": _("Open Route"), "action": "caret_option_open_route"},
+                {
+                    "name": self.env._("Open Product"),
+                    "action": "caret_option_open_record",
+                },
+                {"name": self.env._("Open Route"), "action": "caret_option_open_route"},
             ],
         }
 
@@ -148,7 +151,7 @@ class MrpBomOverviewReportHandler(models.AbstractModel):
         )
         return {
             "type": "ir.actions.act_window",
-            "name": _("Manufacturing Orders"),
+            "name": self.env._("Manufacturing Orders"),
             "res_model": "mrp.production",
             "views": [(False, "form")],
             "target": "current",

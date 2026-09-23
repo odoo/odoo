@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.db.schema import drop_view_if_exists
 
 
@@ -18,7 +18,7 @@ class LunchCashmoveReport(models.Model):
     def _compute_display_name(self):
         for cashmove in self:
             cashmove.display_name = "{} {}".format(
-                _("Lunch Cashmove"), "#%d" % cashmove.id
+                self.env._("Lunch Cashmove"), "#%d" % cashmove.id
             )
 
     def init(self):

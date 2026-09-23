@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class ResCompany(models.Model):
@@ -76,7 +76,7 @@ class ResCompany(models.Model):
     def _prepare_default_pricelist_vals(self):
         self.check_singleton()
         return {
-            "name": _("Default"),
+            "name": self.env._("Default"),
             "currency_id": self.currency_id.id,
             "company_id": self.id,
             "sequence": 10,

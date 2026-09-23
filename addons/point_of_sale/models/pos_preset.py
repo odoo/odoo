@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from ..tools import debug_log as dbg
@@ -74,7 +74,7 @@ class PosPreset(models.Model):
             for attendance in preset.attendance_ids:
                 if attendance.hour_from >= attendance.hour_to:
                     raise ValidationError(
-                        _("The start time must be before the end time.")
+                        self.env._("The start time must be before the end time.")
                     )
 
     @api.constrains("use_timing", "interval_time", "slots_per_interval")
@@ -84,7 +84,9 @@ class PosPreset(models.Model):
                 preset.interval_time <= 0 or preset.slots_per_interval <= 0
             ):
                 raise ValidationError(
-                    _("Timed presets require a positive interval and capacity.")
+                    self.env._(
+                        "Timed presets require a positive interval and capacity."
+                    )
                 )
 
     @api.model
@@ -175,7 +177,7 @@ class PosPreset(models.Model):
     def action_view_linked_orders(self):
         self.check_singleton()
         return {
-            "name": _("Linked Orders"),
+            "name": self.env._("Linked Orders"),
             "view_mode": "list",
             "res_model": "pos.order",
             "type": "ir.actions.act_window",
@@ -185,7 +187,7 @@ class PosPreset(models.Model):
     def action_view_linked_config(self):
         self.check_singleton()
         return {
-            "name": _("Linked POS Configurations"),
+            "name": self.env._("Linked POS Configurations"),
             "view_mode": "list",
             "res_model": "pos.config",
             "type": "ir.actions.act_window",
@@ -202,7 +204,7 @@ class PosPreset(models.Model):
         for preset in self:
             if preset.count_linked_config:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot delete a preset that is linked to a POS configuration."
                     )
                 )

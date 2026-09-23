@@ -2,7 +2,7 @@ import re
 from collections import defaultdict
 from collections.abc import Iterable
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -38,7 +38,7 @@ class StockLotName(models.Model):
         )
         if not value:
             raise UserError(
-                _(
+                self.env._(
                     "No sequence can name a lot for %(product)s. Set a "
                     "Serial/Lot Numbers Sequence on the product, or restore the "
                     "default one.",
@@ -68,7 +68,7 @@ class StockLotName(models.Model):
             return lot_format % self._get_lot_name_values()
         except (ValueError, TypeError, KeyError) as error:
             raise UserError(
-                _(
+                self.env._(
                     "The Lot/Serial Name Format on %(product)s cannot be used: "
                     "%(error)s.\nExpected placeholders are %(placeholders)s.",
                     product=self.product_id.display_name,
@@ -299,7 +299,7 @@ class StockLotName(models.Model):
         else:
             action.update(
                 {
-                    "name": _("Delivery orders of %s", self.display_name),
+                    "name": self.env._("Delivery orders of %s", self.display_name),
                     "domain": [("id", "in", self.delivery_ids.ids)],
                     "view_mode": "list,form",
                 }

@@ -1,6 +1,6 @@
 from ast import literal_eval
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
@@ -36,7 +36,7 @@ class StockQuantRelocate(models.TransientModel):
         for wizard in self:
             if len(wizard.quant_ids.company_id) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot relocate quantities belonging to several"
                         " companies at once.",
                     ),

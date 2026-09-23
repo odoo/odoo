@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -101,7 +101,7 @@ class ProjectMilestone(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Sales Order"),
+            "name": self.env._("Sales Order"),
             "res_model": "sale.order",
             "res_id": self.sale_line_id.order_id.id,
             "view_mode": "form",

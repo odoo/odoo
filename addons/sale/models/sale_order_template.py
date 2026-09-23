@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -123,7 +123,7 @@ class SaleOrderTemplate(models.Model):
                     products=restricted_products,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Your template cannot contain products from specific companies if it's shared"
                         " between companies. Please restrict the template access, or remove those"
                         " products."
@@ -143,7 +143,7 @@ class SaleOrderTemplate(models.Model):
                 )
                 if len(unaccessible_companies) > 1:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Your template belongs to company %(template_company)s but contains"
                             " products from other companies (%(product_company)s) that are not"
                             " accessible to %(template_company)s.\nPlease change the company of your"
@@ -156,7 +156,7 @@ class SaleOrderTemplate(models.Model):
                     )
 
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Your template belongs to company %(template_company)s but contains"
                         " products from company (%(product_company)s) that are not"
                         " accessible to %(template_company)s.\nPlease change the company of your"
@@ -178,7 +178,7 @@ class SaleOrderTemplate(models.Model):
                     percent=template.prepayment_percent,
                 )
                 raise ValidationError(
-                    _("Prepayment percentage must be a valid percentage.")
+                    self.env._("Prepayment percentage must be a valid percentage.")
                 )
 
     @api.model_create_multi

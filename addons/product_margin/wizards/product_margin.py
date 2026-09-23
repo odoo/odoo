@@ -1,6 +1,6 @@
 import time
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ProductMargin(models.TransientModel):
@@ -52,7 +52,7 @@ class ProductMargin(models.TransientModel):
             (graph_view_id, "graph"),
         ]
         return {
-            "name": _("Product Margins"),
+            "name": self.env._("Product Margins"),
             "context": context,
             "view_mode": "list,form,graph",
             "res_model": "product.product",

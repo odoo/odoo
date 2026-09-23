@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -67,7 +67,7 @@ class ProductPricelist(models.Model):
             for pricelist, vals in zip(self, vals_list, strict=True):
                 if vals is None:
                     continue
-                vals["name"] = _("%s (copy)", pricelist.name)
+                vals["name"] = self.env._("%s (copy)", pricelist.name)
         return vals_list
 
     def copy_translations(self, new, excluded=()):
@@ -79,7 +79,7 @@ class ProductPricelist(models.Model):
     @api.depends("currency_id")
     def _compute_display_name(self):
         for pricelist in self:
-            pricelist_name = pricelist.name or _("New")
+            pricelist_name = pricelist.name or self.env._("New")
             pricelist.display_name = f"{pricelist_name} ({pricelist.currency_id.name})"
 
     @api.ondelete(at_uninstall=False)
@@ -97,7 +97,7 @@ class ProductPricelist(models.Model):
         )
         if linked_items:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete pricelist(s):\n(%(pricelists)s)\nThey are used within pricelist(s):\n%(other_pricelists)s",
                     pricelists="\n".join(
                         linked_items.base_pricelist_id.mapped("display_name")
@@ -112,7 +112,7 @@ class ProductPricelist(models.Model):
     def action_view_pricelist_report(self):
         self.check_singleton()
         return {
-            "name": _("Pricelist Report Preview"),
+            "name": self.env._("Pricelist Report Preview"),
             "type": "ir.actions.client",
             "tag": "generate_pricelist_report",
         }
@@ -402,7 +402,7 @@ class ProductPricelist(models.Model):
     def get_import_templates(self):
         return [
             {
-                "label": _("Import Template for Pricelists"),
+                "label": self.env._("Import Template for Pricelists"),
                 "template": "/product/static/xls/product_pricelist.xls",
             }
         ]

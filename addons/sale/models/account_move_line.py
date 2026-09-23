@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_is_zero
@@ -192,7 +192,7 @@ class AccountMoveLine(models.Model):
         if sale_order.state == "draft":
             _debug.logic("expense_refused", order=sale_order, reason="draft")
             raise UserError(
-                _(
+                self.env._(
                     "The Sales Order %(order)s to be reinvoiced must be validated before registering expenses.",
                     order=sale_order.name,
                 ),
@@ -200,7 +200,7 @@ class AccountMoveLine(models.Model):
         if sale_order.state == "cancel":
             _debug.logic("expense_refused", order=sale_order, reason="cancelled")
             raise UserError(
-                _(
+                self.env._(
                     "The Sales Order %(order)s to be reinvoiced is cancelled."
                     " You cannot register an expense on a cancelled Sales Order.",
                     order=sale_order.name,
@@ -209,7 +209,7 @@ class AccountMoveLine(models.Model):
         if sale_order.locked:
             _debug.logic("expense_refused", order=sale_order, reason="locked")
             raise UserError(
-                _(
+                self.env._(
                     "The Sales Order %(order)s to be reinvoiced is currently locked."
                     " You cannot register an expense on a locked Sales Order.",
                     order=sale_order.name,

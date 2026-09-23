@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -80,7 +80,7 @@ class ProductValue(models.Model):
                 continue
             uom = move.product_id.uom_id.name
             price_unit = move.value / quantity
-            product_value.current_value_details = _(
+            product_value.current_value_details = self.env._(
                 "For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)",
                 quantity=quantity,
                 uom=uom,

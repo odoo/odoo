@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class AccountAnalyticAccount(models.Model):
@@ -46,14 +46,14 @@ class AccountAnalyticAccount(models.Model):
     def action_view_mrp_production(self):
         return self._action_view_linked(
             self.production_ids,
-            _("Manufacturing Orders"),
+            self.env._("Manufacturing Orders"),
             context={"default_analytic_account_id": self.id},
         )
 
     def action_view_mrp_bom(self):
         return self._action_view_linked(
             self.bom_ids,
-            _("Bills of Materials"),
+            self.env._("Bills of Materials"),
             context={"default_analytic_account_id": self.id},
         )
 
@@ -64,7 +64,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "mrp.workorder",
             "domain": [("id", "in", self._get_workorders().ids)],
             "context": {"create": False},
-            "name": _("Work Orders"),
+            "name": self.env._("Work Orders"),
             "view_mode": "list",
         }
 

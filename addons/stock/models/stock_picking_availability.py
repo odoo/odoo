@@ -4,7 +4,6 @@ from collections import defaultdict
 from odoo import api, models
 from odoo.fields import Domain
 from odoo.tools import format_date, format_datetime
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from .stock_picking import (
@@ -166,7 +165,7 @@ class StockPickingAvailability(models.Model):
             ),
         )
         pickings.products_availability_state = "available"
-        pickings.products_availability = _("Available")
+        pickings.products_availability = self.env._("Available")
         other_pickings = self - pickings
         other_pickings.products_availability = False
         other_pickings.products_availability_state = False
@@ -185,12 +184,12 @@ class StockPickingAvailability(models.Model):
             )
             picking.products_availability_state = state
             if forecast_date:
-                picking.products_availability = _(
+                picking.products_availability = self.env._(
                     "Exp %s",
                     format_date(self.env, forecast_date),
                 )
             elif state == "late":
-                picking.products_availability = _("Not Available")
+                picking.products_availability = self.env._("Not Available")
 
     def _search_products_availability_state(self, operator, value):
         if operator != "in":

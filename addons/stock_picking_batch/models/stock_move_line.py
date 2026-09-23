@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import OrderedSet
@@ -64,7 +64,7 @@ class StockMoveLine(models.Model):
             return self._add_to_wave(wave)
         view = self.env.ref("stock_picking_batch.stock_add_to_wave_form")
         return {
-            "name": _("Add to Wave"),
+            "name": self.env._("Add to Wave"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "stock.add.to.wave",
@@ -143,9 +143,13 @@ class StockMoveLine(models.Model):
                     "user_id": self.env.context.get("active_owner_id"),
                 }
             )
-            notification_title = _("The following wave transfer has been created")
+            notification_title = self.env._(
+                "The following wave transfer has been created"
+            )
         else:
-            notification_title = _("The following wave transfer has been updated")
+            notification_title = self.env._(
+                "The following wave transfer has been updated"
+            )
         picking_to_wave_vals_list = []
         split_pickings = self.env["stock.picking"]
         for picking, lines in self.grouped("picking_id").items():

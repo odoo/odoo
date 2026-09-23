@@ -3,7 +3,7 @@ from json import dumps
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.numbers import float_round
@@ -80,7 +80,9 @@ class StockReplenishmentInfo(models.TransientModel):
     @api.constrains("percent_factor")
     def _check_percent_factor(self):
         if any(report.percent_factor < 0 for report in self):
-            raise ValidationError(_("The percentage factor cannot be negative."))
+            raise ValidationError(
+                self.env._("The percentage factor cannot be negative.")
+            )
 
     def _create_wh_replenishment_options(self):
         option_vals = []
@@ -212,7 +214,7 @@ class StockReplenishmentInfo(models.TransientModel):
             x_axis_vals = [""]
             curve_line_vals = [{"x": "", "y": product_max_qty}]
             for i in range(1, 4):
-                date_string = _("In %s day(s)", int(i * ordering_period))
+                date_string = self.env._("In %s day(s)", int(i * ordering_period))
                 x_axis_vals.append(date_string)
                 curve_line_vals.append({"x": date_string, "y": product_min_qty})
                 curve_line_vals.append({"x": date_string, "y": product_max_qty})
@@ -367,7 +369,7 @@ class StockReplenishmentOption(models.TransientModel):
             delay = (
                 rule._get_lead_days(record.product_id)[0]["total_delay"] if rule else 0
             )
-            record.lead_time = _("%s days", delay)
+            record.lead_time = self.env._("%s days", delay)
 
     @api.depends("warehouse_id", "qty_free", "uom", "qty_to_order")
     def _compute_warning_message(self):
@@ -377,7 +379,7 @@ class StockReplenishmentOption(models.TransientModel):
                 record.product_id.uom_id.compare(record.qty_free, record.qty_to_order)
                 < 0
             ):
-                record.warning_message = _(
+                record.warning_message = self.env._(
                     "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to order is %(qty_to_order)s %(uom)s.",
                     warehouse=record.warehouse_id.name,
                     free_qty=record.qty_free,
@@ -404,7 +406,7 @@ class StockReplenishmentOption(models.TransientModel):
                     ],
                 ],
                 "target": "new",
-                "name": _("Quantity available too low"),
+                "name": self.env._("Quantity available too low"),
             }
         return self.action_order_full_quantity()
 

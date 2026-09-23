@@ -1,12 +1,12 @@
 import base64
 import io
 
-from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import pdf
+from odoo.tools import LazyTranslate, pdf
 
 _debug = DebugLog(__name__)
+_lt = LazyTranslate(__name__)
 
 
 def _check_document_not_encrypted(document):
@@ -20,7 +20,7 @@ def _check_document_not_encrypted(document):
     if document_is_invalid:
         _debug.logic("pdf_document_encrypted")
         raise ValidationError(
-            _(
+            _lt(
                 "It seems that we're not able to process this pdf inside a quotation. It is either"
                 " encrypted, or encoded in a format we do not support."
             )

@@ -3,7 +3,6 @@ from collections import defaultdict
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -109,7 +108,7 @@ class ProductTemplate(models.Model):
             if so_lines:
                 used_products = [sol["product_id"][1] for sol in so_lines]
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The following products cannot be restricted to the company"
                         " %(company)s because they have already been used in quotations or "
                         "sales orders in another company:\n%(used_products)s\n"
@@ -150,7 +149,7 @@ class ProductTemplate(models.Model):
                     fields=",".join(incompatible_fields),
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The product (%(product)s) has incompatible values: %(value_list)s",
                         product=val["name"],
                         value_list=[field_descriptions[v] for v in incompatible_fields],
@@ -215,8 +214,8 @@ class ProductTemplate(models.Model):
                 sold=self.sales_count,
             )
             res["warning"] = {
-                "title": _("Warning"),
-                "message": _(
+                "title": self.env._("Warning"),
+                "message": self.env._(
                     "You cannot change the product's type because it is already used in sales orders."
                 ),
             }
@@ -236,7 +235,7 @@ class ProductTemplate(models.Model):
                 self.with_context(active_test=False).product_variant_ids.ids,
             ),
         ]
-        action["display_name"] = _("Sales History for %s", self.display_name)
+        action["display_name"] = self.env._("Sales History for %s", self.display_name)
         return action
 
     def _get_backend_root_menu_ids(self):
@@ -251,7 +250,7 @@ class ProductTemplate(models.Model):
             if self.env.user.has_group("product.group_product_pricelist"):
                 return [
                     {
-                        "label": _("Import Template for Products"),
+                        "label": self.env._("Import Template for Products"),
                         "template": "/product/static/xls/product_template.xls",
                     },
                 ]
@@ -372,11 +371,13 @@ class ProductTemplate(models.Model):
             type=self.type,
         )
         if self.invoice_policy == "transferred" and self.type != "consu":
-            return _(
+            return self.env._(
                 "Invoice after delivery, based on quantities delivered, not ordered."
             )
         elif self.invoice_policy == "ordered" and self.type == "service":
-            return _("Invoice ordered quantities as soon as this service is sold.")
+            return self.env._(
+                "Invoice ordered quantities as soon as this service is sold."
+            )
         return ""
 
     def _prepare_service_tracking_tooltip(self):

@@ -3,7 +3,6 @@ import logging
 from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.tools import ormcache
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from .stock_warehouse import PARTNER_LOCATION_MISSING, PARTNER_LOCATION_XML_IDS
@@ -48,32 +47,32 @@ class StockWarehouseLocation(models.Model):
         code = def_values["code"]
         return {
             "lot_stock_id": {
-                "name": _("Stock"),
+                "name": self.env._("Stock"),
                 "active": True,
                 "usage": "internal",
                 "replenish_location": True,
                 "barcode": code + "STOCK",
             },
             "wh_input_stock_loc_id": {
-                "name": _("Input"),
+                "name": self.env._("Input"),
                 "active": reception_steps != "one_step",
                 "usage": "internal",
                 "barcode": code + "INPUT",
             },
             "wh_qc_stock_loc_id": {
-                "name": _("Quality Control"),
+                "name": self.env._("Quality Control"),
                 "active": reception_steps == "three_steps",
                 "usage": "internal",
                 "barcode": code + "QUALITY",
             },
             "wh_output_stock_loc_id": {
-                "name": _("Output"),
+                "name": self.env._("Output"),
                 "active": delivery_steps != "ship_only",
                 "usage": "internal",
                 "barcode": code + "OUTPUT",
             },
             "wh_pack_stock_loc_id": {
-                "name": _("Packing Zone"),
+                "name": self.env._("Packing Zone"),
                 "active": delivery_steps == "pick_pack_ship",
                 "usage": "internal",
                 "barcode": code + "PACKING",
@@ -266,7 +265,7 @@ class StockWarehouseLocation(models.Model):
             limit=1,
         )
         if not location:
-            raise UserError(_("Can't find any production location."))
+            raise UserError(self.env._("Can't find any production location."))
         return location
 
     @api.model

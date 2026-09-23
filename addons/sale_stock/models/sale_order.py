@@ -6,7 +6,6 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare
-from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -135,7 +134,9 @@ class SaleOrder(models.Model):
                     company=order_line.order_id.company_id,
                 )
                 raise ValidationError(
-                    _("You must set a warehouse on your sale order to proceed."),
+                    self.env._(
+                        "You must set a warehouse on your sale order to proceed."
+                    ),
                 )
             self.env["stock.warehouse"].with_company(
                 order_line.order_id.company_id,
@@ -150,7 +151,7 @@ class SaleOrder(models.Model):
                 companies=len(other_company),
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "You must have a warehouse for line using a delivery in different company.",
                 ),
             )
@@ -186,7 +187,7 @@ class SaleOrder(models.Model):
                 picking = record.mapped("picking_ids").filtered(
                     lambda x: x.state not in ("done", "cancel"),
                 )
-                message = _(
+                message = self.env._(
                     """
                     The delivery address has been changed on the Sales Order<br/>
                     From <strong>"%(old_address)s"</strong> to <strong>"%(new_address)s"</strong>,
@@ -355,8 +356,8 @@ class SaleOrder(models.Model):
                 pickings=pickings,
             )
             res["warning"] = {
-                "title": _("Warning!"),
-                "message": _(
+                "title": self.env._("Warning!"),
+                "message": self.env._(
                     "Do not forget to change the partner on the following delivery orders: %s",
                     ",".join(pickings.mapped("name")),
                 ),
@@ -498,7 +499,7 @@ class SaleOrder(models.Model):
     def action_delivery_matching(self):
         self.check_singleton()
         return {
-            "name": _("Delivery Matching"),
+            "name": self.env._("Delivery Matching"),
             "type": "ir.actions.act_window",
             "res_model": "sale.delivery.line.match",
             "views": [

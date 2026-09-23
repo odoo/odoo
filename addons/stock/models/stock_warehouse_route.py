@@ -4,7 +4,6 @@ from collections import defaultdict
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import ormcache
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from .stock_warehouse import ROUTE_NAMES
@@ -204,7 +203,9 @@ class StockWarehouseRoute(models.Model):
             )
         if not route:
             if raise_if_not_found:
-                raise UserError(_("Can't find any generic route %s.", route_name))
+                raise UserError(
+                    self.env._("Can't find any generic route %s.", route_name)
+                )
             if data_route and create:
                 dbg.lifecycle.debug(
                     "_get_or_create_global_route: copying %s for company %s",
@@ -236,7 +237,7 @@ class StockWarehouseRoute(models.Model):
         )
         if not rule:
             raise UserError(
-                _(
+                self.env._(
                     "The delivery configuration of warehouse %s has no rule "
                     "starting from its stock location, so its MTO rule can't be "
                     "generated.",
@@ -257,7 +258,8 @@ class StockWarehouseRoute(models.Model):
                     "auto": "manual",
                     "propagate_carrier": True,
                     "route_id": self._get_or_create_global_route(
-                        "stock.route_warehouse0_mto", _("Replenish on Order (MTO)")
+                        "stock.route_warehouse0_mto",
+                        self.env._("Replenish on Order (MTO)"),
                     ).id,
                 },
                 "update_values": {
@@ -510,7 +512,7 @@ class StockWarehouseRoute(models.Model):
     def _get_route_name(self, route_type):
         if route_type not in ROUTE_NAMES:
             raise UserError(
-                _(
+                self.env._(
                     "No route name is declared for the routing configuration %s.",
                     route_type,
                 )
@@ -691,7 +693,7 @@ class StockWarehouseRoute(models.Model):
         self.check_singleton()
         mto_route = self._get_or_create_global_route(
             "stock.route_warehouse0_mto",
-            _("Replenish on Order (MTO)"),
+            self.env._("Replenish on Order (MTO)"),
             create=False,
         )
         if not mto_route:
@@ -873,7 +875,7 @@ class StockWarehouseRoute(models.Model):
 
     @api.model
     def _format_resupply_routename(self, supplied_name, supplier_name):
-        return _(
+        return self.env._(
             "%(warehouse)s: Supply Product from %(supplier)s",
             warehouse=supplied_name,
             supplier=supplier_name,
@@ -882,7 +884,7 @@ class StockWarehouseRoute(models.Model):
     def action_view_all_routes(self):
         routes = self._get_all_routes()
         return {
-            "name": _("Warehouse's Routes"),
+            "name": self.env._("Warehouse's Routes"),
             "domain": [("id", "in", routes.ids)],
             "res_model": "stock.route",
             "type": "ir.actions.act_window",

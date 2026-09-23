@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -75,7 +75,9 @@ class StockScrap(models.Model):
                 if message:
                     if recommended_location:
                         self.location_id = recommended_location
-                    return {"warning": {"title": _("Warning"), "message": message}}
+                    return {
+                        "warning": {"title": self.env._("Warning"), "message": message}
+                    }
             else:
                 return super()._onchange_serial_number()
         return None

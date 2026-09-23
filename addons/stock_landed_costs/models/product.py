@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.stock_landed_costs.models.stock_landed_cost import SPLIT_METHOD
@@ -36,7 +36,7 @@ class ProductTemplate(models.Model):
                     limit=1,
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot change the product type or disable landed cost option because the product is used in an account move line."
                         )
                     )

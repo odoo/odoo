@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import DOMAIN_PREDICATES, TransactionMemo, frozendict
@@ -264,7 +264,7 @@ class StockWarehouseOrderpoint(models.Model):
             for orderpoint in self
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "The minimum quantity must be less than or equal to the maximum quantity.",
                 ),
             )
@@ -292,7 +292,7 @@ class StockWarehouseOrderpoint(models.Model):
             for vals in vals_list
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You can not create a snoozed orderpoint that is not manually triggered.",
                 ),
             )
@@ -308,7 +308,7 @@ class StockWarehouseOrderpoint(models.Model):
             for orderpoint in self:
                 if orderpoint.company_id.id != vals["company_id"]:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Changing the company of this record is forbidden at this point, you should rather archive it and create a new one.",
                         ),
                     )
@@ -318,7 +318,7 @@ class StockWarehouseOrderpoint(models.Model):
                 (new_trigger or orderpoint.trigger) == "auto" for orderpoint in self
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can only snooze manual orderpoints. You should rather archive 'auto-trigger' orderpoints if you do not want them to be triggered.",
                     ),
                 )

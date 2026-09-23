@@ -5,7 +5,7 @@ from collections import defaultdict
 from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools import TransactionMemo
-from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.translate import LazyTranslate
 
 from ..tools import debug_log as dbg
 
@@ -309,7 +309,7 @@ class StockWarehouse(models.Model):
                     continue
                 if not self._is_location_inside(location, view_location):
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "%(location)s is not inside warehouse %(warehouse)s, so it "
                             "cannot be its %(field)s.",
                             location=location.display_name,
@@ -323,7 +323,7 @@ class StockWarehouse(models.Model):
         for warehouse in self:
             if warehouse in warehouse.resupply_wh_ids:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Warehouse %s cannot be resupplied by itself.",
                         warehouse.display_name,
                     )
@@ -458,7 +458,7 @@ class StockWarehouse(models.Model):
         for warehouse in self:
             if warehouse.company_id.id != vals["company_id"]:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."
                     )
                 )
@@ -612,7 +612,7 @@ class StockWarehouse(models.Model):
             if not record:
                 continue
             raise UserError(
-                _(
+                self.env._(
                     "Warehouse %s has stock or transfer records on its locations, so "
                     "it cannot be deleted. Archive it instead — its history stays "
                     "readable.",
@@ -687,7 +687,7 @@ class StockWarehouse(models.Model):
             company = warehouse.company_id
             if "name" not in default:
                 vals["name"] = self._get_unique_copy_name(
-                    _("%s (copy)", warehouse.name),
+                    self.env._("%s (copy)", warehouse.name),
                     company,
                     self._get_taken_warehouse_values(taken, "name", company, chosen),
                 )
@@ -718,8 +718,8 @@ class StockWarehouse(models.Model):
         ):
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "Creating a new warehouse will automatically activate the Storage Locations setting"
                     ),
                 }
@@ -791,7 +791,7 @@ class StockWarehouse(models.Model):
                 *(picking_type for (picking_type,) in open_moves)
             )
             raise UserError(
-                _(
+                self.env._(
                     "You still have ongoing operations for operation types %(operations)s in warehouse %(warehouse)s",
                     operations=blocking.mapped("name"),
                     warehouse=self._get_one_display_name(blocking.warehouse_id),
@@ -818,13 +818,13 @@ class StockWarehouse(models.Model):
             foreign.default_location_src_id | foreign.default_location_dest_id
         ).warehouse_id
         message = (
-            _(
+            self.env._(
                 "%(operations)s have default source or destination locations within warehouse %(warehouse)s, therefore you cannot delete it.",
                 operations=foreign.mapped("name"),
                 warehouse=self._get_one_display_name(owners),
             )
             if deleting
-            else _(
+            else self.env._(
                 "%(operations)s have default source or destination locations within warehouse %(warehouse)s, therefore you cannot archive it.",
                 operations=foreign.mapped("name"),
                 warehouse=self._get_one_display_name(owners),
@@ -915,7 +915,7 @@ class StockWarehouse(models.Model):
             return company.name
         counter = len(existing) + 1
         while True:
-            candidate = _(
+            candidate = self.env._(
                 "%(company)s - warehouse # %(counter)s",
                 company=company.name,
                 counter=counter,
@@ -937,7 +937,7 @@ class StockWarehouse(models.Model):
             if candidate not in existing:
                 return candidate
         raise UserError(
-            _(
+            self.env._(
                 "Unable to generate a unique short name for a warehouse in %s.",
                 company.display_name,
             )
@@ -982,7 +982,7 @@ class StockWarehouse(models.Model):
                 )
             )
         warehouse_action = self.env.ref("stock.action_stock_warehouse")
-        msg = _(
+        msg = self.env._(
             "Please create a warehouse for company %s.", self.env.company.display_name
         )
-        raise RedirectWarning(msg, warehouse_action.id, _("Go to Warehouses"))
+        raise RedirectWarning(msg, warehouse_action.id, self.env._("Go to Warehouses"))

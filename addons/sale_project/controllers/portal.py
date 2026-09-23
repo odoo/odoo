@@ -1,4 +1,4 @@
-from odoo import _
+from odoo.http import request
 
 from odoo.addons.project.controllers.portal import ProjectCustomerPortal
 
@@ -10,7 +10,10 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
             del values["partner_id"]
         if not project or project.sudo().allow_billable:
             values |= {
-                "sale_line_id": {"label": _("Sales Order Item"), "sequence": 80},
+                "sale_line_id": {
+                    "label": request.env._("Sales Order Item"),
+                    "sequence": 80,
+                },
             }
         return values
 
@@ -22,12 +25,12 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
             values |= {
                 "sale_order": {
                     "input": "sale_order",
-                    "label": _("Search in Sales Order Item"),
+                    "label": request.env._("Search in Sales Order Item"),
                     "sequence": 90,
                 },
                 "invoice": {
                     "input": "invoice",
-                    "label": _("Search in Invoice"),
+                    "label": request.env._("Search in Invoice"),
                     "sequence": 100,
                 },
             }

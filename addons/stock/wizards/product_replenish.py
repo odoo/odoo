@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools.misc import clean_context
 
@@ -140,8 +140,8 @@ class ProductReplenish(models.TransientModel):
                     self.quantity,
                     self.product_uom_id,
                     self.warehouse_id.lot_stock_id,
-                    _("Manual Replenishment"),
-                    _("Manual Replenishment"),
+                    self.env._("Manual Replenishment"),
+                    self.env._("Manual Replenishment"),
                     self.warehouse_id.company_id,
                     self._prepare_run_values(),
                 )
@@ -192,7 +192,9 @@ class ProductReplenish(models.TransientModel):
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "title": _("The following replenishment order has been generated"),
+                "title": self.env._(
+                    "The following replenishment order has been generated"
+                ),
                 "message": "%s",
                 "links": link,
                 "sticky": False,

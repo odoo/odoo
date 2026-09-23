@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -42,4 +42,4 @@ class MrpProductionGroup(models.Model):
     def _check_no_cyclic_dependencies(self):
         if self._has_cycle("child_ids"):
             _debug.logic("production_group_cycle", groups=self)
-            raise ValidationError(_("You cannot create cyclic dependency."))
+            raise ValidationError(self.env._("You cannot create cyclic dependency."))

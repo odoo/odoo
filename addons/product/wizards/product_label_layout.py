@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -45,7 +45,7 @@ class ProductLabelLayout(models.TransientModel):
 
     def _prepare_report_data(self):
         if self.custom_quantity <= 0:
-            raise UserError(_("You need to set a positive quantity."))
+            raise UserError(self.env._("You need to set a positive quantity."))
 
         if self.print_format == "dymo":
             xml_id = "product.report_product_template_label_dymo"
@@ -68,7 +68,7 @@ class ProductLabelLayout(models.TransientModel):
             active_model = "product.product"
         else:
             raise UserError(
-                _(
+                self.env._(
                     "No product to print, if the product is archived please unarchive it before printing its label."
                 )
             )
@@ -86,7 +86,9 @@ class ProductLabelLayout(models.TransientModel):
         xml_id, data = self._prepare_report_data()
         if not xml_id:
             raise UserError(
-                _("Unable to find report template for %s format", self.print_format)
+                self.env._(
+                    "Unable to find report template for %s format", self.print_format
+                )
             )
         report_action = self.env.ref(xml_id).report_action(
             None, data=data, config=False

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from .pine_labs_pos_request import call_pine_labs
@@ -76,7 +76,7 @@ class PosPaymentMethod(models.Model):
                     "PlutusTransactionReferenceID"
                 ],
             }
-        default_error = _(
+        default_error = self.env._(
             "The expected error code for the Pine Labs POS status request was not included in the response."
         )
         error = (
@@ -113,7 +113,7 @@ class PosPaymentMethod(models.Model):
                 ],
                 "data": formatted_transaction_data,
             }
-        default_error = _(
+        default_error = self.env._(
             "The expected error code for the Pine Labs POS status request was not included in the response."
         )
         error = (
@@ -146,11 +146,11 @@ class PosPaymentMethod(models.Model):
         ):
             return {
                 "responseCode": response["ResponseCode"],
-                "notification": _(
+                "notification": self.env._(
                     "Pine Labs POS transaction cancelled. Retry again for collecting payment."
                 ),
             }
-        default_error = _(
+        default_error = self.env._(
             "The expected error code for the Pine Labs POS status request was not included in the response."
         )
         error = (
@@ -167,4 +167,6 @@ class PosPaymentMethod(models.Model):
             and record.company_id.currency_id.name != "INR"
             for record in self
         ):
-            raise UserError(_("This Payment Terminal is only valid for INR Currency"))
+            raise UserError(
+                self.env._("This Payment Terminal is only valid for INR Currency")
+            )

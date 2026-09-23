@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.tools import OrderedSet
@@ -524,7 +524,9 @@ class StockMoveLineQuant(models.Model):
                 "tag": "display_notification",
                 "params": {
                     "type": "danger",
-                    "message": _("There are no inventory adjustments to revert."),
+                    "message": self.env._(
+                        "There are no inventory adjustments to revert."
+                    ),
                 },
             }
         dbg.pipeline.debug(
@@ -537,7 +539,7 @@ class StockMoveLineQuant(models.Model):
         )
         moves._action_done()
         return {
-            "name": _("Reverted Moves"),
+            "name": self.env._("Reverted Moves"),
             "type": "ir.actions.act_window",
             "res_model": "stock.move.line",
             "view_mode": "list",

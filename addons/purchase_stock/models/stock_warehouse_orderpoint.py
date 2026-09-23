@@ -2,7 +2,6 @@ from dateutil import relativedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
 
 
 class StockWarehouseOrderpoint(models.Model):
@@ -134,7 +133,7 @@ class StockWarehouseOrderpoint(models.Model):
                 buy_routes = self.env["stock.rule"]._get_buy_routes()
             if not buy_routes:
                 raise UserError(
-                    _(
+                    self.env._(
                         "No Buy route is available, so a vendor cannot be set on "
                         '%(orderpoint)s. Enable "Buy to Resupply" on a warehouse first.',
                         orderpoint=orderpoint.display_name,
@@ -213,7 +212,7 @@ class StockWarehouseOrderpoint(models.Model):
         )
         if order:
             return self._prepare_action_replenishment_notification(
-                _("The following replenishment order has been generated"),
+                self.env._("The following replenishment order has been generated"),
                 order.display_name,
                 f"/odoo/action-purchase.action_purchase_order_3/{order.id}",
             )

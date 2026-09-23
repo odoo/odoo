@@ -3,7 +3,7 @@ import re
 
 import psycopg
 
-from odoo import SUPERUSER_ID, Command, _, api, fields, models
+from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.modules.registry import Registry
@@ -246,7 +246,7 @@ class DeliveryCarrier(models.Model):
         for carrier in self:
             if carrier.must_have_tag_ids & carrier.excluded_tag_ids:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
                     )
                     % carrier.name
@@ -287,7 +287,7 @@ class DeliveryCarrier(models.Model):
             "delivery_iot",
         ]
         return {
-            "name": _("New Providers"),
+            "name": self.env._("New Providers"),
             "res_model": "ir.module.module",
             "view_mode": "kanban,list",
             "views": [
@@ -299,7 +299,7 @@ class DeliveryCarrier(models.Model):
                 ["name", "not in", exclude_apps],
             ],
             "type": "ir.actions.act_window",
-            "help": _("""<p class="o_view_nocontent">
+            "help": self.env._("""<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
                 </p>"""),
         }
@@ -381,7 +381,7 @@ class DeliveryCarrier(models.Model):
         elif source._name == "stock.picking":
             products = source.move_ids.with_prefetch().mapped("product_id")
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         _debug.logic(
             "carrier_match_must_have_tags",
             carrier=self.id,
@@ -399,7 +399,7 @@ class DeliveryCarrier(models.Model):
         elif source._name == "stock.picking":
             products = source.move_ids.with_prefetch().mapped("product_id")
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         _debug.logic(
             "carrier_match_excluded_tags",
             carrier=self.id,
@@ -423,7 +423,7 @@ class DeliveryCarrier(models.Model):
                 for move in source.move_ids
             )
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         _debug.logic(
             "carrier_match_weight",
             carrier=self.id,
@@ -445,7 +445,7 @@ class DeliveryCarrier(models.Model):
                 for move in source.move_ids
             )
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         _debug.logic(
             "carrier_match_volume",
             carrier=self.id,
@@ -573,7 +573,7 @@ class DeliveryCarrier(models.Model):
                 )
                 >= self.amount
             ):
-                res["warning_message"] = _(
+                res["warning_message"] = self.env._(
                     "The shipping is free since the order amount exceeds %.2f.",
                     self.amount,
                 )
@@ -601,7 +601,9 @@ class DeliveryCarrier(models.Model):
             return {
                 "success": False,
                 "price": 0.0,
-                "error_message": _("Error: this delivery method is not available."),
+                "error_message": self.env._(
+                    "Error: this delivery method is not available."
+                ),
                 "warning_message": False,
             }
 
@@ -665,7 +667,7 @@ class DeliveryCarrier(models.Model):
             return {
                 "success": False,
                 "price": 0.0,
-                "error_message": _(
+                "error_message": self.env._(
                     "Error: this delivery method is not available for this address."
                 ),
                 "warning_message": False,
@@ -695,7 +697,7 @@ class DeliveryCarrier(models.Model):
             return {
                 "success": False,
                 "price": 0.0,
-                "error_message": _(
+                "error_message": self.env._(
                     "Error: this delivery method is not available for this address."
                 ),
                 "warning_message": False,
@@ -825,6 +827,6 @@ class DeliveryCarrier(models.Model):
                 criteria_found = True
                 break
         if not criteria_found:
-            raise UserError(_("Not available for current order"))
+            raise UserError(self.env._("Not available for current order"))
 
         return price

@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class AccountPayment(models.Model):
@@ -16,7 +16,7 @@ class AccountPayment(models.Model):
         self.check_singleton()
 
         return {
-            "name": _("POS Order"),
+            "name": self.env._("POS Order"),
             "type": "ir.actions.act_window",
             "res_model": "pos.order",
             "target": "current",

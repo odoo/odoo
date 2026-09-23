@@ -2,7 +2,7 @@ import calendar
 import datetime
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.barcode import get_barcode_check_digit
@@ -32,7 +32,7 @@ class BarcodeNomenclature(models.Model):
                     re.compile("(?:%s)?" % nom.gs1_separator_fnc1)
                 except re.error as error:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The FNC1 Separator Alternative is not a valid Regex: %(error)s",
                             error=error,
                         )
@@ -71,7 +71,7 @@ class BarcodeNomenclature(models.Model):
                 date = datetime.datetime.strptime(str(year) + gs1_date[2:], "%Y%m%d")
         except (ValueError, calendar.IllegalMonthError) as e:
             raise ValidationError(
-                _(
+                self.env._(
                     "A GS1 barcode nomenclature pattern was matched. However, the barcode failed to be converted to a valid date: '%(error_message)s'",
                     error_message=e,
                 )
@@ -107,7 +107,7 @@ class BarcodeNomenclature(models.Model):
                     result["value"] = int(match.group(2))
             except Exception as e:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'There is something wrong with the barcode rule "%s" pattern.\n'
                         "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
                         "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure.",
@@ -117,7 +117,7 @@ class BarcodeNomenclature(models.Model):
         elif rule.gs1_content_type == "identifier":
             if not match.group(2):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'There is something wrong with the barcode rule "%s" pattern.\n'
                         "Its value must match at least one digit to compute a check digit.",
                         rule.name,

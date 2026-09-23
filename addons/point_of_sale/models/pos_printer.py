@@ -1,7 +1,7 @@
 from base64 import b32encode
 from hashlib import sha256
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from ..tools import debug_log as dbg
@@ -95,7 +95,9 @@ class PosPrinter(models.Model):
     def _constrains_epson_printer_ip(self):
         for record in self:
             if record.printer_type == "epson_epos" and not record.epson_printer_ip:
-                raise ValidationError(_("Epson Printer IP Address cannot be empty."))
+                raise ValidationError(
+                    self.env._("Epson Printer IP Address cannot be empty.")
+                )
 
     @api.onchange("epson_printer_ip")
     def _onchange_epson_printer_ip(self):

@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
@@ -42,7 +42,7 @@ class AccountTax(models.Model):
             )
             if self.env.cr.fetchone():
                 raise UserError(
-                    _(
+                    self.env._(
                         "It is forbidden to modify a tax used in a POS order not posted. "
                         "You must close the POS sessions before modifying the tax."
                     )

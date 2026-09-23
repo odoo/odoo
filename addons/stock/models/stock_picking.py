@@ -4,7 +4,6 @@ from odoo import api, fields, models
 from odoo.db.schema import column_exists
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
@@ -446,7 +445,7 @@ class StockPicking(models.Model):
                 for picking in pickings_changing_type
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Changing the operation type of this record is forbidden at this point.",
                     ),
                 )
@@ -778,7 +777,9 @@ class StockPicking(models.Model):
         for picking in self:
             if picking.state == "cancel":
                 raise UserError(
-                    _("You cannot change the Scheduled Date on a cancelled transfer."),
+                    self.env._(
+                        "You cannot change the Scheduled Date on a cancelled transfer."
+                    ),
                 )
             if picking.state == "done":
                 continue
@@ -805,8 +806,8 @@ class StockPicking(models.Model):
                 if not ml.location_id._is_descendant_of(self.location_id):
                     return {
                         "warning": {
-                            "title": _("Warning: change source location"),
-                            "message": _(
+                            "title": self.env._("Warning: change source location"),
+                            "message": self.env._(
                                 "Updating the location of this transfer will result in unreservation of the currently assigned items. "
                                 "An attempt to reserve items at the new location will be made and the link with preceding transfers will be discarded.\n\n"
                                 "To avoid this, please discard the source location change before saving.",
@@ -847,7 +848,7 @@ class StockPicking(models.Model):
             ),
         )
         if not moves:
-            raise UserError(_("Nothing to check the availability for."))
+            raise UserError(self.env._("Nothing to check the availability for."))
         dbg.pipeline.debug("action_assign -> _action_assign %s", dbg.rec(moves))
         moves._action_assign()
         return True
@@ -1012,7 +1013,7 @@ class StockPicking(models.Model):
         self.check_singleton()
         if all(m.product_uom_id.is_zero(m.quantity) for m in self.move_ids):
             raise UserError(
-                _(
+                self.env._(
                     "%s: Nothing to split. Fill the quantities you want in a new transfer in the done quantities",
                     self.display_name,
                 ),
@@ -1023,14 +1024,14 @@ class StockPicking(models.Model):
         ]
         if all(comparison == 0 for comparison in demand_comparisons):
             raise UserError(
-                _(
+                self.env._(
                     "%s: Nothing to split, all demand is done. For split you need at least one line not fully fulfilled",
                     self.display_name,
                 ),
             )
         if any(comparison > 0 for comparison in demand_comparisons):
             raise UserError(
-                _(
+                self.env._(
                     "%s: Can't split: quantities done can't be above demand",
                     self.display_name,
                 ),
@@ -1103,7 +1104,7 @@ class StockPicking(models.Model):
             ):
                 products |= move.product_id
         return {
-            "name": _("Scrap Products"),
+            "name": self.env._("Scrap Products"),
             "view_mode": "form",
             "res_model": "stock.scrap",
             "view_id": view.id,
@@ -1238,7 +1239,7 @@ class StockPicking(models.Model):
         if not self._is_transfer_display_required():
             if pickings_without_moves:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can’t validate an empty transfer. Please add some products to move before proceeding.",
                     ),
                 )
@@ -1246,7 +1247,7 @@ class StockPicking(models.Model):
                 raise UserError(self._get_without_quantities_error_message())
             if pickings_without_lots:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You need to supply a Lot/Serial number for products %s.",
                         ", ".join(products_without_lots.mapped("display_name")),
                     ),
@@ -1254,19 +1255,19 @@ class StockPicking(models.Model):
         else:
             message = ""
             if pickings_without_moves:
-                message += _(
+                message += self.env._(
                     "Transfers %s: Please add some items to move.",
                     ", ".join(pickings_without_moves.mapped("name")),
                 )
             if zero_quantity_pickings := pickings_without_quantities.filtered(
                 lambda p: p.state != "draft",
             ):
-                message += _(
+                message += self.env._(
                     "\n\nTransfers %s: You cannot validate a transfer without any quantities set. Set some quantities before proceeding.",
                     ", ".join(zero_quantity_pickings.mapped("name")),
                 )
             if pickings_without_lots:
-                message += _(
+                message += self.env._(
                     "\n\nTransfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s.",
                     transfer_list=", ".join(pickings_without_lots.mapped("name")),
                     product_list=", ".join(

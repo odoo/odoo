@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from psycopg import Error
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
@@ -72,7 +72,9 @@ class StockQuantReservation(models.Model):
     def _get_removal_strategy_order(self, removal_strategy):
         strategy = self._get_removal_strategies().get(removal_strategy)
         if strategy is None:
-            raise UserError(_("Removal strategy %s not implemented.", removal_strategy))
+            raise UserError(
+                self.env._("Removal strategy %s not implemented.", removal_strategy)
+            )
         return strategy.order
 
     @api.model
@@ -650,7 +652,9 @@ class StockQuantReservation(models.Model):
         in_date=None,
     ):
         if not (quantity or reserved_quantity):
-            raise ValidationError(_("Quantity or Reserved Quantity should be set."))
+            raise ValidationError(
+                self.env._("Quantity or Reserved Quantity should be set.")
+            )
         dbg.lifecycle.debug(
             "_update_available_quantity product=%s location=%s lot=%s package=%s "
             "qty=%s reserved=%s",

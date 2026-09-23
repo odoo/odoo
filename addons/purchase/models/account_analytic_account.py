@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.tools.translate import _
 
 
 class AccountAnalyticAccount(models.Model):
@@ -31,7 +30,7 @@ class AccountAnalyticAccount(models.Model):
     def action_view_purchase_orders(self):
         self.check_singleton()
         result = {
-            "name": _("Purchase Orders"),
+            "name": self.env._("Purchase Orders"),
             "type": "ir.actions.act_window",
             "res_model": "purchase.order",
             "domain": self._get_domain_purchase_order(),

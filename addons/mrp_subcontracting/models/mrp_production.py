@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -83,7 +83,7 @@ class MrpProduction(models.Model):
                     fields=sorted(unauthorized_fields),
                 )
                 raise AccessError(
-                    _(
+                    self.env._(
                         "You cannot write on fields %s in mrp.production.",
                         ", ".join(unauthorized_fields),
                     )
@@ -148,7 +148,7 @@ class MrpProduction(models.Model):
         if any(production._get_subcontract_move() for production in self):
             _debug.logic("merge_refused", reason="subcontracted", productions=self)
             raise ValidationError(
-                _("Subcontracted manufacturing orders cannot be merged.")
+                self.env._("Subcontracted manufacturing orders cannot be merged.")
             )
         return super().action_merge()
 
@@ -207,7 +207,7 @@ class MrpProduction(models.Model):
         self.check_singleton()
         if not self.lot_producing_ids:
             raise UserError(
-                _(
+                self.env._(
                     "Please set a lot/serial for the currently opened subcontracting MO first."
                 )
             )
@@ -215,7 +215,9 @@ class MrpProduction(models.Model):
         if not move:
             return False
         if move.state == "done":
-            raise UserError(_("The subcontracted goods have already been received."))
+            raise UserError(
+                self.env._("The subcontracted goods have already been received.")
+            )
         if all(l.lot_id for l in move.move_line_ids):
             move.move_line_ids.create(
                 {

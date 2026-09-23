@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -43,5 +43,5 @@ class PosOrder(models.Model):
         return (
             super()._prepare_pos_log(body)
             + Markup("<br/>")
-            + _("Cashier %s", self.cashier)
+            + self.env._("Cashier %s", self.cashier)
         )

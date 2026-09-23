@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 
 class AccountMove(models.Model):
@@ -14,7 +14,7 @@ class AccountMove(models.Model):
                             and "(Cancelled)"
                             not in pos_order_line.sale_order_line_id.name
                         ):
-                            name = _(
+                            name = self.env._(
                                 "%(old_name)s (Cancelled)",
                                 old_name=pos_order_line.sale_order_line_id.name,
                             )

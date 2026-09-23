@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -35,7 +35,7 @@ class StockLandedCost(models.Model):
         )
 
     name = fields.Char(
-        default=lambda self: _("New"),
+        default=lambda self: self.env._("New"),
         copy=False,
         readonly=True,
         tracking=True,
@@ -112,7 +112,7 @@ class StockLandedCost(models.Model):
     def create(self, vals_list):
         _debug.lifecycle("landed_cost_create", count=len(vals_list))
         for vals in vals_list:
-            if vals.get("name", _("New")) == _("New"):
+            if vals.get("name", self.env._("New")) == self.env._("New"):
                 vals["name"] = self.env["ir.sequence"].next_by_code("stock.landed.cost")
         return super().create(vals_list)
 
@@ -130,7 +130,7 @@ class StockLandedCost(models.Model):
         _debug.lifecycle("landed_cost_cancel", costs=self)
         if any(cost.state == "done" for cost in self):
             raise UserError(
-                _(
+                self.env._(
                     "Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them"
                 )
             )
@@ -146,7 +146,7 @@ class StockLandedCost(models.Model):
             cost_without_adjusment_lines.compute_landed_cost()
         if not self._is_valuation_balanced():
             raise UserError(
-                _(
+                self.env._(
                     "Cost and adjustments lines do not match. You should maybe recompute the landed costs."
                 )
             )
@@ -209,7 +209,7 @@ class StockLandedCost(models.Model):
 
         if not lines:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot apply landed costs on the chosen Transfer(s). Landed costs can only be applied for products with FIFO or average costing method."
                 )
             )
@@ -308,11 +308,11 @@ class StockLandedCost(models.Model):
     def _check_can_validate(self):
         _debug.logic("landed_cost_validate_check", costs=self)
         if any(cost.state != "draft" for cost in self):
-            raise UserError(_("Only draft landed costs can be validated"))
+            raise UserError(self.env._("Only draft landed costs can be validated"))
         for cost in self:
             if not cost._get_targeted_move_ids():
                 raise UserError(
-                    _(
+                    self.env._(
                         "Please define Transfer(s) on which those additional costs should apply."
                     )
                 )
@@ -474,7 +474,7 @@ class StockValuationAdjustmentLines(models.Model):
 
         if not debit_account_id:
             raise UserError(
-                _(
+                self.env._(
                     "Please configure Stock Valuation Account for product: %s.",
                     self.product_id.name,
                 )
@@ -482,7 +482,7 @@ class StockValuationAdjustmentLines(models.Model):
 
         if not credit_account_id:
             raise UserError(
-                _(
+                self.env._(
                     "Please configure Stock Expense Account for product: %s.",
                     cost_product.name,
                 )

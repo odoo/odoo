@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 
@@ -77,12 +77,12 @@ class AccountMove(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Timesheets"),
+            "name": self.env._("Timesheets"),
             "domain": [("project_id", "!=", False)],
             "res_model": "account.analytic.line",
             "view_id": False,
             "view_mode": "list,form",
-            "help": _("""
+            "help": self.env._("""
                 <p class="o_view_nocontent_smiling_face">
                     Record timesheets
                 </p><p>

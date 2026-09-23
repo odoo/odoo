@@ -1,7 +1,7 @@
 import logging
 import pprint
 
-from odoo import SUPERUSER_ID, _
+from odoo import SUPERUSER_ID
 from odoo.http import Controller, request, route
 from odoo.libs.debug_log import DebugLog
 
@@ -32,7 +32,7 @@ class GelatoController(Controller):
         _debug.pipeline("gelato_webhook", event=event_data["event"])
         fulfillment_status = event_data.get("fulfillmentStatus")
         if fulfillment_status == "failed":
-            log_message = _(
+            log_message = request.env._(
                 "Gelato could not proceed with the fulfillment of order %(order_reference)s:"
                 " %(gelato_message)s",
                 order_reference=order_sudo.display_name,
@@ -46,7 +46,7 @@ class GelatoController(Controller):
 
             order_sudo.line_ids.currency_id  # noqa: B018  warms the cache: the flush cannot read it under access rights
 
-            log_message = _(
+            log_message = request.env._(
                 "Gelato has canceled order %(reference)s.",
                 reference=order_sudo.display_name,
             )
@@ -69,7 +69,7 @@ class GelatoController(Controller):
                 author_id=request.env.ref("base.partner_root").id,
             )
         elif fulfillment_status == "returned":
-            log_message = _(
+            log_message = request.env._(
                 "Gelato has returned order %(reference)s.",
                 reference=order_sudo.display_name,
             )

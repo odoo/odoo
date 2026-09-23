@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -25,23 +25,25 @@ class StockPickingBatch(models.Model):
             )
         if len(self.picking_type_id) > 1:
             raise UserError(
-                _(
+                self.env._(
                     "Batch/Wave transfers with different operation types cannot be merged."
                 )
             )
         if len(set(self.mapped("is_wave"))) > 1:
             raise UserError(
-                _(
+                self.env._(
                     "Batch transfers cannot be merged with wave transfers and vice versa."
                 )
             )
         if len(set(self.mapped("state"))) > 1:
             raise UserError(
-                _("Batch/Wave transfers with different states cannot be merged.")
+                self.env._(
+                    "Batch/Wave transfers with different states cannot be merged."
+                )
             )
         if self[:1].state in ["done", "cancel"]:
             raise UserError(
-                _("You cannot merge done or cancelled batch/wave transfers.")
+                self.env._("You cannot merge done or cancelled batch/wave transfers.")
             )
 
         target_batch = self[:1]
@@ -56,7 +58,7 @@ class StockPickingBatch(models.Model):
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "title": _(
+                "title": self.env._(
                     "Batch/Wave transfers have been merged into the following transfer"
                 ),
                 "message": "%s",
@@ -76,7 +78,7 @@ class StockPickingBatch(models.Model):
         self.check_singleton()
         view_id = self.env.ref("stock_picking_batch.view_stock_move_line_list").id
         return {
-            "name": _("Detailed Operations"),
+            "name": self.env._("Detailed Operations"),
             "view_mode": "list",
             "type": "ir.actions.act_window",
             "res_model": "stock.move.line",

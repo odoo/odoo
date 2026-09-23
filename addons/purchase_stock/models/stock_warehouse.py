@@ -1,6 +1,5 @@
 from odoo import api, fields, models
 from odoo.fields import Command
-from odoo.tools.translate import _
 
 
 class StockWarehouse(models.Model):
@@ -38,7 +37,7 @@ class StockWarehouse(models.Model):
     def _create_or_update_route(self):
         purchase_route = self._get_or_create_global_route(
             "purchase_stock.route_warehouse0_buy",
-            _("Buy"),
+            self.env._("Buy"),
         )
         to_link = self.filtered("buy_to_resupply")
         if to_link:
@@ -58,7 +57,7 @@ class StockWarehouse(models.Model):
                         "company_id": self.company_id.id,
                         "route_id": self._get_or_create_global_route(
                             "purchase_stock.route_warehouse0_buy",
-                            _("Buy"),
+                            self.env._("Buy"),
                         ).id,
                         "propagate_cancel": self.reception_steps != "one_step",
                     },

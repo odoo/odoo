@@ -2,7 +2,6 @@ import logging
 
 from odoo import api, models
 from odoo.libs.colors import TAG_COLOR_INDICES
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from .stock_warehouse import WAREHOUSE_PICKING_TYPE_CODES
@@ -209,20 +208,20 @@ class StockWarehousePickingType(models.Model):
         _input_loc, output_loc = self._get_input_output_locations()
         return {
             "in_type_id": {
-                "name": _("Receipts"),
+                "name": self.env._("Receipts"),
                 "code": "incoming",
                 "use_existing_lots": False,
                 "company_id": self.company_id.id,
             },
             "out_type_id": {
-                "name": _("Delivery Orders"),
+                "name": self.env._("Delivery Orders"),
                 "code": "outgoing",
                 "use_create_lots": False,
                 "print_label": True,
                 "company_id": self.company_id.id,
             },
             "pack_type_id": {
-                "name": _("Pack"),
+                "name": self.env._("Pack"),
                 "code": "internal",
                 "use_create_lots": False,
                 "use_existing_lots": True,
@@ -231,7 +230,7 @@ class StockWarehousePickingType(models.Model):
                 "company_id": self.company_id.id,
             },
             "pick_type_id": {
-                "name": _("Pick"),
+                "name": self.env._("Pick"),
                 "code": "internal",
                 "use_create_lots": False,
                 "use_existing_lots": True,
@@ -239,7 +238,7 @@ class StockWarehousePickingType(models.Model):
                 "company_id": self.company_id.id,
             },
             "qc_type_id": {
-                "name": _("Quality Control"),
+                "name": self.env._("Quality Control"),
                 "code": "internal",
                 "use_create_lots": False,
                 "use_existing_lots": True,
@@ -248,7 +247,7 @@ class StockWarehousePickingType(models.Model):
                 "company_id": self.company_id.id,
             },
             "store_type_id": {
-                "name": _("Storage"),
+                "name": self.env._("Storage"),
                 "code": "internal",
                 "use_create_lots": False,
                 "use_existing_lots": True,
@@ -256,7 +255,7 @@ class StockWarehousePickingType(models.Model):
                 "company_id": self.company_id.id,
             },
             "int_type_id": {
-                "name": _("Internal Transfers"),
+                "name": self.env._("Internal Transfers"),
                 "code": "internal",
                 "use_create_lots": False,
                 "use_existing_lots": True,
@@ -266,7 +265,7 @@ class StockWarehousePickingType(models.Model):
                 "company_id": self.company_id.id,
             },
             "xdock_type_id": {
-                "name": _("Cross Dock"),
+                "name": self.env._("Cross Dock"),
                 "code": "internal",
                 "use_create_lots": False,
                 "use_existing_lots": True,

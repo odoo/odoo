@@ -3,7 +3,7 @@ import logging
 import requests
 from requests.exceptions import HTTPError, RequestException
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -121,7 +121,7 @@ class PosPaymentMethod(models.Model):
 
         if not access_token:
             raise UserError(
-                _(
+                self.env._(
                     "Unable to retrieve DPO Pay bearer token: check Client ID and Client Secret."
                 )
             )
@@ -139,7 +139,7 @@ class PosPaymentMethod(models.Model):
             "get-status",
             "cancel-transaction",
         ):
-            raise UserError(_("Invalid endpoint"))
+            raise UserError(self.env._("Invalid endpoint"))
 
         mode = "Test" if self.dpopay_test_mode else "Production"
         url = f"{self._get_dpopay_base_url()}/{endpoint}"
@@ -192,13 +192,13 @@ class PosPaymentMethod(models.Model):
             )
 
             if error_code == "403":
-                error_message = _(
+                error_message = self.env._(
                     "Please ensure the device is online and confirm that the Merchant ID (MID) and Terminal ID (TID) are correct. %s",
                     error_message,
                 )
 
             if error_code == "999911":
-                error_message = _(
+                error_message = self.env._(
                     "Invalid Chain ID. Please verify the configuration. %s",
                     error_message,
                 )

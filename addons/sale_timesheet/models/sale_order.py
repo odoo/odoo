@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -125,7 +125,9 @@ class SaleOrder(models.Model):
                     reason="no_service_line",
                 )
                 raise UserError(
-                    _("The Sales Order must contain at least one service product.")
+                    self.env._(
+                        "The Sales Order must contain at least one service product."
+                    )
                 )
             _debug.pipeline(
                 "order_confirmed_for_employee_mapping", orders=created_records
@@ -210,7 +212,7 @@ class SaleOrder(models.Model):
                     ("so_line", "in", self.line_ids.ids),
                     ("project_id", "!=", False),
                 ],
-                "help": _("""
+                "help": self.env._("""
                 <p class="o_view_nocontent_smiling_face">
                     No activities found. Let's start a new one!
                 </p><p>

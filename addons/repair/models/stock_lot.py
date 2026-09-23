@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -91,7 +91,7 @@ class StockLot(models.Model):
         else:
             action.update(
                 {
-                    "name": _("Repair orders of %s", self.name),
+                    "name": self.env._("Repair orders of %s", self.name),
                     "domain": [("id", "in", self.repair_line_ids.ids)],
                     "view_mode": "list,form",
                 }
@@ -105,7 +105,7 @@ class StockLot(models.Model):
             active_repair = self.env["repair.order"].browse(active_repair_id)
             if active_repair and not active_repair.picking_type_id.use_create_lots:
                 raise UserError(
-                    _(
+                    self.env._(
                         'You are not allowed to create a lot or serial number with this operation type. To change this, go on the operation type and tick the box "Create New Lots/Serial Numbers".'
                     )
                 )

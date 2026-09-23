@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from ..tools import debug_log as dbg
@@ -23,7 +23,7 @@ class AccountJournal(models.Model):
         )
         if methods:
             raise ValidationError(
-                _(
+                self.env._(
                     "This journal is associated with a payment method. You cannot modify its type"
                 )
             )
@@ -36,7 +36,7 @@ class AccountJournal(models.Model):
         )
         if linked_payment_methods:
             raise ValidationError(
-                _(
+                self.env._(
                     "You can not archive this journal because it is set on the following payment method : %s.",
                     linked_payment_methods.name,
                 )
@@ -83,7 +83,7 @@ class AccountJournal(models.Model):
         if not journal:
             journal = self.create(
                 {
-                    "name": _("Point of Sale"),
+                    "name": self.env._("Point of Sale"),
                     "code": "POSS",
                     "type": "general",
                     "company_id": self.env.company.id,

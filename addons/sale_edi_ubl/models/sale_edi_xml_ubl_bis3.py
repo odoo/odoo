@@ -1,6 +1,6 @@
 from lxml import etree
 
-from odoo import Command, _, models
+from odoo import Command, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import html2plaintext
 from odoo.tools.xml_utils import dict_to_xml
@@ -361,7 +361,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             if not line.get("product_id"):
                 _debug.logic("edi_product_unmatched", order=order, name=line["name"])
                 line_logs.append(
-                    _(
+                    self.env._(
                         "Could not retrieve the product named: %(name)s",
                         name=line["name"],
                     )

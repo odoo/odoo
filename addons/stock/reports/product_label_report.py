@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from markupsafe import Markup
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
@@ -19,7 +19,9 @@ class ReportStockLabel_Product_Product_View(models.AbstractModel):
             Product = self.env["product.product"]
         else:
             raise UserError(
-                _("Product model not defined, Please contact your administrator.")
+                self.env._(
+                    "Product model not defined, Please contact your administrator."
+                )
             )
 
         quantity_by_product = defaultdict(list)

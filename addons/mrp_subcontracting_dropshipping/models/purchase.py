@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class PurchaseOrder(models.Model):
@@ -33,8 +33,8 @@ class PurchaseOrder(models.Model):
         if self.default_location_dest_id_is_subcontracting_loc:
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "Please note this purchase order is for subcontracting purposes."
                     ),
                 }

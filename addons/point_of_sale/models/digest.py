@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError
 
 from ..tools import debug_log as dbg
@@ -14,7 +14,7 @@ class DigestDigest(models.Model):
     def _compute_kpi_pos_total_value(self):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
             raise AccessError(
-                _("Do not have access, skip this data for user's digest email")
+                self.env._("Do not have access, skip this data for user's digest email")
             )
 
         with dbg.timer(self.env, "digest kpi_pos_total_value for %s", dbg.rec(self)):

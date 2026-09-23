@@ -6,7 +6,7 @@ from itertools import batched
 from dateutil import relativedelta
 from psycopg import OperationalError
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
@@ -58,7 +58,7 @@ class StockWarehouseOrderpointReplenish(models.Model):
                         ),
                     ],
                 },
-                _("Edit Product"),
+                self.env._("Edit Product"),
             ) from e
         notification = False
         if len(self) == 1:
@@ -267,7 +267,7 @@ class StockWarehouseOrderpointReplenish(models.Model):
             or move.location_id.usage == "transit"
         ) and move.picking_id:
             return self._prepare_action_replenishment_notification(
-                _("The inter-warehouse transfers have been generated"),
+                self.env._("The inter-warehouse transfers have been generated"),
                 move.picking_id.name,
                 "/odoo/action-stock.stock_picking_action_picking_type/"
                 f"{move.picking_id.id}",
@@ -587,7 +587,7 @@ class StockWarehouseOrderpointReplenish(models.Model):
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "stock.action_stock_replenishment_info",
         )
-        action["name"] = _(
+        action["name"] = self.env._(
             "Replenishment Information for %(product)s in %(warehouse)s",
             product=self.product_id.display_name,
             warehouse=self.warehouse_id.display_name,

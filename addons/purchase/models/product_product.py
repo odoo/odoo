@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ProductProduct(models.Model):
@@ -37,8 +37,8 @@ class ProductProduct(models.Model):
         if self._origin and self.purchased_product_qty > 0:
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "You cannot change the product's type because it is already used in purchase orders."
                     ),
                 }
@@ -54,7 +54,9 @@ class ProductProduct(models.Model):
             ("state", "=", "done"),
             ("product_id", "in", self.ids),
         ]
-        action["display_name"] = _("Purchase History for %s", self.display_name)
+        action["display_name"] = self.env._(
+            "Purchase History for %s", self.display_name
+        )
         return action
 
     def _get_backend_root_menu_ids(self):

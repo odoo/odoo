@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -128,7 +128,7 @@ class StockWarehouse(models.Model):
 
     def _create_or_update_route(self):
         manufacture_route = self._get_or_create_global_route(
-            "mrp.route_warehouse0_manufacture", _("Manufacture")
+            "mrp.route_warehouse0_manufacture", self.env._("Manufacture")
         )
         for warehouse in self:
             if warehouse.manufacture_to_resupply:
@@ -227,9 +227,9 @@ class StockWarehouse(models.Model):
 
     def _get_route_name(self, route_type):
         names = {
-            "mrp_one_step": _("Manufacture (1 step)"),
-            "pbm": _("Pick components and then manufacture"),
-            "pbm_sam": _(
+            "mrp_one_step": self.env._("Manufacture (1 step)"),
+            "pbm": self.env._("Pick components and then manufacture"),
+            "pbm_sam": self.env._(
                 "Pick components, manufacture and then store products (3 steps)"
             ),
         }
@@ -251,7 +251,8 @@ class StockWarehouse(models.Model):
                         "company_id": self.company_id.id,
                         "picking_type_id": self.manu_type_id.id,
                         "route_id": self._get_or_create_global_route(
-                            "mrp.route_warehouse0_manufacture", _("Manufacture")
+                            "mrp.route_warehouse0_manufacture",
+                            self.env._("Manufacture"),
                         ).id,
                     },
                     "update_values": {
@@ -271,7 +272,8 @@ class StockWarehouse(models.Model):
                         "action": "pull",
                         "auto": "manual",
                         "route_id": self._get_or_create_global_route(
-                            "stock.route_warehouse0_mto", _("Replenish on Order (MTO)")
+                            "stock.route_warehouse0_mto",
+                            self.env._("Replenish on Order (MTO)"),
                         ).id,
                         "location_dest_id": production_location.id,
                         "location_src_id": self.lot_stock_id.id,
@@ -292,7 +294,8 @@ class StockWarehouse(models.Model):
                         "action": "pull",
                         "auto": "manual",
                         "route_id": self._get_or_create_global_route(
-                            "stock.route_warehouse0_mto", _("Replenish on Order (MTO)")
+                            "stock.route_warehouse0_mto",
+                            self.env._("Replenish on Order (MTO)"),
                         ).id,
                         "name": self._format_rulename(
                             self.lot_stock_id, self.pbm_loc_id, "MTO"
@@ -321,13 +324,13 @@ class StockWarehouse(models.Model):
         values.update(
             {
                 "pbm_loc_id": {
-                    "name": _("Pre-Production"),
+                    "name": self.env._("Pre-Production"),
                     "active": manufacture_steps in ("pbm", "pbm_sam"),
                     "usage": "internal",
                     "barcode": code + "PREPRODUCTION",
                 },
                 "sam_loc_id": {
-                    "name": _("Post-Production"),
+                    "name": self.env._("Post-Production"),
                     "active": manufacture_steps == "pbm_sam",
                     "usage": "internal",
                     "barcode": code + "POSTPRODUCTION",
@@ -351,7 +354,7 @@ class StockWarehouse(models.Model):
         data.update(
             {
                 "pbm_type_id": {
-                    "name": _("Pick Components"),
+                    "name": self.env._("Pick Components"),
                     "code": "internal",
                     "use_create_lots": True,
                     "use_existing_lots": True,
@@ -360,7 +363,7 @@ class StockWarehouse(models.Model):
                     "company_id": self.company_id.id,
                 },
                 "sam_type_id": {
-                    "name": _("Store Finished Product"),
+                    "name": self.env._("Store Finished Product"),
                     "code": "internal",
                     "use_create_lots": True,
                     "use_existing_lots": True,
@@ -369,7 +372,7 @@ class StockWarehouse(models.Model):
                     "company_id": self.company_id.id,
                 },
                 "manu_type_id": {
-                    "name": _("Manufacturing"),
+                    "name": self.env._("Manufacturing"),
                     "code": "mrp_operation",
                     "use_create_lots": True,
                     "use_existing_lots": True,

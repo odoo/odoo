@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -81,14 +81,16 @@ class TeamTeam(models.Model):
         if protected := (self & default_teams):
             _debug.logic("team_unlink_refused", teams=protected, reason="default_team")
             raise UserError(
-                _('Cannot delete default team "%(name)s"', name=protected[0].name)
+                self.env._(
+                    'Cannot delete default team "%(name)s"', name=protected[0].name
+                )
             )
 
     def _compute_dashboard_button_name(self):
         if self._is_in_sale_scope():
-            self.dashboard_button_name = _("Sales Analysis")
+            self.dashboard_button_name = self.env._("Sales Analysis")
         else:
-            self.dashboard_button_name = _("Dashboard")
+            self.dashboard_button_name = self.env._("Dashboard")
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_for_sales(self):
@@ -99,7 +101,7 @@ class TeamTeam(models.Model):
                     "team_unlink_refused", team=team, orders=team.sale_order_count
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider cancelling them or archiving the team instead.",
                         team_name=team.name,
                         sale_order_count=team.sale_order_count,

@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
             )
         )
         if unmatch:
-            error = _(
+            error = self.env._(
                 "Mondial Relay mismatching between delivery method and shipping address."
             )
             if len(self) > 1:

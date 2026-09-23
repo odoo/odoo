@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.tools import DOMAIN_PREDICATES
 
@@ -92,7 +92,7 @@ class ProductTemplateQuantity(models.Model):
         for template, qty in zip(self, quantities, strict=True):
             if template.type != "consu" or not template.is_storable:
                 raise UserError(
-                    _(
+                    self.env._(
                         "%(product)s does not track inventory, so it cannot have a"
                         " quantity on hand. Enable Track Inventory first.",
                         product=template.display_name,
@@ -100,7 +100,7 @@ class ProductTemplateQuantity(models.Model):
                 )
             if template.tracking != "none":
                 raise UserError(
-                    _(
+                    self.env._(
                         "%(product)s is tracked by lot/serial number: set its quantity"
                         " through an inventory adjustment so lot/serial numbers can be"
                         " assigned.",
@@ -109,7 +109,7 @@ class ProductTemplateQuantity(models.Model):
                 )
             if template.product_variant_count > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "%(product)s has several variants: update the quantity of each"
                         " variant instead.",
                         product=template.display_name,
@@ -118,18 +118,20 @@ class ProductTemplateQuantity(models.Model):
             if not template.product_variant_id:
                 if template.id:
                     raise UserError(
-                        _(
+                        self.env._(
                             "%(product)s has no active variant, so there is nothing"
                             " to hold a quantity on hand. Unarchive a variant first.",
                             product=template.display_name,
                         ),
                     )
                 raise UserError(
-                    _("Save the product form before updating the Quantity On Hand."),
+                    self.env._(
+                        "Save the product form before updating the Quantity On Hand."
+                    ),
                 )
             if template.uom_id.compare(qty, 0) < 0:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The quantity on hand of %(product)s cannot be set to a negative value.",
                         product=template.display_name,
                     ),

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -26,7 +26,7 @@ class PosConfig(models.Model):
                 )
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The online payment method used for self-order in a POS config must have at least one published payment provider supporting the currency of that POS config."
                     )
                 )

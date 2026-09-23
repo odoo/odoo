@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
@@ -377,14 +377,14 @@ class SaleOrder(models.Model):
         )
         return {
             "type": "ir.actions.act_window",
-            "name": _("Milestones"),
+            "name": self.env._("Milestones"),
             "domain": [("sale_line_id", "in", self.line_ids.ids)],
             "res_model": "project.milestone",
             "views": [
                 (self.env.ref("sale_project.project_milestone_view_tree").id, "list")
             ],
             "view_mode": "list",
-            "help": _("""
+            "help": self.env._("""
                 <p class="o_view_nocontent_smiling_face">
                     No milestones found. Let's create one!
                 </p><p>

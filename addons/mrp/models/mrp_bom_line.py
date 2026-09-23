@@ -3,7 +3,7 @@ from itertools import starmap
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import formatLang
@@ -105,7 +105,7 @@ class MrpBomLine(models.Model):
             line.child_line_ids = line.child_bom_id.bom_line_ids
 
     def _get_uom_mismatch_message(self):
-        return _(
+        return self.env._(
             "The component %(product)s is used in %(unit)s, which does"
             " not measure the same thing as its own unit"
             " %(product_unit)s.",
@@ -292,13 +292,13 @@ class MrpBomLine(models.Model):
         }
 
         return {
-            "name": _("Attachments"),
+            "name": self.env._("Attachments"),
             "domain": domain,
             "res_model": "document.document",
             "type": "ir.actions.act_window",
             "view_mode": "kanban,list,form",
             "target": "current",
-            "help": _("""<p class="o_view_nocontent_smiling_face">
+            "help": self.env._("""<p class="o_view_nocontent_smiling_face">
                         Upload files to your product
                     </p><p>
                         Use this feature to store any files, like drawings or specifications.
@@ -361,7 +361,7 @@ class MrpBomLine(models.Model):
                 ancestors=len(ancestors),
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "The current configuration is incorrect because it would "
                     "create a cycle between these products: %s.",
                     self.product_id.display_name,

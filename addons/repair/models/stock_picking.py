@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import clean_context
 
@@ -252,7 +252,7 @@ class StockPicking(models.Model):
             }
         )
         return {
-            "name": _("Create Repair"),
+            "name": self.env._("Create Repair"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "repair.order",
@@ -276,7 +276,7 @@ class StockPicking(models.Model):
             else:
                 action.update(
                     {
-                        "name": _("Repair Orders"),
+                        "name": self.env._("Repair Orders"),
                         "view_mode": "list,form",
                         "domain": [("id", "in", self.repair_ids.ids)],
                     }

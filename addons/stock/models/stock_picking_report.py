@@ -2,7 +2,6 @@ import math
 
 from odoo import api, models
 from odoo.tools import OrderedSet
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from .stock_picking import DONE_CANCEL_STATES
@@ -25,9 +24,9 @@ class StockPickingReport(models.Model):
         )
         filename = "%s_signed_delivery_slip" % self.name
         if self.partner_id:
-            message = _("Order signed by %s", self.partner_id.name)
+            message = self.env._("Order signed by %s", self.partner_id.name)
         else:
-            message = _("Order signed")
+            message = self.env._("Order signed")
         self.message_post(
             attachments=[("%s.pdf" % filename, report[0])],
             body=message,
@@ -251,7 +250,7 @@ class StockPickingReport(models.Model):
     def action_view_label_layout(self):
         view = self.env.ref("stock.product_label_layout_form_picking")
         return {
-            "name": _("Choose Labels Layout"),
+            "name": self.env._("Choose Labels Layout"),
             "type": "ir.actions.act_window",
             "res_model": "product.label.layout",
             "views": [(view.id, "form")],
@@ -270,7 +269,7 @@ class StockPickingReport(models.Model):
         ):
             view = self.env.ref("stock.picking_label_type_form")
             return {
-                "name": _("Choose Type of Labels To Print"),
+                "name": self.env._("Choose Type of Labels To Print"),
                 "type": "ir.actions.act_window",
                 "res_model": "picking.label.type",
                 "views": [(view.id, "form")],
@@ -344,7 +343,7 @@ class StockPickingReport(models.Model):
 
     def action_view_returns(self):
         self.check_singleton()
-        return self._prepare_action_pickings(self.return_ids, _("Returns"))
+        return self._prepare_action_pickings(self.return_ids, self.env._("Returns"))
 
     @api.model
     def _prepare_action_pickings(self, pickings, name):
@@ -407,7 +406,7 @@ class StockPickingReport(models.Model):
     def action_detailed_operations(self):
         view_id = self.env.ref("stock.view_stock_move_line_detailed_operation_tree").id
         return {
-            "name": _("Detailed Operations"),
+            "name": self.env._("Detailed Operations"),
             "view_mode": "list",
             "type": "ir.actions.act_window",
             "res_model": "stock.move.line",
@@ -427,7 +426,7 @@ class StockPickingReport(models.Model):
 
     def action_next_transfer(self):
         return self._prepare_action_pickings(
-            self._get_next_transfers(), _("Next Transfers")
+            self._get_next_transfers(), self.env._("Next Transfers")
         )
 
     def _get_next_transfers(self):

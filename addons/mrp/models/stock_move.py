@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -365,7 +365,7 @@ class StockMove(models.Model):
                 and move.product_uom_id.compare(move.quantity, 0) < 0
             ):
                 raise ValidationError(
-                    _("A component cannot be consumed in a negative quantity.")
+                    self.env._("A component cannot be consumed in a negative quantity.")
                 )
 
     @api.model_create_multi
@@ -682,7 +682,7 @@ class StockMove(models.Model):
         self.check_singleton()
         action = super().action_show_details()
         if self.raw_material_production_id:
-            action["name"] = _("Components")
+            action["name"] = self.env._("Components")
             action["views"] = [
                 (self.env.ref("mrp.view_stock_move_form_operations_raw").id, "form")
             ]
@@ -690,7 +690,7 @@ class StockMove(models.Model):
             action["context"]["force_manual_consumption"] = True
             action["context"]["active_mo_id"] = self.raw_material_production_id.id
         elif self.production_id:
-            action["name"] = _("Move Byproduct")
+            action["name"] = self.env._("Move Byproduct")
             action["views"] = [
                 (
                     self.env.ref("mrp.view_stock_move_form_operations_finished").id,

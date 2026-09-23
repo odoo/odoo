@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.barcode import is_barcode_encoding_valid
@@ -186,10 +186,12 @@ class StockPackage(models.Model):
         if "location_id" in vals:
             empty_packs = self.filtered(lambda pack: not pack.contained_quant_ids)
             if not vals["location_id"] and self - empty_packs:
-                raise UserError(_("Cannot remove the location of a non empty package"))
+                raise UserError(
+                    self.env._("Cannot remove the location of a non empty package")
+                )
             if vals["location_id"]:
                 if empty_packs:
-                    raise UserError(_("Cannot move an empty package"))
+                    raise UserError(self.env._("Cannot move an empty package"))
                 location_dest_id = self.env["stock.location"].browse(
                     vals["location_id"]
                 )
@@ -243,7 +245,7 @@ class StockPackage(models.Model):
                 in package._get_all_children_package_dest_ids()[1]
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A package can't have one of its contained packages as destination container."
                     ),
                 )
@@ -409,7 +411,7 @@ class StockPackage(models.Model):
         self.child_package_ids.parent_package_id = False
         quants = self.quant_ids
         if quants:
-            quants.move_quants(message=_("Quantities unpacked"), unpack=True)
+            quants.move_quants(message=self.env._("Quantities unpacked"), unpack=True)
             quants._run_maintenance_tasks()
 
     def _pre_put_in_pack_hook(

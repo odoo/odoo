@@ -5,7 +5,7 @@ from datetime import timedelta
 from babel.dates import format_date
 from dateutil import relativedelta
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -184,7 +184,7 @@ class MrpWorkcenter(models.Model):
         for workcenter in self:
             if workcenter in workcenter.alternative_workcenter_ids:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Workcenter %s cannot be an alternative of itself.",
                         workcenter.name,
                     )
@@ -220,7 +220,7 @@ class MrpWorkcenter(models.Model):
                 week_end, "d MMM", locale=locale
             )
             if not delta:
-                short_name = _("This Week")
+                short_name = self.env._("This Week")
             week_range[week_start] = short_name
         date_start = start_of(
             today + relativedelta.relativedelta(days=-7 - day_offset), "day"
@@ -430,7 +430,7 @@ class MrpWorkcenter(models.Model):
         self.check_singleton()
         if self.working_state != "blocked":
             _debug.logic("workcenter_refused", reason="not_blocked", workcenter=self.id)
-            raise UserError(_("It has already been unblocked."))
+            raise UserError(self.env._("It has already been unblocked."))
         blocking = self.env["mrp.workcenter.productivity"].search(
             [
                 ("workcenter_id", "=", self.id),
@@ -578,7 +578,7 @@ class MrpWorkcenter(models.Model):
                 duration=duration,
                 horizon_days=iterations * step.days,
             )
-            return False, _(
+            return False, self.env._(
                 "No available slot within %(days)s days of the planned start",
                 days=iterations * step.days,
             )
@@ -602,7 +602,10 @@ class MrpWorkcenter(models.Model):
                     workcenter=workcenter.id,
                 )
                 raise UserError(
-                    _("There is no defined calendar on workcenter %s.", workcenter.name)
+                    self.env._(
+                        "There is no defined calendar on workcenter %s.",
+                        workcenter.name,
+                    )
                 )
             duration = duration_by_workcenter[workcenter]
             with _debug.perf(
@@ -633,11 +636,11 @@ class MrpWorkcenter(models.Model):
     @api.model
     def _prepare_unplannable_error(self, subject, reasons):
         if not reasons:
-            return _(
+            return self.env._(
                 "%(subject)s cannot be planned: it has no work center to run on.",
                 subject=subject,
             )
-        return _(
+        return self.env._(
             "%(subject)s cannot be planned on any of its work centers:\n%(reasons)s",
             subject=subject,
             reasons="\n".join(
@@ -768,7 +771,7 @@ class MrpWorkcenter(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Schedule: %s", self.display_name),
+            "name": self.env._("Schedule: %s", self.display_name),
             "res_model": "resource.reservation",
             "view_mode": "calendar,list,form",
             "domain": [("resource_id", "=", self.resource_id.id)],
@@ -784,7 +787,7 @@ class MrpWorkcenter(models.Model):
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
-                    "title": _(
+                    "title": self.env._(
                         "Note that archived work center(s): '%s' is/are still linked to active Bill of Materials, which means that operations can still be planned on it/them. "
                         "To prevent this, deletion of the work center is recommended instead.",
                         filtered_workcenters,
@@ -910,7 +913,7 @@ class MrpWorkcenterProductivityLoss(models.Model):
         if not loss:
             labels = dict(self._fields["loss_type"]._description_selection(self.env))
             raise UserError(
-                _(
+                self.env._(
                     "You need to define at least one productivity loss in the "
                     "category '%s'. Create one from the Manufacturing app, menu: "
                     "Configuration / Productivity Losses.",
@@ -1078,7 +1081,7 @@ class MrpWorkcenterProductivity(models.Model):
         )
         if duplicated:
             raise ValidationError(
-                _(
+                self.env._(
                     "The Workorder (%s) cannot be started twice!",
                     duplicated[0][0].display_name,
                 )

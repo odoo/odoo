@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models, modules
+from odoo import api, fields, models, modules
 
 from ..tools import debug_log as dbg
 
@@ -71,7 +71,7 @@ class ResCompany(models.Model):
         locations = self.env["stock.location"].create(
             [
                 {
-                    "name": _("Inter-warehouse transit"),
+                    "name": self.env._("Inter-warehouse transit"),
                     "usage": "transit",
                     "company_id": company.id,
                     "active": False,
@@ -111,12 +111,12 @@ class ResCompany(models.Model):
 
     def _create_inventory_loss_location(self):
         return self._create_property_location(
-            _("Inventory adjustment"), "inventory", "property_stock_inventory"
+            self.env._("Inventory adjustment"), "inventory", "property_stock_inventory"
         )
 
     def _create_production_location(self):
         return self._create_property_location(
-            _("Production"), "production", "property_stock_production"
+            self.env._("Production"), "production", "property_stock_production"
         )
 
     def _create_scrap_sequence(self):

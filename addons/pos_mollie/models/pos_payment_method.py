@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import hash_sign, resolve_hash_signed
@@ -65,7 +65,7 @@ class PosPaymentMethod(models.Model):
                 continue
             if not payment_method.mollie_payment_provider_id.mollie_api_key:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Please set the Mollie API Key field on the %s payment provider.",
                         payment_method.mollie_payment_provider_id.name,
                     )

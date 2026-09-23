@@ -3,7 +3,7 @@ import logging
 import pprint
 from urllib.parse import parse_qs
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.http import request
 from odoo.tools import consteq, hmac
@@ -150,14 +150,14 @@ class PosPaymentMethod(models.Model):
             if existing_payment_method:
                 if existing_payment_method.company_id == payment_method.company_id:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Terminal %(terminal)s is already used on payment method %(payment_method)s.",
                             terminal=payment_method.adyen_terminal_identifier,
                             payment_method=existing_payment_method.display_name,
                         )
                     )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Terminal %(terminal)s is already used in company %(company)s on payment method %(payment_method)s.",
                         terminal=payment_method.adyen_terminal_identifier,
                         company=existing_payment_method.company_id.name,
@@ -191,7 +191,7 @@ class PosPaymentMethod(models.Model):
         ):
             raise AccessDenied
         if not data:
-            raise UserError(_("Invalid Adyen request"))
+            raise UserError(self.env._("Invalid Adyen request"))
 
         if (
             "SaleToPOIRequest" in data
@@ -307,7 +307,7 @@ class PosPaymentMethod(models.Model):
             and not is_cancel_data
             and not is_capture_data
         ):
-            raise UserError(_("Invalid Adyen request"))
+            raise UserError(self.env._("Invalid Adyen request"))
 
         if (
             is_payment_request_with_acquirer_data

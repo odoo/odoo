@@ -1,4 +1,4 @@
-from odoo import Command, _, api, models
+from odoo import Command, api, models
 
 
 class LoyaltyProgram(models.Model):
@@ -30,7 +30,7 @@ class LoyaltyProgram(models.Model):
     def get_program_templates(self):
         res = super().get_program_templates()
         if "promotion" in res:
-            res["promotion"]["description"] = _(
+            res["promotion"]["description"] = self.env._(
                 "Automatic promotion: free shipping on orders higher than $50"
             )
         return res

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -42,19 +42,25 @@ class ProductCombo(models.Model):
     def _check_qty_max(self):
         if any(combo.qty_max < 1 for combo in self):
             raise ValidationError(
-                _("The maximum quantity of a combo must be greater or equal to 1.")
+                self.env._(
+                    "The maximum quantity of a combo must be greater or equal to 1."
+                )
             )
 
     @api.constrains("qty_free")
     def _check_qty_free(self):
         if any(combo.qty_free < 0 for combo in self):
             raise ValidationError(
-                _("The free quantity of a combo must be greater or equal to 0.")
+                self.env._(
+                    "The free quantity of a combo must be greater or equal to 0."
+                )
             )
 
     @api.constrains("qty_max", "qty_free")
     def _check_qty_max_greater_than_qty_free(self):
         if any(combo.qty_free > combo.qty_max for combo in self):
             raise ValidationError(
-                _("The free quantity must be smaller or equal to the maximum quantity.")
+                self.env._(
+                    "The free quantity must be smaller or equal to the maximum quantity."
+                )
             )

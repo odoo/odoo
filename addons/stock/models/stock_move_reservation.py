@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.libs.numbers import float_is_zero
 from odoo.tools.misc import OrderedSet, groupby
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from odoo.addons.stock.tools.reservation import ReservationLedger
@@ -454,7 +453,9 @@ class StockMoveReservation(models.Model):
                 continue
             if move.state == "done":
                 raise UserError(
-                    _("You cannot unreserve a stock move that has been set to 'Done'."),
+                    self.env._(
+                        "You cannot unreserve a stock move that has been set to 'Done'."
+                    ),
                 )
             moves_to_unreserve.add(move.id)
         moves_to_unreserve = self.env["stock.move"].browse(moves_to_unreserve)

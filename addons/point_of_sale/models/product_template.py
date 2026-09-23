@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import SQL, is_html_empty
 
@@ -62,7 +62,7 @@ class ProductTemplate(models.Model):
         )
         if combo_item:
             raise ValidationError(
-                _(
+                self.env._(
                     "You must first remove this product from the %s combo",
                     combo_item.combo_id.name,
                 )
@@ -73,7 +73,7 @@ class ProductTemplate(models.Model):
         for template in self:
             if template in template.pos_optional_product_ids:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "%s cannot be suggested as an optional product for itself.",
                         template.display_name,
                     )
@@ -82,7 +82,7 @@ class ProductTemplate(models.Model):
     def _check_unused_in_pos(self):
         if self._is_blocked_by_open_pos_session():
             raise UserError(
-                _(
+                self.env._(
                     "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
                     "Make sure to close all sessions first to avoid any issues.",
                 )
@@ -92,7 +92,7 @@ class ProductTemplate(models.Model):
         special = self._filtered_pos_special_products()
         if special:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot archive or delete %s: it is set as a special product "
                     "in a Point of Sale configuration. Please change the configuration first.",
                     special[0].display_name,
@@ -127,7 +127,7 @@ class ProductTemplate(models.Model):
     def _unlink_except_open_session(self):
         if self._is_blocked_by_open_pos_session():
             raise UserError(
-                _(
+                self.env._(
                     "To delete a product, make sure all point of sale sessions are closed.\n\n"
                     "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
                 )
@@ -161,10 +161,12 @@ class ProductTemplate(models.Model):
             "product.template %s favorite -> %s", dbg.rec(self), bool(is_favorite)
         )
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
-            raise AccessError(_("Only Point of Sale users can change a POS favorite."))
+            raise AccessError(
+                self.env._("Only Point of Sale users can change a POS favorite.")
+            )
         if not self.available_in_pos:
             raise AccessError(
-                _(
+                self.env._(
                     "%s is not available in the Point of Sale, so it cannot be "
                     "marked as a favorite there.",
                     self.display_name,

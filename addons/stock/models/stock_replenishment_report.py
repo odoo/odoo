@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from dateutil import relativedelta
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.fields import Domain
 from odoo.tools import float_compare
 
@@ -224,7 +224,7 @@ class StockReplenishmentReport(models.AbstractModel):
             values = Orderpoint._prepare_orderpoint_vals(product_id, location_id)
             values.update(
                 {
-                    "name": _("Replenishment Report"),
+                    "name": self.env._("Replenishment Report"),
                     "warehouse_id": location.warehouse_id.id
                     or fallback_warehouse.get(location.company_id.id, False),
                     "company_id": location.company_id.id,

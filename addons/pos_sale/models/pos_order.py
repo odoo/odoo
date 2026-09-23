@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class PosOrder(models.Model):
@@ -215,7 +215,7 @@ class PosOrder(models.Model):
         linked_orders = self.lines.mapped("sale_order_origin_id")
         return {
             "type": "ir.actions.act_window",
-            "name": _("Linked Sale Orders"),
+            "name": self.env._("Linked Sale Orders"),
             "res_model": "sale.order",
             "view_mode": "list,form",
             "domain": [("id", "in", linked_orders.ids)],

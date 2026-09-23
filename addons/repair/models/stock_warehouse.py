@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -37,12 +37,12 @@ class StockWarehouse(models.Model):
             limit=1,
         )
         if not scrap_location:
-            raise UserError(_("No location of type Inventory Loss found"))
+            raise UserError(self.env._("No location of type Inventory Loss found"))
 
         data.update(
             {
                 "repair_type_id": {
-                    "name": _("Repairs"),
+                    "name": self.env._("Repairs"),
                     "code": "repair_operation",
                     "default_location_src_id": self.lot_stock_id.id,
                     "default_location_dest_id": prod_location.id,
@@ -103,7 +103,8 @@ class StockWarehouse(models.Model):
                         "action": "pull",
                         "auto": "manual",
                         "route_id": self._get_or_create_global_route(
-                            "stock.route_warehouse0_mto", _("Replenish on Order (MTO)")
+                            "stock.route_warehouse0_mto",
+                            self.env._("Replenish on Order (MTO)"),
                         ).id,
                         "location_dest_id": self.repair_type_id.default_location_dest_id.id,
                         "location_src_id": self.repair_type_id.default_location_src_id.id,

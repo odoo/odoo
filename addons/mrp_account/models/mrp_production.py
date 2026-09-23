@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, fields, models
+from odoo import Command, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -36,7 +36,7 @@ class MrpProduction(models.Model):
             for workorder in production.workorder_ids:
                 analytic_lines = workorder._get_analytic_lines()
                 analytic_lines.ref = production.display_name
-                analytic_lines.name = _("[WC] %s", workorder.display_name)
+                analytic_lines.name = self.env._("[WC] %s", workorder.display_name)
         return res
 
     def action_view_move_wip(self):
@@ -55,7 +55,7 @@ class MrpProduction(models.Model):
         else:
             action.update(
                 {
-                    "name": _("WIP Entries of %s", self.name),
+                    "name": self.env._("WIP Entries of %s", self.name),
                     "domain": [("id", "in", self.wip_move_ids.ids)],
                     "view_mode": "list,form",
                     "views": [(self.env.ref("account.view_move_tree").id, "list")],
@@ -194,7 +194,7 @@ class MrpProduction(models.Model):
                 workorders=len(workorders),
             )
 
-            desc = _("%s - Labour", mo.name)
+            desc = self.env._("%s - Labour", mo.name)
             charged = list(labour_amounts.items())
             account_move = (
                 mo.env["account.move"]

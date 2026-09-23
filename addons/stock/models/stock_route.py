@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import TransactionMemo
 
@@ -118,7 +118,7 @@ class StockRoute(models.Model):
             for rule in route.rule_ids:
                 if route.company_id.id != rule.company_id.id:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Rule %(rule)s belongs to %(rule_company)s while the route belongs to %(route_company)s.",
                             rule=rule.display_name,
                             rule_company=rule.company_id.display_name,
@@ -155,7 +155,7 @@ class StockRoute(models.Model):
         vals_list = super().copy_data(default=default)
         if "name" not in default:
             for route, vals in zip(self, vals_list, strict=True):
-                vals["name"] = _("%s (copy)", route.name)
+                vals["name"] = self.env._("%s (copy)", route.name)
         return vals_list
 
     def copy_translations(self, new, excluded=()):

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from ..tools import debug_log as dbg
@@ -65,7 +65,7 @@ class ResPartner(models.Model):
             stat_info = {
                 "iconClass": "fa-solid fa-bag-shopping",
                 "value": partner.pos_order_count,
-                "label": _("Shopping cart"),
+                "label": self.env._("Shopping cart"),
                 "tagClass": "o_tag_color_7",
             }
             data_list[partner.id].append(stat_info)
@@ -211,7 +211,7 @@ class ResPartner(models.Model):
                 "res.partner unlink refused: %s has pos orders", dbg.rec(self)
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "You cannot delete a customer that has point of sales orders. You can archive it instead."
                 )
             )

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -39,7 +39,7 @@ class SaleOrder(models.Model):
             }
         elif self.repair_count > 1:
             return {
-                "name": _("Repair Orders"),
+                "name": self.env._("Repair Orders"),
                 "type": "ir.actions.act_window",
                 "res_model": "repair.order",
                 "view_mode": "list,form",

@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.barcode import is_barcode_encoding_valid
@@ -223,7 +223,7 @@ class ProductProduct(models.Model):
         ):
             location = self.env["stock.location"].browse(self.env.context["active_id"])
             if location.exists():
-                return _("Products: %(location)s", location=location.name)
+                return self.env._("Products: %(location)s", location=location.name)
         return res
 
     @api.model
@@ -336,8 +336,8 @@ class ProductProduct(models.Model):
         ):
             return {
                 "warning": {
-                    "title": _("Warning!"),
-                    "message": _(
+                    "title": self.env._("Warning!"),
+                    "message": self.env._(
                         "You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment."
                     ),
                 }
@@ -449,7 +449,7 @@ class ProductProduct(models.Model):
         action = self.env["stock.quant"].with_context(**context).action_view_quants()
         if not self.env.context.get("is_stock_report"):
             action["domain"] = [("product_id", "in", self.ids)]
-            action["name"] = _("Update Quantity")
+            action["name"] = self.env._("Update Quantity")
         return action
 
     def action_product_forecast_report(self):
@@ -504,7 +504,7 @@ class ProductProduct(models.Model):
         )
         if rule in seen_rules:
             raise UserError(
-                _(
+                self.env._(
                     "Invalid rule's configuration, the following rule causes an endless loop: %s",
                     rule.display_name,
                 ),

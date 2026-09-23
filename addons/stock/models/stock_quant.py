@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
@@ -224,7 +224,7 @@ class StockQuant(models.Model):
         for quant in self:
             if quant.location_id.usage == "view":
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'You cannot take products from or deliver products to a location of type "view" (%s).',
                         quant.location_id.name,
                     )
@@ -235,7 +235,7 @@ class StockQuant(models.Model):
         non_storable = self.product_id.filtered(lambda p: not p.is_storable)
         if non_storable:
             raise ValidationError(
-                _(
+                self.env._(
                     "Quants cannot be created for consumables or services: %s",
                     ", ".join(non_storable.mapped("display_name")),
                 )
@@ -246,7 +246,7 @@ class StockQuant(models.Model):
         for quant in self:
             if quant.lot_id.product_id and quant.lot_id.product_id != quant.product_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The Lot/Serial number (%s) is linked to another product.",
                         quant.lot_id.name,
                     )
@@ -277,14 +277,14 @@ class StockQuant(models.Model):
                 continue
             if product.uom_id.compare(qty, 0) > 0:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The serial number has already been assigned: \n Product: %(product)s, Serial Number: %(serial_number)s",
                         product=product.display_name,
                         serial_number=lot.name,
                     )
                 )
             raise ValidationError(
-                _(
+                self.env._(
                     "This serial number is at a negative quantity, so it has been"
                     " taken out more times than it was brought in: \n Product:"
                     " %(product)s, Serial Number: %(serial_number)s",
@@ -321,7 +321,7 @@ class StockQuant(models.Model):
             sn_locations = quants.mapped("location_id")
             if quants:
                 if not source_location_id:
-                    message = _(
+                    message = self.env._(
                         "The Serial Number (%(serial_number)s) is already used in location(s): %(location_list)s.\n\n"
                         "Is this expected? For example, this can occur if a delivery operation is validated "
                         "before its corresponding receipt operation is validated. In this case the issue will be solved "
@@ -347,7 +347,7 @@ class StockQuant(models.Model):
                         recommended_location
                         and recommended_location.company_id == company_id
                     ):
-                        message = _(
+                        message = self.env._(
                             "Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n\n"
                             "Source location for this move will be changed to %(recommended_location)s",
                             serial_number=lot_id.name,
@@ -356,7 +356,7 @@ class StockQuant(models.Model):
                             recommended_location=recommended_location.display_name,
                         )
                     else:
-                        message = _(
+                        message = self.env._(
                             "Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n\n"
                             "Please correct this to prevent inconsistent data.",
                             serial_number=lot_id.name,
@@ -400,7 +400,7 @@ class StockQuant(models.Model):
                 first = counted_by_quant.get(quant.id)
                 if first is not None:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Lines %(first)s and %(second)s both count the same"
                             " quant (%(quant)s). Merge them into a single line:"
                             " a quant has one counted quantity, not two.",
@@ -446,7 +446,9 @@ class StockQuant(models.Model):
         if self._is_inventory_mode() and forbidden_fields.intersection(vals):
             if self.filtered(lambda quant: quant.location_id.usage != "inventory"):
                 raise UserError(
-                    _("Quant's editing is restricted, you can't do this operation.")
+                    self.env._(
+                        "Quant's editing is restricted, you can't do this operation."
+                    )
                 )
             dbg.logic.debug(
                 "write: inventory mode drops forbidden keys %s",
@@ -462,14 +464,14 @@ class StockQuant(models.Model):
         return super().write(vals)
 
     def copy(self, default=None):
-        raise UserError(_("You cannot duplicate stock quants."))
+        raise UserError(self.env._("You cannot duplicate stock quants."))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_wrong_permission(self):
         if not self.env.is_superuser():
             if not self.env.user.has_group("stock.group_stock_manager"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Quants are auto-deleted when appropriate. If you must manually delete them, please ask a stock manager to do it."
                     )
                 )
@@ -484,7 +486,7 @@ class StockQuant(models.Model):
     @api.model
     def name_create(self, name):
         raise UserError(
-            _(
+            self.env._(
                 "A quant is identified by its product, location, lot, package and"
                 " owner, so it cannot be created from a name alone."
             )
@@ -642,7 +644,7 @@ class StockQuant(models.Model):
                 )
             )
             if message:
-                return {"warning": {"title": _("Warning"), "message": message}}
+                return {"warning": {"title": self.env._("Warning"), "message": message}}
         return None
 
     @api.onchange("product_id", "company_id")
@@ -708,7 +710,7 @@ class StockQuant(models.Model):
     def get_import_templates(self):
         return [
             {
-                "label": _("Import Template for Inventory Adjustments"),
+                "label": self.env._("Import Template for Inventory Adjustments"),
                 "template": "/stock/static/xlsx/stock_quant.xlsx",
             }
         ]

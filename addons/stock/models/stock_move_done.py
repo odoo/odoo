@@ -6,7 +6,6 @@ from markupsafe import Markup
 from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import OrderedSet
-from odoo.tools.translate import _
 
 from ..const import (
     BLOCK_REASON_COMPLETING,
@@ -258,9 +257,9 @@ class StockMoveDone(models.Model):
             ).location_id
             if len(locations) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot move the same package content more than once in the same transfer"
                         " or split the same package into two location.",
                     )
-                    + _("\nPackage: %s", package.name)
+                    + self.env._("\nPackage: %s", package.name)
                 )

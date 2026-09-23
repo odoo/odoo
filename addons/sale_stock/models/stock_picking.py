@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.db.schema import column_exists, create_column
 from odoo.libs.debug_log import DebugLog
 
@@ -155,7 +155,7 @@ class StockPicking(models.Model):
 
     def action_sale_matching(self):
         return self._get_action_transfer_matching(
-            _("Sales Matching"),
+            self.env._("Sales Matching"),
             "sale.delivery.line.match",
             "sale_stock.sale_delivery_line_match_list",
         )

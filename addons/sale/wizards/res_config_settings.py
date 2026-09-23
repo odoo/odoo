@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -144,7 +144,7 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_quotation_validity_days(self):
         return self._clamp_validity_days(
             "quotation_validity_days",
-            _("Quotation Validity"),
+            self.env._("Quotation Validity"),
         )
 
     def set_values(self):

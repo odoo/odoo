@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -49,7 +49,7 @@ class PosConfig(models.Model):
                 and not config.discount_product_id
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "A discount product is needed to use the Global Discount feature. Go to Point of Sale > Configuration > Settings to set it."
                     )
                 )

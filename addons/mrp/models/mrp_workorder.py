@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -394,7 +394,7 @@ class MrpWorkorder(models.Model):
                 workorders=self,
             )
             raise UserError(
-                _(
+                self.env._(
                     "A work order is blocked when the work orders it waits on "
                     "have not produced enough for it to start. It is not a "
                     "status you can set."
@@ -472,7 +472,7 @@ class MrpWorkorder(models.Model):
                     infos.append(
                         {
                             "color": "text-primary",
-                            "msg": _(
+                            "msg": self.env._(
                                 "Waiting the previous work order, planned from %(start)s to %(end)s",
                                 start=format_datetime(
                                     self.env, prev_start, dt_format=False
@@ -487,7 +487,7 @@ class MrpWorkorder(models.Model):
                     infos.append(
                         {
                             "color": "text-warning",
-                            "msg": _(
+                            "msg": self.env._(
                                 "The work order should have already been processed."
                             ),
                         }
@@ -496,7 +496,7 @@ class MrpWorkorder(models.Model):
                     infos.append(
                         {
                             "color": "text-danger",
-                            "msg": _(
+                            "msg": self.env._(
                                 "Scheduled before the previous work order, planned from %(start)s to %(end)s",
                                 start=format_datetime(
                                     self.env, prev_start, dt_format=False
@@ -511,7 +511,7 @@ class MrpWorkorder(models.Model):
                     infos.append(
                         {
                             "color": "text-danger",
-                            "msg": _(
+                            "msg": self.env._(
                                 "Planned at the same time as other workorder(s) at %s",
                                 wo.workcenter_id.display_name,
                             ),
@@ -521,7 +521,7 @@ class MrpWorkorder(models.Model):
                     infos.append(
                         {
                             "color": "text-danger",
-                            "msg": _(
+                            "msg": self.env._(
                                 "%s is already booked for that time slot.",
                                 wo.workcenter_id.display_name,
                             ),
@@ -607,7 +607,7 @@ class MrpWorkorder(models.Model):
     @api.constrains("blocked_by_workorder_ids")
     def _check_no_cyclic_dependencies(self):
         if self._has_cycle("blocked_by_workorder_ids"):
-            raise ValidationError(_("You cannot create cyclic dependency."))
+            raise ValidationError(self.env._("You cannot create cyclic dependency."))
 
     @api.depends("production_id.name")
     def _compute_barcode(self):
@@ -859,7 +859,7 @@ class MrpWorkorder(models.Model):
             self.duration_expected = self._get_duration_expected_from_dates()
         if not self.date_end and self.date_start:
             raise UserError(
-                _(
+                self.env._(
                     "It is not possible to unplan one single Work Order. "
                     "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."
                 )
@@ -911,19 +911,21 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             if workorder.state in ("done", "cancel"):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot change the quantity produced of a work order that is in done or cancel state."
                     )
                 )
             if workorder.product_uom_id.compare(values["qty_produced"], 0) < 0:
-                raise UserError(_("The quantity produced must be positive."))
+                raise UserError(self.env._("The quantity produced must be positive."))
 
     def _check_write_production_id(self, values):
         if "production_id" in values and any(
             values["production_id"] != workorder.production_id.id for workorder in self
         ):
             raise UserError(
-                _("You cannot link this work order to another manufacturing order.")
+                self.env._(
+                    "You cannot link this work order to another manufacturing order."
+                )
             )
 
     def _pre_write_workcenter(self, values):
@@ -936,7 +938,9 @@ class MrpWorkorder(models.Model):
                 continue
             if workorder.state in ("done", "cancel"):
                 raise UserError(
-                    _("You cannot change the workcenter of a work order that is done.")
+                    self.env._(
+                        "You cannot change the workcenter of a work order that is done."
+                    )
                 )
             workorder.reservation_id.resource_id = new_workcenter.resource_id
             if workorder.state != "progress":
@@ -960,7 +964,7 @@ class MrpWorkorder(models.Model):
             )
             if date_start and date_end and date_start > date_end:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The planned end date of the work order cannot be prior to the planned start date, please correct this to save the work order."
                     )
                 )
@@ -1199,7 +1203,7 @@ class MrpWorkorder(models.Model):
                 "workorder_refused", reason="workcenter_blocked", workorders=self
             )
             raise UserError(
-                _("Please unblock the work center to start the work order.")
+                self.env._("Please unblock the work center to start the work order.")
             )
         for wo in self:
             if any(
@@ -1219,7 +1223,9 @@ class MrpWorkorder(models.Model):
                     state=wo.state,
                 )
                 raise UserError(
-                    _("You cannot start a work order that is already done or cancelled")
+                    self.env._(
+                        "You cannot start a work order that is already done or cancelled"
+                    )
                 )
 
             if wo.qty_producing == 0:
@@ -1343,7 +1349,7 @@ class MrpWorkorder(models.Model):
     def button_scrap(self):
         self.check_singleton()
         return {
-            "name": _("Scrap Products"),
+            "name": self.env._("Scrap Products"),
             "view_mode": "form",
             "res_model": "stock.scrap",
             "views": [(self.env.ref("stock.view_stock_scrap_form2").id, "form")],
@@ -1526,7 +1532,9 @@ class MrpWorkorder(models.Model):
         return {
             "workorder_id": self.id,
             "workcenter_id": self.workcenter_id.id,
-            "description": _("Time Tracking: %(user)s", user=self.env.user.name),
+            "description": self.env._(
+                "Time Tracking: %(user)s", user=self.env.user.name
+            ),
             "loss_id": loss_id.id,
             "date_start": date_start.replace(microsecond=0),
             "date_end": date_end.replace(microsecond=0) if date_end else date_end,
@@ -1600,7 +1608,9 @@ class MrpWorkorder(models.Model):
         for wo in self:
             if wo.working_state == "blocked":
                 raise UserError(
-                    _("Please unblock the work center to validate the work order")
+                    self.env._(
+                        "Please unblock the work center to validate the work order"
+                    )
                 )
             wo.button_finish()
             if not wo.duration:

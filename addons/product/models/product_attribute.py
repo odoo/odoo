@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.base.models.mixin_catalog import no_name_uniq_index
@@ -81,7 +81,7 @@ class ProductAttribute(models.Model):
                     and pa.count_product_tmpl
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot change the Variants Creation Mode of the attribute %(attribute)s"
                             " because it is used on the following products:\n%(products)s",
                             attribute=pa.display_name,
@@ -150,7 +150,7 @@ class ProductAttribute(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Products"),
+            "name": self.env._("Products"),
             "res_model": "product.template.attribute.line",
             "view_mode": "list,form",
             "domain": [

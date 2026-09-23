@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare
@@ -205,10 +205,10 @@ class MrpUnbuild(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if not vals.get("name") or vals["name"] == _("New"):
-                vals["name"] = self.env["ir.sequence"].next_by_code("mrp.unbuild") or _(
-                    "New"
-                )
+            if not vals.get("name") or vals["name"] == self.env._("New"):
+                vals["name"] = self.env["ir.sequence"].next_by_code(
+                    "mrp.unbuild"
+                ) or self.env._("New")
         _debug.lifecycle("create", count=len(vals_list))
         return super().create(vals_list)
 
@@ -217,7 +217,7 @@ class MrpUnbuild(models.Model):
         if "done" in self.mapped("state"):
             _debug.logic("unbuild_refused", reason="delete_done", unbuilds=self)
             raise UserError(
-                _("You cannot delete an unbuild order if the state is 'Done'.")
+                self.env._("You cannot delete an unbuild order if the state is 'Done'.")
             )
 
     def _prepare_finished_move_line_vals(self, finished_move):
@@ -248,22 +248,28 @@ class MrpUnbuild(models.Model):
         self = self.with_env(self.env(context=clean_context(self.env.context)))
         if self.product_id.tracking != "none" and not self.lot_id.id:
             _debug.logic("unbuild_refused", reason="no_lot", unbuild=self.id)
-            raise UserError(_("You should provide a lot number for the final product."))
+            raise UserError(
+                self.env._("You should provide a lot number for the final product.")
+            )
 
         if self.mo_id and self.mo_id.state != "done":
             _debug.logic("unbuild_refused", reason="mo_not_done", unbuild=self.id)
-            raise UserError(_("You cannot unbuild a undone manufacturing order."))
+            raise UserError(
+                self.env._("You cannot unbuild a undone manufacturing order.")
+            )
 
         if self.mo_id and self.mo_id.product_uom_id.is_zero(self.mo_id.qty_produced):
             _debug.logic("unbuild_refused", reason="nothing_produced", unbuild=self)
             raise UserError(
-                _("You cannot unbuild a manufacturing order that produced nothing.")
+                self.env._(
+                    "You cannot unbuild a manufacturing order that produced nothing."
+                )
             )
 
         if not self.mo_id and not self.bom_id:
             _debug.logic("unbuild_refused", reason="no_bom_no_mo", unbuild=self.id)
             raise UserError(
-                _(
+                self.env._(
                     "%(product)s has no bill of materials, so there is nothing to"
                     " unbuild it into. Set one on this order, or select the"
                     " manufacturing order that produced it.",
@@ -293,7 +299,7 @@ class MrpUnbuild(models.Model):
             lambda m: m.product_id == self.product_id
         )
         consume_moves -= finished_moves
-        error_message = _(
+        error_message = self.env._(
             "Please specify a manufacturing order.\n"
             "It will allow us to retrieve the lots/serial numbers of the correct components and/or byproducts."
         )
@@ -395,7 +401,7 @@ class MrpUnbuild(models.Model):
         )
         _debug.lifecycle("unbuild_done", unbuild=self.id, mo=self.mo_id)
         if self.mo_id:
-            unbuild_msg = _(
+            unbuild_msg = self.env._(
                 "%(qty)s %(measure)s unbuilt in %(order)s",
                 qty=self.product_qty,
                 measure=self.product_uom_id.name,
@@ -549,7 +555,7 @@ class MrpUnbuild(models.Model):
             return self.action_unbuild()
         else:
             return {
-                "name": _(
+                "name": self.env._(
                     "%(product)s: Insufficient Quantity To Unbuild",
                     product=self.product_id.display_name,
                 ),

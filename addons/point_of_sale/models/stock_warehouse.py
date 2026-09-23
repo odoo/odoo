@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from ..tools import debug_log as dbg
 
@@ -29,7 +29,7 @@ class StockWarehouse(models.Model):
         picking_type_create_values.update(
             {
                 "pos_type_id": {
-                    "name": _("PoS Orders"),
+                    "name": self.env._("PoS Orders"),
                     "code": "outgoing",
                     "default_location_src_id": self.lot_stock_id.id,
                     "default_location_dest_id": self.env.ref(

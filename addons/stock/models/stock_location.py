@@ -4,7 +4,7 @@ import logging
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.api import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -300,7 +300,7 @@ class StockLocation(models.Model):
                     location
                 ):
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Another parent/sub replenish location %s exists, if you wish to change it, uncheck it first",
                             other.display_name,
                         ),
@@ -332,7 +332,7 @@ class StockLocation(models.Model):
             limit=1,
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "You cannot set a location's type to Inventory Loss while it is the destination location of a manufacturing operation type."
                 ),
             )
@@ -340,7 +340,7 @@ class StockLocation(models.Model):
     def _check_company_not_changed(self, company_id):
         if any(location.company_id.id != company_id for location in self):
             raise UserError(
-                _(
+                self.env._(
                     "Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."
                 ),
             )
@@ -350,7 +350,7 @@ class StockLocation(models.Model):
         if frequency is None or 0 <= frequency <= MAX_CYCLIC_INVENTORY_DAYS:
             return
         raise ValidationError(
-            _(
+            self.env._(
                 "The inventory frequency must be between 0 and %(maximum)s days.",
                 maximum=MAX_CYCLIC_INVENTORY_DAYS,
             ),
@@ -377,14 +377,14 @@ class StockLocation(models.Model):
             return
         if usage == "view":
             raise UserError(
-                _(
+                self.env._(
                     "A view location groups its children and cannot hold "
                     "products; %s still does.",
                     blocking.display_name,
                 ),
             )
         raise UserError(
-            _(
+            self.env._(
                 "%s still holds stock, so its type cannot be changed.",
                 blocking.display_name,
             ),
@@ -448,7 +448,7 @@ class StockLocation(models.Model):
         vals_list = super().copy_data(default=default)
         if "name" not in default:
             for location, vals in zip(self, vals_list, strict=True):
-                vals["name"] = _("%s (copy)", location.name)
+                vals["name"] = self.env._("%s (copy)", location.name)
         return vals_list
 
     @dbg.timed
@@ -480,7 +480,7 @@ class StockLocation(models.Model):
                 (self.browse(), self.browse()),
             )
             raise UserError(  # noqa: E8506 - uninstall already excluded above
-                _(
+                self.env._(
                     "You cannot delete location %(location)s: it still contains "
                     "%(count)s sub-location(s) (archived ones included). Delete or "
                     "move them first.",
@@ -497,7 +497,7 @@ class StockLocation(models.Model):
         inter_company_location = self.env.ref("stock.stock_location_inter_company")
         if inter_company_location in self:
             raise ValidationError(
-                _(
+                self.env._(
                     "The %s location is required by the Inventory app and cannot be deleted, but you can archive it.",
                     inter_company_location.name,
                 ),
@@ -737,7 +737,7 @@ class StockLocation(models.Model):
                 else blocking_warehouse.view_location_id
             )
             raise UserError(
-                _(
+                self.env._(
                     "You cannot archive location %(location)s because it is used by warehouse %(warehouse)s",
                     location=location.display_name,
                     warehouse=blocking_warehouse.display_name,
@@ -748,7 +748,7 @@ class StockLocation(models.Model):
         )
         if occupied:
             raise UserError(
-                _(
+                self.env._(
                     "You can't disable locations %s because they still contain products.",
                     ", ".join(occupied.mapped("display_name")),
                 ),

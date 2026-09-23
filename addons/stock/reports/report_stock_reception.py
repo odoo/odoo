@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.tools import format_date
 
@@ -88,10 +88,12 @@ class ReportStockReport_Reception(models.AbstractModel):
         docs = self._get_docs(docids)
         doc_types = self._get_doc_types_label()
         if not docs:
-            return docs, _("No %s selected or a delivery order selected", doc_types)
+            return docs, self.env._(
+                "No %s selected or a delivery order selected", doc_types
+            )
         doc_states = docs.mapped("state")
         if "done" in doc_states and len(set(doc_states)) > 1:
-            return docs.browse(), _(
+            return docs.browse(), self.env._(
                 "This report cannot be used for done and not done %s at the same time",
                 doc_types,
             )
@@ -304,7 +306,7 @@ class ReportStockReport_Reception(models.AbstractModel):
                 in_ids = [[in_id] for in_id in in_ids]
         if not (len(move_ids) == len(qtys) == len(in_ids)):
             raise UserError(
-                _(
+                self.env._(
                     "Invalid assignment request: the moves, quantities and incoming"
                     " moves lists must have the same length."
                 )
@@ -320,7 +322,7 @@ class ReportStockReport_Reception(models.AbstractModel):
             out = self.env["stock.move"].browse(out_id)
             if out.state not in ASSIGNABLE_OUT_STATES:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot assign transfer %(transfer)s in state %(state)s.",
                         transfer=out.display_name,
                         state=out.state,
@@ -328,7 +330,9 @@ class ReportStockReport_Reception(models.AbstractModel):
                 )
             if out.move_orig_ids:
                 raise UserError(
-                    _("Transfer %s is already linked to a source.", out.display_name)
+                    self.env._(
+                        "Transfer %s is already linked to a source.", out.display_name
+                    )
                 )
             self._check_same_company(out, self.env["stock.move"].browse(ins))
 
@@ -336,7 +340,7 @@ class ReportStockReport_Reception(models.AbstractModel):
         for in_move in ins:
             if in_move.company_id != out.company_id:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Transfers %(out)s and %(inc)s belong to different companies.",
                         out=out.display_name,
                         inc=in_move.display_name,
@@ -467,7 +471,7 @@ class ReportStockReport_Reception(models.AbstractModel):
 
         if out.state not in ASSIGNABLE_OUT_STATES:
             raise UserError(
-                _(
+                self.env._(
                     "Cannot unassign transfer %(transfer)s in state %(state)s.",
                     transfer=out.display_name,
                     state=out.state,
@@ -475,7 +479,7 @@ class ReportStockReport_Reception(models.AbstractModel):
             )
         if not out.move_orig_ids:
             raise UserError(
-                _("Transfer %s is not linked to a source.", out.display_name)
+                self.env._("Transfer %s is not linked to a source.", out.display_name)
             )
         self._check_same_company(out, ins)
 

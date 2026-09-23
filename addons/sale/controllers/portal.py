@@ -1,6 +1,6 @@
 import binascii
 
-from odoo import SUPERUSER_ID, _, fields, http
+from odoo import SUPERUSER_ID, fields, http
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
@@ -53,15 +53,15 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             return {}
         return {
             "all": {
-                "label": _("All"),
+                "label": request.env._("All"),
                 "domain": [("state", "in", ("done", "cancel"))],
             },
             "order": {
-                "label": _("Sales Order"),
+                "label": request.env._("Sales Order"),
                 "domain": [("state", "=", "done")],
             },
             "cancel": {
-                "label": _("Cancelled"),
+                "label": request.env._("Cancelled"),
                 "domain": [("state", "=", "cancel")],
             },
         }
@@ -161,7 +161,9 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
                 requested=payment_amount,
                 prepayment=prepayment_amount,
             )
-            raise MissingError(_("The amount is lower than the prepayment amount."))
+            raise MissingError(
+                request.env._("The amount is lower than the prepayment amount.")
+            )
 
         if report_type in ("html", "pdf", "text"):
             _debug.pipeline("portal_report", order=order_sudo, kind=report_type)
@@ -369,20 +371,22 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             )
         except AccessError, MissingError:
             _debug.logic("portal_access_denied", route="accept", order=order_id)
-            return {"error": _("Invalid order.")}
+            return {"error": request.env._("Invalid order.")}
 
         if not order_sudo._has_to_be_signed():
             _debug.logic(
                 "portal_sign_refused", order=order_sudo, reason="not_awaiting_signature"
             )
             return {
-                "error": _("The order is not in a state requiring customer signature.")
+                "error": request.env._(
+                    "The order is not in a state requiring customer signature."
+                )
             }
         if not signature:
             _debug.logic(
                 "portal_sign_refused", order=order_sudo, reason="missing_signature"
             )
-            return {"error": _("Signature is missing.")}
+            return {"error": request.env._("Signature is missing.")}
 
         try:
             order_sudo.write(
@@ -397,7 +401,7 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             _debug.logic(
                 "portal_sign_refused", order=order_sudo, reason="undecodable_signature"
             )
-            return {"error": _("Invalid signature data.")}
+            return {"error": request.env._("Invalid signature data.")}
 
         _debug.lifecycle("portal_order_signed", order=order_sudo, signed_by=bool(name))
         if not order_sudo._has_to_be_paid():
@@ -418,7 +422,7 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
                 if request.env.user._is_public()
                 else request.env.user.partner_id.id
             ),
-            body=_("Order signed by %s", name),
+            body=request.env._("Order signed by %s", name),
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
         )
@@ -609,7 +613,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
             raise
         except AccessError:
             _debug.logic("portal_access_denied", route="transaction", order=order_id)
-            raise ValidationError(_("The access token is invalid.")) from None
+            raise ValidationError(
+                request.env._("The access token is invalid.")
+            ) from None
 
         logged_in = not request.env.user._is_public()
         partner_sudo = (

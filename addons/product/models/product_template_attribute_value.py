@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 
@@ -90,7 +90,7 @@ class ProductTemplateAttributeValue(models.Model):
                 not in ptav.attribute_line_id.value_ids
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The value %(value)s is not defined for the attribute %(attribute)s"
                         " on the product %(product)s.",
                         value=ptav.product_attribute_value_id.display_name,
@@ -103,7 +103,7 @@ class ProductTemplateAttributeValue(models.Model):
     def create(self, vals_list):
         if any("ptav_product_variant_ids" in v for v in vals_list):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot update related variants from the values. Please update related values from the variants."
                 )
             )
@@ -112,7 +112,7 @@ class ProductTemplateAttributeValue(models.Model):
     def write(self, values):
         if "ptav_product_variant_ids" in values:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot update related variants from the values. Please update related values from the variants."
                 )
             )
@@ -126,7 +126,7 @@ class ProductTemplateAttributeValue(models.Model):
                     != values["product_attribute_value_id"]
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot change the value of the value %(value)s set on product %(product)s.",
                             value=ptav.display_name,
                             product=ptav.product_tmpl_id.display_name,
@@ -137,7 +137,7 @@ class ProductTemplateAttributeValue(models.Model):
                     and ptav.product_tmpl_id.id != values["product_tmpl_id"]
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot change the product of the value %(value)s set on product %(product)s.",
                             value=ptav.display_name,
                             product=ptav.product_tmpl_id.display_name,

@@ -2,8 +2,6 @@ import logging
 
 import requests
 
-from odoo import _
-
 REQUEST_TIMEOUT = 10
 
 _logger = logging.getLogger(__name__)
@@ -55,7 +53,11 @@ class RazorpayPosRequest:
             return {"errorMessage": str(error)}
         except ValueError as error:
             _logger.warning("Cannot decode response json. Error: %s", error)
-            return {"errorMessage": _("Cannot decode Razorpay POS response")}
+            return {
+                "errorMessage": self.payment_method.env._(
+                    "Cannot decode Razorpay POS response"
+                )
+            }
         return res_json
 
     def _razorpay_get_payment_request_body(self, payment_mode=True):

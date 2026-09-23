@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare, float_is_zero
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -246,7 +245,7 @@ class SaleOrderLine(models.Model):
                 with contextlib.suppress(UserError):
                     mto_route = self.env["stock.warehouse"]._get_or_create_global_route(
                         "stock.route_warehouse0_mto",
-                        _("Replenish on Order (MTO)"),
+                        self.env._("Replenish on Order (MTO)"),
                         create=False,
                     )
 
@@ -667,7 +666,7 @@ class SaleOrderLine(models.Model):
                 requested=values["product_qty"],
             )
             raise UserError(
-                _(
+                self.env._(
                     "The ordered quantity of a sale order line cannot be decreased below the amount already delivered. Instead, create a return in your inventory.",
                 ),
             )

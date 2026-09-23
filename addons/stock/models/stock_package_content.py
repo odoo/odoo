@@ -2,7 +2,7 @@ import json
 from collections import defaultdict
 from collections.abc import Iterable
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.libs.numbers import float_is_zero, float_round
@@ -78,8 +78,8 @@ class StockPackageContent(models.Model):
             )
             package.json_popover = json.dumps(
                 {
-                    "title": _("Multiple destinations"),
-                    "msg": _(
+                    "title": self.env._("Multiple destinations"),
+                    "msg": self.env._(
                         "This package is currently set to be sent in %(location_names_list)s.",
                         location_names_list=location_names,
                     ),
@@ -370,7 +370,7 @@ class StockPackageContent(models.Model):
             new_location = packages.location_id
             if len(new_location) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Packages %(duplicate_names)s are moved to different locations while being in the same container %(container_name)s.",
                         duplicate_names=packages.mapped("name"),
                         container_name=container_package.name,
@@ -386,7 +386,7 @@ class StockPackageContent(models.Model):
             if contained_quants and contained_quants.location_id != new_location:
                 old_location = contained_quants.location_id - new_location
                 raise UserError(
-                    _(
+                    self.env._(
                         "Can't move a container having packages in another location (%(old_location)s) to a different location (%(new_location)s).",
                         old_location=old_location.display_name,
                         new_location=new_location.display_name,

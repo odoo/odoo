@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_is_zero, float_round
@@ -147,7 +147,7 @@ class MrpRoutingWorkcenter(models.Model):
     def _compute_time_computed_on(self):
         for operation in self:
             operation.time_computed_on = (
-                _("%i work orders", operation.time_mode_batch)
+                self.env._("%i work orders", operation.time_mode_batch)
                 if operation.time_mode != "manual"
                 else False
             )
@@ -308,7 +308,7 @@ class MrpRoutingWorkcenter(models.Model):
     @api.constrains("blocked_by_operation_ids")
     def _check_no_cyclic_dependencies(self):
         if self._has_cycle("blocked_by_operation_ids"):
-            raise ValidationError(_("You cannot create cyclic dependency."))
+            raise ValidationError(self.env._("You cannot create cyclic dependency."))
 
     @api.constrains("blocked_by_operation_ids", "bom_id")
     def _check_blocked_by_same_bom(self):
@@ -316,7 +316,9 @@ class MrpRoutingWorkcenter(models.Model):
             other_boms = operation.blocked_by_operation_ids.bom_id - operation.bom_id
             if other_boms:
                 raise ValidationError(
-                    _("An operation can only depend on operations of the same BoM.")
+                    self.env._(
+                        "An operation can only depend on operations of the same BoM."
+                    )
                 )
 
     @api.model_create_multi
@@ -412,7 +414,7 @@ class MrpRoutingWorkcenter(models.Model):
     def action_copy_existing_operations(self):
         return {
             "type": "ir.actions.act_window",
-            "name": _("Select Operations to Copy"),
+            "name": self.env._("Select Operations to Copy"),
             "res_model": "mrp.routing.workcenter",
             "view_mode": "list,form",
             "domain": ["|", ("bom_id", "=", False), ("bom_id.active", "=", True)],

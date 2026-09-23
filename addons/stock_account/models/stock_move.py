@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -100,7 +100,9 @@ class StockMove(models.Model):
     def _search_remaining_qty(self, operator, value):
         if operator != "=" or not isinstance(value, bool) or value is not True:
             raise UserError(
-                _("Only is set (= True) is supported in search for remaining_qty.")
+                self.env._(
+                    "Only is set (= True) is supported in search for remaining_qty."
+                )
             )
         products = (
             "default_product_id" in self.env.context
@@ -268,13 +270,15 @@ class StockMove(models.Model):
 
     def action_adjust_valuation(self):
         if len(self) != 1:
-            raise UserError(_("You can only adjust valuation for one move at a time."))
+            raise UserError(
+                self.env._("You can only adjust valuation for one move at a time.")
+            )
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "stock_account.product_value_action"
         )
         product = self.product_id if len(self.product_id) == 1 else False
         if product:
-            action["name"] = _(
+            action["name"] = self.env._(
                 "Adjust Valuation: %(product)s", product=product.display_name
             )
         action["target"] = "new"
@@ -756,7 +760,7 @@ class StockMove(models.Model):
         if manual_value:
             valuation_data["value"] = manual_value.value
             valuation_data["quantity"] = quantity
-            description = _(
+            description = self.env._(
                 "Adjusted on %(date)s by %(user)s",
                 date=manual_value.date,
                 user=manual_value.user_id.name,
@@ -784,7 +788,7 @@ class StockMove(models.Model):
                 if self.product_uom_id.is_zero(origin_valued_qty)
                 else origin_move.value * quantity / origin_valued_qty,
                 "quantity": quantity,
-                "description": _(
+                "description": self.env._(
                     "Value based on original move %(reference)s",
                     reference=origin_move.reference,
                 ),

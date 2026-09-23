@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from ..tools import debug_log as dbg
 
@@ -169,7 +169,7 @@ class AccountMove(models.Model):
                 "simple_notification",
                 {
                     "type": "danger",
-                    "message": _(
+                    "message": self.env._(
                         "You can't reset this invoice to draft because the POS session is still open. Please close the ongoing session first, then try again."
                     ),
                     "sticky": True,

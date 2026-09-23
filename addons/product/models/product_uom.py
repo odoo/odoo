@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import groupby
 
@@ -69,7 +69,7 @@ class ProductUom(models.Model):
                 )
                 for product in colliding
             ):
-                raise ValidationError(_("A product already uses the barcode"))
+                raise ValidationError(self.env._("A product already uses the barcode"))
 
     def _compute_display_name(self):
         if not self.env.context.get("show_variant_name"):

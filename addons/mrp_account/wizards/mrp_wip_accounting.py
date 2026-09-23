@@ -3,7 +3,7 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -73,9 +73,9 @@ class MrpAccountWipAccounting(models.TransientModel):
             if journal:
                 res["journal_id"] = journal.id
         if "reference" in fields_list:
-            res["reference"] = _(
+            res["reference"] = self.env._(
                 "Manufacturing WIP - %(orders_list)s",
-                orders_list=productions.mapped("name") or _("Manual Entry"),
+                orders_list=productions.mapped("name") or self.env._("Manual Entry"),
             )
         if "mo_ids" in fields_list:
             res["mo_ids"] = [Command.set(productions.ids)]
@@ -159,23 +159,24 @@ class MrpAccountWipAccounting(models.TransientModel):
         return [
             Command.create(
                 {
-                    "label": _("WIP - Component Value"),
+                    "label": self.env._("WIP - Component Value"),
                     "credit": compo_value,
                     "account_id": sval_acc,
                 }
             ),
             Command.create(
                 {
-                    "label": _("WIP - Overhead"),
+                    "label": self.env._("WIP - Overhead"),
                     "credit": overhead_value,
                     "account_id": self._get_overhead_account(),
                 }
             ),
             Command.create(
                 {
-                    "label": _(
+                    "label": self.env._(
                         "Manufacturing WIP - %(orders_list)s",
-                        orders_list=productions.mapped("name") or _("Manual Entry"),
+                        orders_list=productions.mapped("name")
+                        or self.env._("Manual Entry"),
                     ),
                     "debit": compo_value + overhead_value,
                     "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
@@ -202,7 +203,7 @@ class MrpAccountWipAccounting(models.TransientModel):
         if len(self.mo_ids.company_id) > 1:
             _debug.logic("wip_refused", reason="multi_company", productions=self.mo_ids)
             raise UserError(
-                _(
+                self.env._(
                     "Post one WIP entry per company: the selected orders belong "
                     "to %(companies)s.",
                     companies=self.mo_ids.company_id.mapped("display_name"),
@@ -211,7 +212,7 @@ class MrpAccountWipAccounting(models.TransientModel):
         if unaccounted := self.line_ids.filtered(lambda line: not line.account_id):
             _debug.logic("wip_refused", reason="no_account", lines=len(unaccounted))
             raise UserError(
-                _(
+                self.env._(
                     "No account is configured for: %(labels)s. Set the WIP accounts "
                     "on the company, or the production and stock valuation accounts "
                     "on the product category.",
@@ -226,13 +227,13 @@ class MrpAccountWipAccounting(models.TransientModel):
         ):
             _debug.logic("wip_refused", reason="unbalanced", lines=len(self.line_ids))
             raise UserError(
-                _(
+                self.env._(
                     "Please make sure the total credit amount equals the total debit amount."
                 )
             )
         if self.reversal_date <= self.date:
             _debug.logic("wip_refused", reason="reversal_before_posting")
-            raise UserError(_("Reversal date must be after the posting date."))
+            raise UserError(self.env._("Reversal date must be after the posting date."))
         move = (
             self.env["account.move"]
             .sudo()
@@ -267,7 +268,7 @@ class MrpAccountWipAccounting(models.TransientModel):
         move._reverse_moves(
             default_values_list=[
                 {
-                    "ref": _("Reversal of: %s", self.reference),
+                    "ref": self.env._("Reversal of: %s", self.reference),
                     "wip_production_ids": self.mo_ids.ids,
                     "date": self.reversal_date,
                 }

@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.fields import Domain
 from odoo.tools.cache import TransactionMemo
 from odoo.tools.safe_eval import safe_eval
@@ -61,7 +61,7 @@ class StockValuationReport(models.AbstractModel):
         account_ids = {acc.id for acc in accounts}
 
         initial_balance = {
-            "label": _("Initial Balance"),
+            "label": self.env._("Initial Balance"),
             "value": 0,
             "lines_by_account_id": defaultdict(
                 lambda: {
@@ -70,7 +70,7 @@ class StockValuationReport(models.AbstractModel):
             ),
         }
         ending_stock = {
-            "label": _("Ending Stock"),
+            "label": self.env._("Ending Stock"),
             "value": 0,
             "lines_by_account_id": defaultdict(
                 lambda: {
@@ -113,7 +113,7 @@ class StockValuationReport(models.AbstractModel):
                 location_domain=[("usage", "=", "inventory")],
             )
             inventory_loss = {
-                "label": _("Inventory Loss"),
+                "label": self.env._("Inventory Loss"),
                 "value": 0,
             }
             lines_by_account_id = defaultdict(
@@ -138,7 +138,7 @@ class StockValuationReport(models.AbstractModel):
             report_data["inventory_loss"] = inventory_loss
 
         stock_variation = {
-            "label": _("Stock Variation"),
+            "label": self.env._("Stock Variation"),
             "value": 0,
         }
         lines_by_account_id = defaultdict(
@@ -194,7 +194,7 @@ class StockValuationReportHandler(models.AbstractModel):
         super()._custom_options_initializer(report, options, previous_options)
         options["buttons"].append(
             {
-                "name": _("Generate Entry"),
+                "name": self.env._("Generate Entry"),
                 "sequence": 5,
                 "action": "action_generate_entry",
                 "always_show": True,
@@ -315,7 +315,7 @@ class StockValuationReportHandler(models.AbstractModel):
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
-                    "message": _("Everything is correctly closed"),
+                    "message": self.env._("Everything is correctly closed"),
                     "type": "info",
                     "sticky": False,
                 },
@@ -386,4 +386,4 @@ class StockValuationReportHandler(models.AbstractModel):
         return context
 
     def _section_move_usages(self):
-        return {"SV_LOSS": ("inventory", _("Inventory Loss"))}
+        return {"SV_LOSS": ("inventory", self.env._("Inventory Loss"))}

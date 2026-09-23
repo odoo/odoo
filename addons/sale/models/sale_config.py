@@ -1,7 +1,6 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -88,5 +87,5 @@ class SaleConfig(models.Model):
                     percent=company.prepayment_percent,
                 )
                 raise ValidationError(
-                    _("Prepayment percentage must be a valid percentage."),
+                    self.env._("Prepayment percentage must be a valid percentage."),
                 )

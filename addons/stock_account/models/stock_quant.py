@@ -1,4 +1,4 @@
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import groupby
 
@@ -142,12 +142,12 @@ class StockQuant(models.Model):
             force_period_date = self.env.context.get("force_period_date", False)
             if force_period_date:
                 if self.product_uom_id.is_zero(qty):
-                    name = _("Product Quantity Confirmed")
+                    name = self.env._("Product Quantity Confirmed")
                 else:
-                    name = _("Product Quantity Updated")
+                    name = self.env._("Product Quantity Updated")
                 if self.env.uid and self.env.uid != SUPERUSER_ID:
                     name += f" ({self.env.user.display_name})"
-                res_move["inventory_name"] = name + _(
+                res_move["inventory_name"] = name + self.env._(
                     " [Accounted on %s]", force_period_date
                 )
         return res_move

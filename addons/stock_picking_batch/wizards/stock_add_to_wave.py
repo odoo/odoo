@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -26,7 +26,9 @@ class StockAddToWave(models.TransientModel):
 
         if len(picking_types) > 1:
             raise UserError(
-                _("The selected transfers should belong to the same operation type")
+                self.env._(
+                    "The selected transfers should belong to the same operation type"
+                )
             )
         return res
 
@@ -58,23 +60,27 @@ class StockAddToWave(models.TransientModel):
             company = self.line_ids.company_id
             if len(company) > 1:
                 raise UserError(
-                    _("The selected operations should belong to a unique company.")
+                    self.env._(
+                        "The selected operations should belong to a unique company."
+                    )
                 )
             return self.line_ids._add_to_wave(wave)
         if self.picking_ids:
             company = self.picking_ids.company_id
             if len(company) > 1:
                 raise UserError(
-                    _("The selected transfers should belong to a unique company.")
+                    self.env._(
+                        "The selected transfers should belong to a unique company."
+                    )
                 )
         else:
-            raise UserError(_("Cannot create wave transfers"))
+            raise UserError(self.env._("Cannot create wave transfers"))
 
         view = self.env.ref(
             "stock_picking_batch.view_stock_move_line_list_detailed_wave"
         )
         return {
-            "name": _("Add Operations"),
+            "name": self.env._("Add Operations"),
             "type": "ir.actions.act_window",
             "view_mode": "list",
             "views": [(view.id, "list")],

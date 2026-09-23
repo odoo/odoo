@@ -6,7 +6,7 @@ from itertools import batched, starmap
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.db.schema import create_index
 from odoo.exceptions import AccessError, LockError, UserError, ValidationError
 from odoo.fields import Command, Domain
@@ -410,7 +410,7 @@ class PosSession(models.Model):
             }
         if self.state != "opening_control" or len(self.order_ids) > 0:
             raise UserError(
-                _(
+                self.env._(
                     "You can only cancel a session that is in opening control state and has no orders."
                 )
             )
@@ -531,7 +531,7 @@ class PosSession(models.Model):
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "stock.action_picking_tree_ready"
         )
-        action["display_name"] = _("Pickings")
+        action["display_name"] = self.env._("Pickings")
         action["context"] = {}
         action["domain"] = [("id", "in", self.picking_ids.ids)]
         return action
@@ -602,7 +602,7 @@ class PosSession(models.Model):
         )
         if any(count > 1 for _config, count in open_per_config):
             raise ValidationError(
-                _("Another session is already opened for this point of sale.")
+                self.env._("Another session is already opened for this point of sale.")
             )
 
     @api.constrains("start_at")
@@ -618,7 +618,7 @@ class PosSession(models.Model):
             )
             if violated_lock_dates:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot create a session starting before: %(lock_date_info)s",
                         lock_date_info=self.env["res.company"]._format_lock_dates(
                             violated_lock_dates
@@ -635,7 +635,7 @@ class PosSession(models.Model):
         )
         if unposted_invoices:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot close the POS when invoices are not posted.\nInvoices: %s",
                     "\n".join(
                         f"{invoice.name} - {invoice.state}"
@@ -650,7 +650,9 @@ class PosSession(models.Model):
         default_config_id = self.env.context.get("default_config_id")
         config_ids = [vals.get("config_id") or default_config_id for vals in vals_list]
         if not all(config_ids):
-            raise UserError(_("You should assign a Point of Sale to your session."))
+            raise UserError(
+                self.env._("You should assign a Point of Sale to your session.")
+            )
 
         configs = self.env["pos.config"].browse(list(dict.fromkeys(config_ids)))
         config_by_id = {config.id: config for config in configs}
@@ -756,12 +758,12 @@ class PosSession(models.Model):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         if any(order.state == "draft" for order in self.get_session_orders()):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot close the POS while there are still draft orders for the day."
                 )
             )
         if self.state == "closed":
-            raise UserError(_("This session is already closed."))
+            raise UserError(self.env._("This session is already closed."))
         stop_at = self.stop_at or fields.Datetime.now()
         dbg.lifecycle.debug(
             "[session:%s] %s -> closing_control (cash_control=%s rescue=%s"
@@ -785,7 +787,7 @@ class PosSession(models.Model):
             )[:1]
             if not default_cash_payment_method_id:
                 raise UserError(
-                    _(
+                    self.env._(
                         "This point of sale has cash control enabled but no cash "
                         "payment method, so its cash register cannot be counted."
                     )
@@ -837,11 +839,13 @@ class PosSession(models.Model):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         record = self.check_singleton()
         self._check_bank_payment_method_diffs(bank_payment_method_diffs)
-        self._lock_sessions(_("Another user is currently closing this session."))
+        self._lock_sessions(
+            self.env._("Another user is currently closing this session.")
+        )
         if self.env.user.has_group("point_of_sale.group_pos_user"):
             record = record.sudo()
         if self.state == "closed":
-            raise UserError(_("This session is already closed."))
+            raise UserError(self.env._("This session is already closed."))
         data = {}
         has_activity = bool(
             record.get_session_orders().filtered(lambda o: o.state != "cancel")
@@ -948,7 +952,7 @@ class PosSession(models.Model):
         if self.config_id.order_edit_tracking:
             edited_orders = self.get_session_orders().filtered(lambda o: o.is_edited)
             if len(edited_orders) > 0:
-                body = _(
+                body = self.env._(
                     "Edited order(s) during the session:%s",
                     Markup("<br/><ul>%s</ul>")
                     % Markup().join(
@@ -984,7 +988,7 @@ class PosSession(models.Model):
         )
         if set(differences) - set(bank_methods.ids):
             raise UserError(
-                _(
+                self.env._(
                     "Closing differences must use bank payment methods configured on this session."
                 )
             )
@@ -1003,7 +1007,7 @@ class PosSession(models.Model):
             valid = False
         if not valid:
             dbg.logic.debug("Session amount rejected: %r", amount)
-            raise UserError(_("An amount must be a finite number."))
+            raise UserError(self.env._("An amount must be a finite number."))
 
     def _post_statement_difference(self, amount):
         dbg.logic.debug(
@@ -1028,13 +1032,13 @@ class PosSession(models.Model):
             if amount < 0.0:
                 if not self.cash_journal_id.loss_account_id:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Please go on the %s journal and define a Loss Account. This account will be used to record cash difference.",
                             self.cash_journal_id.name,
                         )
                     )
 
-                st_line_vals["payment_ref"] = _(
+                st_line_vals["payment_ref"] = self.env._(
                     "Cash difference observed during the counting (Loss) - closing"
                 )
                 st_line_vals["counterpart_account_id"] = (
@@ -1043,13 +1047,13 @@ class PosSession(models.Model):
             else:
                 if not self.cash_journal_id.profit_account_id:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Please go on the %s journal and define a Profit Account. This account will be used to record cash difference.",
                             self.cash_journal_id.name,
                         )
                     )
 
-                st_line_vals["payment_ref"] = _(
+                st_line_vals["payment_ref"] = self.env._(
                     "Cash difference observed during the counting (Profit) - closing"
                 )
                 st_line_vals["counterpart_account_id"] = (
@@ -1064,7 +1068,9 @@ class PosSession(models.Model):
 
             if created_line:
                 created_line.move_id.message_post(
-                    body=_("Related Session: %(link)s", link=self._get_html_link())
+                    body=self.env._(
+                        "Related Session: %(link)s", link=self._get_html_link()
+                    )
                 )
 
     def _open_force_close_wizard(
@@ -1078,13 +1084,13 @@ class PosSession(models.Model):
                 "account_readonly": not self.env.user.has_group(
                     "account.group_account_readonly"
                 ),
-                "message": _(
+                "message": self.env._(
                     "There is a difference between the amounts to post and the amounts of the orders, it is probably caused by taxes or accounting configurations changes."
                 ),
             }
         )
         return {
-            "name": _("Force Close Session"),
+            "name": self.env._("Force Close Session"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "pos.close.session.wizard",
@@ -1158,13 +1164,15 @@ class PosSession(models.Model):
         return {"successful": True}
 
     def post_close_register_message(self):
-        self.message_post(body=_("Closed Register"))
+        self.message_post(body=self.env._("Closed Register"))
 
     def update_closing_control_state_session(self, notes):
         self.check_singleton()
-        self._lock_sessions(_("Another user is currently updating this session."))
+        self._lock_sessions(
+            self.env._("Another user is currently updating this session.")
+        )
         if self.state == "closed":
-            raise UserError(_("This session is already closed."))
+            raise UserError(self.env._("This session is already closed."))
         dbg.lifecycle.debug(
             "[session:%s] %s -> closing_control from UI (notes=%s)",
             self.name,
@@ -1187,7 +1195,9 @@ class PosSession(models.Model):
 
     def update_closing_cash_details(self, counted_cash):
         self.check_singleton()
-        self._lock_sessions(_("Another user is currently updating this session."))
+        self._lock_sessions(
+            self.env._("Another user is currently updating this session.")
+        )
         check_closing_session = self._resolve_close_refusal()
         if check_closing_session:
             open_order_ids = (
@@ -1198,7 +1208,7 @@ class PosSession(models.Model):
 
         self._check_amount_is_finite(counted_cash)
         if not self.cash_journal_id:
-            raise UserError(_("There is no cash register in this session."))
+            raise UserError(self.env._("There is no cash register in this session."))
 
         dbg.logic.debug(
             "[session:%s] counted cash %s (expected %s)",
@@ -1268,7 +1278,7 @@ class PosSession(models.Model):
         )
 
     def _get_diff_account_move_ref(self, payment_method):
-        return _(
+        return self.env._(
             "Closing difference in %(payment_method)s (%(session)s)",
             payment_method=payment_method.name,
             session=self.name,
@@ -1291,14 +1301,14 @@ class PosSession(models.Model):
             return False
         if not source_account:
             raise UserError(
-                _(
+                self.env._(
                     "Configure an outstanding account for payment method %s before posting its closing difference.",
                     payment_method.name,
                 )
             )
         if not destination_account:
             raise UserError(
-                _(
+                self.env._(
                     "Configure a profit or loss account on journal %s before posting its closing difference.",
                     payment_method.journal_id.name,
                 )
@@ -1325,7 +1335,7 @@ class PosSession(models.Model):
         if any(order.state == "draft" for order in self.get_session_orders()):
             return {
                 "successful": False,
-                "message": _(
+                "message": self.env._(
                     "You cannot close the POS while there are still draft orders for the day."
                 ),
                 "redirect": False,
@@ -1335,7 +1345,7 @@ class PosSession(models.Model):
                 "successful": False,
                 "type": "alert",
                 "title": "Session already closed",
-                "message": _(
+                "message": self.env._(
                     "The session has been already closed by another User. "
                     "All sales completed in the meantime have been saved in a "
                     "Rescue Session, which can be reviewed anytime and posted "
@@ -1359,12 +1369,12 @@ class PosSession(models.Model):
                     no_profit_account |= journal
             message = ""
             if no_loss_account:
-                message += _(
+                message += self.env._(
                     "Need loss account for the following journals to post the lost amount: %s\n",
                     ", ".join(no_loss_account.mapped("name")),
                 )
             if no_profit_account:
-                message += _(
+                message += self.env._(
                     "Need profit account for the following journals to post the gained amount: %s",
                     ", ".join(no_profit_account.mapped("name")),
                 )
@@ -1375,7 +1385,9 @@ class PosSession(models.Model):
     def get_cash_in_out_list(self):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
             raise AccessError(
-                _("You don't have the access rights to get the cash in/out list.")
+                self.env._(
+                    "You don't have the access rights to get the cash in/out list."
+                )
             )
         cash_in_count = 0
         cash_out_count = 0
@@ -1402,7 +1414,7 @@ class PosSession(models.Model):
     def get_closing_control_data(self):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
             raise AccessError(
-                _(
+                self.env._(
                     "You don't have the access rights to get the point of sale closing control data."
                 )
             )
@@ -1508,7 +1520,7 @@ class PosSession(models.Model):
 
     def _prepare_balancing_line_vals(self, imbalance_amount, move, balancing_account):
         partial_vals = {
-            "name": _("Difference at closing PoS session"),
+            "name": self.env._("Difference at closing PoS session"),
             "account_id": balancing_account.id,
             "move_id": move.id,
             "partner_id": False,
@@ -1862,7 +1874,7 @@ class PosSession(models.Model):
         ]
         if tax_names_no_account:
             raise UserError(
-                _(
+                self.env._(
                     "Unable to close and validate the session.\n"
                     "Please set corresponding tax account in each repartition line of the following taxes: \n%s",
                     ", ".join(tax_names_no_account),
@@ -2028,7 +2040,7 @@ class PosSession(models.Model):
                     "journal_id": payment_method.journal_id.id,
                     "force_outstanding_account_id": outstanding_account.id,
                     "destination_account_id": destination_account.id,
-                    "memo": _(
+                    "memo": self.env._(
                         "Combine %(payment_method)s POS payments from %(session)s",
                         payment_method=payment_method.name,
                         session=self.name,
@@ -2148,7 +2160,7 @@ class PosSession(models.Model):
                 "journal_id": payment_method.journal_id.id,
                 "force_outstanding_account_id": outstanding_account.id,
                 "destination_account_id": destination_account.id,
-                "memo": _(
+                "memo": self.env._(
                     "%(payment_method)s POS payment of %(partner)s in %(session)s",
                     payment_method=payment_method.name,
                     partner=payment.partner_id.display_name,
@@ -2405,7 +2417,7 @@ class PosSession(models.Model):
         accounting_partner = payment.partner_id.commercial_partner_id
         if not accounting_partner:
             raise UserError(
-                _(
+                self.env._(
                     'You have enabled the "Identify Customer" option for %(payment_method)s payment method,'
                     "but the order %(order)s does not contain a customer.",
                     payment_method=payment.payment_method_id.name,
@@ -2435,7 +2447,7 @@ class PosSession(models.Model):
         partial_vals = {
             "account_id": self.company_id.account_config_id.account_default_pos_receivable_account_id.id,
             "move_id": self.move_id.id,
-            "name": _("From invoice payments"),
+            "name": self.env._("From invoice payments"),
             "display_type": "payment_term",
         }
         return self._prepare_credit_line_vals(partial_vals, amount, amount_converted)
@@ -2467,10 +2479,10 @@ class PosSession(models.Model):
         else:
             product_name = ""
             product_uom_id = False
-        title = _("Sales") if sign == 1 else _("Refund")
-        name = _("%s untaxed", title)
+        title = self.env._("Sales") if sign == 1 else self.env._("Refund")
+        name = self.env._("%s untaxed", title)
         if applied_taxes:
-            name = _(
+            name = self.env._(
                 "%(title)s %(product_name)s with %(taxes)s",
                 title=title,
                 product_name=product_name,
@@ -2638,7 +2650,7 @@ class PosSession(models.Model):
 
     def action_view_cash_register(self):
         return {
-            "name": _("Cash register"),
+            "name": self.env._("Cash register"),
             "type": "ir.actions.act_window",
             "res_model": "account.bank.statement.line",
             "view_mode": "list,kanban",
@@ -2649,7 +2661,7 @@ class PosSession(models.Model):
         self.check_singleton()
         all_related_moves = self._get_related_account_moves()
         return {
-            "name": _("Journal Items"),
+            "name": self.env._("Journal Items"),
             "type": "ir.actions.act_window",
             "res_model": "account.move.line",
             "view_mode": "list",
@@ -2710,7 +2722,7 @@ class PosSession(models.Model):
 
     def action_show_payments_list(self):
         return {
-            "name": _("Payments"),
+            "name": self.env._("Payments"),
             "type": "ir.actions.act_window",
             "res_model": "pos.payment",
             "view_mode": "list,form",
@@ -2752,13 +2764,15 @@ class PosSession(models.Model):
             )
             self.cash_register_balance_start = cashbox_value
         elif notes:
-            message = _("Opening control message: ")
+            message = self.env._("Opening control message: ")
             message += notes
             self.message_post(body=plaintext2html(message))
 
     def set_opening_control(self, cashbox_value: float, notes: str):
         self.check_singleton()
-        self._lock_sessions(_("Another user is currently updating this session."))
+        self._lock_sessions(
+            self.env._("Another user is currently updating this session.")
+        )
         if self.state != "opening_control":
             dbg.logic.debug(
                 "[session:%s] set_opening_control ignored in state %s",
@@ -2775,19 +2789,19 @@ class PosSession(models.Model):
         counted_formatted = self.currency_id.format(expected + difference)
 
         if opening:
-            message = _("Opening cash difference: %s \n", difference_formatted)
-            message += _("Opening cash expected: %s \n", expected_formatted)
-            message += _("Opening cash counted: %s \n", counted_formatted)
+            message = self.env._("Opening cash difference: %s \n", difference_formatted)
+            message += self.env._("Opening cash expected: %s \n", expected_formatted)
+            message += self.env._("Opening cash counted: %s \n", counted_formatted)
         else:
-            message = _("Closing difference: %s \n", difference_formatted)
-            message += _("Closing expected: %s \n", expected_formatted)
-            message += _("Closing counted: %s \n", counted_formatted)
+            message = self.env._("Closing difference: %s \n", difference_formatted)
+            message += self.env._("Closing expected: %s \n", expected_formatted)
+            message += self.env._("Closing counted: %s \n", counted_formatted)
 
         if notes:
             message += (
-                _("Opening control message: ")
+                self.env._("Opening control message: ")
                 if opening
-                else _("Closing control message: ")
+                else self.env._("Closing control message: ")
             )
             message += notes
         if message:
@@ -2798,7 +2812,7 @@ class PosSession(models.Model):
 
     def action_view_order(self):
         return {
-            "name": _("Orders"),
+            "name": self.env._("Orders"),
             "res_model": "pos.order",
             "view_mode": "list,form",
             "views": [
@@ -2844,7 +2858,7 @@ class PosSession(models.Model):
             session.activity_schedule(
                 "point_of_sale.mail_activity_old_session",
                 user_id=session.user_id.id,
-                note=_(
+                note=self.env._(
                     "Your PoS Session is open since %(date)s, we advise you to close it and to create a new one.",
                     date=session.start_at,
                 ),
@@ -2856,7 +2870,7 @@ class PosSession(models.Model):
         )
         if draft_orders:
             raise UserError(
-                _(
+                self.env._(
                     "There are still orders in draft state in the session. "
                     "Pay or cancel the following orders to validate the session:\n%s",
                     ", ".join(draft_orders.mapped("name")),
@@ -2865,7 +2879,7 @@ class PosSession(models.Model):
         return True
 
     def _get_cash_move_label(self, _type):
-        return _("Cash In") if _type == "in" else _("Cash Out")
+        return self.env._("Cash In") if _type == "in" else self.env._("Cash Out")
 
     def _prepare_account_bank_statement_line_vals(
         self, sign, amount, reason, partner_id, extras
@@ -2891,15 +2905,19 @@ class PosSession(models.Model):
 
     def try_cash_in_out(self, _type, amount, reason, partner_id, extras):
         if _type not in self.CASH_MOVE_TYPES:
-            raise UserError(_("Unknown cash movement type %(type)s.", type=_type))
+            raise UserError(
+                self.env._("Unknown cash movement type %(type)s.", type=_type)
+            )
         self._check_amount_is_finite(amount)
         sign = 1 if _type == "in" else -1
         amount = abs(amount)
-        self._lock_sessions(_("Another user is currently updating this session."))
+        self._lock_sessions(
+            self.env._("Another user is currently updating this session.")
+        )
 
         if no_journal := self.filtered(lambda session: not session.cash_journal_id):
             raise UserError(
-                _(
+                self.env._(
                     "There is no cash payment method for %(sessions)s.",
                     sessions=", ".join(no_journal.mapped("name")),
                 )
@@ -2907,7 +2925,7 @@ class PosSession(models.Model):
         sessions = self
         if closed := sessions.filtered(lambda s: s.state not in self.CASH_MOVE_STATES):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot register a cash movement on a session that is no"
                     " longer open: %(sessions)s",
                     sessions=", ".join(closed.mapped("name")),
@@ -2917,7 +2935,7 @@ class PosSession(models.Model):
             lambda session: not session.currency_id.compare_amounts(amount, 0.0)
         ):
             raise UserError(
-                _(
+                self.env._(
                     "A cash movement must have a non-zero amount, and %(amount)s"
                     " rounds to zero in %(sessions)s.",
                     amount=amount,
@@ -2948,19 +2966,23 @@ class PosSession(models.Model):
         self.check_singleton()
         if not self.env.user.has_group("account.group_account_basic"):
             raise AccessError(
-                _("You don't have the access rights to delete a cash in/out.")
+                self.env._("You don't have the access rights to delete a cash in/out.")
             )
-        self._lock_sessions(_("Another user is currently updating this session."))
+        self._lock_sessions(
+            self.env._("Another user is currently updating this session.")
+        )
         if self.state not in self.CASH_MOVE_STATES:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete a cash movement after closing control has started."
                 )
             )
         absl = self.env["account.bank.statement.line"].browse(absl_id)
         if absl not in self.statement_line_ids:
             raise AccessError(
-                _("You cannot delete a cash move that is not linked to this session.")
+                self.env._(
+                    "You cannot delete a cash move that is not linked to this session."
+                )
             )
         action = ": ".join(
             part for part in (absl.partner_id.name, str(absl.amount)) if part
@@ -2973,13 +2995,15 @@ class PosSession(models.Model):
 
     def log_partner_message(self, partner_id, action, message_type):
         if message_type == "ACTION_CANCELLED":
-            body = _("Action cancelled (%(ACTION)s)", ACTION=action)
+            body = self.env._("Action cancelled (%(ACTION)s)", ACTION=action)
         elif message_type == "CASH_DRAWER_ACTION":
-            body = _("Cash drawer opened (%(ACTION)s)", ACTION=action)
+            body = self.env._("Cash drawer opened (%(ACTION)s)", ACTION=action)
         elif message_type == "CASH_IN_OUT_UNLINK":
-            body = _("Cash move deleted: %s", action)
+            body = self.env._("Cash move deleted: %s", action)
         else:
-            raise UserError(_("Unknown message type %(type)s.", type=message_type))
+            raise UserError(
+                self.env._("Unknown message type %(type)s.", type=message_type)
+            )
 
         self.message_post(body=body, author_id=partner_id)
 

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class StockWarehouse(models.Model):
@@ -29,7 +29,7 @@ class StockWarehouse(models.Model):
         subcontracting_locations = self._get_subcontracting_locations()
         route_id = self._get_or_create_global_route(
             "stock_dropshipping.route_drop_shipping",
-            _("Dropship Subcontractor on Order"),
+            self.env._("Dropship Subcontractor on Order"),
         )
         warehouses_dropship = self.filtered(
             lambda w: w.subcontracting_to_resupply and w.active
@@ -58,7 +58,7 @@ class StockWarehouse(models.Model):
     def update_global_route_dropship_subcontractor(self):
         route_id = self._get_or_create_global_route(
             "stock_dropshipping.route_drop_shipping",
-            _("Dropship Subcontractor on Order"),
+            self.env._("Dropship Subcontractor on Order"),
         )
         all_rules = route_id.sudo().rule_ids.filtered(lambda r: r.active)
         for company in self.company_id:

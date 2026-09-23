@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import OrderedSet
@@ -132,7 +132,7 @@ class StockMove(models.Model):
         if len(productions) > 1:
             action.update(
                 {
-                    "name": _("Subcontracting MOs"),
+                    "name": self.env._("Subcontracting MOs"),
                     "views": [
                         (
                             self.env.ref(
@@ -284,7 +284,7 @@ class StockMove(models.Model):
         if self.env.user._is_portal() and not self.env.su:
             if vals.get("state") == "done":
                 raise AccessError(
-                    _(
+                    self.env._(
                         "Portal users cannot create a stock move with a state 'Done' or change the current state to 'Done'."
                     )
                 )

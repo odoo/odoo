@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -60,7 +60,7 @@ class QuotationDocument(models.Model):
                     "quotation_document_rejected", document=doc, reason="not_a_pdf"
                 )
                 raise ValidationError(
-                    _("Only PDF documents can be used as header or footer.")
+                    self.env._("Only PDF documents can be used as header or footer.")
                 )
             utils._check_document_not_encrypted(
                 doc.ir_attachment_id._get_content_prefix()
@@ -85,7 +85,7 @@ class QuotationDocument(models.Model):
     def action_view_pdf_form_fields(self):
         self.check_singleton()
         return {
-            "name": _("Form Fields"),
+            "name": self.env._("Form Fields"),
             "type": "ir.actions.act_window",
             "res_model": "sale.pdf.form.field",
             "view_mode": "list",

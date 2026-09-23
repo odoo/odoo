@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.fields import Domain
 from odoo.tools.misc import format_datetime
 
@@ -39,7 +39,7 @@ class StockQuantityHistory(models.TransientModel):
             "type": "ir.actions.act_window",
             "views": [(tree_view_id, "list"), (form_view_id, "form")],
             "view_mode": "list,form",
-            "name": _("Products"),
+            "name": self.env._("Products"),
             "res_model": "product.product",
             "domain": domain,
             "context": dict(self.env.context, to_date=self.inventory_datetime),

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -42,7 +42,7 @@ class ProductComboItem(models.Model):
     def _check_product_id_no_combo(self):
         if any(combo_item.product_id.type == "combo" for combo_item in self):
             raise ValidationError(
-                _('A combo choice can\'t contain products of type "combo".')
+                self.env._('A combo choice can\'t contain products of type "combo".')
             )
 
     def unlink(self):
@@ -69,7 +69,7 @@ class ProductComboItem(models.Model):
         emptied = combos.filtered(lambda combo: not remaining.get(combo))
         if emptied:
             raise ValidationError(
-                _(
+                self.env._(
                     "A combo must keep at least 1 choice: %(combos)s would be left"
                     " empty. Delete the combo itself instead.",
                     combos=", ".join(emptied.mapped("name")),

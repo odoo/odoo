@@ -1,6 +1,6 @@
 import hashlib
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -144,7 +144,7 @@ class HrEmployee(models.Model):
             configs_naming_these=configs_with_specific_employees,
         )
         if configs_with_all_employees or configs_with_specific_employees:
-            error_msg = _(
+            error_msg = self.env._(
                 "You cannot delete an employee that may be used in an active PoS session, close the session(s) first: \n"
             )
             for employee in self:
@@ -159,7 +159,7 @@ class HrEmployee(models.Model):
                     )
                 )
                 if config_ids:
-                    error_msg += _(
+                    error_msg += self.env._(
                         "Employee: %(employee)s - PoS Config(s): %(config_list)s \n",
                         employee=employee.name,
                         config_list=config_ids.mapped("name"),

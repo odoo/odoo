@@ -2,13 +2,14 @@ import logging
 
 import requests
 
-from odoo import _
 from odoo.exceptions import UserError
 from odoo.libs import guarded_http, netguard
 from odoo.libs.debug_log import DebugLog
+from odoo.tools import LazyTranslate
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
+_lt = LazyTranslate(__name__)
 
 
 def send_request(api_key, subdomain, version, endpoint, payload=None, method="POST"):
@@ -38,6 +39,6 @@ def send_request(api_key, subdomain, version, endpoint, payload=None, method="PO
         )
         _logger.exception("Unable to reach endpoint at %s", url)
         raise UserError(
-            _("Could not establish the connection to the Gelato API.")
+            _lt("Could not establish the connection to the Gelato API.")
         ) from error
     return response.json()

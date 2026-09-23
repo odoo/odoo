@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.tools.translate import _
 
 
 class ResPartner(models.Model):
@@ -67,7 +66,7 @@ class ResPartner(models.Model):
             "purchase_order_count",
             "purchase.group_purchase_user",
             "fa-solid fa-credit-card",
-            _("Purchases"),
+            self.env._("Purchases"),
             "o_tag_color_5",
         )
 

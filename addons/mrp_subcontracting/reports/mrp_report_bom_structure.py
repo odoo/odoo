@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -89,7 +89,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             subcontract_info = data["subcontracting"]
             lines.append(
                 {
-                    "name": _("Subcontracting: %s", subcontract_info["name"]),
+                    "name": self.env._("Subcontracting: %s", subcontract_info["name"]),
                     "type": "subcontract",
                     "uom": False,
                     "quantity": subcontract_info["quantity"],

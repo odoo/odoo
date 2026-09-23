@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -31,7 +31,7 @@ class StockPicking(models.Model):
                     reason="order_not_confirmed",
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "The Sales Order %(order)s linked to the Project %(project)s must be"
                         " validated before validating the stock picking.",
                         order=sale_order.name,
@@ -46,7 +46,7 @@ class StockPicking(models.Model):
                     reason="order_cancelled",
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "The Sales Order %(order)s linked to the Project %(project)s is cancelled."
                         " You cannot validate a stock picking on a cancelled Sales Order.",
                         order=sale_order.name,
@@ -61,7 +61,7 @@ class StockPicking(models.Model):
                     reason="order_locked",
                 )
                 raise UserError(
-                    _(
+                    self.env._(
                         "The Sales Order %(order)s linked to the Project %(project)s is currently locked."
                         " You cannot validate a stock picking on a locked Sales Order."
                         " Please create a new SO linked to this Project.",

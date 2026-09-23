@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -58,7 +58,7 @@ class SalePdfFormField(models.Model):
                     reason="bad_characters",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invalid form field name %(field_name)s. It should only contain alphanumerics,"
                         " hyphens or underscores.",
                         field_name=form_field.name,
@@ -71,7 +71,7 @@ class SalePdfFormField(models.Model):
                     reason="reserved_prefix",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invalid form field name %(field_name)s. A form field name in a header or a"
                         ' footer can not start with "sol_id_".',
                         field_name=form_field.name,
@@ -89,7 +89,7 @@ class SalePdfFormField(models.Model):
                     reason="bad_characters",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invalid path %(path)s. It should only contain alphanumerics, hyphens,"
                         " underscores or points.",
                         path=form_field.path,
@@ -107,7 +107,7 @@ class SalePdfFormField(models.Model):
                 field_name = path[i]
                 if Model == []:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Please use only relational fields until the last value of your path."
                         )
                     )
@@ -119,7 +119,7 @@ class SalePdfFormField(models.Model):
                         model=Model._name,
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The field %(field_name)s doesn't exist on model %(model_name)s",
                             field_name=field_name,
                             model_name=Model._name,
@@ -134,14 +134,14 @@ class SalePdfFormField(models.Model):
             doc_type = form_field.document_type
             if doc_type == "quotation_document" and form_field.product_document_ids:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A form field set as used in product documents can't be linked to a quotation"
                         " document."
                     )
                 )
             if doc_type == "product_document" and form_field.quotation_document_ids:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A form field set as used in quotation documents can't be linked to a product"
                         " document."
                     )

@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -47,7 +47,7 @@ class SaleOrderLine(models.Model):
             == "sale_project.sale_order_line_view_form_editable"
         ):
             default_values = {
-                "name": _("New Sales Order Item"),
+                "name": self.env._("New Sales Order Item"),
             }
             if "order_id" in res:
                 try:
@@ -229,7 +229,7 @@ class SaleOrderLine(models.Model):
         confirmed_lines.sudo()._timesheet_service_generation()
         for line in confirmed_lines - has_task_lines:
             if line.task_id:
-                msg_body = _(
+                msg_body = self.env._(
                     "Task Created (%(name)s): %(link)s",
                     name=line.product_id.name,
                     link=line.task_id._get_html_link(),
@@ -364,10 +364,10 @@ class SaleOrderLine(models.Model):
                         "sequence": sequence,
                     }
                     for name, fold, sequence in [
-                        (_("To Do"), False, 5),
-                        (_("In Progress"), False, 10),
-                        (_("Done"), False, 15),
-                        (_("Cancelled"), True, 20),
+                        (self.env._("To Do"), False, 5),
+                        (self.env._("In Progress"), False, 10),
+                        (self.env._("Done"), False, 15),
+                        (self.env._("Cancelled"), True, 20),
                     ]
                 ]
             )
@@ -460,7 +460,7 @@ class SaleOrderLine(models.Model):
             values = self._timesheet_create_task_prepare_values(project)
             task = self.env["project.task"].sudo().create(values)
         self.task_id = task
-        task_msg = _(
+        task_msg = self.env._(
             "This task has been created from: %(order_link)s (%(product_name)s)",
             order_link=self.order_id._get_html_link(),
             product_name=self.product_id.name,
@@ -629,7 +629,7 @@ class SaleOrderLine(models.Model):
                         "task_generation_refused", line=so_line, reason="no_project"
                     )
                     raise UserError(
-                        _(
+                        self.env._(
                             "A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
                             "The following product need a project in which to put its task: %(product_name)s",
                             order=so_line.order_id.name,

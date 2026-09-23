@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
@@ -219,7 +219,7 @@ class SaleOrderLine(models.Model):
                 "refunded_orderline_id.sale_order_line_id"
             )
             for downpayment_sol in downpayment_sols:
-                downpayment_sol.name = _(
+                downpayment_sol.name = self.env._(
                     "%(line_description)s (Cancelled)",
                     line_description=downpayment_sol.name,
                 )

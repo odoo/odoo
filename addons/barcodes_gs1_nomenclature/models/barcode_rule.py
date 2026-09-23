@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -70,7 +70,7 @@ class BarcodeRule(models.Model):
                 compiled_pattern = re.compile(rule.pattern)
             except re.error as error:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The rule pattern '%(rule)s' is not a valid Regex: %(error)s",
                         rule=rule.name,
                         error=error,
@@ -78,7 +78,7 @@ class BarcodeRule(models.Model):
                 ) from error
             if compiled_pattern.groups != 2:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'The rule pattern "%s" is not valid, it needs two groups:'
                         "\n\t- A first one for the Application Identifier (usually 2 to 4 digits);"
                         "\n\t- A second one to catch the value.",

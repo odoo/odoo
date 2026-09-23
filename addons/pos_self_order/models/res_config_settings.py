@@ -3,7 +3,7 @@ from io import BytesIO
 from itertools import batched
 from urllib.parse import unquote
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.documents import Document, mimetype_for
@@ -70,7 +70,7 @@ class ResConfigSettings(models.TransientModel):
                 user.has_group("point_of_sale.group_pos_user")
                 or user.has_group("point_of_sale.group_pos_manager")
             ):
-                raise ValidationError(_("The user must be a POS user"))
+                raise ValidationError(self.env._("The user must be a POS user"))
 
     @api.onchange("pos_self_ordering_service_mode")
     def _onchange_pos_self_order_service_mode(self):
@@ -119,7 +119,7 @@ class ResConfigSettings(models.TransientModel):
             pm.is_cash_count for pm in self.pos_payment_method_ids
         ):
             raise ValidationError(
-                _("You cannot add cash payment methods in kiosk mode.")
+                self.env._("You cannot add cash payment methods in kiosk mode.")
             )
 
     @api.onchange("pos_self_ordering_pay_after", "pos_self_ordering_mode")
@@ -129,7 +129,7 @@ class ResConfigSettings(models.TransientModel):
             and self.pos_self_ordering_mode == "kiosk"
         ):
             raise ValidationError(
-                _("Only pay after each is available with kiosk mode.")
+                self.env._("Only pay after each is available with kiosk mode.")
             )
 
         if (
@@ -173,7 +173,9 @@ class ResConfigSettings(models.TransientModel):
     def generate_qr_codes_zip(self):
         if self.pos_self_ordering_mode not in ["mobile", "consultation"]:
             raise ValidationError(
-                _("QR codes can only be generated in mobile or consultation mode.")
+                self.env._(
+                    "QR codes can only be generated in mobile or consultation mode."
+                )
             )
 
         qr_images = []
@@ -184,7 +186,7 @@ class ResConfigSettings(models.TransientModel):
 
             if not table_ids:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "In Self-Order mode, you must have at least one table to generate QR codes"
                     )
                 )
@@ -260,7 +262,7 @@ class ResConfigSettings(models.TransientModel):
 
             if not table_ids:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "In Self-Order mode, you must have at least one table to generate QR codes"
                     )
                 )

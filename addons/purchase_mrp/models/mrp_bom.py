@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_compare, float_is_zero
 
@@ -23,7 +23,9 @@ class MrpBom(models.Model):
                 float_compare(bl.cost_share, 0, precision_digits=2) < 0 for bl in lines
             ):
                 raise ValidationError(
-                    _("Components cost share have to be positive or equals to zero.")
+                    self.env._(
+                        "Components cost share have to be positive or equals to zero."
+                    )
                 )
             variants = bom.product_id or bom.product_tmpl_id.product_variant_ids
             if not lines.bom_product_template_attribute_value_ids:
@@ -43,7 +45,9 @@ class MrpBom(models.Model):
                     != 0
                 ):
                     raise ValidationError(
-                        _("The total cost share for a BoM's component have to be 100")
+                        self.env._(
+                            "The total cost share for a BoM's component have to be 100"
+                        )
                     )
         return res
 
@@ -72,7 +76,9 @@ class MrpBomLine(models.Model):
         for line in self:
             if float_compare(line.cost_share, 0, precision_digits=2) < 0:
                 raise ValidationError(
-                    _("Components cost share have to be positive or equals to zero.")
+                    self.env._(
+                        "Components cost share have to be positive or equals to zero."
+                    )
                 )
 
     def _get_cost_share(self, product=None):

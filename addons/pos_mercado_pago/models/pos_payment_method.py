@@ -3,7 +3,7 @@ import hmac
 import logging
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 
@@ -138,7 +138,9 @@ class PosPaymentMethod(models.Model):
 
     def _check_special_access(self):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
-            raise AccessError(_("Do not have access to fetch token from Mercado Pago"))
+            raise AccessError(
+                self.env._("Do not have access to fetch token from Mercado Pago")
+            )
 
     def force_pdv(self):
         """
@@ -157,7 +159,7 @@ class PosPaymentMethod(models.Model):
             mode,
         )
         if resp.get("operating_mode") != "PDV":
-            raise UserError(_("Unexpected Mercado Pago response: %s", resp))
+            raise UserError(self.env._("Unexpected Mercado Pago response: %s", resp))
         _logger.debug("Successfully set the terminal mode to 'PDV'.")
 
     def mp_payment_intent_create(self, infos):
@@ -236,13 +238,17 @@ class PosPaymentMethod(models.Model):
 
             if not found_device:
                 raise UserError(
-                    _("The terminal serial number is not registered on Mercado Pago")
+                    self.env._(
+                        "The terminal serial number is not registered on Mercado Pago"
+                    )
                 )
 
             return found_device.get("id", "")
         else:
             raise UserError(
-                _("Please verify your production user token as it was rejected")
+                self.env._(
+                    "Please verify your production user token as it was rejected"
+                )
             )
 
     def write(self, vals):

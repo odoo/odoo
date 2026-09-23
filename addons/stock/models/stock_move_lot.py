@@ -6,7 +6,6 @@ from odoo import api, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools.misc import OrderedSet
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from .stock_move import FIELD_DATA_IGNORED, GENERATED_LOT_VALS_MAX
@@ -202,7 +201,7 @@ class StockMoveLot(models.Model):
         if not problematic_quants:
             return None
         sn_to_location = "".join(
-            _(
+            self.env._(
                 "\n(%(serial_number)s) exists in location %(location)s",
                 serial_number=quant.lot_id.display_name,
                 location=quant.location_id.display_name,
@@ -211,8 +210,8 @@ class StockMoveLot(models.Model):
         )
         return {
             "warning": {
-                "title": _("Warning"),
-                "message": _(
+                "title": self.env._("Warning"),
+                "message": self.env._(
                     "Unavailable Serial numbers. Please correct the serial numbers encoded: %(serial_numbers_to_locations)s",
                     serial_numbers_to_locations=sn_to_location,
                 ),
@@ -266,9 +265,11 @@ class StockMoveLot(models.Model):
     @api.model
     def _prepare_lot_generation_defaults(self, context_data, mode):
         if not context_data.get("default_product_id"):
-            raise UserError(_("No product found to generate Serials/Lots for."))
+            raise UserError(
+                self.env._("No product found to generate Serials/Lots for.")
+            )
         if mode not in ("generate", "import"):
-            raise UserError(_("Invalid mode %s.", mode))
+            raise UserError(self.env._("Invalid mode %s.", mode))
 
         default_vals = {}
         for key in context_data:
@@ -281,7 +282,7 @@ class StockMoveLot(models.Model):
         missing = [key for key in required_keys if key not in default_vals]
         if missing:
             raise UserError(
-                _(
+                self.env._(
                     "Missing required values to generate Serials/Lots: %(keys)s.",
                     keys=", ".join(missing),
                 ),
@@ -304,7 +305,7 @@ class StockMoveLot(models.Model):
                 {"lot_name": name}
                 for name in self.env["stock.lot"].prepare_lot_names(
                     self._coerce_lot_text(
-                        first_lot, _("The first Serial/Lot must be text.")
+                        first_lot, self.env._("The first Serial/Lot must be text.")
                     ),
                     len(lot_qties),
                 )
@@ -312,7 +313,7 @@ class StockMoveLot(models.Model):
         else:
             lot_names = self.split_lots(
                 self._coerce_lot_text(
-                    lot_text, _("The Serials/Lots to import must be text.")
+                    lot_text, self.env._("The Serials/Lots to import must be text.")
                 ),
             )
             lot_qties = [1] * len(lot_names)
@@ -321,7 +322,9 @@ class StockMoveLot(models.Model):
 
     @api.model
     def _coerce_generated_lot_count(self, count):
-        not_whole = _("The number of Serials/Lots to generate must be a whole number.")
+        not_whole = self.env._(
+            "The number of Serials/Lots to generate must be a whole number."
+        )
         try:
             line_count = int(count)
         except TypeError, ValueError:
@@ -346,11 +349,11 @@ class StockMoveLot(models.Model):
             qty_per_lot = float(qty_per_lot)
         except TypeError, ValueError:
             raise UserError(
-                _("The quantity and the quantity per lot must be numbers."),
+                self.env._("The quantity and the quantity per lot must be numbers."),
             ) from None
         if qty_per_lot <= 0:
             raise UserError(
-                _("The quantity per lot should always be a positive value."),
+                self.env._("The quantity per lot should always be a positive value."),
             )
         line_count = int(quantity // qty_per_lot)
         self._check_generated_lot_count(line_count)
@@ -364,7 +367,7 @@ class StockMoveLot(models.Model):
     def _check_generated_lot_count(self, count):
         if count > GENERATED_LOT_VALS_MAX:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot generate more than %s Serials/Lots at once.",
                     GENERATED_LOT_VALS_MAX,
                 ),
@@ -611,7 +614,7 @@ class StockMoveLot(models.Model):
         count = next_serial_count or self.next_serial_count
         if not count:
             raise ValidationError(
-                _(
+                self.env._(
                     "The number of Serial Numbers to generate must be greater than zero.",
                 ),
             )

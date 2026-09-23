@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
@@ -158,7 +158,7 @@ class ResConfigSettings(models.TransientModel):
             and warehouse_grp in base_user_implied_ids
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You can't deactivate the multi-location setting if you have more than one warehouse per company."
                 )
             )
@@ -194,7 +194,7 @@ class ResConfigSettings(models.TransientModel):
                 [("tracking", "!=", "none")], limit=1
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You have product(s) in stock that have lot/serial number tracking enabled. \nSwitch off tracking on all the products before switching off this setting."
                     )
                 )

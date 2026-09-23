@@ -3,7 +3,6 @@ import logging
 import traceback
 from http import HTTPStatus
 
-from odoo import _
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
 from odoo.libs.debug_log import DebugLog
@@ -43,7 +42,7 @@ class QuotationDocumentController(Controller):
             files=len(files),
             template=sale_order_template,
         )
-        result = {"success": _("All files uploaded")}
+        result = {"success": request.env._("All files uploaded")}
         for uploaded_file in files:
             try:
                 mimetype = uploaded_file.content_type

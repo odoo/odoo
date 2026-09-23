@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_round
@@ -141,7 +141,7 @@ class MrpProductionSplit(models.TransientModel):
                 production=self.production_id.id,
             )
             raise UserError(
-                _(
+                self.env._(
                     "The total quantity to split (%(total)s) does not match "
                     "the manufacturing order's quantity (%(product_qty)s).",
                     total=sum(self.production_detailed_vals_ids.mapped("quantity")),

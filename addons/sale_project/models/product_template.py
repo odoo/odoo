@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -11,15 +11,15 @@ class ProductTemplate(models.Model):
     @api.model
     def _selection_service_policy(self):
         service_policies = [
-            ("ordered_prepaid", _("Prepaid/Fixed Price")),
-            ("delivered_manual", _("Based on Delivered Quantity (Manual)")),
+            ("ordered_prepaid", self.env._("Prepaid/Fixed Price")),
+            ("delivered_manual", self.env._("Based on Delivered Quantity (Manual)")),
         ]
 
         if self.env["res.groups"]._is_feature_enabled(
             "project.group_project_milestone"
         ):
             service_policies.insert(
-                1, ("delivered_milestones", _("Based on Milestones"))
+                1, ("delivered_milestones", self.env._("Based on Milestones"))
             )
         return service_policies
 
@@ -94,23 +94,27 @@ class ProductTemplate(models.Model):
 
     def _prepare_service_tracking_tooltip(self):
         if self.service_tracking == "task_global_project":
-            return _("Create a task in an existing project to track the time spent.")
+            return self.env._(
+                "Create a task in an existing project to track the time spent."
+            )
         elif self.service_tracking == "project_only":
-            return _("Create an empty project for the order to track the time spent.")
+            return self.env._(
+                "Create an empty project for the order to track the time spent."
+            )
         elif self.service_tracking == "task_in_project":
-            return _(
+            return self.env._(
                 "Create a project for the order with a task for each sales order line "
                 "to track the time spent."
             )
         elif self.service_tracking == "no":
-            return _(
+            return self.env._(
                 "Create projects or tasks later, and link them to order to track the time spent."
             )
         return super()._prepare_service_tracking_tooltip()
 
     def _prepare_invoicing_tooltip(self):
         if self.service_policy == "delivered_milestones":
-            return _("Invoice your milestones when they are reached.")
+            return self.env._("Invoice your milestones when they are reached.")
         return super()._prepare_invoicing_tooltip()
 
     def _get_service_to_general_map(self):
@@ -154,7 +158,7 @@ class ProductTemplate(models.Model):
                     "service_tracking_rejected", product=product, reason="tracking_no"
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The product %s should not have a project nor a project template since it will not generate project.",
                         product.name,
                     )
@@ -169,7 +173,7 @@ class ProductTemplate(models.Model):
                     reason="global_project_with_template",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The product %s should not have a project template since it will generate a task in a global project.",
                         product.name,
                     )
@@ -184,7 +188,7 @@ class ProductTemplate(models.Model):
                     reason="new_project_with_global_project",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The product %s should not have a global project since it will generate a project.",
                         product.name,
                     )

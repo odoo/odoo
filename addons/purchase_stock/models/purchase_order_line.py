@@ -6,7 +6,6 @@ from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_round
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -607,7 +606,7 @@ class PurchaseOrderLine(models.Model):
             ):
                 line.invoice_line_ids[0].move_id.activity_schedule(
                     "mail.mail_activity_data_warning",
-                    note=_(
+                    note=self.env._(
                         "The quantities on your purchase order indicate less than billed. You should ask for a refund.",
                     ),
                     user_id=self.env.uid,
@@ -680,7 +679,7 @@ class PurchaseOrderLine(models.Model):
             and warehouse_loc.parent_path not in dest_loc[0].parent_path
         ):
             raise UserError(
-                _(
+                self.env._(
                     "The warehouse of operation type (%(operation_type)s) is inconsistent with location (%(location)s) of reordering rule (%(reordering_rule)s) for product %(product)s. Change the operation type or cancel the request for quotation.",
                     product=self.product_id.display_name,
                     operation_type=self.order_id.picking_type_id.display_name,

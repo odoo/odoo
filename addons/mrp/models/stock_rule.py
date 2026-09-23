@@ -4,7 +4,7 @@ from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -26,16 +26,16 @@ class StockRule(models.Model):
     def _get_action_messages(self):
         message_dict = super()._get_action_messages()
         source, destination, direct_destination, operation = self._get_message_labels()
-        manufacture_message = _(
+        manufacture_message = self.env._(
             "When products are needed in <b>%s</b>, <br/> a manufacturing order is created to fulfill the need.",
             destination,
         )
         if self.location_src_id:
-            manufacture_message += _(
+            manufacture_message += self.env._(
                 " <br/><br/> The components will be taken from <b>%s</b>.", source
             )
         if direct_destination and not self.location_dest_from_rule:
-            manufacture_message += _(
+            manufacture_message += self.env._(
                 " <br/><br/> The manufactured products will be moved towards <b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination.",
                 destination=direct_destination,
                 operation=operation,
@@ -378,7 +378,7 @@ class StockRule(models.Model):
             picking_type = warehouse.manu_type_id
             if not picking_type:
                 raise UserError(
-                    _(
+                    self.env._(
                         "No manufacturing operation type is configured for"
                         " %(product)s. Set one on the bill of materials, on the"
                         " manufacturing rule, or on the warehouse.",
@@ -455,14 +455,21 @@ class StockRule(models.Model):
             delays["total_delay"] += 365
             delays["no_bom_found_delay"] += 365
             if not bypass_delay_description:
-                delay_description.append((_("No BoM Found"), _("+ %s day(s)", 365)))
+                delay_description.append(
+                    (self.env._("No BoM Found"), self.env._("+ %s day(s)", 365))
+                )
         manufacture_delay = bom.produce_delay
         delays["total_delay"] += manufacture_delay
         delays["manufacture_delay"] += manufacture_delay
         if not bypass_delay_description:
-            delay_description.append((_("Production End Date"), manufacture_delay))
             delay_description.append(
-                (_("Manufacturing Lead Time"), _("+ %d day(s)", manufacture_delay))
+                (self.env._("Production End Date"), manufacture_delay)
+            )
+            delay_description.append(
+                (
+                    self.env._("Manufacturing Lead Time"),
+                    self.env._("+ %d day(s)", manufacture_delay),
+                )
             )
         if bom.type == "normal":
             warehouse = self.location_dest_id.warehouse_id
@@ -490,9 +497,14 @@ class StockRule(models.Model):
         )
         delays["total_delay"] += days_to_order
         if not bypass_delay_description:
-            delay_description.append((_("Production Start Date"), days_to_order))
             delay_description.append(
-                (_("Days to Supply Components"), _("+ %d day(s)", days_to_order))
+                (self.env._("Production Start Date"), days_to_order)
+            )
+            delay_description.append(
+                (
+                    self.env._("Days to Supply Components"),
+                    self.env._("+ %d day(s)", days_to_order),
+                )
             )
         return delays, delay_description
 

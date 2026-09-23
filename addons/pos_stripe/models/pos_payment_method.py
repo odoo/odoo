@@ -1,6 +1,6 @@
 from urllib.parse import quote
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 
@@ -36,7 +36,7 @@ class PosPaymentMethod(models.Model):
             )
             if existing_payment_method:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Terminal %(terminal)s is already used on payment method %(payment_method)s.",
                         terminal=payment_method.stripe_serial_number,
                         payment_method=existing_payment_method.display_name,
@@ -50,7 +50,7 @@ class PosPaymentMethod(models.Model):
 
         if not stripe_payment_provider:
             raise UserError(
-                _(
+                self.env._(
                     "Stripe payment provider for company %s is missing",
                     self.env.company.name,
                 )
@@ -61,7 +61,9 @@ class PosPaymentMethod(models.Model):
     @api.model
     def stripe_connection_token(self):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
-            raise AccessError(_("Do not have access to fetch token from Stripe"))
+            raise AccessError(
+                self.env._("Do not have access to fetch token from Stripe")
+            )
 
         return (
             self.sudo()
@@ -75,7 +77,9 @@ class PosPaymentMethod(models.Model):
 
     def stripe_payment_intent(self, amount):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
-            raise AccessError(_("Do not have access to fetch token from Stripe"))
+            raise AccessError(
+                self.env._("Do not have access to fetch token from Stripe")
+            )
 
         # For Terminal payments, the 'payment_method_types' parameter must include
         # at least 'card_present' and the 'capture_method' must be set to 'manual'.
@@ -116,7 +120,9 @@ class PosPaymentMethod(models.Model):
                        overcapturing to support tips.
         """
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
-            raise AccessError(_("Do not have access to fetch token from Stripe"))
+            raise AccessError(
+                self.env._("Do not have access to fetch token from Stripe")
+            )
 
         endpoint = ("payment_intents/%s/capture") % (quote(paymentIntentId, safe="/:"))
 
@@ -138,7 +144,7 @@ class PosPaymentMethod(models.Model):
         res_id = self._get_stripe_payment_provider().id
         # Redirect
         return {
-            "name": _("Stripe"),
+            "name": self.env._("Stripe"),
             "res_model": "payment.provider",
             "type": "ir.actions.act_window",
             "view_mode": "form",

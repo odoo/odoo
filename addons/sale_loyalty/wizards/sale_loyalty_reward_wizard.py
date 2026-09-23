@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -59,7 +59,7 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
         self.check_singleton()
         if not self.selected_reward_id:
             _debug.logic("reward_apply_refused", wizard=self, reason="none_selected")
-            raise ValidationError(_("No reward selected."))
+            raise ValidationError(self.env._("No reward selected."))
         claimable_rewards = self.order_id._get_claimable_rewards()
         selected_coupon = False
         for coupon, rewards in claimable_rewards.items():
@@ -74,7 +74,7 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
                 reward=self.selected_reward_id,
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "Coupon not found while trying to add the following reward: %s",
                     self.selected_reward_id.description,
                 )

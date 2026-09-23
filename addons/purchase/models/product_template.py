@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.tools.translate import _
 
 
 class ProductTemplate(models.Model):
@@ -64,7 +63,9 @@ class ProductTemplate(models.Model):
                 self.with_context(active_test=False).product_variant_ids.ids,
             ),
         ]
-        action["display_name"] = _("Purchase History for %s", self.display_name)
+        action["display_name"] = self.env._(
+            "Purchase History for %s", self.display_name
+        )
         return action
 
     def _get_backend_root_menu_ids(self):
@@ -78,7 +79,7 @@ class ProductTemplate(models.Model):
         if self.env.context.get("purchase_product_template"):
             return [
                 {
-                    "label": _("Import Template for Products"),
+                    "label": self.env._("Import Template for Products"),
                     "template": "/purchase/static/xls/product_purchase.xls",
                 },
             ]

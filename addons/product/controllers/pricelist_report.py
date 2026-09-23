@@ -4,7 +4,6 @@ import json
 
 from werkzeug.exceptions import BadRequest
 
-from odoo import _
 from odoo.http import Controller, prepare_content_disposition_header, request, route
 from odoo.libs.documents import Document, extension_for, mimetype_for
 
@@ -30,9 +29,9 @@ class ProductPricelistExportController(Controller):
         quantities = report_data["quantities"]
         products = report_data["products"]
         headers = [
-            _("Product"),
-            _("UOM"),
-        ] + [_("Quantity (%s UoM)", qty) for qty in quantities]
+            request.env._("Product"),
+            request.env._("UOM"),
+        ] + [request.env._("Quantity (%s UoM)", qty) for qty in quantities]
         if export_format == "csv":
             return self._generate_csv(pricelist_name, quantities, products, headers)
         else:

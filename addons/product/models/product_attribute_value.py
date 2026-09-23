@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ProductAttributeValue(models.Model):
@@ -131,7 +131,7 @@ class ProductAttributeValue(models.Model):
     @api.readonly
     def action_add_to_products(self):
         return {
-            "name": _("Add to all products"),
+            "name": self.env._("Add to all products"),
             "type": "ir.actions.act_window",
             "res_model": "update.product.attribute.value",
             "view_mode": "form",
@@ -146,7 +146,7 @@ class ProductAttributeValue(models.Model):
     @api.readonly
     def action_update_prices(self):
         return {
-            "name": _("Update product extra prices"),
+            "name": self.env._("Update product extra prices"),
             "type": "ir.actions.act_window",
             "res_model": "update.product.attribute.value",
             "view_mode": "form",

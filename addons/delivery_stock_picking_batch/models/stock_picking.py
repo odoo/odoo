@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -52,7 +52,7 @@ class StockPickingType(models.Model):
         for picking_type in self:
             if picking_type.batch_max_weight < 0:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The maximum batch weight cannot be negative. Leave it at '0' to disable the limit."
                     )
                 )

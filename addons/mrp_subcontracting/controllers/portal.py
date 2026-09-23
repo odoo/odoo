@@ -2,7 +2,7 @@ from collections import OrderedDict
 
 import werkzeug
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -49,16 +49,25 @@ class CustomerPortal(portal.CustomerPortal):
             ]
 
         searchbar_filters = {
-            "all": {"label": _("All"), "domain": []},
-            "done": {"label": _("Done"), "domain": [("state", "=", "done")]},
-            "ready": {"label": _("Ready"), "domain": [("state", "=", "assigned")]},
+            "all": {"label": request.env._("All"), "domain": []},
+            "done": {
+                "label": request.env._("Done"),
+                "domain": [("state", "=", "done")],
+            },
+            "ready": {
+                "label": request.env._("Ready"),
+                "domain": [("state", "=", "assigned")],
+            },
         }
         filterby = self._resolve_searchbar_option(searchbar_filters, filterby, "all")
         domain += searchbar_filters[filterby]["domain"]
 
         searchbar_sortings = {
-            "date": {"label": _("Newest"), "order": "create_date desc, id desc"},
-            "name": {"label": _("Name"), "order": "name asc, id asc"},
+            "date": {
+                "label": request.env._("Newest"),
+                "order": "create_date desc, id desc",
+            },
+            "name": {"label": request.env._("Name"), "order": "name asc, id asc"},
         }
         sortby = self._resolve_searchbar_option(searchbar_sortings, sortby, "date")
         order = searchbar_sortings[sortby]["order"]

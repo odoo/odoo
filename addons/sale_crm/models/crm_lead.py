@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 
@@ -167,7 +167,7 @@ class CrmLead(models.Model):
                 )
                 opportunity.expected_revenue = order.amount_untaxed
                 opportunity._track_set_log_message(
-                    _(
+                    self.env._(
                         "Expected revenue has been updated based on the linked Sales Orders."
                     )
                 )

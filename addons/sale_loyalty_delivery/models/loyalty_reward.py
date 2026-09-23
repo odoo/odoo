@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class LoyaltyReward(models.Model):
@@ -14,7 +14,7 @@ class LoyaltyReward(models.Model):
         for index, reward in enumerate(self):
             if reward.reward_type != "shipping":
                 continue
-            reward_string = _("Free shipping")
+            reward_string = self.env._("Free shipping")
             if reward.discount_max_amount:
                 format_string = "%(amount)g %(symbol)s"
                 if reward.currency_id.position == "before":
@@ -23,6 +23,6 @@ class LoyaltyReward(models.Model):
                     "amount": reward.discount_max_amount,
                     "symbol": reward.currency_id.symbol,
                 }
-                reward_string += _(" (Max %s)", formatted_amount)
+                reward_string += self.env._(" (Max %s)", formatted_amount)
             descriptions[index] = reward_string
         return descriptions

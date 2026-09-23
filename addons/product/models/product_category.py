@@ -1,4 +1,4 @@
-from odoo import _, _lt, api, fields, models
+from odoo import _lt, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -89,7 +89,7 @@ class ProductCategory(models.Model):
             for category, vals in zip(self, vals_list, strict=True):
                 if vals is None:
                     continue
-                vals["name"] = _("%s (copy)", category.name)
+                vals["name"] = self.env._("%s (copy)", category.name)
         return vals_list
 
     @api.depends("name", "parent_id.complete_name")

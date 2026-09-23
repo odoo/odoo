@@ -6,7 +6,7 @@ import logging
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
 from odoo.tools import consteq
@@ -114,7 +114,7 @@ class PosPaymentMethod(models.Model):
             and record.company_id.currency_id.name != "HKD"
             for record in self
         ):
-            raise UserError(_("QFPay is only valid for HKD Currency"))
+            raise UserError(self.env._("QFPay is only valid for HKD Currency"))
 
     def _is_write_forbidden(self, fields):
         return super()._is_write_forbidden(fields - {"qfpay_latest_response"})
@@ -128,7 +128,7 @@ class PosPaymentMethod(models.Model):
 
         if self.use_payment_terminal != "qfpay":
             raise UserError(
-                _("This method can only be used with QFPay payment terminal.")
+                self.env._("This method can only be used with QFPay payment terminal.")
             )
 
         key = self.sudo().qfpay_pos_key

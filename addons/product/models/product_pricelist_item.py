@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round, format_amount, format_datetime, formatLang
 
@@ -215,7 +215,7 @@ class ProductPricelistItem(models.Model):
                 item.pricelist_id, item.base_pricelist_id, item.pricelist_id, seen
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Recursive pricelist rules detected: %s",
                         " ⇒ ".join(path.mapped("name")),
                     ),
@@ -226,7 +226,7 @@ class ProductPricelistItem(models.Model):
         for item in self:
             if item.date_start and item.date_end and item.date_start >= item.date_end:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "%(item_name)s: end date (%(end_date)s) should be after start date (%(start_date)s)",
                         item_name=item.display_name,
                         end_date=format_datetime(self.env, item.date_end),
@@ -239,7 +239,7 @@ class ProductPricelistItem(models.Model):
         for item in self:
             if item.price_max_margin and item.price_min_margin > item.price_max_margin:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "%(rule)s: the minimum margin (%(min)s) must be lower than"
                         " the maximum margin (%(max)s).",
                         rule=item.display_name,
@@ -257,7 +257,7 @@ class ProductPricelistItem(models.Model):
                 and item.product_id.product_tmpl_id != item.product_tmpl_id
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The product variant %(variant)s does not belong to the"
                         " product %(product)s.",
                         variant=item.product_id.display_name,
@@ -270,19 +270,19 @@ class ProductPricelistItem(models.Model):
         for item in self:
             if item.applied_on == "2_product_category" and not item.categ_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Please specify the category for which this rule should be applied"
                     ),
                 )
             if item.applied_on == "1_product" and not item.product_tmpl_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Please specify the product for which this rule should be applied"
                     ),
                 )
             if item.applied_on == "0_product_variant" and not item.product_id:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Please specify the product variant for which this rule should be applied"
                     ),
                 )
@@ -293,7 +293,7 @@ class ProductPricelistItem(models.Model):
             item.base == "pricelist" and not item.base_pricelist_id for item in self
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     'A pricelist item with "Other Pricelist" as base must have a base_pricelist_id.'
                 ),
             )
@@ -303,7 +303,7 @@ class ProductPricelistItem(models.Model):
         for item in self:
             if item.price_round and item.price_round < 0:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "%(rule)s: the price rounding cannot be negative.",
                         rule=item.display_name,
                     ),
@@ -437,15 +437,15 @@ class ProductPricelistItem(models.Model):
     def _compute_name(self):
         for item in self:
             if item.categ_id and item.applied_on == "2_product_category":
-                item.name = _("Category: %s", item.categ_id.display_name)
+                item.name = self.env._("Category: %s", item.categ_id.display_name)
             elif item.product_tmpl_id and item.applied_on == "1_product":
                 item.name = item.product_tmpl_id.display_name
             elif item.product_id and item.applied_on == "0_product_variant":
-                item.name = _("Variant: %s", item.product_id.display_name)
+                item.name = self.env._("Variant: %s", item.product_id.display_name)
             elif item.display_applied_on == "2_product_category":
-                item.name = _("All Categories")
+                item.name = self.env._("All Categories")
             else:
-                item.name = _("All Products")
+                item.name = self.env._("All Products")
 
     @api.depends(
         "compute_price",
@@ -471,13 +471,13 @@ class ProductPricelistItem(models.Model):
             elif item.compute_price == "percentage":
                 percentage = self._int_if_whole(item.percent_price)
                 if item.base_pricelist_id:
-                    item.price = _(
+                    item.price = self.env._(
                         "%(percentage)s %% discount on %(pricelist)s",
                         percentage=percentage,
                         pricelist=item.base_pricelist_id.display_name,
                     )
                 else:
-                    item.price = _(
+                    item.price = self.env._(
                         "%(percentage)s %% discount on sales price",
                         percentage=percentage,
                     )
@@ -486,7 +486,7 @@ class ProductPricelistItem(models.Model):
 
                 extra_fee_str = ""
                 if item.price_surcharge > 0:
-                    extra_fee_str = _(
+                    extra_fee_str = self.env._(
                         "+ %(amount)s extra fee",
                         amount=format_amount(
                             item.env,
@@ -495,7 +495,7 @@ class ProductPricelistItem(models.Model):
                         ),
                     )
                 elif item.price_surcharge < 0:
-                    extra_fee_str = _(
+                    extra_fee_str = self.env._(
                         "- %(amount)s rebate",
                         amount=format_amount(
                             item.env,
@@ -504,7 +504,7 @@ class ProductPricelistItem(models.Model):
                         ),
                     )
                 discount_type, percentage = item._get_displayed_discount()
-                item.price = _(
+                item.price = self.env._(
                     "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s",
                     percentage=percentage,
                     discount_type=discount_type,
@@ -550,7 +550,7 @@ class ProductPricelistItem(models.Model):
             surcharge = format_amount(item.env, item.price_surcharge, item.currency_id)
             discount_type, discount = item._get_displayed_discount()
 
-            item.rule_tip = _(
+            item.rule_tip = self.env._(
                 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
                 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s",
                 base=base_selection_vals[item.base],
@@ -568,8 +568,8 @@ class ProductPricelistItem(models.Model):
     def _get_displayed_discount(self):
         self.check_singleton()
         if self.base == "standard_price":
-            return _("markup"), self._int_if_whole(self.price_markup)
-        return _("discount"), self._int_if_whole(self.price_discount)
+            return self.env._("markup"), self._int_if_whole(self.price_markup)
+        return self.env._("discount"), self._int_if_whole(self.price_discount)
 
     def _int_if_whole(self, percentage):
         return int(percentage) if percentage == int(percentage) else percentage
@@ -580,9 +580,9 @@ class ProductPricelistItem(models.Model):
         if self.base == "pricelist" and self.base_pricelist_id:
             base_str = self.base_pricelist_id.display_name
         elif self.base == "standard_price":
-            base_str = _("product cost")
+            base_str = self.env._("product cost")
         else:
-            base_str = _("sales price")
+            base_str = self.env._("sales price")
         return base_str
 
     def _default_pricelist_id(self):
@@ -788,7 +788,7 @@ class ProductPricelistItem(models.Model):
         else:
             if rule_base != "list_price":
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "%(rule)s cannot be priced: %(base)s is not a base this"
                         " pricelist knows how to compute from.",
                         rule=self.display_name,

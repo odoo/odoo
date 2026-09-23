@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.tools import SQL
 
 
@@ -27,10 +27,12 @@ class SaleDeliveryLineMatch(models.Model):
     )
 
     def _get_no_order_line_message(self):
-        return _("You must select at least one Sales Order line to match or deliver.")
+        return self.env._(
+            "You must select at least one Sales Order line to match or deliver."
+        )
 
     def _get_no_move_message(self):
-        return _("You must select at least one delivery move to match.")
+        return self.env._("You must select at least one delivery move to match.")
 
     def _select_order_line_date(self):
         return SQL("o.date_commitment")

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -41,13 +41,15 @@ class SaleOrderDiscount(models.TransientModel):
                         percentage=wizard.discount_percentage,
                     )
                     raise ValidationError(
-                        _("Discount percentage must be at most 100%.")
+                        self.env._("Discount percentage must be at most 100%.")
                     )
                 if wizard.discount_percentage < 0.0:
                     _debug.logic(
                         "discount_rejected", wizard=wizard, reason="negative_percentage"
                     )
-                    raise ValidationError(_("Discount percentage cannot be negative."))
+                    raise ValidationError(
+                        self.env._("Discount percentage cannot be negative.")
+                    )
             if wizard.discount_type == "amount":
                 currency = wizard.currency_id or wizard.sale_order_id.currency_id
                 if wizard.discount_amount < 0.0:
@@ -55,7 +57,7 @@ class SaleOrderDiscount(models.TransientModel):
                         "discount_rejected", wizard=wizard, reason="negative_amount"
                     )
                     raise ValidationError(
-                        _("The discount amount cannot be negative."),
+                        self.env._("The discount amount cannot be negative."),
                     )
                 if (
                     currency.compare_amounts(
@@ -70,13 +72,15 @@ class SaleOrderDiscount(models.TransientModel):
                         amount=wizard.discount_amount,
                     )
                     raise ValidationError(
-                        _("The discount amount cannot exceed the order total."),
+                        self.env._(
+                            "The discount amount cannot exceed the order total."
+                        ),
                     )
 
     def _prepare_discount_product_values(self):
         self.check_singleton()
         values = {
-            "name": _("Discount"),
+            "name": self.env._("Discount"),
             "type": "service",
             "invoice_policy": "ordered",
             "list_price": 0.0,
@@ -176,7 +180,7 @@ class SaleOrderDiscount(models.TransientModel):
                     "discount_product_refused", company=company, reason="no_access"
                 )
                 raise AccessError(
-                    _(
+                    self.env._(
                         "There does not seem to be any discount product configured for this company yet."
                         " You can either use a per-line discount, or ask an administrator to grant the"
                         " discount the first time.",

@@ -2,7 +2,7 @@ from collections import defaultdict
 from datetime import date, datetime, time
 from itertools import batched
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -442,7 +442,7 @@ class ProductProduct(models.Model):
                     "value": product.standard_price,
                     "company_id": self.env.company.id,
                     "date": date,
-                    "description": _(
+                    "description": self.env._(
                         "Price update from %(old_price)s to %(new_price)s by %(user)s",
                         old_price=product_old_price,
                         new_price=product.standard_price,
@@ -469,7 +469,7 @@ class ProductProduct(models.Model):
             return self.standard_price
         if self.cost_method != "standard":
             raise ValidationError(
-                _(
+                self.env._(
                     "You can only get the standard price at a given date for products with 'Standard Price' as cost method."
                 )
             )

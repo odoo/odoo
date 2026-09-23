@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from ..tools import debug_log as dbg
@@ -243,7 +243,7 @@ class PosPaymentMethod(models.Model):
         for pm in self:
             if pm.journal_id and pm.journal_id.type not in ["cash", "bank"]:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
                     )
                 )
@@ -293,7 +293,7 @@ class PosPaymentMethod(models.Model):
         )
         if self._is_write_forbidden(set(vals.keys())):
             raise UserError(
-                _(
+                self.env._(
                     "Please close and validate the following open PoS Sessions before modifying this payment method.\n"
                     "Open sessions: %s",
                     (" ".join(self.open_session_ids.mapped("name")),),
@@ -363,13 +363,13 @@ class PosPaymentMethod(models.Model):
             if rec.payment_method_type == "qr_code":
                 if rec.journal_id.type != "bank" or not rec.journal_id.bank_account_id:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "At least one bank account must be defined on the journal to allow registering QR code payments with Bank apps."
                         )
                     )
                 if not rec.qr_code_method:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "You must select a QR-code method to generate QR-codes for this payment method."
                         )
                     )
@@ -386,7 +386,7 @@ class PosPaymentMethod(models.Model):
                 config.company_id != payment.company_id for config in payment.config_ids
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The points of sale for the payment method %s must belong to its company.",
                         payment.name,
                     )
@@ -423,7 +423,7 @@ class PosPaymentMethod(models.Model):
         )
         if self not in self.open_session_ids.config_id.payment_method_ids:
             raise UserError(
-                _(
+                self.env._(
                     "This payment method is not available in any of your open PoS sessions."
                 )
             )
@@ -446,7 +446,9 @@ class PosPaymentMethod(models.Model):
         self.check_singleton()
         if self.payment_method_type != "qr_code" or not self.qr_code_method:
             raise UserError(
-                _("This payment method is not configured to generate QR codes.")
+                self.env._(
+                    "This payment method is not configured to generate QR codes."
+                )
             )
         payment_bank = self.journal_id.bank_account_id
         debtor_partner = self.env["res.partner"].browse(debtor_partner)

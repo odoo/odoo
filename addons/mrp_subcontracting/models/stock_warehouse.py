@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
 
@@ -79,7 +79,7 @@ class StockWarehouse(models.Model):
     def _update_global_route_resupply_subcontractor(self):
         route_id = self._get_or_create_global_route(
             "mrp_subcontracting.route_resupply_subcontractor_mto",
-            _("Resupply Subcontractor on Order"),
+            self.env._("Resupply Subcontractor on Order"),
         )
         if not route_id.sudo().rule_ids.filtered(lambda r: r.active):
             route_id.active = False
@@ -101,7 +101,7 @@ class StockWarehouse(models.Model):
                         "company_id": self.company_id.id,
                         "sequence": 10,
                         "name": self._format_routename(
-                            name=_("Resupply Subcontractor")
+                            name=self.env._("Resupply Subcontractor")
                         ),
                     },
                     "route_update_values": {
@@ -129,7 +129,8 @@ class StockWarehouse(models.Model):
                         "action": "pull",
                         "auto": "manual",
                         "route_id": self._get_or_create_global_route(
-                            "stock.route_warehouse0_mto", _("Replenish on Order (MTO)")
+                            "stock.route_warehouse0_mto",
+                            self.env._("Replenish on Order (MTO)"),
                         ).id,
                         "name": self._format_rulename(
                             self.lot_stock_id, subcontract_location_id, "MTO"
@@ -149,7 +150,7 @@ class StockWarehouse(models.Model):
                         "auto": "manual",
                         "route_id": self._get_or_create_global_route(
                             "mrp_subcontracting.route_resupply_subcontractor_mto",
-                            _("Resupply Subcontractor on Order"),
+                            self.env._("Resupply Subcontractor on Order"),
                         ).id,
                         "name": self._format_rulename(
                             subcontract_location_id, production_location_id, False
@@ -178,13 +179,13 @@ class StockWarehouse(models.Model):
         data.update(
             {
                 "subcontracting_type_id": {
-                    "name": _("Subcontracting"),
+                    "name": self.env._("Subcontracting"),
                     "code": "mrp_operation",
                     "use_create_components_lots": True,
                     "company_id": self.company_id.id,
                 },
                 "subcontracting_resupply_type_id": {
-                    "name": _("Resupply Subcontractor"),
+                    "name": self.env._("Resupply Subcontractor"),
                     "code": "internal",
                     "use_create_lots": False,
                     "use_existing_lots": True,

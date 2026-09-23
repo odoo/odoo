@@ -6,7 +6,6 @@ from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.tools import OrderedSet
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from .stock_orderpoint import ORDERPOINTS_BY_SCOPE
@@ -305,7 +304,7 @@ class StockMoveProcurement(models.Model):
         dbg.pipeline.debug("_push_apply on %s at depth %d", dbg.rec(self), depth)
         if depth > self._MAX_PUSH_DEPTH:
             raise UserError(
-                _(
+                self.env._(
                     "Push rules recursion limit reached. Check for circular push rules in your warehouse configuration."
                 )
             )

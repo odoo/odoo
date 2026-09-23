@@ -1,4 +1,4 @@
-from odoo import _, fields, http
+from odoo import fields, http
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request
@@ -200,7 +200,7 @@ class LunchController(http.Controller):
             and not request.env.user.has_group("lunch.group_lunch_manager")
         ):
             raise AccessError(
-                _(
+                request.env._(
                     "You are trying to impersonate another user, but this can only be done by a lunch manager"
                 )
             )

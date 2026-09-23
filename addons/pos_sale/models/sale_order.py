@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.tools import format_date
 
 
@@ -86,7 +86,7 @@ class SaleOrder(models.Model):
         linked_orders = self.pos_order_line_ids.mapped("order_id")
         return {
             "type": "ir.actions.act_window",
-            "name": _("Linked POS Orders"),
+            "name": self.env._("Linked POS Orders"),
             "res_model": "pos.order",
             "view_mode": "list,form",
             "domain": [("id", "in", linked_orders.ids)],
@@ -154,7 +154,7 @@ class SaleOrder(models.Model):
             and base_line["record"]._name == "pos.order.line"
         ):
             pos_order_line = base_line["record"]
-            so_line_values["name"] = _(
+            so_line_values["name"] = self.env._(
                 "Down payment (ref: %(order_reference)s on \n %(date)s)",
                 order_reference=pos_order_line.name,
                 date=format_date(

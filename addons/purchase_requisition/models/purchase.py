@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 
 
 class PurchaseOrderGroup(models.Model):
@@ -127,7 +127,9 @@ class PurchaseOrder(models.Model):
                     "purchase_requisition.purchase_requisition_alternative_warning_form"
                 )
                 return {
-                    "name": _("What about the alternative Requests for Quotations?"),
+                    "name": self.env._(
+                        "What about the alternative Requests for Quotations?"
+                    ),
                     "type": "ir.actions.act_window",
                     "view_mode": "form",
                     "res_model": "purchase.requisition.alternative.warning",
@@ -202,7 +204,7 @@ class PurchaseOrder(models.Model):
     def action_create_alternative(self):
         ctx = dict(**self.env.context, default_origin_po_id=self.id)
         return {
-            "name": _("Create alternative"),
+            "name": self.env._("Create alternative"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "purchase.requisition.create.alternative",
@@ -223,7 +225,7 @@ class PurchaseOrder(models.Model):
             "purchase_requisition.purchase_order_line_compare_tree"
         ).id
         return {
-            "name": _("Compare Order Lines"),
+            "name": self.env._("Compare Order Lines"),
             "type": "ir.actions.act_window",
             "view_mode": "list",
             "res_model": "purchase.order.line",
@@ -351,8 +353,8 @@ class PurchaseOrderLine(models.Model):
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
-                    "title": _("Some not cleared"),
-                    "message": _(
+                    "title": self.env._("Some not cleared"),
+                    "message": self.env._(
                         "Some quantities were not cleared because their status is not a RFQ status."
                     ),
                     "sticky": False,
@@ -377,8 +379,8 @@ class PurchaseOrderLine(models.Model):
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "title": _("Nothing to clear"),
-                "message": _("There are no quantities to clear."),
+                "title": self.env._("Nothing to clear"),
+                "message": self.env._("There are no quantities to clear."),
                 "sticky": False,
             },
         }

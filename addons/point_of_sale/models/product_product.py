@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
@@ -74,7 +74,7 @@ class ProductProduct(models.Model):
                 limit=1,
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "To delete a product, make sure all point of sale sessions are closed.\n\n"
                         "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
                     )

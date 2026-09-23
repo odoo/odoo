@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_is_zero, float_round
@@ -102,7 +102,7 @@ class DeliveryCarrier(models.Model):
                 "product.template"
             ]._get_weight_uom_name_from_ir_config_parameter()
             raise UserError(
-                _(
+                self.env._(
                     "The package cannot be created because the total weight of the products in the picking is 0.0 %s",
                     weight_uom_name,
                 )
@@ -211,7 +211,7 @@ class DeliveryCarrier(models.Model):
             )
         elif not packages:
             raise UserError(
-                _(
+                self.env._(
                     "The package cannot be created because the total weight of the "
                     "products in the picking is 0.0 %s",
                     picking.weight_uom_name,
@@ -336,7 +336,7 @@ class DeliveryCarrier(models.Model):
         for p in pickings:
             carrier = self._match_address(p.partner_id)
             if not carrier:
-                raise ValidationError(_("There is no matching delivery rule."))
+                raise ValidationError(self.env._("There is no matching delivery rule."))
             res += [
                 {
                     "exact_price": p.carrier_id._get_price_available(p.sale_id)

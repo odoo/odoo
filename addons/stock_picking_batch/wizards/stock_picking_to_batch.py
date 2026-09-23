@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -35,7 +35,9 @@ class StockPickingToBatch(models.TransientModel):
             company = pickings.company_id
             if len(company) > 1:
                 raise UserError(
-                    _("The selected pickings should belong to an unique company.")
+                    self.env._(
+                        "The selected pickings should belong to an unique company."
+                    )
                 )
             batch = self.env["stock.picking.batch"].create(
                 {
@@ -45,10 +47,14 @@ class StockPickingToBatch(models.TransientModel):
                     "description": self.description,
                 }
             )
-            notification_title = _("The following batch transfer has been created")
+            notification_title = self.env._(
+                "The following batch transfer has been created"
+            )
         else:
             batch = self.batch_id
-            notification_title = _("The following batch transfer has been updated")
+            notification_title = self.env._(
+                "The following batch transfer has been updated"
+            )
 
         pickings.write({"batch_id": batch.id})
         if self.mode == "new" and not self.is_create_draft:

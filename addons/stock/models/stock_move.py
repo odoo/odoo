@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools import SQL
 from odoo.tools.misc import OrderedSet, clean_context
-from odoo.tools.translate import _
 
 from ..const import INVENTORY_REFERENCE_CONFIRMED, INVENTORY_REFERENCE_UPDATED
 from ..tools import debug_log as dbg
@@ -615,7 +614,7 @@ class StockMove(models.Model):
         for move in self:
             if move.state == "done":
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot delete a stock move that has been set to 'Done'."
                         " Create a return in order to reverse the moves which took place.",
                     ),
@@ -624,7 +623,7 @@ class StockMove(models.Model):
                 move.move_orig_ids or move.move_dest_ids
             ):
                 raise UserError(
-                    _("You can not delete moves linked to another operation"),
+                    self.env._("You can not delete moves linked to another operation"),
                 )
 
     @api.model
@@ -1057,7 +1056,7 @@ class StockMove(models.Model):
 
     def _inverse_product_qty(self):
         raise UserError(
-            _(
+            self.env._(
                 "The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.",
             ),
         )
@@ -1170,7 +1169,7 @@ class StockMove(models.Model):
             for move in self
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot cancel a stock move that has been set to 'Done'. Create a return in order to reverse the moves which took place.",
                 ),
             )
@@ -1523,7 +1522,7 @@ class StockMove(models.Model):
         if "quantity" in vals:
             if any(move.state == "cancel" for move in self):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot change a cancelled stock move, create a new line instead.",
                     ),
                 )
@@ -1535,7 +1534,7 @@ class StockMove(models.Model):
             and not self.env.context.get("skip_uom_conversion")
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot change the UoM for a stock move that has been set to 'Done'.",
                 ),
             )

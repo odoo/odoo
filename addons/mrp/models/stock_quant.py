@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -9,7 +9,7 @@ class StockQuant(models.Model):
     def _check_kits(self):
         if self.sudo().product_id.filtered("is_kit"):
             raise UserError(
-                _(
+                self.env._(
                     "You should update the components quantity instead of directly updating the quantity of the kit product."
                 )
             )

@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -125,7 +125,10 @@ class PosOrder(models.Model):
         mail_template = self.env["mail.template"].browse(mail_template_id)
         if not mail_template:
             raise UserError(
-                _("The mail template with xmlid %s has been deleted.", mail_template_id)
+                self.env._(
+                    "The mail template with xmlid %s has been deleted.",
+                    mail_template_id,
+                )
             )
         email_values = {"email_to": email}
         if self.state == "paid" and ticket_image:

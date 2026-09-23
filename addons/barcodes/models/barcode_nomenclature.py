@@ -1,7 +1,7 @@
 import logging
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.barcode import get_barcode_check_digit, is_barcode_encoding_valid
 
@@ -339,7 +339,7 @@ class BarcodeNomenclature(models.Model):
         )
         if default_record and default_record in self:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete '%(name)s' because it's the default barcode nomenclature.",
                     name=default_record.display_name,
                 )
@@ -361,7 +361,7 @@ class BarcodeNomenclature(models.Model):
         )
         if companies:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete the barcode nomenclature %(names)s because "
                     "it is still used by: %(companies)s.",
                     names=", ".join(

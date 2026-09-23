@@ -2,7 +2,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import OrderedSet, format_date
@@ -227,7 +227,9 @@ class StockForecasted_Product_Product(models.AbstractModel):
     @dbg.timed
     def _get_report_data(self, product_template_ids=False, product_ids=False):
         if not product_template_ids and not product_ids:
-            raise UserError(_("No product selected for the forecasted report."))
+            raise UserError(
+                self.env._("No product selected for the forecasted report.")
+            )
         res = {}
 
         warehouse = self._get_warehouse()

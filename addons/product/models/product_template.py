@@ -2,7 +2,7 @@ import itertools
 import logging
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.sql import SQL
@@ -316,7 +316,7 @@ class ProductTemplate(models.Model):
         for template in self:
             if template.type == "combo" and not template.combo_ids:
                 raise ValidationError(
-                    _("A combo product must contain at least 1 combo choice.")
+                    self.env._("A combo product must contain at least 1 combo choice.")
                 )
 
     @api.constrains("type", "combo_ids", "sale_ok")
@@ -331,7 +331,9 @@ class ProductTemplate(models.Model):
                 )
             ):
                 raise ValidationError(
-                    _("A sellable combo product can only contain sellable products.")
+                    self.env._(
+                        "A sellable combo product can only contain sellable products."
+                    )
                 )
 
     @api.constrains("company_id")
@@ -350,7 +352,7 @@ class ProductTemplate(models.Model):
             )
             if incompatible:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The packaging %(packagings)s cannot be used for"
                         " %(product)s: they do not measure the same thing as its"
                         " unit %(unit)s, so no quantity or price could be"
@@ -443,7 +445,7 @@ class ProductTemplate(models.Model):
             for template, vals in zip(self, vals_list, strict=True):
                 if vals is None:
                     continue
-                vals["name"] = _("%s (copy)", template.name)
+                vals["name"] = self.env._("%s (copy)", template.name)
         return vals_list
 
     def copy_translations(self, new, excluded=()):
@@ -636,7 +638,7 @@ class ProductTemplate(models.Model):
             self._set_product_variant_field(fname)
 
     def _inverse_import_attribute_values(self):
-        raise UserError(_("This field can only be used to import products."))
+        raise UserError(self.env._("This field can only be used to import products."))
 
     def _search_standard_price(self, operator, value):
         return [("product_variant_ids.standard_price", operator, value)]
@@ -670,7 +672,7 @@ class ProductTemplate(models.Model):
     def _onchange_type(self):
         if self.type == "combo":
             if self.attribute_line_ids:
-                raise UserError(_("Combo products can't have attributes."))
+                raise UserError(self.env._("Combo products can't have attributes."))
             combo_items = (
                 self.env["product.combo.item"]
                 .sudo()
@@ -678,7 +680,7 @@ class ProductTemplate(models.Model):
             )
             if combo_items:
                 raise UserError(
-                    _(
+                    self.env._(
                         'This product is part of a combo, so its type can\'t be changed to "combo".'
                     )
                 )
@@ -694,7 +696,7 @@ class ProductTemplate(models.Model):
             ).product_variant_ids._is_uom_change_warning_required()
         ):
             return None
-        message = _(
+        message = self.env._(
             "Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
             "All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name.",
             old_uom_name=self._origin.uom_id.display_name,
@@ -702,7 +704,7 @@ class ProductTemplate(models.Model):
         )
         return {
             "warning": {
-                "title": _("What to expect ?"),
+                "title": self.env._("What to expect ?"),
                 "message": message,
             }
         }
@@ -719,8 +721,8 @@ class ProductTemplate(models.Model):
         if self.env["product.template"].search_count(domain, limit=1):
             return {
                 "warning": {
-                    "title": _("Note:"),
-                    "message": _(
+                    "title": self.env._("Note:"),
+                    "message": self.env._(
                         "The Internal Reference '%s' already exists.", self.default_code
                     ),
                 }
@@ -745,7 +747,7 @@ class ProductTemplate(models.Model):
     def action_view_label_layout(self):
         if any(product_tmpl.type == "service" for product_tmpl in self):
             raise ValidationError(
-                _("Labels cannot be printed for products of service type")
+                self.env._("Labels cannot be printed for products of service type")
             )
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "product.action_view_label_layout"
@@ -998,7 +1000,7 @@ class ProductTemplate(models.Model):
                         )
                         if len(current_variants_to_create) > variant_limit:
                             raise UserError(
-                                _(
+                                self.env._(
                                     "The number of variants to generate is above allowed limit. "
                                     "You should either not generate variants for each combination or generate them on demand from the sales order. "
                                     "To do so, open the form view of attributes and change the mode of *Create Variants*."
@@ -1034,7 +1036,7 @@ class ProductTemplate(models.Model):
             variants_to_unlink._unlink_or_archive()
             if self.exists() != self:
                 raise UserError(
-                    _(
+                    self.env._(
                         "This configuration of product attributes, values, and exclusions would lead to no possible variant. Please archive or delete your product directly if intended."
                     )
                 )
@@ -1328,7 +1330,7 @@ class ProductTemplate(models.Model):
     @api.model
     def get_empty_list_help(self, help_message):
         self = self.with_context(
-            empty_list_help_document_name=_("product"),
+            empty_list_help_document_name=self.env._("product"),
         )
         return super().get_empty_list_help(help_message)
 
@@ -1336,7 +1338,7 @@ class ProductTemplate(models.Model):
     def get_import_templates(self):
         return [
             {
-                "label": _("Import Template for Products"),
+                "label": self.env._("Import Template for Products"),
                 "template": "/product/static/xls/product_product.xls",
             }
         ]
@@ -1567,7 +1569,7 @@ class ProductTemplate(models.Model):
         self.check_singleton()
         tooltip = ""
         if self.type == "combo":
-            tooltip = _(
+            tooltip = self.env._(
                 "Combos allow to choose one product amongst a selection of choices per category."
             )
         return tooltip

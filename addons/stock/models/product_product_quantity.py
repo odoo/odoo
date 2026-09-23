@@ -4,7 +4,7 @@ from collections.abc import Iterable
 from datetime import UTC, date, datetime, time
 from typing import NamedTuple
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import DOMAIN_PREDICATES
@@ -111,7 +111,7 @@ class ProductProductQuantity(models.Model):
                 if not quantity:
                     continue
                 raise UserError(
-                    _(
+                    self.env._(
                         "%(product)s does not track inventory, so it cannot have a"
                         " quantity on hand. Enable Track Inventory first.",
                         product=product.display_name,
@@ -119,7 +119,7 @@ class ProductProductQuantity(models.Model):
                 )
             if product.tracking != "none":
                 raise UserError(
-                    _(
+                    self.env._(
                         "%(product)s is tracked by lot/serial number: set its quantity"
                         " through an inventory adjustment so lot/serial numbers can be"
                         " assigned.",
@@ -128,7 +128,7 @@ class ProductProductQuantity(models.Model):
                 )
             if product.uom_id.compare(quantity, 0.0) < 0:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The quantity on hand of %(product)s cannot be set to a negative value.",
                         product=product.display_name,
                     ),
@@ -211,7 +211,7 @@ class ProductProductQuantity(models.Model):
             return warehouses.lot_stock_id
         if len(locations) == 1:
             raise UserError(
-                _(
+                self.env._(
                     "The quantity on hand cannot be set while the view is scoped to "
                     "%(location)s: it is not an internal location, so it holds no "
                     "stock of its own. Scope the view to a stock location or a "
@@ -220,7 +220,7 @@ class ProductProductQuantity(models.Model):
                 ),
             )
         raise UserError(
-            _(
+            self.env._(
                 "The quantity on hand cannot be set while the view is scoped to "
                 "%(count)s locations (%(locations)s): the value is a total over all of "
                 "them, and there is no way to tell how it should be split. Scope the "

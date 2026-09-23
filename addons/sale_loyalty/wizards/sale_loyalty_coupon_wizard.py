@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -21,7 +21,7 @@ class SaleLoyaltyCouponWizard(models.TransientModel):
         self.check_singleton()
         if not self.order_id:
             _debug.logic("coupon_apply_refused", wizard=self, reason="no_order")
-            raise ValidationError(_("Invalid sales order."))
+            raise ValidationError(self.env._("Invalid sales order."))
         status = self.order_id._try_apply_code(self.coupon_code)
         _debug.lifecycle(
             "coupon_code_tried", order=self.order_id, failed="error" in status

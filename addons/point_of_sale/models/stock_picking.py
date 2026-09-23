@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from ..tools import debug_log as dbg
@@ -332,7 +332,7 @@ class StockPickingType(models.Model):
             pos_config = configs_by_picking_type.get(picking_type)
             if pos_config:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot archive '%(picking_type)s' as it is used by POS configuration '%(config)s'.",
                         picking_type=picking_type.name,
                         config=pos_config[0].name,
@@ -438,18 +438,18 @@ class StockMove(models.Model):
         if not rounding_to_zero:
             return
         message_lines = [
-            _(
+            self.env._(
                 "Conversion Error: The following unit of measure conversions result in a zero quantity due to rounding:"
             ),
             *(
-                _(
+                self.env._(
                     ' - From "%(uom_from)s" to "%(uom_to)s"',
                     uom_from=uom_from,
                     uom_to=uom_to,
                 )
                 for uom_from, uom_to in rounding_to_zero
             ),
-            _(
+            self.env._(
                 "\nThis issue occurs because the quantity becomes zero after rounding during the conversion. "
                 "To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit "
                 "does not round down to zero in the target unit."

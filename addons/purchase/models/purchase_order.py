@@ -14,7 +14,6 @@ from odoo.tools import (
     format_date,
     formatLang,
 )
-from odoo.tools.translate import _
 
 from odoo.addons.purchase import const
 
@@ -158,7 +157,7 @@ class PurchaseOrder(models.Model):
         return new_orders
 
     def _get_confirmed_type_name(self):
-        return _("Purchase Order")
+        return self.env._("Purchase Order")
 
     @api.depends("state", "date_order", "date_confirmed")
     def _compute_date_calendar_start(self):
@@ -313,7 +312,7 @@ class PurchaseOrder(models.Model):
         self.check_singleton()
         product_ids = self.line_ids.product_id.ids
         return {
-            "name": _("Bill Matching"),
+            "name": self.env._("Bill Matching"),
             "type": "ir.actions.act_window",
             "res_model": "purchase.bill.line.match",
             "views": [
@@ -348,28 +347,28 @@ class PurchaseOrder(models.Model):
                 "purchase.group_order_lock"
             ):
                 raise AccessError(
-                    _("You are not allowed to lock a purchase order."),
+                    self.env._("You are not allowed to lock a purchase order."),
                 )
         self.write({"locked": True, "priority": "0"})
 
     def action_unlock(self):
         if not self.env.user.has_group("purchase.group_order_unlock"):
             raise AccessError(
-                _("You are not allowed to unlock a purchase order."),
+                self.env._("You are not allowed to unlock a purchase order."),
             )
         return super().action_unlock()
 
     def _merge_check_selection(self, orders):
         if len(orders) < 2:
             raise UserError(
-                _("Please select at least two RFQs to merge."),
+                self.env._("Please select at least two RFQs to merge."),
             )
 
     def _get_merge_group_description(self):
-        return _("- Vendor\n- Currency\n- Dropship Address")
+        return self.env._("- Vendor\n- Currency\n- Dropship Address")
 
     def _get_merge_result_name(self):
-        return _("Merged RFQs")
+        return self.env._("Merged RFQs")
 
     def _merge_finalize(self, target, sources):
         super()._merge_finalize(target, sources)
@@ -380,7 +379,7 @@ class PurchaseOrder(models.Model):
         return self._action_send_by_email()
 
     def _get_mail_composer_action_name(self):
-        return _("Compose Email")
+        return self.env._("Compose Email")
 
     def _prepare_mail_composer_context(self):
         return {**self.env.context, **super()._prepare_mail_composer_context()}
@@ -434,12 +433,12 @@ class PurchaseOrder(models.Model):
         return action
 
     def _create_update_date_activity(self, updated_dates):
-        note = Markup("<p>%s</p>\n") % _(
+        note = Markup("<p>%s</p>\n") % self.env._(
             "%s modified receipt dates for the following products:",
             self.partner_id.name,
         )
         for line, date in updated_dates:
-            note += Markup("<p> - %s</p>\n") % _(
+            note += Markup("<p> - %s</p>\n") % self.env._(
                 "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s",
                 product=line.product_id.display_name,
                 original_receipt_date=line.date_commitment.date(),
@@ -447,7 +446,7 @@ class PurchaseOrder(models.Model):
             )
         activity = self.activity_schedule(
             "mail.mail_activity_data_warning",
-            summary=_("Date Updated"),
+            summary=self.env._("Date Updated"),
             user_id=self.user_id.id,
         )
         activity.note = note
@@ -463,10 +462,10 @@ class PurchaseOrder(models.Model):
         else:
             access_opt = customer_portal_group[2].setdefault("button_access", {})
             if self.env.context.get("is_reminder"):
-                access_opt["title"] = _("View")
+                access_opt["title"] = self.env._("View")
             else:
                 access_opt.update(
-                    title=_("View %s", self.type_name),
+                    title=self.env._("View %s", self.type_name),
                     url=self.get_base_url() + self.get_confirm_url(),
                 )
 
@@ -474,7 +473,7 @@ class PurchaseOrder(models.Model):
         subtitles = [render_context["record"].name]
         if self.state == "draft":
             subtitles.append(
-                _(
+                self.env._(
                     "Order\N{NO-BREAK SPACE}due\N{NO-BREAK SPACE}%(date)s",
                     date=format_date(
                         self.env,
@@ -506,7 +505,7 @@ class PurchaseOrder(models.Model):
 
     def _update_update_date_activity(self, updated_dates, activity):
         for line, date in updated_dates:
-            activity.note += Markup("<p> - %s</p>\n") % _(
+            activity.note += Markup("<p> - %s</p>\n") % self.env._(
                 "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s",
                 product=line.product_id.display_name,
                 original_receipt_date=line.date_commitment.date(),
@@ -565,7 +564,7 @@ class PurchaseOrder(models.Model):
         return line.price_unit_discounted_taxexc
 
     def _get_import_template_label(self):
-        return _("Import Template for Requests for Quotation")
+        return self.env._("Import Template for Requests for Quotation")
 
     def _get_import_template_path(self):
         return "/purchase/static/xls/requests_for_quotation_import_template.xlsx"
@@ -616,7 +615,9 @@ class PurchaseOrder(models.Model):
             if attachments:
                 if len(invoices) != 1:
                     raise ValidationError(
-                        _("You can only upload a bill for a single vendor at a time."),
+                        self.env._(
+                            "You can only upload a bill for a single vendor at a time."
+                        ),
                     )
                 invoices.with_context(
                     skip_is_manually_modified=True
@@ -870,7 +871,7 @@ class PurchaseOrder(models.Model):
     def _prepare_down_payment_line_section_values(self):
         return {
             **super()._prepare_down_payment_line_section_values(),
-            "name": _("Down Payments"),
+            "name": self.env._("Down Payments"),
         }
 
     def _prepare_grouped_data(self, rfq):
@@ -946,7 +947,7 @@ class PurchaseOrder(models.Model):
         self = self.with_context(lang=self._get_mail_composer_lang(ctx))
         compose_form_id = self._get_mail_compose_form()
         return {
-            "name": _("Compose Email"),
+            "name": self.env._("Compose Email"),
             "type": "ir.actions.act_window",
             "res_model": "mail.compose.message",
             "view_mode": "form",
@@ -960,7 +961,9 @@ class PurchaseOrder(models.Model):
         self.check_singleton()
         if not self.env.user.has_group("purchase.group_send_reminder"):
             return {
-                "toast_message": _("You are not allowed to send reminder emails."),
+                "toast_message": self.env._(
+                    "You are not allowed to send reminder emails."
+                ),
                 "toast_type": "warning",
             }
 
@@ -970,12 +973,12 @@ class PurchaseOrder(models.Model):
         )
         if not template:
             return {
-                "toast_message": _("The reminder email template is missing."),
+                "toast_message": self.env._("The reminder email template is missing."),
                 "toast_type": "warning",
             }
         if not self.env.user.email:
             return {
-                "toast_message": _(
+                "toast_message": self.env._(
                     "Set an email address on your user to preview the reminder."
                 ),
                 "toast_type": "warning",
@@ -990,7 +993,7 @@ class PurchaseOrder(models.Model):
         )
         return {
             "toast_message": escape(
-                _("A sample email has been sent to %s.", self.env.user.email),
+                self.env._("A sample email has been sent to %s.", self.env.user.email),
             ),
         }
 
@@ -1002,7 +1005,7 @@ class PurchaseOrder(models.Model):
         self.check_singleton()
         if not self._is_date_commitment_updatable():
             raise UserError(
-                _(
+                self.env._(
                     "The expected arrival date of %(order)s can no longer be updated.",
                     order=self.display_name,
                 ),
@@ -1010,7 +1013,7 @@ class PurchaseOrder(models.Model):
 
         activity = self.env["mail.activity"].search(
             [
-                ("summary", "=", _("Date Updated")),
+                ("summary", "=", self.env._("Date Updated")),
                 ("res_model", "=", "purchase.order"),
                 ("res_id", "=", self.id),
                 ("user_id", "=", self.user_id.id),
@@ -1044,10 +1047,11 @@ class PurchaseOrder(models.Model):
                     )
                 except (UserError, ValidationError) as e:
                     line_errors.append(
-                        _(
+                        self.env._(
                             "  • Line %(line_num)s (%(product)s): %(error)s",
                             line_num=line.sequence or "?",
-                            product=line.product_id.display_name or _("No product"),
+                            product=line.product_id.display_name
+                            or self.env._("No product"),
                             error=str(e).split("\n")[0],
                         ),
                     )
@@ -1059,7 +1063,7 @@ class PurchaseOrder(models.Model):
             error_details = []
             for order, line_errors in orders_with_errors.items():
                 error_details.append(
-                    _(
+                    self.env._(
                         "%(order)s:\n%(lines)s",
                         order=order.display_name,
                         lines="\n".join(line_errors),
@@ -1067,7 +1071,7 @@ class PurchaseOrder(models.Model):
                 )
 
             raise UserError(
-                _(
+                self.env._(
                     "Cannot confirm purchase orders with invalid analytic distributions:\n\n%s\n\n"
                     "Please fix the analytic distribution on the highlighted lines.",
                     "\n\n".join(error_details),
@@ -1091,7 +1095,7 @@ class PurchaseOrder(models.Model):
                 posted_bills = order.invoice_ids.filtered(lambda i: i.state == "posted")
                 bill_names = ", ".join(posted_bills.mapped("name"))
                 error_details.append(
-                    _(
+                    self.env._(
                         "• %(order)s has posted bills: %(bills)s",
                         order=order.display_name,
                         bills=bill_names,
@@ -1099,7 +1103,7 @@ class PurchaseOrder(models.Model):
                 )
 
             raise UserError(
-                _(
+                self.env._(
                     "Cannot cancel purchase orders with posted vendor bills:\n\n%s\n\n"
                     "Please cancel or reset the bills to draft first.",
                     "\n".join(error_details),

@@ -1,6 +1,6 @@
 import math
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -36,14 +36,16 @@ class ReportProductReport_Pricelist(models.AbstractModel):
 
         active_model = data.get("active_model", "product.template")
         if active_model not in ("product.template", "product.product"):
-            raise UserError(_("The pricelist report can only be printed for products."))
+            raise UserError(
+                self.env._("The pricelist report can only be printed for products.")
+            )
         try:
             active_ids = [int(id_) for id_ in data.get("active_ids") or []]
         except ValueError, TypeError:
-            raise UserError(_("Invalid product ids.")) from None
+            raise UserError(self.env._("Invalid product ids.")) from None
         if len(active_ids) > self.MAX_PRODUCTS:
             raise UserError(
-                _(
+                self.env._(
                     "At most %s products can be printed on the pricelist report.",
                     self.MAX_PRODUCTS,
                 )
@@ -81,17 +83,17 @@ class ReportProductReport_Pricelist(models.AbstractModel):
                 parsed.append(int(value) if value.is_integer() else value)
             quantities = parsed
         except ValueError, TypeError:
-            raise UserError(_("Invalid quantities.")) from None
+            raise UserError(self.env._("Invalid quantities.")) from None
         if len(quantities) > self.MAX_QUANTITIES:
             raise UserError(
-                _(
+                self.env._(
                     "At most %s quantity columns can be printed on the pricelist"
                     " report.",
                     self.MAX_QUANTITIES,
                 )
             )
         if any(qty <= 0 for qty in quantities):
-            raise UserError(_("Quantities must be positive."))
+            raise UserError(self.env._("Quantities must be positive."))
         return quantities
 
     def _get_products_data(self, is_product_tmpl, products, pricelist, quantities):
@@ -100,7 +102,7 @@ class ReportProductReport_Pricelist(models.AbstractModel):
 
         if len(products) * len(quantities) > self.MAX_PRICE_COMPUTATIONS:
             raise UserError(
-                _(
+                self.env._(
                     "Too many products and quantity columns requested together."
                     " Reduce either to print this report."
                 )

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -79,7 +79,7 @@ class ChangeProductionQty(models.TransientModel):
             if production.product_uom_id.is_zero(old_production_qty):
                 _debug.logic("qty_change_refused", mo=production)
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot change the quantity of a manufacturing order whose "
                         "current quantity is zero."
                     )

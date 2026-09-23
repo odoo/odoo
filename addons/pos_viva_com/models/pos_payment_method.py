@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from odoo import _, api, fields, models, modules
+from odoo import api, fields, models, modules
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.tools import consteq
@@ -39,7 +39,9 @@ class PosPaymentMethod(models.Model):
         )
         if method is None:
             _logger.error(
-                _("received a message for a pos payment provider not registered.")
+                self.env._(
+                    "received a message for a pos payment provider not registered."
+                )
             )
             request.env["integration.exchange"]._record_unknown_caller(
                 self._name,
@@ -178,7 +180,7 @@ class PosPaymentMethod(models.Model):
             return {"Authorization": f"Bearer {access_token}"}
         else:
             raise UserError(
-                _(
+                self.env._(
                     "Unable to retrieve Viva.com Bearer Token: Please verify that the Client ID "
                     "and Client Secret are correct"
                 )
@@ -234,7 +236,7 @@ class PosPaymentMethod(models.Model):
             resp = session.request(action, endpoint, json=data, timeout=TIMEOUT)
         except requests.exceptions.RequestException as e:
             return {
-                "error": _(
+                "error": self.env._(
                     "There are some issues between us and Viva.com, try again later.%s)",
                     e,
                 )
@@ -249,7 +251,7 @@ class PosPaymentMethod(models.Model):
             return {"success": resp.status_code}
         else:
             return {
-                "error": _(
+                "error": self.env._(
                     "There are some issues between us and Viva.com, try again later. %s",
                     resp.json().get("detail"),
                 )
@@ -263,7 +265,7 @@ class PosPaymentMethod(models.Model):
         if not MerchantTrns:
             return self._send_notification(
                 {
-                    "error": _(
+                    "error": self.env._(
                         "Your transaction with Viva.com failed. Please try again later."
                     )
                 }
@@ -282,7 +284,7 @@ class PosPaymentMethod(models.Model):
         else:
             self._send_notification(
                 {
-                    "error": _(
+                    "error": self.env._(
                         "There are some issues between us and Viva.com, try again later. %s",
                         data.get("detail"),
                     )
@@ -314,7 +316,7 @@ class PosPaymentMethod(models.Model):
     def viva_com_send_payment_request(self, data):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
             raise AccessError(
-                _(
+                self.env._(
                     "Only 'group_pos_user' are allowed to send a Viva.com payment request"
                 )
             )
@@ -325,7 +327,9 @@ class PosPaymentMethod(models.Model):
     def viva_com_send_refund_request(self, data):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
             raise AccessError(
-                _("Only 'group_pos_user' are allowed to send a Viva.com refund request")
+                self.env._(
+                    "Only 'group_pos_user' are allowed to send a Viva.com refund request"
+                )
             )
 
         endpoint = (
@@ -338,7 +342,9 @@ class PosPaymentMethod(models.Model):
     def viva_com_send_payment_cancel(self, data):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
             raise AccessError(
-                _("Only 'group_pos_user' are allowed to cancel a Viva.com payment")
+                self.env._(
+                    "Only 'group_pos_user' are allowed to cancel a Viva.com payment"
+                )
             )
 
         session_id = data.get("sessionId")
@@ -349,7 +355,7 @@ class PosPaymentMethod(models.Model):
     def viva_com_get_payment_status(self, session_id):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
             raise AccessError(
-                _(
+                self.env._(
                     "Only 'group_pos_user' are allowed to get the payment status from Viva.com"
                 )
             )
@@ -364,7 +370,7 @@ class PosPaymentMethod(models.Model):
             self.viva_com_webhook_verification_key = self._viva_com_verification_key()
             if not self.viva_com_webhook_verification_key:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Can't update payment method. Please check the data and update it."
                     )
                 )
@@ -382,7 +388,7 @@ class PosPaymentMethod(models.Model):
                 )
                 if not record.viva_com_webhook_verification_key:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Can't create payment method. Please check the data and update it."
                         )
                     )
@@ -407,5 +413,7 @@ class PosPaymentMethod(models.Model):
                 ]
             ):
                 raise UserError(
-                    _("It is essential to provide API key for the use of Viva.com")
+                    self.env._(
+                        "It is essential to provide API key for the use of Viva.com"
+                    )
                 )

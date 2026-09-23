@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class StockPicking(models.Model):
@@ -33,7 +33,7 @@ class StockPicking(models.Model):
         else:
             action.update(
                 {
-                    "name": _("Source PO of %s", self.name),
+                    "name": self.env._("Source PO of %s", self.name),
                     "domain": [("id", "in", purchase_order_ids)],
                     "view_mode": "list,form",
                 }

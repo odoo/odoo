@@ -4,7 +4,7 @@ from ast import literal_eval
 
 from markupsafe import escape
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import SQL
@@ -197,8 +197,8 @@ class StockQuantInventory(models.Model):
     def _onchange_inventory_quantity(self):
         if self.location_id and self.location_id.usage == "inventory":
             warning = {
-                "title": _("You cannot modify inventory loss quantity"),
-                "message": _(
+                "title": self.env._("You cannot modify inventory loss quantity"),
+                "message": self.env._(
                     "Editing quantities in an Inventory Adjustment location is forbidden,"
                     "those locations are used as counterpart when correcting the quantities."
                 ),
@@ -224,7 +224,7 @@ class StockQuantInventory(models.Model):
             ctx["search_default_my_count"] = True
         view_id = self.env.ref("stock.view_stock_quant_list_inventory_editable").id
         return {
-            "name": _("Physical Inventory"),
+            "name": self.env._("Physical Inventory"),
             "view_mode": "list",
             "res_model": "stock.quant",
             "type": "ir.actions.act_window",
@@ -239,9 +239,9 @@ class StockQuantInventory(models.Model):
                     {} <span class="fa-solid fa-cog"/>
                 </p>
                 """.format(
-                escape(_("Your stock is currently empty")),
+                escape(self.env._("Your stock is currently empty")),
                 escape(
-                    _(
+                    self.env._(
                         'Press the "New" button to define the quantity for a product in your stock or import quantities from a spreadsheet via the Actions menu'
                     )
                 ),
@@ -259,7 +259,7 @@ class StockQuantInventory(models.Model):
             )
             ctx["default_quant_to_fix_ids"] = quants_outdated.ids
             return {
-                "name": _("Conflict in Inventory Adjustment"),
+                "name": self.env._("Conflict in Inventory Adjustment"),
                 "type": "ir.actions.act_window",
                 "view_mode": "form",
                 "views": [(False, "form")],
@@ -277,7 +277,7 @@ class StockQuantInventory(models.Model):
             or any(q.product_uom_id.compare(q.quantity, 0) <= 0 for q in self)
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You can only move positive quantities stored in locations used by a single company per relocation."
                 )
             )
@@ -297,7 +297,7 @@ class StockQuantInventory(models.Model):
     def action_inventory_history(self):
         self.check_singleton()
         action = {
-            "name": _("History"),
+            "name": self.env._("History"),
             "view_mode": "list,form",
             "res_model": "stock.move.line",
             "views": [
@@ -336,7 +336,7 @@ class StockQuantInventory(models.Model):
             ctx = dict(self.env.context or {}, default_quant_ids=self.ids)
             view = self.env.ref("stock.inventory_warning_set_view", False)
             return {
-                "name": _("Quantities Already Set"),
+                "name": self.env._("Quantities Already Set"),
                 "type": "ir.actions.act_window",
                 "view_mode": "form",
                 "views": [(view.id, "form")],
@@ -360,7 +360,7 @@ class StockQuantInventory(models.Model):
         ctx = dict(self.env.context or {}, default_quant_ids=quant_ids)
         view = self.env.ref("stock.stock_inventory_adjustment_name_form_view", False)
         return {
-            "name": _("Inventory Adjustment"),
+            "name": self.env._("Inventory Adjustment"),
             "type": "ir.actions.act_window",
             "views": [(view.id, "form")],
             "res_model": "stock.inventory.adjustment.name",
@@ -372,7 +372,7 @@ class StockQuantInventory(models.Model):
         ctx = dict(self.env.context or {}, default_quant_ids=self.ids)
         view = self.env.ref("stock.inventory_warning_reset_view", False)
         return {
-            "name": _("Quantities To Reset"),
+            "name": self.env._("Quantities To Reset"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "views": [(view.id, "form")],
@@ -462,7 +462,7 @@ class StockQuantInventory(models.Model):
             ] or default_loss_locations.get(quant.company_id.id)
             if not inventory_location:
                 raise UserError(
-                    _(
+                    self.env._(
                         "No inventory loss location is configured for product "
                         "%(product)s (company %(company)s). Set one on the product "
                         "or in the company's default product settings.",
@@ -657,7 +657,9 @@ class StockQuantInventory(models.Model):
             not field.startswith("x_") and field not in allowed_fields for field in vals
         ):
             raise UserError(
-                _("Quant's creation is restricted, you can't do this operation.")
+                self.env._(
+                    "Quant's creation is restricted, you can't do this operation."
+                )
             )
         if "inventory_quantity_auto_apply" in vals:
             auto_apply = True

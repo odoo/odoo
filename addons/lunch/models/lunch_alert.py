@@ -2,7 +2,7 @@ import logging
 from datetime import UTC, datetime, timedelta
 from textwrap import dedent
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
 
@@ -254,5 +254,5 @@ class LunchAlert(models.Model):
                 res_id=self.id,
                 body=self.message,
                 partner_ids=partners.ids,
-                subject=_("Your Lunch Order"),
+                subject=self.env._("Your Lunch Order"),
             )

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -18,7 +18,7 @@ class CrmQuotationPartner(models.TransientModel):
             _debug.logic(
                 "quotation_partner_wizard_refused", model=active_model or "none"
             )
-            raise UserError(_("You can only apply this action from a lead."))
+            raise UserError(self.env._("You can only apply this action from a lead."))
 
         lead = False
         if result.get("lead_id"):

@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -12,7 +12,7 @@ class PurchaseRequisition(models.Model):
 
     name = fields.Char(
         string="Agreement",
-        default=lambda self: _("New"),
+        default=lambda self: self.env._("New"),
         copy=False,
         readonly=True,
         required=True,
@@ -105,8 +105,8 @@ class PurchaseRequisition(models.Model):
             ]
         )
         if any(requisitions):
-            title = _("Warning for %s", self.vendor_id.name)
-            message = _(
+            title = self.env._("Warning for %s", self.vendor_id.name)
+            message = self.env._(
                 "There is already an open blanket order for this supplier. We suggest you complete this open blanket order, instead of creating a new one."
             )
             warning = {"title": title, "message": message}
@@ -133,7 +133,7 @@ class PurchaseRequisition(models.Model):
         )
         if invalid_requsitions:
             raise ValidationError(
-                _(
+                self.env._(
                     "End date cannot be earlier than start date. Please check dates for agreements: %s",
                     ", ".join(invalid_requsitions.mapped("name")),
                 )
@@ -175,7 +175,7 @@ class PurchaseRequisition(models.Model):
         for requisition in requisitions_to_rename:
             if requisition.state != "draft":
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot change the Agreement Type or Company of a not draft purchase agreement."
                     )
                 )
@@ -203,7 +203,9 @@ class PurchaseRequisition(models.Model):
             requisition.purchase_ids.action_cancel()
             for po in requisition.purchase_ids:
                 po.message_post(
-                    body=_("Cancelled by the agreement associated to this quotation.")
+                    body=self.env._(
+                        "Cancelled by the agreement associated to this quotation."
+                    )
                 )
         self.state = "cancel"
 
@@ -211,7 +213,7 @@ class PurchaseRequisition(models.Model):
         self.check_singleton()
         if not self.line_ids:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot confirm agreement '%(agreement)s' because it does not contain any product lines.",
                     agreement=self.name,
                 )
@@ -220,13 +222,13 @@ class PurchaseRequisition(models.Model):
             for requisition_line in self.line_ids:
                 if requisition_line.price_unit <= 0.0:
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot confirm a blanket order with lines missing a price."
                         )
                     )
                 if requisition_line.product_qty <= 0.0:
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot confirm a blanket order with lines missing a quantity."
                         )
                     )
@@ -243,7 +245,7 @@ class PurchaseRequisition(models.Model):
             for purchase_order in self.mapped("purchase_ids")
         ):
             raise UserError(
-                _(
+                self.env._(
                     "To close this purchase requisition, cancel related Requests for Quotation.\n\n"
                     "Imagine the mess if someone confirms these duplicates: double the order, double the trouble :)"
                 )
@@ -256,7 +258,9 @@ class PurchaseRequisition(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):
         if any(requisition.state not in ("draft", "cancel") for requisition in self):
-            raise UserError(_("You can only delete draft or cancelled requisitions."))
+            raise UserError(
+                self.env._("You can only delete draft or cancelled requisitions.")
+            )
 
 
 class PurchaseRequisitionLine(models.Model):
@@ -393,7 +397,7 @@ class PurchaseRequisitionLine(models.Model):
             ):
                 if line.price_unit <= 0.0:
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot have a negative or unit price of 0 for an already confirmed blanket order."
                         )
                     )
@@ -417,7 +421,7 @@ class PurchaseRequisitionLine(models.Model):
             for requisition in self.mapped("requisition_id")
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot have a negative or unit price of 0 for an already confirmed blanket order."
                 )
             )

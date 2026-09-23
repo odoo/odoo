@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -84,7 +84,7 @@ class StockPutawayRule(models.Model):
             for rule in self:
                 if rule.company_id.id != vals["company_id"]:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."
                         ),
                     )
@@ -108,8 +108,8 @@ class StockPutawayRule(models.Model):
             if not child_location_ids:
                 return {
                     "warning": {
-                        "title": _("Warning"),
-                        "message": _(
+                        "title": self.env._("Warning"),
+                        "message": self.env._(
                             "Selected storage category does not exist in the 'store to' location or any of its sublocations"
                         ),
                     },

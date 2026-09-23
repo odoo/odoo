@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResCompany(models.Model):
@@ -44,7 +44,7 @@ class ResCompany(models.Model):
         for company in self:
             subcontracting_location = self.env["stock.location"].create(
                 {
-                    "name": _("Subcontracting"),
+                    "name": self.env._("Subcontracting"),
                     "usage": "internal",
                     "company_id": company.id,
                 }

@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -15,7 +15,7 @@ class StockLot(models.Model):
                 and set(product_ids) & component_product_ids
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         'You are not allowed to create or edit a lot or serial number for the components with the operation type "Manufacturing". To change this, go on the operation type and tick the box "Create New Lots/Serial Numbers for Components".'
                     )
                 )

@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.tools import SQL
 
 
@@ -28,12 +28,12 @@ class PurchaseReceiptLineMatch(models.Model):
     )
 
     def _get_no_order_line_message(self):
-        return _(
+        return self.env._(
             "You must select at least one Purchase Order line to match or receive."
         )
 
     def _get_no_move_message(self):
-        return _("You must select at least one receipt move to match.")
+        return self.env._("You must select at least one receipt move to match.")
 
     def _get_location_rank(self, order_line, move):
         if order_line.location_final_id and order_line.location_final_id == (

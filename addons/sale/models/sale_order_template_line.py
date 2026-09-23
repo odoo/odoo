@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -136,7 +136,7 @@ class SaleOrderTemplateLine(models.Model):
             lambda line: line.display_type != vals.get("display_type")
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."
                 )
             )

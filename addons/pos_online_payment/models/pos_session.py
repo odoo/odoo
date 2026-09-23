@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -67,7 +67,7 @@ class PosSession(models.Model):
         accounting_partner = partner.commercial_partner_id
         if not accounting_partner:
             raise UserError(
-                _(
+                self.env._(
                     "The partner of the POS online payment (id=%d) could not be found",
                     payment.id,
                 )

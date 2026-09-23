@@ -1,7 +1,7 @@
 from datetime import UTC, timedelta
 from itertools import starmap
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 from ..tools import debug_log as dbg
@@ -338,7 +338,12 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             base_amount = total_amount
             taxes.setdefault(
                 0,
-                {"id": 0, "name": _("No Taxes"), "tax_amount": 0.0, "base_amount": 0.0},
+                {
+                    "id": 0,
+                    "name": self.env._("No Taxes"),
+                    "tax_amount": 0.0,
+                    "base_amount": 0.0,
+                },
             )
             taxes[0]["base_amount"] += base_amount
 
@@ -381,7 +386,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
     def _serialize_products_by_category(self, products_by_category):
         rows = [
             (
-                category.name if category else _("Not Categorized"),
+                category.name if category else self.env._("Not Categorized"),
                 category.id or 0,
                 sorted(
                     [
@@ -699,7 +704,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         payment = {
             "id": False,
             "session": session.id,
-            "name": _("Cash %(session_name)s", session_name=session.name),
+            "name": self.env._("Cash %(session_name)s", session_name=session.name),
             "cash": True,
             "journal_id": session.cash_journal_id.id,
             "total": 0,
@@ -735,7 +740,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         if not session.currency_id.is_zero(session.cash_register_balance_start):
             cash_in_out_list.append(
                 {
-                    "name": _("Cash Opening"),
+                    "name": self.env._("Cash Opening"),
                     "amount": session.cash_register_balance_start,
                 }
             )
@@ -754,7 +759,10 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             )
             if not session.currency_id.is_zero(legacy_amount):
                 cash_in_out_list.append(
-                    {"name": _("Other cash movements"), "amount": legacy_amount}
+                    {
+                        "name": self.env._("Other cash movements"),
+                        "amount": legacy_amount,
+                    }
                 )
             dbg.logic.debug(
                 "[report] session %s: summarized %d legacy cash entries as %s",
@@ -768,10 +776,10 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 continue
             if cash_move.amount > 0:
                 cash_in_count += 1
-                name = _("Cash in %(number)s", number=cash_in_count)
+                name = self.env._("Cash in %(number)s", number=cash_in_count)
             else:
                 cash_out_count += 1
-                name = _("Cash out %(number)s", number=cash_out_count)
+                name = self.env._("Cash out %(number)s", number=cash_out_count)
             cash_in_out_list.append(
                 {"name": cash_move.payment_ref or name, "amount": cash_move.amount}
             )
@@ -862,9 +870,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         if not difference:
             return []
         move_name = (
-            _("Difference observed during the counting (Loss)")
+            self.env._("Difference observed during the counting (Loss)")
             if is_loss
-            else _("Difference observed during the counting (Profit)")
+            else self.env._("Difference observed during the counting (Profit)")
         )
         return [{"name": move_name, "amount": difference}]
 

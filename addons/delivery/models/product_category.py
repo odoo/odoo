@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -12,7 +12,7 @@ class ProductCategory(models.Model):
         )
         if delivery_category and delivery_category in self:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete the deliveries product category as it is used on the delivery carriers products."
                 )
             )

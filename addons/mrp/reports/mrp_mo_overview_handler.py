@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 STATE_DECORATORS = {
     "mrp.production": {
@@ -54,12 +54,15 @@ class MrpMoOverviewReportHandler(models.AbstractModel):
         return {
             "mrp.production": [
                 {
-                    "name": _("Open Manufacturing Order"),
+                    "name": self.env._("Open Manufacturing Order"),
                     "action": "caret_option_open_record",
                 },
             ],
             "product.product": [
-                {"name": _("Open Product"), "action": "caret_option_open_record"},
+                {
+                    "name": self.env._("Open Product"),
+                    "action": "caret_option_open_record",
+                },
             ],
         }
 
@@ -124,7 +127,7 @@ class MrpMoOverviewReportHandler(models.AbstractModel):
         summary = data["summary"]
         rows = [
             (
-                _("Unit Cost"),
+                self.env._("Unit Cost"),
                 {
                     "mo_cost": extras.get("unit_mo_cost"),
                     "bom_cost": extras.get("unit_bom_cost"),
@@ -135,7 +138,7 @@ class MrpMoOverviewReportHandler(models.AbstractModel):
         if "total_mo_cost" in extras:
             rows += [
                 (
-                    _("Total Cost of Components"),
+                    self.env._("Total Cost of Components"),
                     {
                         "mo_cost": extras["total_mo_cost_components"],
                         "bom_cost": extras["total_bom_cost_components"],
@@ -143,7 +146,7 @@ class MrpMoOverviewReportHandler(models.AbstractModel):
                     },
                 ),
                 (
-                    _("Total Cost of Operations"),
+                    self.env._("Total Cost of Operations"),
                     {
                         "mo_cost": extras["total_mo_cost_operations"],
                         "bom_cost": extras["total_bom_cost_operations"],
@@ -151,7 +154,7 @@ class MrpMoOverviewReportHandler(models.AbstractModel):
                     },
                 ),
                 (
-                    _("Total Cost"),
+                    self.env._("Total Cost"),
                     {
                         "mo_cost": extras["total_mo_cost"],
                         "bom_cost": extras["total_bom_cost"],

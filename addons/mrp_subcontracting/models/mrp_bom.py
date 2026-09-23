@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -55,7 +55,7 @@ class MrpBom(models.Model):
         ):
             _debug.logic("bom_refused", reason="subcontract_with_operations", boms=self)
             raise ValidationError(
-                _(
+                self.env._(
                     "You can not set a Bill of Material with operations or by-product line as subcontracting."
                 )
             )

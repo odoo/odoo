@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, http
+from odoo import http
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ class PosVivaComController(http.Controller):
                 payment_method_sudo._notify_session_status(data_webhook)
             else:
                 _logger.error(
-                    _(
+                    request.env._(
                         "received a message for a terminal not registered in Odoo: %s",
                         terminal_id,
                     )

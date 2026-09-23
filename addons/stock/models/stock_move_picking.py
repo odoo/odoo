@@ -3,7 +3,6 @@ import logging
 from odoo import api, models
 from odoo.fields import Domain
 from odoo.tools.misc import OrderedSet, groupby
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 
@@ -262,7 +261,7 @@ class StockMovePicking(models.Model):
         view = self.env.ref("stock.view_stock_move_form_operations")
 
         return {
-            "name": _("Detailed Operations"),
+            "name": self.env._("Detailed Operations"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "stock.move",

@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, models
+from odoo import models
 
 
 class StockValuationReport(models.AbstractModel):
@@ -18,7 +18,7 @@ class StockValuationReport(models.AbstractModel):
             )
         )
         cost_of_production = {
-            "label": _("Cost of Production"),
+            "label": self.env._("Cost of Production"),
             "value": 0,
         }
         lines_by_account_id = defaultdict(
@@ -82,5 +82,5 @@ class StockValuationReportHandler(models.AbstractModel):
     def _section_move_usages(self):
         return {
             **super()._section_move_usages(),
-            "SV_PRODUCTION": ("production", _("Cost of Production")),
+            "SV_PRODUCTION": ("production", self.env._("Cost of Production")),
         }

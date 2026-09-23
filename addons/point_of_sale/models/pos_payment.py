@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import formatLang
 
@@ -151,7 +151,7 @@ class PosPayment(models.Model):
                 or payment.account_move_id.state == "posted"
             ):
                 raise ValidationError(
-                    _("You cannot edit a payment for a posted order.")
+                    self.env._("You cannot edit a payment for a posted order.")
                 )
 
     def write(self, vals):
@@ -182,7 +182,7 @@ class PosPayment(models.Model):
                 not in payment.session_id.config_id.payment_method_ids
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The payment method selected is not allowed in the config of the POS session."
                     )
                 )
@@ -244,7 +244,7 @@ class PosPayment(models.Model):
                     {
                         "journal_id": journal.id,
                         "date": fields.Date.context_today(order, order.date_order),
-                        "ref": _(
+                        "ref": self.env._(
                             "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s",
                             order=order.name,
                             account_move=order.account_move.name,

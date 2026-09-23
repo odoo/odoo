@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -56,7 +56,7 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_po_quotation_validity_days(self):
         return self._clamp_validity_days(
             "po_quotation_validity_days",
-            _("RFQ Validity"),
+            self.env._("RFQ Validity"),
         )
 
     def set_values(self):

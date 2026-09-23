@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import format_duration
@@ -51,10 +51,10 @@ class SaleOrderLine(models.Model):
             unit_label = ""
             if encoding_uom == self.env.ref("uom.product_uom_hour"):
                 is_hour = True
-                unit_label = _("remaining")
+                unit_label = self.env._("remaining")
             elif encoding_uom == self.env.ref("uom.product_uom_day"):
                 is_day = True
-                unit_label = _("days remaining")
+                unit_label = self.env._("days remaining")
             for line in self:
                 if line.remaining_hours_available:
                     remaining_time = ""

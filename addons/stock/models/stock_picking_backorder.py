@@ -1,5 +1,4 @@
 from odoo import Command, models
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from .stock_picking import DONE_CANCEL_STATES
@@ -26,7 +25,7 @@ class StockPickingBackorder(models.Model):
     def _prepare_action_backorder_confirmation(self, show_transfers=False):
         view = self.env.ref("stock.view_backorder_confirmation")
         return {
-            "name": _("Create Backorder?"),
+            "name": self.env._("Create Backorder?"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "stock.backorder.confirmation",
@@ -94,7 +93,7 @@ class StockPickingBackorder(models.Model):
             )
             all_moves_to_backorder |= moves_to_backorder
             picking.message_post(
-                body=_(
+                body=self.env._(
                     "The backorder %s has been created.",
                     backorder_picking._get_html_link(),
                 ),
@@ -174,7 +173,7 @@ class StockPickingBackorder(models.Model):
         return documents
 
     def _get_without_quantities_error_message(self):
-        return _(
+        return self.env._(
             "Transfer trouble alert! Validating a zero quantity transfer? You're not moving invisible goods around are you?\n"
             "Set some quantities and let's get moving!",
         )

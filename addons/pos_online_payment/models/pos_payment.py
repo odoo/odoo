@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -41,14 +41,14 @@ class PosPayment(models.Model):
             if pm_id in opms_id:
                 if None in oaps_id:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Cannot create a POS online payment without an accounting payment."
                         )
                     )
                 online_account_payments_to_check_id.update(oaps_id)
             elif any(oaps_id):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot create a POS payment with a not online payment method and an online accounting payment."
                     )
                 )
@@ -59,7 +59,7 @@ class PosPayment(models.Model):
             )
             if valid_oap_amount != len(online_account_payments_to_check_id):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Cannot create a POS online payment without an accounting payment."
                     )
                 )
@@ -78,7 +78,9 @@ class PosPayment(models.Model):
             or payment.payment_method_id.is_online_payment
             for payment in self
         ):
-            raise UserError(_("Cannot edit a POS online payment essential data."))
+            raise UserError(
+                self.env._("Cannot edit a POS online payment essential data.")
+            )
         return super().write(vals)
 
     @api.constrains("payment_method_id")

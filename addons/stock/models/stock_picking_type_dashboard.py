@@ -1,7 +1,7 @@
 import json
 from datetime import UTC
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.fields import Domain
 from odoo.libs.sql import escape_psql
 from odoo.tools import SQL
@@ -134,7 +134,9 @@ class StockPickingTypeDashboard(models.Model):
             empty = all(summary[key] == 0 for key in data_category_mapping)
             graph_data = [
                 {
-                    "key": _("Sample data") if empty else summary["data_series_name"],
+                    "key": self.env._("Sample data")
+                    if empty
+                    else summary["data_series_name"],
                     "picking_type_id": None if empty else picking_type.id,
                     "values": [
                         dict(
@@ -232,9 +234,9 @@ class StockPickingTypeDashboard(models.Model):
     def _get_code_report_name(self):
         self.check_singleton()
         code_names = {
-            "outgoing": _("Delivery Note"),
-            "incoming": _("Goods Receipt Note"),
-            "internal": _("Internal Move"),
+            "outgoing": self.env._("Delivery Note"),
+            "incoming": self.env._("Goods Receipt Note"),
+            "internal": self.env._("Internal Move"),
         }
         return code_names.get(self.code)
 
@@ -254,7 +256,7 @@ class StockPickingTypeDashboard(models.Model):
         warehouse = self.warehouse_id
         if not warehouse:
             return {
-                "name": _("Sequence %(code)s", code=self.sequence_code),
+                "name": self.env._("Sequence %(code)s", code=self.sequence_code),
                 "prefix": self.sequence_code,
                 "padding": 5,
                 "company_id": self.company_id.id,
@@ -262,7 +264,7 @@ class StockPickingTypeDashboard(models.Model):
         name = warehouse_name or warehouse.name
         code = warehouse._normalize_code(warehouse_code or warehouse.code)
         return {
-            "name": _(
+            "name": self.env._(
                 "%(warehouse)s Sequence %(code)s",
                 warehouse=name,
                 code=self.sequence_code,

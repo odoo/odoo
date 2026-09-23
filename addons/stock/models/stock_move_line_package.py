@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools import groupby
@@ -248,7 +248,7 @@ class StockMoveLinePackage(models.Model):
     def _get_lines_and_packages_to_pack(self, picked_first=True):
         if len(self.picking_type_id) > 1:
             raise UserError(
-                _(
+                self.env._(
                     "You cannot pack products into the same package when they are from different transfers with different operation types"
                 ),
             )
@@ -322,7 +322,7 @@ class StockMoveLinePackage(models.Model):
                 }
             )
             return {
-                "name": _("Choose destination location"),
+                "name": self.env._("Choose destination location"),
                 "view_mode": "form",
                 "res_model": "stock.package.destination",
                 "view_id": view_id,

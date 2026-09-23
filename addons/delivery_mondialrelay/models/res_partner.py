@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -23,7 +23,7 @@ class ResPartner(models.Model):
             limit=1,
         )
         if not country:
-            raise ValidationError(_("The pickup point country is invalid."))
+            raise ValidationError(self.env._("The pickup point country is invalid."))
         address_values = {
             "ref": "MR#%s" % data["id"],
             "name": data["name"],

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -18,11 +18,11 @@ class StockLocation(models.Model):
                 == location.company_id.mrp_subcontracting_config_id.subcontracting_location_id
             ):
                 raise ValidationError(
-                    _("You cannot alter the company's subcontracting location")
+                    self.env._("You cannot alter the company's subcontracting location")
                 )
             if location.is_subcontract() and location.usage != "internal":
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "In order to manage stock accurately, subcontracting locations must be type Internal, linked to the appropriate company."
                     )
                 )

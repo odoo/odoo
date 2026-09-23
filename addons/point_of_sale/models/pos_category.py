@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from ..tools import debug_log as dbg
@@ -13,7 +13,9 @@ class PosCategory(models.Model):
     @api.constrains("parent_id")
     def _check_category_recursion(self):
         if self._has_cycle():
-            raise ValidationError(_("Error! You cannot create recursive categories."))
+            raise ValidationError(
+                self.env._("Error! You cannot create recursive categories.")
+            )
 
     _color_default_indices = tuple(range(11))
 
@@ -142,7 +144,7 @@ class PosCategory(models.Model):
                 dbg.rec(blocking_session),
             )
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete a point of sale category while the session"
                     " %(session)s of %(config)s is still opened.",
                     session=blocking_session.name,
@@ -160,13 +162,19 @@ class PosCategory(models.Model):
         for category in self:
             if not 0.0 <= category.hour_until <= 24.0:
                 raise ValidationError(
-                    _("The Availability Until must be set between 00:00 and 24:00")
+                    self.env._(
+                        "The Availability Until must be set between 00:00 and 24:00"
+                    )
                 )
             if not 0.0 <= category.hour_after <= 24.0:
                 raise ValidationError(
-                    _("The Availability After must be set between 00:00 and 24:00")
+                    self.env._(
+                        "The Availability After must be set between 00:00 and 24:00"
+                    )
                 )
             if category.hour_until < category.hour_after:
                 raise ValidationError(
-                    _("The Availability Until must be greater than Availability After.")
+                    self.env._(
+                        "The Availability Until must be greater than Availability After."
+                    )
                 )

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import format_list
 
 
@@ -39,7 +39,7 @@ class ProductProduct(models.Model):
             capacities = []
             if product.weight_capacity:
                 capacities.append(
-                    _(
+                    self.env._(
                         "%(weight_capacity)s %(weight_uom)s",
                         weight_capacity=product.weight_capacity,
                         weight_uom=product.weight_capacity_uom_name,
@@ -47,14 +47,14 @@ class ProductProduct(models.Model):
                 )
             if product.volume_capacity:
                 capacities.append(
-                    _(
+                    self.env._(
                         "%(volume_capacity)s %(volume_uom)s",
                         volume_capacity=product.volume_capacity,
                         volume_uom=product.volume_capacity_uom_name,
                     )
                 )
             if capacities:
-                product.display_name = _(
+                product.display_name = self.env._(
                     "%(display_name)s (%(load_capacity)s)",
                     display_name=product.display_name,
                     load_capacity=format_list(self.env, capacities, "unit-short"),

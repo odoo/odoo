@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -88,7 +88,7 @@ class LoyaltyProgram(models.Model):
                         "pos_report_print_id"
                     ).get_description(self.env)["string"]
                     raise UserError(
-                        _(
+                        self.env._(
                             "You must set '%(mail_template)s' before setting '%(report)s'.",
                             mail_template=mail_template_label,
                             report=pos_report_print_label,

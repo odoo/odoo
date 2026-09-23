@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -42,14 +42,16 @@ class PaymentTransaction(models.Model):
                 pos_order = tx.pos_order_id
                 if pos_order.currency_id.compare_amounts(tx.amount, 0.0) <= 0:
                     raise ValidationError(
-                        _("The payment transaction (%d) has a negative amount.", tx.id)
+                        self.env._(
+                            "The payment transaction (%d) has a negative amount.", tx.id
+                        )
                     )
 
                 if not tx.payment_id:  # the payment could already have been created by account_payment module
                     tx._create_payment()
                 if not tx.payment_id:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The POS online payment (tx.id=%d) could not be saved correctly",
                             tx.id,
                         )
@@ -67,7 +69,7 @@ class PaymentTransaction(models.Model):
                     )
                     if not payment_method:
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "The POS online payment (tx.id=%d) could not be saved correctly because the online payment method could not be found",
                                 tx.id,
                             )
@@ -104,7 +106,7 @@ class PaymentTransaction(models.Model):
         self.check_singleton()
 
         return {
-            "name": _("POS Order"),
+            "name": self.env._("POS Order"),
             "type": "ir.actions.act_window",
             "res_model": "pos.order",
             "target": "current",

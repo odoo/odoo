@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.fields import Domain
 from odoo.tools.misc import clean_context
 
@@ -15,7 +15,7 @@ class MixinProductCatalog(models.AbstractModel):
         additional_context = self._prepare_catalog_extra_context()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Products"),
+            "name": self.env._("Products"),
             "res_model": "product.product",
             "views": [(kanban_view_id, "kanban"), (False, "form")],
             "search_view_id": [search_view_id, "search"],

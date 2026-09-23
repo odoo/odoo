@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -30,7 +30,7 @@ class StockPicking(models.Model):
 
     def action_purchase_matching(self):
         return self._get_action_transfer_matching(
-            _("Purchase Matching"),
+            self.env._("Purchase Matching"),
             "purchase.receipt.line.match",
             "purchase_stock.purchase_receipt_line_match_list",
         )

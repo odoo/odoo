@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -431,13 +431,13 @@ class StockPickingBatch(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
         if any(batch.state == "done" for batch in self):
-            raise UserError(_("You cannot delete Done batch transfers."))
+            raise UserError(self.env._("You cannot delete Done batch transfers."))
 
     @dbg.timed
     def action_confirm(self):
         self.check_singleton()
         if not self.picking_ids:
-            raise UserError(_("You have to set some pickings to batch."))
+            raise UserError(self.env._("You have to set some pickings to batch."))
         dbg.pipeline.debug(
             "[batch:%s] action_confirm -> %s", self.id, dbg.rec(self.picking_ids)
         )
@@ -486,7 +486,7 @@ class StockPickingBatch(models.Model):
         pickings -= empty_waiting_pickings
         if not pickings:
             raise UserError(
-                _("No quantity was processed in any transfer of this batch.")
+                self.env._("No quantity was processed in any transfer of this batch.")
             )
 
         empty_pickings = pickings.filtered(has_no_quantity)
@@ -510,12 +510,16 @@ class StockPickingBatch(models.Model):
         for picking in pickings:
             picking.message_post(
                 body=Markup("<b>%s:</b> %s %s")
-                % (_("Transferred by"), _("Batch Transfer"), self._get_html_link())
+                % (
+                    self.env._("Transferred by"),
+                    self.env._("Batch Transfer"),
+                    self._get_html_link(),
+                )
             )
 
         if empty_waiting_pickings:
             self.message_post(
-                body=_(
+                body=self.env._(
                     "%s was removed from the batch, no quantity processed",
                     Markup(", ").join(
                         [picking._get_html_link() for picking in empty_waiting_pickings]
@@ -557,7 +561,7 @@ class StockPickingBatch(models.Model):
         ):
             view = self.env.ref("stock.picking_label_type_form")
             return {
-                "name": _("Choose Type of Labels To Print"),
+                "name": self.env._("Choose Type of Labels To Print"),
                 "type": "ir.actions.act_window",
                 "res_model": "picking.label.type",
                 "views": [(view.id, "form")],
@@ -566,7 +570,7 @@ class StockPickingBatch(models.Model):
             }
         view = self.env.ref("stock.product_label_layout_form_picking")
         return {
-            "name": _("Choose Labels Layout"),
+            "name": self.env._("Choose Labels Layout"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "product.label.layout",
@@ -659,7 +663,7 @@ class StockPickingBatch(models.Model):
             )
             if erroneous_pickings:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The following transfers cannot be added to batch transfer %(batch)s. "
                         "Please check their states and operation types.\n\n"
                         "Incompatibilities: %(incompatible_transfers)s",

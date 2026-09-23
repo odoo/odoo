@@ -8,7 +8,6 @@ from odoo import api, fields, models
 from odoo.api import SUPERUSER_ID
 from odoo.fields import Command
 from odoo.tools import groupby
-from odoo.tools.translate import _
 
 from odoo.addons.stock.models.stock_rule import ProcurementException
 
@@ -70,7 +69,9 @@ class StockRule(models.Model):
             delays["total_delay"] += 365
             delays["no_vendor_found_delay"] += 365
             if not bypass_delay_description:
-                delay_description.append((_("No Vendor Found"), _("+ %s day(s)", 365)))
+                delay_description.append(
+                    (self.env._("No Vendor Found"), self.env._("+ %s day(s)", 365))
+                )
             return delays, delay_description
         buy_rule.check_singleton()
         if not self.env.context.get("ignore_vendor_lead_time"):
@@ -78,16 +79,22 @@ class StockRule(models.Model):
             delays["total_delay"] += supplier_delay
             delays["purchase_delay"] += supplier_delay
             if not bypass_delay_description:
-                delay_description.append((_("Receipt Date"), supplier_delay))
+                delay_description.append((self.env._("Receipt Date"), supplier_delay))
                 delay_description.append(
-                    (_("Vendor Lead Time"), _("+ %d day(s)", supplier_delay)),
+                    (
+                        self.env._("Vendor Lead Time"),
+                        self.env._("+ %d day(s)", supplier_delay),
+                    ),
                 )
         days_to_order = buy_rule.company_id.purchase_config_id.days_to_purchase
         delays["total_delay"] += days_to_order
         if not bypass_delay_description:
-            delay_description.append((_("Order Deadline"), days_to_order))
+            delay_description.append((self.env._("Order Deadline"), days_to_order))
             delay_description.append(
-                (_("Days to Purchase"), _("+ %d day(s)", days_to_order)),
+                (
+                    self.env._("Days to Purchase"),
+                    self.env._("+ %d day(s)", days_to_order),
+                ),
             )
         return delays, delay_description
 
@@ -133,7 +140,7 @@ class StockRule(models.Model):
         __, destination, __, __ = self._get_message_labels()
         message_dict.update(
             {
-                "buy": _(
+                "buy": self.env._(
                     "When products are needed in <b>%s</b>, <br/> "
                     "a request for quotation is created to fulfill the need.<br/>"
                     "Note: This rule will be used in combination with the rules<br/>"
@@ -268,9 +275,9 @@ class StockRule(models.Model):
             for user in users_to_notify
         )
         notification_msg += Markup("<br/>%s <strong>%s</strong>, %s") % (
-            _("No supplier has been found to replenish"),
+            self.env._("No supplier has been found to replenish"),
             product.display_name,
-            _("this product should be manually replenished."),
+            self.env._("this product should be manually replenished."),
         )
         records_to_notify.message_post(
             body=notification_msg,
@@ -348,7 +355,7 @@ class StockRule(models.Model):
             )
 
             if not supplier and self.env.context.get("from_orderpoint"):
-                msg = _(
+                msg = self.env._(
                     "There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.",
                     procurement.product_id.display_name,
                 )

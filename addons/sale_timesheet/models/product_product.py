@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 
 
@@ -45,7 +45,7 @@ class ProductProduct(models.Model):
         time_product = self.env.ref("sale_timesheet.time_product")
         if time_product in self:
             raise ValidationError(
-                _(
+                self.env._(
                     "The %s product is required by the Timesheets app and cannot be archived, deleted nor linked to a company.",
                     time_product.name,
                 )
@@ -56,7 +56,7 @@ class ProductProduct(models.Model):
             time_product = self.env.ref("sale_timesheet.time_product")
             if time_product in self:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The %s product is required by the Timesheets app and cannot be archived, deleted nor linked to a company.",
                         time_product.name,
                     )

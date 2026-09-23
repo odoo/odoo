@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ProductTemplate(models.Model):
@@ -16,15 +16,15 @@ class ProductTemplate(models.Model):
             ):
                 product_template.expense_policy_tooltip = False
             elif product_template.expense_policy == "no":
-                product_template.expense_policy_tooltip = _(
+                product_template.expense_policy_tooltip = self.env._(
                     "Expenses of this category may not be added to a Sales Order."
                 )
             elif product_template.expense_policy == "cost":
-                product_template.expense_policy_tooltip = _(
+                product_template.expense_policy_tooltip = self.env._(
                     "Expenses will be added to the Sales Order at their actual cost when posted."
                 )
             elif product_template.expense_policy == "sales_price":
-                product_template.expense_policy_tooltip = _(
+                product_template.expense_policy_tooltip = self.env._(
                     "Expenses will be added to the Sales Order at their sales price (product price, pricelist, etc.) when posted."
                 )
 

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
 from odoo.tools.misc import clean_context
@@ -15,7 +15,7 @@ class StockScrap(models.Model):
 
     name = fields.Char(
         string="Reference",
-        default=lambda self: _("New"),
+        default=lambda self: self.env._("New"),
         copy=False,
         readonly=True,
         required=True,
@@ -234,12 +234,12 @@ class StockScrap(models.Model):
             return None
         if recommended_location:
             self.location_id = recommended_location
-        return {"warning": {"title": _("Warning"), "message": message}}
+        return {"warning": {"title": self.env._("Warning"), "message": message}}
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
         if "done" in self.mapped("state"):
-            raise UserError(_("You cannot delete a scrap which is done."))
+            raise UserError(self.env._("You cannot delete a scrap which is done."))
 
     def _prepare_move_values(self):
         self.check_singleton()
@@ -280,7 +280,7 @@ class StockScrap(models.Model):
         already_done = self.filtered(lambda s: s.state == "done")
         if already_done:
             raise UserError(
-                _(
+                self.env._(
                     "The following scrap orders are already done and cannot be "
                     "validated again: %s",
                     ", ".join(already_done.mapped("name")),
@@ -313,7 +313,7 @@ class StockScrap(models.Model):
         if not under_lots:
             return
         raise UserError(
-            _(
+            self.env._(
                 "There is no untracked stock of %(product)s in %(location)s to "
                 "scrap, but %(quantity)s under lot/serial numbers: %(lots)s.\n"
                 "Pick the one you mean to scrap.",
@@ -333,7 +333,7 @@ class StockScrap(models.Model):
             )
             if not name:
                 raise UserError(
-                    _(
+                    self.env._(
                         "No scrap sequence is configured for %(company)s, so this "
                         "scrap cannot be given a reference. Create an "
                         "ir.sequence with code 'stock.scrap' for it.",
@@ -409,7 +409,7 @@ class StockScrap(models.Model):
     def action_validate(self):
         self.check_singleton()
         if self.product_uom_id.is_zero(self.scrap_qty):
-            raise UserError(_("You can only enter positive quantities."))
+            raise UserError(self.env._("You can only enter positive quantities."))
         if self.has_available_qty():
             return self._action_done()
         else:
@@ -427,7 +427,7 @@ class StockScrap(models.Model):
                 }
             )
             return {
-                "name": _(
+                "name": self.env._(
                     "%(product)s: Insufficient Quantity To Scrap",
                     product=self.product_id.display_name,
                 ),

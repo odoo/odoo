@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Command
 
 
@@ -28,14 +28,14 @@ class UpdateProductAttributeValue(models.TransientModel):
         self.message = ""
         for wizard in self:
             if wizard.mode == "add":
-                wizard.message = _(
+                wizard.message = self.env._(
                     'You are about to add the value "%(attribute_value)s" to %(product_count)s products.',
                     attribute_value=wizard.attribute_value_id.name,
                     product_count=wizard.product_count,
                 )
             elif wizard.mode == "update_extra_price":
                 if wizard.customized_product_count:
-                    wizard.message = _(
+                    wizard.message = self.env._(
                         "You are about to update the extra price of %(product_count)s"
                         " products, including %(customized_count)s with a price"
                         " already customized away from the previous default. Their"
@@ -44,7 +44,7 @@ class UpdateProductAttributeValue(models.TransientModel):
                         customized_count=wizard.customized_product_count,
                     )
                 else:
-                    wizard.message = _(
+                    wizard.message = self.env._(
                         "You are about to update the extra price of %s products.",
                         wizard.product_count,
                     )

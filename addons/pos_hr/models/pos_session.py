@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import plaintext2html
 
@@ -25,13 +25,15 @@ class PosSession(models.Model):
         super()._set_opening_control_data(cashbox_value, notes)
         if author_id := self._get_message_author():
             self.message_post(
-                body=plaintext2html(_("Opened register")), author_id=author_id.id
+                body=plaintext2html(self.env._("Opened register")),
+                author_id=author_id.id,
             )
 
     def post_close_register_message(self):
         if author_id := self._get_message_author():
             self.message_post(
-                body=plaintext2html(_("Closed Register")), author_id=author_id.id
+                body=plaintext2html(self.env._("Closed Register")),
+                author_id=author_id.id,
             )
             return None
         return super().post_close_register_message()
@@ -71,7 +73,7 @@ class PosSession(models.Model):
             payments_by_employee.append(
                 {
                     "id": employee.id if employee else "others",
-                    "name": employee.name if employee else _("Others"),
+                    "name": employee.name if employee else self.env._("Others"),
                     "amount": sum(payments_group.mapped("amount")),
                 }
             )

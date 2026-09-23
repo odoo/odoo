@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -105,7 +105,7 @@ class ResCompany(models.Model):
                 )
                 sessions_str = ", ".join(sessions_in_period.mapped("name"))
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Please close all the point of sale sessions in this period before closing it. Open sessions are: %s ",
                         sessions_str,
                     )

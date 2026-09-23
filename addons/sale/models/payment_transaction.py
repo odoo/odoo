@@ -7,7 +7,6 @@ from odoo.api import SUPERUSER_ID
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import str2bool
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -267,7 +266,7 @@ class PaymentTransaction(models.Model):
     @api.readonly
     def action_view_sales_orders(self):
         action = {
-            "name": _("Sales Order(s)"),
+            "name": self.env._("Sales Order(s)"),
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
             "target": "current",

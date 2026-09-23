@@ -1,7 +1,7 @@
 import base64
 from datetime import datetime
 
-from odoo import _, fields, http
+from odoo import fields, http
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.tools.image import image_process
@@ -51,15 +51,15 @@ class CustomerPortal(portal.CustomerPortal, OrderPortalMixin):
             return {}
         return {
             "all": {
-                "label": _("All"),
+                "label": request.env._("All"),
                 "domain": [("state", "in", ("done", "cancel"))],
             },
             "purchase": {
-                "label": _("Purchase Order"),
+                "label": request.env._("Purchase Order"),
                 "domain": [("state", "=", "done")],
             },
             "cancel": {
-                "label": _("Cancelled"),
+                "label": request.env._("Cancelled"),
                 "domain": [("state", "=", "cancel")],
             },
         }
@@ -200,13 +200,15 @@ class CustomerPortal(portal.CustomerPortal, OrderPortalMixin):
         except AccessError, MissingError:
             return {
                 "success": False,
-                "error": _("You are not allowed to update this purchase order."),
+                "error": request.env._(
+                    "You are not allowed to update this purchase order."
+                ),
             }
 
         if not order_sudo._is_date_commitment_updatable():
             return {
                 "success": False,
-                "error": _("This purchase order can no longer be updated."),
+                "error": request.env._("This purchase order can no longer be updated."),
             }
 
         today = fields.Date.context_today(order_sudo)
@@ -215,19 +217,21 @@ class CustomerPortal(portal.CustomerPortal, OrderPortalMixin):
             try:
                 line_id = int(id_str)
             except TypeError, ValueError:
-                return {"success": False, "error": _("Invalid order line.")}
+                return {"success": False, "error": request.env._("Invalid order line.")}
             line = order_sudo.line_ids.filtered_domain([("id", "=", line_id)])
             if not line:
-                return {"success": False, "error": _("Invalid order line.")}
+                return {"success": False, "error": request.env._("Invalid order line.")}
 
             try:
                 parsed = datetime.strptime(date_str, "%Y-%m-%d")
             except TypeError, ValueError:
-                return {"success": False, "error": _("Invalid date.")}
+                return {"success": False, "error": request.env._("Invalid date.")}
             if parsed.date() < today:
                 return {
                     "success": False,
-                    "error": _("The expected arrival date cannot be in the past."),
+                    "error": request.env._(
+                        "The expected arrival date cannot be in the past."
+                    ),
                 }
 
             updated_dates.append((line, line._convert_to_middle_of_day(parsed)))

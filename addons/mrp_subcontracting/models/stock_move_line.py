@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class StockMoveLine(models.Model):
@@ -13,7 +13,7 @@ class StockMoveLine(models.Model):
             res["warning"]["message"] = (
                 res["warning"]["message"].split("\n\n", 1)[0]
                 + "\n\n"
-                + _(
+                + self.env._(
                     "Make sure you validate or adapt the related resupply picking to your subcontractor in order to avoid inconsistencies in your stock."
                 )
             )

@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class MrpBomByproduct(models.Model):
@@ -28,7 +28,7 @@ class MrpBomByproduct(models.Model):
     )
 
     def _get_uom_mismatch_message(self):
-        return _(
+        return self.env._(
             "The by-product %(product)s is produced in %(unit)s, which"
             " does not measure the same thing as its own unit"
             " %(product_unit)s.",

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 
@@ -89,7 +89,7 @@ class ProductTemplateAttributeLine(models.Model):
             for ptal in self:
                 if ptal.product_tmpl_id.id != values["product_tmpl_id"]:
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot move the attribute %(attribute)s from the product"
                             " %(product_src)s to the product %(product_dest)s.",
                             attribute=ptal.attribute_id.display_name,
@@ -102,7 +102,7 @@ class ProductTemplateAttributeLine(models.Model):
             for ptal in self:
                 if ptal.attribute_id.id != values["attribute_id"]:
                     raise UserError(
-                        _(
+                        self.env._(
                             "On the product %(product)s you cannot transform the attribute"
                             " %(attribute_src)s into the attribute %(attribute_dest)s.",
                             product=ptal.product_tmpl_id.display_name,
@@ -255,7 +255,7 @@ class ProductTemplateAttributeLine(models.Model):
     def action_view_attribute_values(self):
         return {
             "type": "ir.actions.act_window",
-            "name": _("Product Variant Values"),
+            "name": self.env._("Product Variant Values"),
             "res_model": "product.template.attribute.value",
             "view_mode": "list,form",
             "domain": [("id", "in", self.product_template_value_ids.ids)],

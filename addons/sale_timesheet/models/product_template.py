@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
@@ -10,7 +10,9 @@ class ProductTemplate(models.Model):
 
     def _selection_service_policy(self):
         service_policies = super()._selection_service_policy()
-        service_policies.insert(1, ("delivered_timesheet", _("Based on Timesheets")))
+        service_policies.insert(
+            1, ("delivered_timesheet", self.env._("Based on Timesheets"))
+        )
         return service_policies
 
     service_type = fields.Selection(
@@ -63,7 +65,7 @@ class ProductTemplate(models.Model):
 
     def _prepare_invoicing_tooltip(self):
         if self.service_policy == "delivered_timesheet":
-            return _("Invoice based on timesheets (delivered quantity).")
+            return self.env._("Invoice based on timesheets (delivered quantity).")
         return super()._prepare_invoicing_tooltip()
 
     @api.onchange("type", "service_type", "service_policy")
@@ -120,7 +122,7 @@ class ProductTemplate(models.Model):
         if time_product.product_tmpl_id in self:
             _debug.logic("master_product_protected", products=self, action="unlink")
             raise ValidationError(
-                _(
+                self.env._(
                     "The %s product is required by the Timesheets app and cannot be archived, deleted nor linked to a company.",
                     time_product.name,
                 )
@@ -132,7 +134,7 @@ class ProductTemplate(models.Model):
             if time_product.product_tmpl_id in self:
                 _debug.logic("master_product_protected", products=self, action="write")
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The %s product is required by the Timesheets app and cannot be archived, deleted nor linked to a company.",
                         time_product.name,
                     )

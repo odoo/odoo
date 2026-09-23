@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -22,7 +22,7 @@ class ProductTemplate(models.Model):
         self.check_singleton()
         if self.type != "service":
             raise ValidationError(
-                _(
+                self.env._(
                     "%(product)s is set up as a subcontracted service in %(company)s, which only a service can be.",
                     product=self.display_name,
                     company=company.display_name,
@@ -30,7 +30,7 @@ class ProductTemplate(models.Model):
             )
         if self.expense_policy != "no":
             raise ValidationError(
-                _(
+                self.env._(
                     "%(product)s is re-invoiced at cost, so it is already bought through the expense and cannot also raise a RfQ in %(company)s.",
                     product=self.display_name,
                     company=company.display_name,
@@ -38,7 +38,7 @@ class ProductTemplate(models.Model):
             )
         if not self.seller_ids:
             raise ValidationError(
-                _(
+                self.env._(
                     "Please define the vendor from whom you would like to purchase %(product)s automatically for %(company)s.",
                     product=self.display_name,
                     company=company.display_name,

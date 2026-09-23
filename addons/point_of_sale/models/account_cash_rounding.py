@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError, ValidationError
 
 from ..tools import debug_log as dbg
@@ -14,7 +14,7 @@ class AccountCashRounding(models.Model):
             [("rounding_method", "in", self.ids)], limit=1
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot delete a rounding method that is used in a Point of Sale configuration."
                 )
             )
@@ -32,7 +32,7 @@ class AccountCashRounding(models.Model):
                 dbg.rec(open_session),
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "You are not allowed to change the cash rounding configuration while a pos session using it is already opened."
                 )
             )

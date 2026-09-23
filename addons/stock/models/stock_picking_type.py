@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 
@@ -336,7 +336,7 @@ class StockPickingType(models.Model):
         vals_list = super().copy_data(default=default)
         for picking, vals in zip(self, vals_list, strict=True):
             if "name" not in default:
-                vals["name"] = _("%s (copy)", picking.name)
+                vals["name"] = self.env._("%s (copy)", picking.name)
             if "sequence_code" not in default:
                 vals["sequence_code"] = picking._get_unique_sequence_code()
         return vals_list
@@ -352,7 +352,7 @@ class StockPickingType(models.Model):
             return
         if self.filtered(lambda pt: pt.company_id.id != vals["company_id"]):
             raise UserError(
-                _(
+                self.env._(
                     "Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."
                 )
             )
@@ -545,11 +545,11 @@ class StockPickingType(models.Model):
         ):
             self.env["stock.warehouse"]._raise_missing_warehouse()
         raise UserError(
-            _(
+            self.env._(
                 "Operation type %(name)s has no warehouse, so its default "
                 "locations cannot be derived. Set a warehouse on it, or give it "
                 "explicit source and destination locations.",
-                name=self[0].display_name or _("(new)"),
+                name=self[0].display_name or self.env._("(new)"),
             )
         )
 
@@ -644,7 +644,7 @@ class StockPickingType(models.Model):
         ):
             return {
                 "warning": {
-                    "message": _(
+                    "message": self.env._(
                         "You need to activate storage locations to be able to do internal operation types."
                     )
                 }
@@ -659,11 +659,11 @@ class StockPickingType(models.Model):
         if clashing and clashing.sequence_id != self.sequence_id:
             return {
                 "warning": {
-                    "message": _(
+                    "message": self.env._(
                         "This sequence prefix is already used by %(name)s%(archived)s. "
                         "Pick a unique prefix.",
                         name=clashing.display_name,
-                        archived="" if clashing.active else _(" (archived)"),
+                        archived="" if clashing.active else self.env._(" (archived)"),
                     )
                 }
             }
@@ -843,7 +843,7 @@ class StockPickingType(models.Model):
                 continue
             if not any(picking_type[key] for key in group_by_keys):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."
                     )
                 )
@@ -853,7 +853,7 @@ class StockPickingType(models.Model):
         for picking_type in self:
             if picking_type.batch_max_lines < 0 or picking_type.batch_max_pickings < 0:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Batch limits cannot be negative. Leave a limit at '0' to disable it."
                     )
                 )

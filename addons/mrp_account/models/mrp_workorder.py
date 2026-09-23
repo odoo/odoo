@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class MrpWorkorder(models.Model):
@@ -39,7 +39,7 @@ class MrpWorkorder(models.Model):
     def _prepare_analytic_line_values(self, account_field_values, amount, unit_amount):
         self.check_singleton()
         return {
-            "name": _("[WC] %s", self.display_name),
+            "name": self.env._("[WC] %s", self.display_name),
             "amount": amount,
             **account_field_values,
             "unit_amount": unit_amount,

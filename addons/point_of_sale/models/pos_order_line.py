@@ -5,7 +5,7 @@ from uuid import uuid4
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools import float_compare
@@ -251,7 +251,7 @@ class PosOrderLine(models.Model):
     def _prepare_refund_data(self, refund_order, refund_lots):
         self.check_singleton()
         return {
-            "name": _("%(name)s REFUND", name=self.name),
+            "name": self.env._("%(name)s REFUND", name=self.name),
             "qty": -(self.qty - self.refunded_qty),
             "order_id": refund_order.id,
             "pack_lot_ids": refund_lots,
@@ -286,7 +286,7 @@ class PosOrderLine(models.Model):
                 sequence = sequence_by_order_id.get(order_id, self.env["ir.sequence"])
                 if not sequence:
                     raise UserError(
-                        _(
+                        self.env._(
                             "The point of sale %(config)s has no order-line"
                             " sequence, so its order lines cannot be numbered.",
                             config=order.session_id.config_id.display_name
@@ -318,7 +318,7 @@ class PosOrderLine(models.Model):
                     new_qty,
                 )
                 edited |= line
-                body = _(
+                body = self.env._(
                     "%(product_name)s: Ordered quantity: %(old_qty)s",
                     product_name=line.full_product_name,
                     old_qty=line.qty,
@@ -341,7 +341,7 @@ class PosOrderLine(models.Model):
         self.check_access("read")
         pos_config = self.env["pos.config"].browse(config_id)
         if not pos_config:
-            raise UserError(_("No PoS configuration found"))
+            raise UserError(self.env._("No PoS configuration found"))
 
         company_id = pos_config.company_id.id
         src_loc = pos_config.picking_type_id.default_location_src_id
@@ -379,7 +379,7 @@ class PosOrderLine(models.Model):
     def _unlink_except_order_state(self):
         if self.filtered(lambda x: x.order_id.state not in ["draft", "cancel"]):
             raise UserError(
-                _(
+                self.env._(
                     "You can only unlink PoS order lines that are related to orders in new or cancelled state."
                 )
             )
@@ -632,7 +632,7 @@ class PosOrderLine(models.Model):
         )
         if not account:
             raise UserError(
-                _(
+                self.env._(
                     "Please define income account for this product: '%(product)s' (id:%(id)d).",
                     product=line.product_id.name,
                     id=line.product_id.id,
@@ -682,7 +682,7 @@ class PosOrderLine(models.Model):
         for line in self:
             if line.order_id.config_id.order_edit_tracking:
                 bodies_per_order[line.order_id].append(
-                    _(
+                    self.env._(
                         "%(product_name)s: Deleted line (quantity: %(qty)s)",
                         product_name=line.full_product_name,
                         qty=line.qty,

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -45,8 +45,8 @@ class ProductProduct(models.Model):
             )
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "You cannot change the product's type because it is already used in sales orders."
                     ),
                 }
@@ -62,7 +62,7 @@ class ProductProduct(models.Model):
             ("state", "=", "done"),
             ("product_id", "in", self.ids),
         ]
-        action["display_name"] = _("Sales History for %s", self.display_name)
+        action["display_name"] = self.env._("Sales History for %s", self.display_name)
         return action
 
     def _filtered_to_unlink(self):

@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 # A group that is itself quantified and whose body contains an unbounded
@@ -107,7 +107,7 @@ class BarcodeRule(models.Model):
         for rule in self:
             if rule.type == "alias" and not rule.alias:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Barcode rule %(name)s is an alias rule, so it needs an alias to point at.",
                         name=rule.name,
                     )
@@ -125,42 +125,44 @@ class BarcodeRule(models.Model):
             if len(findall) == 2:
                 if not re.search(r"[{][N]*[D]*[}]", p):
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's.",
                             pattern=rule.pattern,
                         )
                     )
                 if re.search(r"[{][}]", p):
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "There is a syntax error in the barcode pattern %(pattern)s: empty braces.",
                             pattern=rule.pattern,
                         )
                     )
             elif len(findall) != 0:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces.",
                         pattern=rule.pattern,
                     )
                 )
             elif p == "*":
                 raise ValidationError(
-                    _(" '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?")
+                    self.env._(
+                        " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
+                    )
                 )
             bare_pattern = re.sub(r"{N*D*}", "", p)
             try:
                 re.compile(bare_pattern)
             except re.error as e:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The barcode pattern %(pattern)s does not lead to a valid regular expression.",
                         pattern=rule.pattern,
                     )
                 ) from e
             if _NESTED_QUANTIFIER.search(bare_pattern):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The barcode pattern %(pattern)s nests one repetition inside another (for instance '(x+x+)+'). "
                         "Such a pattern can take exponentially long to match and would block the server on every scan.",
                         pattern=rule.pattern,
@@ -168,7 +170,7 @@ class BarcodeRule(models.Model):
                 )
             if _has_ambiguous_alternation(bare_pattern):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The barcode pattern %(pattern)s repeats a group whose alternatives share a prefix (for instance '(a|aa)+'). "
                         "Such a pattern can take exponentially long to match and would block the server on every scan.",
                         pattern=rule.pattern,

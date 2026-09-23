@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -201,7 +201,9 @@ class AccountAnalyticLine(models.Model):
                     reason="already_invoiced",
                 )
                 raise UserError(
-                    _("You cannot modify timesheets that are already invoiced.")
+                    self.env._(
+                        "You cannot modify timesheets that are already invoiced."
+                    )
                 )
         return super()._check_can_write(values)
 
@@ -290,7 +292,9 @@ class AccountAnalyticLine(models.Model):
                 "timesheet_unlink_refused", timesheets=self, reason="posted_invoice"
             )
             raise UserError(
-                _("You cannot remove a timesheet that has already been invoiced.")
+                self.env._(
+                    "You cannot remove a timesheet that has already been invoiced."
+                )
             )
 
     def _get_employee_mapping_entry(self):
@@ -318,7 +322,7 @@ class AccountAnalyticLine(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Sales Order"),
+            "name": self.env._("Sales Order"),
             "res_model": "sale.order",
             "views": [[False, "form"]],
             "context": {"create": False, "show_sale": True},
@@ -329,7 +333,7 @@ class AccountAnalyticLine(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Invoice"),
+            "name": self.env._("Invoice"),
             "res_model": "account.move",
             "views": [[False, "form"]],
             "context": {"create": False},
@@ -386,7 +390,7 @@ class AccountAnalyticLine(models.Model):
                 plans=",".join(missing_plan_names),
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "'%(missing_plan_names)s' analytic plan(s) required on the analytic distribution of the sale order item '%(so_line_name)s' linked to the timesheet.",
                     missing_plan_names=missing_plan_names,
                     so_line_name=so_line.name,

@@ -10,7 +10,7 @@ from uuid import uuid4
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_is_zero, float_repr, float_round, formatLang
@@ -356,7 +356,7 @@ class PosOrder(models.Model):
             return open_session
 
         raise UserError(
-            _(
+            self.env._(
                 "No open session available. Please open a new session to capture the order."
             )
         )
@@ -657,7 +657,7 @@ class PosOrder(models.Model):
                     "Trying to create an invoice without any journal configured"
                 )
                 raise UserError(
-                    _("No invoice journal configured for this POS session.")
+                    self.env._("No invoice journal configured for this POS session.")
                 )
             dbg.pipeline.debug("[order:%s] -> invoice", self.uuid)
             self._generate_pos_order_invoice()
@@ -687,13 +687,13 @@ class PosOrder(models.Model):
             )
             if not cash_payment_method:
                 raise UserError(
-                    _(
+                    self.env._(
                         "No cash statement found for this session. Unable to record returned cash."
                     )
                 )
             order.add_payment(
                 {
-                    "name": _("return"),
+                    "name": self.env._("return"),
                     "pos_order_id": order.id,
                     "amount": amount_return,
                     "payment_date": fields.Datetime.now(),
@@ -788,7 +788,7 @@ class PosOrder(models.Model):
                             0,
                             None,
                             {
-                                "name": _(
+                                "name": self.env._(
                                     "Price discount from %(original_price)s to %(discounted_price)s",
                                     original_price=float_repr(
                                         line.product_id.lst_price,
@@ -1039,7 +1039,7 @@ class PosOrder(models.Model):
         for order in self:
             if not order.currency_id:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"
                     )
                 )
@@ -1108,7 +1108,9 @@ class PosOrder(models.Model):
         for pos_order in self:
             if pos_order.state not in ["draft", "cancel"]:
                 raise UserError(
-                    _("In order to delete a sale, it must be new or cancelled.")
+                    self.env._(
+                        "In order to delete a sale, it must be new or cancelled."
+                    )
                 )
             if pos_order.state == "draft":
                 order_to_cancel |= pos_order
@@ -1128,7 +1130,9 @@ class PosOrder(models.Model):
             if "last_order_preparation_change" in vals:
                 self._get_preparation_change_data(vals["last_order_preparation_change"])
             if not vals.get("session_id"):
-                raise UserError(_("A point of sale order must belong to a session."))
+                raise UserError(
+                    self.env._("A point of sale order must belong to a session.")
+                )
             session = self.env["pos.session"].browse(vals["session_id"])
             self._update_values_from_session(session, vals)
         orders = super().create(vals_list)
@@ -1199,7 +1203,9 @@ class PosOrder(models.Model):
                 and command[2]["payment_status"] != "cancelled"
                 for command in vals.get("payment_ids") or []
             ):
-                raise UserError(_("You cannot change the payment of a printed order."))
+                raise UserError(
+                    self.env._("You cannot change the payment of a printed order.")
+                )
             if vals.get("state") and vals["state"] == "paid" and order.name == "/":
                 session = (
                     self.env["pos.session"].browse(vals["session_id"])
@@ -1223,7 +1229,7 @@ class PosOrder(models.Model):
                 and order.state in allowed_vals
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "This order has already been paid. You cannot set it back to draft or edit it."
                     )
                 )
@@ -1254,13 +1260,13 @@ class PosOrder(models.Model):
                 )
                 if payment_comparison < 0 or is_negative_total:
                     raise UserError(
-                        _(
+                        self.env._(
                             "The paid amount is different from the total amount of the order."
                         )
                     )
                 if payment_comparison > 0 and order.state == "paid":
                     payment_changes.append(
-                        _(
+                        self.env._(
                             "Warning, the paid amount is higher than the total amount. (Difference: %s)",
                             formatLang(
                                 self.env,
@@ -1271,7 +1277,7 @@ class PosOrder(models.Model):
                     )
 
         if len(payment_changes) > 0:
-            body = _("Payment changes:")
+            body = self.env._("Payment changes:")
             body += self._markup_list_message(payment_changes)
             for order in self:
                 if vals.get("payment_ids"):
@@ -1296,7 +1302,7 @@ class PosOrder(models.Model):
                     self.env, new_pm[2].get("amount"), currency_obj=self.currency_id
                 )
                 message_list.append(
-                    _(
+                    self.env._(
                         "Added %(payment_method)s with %(amount)s",
                         payment_method=payment_method_id.name,
                         amount=amount,
@@ -1324,7 +1330,7 @@ class PosOrder(models.Model):
 
                 if new_payment_method and new_amount:
                     message_list.append(
-                        _(
+                        self.env._(
                             "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s",
                             old_pm=old_pm,
                             new_pm=new_payment_method.name,
@@ -1334,7 +1340,7 @@ class PosOrder(models.Model):
                     )
                 elif new_payment_method:
                     message_list.append(
-                        _(
+                        self.env._(
                             "%(old_pm)s changed to %(new_pm)s for %(old_amount)s",
                             old_pm=old_pm,
                             new_pm=new_payment_method.name,
@@ -1343,7 +1349,7 @@ class PosOrder(models.Model):
                     )
                 elif new_amount:
                     message_list.append(
-                        _(
+                        self.env._(
                             "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s",
                             old_amount=old_amount,
                             new_amount=new_amount,
@@ -1356,7 +1362,7 @@ class PosOrder(models.Model):
                     self.env, pm_id.amount, currency_obj=pm_id.currency_id
                 )
                 message_list.append(
-                    _(
+                    self.env._(
                         "Removed %(payment_method)s with %(amount)s",
                         payment_method=pm_id.payment_method_id.name,
                         amount=amount,
@@ -1377,7 +1383,7 @@ class PosOrder(models.Model):
     def _get_order_name(self, session=None):
         session = session or self.session_id
         if self.refunded_order_id.exists():
-            return _(
+            return self.env._(
                 "%(refunded_order)s REFUND", refunded_order=self.refunded_order_id.name
             )
         else:
@@ -1398,7 +1404,7 @@ class PosOrder(models.Model):
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "stock.action_picking_tree_ready"
         )
-        action["display_name"] = _("Pickings")
+        action["display_name"] = self.env._("Pickings")
         action["context"] = {}
         action["domain"] = [("id", "in", self.picking_ids.ids)]
         return action
@@ -1407,7 +1413,7 @@ class PosOrder(models.Model):
         invoices = self.account_move
         if len(invoices) == 1:
             return {
-                "name": _("Customer Invoice"),
+                "name": self.env._("Customer Invoice"),
                 "view_mode": "form",
                 "view_id": self.env.ref("account.view_move_form").id,
                 "res_model": "account.move",
@@ -1417,7 +1423,7 @@ class PosOrder(models.Model):
             }
         else:
             return {
-                "name": _("Customer Invoices"),
+                "name": self.env._("Customer Invoices"),
                 "view_mode": "list,form",
                 "res_model": "account.move",
                 "type": "ir.actions.act_window",
@@ -1426,7 +1432,7 @@ class PosOrder(models.Model):
 
     def action_create_invoices(self):
         return {
-            "name": _("Create Invoice(s)"),
+            "name": self.env._("Create Invoice(s)"),
             "view_mode": "form",
             "view_id": self.env.ref("point_of_sale.view_pos_make_invoice").id,
             "res_model": "pos.make.invoice",
@@ -1437,7 +1443,7 @@ class PosOrder(models.Model):
 
     def action_view_refunded_order(self):
         return {
-            "name": _("Refunded Order"),
+            "name": self.env._("Refunded Order"),
             "view_mode": "form",
             "view_id": self.env.ref("point_of_sale.view_pos_pos_form").id,
             "res_model": "pos.order",
@@ -1447,7 +1453,7 @@ class PosOrder(models.Model):
 
     def action_view_refund_orders(self):
         return {
-            "name": _("Refund Orders"),
+            "name": self.env._("Refund Orders"),
             "view_mode": "list,form",
             "res_model": "pos.order",
             "type": "ir.actions.act_window",
@@ -1619,7 +1625,7 @@ class PosOrder(models.Model):
                     invoice.with_context(
                         skip_invoice_sync=True
                     ).line_ids = line_ids_commands
-        body = _(
+        body = self.env._(
             "This invoice has been created from the point of sale session:%s",
             Markup().join(Markup("%s ") % order._get_html_link() for order in self),
         )
@@ -1668,7 +1674,7 @@ class PosOrder(models.Model):
     def action_pos_order_paid(self):
         self.check_singleton()
         if not self._is_payment_amount_valid():
-            raise UserError(_("Order %s is not fully paid.", self.name))
+            raise UserError(self.env._("Order %s is not fully paid.", self.name))
         dbg.lifecycle.debug("[order:%s] state %s -> paid", self.uuid, self.state)
         self.write({"state": "paid"})
 
@@ -1739,7 +1745,9 @@ class PosOrder(models.Model):
             "invoice_payment_term_id": invoice_payment_term_id,
         }
         if is_single_order and self.refunded_order_id.account_move:
-            vals["ref"] = _("Reversal of: %s", self.refunded_order_id.account_move.name)
+            vals["ref"] = self.env._(
+                "Reversal of: %s", self.refunded_order_id.account_move.name
+            )
             vals["reversed_entry_id"] = self.refunded_order_id.account_move.id
 
         if self._is_cash_rounding_applicable():
@@ -1940,7 +1948,9 @@ class PosOrder(models.Model):
                 balance = stock_move.value if stock_move.is_out else -stock_move.value
                 aml_vals_list_per_nature["stock"].append(
                     {
-                        "name": _("Stock variation for %s", stock_move.product_id.name),
+                        "name": self.env._(
+                            "Stock variation for %s", stock_move.product_id.name
+                        ),
                         "account_id": expense_account.id,
                         "partner_id": commercial_partner.id,
                         "currency_id": self.company_id.currency_id.id,
@@ -1950,7 +1960,9 @@ class PosOrder(models.Model):
                 )
                 aml_vals_list_per_nature["stock"].append(
                     {
-                        "name": _("Stock variation for %s", stock_move.product_id.name),
+                        "name": self.env._(
+                            "Stock variation for %s", stock_move.product_id.name
+                        ),
                         "account_id": stock_account.id,
                         "partner_id": commercial_partner.id,
                         "currency_id": self.company_id.currency_id.id,
@@ -2023,7 +2035,7 @@ class PosOrder(models.Model):
                 {
                     "journal_id": self.config_id.journal_id.id,
                     "date": fields.Date.context_today(self),
-                    "ref": _(
+                    "ref": self.env._(
                         "Reversal of POS closing entry %(entry)s for order %(order)s from session %(session)s",
                         entry=self.session_move_id.name,
                         order=self.name,
@@ -2100,7 +2112,7 @@ class PosOrder(models.Model):
                 self._create_order_picking()
             move = self._generate_pos_order_invoice()
         return {
-            "name": _("Customer Invoice"),
+            "name": self.env._("Customer Invoice"),
             "view_mode": "form",
             "view_id": self.env.ref("account.view_move_form").id,
             "res_model": "account.move",
@@ -2126,7 +2138,7 @@ class PosOrder(models.Model):
         )
         if invalid_orders := self.filtered(lambda o: o.state not in ("paid", "done")):
             raise UserError(
-                _(
+                self.env._(
                     "The following orders cannot be invoiced because they are not"
                     " paid: %(orders)s",
                     orders=", ".join(invalid_orders.mapped("name")),
@@ -2137,7 +2149,9 @@ class PosOrder(models.Model):
                 "[order:%s] invoicing refused: records locked", dbg.names(self, "uuid")
             )
             raise UserError(
-                _("Some orders are already being invoiced. Please try again later.")
+                self.env._(
+                    "Some orders are already being invoiced. Please try again later."
+                )
             )
         dbg.lifecycle.debug("[order:%s] state -> done", dbg.names(self, "uuid"))
         self.state = "done"
@@ -2227,7 +2241,7 @@ class PosOrder(models.Model):
             )
             if order_is_in_futur:
                 raise UserError(
-                    _(
+                    self.env._(
                         "The order delivery / pickup date is in the future. You cannot cancel it."
                     )
                 )
@@ -2411,7 +2425,7 @@ class PosOrder(models.Model):
     def _check_single_refund_origin(self, refunded_orders):
         if len(refunded_orders) > 1:
             raise ValidationError(
-                _("You can only refund products from the same order.")
+                self.env._("You can only refund products from the same order.")
             )
 
     @api.model
@@ -2521,7 +2535,7 @@ class PosOrder(models.Model):
             current_session.config_id._get_next_order_refs()
         )
         return {
-            "name": _("%(name)s REFUND", name=self.name),
+            "name": self.env._("%(name)s REFUND", name=self.name),
             "session_id": current_session.id,
             "date_order": fields.Datetime.now(),
             "pos_reference": pos_reference,
@@ -2538,7 +2552,7 @@ class PosOrder(models.Model):
             current_session = order.session_id.config_id.current_session_id
             if not current_session:
                 raise UserError(
-                    _(
+                    self.env._(
                         "To return product(s), you need to open a session in the POS %s",
                         order.session_id.config_id.display_name,
                     )
@@ -2564,7 +2578,7 @@ class PosOrder(models.Model):
     def action_refund(self):
         self.check_singleton()
         return {
-            "name": _("Return Products"),
+            "name": self.env._("Return Products"),
             "view_mode": "form",
             "res_model": "pos.order",
             "res_id": self._refund().ids[0],
@@ -2579,7 +2593,7 @@ class PosOrder(models.Model):
             [("model", "=", self._name)], limit=1
         )
         return {
-            "name": _("Send Email"),
+            "name": self.env._("Send Email"),
             "view_mode": "form",
             "res_model": "mail.compose.message",
             "type": "ir.actions.act_window",
@@ -2605,7 +2619,10 @@ class PosOrder(models.Model):
         mail_template = self.env.ref(mail_template_id, raise_if_not_found=False)
         if not mail_template:
             raise UserError(
-                _("The mail template with xmlid %s has been deleted.", mail_template_id)
+                self.env._(
+                    "The mail template with xmlid %s has been deleted.",
+                    mail_template_id,
+                )
             )
         mail_template.send_mail(
             self.id,

@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 
 
 class MrpProduction(models.Model):
@@ -37,7 +37,7 @@ class MrpProduction(models.Model):
         else:
             action.update(
                 {
-                    "name": _("Purchase Order generated from %s", self.name),
+                    "name": self.env._("Purchase Order generated from %s", self.name),
                     "domain": [("id", "in", purchase_order_ids)],
                     "view_mode": "list,form",
                 }

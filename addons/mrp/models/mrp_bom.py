@@ -1,6 +1,6 @@
 from collections import defaultdict, deque
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
@@ -182,7 +182,7 @@ class MrpBom(models.Model):
                 and not bom.product_uom_id._has_common_reference(product_uom)
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The bill of materials for %(product)s is quantified in"
                         " %(unit)s, which does not measure the same thing as the"
                         " product's own unit %(product_unit)s.",
@@ -258,8 +258,8 @@ class MrpBom(models.Model):
     def _prepare_variant_reset_warning(self):
         return {
             "warning": {
-                "title": _("Warning"),
-                "message": _(
+                "title": self.env._("Warning"),
+                "message": self.env._(
                     "Changing the product or variant will permanently reset all previously encoded variant-related data."
                 ),
             }
@@ -285,7 +285,7 @@ class MrpBom(models.Model):
                         finished=finished_products,
                     )
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The current configuration is incorrect because it would create a cycle between these products: %s.",
                             ", ".join(finished_products.mapped("display_name")),
                         )
@@ -349,14 +349,14 @@ class MrpBom(models.Model):
             )
             if bom.product_id and apply_variants:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot use the 'Apply on Variant' functionality and simultaneously create a BoM for a specific variant."
                     )
                 )
             for ptav in apply_variants:
                 if ptav.product_tmpl_id != bom.product_tmpl_id:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The attribute value %(attribute)s set on product %(product)s does not match the BoM product %(bom_product)s.",
                             attribute=ptav.display_name,
                             product=ptav.product_tmpl_id.display_name,
@@ -372,14 +372,14 @@ class MrpBom(models.Model):
                     )
                 if same_product:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "By-product %s should not be the same as BoM product.",
                             bom.display_name,
                         )
                     )
                 if byproduct.cost_share < 0:
                     raise ValidationError(
-                        _("By-products cost shares cannot be negative.")
+                        self.env._("By-products cost shares cannot be negative.")
                     )
             byproducts = bom.byproduct_ids.filtered(
                 lambda bp: not bp.product_uom_id.is_zero(bp.product_qty)
@@ -397,7 +397,7 @@ class MrpBom(models.Model):
                 )
                 if float_compare(total_variant_cost_share, 100, precision_digits=2) > 0:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "The total cost share for a BoM's by-products cannot exceed 100."
                         )
                     )
@@ -413,8 +413,8 @@ class MrpBom(models.Model):
         ):
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "The product has already been used at least once, editing its structure may lead to undesirable behaviours. "
                         "You should rather archive the product and create a new one with a new bill of materials."
                     ),
@@ -442,7 +442,7 @@ class MrpBom(models.Model):
             if not self.code:
                 number_of_bom_of_this_product = self.search_count(domain)
                 if number_of_bom_of_this_product:
-                    self.code = _(
+                    self.code = self.env._(
                         "%(product_name)s (new) %(number_of_boms)s",
                         product_name=self.product_tmpl_id.name,
                         number_of_boms=number_of_bom_of_this_product,
@@ -522,7 +522,9 @@ class MrpBom(models.Model):
     def name_create(self, name):
         product_tmpl_id = self.env.context.get("default_product_tmpl_id")
         if not product_tmpl_id:
-            raise UserError(_("You cannot create a new Bill of Material from here."))
+            raise UserError(
+                self.env._("You cannot create a new Bill of Material from here.")
+            )
         bom = self.create({"product_tmpl_id": product_tmpl_id, "code": name})
         return bom.id, bom.display_name
 
@@ -587,7 +589,7 @@ class MrpBom(models.Model):
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "title": _(
+                "title": self.env._(
                     "Cannot compute days to prepare for %(boms)s: route info is missing for at least one component or for the final product.",
                     boms=", ".join(incomplete.mapped("display_name")),
                 ),
@@ -614,7 +616,7 @@ class MrpBom(models.Model):
                 products=len(product_ids),
             )
             raise ValidationError(
-                _(
+                self.env._(
                     "You can not create a kit-type bill of materials for products that have at least one reordering rule."
                 )
             )
@@ -637,7 +639,7 @@ class MrpBom(models.Model):
         ):
             _debug.logic("bom_refused", reason="running_production", boms=self)
             raise UserError(
-                _(
+                self.env._(
                     "You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first."
                 )
             )
@@ -933,7 +935,7 @@ class MrpBom(models.Model):
     def get_import_templates(self):
         return [
             {
-                "label": _("Import Template for Bills of Materials"),
+                "label": self.env._("Import Template for Bills of Materials"),
                 "template": "/mrp/static/xls/mrp_bom.xls",
             }
         ]

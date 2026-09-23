@@ -1,7 +1,7 @@
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -107,7 +107,7 @@ class StockPickingType(models.Model):
                 and record.default_location_dest_id.usage == "inventory"
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot set a scrap location as the destination location for a manufacturing type operation."
                     )
                 )
@@ -238,7 +238,7 @@ class StockPicking(models.Model):
     def action_view_mrp_production(self):
         self.check_singleton()
         action = {
-            "name": _("Manufacturing Orders"),
+            "name": self.env._("Manufacturing Orders"),
             "res_model": "mrp.production",
             "type": "ir.actions.act_window",
             "domain": [("id", "in", self.production_ids.ids)],

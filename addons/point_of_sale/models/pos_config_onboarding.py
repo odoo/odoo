@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.tools import convert
 
 from ..tools import debug_log as dbg
@@ -47,14 +47,14 @@ class PosConfigOnboarding(models.Model):
     def load_onboarding_clothes_scenario(self, with_demo_data=True):
         journal, payment_methods_ids = self._create_journal_and_payment_methods(
             cash_journal_vals={
-                "name": _("Cash Clothes Shop"),
+                "name": self.env._("Cash Clothes Shop"),
                 "show_on_dashboard": False,
             }
         )
         config = self.env["pos.config"].create(
             [
                 {
-                    "name": _("Clothes Shop"),
+                    "name": self.env._("Clothes Shop"),
                     "company_id": self.env.company.id,
                     "journal_id": journal.id,
                     "payment_method_ids": payment_methods_ids,
@@ -120,11 +120,14 @@ class PosConfigOnboarding(models.Model):
     @api.model
     def load_onboarding_bakery_scenario(self, with_demo_data=True):
         journal, payment_methods_ids = self._create_journal_and_payment_methods(
-            cash_journal_vals={"name": _("Cash Bakery"), "show_on_dashboard": False}
+            cash_journal_vals={
+                "name": self.env._("Cash Bakery"),
+                "show_on_dashboard": False,
+            }
         )
         config = self.env["pos.config"].create(
             {
-                "name": _("Bakery Shop"),
+                "name": self.env._("Bakery Shop"),
                 "company_id": self.env.company.id,
                 "journal_id": journal.id,
                 "payment_method_ids": payment_methods_ids,
@@ -179,14 +182,14 @@ class PosConfigOnboarding(models.Model):
         journal, payment_methods_ids = self._create_journal_and_payment_methods(
             cash_ref="point_of_sale.cash_payment_method_furniture",
             cash_journal_vals={
-                "name": _("Cash Furn. Shop"),
+                "name": self.env._("Cash Furn. Shop"),
                 "show_on_dashboard": False,
             },
         )
         config = self.env["pos.config"].create(
             [
                 {
-                    "name": _("Furniture Shop"),
+                    "name": self.env._("Furniture Shop"),
                     "company_id": self.env.company.id,
                     "journal_id": journal.id,
                     "payment_method_ids": payment_methods_ids,
@@ -286,7 +289,7 @@ class PosConfigOnboarding(models.Model):
     def load_onboarding_retail_scenario(self, with_demo_data=False):
         journal, payment_methods_ids = self._create_journal_and_payment_methods(
             cash_journal_vals={
-                "name": _("Cash %s", self.env.company.name),
+                "name": self.env._("Cash %s", self.env.company.name),
                 "show_on_dashboard": False,
             },
         )

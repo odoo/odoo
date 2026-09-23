@@ -8,7 +8,7 @@ from urllib.parse import unquote
 import qrcode
 import qrcode.image.svg
 
-from odoo import Command, _, api, fields, models, service
+from odoo import Command, api, fields, models, service
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 
@@ -170,7 +170,7 @@ class PosConfig(models.Model):
             if not exists:
                 record.env["pos_self_order.custom_link"].create(
                     {
-                        "name": _("Order Now"),
+                        "name": self.env._("Order Now"),
                         "url": f"/pos-self/{record.id}/products",
                         "pos_config_ids": [Command.link(record.id)],
                     }
@@ -225,13 +225,13 @@ class PosConfig(models.Model):
                 record.self_ordering_mode = "nothing"
 
     def _selection_pay_after(self):
-        selection_each_label = _("Each Order")
+        selection_each_label = self.env._("Each Order")
         version_info = service.common.exp_version()["server_version_info"]
         if version_info[-1] == "":
             selection_each_label = (
-                f"{selection_each_label} {_('(require Odoo Enterprise)')}"
+                f"{selection_each_label} {self.env._('(require Odoo Enterprise)')}"
             )
-        return [("meal", _("Meal")), ("each", selection_each_label)]
+        return [("meal", self.env._("Meal")), ("each", selection_each_label)]
 
     @api.constrains("self_ordering_default_user_id")
     def _check_default_user(self):
@@ -248,7 +248,9 @@ class PosConfig(models.Model):
                     )
                 )
             ):
-                raise UserError(_("The Self-Order default user must be a POS user"))
+                raise UserError(
+                    self.env._("The Self-Order default user must be a POS user")
+                )
 
     @api.constrains("payment_method_ids", "self_ordering_mode")
     def _onchange_payment_method_ids(self):
@@ -258,7 +260,7 @@ class PosConfig(models.Model):
             for record in self
         ):
             raise ValidationError(
-                _("You cannot add cash payment methods in kiosk mode.")
+                self.env._("You cannot add cash payment methods in kiosk mode.")
             )
 
     def _get_qr_code_data(self):
@@ -294,7 +296,7 @@ class PosConfig(models.Model):
             table_qr_code.extend(
                 [
                     {
-                        "name": _("Generic"),
+                        "name": self.env._("Generic"),
                         "type": "default",
                         "tables": [
                             {
@@ -518,7 +520,7 @@ class PosConfig(models.Model):
 
         return {
             "type": "ir.actions.act_url",
-            "name": _("Self Order"),
+            "name": self.env._("Self Order"),
             "target": "new",
             "url": self.get_kiosk_url(),
         }
@@ -563,7 +565,7 @@ class PosConfig(models.Model):
         )
         self.env["pos.config"].create(
             {
-                "name": _("Kiosk"),
+                "name": self.env._("Kiosk"),
                 "company_id": self.env.company.id,
                 "journal_id": journal.id,
                 "payment_method_ids": not_cash_payment_methods_ids,

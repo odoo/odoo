@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -19,13 +19,13 @@ class ResCompany(models.Model):
         self.check_singleton()
         account_move = self._close_stock_valuation(at_date=at_date, auto_post=auto_post)
         if not account_move:
-            raise UserError(_("Everything is correctly closed"))
+            raise UserError(self.env._("Everything is correctly closed"))
         return self._stock_valuation_move_action(account_move)
 
     def _stock_valuation_move_action(self, account_move):
         return {
             "type": "ir.actions.act_window",
-            "name": _("Journal Items"),
+            "name": self.env._("Journal Items"),
             "res_model": "account.move",
             "res_id": account_move.id,
             "views": [(False, "form")],
@@ -41,7 +41,7 @@ class ResCompany(models.Model):
         self.check_singleton()
         if not self.try_lock_for_update(allow_referencing=True):
             raise UserError(
-                _(
+                self.env._(
                     "An inventory valuation closing is already running for %s.",
                     self.display_name,
                 ),
@@ -111,7 +111,7 @@ class ResCompany(models.Model):
         moves_vals = {
             "journal_id": self.stock_config_id.account_stock_journal_id.id,
             "date": at_date or fields.Date.today(),
-            "ref": _("Stock Closing"),
+            "ref": self.env._("Stock Closing"),
             "is_stock_valuation_closing": True,
             "stock_valuation_closing_cutoff": (
                 fields.Datetime.to_datetime(at_date)
@@ -324,7 +324,7 @@ class ResCompany(models.Model):
                 location_account,
                 stock_account,
                 balance,
-                _(
+                self.env._(
                     "Closing: Location Reclassification - [%(account)s]",
                     account=location_account.display_name,
                 ),
@@ -364,7 +364,7 @@ class ResCompany(models.Model):
                 account,
                 account_variation,
                 balance,
-                _(
+                self.env._(
                     "Closing: Stock Variation Global for company [%(company)s]",
                     company=self.display_name,
                 ),
@@ -427,7 +427,7 @@ class ResCompany(models.Model):
                 expense_acc,
                 variation_acc,
                 balance_over_period,
-                _("Closing: Stock Variation Over Period"),
+                self.env._("Closing: Stock Variation Over Period"),
             )
             amls_vals_list += amls_vals
 

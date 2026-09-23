@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -66,7 +66,7 @@ class StockConfig(models.Model):
         for company in self:
             if company.horizon_days < 0:
                 raise ValidationError(
-                    _("The replenishment horizon cannot be negative.")
+                    self.env._("The replenishment horizon cannot be negative.")
                 )
 
     def _default_stock_mail_confirmation_template_id(self):

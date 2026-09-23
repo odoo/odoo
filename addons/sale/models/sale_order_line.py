@@ -8,7 +8,6 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare, float_is_zero, format_date, groupby
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -212,7 +211,7 @@ class SaleOrderLine(models.Model):
                     combo_item=line.combo_item_id,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A sale order line's combo item must be among its linked line's available"
                         " combo items.",
                     ),
@@ -225,7 +224,7 @@ class SaleOrderLine(models.Model):
                     combo_item=line.combo_item_id,
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A sale order line's product must match its combo item's product.",
                     ),
                 )
@@ -944,18 +943,18 @@ class SaleOrderLine(models.Model):
         self.check_singleton()
 
         if self.display_type:
-            return _("Down Payments")
+            return self.env._("Down Payments")
 
         dp_state = self._get_downpayment_state()
         _debug.logic("downpayment_description", line=self, state=dp_state or "invoiced")
-        name = _("Down Payment")
+        name = self.env._("Down Payment")
         if dp_state == "draft":
-            name = _(
+            name = self.env._(
                 "Down Payment: %(date)s (Draft)",
                 date=format_date(self.env, self.create_date.date()),
             )
         elif dp_state == "cancel":
-            name = _("Down Payment (Cancelled)")
+            name = self.env._("Down Payment (Cancelled)")
         else:
             invoice = (
                 self._get_invoice_lines()
@@ -963,7 +962,7 @@ class SaleOrderLine(models.Model):
                 .move_id.filtered(lambda move: move.move_type == "out_invoice")
             )
             if len(invoice) == 1 and invoice.payment_reference and invoice.invoice_date:
-                name = _(
+                name = self.env._(
                     "Down Payment (ref: %(reference)s on %(date)s)",
                     reference=invoice.payment_reference,
                     date=format_date(self.env, invoice.invoice_date),
@@ -1050,7 +1049,7 @@ class SaleOrderLine(models.Model):
             + self._get_line_multiline_description_variants()
         )
         if self.linked_line_id and not self.combo_item_id:
-            description += "\n" + _(
+            description += "\n" + self.env._(
                 "Option for: %s",
                 self.linked_line_id.product_id.with_context(
                     display_default_code=False,
@@ -1078,7 +1077,7 @@ class SaleOrderLine(models.Model):
             name += "\n" + ptav.display_name
 
         for pta, ptavs in groupby(multi_ptavs, lambda ptav: ptav.attribute_id):
-            name += "\n" + _(
+            name += "\n" + self.env._(
                 "%(attribute)s: %(values)s",
                 attribute=pta.name,
                 values=", ".join(ptav.name for ptav in ptavs),
@@ -1473,7 +1472,9 @@ class SaleOrderLine(models.Model):
                     "manual_price_refused", line=line, reason="already_invoiced"
                 )
                 raise UserError(
-                    _("Cannot set manual price on invoiced line %s", line.display_name),
+                    self.env._(
+                        "Cannot set manual price on invoiced line %s", line.display_name
+                    ),
                 )
 
             _debug.lifecycle("manual_price_set", line=line, price=price)
@@ -1486,7 +1487,9 @@ class SaleOrderLine(models.Model):
                     "price_reset_refused", line=line, reason="already_invoiced"
                 )
                 raise UserError(
-                    _("Cannot reset price on invoiced line %s", line.display_name),
+                    self.env._(
+                        "Cannot reset price on invoiced line %s", line.display_name
+                    ),
                 )
 
         _debug.lifecycle("price_reset_to_pricelist", lines=self)
@@ -1502,7 +1505,9 @@ class SaleOrderLine(models.Model):
         orders = self.mapped("order_id")
         for order in orders:
             order_lines = self.filtered(lambda x, order=order: x.order_id == order)
-            msg = Markup("<b>%s</b><ul>") % _("The ordered quantity has been updated.")
+            msg = Markup("<b>%s</b><ul>") % self.env._(
+                "The ordered quantity has been updated."
+            )
             for line in order_lines:
                 if (
                     "product_id" in values
@@ -1510,16 +1515,20 @@ class SaleOrderLine(models.Model):
                 ):
                     continue
                 msg += Markup("<li> %s: <br/>") % line.product_id.display_name
-                msg += _(
+                msg += self.env._(
                     "Ordered Quantity: %(old_qty)s -> %(new_qty)s",
                     old_qty=line.product_qty,
                     new_qty=values["product_qty"],
                 ) + Markup("<br/>")
                 if line.product_id.type == "consu":
-                    msg += _("Delivered Quantity: %s", line.qty_transferred) + Markup(
+                    msg += self.env._(
+                        "Delivered Quantity: %s", line.qty_transferred
+                    ) + Markup(
                         "<br/>",
                     )
-                msg += _("Invoiced Quantity: %s", line.qty_invoiced) + Markup("<br/>")
+                msg += self.env._("Invoiced Quantity: %s", line.qty_invoiced) + Markup(
+                    "<br/>"
+                )
             msg += Markup("</ul>")
             _debug.lifecycle(
                 "ordered_quantity_updated",
@@ -1663,7 +1672,7 @@ class SaleOrderLine(models.Model):
             line = lines[0]
             line_id = self._get_line_identifier(line)
             raise UserError(
-                _(
+                self.env._(
                     "You cannot change the %(field)s of order line '%(line)s'%(reason)s.",
                     field=field_description,
                     line=line_id,
@@ -1673,10 +1682,10 @@ class SaleOrderLine(models.Model):
         line_ids = [self._get_line_identifier(l) for l in lines[:5]]
         error_msg = ", ".join(line_ids)
         if len(lines) > 5:
-            error_msg += _(" and %s more", len(lines) - 5)
+            error_msg += self.env._(" and %s more", len(lines) - 5)
 
         raise UserError(
-            _(
+            self.env._(
                 "You cannot change the %(field)s of %(count)s order lines (%(lines)s)%(reason)s.",
                 field=field_description,
                 count=len(lines),

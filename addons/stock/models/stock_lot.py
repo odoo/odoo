@@ -1,7 +1,7 @@
 from collections import Counter
 from collections.abc import Iterable
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import DOMAIN_PREDICATES
@@ -133,7 +133,7 @@ class StockLot(models.Model):
     @api.model
     def _prepare_duplicate_lot_error(self, product_name_pairs) -> ValidationError:
         error_message_lines = sorted(
-            _(
+            self.env._(
                 " - Product: %(product)s, Lot/Serial Number: %(lot)s",
                 product=product.display_name,
                 lot=name,
@@ -141,7 +141,7 @@ class StockLot(models.Model):
             for product, name in product_name_pairs
         )
         return ValidationError(
-            _(
+            self.env._(
                 "The combination of lot/serial number and product must be unique within a company including when no company is defined.\nThe following combinations contain duplicates:\n%(error_lines)s",
                 error_lines="\n".join(error_message_lines),
             ),
@@ -243,7 +243,7 @@ class StockLot(models.Model):
                 ).location_id.company_id
                 if any(company.id != vals["company_id"] for company in quant_companies):
                     raise UserError(
-                        _(
+                        self.env._(
                             "You cannot change the company of a lot/serial number currently in a location belonging to another company."
                         ),
                     )
@@ -256,7 +256,7 @@ class StockLot(models.Model):
             )
             if move_lines:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You are not allowed to change the product linked to a serial or lot number "
                         "if some stock moves have already been created with that number. "
                         "This would lead to inconsistencies in your stock."
@@ -272,7 +272,7 @@ class StockLot(models.Model):
                 vals["name"] = self._get_free_lot_name(
                     lot.company_id,
                     lot.product_id,
-                    _("(copy of) %s", lot.name),
+                    self.env._("(copy of) %s", lot.name),
                 )
         return vals_list
 
@@ -355,13 +355,13 @@ class StockLot(models.Model):
             )
             if len(quants.location_id) > 1:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can only move a lot/serial to a new location if it exists in a single location."
                     ),
                 )
             if not quants:
                 continue
-            message = _("Lot/Serial Number Relocated")
+            message = self.env._("Lot/Serial Number Relocated")
             breaking = quants._filtered_breaking_a_package()
             dbg.pipeline.debug(
                 "[lot:%s] relocate to %s: breaking packages %s, intact %s",
@@ -488,7 +488,7 @@ class StockLot(models.Model):
             picking_id = self.env["stock.picking"].browse(active_picking_id)
             if picking_id and not picking_id.picking_type_id.use_create_lots:
                 raise UserError(
-                    _(
+                    self.env._(
                         'You are not allowed to create a lot or serial number with this operation type. To change this, go on the operation type and tick the box "Create New Lots/Serial Numbers".'
                     ),
                 )

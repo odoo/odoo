@@ -1,6 +1,6 @@
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -46,8 +46,8 @@ class SaleOrderLine(models.Model):
             return {}
         return {
             "warning": {
-                "title": _("Ordered quantity decreased!"),
-                "message": _(
+                "title": self.env._("Ordered quantity decreased!"),
+                "message": self.env._(
                     "You are decreasing the ordered quantity! Do not forget to manually update the purchase order if needed."
                 ),
             }
@@ -246,7 +246,7 @@ class SaleOrderLine(models.Model):
         if warning and not supplier:
             _debug.logic("no_vendor_for_service", line=self, product=self.product_id)
             raise UserError(
-                _(
+                self.env._(
                     "There is no vendor associated to the product %s. Please define a vendor for this product.",
                     self.product_id.display_name,
                 )

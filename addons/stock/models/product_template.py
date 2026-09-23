@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 
@@ -216,7 +216,7 @@ class ProductTemplate(models.Model):
         for template in self:
             if template.type != "consu" and template.is_storable:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "%(product)s is not a goods product, so it cannot track"
                         " inventory. Set its type to Goods, or leave Track"
                         " Inventory off.",
@@ -229,7 +229,7 @@ class ProductTemplate(models.Model):
         for template in self:
             if not template.is_storable and template.tracking != "none":
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "%(product)s does not track inventory, so it cannot be"
                         " tracked by lot or serial number. Enable Track Inventory"
                         " first.",
@@ -292,7 +292,7 @@ class ProductTemplate(models.Model):
                 )
                 if move:
                     raise UserError(
-                        _(
+                        self.env._(
                             "This product's company cannot be changed as long as there are stock moves of it belonging to another company.",
                         ),
                     )
@@ -310,7 +310,7 @@ class ProductTemplate(models.Model):
                 )
                 if quant:
                     raise UserError(
-                        _(
+                        self.env._(
                             "This product's company cannot be changed as long as there are quantities of it belonging to another company.",
                         ),
                     )
@@ -526,8 +526,8 @@ class ProductTemplate(models.Model):
             )
         ):
             res["warning"] = {
-                "title": _("Warning!"),
-                "message": _(
+                "title": self.env._("Warning!"),
+                "message": self.env._(
                     "This product has been used in at least one inventory movement. "
                     "It is not advised to change the Product Type since it can lead to inconsistencies. "
                     "A better solution could be to archive the product and create a new one instead."
@@ -707,7 +707,7 @@ class ProductTemplate(models.Model):
     @api.model
     def _prepare_action_view_putaway_rules(self, domain):
         return {
-            "name": _("Putaway Rules"),
+            "name": self.env._("Putaway Rules"),
             "type": "ir.actions.act_window",
             "res_model": "stock.putaway.rule",
             "view_mode": "list",

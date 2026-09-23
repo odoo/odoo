@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -173,7 +173,7 @@ class StockLot(models.Model):
                     "value": lot.standard_price,
                     "company_id": self.env.company.id,
                     "date": fields.Datetime.now(),
-                    "description": _(
+                    "description": self.env._(
                         "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s",
                         lot=lot.name,
                         old_price=lot_old_price,

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import float_round
 
 
@@ -28,7 +28,7 @@ class LunchCashmove(models.Model):
     def _compute_display_name(self):
         for cashmove in self:
             cashmove.display_name = "{} {}".format(
-                _("Lunch Cashmove"), "#%s" % (cashmove.id or "_")
+                self.env._("Lunch Cashmove"), "#%s" % (cashmove.id or "_")
             )
 
     @api.model

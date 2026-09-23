@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class SaleInvoiceLineMatch(models.Model):
@@ -29,20 +29,22 @@ class SaleInvoiceLineMatch(models.Model):
     )
 
     def _get_no_order_line_message(self):
-        return _(
+        return self.env._(
             "You must select at least one Sales Order line to match or create invoice."
         )
 
     def _get_add_to_order_messages(self):
         return {
-            "no_invoice_line": _(
+            "no_invoice_line": self.env._(
                 "Select Customer Invoice lines to add to a Sales Order"
             ),
-            "multi_partner": _("Please select invoice lines with the same customer."),
-            "multi_order": _(
+            "multi_partner": self.env._(
+                "Please select invoice lines with the same customer."
+            ),
+            "multi_order": self.env._(
                 "Customer Invoice lines can only be added to one Sales Order."
             ),
-            "action_name": _("Add to Sales Order"),
+            "action_name": self.env._("Add to Sales Order"),
         }
 
     def action_add_to_so(self):

@@ -1,4 +1,4 @@
-from odoo import Command, _, fields, models
+from odoo import Command, fields, models
 from odoo.exceptions import UserError
 
 
@@ -22,7 +22,7 @@ class BillToPoWizard(models.TransientModel):
         )
         if not lines_to_add:
             raise UserError(
-                _(
+                self.env._(
                     "There are no products to add to the Purchase Order. Are these Down Payments?"
                 )
             )
@@ -77,7 +77,7 @@ class BillToPoWizard(models.TransientModel):
         date = self.purchase_order_id.date_order or fields.Date.today()
         line_vals = [
             {
-                "name": _("Down Payment (ref: %(ref)s)", ref=aml.display_name),
+                "name": self.env._("Down Payment (ref: %(ref)s)", ref=aml.display_name),
                 "product_qty": 0.0,
                 "product_uom_id": aml.product_uom_id.id,
                 "is_downpayment": True,

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
@@ -26,7 +26,7 @@ class PosBill(models.Model):
             value = float(name)
         except ValueError:
             raise UserError(
-                _("The name of the Coins/Bills must be a number.")
+                self.env._("The name of the Coins/Bills must be a number.")
             ) from None
         result = super().create({"name": name, "value": value})
         dbg.lifecycle.debug("pos.bill %s created from %r", dbg.rec(result), name)

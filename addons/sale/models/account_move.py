@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.libs.debug_log import DebugLog
@@ -151,7 +151,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Sale Matching"),
+            "name": self.env._("Sale Matching"),
             "res_model": "sale.invoice.line.match",
             "domain": [
                 (
@@ -358,7 +358,7 @@ class AccountMove(models.Model):
                 )
         _debug.pipeline("invoice_paid_hook", moves=self, orders_notified=len(todo))
         for order, name in todo:
-            order.message_post(body=_("Invoice %s paid", name))
+            order.message_post(body=self.env._("Invoice %s paid", name))
         return res
 
     def _get_sale_order_invoiced_amount(self, order):

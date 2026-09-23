@@ -5,7 +5,6 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -257,7 +256,7 @@ class ProjectProject(models.Model):
                     reason="not_a_service",
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot link a billable project to a sales order item that is not a service."
                     )
                 )
@@ -266,7 +265,7 @@ class ProjectProject(models.Model):
                     "project_sale_line_rejected", project=project, reason="is_expense"
                 )
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot link a billable project to a sales order item that comes from an expense or a vendor bill."
                     )
                 )
@@ -313,12 +312,12 @@ class ProjectProject(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Timesheets of %s", self.name),
+            "name": self.env._("Timesheets of %s", self.name),
             "domain": [("project_id", "!=", False)],
             "res_model": "account.analytic.line",
             "view_id": False,
             "view_mode": "list,form",
-            "help": _("""
+            "help": self.env._("""
                 <p class="o_view_nocontent_smiling_face">
                     Record timesheets
                 </p><p>

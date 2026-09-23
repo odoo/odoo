@@ -1,6 +1,6 @@
 import json
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -84,7 +84,7 @@ class SaleOrder(models.Model):
         to_delete = delivery_lines.filtered(lambda x: x.qty_invoiced == 0)
         if not to_delete:
             raise UserError(
-                _(
+                self.env._(
                     "You can not update the shipping costs on an order where it was already invoiced!\n\nThe following delivery lines (product, invoiced quantity and price) have already been processed:\n\n"
                 )
                 + "\n".join(
@@ -135,7 +135,9 @@ class SaleOrder(models.Model):
         :return: None
         """
         if not isinstance(pickup_location, dict):
-            raise UserError(_("The pickup location must contain address information."))
+            raise UserError(
+                self.env._("The pickup location must contain address information.")
+            )
         missing_fnames = []
         for fname in ("street", "city", "zip_code", "country_code"):
             value = pickup_location.get(fname)
@@ -149,7 +151,7 @@ class SaleOrder(models.Model):
                 missing_fnames.append(fname)
         if missing_fnames:
             raise UserError(
-                _(
+                self.env._(
                     "The pickup location is missing required information: %s",
                     ", ".join(missing_fnames),
                 )
@@ -180,7 +182,9 @@ class SaleOrder(models.Model):
             partner_address = self.partner_shipping_id
         try:
             error = {
-                "error": _("No pick-up points are available for this delivery address.")
+                "error": self.env._(
+                    "No pick-up points are available for this delivery address."
+                )
             }
             function_name = f"_{self.carrier_id.delivery_type}_get_close_locations"
             if not hasattr(self.carrier_id, function_name):
@@ -197,10 +201,10 @@ class SaleOrder(models.Model):
     def action_view_delivery_wizard(self):
         view_id = self.env.ref("delivery.choose_delivery_carrier_view_form").id
         if self.env.context.get("carrier_recompute"):
-            name = _("Update shipping cost")
+            name = self.env._("Update shipping cost")
             carrier = self.carrier_id
         else:
-            name = _("Add a shipping method")
+            name = self.env._("Add a shipping method")
             shipping_partner_id = self.with_company(self.company_id).partner_shipping_id
             carrier_property = (
                 shipping_partner_id.property_delivery_carrier_id.filtered("active")
@@ -237,7 +241,7 @@ class SaleOrder(models.Model):
             limit=1,
         )
         if not country:
-            raise UserError(_("The pickup location country is invalid."))
+            raise UserError(self.env._("The pickup location country is invalid."))
         state = self.env["res.country.state"]
         if location.get("state"):
             state = state.search(
@@ -318,7 +322,7 @@ class SaleOrder(models.Model):
             "is_delivery": True,
         }
         if carrier.free_over and self.currency_id.is_zero(price_unit):
-            values["name"] = _("%s\nFree Shipping", values["name"])
+            values["name"] = self.env._("%s\nFree Shipping", values["name"])
         if self.line_ids:
             values["sequence"] = self.line_ids[-1].sequence + 1
         return values

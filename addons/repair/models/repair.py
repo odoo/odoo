@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
@@ -483,7 +483,7 @@ class RepairOrder(models.Model):
         _debug.perf.count("repair_parts_availability_compute", repairs=self)
         repairs = self.filtered(lambda ro: ro.state in ("confirmed", "under_repair"))
         repairs.parts_availability_state = "available"
-        repairs.parts_availability = _("Available")
+        repairs.parts_availability = self.env._("Available")
 
         other_repairs = self - repairs
         other_repairs.parts_availability = False
@@ -501,7 +501,7 @@ class RepairOrder(models.Model):
                 < 0
                 for move in repair.move_ids
             ):
-                repair.parts_availability = _("Not Available")
+                repair.parts_availability = self.env._("Not Available")
                 repair.parts_availability_state = "late"
                 continue
             forecast_date = max(
@@ -512,7 +512,7 @@ class RepairOrder(models.Model):
             )
             if not forecast_date:
                 continue
-            repair.parts_availability = _(
+            repair.parts_availability = self.env._(
                 "Exp %s", format_date(self.env, forecast_date)
             )
             if repair.schedule_date:
@@ -580,8 +580,8 @@ class RepairOrder(models.Model):
         ):
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "Note that the warehouses of the return and repair locations don't match!"
                     ),
                 },
@@ -699,7 +699,7 @@ class RepairOrder(models.Model):
             concerned_ro = self.filtered("sale_order_id")
             ref_str = "\n".join(ro.name for ro in concerned_ro)
             raise UserError(
-                _(
+                self.env._(
                     "You cannot create a quotation for a repair order that is already linked to an existing sale order.\nConcerned repair order(s):\n%(ref_str)s",
                     ref_str=ref_str,
                 ),
@@ -708,7 +708,7 @@ class RepairOrder(models.Model):
             concerned_ro = self.filtered(lambda ro: not ro.partner_id)
             ref_str = "\n".join(ro.name for ro in concerned_ro)
             raise UserError(
-                _(
+                self.env._(
                     "You need to define a customer for a repair order in order to create an associated quotation.\nConcerned repair order(s):\n%(ref_str)s",
                     ref_str=ref_str,
                 ),
@@ -732,7 +732,9 @@ class RepairOrder(models.Model):
         _debug.lifecycle("repair_cancel", repairs=self)
         if any(repair.state == "done" for repair in self):
             raise UserError(
-                _("You cannot cancel a Repair Order that's already been completed")
+                self.env._(
+                    "You cannot cancel a Repair Order that's already been completed"
+                )
             )
         for repair in self:
             if repair.sale_order_id:
@@ -795,7 +797,7 @@ class RepairOrder(models.Model):
                 and not repair.lot_id
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Serial number is required for product to repair : %s",
                         repair.product_id.display_name,
                     )
@@ -874,7 +876,7 @@ class RepairOrder(models.Model):
         _debug.lifecycle("repair_end", repairs=self)
         if self.filtered(lambda repair: repair.state != "under_repair"):
             raise UserError(
-                _("Repair must be under repair in order to end reparation.")
+                self.env._("Repair must be under repair in order to end reparation.")
             )
         partial_moves = set()
         picked_moves = set()
@@ -904,7 +906,7 @@ class RepairOrder(models.Model):
         if self.filtered(
             lambda repair: any(m.product_uom_qty < 0 for m in repair.move_ids)
         ):
-            raise UserError(_("You can not enter negative quantities."))
+            raise UserError(self.env._("You can not enter negative quantities."))
         if not self.product_id or not self.product_id.is_storable:
             return self._action_repair_confirm()
         precision = self.env["decimal.precision"].get_precision("Product Unit")
@@ -943,7 +945,7 @@ class RepairOrder(models.Model):
                 return self._action_repair_confirm()
 
         return {
-            "name": _(
+            "name": self.env._(
                 "%(product)s: Insufficient Quantity To Repair",
                 product=self.product_id.display_name,
             ),

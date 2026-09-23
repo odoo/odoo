@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
@@ -37,7 +37,7 @@ class MrpBom(models.Model):
             product_names = ", ".join(lines.product_id.mapped("display_name"))
             _debug.logic("bom_change_refused", boms=self, order_lines=lines)
             raise UserError(
-                _(
+                self.env._(
                     "As long as there are some sale order lines that must be delivered/invoiced and are "
                     "related to these bills of materials, you can not remove them.\n"
                     "The error concerns these products: %s",

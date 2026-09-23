@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class PurchaseBillLineMatch(models.Model):
@@ -29,18 +29,22 @@ class PurchaseBillLineMatch(models.Model):
     )
 
     def _get_no_order_line_message(self):
-        return _(
+        return self.env._(
             "You must select at least one Purchase Order line to match or create bill."
         )
 
     def _get_add_to_order_messages(self):
         return {
-            "no_invoice_line": _("Select Vendor Bill lines to add to a Purchase Order"),
-            "multi_partner": _("Please select bill lines with the same vendor."),
-            "multi_order": _(
+            "no_invoice_line": self.env._(
+                "Select Vendor Bill lines to add to a Purchase Order"
+            ),
+            "multi_partner": self.env._(
+                "Please select bill lines with the same vendor."
+            ),
+            "multi_order": self.env._(
                 "Vendor Bill lines can only be added to one Purchase Order."
             ),
-            "action_name": _("Add to Purchase Order"),
+            "action_name": self.env._("Add to Purchase Order"),
         }
 
     def action_add_to_po(self):
