@@ -1127,12 +1127,22 @@ test("Should should show link popover without edit", async () => {
     expectElementCount(".o_we_edit_link", 0);
 });
 
-test("Should open link popover in read only mode when link is not editable", async () => {
+test("Should open link popover in read only mode when link is not editable (1)", async () => {
     onRpc("/html_editor/link_preview_internal", () => ({}));
     onRpc("/link", () => ({}));
     const { el } = await setupEditor('<p><a contenteditable="false" href="/link">link</a></p>');
     setSelection({ anchorNode: el.querySelector("a"), anchorOffset: 1 });
-    await click(queryOne(`a[contenteditable="false"]`));
+    await waitFor(".o-we-linkpopover");
+    expect(".o_we_edit_link").toHaveCount(0);
+});
+
+test("Should open link popover in read only mode when link is not editable (2)", async () => {
+    onRpc("/html_editor/link_preview_internal", () => ({}));
+    onRpc("/link", () => ({}));
+    const { el } = await setupEditor(
+        '<p contenteditable="false"><a href="/link"><span contenteditable="false">link</span></a></p>'
+    );
+    setSelection({ anchorNode: el.querySelector("span"), anchorOffset: 0 });
     await waitFor(".o-we-linkpopover");
     expect(".o_we_edit_link").toHaveCount(0);
 });
