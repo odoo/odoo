@@ -123,7 +123,7 @@ class TestParseFailuresAreLoud(_ConfigFileCase):
         message = str(caught.exception)
         self.assertIn("addons_path", message)
         self.assertIn(str(path), message, "the message must name the file")
-        self.assertIsInstance(caught.exception.__cause__, PermissionError)
+        self.assertIsInstance(caught.exception.__cause__.__cause__, PermissionError)
 
 
 if __name__ == "__main__":

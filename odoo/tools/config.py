@@ -2062,14 +2062,17 @@ class configmanager:
 
     @classmethod
     def _is_addons_path(cls, path: str) -> bool:
-        for modpath in Path(path).iterdir():
-
-            def hasfile(filename, _mp=modpath):
-                return Path(_mp, filename).is_file()
-
-            if hasfile("__init__.py") and hasfile("__manifest__.py"):
-                return True
-        return False
+        try:
+            modpaths = list(Path(path).iterdir())
+        except OSError as exc:
+            raise optparse.OptionValueError(
+                f"cannot read the addons directory {path!r}: {exc.strerror}"
+            ) from exc
+        return any(
+            Path(modpath, "__init__.py").is_file()
+            and Path(modpath, "__manifest__.py").is_file()
+            for modpath in modpaths
+        )
 
     @classmethod
     def _parse_addons_path(

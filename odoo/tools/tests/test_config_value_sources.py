@@ -188,5 +188,26 @@ class TestTypeTablesAreBuiltOnce(unittest.TestCase):
         self.assertEqual(first.format("addons_path", ["/a", "/b"]), "/a,/b")
 
 
+class TestAnUnreadableAddonsDirectoryIsAnOptionError(_Case):
+    def setUp(self):
+        super().setUp()
+        self.locked = self.tmp / "locked"
+        (self.locked / "child").mkdir(parents=True)
+        self.locked.chmod(0)
+        self.addCleanup(self.locked.chmod, 0o700)
+
+    def test_on_the_command_line(self):
+        with self.assertRaises(SystemExit) as caught:
+            self.parse(["--addons-path", str(self.locked)])
+        self.assertEqual(caught.exception.code, 2)
+
+    def test_in_the_environment_the_manager_still_builds(self):
+        os.environ["ODOO_ADDONS_PATH"] = str(self.locked)
+        config = configmanager()
+        with self.assertRaises(ValueError) as caught:
+            config._parse_config([])
+        self.assertIn("ODOO_ADDONS_PATH", str(caught.exception))
+
+
 if __name__ == "__main__":
     unittest.main()
