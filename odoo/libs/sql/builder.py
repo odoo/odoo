@@ -128,7 +128,9 @@ class SQL:
         return self.__to_flush
 
     def with_to_flush(self, to_flush: Iterable[Field]) -> SQL:
-        sql = SQL(self)
+        sql = SQL.__new__(SQL)
+        sql.__code = self.__code
+        sql.__params = self.__params
         sql.__to_flush = self.__normalize_to_flush(to_flush)
         return sql
 
