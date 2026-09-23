@@ -8,8 +8,8 @@ from ._frames import (
     Frame,
     close_keyword_frame,
     handle_line_comment,
-    open_call_frame,
     open_keyword_name,
+    push_function_frame,
 )
 
 type _SimpleKeyword = tuple[int | tuple[int, int] | tuple[int, str], ...] | None
@@ -207,12 +207,13 @@ def extract_javascript(
             and last_token.value in keywords
             and token.type == "template_string"
         ):
-            translator_comments = open_call_frame(
+            translator_comments = push_function_frame(
                 function_stack,
                 translator_comments,
                 message_buffer,
-                last_token,
+                compare_lineno=last_token.lineno,
                 function_lineno=last_token.lineno,
+                function_name=last_token.value,
                 message_lineno=token.lineno,
                 messages=[],
             )
@@ -234,12 +235,13 @@ def extract_javascript(
 
         elif token.type == "operator" and token.value == "(":
             if last_token and last_token.type == "name":
-                translator_comments = open_call_frame(
+                translator_comments = push_function_frame(
                     function_stack,
                     translator_comments,
                     message_buffer,
-                    last_token,
+                    compare_lineno=last_token.lineno,
                     function_lineno=token.lineno,
+                    function_name=last_token.value,
                     message_lineno=None,
                     messages=[],
                 )

@@ -1681,14 +1681,11 @@ class TranslationRecordReader(TranslationReader):
         cr: BaseCursor,
         model_name: str,
         ids: list[int],
-        field_names: list[str] | None = None,
         lang: str | None = None,
     ) -> None:
         super().__init__(cr, lang)
-        self._records = self.env[model_name].browse(ids)
-        self._field_names = field_names or list(self._records._fields.keys())
-
-        self._export_translatable_records(self._records, self._field_names)
+        records = self.env[model_name].browse(ids)
+        self._export_translatable_records(records, list(records._fields))
 
     def _export_translatable_records(
         self, records: Any, field_names: list[str]
@@ -1953,7 +1950,7 @@ class TranslationModuleReader(TranslationReader):
 
     def _export_translatable_resources(self) -> None:
 
-        for bin_path in ["orm", "osv", "report", "modules", "service", "tools"]:
+        for bin_path in ["orm", "modules", "service", "tools"]:
             self._path_list.append((str(Path(config.root_path, bin_path)), True, False))
         self._path_list.append((config.root_path, False, False))
         _logger.debug("Scanning modules at paths: %s", self._path_list)
@@ -2048,7 +2045,6 @@ class TranslationImporter:
         self,
         filepath: str,
         lang: str,
-        xmlids: set[str] | None = None,
         module: str | None = None,
     ) -> None:
         with (
@@ -2062,14 +2058,13 @@ class TranslationImporter:
                     lang,
                 )
             fileformat = Path(filepath).suffix[1:].lower()
-            self.load(fileobj, fileformat, lang, xmlids=xmlids, module=module)
+            self.load(fileobj, fileformat, lang, module=module)
 
     def load(
         self,
         fileobj: IO[bytes],
         fileformat: str,
         lang: str,
-        xmlids: set[str] | None = None,
         module: str | None = None,
     ) -> None:
         if self.verbose:
@@ -2091,17 +2086,16 @@ class TranslationImporter:
                 lang=lang,
                 format=fileformat,
                 module=module,
-                xmlids=None if xmlids is None else len(xmlids),
                 file=getattr(fileobj, "name", None),
             ):
-                self._load(reader, lang, xmlids)
+                self._load(reader, lang)
         except OSError as exc:
-            iso_lang = get_iso_codes(lang)
-            filename = "[lang: %s][format: %s]" % (
-                iso_lang or "new",
+            _logger.exception(
+                "couldn't read translation file %s [lang: %s][format: %s]",
+                getattr(fileobj, "name", "<stream>"),
+                get_iso_codes(lang),
                 fileformat,
             )
-            _logger.exception("couldn't read translation file %s", filename)
             _debug.logic(
                 "translate.load_file_unreadable",
                 lang=lang,
@@ -2110,11 +2104,7 @@ class TranslationImporter:
                 error=type(exc).__name__,
             )
 
-    def _load(
-        self, reader: Iterable[dict], lang: str, xmlids: set[str] | None = None
-    ) -> None:
-        if xmlids and not isinstance(xmlids, set):
-            xmlids = set(xmlids)
+    def _load(self, reader: Iterable[dict], lang: str) -> None:
         valid_langs = get_base_langs(lang)
         rows = sorted(
             reader,
@@ -2147,9 +2137,6 @@ class TranslationImporter:
                 skipped["field"] += 1  # debuglog
                 continue
             xmlid = module_name + "." + row["imd_name"]
-            if xmlids and xmlid not in xmlids:
-                skipped["xmlid"] += 1  # debuglog
-                continue
             if row.get("type") == "model" and field.translate is True:
                 self.model_translations[model_name][field_name][xmlid][lang] = row[
                     "value"
@@ -2545,9 +2532,11 @@ class CodeTranslations:
                 translations.update(p)
                 files += 1  # debuglog
             except OSError:
-                iso_lang = get_iso_codes(lang)
-                filename = "[lang: %s][format: %s]" % (iso_lang or "new", "po")
-                _logger.exception("couldn't read translation file %s", filename)
+                _logger.exception(
+                    "couldn't read translation file %s [lang: %s]",
+                    po_path,
+                    get_iso_codes(lang),
+                )
         _debug.perf.count(
             "translate.code_translations_loaded",
             module=module_name,

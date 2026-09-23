@@ -79,28 +79,6 @@ def handle_line_comment(
     return in_translator_comments, False
 
 
-def open_call_frame(
-    function_stack: list[Frame],
-    translator_comments: TranslatorComments,
-    message_buffer: list[str],
-    name_token: Any,
-    *,
-    function_lineno: int,
-    message_lineno: int | None,
-    messages: list,
-) -> TranslatorComments:
-    return push_function_frame(
-        function_stack,
-        translator_comments,
-        message_buffer,
-        compare_lineno=name_token.lineno,
-        function_lineno=function_lineno,
-        function_name=name_token.value,
-        message_lineno=message_lineno,
-        messages=messages,
-    )
-
-
 def open_keyword_name(function_stack: list[Frame], keywords: Any) -> str:
     if function_stack and function_stack[-1]["function_name"] in keywords:
         return function_stack[-1]["function_name"]

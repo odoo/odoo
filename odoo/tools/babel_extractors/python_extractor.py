@@ -1,7 +1,15 @@
 import ast
-import tokenize
-from tokenize import COMMENT, NAME, OP, STRING, generate_tokens
-from typing import IO, TYPE_CHECKING, NamedTuple
+from tokenize import (
+    COMMENT,
+    FSTRING_END,
+    FSTRING_MIDDLE,
+    FSTRING_START,
+    NAME,
+    OP,
+    STRING,
+    generate_tokens,
+)
+from typing import IO, TYPE_CHECKING
 
 from babel.util import parse_encoding, parse_future_flags
 
@@ -9,14 +17,8 @@ from ._frames import (
     Frame,
     close_keyword_frame,
     handle_line_comment,
-    open_call_frame,
+    push_function_frame,
 )
-
-
-class _NameToken(NamedTuple):
-    lineno: int
-    value: str
-
 
 type _SimpleKeyword = tuple[int | tuple[int, int] | tuple[int, str], ...] | None
 type _Keyword = dict[int | None, _SimpleKeyword] | _SimpleKeyword
@@ -28,13 +30,6 @@ if TYPE_CHECKING:
 
     class _PyOptions(TypedDict, total=False):
         encoding: str
-
-
-FSTRING_START = tokenize.FSTRING_START if hasattr(tokenize, "FSTRING_START") else None
-FSTRING_MIDDLE = (
-    tokenize.FSTRING_MIDDLE if hasattr(tokenize, "FSTRING_MIDDLE") else None
-)
-FSTRING_END = tokenize.FSTRING_END if hasattr(tokenize, "FSTRING_END") else None
 
 
 def _parse_python_string(value: str, encoding: str, future_flags: int) -> str | None:
@@ -148,12 +143,13 @@ def extract_python(
             continue
 
         if token == OP and value == "(" and last_name:
-            translator_comments = open_call_frame(
+            translator_comments = push_function_frame(
                 function_stack,
                 translator_comments,
                 message_buffer,
-                _NameToken(lineno, last_name),
+                compare_lineno=lineno,
                 function_lineno=lineno,
+                function_name=last_name,
                 message_lineno=None,
                 messages=[],
             )

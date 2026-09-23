@@ -7,6 +7,7 @@ from odoo.libs.func import (
     lazy_classproperty,
     reset_cached_properties,
 )
+from odoo.libs.locale import py_to_js_locale
 from odoo.libs.numbers import (
     float_compare,
     float_is_zero,
@@ -26,7 +27,7 @@ from .convert import (
     convert_sql_import,
     convert_xml_import,
 )
-from .i18n import format_list, py_to_js_locale
+from .i18n import format_list
 from .json import json_default
 from .mail import (
     email_domain_extract,
