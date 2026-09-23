@@ -419,3 +419,44 @@ second vehicle with an already-used `license_plate` raises `UniqueViolation`
 (SQL); creating one with `model_year=1900` or `seats=0` raises
 `ValidationError` (Python) — all three verified. In the UI, try the same from
 the vehicle form and see the corresponding error dialog.
+
+---
+
+## Chapter 11 — Add The Sprinkles
+
+**Concept.** Small view features that make an app feel finished rather than
+functional-but-raw: a **kanban** board view for a visual, drag-friendly
+overview; a **ribbon widget** for an at-a-glance record status; **decorations**
+(conditional colors/badges) so state is readable without opening a record.
+
+**Why?** A list of rows is fine for data entry; a kanban board grouped by
+status is how a fleet coordinator actually wants to *see* the fleet at a
+glance. Ribbons and decorations move state from "a column you have to read" to
+"a color you notice."
+
+**Where?** [`views/fleet_vehicle_views.xml`](views/fleet_vehicle_views.xml) —
+kanban view, form ribbons; [`views/fleet_vehicle_menus.xml`](views/fleet_vehicle_menus.xml) — `view_mode`
+
+**Code explanation.** The kanban view's `default_group_by="state"` makes it
+open as three columns (Available / Assigned / In Maintenance) out of the box.
+Its card template (`<t t-name="card">`, Odoo 20's kanban card slot) shows a
+`web_ribbon` widget that only becomes `visible` when `state == 'maintenance'`,
+the driver as an avatar + name, and the same colored tag pills as the form.
+The form gained its own `web_ribbon` for `invisible="active"` — the classic
+"Archived" banner pattern, needing `active` pulled into the view as an
+`invisible="1"` field so the ribbon's condition can read it without displaying
+it as a normal field.
+
+**Fleet functionality.** Fleet Training > Vehicles now opens on a kanban board
+grouped by status; an archived vehicle's form clearly shows an "Archived"
+ribbon instead of just being harder to find.
+
+**What changed.** Added the kanban view and both ribbons in
+`views/fleet_vehicle_views.xml`; `view_mode` on the action now starts with
+`kanban`.
+
+**Testing.** Upgrade the module. In the UI: open Vehicles, confirm it opens on
+a kanban grouped by status, with a vehicle in Maintenance showing the ribbon;
+archive a vehicle and open its form to see the "Archived" ribbon. Verified via
+shell that both the kanban and form `arch` parse and render for an
+active-test-disabled (archived) record.
