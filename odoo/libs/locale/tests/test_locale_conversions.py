@@ -85,3 +85,23 @@ class TestFormatNumberDetectsScientificFromTheSpec:
 
     def test_g_without_an_exponent_is_grouped(self):
         assert format_number("%g", 1234.5, _EU(), grouping=True) == "1.234,5"
+
+
+def test_a_grouping_stored_as_a_bare_count_formats():
+    from types import SimpleNamespace
+
+    bare = SimpleNamespace(decimal_point=".", grouping="3", thousands_sep=",")
+    listed = SimpleNamespace(decimal_point=".", grouping="[3]", thousands_sep=",")
+    assert format_number("%.2f", 1234567.5, bare, grouping=True) == format_number(
+        "%.2f", 1234567.5, listed, grouping=True
+    )
+
+
+def test_a_grouping_that_is_not_digit_counts_is_a_clear_error():
+    from types import SimpleNamespace
+
+    import pytest
+
+    lang = SimpleNamespace(decimal_point=".", grouping="'x'", thousands_sep=",")
+    with pytest.raises(ValueError, match="list of digit counts"):
+        format_number("%.2f", 1234.5, lang, grouping=True)

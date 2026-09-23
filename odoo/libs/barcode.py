@@ -106,6 +106,8 @@ _BARCODE_SIZES = {
 
 
 def is_barcode_encoding_valid(barcode: str, encoding: str) -> bool:
+    if not isinstance(barcode, str) or not isinstance(encoding, str):
+        return False
     encoding = encoding.lower()
     if encoding == "any":
         return True

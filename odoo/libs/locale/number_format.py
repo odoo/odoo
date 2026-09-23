@@ -10,8 +10,6 @@ __all__ = [
     "LocaleConventions",
     "format_number",
     "intersperse",
-    "parse_grouping",
-    "split",
 ]
 
 
@@ -27,11 +25,23 @@ class LocaleConventions(Protocol):
 
 
 @functools.lru_cache(maxsize=128)
-def parse_grouping(grouping: str) -> tuple[int, ...]:
-    return tuple(ast.literal_eval(grouping))
+def _parse_grouping(grouping: str) -> tuple[int, ...]:
+    # a language stores its grouping as a Python literal: "[3,0]", or "3"
+    try:
+        value = ast.literal_eval(grouping)
+    except SyntaxError, ValueError:
+        value = None
+    if isinstance(value, int) and not isinstance(value, bool):
+        return (value,)
+    if isinstance(value, list | tuple) and all(
+        isinstance(count, int) and not isinstance(count, bool) for count in value
+    ):
+        return tuple(value)
+    msg = f"a grouping is a list of digit counts such as [3,0], got {grouping!r}"
+    raise ValueError(msg)
 
 
-def split(l: str, counts: Sequence[int]) -> list[str]:
+def _split(l: str, counts: Sequence[int]) -> list[str]:
     res = []
     saved_count = len(l)
     for count in counts:
@@ -65,7 +75,7 @@ def intersperse(
     def reverse(s: str) -> str:
         return s[::-1]
 
-    splits = split(reverse(rest), counts)
+    splits = _split(reverse(rest), counts)
     res = separator.join(reverse(s) for s in reversed(splits))
     return left + res + right, max(len(splits) - 1, 0)
 
@@ -112,7 +122,7 @@ def format_number(
             lang_data.grouping,
             lang_data.thousands_sep or "",
         )
-        eval_lang_grouping = parse_grouping(lang_grouping)
+        eval_lang_grouping = _parse_grouping(lang_grouping)
 
         if conversion in _FLOATING:
             parts = number.split(".")

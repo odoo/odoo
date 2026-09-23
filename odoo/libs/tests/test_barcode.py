@@ -62,3 +62,16 @@ class TestCheckBarcodeEncoding(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestEncodingPredicateIsTotal(unittest.TestCase):
+    def test_a_missing_barcode_or_encoding_is_simply_not_valid(self):
+        for barcode, encoding in (
+            (None, "ean13"),
+            (False, "any"),
+            (4006381333931, "ean13"),
+            ("4006381333931", None),
+        ):
+            with self.subTest(barcode=barcode, encoding=encoding):
+                self.assertFalse(is_barcode_encoding_valid(barcode, encoding))
+        self.assertTrue(is_barcode_encoding_valid("4006381333931", "ean13"))

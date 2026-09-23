@@ -3,13 +3,12 @@ import re
 import babel
 
 __all__ = [
-    "XPG_LOCALE_RE",
     "posix_to_ldml",
     "py_to_js_locale",
 ]
 
 
-XPG_LOCALE_RE = re.compile(
+_XPG_LOCALE_RE = re.compile(
     r"""^
     ([a-z]+)      # language
     (_[A-Z\d]+)?  # maybe _territory
@@ -21,7 +20,7 @@ XPG_LOCALE_RE = re.compile(
 
 
 def py_to_js_locale(locale: str) -> str:
-    match_ = XPG_LOCALE_RE.match(locale)
+    match_ = _XPG_LOCALE_RE.match(locale)
     if not match_:
         return locale
     language, territory, modifier = match_.groups()
