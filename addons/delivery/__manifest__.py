@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    "name": "Delivery Costs",
+    "name": "In-house Delivery",
+    "summary": "Deliver orders with your own drivers.",
     "category": "Sales/Delivery",
+    "sequence": 10,
     "description": """
 Allows you to add delivery methods in sale orders.
 ==================================================

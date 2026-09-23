@@ -19,6 +19,11 @@ class ProviderGelato(models.Model):
         default="normal",
     )
 
+    def _compute_provider_icon(self):
+        super()._compute_provider_icon()
+        for carrier in self.filtered(lambda c: c.delivery_type == "gelato"):
+            carrier.provider_icon = "/sale_gelato/static/description/icon.png"
+
     @api.depends("delivery_type")
     def _compute_support_test_environment(self):
         super()._compute_support_test_environment()
