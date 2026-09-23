@@ -424,7 +424,7 @@ class StockPickingBatch(models.Model):
             self.picking_ids.update_batch_user(vals["user_id"])
         if vals.get("date_planned"):
             self.picking_ids.filtered(
-                lambda picking: picking.date_planned != self.date_planned
+                lambda picking: picking.date_planned != picking.batch_id.date_planned
             ).date_planned = vals["date_planned"]
         return res
 

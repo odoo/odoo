@@ -583,6 +583,34 @@ class TestBatchAuditFixes(TransactionCase):
         picking.batch_id = batch
         self.assertEqual(picking.user_id, self.env.user)
 
+    def test_a_transfer_joining_a_batch_leaves_its_siblings_responsible_alone(self):
+        batch_user = self.env["res.users"].create(
+            {"name": "Batch picker", "login": "audit_batch_picker"}
+        )
+        own_user = self.env["res.users"].create(
+            {"name": "Own picker", "login": "audit_own_picker"}
+        )
+        sibling = self._picking()
+        batch = self.env["stock.picking.batch"].create(
+            {
+                "picking_type_id": self.picking_type.id,
+                "user_id": batch_user.id,
+                "picking_ids": [Command.set(sibling.ids)],
+            }
+        )
+        sibling.user_id = own_user
+        newcomer = self._picking()
+        newcomer.batch_id = batch
+        self.assertEqual(newcomer.user_id, batch_user)
+        self.assertEqual(sibling.user_id, own_user)
+
+    def test_several_batches_take_one_scheduled_date_together(self):
+        batches = self._batch(self._picking()) | self._batch(self._picking())
+        when = fields.Datetime.to_datetime("2030-01-02 10:00:00")
+        batches.write({"date_planned": when})
+        self.assertEqual(set(batches.mapped("date_planned")), {when})
+        self.assertEqual(set(batches.picking_ids.mapped("date_planned")), {when})
+
     def test_a_line_added_from_detailed_operations_stays_in_that_list(self):
         picking = self._picking()
         batch = self._batch(picking)
