@@ -115,3 +115,41 @@ class TestWaveGroupingKeys(TransactionCase):
         self.assertTrue(first.batch_id.is_wave)
         self.assertEqual(second.batch_id, first.batch_id)
         self.assertEqual(first.batch_id.wave_source_location_id, self.stock_location)
+
+    def test_lines_reserved_on_two_shelves_of_one_source_share_a_wave(self):
+        product = self.env["product.product"].create(
+            {"name": "Wave key two-shelf product", "is_storable": True}
+        )
+        shelves = self.env["stock.location"].create(
+            [
+                {"name": f"Wave key shelf {n}", "location_id": self.stock_location.id}
+                for n in (1, 2)
+            ]
+        )
+        for shelf in shelves:
+            self.env["stock.quant"]._update_available_quantity(product, shelf, 3)
+        picking_type = self.env.ref("stock.picking_type_out")
+        picking_type.write(
+            {
+                **self.no_batch_grouping,
+                "auto_batch": True,
+                "batch_group_by_src_loc": True,
+                "wave_group_by_product": True,
+            }
+        )
+        deliveries = self._picking(
+            picking_type, self.stock_location, self.customer_location
+        ) | self._picking(picking_type, self.stock_location, self.customer_location)
+        deliveries.move_ids.product_id = product
+        deliveries.action_confirm()
+        self.assertEqual(
+            sorted(len(delivery.move_line_ids.location_id) for delivery in deliveries),
+            [1, 1],
+        )
+        self.assertEqual(deliveries.move_line_ids.location_id, shelves)
+        self.assertEqual(len(deliveries.batch_id), 1)
+        self.assertTrue(
+            deliveries.batch_id.is_wave,
+            "Grouping by source location groups on the location the transfers "
+            "leave from; a finer split is what the wave locations are for.",
+        )
