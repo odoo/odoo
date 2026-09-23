@@ -32,6 +32,15 @@ class TestBabelLocaleParse(unittest.TestCase):
             with self.subTest(code=code):
                 self.assertEqual(str(babel_locale_parse(code)), expected)
 
+    def test_a_posix_code_set_is_not_part_of_the_locale(self):
+        for code, expected in (
+            ("fr_FR.UTF-8", "fr_FR"),
+            ("es_MX.utf8", "es_MX"),
+            ("sr_RS.UTF-8@latin", "sr_Latn_RS"),
+        ):
+            with self.subTest(code=code):
+                self.assertEqual(str(babel_locale_parse(code)), expected)
+
     def test_unknown_code_falls_back_to_en_us_whatever_the_environment(self):
         with patch.dict(os.environ, {"LANG": "fr_FR.UTF-8", "LC_ALL": "fr_FR.UTF-8"}):
             for code in ("xx_XX", "", None):

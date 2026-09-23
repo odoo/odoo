@@ -1,6 +1,7 @@
 import csv
 import functools
 import logging
+import re
 import typing
 from operator import itemgetter
 
@@ -86,11 +87,17 @@ def get_lang(env: Environment, lang_code: str | None = None) -> LangData:
     return locale.lang_data(env, lang)
 
 
+_CODESET_RE = re.compile(r"\.[^@]*")
+
+
 @functools.cache
 def babel_locale_parse(lang_code: str | None) -> babel.Locale:
     if lang_code:
         try:
-            return babel.Locale.parse(py_to_js_locale(lang_code), sep="-")
+            # a POSIX code set (`fr_FR.UTF-8`, `sr_RS.UTF-8@latin`) says how
+            # text is encoded, not which locale formats it
+            code = _CODESET_RE.sub("", lang_code)
+            return babel.Locale.parse(py_to_js_locale(code), sep="-")
         except (ValueError, TypeError, babel.UnknownLocaleError) as exc:
             _debug.logic(
                 "locale.babel_fallback_en_US",
