@@ -5,7 +5,10 @@ import requests
 from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.integration.tools.connection_gate import ConnectionUnavailable
+from odoo.addons.integration.tools.connection_gate import (
+    BudgetSpent,
+    ConnectionUnavailable,
+)
 
 URL = "https://api.example.com/v1/charge"
 
@@ -134,6 +137,44 @@ class TestConnectionGate(TransactionCase):
         self.env.cr.precommit.run()
         self.assertEqual(self.connection.circuit_state, "closed")
         self.assertTrue(self.connection.last_success_at)
+
+    def test_a_late_success_from_before_the_trip_does_not_record_a_close(self):
+        breaker = self.env.registry._integration_connection_breakers.get(
+            self.connection.id, 2, 60, 60
+        )
+        before_the_trip = breaker.acquire_attempt()
+        for _ in range(2):
+            self._call(side_effect=requests.ConnectionError("down"))
+        self.assertFalse(breaker.closed)
+
+        self.connection._settle_call(
+            response=MagicMock(status_code=200), attempt=before_the_trip
+        )
+
+        self.assertFalse(breaker.closed)
+        self.env.flush_all()
+        self.env.cr.precommit.run()
+        self.assertEqual(self.connection.circuit_state, "open")
+
+    def test_a_probe_refused_by_the_budget_does_not_hold_the_probe_slot(self):
+        breaker = self.env.registry._integration_connection_breakers.get(
+            self.connection.id, 2, 60, 60
+        )
+        for _ in range(2):
+            self._call(side_effect=requests.ConnectionError("down"))
+        self.connection.write({"budget_requests": 1, "budget_window_seconds": 3600})
+        self.env["rate.limit.bucket"].consume_for_key(
+            f"integration.connection:{self.connection.id}",
+            subject_model=self.connection._name,
+            subject_id=self.connection.id,
+            capacity=1.0,
+            window_seconds=3600,
+            company_id=self.connection.company_id.id or None,
+        )
+        with patch("odoo.libs.breaker.monotonic", return_value=10**9):
+            with self.assertRaises(BudgetSpent):
+                self.connection._admit_call()
+            self.assertTrue(breaker.acquire_attempt().probe)
 
     def test_a_spent_budget_refuses_before_sending(self):
         self.connection.write({"budget_requests": 1, "budget_window_seconds": 3600})

@@ -214,10 +214,14 @@ class ReplicaRouter:
                 self.breaker.failures,
             )
             return None
-        if not self.breaker.closed:
+        except BaseException:
+            self.breaker.release(attempt)
+            raise
+        was_closed = self.breaker.closed
+        self.breaker.record_success(attempt)
+        if not was_closed and self.breaker.closed:
             _debug.lifecycle("replica.recovered", trips=self.breaker.trips)
             _logger.info("Replica reachable again, resuming readonly cursors")
-        self.breaker.record_success(attempt)
         if sample_due and self.lag.acquire_sample_interval():
             self._sample_lag(cr)
         if self.lag.is_replica_usable():

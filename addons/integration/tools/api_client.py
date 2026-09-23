@@ -371,9 +371,12 @@ class OutboundAPIClient:
 
         self.service.sudo()._check_before_request(self.company_id)
         attempt = self.admit()
-
-        self._update_request_kwargs(url, kwargs)
-        self._check_credential_host(url, kwargs)
+        try:
+            self._update_request_kwargs(url, kwargs)
+            self._check_credential_host(url, kwargs)
+        except BaseException:
+            self.connection._release_call(attempt)
+            raise
         self.session.credential_header_names = self._credential_header_names
         start_time = datetime.now()
 
@@ -876,6 +879,9 @@ class OutboundAPIClient:
         except requests.RequestException as error:
             self.connection._settle_call(error=error, attempt=attempt)
             raise
+        except BaseException:
+            self.connection._release_call(attempt)
+            raise
         self.connection._settle_call(response=response, attempt=attempt)
         return response
 
@@ -1139,6 +1145,9 @@ def _zeep_transport_class():
             except requests.RequestException as error:
                 client.connection._settle_call(error=error, attempt=attempt)
                 raise
+            except BaseException:
+                client.connection._release_call(attempt)
+                raise
             client.connection._settle_call(response=response, attempt=attempt)
             with closing(response):
                 response.raise_for_status()
@@ -1158,6 +1167,7 @@ def _zeep_transport_class():
                 raise
             except Exception as exc:
                 error = exc
+                client.connection._release_call(attempt)
                 raise
             else:
                 client.connection._settle_call(response=response, attempt=attempt)

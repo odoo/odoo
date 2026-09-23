@@ -443,6 +443,9 @@ class IntegrationConnection(models.Model):
             except requests.RequestException as error:
                 connection._settle_call(error=error, attempt=attempt)
                 raise
+            except BaseException:
+                connection._release_call(attempt)
+                raise
             connection._settle_call(response=response, attempt=attempt)
             return response
 
@@ -481,6 +484,17 @@ class IntegrationConnection(models.Model):
                     connection=self.display_name,
                 )
             )
+        try:
+            self._check_call_budget()
+        except BaseException:
+            self._release_call(attempt)
+            raise
+        return attempt
+
+    def _release_call(self, attempt: Attempt | None) -> None:
+        breaker_for(self.env, self).release(attempt)
+
+    def _check_call_budget(self) -> None:
         service = self.service_id.sudo()
         if service.rate_limit_enabled and not service.check_rate_limit(
             company_id=self.company_id.id or None
@@ -511,7 +525,6 @@ class IntegrationConnection(models.Model):
                     window=self.budget_window_seconds,
                 )
             )
-        return attempt
 
     def _settle_call(
         self,
@@ -538,7 +551,7 @@ class IntegrationConnection(models.Model):
                 )
             return
         breaker.record_success(attempt)
-        if not was_closed:
+        if not was_closed and breaker.closed:
             self._queue_circuit_values(
                 {"circuit_state": "closed", "last_success_at": fields.Datetime.now()}
             )

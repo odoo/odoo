@@ -134,9 +134,22 @@ class CircuitBreaker:
         )
         return True
 
+    def release(self, attempt: Attempt | None) -> None:
+        # an admitted call that produced no outcome frees the probe slot, so
+        # the next caller probes now instead of after _PROBE_ABANDON_AFTER
+        with self._lock:
+            if (
+                attempt is not None
+                and attempt.probe
+                and attempt.generation == self._generation
+                and self._probing_since
+            ):
+                self._probing_since = 0.0
+                _debug.logic("breaker.probe_released", generation=self._generation)
+
     def record_success(self, attempt: Attempt | None = None) -> None:
         with self._lock:
-            if self._open and self._is_stale_locked(attempt, "success"):
+            if self._is_stale_locked(attempt, "success"):
                 return
             if self._open:
                 self._generation += 1

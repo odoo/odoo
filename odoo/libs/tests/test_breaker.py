@@ -280,3 +280,42 @@ class TestFailureThreshold(unittest.TestCase):
             CircuitBreaker(max_cooldown=10, failure_threshold=0)
         with self.assertRaises(ValueError):
             CircuitBreaker(max_cooldown=10, failure_window=0)
+
+
+class TestUnsettledAttempts(unittest.TestCase):
+    def _probing(self):
+        breaker = CircuitBreaker(max_cooldown=1200, initial_cooldown=60)
+        breaker.record_failure()
+        breaker._opened_at -= 61
+        probe = breaker.acquire_attempt()
+        self.assertTrue(probe.probe)
+        self.assertIsNone(breaker.acquire_attempt())
+        return breaker, probe
+
+    def test_a_released_probe_frees_the_slot_for_the_next_caller(self):
+        breaker, probe = self._probing()
+        breaker.release(probe)
+        self.assertTrue(breaker.acquire_attempt().probe)
+
+    def test_releasing_a_stale_or_ordinary_attempt_changes_nothing(self):
+        breaker, probe = self._probing()
+        breaker.release(None)
+        stale = type(probe)(probe.generation - 1, probe=True)
+        breaker.release(stale)
+        self.assertIsNone(breaker.acquire_attempt())
+
+    def test_a_stale_success_on_a_closed_breaker_keeps_the_failure_count(self):
+        breaker = CircuitBreaker(
+            max_cooldown=1200, initial_cooldown=60, failure_threshold=2
+        )
+        early = breaker.acquire_attempt()
+        breaker.record_failure(breaker.acquire_attempt())
+        breaker.record_failure(breaker.acquire_attempt())
+        self.assertFalse(breaker.closed)
+        breaker._opened_at -= 61
+        breaker.record_success(breaker.acquire_attempt())
+        self.assertTrue(breaker.closed)
+        breaker.record_failure(breaker.acquire_attempt())
+        breaker.record_success(early)
+        self.assertEqual(len(breaker._recent_failures), 1)
+        self.assertEqual(breaker.failures, 1)
