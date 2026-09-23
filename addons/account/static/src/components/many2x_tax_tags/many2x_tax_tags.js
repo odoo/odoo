@@ -97,29 +97,17 @@ export class Many2ManyTaxTagsField extends Many2ManyTagsField {
             ? taxData.description.replace(/<[^>]+>/g, "").trim()
             : "";
 
-        const groupByType = (lines) => {
-            const groups = {};
-            for (const line of lines) {
-                if (!groups[line.repartition_type]) {
-                    groups[line.repartition_type] = {
-                        type: line.repartition_type,
-                        lines: [],
-                    };
-                }
-
-                groups[line.repartition_type].lines.push({
-                    factor_percent:
-                        Math.abs(line.factor_percent) !== 100 ? line.factor_percent : null,
-                    tag_names: (line.tag_ids || []).map((tag) => tag.name),
-                });
-            }
-            return Object.values(groups);
-        };
+        const formatLines = (lines) =>
+            lines.map((line) => ({
+                type: line.repartition_type,
+                factor_percent: Math.abs(line.factor_percent) !== 100 ? line.factor_percent : null,
+                tag_names: (line.tag_ids || []).map((tag) => tag.name),
+            }));
 
         this.taxPopover.open(ev.target, {
             description: taxData.description,
-            invoiceLines: groupByType(taxData.invoice_repartition_line_ids),
-            refundLines: groupByType(taxData.refund_repartition_line_ids),
+            invoiceLines: formatLines(taxData.invoice_repartition_line_ids),
+            refundLines: formatLines(taxData.refund_repartition_line_ids),
             close: () => this.taxPopover.close(),
         });
     }
