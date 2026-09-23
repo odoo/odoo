@@ -524,18 +524,94 @@ test("tooltip with a template is never considered redundant", async () => {
 });
 
 test.tags("desktop");
-test("tooltip on an element whose overflow can't be measured", async () => {
+test("no tooltip on an inline element entirely displayed", async () => {
     class MyComponent extends Component {
         static template = xml`<div><span class="mytext" data-tooltip="hello">hello</span></div>`;
     }
 
     await mountWithCleanup(MyComponent);
-    expect(queryOne(".mytext").clientWidth).toBe(0); // inline element
+    expect(queryOne(".mytext").clientWidth).toBe(0); // inline element: can't overflow itself
+
+    await hover(".mytext");
+    await runAllTimers();
+    expect(".o_popover").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("tooltip on an inline element clipped by an ancestor", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <div style="width: 20px; overflow: hidden; white-space: nowrap">
+                <span class="mytext" data-tooltip="hello everyone">hello everyone</span>
+            </div>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    const textEl = queryOne(".mytext");
+    expect(textEl.clientWidth).toBe(0); // inline element: doesn't overflow itself
+    expect(textEl.getBoundingClientRect().right).toBeGreaterThan(
+        textEl.parentElement.getBoundingClientRect().right
+    ); // but it is cut by its parent
 
     await hover(".mytext");
     await runAllTimers();
     expect(".o_popover").toHaveCount(1);
-    expect(".o_popover").toHaveText("hello");
+    expect(".o_popover").toHaveText("hello everyone");
+});
+
+test.tags("desktop");
+test("tooltip if a block element is clipped by an ancestor", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <div style="display: flex; width: 20px; overflow: hidden">
+                <div class="mytext" style="flex-shrink: 0; width: 200px" data-tooltip="hello everyone">hello everyone</div>
+            </div>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    const textEl = queryOne(".mytext");
+    expect(textEl.scrollWidth).toBe(textEl.clientWidth); // the element itself doesn't overflow
+
+    await hover(".mytext");
+    await runAllTimers();
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveText("hello everyone");
+});
+
+test.tags("desktop");
+test("tooltip if a part of the text is hidden (display: none)", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <button class="mytext" style="width: 300px" data-tooltip="Archive">
+                <i/><span style="display: none">Archive</span>
+            </button>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(queryOne(".mytext").textContent.trim()).toBe("Archive"); // the text is in the DOM
+    expect(queryOne(".mytext").innerText.trim()).toBe(""); // but it isn't displayed
+
+    await hover(".mytext");
+    await runAllTimers();
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveText("Archive");
+});
+
+test.tags("desktop");
+test("tooltip if a part of the text is hidden (visibility: hidden)", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <div class="mytext" style="width: 300px" data-tooltip="hello everyone">
+                <span>hello</span> <span style="visibility: hidden">everyone</span>
+            </div>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+
+    await hover(".mytext");
+    await runAllTimers();
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveText("hello everyone");
 });
 
 test.tags("desktop");

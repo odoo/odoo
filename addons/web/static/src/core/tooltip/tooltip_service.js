@@ -85,10 +85,43 @@ export const tooltipService = {
         }
 
         /**
+         * Detect if the element is (partially) clipped by one of its ancestors.
+         * Such an element doesn't overflow itself, but is visually cut anyway
+         * (e.g. an inline element inside a ".text-truncate" container, or a
+         * "flex-shrink-0" element inside a narrower one).
+         *
+         * @param {HTMLElement} el
+         * @return {boolean}
+         */
+        function isClippedByAncestor(el) {
+            const { top, right, bottom, left } = el.getBoundingClientRect();
+            for (
+                let parent = el.parentElement;
+                parent && parent !== document.documentElement;
+                parent = parent.parentElement
+            ) {
+                const { overflowX, overflowY } = getComputedStyle(parent);
+                if (overflowX === "visible" && overflowY === "visible") {
+                    continue; // that ancestor doesn't clip its content
+                }
+                const rect = parent.getBoundingClientRect();
+                if (
+                    left < rect.left - 1 ||
+                    right > rect.right + 1 ||
+                    top < rect.top - 1 ||
+                    bottom > rect.bottom + 1
+                ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /**
          * Detect if the tooltip would only repeat what the user can already
          * read, i.e. if it is a plain text tooltip (no template) whose content
-         * is the text content of the element, that text being entirely
-         * displayed (i.e. not truncated by an overflow).
+         * is the text displayed by the element, that text being entirely
+         * visible (i.e. neither truncated by an overflow nor clipped).
          *
          * @param {HTMLElement} el
          * @param {string} tooltip
@@ -100,24 +133,23 @@ export const tooltipService = {
                 return false; // dynamic content, nothing to compare
             }
             const normalize = (str) => str.replace(/\s+/g, " ").trim();
-            if (normalize(el.textContent) !== normalize(tooltip)) {
-                return false;
-            }
-            if (!el.clientWidth) {
-                // The element can't be measured (e.g. a non blockified inline
-                // element), so it might be truncated by one of its ancestors.
+            // "innerText" is used instead of "textContent" as it only contains
+            // the text that is actually rendered, ignoring e.g. a label hidden
+            // by a "d-none" on small screens, which the tooltip must display.
+            if (normalize(el.innerText) !== normalize(tooltip)) {
                 return false;
             }
             // The text isn't entirely displayed as soon as the element or one
-            // of its descendants overflows (e.g. an inner ".text-truncate").
+            // of its descendants overflows (e.g. an inner ".text-truncate"), or
+            // as soon as the element is clipped by one of its ancestors.
             // Descendants without text content are ignored, as they can't hide
             // any part of the text (e.g. a button displaying only an icon).
-            // Note that we only get here if the tooltip is the text content of
-            // the element, so that subtree is necessarily small.
+            // Note that we only get here if the tooltip is the text displayed
+            // by the element, so that subtree is necessarily small.
             const textDescendants = [...el.querySelectorAll("*")].filter((descendant) =>
                 descendant.textContent.trim()
             );
-            return ![el, ...textDescendants].some(isOverflowing);
+            return ![el, ...textDescendants].some(isOverflowing) && !isClippedByAncestor(el);
         }
 
         /**
