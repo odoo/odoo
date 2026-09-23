@@ -281,9 +281,7 @@ class AppointmentManageLeaveTest(AppointmentCommon):
             "date_to": datetime(2022, 2, 14, 15, 0, 0),
         }
         Leaves = self.env["resource.schedule.exception"]
-        leave = Leaves.create(
-            {**leave_vals, "resource_id": appointment_resource.id}
-        )
+        leave = Leaves.create({**leave_vals, "resource_id": appointment_resource.id})
         leave.name = "Resurfacing"
         leave.unlink()
         with self.assertRaises(AccessError):

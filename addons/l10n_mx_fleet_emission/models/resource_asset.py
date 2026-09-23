@@ -76,8 +76,8 @@ class ResourceAsset(models.Model):
             for digit in calendar._get_digits()
         }
         for asset in self:
-            asset.l10n_mx_emission_calendar_id = (
-                by_digit.get(asset.l10n_mx_emission_plate_digit, False)
+            asset.l10n_mx_emission_calendar_id = by_digit.get(
+                asset.l10n_mx_emission_plate_digit, False
             )
 
     @api.depends("l10n_mx_emission_inspection_ids.state")

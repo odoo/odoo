@@ -68,9 +68,7 @@ class L10n_IdQrisTransaction(models.Model):
         # Looping to make requests is far from ideal, but we have no choices as they don't allow getting multiple QR result at once.
         # Ensure to loop in reverse and check from the most recent QR code.
         for transaction in self.sorted(lambda t: t.qris_creation_datetime):
-            status_response = self.sudo().bank_id._l10n_id_qris_get_status(
-                transaction
-            )
+            status_response = self.sudo().bank_id._l10n_id_qris_get_status(transaction)
             if status_response["data"].get("qris_status") == "paid":
                 transaction.paid = True
                 return {"paid": True, "qr_statuses": [status_response["data"]]}

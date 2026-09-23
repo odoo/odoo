@@ -1,7 +1,10 @@
 from odoo import SUPERUSER_ID, api
 from odoo.db.schema import column_exists
 
-COLUMNS = ("l10n_my_edi_mode", "l10n_my_edi_default_import_journal_id",)
+COLUMNS = (
+    "l10n_my_edi_mode",
+    "l10n_my_edi_default_import_journal_id",
+)
 
 
 def migrate(cr, version):

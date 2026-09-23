@@ -61,9 +61,7 @@ class AppointmentBookingLine(models.Model):
         "The capacity reserved should be positive.",
     )
 
-    @api.constrains(
-        "resource_id", "appointment_type_id", "appointment_user_id"
-    )
+    @api.constrains("resource_id", "appointment_type_id", "appointment_user_id")
     def _check_user_or_resource_set(self):
         for line in self:
             if (
@@ -77,9 +75,7 @@ class AppointmentBookingLine(models.Model):
                     _("Booking line must have a user or resource set.")
                 )
 
-    @api.constrains(
-        "resource_id", "appointment_type_id", "appointment_user_id"
-    )
+    @api.constrains("resource_id", "appointment_type_id", "appointment_user_id")
     def _check_user_or_resource_match_appointment_type(self):
         """Check appointment user/resource linked to the lines is indeed usable through the appointment type."""
         for appointment_type, lines in self.grouped("appointment_type_id").items():

@@ -459,7 +459,9 @@ class TestMailAlias(TestMailAliasCommon):
         ]:
             with self.subTest(source=source):
                 self.assertEqual(
-                    MailAlias._normalize_alias_name(source, is_email=True), expected, msg
+                    MailAlias._normalize_alias_name(source, is_email=True),
+                    expected,
+                    msg,
                 )
 
     @users("admin")

@@ -22,9 +22,7 @@ class ResPartner(models.Model):
             )
             for partner in ci_nie_types:
                 if not partner._l10n_uy_ci_nie_is_valid():
-                    raise ValidationError(
-                        self._l10n_uy_get_vat_error_message(partner)
-                    )
+                    raise ValidationError(self._l10n_uy_get_vat_error_message(partner))
         return super()._run_check_identification(validation=validation)
 
     @api.model

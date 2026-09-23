@@ -199,9 +199,7 @@ class ProductPricelist(models.Model):
 
         return results
 
-    def _get_price_rule_multi(
-        self, products, quantity, uom=None, date=False, **kwargs
-    ):
+    def _get_price_rule_multi(self, products, quantity, uom=None, date=False, **kwargs):
         if not self.ids:
             pricelists = self.search([])
         else:

@@ -924,7 +924,9 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         self.assertListEqual(available_resources_c10, bar.ids)
         self.assertListEqual(
             available_resources_c12,
-            (table2_c6 + table2_c6.combinable_resource_ids).sorted("booking_sequence").ids,
+            (table2_c6 + table2_c6.combinable_resource_ids)
+            .sorted("booking_sequence")
+            .ids,
         )
 
     @users("apt_manager")

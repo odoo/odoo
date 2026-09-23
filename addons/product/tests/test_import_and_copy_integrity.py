@@ -237,15 +237,9 @@ class TestSellerPriceUomConversion(ProductCommon):
             self.uom_kgm._get_price_in_unit(100.0, self.uom_unit)
 
     def test_compute_price_wrappers_degrade(self):
-        self.assertEqual(
-            self.uom_kgm._get_price_report(100.0, self.uom_unit), 100.0
-        )
-        self.assertEqual(
-            self.uom_kgm._get_price_estimate(100.0, self.uom_unit), 100.0
-        )
-        self.assertEqual(
-            self.uom_dozen._get_price_report(120.0, self.uom_unit), 10.0
-        )
+        self.assertEqual(self.uom_kgm._get_price_report(100.0, self.uom_unit), 100.0)
+        self.assertEqual(self.uom_kgm._get_price_estimate(100.0, self.uom_unit), 100.0)
+        self.assertEqual(self.uom_dozen._get_price_report(120.0, self.uom_unit), 10.0)
 
 
 @tagged("post_install", "-at_install")

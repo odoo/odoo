@@ -16,9 +16,7 @@ class CalendarEvent(models.Model):
         }
 
     def _get_kiosk_rooms(self):
-        return self.sudo().booking_line_ids.resource_id.filtered(
-            "access_token"
-        )
+        return self.sudo().booking_line_ids.resource_id.filtered("access_token")
 
     def _notify_room_kiosks(self, method):
         for room in self._get_kiosk_rooms():

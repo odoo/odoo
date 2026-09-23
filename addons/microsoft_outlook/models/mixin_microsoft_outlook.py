@@ -1,4 +1,3 @@
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.web import urljoin as url_join

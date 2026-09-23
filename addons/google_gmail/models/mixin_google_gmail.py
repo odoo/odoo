@@ -1,4 +1,3 @@
-
 from odoo import api, fields, models
 
 from odoo.addons.mail_oauth2.models.mixin_oauth2_mail_provider import (

@@ -1200,9 +1200,7 @@ class HrLeaveAllocation(models.Model):
             self.add_follower(employee_id)
 
         changes_coverage = not self._COVERAGE_FIELDS.isdisjoint(values)
-        excess_before = (
-            self._excess_days_by_allocation() if changes_coverage else {}
-        )
+        excess_before = self._excess_days_by_allocation() if changes_coverage else {}
         result = super().write(values)
         if "name" in values:
             self._mark_custom_names()

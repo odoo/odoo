@@ -508,7 +508,9 @@ class IotBoxOwlHomePage(http.Controller):
         elif name == "odoo":
             self._update_logger_level("odoo", value, AVAILABLE_LOG_LEVELS)
             self._update_logger_level(
-                "odoo.service.http.access", value if value != "debug" else "info", AVAILABLE_LOG_LEVELS
+                "odoo.service.http.access",
+                value if value != "debug" else "info",
+                AVAILABLE_LOG_LEVELS,
             )
         elif name.startswith(INTERFACE_PREFIX):
             logger_name = name[len(INTERFACE_PREFIX) :]

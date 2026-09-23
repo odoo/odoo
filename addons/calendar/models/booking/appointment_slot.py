@@ -16,7 +16,9 @@ class AppointmentSlot(models.Model):
         index=True,
         ondelete="cascade",
     )
-    schedule_based_on = fields.Selection(related="appointment_type_id.schedule_based_on")
+    schedule_based_on = fields.Selection(
+        related="appointment_type_id.schedule_based_on"
+    )
     slot_type = fields.Selection(
         selection=[("recurring", "Regular"), ("unique", "One Shot")],
         string="Slot type",

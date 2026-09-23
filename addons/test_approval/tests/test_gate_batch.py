@@ -20,7 +20,9 @@ class TestGateBatchSurvivesAnUnstaffedStep(ApprovalCommon):
 
     def setUp(self):
         super().setUp()
-        self.elsewhere = self.env["res.company"].create({"name": f"Elsewhere {self.id()}"})
+        self.elsewhere = self.env["res.company"].create(
+            {"name": f"Elsewhere {self.id()}"}
+        )
         self.approver_elsewhere = mail_new_test_user(
             self.env,
             login=f"approver_elsewhere_{self.id()}",

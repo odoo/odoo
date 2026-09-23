@@ -261,9 +261,7 @@ def _convert_bookings(cr, env, rooms):
                 "partner_ids": [Command.set([partner_id] if partner_id else [])],
                 "appointment_type_id": room_type.id,
                 "booking_line_ids": [
-                    Command.create(
-                        {"resource_id": resource.id, "capacity_reserved": 1}
-                    )
+                    Command.create({"resource_id": resource.id, "capacity_reserved": 1})
                 ],
             }
         )

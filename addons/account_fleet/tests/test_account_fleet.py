@@ -8,7 +8,9 @@ class TestAccountFleet(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.group_ids |= cls.env.ref("resource_asset.group_asset_user") | cls.env.ref("fleet.fleet_group_user")
+        cls.env.user.group_ids |= cls.env.ref(
+            "resource_asset.group_asset_user"
+        ) | cls.env.ref("fleet.fleet_group_user")
         cls.car = cls.env["resource.asset"].create(
             {
                 "name": "Billed Car",

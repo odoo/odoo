@@ -48,9 +48,7 @@ class PosSelfOrderControllerStripe(PosSelfOrderController):
         payment_method = pos_config.payment_method_ids.filtered(
             lambda p: p.id == payment_method_id
         )
-        stripe_order_amount = payment_method._stripe_get_amount(
-            order.amount_total
-        )
+        stripe_order_amount = payment_method._stripe_get_amount(order.amount_total)
 
         if (
             float_is_zero(

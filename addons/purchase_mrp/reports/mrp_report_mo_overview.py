@@ -86,9 +86,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 return {
                     "delay": supplier.delay + rules_delay,
                     "cost": supplier.price
-                    * uom_id._get_quantity_report(
-                        quantity, supplier.product_uom_id
-                    ),
+                    * uom_id._get_quantity_report(quantity, supplier.product_uom_id),
                     "currency": supplier.currency_id,
                 }
         return res

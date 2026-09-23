@@ -328,7 +328,9 @@ class TestEmissionCertificateIsADocument(TestL10nMxFleetEmission):
 
         row = self._compliance_row(vehicle)
 
-        self.assertIn(self.document_type.id, row.read(["id"]) and [self.document_type.id])
+        self.assertIn(
+            self.document_type.id, row.read(["id"]) and [self.document_type.id]
+        )
         self.assertGreaterEqual(row.total_required, 1)
         self.assertEqual(row.total_valid, 0)
 

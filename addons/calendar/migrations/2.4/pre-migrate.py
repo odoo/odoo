@@ -140,9 +140,14 @@ def _refuse_alternative_profiles(cr):
 def _drop_profile_foreign_keys(cr, table, column):
     """The link points at `appointment_resource` until the registry rebuilds it,
     and that constraint refuses the resource ids this script writes."""
-    for name, _table, attname, target, _target_column, _ondelete in (
-        get_fk_constraints_batch(cr, [table])
-    ):
+    for (
+        name,
+        _table,
+        attname,
+        target,
+        _target_column,
+        _ondelete,
+    ) in get_fk_constraints_batch(cr, [table]):
         if attname == column and target == "appointment_resource":
             drop_constraint(cr, table, name)
 
@@ -267,7 +272,9 @@ def _repoint_combinations(cr):
 def _drop_wizard_relation(cr):
     """The leaves wizard is transient: its rows name profiles that are gone, and
     the registry builds the resource-side table itself."""
-    cr.execute("DROP TABLE IF EXISTS appointment_manage_leaves_appointment_resource_rel")
+    cr.execute(
+        "DROP TABLE IF EXISTS appointment_manage_leaves_appointment_resource_rel"
+    )
 
 
 def _repoint_attachments(cr):
@@ -287,7 +294,9 @@ def _repoint_attachments(cr):
         "DELETE FROM ir_attachment WHERE res_model = 'appointment.resource' RETURNING id"
     )
     if dropped := cr.rowcount:
-        _logger.info("calendar: %s files of profiles without a resource dropped", dropped)
+        _logger.info(
+            "calendar: %s files of profiles without a resource dropped", dropped
+        )
 
 
 def _repoint_xmlids(cr):

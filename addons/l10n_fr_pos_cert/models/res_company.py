@@ -107,9 +107,7 @@ class ResCompany(models.Model):
             previous_hash = ""
             corrupted_orders = []
             for order in orders:
-                if order.l10n_fr_hash != order._get_hash(
-                    previous_hash=previous_hash
-                ):
+                if order.l10n_fr_hash != order._get_hash(previous_hash=previous_hash):
                     corrupted_orders.append(order.name)
                     msg_alert = _(
                         "Corrupted data on point of sale order with id %s.", order.id

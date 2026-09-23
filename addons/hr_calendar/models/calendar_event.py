@@ -35,10 +35,8 @@ class CalendarEvent(models.Model):
             schedule_by_partner = event.partner_ids._get_schedule(
                 start, stop, merge=False
             )
-            event.unavailable_partner_ids |= (
-                event._get_unavailable_partners_for_event(
-                    schedule_by_partner, event_interval
-                )
+            event.unavailable_partner_ids |= event._get_unavailable_partners_for_event(
+                schedule_by_partner, event_interval
             )
 
     @api.model
@@ -105,9 +103,7 @@ class CalendarEvent(models.Model):
                 )
         return interval_by_event
 
-    def _get_unavailable_partners_for_event(
-        self, schedule_by_partner, event_interval
-    ):
+    def _get_unavailable_partners_for_event(self, schedule_by_partner, event_interval):
         unavailable_partners = self.env["res.partner"]
         for partner, schedule in schedule_by_partner.items():
             common_interval = schedule & event_interval

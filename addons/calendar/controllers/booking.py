@@ -471,9 +471,7 @@ class AppointmentController(http.Controller):
                 )
             ):
                 resource_selected = (
-                    request.env["resource.resource"]
-                    .sudo()
-                    .browse(resource_selected_id)
+                    request.env["resource.resource"].sudo().browse(resource_selected_id)
                 )
             elif (
                 not appointment_type.is_auto_assign

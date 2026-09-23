@@ -165,7 +165,8 @@ class MixinTableInheritanceRoot(models.AbstractModel):
         fields_by_table = self._get_model_names_by_table()
         for table, column in cr.fetchall():
             declared = any(
-                column in self.env[name]._fields for name in fields_by_table.get(table, ())
+                column in self.env[name]._fields
+                for name in fields_by_table.get(table, ())
             )
             if declared:
                 continue

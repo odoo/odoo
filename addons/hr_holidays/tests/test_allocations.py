@@ -954,6 +954,7 @@ class TestAllocations(TestHrHolidaysCommon):
             )
             allocation_form.date_to = date(2023, 6, 30)
         self.assertEqual(allocation.date_to, date(2023, 6, 30))
+
     def test_refused_allocation_is_frozen(self):
         """A refused allocation cannot be edited from either form.
 

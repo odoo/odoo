@@ -43,6 +43,7 @@ class CalendarAttendee(models.Model):
 
     def _is_attendee_notification_required(self, notify_author=False):
         """Notify all attendees for meeting linked to appointment type"""
-        return self.event_id.appointment_type_id or super()._is_attendee_notification_required(
-            notify_author=notify_author
+        return (
+            self.event_id.appointment_type_id
+            or super()._is_attendee_notification_required(notify_author=notify_author)
         )

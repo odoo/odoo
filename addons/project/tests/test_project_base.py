@@ -153,7 +153,6 @@ class TestProjectCommon(TransactionCase):
             )
         )
 
-
     @classmethod
     def _employ(cls, users) -> None:
         # a tree carrying project_hr assigns a project only to an employee, so

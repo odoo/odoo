@@ -344,10 +344,8 @@ class StockWarehouseOrderpoint(models.Model):
                 ratios_qty_available.append(qty_available)
                 ratios_total.append(qty_available + (qty_in_progress / qty_per_kit))
             product_qty = min(ratios_total or [0]) - min(ratios_qty_available or [0])
-            res[orderpoint.id] = (
-                orderpoint.product_id.uom_id._get_quantity_estimate(
-                    product_qty, orderpoint.product_uom_id, round=False
-                )
+            res[orderpoint.id] = orderpoint.product_id.uom_id._get_quantity_estimate(
+                product_qty, orderpoint.product_uom_id, round=False
             )
 
         productions_group = self.env["mrp.production"]._read_group(

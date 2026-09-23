@@ -132,7 +132,9 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         values |= common_view_values
         return values
 
-    def _prepare_common_page_view_values(self, invoices_data, access_token=None, **kwargs):
+    def _prepare_common_page_view_values(
+        self, invoices_data, access_token=None, **kwargs
+    ):
         logged_in = not request.env.user._is_public()
         # We set partner_id to the partner id of the current user if logged in, otherwise we set it
         # to the invoice partner id. We do this to ensure that payment tokens are assigned to the

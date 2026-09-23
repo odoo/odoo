@@ -205,9 +205,11 @@ class CalendarEvent(models.Model):
         string="Meeting Subject",
         required=True,
     )
-    description = fields.Html(help="""When synchronization with an external calendar is active, this description is synchronized \
+    description = fields.Html(
+        help="""When synchronization with an external calendar is active, this description is synchronized \
         with the one of the associated meeting in that external calendar. Any update will be propagated there \
-        and vice versa.""")
+        and vice versa."""
+    )
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Organizer",
@@ -417,7 +419,9 @@ class CalendarEvent(models.Model):
         string="Recurrence Rule",
         index="btree_not_null",
     )
-    follow_recurrence = fields.Boolean(default=False)  # Indicates if an event follows the recurrence, i.e. is not an exception
+    follow_recurrence = fields.Boolean(
+        default=False
+    )  # Indicates if an event follows the recurrence, i.e. is not an exception
     recurrence_update = fields.Selection(
         selection=[
             ("this", "This event"),

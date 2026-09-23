@@ -17,7 +17,11 @@ class TestAssetCustody(TransactionCase):
 
     def _assign(self, **vals):
         return self.env["resource.assignment"].create(
-            {"resource_id": self.laptop.resource_id.id, "custody_role": "custodian", **vals}
+            {
+                "resource_id": self.laptop.resource_id.id,
+                "custody_role": "custodian",
+                **vals,
+            }
         )
 
     def test_an_employee_holds_the_assets_assigned_to_them(self):
@@ -71,7 +75,9 @@ class TestEmployeeCustody(TransactionCase):
             }
         )
         self.assertEqual(asset.operator_id, self.employee.resource_id)
-        assignment = asset.assignment_ids.filtered(lambda a: a.custody_role == "operator")
+        assignment = asset.assignment_ids.filtered(
+            lambda a: a.custody_role == "operator"
+        )
         self.assertEqual(assignment.assignee_id, self.employee.resource_id)
         self.assertEqual(asset.operator_employee_id, self.employee)
         self.assertIn(
