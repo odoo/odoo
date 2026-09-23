@@ -55,25 +55,3 @@ class IrActionsServerHistory(models.Model):
             to_clean |= history_ids.sorted()[self._max_entries_per_action :]
         _debug.lifecycle("gc_histories", actions=len(result), removed=len(to_clean))
         to_clean.unlink()
-
-
-WEBHOOK_SAMPLE_VALUES = {
-    "integer": 42,
-    "float": 42.42,
-    "monetary": 42.42,
-    "char": "Hello World",
-    "text": "Hello World",
-    "html": "<p>Hello World</p>",
-    "boolean": True,
-    "selection": "option1",
-    "date": "2020-01-01",
-    "datetime": "2020-01-01 00:00:00",
-    "binary": "<base64_data>",
-    "many2one": 47,
-    "many2many": [42, 47],
-    "one2many": [42, 47],
-    "reference": "res.partner,42",
-    None: "some_data",
-}
-
-CRUD_STATES = ("object_write", "object_create", "object_copy")

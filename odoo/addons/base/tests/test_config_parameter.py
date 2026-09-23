@@ -61,6 +61,16 @@ class TestSealedDatabaseSecret(TransactionCase):
                 self.ICP.get_param("database.secret"), "the-database-secret"
             )
 
+    def test_setting_the_same_secret_again_writes_nothing(self):
+        with patch.dict(os.environ, self.real_key):
+            self.ICP.set_param("database.secret", "the-database-secret")
+            sealed = self._stored()
+            with patch.object(type(self.ICP), "write") as write:
+                old = self.ICP.set_param("database.secret", "the-database-secret")
+            write.assert_not_called()
+            self.assertEqual(old, "the-database-secret")
+            self.assertEqual(self._stored(), sealed)
+
     def test_a_secret_left_in_clear_is_sealed_when_the_registry_loads(self):
         self._store_in_clear("legacy-secret")
         with patch.dict(os.environ, self.real_key):

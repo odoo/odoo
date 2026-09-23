@@ -299,7 +299,7 @@ class ResCompany(models.Model):
         return companies
 
     def write(self, vals: dict[str, Any]) -> bool:
-        vals = self._normalize_vals(vals)
+        vals = dict(self._normalize_vals(vals))
         for link, link_vals in self._split_config_vals(vals).items():
             self[link].write(link_vals)
         if "parent_id" in vals and any(

@@ -1381,6 +1381,63 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env["ir.qweb"]._render(t.id)
         self.assertEqual(rendered.strip(), result.strip())
 
+    def test_a_t_call_whose_options_already_hold_keeps_its_environment(self):
+        View = self.env["ir.ui.view"]
+        View.create(
+            {
+                "name": "callee",
+                "type": "qweb",
+                "key": "base.c9_callee",
+                "arch_db": '<t t-name="base.c9_callee"><span>in</span></t>',
+            }
+        )
+        plain, with_lang = View.create(
+            [
+                {"name": name, "type": "qweb", "arch_db": arch}
+                for name, arch in (
+                    ("plain", '<t t-name="plain"><t t-call="base.c9_callee"/></t>'),
+                    (
+                        "with_lang",
+                        (
+                            '<t t-name="with_lang">'
+                            '<t t-call="base.c9_callee" t-lang="\'en_US\'"/></t>'
+                        ),
+                    ),
+                )
+            ]
+        )
+        QWeb = self.env["ir.qweb"].with_context(lang="en_US")
+        signatures = []
+        original = type(QWeb)._get_template_cache_signature
+
+        def counting(qweb):
+            signatures.append(1)
+            return original(qweb)
+
+        QWeb._render(plain.id)
+        QWeb._render(with_lang.id)
+        with patch.object(type(QWeb), "_get_template_cache_signature", counting):
+            QWeb._render(plain.id)
+            baseline = len(signatures)
+            signatures.clear()
+            QWeb._render(with_lang.id)
+        self.assertEqual(len(signatures), baseline)
+
+    def test_foreach_lazy_size_no_leak(self):
+        t = self.env["ir.ui.view"].create(
+            {
+                "name": "test",
+                "type": "qweb",
+                "arch_db": """<t t-name="lazy-size">"""
+                """<t t-foreach="gen" t-as="x">[<t t-esc="x_size"/>]</t>"""
+                """</t>""",
+            }
+        )
+        rendered = self.env["ir.qweb"]._render(
+            t.id, {"gen": (c for c in "ab"), "x_size": "STALE"}
+        )
+        self.assertNotIn("STALE", rendered)
+
     def test_foreach_lazy_last_no_leak(self):
         t = self.env["ir.ui.view"].create(
             {
@@ -3850,6 +3907,17 @@ class TestQWebImageDataUri(TransactionCase):
         qweb = self.env["ir.qweb"].with_context(webp_as_jpg=True)
         uri = qweb._get_converted_image_data_uri(self.WEBP_B64.encode())
         self.assertEqual(uri, f"data:image/png;base64,{converted.datas.decode()}")
+
+    def test_a_str_webp_without_a_converted_twin_renders(self):
+        uri = (
+            self.env["ir.qweb"]
+            .with_context(webp_as_jpg=True)
+            ._get_converted_image_data_uri(self.WEBP_B64)
+        )
+        self.assertEqual(uri, f"data:image/webp;base64,{self.WEBP_B64}")
+        self.assertEqual(
+            self.env["ir.qweb"]._get_converted_image_data_uri(self.WEBP_B64), uri
+        )
 
     def test_webp_conversion_str_source(self):
         converted = self._create_converted_pair()

@@ -108,3 +108,45 @@ class TestIrModelDataCacheInvalidation(TransactionCase):
             "writing a res.groups xmlid must invalidate the `groups` cache even "
             "when vals does not include `model`",
         )
+
+    def test_unlinking_a_record_xmlid_invalidates_only_xmlids(self):
+        record = self.env["res.partner"].create({"name": "exported"})
+        imd = self.env["ir.model.data"].create(
+            {
+                "module": "__export__",
+                "name": "exported_partner",
+                "model": "res.partner",
+                "res_id": record.id,
+            }
+        )
+        with patch.object(
+            self.env.registry, "clear_cache", wraps=self.env.registry.clear_cache
+        ) as mock_clear:
+            imd.unlink()
+        self.assertEqual(
+            [call.args for call in mock_clear.call_args_list], [("xmlid",)]
+        )
+
+    def test_unlinking_a_menu_xmlid_leaves_no_stale_loaded_menu(self):
+        menu = self.env["ir.ui.menu"].create(
+            {
+                "name": "Xmlid probe",
+                "action": f"ir.actions.act_window,{self.env.ref('base.action_res_users').id}",
+            }
+        )
+        self.env["ir.model.data"].create(
+            {
+                "module": "__test__",
+                "name": "xmlid_probe_menu",
+                "model": "ir.ui.menu",
+                "res_id": menu.id,
+            }
+        )
+        Menu = self.env["ir.ui.menu"]
+        self.assertEqual(
+            Menu.load_menus(False)[menu.id]["xmlid"], "__test__.xmlid_probe_menu"
+        )
+        self.env["ir.model.data"].search(
+            [("model", "=", "ir.ui.menu"), ("res_id", "=", menu.id)]
+        ).unlink()
+        self.assertEqual(Menu.load_menus(False)[menu.id]["xmlid"], "")

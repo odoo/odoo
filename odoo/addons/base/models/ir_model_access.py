@@ -153,7 +153,8 @@ class IrModelAccess(models.Model):
     def call_cache_clearing_methods(self) -> None:
         _debug.lifecycle("acl_cache_cleared")
         self.env.invalidate_all()
-        self.env.registry.clear_cache("stable")
+        # views bake each model's ACL groups into their cached field access
+        self.env.registry.clear_cache("stable", "templates")
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:

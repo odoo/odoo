@@ -4791,6 +4791,33 @@ class TestViewTranslations(common.TransactionCase):
         self.env.invalidate_all()
         return view
 
+    def test_resetting_to_another_view_writes_the_source_arch(self):
+        archf = '<form string="X"><div>%s</div></form>'
+        view = self.create_view(archf, ("Bread",), fr_FR=("Pain",))
+        other = self.env["ir.ui.view"].create(
+            {
+                "name": "other",
+                "model": "res.partner",
+                "arch": '<form string="X"><div>Bread</div><field name="name"/></form>',
+            }
+        )
+        wizard = (
+            self.env["reset.view.arch.wizard"]
+            .with_context(lang="fr_FR")
+            .create(
+                {
+                    "view_id": view.id,
+                    "reset_mode": "other_view",
+                    "compare_view_id": other.id,
+                }
+            )
+        )
+        wizard.reset_view_button()
+        self.env.invalidate_all()
+
+        self.assertIn('<field name="name"/>', view.with_context(lang=None).arch_db)
+        self.assertIn("Pain", view.with_context(lang="fr_FR").arch_db)
+
     def test_sync(self):
         archf = '<form string="X">%s</form>'
         terms_en = ("Bread and cheeze",)
@@ -5044,6 +5071,69 @@ class TestDefaultView(ViewCase):
             view2.id,
             "default_view should get the view with the lowest priority for a (model, view_type) pair",
         )
+
+    def test_an_access_line_refreshes_the_cached_field_groups(self):
+        group = self.env["res.groups"].create({"name": "Log readers"})
+        self.env["ir.model.data"].create(
+            {
+                "module": "__test__",
+                "name": "log_readers",
+                "model": "res.groups",
+                "res_id": group.id,
+            }
+        )
+        xmlid = "__test__.log_readers"
+        self.View.create(
+            {
+                "name": "log groups",
+                "model": "ir.logging",
+                "type": "form",
+                "priority": 1,
+                "arch": f'<form><field name="name"/><field name="func" groups="{xmlid}"/></form>',
+            }
+        )
+        reader = self.env["res.users"].create(
+            {
+                "name": "Log reader",
+                "login": "log_reader",
+                "group_ids": [
+                    Command.set([self.env.ref("base.group_user").id, group.id])
+                ],
+            }
+        )
+        self.env["ir.logging"].get_view(view_type="form")
+
+        self.env["ir.model.access"].create(
+            {
+                "name": "log readers",
+                "model_id": self.env["ir.model"]._get_id("ir.logging"),
+                "group_id": group.id,
+                "perm_read": True,
+            }
+        )
+
+        arch = (
+            self.env["ir.logging"].with_user(reader).get_view(view_type="form")["arch"]
+        )
+        self.assertIn('name="func"', arch)
+
+    def test_renaming_a_view_moves_the_cached_default(self):
+        Tag = self.env["res.partner.tag"]
+        first, second = self.View.create(
+            [
+                {
+                    "name": name,
+                    "model": "res.partner.tag",
+                    "type": "form",
+                    "priority": 1,
+                    "arch": f'<form string="{name}"><field name="name"/></form>',
+                }
+                for name in ("aaa default", "bbb default")
+            ]
+        )
+        self.assertEqual(Tag.get_view(view_type="form")["id"], first.id)
+        first.name = "zzz default"
+        self.assertEqual(Tag.get_view(view_type="form")["id"], second.id)
 
     def test_default_view_primary(self):
         view1 = self.View.create(

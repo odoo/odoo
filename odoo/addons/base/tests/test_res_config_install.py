@@ -53,3 +53,27 @@ class TestResConfigInstall(TransactionCase):
         ):
             with self.assertRaisesRegex(Exception, "We should not be here."):
                 self.config.execute()
+
+    def test_install_survives_an_uninstall_in_the_same_save(self):
+        config_fields = self.config._get_fields_classified()
+        uninstalled = [m for m in config_fields["module"] if m.state == "uninstalled"]
+        if len(uninstalled) < 2:
+            self.skipTest("Needs two uninstalled settings modules")
+        to_install, to_uninstall = uninstalled[:2]
+        to_uninstall.sudo().state = "installed"
+        self.config[f"module_{to_install.name}"] = True
+        self.config[f"module_{to_uninstall.name}"] = False
+        installed = []
+
+        def record_install(modules):
+            installed.extend(modules.mapped("name"))
+
+        with patch(
+            "odoo.addons.base.models.ir_module.IrModuleModule.button_immediate_install",
+            new=record_install,
+        ):
+            action = self.config.execute()
+
+        self.assertEqual(installed, [to_install.name])
+        self.assertEqual(action["res_model"], "base.module.uninstall")
+        self.assertEqual(action["context"]["default_module_ids"], to_uninstall.ids)

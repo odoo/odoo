@@ -18,6 +18,14 @@ class TestTagTag(TransactionCase):
         cls.leaf = Tag.create({"name": "Leaftag", "parent_id": cls.mid.id})
         cls.other = Tag.create({"name": "Loosetag"})
 
+    def test_a_code_computed_earlier_in_the_transaction_is_taken(self):
+        Tag = self.env["tag.tag"]
+        first = Tag.create({"name": "Crimson Dup"})
+        self.assertTrue(first.code)
+        second = Tag.create({"name": "crimson dup"})
+        self.assertNotEqual(first.code, second.code)
+        self.env.flush_all()
+
     def test_color_default_is_overridable_and_preserves_explicit_zero(self):
         Tag = self.env["tag.tag"]
         with patch.object(type(Tag), "_default_color", return_value=7):

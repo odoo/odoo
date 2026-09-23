@@ -1,3 +1,4 @@
+import threading
 from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -976,6 +977,35 @@ class TestLoginCooldown(TransactionCase):
             "203.0.113.8", remaining, "the just-failed source must be recorded"
         )
 
+    def test_a_failure_racing_the_first_row_is_counted(self):
+        source = "203.0.113.50"
+        cooldown = self.env["res.users"]._login_cooldown()
+        racer = threading.Thread(
+            target=cooldown.record_failure, args=(source, timedelta(seconds=60))
+        )
+        with self.env.registry.cursor() as cr:
+            cr.execute(
+                "INSERT INTO res_users_login_cooldown (source, failures, last_failure) "
+                "VALUES (%s, 1, %s)",
+                [source, datetime.now(UTC).replace(tzinfo=None)],
+            )
+            racer.start()
+            racer.join(0.5)
+            self.assertTrue(racer.is_alive(), "the racer waits on the first row")
+        racer.join(10)
+        self.assertFalse(racer.is_alive())
+        self.assertEqual(cooldown.state(source)[0], 2)
+
+    def test_a_success_without_failures_touches_no_ledger(self):
+        users = self.env["res.users"]
+        with (
+            patch(self._REQUEST, self._request("203.0.113.51")),
+            patch.object(type(users), "_clear_login_failures") as clear,
+        ):
+            with users._assert_can_auth(user=self.env.uid):
+                pass
+        clear.assert_not_called()
+
 
 @tagged("post_install", "-at_install")
 class TestLoginTimingSideChannel(TransactionCase):
@@ -1406,6 +1436,39 @@ class TestSelfServiceEscalation(TransactionCase):
             self.assertFalse(self.user.tag_ids)
         self.env.registry.clear_cache("stable")
         self.assertTrue(self.tag.exists(), "a relation edit destroyed the tag")
+
+    def test_linking_an_unreadable_record_is_not_escalated(self):
+        portal = self.env["res.users"].create(
+            {
+                "name": "Portal linker",
+                "login": "portal_linker",
+                "group_ids": [Command.set([self.env.ref("base.group_portal").id])],
+            }
+        )
+        stranger = self.env["res.partner"].create({"name": "Stranger"})
+        phone = self.env["phone.number"].create(
+            {"number": "+52 55 1234 5678", "partner_ids": [Command.link(stranger.id)]}
+        )
+        self.assertFalse(phone.with_user(portal).has_access("read"))
+
+        for value in (
+            [Command.link(phone.id)],
+            [Command.set(phone.ids)],
+            [phone.id],
+            phone,
+        ):
+            with self.assertRaises(AccessError):
+                portal.with_user(portal).write({"phone_ids": value})
+        self.assertNotIn(portal.partner_id, phone.partner_ids)
+
+    def test_linking_a_readable_record_is_still_escalated(self):
+        phone = (
+            self.env["phone.number"]
+            .with_user(self.user)
+            .create({"number": "+52 55 8765 4321"})
+        )
+        self._self_write({"phone_ids": [Command.link(phone.id)]})
+        self.assertIn(phone, self.user.phone_ids)
 
     def test_shorthand_values_are_classified_by_effect(self):
         Users = self.env["res.users"]

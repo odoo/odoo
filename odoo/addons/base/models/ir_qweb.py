@@ -583,7 +583,9 @@ class IrQweb(models.AbstractModel):
         # A t-set body captures the whole context it was written in, which is
         # nearly always the context it is rendered in: switching environments
         # and re-deriving the cache signature only when they differ.
-        context_switched = bool(params.context) and params.context != qweb.env.context
+        context_switched = bool(params.context) and not (
+            params.context.items() <= qweb.env.context.items()
+        )
         if context_switched:
             qweb = qweb.with_context(**params.context)
             cache_signature = qweb._get_template_cache_signature()
@@ -1336,11 +1338,10 @@ class IrQweb(models.AbstractModel):
         return compile_batch
 
     def _get_converted_image_data_uri(self, base64_source: str | bytes) -> str:
+        if isinstance(base64_source, str):
+            base64_source = base64_source.encode()
         if self.env.context.get("webp_as_jpg"):
-            magicword = base64_source[:1]
-            if isinstance(magicword, str):
-                magicword = magicword.encode()
-            if "webp" in FILETYPE_BASE64_MAGICWORD.get(magicword, "png"):
+            if "webp" in FILETYPE_BASE64_MAGICWORD.get(base64_source[:1], "png"):
                 base64_source = self._get_jpg_for_webp(base64_source) or base64_source
         return image_data_uri(base64_source)
 
@@ -2572,7 +2573,7 @@ class IrQweb(models.AbstractModel):
             values[{expr_as + "_size"!r}] = {size} = {t_foreach}
             {t_foreach} = range({size})
         else:
-            {size} = None
+            values[{expr_as + "_size"!r}] = {size} = None
         {has_value} = False
         if isinstance({t_foreach}, Mapping):
             {t_foreach} = {t_foreach}.items()

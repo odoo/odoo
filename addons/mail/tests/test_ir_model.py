@@ -38,3 +38,24 @@ class TestIrModelMail(TransactionCase):
             self.assertTrue(definition["has_activities"])
             self.assertTrue(definition["fields"]["email"]["tracking"])
             self.assertNotIn("tracking", definition["fields"]["comment"])
+
+    def test_a_custom_thread_model_reflects_its_mixins_without_a_false_module(self):
+        model = self.env["ir.model"].create(
+            {
+                "name": "Threaded Custom",
+                "model": "x_mail_threaded",
+                "state": "manual",
+                "is_mail_thread": True,
+                "is_mail_activity": True,
+            }
+        )
+        inherits = self.env["ir.model.inherit"].search([("model_id", "=", model.id)])
+        self.assertIn("mixin.mail.thread", inherits.parent_id.mapped("model"))
+        self.assertIn(
+            "mixin.mail.activity",
+            inherits.parent_id.mapped("model"),
+            "only the custom class links this mixin, and it has no module",
+        )
+        self.assertFalse(
+            self.env["ir.model.data"].search_count([("module", "=", "False")])
+        )

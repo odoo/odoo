@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -131,3 +132,48 @@ class TestMergePartner(AccountTestInvoicingCommon):
             self.partner1,
             "Payment's bank account should belong to the destination partner",
         )
+
+    def test_merging_a_partner_whose_archived_account_a_payment_names(self):
+        self.bank2.action_archive()
+        wizard = self.env["base.partner.merge.automatic.wizard"].create({})
+        wizard._merge([self.partner1.id, self.partner2.id], self.partner1)
+
+        self.assertFalse(self.partner2.exists())
+        self.assertEqual(self.payment2.bank_account_id, self.bank2)
+        self.assertEqual(self.bank2.partner_id, self.partner1)
+
+    def test_merging_without_absorbing_keeps_the_accounts_payments_name(self):
+        wizard = self.env["base.partner.merge.automatic.wizard"].create(
+            {"absorb_source_values": False}
+        )
+        wizard._merge([self.partner1.id, self.partner2.id], self.partner1)
+
+        self.assertFalse(self.partner2.exists())
+        self.assertEqual(self.payment2.bank_account_id.partner_id, self.partner1)
+
+    def test_merging_leaves_a_posted_bill_as_it_was_posted(self):
+        term = self.env.ref("account.account_payment_term_30days")
+        self.partner1.property_supplier_payment_term_id = self.env.ref(
+            "account.account_payment_term_immediate"
+        )
+        bill = self.env["account.move"].create(
+            {
+                "move_type": "in_invoice",
+                "partner_id": self.partner2.id,
+                "invoice_date": "2026-01-01",
+                "bank_account_id": self.bank2.id,
+                "invoice_payment_term_id": term.id,
+                "invoice_line_ids": [
+                    Command.create({"name": "line", "quantity": 1, "price_unit": 10})
+                ],
+            }
+        )
+        bill.action_post()
+        wizard = self.env["base.partner.merge.automatic.wizard"].create({})
+        wizard._merge([self.partner1.id, self.partner2.id], self.partner1)
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        self.assertEqual(bill.partner_id, self.partner1)
+        self.assertEqual(bill.bank_account_id, self.bank2)
+        self.assertEqual(bill.invoice_payment_term_id, term)

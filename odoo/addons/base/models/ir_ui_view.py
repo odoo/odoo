@@ -78,7 +78,7 @@ VIEW_MODIFIERS = ("column_invisible", "invisible", "readonly", "required")
 CALENDAR_DATE_ATTRS = ("date_start", "date_delay", "date_stop", "color", "all_day")
 
 
-_TEMPLATE_CACHE_FIELDS = frozenset(
+_CUSTOMIZATION_RESET_FIELDS = frozenset(
     {
         "arch",
         "arch_base",
@@ -92,6 +92,8 @@ _TEMPLATE_CACHE_FIELDS = frozenset(
         "group_ids",
     }
 )
+
+_NON_RENDERING_FIELDS = frozenset({"arch_prev"})
 
 _REVALIDATE_ALWAYS = frozenset({"active", "arch_db", "inherit_id"})
 _REVALIDATE_ON_CHANGE = frozenset({"mode", "model", "priority", "type"})
@@ -1101,8 +1103,12 @@ class IrUiView(models.Model):
         vals = self._with_arch_updated(vals)
 
         nested_arch_write = self.env.context.get("ir_ui_view_nested_arch_write")
-        if not nested_arch_write and _TEMPLATE_CACHE_FIELDS.intersection(vals):
-            self._forget_rendered_templates()
+        if not nested_arch_write:
+            if _CUSTOMIZATION_RESET_FIELDS.intersection(vals):
+                self._forget_customizations()
+            if not _NON_RENDERING_FIELDS.issuperset(vals):
+                _debug.lifecycle("write.template_cache_cleared", views=len(self))
+                self.env.registry.clear_cache("templates")
         if "arch_db" in vals and not self.env.context.get("no_save_prev"):
             self._save_arch_prev()
 
@@ -1150,18 +1156,11 @@ class IrUiView(models.Model):
             return vals
         return {**vals, "arch_updated": True}
 
-    def _forget_rendered_templates(self) -> None:
-        """What a change to how these views render invalidates: the users'
-        customizations of them and the registry-wide templates cache."""
+    def _forget_customizations(self) -> None:
         custom_view = self._get_customizations()
-        _debug.lifecycle(
-            "write.template_cache_cleared",
-            views=len(self),
-            custom_views=len(custom_view),
-        )
+        _debug.lifecycle("write.customizations_reset", custom_views=len(custom_view))
         if custom_view:
             custom_view.unlink()
-        self.env.registry.clear_cache("templates")
 
     def _save_arch_prev(self) -> None:
         saved = 0  # debuglog

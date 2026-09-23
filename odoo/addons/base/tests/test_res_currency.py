@@ -514,6 +514,15 @@ class TestResCurrency(TransactionCase):
             f"expected a 'Minus' prefix for a negative sub-unit amount, got {text!r}",
         )
 
+    def test_amount_to_text_names_the_rounded_amount(self):
+        usd = self.env.ref("base.USD")
+        self.assertIn("Sixty-Eight", usd.amount_to_text(2.675))
+        self.assertIn(" and One ", usd.amount_to_text(1.005))
+
+    def test_amount_to_text_of_a_negative_rounding_to_zero_is_zero(self):
+        text = self.env.ref("base.USD").amount_to_text(-0.001)
+        self.assertFalse(text.startswith("Minus"), text)
+
     def test_res_currency_name_search(self):
         currency_A, currency_B = self.env["res.currency"].create(
             [
@@ -610,3 +619,29 @@ class TestResCurrencyRateMemoScope(TransactionCase):
                 self._rates(su, sql=True),
                 f"memo/SQL divergence for su={su}",
             )
+
+
+class TestResCurrencyViewsAndGuards(TransactionCase):
+    def test_rate_list_labels_follow_the_opened_currency(self):
+        Rate = self.env["res.currency.rate"]
+        labels = {}
+        for code in ("USD", "GBP"):
+            currency = self.env.ref(f"base.{code}")
+            arch = Rate.with_context(
+                active_model="res.currency", active_id=currency.id
+            ).get_view(view_type="list")["arch"]
+            node = etree.fromstring(arch).find('.//field[@name="company_rate"]')
+            labels[code] = node.get("string")
+        self.assertTrue(labels["USD"].startswith("USD per "))
+        self.assertTrue(labels["GBP"].startswith("GBP per "))
+
+    def test_rate_list_ignores_an_active_id_of_another_model(self):
+        arch = (
+            self.env["res.currency.rate"]
+            .with_context(
+                active_model="res.partner", active_id=self.env.ref("base.USD").id
+            )
+            .get_view(view_type="list")["arch"]
+        )
+        node = etree.fromstring(arch).find('.//field[@name="company_rate"]')
+        self.assertTrue(node.get("string").startswith("Unit per "))

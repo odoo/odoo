@@ -671,6 +671,18 @@ class TestQwebFieldImageInput(common.TransactionCase):
         with self.assertRaises(ValueError):
             self.value_to_html(smuggled)
 
+    def test_an_ascii_stray_byte_is_refused(self):
+        smuggled = self.PNG_B64[:10] + b"!" + self.PNG_B64[10:]
+        self.assertEqual(base64.b64decode(smuggled), base64.b64decode(self.PNG_B64))
+        with self.assertRaises(ValueError):
+            self.value_to_html(smuggled)
+
+    def test_a_line_wrapped_payload_renders_unwrapped(self):
+        wrapped = self.PNG_B64[:40] + b"\n" + self.PNG_B64[40:]
+        self.assertEqual(
+            str(self.value_to_html(wrapped)), str(self.value_to_html(self.PNG_B64))
+        )
+
     def test_a_format_with_no_registered_mime_falls_back_to_the_sniff(self):
         from unittest.mock import patch
 
@@ -679,6 +691,23 @@ class TestQwebFieldImageInput(common.TransactionCase):
         with patch.dict(Image.MIME, clear=True):
             rendered = str(self.value_to_html(self.PNG_B64))
         self.assertIn("data:image/png;base64,", rendered)
+
+
+class TestQwebFieldMany2ManyNames(common.TransactionCase):
+    def test_a_record_without_a_display_name_is_left_out(self):
+        Tag = self.env["res.partner.tag"]
+        tags = Tag.create([{"name": "Kept"}, {"name": "Blank"}])
+        with patch.object(
+            type(Tag),
+            "_compute_display_name",
+            lambda records: [
+                record.update({"display_name": record.name != "Blank" and record.name})
+                for record in records
+            ],
+        ):
+            tags.invalidate_recordset(["display_name"])
+            rendered = self.env["ir.qweb.field.many2many"].value_to_html(tags, {})
+        self.assertEqual(str(rendered), "Kept")
 
 
 class TestQwebFieldBarcodeInput(common.TransactionCase):

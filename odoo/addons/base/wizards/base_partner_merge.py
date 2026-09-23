@@ -169,6 +169,10 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
     def _merge_bank_accounts(
         self, src_partners: models.BaseModel, dst_partner: models.BaseModel
     ) -> None:
+        # archived accounts too: a source's account dies with it by cascade,
+        # and one an invoice or a payment names refuses to
+        src_partners = src_partners.sudo().with_context(active_test=False)
+        dst_partner = dst_partner.sudo().with_context(active_test=False)
         all_src_accounts = src_partners.bank_account_ids
 
         absorbed = 0  # debuglog
@@ -177,18 +181,20 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 lambda a, src_account=src_account: (
                     a.sanitized_acc_number == src_account.sanitized_acc_number
                 )
-            )
+            ).sorted(lambda a: not a.active)[:1]
             if duplicate_account:
+                if src_account.active and not duplicate_account.active:
+                    duplicate_account.action_unarchive()
                 self._update_foreign_keys_generic(
                     "res.partner.bank.account", src_account, duplicate_account
                 )
                 self._update_reference_fields_generic(
                     "res.partner.bank.account", src_account, duplicate_account
                 )
-                src_account.sudo().unlink()
+                src_account.unlink()
                 absorbed += 1  # debuglog
             else:
-                src_account.sudo().write({"partner_id": dst_partner.id})
+                src_account.write({"partner_id": dst_partner.id})
         _debug.pipeline(
             "merge_bank_accounts",
             dst=dst_partner.id,
@@ -225,6 +231,10 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
     def _merge_identifiers(
         self, src_partners: models.BaseModel, dst_partner: models.BaseModel
     ) -> None:
+        # record rules hide a confidential identifier from all but its holder,
+        # and one left on a source is deleted with it by cascade
+        src_partners = src_partners.sudo().with_context(active_test=False)
+        dst_partner = dst_partner.sudo().with_context(active_test=False)
         held_types = set(dst_partner.identifier_ids.type_id.ids)
         held_values = {
             (i.type_id.id, i.normalized_value) for i in dst_partner.identifier_ids
@@ -239,14 +249,14 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             else:
                 clash = identifier_type.id in held_types
             if clash:
-                src_identifier.sudo().unlink()
+                src_identifier.unlink()
                 _debug.logic(
                     "merge_identifier_dropped",
                     dst=dst_partner.id,
                     type=identifier_type.code,
                 )
             else:
-                src_identifier.sudo().write({"partner_id": dst_partner.id})
+                src_identifier.write({"partner_id": dst_partner.id})
                 held_types.add(identifier_type.id)
                 held_values.add((identifier_type.id, src_identifier.normalized_value))
 
@@ -314,7 +324,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         deferred_values = {}
         if self._is_source_absorbed_on_merge():
             self._merge_phone_numbers(src_partners, dst_partner)
-            self._merge_bank_accounts(src_partners, dst_partner)
+        self._merge_bank_accounts(src_partners, dst_partner)
         self._merge_identifiers(src_partners, dst_partner)
 
         with _debug.perf(
@@ -641,11 +651,6 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             "target": "new",
         }
 
-    def _create_merge_lines_from_query(self, query: SQL) -> None:
-        self.check_singleton()
-        self.env.cr.execute(query)  # noqa: E8501  built via SQL() by _generate_query or action_process_parent_migration, not from user input
-        self._create_merge_lines(self.env.cr.fetchall())
-
     def _create_merge_lines(self, groups: list[tuple[int, list[int]]]) -> None:
         self.check_singleton()
         model_mapping = self._get_exclusion_models()
@@ -715,7 +720,15 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
 
         _debug.pipeline("automatic_merge", wizard=self.id, lines=len(self.line_ids))
         for line in self.line_ids:
-            self._merge_duplicate_group(literal_eval(line.aggr_ids))
+            try:
+                with self.env.cr.savepoint():
+                    self._merge_duplicate_group(literal_eval(line.aggr_ids))
+            except UserError as error:
+                _logger.info(
+                    "Automatic merge skipped group %s: %s", line.aggr_ids, error
+                )
+                _debug.logic("automatic_merge_group_refused", line=line.id)
+                continue
             line.unlink()
             self.env.cr.commit()
 
@@ -727,88 +740,6 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             "view_mode": "form",
             "target": "new",
         }
-
-    def action_process_parent_migration(self) -> dict[str, Any]:
-        self.check_singleton()
-
-        query = SQL("""
-            SELECT
-                min(p1.id),
-                array_agg(DISTINCT p1.id)
-            FROM
-                res_partner as p1
-            INNER join
-                res_partner as p2
-            ON
-                p1.email = p2.email AND
-                p1.name = p2.name AND
-                (p1.parent_id = p2.id OR p1.id = p2.parent_id)
-            WHERE
-                p2.id IS NOT NULL
-            GROUP BY
-                p1.email,
-                p1.name,
-                CASE WHEN p1.parent_id = p2.id THEN p2.id
-                    ELSE p1.id
-                END
-            HAVING COUNT(*) >= 2
-            ORDER BY
-                min(p1.id)
-        """)
-
-        self._create_merge_lines_from_query(query)
-
-        _debug.pipeline("parent_migration", wizard=self.id, lines=len(self.line_ids))
-        for line in self.line_ids:
-            self._merge_duplicate_group(literal_eval(line.aggr_ids))
-            line.unlink()
-            self.env.cr.commit()
-
-        self.write({"state": "finished"})
-
-        self.env.cr.execute("""
-            UPDATE
-                res_partner
-            SET
-                is_company = NULL,
-                parent_id = NULL
-            WHERE
-                parent_id = id
-        """)
-        _debug.lifecycle("self_parents_cleared", rows=self.env.cr.rowcount)
-
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": self._name,
-            "res_id": self.id,
-            "view_mode": "form",
-            "target": "new",
-        }
-
-    def action_update_all_process(self) -> dict[str, Any]:
-        self.check_singleton()
-        self.action_process_parent_migration()
-
-        wizard = self.create(
-            {
-                "group_by_vat": True,
-                "group_by_email": True,
-                "group_by_name": True,
-            }
-        )
-        wizard.action_start_automatic_process()
-
-        self.env.cr.execute("""
-            UPDATE
-                res_partner
-            SET
-                is_company = NULL
-            WHERE
-                parent_id IS NOT NULL AND
-                is_company IS NOT NULL
-        """)
-
-        return self._action_next_screen()
 
     def action_merge(self) -> dict[str, Any]:
         if len(self.partner_ids) > self._MERGE_SIZE_LIMIT:

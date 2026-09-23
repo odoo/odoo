@@ -38,6 +38,7 @@ from .ir_cron import (
     BadModuleStateError,
     BadVersionError,
     IrCron,
+    _job_default_env,
     is_user_archived,
     notify_channel,
     schedule_notify_after_commit,
@@ -1113,7 +1114,6 @@ class IrJob(models.Model):
         cr, job: dict[str, Any]
     ) -> tuple[api.Environment, models.BaseModel]:
         env = api.Environment(cr, job["user_id"], dict(job["context"] or {}))
-        env.transaction.default_env = env
         if is_user_archived(env):
             _debug.logic("job.terminal", job=job["id"], reason="user_archived")
             raise TerminalJobError(
@@ -1199,11 +1199,11 @@ class IrJob(models.Model):
         )
         job.pop("defer", None)
         try:
-            with _running_job(job):
+            with _job_default_env(env), _running_job(job):
                 getattr(records, job["method_name"])(
                     *(job["args"] or []), **(job["kwargs"] or {})
                 )
-            env.flush_all()
+                env.flush_all()
         except MissingError:
             if records and not records.exists():
                 _debug.logic("job.terminal", job=job["id"], reason="records_missing")
@@ -1666,6 +1666,16 @@ class IrJob(models.Model):
                 _debug.logic("requeue.refused", job=job.id, state=job.state)
                 raise UserError(
                     self.env._("Only failed or cancelled jobs can be requeued.")
+                )
+            if (job.depends_on_ids - self).filtered(
+                lambda dep: dep.state in DEAD_DEPENDENCY_STATES
+            ):
+                _debug.logic("requeue.refused", job=job.id, reason="dead_dependency")
+                raise UserError(
+                    self.env._(
+                        "Cannot requeue a job after a failed or cancelled job; "
+                        "requeue the dependency first."
+                    )
                 )
         cleared = {
             "retry": 0,

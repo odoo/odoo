@@ -424,6 +424,20 @@ class TestCompanyConfigLink(TransactionCase):
         self.assertEqual(found, config)
         self.assertEqual(Config.search_count([("company_id", "=", company.id)]), 1)
 
+    def test_a_write_leaves_the_callers_values_alone(self):
+        companies = self.env["res.company"].create(
+            [{"name": "Shared Vals A"}, {"name": "Shared Vals B"}]
+        )
+        vals = {"report_footer": "<p>Shared footer</p>"}
+        for company in companies:
+            company.write(vals)
+        self.assertEqual(vals, {"report_footer": "<p>Shared footer</p>"})
+        for company in companies:
+            self.assertIn(
+                "Shared footer",
+                self.env["report.config"]._for_each(company).report_footer,
+            )
+
     def test_a_deleted_configuration_is_made_again(self):
         Config = self.env["report.config"]
         company = self.env["res.company"].create({"name": "Deleted Config Co"})

@@ -11,13 +11,14 @@ from unittest.mock import patch
 
 from PIL import Image
 
+from odoo import Command
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.hashing import ALGO_TAG
 from odoo.models import PREFETCH_MAX
 from odoo.tests.common import TransactionCase, skip_if_dev_mode, tagged
-from odoo.tools import OrderedSet, human_size, mute_logger
+from odoo.tools import OrderedSet, config, human_size, mute_logger
 from odoo.tools.image import image_to_base64
 
 from odoo.addons.base.models import ir_attachment as ir_attachment_module
@@ -874,6 +875,24 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
                 "content outside the filestore was served through a symlinked key",
             )
 
+    def test_a_symlinked_filestore_keeps_its_configured_spelling(self):
+        link = Path(self.filestore).parent / f"linked-{os.urandom(6).hex()}"
+        link.symlink_to(Path(self.filestore).resolve(), target_is_directory=True)
+        self.addCleanup(link.unlink)
+        self.patch(IrAttachment, "_get_filestore", lambda self: str(link))
+
+        full = self.Attachment._get_full_path(self.blob1_fname)
+
+        self.assertEqual(full, str(link / self.blob1_fname))
+        Path(full).relative_to(Path(config["data_dir"], "filestore"))
+        self.assertEqual(
+            os.path.realpath(full),
+            os.path.realpath(Path(self.filestore, self.blob1_fname)),
+        )
+        with self.assertRaises(ValueError):
+            self.patch(IrAttachment, "_normalize_store_key", lambda self, path: path)
+            self.Attachment._get_full_path("../../etc/passwd")
+
     def test_fixed_subdirs_resolve_to_the_same_place_as_full_path(self):
         for name in ("tmp", "checklist"):
             self.assertEqual(
@@ -1436,6 +1455,38 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             att.raw = b"v3"
             att.flush_recordset()
             self.assertGreaterEqual(spy.call_count, 1, "record.raw= must re-check")
+
+    def test_publishing_a_url_attachment_is_a_serving_write(self):
+        editor = self.env["res.users"].create(
+            {
+                "name": "Partner editor",
+                "login": "partner_editor_serving",
+                "group_ids": [
+                    Command.set(
+                        [
+                            self.env.ref("base.group_user").id,
+                            self.env.ref("base.group_partner_manager").id,
+                        ]
+                    )
+                ],
+            }
+        )
+        partner = self.env["res.partner"].create({"name": "Served owner"})
+        att = self.Attachment.create(
+            {
+                "name": "hidden",
+                "type": "binary",
+                "url": "/vanity/served",
+                "raw": b"not public yet",
+                "res_model": "res.partner",
+                "res_id": partner.id,
+                "public": False,
+            }
+        )
+        self.assertTrue(att.with_user(editor).has_access("write"))
+        with self.assertRaises(ValidationError):
+            att.with_user(editor).write({"public": True})
+        att.with_user(editor).write({"public": False})
 
     @mute_logger("odoo.addons.base.models.ir_attachment")
     def test_file_write_atomic_no_poison(self):
@@ -2177,6 +2228,33 @@ class TestContentDigestKeys(TransactionCaseWithUserDemo):
                 )
             att.invalidate_recordset()
             self.assertFalse(att.store_fname.startswith("b3/"))
+
+    def test_rehash_pages_past_rows_it_cannot_read(self):
+        with self._tagged_digest_build():
+            self._drain_legacy_rows()
+            blocked = [
+                self._legacy_row(b"blocked-" + os.urandom(16))[0] for _ in range(2)
+            ]
+            readable, _fname = self._legacy_row(b"readable-" + os.urandom(16))
+            real_read = IrAttachment._read_file
+
+            def read(records, fname, *args, **kwargs):
+                if fname in blocked_fnames:
+                    return b""
+                return real_read(records, fname, *args, **kwargs)
+
+            blocked_fnames = {att.store_fname for att in blocked}
+            with patch.object(IrAttachment, "_read_file", read):
+                first = self.Attachment._gc_rehash_legacy_keys(limit=2)
+                second = self.Attachment._gc_rehash_legacy_keys(limit=2)
+
+            self.assertEqual(first, (0, 1))
+            self.assertEqual(second, (1, 0))
+            readable.invalidate_recordset()
+            self.addCleanup(
+                Path(self.filestore, readable.store_fname).unlink, missing_ok=True
+            )
+            self.assertTrue(readable.store_fname.startswith("b3/"))
 
     def test_rehash_skips_other_backends_keys(self):
         with self._tagged_digest_build():

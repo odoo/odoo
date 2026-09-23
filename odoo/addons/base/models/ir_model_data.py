@@ -178,10 +178,12 @@ class IrModelData(models.Model):
     def unlink(self) -> bool:
         if not self:
             return True
-        touch_groups = any(data.model == "res.groups" for data in self.exists())
+        models_ = set(self.exists().mapped("model"))
+        touch_groups = "res.groups" in models_
         _debug.lifecycle("unlink", count=len(self), touch_groups=touch_groups)
         res = super().unlink()
-        self.env.registry.clear_cache()
+        # the loaded menus carry their xmlids, in the "default" group
+        self.env.registry.clear_cache("default" if "ir.ui.menu" in models_ else "xmlid")
         if touch_groups:
             self.env.registry.clear_cache("groups")
         return res

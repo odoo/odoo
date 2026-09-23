@@ -334,7 +334,10 @@ class IrModelFieldsSelection(models.Model):
         if not self:
             return True
 
-        if not all(self._fields[fname].translate for fname in vals):
+        if not all(
+            (field := self._fields.get(fname)) is not None and field.translate
+            for fname in vals
+        ):
             self._check_base_field_mutation(self.field_id)
 
         if "value" in vals:

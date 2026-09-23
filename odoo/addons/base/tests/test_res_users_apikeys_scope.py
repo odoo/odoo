@@ -2,7 +2,7 @@ import time
 from datetime import timedelta
 
 from odoo import fields
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.service import api_scope
 from odoo.service.model import call_kw
 from odoo.tests import tagged
@@ -306,6 +306,25 @@ class TestKeysAndScopes(TransactionCase):
         self.assertEqual(keys._check_credentials(scope="mcp", key=universal), user.id)
         self.assertEqual(keys._check_credentials(scope="rpc", key=universal), user.id)
 
+    def test_a_key_bound_to_an_archived_scope_opens_nothing(self):
+        user = new_test_user(
+            self.env, login="scope_archived_user", groups="base.group_user"
+        )
+        scope = self.env["res.users.apikeys.scope"].create(
+            {"name": "Archived door", "key": "archived_door"}
+        )
+        keys = self.env["res.users.apikeys"].with_user(user)
+        key = keys._generate(
+            "archived_door", "k", fields.Datetime.now() + timedelta(hours=1)
+        )
+        self.assertEqual(
+            keys._check_credentials(scope="archived_door", key=key), user.id
+        )
+        scope.action_archive()
+        self.assertIsNone(keys._check_credentials(scope="archived_door", key=key))
+        with self.assertRaises(AccessDenied):
+            self.env["res.users"]._check_uid_passwd(user.id, key)
+
     def test_a_scope_string_nobody_described_is_a_record_reaching_everything(self):
         scope = self.env["res.users.apikeys.scope"]._get_or_create("never_seen")
         self.assertEqual((scope.key, scope.name), ("never_seen", "never_seen"))
@@ -327,6 +346,25 @@ class TestKeysAndScopes(TransactionCase):
             self.env.ref("base.apikeys_scope_rpc").id,
         )
         self.assertIsNone(Users._check_uid_passwd(user.id, "scope_rpc_user"))
+
+    def test_a_user_without_a_password_still_enters_rpc_with_a_key(self):
+        user = new_test_user(
+            self.env, login="scope_nopass_user", groups="base.group_user"
+        )
+        key = (
+            self.env["res.users.apikeys"]
+            .with_user(user)
+            ._generate("rpc", "k", fields.Datetime.now() + timedelta(hours=1))
+        )
+        user._clear_password()
+        self.env.flush_all()
+        Users = self.env["res.users"]
+        self.assertEqual(
+            Users._check_uid_passwd(user.id, key),
+            self.env.ref("base.apikeys_scope_rpc").id,
+        )
+        with self.assertRaises(AccessDenied):
+            Users._check_uid_passwd(user.id, "anything")
 
     def test_a_key_bound_to_another_door_enters_xmlrpc_under_its_own_scope(self):
         user = new_test_user(

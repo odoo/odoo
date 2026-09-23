@@ -77,6 +77,9 @@ BIN_SIZE_KEYS = {
 }
 
 
+_REHASH_CURSOR_PARAM = "ir_attachment.rehash_legacy_keys_after_id"
+
+
 @functools.cache
 def _get_filestore_root(filestore: str) -> str:
     return str(Path(filestore).resolve())
@@ -84,7 +87,7 @@ def _get_filestore_root(filestore: str) -> str:
 
 @functools.cache
 def _get_filestore_dir_path(filestore: str, name: str) -> Path:
-    return Path(_get_filestore_root(filestore), name)
+    return Path(filestore, name)
 
 
 def _get_condition_values(
@@ -407,7 +410,7 @@ class IrAttachment(models.Model):
             "write", count=len(self), fields=list(vals), has_content=has_content
         )
         res = super().write(vals)
-        if "url" in vals or "type" in vals:
+        if "url" in vals or "type" in vals or vals.get("public"):
             self._check_serving_attachments()
         return res
 
@@ -709,12 +712,16 @@ class IrAttachment(models.Model):
     @api.model
     def _get_full_path(self, path: str) -> str:
         path = self._normalize_store_key(path)
-        filestore = _get_filestore_root(self._get_filestore())
-        full = os.path.realpath(Path(filestore, path))
-        if full != filestore and not full.startswith(filestore + os.sep):
+        configured = self._get_filestore()
+        filestore = _get_filestore_root(configured)
+        resolved = os.path.realpath(Path(filestore, path))
+        if resolved != filestore and not resolved.startswith(filestore + os.sep):
             _debug.logic("store_key_refused", key=path, reason="escapes_filestore")
             raise ValueError(f"Attachment path {path!r} escapes the filestore")
-        return full
+        # the configured spelling, not the resolved one: X-Accel-Redirect maps
+        # a path under the configured data_dir, which a symlinked filestore
+        # would otherwise fall outside of
+        return str(Path(configured, path))
 
     @api.model
     def _get_filestore_dir(self, name: str) -> Path:
@@ -1826,9 +1833,21 @@ class IrAttachment(models.Model):
             _debug.logic("rehash_skipped", reason="not_file_storage")
             return 0, 0
 
+        # keyset paging: rows it cannot read stay legacy, and a page taken from
+        # the head of the table would meet them again on every run
+        ICP = self.env["ir.config_parameter"].sudo()
+        after = ICP.get_param_int(_REHASH_CURSOR_PARAM, 0)
         domain = self._get_domain_legacy_keys()
         model = self.sudo()._with_field_rows()
-        legacy = model.search(domain, order="id", limit=limit)
+        legacy = model.search(
+            domain & Domain("id", ">", after), order="id", limit=limit
+        )
+        if not legacy:
+            if after:
+                _debug.lifecycle("legacy_keys_pass_done", after=after)
+                ICP.set_param(_REHASH_CURSOR_PARAM, 0)
+            return 0, 0
+        ICP.set_param(_REHASH_CURSOR_PARAM, legacy[-1].id)
         rekeyed = 0
         backend = self._get_storage_backend()
         for attach in legacy:
@@ -1855,9 +1874,11 @@ class IrAttachment(models.Model):
         _debug.lifecycle(
             "legacy_keys_rehashed", candidates=len(legacy), rekeyed=rekeyed
         )
+        remaining = model.search_count(
+            domain & Domain("id", ">", legacy[-1].id), limit=limit + 1
+        )
         if not rekeyed:
-            return 0, 0
-        remaining = model.search_count(domain, limit=limit + 1)
+            return 0, remaining
         _logger.info(
             "filestore rehash: re-keyed %d attachment(s) to the %s digest "
             "(%s%d still on a legacy key)",

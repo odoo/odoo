@@ -140,6 +140,7 @@ class ResUsersApikeys(models.Model):
         door named (``scope=None``) any key matches and answers the scope it is
         bound to: the universal door, XML-RPC, applies the key's own rules.
         """
+        self.env["res.users.apikeys.scope"].flush_model(["active", "key"])
         self.env.cr.execute(
             SQL(
                 """
@@ -148,6 +149,7 @@ class ResUsersApikeys(models.Model):
                 INNER JOIN res_users u ON (u.id = k.user_id)
                 LEFT JOIN res_users_apikeys_scope s ON (s.id = k.scope_id)
                 WHERE u.active AND k.index = %s
+                  AND (k.scope_id IS NULL OR s.active)
                   AND (%s::varchar IS NULL OR k.scope_id IS NULL OR s.key = %s) %s
                 """,
                 SQL.identifier(self._table),

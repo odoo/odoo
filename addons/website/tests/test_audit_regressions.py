@@ -1024,3 +1024,33 @@ class TestFormSignatureTreatsEmptyRecipientAsAbsent(TransactionCase):
             website_form_signature_payload("to@example.com", {"email_cc": "cc@x.com"}),
             website_form_signature_payload("to@example.com", {}),
         )
+
+
+@tagged("post_install", "-at_install")
+class TestRestrictedPageLeavesTheTemplateCache(HttpCase):
+    URL = "/test-c9-restricted"
+    BODY = "C9RESTRICTEDBODY"
+
+    def test_restricting_a_served_page_reaches_the_next_visitor(self):
+        page = self.env["website.page"].create(
+            {
+                "name": "C9 Restricted",
+                "url": self.URL,
+                "is_published": True,
+                "type": "qweb",
+                "key": "website.test_c9_restricted",
+                "arch": '<t t-name="website.test_c9_restricted">'
+                '<t t-call="website.layout">%s</t></t>' % self.BODY,
+            }
+        )
+        self.env.flush_all()
+        served = self.url_open(self.URL, allow_redirects=False)
+        self.assertEqual(served.status_code, 200)
+        self.assertIn(self.BODY, served.text)
+
+        page.view_id.write({"visibility": "connected"})
+        self.env.flush_all()
+
+        restricted = self.url_open(self.URL, allow_redirects=False)
+        self.assertNotIn(self.BODY, restricted.text)
+        self.assertNotEqual(restricted.status_code, 200)

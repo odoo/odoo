@@ -704,42 +704,10 @@ class IrSequence(models.Model):
         ).get_next_char(number_next)
 
     @api.model
-    def next_by_code(self, sequence_code: str, sequence_date: Any = None) -> str | bool:
+    def _get_by_code(self, sequence_code: str) -> Self:
         self.browse().check_access("read")
         company_id = self.env.company.id
-        seq_ids = self.search(
-            [
-                ("code", "=", sequence_code),
-                ("company_id", "in", [company_id, False]),
-            ],
-            order="company_id, id",
-        )
-        if not seq_ids:
-            _logger.debug(
-                "No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company.",
-                sequence_code,
-            )
-            _debug.logic("code_not_found", code=sequence_code, company=company_id)
-            return False
-        seq_id = seq_ids[0]
-        _debug.logic(
-            "code_resolved",
-            code=sequence_code,
-            company=company_id,
-            sequence=seq_id.id,
-            candidates=len(seq_ids),
-        )
-        return seq_id._next(sequence_date=sequence_date)
-
-    @api.model
-    def next_by_code_batch(
-        self, sequence_code: str, count: int, sequence_date: Any = None
-    ) -> list[str] | Literal[False]:
-        self.browse().check_access("read")
-        if count <= 0:
-            return []
-        company_id = self.env.company.id
-        seq_ids = self.search(
+        sequence = self.search(
             [
                 ("code", "=", sequence_code),
                 ("company_id", "in", [company_id, False]),
@@ -747,21 +715,37 @@ class IrSequence(models.Model):
             order="company_id, id",
             limit=1,
         )
-        if not seq_ids:
+        if not sequence:
             _logger.debug(
                 "No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company.",
                 sequence_code,
             )
-            _debug.logic("code_not_found", code=sequence_code, company=company_id)
-            return False
         _debug.logic(
-            "code_resolved_batch",
+            "code_resolved",
             code=sequence_code,
             company=company_id,
-            sequence=seq_ids.id,
-            count=count,
+            sequence=sequence.id,
         )
-        return seq_ids._next_batch(count, sequence_date=sequence_date)
+        return sequence
+
+    @api.model
+    def next_by_code(self, sequence_code: str, sequence_date: Any = None) -> str | bool:
+        sequence = self._get_by_code(sequence_code)
+        if not sequence:
+            return False
+        return sequence._next(sequence_date=sequence_date)
+
+    @api.model
+    def next_by_code_batch(
+        self, sequence_code: str, count: int, sequence_date: Any = None
+    ) -> list[str] | Literal[False]:
+        if count <= 0:
+            self.browse().check_access("read")
+            return []
+        sequence = self._get_by_code(sequence_code)
+        if not sequence:
+            return False
+        return sequence._next_batch(count, sequence_date=sequence_date)
 
 
 class IrSequenceDate_Range(models.Model):

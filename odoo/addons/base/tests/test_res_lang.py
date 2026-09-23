@@ -227,6 +227,28 @@ class test_res_lang(TransactionCase):
         with self.assertRaisesRegex(UserError, "archived users"):
             language.active = False
 
+    def test_deactivation_sees_contacts_outside_the_current_companies(self):
+        language = self.env["res.lang"]._activate_lang("en_GB")
+        company_a = self.env.company
+        company_b = self.env["res.company"].create({"name": "Elsewhere"})
+        partner = self.env["res.partner"].create(
+            {"name": "Far away", "company_id": company_b.id, "lang": "en_GB"}
+        )
+        admin = self.env.ref("base.user_admin")
+        admin.write({"company_ids": [(4, company_b.id)]})
+        as_admin = language.with_user(admin).with_context(
+            allowed_company_ids=[company_a.id]
+        )
+        self.assertFalse(
+            self.env["res.partner"]
+            .with_user(admin)
+            .with_context(allowed_company_ids=[company_a.id])
+            .search([("id", "=", partner.id), ("partner_share", "=", True)])
+        )
+
+        with self.assertRaises(UserError):
+            as_admin.active = False
+
     def test_get_data(self):
         ResLang = self.env["res.lang"]
         en_id = ResLang._activate_lang("en_US").id

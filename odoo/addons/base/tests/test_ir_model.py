@@ -6,12 +6,14 @@ from psycopg import IntegrityError
 from psycopg.errors import NotNullViolation
 from psycopg.types.json import Json
 
-from odoo import Command
+from odoo import Command, api
+from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import NO_ACCESS
 from odoo.models import BaseModel, is_model_definition, pop_field
+from odoo.modules.registry import Registry
 from odoo.tests import Form, HttpCase, TransactionCase, tagged
-from odoo.tests.common import new_test_user
+from odoo.tests.common import BaseCase, get_db_name, new_test_user
 from odoo.tools import SQL, escape_psql, mute_logger
 
 from odoo.addons.base.models import (
@@ -1854,6 +1856,11 @@ class TestIrModelRelationReflection(TransactionCase):
 
 @tagged("-at_install", "post_install")
 class TestIrModelFieldsSelection(TransactionCase):
+    def test_writing_an_unknown_attribute_is_a_value_error(self):
+        _model, field = self._make_selection_field("unknown_attr")
+        with self.assertRaises(ValueError):
+            field.selection_ids[:1].write({"no_such_attribute": 1})
+
     @contextmanager
     def _write_raises(self, model_name, field_name, error):
         original_write = BaseModel.write
@@ -2782,3 +2789,50 @@ class TestInverseSuppliedInTheSameBatch(TransactionCase):
         main["field_id"][0][2]["relation_field"] = "x_no_such_inverse_field"
         with self.assertRaises(UserError):
             self.env["ir.model"].create([main])
+
+
+class TestRefusedFieldRename(BaseCase):
+    def setUp(self):
+        super().setUp()
+        self.registry = Registry(get_db_name())
+        with self.registry.cursor() as cr:
+            env = api.Environment(cr, SUPERUSER_ID, {})
+            model = env["ir.model"].create(
+                {"model": "x_imf_refused", "name": "IMF refused rename"}
+            )
+            self.field_id = (
+                env["ir.model.fields"]
+                .create(
+                    {
+                        "name": "x_refused",
+                        "field_description": "Refused",
+                        "model_id": model.id,
+                        "ttype": "char",
+                    }
+                )
+                .id
+            )
+            self.model_id = model.id
+            cr.commit()
+        # committed and set up; what the test watches is what the rename sets
+        self.registry.registry_invalidated = False
+        self.addCleanup(self._drop_model)
+
+    def _drop_model(self):
+        with self.registry.cursor() as cr:
+            env = api.Environment(cr, SUPERUSER_ID, {})
+            env["ir.model"].browse(self.model_id).unlink()
+            cr.commit()
+
+    def test_a_refused_rename_keeps_the_field_once_rolled_back(self):
+        with self.registry.cursor() as cr:
+            env = api.Environment(cr, SUPERUSER_ID, {})
+            with self.assertRaises(ValidationError):
+                env["ir.model.fields"].browse(self.field_id).write(
+                    {"name": "x refused"}
+                )
+                env.flush_all()
+            cr.rollback()
+            self.registry.reset_changes()
+
+        self.assertIn("x_refused", self.registry["x_imf_refused"]._fields)

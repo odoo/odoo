@@ -488,6 +488,7 @@ class ResLang(models.Model):
         # active over archived
         holders = {
             model_name: self.env[model_name]
+            .sudo()
             .with_context(active_test=False)
             .search_fetch(
                 [("lang", "in", lang_codes)],

@@ -232,6 +232,8 @@ class IrConfig_Parameter(models.Model):
                 return False
 
         old = param.value
+        if key in _SEALED_PARAMETERS and sealing.is_sealed(old):
+            old = self._unseal_param(key, old)
         if value is False or value is None:
             _debug.logic("set_param", key=key, action="unlink")
             param.unlink()

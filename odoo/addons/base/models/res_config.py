@@ -359,7 +359,14 @@ class ResConfigSettings(models.TransientModel):
         if to_install or to_uninstall:
             self.env.flush_all()
 
-        if to_uninstall:
+        to_uninstall_ids = to_uninstall.ids
+        installation_status = self._install_modules(to_install)
+
+        if installation_status:
+            _debug.lifecycle("transaction_reset", model=self._name, by="install")
+            self.env.transaction.reset()
+
+        if to_uninstall_ids:
             return {
                 "type": "ir.actions.act_window",
                 "target": "new",
@@ -367,15 +374,9 @@ class ResConfigSettings(models.TransientModel):
                 "view_mode": "form",
                 "res_model": "base.module.uninstall",
                 "context": {
-                    "default_module_ids": to_uninstall.ids,
+                    "default_module_ids": to_uninstall_ids,
                 },
             }
-
-        installation_status = self._install_modules(to_install)
-
-        if installation_status:
-            _debug.lifecycle("transaction_reset", model=self._name, by="install")
-            self.env.transaction.reset()
 
         return self.env["res.config"]._next_todo_action()
 

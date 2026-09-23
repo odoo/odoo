@@ -45,6 +45,8 @@ class MixinTag(models.AbstractModel):
                 "codes_kept", model=self._name, tags=len(self), reason="none_pending"
             )
             return
+        # a code computed earlier in this transaction is taken too
+        self.flush_model(["code"])
         taken = {
             code
             for [code] in self.env.execute_query(

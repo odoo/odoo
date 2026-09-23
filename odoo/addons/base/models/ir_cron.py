@@ -417,6 +417,10 @@ class IrCron(models.Model):
                 _debug.logic("job_skipped", job=job_id, reason="concurrency_error")
                 continue
             if not job:
+                # _acquire_job may hold the advisory lock of a job it found
+                # not ready; left in place it would block that job for as
+                # long as the next one runs
+                cron_cr.rollback()
                 _logger.debug(
                     "job %s is being processed by another worker, skip", job_id
                 )

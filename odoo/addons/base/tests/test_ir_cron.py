@@ -22,6 +22,7 @@ from odoo.tools.constants import CRON_TRIGGER_CHANNEL
 from odoo.addons.base.models import ir_cron
 from odoo.addons.base.models.ir_cron import (
     CONSECUTIVE_TIMEOUT_FOR_FAILURE,
+    CRON_ADVISORY_LOCK_NAMESPACE,
     MAX_FAIL_TIME,
     MAX_STALLED_ATTEMPTS_PER_RUN,
     MIN_DELTA_BEFORE_DEACTIVATION,
@@ -1118,6 +1119,52 @@ class TestIrCronAcquireLock(BaseCase):
 
             cr_a.rollback()
             cr_b.rollback()
+
+    def test_a_job_found_not_ready_is_not_held_while_the_next_runs(self):
+        with self.registry.cursor() as cr:
+            env = odoo.api.Environment(cr, common.ADMIN_USER_ID, {})
+            later = env["ir.cron"].create(
+                {
+                    "name": f"Audit later cron {secrets.token_urlsafe(8)}",
+                    "state": "code",
+                    "code": "",
+                    "model_id": env.ref("base.model_res_partner").id,
+                    "user_id": env.uid,
+                    "active": True,
+                    "nextcall": datetime(2999, 1, 1, 0, 0, 0),
+                }
+            )
+            later_id = later.id
+            cr.commit()
+        self.addCleanup(self._drop_cron_id, later_id)
+        IrCronModel = self.registry["ir.cron"]
+        seen = []
+
+        def probe(cls, cron_cr, job, **kwargs):
+            with self.registry.cursor() as other:
+                other.execute(
+                    "SELECT pg_try_advisory_xact_lock(%s, %s)",
+                    [CRON_ADVISORY_LOCK_NAMESPACE, later_id],
+                )
+                seen.append(other.fetchone()[0])
+                other.rollback()
+
+        with (
+            patch.object(IrCronModel, "_run_job", classmethod(probe)),
+            self.registry.cursor() as cron_cr,
+        ):
+            IrCronModel._run_jobs_until_deadline(
+                cron_cr, job_ids=[later_id, self.cron_id]
+            )
+            cron_cr.rollback()
+
+        self.assertEqual(seen, [True])
+
+    def _drop_cron_id(self, cron_id):
+        with self.registry.cursor() as cr:
+            env = odoo.api.Environment(cr, common.ADMIN_USER_ID, {})
+            env["ir.cron"].browse(cron_id).unlink()
+            cr.commit()
 
     def test_acquire_job_after_release(self):
         IrCronModel = self.registry["ir.cron"]

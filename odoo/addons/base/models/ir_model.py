@@ -702,7 +702,9 @@ class IrModelInherit(models.Model):
                     cls, model_name, model_id, get_model_id, get_field_id
                 )
                 for item in items:
-                    module_mapping[item].add(cls._module)
+                    modules = module_mapping[item]
+                    if cls._module:
+                        modules.add(cls._module)
         return module_mapping
 
     @staticmethod

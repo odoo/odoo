@@ -120,7 +120,9 @@ class ResetViewArchWizard(models.TransientModel):
             "wizard_reset_view", view=self.view_id.id, mode=self.reset_mode
         )
         if self.reset_mode == "other_view":
-            self.view_id.write({"arch_db": self.arch_to_compare})
+            self.view_id.with_context(lang=None).write(
+                {"arch_db": self.arch_to_compare}
+            )
         else:
             self.view_id.reset_arch(self.reset_mode)
         return {"type": "ir.actions.act_window_close"}

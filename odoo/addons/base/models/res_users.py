@@ -37,17 +37,12 @@ from odoo.tools import (
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
-from .res_users_auth import PasswordStore, session_token
+from .res_users_auth import _DUMMY_PASSWORD_HASH, PasswordStore, session_token
 from .res_users_login_cooldown import LoginCooldown
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
-
-_DUMMY_PASSWORD_HASH = (
-    "$pbkdf2-sha512$600000$7w4wftbyNcmfyucdH94fxA$"
-    "6gY5uDHtaWIcyKdWlT0sfnF8OhSZMjbKmB8DizAUKVRJ8HidOesEczP4wP5dSBKAZPAuoE2TuABEWSXm6XGR1Q"
-)
 
 DEBUG_GROUP = "base.group_no_one"
 
@@ -687,9 +682,6 @@ class ResUsers(models.Model):
                     all _check_credentials environments"
                 )
 
-            if self._password_store().stored_hash(self, self.id) is None:
-                _debug.logic("credentials_refused", uid=self.id, reason="no_hash")
-                raise AccessDenied
             valid, replacement = self._password_store().match_and_update(
                 self, self.id, credential["password"]
             )
@@ -940,11 +932,7 @@ class ResUsers(models.Model):
         load: str = "_classic_read",
     ) -> list[ValuesType]:
         readable, _ = self._get_self_accessible_fields()
-        if (
-            fields
-            and self == self.env.user
-            and all(key in readable or key.startswith("context_") for key in fields)
-        ):
+        if fields and self == self.env.user and all(key in readable for key in fields):
             _debug.logic("self_read_elevated", uid=self.env.uid, fields=list(fields))
             self = self.sudo()
         return super().read(fields=fields, load=load)
@@ -1034,21 +1022,37 @@ class ResUsers(models.Model):
             if field.type == "one2many":
                 _debug.logic("own_record_escape", field=fname, reason="one2many")
                 return True
-            if isinstance(value, models.BaseModel) or not value:
+            if not value:
                 continue
-            if not isinstance(value, (list, tuple)):
+            if isinstance(value, models.BaseModel):
+                linked_ids = set(value._ids)
+            elif not isinstance(value, (list, tuple)):
                 _debug.logic("own_record_escape", field=fname, reason="not_commands")
                 return True
-            for command in value:
-                if isinstance(command, (list, tuple)):
-                    if not command or command[0] not in _RELATION_ONLY_COMMANDS:
+            else:
+                linked_ids = set()
+                for command in value:
+                    if isinstance(command, (list, tuple)):
+                        if not command or command[0] not in _RELATION_ONLY_COMMANDS:
+                            _debug.logic(
+                                "own_record_escape", field=fname, reason="write_command"
+                            )
+                            return True
+                        if command[0] == Command.LINK:
+                            linked_ids.add(command[1])
+                        elif command[0] == Command.SET:
+                            linked_ids.update(command[2])
+                    elif isinstance(command, int):
+                        linked_ids.add(command)
+                    else:
                         _debug.logic(
-                            "own_record_escape", field=fname, reason="write_command"
+                            "own_record_escape", field=fname, reason="not_an_id"
                         )
                         return True
-                elif not isinstance(command, int):
-                    _debug.logic("own_record_escape", field=fname, reason="not_an_id")
-                    return True
+            linked = self.env[field.comodel_name].browse(linked_ids)
+            if linked and not linked.has_access("read"):
+                _debug.logic("own_record_escape", field=fname, reason="unreadable_link")
+                return True
         return False
 
     def write(self, vals: dict[str, Any]) -> bool:
@@ -1707,7 +1711,8 @@ class ResUsers(models.Model):
             self._record_login_failure(source)
             raise
         else:
-            self._clear_login_failures(source)
+            if failures:
+                self._clear_login_failures(source)
 
     def _get_login_cooldown_duration(self) -> int:
         return (

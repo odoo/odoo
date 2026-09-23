@@ -632,9 +632,11 @@ class ResPartner(models.Model):
 
     def write(self, vals: dict[str, Any]) -> bool:
         vals = dict(vals)
-        if self._is_geolocation_stale(vals):
-            vals["partner_latitude"] = False
-            vals["partner_longitude"] = False
+        stale = self._get_geolocation_stale(vals)
+        if stale == self:
+            vals.update(dict.fromkeys(POSITION_FIELDS, False))
+        elif stale:
+            stale.write(dict.fromkeys(POSITION_FIELDS, False))
         if "active" in vals and not vals["active"]:
             self._check_archive_allowed()
         if vals.get("website"):
@@ -680,6 +682,8 @@ class ResPartner(models.Model):
             return vals_list
         return [
             dict(vals, name=self.env._("%s (copy)", partner.name))
+            if partner.name
+            else vals
             for partner, vals in zip(self, vals_list, strict=True)
         ]
 
@@ -2323,13 +2327,14 @@ class ResPartner(models.Model):
             matching = state_by_key.get(key)
             vals["state_id"] = matching.id if matching else False
 
-    def _is_geolocation_stale(self, vals: dict[str, Any]) -> bool:
+    def _get_geolocation_stale(self, vals: dict[str, Any]) -> Self:
         written_address_fields = [field for field in ADDRESS_FIELDS if field in vals]
-        if not written_address_fields:
-            return False
-        if all(field in vals for field in POSITION_FIELDS):
-            return False
-        for partner in self:
+        if not written_address_fields or all(
+            field in vals for field in POSITION_FIELDS
+        ):
+            return self.browse()
+
+        def moves(partner):
             for field_name in written_address_fields:
                 current = partner[field_name]
                 if self._fields[field_name].type == "many2one":
@@ -2339,4 +2344,6 @@ class ResPartner(models.Model):
                         "geolocation_stale", partner=partner.id, field=field_name
                     )
                     return True
-        return False
+            return False
+
+        return self.filtered(moves)

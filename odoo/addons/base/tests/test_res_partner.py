@@ -2722,6 +2722,31 @@ class TestPartnerGeolocationInvalidation(TransactionCase):
         self.assertEqual(partner.partner_latitude, 0.0)
         self.assertEqual(partner.partner_longitude, 0.0)
 
+    def test_a_batch_write_clears_only_the_partners_that_moved(self):
+        """Check that a partner already at the written address keeps its pin."""
+        mx = self.env.ref("base.mx")
+        staying, moving = self.env["res.partner"].create(
+            [
+                {
+                    "name": name,
+                    "country_id": country.id,
+                    "partner_latitude": 5.0,
+                    "partner_longitude": 6.0,
+                }
+                for name, country in (
+                    ("Staying", mx),
+                    ("Moving", self.env.ref("base.us")),
+                )
+            ]
+        )
+
+        (staying | moving).write({"country_id": mx.id})
+
+        self.assertEqual(staying.partner_latitude, 5.0)
+        self.assertEqual(staying.partner_longitude, 6.0)
+        self.assertEqual(moving.partner_latitude, 0.0)
+        self.assertEqual(moving.partner_longitude, 0.0)
+
     def test_moving_street2_clears_the_coordinates(self):
         """Check that street2 counts as part of the address.
 
@@ -2940,6 +2965,14 @@ class TestPartnerSmallContracts(TransactionCase):
         partner = self.Partner.create({"name": "Original"})
         self.assertEqual(partner.copy().name, "Original (copy)")
         self.assertEqual(partner.copy({"name": "Renamed"}).name, "Renamed")
+
+    def test_a_nameless_address_copies_without_a_name(self):
+        parent = self.env["res.partner"].create({"name": "Addressed"})
+        delivery = self.env["res.partner"].create(
+            {"parent_id": parent.id, "type": "delivery", "street": "Dock 4"}
+        )
+        self.assertFalse(delivery.name)
+        self.assertFalse(delivery.copy().name)
 
     def test_an_import_realigns_a_state_to_the_row_country(self):
         State = self.env["res.country.state"]

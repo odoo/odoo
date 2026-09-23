@@ -1,6 +1,7 @@
 import base64
 import logging
 import math
+import re
 from datetime import date, datetime, time
 from io import BytesIO
 from typing import Any
@@ -392,7 +393,7 @@ class IrQwebFieldMany2many(models.AbstractModel):
             records=len(value),
             visible=len(visible),
         )
-        text = ", ".join(visible.mapped("display_name"))
+        text = ", ".join(filter(None, visible.mapped("display_name")))
         if not text:
             return False
         return nl2br(text)
@@ -451,18 +452,18 @@ class IrQwebFieldImage(models.AbstractModel):
 
     @api.model
     def _get_src_data_b64(self, value: Any, options: dict[str, Any]) -> str:
-        if isinstance(value, (bytes, bytearray, memoryview)):
-            source = bytes(value)
-        elif isinstance(value, str):
-            source = value
-        else:
+        if not isinstance(value, (bytes, bytearray, memoryview, str)):
             _debug.logic("image_rejected", reason="bad_type", type=type(value).__name__)
             msg = "Invalid image content"
             raise ValueError(msg)
 
+        # strictly: a lenient decode drops stray bytes that the data URI,
+        # built from the text, would still carry
         try:
-            img_b64 = base64.b64decode(source)
-            value_b64 = source if isinstance(source, str) else source.decode("ascii")
+            source = value.encode("ascii") if isinstance(value, str) else bytes(value)
+            source = re.sub(rb"\s+", b"", source)
+            img_b64 = base64.b64decode(source, validate=True)
+            value_b64 = source.decode("ascii")
         except ValueError:
             _debug.logic("image_rejected", reason="not_base64")
             msg = "Invalid image content"
@@ -471,7 +472,7 @@ class IrQwebFieldImage(models.AbstractModel):
         mimetype = guess_mimetype(img_b64, "") if img_b64 else None
         _debug.logic("image_sniffed", mimetype=mimetype, bytes=len(img_b64))
         if mimetype == "image/webp":
-            return self.env["ir.qweb"]._get_converted_image_data_uri(value)
+            return self.env["ir.qweb"]._get_converted_image_data_uri(source)
         elif mimetype != "image/svg+xml":
             sniffed = mimetype
             try:

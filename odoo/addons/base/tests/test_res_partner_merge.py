@@ -423,7 +423,11 @@ class TestMergePartnerAbsorbSourceValues(TransactionCase):
         self.assertFalse(dst.street, "a plain field must not be absorbed")
         self.assertFalse(dst.barcode, "a company-dependent field must not be absorbed")
         self.assertEqual(dst.tag_ids, self.tag_dst, "a many2many must not be absorbed")
-        self.assertFalse(dst.bank_account_ids, "a bank account must not be absorbed")
+        self.assertEqual(
+            dst.bank_account_ids.acc_number,
+            "BE55001234567890",
+            "a bank account is referenced by payments and moves either way",
+        )
 
     def test_absorbing_a_uniqueness_constrained_value(self):
         dst, src, _attachment = self._prepare_pair()
@@ -438,17 +442,94 @@ class TestMergePartnerAbsorbSourceValues(TransactionCase):
             "the destination adopts the barcode once the source no longer holds it",
         )
 
-    def test_not_absorbing_leaves_the_source_bank_account_behind(self):
-        dst, src, _attachment = self._prepare_pair()
-        bank = src.bank_account_ids
+    def test_a_moved_child_is_renamed_after_its_new_parent(self):
+        dst = self.env["res.partner"].create(
+            {"name": "ACME Corporation", "is_company": True}
+        )
+        src = self.env["res.partner"].create({"name": "Acme Corp", "is_company": True})
+        child = self.env["res.partner"].create({"name": "John", "parent_id": src.id})
+        self.assertEqual(child.complete_name, "Acme Corp, John")
         wizard = self.Wizard.create({"absorb_source_values": False})
         wizard._merge([dst.id, src.id], dst, extra_checks=False)
+        self.env.flush_all()
         self.env.invalidate_all()
 
-        self.assertFalse(
-            bank.exists(),
-            "an excluded bank account dies with its partner rather than moving",
+        self.assertEqual(child.parent_id, dst)
+        self.assertEqual(child.complete_name, "ACME Corporation, John")
+        self.assertEqual(child.commercial_partner_id, dst)
+        self.assertEqual(child.commercial_company_name, "ACME Corporation")
+
+    def test_an_archived_source_bank_account_moves_rather_than_cascading(self):
+        dst, src, _attachment = self._prepare_pair()
+        bank = src.bank_account_ids
+        bank.action_archive()
+        self.Wizard.create({})._merge([dst.id, src.id], dst, extra_checks=False)
+        self.env.invalidate_all()
+
+        self.assertTrue(bank.exists())
+        self.assertEqual(bank.partner_id, dst)
+
+    def test_an_active_source_account_is_not_folded_into_an_archived_twin(self):
+        dst, src, _attachment = self._prepare_pair()
+        number = src.bank_account_ids.acc_number
+        twin = self.env["res.partner.bank.account"].create(
+            {"acc_number": number, "partner_id": dst.id}
         )
+        twin.action_archive()
+        self.Wizard.create({})._merge([dst.id, src.id], dst, extra_checks=False)
+        self.env.invalidate_all()
+
+        self.assertEqual(dst.bank_account_ids.mapped("acc_number"), [number])
+
+    def test_a_confidential_identifier_hidden_from_the_merger_moves(self):
+        secret_type = self.env["res.partner.identifier.type"].create(
+            {"name": "Merge Secret", "code": "MERGE_SECRET", "confidential": True}
+        )
+        dst, src, _attachment = self._prepare_pair()
+        secret = self.env["res.partner.identifier"].create(
+            {"partner_id": src.id, "type_id": secret_type.id, "value": "S-1"}
+        )
+        merger = self.env["res.users"].create(
+            {
+                "name": "Partner merger",
+                "login": "partner_merger",
+                "group_ids": [
+                    Command.set(
+                        [
+                            self.env.ref("base.group_user").id,
+                            self.env.ref("base.group_partner_manager").id,
+                        ]
+                    )
+                ],
+            }
+        )
+        self.assertFalse(src.with_user(merger).identifier_ids)
+        self.Wizard.with_user(merger).create({})._merge(
+            [dst.id, src.id], dst.with_user(merger), extra_checks=False
+        )
+        self.env.invalidate_all()
+
+        self.assertTrue(secret.exists())
+        self.assertEqual(secret.partner_id, dst)
+
+    def test_the_automatic_process_skips_a_group_it_cannot_merge(self):
+        parent = self.env["res.partner"].create(
+            {"name": "Twin Name", "email": "twin@example.com", "is_company": True}
+        )
+        self.env["res.partner"].create(
+            {"name": "Twin Name", "email": "twin@example.com", "parent_id": parent.id}
+        )
+        loose = self.env["res.partner"].create(
+            [{"name": "Loose Twin", "email": "loose@example.com"} for _ in range(2)]
+        )
+        wizard = self.Wizard.create({"group_by_email": True})
+        with patch.object(self.env.cr, "commit"):
+            wizard.action_start_automatic_process()
+        self.env.invalidate_all()
+
+        self.assertEqual(len(loose.exists()), 1, "the mergeable group still merges")
+        self.assertTrue(parent.exists())
+        self.assertEqual(len(parent.child_ids), 1, "the refused group is left alone")
 
 
 @tagged("post_install", "-at_install")

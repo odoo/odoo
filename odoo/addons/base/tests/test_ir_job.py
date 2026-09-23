@@ -561,6 +561,15 @@ class TestIrJob(TransactionCase):
         self.assertEqual(j1.state, "pending")
         self.assertEqual(j2.state, "wait_deps")
 
+    def test_requeue_refuses_a_job_whose_dependency_stays_dead(self):
+        j1 = self.partner.delayed()._ir_job_test_append()
+        j2 = self.partner.delayed(after=j1)._ir_job_test_append()
+        j1.action_cancel()
+        j2.invalidate_recordset()
+        with self.assertRaises(UserError):
+            j2.action_requeue()
+        self.assertEqual(j2.state, "cancelled")
+
     def test_repair_sweep_resolves_stuck_jobs(self):
         j1 = self.partner.delayed()._ir_job_test_append()
         j2 = self.partner.delayed(after=j1)._ir_job_test_append()
@@ -597,6 +606,25 @@ class TestIrJob(TransactionCase):
         self.assertEqual(self.partner.name, "job target manual")
         with self.assertRaises(UserError):
             job.action_run_now()
+
+    def test_run_now_gives_the_callers_default_env_back(self):
+        other = self.env["res.users"].create(
+            {
+                "name": "Job enqueuer",
+                "login": "job_enqueuer",
+                "group_ids": [
+                    (4, self.env.ref("base.group_user").id),
+                    (4, self.env.ref("base.group_partner_manager").id),
+                ],
+            }
+        )
+        partner = self.partner.with_user(other)
+        job = partner.delayed(eta=3600)._ir_job_test_append(" as other")
+        caller = self.env.transaction.default_env
+
+        self.env["ir.job"].browse(job.id).action_run_now()
+
+        self.assertIs(self.env.transaction.default_env, caller)
 
     def test_run_now_propagates_business_exception(self):
         job = self.partner.delayed()._ir_job_test_boom()

@@ -8,6 +8,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.datetime import localize_standard, timezone
 from odoo.libs.debug_log import DebugLog
+from odoo.tools import get_lang
 
 from odoo.addons.base.models.mixin_recurrence_anchored import WEEKDAY_SELECTION
 from odoo.addons.base.models.mixin_recurrence_rule import (
@@ -365,6 +366,16 @@ class MixinRecurrenceRrule(models.AbstractModel):
                 )
             )
 
+        if self.repeat_type == "until" and not self.repeat_until:
+            _debug.logic(
+                "recurrence.serialize_rejected",
+                record=self.id,
+                reason="until_without_date",
+            )
+            raise UserError(
+                _("A recurrence that repeats until a date needs that date.")
+            )
+
         if not self.repeat_unit:
             _debug.logic("recurrence.serialize.empty", record=self.id)
             return ""
@@ -449,7 +460,7 @@ class MixinRecurrenceRrule(models.AbstractModel):
         return data
 
     def _get_lang_week_start(self):
-        lang = self.env["res.lang"]._get_data(code=self.env.user.lang)
+        lang = get_lang(self.env, self.env.user.lang)
         week_start = int(lang.week_start)  # lang.week_start ranges from '1' to '7'
         return rrule.weekday(week_start - 1)  # rrule expects an int from 0 to 6
 

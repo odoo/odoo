@@ -176,7 +176,7 @@ class ResCurrency(models.Model):
             return
 
         currencies = self.filtered(lambda c: not c.active)
-        if self.env["res.company"].search_count(
+        if currencies and self.env["res.company"].search_count(
             [("currency_id", "in", currencies.ids)], limit=1
         ):
             _debug.logic("deactivation_refused", currencies=currencies.mapped("name"))
@@ -378,7 +378,10 @@ class ResCurrency(models.Model):
                 )
                 return num2words(number, lang="en").title()
 
-        integral, _sep, fractional = f"{amount:.{self.decimal_places}f}".partition(".")
+        # the words must name the amount `format` prints: the currency's
+        # half-up rounding, not the binary float's half-even
+        amount = self.round(amount)
+        integral, fractional = tools.float_split_str(amount, self.decimal_places)
         integer_value = int(integral)
         lang = tools.get_lang(self.env)
         _debug.logic(
@@ -805,7 +808,22 @@ class ResCurrencyRate(models.Model):
         self, view_id: int | None = None, view_type: str = "form", **options
     ) -> tuple:
         key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + (self.env["res.currency"]._get_context_company_currency_name(),)
+        return key + (
+            self.env["res.currency"]._get_context_company_currency_name(),
+            self._get_context_rate_currency_name(),
+        )
+
+    @api.model
+    def _get_context_rate_currency_name(self) -> str:
+        context = self.env.context
+        if context.get("active_model") != "res.currency" or not context.get(
+            "active_id"
+        ):
+            return "Unit"
+        return (
+            self.env["res.currency"].browse(context["active_id"]).exists().name
+            or "Unit"
+        )
 
     @api.model
     def _get_view(
@@ -817,10 +835,7 @@ class ResCurrencyRate(models.Model):
                 "company_currency_name": self.env[
                     "res.currency"
                 ]._get_context_company_currency_name(),
-                "rate_currency_name": self.env["res.currency"]
-                .browse(self.env.context.get("active_id"))
-                .name
-                or "Unit",
+                "rate_currency_name": self._get_context_rate_currency_name(),
             }
             for name, label in [
                 [

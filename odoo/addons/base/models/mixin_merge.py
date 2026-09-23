@@ -8,6 +8,7 @@ import psycopg
 
 from odoo import api, models
 from odoo.db import schema as sql_tools
+from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, mute_logger
 
@@ -163,6 +164,9 @@ class MixinMerge(models.AbstractModel):
         )
 
         relations = self._get_relations_to_repoint(model)
+        to_recompute = self._get_repointed_records_with_dependents(
+            model, relations, src_records
+        )
 
         self.env.invalidate_all()
 
@@ -176,6 +180,43 @@ class MixinMerge(models.AbstractModel):
         ):
             for table, column in relations:
                 self._repoint_table(table, column, src_records, dst_record)
+
+        for records, fnames in to_recompute:
+            records.modified(fnames)
+
+    def _get_repointed_records_with_dependents(
+        self,
+        model: str,
+        relations: list[tuple[str, str]],
+        src_records: models.BaseModel,
+    ) -> list[tuple[models.BaseModel, list[str]]]:
+        # A repoint is raw SQL, so the merged model's own hierarchy (a child's
+        # complete_name through parent_id) is told by hand. Rows of other
+        # models keep what they computed: a posted invoice re-deriving its
+        # bank account from its new partner would rewrite a closed document.
+        Model = self.env[model].sudo().with_context(active_test=False)
+        columns = [
+            column
+            for table, column in relations
+            if table == Model._table
+            and (field := Model._fields.get(column)) is not None
+            and field.store
+            and self.env.registry.get_trigger_tree([field])
+        ]
+        records = (
+            Model.search(
+                Domain.OR(Domain(column, "in", src_records.ids) for column in columns)
+            )
+            if columns
+            else Model.browse()
+        )
+        _debug.logic(
+            "repointed_with_dependents",
+            model=model,
+            columns=columns,
+            records=len(records),
+        )
+        return [(records, columns)] if records else []
 
     def _repoint_table(
         self,

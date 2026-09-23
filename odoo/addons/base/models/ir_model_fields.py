@@ -962,6 +962,8 @@ class IrModelFields(models.Model):
             for record in records
         ]
         self.pool.discard_fields([field for field in fields_ if field is not None])
+        # the popped fields must come back if this transaction does not commit
+        self.pool.registry_invalidated = True
         views = self._get_views_mentioning(records.mapped("name"))
         _debug.logic("views_mentioning_fields", fields=len(records), views=len(views))
         try:
