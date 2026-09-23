@@ -114,6 +114,13 @@ class TestNodeLocator(common.TransactionCase):
         )
         self.assertIsNone(node)
 
+    def test_an_xpath_selecting_a_value_is_a_validation_error(self):
+        for expr in ("//foo/@name", "name(/*)", "count(//foo)", ""):
+            with self.subTest(expr=expr), self.assertRaises(ValidationError):
+                self.env["ir.ui.view"].locate_node(
+                    E.root(E.foo(name="a")), E.xpath(expr=expr)
+                )
+
     def test_match_xpath(self):
         bar = E.bar()
         node = self.env["ir.ui.view"].locate_node(
@@ -482,6 +489,30 @@ class TestViewInheritance(ViewCase):
                 {
                     "tag": "xpath",
                     "attrib": {"expr": "//field[@name=", "position": "move"},
+                    "sourceline": 1,
+                }
+            ],
+        )
+
+    def test_invalid_locators_report_an_xpath_selecting_a_value(self):
+        base_view = self.makeView(
+            "value_xpath_base", arch="<form><field name='id'/></form>"
+        )
+        child = self.View.create(
+            {
+                "model": self.model,
+                "name": "value_xpath_child",
+                "inherit_id": base_view.id,
+                "active": False,
+                "arch": '<xpath expr="//field/@name" position="after"><div/></xpath>',
+            }
+        )
+        self.assertEqual(
+            child.invalid_locators,
+            [
+                {
+                    "tag": "xpath",
+                    "attrib": {"expr": "//field/@name", "position": "after"},
                     "sourceline": 1,
                 }
             ],
