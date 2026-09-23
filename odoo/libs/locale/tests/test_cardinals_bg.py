@@ -161,3 +161,18 @@ class TestTheContractResCurrencyRelies_On:
     def test_string_input_goes_through_str_to_number(self, bg):
         assert bg.str_to_number("42") == 42
         assert bg.str_to_number("42.5") == 42.5
+
+
+@pytest.mark.parametrize(
+    ("value", "words"),
+    [
+        (1_001_000, "един милион и хиляда"),
+        (2_001_000, "два милиона и хиляда"),
+        (2_001_000_000, "два милиарда и един милион"),
+        (1_000_001_000, "един милиард и хиляда"),
+        (1_002_000, "един милион и две хиляди"),
+        (1_001_001, "един милион хиляда и едно"),
+    ],
+)
+def test_a_lone_scale_word_as_the_last_component_takes_and(value, words):
+    assert BulgarianNumerals().to_cardinal(value) == words
