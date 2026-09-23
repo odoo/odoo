@@ -1985,3 +1985,48 @@ class TestHrAttendanceOvertime(HttpCase):
         })
         # Since the absence has been covered, there should no longer be any overtime
         self.assertEqual(absence_attendance.linked_overtime_ids.duration, 0)
+
+    def test_absence_detection_weekly_rule_unscheduled_days(self):
+        """ With a weekly quantity rule, the week-to-date deficit must not turn
+        days without scheduled work (weekend) into unjustified absences. """
+        self.company.absence_management = True
+        weekly_ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Ruleset weekly schedule quantity',
+            'company_id': self.company.id,
+            'rule_ids': [Command.create({
+                'name': 'Rule weekly schedule quantity',
+                'base_off': 'quantity',
+                'expected_hours_from_contract': True,
+                'quantity_period': 'week',
+            })],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Weekly Worker',
+            'company_id': self.company.id,
+            'tz': 'Europe/Brussels',
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'resource_calendar_id': self.company.resource_calendar_id.id,
+            'ruleset_id': weekly_ruleset.id,
+        })
+        # Monday 3 to Friday 7 August 2026: 4 hours worked instead of 8 each day
+        self.env['hr.attendance'].create([{
+            'employee_id': employee.id,
+            'check_in': datetime(2026, 8, day, 6, 0),
+            'check_out': datetime(2026, 8, day, 10, 0),
+        } for day in range(3, 8)])
+        technical_domain = [('employee_id', '=', employee.id), ('in_mode', '=', 'technical')]
+
+        # Saturday and Sunday are not scheduled: no absence despite the weekly deficit
+        for today in ('2026-08-09 06:00:00', '2026-08-10 06:00:00'):
+            with freeze_time(today):
+                self.env['hr.attendance']._cron_absence_detection()
+            self.assertFalse(self.env['hr.attendance'].search(technical_domain))
+
+        # Monday 10 is scheduled but not worked: an absence is created
+        with freeze_time('2026-08-11 06:00:00'):
+            self.env['hr.attendance']._cron_absence_detection()
+        absence = self.env['hr.attendance'].search(technical_domain)
+        self.assertEqual(len(absence), 1)
+        self.assertEqual(absence.check_in, datetime(2026, 8, 9, 22, 0))
+        self.assertLess(absence.overtime_hours, 0)
