@@ -36,7 +36,7 @@
                 <list string="Moves" create="0" editable="bottom" default_order="date desc" duplicate="0">
                     <field name="date" string="Date" optional="show" readonly="1"
                         decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
-                    <field name="reference"/>
+                    <field name="reference" readonly="1"/>
                     <field name="picking_type_id" column_invisible="True" readonly="1"/>
                     <field name="location_usage" column_invisible="True" readonly="1"/>
                     <field name="location_dest_usage" column_invisible="True" readonly="1"/>
@@ -410,7 +410,7 @@
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="reference"/>
+                    <field name="reference" readonly="1"/>
                     <field name="date" string="Date"/>
                     <field name="product_id"/>
                     <field name="quantity"/>
