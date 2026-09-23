@@ -6,6 +6,7 @@ from unittest import mock
 
 from odoo.tools import config
 from odoo.tools import subprocess as tools_subprocess
+from odoo.tools.config import configmanager
 from odoo.tools.subprocess import (
     get_executable_path,
     get_pg_tool_path,
@@ -16,6 +17,14 @@ from odoo.tools.subprocess import (
 def strip(argv, *extra):
     with mock.patch.object(tools_subprocess.sys, "argv", argv):
         return stripped_sys_argv(*extra)
+
+
+def parsed(args):
+    # a private manager: parsing into the global one would leave `-d db` behind
+    # for every later test, and `--save` would write the user's rc file
+    manager = configmanager()
+    with mock.patch.object(configmanager, "save"):
+        return vars(manager._parse_config(args))
 
 
 class TestStrippedSysArgv(unittest.TestCase):
@@ -131,9 +140,7 @@ class TestStrippedSysArgv(unittest.TestCase):
             "-d",
             "db",
         ]
-        original = vars(config._parse_config(argv[1:]))
-        stripped = vars(config._parse_config(strip(argv)[1:]))
-        self.assertEqual(stripped, original)
+        self.assertEqual(parsed(strip(argv)[1:]), parsed(argv[1:]))
 
     def test_everything_after_a_double_dash_is_positional(self):
         self.assertEqual(
