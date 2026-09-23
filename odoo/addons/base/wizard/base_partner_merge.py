@@ -406,7 +406,7 @@ class MergePartnerAutomatic(models.TransientModel):
             raise UserError(_("You cannot merge a contact with one of his parent."))
 
         # check if the list of partners to merge are linked to more than one user
-        if len(partner_ids.with_context(active_test=False).user_ids) > 1:
+        if len(partner_ids.sudo().with_context(active_test=False).user_ids) > 1:
             raise UserError(_("You cannot merge contacts linked to more than one user even if only one is active."))
 
         if extra_checks and len(set(partner.email for partner in partner_ids)) > 1:
