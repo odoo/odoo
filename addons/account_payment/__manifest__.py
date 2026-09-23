@@ -19,6 +19,7 @@
         'views/payment_form_templates.xml',
         'views/payment_provider_views.xml',
         'views/payment_transaction_views.xml',
+        'views/res_config_settings_views.xml',
 
         'wizards/account_payment_register_views.xml',
         'wizards/payment_link_wizard_views.xml',
