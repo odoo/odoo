@@ -208,9 +208,14 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
 
         self.product.accessory_product_ids = [Command.link(accessory_product.id)]
         self.empty_cart._cart_add(product_id=self.product.id)
-        self.assertEqual(
-            len(self.empty_cart.with_user(self.public_user)._cart_accessories()), 0
-        )
+        # the cart controllers read the visitor's cart as the system, under the
+        # visitor's own user, which is what decides the published filter
+        cart_sudo = self.empty_cart.with_user(self.public_user).sudo()
+        website = self.website.with_user(self.public_user)
+        with MockRequest(website.env, website=website):
+            self.assertEqual(len(cart_sudo._cart_accessories()), 0)
+            accessory_product.is_published = True
+            self.assertEqual(cart_sudo._cart_accessories(), [accessory_product])
 
     def test_cart_new_fpos_from_geoip(self):
         fpos_be = self.env["account.fiscal.position"].create(
