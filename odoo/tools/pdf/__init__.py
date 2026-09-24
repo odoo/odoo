@@ -597,8 +597,9 @@ class OdooPdfFileWriter(PdfFileWriter):
 
                 annot[NameObject('/F')] = NumberObject(flags)
 
-        outlines = self._root_object['/Outlines'].get_object()
-        outlines[NameObject('/Count')] = NumberObject(1)
+        if '/Outlines' in self._root_object:
+            outlines = self._root_object['/Outlines'].get_object()
+            outlines[NameObject('/Count')] = NumberObject(1)
 
         # [6.7.2.2-1] include a MarkInfo dictionary containing "Marked" with true value
         mark_info = DictionaryObject({NameObject("/Marked"): BooleanObject(True)})
@@ -609,7 +610,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         self._root_object[NameObject("/StructTreeRoot")] = struct_tree_root
 
         # Set odoo as producer
-        self.addMetadata({
+        self.add_metadata({
             '/Creator': "Odoo",
             '/Producer': "Odoo",
         })
