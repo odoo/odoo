@@ -142,7 +142,9 @@ class AccountEdiFormat(models.Model):
         if response.get("error"):
             error = response["error"]
             error_codes = [e.get("code") for e in error]
-            if "238" in error_codes:
+            if "238" in error_codes or any(
+                "The token is missing or has expired" in str(e.get("message", "")) for e in error
+            ):
                 # Invalid token eror then create new token and send generate request again.
                 # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
                 authenticate_response = self._l10n_in_edi_ewaybill_authenticate(invoices.company_id)
@@ -303,7 +305,9 @@ class AccountEdiFormat(models.Model):
         if response.get("error"):
             error = response["error"]
             error_codes = [e.get("code") for e in error]
-            if "238" in error_codes:
+            if "238" in error_codes or any(
+                "The token is missing or has expired" in str(e.get("message", "")) for e in error
+            ):
                 # Invalid token eror then create new token and send generate request again.
                 # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
                 authenticate_response = self._l10n_in_edi_ewaybill_authenticate(invoices.company_id)
