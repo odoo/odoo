@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { click, edit, keyDown, keyUp, queryAllTexts, queryAll } from "@odoo/hoot-dom";
+import { click, edit, keyDown, keyUp, queryAllTexts, queryAll, queryOne } from "@odoo/hoot-dom";
 import {
     advanceTime,
     animationFrame,
@@ -846,19 +846,21 @@ test("multi_create: avoid trigger add/del event on specific element", async () =
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
 
-    await click(".fc-more-cell a");
+    // FullCalendar renders its popover in the body, outside of the test fixture
+    const body = { root: document.body };
+    await click(".fc-more-link");
     await animationFrame();
-    expect(".fc-more-popover").toHaveCount(1);
+    expect(queryAll(".fc-more-popover", body)).toHaveLength(1);
     expect(".o_multi_selection_buttons").toHaveCount(0);
 
-    await click(".fc-popover-title");
+    await click(queryOne(".fc-more-popover .fc-col-header-cell", body));
     await animationFrame();
-    expect(".fc-more-popover").toHaveCount(1);
+    expect(queryAll(".fc-more-popover", body)).toHaveLength(1);
     expect(".o_multi_selection_buttons").toHaveCount(0);
 
-    await click(".fc-popover-close");
+    await click(queryOne(".fc-popover-close", body));
     await animationFrame();
-    expect(".fc-more-popover").toHaveCount(0);
+    expect(queryAll(".fc-more-popover", body)).toHaveLength(0);
     expect(".o_multi_selection_buttons").toHaveCount(0);
 });
 

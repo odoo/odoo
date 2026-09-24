@@ -16,6 +16,7 @@ import {
     clickEvent,
     expandCalendarView,
     findDateColumn,
+    findTimeGridColumn,
     findTimeRow,
     toggleFilter,
 } from "@web/../tests/views/calendar/calendar_test_helpers";
@@ -58,7 +59,7 @@ async function selectTimeStart(startDateTime) {
 
     const startColRect = startCol.getBoundingClientRect();
     const startRowRect = startRow.getBoundingClientRect();
-    await contains(startRow).click({
+    await contains(findTimeGridColumn(startDate)).click({
         position: {
             x: startColRect.x + startColRect.width / 2,
             y: startRowRect.y + 1,
@@ -262,11 +263,15 @@ test("Activity events rendering and popover", async () => {
     // Check activity events rendering (3 activity events: overdue, today and planned)
     // Done activities and other users activities are not displayed.
     expect(".fc-event.o_activity_event").toHaveCount(3);
-    expect("td[data-date='2016-12-11'] .o_activity_event:contains('Activity 1')").toHaveCount(1);
     expect(
-        "td[data-date='2016-12-12'] .o_activity_event:contains('2 pending activities')"
+        ".fc-daygrid-day[data-date='2016-12-11'] .o_activity_event:contains('Activity 1')"
     ).toHaveCount(1);
-    expect("td[data-date='2016-12-13'] .o_activity_event:contains('Activity 5')").toHaveCount(1);
+    expect(
+        ".fc-daygrid-day[data-date='2016-12-12'] .o_activity_event:contains('2 pending activities')"
+    ).toHaveCount(1);
+    expect(
+        ".fc-daygrid-day[data-date='2016-12-13'] .o_activity_event:contains('Activity 5')"
+    ).toHaveCount(1);
     // Check activity calendar side panel filter
     expect(".o_calendar_sidepanel input#show_activities_checkbox").toHaveProperty("checked", true);
     await contains(".o_calendar_sidepanel input#show_activities_checkbox").click(); // Hide activities

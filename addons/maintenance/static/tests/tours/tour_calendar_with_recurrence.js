@@ -4,7 +4,7 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
     steps: () => [
         {
             content: "Enter event form",
-            trigger: 'a[data-event-id="1"]',
+            trigger: '.o_event[data-event-id="1"]',
             run: "dblclick",
         },
         {
@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
         },
         {
             content: "Access occurrence",
-            trigger: 'a[data-event-id="2"]',
+            trigger: '.o_event[data-event-id="2"]',
             run: "dblclick",
         },
         {
@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
             run: "click",
         },
         {
-            trigger: 'a[data-event-id="2"]',
+            trigger: '.o_event[data-event-id="2"]',
         },
     ],
 });
@@ -75,13 +75,15 @@ registry.category("web_tour.tours").add("test_drag_and_drop_event_in_calendar", 
         },
         {
             content: "Move event to 15th of the month",
-            trigger: 'a[data-event-id="1"]',
-            run: 'drag_and_drop .fc-daygrid-day[data-date$="15"] .fc-daygrid-day-events',
+            trigger: '.o_event[data-event-id="1"]',
+            run: ({ drag_and_drop }) =>
+                drag_and_drop('.fc-daygrid-day[data-date$="15"]', { position: "center", relative: true }),
         },
         {
             content: "Move occurrence to 20th of the month (nothing should happen)",
-            trigger: 'a[data-event-id="2"]',
-            run: 'drag_and_drop .fc-daygrid-day[data-date$="20"] .fc-daygrid-day-events',
+            trigger: '.o_event[data-event-id="2"]',
+            run: ({ drag_and_drop }) =>
+                drag_and_drop('.fc-daygrid-day[data-date$="20"]', { position: "center", relative: true }),
         },
     ],
 });
