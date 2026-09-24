@@ -7,7 +7,7 @@ from .common import LintCase
 
 _logger = logging.getLogger(__name__)
 MARKERS = [b'<' * 7, b'>' * 7]
-EXTENSIONS = ('.py', '.js', '.xml', '.less', '.sass')
+EXTENSIONS = ('.py', '.js', '.xml', '.sass')
 
 
 class TestConflictMarkers(LintCase):
