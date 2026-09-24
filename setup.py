@@ -69,6 +69,7 @@ setup(
     python_requires='>=' + ".".join(map(str, MIN_PY_VERSION)),
     extras_require={
         'ldap': ['python-ldap'],
+        'markdown': ['markdown2'],
     },
     tests_require=[
         'freezegun',
