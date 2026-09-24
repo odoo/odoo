@@ -133,6 +133,7 @@
         <field name="code">klarna</field>
         <field name="provider_id" ref="payment.payment_provider_mollie"/>
         <field name="image" type="bytes" file="payment/static/img/klarna.png"/>
+        <field name="require_billing_address">True</field>
         <field name="support_tokenization">False</field>
         <field
             name="supported_country_ids"

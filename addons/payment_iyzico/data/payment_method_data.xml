@@ -8,6 +8,7 @@
         <field name="code">bank_transfer</field>
         <field name="provider_id" ref="payment.payment_provider_iyzico"/>
         <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="require_billing_address">True</field>
     </record>
 
     <record id="payment_method_card" model="payment.method">
@@ -16,6 +17,7 @@
         <field name="sequence">10</field>
         <field name="provider_id" ref="payment.payment_provider_iyzico"/>
         <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="require_billing_address">True</field>
     </record>
 
     <!-- === PAYMENT METHOD BRANDS === -->

@@ -311,6 +311,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             company.id,
             partner_sudo.id,
             amount,
+            billing_partner_id=order_sudo.partner_invoice_id.id,
             currency_id=currency.id,
             sale_order_id=order_sudo.id,
             **kwargs,

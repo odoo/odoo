@@ -60,6 +60,12 @@ class PaymentMethod(models.Model):
         max_height=30,
         store=True,
     )
+    require_billing_address = fields.Boolean(
+        string="Require Billing Address",
+        help="Whether this payment method requires a complete billing address. Without one, the"
+        " payment method is not available to customers.",
+        readonly=True,
+    )
 
     # === FEATURE SUPPORT FIELDS === #
 
