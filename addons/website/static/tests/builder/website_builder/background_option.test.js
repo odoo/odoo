@@ -9,7 +9,6 @@ import {
     addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
-    setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -326,6 +325,20 @@ test("Color filter doesn't disappear when video background is set", async () => 
     expect(":iframe .gradient-target .o_we_bg_filter").toHaveCount(1);
 });
 
+test("Color filter set with a color class doesn't disappear when video background is set", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <section class="o_background_video" data-snippet="s_text_image" data-name="Text - Image" data-bg-video-src="/test_route">
+            <div class="o_bg_video_container" contenteditable="false">
+                <div class="o_bg_video_loading d-flex justify-content-center align-items-center text-primary"></div>
+            </div>
+            <div class="o_we_bg_filter bg-white-50"></div>
+            <div class="container"><p>Some text</p></div>
+        </section>`);
+    await contains(":iframe section").click();
+    await waitSidebarUpdated();
+    expect(":iframe section > .o_we_bg_filter").toHaveClass("bg-white-50");
+});
+
 async function openBgPositionOverlay(editingElement, waitSidebarUpdated) {
     await contains(editingElement).click();
     await waitSidebarUpdated();
@@ -447,8 +460,14 @@ test("changing shape's background color doesn't hide the shape itself", async ()
 });
 
 test("remove background image removes color filter", async () => {
-    await setupWebsiteBuilderWithSnippet("s_cover");
+    await setupWebsiteBuilder(`
+        <section class="s_cover parallax s_parallax_is_fixed" data-scroll-background-ratio="1">
+            <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/123/transparent.png');"></span>
+            <div class="o_we_bg_filter bg-black-50"></div>
+            <div class="container">AAAA</div>
+        </section>`);
     await contains(":iframe section").click();
+    expect(":iframe section .o_we_bg_filter").toHaveCount(1);
     await contains("[data-action-id='toggleBgImage']").click();
     expect(":iframe section .o_we_bg_filter").not.toHaveCount();
 });
