@@ -103,3 +103,11 @@
         }
     }
 }
+
+html[data-edit_translations="1"] {
+    // Show donation description inputs in translation mode. Hidden in normal
+    // mode to avoid extra space in the snippet.
+    .s_donation #s_donation_description_inputs {
+        display: block !important;
+    }
+}
