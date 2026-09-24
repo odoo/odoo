@@ -32,18 +32,18 @@ a.o-discuss-mention {
 
 // dark theme variant of `o-bubble-color-vars`
 @mixin o-bubble-color-vars($type) {
-    $_color: if($type == 'o-blue', darken($info, 10%), if($type == 'o-green', darken($success, 2.5%), $warning));
-    $_border-base: mix($_color, $body-color, 75%);
-    $_base-bg: mix($white, $gray-100, 15%);
-    $_base-bg-muted: mix($white, $gray-100, 85%);
+    $_color: if($type == 'o-blue', darken($info, 10%), if($type == 'o-green', lighten($success, 2.5%), $warning));
+    $_border-base: mix($_color, $body-color, 90%);
+    $_base-bg: mix($white, $gray-100, 35%);
+    $_base-bg-muted: mix($white, $gray-100, 75%);
     @if $type == 'o-orange' {
-        --o-bubble-bg: #{mix($_base-bg, $_color, 62.5%)};
+        --o-bubble-bg: #{mix($_base-bg, $_color, 55%)};
         --o-bubble-bg-muted: #{mix($_base-bg-muted, $_color, 82.5%)};
     } @else {
-        --o-bubble-bg: #{mix($_base-bg, $_color, 82.5%)};
+        --o-bubble-bg: #{mix($_base-bg, $_color, 75%)};
         --o-bubble-bg-muted: #{mix($_base-bg-muted, $_color, 82.5%)};
     }
-    --o-bubble-border-color: #{mix($_base-bg, $_border-base, 82.5%)};
+    --o-bubble-border-color: #{mix($_base-bg, $_border-base, 70%)};
     --o-bubble-color-base: #{$_color};
 }
 

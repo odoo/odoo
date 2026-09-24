@@ -63,7 +63,11 @@ $o-bubble-colors: (
     $_bg-ratio: if($type == 'o-orange', 80%, 90%);
     $_border-ratio: if($type == 'o-orange', 65%, 80%);
     --o-bubble-bg: #{mix($o-view-background-color, $_color, $_bg-ratio)};
-    --o-bubble-bg-muted: #{$o-view-background-color};
+    --o-bubble-bg-muted: #{color-mix(
+        in srgb,
+        #{$o-view-background-color} 97.5%,
+        var(--o-bubble-color-base) 2.5%
+    )};
     --o-bubble-border-color: #{mix($o-view-background-color, $_border-base, $_border-ratio)};
     --o-bubble-color-base: #{$_color};
 }
