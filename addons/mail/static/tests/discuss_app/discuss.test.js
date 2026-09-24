@@ -2737,7 +2737,7 @@ test("Read-only channel member has bottom banner instead of composer", async () 
         is_readonly: true,
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
-            Command.create({ partner_id: memberPartnerId, channel_role: "member" }),
+            Command.create({ partner_id: memberPartnerId }),
         ],
     });
     pyEnv["mail.message"].create({
@@ -2792,7 +2792,7 @@ test("Read-only channel admin has composer", async () => {
         ["channel_id", "=", channelId],
         ["partner_id", "=", adminPartnerId],
     ])[0];
-    pyEnv["discuss.channel.member"].write([memberId], { channel_role: "member" });
+    pyEnv["discuss.channel.member"].write([memberId], { channel_role: false });
     await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')");
     await contains(".o-mail-Composer", { count: 0 });
     pyEnv["discuss.channel.member"].write([memberId], { channel_role: "admin" });
@@ -2815,7 +2815,7 @@ test("Read-only channel member cannot respond or create subthread", async () => 
         is_readonly: true,
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
-            Command.create({ partner_id: memberPartnerId, channel_role: "member" }),
+            Command.create({ partner_id: memberPartnerId }),
         ],
     });
     const memberId = pyEnv["discuss.channel.member"].search([
@@ -2882,7 +2882,7 @@ test("Cannot call read-only channels", async () => {
         name: "General",
         is_readonly: true,
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, channel_role: "member" }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: adminPartnerId, channel_role: "owner" }),
         ],
     });
