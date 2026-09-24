@@ -326,6 +326,20 @@ test("Color filter doesn't disappear when video background is set", async () => 
     expect(":iframe .gradient-target .o_we_bg_filter").toHaveCount(1);
 });
 
+test("Color filter set with a color class doesn't disappear when video background is set", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <section class="o_background_video" data-snippet="s_text_image" data-name="Text - Image" data-bg-video-src="/test_route">
+            <div class="o_bg_video_container" contenteditable="false">
+                <div class="o_bg_video_loading d-flex justify-content-center align-items-center text-primary"></div>
+            </div>
+            <div class="o_we_bg_filter bg-white-50"></div>
+            <div class="container"><p>Some text</p></div>
+        </section>`);
+    await contains(":iframe section").click();
+    await waitSidebarUpdated();
+    expect(":iframe section > .o_we_bg_filter").toHaveClass("bg-white-50");
+});
+
 async function openBgPositionOverlay(editingElement, waitSidebarUpdated) {
     await contains(editingElement).click();
     await waitSidebarUpdated();
