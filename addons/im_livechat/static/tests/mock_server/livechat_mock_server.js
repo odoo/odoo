@@ -108,7 +108,7 @@ async function feedback(request) {
     if (!channel) {
         return false;
     }
-    DiscussChannel.write([channel_id], { livechat_rating: rate });
+    DiscussChannel.write([channel_id], { livechat_rating: String(rate) });
 }
 
 registerRoute("/im_livechat/init", livechat_init);

@@ -12,7 +12,10 @@ export class DiscussChannel extends mailModels.DiscussChannel {
     });
     livechat_note = fields.Html({ sanitize: true });
     livechat_status = fields.Selection({
-        selection: [("in_progress", "In progress"), ("need_help", "Looking for help")],
+        selection: [
+            ["in_progress", "In progress"],
+            ["need_help", "Looking for help"],
+        ],
     });
     livechat_expertise_ids = fields.Many2many({
         relation: "im_livechat.expertise",

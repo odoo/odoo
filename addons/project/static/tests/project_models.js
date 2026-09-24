@@ -102,9 +102,10 @@ export class ProjectTask extends models.Model {
             ["01_in_progress", "In Progress"],
             ["02_changes_requested", "Changes Requested"],
             ["03_approved", "Approved"],
-            ["1_canceled", "Cancelled"],
-            ["1_done", "Done"],
             ["04_waiting_normal", "Waiting Normal"],
+            // Hard-coded values read by the templates
+            ["1_done", "Done"],
+            ["1_canceled", "Cancelled"],
         ],
     });
     user_ids = fields.Many2many({
