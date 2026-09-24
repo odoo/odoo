@@ -13,6 +13,10 @@ NEW_STATUSES = MappingProxyType({
     'sent': _lt('Sent'),
     'suspended': _lt('Suspended'),
     'completed': _lt('Completed'),
+    # Sent by the PDP:
+    'in_hand': _lt('In Hand'),
+    'contested': _lt('Contested'),
+    'payment_sent': _lt('Payment Sent'),
 })
 
 PDP_STATUSES = MappingProxyType({
@@ -70,7 +74,7 @@ class AccountPeppolResponse(models.Model):
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         for field_name in ['response_code', 'pdp_ref_response_code']:
-            self.env['res.config.settings']._pdp_ensure_selection_value('account.peppol.response', field_name, 'completed')
+            self.env['res.config.settings']._pdp_ensure_selection_value('account.peppol.response', field_name, 'contested')
         return super().fields_get(allfields, attributes)
 
     @api.depends('move_id.peppol_response_ids')

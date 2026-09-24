@@ -11,6 +11,9 @@ from odoo.exceptions import UserError
 from odoo.tests.common import tagged
 from odoo.tools.misc import file_open
 
+from odoo.addons.l10n_fr_pdp.models.account_edi_proxy_user import PROCESS_CONDITION_CODE_TO_RESPONSE_CODE_PDP
+from odoo.addons.l10n_fr_pdp.models.account_peppol_response import PDP_STATUSES
+
 from .common import FAKE_UUID, FILE_PATH
 from .messages_common import TestPdpMessagesCommon
 
@@ -755,6 +758,71 @@ class TestPdpMessage(TestPdpMessagesCommon):
             ],
             'move_id': move.id,
         }])
+
+    def _pdp_encrypted_lifecycle_content(self, process_condition_code):
+        document = f"""<?xml version="1.0" encoding="UTF-8"?>
+            <rsm:CrossDomainAcknowledgementAndResponse
+                xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossDomainAcknowledgementAndResponse:100"
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
+                <rsm:AcknowledgementDocument>
+                    <ram:IssueDateTime>
+                        <udt:DateTimeString format="204">20241205000000</udt:DateTimeString>
+                    </ram:IssueDateTime>
+                    <ram:ReferenceReferencedDocument>
+                        <ram:ProcessConditionCode>{process_condition_code}</ram:ProcessConditionCode>
+                        <ram:SpecifiedDocumentStatus>
+                            <ram:ReasonCode>TRANSAC_INC</ram:ReasonCode>
+                            <ram:Reason>Unknown transaction</ram:Reason>
+                        </ram:SpecifiedDocumentStatus>
+                    </ram:ReferenceReferencedDocument>
+                </rsm:AcknowledgementDocument>
+            </rsm:CrossDomainAcknowledgementAndResponse>""".encode()
+        symmetric_key = Fernet.generate_key()
+        private_key = serialization.load_pem_private_key(
+            b64decode(self.proxy_user.private_key),
+            password=None,
+        )
+        encrypted_key = private_key.public_key().encrypt(
+            symmetric_key,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None,
+            ),
+        )
+        return {
+            'document': b64encode(Fernet(symmetric_key).encrypt(document)),
+            'enc_key': b64encode(encrypted_key),
+            'flow_number': '2',
+            'origin_ref_status_code': None,
+            'origin_peppol_lifecycle_uuid': None,
+            'state': 'done',
+        }
+
+    def test_pdp_every_process_condition_code_has_a_status(self):
+        self.assertFalse(
+            {code: status for code, status in PROCESS_CONDITION_CODE_TO_RESPONSE_CODE_PDP.items() if status not in PDP_STATUSES},
+            "Every code the PDP can send must map to a status the response and the move can store.",
+        )
+
+    def test_pdp_import_lifecycle_statuses_sent_by_the_pdp(self):
+        for process_condition_code, response_code in (('204', 'in_hand'), ('207', 'contested'), ('211', 'payment_sent')):
+            with self.subTest(process_condition_code=process_condition_code):
+                move = self._create_french_invoice()
+                move.action_post()
+                move.peppol_message_uuid = FAKE_UUID[0]
+                move.peppol_move_state = 'done'
+
+                response = self.proxy_user._pdp_import_incoming_response(
+                    FAKE_UUID[1],
+                    self._pdp_encrypted_lifecycle_content(process_condition_code),
+                    move,
+                )
+
+                self.assertRecordValues(response, [{'response_code': response_code, 'move_id': move.id}])
+                self.assertEqual(move.peppol_move_state, response_code)
+                self.assertNotIn('Failed to process incoming response', move.message_ids[0].body)
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
