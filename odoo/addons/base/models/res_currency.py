@@ -34,7 +34,7 @@ def _num2words_currency_amount(number, lang, currency_code, subunit, fallback_la
     # (lang, currency) pair: it knows the grammatical gender and plural forms of
     # amounts that a single translated label can't express.
     converter = NUM2WORDS_CONVERTER_CLASSES.get(lang) or NUM2WORDS_CONVERTER_CLASSES.get(lang[:2])
-    forms = converter and converter.CURRENCY_FORMS.get(currency_code)
+    forms = converter and getattr(converter, 'CURRENCY_FORMS', {}).get(currency_code)
     if not forms:
         return _num2words_plain_cardinal(number, lang), fallback_label
     label_forms = forms[1] if subunit else forms[0]
