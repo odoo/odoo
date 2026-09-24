@@ -1,6 +1,7 @@
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { getBgImageURLFromEl, isBackgroundImageAttribute } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
+import { BG_CLASSES_REGEX } from "@html_editor/utils/color";
 import { removeOnImageChangeAttrs } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
@@ -182,6 +183,11 @@ export class SelectFilterColorAction extends StyleAction {
 
         // If no value is provided, use the current one if any.
         if (filterEl && value === undefined) {
+            // A filter set with a color class (e.g. "bg-black-50") has no
+            // inline style to read back: keep it as is.
+            if ([...filterEl.classList].some((cls) => BG_CLASSES_REGEX.test(cls))) {
+                return;
+            }
             value = filterEl.style.backgroundImage || filterEl.style.backgroundColor;
         }
         // If the filter would be transparent, remove it / don't create it.
