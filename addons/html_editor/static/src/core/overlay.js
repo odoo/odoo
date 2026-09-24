@@ -1,3 +1,4 @@
+import { closestBlock } from "@html_editor/utils/blocks";
 import {
     Component,
     onWillDestroy,
@@ -141,24 +142,40 @@ export class EditorOverlay extends Component {
             this.lastSelection.rect ||
             range.getBoundingClientRect();
         if (rect.x === 0 && rect.width === 0 && rect.height === 0) {
-            // Attention, ignoring DOM mutations is always dangerous (when we add or remove nodes)
-            // because if another mutation uses the target that is not observed, that mutation can never be applied
-            // again (when undo/redo and in collaboration).
-            this.props.shared.ignoreDOMMutations(() => {
-                const clonedRange = range.cloneRange();
-                const shadowCaret = doc.createTextNode("|");
-                clonedRange.insertNode(shadowCaret);
-                clonedRange.selectNode(shadowCaret);
-                rect = clonedRange.getBoundingClientRect();
-                shadowCaret.remove();
-                clonedRange.detach();
-            });
+            rect = this.getRectForCollapsedRange(selection, range);
         }
         // Html element with a patched getBoundingClientRect method. It
         // represents the range as a (HTMLElement) target for the usePosition
         // hook.
         this.rangeElement.getBoundingClientRect = () => rect;
         return this.rangeElement;
+    }
+
+    getRectForCollapsedRange(selection, range) {
+        let rect;
+        const clonedRange = range.cloneRange();
+        const isLtr = this.props.editable.getAttribute("dir") != "rtl";
+        let targetRect;
+        // At this point in execution, the range is collapsed to a single point "between" nodes, and its coordinates are nullified.
+        // We seek the most accurate rect for overlay positionning calculations.
+        if (clonedRange.startOffset > 0) {
+            // If the selected point has a previous sibling, we extend the range to it and correct the resulting rect
+            clonedRange.setStart(clonedRange.startContainer, clonedRange.startOffset - 1);
+            targetRect = clonedRange.getBoundingClientRect();
+            const coordX = isLtr ? targetRect.right : targetRect.left;
+            rect = new DOMRect(coordX, targetRect.y, 0, targetRect.height);
+        } else {
+            // If the selected point is before the first child or has no siblings
+            // we use the rect of the closest block, corrected by padding and border width.
+            // Having a closest block outside of the editable area is possible and should not throw
+            const closestEl = closestBlock(selection.focusNode);
+            targetRect = closestEl.getBoundingClientRect();
+            const coordX = isLtr
+                ? targetRect.left + parseFloat(getComputedStyle(closestEl).paddingLeft) + closestEl.clientLeft
+                : targetRect.right - parseFloat(getComputedStyle(closestEl).paddingRight) - closestEl.clientRight;
+            rect = new DOMRect(coordX, targetRect.y, 0, targetRect.height);
+        }
+        return rect;
     }
 
     updateVisibility(overlayElement, solution, scrollContainer) {
