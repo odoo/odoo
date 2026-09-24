@@ -30,6 +30,10 @@ div.col:not([align]) {
 // ===== Layout =====
 .o_layout {
     overflow: hidden;
+    .container:not(.o_mail_wrapper) {
+        max-width: unset;
+        margin: 0;
+    }
 
     > .o_mail_wrapper {
         width: 100%;
@@ -55,11 +59,6 @@ div.col:not([align]) {
 .o_mail_snippet_general {
     width: 100%;
     box-sizing: border-box;
-
-    .container > div.row {
-        margin-left: 0;
-        margin-right: 0;
-    }
 
     a:not(.btn), .btn.btn-link {
         border: none!important;
