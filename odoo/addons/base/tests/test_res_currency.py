@@ -154,6 +154,15 @@ class TestResCurrency(TransactionCase):
         self.assertEqual(eur.amount_to_text(2.0), "deux euros")
         self.assertEqual(eur.amount_to_text(21.56), "vingt et un euros et cinquante-six centimes")
 
+    def test_amount_to_text_currency_aware_inflection_vi_vn(self):
+        """Convert currency amounts to text for languages without currency forms."""
+        self.env['res.lang'].with_context(active_test=False).search([
+            ('code', '=', 'vi_VN'),
+        ]).active = True
+
+        vnd = self.env.ref('base.VND').with_context(lang='vi_VN')
+        self.assertEqual(vnd.amount_to_text(12.0), "Mười Hai Dong")
+
     def test_rounding_04(self):
         """ check that proper rounding is performed for float persistence """
         currency = self.env.ref('base.EUR')
