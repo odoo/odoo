@@ -45,7 +45,6 @@
                     t-att-class="{
                         'active': isBtnActive,
                         'o-inProgress': btn.status === 'in_progress',
-                        'bg-view': isBtnActive and btn.status === 'in_progress',
                         'o-need-help': isBtnActive and btn.status === 'need_help',
                     }"
                     t-att-disabled="!this.store.has_access_livechat"

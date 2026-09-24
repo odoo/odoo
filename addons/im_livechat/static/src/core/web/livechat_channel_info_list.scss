@@ -11,9 +11,16 @@
         40%, 80% {transform: translate3d(.15em, 0, 0);}
     }
 
-    button:where(:not(.active)) .o-livechat-LivechatStatusLabel {
-        visibility: hidden;
-        animation: none;
+    button:where(:not(.active)) {
+        &:not(:hover) {
+            background-color: $gray-200;
+            opacity: 75%;
+        }
+
+        .o-livechat-LivechatStatusLabel {
+            visibility: hidden;
+            animation: none;
+        }
     }
 
     .o-livechat-LivechatStatusLabel {
@@ -29,7 +36,7 @@
     }
 
     button.active.o-inProgress  {
-        --list-group-active-bg: #{rgba($success, .2)};
+        --list-group-active-bg: #{rgba($success, .15)};
         --list-group-active-color: #{$success};
         --list-group-active-border-color: #{$success};
 
@@ -47,9 +54,9 @@
     }
 
     button.active.o-need-help {
-        --list-group-active-bg: #{rgba($purple, .1)};
+        --list-group-active-bg: #{rgba($purple, .35)};
         --list-group-active-color: var(--body-color);
-        --list-group-active-border-color: var(--purple);
+        --list-group-active-border-color: #{lighten($purple, 15%)};
 
 
         &.o-livechat-LivechatStatusLabel-icon {
@@ -64,12 +71,7 @@
 
     // Dropdown
     .o_popover & {
-        --list-group-border-radius: 0;
-
-        .list-group-item {
-            border-width: 0;
-            margin: 0;
-        }
+        border-radius: $border-radius-xl;
     }
 }
 
