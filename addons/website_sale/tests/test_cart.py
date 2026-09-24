@@ -609,3 +609,17 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
             # We shouldn't find any abandonned cart if the customer isn't allowed to
             # buy from this website (because their contact belongs to another company)
             self.assertFalse(request.cart)
+
+    def test_update_cart_on_deleted_cart(self):
+        """Updating a cart line shouldn't crash if the cart no longer exists, e.g. it was
+        deleted while the customer still had it open in another tab."""
+        cart_id, line_id = self.cart.id, self.cart.order_line[0].id
+        self.cart.unlink()
+
+        with self.mock_request(sale_order_id=cart_id):
+            res = self.WebsiteSaleCartController.update_cart(line_id=line_id, quantity=0)
+
+            self.assertEqual(res["cart_quantity"], 0)
+            self.assertEqual(res["amount"], 0.0)
+            self.assertEqual(res["minor_amount"], 0)
+            self.assertIn("warning", res)
