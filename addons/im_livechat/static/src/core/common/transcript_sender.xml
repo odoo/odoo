@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
     <t t-name="im_livechat.TranscriptSender">
         <div class="o-livechat-TranscriptSender">
-            <div class="input-group">
-                <input t-on-keydown="this.onKeydown" t-model.proxy="this.state.email" t-att-disabled="this.isInputDisabled" type="text" class="form-control" t-att-class="{'bg-view': !this.isInputDisabled}" placeholder="mail@example.com" />
-                <button class="btn btn-primary" type="button" data-action="sendTranscript" t-att-disabled="this.isButtonDisabled" t-on-click="this.onClickSend">
+            <div class="input-group position-relative align-items-center">
+                <input t-on-keydown="this.onKeydown" t-model.proxy="this.state.email" t-att-disabled="this.isInputDisabled" type="text" class="form-control bg-100 rounded-pill o-px-2_5" t-att-class="{'bg-view': !this.isInputDisabled}" placeholder="mail@example.com" />
+                <button class="btn btn-primary o_btn_circle position-absolute" type="button" data-action="sendTranscript" t-att-disabled="this.isButtonDisabled" t-on-click="this.onClickSend">
                     <i class="oi" t-att-class="{
                         'oi-spin': this.state.status === this.STATUS.SENDING,
                         'oi-filled': this.state.status === this.STATUS.IDLE,

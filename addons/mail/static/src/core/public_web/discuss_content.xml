@@ -66,7 +66,7 @@
                         <div t-if="!this.ui.isSmall or !hasActivePanel" class="d-flex flex-column flex-grow-1 bg-inherit min-w-0 mt-1">
                             <t name="thread"><Thread thread="this.thread" t-key="this.thread.localId" jumpPresent="this.state.jumpThreadPresent" autofocus="this.thread.channel?.composerHidden"/></t>
                             <Composer t-if="!this.thread.channel?.composerHidden" t-key="this.thread.localId" composer="this.thread.composer" autofocus="true" onDiscardCallback="() => (this.thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="this.rootRef" type="this.thread.composer.replyToMessage ? (this.thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
-                            <span t-if="this.thread.channel?.composerHidden and this.thread.channel?.composerHiddenText" class="bg-200 py-1 text-center fst-italic fw-bold text-muted" t-out="this.thread.channel?.composerHiddenText"/>
+                            <span t-if="this.thread.channel?.composerHidden and this.thread.channel?.composerHiddenText" class="bg-200 py-1 text-center fst-italic fw-bold text-muted rounded-pill border" t-out="this.thread.channel?.composerHiddenText"/>
                         </div>
                         <div t-if="hasActivePanel" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer rounded-4 border mt-1 flex-shrink-0 d-print-none" t-att-class="{ 'w-100': this.ui.isSmall }">
                             <t t-component="this.threadActions.activeAction.actionPanelComponent" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>
