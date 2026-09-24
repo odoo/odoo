@@ -60,6 +60,7 @@ export class HighlightPlugin extends Plugin {
             }
         },
         format_class_predicates: (className) => className.startsWith("o_text_highlight"),
+        system_node_selectors: ".o_text_highlight_svg",
         selectionchange_handlers: this.updateSelectedHighlight.bind(this),
         remove_all_formats_handlers: () => {
             // we rely on the normalize handler to start it again

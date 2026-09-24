@@ -53,18 +53,24 @@ export class TextHighlight extends Interaction {
             closestToObserves.add(this.closestToObserve(target));
         }
         for (const closestToObserve of closestToObserves) {
-            for (const el of closestToObserve.querySelectorAll(".o_text_highlight")) {
+            const descendantEls = closestToObserve.querySelectorAll(".o_text_highlight");
+            const highlightEls = closestToObserve.matches(".o_text_highlight")
+                ? [closestToObserve, ...descendantEls]
+                : descendantEls;
+            for (const el of highlightEls) {
                 const highlightID = getCurrentTextHighlight(el);
                 const currentSVGs = el.querySelectorAll(".o_text_highlight_svg");
                 for (const svg of currentSVGs) {
                     svg.remove();
                 }
-                const svgs = makeHighlightSvgs(el, highlightID);
+                withAnimationsAtEnd(el, () => {
+                    const svgs = makeHighlightSvgs(el, highlightID);
 
-                for (const svg of svgs.toReversed()) {
-                    this.insert(svg, el, "afterbegin");
-                    adaptHighlightPosition(el, svg);
-                }
+                    for (const svg of svgs.toReversed()) {
+                        this.insert(svg, el, "afterbegin");
+                        adaptHighlightPosition(el, svg);
+                    }
+                });
             }
         }
     }
@@ -117,6 +123,37 @@ export class TextHighlight extends Interaction {
         // todo: what was the purpose of this?
         // this.lockTextHighlightObserver(el);
         this.handleEl(el);
+    }
+}
+
+/**
+ * While an animation is running, an element may be moving, resizing, or
+ * rotating. If we measure it at that moment, we get its temporary size and
+ * position instead of its final ones. The highlight SVGs use these measurements
+ * and keep that shape. So, if they are created during an animation, they may
+ * end up using a temporary shape. To avoid this, the animations are briefly
+ * reset before taking measurements and then restored before the browser shows
+ * the next frame. The visitor does not notice this, and no HTML is changed.
+ *
+ * @param {HTMLElement} el
+ * @param {Function} callback
+ */
+function withAnimationsAtEnd(el, callback) {
+    const currentTimes = new Map();
+    for (const animation of el.ownerDocument.getAnimations()) {
+        const targetEl = animation.effect?.target;
+        if (!(targetEl?.contains(el) || el.contains(targetEl))) {
+            continue;
+        }
+        currentTimes.set(animation, animation.currentTime);
+        animation.currentTime = animation.effect.getComputedTiming().endTime;
+    }
+    try {
+        callback();
+    } finally {
+        for (const [animation, currentTime] of currentTimes) {
+            animation.currentTime = currentTime;
+        }
     }
 }
 
