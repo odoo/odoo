@@ -17,15 +17,13 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { Attachment } from "@mail/core/common/attachment_model";
-import { describe, expect, test } from "@odoo/hoot";
-import { mockFetch } from "@odoo/hoot-mock";
+import { describe, expect, mockFetch, test } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
-import { patch } from "@web/core/utils/patch";
-
+import { location } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
+import { patch } from "@web/core/utils/patch";
 import { getOrigin } from "@web/core/utils/urls";
-import { location } from "@web/core/browser/browser";
 import { session } from "@web/session";
 
 describe.current.tags("desktop");
@@ -72,7 +70,7 @@ test("The name of the conversation changes based on the agents' names", async ()
         name: "James",
     });
     pyEnv["res.partner"].create({
-        lang: "en",
+        lang: "en_US",
         name: "James",
         user_ids: [userId],
     });
