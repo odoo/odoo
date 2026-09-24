@@ -374,8 +374,11 @@ class Cart(PaymentPortal):
             "cart_has_blocking_alerts": order_sudo._has_blocking_alerts(),
             "cart_quantity": order_sudo.cart_quantity,
             "amount": order_sudo.amount_total,
-            "minor_amount": payment_utils.to_minor_currency_units(
-                order_sudo.amount_total, order_sudo.currency_id
+            "minor_amount": (
+                order_sudo.amount_total
+                and payment_utils.to_minor_currency_units(
+                    order_sudo.amount_total, order_sudo.currency_id
+                )
             ),
             "website_sale.cart_lines": IrUiView._render_template(
                 "website_sale.cart_lines",
