@@ -480,6 +480,40 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertIn('[TRANSAC_INC] Unknown transaction', body)
         self.assertIn('Lifecycle note', body)
 
+    def test_pdp_einvoicing_contested_lifecycle(self):
+        move = self._create_french_invoice()
+        move.action_post()
+        move.peppol_message_uuid = FAKE_UUID[0]
+        move.peppol_move_state = 'done'
+        response_info = {
+            'response_code': 'contested',
+            'issue_date': self.fakenow,
+            'status_infos': [{
+                'reason_code': 'LITIGE',
+                'reason': 'Invoice contested by buyer',
+                'note': 'Contested note',
+            }],
+        }
+        proxy_model = self.env.registry[self.proxy_user._name]
+        with (
+            patch.object(proxy_model, '_peppol_get_decoded_document', return_value=b''),
+            patch.object(proxy_model, '_pdp_extract_response_info', return_value=response_info),
+        ):
+            response = self.proxy_user._pdp_import_incoming_response(FAKE_UUID[1], {
+                'flow_number': '2',
+                'origin_ref_status_code': None,
+                'origin_peppol_lifecycle_uuid': None,
+                'state': 'done',
+            }, move)
+
+        self.assertTrue(response)
+        self.assertEqual(response.response_code, 'contested')
+        body = move.message_ids[0].body
+        self.assertIn('Details:', body)
+        self.assertNotIn('Errors:', body)
+        self.assertIn('[LITIGE] Invoice contested by buyer', body)
+        self.assertIn('Contested note', body)
+
     def test_pdp_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via pdp
         self.env.company.account_peppol_proxy_state = 'rejected'

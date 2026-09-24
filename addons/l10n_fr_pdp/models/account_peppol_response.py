@@ -11,6 +11,7 @@ NEW_STATUSES = MappingProxyType({
     'made_available': _lt('Made Available'),  # required by Peppol
     'refused': _lt('Refused'),  # required by Peppol and PPF; used for PPF messages
     'cancelled': _lt('Cancelled'),
+    'contested': _lt('Contested'),
     # Added for Chorus Pro:
     'sent': _lt('Sent'),
     'suspended': _lt('Suspended'),
