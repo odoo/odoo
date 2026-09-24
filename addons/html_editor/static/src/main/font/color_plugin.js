@@ -7,6 +7,7 @@ import {
 } from "@html_editor/utils/color";
 import { fillEmpty, removeClass, removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import {
+    isContentEditable,
     isElement,
     isEmptyBlock,
     isIconElement,
@@ -126,6 +127,7 @@ export class ColorPlugin extends Plugin {
                             (n) =>
                                 (isTextNode(n) ||
                                     isIconElement(n) ||
+                                    (!isContentEditable(n) && !isBlock(n)) ||
                                     n.matches?.(`t, ${PROTECTED_QWEB_SELECTOR}`) ||
                                     (mode === "backgroundColor" &&
                                         n.classList.contains("o_selected_td"))) &&

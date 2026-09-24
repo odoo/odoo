@@ -1340,3 +1340,12 @@ test("should not remove format around unsplittable if partially selected", async
         contentAfter: '<p>ab<u>c<a href="a.com">d[e</a></u>fg]h</p>',
     });
 });
+
+test("should remove the color applied around a non-editable element", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font style="color: rgb(255, 0, 0);">[<span contenteditable="false">ab</span>]</font></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: '<p>[<span contenteditable="false">ab</span>]</p>',
+    });
+});
