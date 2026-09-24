@@ -118,7 +118,9 @@ class EWayBillApi:
                 })
                 raise
 
-            if '238' in e.error_codes:
+            if '238' in e.error_codes or any(
+                'the token is missing or has expired' in str(err.get('message', '')).lower() for err in e.error_json['error']
+            ):
                 # Invalid token eror then create new token and send generate request again.
                 # This happens when authenticate called from another odoo instance with same credentials
                 # (like. Demo/Test)
