@@ -62,7 +62,7 @@ test("[rtl] SVG positionned inside highlighted text", async () => {
             position.push("afterBottom");
         }
         return position.join() || "inside";
-    }
+    };
     await startInteractions(`
       <p style="direction: rtl">
         اَلْعَرَﺐِﻳَّ<span class="o_text_highlight o_text_highlight_circle_1" style="--text-highlight-width: 2px;">ةُ<br>اَ</span>لْعَرَبِيَّةُ
@@ -84,4 +84,41 @@ test("[rtl] SVG positionned inside highlighted text", async () => {
     expect(relativePosition(items[1], items[0])).toBe("afterRight,afterBottom");
     // in RTL with LTR content, highlight of previous line is top right
     expect(relativePosition(items[3], items[2])).toBe("beforeLeft,afterBottom");
+});
+
+test("highlight of an animated text is drawn as displayed once animated", async () => {
+    const highlightMarkup = `<span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 2px;">personality</span>`;
+    await startInteractions(`
+        <p>${highlightMarkup}</p>
+        <p><span class="o_animated_text" style="display: inline-block;">${highlightMarkup}</span></p>
+    `);
+    // Zoom in the animated text, and keep it on the first frame of the
+    // animation, as when it starts on page load.
+    const animatedEl = queryFirst(".o_animated_text");
+    animatedEl
+        .animate([{ transform: "scale(0.5)" }, { transform: "none" }], {
+            duration: 10000,
+            fill: "both",
+        })
+        .pause();
+    // An endless animation has no last frame: it has to be left alone.
+    const endlessAnimation = animatedEl.animate([{ opacity: 0.5 }, { opacity: 1 }], {
+        duration: 1000,
+        iterations: Infinity,
+    });
+    animatedEl
+        .querySelector(".o_text_highlight")
+        .dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
+    await animationFrame();
+    endlessAnimation.cancel();
+    const [pathEl, animatedPathEl] = queryAll(".o_text_highlight path");
+    expect(animatedPathEl.getAttribute("d")).toBe(pathEl.getAttribute("d"));
+});
+
+test("highlight applied on an animated text is drawn (structure of a previous version)", async () => {
+    await startInteractions(`
+        <p><span class="o_animated_text o_text_highlight o_text_highlight_underline" style="display: inline-block; --text-highlight-width: 2px;">personality</span></p>
+    `);
+    await animationFrame();
+    expect(".o_text_highlight > .o_text_highlight_svg").toHaveCount(1);
 });
