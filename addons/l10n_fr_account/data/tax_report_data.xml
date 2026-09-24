@@ -2051,10 +2051,12 @@
                                         <field name="formula">box_15.balance_rounded</field>
                                         <field name="subformula">if_other_expr_above(box_15.balance_rounded, EUR(0))</field>
                                     </record>
+                                    <!-- Box 15 is the legal destination of a reversed deduction: on top of its own tag, it takes
+                                         the excess of the deductible boxes 19 and 20 whose own balance is clamped to zero. -->
                                     <record id="tax_report_15_balance_rounded" model="account.report.expression">
                                         <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">box_15.balance_from_tags</field>
+                                        <field name="formula">box_15.balance_from_tags + box_19.negative_spill + box_20.negative_spill</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
                                     <record id="tax_report_15_balance_from_tags" model="account.report.expression">
@@ -2216,6 +2218,14 @@
                                         <field name="formula">box_19.balance_rounded</field>
                                         <field name="subformula">if_other_expr_above(box_19.balance_rounded, EUR(0))</field>
                                     </record>
+                                    <!-- Same as box 20: box 23 sums the guarded balance, so the negative excess of box 19
+                                         is captured here (as a positive amount) instead of being dropped from the totals. -->
+                                    <record id="tax_report_19_negative_spill" model="account.report.expression">
+                                        <field name="label">negative_spill</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">0 - box_19.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_below(box_19.balance_rounded, EUR(0))</field>
+                                    </record>
                                     <record id="tax_report_19_balance_rounded" model="account.report.expression">
                                         <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
@@ -2239,6 +2249,14 @@
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_20.balance_rounded</field>
                                         <field name="subformula">if_other_expr_above(box_20.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <!-- When vendor refunds exceed vendor bills, box 20 nets negative and the guard above blanks it.
+                                         This non-displayed expression keeps that excess (as a positive amount) so box 15 can reclaim it. -->
+                                    <record id="tax_report_20_negative_spill" model="account.report.expression">
+                                        <field name="label">negative_spill</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">0 - box_20.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_below(box_20.balance_rounded, EUR(0))</field>
                                     </record>
                                     <record id="tax_report_20_balance_rounded" model="account.report.expression">
                                         <field name="label">balance_rounded</field>
