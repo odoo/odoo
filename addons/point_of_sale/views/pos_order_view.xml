@@ -88,7 +88,9 @@
                             <list name="order_line_list" string="Order lines" editable="bottom">
                                 <field name="name" column_invisible="True"/>
                                 <field name="full_product_name" optional="hide" readonly="1"/>
-                                <field name="product_id" widget="account_product_field" readonly="parent.is_refund"/>
+                                <field name="custom_attribute_value_ids" optional="hide" readonly="1" widget="many2many_tags"/>
+                                <field name="attribute_value_ids" optional="hide" readonly="1" widget="many2many_tags"/>
+                                <field name="product_id" widget="pos_product_field" readonly="parent.is_refund"/>
                                 <field name="is_edited" readonly="1" />
                                 <field name="qty"/>
                                 <field name="customer_note" optional="hide"/>
