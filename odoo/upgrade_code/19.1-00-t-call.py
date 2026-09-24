@@ -14,6 +14,8 @@ if typing.TYPE_CHECKING:
 
 AUTO_CLOSE_T = re.compile(r"(<t [^>]*[^/>])>\s*</t>", flags=re.MULTILINE)
 XPATH_TCALL_REG = re.compile(r'\[@(t-call|t-snippet-call)=[^\]]+\]$')
+ROOT_TAG_REG = re.compile(r'^(?P<prolog>\s*(?:<\?xml[^>]*\?>\s*)?)(?P<tag><(?:t|xpath)\s[^>]*>)')
+T_NAME_REG = re.compile(r'\st-name=(["\']).*?\1')
 
 log = logging.getLogger(__name__)
 
@@ -255,6 +257,38 @@ def change(root: etree._ElementTree, path: str) -> bool:
     return content_updated
 
 
+def wrap_root_tcall(content: str) -> str:
+    """ Wrap a template whose root element is a t-call, or an xpath
+    of a t-call, since the conversion creates siblings to that element:
+
+    - the t-set moved before the t-call, wrapped in a plain <t>
+    - added xpaths (position="attributes" and position="before"),
+      wrapped in a <data> tag.
+
+    The t-name, if any, is moved on the wrapper since it becomes the new root
+    element.
+    """
+    match = ROOT_TAG_REG.match(content)
+    if not match:
+        return content
+
+    tag = match['tag']
+    if 't-call=' not in tag and 't-snippet-call=' not in tag:
+        return content
+
+    attributes = ''
+    if 'position=' in tag:
+        wrapper_tag = 'data'
+    else:
+        wrapper_tag = 't'
+        if t_name := T_NAME_REG.search(tag):
+            attributes = t_name.group()
+            tag = tag.replace(t_name.group(), '', 1)
+
+    body = content[match.end():].rstrip()
+    return f"{match['prolog']}<{wrapper_tag}{attributes}>{tag}{body}</{wrapper_tag}>\n"
+
+
 def upgrade(file_manager: FileManager):
     files = [file for file in file_manager if file.path.suffix == '.xml' and '/static/' not in str(file.path)]
     if not files:
@@ -266,7 +300,11 @@ def upgrade(file_manager: FileManager):
             content = file.content
 
             if ('t-call=' in content or 't-snippet-call=' in content) and 't-set=' in content:
-                content = update_etree(content, lambda root: change(root, str(file.path)))
+                wrapped = wrap_root_tcall(content)
+                updated = update_etree(wrapped, lambda root: change(root, str(file.path)))
+                if updated != wrapped:
+                    # keep the wrapper only if the template has been updated
+                    content = updated
                 content = AUTO_CLOSE_T.sub(r"\g<1>/>", content)
                 file.content = content
         except Exception as e:  # noqa: BLE001
