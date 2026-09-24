@@ -6,6 +6,7 @@ import { session } from "@web/session";
 import { ensureArray, sortBy } from "./utils/arrays";
 import { cookie } from "@web/core/browser/cookie";
 import { EventBus } from "@odoo/owl";
+import { allowedFns } from "@web/core/py_js/py_interpreter";
 
 // This file exports an object containing user-related information and functions
 // allowing to obtain/alter user-related information from the server.
@@ -99,6 +100,50 @@ export function _makeUser(session) {
         updateActiveCompanies(getCookieCompanyIds(), allowedCompanies, defaultCompany);
     }
 
+    const companyEvalContext = {
+        /**
+         * @type {boolean}
+         * A boolean indicating whether the user has access to multiple companies.
+         */
+        multi_company: allowedCompanies.length > 1,
+
+        /**
+         * @type {Array.<number>}
+         * The list of company IDs the user is allowed to connect to.
+         */
+        allowed_ids: allowedCompanies.map((c) => c.id),
+
+        /**
+         * @type {Array.<number>}
+         * The list of company IDs the user is connected to (selected in the company
+         * switcher dropdown).
+         */
+        active_ids: activeCompanies.map((c) => c.id),
+
+        /**
+         * @type {number}
+         * The ID of the main company selected (the one highlighted in the company switcher
+         * dropdown and displayed in the navbar of the webclient).
+         */
+        active_id: activeCompanies?.[0]?.id,
+
+        /**
+         * @param {(Array.<number>|number)} ids - id or ids of companies
+         * @param {string} field - property of the company. Note that the properties of the
+         *                          companies are those sent by the server in the session info.
+         * @param {*} value - specified value
+         * @returns {boolean}
+         * returns a boolean indicating whether there's a company with id in `ids` for which
+         * `field` matches the given `value`.
+         */
+        has: (ids, field, value) => {
+            ids = typeof ids === "number" ? [ids] : ids || [];
+            return allowedCompanies.some((c) => ids.includes(c.id) && c[field] === value);
+        },
+    };
+
+    allowedFns.add(companyEvalContext.has);
+
     // Delete user-related information from the session, s.t. there's a single source of truth
     delete session.home_action_id;
     delete session.is_admin;
@@ -178,6 +223,13 @@ export function _makeUser(session) {
         writeDate,
         get context() {
             return Object.assign({}, context, { uid: this.userId });
+        },
+        get evalContext() {
+            return {
+                uid: this.userId,
+                companies: companyEvalContext,
+                allowed_company_ids: this.context.allowed_company_ids, // For backwards compatibility cases. Deprecated as of 19.0.
+            };
         },
         get lang() {
             return lang;

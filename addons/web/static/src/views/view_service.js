@@ -3,6 +3,8 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { rpcBus } from "@web/core/network/rpc";
 import { UPDATE_METHODS } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 
 /**
  * @typedef {Object} IrFilter
@@ -113,7 +115,14 @@ export const viewService = {
                 const { arch, toolbar, id, filters, custom_view_id } = result.views[viewType];
                 const viewDescription = { arch, id, custom_view_id };
                 if (toolbar) {
-                    viewDescription.actionMenus = toolbar;
+                    const actionMenus = toolbar;
+                    if (actionMenus.action) {
+                        actionMenus.action = actionMenus.action.filter(
+                            (action) =>
+                                !evaluateBooleanExpr(action.binding_invisible, user.evalContext)
+                        );
+                    }
+                    viewDescription.actionMenus = actionMenus;
                 }
                 if (filters) {
                     viewDescription.irFilters = filters;

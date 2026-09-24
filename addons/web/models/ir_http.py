@@ -156,25 +156,8 @@ class IrHttp(models.AbstractModel):
                 # current_company should be default_company
                 "user_companies": {
                     'current_company': user.company_id.id,
-                    'allowed_companies': {
-                        comp.id: {
-                            'id': comp.id,
-                            'name': comp.name,
-                            'sequence': comp.sequence,
-                            'child_ids': (comp.child_ids & all_companies_in_hierarchy_sudo).ids,
-                            'parent_id': comp.parent_id.id,
-                            'currency_id': comp.currency_id.id,
-                        } for comp in user_companies
-                    },
-                    'disallowed_ancestor_companies': {
-                        comp.id: {
-                            'id': comp.id,
-                            'name': comp.name,
-                            'sequence': comp.sequence,
-                            'child_ids': (comp.child_ids & all_companies_in_hierarchy_sudo).ids,
-                            'parent_id': comp.parent_id.id,
-                        } for comp in disallowed_ancestor_companies_sudo
-                    },
+                    'allowed_companies': {comp.id: comp._get_session_info(all_companies_in_hierarchy_sudo) for comp in user_companies},
+                    'disallowed_ancestor_companies': {comp.id: comp._get_session_info(all_companies_in_hierarchy_sudo) for comp in disallowed_ancestor_companies_sudo},
                 },
                 "show_effect": True,
             })
