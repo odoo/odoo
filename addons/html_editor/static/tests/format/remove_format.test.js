@@ -1385,3 +1385,32 @@ test("should not remove the color of a list item from an inline code inside it",
         contentAfter: content,
     });
 });
+
+test("should remove the color applied around a non-editable element", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font style="color: rgb(255, 0, 0);">[<span contenteditable="false">ab</span>]</font></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: '<p>[<span contenteditable="false">ab</span>]</p>',
+    });
+});
+
+test("should not remove the color of a non-editable element itself", async () => {
+    const content =
+        '<p>[x <span contenteditable="false" style="color: rgb(255, 0, 0);">ab</span> y]</p>';
+    await testEditor({
+        contentBefore: content,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: content,
+    });
+});
+
+test("should remove the color of a list item around a non-editable element", async () => {
+    await testEditor({
+        contentBefore:
+            '<ol><li style="color: rgb(255, 0, 0);">x[ <span contenteditable="false">ab</span> ]y</li></ol>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<ol><li style="color: rgb(255, 0, 0);">x<font class="o_default_color">[ <span contenteditable="false">ab</span> ]</font>y</li></ol>',
+    });
+});

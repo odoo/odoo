@@ -3,10 +3,12 @@ import {
     BG_CLASSES_REGEX,
     closestColoredElement,
     COLOR_COMBINATION_CLASSES_REGEX,
+    hasColor,
     TEXT_CLASSES_REGEX,
 } from "@html_editor/utils/color";
 import { fillEmpty, removeClass, removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import {
+    isContentEditable,
     isElement,
     isEmptyBlock,
     isIconElement,
@@ -132,6 +134,9 @@ export class ColorPlugin extends Plugin {
             !(
                 isTextNode(node) ||
                 isIconElement(node) ||
+                (!isContentEditable(node) &&
+                    !isBlock(node) &&
+                    !(isElement(node) && hasColor(node, mode))) ||
                 node.matches?.(`t, ${PROTECTED_QWEB_SELECTOR}`) ||
                 (mode === "backgroundColor" && node.classList?.contains("o_selected_td"))
             )
