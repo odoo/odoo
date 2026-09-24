@@ -848,6 +848,81 @@ export const accountTaxHelpers = {
             };
         }
 
+        function grouping_function_per_taxes(base_line, tax_data) {
+            return {
+                ...grouping_function(base_line, tax_data),
+                tax_ids: base_line.tax_details.taxes_data.map((tax_data) => tax_data.tax.id),
+            };
+        }
+
+        function get_delta_and_target_factors(
+            values,
+            current_mode,
+            delta_currency_indicator,
+            delta_currency
+        ) {
+            let delta_total_excluded = 0.0;
+            let target_factors = [];
+            if (current_mode === "excluded") {
+                // Price-excluded rounding.
+                const raw_total_excluded = values[`target_total_excluded${delta_currency_indicator}`];
+                if (!raw_total_excluded) {
+                    return [null, []];
+                }
+
+                const rounded_raw_total_excluded = roundPrecision(
+                    raw_total_excluded,
+                    delta_currency.rounding
+                );
+                const total_excluded = values[`total_excluded${delta_currency_indicator}`];
+                delta_total_excluded = rounded_raw_total_excluded - total_excluded;
+                target_factors = values.base_line_x_taxes_data.map(([base_line]) => ({
+                    factor: base_line.tax_details[`raw_total_excluded${delta_currency_indicator}`],
+                    base_line: base_line,
+                }));
+            } else {
+                // Price-included rounding.
+                const raw_total_included =
+                    values[`target_total_excluded${delta_currency_indicator}`] +
+                    values[`target_tax_amount${delta_currency_indicator}`];
+                if (!raw_total_included) {
+                    return [null, []];
+                }
+                const rounded_raw_total_included = roundPrecision(
+                    raw_total_included,
+                    delta_currency.rounding
+                );
+                const total_included =
+                    values[`total_excluded${delta_currency_indicator}`] +
+                    values[`tax_amount${delta_currency_indicator}`];
+                delta_total_excluded = rounded_raw_total_included - total_included;
+                target_factors = values.base_line_x_taxes_data.map(([base_line]) => ({
+                    factor: base_line.tax_details[`raw_total_included${delta_currency_indicator}`],
+                    base_line: base_line,
+                }));
+            }
+            return [delta_total_excluded, target_factors];
+        }
+
+        const distribute_delta = (
+            delta_currency,
+            delta_total_excluded,
+            target_factors,
+            delta_currency_indicator
+        ) => {
+            const amounts_to_distribute = this.distribute_delta_amount_smoothly(
+                delta_currency.decimal_places,
+                delta_total_excluded,
+                target_factors
+            );
+            for (let i = 0; i < target_factors.length; i++) {
+                const base_line = target_factors[i].base_line;
+                const amount_to_distribute = amounts_to_distribute[i];
+                base_line.tax_details[`delta_total_excluded${delta_currency_indicator}`] +=
+                    amount_to_distribute;
+            }
+        };
+
         const base_lines_aggregated_values = this.aggregate_base_lines_tax_details(
             base_lines,
             grouping_function
@@ -855,6 +930,18 @@ export const accountTaxHelpers = {
         const values_per_grouping_key = this.aggregate_base_lines_aggregated_values(
             base_lines_aggregated_values
         );
+
+        // The delta of a set of taxes is first distributed on the base lines having the same taxes.
+        // This way, the rounding of a tax doesn't end up on a base line of another tax. Otherwise, the
+        // base amount of the journal items would no longer match the 'tax_base_amount' of the tax line.
+        const base_lines_aggregated_values_per_taxes = this.aggregate_base_lines_tax_details(
+            base_lines,
+            grouping_function_per_taxes
+        );
+        const values_per_taxes_grouping_key = this.aggregate_base_lines_aggregated_values(
+            base_lines_aggregated_values_per_taxes
+        );
+
         for (const values of Object.values(values_per_grouping_key)) {
             const grouping_key = values.grouping_key;
             let current_mode = mode;
@@ -877,63 +964,52 @@ export const accountTaxHelpers = {
             }
 
             const currency = grouping_key.currency;
+            const sub_values_list = Object.values(values_per_taxes_grouping_key).filter(
+                (sub_values) =>
+                    sub_values.grouping_key.currency.id === currency.id &&
+                    sub_values.grouping_key.is_refund === grouping_key.is_refund
+            );
             for (const [delta_currency_indicator, delta_currency] of [
                 ["_currency", currency],
                 ["", company.currency_id],
             ]) {
-                let delta_total_excluded = 0.0;
-                let target_factors = [];
-                if (current_mode === "excluded") {
-                    // Price-excluded rounding.
-                    const raw_total_excluded =
-                        values[`target_total_excluded${delta_currency_indicator}`];
-                    if (!raw_total_excluded) {
+                // Distribute the delta of each set of taxes on its own base lines.
+                let distributed_delta = 0.0;
+                for (const sub_values of sub_values_list) {
+                    const [sub_delta, sub_target_factors] = get_delta_and_target_factors(
+                        sub_values,
+                        current_mode,
+                        delta_currency_indicator,
+                        delta_currency
+                    );
+                    if (sub_delta === null) {
                         continue;
                     }
-
-                    const rounded_raw_total_excluded = roundPrecision(
-                        raw_total_excluded,
-                        delta_currency.rounding
+                    distribute_delta(
+                        delta_currency,
+                        sub_delta,
+                        sub_target_factors,
+                        delta_currency_indicator
                     );
-                    const total_excluded = values[`total_excluded${delta_currency_indicator}`];
-                    delta_total_excluded = rounded_raw_total_excluded - total_excluded;
-                    target_factors = values.base_line_x_taxes_data.map(([base_line]) => ({
-                        factor: base_line.tax_details[`raw_total_excluded${delta_currency_indicator}`],
-                        base_line: base_line,
-                    }));
-                } else {
-                    // Price-included rounding.
-                    const raw_total_included =
-                        values[`target_total_excluded${delta_currency_indicator}`] +
-                        values[`target_tax_amount${delta_currency_indicator}`];
-                    if (!raw_total_included) {
-                        continue;
-                    }
-                    const rounded_raw_total_included = roundPrecision(
-                        raw_total_included,
-                        delta_currency.rounding
-                    );
-                    const total_included =
-                        values[`total_excluded${delta_currency_indicator}`] +
-                        values[`tax_amount${delta_currency_indicator}`];
-                    delta_total_excluded = rounded_raw_total_included - total_included;
-                    target_factors = values.base_line_x_taxes_data.map(([base_line]) => ({
-                        factor: base_line.tax_details[`raw_total_included${delta_currency_indicator}`],
-                        base_line: base_line,
-                    }));
+                    distributed_delta += sub_delta;
                 }
 
-                const amounts_to_distribute = this.distribute_delta_amount_smoothly(
-                    delta_currency.decimal_places,
-                    delta_total_excluded,
-                    target_factors
+                // The remaining delta (due to the rounding of each set of taxes) is distributed on the whole document.
+                const [delta_total_excluded, target_factors] = get_delta_and_target_factors(
+                    values,
+                    current_mode,
+                    delta_currency_indicator,
+                    delta_currency
                 );
-                for (let i = 0; i < target_factors.length; i++) {
-                    const base_line = target_factors[i].base_line;
-                    const amount_to_distribute = amounts_to_distribute[i];
-                    base_line.tax_details[`delta_total_excluded${delta_currency_indicator}`] +=
-                        amount_to_distribute;
+                if (delta_total_excluded === null) {
+                    continue;
                 }
+                distribute_delta(
+                    delta_currency,
+                    delta_total_excluded - distributed_delta,
+                    target_factors,
+                    delta_currency_indicator
+                );
             }
         }
     },
