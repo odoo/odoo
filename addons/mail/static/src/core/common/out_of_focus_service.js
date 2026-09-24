@@ -37,6 +37,7 @@ export class OutOfFocusService {
             "comment",
             "email",
             "notification",
+            "tracking",
             "user_notification",
             "whatsapp_message",
         ];
