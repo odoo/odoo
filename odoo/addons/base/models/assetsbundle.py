@@ -23,7 +23,7 @@ from odoo.tools.misc import file_open, file_path
 _logger = logging.getLogger(__name__)
 
 ANY_UNIQUE = '_' * 7
-EXTENSIONS = (".js", ".css", ".scss", ".sass", ".less", ".xml")
+EXTENSIONS = (".js", ".css", ".scss", ".sass", ".xml")
 
 class CompileError(RuntimeError): pass
 
@@ -106,8 +106,6 @@ class AssetsBundle(object):
                     self.stylesheets.append(SassStylesheetAsset(self, **params, **css_params))
                 elif extension == 'scss':
                     self.stylesheets.append(ScssStylesheetAsset(self, **params, **css_params))
-                elif extension == 'less':
-                    self.stylesheets.append(LessStylesheetAsset(self, **params, **css_params))
                 elif extension == 'css':
                     self.stylesheets.append(StylesheetAsset(self, **params, **css_params))
             if js:
@@ -608,14 +606,14 @@ css_error_message {
 
     def preprocess_css(self, debug=False, old_attachments=None):
         """
-            Checks if the bundle contains any sass/less content, then compiles it to css.
+            Checks if the bundle contains any sass/scss content, then compiles it to css.
             If user language direction is Right to Left then consider css files to call run_rtlcss,
             css files are also stored in ir.attachment after processing done by rtlcss.
             Returns the bundle's flat css.
         """
         if self.stylesheets:
             compiled = ""
-            for atype in (SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset):
+            for atype in (SassStylesheetAsset, ScssStylesheetAsset):
                 assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
                 if assets:
                     source = '\n'.join([asset.get_source() for asset in assets])
@@ -626,7 +624,7 @@ css_error_message {
 
             # We want to run rtlcss on normal css, so merge it in compiled
             if self.rtl:
-                stylesheet_assets = [asset for asset in self.stylesheets if not isinstance(asset, (SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset))]
+                stylesheet_assets = [asset for asset in self.stylesheets if not isinstance(asset, (SassStylesheetAsset, ScssStylesheetAsset))]
                 compiled += '\n'.join([asset.get_source() for asset in stylesheet_assets])
                 compiled = self.run_rtlcss(compiled)
 
@@ -637,7 +635,7 @@ css_error_message {
             fragments = self.rx_css_split.split(compiled)
             at_rules = fragments.pop(0)
             if at_rules:
-                # Sass and less moves @at-rules to the top in order to stay css 2.1 compatible
+                # Sass moves @at-rules to the top in order to stay css 2.1 compatible
                 self.stylesheets.insert(0, StylesheetAsset(self, inline=at_rules))
             while fragments:
                 asset_id = fragments.pop(0)
@@ -703,7 +701,7 @@ css_error_message {
             rtlcss = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, encoding='utf-8')
         except Exception:
 
-            # Check the presence of rtlcss, if rtlcss not available then we should return normal less file
+            # Check the presence of rtlcss, if rtlcss not available then we should return normal css file
             try:
                 process = Popen(
                     ['rtlcss', '--version'], stdout=PIPE, stderr=PIPE
@@ -729,7 +727,7 @@ css_error_message {
         return out.strip()
 
     def get_preprocessor_error(self, stderr, source=None):
-        """Improve and remove sensitive information from sass/less compilator error messages"""
+        """Improve and remove sensitive information from sass/scss compilator error messages"""
         error = stderr.split('Load paths')[0].replace('  Use --trace for backtrace.', '')
         if 'Cannot load compass' in error:
             error += "Maybe you should install the compass gem using this extra argument:\n\n" \
@@ -741,7 +739,7 @@ css_error_message {
         return error
 
     def get_rtlcss_error(self, stderr, source=None):
-        """Improve and remove sensitive information from sass/less compilator error messages"""
+        """Improve and remove sensitive information from rtlcss error messages"""
         error = stderr.split('Load paths')[0].replace('  Use --trace for backtrace.', '')
         error = f"{error}This error occurred while compiling the bundle {self.name!r} containing:"
         return error
@@ -1146,18 +1144,6 @@ class ScssStylesheetAsset(PreprocessedCSS):
         except IOError:
             sassc = 'sassc'
         return [sassc, '--stdin', '--precision', str(self.precision), '--load-path', self.bootstrap_path, '-t', self.output_style]
-
-
-class LessStylesheetAsset(PreprocessedCSS):
-    def get_command(self):
-        try:
-            if os.name == 'nt':
-                lessc = misc.find_in_path('lessc.cmd')
-            else:
-                lessc = misc.find_in_path('lessc')
-        except IOError:
-            lessc = 'lessc'
-        return [lessc, '-', '--no-js', '--no-color']
 
 
 class BinaryAsset(WebAsset):
