@@ -144,15 +144,31 @@ export class EditorOverlay extends Component {
             // Attention, ignoring DOM mutations is always dangerous (when we add or remove nodes)
             // because if another mutation uses the target that is not observed, that mutation can never be applied
             // again (when undo/redo and in collaboration).
+            this.props.editable.style.overflowAnchor = "none";
             this.props.shared.ignoreDOMMutations(() => {
                 const clonedRange = range.cloneRange();
                 const shadowCaret = doc.createTextNode("|");
                 clonedRange.insertNode(shadowCaret);
                 clonedRange.selectNode(shadowCaret);
+                /*
+                to remove at review @editor team:
+                An alternative solution that seems to work with a minimal diff is to, instead of inserting
+                a shadow caret, set the cloned range
+                to encompass the next 'step' instead of adding in a shadow caret.
+                This would make the range's rect larger if the next step is stepping over an image tag.
+                At a cursory glance and quicktests, to my untrained eye, it doesnt seem to have obvious
+                externalities.
+                Would this have obvious consequences you could think of? If not, this might be a better fix,
+                as it ensures no selectionchange is fired at all.:
+                */
+                // clonedRange.setEnd(clonedRange.startContainer, clonedRange.startOffset + 1);
                 rect = clonedRange.getBoundingClientRect();
                 shadowCaret.remove();
                 clonedRange.detach();
             });
+            setTimeout(() => {
+                this.props.editable.style.overflowAnchor = "";
+            }, 0);
         }
         // Html element with a patched getBoundingClientRect method. It
         // represents the range as a (HTMLElement) target for the usePosition

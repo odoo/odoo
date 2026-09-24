@@ -233,10 +233,21 @@ export class SelectionPlugin extends Plugin {
     setup() {
         this.resetSelection();
         this.addGlobalDomListener("selectionchange", () => {
+            const previousActiveSelection = this.previousActiveSelection || {};
             this.updateActiveSelection();
             const selection = this.document.getSelection();
             if (this.isSelectionInEditable(selection)) {
-                scrollToSelection(selection);
+                // Only scroll if the selection has meaningfully changed
+                if (
+                    !(
+                        previousActiveSelection.anchorNode == selection.anchorNode &&
+                        previousActiveSelection.focusNode == selection.focusNode &&
+                        previousActiveSelection.anchorOffset == selection.anchorOffset &&
+                        previousActiveSelection.focusOffset == selection.focusOffset
+                    )
+                ) {
+                    scrollToSelection(selection);
+                }
             }
         });
         this.addDomListener(this.editable, "mousedown", (ev) => {
