@@ -4,6 +4,7 @@
 from odoo.addons.base.tests.files import PDF_RAW, KIDS_PDF_RAW
 from odoo.tests.common import tagged, TransactionCase
 from odoo.tools import pdf
+from odoo.tools.misc import mute_logger
 from odoo.tools.pdf import reshape_text
 import io
 
@@ -150,3 +151,15 @@ class TestPdf(TransactionCase):
         """
         processed_text = reshape_text("الأتعاب (1000) درهم (نقدا)")
         self.assertEqual(processed_text, "(ﺍﺪﻘﻧ) ﻢﻫﺭﺩ (1000) ﺏﺎﻌﺗﻵﺍ")
+
+    @mute_logger('odoo.tools.pdf')
+    def test_convert_to_pdfa_without_outlines(self):
+        """
+        Test converting a PDF without outlines dictionary to PDF/A.
+        """
+        pdf_writer = pdf.OdooPdfFileWriter()
+        pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
+        self.assertNotIn('/Outlines', pdf_writer._root_object)
+
+        pdf_writer.convert_to_pdfa()
+        self.assertTrue(pdf_writer.is_pdfa)
