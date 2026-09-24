@@ -64,5 +64,10 @@ class HrWorkEntryType(models.Model):
             record.is_work = not record.is_leave
 
     def _inverse_is_work(self):
+        attendance_type = self.env.ref('hr_work_entry.work_entry_type_attendance',
+            raise_if_not_found=False,
+        )
         for record in self:
+            if record == attendance_type and not record.is_work:
+                raise UserError(_("The Attendance work entry type cannot be configured as Time Off."))
             record.is_leave = not record.is_work
