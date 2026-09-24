@@ -72,7 +72,7 @@ const calendarMountParams = {
 test("test Project Task Calendar Popover with task_stage_with_state_selection widget", async () => {
     await mountView(calendarMountParams);
 
-    await click("a.fc-daygrid-event");
+    await click(".fc-daygrid-event");
 
     // Skipping setTimeout while clicking event in calendar for calendar popover to appear.
     // There is a timeout set in the useCalendarPopover.

@@ -19,7 +19,7 @@ import {
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { defineResourceModels } from "../resource_test_helpers";
 import { ResourceCalendarAttendance } from "../mock_server/mock_models/resource_calendar_attendance";
-import { waitFor } from "@odoo/hoot-dom";
+import { queryRect, waitFor } from "@odoo/hoot-dom";
 
 defineResourceModels();
 beforeEach(async () => {
@@ -208,7 +208,12 @@ test(`resource calendar week simple click on empty slot in timegrid`, async () =
         type: "calendar",
     });
     await animationFrame();
-    await click(".fc-timegrid-slot-lane[data-time='10:00:00']");
+    // the time slots are below the day columns, which receive the pointer events
+    const slotRect = queryRect(".fc-timegrid-slot-lane[data-time='10:00:00']");
+    const columnRect = queryRect(".fc-timegrid-col:eq(0)");
+    await click(".fc-timegrid-col:eq(0)", {
+        position: { x: columnRect.x + columnRect.width / 2, y: slotRect.y + slotRect.height / 2 },
+    });
     await animationFrame();
     await waitFor(".o_cw_popover");
     expect("div[name=hour_from] input").toHaveValue(10, { message: "Click origin" });

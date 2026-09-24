@@ -7,7 +7,7 @@ import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_com
 import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
-import { Component, onMounted, onPatched, signal, t, useProps } from "@odoo/owl";
+import { Component, onMounted, onPatched, signal, t, useListener, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
@@ -43,6 +43,7 @@ export class CalendarYearRenderer extends Component {
 
         onMounted(() => this.updateSize());
         onPatched(() => this.updateSize());
+        useListener(window, "resize", () => this.onWindowResize());
     }
 
     get disabledOptions() {
@@ -63,8 +64,8 @@ export class CalendarYearRenderer extends Component {
             dayMaxEventRows: this.props.model.eventLimit,
             droppable: true,
             editable: this.props.model.canEdit,
-            eventClassNames: this.eventClassNames.bind(this),
-            eventDidMount: this.onEventDidMount.bind(this),
+            backgroundEventClass: this.eventClassNames.bind(this),
+            backgroundEventDidMount: this.onEventDidMount.bind(this),
             eventReceive: this.onEventScheduled.bind(this),
             eventResizableFromStart: true,
             longPressDelay: TOUCH_SELECTION_THRESHOLD,
@@ -73,16 +74,16 @@ export class CalendarYearRenderer extends Component {
             selectMirror: true,
             selectable: this.props.model.canCreate,
             unselectAuto: false,
-            windowResize: this.onWindowResize.bind(this),
-            eventContent: this.onEventContent.bind(this),
+            backgroundEventContent: "",
             weekends: this.props.isWeekendVisible,
         };
     }
 
     get options() {
         return {
+            dayHeaderAlign: "center",
             dayHeaderFormat: "EEEEE",
-            dayCellClassNames: this.getDayCellClassNames.bind(this),
+            dayCellClass: this.getDayCellClassNames.bind(this),
             initialDate: this.props.initialDate.toISO(),
             initialView: "dayGridMonth",
             direction: localization.direction,
@@ -112,7 +113,7 @@ export class CalendarYearRenderer extends Component {
 
     viewDidMount({ el, view }) {
         const showWeek = view.calendar.currentData.options.weekNumbers;
-        const weekText = view.calendar.currentData.options.weekText;
+        const weekText = view.calendar.currentData.options.weekTextShort;
         const weekColumn = !this.customOptions.weekNumbersWithinDays;
         if (showWeek && weekColumn) {
             makeWeekColumn({ el, weekText });
@@ -254,12 +255,5 @@ export class CalendarYearRenderer extends Component {
     }
     onWindowResize() {
         this.updateSize();
-    }
-
-    onEventContent(info) {
-        // Remove the title on the background event like in FCv4
-        if (info.event.display?.includes("background")) {
-            return null;
-        }
     }
 }

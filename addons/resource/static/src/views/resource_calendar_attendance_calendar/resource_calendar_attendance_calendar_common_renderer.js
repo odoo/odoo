@@ -88,7 +88,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
                 info.jsEvent.clientX,
                 info.jsEvent.clientY
             );
-            dropTarget.fcSeg = info.el.fcSeg;
+            dropTarget.fcEventRange = info.el.fcEventRange;
             record.startDelta = info.startDelta;
             record.endDelta = info.endDelta;
             this.openPopover(dropTarget, record);
@@ -115,7 +115,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
                 info.jsEvent.clientX,
                 info.jsEvent.clientY
             );
-            dropTarget.fcSeg = info.el.fcSeg;
+            dropTarget.fcEventRange = info.el.fcEventRange;
             record.delta = info.delta;
             record.isAllDay = info.event.allDay;
             this.openPopover(dropTarget, record);
@@ -237,8 +237,8 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
      */
     openPopover(target, record) {
         this.popoverPromise = Promise.withResolvers();
-        const start = new luxon.DateTime.fromJSDate(target.fcSeg.eventRange.range.start);
-        const end = new luxon.DateTime.fromJSDate(target.fcSeg.eventRange.range.end);
+        const start = new luxon.DateTime.fromJSDate(target.fcEventRange.range.start);
+        const end = new luxon.DateTime.fromJSDate(target.fcEventRange.range.end);
         record.startOcurrenceDateTime = start.set({
             hour: record.start.hour,
             minute: record.start.minute,

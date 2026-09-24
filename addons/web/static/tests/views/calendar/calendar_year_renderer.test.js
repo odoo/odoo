@@ -155,5 +155,5 @@ test("resize callback is being called", async () => {
     expect.verifySteps([]);
     await resize({ height: 500 });
     await runAllTimers();
-    expect.verifySteps(new Array(12).fill("onWindowResize")); // one for each FullCalendar instance
+    expect.verifySteps(["onWindowResize"]);
 });

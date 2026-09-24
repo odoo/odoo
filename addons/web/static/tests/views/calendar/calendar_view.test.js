@@ -5,6 +5,7 @@ import {
     click,
     press,
     queryAllRects,
+    queryAll,
     queryAllTexts,
     queryFirst,
     queryOne,
@@ -55,6 +56,9 @@ import {
     displayCalendarPanel,
     expandCalendarView,
     findEvent,
+    findTimeGridColumn,
+    findTimeGridScroller,
+    findTimeRow,
     hideCalendarPanel,
     moveEventToAllDaySlot,
     moveEventToDate,
@@ -296,7 +300,8 @@ function expectEventToBeOver(eventSelector, ranges) {
         const startDateRect = queryRect`.fc-daygrid-day[data-date="${start}"]`;
         const endDateRect = queryRect`.fc-daygrid-day[data-date="${end}"]`;
         const minX = startDateRect.left;
-        const maxX = endDateRect.right;
+        // the background fills can overflow the end cell (borders, scrollbar filler)
+        const maxX = endDateRect.right + endDateRect.width / 2;
         result &&=
             eventRect.left >= minX &&
             eventRect.left <= maxX &&
@@ -1104,9 +1109,7 @@ test(`create and change events on desktop`, async () => {
     });
     await contains(`.o-calendar-quick-create--create-btn`).click();
     expect(`.o_event[data-event-id="8"]`).toHaveText("new event in quick create");
-    expect(
-        `.fc-daygrid-event-harness:not(.fc-daygrid-event-harness-abs):contains("new event in quick create")`
-    ).toHaveCount(1);
+    expect(`.fc-event:contains("new event in quick create")`).toHaveCount(1);
 
     // create a new event, quick create only (validated by pressing enter key)
     await clickDate("2016-12-13");
@@ -1215,9 +1218,7 @@ test(`create and change events on mobile`, async () => {
     });
     await contains(`.o-calendar-quick-create--create-btn`).click();
     expect(`.o_event[data-event-id="8"]`).toHaveText("new event in quick create");
-    expect(
-        `.fc-daygrid-event-harness:not(.fc-daygrid-event-harness-abs):contains("new event in quick create")`
-    ).toHaveCount(1);
+    expect(`.fc-event:contains("new event in quick create")`).toHaveCount(1);
 
     // create a new event, quick create only (validated by pressing enter key)
     await clickDate("2016-12-13");
@@ -1377,7 +1378,9 @@ test(`open multiple event form at the same time`, async () => {
         await clickDate("2016-12-13");
     }
 
-    expect(callCounter).toBe(5, { message: "there should had been 5 attemps to open a modal" });
+    expect(callCounter).toBe(1, {
+        message: "FullCalendar ignores the clicks on the calendar covered by the dialog",
+    });
     expect(`.modal`).toHaveCount(1, { message: "there should be only one open modal" });
 });
 
@@ -1630,24 +1633,26 @@ test(`render popover: inside fullcalendar popover`, async () => {
         `,
     });
 
-    expect(`:not(.fc-daygrid-event-harness-abs) > .fc-event`).toHaveCount(4);
+    expect(`.fc-view .fc-event`).toHaveCount(4);
     expect(`.fc-more-link`).toHaveCount(1);
     expect(`.fc-more-link`).toHaveText("+6 more");
-    expect(`.fc-popover`).toHaveCount(0);
+    // FullCalendar renders its popover in the body, outside of the test fixture
+    const body = { root: document.body };
+    expect(queryAll(`.fc-popover`, body)).toHaveLength(0);
 
     await contains(`.fc-more-link`).click();
-    expect(`.fc-popover`).toHaveCount(1);
-    expect(`.fc-popover :not(.fc-daygrid-event-harness-abs) > .fc-event`).toHaveCount(10);
+    expect(queryAll(`.fc-popover`, body)).toHaveLength(1);
+    expect(queryAll(`.fc-popover .fc-event`, body)).toHaveLength(10);
     expect(`.o_cw_popover`).toHaveCount(0);
 
-    await contains(`.fc-popover .fc-daygrid-event-harness:nth-child(1) .fc-event`).click();
+    await contains(`.fc-popover .fc-event:eq(0)`, body).click();
     await advanceTime(500);
     expect(`.o_cw_popover`).toHaveCount(1);
 
     await contains(`.o_cw_popover .o_cw_popover_edit`).click();
     expect.verifySteps(["doAction"]);
     expect(`.o_cw_popover`).toHaveCount(0);
-    expect(`.fc-popover`).toHaveCount(1);
+    expect(queryAll(`.fc-popover`, body)).toHaveLength(1);
 });
 
 test(`attributes hide_date and hide_time`, async () => {
@@ -3555,8 +3560,8 @@ test(`single day event from midnight to midnight`, async () => {
 
     expect(`.o_event`).toHaveCount(1);
     let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
-    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
-    expect(eventWidth).toBe(cellWidth); // over a single day
+    let cellWidth = queryFirst(`.fc-daygrid-day`).getBoundingClientRect().width;
+    expect(eventWidth).toBeWithin(cellWidth - 1, cellWidth + 1); // over a single day
     await changeScale("month");
     expect(`.o_event`).toHaveCount(1);
     eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
@@ -3591,8 +3596,8 @@ test(`event over two days but lasting less than 24h`, async () => {
 
     expect(`.o_event`).toHaveCount(1);
     let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
-    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
-    expect(eventWidth).toBe(2 * cellWidth); // over 2 days
+    let cellWidth = queryFirst(`.fc-daygrid-day`).getBoundingClientRect().width;
+    expect(eventWidth).toBeWithin(2 * cellWidth - 1, 2 * cellWidth + 2); // over 2 days
     await changeScale("month");
     expect(`.o_event`).toHaveCount(1);
     eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
@@ -3626,8 +3631,8 @@ test(`event over two days lasting longer than 24h`, async () => {
 
     expect(`.o_event`).toHaveCount(1);
     let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
-    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
-    expect(eventWidth).toBe(2 * cellWidth); // over 2 days
+    let cellWidth = queryFirst(`.fc-daygrid-day`).getBoundingClientRect().width;
+    expect(eventWidth).toBeWithin(2 * cellWidth - 1, 2 * cellWidth + 2); // over 2 days
     await changeScale("month");
     expect(`.o_event`).toHaveCount(1);
     eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
@@ -3665,8 +3670,8 @@ test(`all day event lasting 2 days`, async () => {
 
     expect(`.o_event`).toHaveCount(1);
     let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
-    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
-    expect(eventWidth).toBe(2 * cellWidth); // over 2 days
+    let cellWidth = queryFirst(`.fc-daygrid-day`).getBoundingClientRect().width;
+    expect(eventWidth).toBeWithin(2 * cellWidth - 1, 2 * cellWidth + 2); // over 2 days
     await changeScale("month");
     expect(`.o_event`).toHaveCount(1);
     eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
@@ -3702,7 +3707,7 @@ test(`set event as all day when field is date`, async () => {
     });
 
     await toggleFilter("attendee_ids", 1);
-    expect(`.fc-daygrid-body .fc-event`).toHaveCount(1);
+    expect(`.fc-daygrid-row .fc-event`).toHaveCount(1);
 
     await clickEvent(1);
     expect(`.o_card_record > div:eq(0)`).toHaveText("December 14, 2016");
@@ -3716,7 +3721,7 @@ test(`set event as all day when field is date (without all_day mapping)`, async 
         type: "calendar",
         arch: `<calendar date_start="start_date" mode="week"/>`,
     });
-    expect(`.fc-daygrid-body .fc-event`).toHaveCount(1);
+    expect(`.fc-daygrid-row .fc-event`).toHaveCount(1);
 });
 
 test(`set event as all day when field is datetime (without all_day mapping)`, async () => {
@@ -3725,7 +3730,7 @@ test(`set event as all day when field is datetime (without all_day mapping)`, as
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
     });
-    expect(`.o_calendar_current .fc-daygrid-body .fc-event`).toHaveCount(1, {
+    expect(`.o_calendar_current .fc-daygrid-row .fc-event`).toHaveCount(1, {
         message: "should be one event in the all day row",
     });
 });
@@ -3768,14 +3773,14 @@ test(`calendar is configured to have no groupBy menu`, async () => {
 
 test.tags("desktop");
 test(`timezone does not affect current day`, async () => {
-    mockTimeZone(40);
+    mockTimeZone(23);
 
     await mountView({
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start"/>`,
     });
-    expect(`.o_datetime_picker .o_selected`).toHaveText("14");
+    expect(`.o_datetime_picker .o_selected`).toHaveText("13");
 
     await pickDate("2016-12-11");
     expect(`.o_datetime_picker .o_selected`).toHaveText("11");
@@ -3783,12 +3788,12 @@ test(`timezone does not affect current day`, async () => {
 
 test.tags("desktop");
 test(`timezone does not affect drag and drop on desktop`, async () => {
-    mockTimeZone(-40);
+    mockTimeZone(-23);
 
     onRpc("write", ({ args }) => {
         expect.step("write");
         expect(args[0]).toEqual([6]);
-        expect(args[1].start).toBe("2016-11-29 08:00:00");
+        expect(args[1].start).toBe("2016-11-28 08:00:00");
     });
     await mountView({
         resModel: "event",
@@ -3802,32 +3807,32 @@ test(`timezone does not affect drag and drop on desktop`, async () => {
     });
 
     await clickEvent(1);
-    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
+    expect(`.o_event[data-event-id="1"]`).toHaveText("01:00\nevent 1");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 10, 1:00 AM");
 
     await clickEvent(6);
-    expect(`.o_event[data-event-id="6"]`).toHaveText("16:00\nevent 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 16, 4:00 PM");
+    expect(`.o_event[data-event-id="6"]`).toHaveText("09:00\nevent 6");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 17, 9:00 AM");
 
     await closeCwPopOver();
     await moveEventToDate(6, "2016-11-27");
     await clickEvent(6);
-    expect(`.o_event[data-event-id="6"]`).toHaveText("16:00\nevent 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Nov 27, 4:00 PM");
+    expect(`.o_event[data-event-id="6"]`).toHaveText("09:00\nevent 6");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Nov 27, 9:00 AM");
     expect.verifySteps(["write"]);
 
     await clickEvent(1);
-    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
+    expect(`.o_event[data-event-id="1"]`).toHaveText("01:00\nevent 1");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 10, 1:00 AM");
 });
 
 test.tags("mobile");
 test(`timezone does not affect drag and drop on mobile`, async () => {
-    mockTimeZone(-40);
+    mockTimeZone(-23);
     onRpc("write", ({ args }) => {
         expect.step("write");
         expect(args[0]).toEqual([6]);
-        expect(args[1].start).toBe("2016-11-29 08:00:00");
+        expect(args[1].start).toBe("2016-11-28 08:00:00");
     });
     await mountView({
         resModel: "event",
@@ -3842,24 +3847,24 @@ test(`timezone does not affect drag and drop on mobile`, async () => {
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 10, 1:00 AM");
     await closeCwPopOver();
 
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 16, 4:00 PM");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 17, 9:00 AM");
     await closeCwPopOver();
 
     await moveEventToDate(6, "2016-11-27");
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Nov 27, 4:00 PM");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Nov 27, 9:00 AM");
     await closeCwPopOver();
     expect.verifySteps(["write"]);
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 10, 1:00 AM");
 });
 
 test.tags("desktop");
@@ -4162,7 +4167,7 @@ test(`default week start (US) month mode on desktop`, async () => {
     expect.verifySteps(["event.search_read"]);
     expect(`.fc-col-header-cell .o_cw_day_name:eq(0)`).toHaveText("SUN");
     expect(`.fc-col-header-cell .o_cw_day_name:eq(-1)`).toHaveText("SAT");
-    expect(`.fc-daygrid-day:eq(0) .fc-daygrid-week-number`).toHaveText("36");
+    expect(`.fc-daygrid-row:eq(0) .fc-daygrid-week-number`).toHaveText("36");
     expect(`.fc-daygrid-day:eq(0) .fc-daygrid-day-number`).toHaveText("1");
     expect(`.fc-daygrid-day:eq(0)`).toHaveAttribute("data-date", "2019-09-01");
     expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("5");
@@ -4223,7 +4228,7 @@ test(`European week start month mode on chat`, async () => {
     expect.verifySteps(["event.search_read"]);
     expect(`.fc-col-header-cell .o_cw_day_name:eq(0)`).toHaveText("MON");
     expect(`.fc-col-header-cell .o_cw_day_name:eq(-1)`).toHaveText("SUN");
-    expect(`.fc-daygrid-day:eq(0) .fc-daygrid-week-number`).toHaveText("35");
+    expect(`.fc-daygrid-row:eq(0) .fc-daygrid-week-number`).toHaveText("35");
     expect(`.fc-daygrid-day:eq(0) .fc-daygrid-day-number`).toHaveText("26");
     expect(`.fc-daygrid-day:eq(0)`).toHaveAttribute("data-date", "2019-08-26");
     expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("6");
@@ -4283,7 +4288,7 @@ test(`Monday week start week mode on desktop`, async () => {
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
     });
     expect.verifySteps(["event.search_read"]);
-    expect(`.fc-timeGridWeek-view .fc-daygrid-body`).toHaveCount(1);
+    expect(`.fc-timeGridWeek-view .fc-daygrid-row`).toHaveCount(1);
     expect(`.fc-col-header-cell .o_cw_day_name:eq(0)`).toHaveText("MON");
     expect(`.fc-col-header-cell .o_cw_day_number:eq(0)`).toHaveText("9");
     expect(`.fc-col-header-cell .o_cw_day_name:eq(-1)`).toHaveText("SUN");
@@ -4314,7 +4319,7 @@ test(`Monday week start week mode on mobile`, async () => {
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
     });
     expect.verifySteps(["event.search_read"]);
-    expect(`.o_calendar_current .fc-timeGridWeek-view .fc-daygrid-body`).toHaveCount(1);
+    expect(`.o_calendar_current .fc-timeGridWeek-view .fc-daygrid-row`).toHaveCount(1);
     expect(`.o_calendar_current .fc-col-header-cell .o_cw_day_name:eq(0)`).toHaveText("MON");
     expect(`.o_calendar_current .fc-col-header-cell .o_cw_day_number:eq(0)`).toHaveText("9");
     expect(`.o_calendar_current .fc-col-header-cell .o_cw_day_name:eq(-1)`).toHaveText("SUN");
@@ -4345,7 +4350,7 @@ test(`Saturday week start week mode on desktop`, async () => {
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
     });
     expect.verifySteps(["event.search_read"]);
-    expect(`.fc-timeGridWeek-view .fc-daygrid-body`).toHaveCount(1);
+    expect(`.fc-timeGridWeek-view .fc-daygrid-row`).toHaveCount(1);
     expect(`.fc-col-header-cell .o_cw_day_name:eq(0)`).toHaveText("SAT");
     expect(`.fc-col-header-cell .o_cw_day_number:eq(0)`).toHaveText("7");
     expect(`.fc-col-header-cell .o_cw_day_name:eq(-1)`).toHaveText("FRI");
@@ -4375,7 +4380,7 @@ test(`Saturday week start week mode on mobile`, async () => {
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
     });
     expect.verifySteps(["event.search_read"]);
-    expect(`.o_calendar_current .fc-timeGridWeek-view .fc-daygrid-body`).toHaveCount(1);
+    expect(`.o_calendar_current .fc-timeGridWeek-view .fc-daygrid-row`).toHaveCount(1);
     expect(`.o_calendar_current .fc-col-header-cell .o_cw_day_name:eq(0)`).toHaveText("SAT");
     expect(`.o_calendar_current .fc-col-header-cell .o_cw_day_number:eq(0)`).toHaveText("7");
     expect(`.o_calendar_current .fc-col-header-cell .o_cw_day_name:eq(-1)`).toHaveText("FRI");
@@ -4393,44 +4398,9 @@ test(`Monday week start year mode`, async () => {
         get options() {
             return { ...super.options, weekNumbers: true };
         },
-    });
-
-    onRpc("event", "search_read", ({ kwargs }) => {
-        expect.step("event.search_read");
-        expect(kwargs.domain).toEqual([
-            "&",
-            ["start", "<=", "2019-12-31 22:59:59"],
-            "|",
-            ["stop", ">=", "2018-12-31 23:00:00"],
-            ["start", ">=", "2018-12-31 23:00:00"],
-        ]);
-    });
-    await mountView({
-        resModel: "event",
-        type: "calendar",
-        arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
-    });
-    expect.verifySteps(["event.search_read"]);
-
-    const weekRow = queryFirst(`.fc-day-today`).closest("tr");
-    expect(queryFirst(`.fc-daygrid-day-top`, { root: weekRow })).toHaveText("9", {
-        message: "The first day of the week should be Monday the 9th",
-    });
-    expect(queryOne(`.fc-daygrid-day-top:last`, { root: weekRow })).toHaveText("15", {
-        message: "The last day of the week should be Sunday the 15th",
-    });
-    expect(queryFirst(`.fc-daygrid-week-number`, { root: weekRow })).toHaveText("37");
-});
-
-test(`Sunday week start year mode`, async () => {
-    mockDate("2019-09-15 08:00:00");
-    // the week start depends on the locale
-    // the localization presents a python-like 1 to 7 weekStart value
-    defineParams({ lang_parameters: { week_start: 7 } });
-
-    patchWithCleanup(CalendarYearRenderer.prototype, {
-        get options() {
-            return { ...super.options, weekNumbers: true };
+        // FullCalendar doesn't render week numbers in cells as narrow as the year view ones
+        get customOptions() {
+            return { ...super.customOptions, weekNumbersWithinDays: false };
         },
     });
 
@@ -4451,14 +4421,57 @@ test(`Sunday week start year mode`, async () => {
     });
     expect.verifySteps(["event.search_read"]);
 
-    const weekRow = queryFirst(`.fc-day-today`).closest("tr");
+    const weekRow = queryFirst(`.fc-day-today`).closest(".fc-daygrid-row");
+    expect(queryFirst(`.fc-daygrid-day-top`, { root: weekRow })).toHaveText("9", {
+        message: "The first day of the week should be Monday the 9th",
+    });
+    expect(queryOne(`.fc-daygrid-day-top:last`, { root: weekRow })).toHaveText("15", {
+        message: "The last day of the week should be Sunday the 15th",
+    });
+    expect(queryFirst(`.o-fc-week`, { root: weekRow })).toHaveText("37");
+});
+
+test(`Sunday week start year mode`, async () => {
+    mockDate("2019-09-15 08:00:00");
+    // the week start depends on the locale
+    // the localization presents a python-like 1 to 7 weekStart value
+    defineParams({ lang_parameters: { week_start: 7 } });
+
+    patchWithCleanup(CalendarYearRenderer.prototype, {
+        get options() {
+            return { ...super.options, weekNumbers: true };
+        },
+        // FullCalendar doesn't render week numbers in cells as narrow as the year view ones
+        get customOptions() {
+            return { ...super.customOptions, weekNumbersWithinDays: false };
+        },
+    });
+
+    onRpc("event", "search_read", ({ kwargs }) => {
+        expect.step("event.search_read");
+        expect(kwargs.domain).toEqual([
+            "&",
+            ["start", "<=", "2019-12-31 22:59:59"],
+            "|",
+            ["stop", ">=", "2018-12-31 23:00:00"],
+            ["start", ">=", "2018-12-31 23:00:00"],
+        ]);
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
+    });
+    expect.verifySteps(["event.search_read"]);
+
+    const weekRow = queryFirst(`.fc-day-today`).closest(".fc-daygrid-row");
     expect(queryFirst(`.fc-daygrid-day-top`, { root: weekRow })).toHaveText("15", {
         message: "The first day of the week should be Sunday the 15th",
     });
     expect(queryOne(`.fc-daygrid-day-top:last`, { root: weekRow })).toHaveText("21", {
         message: "The last day of the week should be Saturday the 21st",
     });
-    expect(queryFirst(`.fc-daygrid-week-number`, { root: weekRow })).toHaveText("38");
+    expect(queryFirst(`.o-fc-week`, { root: weekRow })).toHaveText("38");
 });
 
 test(`edit record and attempt to create a record with "create" attribute set to false`, async () => {
@@ -5546,13 +5559,18 @@ test(`scroll to current hour when clicking on today`, async () => {
         type: "calendar",
         arch: `<calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="week"/>`,
     });
+    await advanceTime(100); // not runAllTimers: FullCalendar has a timer until midnight
     // Default scroll time should be 6am no matter the current hour
-    expect(queryOne(".fc-scroller:last").scrollTop).toBeWithin(280, 300);
+    expect(findTimeGridScroller().scrollTop).toBeWithin(280, 300);
     await contains(".o_calendar_button_today").click();
-    expect(queryOne(".fc-scroller:last").scrollTop).toBe(0);
+    await advanceTime(100); // not runAllTimers: FullCalendar has a timer until midnight
+    expect(findTimeGridScroller().scrollTop).toBe(0);
     mockDate("2016-12-12T20:00:00", 1);
     await contains(".o_calendar_button_today").click();
-    expect(queryOne(".fc-scroller:last").scrollTop).toBeWithin(620, 640);
+    await advanceTime(100); // not runAllTimers: FullCalendar has a timer until midnight
+    // 18:00 can't be scrolled to the top, the scroller is at its end
+    const scroller = findTimeGridScroller();
+    expect(scroller.scrollTop).toBe(scroller.scrollHeight - scroller.clientHeight);
 });
 
 test("save selected date during view switching", async () => {
@@ -5583,10 +5601,10 @@ test("save selected date during view switching", async () => {
 
     await getService("action").switchView("calendar");
     await navigate("next");
-    const weekNumber = await queryFirst(`th .fc-timegrid-axis-cushion`).textContent;
+    const weekNumber = await queryFirst(`.fc-week-number .fc-timegrid-axis-cushion`).textContent;
     await getService("action").switchView("list");
     await getService("action").switchView("calendar");
-    expect(`th .fc-timegrid-axis-cushion:eq(0)`).toHaveText(weekNumber);
+    expect(`.fc-week-number .fc-timegrid-axis-cushion:eq(0)`).toHaveText(weekNumber);
 });
 
 test(`check if active fields are fetched in addition to field names in record data(search_read rpc)`, async () => {
@@ -5810,8 +5828,13 @@ test('calendar: tap on "Free Zone" opens quick create', async () => {
     });
     expandCalendarView();
 
-    // Simulate a "TAP" (touch)
-    await click(".fc-timegrid-slot-lane.fc-timegrid-slot-minor[data-time='08:30:00']");
+    // Simulate a "TAP" (touch) on the column, the time slots are below it
+    const column = findTimeGridColumn("2016-12-12");
+    const columnRect = queryRect(column);
+    const slotRect = queryRect(findTimeRow("08:30:00"));
+    await click(column, {
+        position: { x: columnRect.x + columnRect.width / 2, y: slotRect.y + slotRect.height / 2 },
+    });
     await animationFrame();
 
     // should open a Quick create modal view in mobile on short tap
@@ -6183,7 +6206,7 @@ test(`three calendars are rendered in the ActionSwiper on touch devices`, async 
     expect(".o_actionswiper_left_swipe_area .fc-event").toHaveCount(2, {
         message: "events are displayed on the following month",
     });
-    expect(".o_actionswiper_left_swipe_area .fc-daygrid-body .fc-event").toHaveText("event 5");
+    expect(".o_actionswiper_left_swipe_area .fc-daygrid-row .fc-event").toHaveText("event 5");
 });
 
 test("Revert to the previous state if updateRecord fails (onEventResize)", async () => {

@@ -1,16 +1,18 @@
-export function makeWeekColumn({ el, showWeek, weekColumn, weekText }) {
-    const firstRows = el.querySelectorAll(".fc-col-header-cell:nth-child(1), .fc-day:nth-child(1)");
-    for (const element of firstRows) {
-        const newElement = document.createElement("th");
-        if (element.classList.contains("fc-col-header-cell")) {
-            newElement.classList.add("o-fc-week-header");
-            newElement.innerText = weekText;
-        } else {
-            newElement.classList.add("o-fc-week");
-            const weekElement = element.querySelector(".fc-daygrid-week-number");
-            weekElement.classList.remove("fc-daygrid-week-number");
-            newElement.append(weekElement);
-        }
-        element.parentElement.insertBefore(newElement, element);
+import { getLocalYearAndWeek } from "@web/core/l10n/dates";
+
+export function makeWeekColumn({ el, weekText }) {
+    for (const headerCell of el.querySelectorAll(".fc-col-header-cell:first-child")) {
+        const weekHeader = document.createElement("div");
+        weekHeader.classList.add("o-fc-week-header");
+        weekHeader.innerText = weekText;
+        headerCell.before(weekHeader);
+    }
+    for (const row of el.querySelectorAll(".fc-daygrid-row")) {
+        const { date } = row.querySelector(".fc-daygrid-day[data-date]").dataset;
+        const week = document.createElement("div");
+        week.classList.add("o-fc-week");
+        week.innerText = getLocalYearAndWeek(luxon.DateTime.fromISO(date)).week;
+        row.querySelector(".fc-daygrid-week-number")?.classList.add("d-none");
+        row.prepend(week);
     }
 }

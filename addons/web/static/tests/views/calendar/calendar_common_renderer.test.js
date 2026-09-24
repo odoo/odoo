@@ -1,12 +1,13 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst, queryRect } from "@odoo/hoot-dom";
-import { runAllTimers, mockTimeZone } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers, mockTimeZone } from "@odoo/hoot-mock";
 import { mockService, mountWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
 import {
     DEFAULT_DATE,
     FAKE_MODEL,
     clickAllDaySlot,
     clickEvent,
+    findTimeGridScroller,
     selectTimeRange,
 } from "./calendar_test_helpers";
 
@@ -58,8 +59,8 @@ test(`Month: mount a CalendarCommonRenderer`, async () => {
 
 test(`Day: check week number`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "day" } });
-    expect(`[aria-label^="Week "]`).toHaveCount(1);
-    expect(`[aria-label^="Week "]`).toHaveText(/(Week )?28/);
+    expect(`.fc-week-number`).toHaveCount(1);
+    expect(`.fc-week-number`).toHaveText(/(Week )?28/);
 });
 
 test(`Day: check date`, async () => {
@@ -186,8 +187,9 @@ test("Week: check dates across a DST transition happening at local midnight (Afr
 test(`Day: automatically scroll to 6am`, async () => {
     await mountWithCleanup(`<div class="scrollable" style="height: 500px;"/>`);
     await start({ model: { ...FAKE_MODEL, scale: "day" } }, queryFirst(`.scrollable`));
+    await animationFrame();
 
-    const containerDimensions = queryRect(`.fc-scrollgrid-section-liquid .fc-scroller`);
+    const containerDimensions = findTimeGridScroller().getBoundingClientRect();
     const dayStartDimensions = queryRect(`.fc-timegrid-slot[data-time="06:00:00"]:eq(0)`);
     expect(Math.abs(dayStartDimensions.y - containerDimensions.y)).toBeLessThan(2);
 });
@@ -195,8 +197,9 @@ test(`Day: automatically scroll to 6am`, async () => {
 test(`Week: automatically scroll to 6am`, async () => {
     await mountWithCleanup(`<div class="scrollable" style="height: 500px;"/>`);
     await start({ model: { ...FAKE_MODEL, scale: "week" } }, queryFirst(`.scrollable`));
+    await animationFrame();
 
-    const containerDimensions = queryRect(`.fc-scrollgrid-section-liquid .fc-scroller`);
+    const containerDimensions = findTimeGridScroller().getBoundingClientRect();
     const dayStartDimensions = queryRect(`.fc-timegrid-slot[data-time="06:00:00"]:eq(0)`);
     expect(Math.abs(dayStartDimensions.y - containerDimensions.y)).toBeLessThan(2);
 });

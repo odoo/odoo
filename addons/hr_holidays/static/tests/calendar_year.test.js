@@ -2,7 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { mountView, onRpc } from "@web/../tests/web_test_helpers";
-import { clickDate } from "@web/../tests/views/calendar/calendar_test_helpers";
+import { clickDate, closeCwPopOver } from "@web/../tests/views/calendar/calendar_test_helpers";
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 import { HrLeave } from "@hr_holidays/../tests/mock_server/mock_models/hr_leave";
 
@@ -56,10 +56,13 @@ test("a time off in days ends on the day its exclusive bound closes", async () =
     await waitFor(".o_cw_popover_holidays");
     expect(queryAllTexts(".o_cw_popover_holidays .fw-bold")).toEqual(["January 9-10, 2024"]);
 
+    // the popover covers the next days
+    await closeCwPopOver();
     await clickDate("2024-01-10");
     await waitFor(".o_cw_popover_holidays");
     expect(".o_cw_popover_holidays .o_cw_popover_link").toHaveCount(1);
 
+    await closeCwPopOver();
     await clickDate("2024-01-11");
     expect(".o_cw_popover_holidays").toHaveCount(0);
 });

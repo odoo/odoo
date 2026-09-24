@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
 
 const clickOnTheEvent = {
     content: "Click on the event (focus + waiting)",
-    trigger: 'a .fc-event-main:contains("Test Event")',
+    trigger: '.fc-event .fc-event-main:contains("Test Event")',
     async run(actions) {
         await actions.click();
         await new Promise((r) => setTimeout(r, 1000));

@@ -4,10 +4,9 @@ import { shallowEqual } from "@web/core/utils/objects";
 import { closest } from "@web/core/utils/ui";
 import { useCallbackRecorder } from "@web/search/action_hook";
 
-const CELL_SELECTOR = `.fc-day:not(.fc-col-header-cell, .fc-timegrid-col)`;
-const ROW_SELECTOR = `tr[role="row"]`;
-const EVENT_CONTAINER_SELECTOR = ".fc-daygrid-event-harness";
-const IGNORE_SELECTOR = [".fc-event", ".fc-more-cell", ".fc-more-popover"].join(",");
+const ROW_SELECTOR = ".fc-daygrid-row";
+const CELL_SELECTOR = `${ROW_SELECTOR} > .fc-daygrid-day`;
+const IGNORE_SELECTOR = [".fc-event", ".fc-more-link", ".fc-more-popover"].join(",");
 
 function getClosestCell(ctx) {
     const { pointer, ref } = ctx;
@@ -34,7 +33,7 @@ function getSelectedCellsInBlock(ctx) {
     const { current, ref } = ctx;
     const { startColIndex, endColIndex, startRowIndex, endRowIndex } = getBlockBounds(current);
     const selectedCells = [];
-    for (const cell of ref().querySelectorAll(`tbody ${ROW_SELECTOR} ${CELL_SELECTOR}`)) {
+    for (const cell of ref().querySelectorAll(CELL_SELECTOR)) {
         const { colIndex, rowIndex } = getCoordinates(cell);
         if (
             startColIndex <= colIndex &&
@@ -50,7 +49,7 @@ function getSelectedCellsInBlock(ctx) {
 
 function getSelectedCellsBetween2Cells(ctx, prevCell, cellClicked) {
     const { ref } = ctx;
-    const cells = [...ref().querySelectorAll(`tbody ${ROW_SELECTOR} ${CELL_SELECTOR}`)];
+    const cells = [...ref().querySelectorAll(CELL_SELECTOR)];
     const index1 = cells.indexOf(prevCell);
     if (index1 === -1) {
         return new Set([cellClicked]);
@@ -171,10 +170,6 @@ export function useSquareSelection(fullCalendarRef) {
         }
         const ignoreElement = ev.target.closest(IGNORE_SELECTOR);
         if (ignoreElement) {
-            return;
-        }
-        const eventContainer = ev.target.closest(EVENT_CONTAINER_SELECTOR);
-        if (eventContainer) {
             return;
         }
         const cell = ev.target.closest(CELL_SELECTOR);
