@@ -234,7 +234,7 @@ describe("field HTML", () => {
     test("save arch and html", async () => {
         onRpc("web_save", ({ args }) => {
             expect(args[1].body_arch).toMatch(/^<div/);
-            expect(args[1].body_html).toMatch(/^<table/);
+            expect(args[1].body_html).toMatch(/^<p/);
             expect.step("web_save mail body");
         });
         await mountView({

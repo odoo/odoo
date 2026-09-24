@@ -1,17 +1,20 @@
 <templates>
+    <!-- srcdoc is set to force the document in no-quirks mode -->
     <t t-name="mail.EmailHtmlConverterReferenceIframe">
         <iframe t-att-sandbox="this.isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
-            aria-hidden="true"
+            srcdoc="" aria-hidden="true"
             t-attf-style="
-                visibility: hidden !important;
-                pointer-events: none !important;
-                position: absolute !important;
-                top: 0 !important;
-                left: -9999px !important;
+                {{ this.isVisible ? `` : 
+                    `visibility: hidden !important;
+                    pointer-events: none !important;
+                    position: absolute !important;
+                    top: 0 !important;
+                    left: -9999px !important;`
+                }}
             "/>
     </t>
     <t t-name="mail.EmailHtmlConverterReference">
-        <div style="width: 100% !important"/>
+        <div/>
     </t>
     <t t-name="mail.EmailHtmlConverterHead">
         <meta http-equiv="Content-Security-Policy" content="script-src 'none';"/>

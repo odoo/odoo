@@ -28,7 +28,7 @@
                     <div class="o_mass_mailing_iframe_container"
                         t-att-class="{ 'o_is_mobile': this.state.isMobile, 'h-100': !this.state.isMobile }">
                         <iframe t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
-                            t-att-scrolling="this.state.isMobile ? '' : 'no'"
+                            srcdoc="" t-att-scrolling="this.state.isMobile ? '' : 'no'"
                             t-att-class="{ 'd-none': this.props.showThemeSelector or this.props.showCodeView }"
                             t-ref="this.iframeRef"/>
                     </div>

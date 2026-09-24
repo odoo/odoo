@@ -52,5 +52,5 @@ export class MassMailingLinkPlugin extends LinkPlugin {
     }
 }
 
-registry.category("basic-editor-plugins").add(MassMailingLinkPlugin.id, MassMailingLinkPlugin);
-registry.category("mass_mailing-plugins").add(MassMailingLinkPlugin.id, MassMailingLinkPlugin);
+registry.category("mass_mailing-basic-editor-plugins").add(MassMailingLinkPlugin.id, MassMailingLinkPlugin);
+registry.category("mass_mailing-builder-plugins").add(MassMailingLinkPlugin.id, MassMailingLinkPlugin);
