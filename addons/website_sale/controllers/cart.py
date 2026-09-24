@@ -341,8 +341,8 @@ class Cart(PaymentPortal):
             is falsy
         :params dict kwargs: additional parameters given to _cart_update_line_quantity calls.
         """
-        order_sudo = request.cart
-        order_sudo._check_not_partially_paid()  # Prevent modifying the cart if it's partially paid
+        if order_sudo := request.cart:
+            order_sudo._check_not_partially_paid()  # Prevent modifying the cart if it's partially paid
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
 
         # This method must be only called from the cart page BUT in some advanced logic
@@ -376,8 +376,11 @@ class Cart(PaymentPortal):
             "cart_quantity": order_sudo.cart_quantity,
             "currency": order_sudo.currency_id.name,
             "amount": order_sudo.amount_total,
-            "minor_amount": payment_utils.to_minor_currency_units(
-                order_sudo.amount_total, order_sudo.currency_id
+            "minor_amount": (
+                order_sudo.amount_total
+                and payment_utils.to_minor_currency_units(
+                    order_sudo.amount_total, order_sudo.currency_id
+                )
             ),
             "website_sale.cart_lines": IrUiView._render_template(
                 "website_sale.cart_lines",
