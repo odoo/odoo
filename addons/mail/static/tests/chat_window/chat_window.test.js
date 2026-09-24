@@ -1141,7 +1141,7 @@ test("Readonly chat window as non-admin shows bottom banner", async () => {
         is_readonly: true,
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
-            Command.create({ partner_id: memberPartnerId, channel_role: "member" }),
+            Command.create({ partner_id: memberPartnerId }),
         ],
     });
     setupChatHub({ opened: [channelId] });
@@ -1161,7 +1161,7 @@ test("Readonly chat window as admin shows composer", async () => {
         is_readonly: true,
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
-            Command.create({ partner_id: adminPartnerId, channel_role: "member" }),
+            Command.create({ partner_id: adminPartnerId }),
         ],
     });
     setupChatHub({ opened: [channelId] });
