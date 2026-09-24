@@ -148,8 +148,10 @@ class ResPartner(models.Model):
 
     @api.depends('vat', 'additional_identifiers', 'country_id')
     def _compute_routing_scheme_endpoint(self):
+        own_company_partners = self.env['res.company'].sudo().search([]).partner_id
         for partner in self:
-            identifier_vals = partner._get_preferred_routing_identifier_vals(force_recompute=True)
+            force_recompute = partner._origin not in own_company_partners
+            identifier_vals = partner._get_preferred_routing_identifier_vals(force_recompute=force_recompute)
             partner.routing_scheme = identifier_vals.get('scheme') or False
             partner.routing_endpoint = identifier_vals.get('value') or False
 

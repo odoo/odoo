@@ -27,6 +27,7 @@ class TestSgUBLPint(AccountTestInvoicingCommon):
             'city': 'Central Singapore',
             'phone': '+65 9123 4567',
         })
+        cls.company_data['company'].partner_id.routing_identifier = '0195:00192200M'
         cls.partner_a.write({
             'vat': 'S16FC0121D',
             'l10n_sg_unique_entity_number': '197401143C',

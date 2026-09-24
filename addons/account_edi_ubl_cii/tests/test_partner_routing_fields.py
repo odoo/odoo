@@ -150,3 +150,42 @@ class TestPartnerRoutingFields(AccountTestInvoicingCommon):
         # An invalid France VAT is rejected with a VAT validation error.
         with self.assertRaisesRegex(ValidationError, "for partner does not seem to be valid"):
             partner.routing_identifier = '9957:FR00000000000'
+
+    def test_routing_endpoint_recompute(self):
+        """Changing the VAT of a normal partner recomputes the routing_endpoint,
+        but it must not be possible to change the VAT of our own company."""
+        # Changing the VAT of a normal partner > routing_endpoint recomputed
+        self.partner.write({
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0411905847',
+        })
+        self.assertEqual(
+            (self.partner.routing_scheme, self.partner.routing_endpoint),
+            ('0208', '0411905847'),
+        )
+
+        self.partner.write({
+            'vat': 'BE0691480435',
+        })
+        self.assertEqual(
+            (self.partner.routing_scheme, self.partner.routing_endpoint),
+            ('0208', '0691480435'),
+        )
+
+        # Changing the VAT of our own company > routing_endpoint not recomputed
+        my_company = self.env.company
+        my_company.write({
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0411905847',
+        })
+        my_partner = my_company.partner_id
+        self.assertEqual(
+            (my_partner.routing_scheme, my_partner.routing_endpoint),
+            ('0208', '0411905847'),
+        )
+
+        my_company.vat = 'BE0691480435'
+        self.assertEqual(
+            (my_partner.routing_scheme, my_partner.routing_endpoint),
+            ('0208', '0411905847'),
+        )

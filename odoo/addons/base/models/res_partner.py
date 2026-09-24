@@ -1564,7 +1564,7 @@ class ResPartner(models.Model):
             # well-formed companion id (e.g. a 13-digit RO fiscal code is not a valid 10-digit CUI).
             new_identifiers = {
                 k: v for k, v in deduced_identifiers.items()
-                if k not in identifiers and self.env['res.partner']._validate_identifier(k, v)['valid']
+                if self.env['res.partner']._validate_identifier(k, v)['valid']
             }
             if not new_identifiers:
                 continue
