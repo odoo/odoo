@@ -10,6 +10,7 @@ import { App, Scope } from "@odoo/owl";
 import { startRouter } from "@web/core/browser/router";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { allowedFns } from "@web/core/py_js/py_interpreter";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { getTemplate } from "@web/core/templates";
@@ -75,6 +76,12 @@ beforeEach(function registerMainRegistryForCleanup() {
 afterEach(function restoreMainRegistry() {
     restoreRegistry(registry);
     clearTestEnv();
+    // Ideally: should be done in a patch of the user, but this is less intrusive for now.
+    allowedFns.forEach((fn) => {
+        if (fn.name === "has") {
+            allowedFns.delete(fn);
+        }
+    });
 });
 
 beforeEach(() => {

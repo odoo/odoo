@@ -9,6 +9,7 @@ from . import ir_ui_view
 from . import ir_attachment
 from . import models
 from . import base_document_layout
+from . import res_company
 from . import res_config_settings
 from . import res_partner
 from . import res_users_settings_embedded_action

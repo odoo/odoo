@@ -478,7 +478,7 @@ export class SearchModel extends EventBus {
     }
 
     get domainEvalContext() {
-        return Object.assign({}, this.globalContext, user.context);
+        return Object.assign({}, this.globalContext, user.evalContext);
     }
 
     get facets() {

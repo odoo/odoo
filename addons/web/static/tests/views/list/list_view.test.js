@@ -76,6 +76,8 @@ import {
     validateSearch,
     webModels,
 } from "@web/../tests/web_test_helpers";
+
+import { cookie } from "@web/core/browser/cookie";
 import { currencies } from "@web/core/currency";
 import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
@@ -217,9 +219,7 @@ defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 
 async function clickControlPanelAction(buttonName) {
     if (isSmall()) {
-        await contains(
-            ".o_cp_action_menus [data-icon='more_vert']"
-        ).click();
+        await contains(".o_cp_action_menus [data-icon='more_vert']").click();
         await contains(`.o-dropdown-item button[name="${buttonName}"]`).click();
     } else {
         await contains(`.o_control_panel_actions button[name="${buttonName}"]`).click();
@@ -1448,14 +1448,10 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
         `,
     });
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
     await clickRecordSelector();
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "plaf",
         "Export",
@@ -1463,9 +1459,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
         "Delete",
     ]);
     await clickRecordSelector();
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
 });
 
@@ -1545,9 +1539,7 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
     ]);
 
     await clickRecordSelector();
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "",
         "default-selection",
@@ -1938,6 +1930,50 @@ test(`invisible column based on the context are correctly displayed`, async () =
     expect(`th:not(.o_list_record_selector)`).toHaveAttribute("data-name", "foo");
 });
 
+test(`invisible column based on the company evalContext are correctly displayed`, async () => {
+    cookie.set("cids", "3-1");
+    serverState.companies = [
+        {
+            id: 1,
+            name: "Company 1",
+            sequence: 1,
+            parent_id: false,
+            child_ids: [],
+            country_code: "BE",
+        },
+        {
+            id: 2,
+            name: "Company 2",
+            sequence: 2,
+            parent_id: false,
+            child_ids: [],
+            country_code: "PE",
+        },
+        {
+            id: 3,
+            name: "Company 3",
+            sequence: 3,
+            parent_id: false,
+            child_ids: [],
+            country_code: "AR",
+        },
+    ];
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list>
+                    <field name="date" column_invisible="not companies.has(companies.active_ids, 'country_code', 'PE')"/>
+                    <field name="foo" column_invisible="companies.has(companies.active_ids, 'country_code', 'PE')"/>
+                    <field name="bar" column_invisible="not companies.has(companies.active_ids, 'country_code', 'PE')"/>
+                </list>`,
+    });
+
+    expect(`th:not(.o_list_record_selector)`).toHaveCount(1, {
+        message: "should have 1 th for checkbox, 1 th for foo",
+    });
+    expect(`th:not(.o_list_record_selector)`).toHaveAttribute("data-name", "foo");
+});
+
 test(`invisible column based on the context are correctly displayed in o2m`, async () => {
     Foo._fields.foo_o2m = fields.One2many({ relation: "foo" });
 
@@ -2265,7 +2301,9 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row");
 
     if (isSmall()) {
-        await contains(".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown").click();
+        await contains(
+            ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
+        ).click();
         expect(`.o_list_button_discard`).toHaveCount(0);
         expect(`.o_control_panel .o_list_button_add`).toHaveCount(1);
     } else {

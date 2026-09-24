@@ -3019,3 +3019,22 @@ test("[Offline] switch view with unavailable search (mobile)", async () => {
         `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
     ]);
 });
+
+test("can use user evalContext (companies) on action domain", async () => {
+    onRpc("web_search_read", ({ kwargs }) => {
+        expect.step(kwargs.domain);
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_id: 1,
+        type: "ir.actions.act_window",
+        target: "current",
+        res_model: "partner",
+        views: [
+            [false, "kanban"],
+            [false, "pivot"],
+        ],
+        domain: "[('employee_id', '=', companies.active_ids)]",
+    });
+    expect.verifySteps([[["employee_id", "=", [1]]]]);
+});

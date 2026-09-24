@@ -50,6 +50,7 @@ class LoadMenusTests(HttpCase):
                 'webIcon': False,
                 'webIconData': '/web/static/img/default_icon_app.png',
                 'webIconDataMimetype': False,
+                'webInvisible': False,
                 'xmlid': '',
             },
             str(self.menu_child.id): {
@@ -63,6 +64,7 @@ class LoadMenusTests(HttpCase):
                 'webIcon': False,
                 'webIconData': False,
                 'webIconDataMimetype': False,
+                'webInvisible': False,
                 'xmlid': '',
             },
             'root': {
@@ -77,6 +79,7 @@ class LoadMenusTests(HttpCase):
                 'webIcon': None,
                 'webIconData': None,
                 'webIconDataMimetype': None,
+                'webInvisible': False,
                 'xmlid': '',
             },
         }

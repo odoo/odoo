@@ -366,6 +366,7 @@
             'web/static/src/core/l10n/utils/locales.js',
             'web/static/src/core/l10n/utils/format_list.js',
             'web/static/src/core/l10n/utils/normalize.js',
+            'web/static/src/core/py_js/**/*',
 
             'website/static/src/builder/**/*.edit.xml',
         ],

@@ -78,6 +78,10 @@ class IrActionsActions(models.Model):
                                      ('report', 'Report')],
                                     required=True, default='action')
     binding_view_types = fields.Char(default='list,form')
+    binding_invisible = fields.Char(
+        string="Invisible attribute",
+        help="Python expression, when evaluated as true, the action isn't shown in the action menu.",
+    )
 
     @api.constrains('path')
     def _check_path(self):
@@ -182,7 +186,7 @@ class IrActionsActions(models.Model):
         for action_id, action_model, binding_type in cr.fetchall():
             try:
                 action = self.env[action_model].sudo().browse(action_id)
-                fields = ['name', 'binding_view_types']
+                fields = ['name', 'binding_view_types', 'binding_invisible']
                 for field in ('group_ids', 'res_model', 'sequence', 'domain'):
                     if field in action._fields:
                         fields.append(field)
