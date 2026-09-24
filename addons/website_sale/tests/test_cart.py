@@ -609,3 +609,12 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
             # We shouldn't find any abandonned cart if the customer isn't allowed to
             # buy from this website (because their contact belongs to another company)
             self.assertFalse(request.cart)
+
+    def test_update_cart_on_empty_cart(self):
+        """Updating cart when cart is empty shouldn't crash."""
+        with self.mock_request(user=self.public_user):
+            res = self.WebsiteSaleCartController.update_cart(line_id=1, quantity=0)
+            self.assertEqual(res["cart_quantity"], 0)
+            self.assertEqual(res["amount"], 0.0)
+            self.assertEqual(res["minor_amount"], 0)
+            self.assertIn("warning", res)
