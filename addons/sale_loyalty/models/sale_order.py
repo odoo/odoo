@@ -80,13 +80,15 @@ class SaleOrder(models.Model):
             order.extra_total_fields = groups
 
     def _compute_gift_card_count(self):
-        gift_card_data = dict(
-            self.env["loyalty.card"]._read_group(
-                domain=[("order_id", "in", self.ids), ("program_type", "=", "gift_card")],
-                groupby=["order_id"],
-                aggregates=["__count"],
+        gift_card_data = {}
+        if self.env["loyalty.card"].has_access("read"):
+            gift_card_data = dict(
+                self.env["loyalty.card"]._read_group(
+                    domain=[("order_id", "in", self.ids), ("program_type", "=", "gift_card")],
+                    groupby=["order_id"],
+                    aggregates=["__count"],
+                )
             )
-        )
         for order in self:
             order.gift_card_count = gift_card_data.get(order, 0)
 
@@ -181,7 +183,7 @@ class SaleOrder(models.Model):
 
         _id, issued, cost = loyalty_history_data[0]
 
-        coupons = self.coupon_point_ids.coupon_id
+        coupons = self.sudo().coupon_point_ids.coupon_id
         point_name = coupons.point_name if len(coupons) == 1 else self.env._("Points")
 
         return {"point_name": point_name, "issued": issued, "cost": cost}
@@ -312,9 +314,9 @@ class SaleOrder(models.Model):
 
     def _add_users_to_program(self):
         for order in self:
-            order.code_enabled_rule_ids.program_id.filtered("once_per_user").sudo().write(
-                {"partner_ids": [Command.link(order.partner_id.id)]}
-            )
+            order.code_enabled_rule_ids.program_id.filtered("once_per_user").sudo().write({
+                "partner_ids": [Command.link(order.partner_id.id)]
+            })
 
     def _remove_users_from_single_use_programs(self):
         """Let the customers of the given (cancelled) orders use their single-use codes again."""
@@ -1858,4 +1860,6 @@ class SaleOrder(models.Model):
                     if mail_template.exists():
                         send_context["mail_template"] = mail_template
 
-                self.env['account.move.send']._generate_and_send_invoices_post_commit(invoice, **send_context)
+                self.env["account.move.send"]._generate_and_send_invoices_post_commit(
+                    invoice, **send_context
+                )
