@@ -656,6 +656,23 @@ $-header-nav-link-height: $nav-link-height;
     }
 }
 
+// Footer content width. Applied from the (non-editable) footer element so that
+// it survives edits of the footer content. Only regular containers follow it:
+// sections with a width of their own keep it (`.o_container_small` extends
+// `.container`, hence the `:not()`).
+#wrapwrap > footer {
+    $-containers: ':is(#footer > section, .o_footer_copyright) > .container:not(.o_container_small)';
+
+    &.o_footer_content_width_small #{$-containers} {
+        @include media-breakpoint-up(lg) {
+            max-width: map-get($container-max-widths, md);
+        }
+    }
+    &.o_footer_content_width_fluid #{$-containers} {
+        max-width: none;
+    }
+}
+
 h2 {
     color: map-get($colors, 'o-cc1-h2');
 }
