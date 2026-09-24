@@ -1,15 +1,14 @@
 import {
     click,
     contains,
+    MENU_ACTIVE_IDS,
     openDiscuss,
     start,
     startServer,
-    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, mockDate, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
-import { mockDate } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -18,9 +17,9 @@ test("Can invite a partner to a livechat channel", async () => {
     mockDate("2023-01-03 12:00:00", +1);
     const pyEnv = await startServer();
     const langIds = pyEnv["res.lang"].create([
-        { code: "en", name: "English" },
-        { code: "fr", name: "French" },
-        { code: "de", name: "German" },
+        { code: "en_US", name: "English" },
+        { code: "fr_FR", name: "French" },
+        { code: "de_DE", name: "German" },
     ]);
     const expertiseIds = pyEnv["im_livechat.expertise"].create([
         { name: "pricing" },
@@ -33,7 +32,7 @@ test("Can invite a partner to a livechat channel", async () => {
         livechat_expertise_ids: expertiseIds,
     });
     pyEnv["res.partner"].create({
-        lang: "en",
+        lang: "en_US",
         name: "James",
         user_ids: [userId],
     });
