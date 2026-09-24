@@ -147,21 +147,21 @@ describe("not collapsed selection", () => {
     test("should insert a character in a fully selected font in a heading, preserving its style (1)", async () => {
         await testEditor({
             contentBefore:
-                '<h1><font style="background-color: red;">[abc]</font><br></h1><p>def</p>',
+                '<h1><span style="background-color: red;">[abc]</span><br></h1><p>def</p>',
             stepFunction: async (editor) => await insertText(editor, "g"),
-            contentAfter: '<h1><font style="background-color: red;">g[]</font></h1><p>def</p>',
+            contentAfter: '<h1><span style="background-color: red;">g[]</span></h1><p>def</p>',
         });
     });
 
     test("should insert a character in a fully selected font in a heading, preserving its style (2)", async () => {
         await testEditor({
             contentBefore:
-                '<h1><font style="background-color: red;">[abc]</font><br></h1><p>def</p>',
+                '<h1><span style="background-color: red;">[abc]</span><br></h1><p>def</p>',
             stepFunction: async (editor) => {
                 deleteBackward(editor);
                 await insertText(editor, "g");
             },
-            contentAfter: '<h1><font style="background-color: red;">g[]</font></h1><p>def</p>',
+            contentAfter: '<h1><span style="background-color: red;">g[]</span></h1><p>def</p>',
         });
     });
 
