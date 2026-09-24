@@ -42,7 +42,6 @@
                             t-on-change="() => this.props.setSelected(value)" 
                             t-att-name="value.attribute_id.id" 
                             t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}" 
-                            t-att-disabled="this.pos.doHaveConflictWith(value, this.props.allSelectedValues)"
                             class="form-check-input d-none"
                         />
                         <label
@@ -105,7 +104,6 @@
                                 t-on-change="() => this.props.setSelected(value)"
                                 t-att-name="value.attribute_id.id"
                                 t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}"
-                                t-att-disabled="this.pos.doHaveConflictWith(value, this.props.allSelectedValues)"
                                 class="m-2 opacity-0"
                             />
                         </label>
