@@ -52,7 +52,7 @@ class SaleOrderLine(models.Model):
     def _prepare_base_line_for_taxes_computation(self, **kwargs):
         """Override to add the special_type on coupon lines."""
         self.ensure_one()
-        if self.reward_id and self.reward_id.reward_type == "discount":
+        if self.reward_id and self.reward_id.sudo().reward_type == "discount":
             kwargs["special_type"] = "loyalty_discount"
         return super()._prepare_base_line_for_taxes_computation(**kwargs)
 
@@ -109,7 +109,9 @@ class SaleOrderLine(models.Model):
                     line.coupon_id.points -= line.points_cost
                     # Same coupon: apply the delta in a single call to avoid a redundant search.
                     if line.coupon_id == previous_coupon:
-                        line.order_id._update_loyalty_history(line.coupon_id, line.points_cost - previous_cost)
+                        line.order_id._update_loyalty_history(
+                            line.coupon_id, line.points_cost - previous_cost
+                        )
                     else:
                         if previous_coupon:
                             line.order_id._update_loyalty_history(previous_coupon, -previous_cost)
