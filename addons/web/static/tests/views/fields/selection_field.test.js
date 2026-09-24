@@ -7,6 +7,7 @@ import {
     defineModels,
     editSelectMenu,
     fields,
+    makeMockServer,
     models,
     mountView,
     onRpc,
@@ -447,7 +448,11 @@ test("SelectionField fallback to value when option not found", async () => {
         ],
         string: "Color",
     });
-    Partner._records[0].color = "unknown_value"; // Value not in selection list
+
+    // We cannot assign an invalid value from the '_records' since it would
+    // crash during mock server setup.
+    const { env } = await makeMockServer();
+    env["partner"][0].color = "unknown_value"; // Value not in selection list
 
     await mountView({
         type: "form",
@@ -471,7 +476,11 @@ test("SelectionField fallback to value in readonly mode", async () => {
         ],
         string: "Color",
     });
-    Partner._records[0].color = "deprecated_option";
+
+    // We cannot assign an invalid value from the '_records' since it would
+    // crash during mock server setup.
+    const { env } = await makeMockServer();
+    env["partner"][0].color = "deprecated_option";
 
     await mountView({
         type: "form",
@@ -495,7 +504,11 @@ test("SelectionField fallback in list view", async () => {
         ],
         string: "Color",
     });
-    Partner._records[0].color = "unknown_status";
+
+    // We cannot assign an invalid value from the '_records' since it would
+    // crash during mock server setup.
+    const { env } = await makeMockServer();
+    env["partner"][0].color = "unknown_status";
 
     await mountView({
         type: "list",
