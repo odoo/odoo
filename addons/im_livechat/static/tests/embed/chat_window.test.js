@@ -17,20 +17,19 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { Attachment } from "@mail/core/common/attachment_model";
-import { describe, expect, test } from "@odoo/hoot";
-import { mockFetch } from "@odoo/hoot-mock";
-import { 
-    Command, 
-    getService, 
+import { describe, expect, mockFetch, test } from "@odoo/hoot";
+import {
+    Command,
+    getService,
     patchWithCleanup,
-    serverState, 
-    withUser 
+    serverState,
+    withUser,
 } from "@web/../tests/web_test_helpers";
 
+import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
-import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
 
 describe.current.tags("desktop");
@@ -74,7 +73,7 @@ test("The name of the conversation changes based on the agents' names", async ()
         name: "James",
     });
     const secondAgent = pyEnv["res.partner"].create({
-        lang: "en",
+        lang: "en_US",
         name: "James",
         user_ids: [userId],
     });
@@ -264,7 +263,6 @@ test("Displays the name of agent in welcome message", async () => {
     );
 });
 
-
 test("should not make XMLHttpRequest to server file content when embedded externally", async () => {
     patchWithCleanup(browser.location, {
         origin: "https://www.hoot.test",
@@ -297,11 +295,11 @@ test("should not make XMLHttpRequest to server file content when embedded extern
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(test.txt) .fa-check");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message .o-mail-AttachmentContainer:contains(test.txt)");
-    await click(".o-mail-Message .o-mail-AttachmentContainer:contains(test.txt) [title='Download']");
+    await click(
+        ".o-mail-Message .o-mail-AttachmentContainer:contains(test.txt) [title='Download']"
+    );
 
-    expect.verifySteps([
-        `${session.origin} test.txt`,
-    ]);
+    expect.verifySteps([`${session.origin} test.txt`]);
 });
 
 /** @see {@link import("@mail/core/attachment_list_patch").ExternalLivechatDisabledPdfReason} */

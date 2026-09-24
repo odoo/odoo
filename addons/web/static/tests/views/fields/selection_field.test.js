@@ -1,6 +1,12 @@
-import { expect, test } from "@odoo/hoot";
-import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    click,
+    expect,
+    queryAllTexts,
+    queryFirst,
+    queryOne,
+    test,
+} from "@odoo/hoot";
 import {
     clickSave,
     contains,
@@ -8,6 +14,7 @@ import {
     editSelectMenu,
     fields,
     getService,
+    makeMockServer,
     mockOffline,
     models,
     mountView,
@@ -462,7 +469,11 @@ test("SelectionField fallback to value when option not found", async () => {
         ],
         string: "Color",
     });
-    Partner._records[0].color = "unknown_value"; // Value not in selection list
+
+    // We cannot assign an invalid value from the '_records' since it would
+    // crash during mock server setup.
+    const { env } = await makeMockServer();
+    env["partner"][0].color = "unknown_value"; // Value not in selection list
 
     await mountView({
         type: "form",
@@ -486,7 +497,11 @@ test("SelectionField fallback to value in readonly mode", async () => {
         ],
         string: "Color",
     });
-    Partner._records[0].color = "deprecated_option";
+
+    // We cannot assign an invalid value from the '_records' since it would
+    // crash during mock server setup.
+    const { env } = await makeMockServer();
+    env["partner"][0].color = "deprecated_option";
 
     await mountView({
         type: "form",
@@ -510,7 +525,11 @@ test("SelectionField fallback in list view", async () => {
         ],
         string: "Color",
     });
-    Partner._records[0].color = "unknown_status";
+
+    // We cannot assign an invalid value from the '_records' since it would
+    // crash during mock server setup.
+    const { env } = await makeMockServer();
+    env["partner"][0].color = "unknown_status";
 
     await mountView({
         type: "list",

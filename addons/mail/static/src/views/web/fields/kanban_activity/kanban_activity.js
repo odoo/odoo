@@ -12,7 +12,10 @@ export class KanbanActivity extends Component {
         {
             name: "activity_exception_decoration",
             type: "selection",
-            selection: [("warning", "Alert"), ("danger", "Error")],
+            selection: [
+                ["warning", "Alert"],
+                ["danger", "Error"],
+            ],
         },
         { name: "activity_exception_icon", type: "char" },
         { name: "activity_state", type: "selection" },
