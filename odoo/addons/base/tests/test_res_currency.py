@@ -154,6 +154,33 @@ class TestResCurrency(TransactionCase):
         self.assertEqual(eur.amount_to_text(2.0), "deux euros")
         self.assertEqual(eur.amount_to_text(21.56), "vingt et un euros et cinquante-six centimes")
 
+    def test_amount_to_text_currency_aware_inflection_vi_vn(self):
+        """Convert Vietnamese currency amounts to text without currency forms."""
+        self.env['res.lang'].with_context(active_test=False).search([
+            ('code', '=', 'vi_VN'),
+        ]).active = True
+
+        vnd = self.env.ref('base.VND').with_context(lang='vi_VN')
+        self.assertEqual(vnd.amount_to_text(12.0), "Mười Hai Dong")
+
+    def test_amount_to_text_currency_aware_inflection_fa_ir(self):
+        """Convert Persian currency amounts to text without currency forms."""
+        self.env['res.lang'].with_context(active_test=False).search([
+            ('code', '=', 'fa_IR'),
+        ]).active = True
+
+        irr = self.env.ref('base.IRR').with_context(lang='fa_IR')
+        self.assertEqual(irr.amount_to_text(12.0), "دوازده Dinar")
+
+    def test_amount_to_text_currency_aware_inflection_id_id(self):
+        """Convert Indonesian currency amounts to text without currency forms."""
+        self.env['res.lang'].with_context(active_test=False).search([
+            ('code', '=', 'id_ID'),
+        ]).active = True
+
+        idr = self.env.ref('base.IDR').with_context(lang='id_ID')
+        self.assertEqual(idr.amount_to_text(12.0), "Dua Belas Rupiah")
+
     def test_rounding_04(self):
         """ check that proper rounding is performed for float persistence """
         currency = self.env.ref('base.EUR')
