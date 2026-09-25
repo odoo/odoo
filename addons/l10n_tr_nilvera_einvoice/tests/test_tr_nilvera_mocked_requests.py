@@ -28,7 +28,10 @@ def mock_requests_request(method, url, *args, **kwargs):
     response.status_code = 200
 
     if method == 'GET' and 'Check/TaxNumber' in url:
-        if EINVOICE_PARTNER_VAT in url:
+        # The partners are only registered for e-Invoice.
+        if kwargs['params']['globalUserType'] != 'Invoice':
+            response.json.return_value = []
+        elif EINVOICE_PARTNER_VAT in url:
             response.json.return_value = [
                 {
                     'DocumentType': 'Invoice',

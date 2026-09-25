@@ -19,11 +19,19 @@ class ResPartner(models.Model):
         readonly=False,
     )
 
-    @api.depends('l10n_tr_nilvera_customer_alias_ids', 'l10n_tr_nilvera_customer_status')
+    @api.depends('l10n_tr_nilvera_customer_status')
     def _compute_l10n_tr_nilvera_edispatch_alias_id(self):
+        # The alias of e-Invoice taxpayers is set by `_check_nilvera_customer`.
         for record in self:
-            if not record.l10n_tr_nilvera_edispatch_alias_id:
-                record.l10n_tr_nilvera_edispatch_alias_id = record.l10n_tr_nilvera_customer_alias_ids[:1]
+            if record.l10n_tr_nilvera_customer_status != 'einvoice':
+                record.l10n_tr_nilvera_edispatch_alias_id = False
+
+    def _l10n_tr_nilvera_get_alias_fields(self):
+        # EXTENDS 'l10n_tr_nilvera'
+        return {
+            **super()._l10n_tr_nilvera_get_alias_fields(),
+            'DespatchAdvice': 'l10n_tr_nilvera_edispatch_alias_id',
+        }
 
     def _l10n_tr_nilvera_validate_partner_details(self, tax_office_required=False):
         error_messages = {}

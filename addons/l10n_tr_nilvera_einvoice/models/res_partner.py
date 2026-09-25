@@ -25,13 +25,19 @@ class ResPartner(models.Model):
             if not partner.env.context.get("formatted_display_name"):
                 partner.display_name = (f"{partner.display_name}\n{partner.l10n_tr_tax_office_id.name}")
 
-    @api.depends('l10n_tr_nilvera_customer_alias_ids', 'l10n_tr_nilvera_customer_status')
+    @api.depends('l10n_tr_nilvera_customer_status')
     def _compute_nilvera_customer_alias_id(self):
+        # The alias of e-Invoice taxpayers is set by `_check_nilvera_customer`.
         for record in self:
-            if record.l10n_tr_nilvera_customer_status == 'einvoice' and not record.l10n_tr_nilvera_customer_alias_id:
-                record.l10n_tr_nilvera_customer_alias_id = record.l10n_tr_nilvera_customer_alias_ids[:1]
-            elif record.l10n_tr_nilvera_customer_status == 'earchive':
+            if record.l10n_tr_nilvera_customer_status != 'einvoice':
                 record.l10n_tr_nilvera_customer_alias_id = False
+
+    def _l10n_tr_nilvera_get_alias_fields(self):
+        # EXTENDS 'l10n_tr_nilvera'
+        return {
+            **super()._l10n_tr_nilvera_get_alias_fields(),
+            'Invoice': 'l10n_tr_nilvera_customer_alias_id',
+        }
 
     def _get_tax_office_missing_message(self):
         self.ensure_one()
