@@ -132,7 +132,7 @@ class IrActionsReport(models.Model):
         ondelete={'qweb-pdf-wkhtmltopdf': 'set qweb-pdf'},
     )
 
-    def _run_wkhtmltopdf(self, args):
+    def _run_wkhtmltopdf__(self, args):
         """
         Runs the given arguments against the wkhtmltopdf binary.
 
@@ -380,6 +380,8 @@ class IrActionsReport(models.Model):
                 header=header, footer=footer, landscape=landscape,
                 specific_paperformat_args=specific_paperformat_args,
                 **kwargs)
+
+        assert isinstance(self, IrActionsReport)
         paperformat_id = self._get_report(report_ref).get_paperformat() if report_ref else self.get_paperformat()
 
         # Build the base command args for wkhtmltopdf bin
@@ -452,7 +454,7 @@ class IrActionsReport(models.Model):
             pdf_report.close()
             pdf_report_path = pdf_report.name
 
-            process = self._run_wkhtmltopdf(command_args + files_command_args + paths + [pdf_report_path])
+            process = self._run_wkhtmltopdf__(command_args + files_command_args + paths + [pdf_report_path])
             err = process.stderr or '(no stderr)'
 
             match process.returncode:
