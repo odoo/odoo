@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import Command
 from odoo.addons.l10n_in_edi.tests.test_edi_json import TestEdiJson
 from odoo.tests import tagged
 
@@ -7,11 +8,31 @@ from odoo.tests import tagged
 class TestEdiEwaybillJson(TestEdiJson):
 
     def test_edi_json(self):
+        self.partner_b.write({
+            "vat": False,
+            "street": "Block no. 401",
+            "street2": "Street 2",
+            "city": "City 2",
+            "zip": "500001",
+            "state_id": self.env.ref("base.state_in_ts").id,
+            "country_id": self.env.ref("base.in").id,
+            "l10n_in_gst_treatment": "unregistered",
+        })
+        invoice_global_discount = self.init_invoice("out_invoice", partner=self.partner_b, post=False, products=self.product_a)
+        invoice_global_discount.write({
+            "invoice_line_ids": [Command.create({
+                "name": "Global Discount Line",
+                "price_unit": -100.0,
+                "tax_ids": [Command.clear()],
+            })],
+        })
+        invoice_global_discount.action_post()
         self.env['account.move'].browse((
             self.invoice.id,
             self.invoice_full_discount.id,
             self.invoice_zero_qty.id,
             self.invoice_reverse.id,
+            invoice_global_discount.id,
         )).write({
             "l10n_in_type_id": self.env.ref("l10n_in_edi_ewaybill.type_tax_invoice_sub_type_supply"),
             "l10n_in_distance": 20,
@@ -181,3 +202,35 @@ class TestEdiEwaybillJson(TestEdiJson):
             "totInvValue": 0.0
         })
         self.assertDictEqual(json_value, expected, "Indian EDI with 0(zero) quantity sent json value is not matched")
+
+        # =================================== Global discount test =============================================
+        expected.update({
+            "docNo": invoice_global_discount.name,
+            "toGstin": "URP",
+            "toTrdName": self.partner_b.name,
+            "itemList": [
+                {
+                    "productName": "product_a",
+                    "hsnCode": "01111",
+                    "productDesc": "product_a",
+                    "quantity": 1.0,
+                    "qtyUnit": "UNT",
+                    "taxableAmount": 1000.0,
+                    "cgstRate": 2.5,
+                    "sgstRate": 2.5,
+                }
+            ],
+            "totalValue": 1000.0,
+            "cgstValue": 25.0,
+            "sgstValue": 25.0,
+            "igstValue": 0.0,
+            "cessValue": 0.0,
+            "cessNonAdvolValue": 0.0,
+            "otherValue": -100.0,
+            "totInvValue": 950.0,
+        })
+        self.assertDictEqual(
+            self.env["account.edi.format"]._l10n_in_edi_ewaybill_generate_json(invoice_global_discount),
+            expected,
+            "Ewaybill with global discount failed",
+        )

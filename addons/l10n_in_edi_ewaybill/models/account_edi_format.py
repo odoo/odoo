@@ -113,16 +113,12 @@ class AccountEdiFormat(models.Model):
             error_message.append(_("%s number should be set and not more than 16 characters",
                 (is_purchase and "Bill Reference" or "Invoice")))
         for line in goods_lines:
-            if line.product_id:
+            if line.product_id and line.product_id.l10n_in_hsn_code:
                 hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
-                if not hsn_code:
-                    error_message.append(_("HSN code is not set in product %s", line.product_id.name))
-                elif not re.match("^[0-9]+$", hsn_code):
+                if not re.match("^[0-9]+$", hsn_code):
                     error_message.append(_(
                         "Invalid HSN Code (%s) in product %s", hsn_code, line.product_id.name
                     ))
-            else:
-                error_message.append(_("product is required to get HSN code"))
         if error_message:
             error_message.insert(0, _("Impossible to send the Ewaybill."))
         return error_message
@@ -410,7 +406,20 @@ class AccountEdiFormat(models.Model):
         tax_details = self._l10n_in_prepare_edi_tax_details(invoices)
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
+        filtered_invoice_line_tax_details = {
+            line: line_tax_details
+            for line, line_tax_details in invoice_line_tax_details.items()
+            if line.product_id.l10n_in_hsn_code and line.tax_ids
+        }
+        total_value = sum(details.get("base_amount", 0.00) for details in filtered_invoice_line_tax_details.values())
+        other_base_values = sum(
+            line.balance
+            for line in invoices.invoice_line_ids.filtered(
+                lambda l: l.display_type == 'product' and not (l.product_id.l10n_in_hsn_code and l.tax_ids)
+            )
+        ) * sign
         rounding_amount = sum(line.balance for line in invoices.line_ids if line.display_type == 'rounding') * sign
+        total_invoice_value = total_value + tax_details.get("tax_amount", 0.00) + rounding_amount
         json_payload = {
             # Note:
             # Customer Invoice, Sales Receipt and Vendor Credit Note are Outgoing
@@ -438,20 +447,20 @@ class AccountEdiFormat(models.Model):
             "toPincode": int(extract_digits(ship_to_details.zip)),
             "actToStateCode": int(ship_to_details.state_id.l10n_in_tin),
             "toStateCode": invoices.l10n_in_state_id.l10n_in_tin and int(invoices.l10n_in_state_id.l10n_in_tin) or (
-                buyer_details.state_id.l10n_in_tin or int(buyer_details.state_id.l10n_in_tin) or ""
+                buyer_details.state_id.l10n_in_tin and int(buyer_details.state_id.l10n_in_tin) or ""
             ),
             "itemList": [
                 self._get_l10n_in_edi_ewaybill_line_details(line, line_tax_details, sign)
-                for line, line_tax_details in invoice_line_tax_details.items()
+                for line, line_tax_details in filtered_invoice_line_tax_details.items()
             ],
-            "totalValue": self._l10n_in_round_value(tax_details.get("base_amount")),
+            "totalValue": self._l10n_in_round_value(total_value),
             "cgstValue": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
             "sgstValue": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
             "igstValue": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
             "cessValue": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
             "cessNonAdvolValue": self._l10n_in_round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
-            "otherValue": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00) + rounding_amount),
-            "totInvValue": self._l10n_in_round_value(tax_details.get("base_amount") + tax_details.get("tax_amount") + rounding_amount),
+            "otherValue": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00) + rounding_amount + other_base_values),
+            "totInvValue": self._l10n_in_round_value(total_invoice_value + other_base_values),
         }
         is_overseas = invoices.l10n_in_gst_treatment in ("overseas", "special_economic_zone")
         if invoices.is_outbound():
