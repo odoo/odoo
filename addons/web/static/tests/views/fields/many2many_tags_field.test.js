@@ -2345,3 +2345,57 @@ test("many2many_tags limit and edit color on click", async () => {
     expect(".o_colorlist").toHaveCount(1);
     expect(".o_field_many2many_tags .o_tag").toHaveCount(3); // Clicking on a tag should also expand all tags
 });
+
+test("Opening many2many_tags in x2many safely retains pending changes", async () => {
+    Partner._views = {
+        form: `<form><field name="name"/></form>`,
+    };
+
+    onRpc("get_formview_id", () => false);
+    onRpc("web_read", ({ model }) => {
+        expect.step(`web_read ${model}`);
+    });
+    onRpc("web_save", ({ model }) => {
+        expect.step(`web_save ${model}`);
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list editable="bottom">
+                        <field name="partner_ids" widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+    expect.verifySteps(["web_read partner"]);
+    expect(queryAllTexts(".o_data_row:eq(0) .o_field_widget[name=partner_ids] .o_tag")).toEqual([
+        "second record",
+        "aaa",
+    ]);
+
+    await contains(".o_data_row:eq(0) .o_data_cell[name=name]").click();
+    await contains(".o_data_row:eq(0) .o_field_widget[name=name] input").edit("dirty turtle");
+
+    await contains(".o_data_row:eq(0) .o_data_cell[name=partner_ids]").click();
+    await contains(".o_tag").click();
+    expect(".o_dialog").toHaveCount(1);
+    expect.verifySteps(["web_read partner"]);
+
+    await contains(".o_dialog .o_field_widget[name=name] input").edit("new tag name");
+    await contains(".o_dialog footer .o_form_button_save").click();
+    expect(".o_dialog").toHaveCount(0);
+    expect.verifySteps(["web_save partner", "web_read turtle"]);
+
+    expect(".o_data_row:eq(0) .o_field_widget[name=name] input").toHaveValue("dirty turtle");
+    expect(queryAllTexts(".o_data_row:eq(0) .o_field_widget[name=partner_ids] .o_tag")).toEqual([
+        "new tag name",
+        "aaa",
+    ]);
+});
