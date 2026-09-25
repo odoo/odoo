@@ -152,6 +152,24 @@ class AccountMove(models.Model):
     # CRUD, inherited methods
     # -----------------------
 
+    def _post(self, soft=True):
+        # EXTENDS 'account'
+        # The user may split the single line of a received bill, but the bill must still match its e-invoice.
+        mismatched_bills = self.filtered(lambda move: (
+            move.l10n_my_edi_state == 'received'
+            and move.company_currency_id.compare_amounts(
+                abs(move.amount_total_signed),
+                move.l10n_my_edi_received_document_id.myinvois_amount_total,
+            )
+        ))
+        if mismatched_bills:
+            raise UserError(self.env._(
+                "The total of these bills no longer matches the e-invoice received from MyInvois: %(bills)s\n"
+                "Please adjust their lines before confirming them.",
+                bills=mismatched_bills.mapped('display_name'),
+            ))
+        return super()._post(soft)
+
     def button_request_cancel(self):
         # EXTENDS 'account'
         super().button_request_cancel()
