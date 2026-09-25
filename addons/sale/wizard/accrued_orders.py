@@ -20,15 +20,15 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             amount_currency = order_line.amount_to_invoice_at_date
             amount = order_line.order_id.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
         else:
-            amount_currency, amount, processed_qty = 0, 0, 0
-            for inv_line in order_line.invoice_lines.filtered(lambda ivl: ivl.move_id.state == 'posted').sorted(reverse=True):
-                amount_currency -= inv_line.price_subtotal
-                amount -= order_line.order_id.currency_id._convert(inv_line.price_subtotal, self.company_id.currency_id, self.company_id)
-                processed_qty += inv_line.quantity
-                if processed_qty >= abs(qty_to_invoice):
-                    break
-            if processed_qty:
-                price_unit = abs(amount / processed_qty)
+            invoiced_amount, invoiced_qty = 0, 0
+            for inv_line in order_line._get_invoice_lines().filtered(lambda ivl: ivl.move_id.state == 'posted'):
+                sign = -inv_line.move_id.direction_sign
+                invoiced_amount += sign * inv_line.price_subtotal
+                invoiced_qty += sign * inv_line.product_uom_id._compute_quantity(inv_line.quantity, order_line.product_uom_id)
+            if invoiced_qty:
+                price_unit = invoiced_amount / invoiced_qty
+            amount_currency = order_line.order_id.currency_id.round(qty_to_invoice * price_unit) if invoiced_qty else 0
+            amount = order_line.order_id.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
         return qty_to_invoice, price_unit, amount, amount_currency
 
     def _get_accrual_main_line_vals(self, order_lines, accrual_entry_date):
