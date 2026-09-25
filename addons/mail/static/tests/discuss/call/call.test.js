@@ -1897,7 +1897,7 @@ test("only notified of a call disconnection when the server ends the session", a
     await contains(".o-discuss-Call", { count: 0 });
     await expect.waitForSteps([]);
     // A session removal that does not come from leaving locally is a server disconnection.
-    await click("[title='Start Call']");
+    await click("[title='Start Call']:enabled");
     await contains(".o-discuss-Call");
     pyEnv["discuss.channel.rtc.session"].unlink([getService("discuss.rtc").selfSession.id]);
     await contains(".o-discuss-Call", { count: 0 });
