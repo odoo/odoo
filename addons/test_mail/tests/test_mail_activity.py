@@ -149,6 +149,17 @@ class TestActivityRights(TestActivityCommon):
         found = self.env['mail.activity'].with_user(self.user_employee).search([('res_model', '=', 'mail.test.access.custo')])
         self.assertEqual(found, admin_activities[:2] + emp_new_1 + emp_new_2, 'Should respect _ge_mail_get_operation_for_mail_message_operationt_mail_message_access, reading non locked records')
 
+    def test_activity_security_user_access_get_activity_data(self):
+        """ Test activity data tells whether activities can be scheduled on the
+        model, using '_mail_get_operation_for_mail_message_operation'. """
+        get_activity_data = self.env['mail.activity'].with_user(self.user_employee).get_activity_data
+        # message posting customized to require read access
+        self.assertTrue(get_activity_data('mail.test.access.custo', None)['can_schedule_activity'])
+        # posting requires write access
+        self.assertTrue(get_activity_data('mail.test.composer.source', None)['can_schedule_activity'])
+        self.env.ref('test_mail.access_mail_test_composer_source_user').write({'perm_write': False})
+        self.assertFalse(get_activity_data('mail.test.composer.source', None)['can_schedule_activity'])
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_noaccess_automated(self):
         def _employee_crash(records, operation):

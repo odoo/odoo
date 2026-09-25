@@ -14,7 +14,7 @@ import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { keyDown, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, disableAnimations, mockDate } from "@odoo/hoot-mock";
+import { disableAnimations, mockDate } from "@odoo/hoot-mock";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { MailTestActivity } from "@test_mail/../tests/mock_server/models/mail_test_activity";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
@@ -1159,23 +1159,96 @@ test("Activity view: context given to the rpc to fetch data", async () => {
     await expect.waitForSteps(["get_activity_data"]);
 });
 
-test("Activity View: Hide 'New' button in SelectCreateDialog based on action context", async () => {
+test("Activity view: cannot schedule activity from empty cell without access", async () => {
     registerArchs(archs);
-    MailTestActivity._views.list = `
-            <list string="MailTestActivity">
-                <field name="name"/>
-                <field name="activity_ids" widget="list_activity"/>
-            </list>`;
-
+    const [readonlyRecordId] = pyEnv["mail.test.activity"].search([
+        ["name", "=", "Office planning"],
+    ]);
+    pyEnv["mail.test.activity"].write([readonlyRecordId], { hasWriteAccess: false });
     await start();
     await openView({
         res_model: "mail.test.activity",
         views: [[false, "activity"]],
-        context: { create: false },
     });
-    await click("table tfoot tr .o_record_selector");
-    await animationFrame();
-    expect(".o_create_button").toHaveCount(0, {
-        message: "'New' button should be hidden",
+    mockService("action", {
+        doAction(action) {
+            expect.step(`doAction ${action.context.default_res_id}`);
+        },
+    });
+    await click(":nth-child(1 of .o_activity_empty_cell)", {
+        parent: ["tr", { contains: [".o_activity_record", { text: "Office planning" }] }],
+    });
+    await contains(".o_notification", {
+        text: "You are not allowed to schedule an activity on this record.",
+    });
+    await click(":nth-child(1 of .o_activity_empty_cell)", {
+        parent: ["tr", { contains: [".o_activity_record", { text: "Meeting Room Furnitures" }] }],
+    });
+    const [editableRecordId] = pyEnv["mail.test.activity"].search([
+        ["name", "=", "Meeting Room Furnitures"],
+    ]);
+    await expect.waitForSteps([`doAction ${editableRecordId}`]);
+});
+
+test("Activity view: hide schedule activity without access on the model", async () => {
+    registerArchs(archs);
+    onRpc("get_activity_data", async ({ parent }) => ({
+        ...(await parent()),
+        can_schedule_activity: false,
+    }));
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+    });
+    await contains(".o_activity_view_table");
+    expect("table tfoot .o_record_selector").toHaveCount(0);
+    expect(".o_activity_empty_cell:not(.pe-none)").toHaveCount(0);
+});
+
+test("Activity widget: hide schedule activity without write access on the record", async () => {
+    MailTestActivity._views.list = `
+        <list>
+            <field name="name"/>
+            <field name="activity_ids" widget="list_activity"/>
+        </list>`;
+    const [activityTypeId] = pyEnv["mail.activity.type"].search([]);
+    const activityId = pyEnv["mail.activity"].create({
+        res_model: "mail.test.activity",
+        summary: "Other activity",
+        date_deadline: serializeDate(DateTime.now()),
+        can_write: true,
+        state: "today",
+        activity_type_id: activityTypeId,
+        user_id: pyEnv["res.users"].create({ name: "Other user" }),
+    });
+    pyEnv["mail.test.activity"].create([
+        { name: "Editable record", activity_ids: [activityId] },
+        { name: "Readonly record", activity_ids: [activityId], hasWriteAccess: false },
+        { name: "Readonly empty record", hasWriteAccess: false },
+    ]);
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "list"]],
+    });
+    await click(".o_data_row:contains('Editable record') .o-mail-ActivityButton");
+    await contains(".o-mail-ActivityListPopoverItem", { text: "Other activity" });
+    await contains(".o-mail-ActivityListPopover button", { text: "Schedule an activity" });
+    await click(".o_data_row:contains('Editable record') .o-mail-ActivityButton");
+    await contains(".o-mail-ActivityListPopover", { count: 0 });
+    await click(".o_data_row:contains('Readonly record') .o-mail-ActivityButton");
+    await contains(".o-mail-ActivityListPopoverItem", { text: "Other activity" });
+    await contains(".o-mail-ActivityListPopover button", {
+        text: "Schedule an activity",
+        count: 0,
+    });
+    await click(".o_data_row:contains('Readonly record') .o-mail-ActivityButton");
+    await contains(".o-mail-ActivityListPopover", { count: 0 });
+    await click(".o_data_row:contains('Readonly empty record') .o-mail-ActivityButton");
+    await contains(".o-mail-ActivityListPopover", { text: "No activities." });
+    await contains(".o-mail-ActivityListPopover button", {
+        text: "Schedule an activity",
+        count: 0,
     });
 });

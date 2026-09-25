@@ -92,7 +92,7 @@
     </td>
     <td t-else=""
         class="o_activity_summary_cell o_activity_empty_cell cursor-pointer"
-        t-attf-class="{{ activeFilter.resIds.has(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}"
+        t-attf-class="{{ activeFilter.resIds.has(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }} {{ props.canScheduleActivity ? '' : 'pe-none' }}"
         t-on-click.prevent.stop="() => props.onEmptyCell(resId, type.id)">
         <i data-tooltip="Create" class="text-center fa fa-plus mt-2 align-items-center justify-content-center h-100"/>
     </td>
@@ -102,7 +102,7 @@
     <tfoot class="o_activity_view_table_footer">
         <tr class="o_data_row">
             <td class="p-3" colspan="100">
-                <span class="btn btn-link o_record_selector cursor-pointer"
+                <span t-if="props.canScheduleActivity" class="btn btn-link o_record_selector cursor-pointer"
                       t-on-click.prevent.stop="props.scheduleActivity">
                     <i class="fa fa-plus pe-2"/> Schedule activity
                 </span>
