@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from unittest.mock import patch
 
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sms_twilio.tests.common import MockSmsTwilioApi
@@ -188,6 +189,54 @@ class TestMassSMSInternals(TestMassSMSCommon):
               'content': 'Dear %s this is a mass SMS' % record.display_name}
              for i, record in enumerate(self.records[5:])],
             mailing, self.records[5:],
+        )
+
+    @users('user_marketing')
+    def test_mass_sms_duplicates_across_batches(self):
+        """ Recipients are sent in batches. Two records sharing a phone number
+        but falling in different batches must still be deduplicated: only the
+        first is kept, the later ones are canceled as duplicates. """
+        numbers = ['0455123401', '0455123402']
+        records = self.env['mail.test.sms'].create([
+            {'name': 'MassSMSBatchDup_%d' % idx,
+             'customer_id': self.partners[idx].id,
+             'phone_nbr': numbers[idx % 2]}
+            for idx in range(4)
+        ])
+        formatted_numbers = [
+            phone_validation.phone_format(number, 'BE', '32', force_format='E164')
+            for number in numbers
+        ]
+
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'Batch duplicates SMS',
+            'subject': 'Batch duplicates SMS',
+            'mailing_model_id': self.env['ir.model']._get('mail.test.sms').id,
+            'mailing_type': 'sms',
+            'mailing_domain': repr([('name', 'like', 'MassSMSBatchDup_')]),
+            'body_plaintext': 'Dear {{object.display_name}} this is a mass SMS',
+            'sms_force_send': False,  # keep traces outgoing, no gateway send
+        })
+
+        # one recipient per batch, so the duplicates land in separate batches
+        with patch('odoo.addons.mass_mailing_sms.models.mailing_mailing.SMS_RECIPIENT_BATCH_SIZE', 1):
+            with self.mockSMSGateway():
+                mailing.action_send_sms()
+
+        # the first record for each number is kept ...
+        self.assertSMSTraces(
+            [{'partner': records[idx].customer_id, 'number': formatted_numbers[idx],
+              'content': 'Dear %s this is a mass SMS' % records[idx].display_name}
+             for idx in range(2)],
+            mailing, records[:2],
+        )
+        # ... the later records sharing the same number are canceled as duplicates
+        self.assertSMSTraces(
+            [{'partner': records[idx].customer_id, 'number': formatted_numbers[idx % 2],
+              'content': 'Dear %s this is a mass SMS' % records[idx].display_name,
+              'trace_status': 'cancel', 'failure_type': 'sms_duplicate'}
+             for idx in range(2, 4)],
+            mailing, records[2:],
         )
 
     @users('user_marketing')
