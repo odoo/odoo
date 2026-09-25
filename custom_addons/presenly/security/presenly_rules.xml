@@ -3,7 +3,7 @@
         <field name="name">Presenly native work locations by allowed company</field>
         <field name="model_id" ref="hr.model_hr_work_location"/>
         <field name="groups" eval="[(4, ref('presenly.group_presenly_employee'))]"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
     </record>
     <record id="rule_presenly_approval_rule_company" model="ir.rule">
         <field name="name">Presenly approval rules by company</field>
