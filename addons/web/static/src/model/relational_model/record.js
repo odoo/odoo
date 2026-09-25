@@ -107,8 +107,9 @@ export class Record extends DataPoint {
         }
         if (!keepChanges) {
             this._changes = markRaw({});
+            this.dirty = false;
+            this._savePoint = undefined;
         }
-        this.dirty = false;
         this.data = { ...this._values, ...this._changes };
         this._setEvalContext();
         this._initialTextValues = { ...this._textValues };
@@ -117,7 +118,6 @@ export class Record extends DataPoint {
         if (!this.isNew && this.isInEdition && !this._parentRecord) {
             this._checkValidity();
         }
-        this._savePoint = undefined;
     }
 
     // -------------------------------------------------------------------------
@@ -277,6 +277,30 @@ export class Record extends DataPoint {
             throw new Error("Record.load() does not accept arguments");
         }
         return this.model.mutex.exec(() => this._load());
+    }
+
+    /**
+     * Only reload if the record exists, and keep potential pending changes.
+     *
+     * @returns {Promise}
+     */
+    async safeLoad() {
+        if (this.resId) {
+            if (arguments.length > 0) {
+                throw new Error("Record.safeLoad() does not accept arguments");
+            }
+            return this.model.mutex.exec(() => this._load({}, { keepChanges: true }));
+        }
+    }
+
+    /**
+     * Only save if the record is a main record, do not save if it is a one2many
+     * record.
+     *
+     * @returns {Promise<boolean>}
+     */
+    async safeSave() {
+        return !!this._parentRecord || (await this.save());
     }
 
     /**
@@ -902,7 +926,7 @@ export class Record extends DataPoint {
         return required ? evaluateBooleanExpr(required, this.evalContextWithVirtualIds) : false;
     }
 
-    async _load(nextConfig = {}) {
+    async _load(nextConfig = {}, options = {}) {
         if ("resId" in nextConfig && this.resId) {
             throw new Error("Cannot change resId of a record");
         }
@@ -911,7 +935,7 @@ export class Record extends DataPoint {
                 if (this.resId) {
                     this.model._updateSimilarRecords(this, values);
                 }
-                this._setData(values);
+                this._setData(values, { keepChanges: options.keepChanges });
             },
         });
     }
