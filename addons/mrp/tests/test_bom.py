@@ -2975,6 +2975,16 @@ class TestBoM(TestMrpCommon):
             "Filtering the exploded BoM list should return only the matching BoM line.",
         )
 
+    def test_bom_cycle_on_component_change(self):
+        p1, p2, p3 = self.make_prods(3)
+        self.make_bom(p1, p2)
+        bom = self.make_bom(p2, p3)
+        bom_form = Form(bom)
+        with self.assertRaises(exceptions.ValidationError):
+            with bom_form.bom_line_ids.edit(0) as bom_line:
+                bom_line.product_id = p1
+            bom_form.save()
+
 
 class TestTourBoM(HttpCase):
     @classmethod
