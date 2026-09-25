@@ -99,6 +99,9 @@ patch(PosOrder.prototype, {
     },
     restoreState(vals) {
         super.restoreState(...arguments);
+        // The state may have been stored before pos_loyalty was installed
+        this.uiState.codeActivatedProgramRules ||= [];
+        this.uiState.couponPointChanges ||= {};
         this.uiState.disabledRewards = new Set(vals?.disabledRewards || []);
         for (const [key, pe] of Object.entries(this.uiState.couponPointChanges)) {
             if (!this.models["loyalty.program"].get(pe.program_id)) {
