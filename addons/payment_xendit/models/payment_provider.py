@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.tools.urls import urljoin
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_xendit import const
@@ -14,9 +15,10 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[("xendit", "Xendit")], ondelete={"xendit": "set default"}
     )
-    xendit_public_key = fields.Char(
-        string="Xendit Public Key", required_if_provider="xendit", copy=False
-    )
+    # Kept for backward compatibility with existing databases; no longer used or shown in the
+    # provider form since the inline card flow it configured was replaced by hosted redirect
+    # flows. Not removed, as dropping a field is not allowed in stable versions.
+    xendit_public_key = fields.Char(string="Xendit Public Key", copy=False)
     xendit_secret_key = fields.Char(
         string="Xendit Secret Key",
         required_if_provider="xendit",
@@ -57,25 +59,34 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS === #
 
-    def _get_redirect_form_view(self, is_validation=False):
-        """Override of `payment` to avoid rendering the form view for validation operations.
+    def _get_validation_currency(self):
+        """Override of `payment` to prefer the company's currency for validation operations.
 
-        Unlike other compatible payment methods in Xendit, `Card` is implemented using a direct
-        flow. To avoid rendering a useless template, and also to avoid computing wrong values, this
-        method returns `None` for Xendit's validation operations (Card is and will always be the
-        sole tokenizable payment method for Xendit).
+        Xendit's payment channels are activated per country, and picking an arbitrary supported
+        currency unrelated to the merchant's own country (as the base implementation would for a
+        company whose currency isn't the first found) can make Xendit reject the request.
 
         Note: `self.ensure_one()`
 
-        :param bool is_validation: Whether the operation is a validation.
-        :return: The view of the redirect form template or None.
-        :rtype: ir.ui.view | None
+        :return: The validation currency.
+        :rtype: recordset of `res.currency`
         """
         self.ensure_one()
+        if self.code == "xendit" and self.company_id.currency_id.name in const.SUPPORTED_CURRENCIES:
+            return self.company_id.currency_id
+        return super()._get_validation_currency()
 
-        if self.code == "xendit" and is_validation:
-            return None
-        return super()._get_redirect_form_view(is_validation)
+    def _get_redirect_form_view(self, is_validation=False):
+        """Override of `payment` kept for backward compatibility.
+
+        Validation operations used to skip the redirect form, as `Card` was implemented using a
+        direct flow. They now go through the redirect flow like any other operation.
+
+        :param bool is_validation: Whether the operation is a validation.
+        :return: The view of the redirect form template.
+        :rtype: ir.ui.view
+        """
+        return super()._get_redirect_form_view(is_validation=is_validation)
 
     # === REQUEST HELPERS ===#
 
@@ -83,7 +94,18 @@ class PaymentProvider(models.Model):
         """Override of `payment` to build the request URL."""
         if self.code != "xendit":
             return super()._build_request_url(endpoint, **kwargs)
-        return f"https://api.xendit.co/{endpoint}"
+        return urljoin("https://api.xendit.co/", endpoint)
+
+    def _build_request_headers(self, method, endpoint, payload, *, api_version=None, **kwargs):
+        """Override of `payment` to set the API version header, if any."""
+        if self.code != "xendit":
+            return super()._build_request_headers(
+                method, endpoint, payload, api_version=api_version, **kwargs
+            )
+        headers = {}
+        if api_version:
+            headers["api-version"] = api_version
+        return headers
 
     def _build_request_auth(self, **kwargs):
         """Override of `payment` to build the request Auth."""

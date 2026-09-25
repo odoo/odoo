@@ -8,12 +8,6 @@
         <field name="arch" type="xml">
             <group name="provider_credentials" position="inside">
                 <field
-                    string="Public Key"
-                    name="xendit_public_key"
-                    invisible="code != 'xendit'"
-                    required="is_live"
-                />
-                <field
                     string="Secret Key"
                     name="xendit_secret_key"
                     invisible="code != 'xendit'"
