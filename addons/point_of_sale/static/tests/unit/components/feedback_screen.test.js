@@ -32,9 +32,11 @@ test("canEditPayment", async () => {
     // edit
     order.state = "paid";
     store.config.iface_print_auto = true;
-    expect(store.canEditPayment(order)).toBe(false);
+    expect(store.canEditPayment(order)).toBe(true);
     store.config.iface_print_auto = false;
     expect(store.canEditPayment(order)).toBe(true);
     order.nb_print = 1;
+    expect(store.canEditPayment(order)).toBe(true);
+    order.invoice_status = "invoiced";
     expect(store.canEditPayment(order)).toBe(false);
 });

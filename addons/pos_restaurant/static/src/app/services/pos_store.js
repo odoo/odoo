@@ -412,9 +412,6 @@ patch(PosStore.prototype, {
             table.uiState.changeCount = qtyChange.changed;
         }
     },
-    canEditPayment(order) {
-        return order.isTippedAfterPayment ? false : super.canEditPayment(order);
-    },
     get selectedTable() {
         return this.getOrder()?.table_id;
     },

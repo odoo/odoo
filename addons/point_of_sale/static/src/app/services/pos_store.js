@@ -2213,7 +2213,7 @@ export class PosStore extends WithLazyGetterTrap {
         });
     }
     canEditPayment(order) {
-        return !this.config.autoPrint && order.nb_print === 0 && order.state === "paid";
+        return order.canEditPayment() && this.accessRight.canEditPayment;
     }
     openFinalizedOrders() {
         const order = this.getOrder();

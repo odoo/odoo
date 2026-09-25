@@ -215,12 +215,12 @@ export class PosTicketPrinterPlugin extends Plugin {
             }
         }
 
+        let status = { successful: false };
+
         if (!printersToTry.length && !download) {
             webFallback && this.printWeb(iframe);
-            return;
+            return status;
         }
-
-        let status = { successful: false };
 
         for (const printer of printersToTry.filter(Boolean)) {
             try {
