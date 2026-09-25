@@ -19,6 +19,7 @@ export class ActivityListPopover extends Component {
     static components = { ActivityListPopoverItem };
     static props = [
         "activityIds",
+        "canScheduleActivity?",
         "close",
         "defaultActivityTypeId?",
         "onActivityChanged",
@@ -27,6 +28,9 @@ export class ActivityListPopover extends Component {
         "resIds?",
         "resModel",
     ];
+    static defaultProps = {
+        canScheduleActivity: true,
+    };
     static template = "mail.ActivityListPopover";
 
     setup() {
