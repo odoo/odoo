@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:37+0000\n"
-"PO-Revision-Date: 2026-08-24 05:14+0000\n"
+"PO-Revision-Date: 2026-09-16 04:35+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "stock/ja/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock
 #. odoo-python
@@ -41,7 +41,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"転送%(transfer_list)s:プロダクト%(product_list)sのロット/シリアル番号を指定す"
+"移動%(transfer_list)s:プロダクト%(product_list)sのロット/シリアル番号を指定す"
 "る必要があります。"
 
 #. module: stock
@@ -134,20 +134,20 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
-" *下書き:転送はまだ確認されていません。引当は適用されません。 \n"
-"*別の操作を待機中:この転送は、準備が整う前に別の操作を待機しています。 \n"
-"*待機中:転送は一部のプロダクトの利用可能在庫を待っています。 \n"
+" *下書き:移動はまだ確認されていません。引当は適用されません。 \n"
+"*別の操作を待機中:この移動は、準備が整う前に別の操作を待機しています。 \n"
+"*待機中:移動は一部のプロダクトの利用可能在庫を待っています。 \n"
 "(a)配送ポリシーは'できるだけ早く'です。プロダクトを引当てすることはできません"
 "。 \n"
 "(b)配送ポリシーは'すべてのプロダクトの準備ができたら'です。すべてのプロダクト"
 "を引当てできるわけではありません。 \n"
-"*準備完了:転送を処理する準備ができています。 \n"
+"*準備完了:移動を処理する準備ができています。 \n"
 "(a)配送ポリシーは'できるだけ早く'です。少なくとも1つのプロダクトが引当されて"
 "います。 \n"
 "(b)配送ポリシーは'すべてのプロダクトの準備ができたら'です。すべてのプロダクト"
 "が引当されています。 \n"
-"*完了:転送は処理されました。 \n"
-"*キャンセル済み:転送はキャンセルされました。"
+"*完了:移動は処理されました。 \n"
+"*キャンセル済み:移動はキャンセルされました。"
 
 #. module: stock
 #. odoo-python
@@ -308,7 +308,7 @@ msgid ""
 "%s: Nothing to split. Fill the quantities you want in a new transfer in the "
 "done quantities"
 msgstr ""
-"%s:  分割するものはありません。新しい転送に必要な数量を完了数量に記入して下さ"
+"%s:  分割するものはありません。新しい移動に必要な数量を完了数量に記入して下さ"
 "い。"
 
 #. module: stock
@@ -401,7 +401,7 @@ msgstr ""
 "*他の移動待ち: この前にリンクされた在庫移動が完了する必要があります。\n"
 "* 待ち: 在庫移動は確認されましたがプロダクトが引当できません。\n"
 "* 在庫利用可能: 在庫移動のプロダクトは引当済です。\n"
-"* 完了: プロダクトが転送され、転送が検証されました。"
+"* 完了: プロダクトが移動され、移動が検証されました。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -741,7 +741,7 @@ msgstr "<span class=\"o_stat_text\">移動</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Next Transfer</span>"
-msgstr "<span class=\"o_stat_text\">次の転送</span>"
+msgstr "<span class=\"o_stat_text\">次の移動</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1216,7 +1216,7 @@ msgstr "明細追加: %s"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Add quality checks to your transfer operations"
-msgstr "転送処理に品質検査を追加"
+msgstr "移動処理に品質検査を追加"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1295,7 +1295,7 @@ msgstr "全プロダクト"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
 msgid "All Transfers"
-msgstr "全ての転送"
+msgstr "全ての移動"
 
 #. module: stock
 #. odoo-javascript
@@ -1488,7 +1488,7 @@ msgstr "アーカイブ済"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Are you sure you want to cancel this transfer?"
-msgstr "この転送を本当にキャンセルしますか？"
+msgstr "この移動を本当にキャンセルしますか？"
 
 #. module: stock
 #. odoo-python
@@ -1774,7 +1774,7 @@ msgstr "基準"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch, Wave & Cluster Transfers"
-msgstr "バッチ、ウェーブ、クラスタ転送"
+msgstr "バッチ、ウェーブ、クラスタ移動"
 
 #. module: stock
 #. odoo-python
@@ -2807,7 +2807,7 @@ msgstr "生成される在庫移動の計上日。"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
 msgid "Date at which the transfer has been processed or cancelled."
-msgstr "転送が処理またはキャンセルされた日"
+msgstr "移動が処理またはキャンセルされた日"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__deadline_date
@@ -2828,7 +2828,7 @@ msgstr "周期スケジュールを元に次回予定されている棚卸日"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
 msgid "Date of Transfer"
-msgstr "転送日"
+msgstr "移動日"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__last_inventory_date
@@ -3031,7 +3031,7 @@ msgid ""
 "\n"
 "Try changing the “done” quantity to 0 instead."
 msgstr ""
-"転送後にプロダクトの移動を削除しますか?\n"
+"移動後にプロダクトの移動を削除しますか?\n"
 "\n"
 "これは、すでに実行された処理を過去にさかのぼってすべて取り消すようなものです"
 "。何が起こるか予測できないため、おすすめできません。\n"
@@ -3211,7 +3211,7 @@ msgstr "出荷オーダ用説明"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Internal Transfers"
-msgstr "内部転送用説明"
+msgstr "内部移動用説明"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -3240,7 +3240,7 @@ msgstr "入荷用説明"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Description on transfer"
-msgstr "転送の説明"
+msgstr "移動の説明"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
@@ -4575,7 +4575,7 @@ msgid ""
 "        In case of incoming flow, validate the transfer before this date in "
 "order to have these products in stock at the date promised by the supplier"
 msgstr ""
-"出荷フローの場合は、この期日までに転送を検証し、顧客に約束の期日に配送できる"
+"出荷フローの場合は、この期日までに移動を検証し、顧客に約束の期日に配送できる"
 "ようにします。\n"
 "       入荷フローがある場合、仕入先が約束した期日にこれらのプロダクトを在庫し"
 "ておくために、この期日までに運送を検証して下さい。"
@@ -4616,7 +4616,7 @@ msgstr "入荷日"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Incoming Draft Transfer"
-msgstr "着信下書き転送"
+msgstr "着信下書き移動"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__incoming_move_line_ids
@@ -4719,7 +4719,7 @@ msgstr "内部参照"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
 msgid "Internal Transfer"
-msgstr "内部転送"
+msgstr "内部移動"
 
 #. module: stock
 #. odoo-python
@@ -4727,7 +4727,7 @@ msgstr "内部転送"
 #: model:ir.actions.act_window,name:stock.action_picking_tree_internal
 #: model:stock.picking.type,name:stock.picking_type_internal
 msgid "Internal Transfers"
-msgstr "内部転送"
+msgstr "内部移動"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
@@ -5921,7 +5921,7 @@ msgstr "自分のカウント"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Transfers"
-msgstr "自分の転送"
+msgstr "自分の移動"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__name
@@ -5986,7 +5986,7 @@ msgstr "新規"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
-msgstr "新規転送"
+msgstr "新規移動"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
@@ -6027,7 +6027,7 @@ msgstr "次のシリアル番号"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Next Transfers"
-msgstr "次の転送"
+msgstr "次の移動"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
@@ -6042,7 +6042,7 @@ msgstr "昨年の翌月"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Next transfer(s) impacted:"
-msgstr "影響を受ける次の転送(複数):"
+msgstr "影響を受ける次の移動(複数):"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__no
@@ -6102,7 +6102,7 @@ msgstr "このロットでは操作は行われません。"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
-msgstr "処理がみつかりません。転送を作成しましょう！"
+msgstr "処理がみつかりません。移動を作成しましょう！"
 
 #. module: stock
 #. odoo-python
@@ -6172,7 +6172,7 @@ msgstr "表示する在庫なし"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No transfer found. Let's create one!"
-msgstr "転送が見つかりません。作成しましょう!"
+msgstr "移動が見つかりません。作成しましょう!"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -6599,7 +6599,7 @@ msgstr "出庫"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Outgoing Draft Transfer"
-msgstr "送信下書き転送"
+msgstr "送信下書き移動"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__outgoing_move_line_ids
@@ -6886,7 +6886,7 @@ msgid ""
 "                Once created, the whole package can be moved at once, or "
 "products can be unpacked and moved as single units again."
 msgstr ""
-"パッケージは通常、転送(パック操作中)を介して作成され、さまざまな製品を含める"
+"パッケージは通常、移動(パック操作中)を介して作成され、さまざまな製品を含める"
 "ことができます。作成したら、パッケージ全体を一度に移動することも、製品を開梱"
 "して1つのユニットとして再度移動することもできます。"
 
@@ -7495,7 +7495,7 @@ msgstr "プロダクトの在庫可用性ステータス"
 msgid ""
 "Products will be reserved first for the transfers with the highest "
 "priorities."
-msgstr "製品は、最も優先度の高い転送のために最初に予約されます。"
+msgstr "製品は、最も優先度の高い移動のために最初に予約されます。"
 
 #. module: stock
 #. odoo-python
@@ -8394,7 +8394,7 @@ msgstr ""
 "バーコードアプリケーションで、再利用可能箱をスキャンすると、この箱内の"
 "プロダクトが追加されます。\n"
 "使い捨て箱は再利用されず、バーコードアプリケーションで使い捨て箱をスキャンす"
-"ると、含まれている製品が転送に追加されます。"
+"ると、含まれている製品が移動に追加されます。"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_inventory_adjustment
@@ -9080,7 +9080,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
 msgid "Show Transfers"
-msgstr "転送を表示"
+msgstr "移動を表示"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -9732,7 +9732,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "The actual date when the transfer was processed."
-msgstr "転送が処理された実際の日付です。"
+msgstr "移動が処理された実際の日付です。"
 
 #. module: stock
 #. odoo-python
@@ -9795,7 +9795,7 @@ msgstr "%sでの遅延のため期日が自動的に更新されました。"
 msgid ""
 "The expected date of the created transfer will be computed based on this "
 "lead time."
-msgstr "作成された転送の予定日は、このリードタイムに基づいて計算されます。"
+msgstr "作成された移動の予定日は、このリードタイムに基づいて計算されます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
@@ -10165,7 +10165,7 @@ msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
-"このメモは内部転送オーダに追加されます（倉庫内のピッキング場所を指定する等）"
+"このメモは内部移動オーダに追加されます（倉庫内のピッキング場所を指定する等）"
 "。"
 
 #. module: stock
@@ -10536,12 +10536,12 @@ msgstr "追跡"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
-msgstr "転送"
+msgstr "移動"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
-msgstr "以下へ転送:"
+msgstr "以下へ移動:"
 
 #. module: stock
 #. odoo-python
@@ -10551,7 +10551,7 @@ msgid ""
 "moving invisible goods around are you?\n"
 "Set some quantities and let's get moving!"
 msgstr ""
-"転送エラー!数量ゼロの転送を検証しようとしています。数量ゼロの在庫は移動できま"
+"移動エラー!数量ゼロの移動を検証しようとしています。数量ゼロの在庫は移動できま"
 "せん。\n"
 "数量を入力してから再度お試しください。"
 
@@ -10573,20 +10573,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Transfers"
-msgstr "転送"
+msgstr "移動"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Transfers %s: Please add some items to move."
-msgstr "転送%s:移動するアイテムをいくつか追加してください。"
+msgstr "移動%s:移動するアイテムをいくつか追加してください。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "Transfers allow you to move products from one location to another."
-msgstr "転送を使用すると、プロダクトをある場所から別の場所に移動できます。"
+msgstr "移動を使用すると、プロダクトをある場所から別の場所に移動できます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package__picking_ids
@@ -10782,7 +10782,7 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
-"この転送のロケーションを更新すると、現在割当てられている項目の予約が解除され"
+"この移動のロケーションを更新すると、現在割当てられている項目の予約が解除され"
 "ます。新しいロケーションで項目の引当が試みられ、以前の運送とのリンクは破棄さ"
 "れます。\n"
 "\n"
@@ -10978,7 +10978,7 @@ msgstr "移動待ち"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Transfers"
-msgstr "転送待ち"
+msgstr "移動待ち"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -11268,7 +11268,7 @@ msgid ""
 " * Always: a backorder is automatically created for the remaining products\n"
 " * Never: remaining products are cancelled"
 msgstr ""
-"転送を検証するとき：\n"
+"移動を検証するとき：\n"
 "* 確認：ユーザは残りのプロダクトについてバックオーダーを作成するかどうか選択"
 "するよう求められます。\n"
 "* 常時：残りのプロダクトに対してバックオーダーが自動的に作成されます。\n"
@@ -11278,13 +11278,13 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
 msgid ""
 "When validating the transfer, the products will be assigned to this owner."
-msgstr "転送を検証すると、プロダクトはこの所有者に割り当てられます。"
+msgstr "移動を検証すると、プロダクトはこの所有者に割り当てられます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid ""
 "When validating the transfer, the products will be taken from this owner."
-msgstr "転送を確認すると、プロダクトはこの所有者から取得されます。"
+msgstr "移動を確認すると、プロダクトはこの所有者から取得されます。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
@@ -11558,7 +11558,7 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer "
 "or split the same package into two location."
 msgstr ""
-"同じ転送で同じ梱包内容を複数回移動したり、同じ梱包を2つの場所に分割したりする"
+"同じ移動で同じ梱包内容を複数回移動したり、同じ梱包を2つの場所に分割したりする"
 "ことはできません。"
 
 #. module: stock
@@ -11568,7 +11568,7 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
 msgstr ""
-"異なるオペレーションタイプの異なる転送からのプロダクトを同梱することはできま"
+"異なるオペレーションタイプの異なる移動からのプロダクトを同梱することはできま"
 "せん。"
 
 #. module: stock
@@ -11625,7 +11625,7 @@ msgstr ""
 msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
-msgstr "空の転送は確認できません。先に進む前に転送するプロダクトを追加して下さい。"
+msgstr "空の移動は確認できません。先に進む前に移動するプロダクトを追加して下さい。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation

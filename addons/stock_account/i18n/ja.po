@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:35+0000\n"
-"PO-Revision-Date: 2026-08-13 04:17+0000\n"
+"PO-Revision-Date: 2026-09-16 04:35+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "stock_account/ja/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock_account
 #. odoo-python
@@ -420,7 +420,7 @@ msgstr "期末在庫"
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Everything is correctly closed"
-msgstr "すべて正しく終了処理されています"
+msgstr "すべてが正しく期末処理されています"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
@@ -738,7 +738,7 @@ msgstr "ピッキングタイプ"
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Please set the Journal for Inventory Valuation in the settings."
-msgstr "設定で在庫評価の仕訳を設定してください。"
+msgstr "管理設定で在庫評価の仕訳を設定してください。"
 
 #. module: stock_account
 #. odoo-python
@@ -906,7 +906,7 @@ msgstr "在庫期末処理"
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_journal_id
 msgid "Stock Journal"
-msgstr "在庫記録簿"
+msgstr "在庫仕訳帳"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -1012,7 +1012,7 @@ msgstr "合計金額"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "転送"
+msgstr "移動"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -1115,7 +1115,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
 msgid "Variation Account"
-msgstr "在庫差額勘定"
+msgstr "在庫変動勘定"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -1123,8 +1123,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
-"プロダクトの自動在庫評価が有効になっている場合、このアカウントはプロダクトの"
-"現在価値を保持します。"
+"プロダクトで自動在庫評価を有効にすると、この勘定にはそのプロダクトの現在の在"
+"庫評価額が計上されます。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal

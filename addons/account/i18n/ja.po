@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:36+0000\n"
-"PO-Revision-Date: 2026-09-07 09:11+0000\n"
+"PO-Revision-Date: 2026-09-22 02:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/ja/>\n"
@@ -428,9 +428,7 @@ msgstr ""
 msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
-msgstr ""
-"。仕訳は、会社で使用されている通貨で記入する前に、Odooに計算される必要があり"
-"ます。"
+msgstr "。会社の通貨で記帳する前に、Odooが仕訳を計算する必要があります。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3273,8 +3271,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"%(date)s: %(accrual_entry)sに作成された未収計上。                およびその逆"
-"仕訳: %(reverse_entry)s。"
+"%(date)sに作成された経過勘定仕訳: %(accrual_entry)s。                その逆仕"
+"訳: %(reverse_entry)s。"
 
 #. module: account
 #. odoo-python
@@ -5286,7 +5284,7 @@ msgstr "売上仕訳帳以外で売上文書を作成することができない
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Cannot create an accrual entry with orders in different currencies."
-msgstr "異なる通貨のオーダを含む未収計上は作成できません。"
+msgstr "通貨の異なるオーダを含む経過勘定仕訳は作成できません。"
 
 #. module: account
 #. odoo-python
@@ -9159,7 +9157,7 @@ msgstr "%なら0から100の間の比率を入力します。"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "For this entry to be automatically posted, it required a bill date."
-msgstr "この仕訳を自動的に記入するためには、請求日が必要とされます。"
+msgstr "この仕訳を自動的に記帳するには、請求日が必要です。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
@@ -12337,7 +12335,7 @@ msgstr "勘定科目を統合"
 #. module: account
 #: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "パートナーをマージするウィザード"
+msgstr "取引先統合ウィザード"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
@@ -16647,7 +16645,9 @@ msgstr ""
 msgid ""
 "Specify whether this entry is posted automatically on its accounting date, "
 "and any similar recurring invoices."
-msgstr "類似の定期請求に、記帳日に自動で仕訳を記入するかどうかを特定します。"
+msgstr ""
+"この仕訳および同様の定期請求書が、会計日付に自動的に記帳されるかどうかを指定"
+"します。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -18748,8 +18748,8 @@ msgid ""
 "There doesn't appear to be anything to invoice for the selected order. "
 "However, you can use the amount field to force an accrual entry."
 msgstr ""
-"選択された注文に請求項目はないようです。しかし、「金額」フィールドを使用する"
-"ことで、強制的に未収計上仕訳を行えます。"
+"選択したオーダには請求対象がないようです。ただし、「金額」フィールドを使用し"
+"て、経過勘定仕訳を強制的に作成できます。"
 
 #. module: account
 #. odoo-python
@@ -19759,7 +19759,7 @@ msgstr "未消込仕訳"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Unreconciled Transactions"
-msgstr "未突合の取引"
+msgstr "未消込取引"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
@@ -20398,8 +20398,8 @@ msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced through this field"
 msgstr ""
-"内部振替が計上されると、対応する支払いが作成される。両者はこのフィールドを通"
-"じて相互参照される。"
+"内部振替が記帳されると、対となる支払が作成されます。これらはこのフィールドを"
+"通じて相互参照されます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -20698,7 +20698,7 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"計上した仕訳明細を削除することはできません。仕訳を下書きに戻してから削除して"
+"記帳済の仕訳明細を削除することはできません。仕訳を下書きに戻してから削除して"
 "下さい。"
 
 #. module: account
@@ -21002,7 +21002,7 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"開始仕訳(%s)がすでに計上されている場合は、 \"openning_balance\"をインポートす"
+"期首仕訳(%s)がすでに記帳されている場合は、 \"openning_balance\"をインポートす"
 "ることはできません。 どうしても勘定科目開始残高を変更したい場合は、仕訳を下書"
 "きにリセットして下さい。"
 

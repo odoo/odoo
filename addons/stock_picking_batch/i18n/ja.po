@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:39+0000\n"
-"PO-Revision-Date: 2026-08-24 05:12+0000\n"
+"PO-Revision-Date: 2026-09-16 07:36+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "stock_picking_batch/ja/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -83,7 +83,7 @@ msgstr "<strong>梱包</strong>"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Product Barcode</strong>"
-msgstr "<strong>製品バーコード</strong>"
+msgstr "<strong>プロダクトバーコード</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -107,7 +107,7 @@ msgid ""
 "number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"この明細数を超えるバッチに転送が追加されても、転送は自動的に追加されません"
+"この明細数を超えるバッチに移動が追加されても、移動は自動的に追加されません"
 "。\n"
 "明細数制限がない場合は、この値を '0' のままにしておきます。"
 
@@ -118,8 +118,8 @@ msgid ""
 "number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"この転送回数を超えるバッチには、転送は自動的に追加されません。\n"
-"転送制限がない場合は、この値を'0'のままにします。"
+"この移動回数を超えるバッチには、移動は自動的に追加されません。\n"
+"移動制限がない場合は、この値を'0'のままにします。"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -258,7 +258,7 @@ msgstr "バッチ"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch & Wave Transfers"
-msgstr "一括 & ウェーブ転送"
+msgstr "バッチ/ウェーブ移動"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -268,7 +268,7 @@ msgstr "バッチ名"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_properties_definition
 msgid "Batch Properties"
-msgstr "一括プロパティ"
+msgstr "バッチプロパティ"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -283,59 +283,59 @@ msgstr "一括プロパティ"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
 msgid "Batch Transfer"
-msgstr "一括転送"
+msgstr "バッチ移動"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Line"
-msgstr "バッチ転送明細"
+msgstr "バッチ移動明細"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 msgid "Batch Transfers"
-msgstr "一括転送"
+msgstr "バッチ移動"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Transfers not finished"
-msgstr "バッチ転送未完了"
+msgstr "バッチ移動未完了"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this transfer"
-msgstr "この転送に関連するバッチ"
+msgstr "この移動に関連するバッチ"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Batch transfers"
-msgstr "一括転送"
+msgstr "バッチ移動"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch transfers cannot be merged with wave transfers and vice versa."
-msgstr "一括転送はウェーブ転送と統合できません。その逆も同様です。"
+msgstr "バッチ移動はウェーブ移動と統合できません。その逆も同様です。"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch/Wave transfers have been merged into the following transfer"
-msgstr "一括/ウェーブ転送は、以下の転送に統合されました。"
+msgstr "一括/ウェーブ移動は、以下の移動に統合されました。"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch/Wave transfers with different operation types cannot be merged."
-msgstr "異なるオペレーションタイプの一括/ウェーブ転送は統合できません。"
+msgstr "異なるオペレーションタイプのバッチ/ウェーブ移動は統合できません。"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch/Wave transfers with different states cannot be merged."
-msgstr "異なるステータスの一括/ウェーブ転送は統合できません。"
+msgstr "異なるステータスの一括/ウェーブ移動は統合できません。"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -363,7 +363,7 @@ msgstr "キャンセル済"
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 msgid "Cannot create wave transfers"
-msgstr "ウェーブ転送を作成できません"
+msgstr "ウェーブ移動を作成できません"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_category_ids
@@ -391,7 +391,7 @@ msgstr "印刷するラベルのタイプを選択する"
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Cluster transfers"
-msgstr "クラスタ転送"
+msgstr "クラスタ移動"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
@@ -632,7 +632,7 @@ msgstr "ライン"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
 msgid "List of transfers associated to this batch"
-msgstr "このバッチに関連した転送のリスト"
+msgstr "このバッチに関連した移動のリスト"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -672,12 +672,12 @@ msgstr "ロット/シリアル番号"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid "Maximum lines"
-msgstr "最大明細"
+msgstr "最大明細行数"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid "Maximum transfers"
-msgstr "最大転送"
+msgstr "最大移動数"
 
 #. module: stock_picking_batch
 #: model:ir.actions.server,name:stock_picking_batch.action_merge_batch_picking
@@ -718,7 +718,7 @@ msgstr "活動期限"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "My Transfers"
-msgstr "自分の転送"
+msgstr "自分の移動"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -824,7 +824,7 @@ msgstr "ピッキングタイプ"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Please select at least two batch/wave transfers to merge."
-msgstr "マージ対象の少なくとも 2 件以上のバッチ/ウェーブ転送を選択してください。"
+msgstr "マージ対象の少なくとも 2 件以上のバッチ/ウェーブ移動を選択してください。"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -925,7 +925,7 @@ msgstr "担当ユーザ"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Result Package ID"
-msgstr "梱包ID結果"
+msgstr "結果梱包ID"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
@@ -949,18 +949,18 @@ msgid ""
 "                but this scheduled date will not be set for all transfers in "
 "batch."
 msgstr ""
-"処理される転送の予定日\n"
+"処理される移動の予定日\n"
 "　　　　- 手動で設定した場合、バッチ内のすべての予定日が自動的にこの日付に更"
 "新されます。\n"
-"　　　　- 手動で変更されず、転送が追加/削除/更新された場合、この日が最も早い"
+"　　　　- 手動で変更されず、移動が追加/削除/更新された場合、この日が最も早い"
 "予定日となります。\n"
-"　　　　しかし、この予定日はバッチ内のすべての振込に設定されるわけではありま"
+"　　　　しかし、この予定日はバッチ内のすべての移動に設定されるわけではありま"
 "せん。"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
-msgstr "バッチ転送を検索"
+msgstr "バッチ移動を検索"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
@@ -1008,7 +1008,7 @@ msgid ""
 "Split transfers by defined locations, then group transfers with the same "
 "location."
 msgstr ""
-"転送を定義したロケーションで分割し、同じロケーションの転送をグループ化します"
+"移動を定義したロケーションで分割し、同じロケーションの移動をグループ化します"
 "。"
 
 #. module: stock_picking_batch
@@ -1017,14 +1017,14 @@ msgid ""
 "Split transfers by product category, then group transfers that have the same "
 "product category."
 msgstr ""
-"プロダクトカテゴリ別に転送を分割し、同じプロダクトカテゴリの転送をグループ化"
+"プロダクトカテゴリ別に移動を分割し、同じプロダクトカテゴリの移動をグループ化"
 "します。"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_product
 msgid ""
 "Split transfers by product then group transfers that have the same product."
-msgstr "プロダクト別に転送を分割し、同じプロダクトを持つ転送をグループ化します。"
+msgstr "プロダクト別に移動を分割し、同じプロダクトを持つ移動をグループ化します。"
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -1060,7 +1060,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Transfer"
-msgstr "在庫バッチ転送"
+msgstr "在庫バッチ移動"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move
@@ -1086,13 +1086,13 @@ msgstr "要約:"
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 msgid "The following batch transfer has been created"
-msgstr "次の一括転送が作成されました。"
+msgstr "次のバッチ移動が作成されました。"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 msgid "The following batch transfer has been updated"
-msgstr "以下の一括転送が更新されました"
+msgstr "以下のバッチ移動が更新されました"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1103,7 +1103,7 @@ msgid ""
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
-"以下の運送は、一括転送 %(batch)sに追加することができません。ステータスと"
+"以下の運送は、バッチ移動 %(batch)sに追加することができません。ステータスと"
 "オペレーションタイプを確認して下さい。\n"
 "\n"
 "非互換性: %(incompatible_transfers)s"
@@ -1112,13 +1112,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_move_line.py:0
 msgid "The following wave transfer has been created"
-msgstr "次のウェーブ転送が作成されました"
+msgstr "次のウェーブ移動が作成されました"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_move_line.py:0
 msgid "The following wave transfer has been updated"
-msgstr "以下のウェーブ転送が更新されました"
+msgstr "以下のウェーブ移動が更新されました"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1136,13 +1136,13 @@ msgstr "選択されたピッキングは一意の会社に属している必要
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 msgid "The selected transfers should belong to a unique company."
-msgstr "選択された転送は一意の会社に属している必要があります。"
+msgstr "選択された移動は一意の会社に属している必要があります。"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 msgid "The selected transfers should belong to the same operation type"
-msgstr "選択された転送は同一のオペレーションタイプに属している必要があります。"
+msgstr "選択された移動は同一のオペレーションタイプに属している必要があります。"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1171,22 +1171,22 @@ msgstr "本日の活動"
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Transfer"
-msgstr "転送"
+msgstr "移動"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Transfer Display Name"
-msgstr "転送表示名"
+msgstr "移動表示名"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Transfer Name"
-msgstr "転送名"
+msgstr "移動名"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_stock_move_operations
 msgid "Transfer:"
-msgstr "転送:"
+msgstr "移動:"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1198,7 +1198,7 @@ msgstr "運送担当"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Transfers"
-msgstr "転送"
+msgstr "移動"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
@@ -1240,24 +1240,24 @@ msgstr "ウェーブプロダクトカテゴリ"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
 msgid "Wave Transfer"
-msgstr "ウェーブ転送"
+msgstr "ウェーブ移動"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Line"
-msgstr "ウェーブ転送明細"
+msgstr "ウェーブ移動明細"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
 msgid "Wave Transfers"
-msgstr "ウェーブ転送"
+msgstr "ウェーブ移動"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Wave transfers"
-msgstr "ウェーブ転送"
+msgstr "ウェーブ移動"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
@@ -1278,13 +1278,13 @@ msgstr "確認して、バッチを下書きステータスで作成して下さ
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "You cannot delete Done batch transfers."
-msgstr "完了済の一括転送を削除することはできません。"
+msgstr "完了済のバッチ移動を削除することはできません。"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "You cannot merge done or cancelled batch/wave transfers."
-msgstr "完了または取消した一括/ウェーブ転送は、統合できません。"
+msgstr "完了または取消した一括/ウェーブ移動は、統合できません。"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1295,22 +1295,22 @@ msgstr "バッチ用のピッキングを設定して下さい。"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
-msgstr "新規バッチ転送"
+msgstr "新規バッチ移動"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
 msgid "a new wave transfer"
-msgstr "新規ウェーブ転送"
+msgstr "新規ウェーブ移動"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr "既存のバッチ転送"
+msgstr "既存のバッチ移動"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
 msgid "an existing wave transfer"
-msgstr "既存のウェーブ転送"
+msgstr "既存のウェーブ移動"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_volume
