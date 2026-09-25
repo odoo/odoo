@@ -188,3 +188,14 @@ class TestResPartner(common.TestArCommon):
         # Parent cannot change its ARCA responsibility type
         with self.assertRaisesRegex(UserError, 'Could not change the ARCA Responsibility'):
             self.partner_ri.l10n_ar_afip_responsibility_type_id = new_responsibility
+
+    def test_create_parent_keeps_afip_responsibility(self):
+        """A company created from a contact's company name keeps the contact's ARCA responsibility."""
+        ri = self.env.ref('l10n_ar.res_IVARI')
+        contact = self.env['res.partner'].create({
+            'name': "AR Contact",
+            'l10n_ar_afip_responsibility_type_id': ri.id,
+        })
+        company = contact._create_parent_from_name("AR Company")
+        self.assertEqual(company.l10n_ar_afip_responsibility_type_id, ri)
+        self.assertEqual(contact.l10n_ar_afip_responsibility_type_id, ri)
