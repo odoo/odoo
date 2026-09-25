@@ -2993,6 +2993,18 @@ class TestBoM(TestMrpCommon):
             "Filtering the exploded BoM list should return only the matching BoM line.",
         )
 
+    def test_bom_cycle_on_component_change(self):
+        """
+        Test that changing a BoM component to a product that creates a BoM cycle
+        raises a ValidationError when saving the BoM.
+        """
+        # bom_2 is already created in setUp for product_5 with product_4 as component
+        bom_form = Form(self.bom_1)
+        with self.assertRaises(exceptions.ValidationError):
+            with bom_form.bom_line_ids.edit(0) as bom_line:
+                bom_line.product_id = self.product_5
+            bom_form.save()
+
 
 class TestTourBoM(HttpCase):
     @classmethod
