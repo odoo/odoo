@@ -7,6 +7,7 @@ import {
     deactivateAllProgramsExcept,
 } from "@pos_loyalty/../tests/unit/utils";
 import { onRpc } from "@web/../tests/web_test_helpers";
+import { SERIALIZED_UI_STATE_PROP } from "@point_of_sale/app/models/related_models/utils";
 
 definePosModels();
 
@@ -631,6 +632,32 @@ describe("pos.order - rebuilt client state", () => {
 
         expect(order._get_reward_lines()).toHaveLength(1);
         expect(order.priceIncl).toBe(0);
+    });
+
+    test("order stored in IndexedDB before pos_loyalty was installed", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const serialized = order.serializeForIndexedDB();
+        const serializedLines = order.lines.map((line) => line.serializeForIndexedDB());
+        // point_of_sale alone does not store the loyalty keys of the ui state
+        const uiState = JSON.parse(serialized[SERIALIZED_UI_STATE_PROP]);
+        delete uiState.couponPointChanges;
+        delete uiState.codeActivatedProgramRules;
+        delete uiState.disabledRewards;
+        serialized[SERIALIZED_UI_STATE_PROP] = JSON.stringify(uiState);
+        store.data.localDeleteCascade(order);
+
+        const restored = store.models.loadConnectedData({
+            "pos.order": [serialized],
+            "pos.order.line": serializedLines,
+        })["pos.order"][0];
+        expect(restored.uiState.couponPointChanges).toEqual({});
+        expect(restored.uiState.codeActivatedProgramRules).toEqual([]);
+        expect(restored.uiState.disabledRewards.size).toBe(0);
+
+        store.setOrder(restored);
+        await store.updatePrograms();
+        expect(restored.getOrderlines()).toHaveLength(2);
     });
 
     test("reward line of a nominative card is still dropped when the partner is removed", async () => {
