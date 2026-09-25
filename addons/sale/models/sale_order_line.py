@@ -1994,6 +1994,11 @@ class SaleOrderLine(models.Model):
 
         return super()._get_catalog_unit_price(parent_record, **kwargs)
 
+    def _get_product_catalog_lines_data(self, parent_record, **kwargs):
+        lines_data = super()._get_product_catalog_lines_data(parent_record, **kwargs)
+        lines_data["readOnly"] |= bool(self.combo_item_id)
+        return lines_data
+
     def _can_be_unlinked_from_catalog(self):
         return super()._can_be_unlinked_from_catalog() and self.state in {"draft", "sent"}
 
