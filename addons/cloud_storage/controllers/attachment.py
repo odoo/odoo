@@ -7,6 +7,10 @@ from odoo.addons.mail.tools.discuss import mail_route
 
 
 class CloudAttachmentController(AttachmentController):
+    def _make_zip(self, name, attachments):
+        # ZIP files need the attachment bytes rather than a cloud redirect.
+        return super()._make_zip(name, attachments.with_context(cloud_storage_force_download=True))
+
     @mail_route()
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
         is_cloud_storage = kwargs.get('cloud_storage')
