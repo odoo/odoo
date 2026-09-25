@@ -20,6 +20,7 @@
         'views/account_move_view.xml',
         'views/account_tax_view.xml',
         'views/l10n_my_edi_industrial_classification_views.xml',
+        'wizard/myinvois_document_sync_wizard.xml',  # Its action is used by the document list view.
         "views/myinvois_document_views.xml",
         'views/product_template_view.xml',
         'views/report_invoice.xml',
