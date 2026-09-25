@@ -89,6 +89,10 @@ class ResPartner(models.Model):
 
     def _l10n_fr_pdp_get_base_identifier(self):
         self.ensure_one()
+
+        if not self._peppol_is_french_partner():
+            return None, None
+
         siret = self.siret or (self.company_registry if self.company_registry and siren_siret_re.match(self.company_registry) else '')
         siren = siret[:9]
         if len(siret) == 9:
@@ -284,7 +288,7 @@ class ResPartner(models.Model):
         try:
             response = requests.get(endpoint, timeout=10)
             decoded_response = response.json()
-        except requests.exceptions.RequestException as e:
+        except (requests.exceptions.RequestException, ValueError) as e:
             _logger.debug("failed to query active annuaire lines for identifier %s: %s", siren, e)
             return {}
 
