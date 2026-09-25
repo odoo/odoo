@@ -53,6 +53,14 @@ def mock_requests_request(method, url, *args, **kwargs):
         elif EARCHIVE_PARTNER_VAT in url:
             response.json.return_value = []
 
+    elif method == 'GET' and 'GetGlobalCustomerInfo' in url:
+        if EINVOICE_PARTNER_VAT in url and kwargs.get('params') == {'globalUserType': 'Invoice'}:
+            response.json.return_value = {
+                'Aliases': [{'Name': 'urn:mail:salt@bae.com'}],
+            }
+        else:
+            response.json.return_value = {'Aliases': []}
+
     elif method == 'GET' and (match := re.fullmatch(r'/einvoice/sale/([\w-]+)/Status', url)):
         if match.group(1) == UUID_INVALID_STATUS:
             data = {
@@ -187,6 +195,73 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
             self.env['account.move.send']._call_web_service_before_invoice_pdf_render(invoices_data)
             mock_submit_earchive.assert_called_once()
             mock_submit_einvoice.assert_not_called()
+
+    @patch_nilvera_request
+    def test_sync_einvoice_alias(self, mocked_request):
+        """ Ensure e-Invoice alias is synced from Nilvera and assigned to the partner. """
+        with patch.object(self.env.cr, 'commit', autospec=True):
+            self.einvoice_partner._check_nilvera_customer()
+
+        self.assertEqual(self.einvoice_partner.l10n_tr_nilvera_customer_alias_id.name, 'urn:mail:salt@bae.com')
+        self.assertRecordValues(self.einvoice_partner.l10n_tr_nilvera_customer_alias_ids, [{
+            'name': 'urn:mail:salt@bae.com',
+            'global_user_type': 'Invoice',
+        }])
+        mocked_request.assert_has_calls([
+            call(
+                'GET',
+                f'/general/GlobalCompany/Check/TaxNumber/{EINVOICE_PARTNER_VAT}',
+                handle_response=False,
+            ),
+            call(
+                'GET',
+                f'/general/GlobalCompany/GetGlobalCustomerInfo/{EINVOICE_PARTNER_VAT}',
+                params={'globalUserType': 'Invoice'},
+                handle_response=False,
+            ),
+        ])
+
+    @patch_nilvera_request
+    def test_earchive_does_not_sync_aliases(self, mocked_request):
+        """ Ensure non-eInvoice taxpayers do not query document aliases. """
+        with patch.object(self.env.cr, 'commit', autospec=True):
+            self.assertTrue(self.earchive_partner._check_nilvera_customer())
+
+        self.assertEqual(self.earchive_partner.l10n_tr_nilvera_customer_status, 'earchive')
+        self.assertFalse(self.earchive_partner.l10n_tr_nilvera_customer_alias_id)
+        mocked_request.assert_called_once_with(
+            'GET',
+            f'/general/GlobalCompany/Check/TaxNumber/{EARCHIVE_PARTNER_VAT}',
+            handle_response=False,
+        )
+
+    @patch_nilvera_request
+    def test_sync_einvoice_aliases_removes_missing_aliases(self, mocked_request):
+        """ Ensure aliases removed on Nilvera are unlinked in Odoo. """
+        self.assertTrue(self.einvoice_partner.l10n_tr_nilvera_customer_alias_id)
+        response = MagicMock(status_code=200)
+        response.json.return_value = {'Aliases': []}
+        mocked_request.side_effect = lambda *args, **kwargs: response
+
+        with patch.object(self.env.cr, 'commit', autospec=True):
+            self.assertTrue(self.einvoice_partner._l10n_tr_nilvera_sync_customer_aliases('Invoice'))
+
+        self.assertFalse(self.einvoice_partner.l10n_tr_nilvera_customer_alias_ids)
+        self.assertFalse(self.einvoice_partner.l10n_tr_nilvera_customer_alias_id)
+
+    @patch_nilvera_request
+    def test_sync_einvoice_alias_failure_keeps_existing_aliases(self, mocked_request):
+        """ Ensure API failure during alias sync preserves existing aliases. """
+        self.assertEqual(self.einvoice_partner.l10n_tr_nilvera_customer_alias_id.name, 'urn:mail:salt@bae.com')
+        taxpayer_response = MagicMock(status_code=200)
+        taxpayer_response.json.return_value = [{'Name': 'urn:mail:salt@bae.com'}]
+        aliases_response = MagicMock(status_code=500)
+        mocked_request.side_effect = [taxpayer_response, aliases_response]
+
+        with patch.object(self.env.cr, 'commit', autospec=True):
+            self.assertFalse(self.einvoice_partner._check_nilvera_customer())
+
+        self.assertEqual(self.einvoice_partner.l10n_tr_nilvera_customer_alias_id.name, 'urn:mail:salt@bae.com')
 
     @patch_nilvera_request
     def test_submit_einvoice(self, mocked_request):
