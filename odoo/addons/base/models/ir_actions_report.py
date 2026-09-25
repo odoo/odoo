@@ -59,6 +59,9 @@ try:
 except Exception:
     pass
 
+# The QR code standard requires a minimum width in module units for the quiet zone on each side of
+# the symbol. This constant applies only to the standard QR code symbol.
+QR_CODE_QUIET_ZONE_WIDTH = 4
 
 def _get_wkhtmltopdf_bin():
     return find_in_path('wkhtmltopdf')
@@ -706,8 +709,11 @@ class IrActionsReport(models.Model):
             barcode_type = symbology_guess.get(len(value), 'Code128')
         elif barcode_type == 'QR':
             # for `QR` type, `quiet` is not supported. And is simply ignored.
-            # But we can use `barBorder` to get a similar behaviour.
+            # But we can use `barBorder` to get expected behaviour.
             if kwargs['quiet']:
+                kwargs['barBorder'] = max(QR_CODE_QUIET_ZONE_WIDTH, kwargs['barBorder'])
+            else:
+                # NOT RECOMMENDED! Removing QR code quiet zone diverges from the standard
                 kwargs['barBorder'] = 0
 
         if barcode_type in ('EAN8', 'EAN13') and not check_barcode_encoding(value, barcode_type):
