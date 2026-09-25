@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- WEBSITE BUILDER - Add custom snippets to default snippets list -->
+<!-- ============================================================== -->
+
+<template id="snippets" inherit_id="website.snippets" name="Coconuts - Snippets">
+    <xpath expr="//*[@id='default_snippets']" position="before">
+        <t id="x_snippets">
+            <div id="x_snippets_category" class="o_panel">
+                <div class="o_panel_header">Coconuts</div>
+                <div class="o_panel_body">
+                    <t t-snippet="website_coconuts.s_coconuts_image_text" t-thumbnail="/website_coconuts/static/src/img/wbuilder/s_coconuts_image_text.svg">
+                        <keywords>Image &amp; Text</keywords>
+                    </t>
+                    <t t-snippet="website_coconuts.s_coconuts_boxes" t-thumbnail="/website_coconuts/static/src/img/wbuilder/s_coconuts_boxes.svg">
+                        <keywords>Columns</keywords>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </xpath>
+</template>
+
+<!-- WEBSITE BUILDER - Add Image Shapes -->
+<!-- ================================== -->
+
+<template id="image_shapes_options" inherit_id="web_editor.snippet_options" name="Coconuts - Image Shapes">
+    <xpath expr="//*[@data-name='shape_img_opt']/*[last()]" position="after">
+        <we-select-page string="Theme">
+            <we-button data-set-img-shape="website_coconuts/blob/01" data-select-label="Blob 1"/>
+        </we-select-page>
+    </xpath>
+</template>
+
+<!-- WEBSITE BUILDER - Add Background Shapes -->
+<!-- ======================================= -->
+
+<template id="background_shapes_options" inherit_id="website.snippet_options_background_options" name="Coconuts Snippets Background Options">
+    <xpath expr="//*[hasclass('o_we_shape_menu')]/*[last()]" position="after">
+        <we-select-page string="Hexagons">
+            <we-button data-shape="illustration/hexagons/01" data-select-label="Hexagon 01"/>
+        </we-select-page>
+    </xpath>
+    <xpath expr="//*[hasclass('o_we_shape_menu')]/*[last()]" position="after">
+        <we-select-page string="Curves">
+            <we-button data-shape="illustration/curves/01" data-select-label="Curve 01"/>
+        </we-select-page>
+    </xpath>
+</template>
+
+</odoo>
