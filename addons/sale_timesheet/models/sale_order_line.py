@@ -49,14 +49,17 @@ class SaleOrderLine(models.Model):
             is_time_product = line.product_uom_id and line.product_uom_id._has_common_reference(self.env.ref('uom.product_uom_hour'))
             line.remaining_hours_available = is_ordered_prepaid and is_time_product
 
-    @api.depends('remaining_hours_available', 'qty_delivered', 'product_uom_qty', 'product_uom_id')
+    @api.depends('remaining_hours_available', 'qty_delivered', 'product_uom_qty', 'product_uom_id', 'timesheet_ids.unit_amount')
     def _compute_remaining_hours(self):
         uom_hour = self.env.ref('uom.product_uom_hour')
         for line in self:
             remaining_hours = None
             if line.remaining_hours_available:
-                qty_left = line.product_uom_qty - line.qty_delivered
-                remaining_hours = line.product_uom_id._compute_quantity(qty_left, uom_hour, round=False)
+                if line.qty_delivered_method == 'timesheet':
+                    remaining_hours = (line.product_uom_id._compute_quantity(line.product_uom_qty, uom_hour, round=False)) - (sum(line.timesheet_ids.mapped('unit_amount')))
+                else:
+                    qty_left = line.product_uom_qty - line.qty_delivered
+                    remaining_hours = line.product_uom_id._compute_quantity(qty_left, uom_hour, round=False)
             line.remaining_hours = remaining_hours
 
     @api.depends('product_id')
