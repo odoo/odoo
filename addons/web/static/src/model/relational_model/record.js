@@ -288,6 +288,19 @@ export class Record extends DataPoint {
     }
 
     /**
+     * @returns {Promise<boolean>}
+     */
+    async saveBeforeDialog() {
+        return !this.canSaveOnUpdate || (await this.save());
+    }
+
+    reloadAfterDialog() {
+        if (this.canSaveOnUpdate || (this.resId && !this.dirty)) {
+            return this.load();
+        }
+    }
+
+    /**
      * @param {string} fieldName
      */
     async setInvalidField(fieldName) {

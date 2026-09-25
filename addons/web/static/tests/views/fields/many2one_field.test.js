@@ -3709,6 +3709,106 @@ test("closing the many2one modal does not focus the field if it becomes readonly
     expect(".o_field_widget[name=trululu]").toHaveClass("o_readonly_modifier");
 });
 
+test("opening many2one does not save or reload the line", async () => {
+    Turtle._views = {
+        form: `<form><field name="turtle_trululu"/><field name="name"/></form>`,
+    };
+
+    onRpc("get_formview_id", () => false);
+    onRpc("turtle", "web_save", () => {
+        expect.step("turtle_web_save");
+    });
+    onRpc("turtle", "web_read", () => {
+        expect.step("turtle_web_read");
+    });
+    onRpc("partner", "web_save", () => {
+        expect.step("partner_web_save");
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="turtles" mode="kanban" add-label="Add Turtle">
+                    <kanban>
+                        <templates>
+                            <t t-name="card">
+                                <field name="turtle_trululu"/>
+                            </t>
+                        </templates>
+                    </kanban>
+                    <form string="Create Turtle">
+                        <field name="turtle_trululu"/>
+                        <field name="name"/>
+                    </form>
+                </field>
+            </form>`,
+    });
+
+    expect("button:contains(Add Turtle)").toHaveCount(1);
+    await contains("button:contains(Add Turtle)").click();
+
+    expect(".o_dialog").toHaveCount(1);
+
+    await selectFieldDropdownItem("turtle_trululu", "first record");
+
+    expect(".o_dialog").toHaveCount(1);
+
+    expect(".o_dialog .o_field_widget[name=turtle_trululu] .o_external_button").toHaveCount(1);
+    await contains(".o_dialog .o_field_widget[name=turtle_trululu] .o_external_button", {
+        visible: false,
+    }).click();
+
+    expect(".o_dialog").toHaveCount(2);
+    expect.verifySteps([]);
+});
+
+test("saving many2one dialog does not discard pending changes on child line dialog", async () => {
+    Turtle._records[1].turtle_trululu = 1;
+    Partner._views = {
+        form: `<form><field name="name"/></form>`,
+    };
+
+    onRpc("get_formview_id", () => false);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list>
+                        <field name="name"/>
+                        <field name="turtle_trululu"/>
+                    </list>
+                    <form string="Journal Item">
+                        <field name="name"/>
+                        <field name="turtle_trululu"/>
+                    </form>
+                </field>
+            </form>`,
+    });
+    
+    await contains(".o_data_row:eq(0) .o_data_cell[name=name]").click();
+    expect(".o_dialog").toHaveCount(1);
+
+    await contains(".o_dialog .o_field_widget[name=name] input").edit("modified line name");
+
+    await contains(".o_dialog .o_field_widget[name=turtle_trululu] .o_external_button", {
+        visible: false,
+    }).click();
+    expect(".o_dialog").toHaveCount(2);
+
+    await contains(".o_dialog:eq(1) .o_field_widget[name=name] input").edit("updated related name");
+    await contains(".o_dialog:eq(1) footer .o_form_button_save").click();
+    expect(".o_dialog").toHaveCount(1);
+
+    expect(".o_dialog .o_field_widget[name=name] input").toHaveValue("modified line name");
+});
+
 test("search more pager is reset when doing a new search", async () => {
     Partner._fields.datetime = fields.Datetime({ string: "Datetime Field", searchable: true });
     Partner._records.push(...range(170).map((i) => ({ id: i + 10, name: `Partner ${i}` })));

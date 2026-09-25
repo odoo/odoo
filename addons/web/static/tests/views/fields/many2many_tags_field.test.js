@@ -2413,3 +2413,48 @@ test("many2many_tags limit and edit color on click", async () => {
     expect(".o_colorlist").toHaveCount(1);
     expect(".o_field_many2many_tags .o_tag").toHaveCount(3); // Clicking on a tag should also expand all tags
 });
+
+test("Opening many2many_tags in x2many safely retains pending changes", async () => {
+    Partner._views = {
+        form: `<form><field name="name"/></form>`,
+    };
+
+    onRpc("get_formview_id", () => false);
+    onRpc("turtle", "web_save", () => {
+        expect.step("turtle_web_save");
+    });
+    onRpc("partner", "web_save", () => {
+        expect.step("partner_web_save");
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list editable="bottom">
+                        <field name="partner_ids" widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+
+    await contains(".o_data_row:eq(0) .o_data_cell[name=name]").click();
+    await contains(".o_data_row:eq(0) .o_field_widget[name=name] input").edit("dirty turtle");
+
+    await contains(".o_data_row:eq(0) .o_data_cell[name=partner_ids]").click();
+    await contains(".o_tag").click();
+    expect(".o_dialog").toHaveCount(1);
+    expect.verifySteps([]);
+
+    await contains(".o_dialog .o_field_widget[name=name] input").edit("new tag name");
+    await contains(".o_dialog footer .o_form_button_save").click();
+    expect(".o_dialog").toHaveCount(0);
+    expect.verifySteps(["partner_web_save"]);
+
+    expect(".o_data_row:eq(0) .o_field_widget[name=name] input").toHaveValue("dirty turtle");
+});
