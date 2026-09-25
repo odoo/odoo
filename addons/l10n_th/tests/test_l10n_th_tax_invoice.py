@@ -14,10 +14,21 @@ class TestL10nTHTaxInvoice(AccountTestInvoicingCommon):
         super().setUpClass()
 
         cls.env.company.l10n_th_is_vat_registered = True
-        cls.th_company_1_data = cls.setup_other_company()
+        cls.th_company_1_data = cls.setup_other_company(l10n_th_is_vat_registered=True)
         cls.th_company_1 = cls.th_company_1_data['company']
-        cls.th_company_1.l10n_th_is_vat_registered = True
-        cls.env = cls.env(context=dict(cls.env.context, allowed_company_ids=(cls.env.company + cls.th_company_1).ids))
+        cls.branch_company_data = cls.setup_other_company(
+            name="TH Branch Company",
+            parent_id=cls.env.company.id,
+            l10n_th_is_vat_registered=True,
+        )
+        cls.branch_company = cls.branch_company_data['company']
+        cls.sub_branch_company_data = cls.setup_other_company(
+            name="TH Sub-Branch Company",
+            parent_id=cls.branch_company.id,
+            l10n_th_is_vat_registered=True,
+        )
+        cls.sub_branch_company = cls.sub_branch_company_data['company']
+        cls.env = cls.env(context=dict(cls.env.context, allowed_company_ids=(cls.env.company + cls.th_company_1 + cls.branch_company + cls.sub_branch_company).ids))
 
         cls.tax_on_invoice = cls.env['account.tax'].create({
             'name': 'VAT On Invoice',
@@ -50,6 +61,85 @@ class TestL10nTHTaxInvoice(AccountTestInvoicingCommon):
 
         for value in expected_values:
             self.assertIn(value, text, f"Expected '{value}' to be present in the generated PDF report.")
+
+    def _create_invoice_for_company(self, company_data):
+        """Create an invoice for a specific company with default journal and tax."""
+        return self._create_invoice(
+            invoice_date='2026-10-01',
+            journal_id=company_data['default_journal_sale'],
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    price_unit=1000,
+                    tax_ids=company_data['default_tax_sale'],
+                ),
+            ],
+            company_id=company_data['company'].id,
+            post=True,
+        )
+
+    def test_tax_invoice_sequence_for_branch_companies(self):
+        """Ensure that each branch company uses its parent company's tax invoice sequence if it doesn't have its own."""
+
+        self.invoice.invoice_line_ids = [
+            self._prepare_invoice_line(
+                price_unit=1000,
+                tax_ids=self.tax_on_invoice,
+            ),
+        ]
+        self.invoice.action_post()
+        self.assertEqual(self.invoice.l10n_th_tax_invoice_ids.tax_invoice_number, 'TINV/2026/00001')
+
+        # Ensure that a branch company without its own sequence uses the immediate parent company's sequence.
+        invoice = self._create_invoice_for_company(self.branch_company_data)
+        self.assertEqual(invoice.l10n_th_tax_invoice_ids.tax_invoice_number, 'TINV/2026/00002')
+
+        # Ensure that branch company uses its own sequence if it has one.
+        self.env['ir.sequence'].create({
+            'name': 'Branch Company Tax Invoice Sequence',
+            'code': 'l10n_th.tax.invoice.tax_invoice_number',
+            'prefix': 'BRANCH-TINV/%(year)s/',
+            'padding': 5,
+            'company_id': self.branch_company.id,
+        })
+
+        invoice_2 = self._create_invoice_for_company(self.branch_company_data)
+        self.assertEqual(invoice_2.l10n_th_tax_invoice_ids.tax_invoice_number, 'BRANCH-TINV/2026/00001')
+
+    def test_tax_invoice_sequence_for_sub_branch_companies(self):
+        """Ensure that a company uses its own tax invoice sequence when available;
+        otherwise, use the closest parent company's sequence.
+        If multiple sequences with the same code exist for a company, use the first one found.
+
+        Company Hierarchy :
+        Main Company (Has its own sequence)
+        └── TH Branch Company (Has its own sequence)
+            └── TH Sub-Branch Company (Does not have its own sequence, should use the first sequence found in the hierarchy)
+
+        The branch company has multiple sequences with the same code,
+        so verify that for the invoice of sub-branch companies, the first sequence found is used to generate the tax invoice number.
+        """
+
+        # Multiple sequences with the same code for the branch company.
+        self.env['ir.sequence'].create({
+            'name': 'Branch Company Receipt Tax Invoice Sequence 1',
+            'code': 'l10n_th.tax.invoice.receipt_tax_invoice_number',
+            'prefix': 'BRANCH1-TINV/%(year)s/',
+            'padding': 5,
+            'company_id': self.branch_company.id,
+        })
+        self.env['ir.sequence'].create({
+            'name': 'Branch Company Receipt Tax Invoice Sequence 2',
+            'code': 'l10n_th.tax.invoice.receipt_tax_invoice_number',
+            'prefix': 'BRANCH2-TINV/%(year)s/',
+            'padding': 5,
+            'company_id': self.branch_company.id,
+        })
+
+        # Ensure that in case of multiple sequences with the same code, it should use the first one found.
+        self.sub_branch_company_data['default_tax_sale'].tax_exigibility = 'on_payment'
+        invoice = self._create_invoice_for_company(self.sub_branch_company_data)
+        self._register_payment(invoice, amount=1070.0)
+        self.assertEqual(invoice.l10n_th_tax_invoice_ids.tax_invoice_number, 'BRANCH1-TINV/2026/00001')
 
     def test_tax_invoice_created_for_on_invoice_tax(self):
         """Ensure a tax invoice is created when posting an invoice with on-invoice VAT."""
