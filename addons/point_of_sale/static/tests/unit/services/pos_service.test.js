@@ -86,6 +86,22 @@ describe("pos_store.js", () => {
         expect(order.hasChange).toBe(false);
     });
 
+    test("computeProductAttributesExclusion ignores exclusion of an unloaded value", async () => {
+        const store = await setupPosEnv();
+        // Exclusion 99 points to a value the POS never loaded, e.g. read back from IndexedDB
+        store.models.loadConnectedData({
+            "product.template.attribute.exclusion": [
+                { id: 98, product_template_attribute_value_id: 5, value_ids: [6, 9998] },
+                { id: 99, product_template_attribute_value_id: 9999, value_ids: [5] },
+            ],
+        });
+
+        const exclusions = store.computeProductAttributesExclusion();
+        expect([...exclusions.get(5)]).toEqual([6]);
+        expect([...exclusions.get(6)]).toEqual([5]);
+        expect(exclusions.has(9999)).toBe(false);
+    });
+
     describe("syncAllOrders", () => {
         test("simple sync", async () => {
             const store = await setupPosEnv();

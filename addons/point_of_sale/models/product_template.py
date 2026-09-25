@@ -125,8 +125,10 @@ class ProductTemplate(models.Model):
 
         # product.template.attribute.exclusion loading
         product_tmpl_excl = self.env['product.template.attribute.exclusion']
+        # An exclusion is only usable in the POS if its value is loaded too
         product_tmpl_exclusion = product_tmpl_attr_value.exclude_for + product_tmpl_excl.search([
             ('product_tmpl_id', 'in', product_tmpls.ids),
+            ('product_template_attribute_value_id', 'in', product_tmpl_attr_value.ids),
         ])
         product_tmpl_exclusion_read = product_tmpl_excl._load_pos_data_read(product_tmpl_exclusion, config)
 

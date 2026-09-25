@@ -355,6 +355,100 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
         self.assertNotEqual(template_available_qty, selected_variant_qty)
         self.assertEqual(warehouse_info['available_quantity'], template_available_qty)
 
+    def test_load_product_from_pos_skips_exclusion_of_archived_value(self):
+        """An exclusion must only be loaded together with its attribute value,
+        otherwise the POS crashes when computing the attribute exclusions."""
+        product_template = self.env['product.template'].create({
+            'name': 'Excluded shirt',
+            'available_in_pos': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.size_attribute.id,
+                    'value_ids': [Command.set([self.size_attribute_s.id, self.size_attribute_m.id])],
+                }),
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])],
+                }),
+            ],
+        })
+        size_line, color_line = product_template.attribute_line_ids
+        ptav_s = size_line.product_template_value_ids.filtered(lambda v: v.product_attribute_value_id == self.size_attribute_s)
+        ptav_red, ptav_blue = color_line.product_template_value_ids
+        size_exclusion, color_exclusion = self.env['product.template.attribute.exclusion'].create([{
+            'product_tmpl_id': product_template.id,
+            'product_template_attribute_value_id': ptav_s.id,
+            'value_ids': [Command.set(ptav_red.ids)],
+        }, {
+            'product_tmpl_id': product_template.id,
+            'product_template_attribute_value_id': ptav_blue.id,
+            'value_ids': [Command.set(ptav_red.ids)],
+        }])
+
+        # A sold variant blocks the deletion of the size line: it is archived with its values
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        variant = product_template.product_variant_ids.filtered(lambda p: ptav_s in p.product_template_attribute_value_ids)[:1]
+        self.env['pos.order'].create({
+            'session_id': self.main_pos_config.current_session_id.id,
+            'amount_tax': 0,
+            'amount_total': 10,
+            'amount_paid': 0,
+            'amount_return': 0,
+            'lines': [Command.create({
+                'product_id': variant.id,
+                'qty': 1,
+                'price_unit': 10,
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
+            })],
+        })
+        size_line.unlink()
+        self.assertFalse(size_line.active)
+        self.assertFalse(ptav_s.ptav_active)
+        self.assertTrue(size_exclusion.exists())
+
+        result = self.env['product.template'].load_product_from_pos(
+            self.main_pos_config.id, [('id', '=', product_template.id)],
+        )
+        loaded_ptav_ids = {ptav['id'] for ptav in result['product.template.attribute.value']}
+        loaded_exclusion_ids = {excl['id'] for excl in result['product.template.attribute.exclusion']}
+        self.assertNotIn(ptav_s.id, loaded_ptav_ids)
+        self.assertEqual(loaded_exclusion_ids, {color_exclusion.id})
+
+    def test_load_product_from_pos_skips_exclusion_of_other_product_value(self):
+        """An exclusion can target another product than the one of its value:
+        it must not be loaded without that value."""
+        excluded_template, other_template = self.env['product.template'].create([{
+            'name': name,
+            'available_in_pos': True,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': self.size_attribute.id,
+                'value_ids': [Command.set([self.size_attribute_s.id, self.size_attribute_m.id])],
+            })],
+        } for name in ('Excluded product', 'Other product')])
+        other_ptav = other_template.attribute_line_ids.product_template_value_ids[0]
+        own_ptav = excluded_template.attribute_line_ids.product_template_value_ids[0]
+        other_exclusion, own_exclusion = self.env['product.template.attribute.exclusion'].create([{
+            'product_tmpl_id': excluded_template.id,
+            'product_template_attribute_value_id': other_ptav.id,
+        }, {
+            'product_tmpl_id': excluded_template.id,
+            'product_template_attribute_value_id': own_ptav.id,
+        }])
+        other_template.action_archive()
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        for load_archived in (False, True):
+            result = self.env['product.template'].with_context(load_archived=load_archived).load_product_from_pos(
+                self.main_pos_config.id, [('id', '=', excluded_template.id)],
+            )
+            loaded_ptav_ids = {ptav['id'] for ptav in result['product.template.attribute.value']}
+            loaded_exclusion_ids = {excl['id'] for excl in result['product.template.attribute.exclusion']}
+            self.assertNotIn(other_ptav.id, loaded_ptav_ids)
+            self.assertIn(own_ptav.id, loaded_ptav_ids)
+            self.assertNotIn(other_exclusion.id, loaded_exclusion_ids, f"load_archived={load_archived}")
+            self.assertIn(own_exclusion.id, loaded_exclusion_ids)
+
     def test_mo_custom_description_ship_later(self):
         """
         Tests that a custom attribute is shown on the MO when being
