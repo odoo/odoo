@@ -1169,3 +1169,14 @@ test("Activity view: hide Schedule activity when create is false", async () => {
     });
     expect("table tfoot .o_record_selector").toHaveCount(0);
 });
+
+test("Activity view: hide empty cell plus(+) when create is false", async () => {
+    registerArchs(archs);
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+        context: { create: false },
+    });
+    expect(".o_activity_empty_cell .fa-plus").toHaveCount(0);
+});
