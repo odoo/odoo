@@ -2,7 +2,7 @@
 
 {
     'name': "Payment Provider: Xendit",
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
     'summary': "A payment provider for Indonesian and the Philippines.",
@@ -14,12 +14,12 @@
 
         'data/payment_provider_data.xml',  # Depends on payment_xendit_templates.xml
     ],
-    'post_init_hook': 'post_init_hook',
-    'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'payment_xendit/static/src/**/*',
+            'payment_xendit/static/src/js/payment_form.js',
         ]
     },
+    'post_init_hook': 'post_init_hook',
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }
