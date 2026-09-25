@@ -128,6 +128,12 @@ class ResPartner(models.Model):
 
         return super().write(vals)
 
+    def _create_parent_from_name(self, parent_name, additional_values=None):
+        parent_company = super()._create_parent_from_name(parent_name, additional_values=additional_values)
+        if parent_company and self.l10n_ar_afip_responsibility_type_id:
+            parent_company.l10n_ar_afip_responsibility_type_id = self.l10n_ar_afip_responsibility_type_id
+        return parent_company
+
     def ensure_vat(self):
         """ This method is a helper that returns the VAT number is this one is defined if not raise an UserError.
 
