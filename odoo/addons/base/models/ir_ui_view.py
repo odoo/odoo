@@ -130,6 +130,7 @@ def get_view_arch_from_file(filepath, xmlid):
             else:
                 node.tag = 'data'
             node.attrib.pop('id', None)
+            node.attrib.pop('technical_usage', None)
             return etree.tostring(node, encoding='unicode')
 
     _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filepath, xmlid)
