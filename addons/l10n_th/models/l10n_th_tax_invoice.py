@@ -73,15 +73,27 @@ class L10nThTaxInvoice(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if any(not v.get('tax_invoice_number') for v in vals_list):
+            sequences = self.env['ir.sequence']._read_group(
+                domain=[
+                    ('code', 'in', ('l10n_th.tax.invoice.receipt_tax_invoice_number', 'l10n_th.tax.invoice.tax_invoice_number')),
+                ],
+                groupby=['company_id', 'code'],
+                aggregates=['id:recordset'],
+            )
+            sequences_dict = {(company.id, code): sequence for company, code, sequence in sequences}
+
         for vals in vals_list:
             if not vals.get('tax_invoice_number'):
-                company = self.env['account.move'].browse(vals.get('invoice_move_id')).company_id
-                vals['tax_invoice_number'] = self.env['ir.sequence'].with_company(company).next_by_code(
-                    'l10n_th.tax.invoice.receipt_tax_invoice_number'
-                    if vals.get('payment_move_id')
-                    else 'l10n_th.tax.invoice.tax_invoice_number',
-                    sequence_date=vals.get('date'),
-                )
+                sequence_code = 'l10n_th.tax.invoice.receipt_tax_invoice_number' if vals.get('payment_move_id') else 'l10n_th.tax.invoice.tax_invoice_number'
+                invoice_company = self.env['account.move'].browse(vals.get('invoice_move_id')).company_id
+                # If the company doesn't have a sequence specific to it, find one by going up the hierarchy. Fallback on a general sequence if needed.
+                for company in [*reversed(invoice_company.parent_ids.ids), False]:
+                    sequence = sequences_dict.get((company, sequence_code))
+                    if sequence:
+                        break
+                if sequence:
+                    vals['tax_invoice_number'] = sequence.next_by_id(sequence_date=vals.get('date'))
 
         return super().create(vals_list)
 
