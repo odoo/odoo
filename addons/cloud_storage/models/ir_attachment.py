@@ -24,6 +24,18 @@ class IrAttachment(models.Model):
 
     def _to_http_stream(self):
         if info := self._get_download_info():
+            if self.env.context.get('cloud_storage_force_download'):
+                response = requests.get(info['url'], timeout=10)
+                response.raise_for_status()
+
+                return Stream(
+                    type='data',
+                    data=response.content,
+                    mimetype=self.mimetype,
+                    download_name=self.name,
+                    size=len(response.content),
+                )
+
             stream = Stream(type='url', url=info['url'])
             if 'time_to_expiry' in info:
                 # cache the redirection until 10 seconds before the expiry
