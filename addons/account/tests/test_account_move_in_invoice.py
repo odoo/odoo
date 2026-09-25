@@ -2874,3 +2874,37 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertRecordValues(move1_reversal.message_main_attachment_id, attachment_vals)
         move2_reversal = self._reverse_invoice(move2, is_modify=True)
         self.assertFalse(move2_reversal.message_main_attachment_id)
+
+    def test_description_change_on_product_change(self):
+        """
+        Check if description changes when product changes and manually altered description is always respected
+        """
+        self.product_a.write({
+            "description_purchase": "description a"
+        })
+        self.product_b.write({
+            "description_purchase": "description b"
+        })
+
+        # making new invoice since only need one line and need to have the name value there
+        invoice = self.init_invoice('in_invoice', products=self.product_a)
+        inv_line = invoice.invoice_line_ids[0]
+
+        self.assertEqual(inv_line.name, self.product_a.description_purchase)
+
+        # we need to edit with the form, otherwise the compute method will not function properly
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.edit(0) as line_form:
+                line_form.product_id = self.product_b
+        self.assertEqual(inv_line.name, self.product_b.description_purchase)
+
+        new_name = "new description"
+        inv_line.write({
+            "name": new_name
+        })
+        self.assertEqual(inv_line.name, new_name)
+
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.edit(0) as line_form:
+                line_form.product_id = self.product_a
+        self.assertEqual(inv_line.name, new_name)
