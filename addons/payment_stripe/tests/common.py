@@ -44,6 +44,19 @@ class StripeCommon(PaymentCommon):
             "type": "payment_intent.succeeded",
         }
 
+        # Flattened payment data, as built by the controller from the Stripe API objects, and as
+        # expected by transaction methods such as `_apply_updates` and `_extract_amount_data`.
+        cls.payment_intent_data = {
+            "id": "pi_3KTk9zAlCFm536g81Wy7RCPH",
+            "status": "succeeded",
+            **cls.notification_amount_and_currency,
+        }
+        cls.payment_method_data = {"id": "pm_1KVZSNAlCFm536g8sYB92I1G", "type": "us_bank_account"}
+        cls.online_payment_data = {
+            "payment_intent": cls.payment_intent_data,
+            "payment_method": cls.payment_method_data,
+        }
+
         cls.refund_object = {
             "charge": "ch_000000000000000000000000",
             "id": "re_000000000000000000000000",
