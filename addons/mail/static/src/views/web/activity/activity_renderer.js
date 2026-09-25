@@ -48,6 +48,10 @@ export class ActivityRenderer extends Component {
         this.setupStorageActiveColumns();
     }
 
+    get hasCreateActivity() {
+        return this.props.archInfo.activeActions.create;
+    }
+
     getGroupInfo(activityType) {
         const types = {
             done: {

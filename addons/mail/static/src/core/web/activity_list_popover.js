@@ -19,6 +19,7 @@ export class ActivityListPopover extends Component {
     static components = { ActivityListPopoverItem };
     static props = [
         "activityIds",
+        "canCreate?",
         "close",
         "defaultActivityTypeId?",
         "onActivityChanged",

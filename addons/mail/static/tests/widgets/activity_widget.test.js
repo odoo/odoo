@@ -3,6 +3,7 @@ import {
     contains,
     defineMailModels,
     listenStoreFetch,
+    openKanbanView,
     openListView,
     start,
     startServer,
@@ -326,5 +327,61 @@ test("list activity exception widget with activity", async () => {
     });
     await contains(":nth-child(2 of .o_data_row) .o_activity_exception_cell", {
         contains: [".o-mail-ActivityException"],
+    });
+});
+
+test("Hide activity icon when create is false and there is no activity", async () => {
+    await start();
+    await openKanbanView("res.users", {
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="name"/>
+                        <field name="activity_ids" widget="kanban_activity"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        context: { create: false },
+    });
+    await contains(".o_kanban_record:not(.o_kanban_ghost)", {
+        contains: [".o-mail-ActivityButton", { count: 0 }],
+    });
+});
+
+test("Keep icon for planned activities when create is false but activities exist", async () => {
+    const pyEnv = await startServer();
+    const activityTypeId = pyEnv["mail.activity.type"].create({});
+    const activityId = pyEnv["mail.activity"].create({
+        activity_type_id: activityTypeId,
+        summary: "Meet FP",
+        state: "planned",
+        user_id: serverState.userId,
+    });
+    pyEnv["res.partner"].write([serverState.partnerId], {
+        activity_ids: [activityId],
+        activity_state: "planned",
+    });
+    pyEnv["res.users"].write([serverState.userId], { activity_ids: [activityId] });
+    await start();
+    await openKanbanView("res.users", {
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="name"/>
+                        <field name="activity_ids" widget="kanban_activity"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        context: { create: false },
+        domain: [["id", "=", serverState.userId]],
+    });
+    await contains(".o-mail-ActivityButton i.fa-tasks");
+    await click(".o-mail-ActivityButton");
+    await contains(".o-mail-ActivityListPopover");
+    await contains(".o-mail-ActivityListPopover button", {
+        text: "Schedule an activity",
+        count: 0,
     });
 });
