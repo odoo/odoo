@@ -72,6 +72,7 @@ class HrVersion(models.Model):
         return created_versions
 
     def write(self, vals):
+<<<<<<< f9321996984924f9adf9328367c2676f6fed61c3
         # we do not want to run this logic if these fields were not affected or if we are in a simulated contract
         if not any(field in vals for field in ['contract_date_start', 'contract_date_end', 'date_version', 'resource_calendar_id']) or self.env.context.get('salary_simulation'):
             return super().write(vals)
@@ -100,9 +101,55 @@ class HrVersion(models.Model):
             for leave in contract_leaves[contract.id]:
                 overlapping_contracts = self._check_overlapping_contract(leave)
                 if len(overlapping_contracts.resource_calendar_id) > 1:
+||||||| 284b3a58f35a57550af1065e701b48432481e4b7
+        specific_contracts = self.env['hr.version']
+        if any(field in vals for field in ['contract_date_start', 'contract_date_end', 'date_version', 'resource_calendar_id']):
+            all_new_leave_origin = []
+            all_new_leave_vals = []
+            leaves_state = {}
+            for contract in self:
+                resource_calendar_id = vals.get('resource_calendar_id', contract.resource_calendar_id.id)
+                extra_domain = [('resource_calendar_id', '!=', resource_calendar_id)] if resource_calendar_id else None
+                leaves = contract._get_leaves(extra_domain=extra_domain)
+                for leave in leaves:
+                    super(HrVersion, contract).write(vals)
+                    overlapping_contracts = self._check_overlapping_contract(leave)
+                    if not overlapping_contracts:
+                        continue
+=======
+        # we do not want to run this logic if these fields were not affected or if we are in a simulated contract
+        if not any(field in vals for field in ['contract_date_start', 'contract_date_end', 'date_version', 'resource_calendar_id']) or self.env.context.get('salary_simulation'):
+            return super().write(vals)
+
+        all_new_leave_origin = []
+        all_new_leave_vals = []
+        leaves_state = {}
+
+        # Pre-fetch leaves per contract BEFORE write, using post-write effective dates
+        # so we don't pull leaves outside the version's effective period.
+        contract_leaves = {}
+        for contract in self:
+            resource_calendar_id = vals.get('resource_calendar_id', contract.resource_calendar_id.id)
+            extra_domain = [('resource_calendar_id', '!=', resource_calendar_id)] if resource_calendar_id else None
+            new_date_version = fields.Date.from_string(vals.get('date_version') or contract.date_version)
+            new_contract_date_start = fields.Date.from_string(
+                vals.get('contract_date_start') or contract.sudo().contract_date_start or new_date_version
+            )
+            min_date = max(new_contract_date_start, new_date_version)
+            contract_leaves[contract.id] = contract._get_leaves(extra_domain=extra_domain, min_date=min_date)
+
+        res = super().write(vals)
+
+        # Process leaves now that DB reflects new contract state
+        for contract in self:
+            for leave in contract_leaves[contract.id]:
+                overlapping_contracts = self._check_overlapping_contract(leave)
+                if len(overlapping_contracts.resource_calendar_id) > 1:
+>>>>>>> a5dfc76ce5e0fd64d59d9bcf741d0a775ce16b64
                     leaves_state = self._update_leave_state(leave, leaves_state, True)
                     all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
                         all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
+<<<<<<< f9321996984924f9adf9328367c2676f6fed61c3
                 else:
                     self._update_leave_calendar(leave, overlapping_contracts)
 
@@ -118,6 +165,34 @@ class HrVersion(models.Model):
                            "these leaves in such a way the employee no longer has the required allocation for "
                            "them. Please review these leaves and/or allocations before changing the contract.\n\n"
                            "This error has been triggered by:\n") + str(e))
+||||||| 284b3a58f35a57550af1065e701b48432481e4b7
+            try:
+                if all_new_leave_vals:
+                    self._create_all_new_leave(all_new_leave_origin, all_new_leave_vals)
+            except ValidationError as e:
+                # In case a validation error is thrown due to holiday creation with the new resource calendar (which can
+                # increase their duration), we catch this error to display a more meaningful error message.
+                raise ValidationError(self.env._("Changing the contract on this employee changes their working schedule in a period "
+                                        "they already took leaves. Changing this working schedule changes the duration of "
+                                        "these leaves in such a way the employee no longer has the required allocation for "
+                                        "them. Please review these leaves and/or allocations before changing the contract.\n\n"
+                                        "This error has been triggered by:\n") + str(e))
+        res = super(HrVersion, self - specific_contracts).write(vals)
+=======
+                else:
+                    self._update_leave_calendar(leave, overlapping_contracts)
+        try:
+            if all_new_leave_vals:
+                self._create_all_new_leave(all_new_leave_origin, all_new_leave_vals)
+        except ValidationError as e:
+            # In case a validation error is thrown due to holiday creation with the new resource calendar (which can
+            # increase their duration), we catch this error to display a more meaningful error message.
+            raise ValidationError(self.env._("Changing the contract on this employee changes their working schedule in a period "
+                                    "they already took leaves. Changing this working schedule changes the duration of "
+                                    "these leaves in such a way the employee no longer has the required allocation for "
+                                    "them. Please review these leaves and/or allocations before changing the contract.\n\n"
+                                    "This error has been triggered by:\n") + str(e))
+>>>>>>> a5dfc76ce5e0fd64d59d9bcf741d0a775ce16b64
 
         if 'resource_calendar_id' in vals:
             # Hour-based allocations store their duration in number_of_days, from
@@ -140,6 +215,7 @@ class HrVersion(models.Model):
                 if hours_per_day:
                     allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
 
+<<<<<<< f9321996984924f9adf9328367c2676f6fed61c3
         return result
 
     def _get_leaves(self, extra_domain=None, min_date=None):
@@ -148,10 +224,31 @@ class HrVersion(models.Model):
                 max(c.contract_date_start or c.date_version, c.date_version)
                 for c in self.sudo()
             )
+||||||| 284b3a58f35a57550af1065e701b48432481e4b7
+    def _get_leaves(self, extra_domain=None):
+=======
+    def _get_leaves(self, extra_domain=None, min_date=None):
+        if min_date is None:
+            min_date = min(
+                max(c.contract_date_start or c.date_version, c.date_version)
+                for c in self.sudo()
+            )
+>>>>>>> a5dfc76ce5e0fd64d59d9bcf741d0a775ce16b64
         domain = [
+<<<<<<< f9321996984924f9adf9328367c2676f6fed61c3
             ('state', 'not in', ['refuse', 'cancel']),
             ('employee_id', 'in', self.employee_id.ids),
             ('date_to', '>=', min_date),
+||||||| 284b3a58f35a57550af1065e701b48432481e4b7
+            ('state', '!=', 'refuse'),
+            ('employee_id', 'in', self.mapped('employee_id.id')),
+            ('date_from', '<=', max(end or date.max for end in self.sudo().mapped('contract_date_end'))),
+            ('date_to', '>=', min(self.sudo().mapped('contract_date_start'))),
+=======
+            ('state', '!=', 'refuse'),
+            ('employee_id', 'in', self.employee_id.ids),
+            ('date_to', '>=', min_date),
+>>>>>>> a5dfc76ce5e0fd64d59d9bcf741d0a775ce16b64
         ]
         if extra_domain:
             domain = Domain.AND([domain, extra_domain])
@@ -172,7 +269,38 @@ class HrVersion(models.Model):
         return self.env['hr.leave'].search(domain)
 
     def _check_overlapping_contract(self, leave):
+<<<<<<< f9321996984924f9adf9328367c2676f6fed61c3
         return leave._get_overlapping_contracts().sorted(key=lambda c: c.contract_date_start)
+||||||| 284b3a58f35a57550af1065e701b48432481e4b7
+        # Get all overlapping contracts but exclude draft contracts that are not included in this transaction.
+        overlapping_contracts = leave._get_overlapping_contracts().sorted(
+            key=lambda c: c.contract_date_start)
+        if len(overlapping_contracts.resource_calendar_id) <= 1:
+            if overlapping_contracts:
+                first_overlapping_contract = next(iter(overlapping_contracts), overlapping_contracts)
+                if leave.resource_calendar_id != first_overlapping_contract.resource_calendar_id:
+                    leave.resource_calendar_id = first_overlapping_contract.resource_calendar_id
+                    if leave.leave_type_request_unit != 'hour':
+                        leave.with_context(leave_skip_date_check=True, leave_skip_state_check=True)._compute_date_from_to()
+                        if leave.state == 'validate':
+                            leave._validate_leave_request()
+            return False
+        return overlapping_contracts
+=======
+        return leave._get_overlapping_contracts().sorted(key=lambda c: c.contract_date_start)
+
+    def _update_leave_calendar(self, leave, overlapping_contracts):
+        if not overlapping_contracts:
+            return
+        first_contract = overlapping_contracts[0]
+        if leave.resource_calendar_id == first_contract.resource_calendar_id:
+            return
+        leave.resource_calendar_id = first_contract.resource_calendar_id
+        if leave.leave_type_request_unit != 'hour':
+            leave.with_context(leave_skip_date_check=True, leave_skip_state_check=True)._compute_date_from_to()
+            if leave.state == 'validate':
+                leave._validate_leave_request()
+>>>>>>> a5dfc76ce5e0fd64d59d9bcf741d0a775ce16b64
 
     def _update_leave_calendar(self, leave, overlapping_contracts):
         if not overlapping_contracts:
