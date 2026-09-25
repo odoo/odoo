@@ -1180,3 +1180,19 @@ test("Activity view: hide empty cell plus(+) when create is false", async () => 
     });
     expect(".o_activity_empty_cell .fa-plus").toHaveCount(0);
 });
+
+test("Activity view: hide Schedule an activity in the cell popover when create is false", async () => {
+    registerArchs(archs);
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+        context: { create: false },
+    });
+    await click(".today .o-mail-ActivityCell-deadline");
+    await contains(".o-mail-ActivityListPopover");
+    await contains(".o-mail-ActivityListPopover button", {
+        text: "Schedule an activity",
+        count: 0,
+    });
+});
