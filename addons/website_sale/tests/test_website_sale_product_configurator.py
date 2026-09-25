@@ -342,6 +342,33 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.assertFalse(show_configurator)
         self.assertListEqual(configurator_values['optional_products'], [])
 
+    def test_product_configurator_quantity_decimals_by_uom(self):
+        """ Test that the configurator only allows decimal quantities for continuous UoMs. """
+        product_unit = self.env['product.template'].create({
+            'name': "Desk",
+            'website_published': True,
+        })
+        product_kg = self.env['product.template'].create({
+            'name': "Powder",
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+            'website_published': True,
+        })
+
+        for product, quantity, expected_quantity, is_continuous in (
+            (product_unit, 1.5, 1, False),
+            (product_kg, 2.555, 2.56, True),
+        ):
+            with MockRequest(self.env, website=self.website):
+                configurator_values = self.pc_controller.website_sale_product_configurator_get_values(
+                    product_template_id=product.id,
+                    quantity=quantity,
+                    currency_id=self.currency.id,
+                    so_date='2000-01-01',
+                    pricelist_id=self.pricelist.id,
+                )
+            self.assertEqual(configurator_values['products'][0]['quantity'], expected_quantity)
+            self.assertEqual(configurator_values['products'][0]['uom']['is_continuous'], is_continuous)
+
     def test_product_configurator_extra_price_taxes(self):
         """ Test that the product configurator applies taxes to PTAV extra prices. """
         self.website.show_line_subtotals_tax_selection = 'tax_included'

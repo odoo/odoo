@@ -684,3 +684,68 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
             "sale",
             "An empty cart should never be confirmed as a sale order.",
         )
+
+    def test_cart_quantity_decimals_by_uom(self):
+        """Quantities keep their decimals for continuous UoMs only."""
+        product_kg = self.env['product.product'].create({
+            'name': 'Powder',
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+            'sale_ok': True,
+            'website_published': True,
+        })
+        with MockRequest(self.env, website=self.website) as request:
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=product_kg.product_tmpl_id,
+                product_id=product_kg.id,
+                quantity=2.5,
+            )
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=2.5,
+            )
+            cart = request.cart
+            line_kg = cart.order_line.filtered(lambda sol: sol.product_id == product_kg)
+            line_unit = cart.order_line - line_kg
+            self.assertEqual(line_kg.product_uom_qty, 2.5)
+            self.assertEqual(line_unit.product_uom_qty, 2)
+
+            values = self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=product_kg.product_tmpl_id,
+                product_id=product_kg.id,
+                quantity=1.1,
+            )
+            self.assertEqual(line_kg.product_uom_qty, 3.6)
+            # The added quantity is not polluted by floating point noise (3.6 - 2.5)
+            self.assertEqual(values['notification_info']['lines'][0]['quantity'], 1.1)
+
+            self.WebsiteSaleCartController.update_cart(line_id=line_kg.id, quantity=7.555)
+            self.assertEqual(line_kg.product_uom_qty, 7.56)
+            self.WebsiteSaleCartController.update_cart(line_id=line_unit.id, quantity=3.7)
+            self.assertEqual(line_unit.product_uom_qty, 3)
+            self.WebsiteSaleCartController.update_cart(
+                line_id=False, quantity=1.5, product_id=product_kg.id,
+            )
+            self.assertEqual(line_kg.product_uom_qty, 1.5)
+
+    def test_cart_quantity_by_uom(self):
+        """The cart quantity counts each line in a continuous UoM once, and sums the others."""
+        product_kg = self.env['product.product'].create({
+            'name': 'Powder',
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+            'sale_ok': True,
+            'website_published': True,
+        })
+        with MockRequest(self.env, website=self.website) as request:
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=product_kg.product_tmpl_id,
+                product_id=product_kg.id,
+                quantity=0.5,
+            )
+            self.assertEqual(request.cart.cart_quantity, 1)
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=3,
+            )
+            self.assertEqual(request.cart.cart_quantity, 4)

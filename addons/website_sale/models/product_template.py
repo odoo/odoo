@@ -627,6 +627,7 @@ class ProductTemplate(models.Model):
             'discount_start_date': pricelist_item.date_start,
             'discount_end_date': pricelist_item.date_end,
             'show_extra_price': pricelist_item.compute_price != 'fixed',
+            'uom_is_continuous': uom._is_continuous(),
         }
 
         if (

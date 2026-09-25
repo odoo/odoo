@@ -20,6 +20,7 @@ class IrHttp(models.AbstractModel):
         session_info = super().get_frontend_session_info()
         session_info.update({
             'add_to_cart_action': request.website.add_to_cart_action,
+            'product_unit_digits': self.env['decimal.precision'].precision_get('Product Unit'),
         })
         return session_info
 

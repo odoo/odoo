@@ -1,8 +1,10 @@
 import { Interaction } from '@web/public/interaction';
 import { browser } from '@web/core/browser/browser';
+import { roundDecimals } from '@web/core/utils/numbers';
 import { registry } from '@web/core/registry';
 import { rpc } from '@web/core/network/rpc';
 import { redirect } from '@web/core/utils/urls';
+import { session } from '@web/session';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export class CartLine extends Interaction {
@@ -33,9 +35,12 @@ export class CartLine extends Interaction {
         const input = currentTargetEl.closest('.css_quantity').querySelector('input.js_quantity');
         const maxQuantity = parseFloat(input.dataset.max || Infinity);
         const oldQuantity = parseFloat(input.value || 0);
-        const newQuantity = currentTargetEl.querySelector('i').classList.contains('oi-minus')
-            ? Math.min(Math.max(oldQuantity - 1, 0), maxQuantity)
-            : Math.min(oldQuantity + 1, maxQuantity);
+        const newQuantity = roundDecimals(
+            currentTargetEl.querySelector('i').classList.contains('oi-minus')
+                ? Math.min(Math.max(oldQuantity - 1, 0), maxQuantity)
+                : Math.min(oldQuantity + 1, maxQuantity),
+            session.product_unit_digits ?? 2,
+        );
         if (oldQuantity !== newQuantity) {
             input.value = newQuantity;
             await this._changeQuantity(input);
@@ -53,7 +58,7 @@ export class CartLine extends Interaction {
     }
 
     async _changeQuantity(input) {
-        let quantity = parseInt(input.value || 0);
+        let quantity = parseFloat(input.value || 0);
         if (isNaN(quantity)) quantity = 1;
         const lineId = parseInt(input.dataset.lineId);
         const data = await this.waitFor(rpc('/shop/cart/update', {

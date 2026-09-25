@@ -63,6 +63,14 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
     )
     def website_sale_product_configurator_get_values(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
+        if kwargs.get('quantity') and kwargs.get('product_template_id'):
+            uom = (
+                (kwargs.get('product_uom_id') and request.env['uom.uom'].browse(kwargs['product_uom_id']))
+                or self._get_product_template(kwargs['product_template_id']).uom_id
+            )
+            # Only continuous UoMs (kg, L, m, ...) allow decimal quantities
+            quantity = kwargs['quantity']
+            kwargs['quantity'] = uom.round(float(quantity)) if uom._is_continuous() else int(quantity)
         return super().sale_product_configurator_get_values(*args, **kwargs)
 
     @route(
@@ -97,6 +105,13 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
     def website_sale_product_configurator_get_optional_products(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
         return super().sale_product_configurator_get_optional_products(*args, **kwargs)
+
+    def _get_product_information(self, product_template, *args, **kwargs):
+        values = super()._get_product_information(product_template, *args, **kwargs)
+        # Let the frontend only allow decimal quantities for continuous UoMs (kg, L, m, ...)
+        for uom_values in [values['uom'], *values.get('available_uoms', [])]:
+            uom_values['is_continuous'] = request.env['uom.uom'].browse(uom_values['id'])._is_continuous()
+        return values
 
     def _get_basic_product_information(
         self, product_or_template, pricelist, combination, currency=None, date=None, **kwargs

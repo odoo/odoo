@@ -111,7 +111,6 @@ class Cart(PaymentPortal):
         :rtype: dict
         """
         order_sudo = request.cart or request.website._create_cart()
-        quantity = int(quantity)  # Do not allow float values in ecommerce by default
 
         product = request.env['product.product'].browse(product_id).exists()
         if product and no_variant_attribute_value_ids:
@@ -126,6 +125,12 @@ class Cart(PaymentPortal):
             raise UserError(_(
                 "The given product does not exist therefore it cannot be added to cart."
             ))
+
+        uom = product.uom_id
+        if uom_id in product.product_tmpl_id._get_available_uoms().ids:
+            uom = request.env['uom.uom'].browse(uom_id)
+        # Only continuous UoMs (kg, L, m, ...) allow decimal quantities
+        quantity = uom.round(float(quantity)) if uom._is_continuous() else int(quantity)
 
         if product.type == 'combo':
             combo_item_products = [
@@ -326,7 +331,6 @@ class Cart(PaymentPortal):
         :params dict kwargs: additional parameters given to _cart_update_line_quantity calls.
         """
         order_sudo = request.cart
-        quantity = int(quantity)  # Do not allow float values in ecommerce by default
         IrUiView = request.env['ir.ui.view']
 
         # This method must be only called from the cart page BUT in some advanced logic
@@ -336,6 +340,13 @@ class Cart(PaymentPortal):
             line_id = order_sudo.order_line.filtered(
                 lambda sol: sol.product_id.id == product_id
             )[:1].id
+
+        # Only continuous UoMs (kg, L, m, ...) allow decimal quantities
+        line = order_sudo.order_line.filtered(lambda sol: sol.id == line_id)
+        uom = line.product_uom_id
+        if not uom and product_id:
+            uom = request.env['product.product'].browse(product_id).uom_id
+        quantity = uom.round(float(quantity)) if uom._is_continuous() else int(quantity)
 
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
 

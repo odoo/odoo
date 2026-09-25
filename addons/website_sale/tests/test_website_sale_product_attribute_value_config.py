@@ -158,6 +158,17 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         self.assertEqual(round(combination_info['price'], 2), 456.52, "434.78$ + 5% tax (mapped from fp 15% -> 5% for BE)")
         self.assertEqual(round(combination_info['list_price'], 2), 456.52, "434.78$ + 5% tax (mapped from fp 15% -> 5% for BE)")
 
+    def test_get_combination_info_uom_is_continuous(self):
+        """ Test that the combination info tells whether the UoM allows decimal quantities. """
+        website = self.env['website'].get_current_website()
+        product_kg = self.env['product.template'].create({
+            'name': "Powder",
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+        })
+        with MockRequest(self.env, website=website):
+            self.assertFalse(self.computer._get_combination_info()['uom_is_continuous'])
+            self.assertTrue(product_kg._get_combination_info()['uom_is_continuous'])
+
     def test_hide_attribute_value_without_matching_product_variant(self):
         """Ensure attribute values are hidden if they don't have a matching product variant"""
         self.ssd_attribute.preview_variants = 'visible'

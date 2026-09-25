@@ -71,7 +71,12 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_uom_qty', 'order_line.product_id')
     def _compute_cart_info(self):
         for order in self:
-            order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
+            # Count each line in a continuous UoM (kg, L, m, ...) as one item, sum the others
+            order.cart_quantity = int(sum(
+                1 if line.product_uom_id._is_continuous() else line.product_uom_qty
+                for line in order.website_order_line
+                if line.product_uom_qty > 0
+            ))
             order.only_services = all(sol.product_id.type == 'service' for sol in order.website_order_line)
 
     @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
@@ -490,7 +495,8 @@ class SaleOrder(models.Model):
             # the requested quantity update.
             warning = ''
 
-        added_qty = quantity - order_line.product_uom_qty  # new_qty - old_qty
+        # new_qty - old_qty, rounded to avoid floating point noise with decimal quantities
+        added_qty = order_line.product_uom_id.round(quantity - order_line.product_uom_qty)
         order_line = self._cart_update_order_line(order_line, quantity, **kwargs)
         if not self.env.context.get('skip_cart_verification'):
             self._verify_cart_after_update()
