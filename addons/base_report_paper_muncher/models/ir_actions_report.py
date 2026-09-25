@@ -57,6 +57,7 @@ class IrActionsReport(models.Model):
         :returns: PDF bytes returned by Paper Muncher.
         :raises RuntimeError: If Paper Muncher fails during any phase.
         """
+        assert isinstance(self, IrActionsReport)
         if specific_paperformat_args:
             if not landscape and specific_paperformat_args.get('data-report-landscape'):
                 landscape = specific_paperformat_args['data-report-landscape']
