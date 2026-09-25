@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("call", {
     condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
+    disabledCondition: ({ store }) => store.rtc.hasPendingRequest,
     hasBtnBg: true,
     icon: "phone",
     iconClass: "oi-filled",
@@ -17,6 +18,7 @@ registerThreadAction("call", {
 });
 registerThreadAction("camera-call", {
     condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
+    disabledCondition: ({ store }) => store.rtc.hasPendingRequest,
     hasBtnBg: true,
     icon: "videocam",
     iconClass: "oi-filled",
