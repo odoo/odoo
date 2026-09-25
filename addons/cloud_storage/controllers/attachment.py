@@ -7,6 +7,10 @@ from odoo.addons.mail.tools.discuss import add_guest_to_context
 
 
 class CloudAttachmentController(AttachmentController):
+    def _make_zip(self, name, attachments):
+        # ZIP files need the attachment bytes rather than a cloud redirect.
+        return super()._make_zip(name, attachments.with_context(cloud_storage_force_download=True))
+
     @route()
     @add_guest_to_context
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
