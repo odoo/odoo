@@ -220,6 +220,13 @@ class MyInvoisDocument(models.Model):
         copy=False,
         readonly=True,
     )
+    myinvois_amount_total = fields.Monetary(
+        string="Received Total",
+        help="Total of the document on MyInvois. Only set on received documents.",
+        currency_field='currency_id',
+        copy=False,
+        readonly=True,
+    )
 
     def init(self):
         super().init()
@@ -1572,6 +1579,7 @@ class MyInvoisDocument(models.Model):
                 'is_debit_note': data['document_type'] == '03',
                 'is_received_document': True,
                 'myinvois_document_type': data['document_type'],
+                'myinvois_amount_total': data['total'],
                 'myinvois_state': 'received',
                 'myinvois_issuance_date': issuance_date,
                 'myinvois_external_uuid': data['uuid'],
