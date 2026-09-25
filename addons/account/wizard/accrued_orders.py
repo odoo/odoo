@@ -255,15 +255,15 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         elif qty_to_invoice < 0:
                             # Invoiced not delivered.
-                            amount_currency, amount, processed_qty = 0, 0, 0
-                            for inv_line in order_line.invoice_lines.filtered(lambda ivl: ivl.move_id.state == 'posted').sorted(reverse=True):
-                                amount_currency -= inv_line.price_subtotal
-                                amount -= order.currency_id._convert(inv_line.price_subtotal, self.company_id.currency_id, self.company_id)
-                                processed_qty += inv_line.quantity
-                                if processed_qty >= abs(qty_to_invoice):
-                                    break
-                            if processed_qty:
-                                price_unit = abs(amount / processed_qty)
+                            invoiced_amount, invoiced_qty = 0, 0
+                            for inv_line in order_line._get_invoice_lines().filtered(lambda ivl: ivl.move_id.state == 'posted'):
+                                sign = -inv_line.move_id.direction_sign
+                                invoiced_amount += sign * inv_line.price_subtotal
+                                invoiced_qty += sign * inv_line.product_uom_id._compute_quantity(inv_line.quantity, order_line.product_uom_id)
+                            if invoiced_qty:
+                                price_unit = invoiced_amount / invoiced_qty
+                            amount_currency = order.currency_id.round(qty_to_invoice * price_unit) if invoiced_qty else 0
+                            amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         label = _(
                             '%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %(quantity_delivered)s Delivered at %(unit_price)s each',
                             order=order.name,
