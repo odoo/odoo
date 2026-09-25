@@ -1597,12 +1597,12 @@ class TransactionCase(BaseCase):
 
             report_model = self.env.registry['ir.actions.report']
             try:
-                old_run_wkhtmltopdf = report_model._run_wkhtmltopdf
+                old_run_wkhtmltopdf = report_model._run_wkhtmltopdf__
             except AttributeError:
                 pass
             else:
                 stack.enter_context(
-                    patch.object(report_model, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
+                    patch.object(report_model, '_run_wkhtmltopdf__', _patched_run_wkhtmltopdf),
                 )
             yield
 
@@ -2731,12 +2731,12 @@ class HttpCase(TransactionCase):
 
         report_model = self.env.registry['ir.actions.report']
         try:
-            old_run_wkhtmltopdf = report_model._run_wkhtmltopdf
+            old_run_wkhtmltopdf = report_model._run_wkhtmltopdf__
         except AttributeError:
             pass
         else:
             self.startPatcher(
-                patch.object(report_model, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
+                patch.object(report_model, '_run_wkhtmltopdf__', _patched_run_wkhtmltopdf),
             )
 
     @contextmanager
