@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
@@ -168,6 +169,19 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
             bill.action_l10n_my_edi_send_invoice()
         mock_contact_proxy.assert_not_called()
         self.assertEqual(bill.l10n_my_edi_document_ids, bill.l10n_my_edi_received_document_id)
+
+    @freeze_time('2024-08-15 10:00:00')
+    def test_post_received_bill_total(self):
+        """ The line of a received bill can be split, as long as the bill still matches the e-invoice. """
+        self._sync([[self._document_data('DOC1')]])
+        bill = self._get_received_bills(['DOC1'])
+        bill.invoice_line_ids.price_unit = 600.0
+        with self.assertRaisesRegex(UserError, 'no longer matches the e-invoice'):
+            bill.action_post()
+
+        bill.invoice_line_ids = [Command.create({'name': 'Delivery', 'quantity': 1, 'price_unit': 400.0, 'tax_ids': []})]
+        bill.action_post()
+        self.assertEqual(bill.state, 'posted')
 
     @freeze_time('2024-08-15 10:00:00')
     def test_sync_error(self):
