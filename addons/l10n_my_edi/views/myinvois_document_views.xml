@@ -26,6 +26,7 @@
                     <sheet>
                         <widget name="web_ribbon" title="Processing" bg_color="text-bg-info" invisible="myinvois_state != 'in_progress'"/>
                         <widget name="web_ribbon" title="Rejected" bg_color="text-bg-warning" invisible="myinvois_state != 'rejected'"/>
+                        <widget name="web_ribbon" title="Received" bg_color="text-bg-success" invisible="myinvois_state != 'received'"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_linked_invoices" type="object" icon="edit_square" class="oe_stat_button" invisible="linked_invoice_count == 0">
                                  <field name="linked_invoice_count" string="Source Documents" widget="statinfo"/>
@@ -38,6 +39,7 @@
                         </div>
                         <group>
                             <group>
+                                <field name="myinvois_document_type" invisible="not is_received_document"/>
                                 <field name="myinvois_issuance_date"/>
                                 <field name="myinvois_submission_uid"/>
                                 <field name="myinvois_external_uuid"/>
@@ -59,16 +61,18 @@
                 <list string="MyInvois Documents" create="false" sample="0" decoration-muted="myinvois_state == 'cancelled'">
                     <header>
                         <button name="action_open_consolidate_invoice_wizard" string="Consolidate Invoices" type="object" display="always" class="btn-primary" invisible="not context.get('display_consolidate_invoice_button', False)" context="{'default_consolidation_type': 'invoice'}"/>
+                        <button name="%(l10n_my_edi.myinvois_document_sync_wizard_action)d" string="Sync MyInvois" type="action" display="always" invisible="not context.get('l10n_my_edi_display_sync_button', False)" context="{'default_journal_id': context.get('journal_id')}"/>
                         <button name="action_submit_to_myinvois" string="Submit To MyInvois" type="object" class="btn-primary"/>
                         <button name="action_update_submission_status" string="Fetch Status From MyInvois" type="object"/>
                     </header>
                     <field name="name" readonly="1"/>
                     <field name="move_type"/>
                     <field name="is_debit_note" optional="hide" widget="boolean_toggle"/>
+                    <field name="myinvois_document_type" optional="hide"/>
                     <field name="myinvois_issuance_date"/>
                     <field name="myinvois_state" widget="badge"
                            decoration-info="myinvois_state == 'in_progress'"
-                           decoration-success="myinvois_state == 'valid'"
+                           decoration-success="myinvois_state in ('valid', 'received')"
                            decoration-warning="myinvois_state == 'rejected'"
                            decoration-muted="myinvois_state == 'invalid'"
                            decoration-danger="myinvois_state == 'cancelled'"/>
@@ -87,6 +91,7 @@
                     <field name="journal_id"/>
                     <filter string="Consolidated Invoice" name="filter_is_consolidated_invoice" domain="[('is_consolidated_invoice', '=', True)]"/>
                     <filter string="Debit Note" name="filter_is_debit_note" domain="[('is_debit_note', '=', True)]"/>
+                    <filter string="Received" name="filter_is_received_document" domain="[('is_received_document', '=', True)]"/>
                     <separator/>
                     <filter string="Draft" name="filter_is_draft" domain="[('myinvois_state', '=', False)]"/>
                     <filter string="In Progress" name="filter_is_in_progress" domain="[('myinvois_state', '=', 'in_progress')]"/>

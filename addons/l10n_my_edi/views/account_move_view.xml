@@ -13,6 +13,13 @@
                     </div>
                 </button>
            </xpath>
+            <!-- The reference of a received bill is the number the supplier gave to the e-invoice. -->
+            <xpath expr="//group[@id='header_left_group']//field[@name='ref']" position="attributes">
+                <attribute name="readonly">l10n_my_edi_received_document_id</attribute>
+            </xpath>
+            <field name="invoice_vendor_bill_id" position="after">
+                <field name="l10n_my_edi_validation_time" invisible="not l10n_my_edi_received_document_id"/>
+            </field>
             <xpath expr="//widget[@name='web_ribbon']" position="before">
                 <widget name="web_ribbon" title="Processing" bg_color="text-bg-info" invisible="l10n_my_edi_state != 'in_progress'"/>
                 <widget name="web_ribbon" title="Rejected" bg_color="text-bg-warning" invisible="l10n_my_edi_state != 'rejected'"/>
@@ -47,6 +54,7 @@
                         <group>
                             <!-- Only displayed if the invoice contains a tax of type Exempt -->
                             <field name="l10n_my_edi_state" invisible="not l10n_my_edi_state"/>
+                            <field name="l10n_my_edi_document_type" invisible="not l10n_my_edi_document_type"/>
                             <field name="l10n_my_edi_exemption_reason" invisible="not l10n_my_edi_display_tax_exemption_reason" readonly="l10n_my_edi_state and l10n_my_edi_state not in ('invalid', 'cancelled')"/>
                             <field name="l10n_my_edi_custom_form_reference" readonly="l10n_my_edi_state and l10n_my_edi_state not in ('invalid', 'cancelled')"/>
                         </group>
@@ -61,14 +69,35 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree" />
         <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="l10n_my_edi_document_type" optional="show" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund')"/>
+            </field>
+            <field name="invoice_date" position="after">
+                <field name="l10n_my_edi_validation_time" optional="show" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund')"/>
+            </field>
             <field name="status_in_payment" position="before">
                 <field name="l10n_my_edi_state" optional="hide" widget="badge"
                        decoration-info="l10n_my_edi_state == 'in_progress'"
-                       decoration-success="l10n_my_edi_state == 'valid'"
+                       decoration-success="l10n_my_edi_state in ('valid', 'received')"
                        decoration-warning="l10n_my_edi_state == 'rejected'"
                        decoration-muted="l10n_my_edi_state == 'invalid'"
                        decoration-danger="l10n_my_edi_state == 'cancelled'"/>
             </field>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter_inherit_l10n_my_myinvois" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit.l10n_my_myinvois</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="l10n_my_edi_document_ids" string="MyInvois UUID" filter_domain="[('l10n_my_edi_document_ids.myinvois_external_uuid', 'ilike', self)]"/>
+                <field name="l10n_my_edi_document_type"/>
+            </field>
+            <filter name="status" position="after">
+                <filter name="groupby_l10n_my_edi_document_type" string="MyInvois Document Type" context="{'group_by': 'l10n_my_edi_document_type'}"/>
+            </filter>
         </field>
     </record>
 
