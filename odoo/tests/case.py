@@ -252,7 +252,7 @@ class TestCase(_TestCase):
     def canonical_tag(self):
         return self.get_canonical_tag()
 
-    def _make_canonical_tag(self=None, tag='', module=None, test_class=None, test_method=None, params=None):
+    def _make_canonical_tag(self, tag='', module=None, test_class=None, test_method=None, params=None):
         if module:
             tag = f'{tag}/{module}'
         if test_class:
