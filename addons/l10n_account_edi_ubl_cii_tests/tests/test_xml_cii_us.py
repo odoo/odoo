@@ -47,7 +47,8 @@ class TestCIIUS(TestUBLCommon):
         # Default XML acting as the default EDI
         edi_attachment = self.env['ir.attachment'].search([
             ('res_model', '=', 'account.move'),
-            ('res_id', '=', invoice.id)
+            ('res_id', '=', invoice.id),
+            ('res_field', '=', False),
         ])
         self.assertEqual(edi_attachment.name, "factur-x.xml")
 

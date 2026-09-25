@@ -19,7 +19,7 @@ class IrActionsReport(models.Model):
         payment_mode_name_map = self._hr_expense_get_payment_mode_name_map()
 
         attachments_per_expense_id = dict(self.env['ir.attachment']._read_group(
-            domain=[('res_id', 'in', res_ids), ('res_model', '=', 'hr.expense')],
+            domain=[('res_id', 'in', res_ids), ('res_model', '=', 'hr.expense'), ('res_field', '=', False)],
             groupby=['res_id'],
             aggregates=['id:recordset'],
         ))

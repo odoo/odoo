@@ -164,7 +164,8 @@ class IrActionsReport(models.Model):
         return record.env['ir.attachment'].search([
                 ('name', '=', attachment_name),
                 ('res_model', '=', self.model),
-                ('res_id', '=', record.id)
+                ('res_id', '=', record.id),
+                ('res_field', '=', False),
         ], limit=1)
 
     @api.model

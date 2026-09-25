@@ -66,7 +66,7 @@ class AccountMove(models.Model):
             domains.append([('res_model', '=', 'account.bank.statement'), ('res_id', 'in', statement_ids.ids)])
         if payment_ids:
             domains.append([('res_model', '=', 'account.payment'), ('res_id', 'in', payment_ids.ids)])
-        return self.env['ir.attachment'].search_count(Domain.OR(domains))
+        return self.env['ir.attachment'].search_count(Domain.OR(domains) & Domain('res_field', '=', False))
 
     def _check_l10n_cn_balance_deduction_info(self):
         """Ensure each product line has exactly one percentage tax and required balance deduction details.
