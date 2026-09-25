@@ -621,7 +621,7 @@ class Meeting(models.Model):
         events = super().create(other_vals)
 
         for vals in recurring_vals:
-            vals['follow_recurrence'] = True
+            vals.setdefault('follow_recurrence', True)
         recurring_events = super().create(recurring_vals)
         events += recurring_events
 
