@@ -117,7 +117,7 @@
         t-attf-style="max-width: {{activeColumns.length &gt; 4 ? 100 : 20 * (activeColumns.length + 1) }}%; min-width: 600px;">
         <t t-call="mail.ActivityViewHeader"/>
         <t t-call="mail.ActivityViewBody"/>
-        <t t-call="mail.ActivityViewFooter"/>
+        <t t-call="mail.ActivityViewFooter" t-if="props.archInfo.activeActions.create"/>
     </table>
 </div>
 

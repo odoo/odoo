@@ -1159,23 +1159,13 @@ test("Activity view: context given to the rpc to fetch data", async () => {
     await expect.waitForSteps(["get_activity_data"]);
 });
 
-test("Activity View: Hide 'New' button in SelectCreateDialog based on action context", async () => {
+test("Activity view: hide Schedule activity when create is false", async () => {
     registerArchs(archs);
-    MailTestActivity._views.list = `
-            <list string="MailTestActivity">
-                <field name="name"/>
-                <field name="activity_ids" widget="list_activity"/>
-            </list>`;
-
     await start();
     await openView({
         res_model: "mail.test.activity",
         views: [[false, "activity"]],
         context: { create: false },
     });
-    await click("table tfoot tr .o_record_selector");
-    await animationFrame();
-    expect(".o_create_button").toHaveCount(0, {
-        message: "'New' button should be hidden",
-    });
+    expect("table tfoot .o_record_selector").toHaveCount(0);
 });
