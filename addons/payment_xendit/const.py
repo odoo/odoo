@@ -11,6 +11,12 @@ SUPPORTED_CURRENCIES = [
     'VND',
 ]
 
+# Tokens created through the v3 Payment Tokens API are prefixed this way. Tokens saved before the
+# migration to that API (and the Payment Sessions API) don't have this prefix; there is no
+# documented way to migrate them, so they must still be charged through the legacy (v2)
+# `credit_card_charges` endpoint.
+V3_TOKEN_ID_PREFIX = 'pt-'
+
 # To correctly allow lowest decimal place rounding
 # https://docs.xendit.co/payment-link/payment-channels
 CURRENCY_DECIMALS = {
@@ -104,7 +110,7 @@ PAYMENT_METHODS_MAPPING = {
     'bank_bca': 'BCA',
     'bank_permata': 'PERMATA',
     'bpi': 'DD_BPI',
-    'card': 'CREDIT_CARD',
+    'card': 'CARDS',
     'maya': 'PAYMAYA',
     'wechat_pay': 'WECHATPAY',
     'scb': 'DD_SCB_MB',
@@ -118,8 +124,8 @@ PAYMENT_METHODS_MAPPING = {
 # Mapping of transaction states to Xendit payment statuses.
 PAYMENT_STATUS_MAPPING = {
     'draft': (),
-    'pending': ('PENDING'),
-    'done': ('SUCCEEDED', 'PAID', 'CAPTURED'),
-    'cancel': ('CANCELLED', 'EXPIRED'),
+    'pending': ('PENDING', 'ACTIVE', 'REQUIRES_ACTION'),
+    'done': ('SUCCEEDED', 'PAID', 'CAPTURED', 'COMPLETED'),
+    'cancel': ('CANCELLED', 'EXPIRED', 'CANCELED'),
     'error': ('FAILED',)
 }
