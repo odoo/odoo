@@ -108,7 +108,7 @@ export class Many2ManyTagsField extends Component {
                 create: false,
                 write: true,
             },
-            onRecordSaved: () => this.props.record.load(),
+            onRecordSaved: () => this.props.record.safeLoad(),
         });
 
         this.update = (recordlist) => {
@@ -171,8 +171,7 @@ export class Many2ManyTagsField extends Component {
             return;
         }
         if (this.props.onTagClick === "open_form") {
-            const saved = await this.props.record.save();
-            if (saved) {
+            if (await this.props.record.safeSave()) {
                 return this.openMany2xRecord({
                     resId: record.resId,
                     context: this.props.context,
