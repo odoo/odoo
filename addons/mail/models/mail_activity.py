@@ -741,6 +741,8 @@ class MailActivity(models.Model):
                                     by closest deadline of the related activities
                                 attachments_info: dict with information about the attachments
                                     {'count': int, 'most_recent_id': int, 'most_recent_name': str}
+                       'can_schedule_activity': bool, whether the user may schedule activities
+                            on records of the model, given their access rights
                        }
         :rtype: dict
         """
@@ -842,6 +844,10 @@ class MailActivity(models.Model):
                 }
                 for activity_type in activity_types
             ],
+            'can_schedule_activity': any(
+                DocModel.has_access(operation)
+                for _domain, operation in DocModel._mail_get_operation_for_mail_message_operation('create')
+            ),
             'grouped_activities': grouped_activities,
         }
 

@@ -260,6 +260,7 @@ export class MailActivity extends models.ServerModel {
                 };
             }),
             activity_res_ids: ongoingResIds.concat(completedResIds).map((idStr) => Number(idStr)),
+            can_schedule_activity: true,
             grouped_activities: groupedActivities,
         };
     }
