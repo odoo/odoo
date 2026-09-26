@@ -214,6 +214,7 @@ export class Builder extends Component {
             publicAttachments: true,
             direction: "ltr",
             maxFontSize: 400,
+            saveScrollableTables: true,
         };
         this.editor = useEditor(config);
         this.props.onEditorLoad?.(this.editor);
