@@ -1074,7 +1074,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderShipLater', login="accountman")
 
-        self.assertEqual(sale_order_single.picking_ids.state, 'cancel')
+        self.assertFalse(sale_order_single.picking_ids)
 
         # The pos order is being shipped later so the qty_delivered should still be 0
         self.assertEqual(sale_order_single.order_line[0].qty_delivered, 0)
@@ -1089,7 +1089,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order_multi.order_line[0].qty_delivered, 0)
         self.assertEqual(sale_order_multi.order_line[1].qty_delivered, 0)
 
-        self.assertEqual(sale_order_multi.picking_ids.state, 'cancel')
+        self.assertFalse(sale_order_multi.picking_ids)
 
     def test_downpayment_invoice(self):
         """This test check that users that don't have the pos user group can invoice downpayments"""
@@ -2403,6 +2403,95 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_settle_so_custom_attribute_value', login="accountman")
+
+    def test_pos_settle_quotation_reordering_rule(self):
+        """
+        Test that settling a quotation in POS does not trigger double reordering.
+        Check the Orderpoint's qty_to_order to avoid dependency on purchase.order model.
+        """
+        if not self.env['ir.module.module'].search([('name', '=', 'purchase_stock'), ('state', '=', 'installed')], limit=1):
+            self.skipTest("purchase_stock module is required for this test")
+
+        # Ensure real-time stock update
+        self.env.company.point_of_sale_update_stock_quantities = 'real'
+
+        # Setup product with reordering rule
+        product_reordering = self.env['product.product'].create({
+            'name': 'Test Reordering Product',
+            'is_storable': True,
+            'available_in_pos': True,
+            'seller_ids': [(0, 0, {
+                'partner_id': self.partner_a.id,
+                'min_qty': 1,
+                'price': 1,
+            })],
+        })
+        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
+        if not route_buy:
+            route_buy = self.env['stock.route'].search([('name', '=', 'Buy')], limit=1)
+        if route_buy:
+            product_reordering.route_ids = [Command.link(route_buy.id)]
+
+        picking_type = self.main_pos_config.picking_type_id
+        location = picking_type.default_location_src_id
+        self.env['stock.quant']._update_available_quantity(product_reordering, location, 10.0)
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product_reordering.id,
+            'location_id': location.id,
+            'product_min_qty': 5.0,
+            'product_max_qty': 10.0,
+            'trigger': 'auto',
+        })
+
+        # Create a quotation
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': product_reordering.id,
+                'product_uom_qty': 10.0,
+            })],
+        })
+
+        self.main_pos_config.open_ui()
+        pos_session = self.main_pos_config.current_session_id
+        pos_session.update_stock_at_closing = False
+
+        # Simulate POS sync_from_ui settling the quotation
+        pos_order_data = {
+            'amount_paid': 100,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 100,
+            'date_order': fields.Datetime.now(),
+            'lines': [[0, 0, {
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': 10,
+                'product_id': product_reordering.id,
+                'qty': 10,
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+                'sale_order_origin_id': sale_order.id,
+                'sale_order_line_id': sale_order.order_line[0].id,
+                'tax_ids': [],
+            }]],
+            'name': 'Order 0001',
+            'partner_id': self.partner_a.id,
+            'session_id': pos_session.id,
+            'state': 'paid',
+            'payment_ids': [(0, 0, {
+                'amount': 100,
+                'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
+            })],
+        }
+
+        self.env['pos.order'].sync_from_ui([pos_order_data])
+
+        # The reordering rule deficit calculation should be exactly 10.0 (to reach Max 10.0).
+        # If the bug occurs (double counting demand), the deficit would be 20.0.
+        orderpoint.invalidate_recordset()
+        self.assertEqual(orderpoint.qty_to_order, 10.0, f"Expected deficit to be 10.0, got {orderpoint.qty_to_order}")
 
 
 @odoo.tests.tagged('post_install', '-at_install')
