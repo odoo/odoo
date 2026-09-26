@@ -115,12 +115,6 @@ export class Thread extends Record {
         )
     );
     create_uid = fields.One("res.users");
-    /**
-     * Server-side value used in chatter to determine if the thread has pinned messages without
-     * having to load them all. Dynamic value should count "pinnedMessages" instead.
-     * @type {boolean}
-     **/
-    has_pinned_messages;
     /** @type {number} */
     id;
     /** @type {string} */
@@ -271,6 +265,15 @@ export class Thread extends Record {
     pid;
     composerDisabled = this.computed(() => this.computeComposerDisabled());
     pinnedMessages = fields.Many("mail.message", { inverse: "threadAsPinned" });
+    /**
+     * Server-side value used to determine the number of pinned messages without having
+     * to load them all. Client-side updates are reflected through "pinnedMessagesCount".
+     * @type {number}
+     */
+    pinned_message_count = 0;
+    pinnedMessagesCount = this.computed(() =>
+        Math.max(this.pinned_message_count, this.pinnedMessages.length)
+    );
     sortedPinnedMessages = this.computed(() =>
         [...this.pinnedMessages].sort((m1, m2) => {
             if (m1.pinned_at === m2.pinned_at) {
@@ -280,12 +283,24 @@ export class Thread extends Record {
         })
     );
 
+    /** @param {string[]} requestList */
+    fetchPinnedMessagesData(requestList) {
+        return this.store.fetchStoreData(
+            this.channel ? "/discuss/channel/pinned_messages" : "mail.thread",
+            {
+                ...this.getFetchParams(),
+                request_list: requestList,
+            }
+        );
+    }
+
     async fetchPinnedMessages() {
-        await this.store.fetchStoreData("mail.thread", {
-            thread_model: this.model,
-            thread_id: this.id,
-            request_list: ["pinned_messages"],
-        });
+        const previouslyPinnedMessages = new Set(this.pinnedMessages);
+        await this.fetchPinnedMessagesData(["pinnedMessages"]);
+        for (const message of previouslyPinnedMessages.difference(new Set(this.pinnedMessages))) {
+            message.pinned_at = undefined;
+        }
+        this.pinned_message_count = this.pinnedMessages.length;
     }
 
     get accessRestrictedToGroupText() {
