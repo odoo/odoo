@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2008 JAILLET Simon - CrysaLEAD - www.crysalead.fr
+from . import demo
 from . import models
 from . import wizard
 
