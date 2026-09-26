@@ -262,6 +262,34 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
 
         self.assertEqual(po.order_line.qty_received, 1.0)
 
+    def test_dropship_subcontractor_bill_valuation_account(self):
+        self.comp1.categ_id = self.category_avco_auto
+        po = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
+            'picking_type_id': self.company.dropship_subcontractor_pick_type_id.id,
+            'dest_address_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'product_id': self.comp1.id,
+                'product_qty': 1.0,
+                'price_unit': 10.0,
+                'tax_ids': False,
+            })],
+        })
+        po.button_confirm()
+        po.picking_ids.move_ids.quantity = 1.0
+        po.picking_ids.move_ids.picked = True
+        po.picking_ids.button_validate()
+
+        po.action_create_invoice()
+        bill = po.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+
+        self.assertEqual(
+            bill.invoice_line_ids.account_id,
+            self.comp1._get_product_accounts()['stock_valuation'],
+        )
+
     def test_subcontracted_bom_routes(self):
         """
         Take two BoM having those components. One being subcontracted and the other not.
