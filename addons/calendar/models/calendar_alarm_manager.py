@@ -13,116 +13,79 @@ class CalendarAlarm_Manager(models.AbstractModel):
     _name = 'calendar.alarm_manager'
     _description = 'Event Alarm Manager'
 
-    def _get_next_potential_limit_alarm(self, alarm_type, seconds=None, partners=None):
+    def _get_next_potential_limit_alarm(self, alarm_type, partners):
+        if not partners:
+            return self.env['calendar.event']
         # flush models before making queries
-        for model_name in ('calendar.alarm', 'calendar.event', 'calendar.recurrence'):
+        for model_name in ('calendar.alarm', 'calendar.event'):
             self.env[model_name].flush_model()
 
-        result = {}
-        delta_request = """
+        if not partners:
+            return self.env['calendar.event']
+
+        params = {
+            'alarm_type': alarm_type,
+            'partner_ids': tuple(partners.ids),
+            'now': self.env.cr.now(),
+        }
+
+        query = SQL("""
+        WITH event_alarmable_window AS (
             SELECT
-                rel.calendar_event_id,
-                max(alarm.duration_minutes) AS max_delta,
-                min(alarm.duration_minutes) AS min_delta
-            FROM
-                calendar_alarm_calendar_event_rel AS rel
-            LEFT JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
-            WHERE alarm.alarm_type = %s
-            GROUP BY rel.calendar_event_id
-        """
-        base_request = """
-            SELECT
-                cal.id,
-                cal.start - interval '1' minute * calcul_delta.max_delta AS first_alarm,
-                cal.stop - interval '1' minute * calcul_delta.min_delta AS last_alarm,
-                cal.start AS first_meeting,
-                cal.stop AS last_meeting,
-                calcul_delta.min_delta,
-                calcul_delta.max_delta
-            FROM
-                calendar_event AS cal
-            INNER JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-            WHERE cal.active = True
-        """
-        filter_user = """
-            INNER JOIN calendar_event_res_partner_rel AS part_rel
+                    cal.id,
+                    cal.start - INTERVAL '1' MINUTE * MAX(alarm.duration_minutes) AS first_alarm,
+                    cal.stop - INTERVAL '1' MINUTE * MIN(alarm.duration_minutes) AS last_alarm
+              FROM calendar_event AS cal
+              JOIN calendar_alarm_calendar_event_rel AS rel
+                ON rel.calendar_event_id = cal.id
+              JOIN calendar_alarm AS alarm
+                ON alarm.id = rel.calendar_alarm_id
+              JOIN calendar_event_res_partner_rel AS part_rel
                 ON part_rel.calendar_event_id = cal.id
-                AND part_rel.res_partner_id IN %s
-            WHERE cal.active = True
-        """
+             WHERE alarm.alarm_type = %(alarm_type)s
+               AND part_rel.res_partner_id IN %(partner_ids)s
+               AND cal.active = TRUE
+          GROUP BY cal.id, cal.start, cal.stop
+        ),
+        next_alarm AS (
+            SELECT MIN(first_alarm) AS alarm_time
+              FROM event_alarmable_window
+             WHERE first_alarm > %(now)s
+        )
+        SELECT id
+          FROM event_alarmable_window
+         WHERE last_alarm > %(now)s
+           AND first_alarm < COALESCE(
+                (SELECT alarm_time FROM next_alarm) + INTERVAL '3 MINUTE',
+                %(now)s
+            )
+        """, **params)
 
-        # Add filter on alarm type
-        tuple_params = (alarm_type,)
-
-        # Add filter on partner_id
-        if partners:
-            base_request = base_request.replace("WHERE cal.active = True", filter_user)
-            tuple_params += (tuple(partners.ids), )
-
-        # Upper bound on first_alarm of requested events
-        first_alarm_max_value = ""
-        if seconds is None:
-            # first alarm in the future + 3 minutes if there is one, now otherwise
-            first_alarm_max_value = """
-                COALESCE((SELECT MIN(cal.start - interval '1' minute  * calcul_delta.max_delta)
-                FROM calendar_event cal
-                RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-                WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
-            ) + interval '3' minute, now() at time zone 'utc')"""
-        else:
-            # now + given seconds
-            first_alarm_max_value = "(now() at time zone 'utc' + interval '%s' second )"
-            tuple_params += (seconds,)
-
-        self.env.flush_all()
-        self.env.cr.execute("""
-            WITH calcul_delta AS (%s)
-            SELECT *
-                FROM ( %s ) AS ALL_EVENTS
-            WHERE ALL_EVENTS.first_alarm < %s
-                AND ALL_EVENTS.last_alarm > ('%s' at time zone 'utc')
-        """ % (delta_request, base_request, first_alarm_max_value, fields.Datetime.now()), tuple_params)
-
-        for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration in self.env.cr.fetchall():
-            result[event_id] = {
-                'event_id': event_id,
-                'first_alarm': first_alarm,
-                'last_alarm': last_alarm,
-                'first_meeting': first_meeting,
-                'last_meeting': last_meeting,
-                'min_duration': min_duration,
-                'max_duration': max_duration,
-            }
+        event_ids = [event_id for (event_id,) in self.env.execute_query(query)]
 
         # determine accessible events
-        events = self.env['calendar.event'].browse(result)
-        result = {
-            key: result[key]
-            for key in events._filtered_access('read').ids
-        }
-        return result
+        events = self.env['calendar.event'].browse(event_ids)._filtered_access('read')
+        return events
 
-    def do_check_alarm_for_one_date(self, one_date, event, event_maxdelta, in_the_next_X_seconds, alarm_type, after=False, missing=False):
+    def do_check_alarm_for_one_date(self, one_date, event, in_the_next_X_seconds, alarm_type, after=False):
         """ Search for some alarms in the interval of time determined by some parameters (after, in_the_next_X_seconds, ...)
             :param one_date: date of the event to check (not the same that in the event browse if recurrent)
             :param event: Event browse record
             :param event_maxdelta: biggest duration from alarms for this event
             :param in_the_next_X_seconds: looking in the future (in seconds)
             :param after: if not False: will return alert if after this date (date as string - todo: change in master)
-            :param missing: if not False: will return alert even if we are too late
             :param notif: Looking for type notification
             :param mail: looking for type email
         """
         result = []
         # TODO: remove event_maxdelta and if using it
-        past = one_date - timedelta(minutes=(missing * event_maxdelta))
+        past = one_date
         future = fields.Datetime.now() + timedelta(seconds=in_the_next_X_seconds)
         if future <= past:
             return result
         for alarm in event.alarm_ids:
             if alarm.alarm_type != alarm_type:
                 continue
-            past = one_date - timedelta(minutes=(missing * alarm.duration_minutes))
             if future <= past:
                 continue
             if after and past <= fields.Datetime.from_string(after):
@@ -215,11 +178,9 @@ class CalendarAlarm_Manager(models.AbstractModel):
 
         all_meetings = self._get_next_potential_limit_alarm('notification', partners=partner)
         time_limit = 3600 * 24  # return alarms of the next 24 hours
-        for event_id in all_meetings:
-            max_delta = all_meetings[event_id]['max_duration']
-            meeting = self.env['calendar.event'].browse(event_id)
+        for meeting in all_meetings:
             in_date_format = fields.Datetime.from_string(meeting.start)
-            last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, time_limit, 'notification', after=partner.calendar_last_notif_ack)
+            last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, time_limit, 'notification', after=partner.calendar_last_notif_ack)
             if last_found:
                 for alert in last_found:
                     all_notif.append(self.do_notif_reminder(alert))
