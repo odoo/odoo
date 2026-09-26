@@ -56,6 +56,9 @@
         'web.assets_tests': [
             'purchase/static/tests/tours/**/*',
         ],
+        'web.assets_unit_tests': [
+            'purchase/static/tests/*.test.js',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
