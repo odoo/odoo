@@ -85,11 +85,11 @@
         <h4 class="border-bottom pb-2">
             Images Optimization
         </h4>
-        <t t-if="!this.state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
+        <t t-if="!this.seoContext.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
             <p><i class="oi text-success me-2" data-icon="check"></i>No warning on images</p>
         </t>
         <div class="row">
-            <t t-foreach="this.state.altAttributes" t-as="img" t-key="img.id">
+            <t t-foreach="this.seoContext.altAttributes" t-as="img" t-key="img.id">
                 <div class="col-lg-6 col-sm-12 d-flex mb-3">
                     <div class="me-3">
                         <img class="o-img-thumbnail" alt="Preview image" t-att-src="img.src"></img>
@@ -183,7 +183,15 @@
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page description">D</abbr></th>
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page content">C</abbr></th>
                         <th title="Most searched topics related to your keyword, ordered by importance">Content ideas based on Google searches</th>
-                        <th class="text-center"></th>
+                        <th></th>
+                        <th class="text-center">
+                            <button class="border-0 oe_remove text-danger bg-transparent"
+                                    t-on-click="this.removeAllKeywords"
+                                    title="Remove all keywords"
+                                    aria-label="Remove all keywords">
+                                <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
+                            </button>
+                        </th>
                     </tr>
                 </thead>
                 <t t-foreach="this.seoContext.keywords" t-as="keyword" t-key="keyword">
@@ -192,15 +200,20 @@
             </table>
         </div>
         <div role="form" class="input-group w-50">
-            <t t-set="placeholderRemove">Remove a keyword first</t>
-            <t t-set="placeholderAdd">Add your keyword</t>
-            <input t-model.proxy="this.state.keyword" type="text" class="form-control" t-att-placeholder="this.isFull ? placeholderRemove : placeholderAdd" t-att-readonly="this.isFull" t-on-keyup="this.onKeyup"/>
-            <button t-on-click="() => this.addKeyword(this.state.keyword)" t-att-disabled="this.isFull" class="btn btn-primary" type="button">Add</button>
-            <button t-if="!this.seoContext.keywords.length" t-on-click="this.provideKeywords" class="btn btn-secondary" type="button">
+            <t t-set="placeholder">Add your keyword</t>
+            <t t-if="this.hasTooManyKeywords">
+                <t t-set="placeholder">Avoid too many keywords</t>
+            </t>
+            <input t-model.proxy="this.state.keyword" type="text" class="form-control" t-att-class="{ 'is-invalid' : this.hasKeyword }" t-att-placeholder="placeholder" t-on-keyup="this.onKeyup"/>
+            <button t-on-click="() => this.addKeyword(this.state.keyword)" t-att-disabled="this.hasKeyword" class="btn btn-primary" type="button">Add</button>
+            <button t-if="!this.hasTooManyKeywords" t-on-click="this.provideKeywords" class="btn btn-secondary" type="button">
                 Generate keywords
             </button>
         </div>
-        <div t-if="this.state.errorMessage" class="alert alert-warning" t-out="this.state.errorMessage"></div>
+        <span t-if="this.hasKeyword" class="me-2 small text-danger">
+            <i class="oi me-1" data-icon="close" aria-hidden="true"/>
+            The keyword <t t-out="this.normalizeKeyword(this.state.keyword)"/> already exists.
+        </span>
     </section>
 </t>
 
@@ -247,6 +260,17 @@
 <t t-name="website.TitleDescription">
     <section>
         <div class="row">
+            <t t-if="this.visibilityWarning">
+                <div class="col-12 px-0">
+                    <div class="alert alert-warning py-2 rounded-0 border-0 mb-0">
+                        <span class="text-info"><t t-out="this.visibilityWarning"/></span>
+                        <button class="btn btn-link ps-1" t-on-click="this.openPagePropertiesDialog">
+                            <i class="oi oi-fw me-1" data-icon="east"/>
+                            <span>Go to page properties</span>
+                        </button>
+                    </div>
+                </div>
+            </t>
             <div class="col-12 px-0">
                 <div class="alert alert-info py-2 rounded-0 border-0">
                     <span class="text-info">Need help to optimize?</span>
@@ -325,14 +349,18 @@
             isIndexed="this.isIndexed"
             defaultTitle="this.defaultTitle"
             previewDescription="this.previewDescription"
-            url="this.url"/>
+            url="this.url"
+            isPublished="this.isPublished"
+            isVisibilityPublic="this.isVisibilityPublic"
+            isDirty="this.isDirty"
+            save="this.boundSave"/>
         <ImageSelector t-if="this.canEditSeo" previewDescription="this.socialPreviewDescription"
             defaultTitle="this.defaultTitle"
             hasSocialDefaultImage="this.hasSocialDefaultImage"
             pageImages="this.pageImages"
             url="this.url"/>
         <MetaKeywords t-if="this.canEditSeo"/>
-        <SeoChecks t-if="this.canEditSeo" isDefaultLang="this.isDefaultLang"/>
+        <SeoChecks t-if="this.canEditSeo" isDefaultLang="this.isDefaultLang" initialSeoState="this.initialSeoState"/>
     </WebsiteDialog>
 </t>
 </templates>
