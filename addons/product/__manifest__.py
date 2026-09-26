@@ -2,7 +2,7 @@
 
 {
     'name': 'Products & Pricelists',
-    'version': '1.2',
+    'version': '1.3',
     'category': 'Sales/Sales',
     'depends': ['base', 'mail', 'uom'],
     'description': """
