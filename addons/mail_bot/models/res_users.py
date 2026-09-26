@@ -23,7 +23,12 @@ class ResUsers(models.Model):
 
     def _on_webclient_bootstrap(self):
         super()._on_webclient_bootstrap()
-        if self._is_internal() and self.odoobot_state in [False, "not_initialized"]:
+        # light users are not meant to use Discuss, their onboarding waits until they become regular
+        if (
+            self._is_internal()
+            and self._has_group("base.group_user_regular")
+            and self.odoobot_state in [False, "not_initialized"]
+        ):
             self._init_odoobot()
 
     def _init_odoobot(self):

@@ -738,11 +738,13 @@ class TestUsers2(UsersCommonCase):
     def test_write_group_ids_performance(self):
         contact_creation_group = self.env.ref("base.group_partner_manager")
         self.assertNotIn(contact_creation_group, self.user_internal.group_ids)
+        # A light user becoming regular joins its auto-subscribe channels (mail), keep it out of the count
+        self.user_internal.group_ids += self.env.ref("base.group_user_regular")
         # Process any tracking message at flush for cleaner queryCount
         self.flush_tracking()
 
-        # all modules: 51, base: 17; nightly: +1
-        with self.assertQueryCount(52):
+        # all modules: 53, base: 17; nightly: +1
+        with self.assertQueryCount(54):
             self.user_internal.write({
                 "group_ids": [Command.link(contact_creation_group.id)],
             })
