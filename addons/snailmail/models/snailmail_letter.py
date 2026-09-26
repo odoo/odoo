@@ -548,8 +548,8 @@ class SnailmailLetter(models.Model):
         new_pdf = PdfFileReader(pdf_buf)
         curr_pdf = PdfFileReader(io.BytesIO(invoice_bin))
         out = PdfFileWriter()
-        for page in curr_pdf.pages:
-            out.addPage(page)
+        for page_index in range(curr_pdf.getNumPages()):
+            out.addPage(curr_pdf.getPage(page_index))
             added_page = out.getPage(-1)
             added_page.mergePage(new_pdf.getPage(0))
             added_page.compressContentStreams()
