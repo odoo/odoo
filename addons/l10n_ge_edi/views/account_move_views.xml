@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_form_inherit_l10n_ge_edi" model="ir.ui.view">
+        <field name="name">account.move.view.form.inherit.l10n.ge.edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_l10n_ge_edi_open_original_move"
+                        class="oe_stat_button"
+                        icon="edit_square"
+                        type="object"
+                        invisible="not l10n_ge_edi_original_move_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Original Invoice</span>
+                    </div>
+                </button>
+                <button name="action_l10n_ge_edi_open_correction_move"
+                        class="oe_stat_button"
+                        icon="edit_square"
+                        type="object"
+                        invisible="not l10n_ge_edi_correction_move_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Corrective Invoice</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <label for="l10n_ge_edi_state"
+                       invisible="l10n_ge_edi_state_not_visible"/>
+                <div name="l10n_ge_edi_state_div"
+                     class="d-flex gap-2 align-items-baseline"
+                     invisible="l10n_ge_edi_state_not_visible">
+                    <field name="l10n_ge_edi_state" class="oe_inline"/>
+                    <button
+                        name="action_l10n_ge_edi_refresh_status"
+                        type="object"
+                        class="o_icon_button text-primary"
+                        invisible="l10n_ge_edi_state in ('not_sent', 'confirmed_cancelled', 'rejected')"
+                        title="Synchronize with RS.ge"
+                        icon="refresh"/>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='sale_info_group']" position="inside">
+                <field name="l10n_ge_edi_f_series" invisible="not l10n_ge_edi_f_series"/>
+                <field name="l10n_ge_edi_f_number" invisible="not l10n_ge_edi_f_series"/>
+                <field name="l10n_ge_edi_registration_date" invisible="not l10n_ge_edi_registration_date"/>
+            </xpath>
+            <xpath expr="//button[@name='action_reverse']" position="attributes">
+                <attribute name="invisible" add="l10n_ge_edi_credit_note_not_allowed" separator="or"/>
+            </xpath>
+            <xpath expr="//button[@name='action_reverse']" position="after">
+                <button name="action_l10n_ge_edi_open_k_invoice_wizard" string="K Invoice"
+                        type="object" groups="account.group_account_invoice"
+                        invisible="l10n_ge_edi_k_invoice_not_allowed"/>
+                <button name="action_l10n_ge_edi_request_cancellation" string="Request Cancellation"
+                        type="object" groups="account.group_account_invoice"
+                        invisible="l10n_ge_edi_request_cancellation_not_allowed"
+                        confirm="Once requested, the customer must accept the cancellation on RS.ge, or it will remain stuck pending. This cannot be undone from Odoo."/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
