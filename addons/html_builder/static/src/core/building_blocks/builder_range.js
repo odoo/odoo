@@ -103,6 +103,7 @@ export class BuilderRange extends Component {
         this.commit = commit;
         if (this.props.withNumberInput) {
             this.inputRefNumber = signal.ref(HTMLInputElement);
+            this.debouncedCommitNumberValue = useInputDebouncedCommit(this.inputRefNumber, commit);
             this.preview = (value, isRatio = false) => {
                 let ratio;
                 if (isRatio) {
@@ -162,6 +163,10 @@ export class BuilderRange extends Component {
         e.target.value = value;
         this.onInputRange(e);
         this.debouncedCommitRangeValue();
+    }
+
+    onKeydownNumber() {
+        this.debouncedCommitNumberValue();
     }
 
     clampValueForInput(value) {

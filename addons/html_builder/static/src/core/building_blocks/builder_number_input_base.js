@@ -28,6 +28,7 @@ export class BuilderNumberInputBase extends BuilderInputBase {
             e.target.value = this.state.value;
             this.props.preview(e.target.value);
             this.props.onKeydownArrow?.(e);
+            this.props.onKeydown?.(e);
         } else {
             super.onKeydown(...arguments);
         }
