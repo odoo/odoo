@@ -19,6 +19,44 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         self._send_patched(invoice)
         self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice")
 
+    def test_export_invoice_line_discount(self):
+        """ A discounted invoice line should be exported as an AllowanceCharge on the line. """
+        invoice = self._create_french_invoice()
+        invoice.invoice_line_ids[0].discount = 10.0
+        invoice.action_post()
+        self._send_patched(invoice)
+        self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice_discount")
+
+    def test_export_invoice_global_discount(self):
+        """ A document-level (sale order) discount should be exported as a document AllowanceCharge. """
+        order = self._create_sale_order()
+        self._apply_sale_order_discount(order, 'percent', 10)
+        invoice = self._create_final_invoice(order, post=True)
+        self._send_patched(invoice)
+        self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice_global_discount")
+
+    def test_import_invoice_partner_fr(self):
+        """ Export a plain invoice, re-import it as a bill, check it comes back. """
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+
+        xml_content, errors = self.env['account.edi.xml.ubl_21_fr']._export_invoice(invoice)
+        self.assertFalse(errors)
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': xml_content,
+            'name': 'test_invoice.xml',
+        })
+        imported_invoice = self._import_invoice_as_attachment_on(
+            attachment=xml_attachment,
+            journal=self.company_data['default_journal_purchase'],
+        )
+
+        self.assertEqual(imported_invoice.move_type, 'in_invoice')
+        self.assertEqual(len(imported_invoice.invoice_line_ids), len(invoice.invoice_line_ids))
+        self.assertEqual(imported_invoice.amount_untaxed, invoice.amount_untaxed)
+        self.assertEqual(imported_invoice.amount_total, invoice.amount_total)
+
     def test_export_invoice_partner_fr_without_pdp(self):
         """
         A French Peppol proxy user must have the BR-FR-05 mandatory notes
