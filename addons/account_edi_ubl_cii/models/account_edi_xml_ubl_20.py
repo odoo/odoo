@@ -532,6 +532,29 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'base_quantity_attrs': {'unitCode': uom},
         }
 
+    def _get_invoice_line_order_line_reference_vals(self, line):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
+        """ Method used to fill the cac:OrderLineReference node on a line level.
+        It provides the buyer's order line reference and the sales order identifier
+        associated with the invoice line.
+
+        :param line:    An invoice line.
+        :return:        A dictionary.
+        """
+        line_id = None
+        sales_order_id = None
+        so_count = self._ubl_get_sale_order_count(line.move_id)
+        if so_count > 1:
+            sale_line = line.sale_line_ids
+            order_lines = sale_line.order_id.order_line.filtered(lambda l: not l.display_type)
+            line_id = order_lines.ids.index(sale_line.id) + 1 if sale_line in order_lines else None
+            sales_order_id = sale_line.order_id.name
+        return {
+            'line_id': line_id,
+            'sales_order_id': sales_order_id,
+        }
+
     def _get_invoice_line_tax_totals_vals_list(self, line, taxes_vals):
         # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
         # If you change this method, please change the corresponding new helper as well (at the end of this file).
@@ -569,6 +592,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
             'price_vals': self._get_invoice_line_price_vals(line),
+            'order_line_reference_vals': self._get_invoice_line_order_line_reference_vals(line),
         }
 
     def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
@@ -701,11 +725,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         supplier = invoice.company_id.partner_id.commercial_partner_id
         customer = invoice.partner_id
 
+        so_count = self._ubl_get_sale_order_count(invoice)
         # OrderReference/SalesOrderID (sales_order_id) is optional
-        sales_order_id = 'sale_line_ids' in invoice.invoice_line_ids._fields \
-                         and ",".join(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
+        sales_order_id = invoice.invoice_origin if so_count == 1 else None
         # OrderReference/ID (order_reference) is mandatory inside the OrderReference node !
-        order_reference = invoice.ref or invoice.name
+        order_reference = invoice.ref or invoice.name if so_count <= 1 else None
 
         vals = {
             'builder': self,
@@ -1249,6 +1273,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_invoice_header_nodes(self, document_node, vals):
         invoice = vals['invoice']
+        so_count = self._ubl_get_sale_order_count(invoice)
         document_node.update({
             'cbc:UBLVersionID': {'_text': '2.0'},
             'cbc:ID': {'_text': invoice.name},
@@ -1258,11 +1283,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'cbc:DocumentCurrencyCode': {'_text': invoice.currency_id.name},
             'cac:OrderReference': {
                 # OrderReference/ID (order_reference) is mandatory inside the OrderReference node
-                'cbc:ID': {'_text': invoice.ref or invoice.name},
+                'cbc:ID': {'_text': invoice.ref or invoice.name if so_count <= 1 else None},
                 # OrderReference/SalesOrderID (sales_order_id) is optional
-                'cbc:SalesOrderID': {
-                    '_text': ",".join(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
-                } if 'sale_line_ids' in invoice.invoice_line_ids._fields else None,
+                'cbc:SalesOrderID': {'_text': invoice.invoice_origin if so_count == 1 else None},
             }
         })
 
@@ -1385,6 +1408,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         self._add_invoice_line_id_nodes(line_node, vals)
         self._add_invoice_line_note_nodes(line_node, vals)
         self._add_invoice_line_period_nodes(line_node, vals)
+        self._add_invoice_line_order_line_reference_nodes(line_node, vals)
         self._add_invoice_line_allowance_charge_nodes(line_node, vals)
         self._add_invoice_line_amount_nodes(line_node, vals)
         self._add_invoice_line_tax_total_nodes(line_node, vals)
@@ -1427,6 +1451,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_invoice_line_period_nodes(self, line_node, vals):
         pass
+
+    def _add_invoice_line_order_line_reference_nodes(self, line_node, vals):
+        sub_vals = {
+            **vals,
+            'line_node': line_node,
+            'line_vals': {'base_line': vals['base_line']},
+        }
+        self._ubl_add_line_order_line_reference_node(sub_vals)
 
     def _add_invoice_line_allowance_charge_nodes(self, line_node, vals):
         self._add_document_line_allowance_charge_nodes(line_node, vals)

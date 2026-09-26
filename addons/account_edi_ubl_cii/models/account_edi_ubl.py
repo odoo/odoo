@@ -864,6 +864,31 @@ class AccountEdiUBL(models.AbstractModel):
             'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
         }
 
+    def _ubl_add_line_order_line_reference_node(self, vals):
+        """ Add line-level OrderLineReference when multiple SOs are linked to the invoice."""
+        invoice = vals['invoice']
+        so_count = self._ubl_get_sale_order_count(invoice)
+        if so_count <= 1:
+            return
+
+        base_line = vals['line_vals']['base_line']
+        move_line = base_line['record']
+        if not isinstance(move_line, models.Model) or move_line._name != 'account.move.line':
+            return
+
+        sale_line = move_line.sale_line_ids
+        order_lines = sale_line.order_id.order_line.filtered(lambda l: not l.display_type)
+        line_id = order_lines.ids.index(sale_line.id) + 1 if sale_line in order_lines else None
+
+        if line_id:
+            vals['line_node']['cac:OrderLineReference'] = {
+                'cbc:LineID': {'_text': line_id},
+                'cac:OrderReference': {
+                    'cbc:ID': {'_text': sale_line.order_id.name},
+                    'cbc:SalesOrderID': {'_text': sale_line.order_id.name},
+                },
+            }
+
     def _ubl_add_line_credited_quantity_node(self, vals):
         base_line = vals['line_vals']['base_line']
         vals['line_node']['cbc:CreditedQuantity'] = {
@@ -1608,6 +1633,7 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_line_id_node(vals)
         self._ubl_add_line_note_nodes(vals)
         self._ubl_add_line_invoiced_quantity_node(vals)
+        self._ubl_add_line_order_line_reference_node(vals)
         self._ubl_add_line_allowance_charge_nodes(vals)
         self._ubl_add_line_extension_amount_node(vals)
         self._ubl_add_line_pricing_reference_node(vals)
@@ -1625,6 +1651,7 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_line_id_node(vals)
         self._ubl_add_line_note_nodes(vals)
         self._ubl_add_line_credited_quantity_node(vals)
+        self._ubl_add_line_order_line_reference_node(vals)
         self._ubl_add_line_allowance_charge_nodes(vals)
         self._ubl_add_line_extension_amount_node(vals)
         self._ubl_add_line_pricing_reference_node(vals)
@@ -1642,6 +1669,7 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_line_id_node(vals)
         self._ubl_add_line_note_nodes(vals)
         self._ubl_add_line_debited_quantity_node(vals)
+        self._ubl_add_line_order_line_reference_node(vals)
         self._ubl_add_line_allowance_charge_nodes(vals)
         self._ubl_add_line_extension_amount_node(vals)
         self._ubl_add_line_pricing_reference_node(vals)
@@ -1724,7 +1752,18 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_add_buyer_reference_node(self, vals):
         vals['document_node']['cbc:BuyerReference'] = {'_text': None}
 
+    def _ubl_get_sale_order_count(self, invoice):
+        """ Return the number of distinct sale orders linked to the invoice.
+
+        :param invoice: An account.move record.
+        :return:        An integer (0 if the sale module is not installed).
+        """
+        return invoice.sale_order_count if 'sale_order_count' in invoice._fields else 0
+
     def _ubl_add_order_reference_node(self, vals):
+        """ Add OrderReference node at the header level for 0/1 SO only. For multiple SOs,
+            the OrderLineReference node will be added at the line level.
+        """
         order_ref_node = vals['document_node']['cac:OrderReference'] = {
             'cbc:ID': {'_text': None},
             'cbc:SalesOrderID': {
@@ -1734,6 +1773,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
             invoice = vals['invoice']
+            so_count = self._ubl_get_sale_order_count(invoice)
 
             # Purchase order reference
             # An identifier of a referenced purchase order, issued by the Buyer.
@@ -1745,14 +1785,11 @@ class AccountEdiUBL(models.AbstractModel):
             # Instead, the user can encode this information on 'Customer Reference' a.k.a the 'ref' field.
             # Since ID is required, the fallback is also fine and avoid to force the encoding of this
             # manual information.
-            order_ref_node['cbc:ID']['_text'] = invoice.ref or invoice.name
+            order_ref_node['cbc:ID']['_text'] = invoice.ref or invoice.name if so_count <= 1 else None
 
             # Sales order reference
             # An identifier of a referenced sales order issued by the Seller.
-            if self.module_installed('sale'):
-                so_names = set(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
-                if so_names:
-                    order_ref_node['cbc:SalesOrderID']['_text'] = ",".join(so_names)
+            order_ref_node['cbc:SalesOrderID']['_text'] = invoice.invoice_origin if so_count == 1 else None
 
     def _ubl_add_billing_reference_nodes(self, vals):
         vals['document_node']['cac:BillingReference'] = []
