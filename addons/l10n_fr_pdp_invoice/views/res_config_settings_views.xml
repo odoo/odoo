@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.fr.pdp.invoice</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="use_invoice_terms" position="after">
+                <field name="l10n_fr_pdp_late_payment_penalties_applicable" invisible="1"/>
+                <!-- Needed by the invisible expression of the setting below. -->
+                <setting id="l10n_fr_pdp_late_payment_penalties"
+                         string="Late Payment Penalties"
+                         company_dependent="1"
+                         invisible="not l10n_fr_pdp_late_payment_penalties_applicable"
+                         help="Calculated as the ECB MRO rate + 10 points. Disable automatic updates to set it manually.">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label for="l10n_fr_pdp_manual_late_payment_penalties_rate" string="Annual Rate" class="col-lg-4 o_light_label"/>
+                            <div class="col-lg-8">
+                                <field name="l10n_fr_pdp_manual_late_payment_penalties_rate"
+                                       class="oe_inline"
+                                       readonly="l10n_fr_pdp_late_payment_penalties_automatic"/>
+                                <span> %</span>
+                            </div>
+                        </div>
+                        <div class="mt8">
+                            <field name="l10n_fr_pdp_late_payment_penalties_automatic"/>
+                            <label for="l10n_fr_pdp_late_payment_penalties_automatic"/>
+                        </div>
+                    </div>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>
