@@ -2177,6 +2177,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.setOrder(order);
         this.navigate("PaymentScreen", {
             orderUuid: order.uuid,
+            editMode: true,
         });
     }
     showOrderDetails(order, props = {}) {
