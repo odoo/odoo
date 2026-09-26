@@ -81,6 +81,7 @@ class SaleReport(models.Model):
             'order_reference': SQL("concat('pos.order', ',', %s)", table.order_id),
         }
 
+<<<<<<< 23ba3c83639e2e9012ae4f0d5f5ea6879f670666
     def _groupby_pos_list(self, table: TableSQL):
         groupby = [
             table.order_id,
@@ -100,3 +101,150 @@ class SaleReport(models.Model):
         if table.consolidation_rate != SQL("1"):
             groupby.append(table.consolidation_rate)
         return groupby
+||||||| 3cb8316c82bba0f9c5c404a38baab69da9603808
+    def _fill_pos_fields(self, additional_fields):
+        """Hook to fill additional fields for the pos_sale.
+
+        :param additional_fields: Dictionary mapping fields with their values
+        :type additional_fields: dict[str, Any]
+        """
+        filled_fields = {x: 'NULL' for x in additional_fields}
+        for fname, value in self._available_additional_pos_fields().items():
+            if fname in additional_fields:
+                filled_fields[fname] = value
+        return filled_fields
+
+    def _from_pos(self):
+        currency_table = self.env['res.currency']._get_simple_currency_table(self.env.companies)
+        return """
+            pos_order_line l
+            JOIN pos_order pos ON l.order_id = pos.id
+            LEFT JOIN res_partner partner ON (pos.partner_id=partner.id OR pos.partner_id = NULL)
+            LEFT JOIN product_product p ON l.product_id=p.id
+            LEFT JOIN product_template t ON p.product_tmpl_id=t.id
+            LEFT JOIN uom_uom u ON u.id=t.uom_id
+            LEFT JOIN pos_session session ON session.id = pos.session_id
+            LEFT JOIN pos_config config ON config.id = session.config_id
+            JOIN {currency_table} ON account_currency_table.company_id = pos.company_id
+            """.format(
+            currency_table=self.env.cr.mogrify(currency_table).decode(self.env.cr.connection.encoding),
+            )
+
+    def _where_pos(self):
+        return """
+            l.sale_order_line_id IS NULL"""
+
+    def _group_by_pos(self):
+        return """
+            l.order_id,
+            l.product_id,
+            l.price_unit,
+            l.discount,
+            l.qty,
+            t.uom_id,
+            t.categ_id,
+            pos.id,
+            pos.name,
+            pos.date_order,
+            pos.partner_id,
+            pos.user_id,
+            pos.state,
+            pos.company_id,
+            pos.pricelist_id,
+            p.product_tmpl_id,
+            partner.commercial_partner_id,
+            partner.country_id,
+            partner.industry_id,
+            partner.state_id,
+            partner.zip,
+            u.factor,
+            pos.crm_team_id,
+            account_currency_table.rate"""
+
+    def _query(self):
+        res = super()._query()
+        return res + f"""UNION ALL (
+            SELECT {self._select_pos()}
+            FROM {self._from_pos()}
+            WHERE {self._where_pos()}
+            GROUP BY {self._group_by_pos()}
+            )
+        """
+=======
+    def _fill_pos_fields(self, additional_fields):
+        """Hook to fill additional fields for the pos_sale.
+
+        :param additional_fields: Dictionary mapping fields with their values
+        :type additional_fields: dict[str, Any]
+        """
+        filled_fields = {x: 'NULL' for x in additional_fields}
+        for fname, value in self._available_additional_pos_fields().items():
+            if fname in additional_fields:
+                filled_fields[fname] = value
+        return filled_fields
+
+    def _from_pos(self):
+        currency_table = self.env['res.currency']._get_simple_currency_table(self.env.companies)
+        return """
+            pos_order_line l
+            JOIN pos_order pos ON l.order_id = pos.id
+            LEFT JOIN res_partner partner ON (pos.partner_id=partner.id OR pos.partner_id = NULL)
+            LEFT JOIN product_product p ON l.product_id=p.id
+            LEFT JOIN product_template t ON p.product_tmpl_id=t.id
+            LEFT JOIN uom_uom u ON u.id=t.uom_id
+            LEFT JOIN pos_session session ON session.id = pos.session_id
+            LEFT JOIN pos_config config ON config.id = session.config_id
+            JOIN {currency_table} ON account_currency_table.company_id = pos.company_id
+            """.format(
+            currency_table=self.env.cr.mogrify(currency_table).decode(self.env.cr.connection.encoding),
+            )
+
+    def _where_pos(self):
+        return """
+            l.sale_order_line_id IS NULL"""
+
+    def _group_by_pos(self):
+        return """
+            l.order_id,
+            l.product_id,
+            l.price_unit,
+            l.discount,
+            l.qty,
+            t.uom_id,
+            t.categ_id,
+            pos.id,
+            pos.name,
+            pos.date_order,
+            pos.partner_id,
+            pos.user_id,
+            pos.state,
+            pos.company_id,
+            pos.pricelist_id,
+            p.product_tmpl_id,
+            partner.commercial_partner_id,
+            partner.country_id,
+            partner.industry_id,
+            partner.state_id,
+            partner.zip,
+            u.factor,
+            pos.crm_team_id,
+            account_currency_table.rate"""
+
+    def _query(self):
+        res = super()._query()
+        return res + f"""UNION ALL (
+            SELECT {self._select_pos()}
+            FROM {self._from_pos()}
+            WHERE {self._where_pos()}
+            GROUP BY {self._group_by_pos()}
+            )
+        """
+
+    def _get_order_reference(self):
+        self.ensure_one()
+        if self.id < 0:
+            line = self.env['pos.order.line'].browse(-self.id)
+            line.fetch(['order_id'])
+            return line.order_id
+        return super()._get_order_reference()
+>>>>>>> 1b0631d01c458b54ed154669ae4eeebecaaf6773
