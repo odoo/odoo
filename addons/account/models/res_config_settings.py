@@ -36,6 +36,7 @@ class ResConfigSettings(models.TransientModel):
     expense_currency_exchange_account_active = fields.Boolean(related='expense_currency_exchange_account_id.active', string="Loss Exchange Rate Account Active")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template = fields.Selection(selection=lambda self: self.env.company._chart_template_selection(), default=lambda self: self.env.company.chart_template)
+    coa_version = fields.Char(related='company_id.coa_version')
     sale_tax_id = fields.Many2one(
         'account.tax',
         string="Default Sale Tax",
