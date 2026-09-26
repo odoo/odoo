@@ -1345,7 +1345,7 @@ test("toolbar works: show the correct vertical alignment", async () => {
                 <tbody>
                     <tr style="height: 100px;">
                         <td class="o_selected_td" style="vertical-align: middle;">[1</td>
-                        <td class="o_selected_td" style="vertical-align: middle;"></td>
+                        <td class="o_selected_td" style="vertical-align: middle;"><p><br></p></td>
                         <td>3</td>
                     </tr>
                     <tr style="height: 100px;">

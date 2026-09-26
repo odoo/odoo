@@ -1,6 +1,7 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { registry } from "@web/core/registry";
 import { parseBoxShadow } from "@html_builder/utils/utils_css";
 
@@ -16,14 +17,20 @@ export class ShadowOptionPlugin extends Plugin {
             SetShadowModeAction,
             SetShadowStyleAction,
         },
+        html_compatibility_processors: this.migrateOldShadows.bind(this),
     };
-    setup() {
-        // Migrate old shadow elements to use the new custom shadow class.
-        const oldShadowElements = this.editable.querySelectorAll(".shadow[style*=box-shadow]");
-        for (const el of oldShadowElements) {
+
+    /**
+     * Migrate old shadow elements to use the new custom shadow class.
+     *
+     * @param {HTMLElement} root
+     */
+    migrateOldShadows(root) {
+        for (const el of selectElements(root, ".shadow[style*=box-shadow]")) {
             el.classList.remove("shadow");
             el.classList.add("o-shadow-custom");
         }
+        return root;
     }
 }
 
