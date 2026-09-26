@@ -2507,6 +2507,46 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 emails_count=1,
             )
 
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_mail_composer_with_template_recipients_log_note(self):
+        """ Logging a note with a template using default recipients should not
+        notify the record itself, as the composer does not display recipients
+        in that mode. Recipients configured on the template are still used. """
+        template_default_to = self.template.copy({
+            'email_to': False,
+            'partner_to': False,
+            'use_default_to': True,
+        })
+        no_partner = self.env['res.partner']
+
+        for test_records, template, expected in [
+            (self.test_record, template_default_to, no_partner),
+            (self.test_records, template_default_to, no_partner),
+            (self.test_record, self.template, self.test_record.customer_id),
+        ]:
+            with self.subTest(records=test_records, use_default_to=template.use_default_to):
+                composer = self.env['mail.compose.message'].with_context(
+                    self._get_web_context(
+                        test_records, add_web=False,
+                        default_composition_mode='comment',
+                        default_subtype_xmlid='mail.mt_note',
+                        default_template_id=template.id,
+                    )
+                ).create({})
+
+                with self.mock_mail_gateway():
+                    _mails, messages = composer._action_send_mail()
+
+                self.assertEqual(len(messages), len(test_records))
+                for message in messages:
+                    self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
+                    self.assertEqual(message.partner_ids, expected)
+                if expected:
+                    self.assertSentEmail(self.partner_employee_2.email_formatted, expected)
+                else:
+                    self.assertNotSentEmail()
+
 
 @tagged('mail_composer', 'mail_blacklist')
 class TestComposerResultsCommentStatus(TestMailComposer):
