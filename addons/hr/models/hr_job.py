@@ -44,13 +44,13 @@ class HrJob(models.Model):
     employee_type_id = fields.Many2one('hr.employee.type', string='Employee Type', tracking=True)
     company_country_code = fields.Char(related='company_id.country_id.code', depends=["company_id.country_id"])
 
-    _name_company_uniq = models.Constraint(
-        'unique(name, company_id, department_id)',
-        'The name of the job position must be unique per department in company!',
-    )
     _no_of_recruitment_positive = models.Constraint(
         'CHECK(no_of_recruitment >= 0)',
         'The expected number of new employees must be positive.',
+    )
+    _name_company_department_idx = models.UniqueIndex(
+        '(name, company_id, department_id) WHERE active IS TRUE',
+        'Only one active job position can exist per department in the company!',
     )
 
     @api.depends('no_of_recruitment', 'employee_ids.job_id', 'employee_ids.active')
