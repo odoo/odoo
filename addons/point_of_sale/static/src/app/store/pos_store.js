@@ -1395,8 +1395,15 @@ export class PosStore extends Reactive {
         ]);
     }
     async loadServerOrders(domain) {
+        const finalizedStates = new Map(
+            this.models["pos.order"].filter((o) => o.finalized).map((o) => [o.uuid, o.state])
+        );
         const orders = await this.data.searchRead("pos.order", domain);
         for (const order of orders) {
+            // A read started before the payment was committed must not reopen the order
+            if (finalizedStates.has(order.uuid) && !order.finalized) {
+                order.state = finalizedStates.get(order.uuid);
+            }
             order.update({
                 config_id: this.config,
                 session_id: this.session,
