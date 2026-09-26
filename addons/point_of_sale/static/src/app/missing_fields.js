@@ -7,5 +7,12 @@ import { registry } from "@web/core/registry";
 class DefaultField extends Component {
     static template = xml``;
 }
-registry.category("fields").add("list.many2one_avatar_user", { component: DefaultField });
+
+class SalesPersonField extends Component {
+    static template = xml`
+        <span t-if="this.props.record?.data?.[this.props.name]">
+            <t t-out="this.props.record?.data?.[this.props.name]?.display_name"/>
+        </span>`;
+}
+registry.category("fields").add("list.many2one_avatar_user", { component: SalesPersonField });
 registry.category("fields").add("list.list_activity", { component: DefaultField });
