@@ -3,6 +3,74 @@ import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
+<<<<<<< fb884265442604edb702cb1ddf93eac1bc062bf6
+||||||| 13eb4691ebc519c1747c3c9ca6c3a0f64d6bbcdf
+import { today } from "@web/core/l10n/dates";
+import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+
+registry.category("web_tour.tours").add("self_order_preset_dine_in_tour", {
+    steps: () => [
+        // Test preset "Dine in" location with table
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Dine in"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("Order"),
+        Utils.clickBtn("Ok"),
+    ],
+});
+
+registry.category("web_tour.tours").add("self_order_preset_takeaway_tour", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Takeaway"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("Order"),
+        CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Phone", "490904390"),
+        Utils.clickBtn("Continue"),
+        Utils.checkConfirmationString(),
+        Utils.clickBtn("Ok"),
+    ],
+});
+=======
+
+registry.category("web_tour.tours").add("self_order_preset_dine_in_tour", {
+    steps: () => [
+        // Test preset "Dine in" location with table
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Dine in"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("Order"),
+        Utils.clickBtn("Ok"),
+    ],
+});
+
+registry.category("web_tour.tours").add("self_order_preset_takeaway_tour", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Takeaway"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("Order"),
+        CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Phone", "490904390"),
+        Utils.clickBtn("Continue"),
+        Utils.checkConfirmationString(),
+        Utils.clickBtn("Ok"),
+    ],
+});
+>>>>>>> 9e5b654c5b2cd995581637459a42f38de369ab5f
 
 registry.category("web_tour.tours").add("self_order_preset_delivery_tour", {
     steps: () => [

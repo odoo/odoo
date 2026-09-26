@@ -1,4 +1,5 @@
 import { expect } from "@odoo/hoot";
+<<<<<<< fb884265442604edb702cb1ddf93eac1bc062bf6
 import { animationFrame, waitFor, queryFirst, queryAll, delay } from "@odoo/hoot-dom";
 import { contains, getService } from "@web/../tests/web_test_helpers";
 
@@ -9,6 +10,13 @@ export function isMobile() {
 export async function mountSelfOrderApp(store) {
     await animationFrame();
 }
+||||||| 13eb4691ebc519c1747c3c9ca6c3a0f64d6bbcdf
+import { animationFrame, waitFor } from "@odoo/hoot-dom";
+import { contains } from "@web/../tests/web_test_helpers";
+=======
+import { animationFrame, queryAll, waitFor } from "@odoo/hoot-dom";
+import { contains } from "@web/../tests/web_test_helpers";
+>>>>>>> 9e5b654c5b2cd995581637459a42f38de369ab5f
 
 export async function clickOrderNow() {
     await contains(".btn:contains('Order Now'), .btn:contains('Order now')").click();
@@ -662,3 +670,26 @@ export async function confirmCart(products, total) {
 export async function checkPaymentPage() {
     await waitFor(".payment-page");
 }
+<<<<<<< fb884265442604edb702cb1ddf93eac1bc062bf6
+||||||| 13eb4691ebc519c1747c3c9ca6c3a0f64d6bbcdf
+
+export async function checkIsNoBtn(text) {
+    expect(`.btn:contains('${text}')`).toHaveCount(0);
+}
+=======
+
+export async function checkIsNoBtn(text) {
+    expect(`.btn:contains('${text}')`).toHaveCount(0);
+}
+
+export async function checkSlotDisabled(slotValue) {
+    await waitFor(".self_order_pills_selection_popup");
+    const slots = queryAll(".self_order_pills_selection_popup .option-item");
+    expect(slots.some((slot) => slot.textContent.trim() === slotValue && slot.disabled)).toBe(true);
+}
+
+export async function clickCartButton(buttonName) {
+    await contains(`.cart.btn:contains('${buttonName}')`).click();
+    await animationFrame();
+}
+>>>>>>> 9e5b654c5b2cd995581637459a42f38de369ab5f

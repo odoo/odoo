@@ -127,7 +127,12 @@ export function initMockRpc() {
 
     onRpc("/pos-self-order/process-order/kiosk", mockProcssOrder);
     onRpc("/pos-self-order/process-order/mobile", mockProcssOrder);
+<<<<<<< fb884265442604edb702cb1ddf93eac1bc062bf6
     onRpc("/pos-self-order/get-slots", mockGetSlots);
+||||||| 13eb4691ebc519c1747c3c9ca6c3a0f64d6bbcdf
+=======
+    onRpc("/pos-self-order/get-slots", () => ({ usage_utc: { "2019-03-12 11:00:00": [1] } }));
+>>>>>>> 9e5b654c5b2cd995581637459a42f38de369ab5f
     onRpc("/pos-self-order/remove-order", () => ({}));
     onRpc("/pos-self-order/sync-from-ui", mockSyncOrder);
     onRpc("/pos-self-order/validate-partner", mockValidatePartner);
