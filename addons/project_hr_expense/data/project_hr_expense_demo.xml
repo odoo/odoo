@@ -12,7 +12,7 @@
             <field name="employee_id" ref="hr.employee_al"/>
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
             <field name="product_id" ref="hr_expense.expense_product_travel_accommodation"/>
-            <field name="total_amount_currency" eval="240.0"/>
+            <field name="price_unit_currency" eval="240.0"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="date" eval="time.strftime('%Y-%m-12')"/>
         </record>
@@ -21,7 +21,7 @@
             <field name="employee_id" ref="hr.employee_al"/>
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
             <field name="product_id" ref="hr_expense.expense_product_meal"/>
-            <field name="total_amount_currency" eval="320.0"/>
+            <field name="price_unit_currency" eval="320.0"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="date" eval="time.strftime('%Y-%m-10')"/>
         </record>
