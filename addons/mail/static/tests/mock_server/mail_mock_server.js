@@ -813,6 +813,40 @@ async function read_subscription_data(request) {
     };
 }
 
+registerRoute("/mail/thread/get_followers", mail_thread_get_followers);
+/** @type {RouteCallback} */
+async function mail_thread_get_followers(request) {
+    /** @type {import("mock_models").MailFollowers} */
+    const MailFollowers = this.env["mail.followers"];
+
+    const { thread_id, thread_model, offset = 0, search_term } = await parseRequestParams(request);
+    const threadDomain = [
+        ["res_id", "=", thread_id],
+        ["res_model", "=", thread_model],
+    ];
+    const domain = [...threadDomain, ["partner_id", "!=", this.env.user.partner_id]];
+    if (search_term) {
+        domain.push("|", ["name", "ilike", search_term], ["email", "ilike", search_term]);
+    }
+    const limit = 20;
+    const followerIds = MailFollowers.search(
+        domain,
+        makeKwArgs({ offset, limit, order: "name ASC, id ASC" })
+    );
+    const store = new Store().add(MailFollowers.browse(followerIds), "_store_follower_fields");
+    const result = { follower_ids: followerIds };
+    if (!offset || followerIds.length < limit) {
+        store.add(
+            this.env[thread_model].browse(thread_id),
+            { followersCount: MailFollowers.search_count(threadDomain) },
+            { as_thread: true }
+        );
+        result.followers_count = MailFollowers.search_count(domain);
+    }
+    result.store_data = store.as_dict();
+    return result;
+}
+
 registerRoute("/mail/rtc/session/update_and_broadcast", session_update_and_broadcast);
 /** @type {RouteCallback} */
 async function session_update_and_broadcast(request) {

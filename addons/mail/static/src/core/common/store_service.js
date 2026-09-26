@@ -86,6 +86,8 @@ export class Store extends BaseStore {
     // messaging menu
     menu = { counter: 0 };
     chatHub = this.computed(() => this.ChatHub.insert({}));
+    /** @type {typeof import("@mail/core/common/follower_list_view_model").FollowerListView} */
+    FollowerListView;
     failures = fields.Many("Failure");
     sortedFailures = this.computed(() =>
         [...this.failures].sort((f1, f2) => {
