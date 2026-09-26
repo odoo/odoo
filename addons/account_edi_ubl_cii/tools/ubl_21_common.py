@@ -145,6 +145,11 @@ Party = {
     'cac:PowerOfAttorney': PowerOfAttorney,
 }
 
+PayeeParty = {
+    **Party,
+    'cbc:IndustryClassificationCode': {},
+}
+
 SupplierParty = {
     'cbc:CustomerAssignedAccountID': {},
     'cbc:AdditionalAccountID': {},
@@ -171,6 +176,7 @@ Delivery = {
 
 FinancialAccount = {
     'cbc:ID': {},
+    'cbc:Name': {},
     'cac:FinancialInstitutionBranch': {
         'cbc:ID': {},
         'cac:FinancialInstitution': {
