@@ -149,18 +149,17 @@ class TestMassSMSCommon(TestMassMailCommon):
         country_be_id = cls.env.ref('base.be').id
         _country_us_id = cls.env.ref('base.us').id
 
-        for x in range(10):
-            partners += cls.env['res.partner'].with_context(**cls._test_context).create({
-                'name': 'Partner_%s' % (x),
-                'email': '_test_partner_%s@example.com' % (x),
-                'country_id': country_be_id,
-                'phone': '045600%s%s99' % (x, x)
-            })
-            records += cls.env['mail.test.sms'].with_context(**cls._test_context).create({
-                'name': 'MassSMSTest_%s' % (x),
-                'customer_id': partners[x].id,
-                'phone_nbr': '045600%s%s44' % (x, x)
-            })
+        partners += cls.env['res.partner'].with_context(**cls._test_context).create([{
+            'name': 'Partner_%s' % (x),
+            'email': '_test_partner_%s@example.com' % (x),
+            'country_id': country_be_id,
+            'phone': '045600%s%s99' % (x, x)
+        } for x in range(10)])
+        records += cls.env['mail.test.sms'].with_context(**cls._test_context).create([{
+            'name': 'MassSMSTest_%s' % (x),
+            'customer_id': partners[x].id,
+            'phone_nbr': '045600%s%s44' % (x, x)
+        } for x in range(10)])
         cls.records = cls._reset_mail_context(records)
         cls.records_numbers = [phone_validation.phone_format(r.phone_nbr, 'BE', '32', force_format='E164') for r in cls.records]
         cls.partners = partners

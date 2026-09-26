@@ -54,10 +54,8 @@ class TestSurveyRandomize(TransactionCase):
         self.assertEqual(len(generated_questions.filtered(lambda question: question.page_id == page_3)), 2, msg="Expected 2 questions in page 3")
 
     def _add_questions(self, question_and_pages, page, count):
-        for i in range(count):
-            question_and_pages |= self.env['survey.question'].sudo().create({
-                'title': f'{page.title} Q{i + 1}',
-                'sequence': page.sequence + (i + 1)
-            })
-
+        question_and_pages |= self.env['survey.question'].sudo().create([{
+            'title': f'{page.title} Q{i + 1}',
+            'sequence': page.sequence + (i + 1)
+        } for i in range(count)])
         return question_and_pages
