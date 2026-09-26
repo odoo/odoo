@@ -746,7 +746,7 @@
                                 <!-- Section / Subsection header -->
                                 <div t-if="is_section_m or is_subsection_m"
                                      t-attf-class="d-flex justify-content-between align-items-center py-2 px-3 fw-bold border-bottom {{ 'bg-200' if is_section_m else 'bg-100' }}">
-                                    <span t-field="line.name"/>
+                                    <span t-field="line.label"/>
                                     <span t-if="is_section_m or not line.parent_id.collapse_prices"
                                           class="text-nowrap ms-2"
                                           t-out="line._get_section_totals(price_field_m)"
@@ -755,13 +755,13 @@
 
                                 <!-- Note -->
                                 <div t-elif="is_note_m" class="fst-italic py-2 px-3 border-bottom text-muted small">
-                                    <span t-field="line.name"/>
+                                    <span t-field="line.label"/>
                                 </div>
 
                                 <!-- Combo header -->
                                 <div t-elif="is_combo_m" class="d-flex justify-content-between align-items-start py-3 px-3 border-bottom fw-bold">
                                     <div>
-                                        <span t-field="line.name"/>
+                                        <span t-field="line.label"/>
                                         <div class="fw-normal text-muted small mt-1">
                                             <span t-field="line.product_uom_qty" t-options="{'min_precision': 0}"/>
                                             <span class="ms-1" t-field="line.product_uom_id"/>
@@ -829,7 +829,7 @@
                                 <t t-foreach="line._get_grouped_section_summary(display_taxes)" t-as="section_line">
                                     <div class="py-3 px-3 border-bottom">
                                         <div class="d-flex justify-content-between align-items-start gap-2">
-                                            <span t-field="line.name"/>
+                                            <span t-field="line.label"/>
                                             <span t-out="section_line[price_field_m]"
                                                 t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"
                                                 class="text-nowrap"/>
