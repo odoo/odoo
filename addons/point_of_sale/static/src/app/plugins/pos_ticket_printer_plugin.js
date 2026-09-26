@@ -584,6 +584,22 @@ export class PosTicketPrinterPlugin extends Plugin {
         return image;
     }
 
+    async reprintOrderChanges({ order, opts = {} }) {
+        return this.printOrderChanges({
+            order,
+            opts: {
+                ...opts,
+                explicitReprint: true,
+                orderChange: {
+                    quantity: 0,
+                    categoryCount: {},
+                    addedQuantity: order.lines.map((l) => order.dataMaker(l, l.qty).data),
+                    removedQuantity: [],
+                    noteUpdate: [],
+                },
+            },
+        });
+    }
     async markReceiptAsPrinted(order) {
         const count = order.nb_print ? order.nb_print + 1 : 1;
         if (order.isSynced) {

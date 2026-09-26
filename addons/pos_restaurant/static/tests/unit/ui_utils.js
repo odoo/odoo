@@ -34,6 +34,10 @@ export async function clickFireCourseButton() {
     await animationFrame();
 }
 
+export async function clickReprintButton() {
+    await contains(".reprint-btn").click();
+}
+
 export async function clickTransferButton() {
     await clickControlButton("Transfer");
     await animationFrame();
