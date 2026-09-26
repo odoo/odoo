@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import _, api, fields, models
-from odoo.tools import plaintext2html
 
 
 class PosSession(models.Model):
@@ -34,17 +33,24 @@ class PosSession(models.Model):
             data += ['hr.employee']
         return data
 
-    def _set_opening_control_data(self, cashbox_value: int, notes: str):
-        super()._set_opening_control_data(cashbox_value, notes)
-        if self.employee_id:
-            self.message_post(body=plaintext2html(_('Opened register')), author_id=self._get_message_author().id)
+    def write(self, vals):
+        res = super().write(vals)
+        # Set the author of tracked-field chatter entries to the employee selected in the PoS UI
+        for session in self:
+            session._track_set_log_author(session._get_message_author())
+        return res
+
+    def message_post(self, **kwargs):
+        # Only use the cashier when the request comes from the PoS.
+        cashier = self.env['hr.employee']._get_current_cashier()
+        if not kwargs.get('author_id') and (author := cashier._get_pos_message_author()):
+            kwargs['author_id'] = author.id
+        return super().message_post(**kwargs)
 
     def _get_message_author(self):
-        if self.employee_id:
-            if related_partners := self.employee_id._get_related_partners():
-                return related_partners[0]
-
-        return super()._get_message_author()
+        self.ensure_one()
+        employee = self.env['hr.employee']._get_current_cashier() or self.employee_id
+        return employee._get_pos_message_author() or super()._get_message_author()
 
     def _aggregate_payments_amounts_by_employee(self, all_payments):
         payments_by_employee = []
