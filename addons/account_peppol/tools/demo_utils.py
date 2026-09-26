@@ -127,6 +127,7 @@ def _mock_create_connection(func, self, *args, **kwargs):
     company.write({
         'account_peppol_proxy_state': dummy_response['peppol_state'],
         'routing_identifier': peppol_identifier,
+        'routing_identifier_override': False,
     })
 
     content = file_read(DEMO_PRIVATE_KEY)
