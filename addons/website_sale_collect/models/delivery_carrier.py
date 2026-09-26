@@ -72,6 +72,10 @@ class DeliveryCarrier(models.Model):
             vals.update(self._get_in_store_default_vals())
         return super().write(vals)
 
+    def _get_delivery_estimate_supported_types(self):
+        """Override of `website_sale` to support estimates on in-store delivery methods."""
+        return [*super()._get_delivery_estimate_supported_types(), "in_store"]
+
     @staticmethod
     def _get_in_store_default_vals():
         return {
