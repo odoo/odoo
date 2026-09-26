@@ -14,7 +14,7 @@ class ResCompany(models.Model):
                  UNION
 
                 -- pos entry transactions --
-                SELECT move.id
+                SELECT move.id, FALSE AS is_payment
                   FROM account_move move
                   JOIN pos_session ON pos_session.move_id = move.id
                  WHERE move.move_type = 'entry'
