@@ -37,6 +37,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def setUpClass(cls):
         super(TestLeaveRequests, cls).setUpClass()
 
+        cls.env.company.country_id = cls.env.ref('base.us')
         # Make sure we have the rights to create, validate and delete the leaves, leave types and allocations
         HrWorkEntryType = cls.env['hr.work.entry.type'].with_user(cls.user_hrmanager_id)
 

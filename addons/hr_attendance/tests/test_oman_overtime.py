@@ -13,6 +13,7 @@ class TestOvertimeRuleRegression(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.country_id = cls.env.ref('base.us')
         att_type = cls.env.company._get_default_attendance_work_entry_type()
 
         ot_type = cls.env['hr.work.entry.type'].create({

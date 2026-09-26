@@ -13,6 +13,7 @@ class TestHrAttendance(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestHrAttendance, cls).setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us').id
         cls.attendance = cls.env['hr.attendance']
         cls.test_employee = cls.env['hr.employee'].create({'name': "Jacky"})
         # demo data contains set up for cls.test_employee

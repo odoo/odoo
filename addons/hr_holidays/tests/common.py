@@ -17,9 +17,10 @@ class TestHrHolidaysCommon(common.TransactionCase):
         super(TestHrHolidaysCommon, cls).setUpClass()
         cls.env.user.tz = 'Europe/Brussels'
         cls.env.user.company_id.tz = "Europe/Brussels"
+        cls.env.company.country_id = cls.env.ref('base.us')
 
-        cls.company = cls.env['res.company'].create({'name': 'Test company'})
-        cls.external_company = cls.env['res.company'].create({'name': 'External Test company'})
+        cls.company = cls.env['res.company'].create({'name': 'Test company', 'country_id': cls.env.ref('base.us').id})
+        cls.external_company = cls.env['res.company'].create({'name': 'External Test company', 'country_id': cls.env.ref('base.us').id})
 
         cls.company.resource_calendar_id = cls.env['resource.calendar'].create({
             'attendance_ids': [
@@ -216,6 +217,7 @@ class TestHolidayContract(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
 
         cls.env.company.resource_calendar_id = cls.env['resource.calendar'].create({
             'attendance_ids': [

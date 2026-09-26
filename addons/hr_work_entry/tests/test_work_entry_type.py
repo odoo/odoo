@@ -7,6 +7,17 @@ from odoo.tests import TransactionCase, tagged
 @tagged('-at_install', 'post_install')
 class TestWorkEntryType(TransactionCase):
 
+    def test_default_country_is_current_company_country(self):
+        country = self.env.ref('base.be')
+        self.env.company.country_id = country
+
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'code': 'TEST_DEFAULT_COUNTRY',
+            'name': 'Test default country',
+        })
+
+        self.assertEqual(work_entry_type.country_id, country)
+
     def test_duplicate_work_entry_type_same_country(self):
         country_be = self.env.ref('base.be')
         self.env['hr.work.entry.type'].create({
@@ -42,40 +53,6 @@ class TestWorkEntryType(TransactionCase):
                 },
             ])
 
-    def test_duplicate_work_entry_type_all_countries(self):
-        self.env['hr.work.entry.type'].create({
-            'code': 'test123',
-            'name': "Test we type",
-            'country_id': False,
-
-        })
-        with self.assertRaises(
-            UserError,
-            msg="It should not be possible to create two work entry types with the same code for all countries",
-        ):
-            self.env['hr.work.entry.type'].create({
-                'code': 'test123',
-                'name': "Test we type",
-                'country_id': False,
-            })
-
-        with self.assertRaises(
-            UserError,
-            msg="It should not be possible to create two work entry types at the same time with the same code for all countries",
-        ):
-            self.env['hr.work.entry.type'].create([
-                {
-                    'code': 'test456',
-                    'name': "Test we type",
-                    'country_id': False,
-                },
-                {
-                    'code': 'test456',
-                    'name': "Test we type",
-                    'country_id': False,
-                },
-            ])
-
     def test_unique_work_entry_types(self):
         """
         No error should be raised if the work entry codes are unique per country_id
@@ -95,19 +72,9 @@ class TestWorkEntryType(TransactionCase):
             'name': "Test we type",
             'country_id': country_us.id,
         })
-        self.env['hr.work.entry.type'].create({
-            'code': 'test123',
-            'name': "Test we type",
-            'country_id': False
-        })
 
         # creating them in batch. `self` should have multiple records at once
         self.env['hr.work.entry.type'].create([
-            {
-                'code': 'test456',
-                'name': "Test we type",
-                'country_id': False,
-            },
             {
                 'code': 'test456',
                 'name': "Test we type",
@@ -139,11 +106,14 @@ class TestWorkEntryType(TransactionCase):
     def test_get_default_attendance_ids_transfers_work_entry_type(self):
         """ Calendar copies built from a company's calendar must carry over the
         attendances' work_entry_type_id, not just their hours. """
-        company = self.env['res.company'].create({'name': 'Test Co'})
+        company = self.env['res.company'].create({
+            'name': 'Test Co',
+            'country_id': self.env.ref('base.be').id,
+        })
         work_entry_type = self.env['hr.work.entry.type'].create({
             'code': 'TESTATT',
             'name': 'Test Attendance',
-            'country_id': False,
+            'country_id': company.country_id.id,
         })
         company.resource_calendar_id.attendance_ids.write({'work_entry_type_id': work_entry_type.id})
 

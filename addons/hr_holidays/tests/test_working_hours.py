@@ -23,6 +23,7 @@ class TestWorkingHours(TestHrContractCalendarCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
             'count_as': 'absence',
+            'country_id': cls.company_A.country_id.id,
         })
 
     def test_multi_companies_2_employees_2_selected_companies_holidays(self):

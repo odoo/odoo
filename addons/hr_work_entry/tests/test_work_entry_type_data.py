@@ -55,7 +55,9 @@ class TestWorkEntryTypeData(TransactionCase):
         This is to test the implemention of automatically populating newly created
         work calendar with the default work calendar.
         """
-        work_entries = self.env['hr.work.entry.type'].search([], order='id')
+        if not self.env.company.country_id:
+            self.env.company.country_id = self.env.ref('base.be')
+        work_entries = self.env['hr.work.entry.type'].search([('country_id', '=', self.env.company.country_id.id)], order='id')
         default_calendar = self.env['resource.calendar'].create({
             'name': '40 hours/week',
             'hours_per_day': 8,
