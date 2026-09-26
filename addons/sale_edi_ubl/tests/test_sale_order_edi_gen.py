@@ -7,6 +7,11 @@ from odoo.tools import file_open
 
 from lxml import etree
 
+UBL_NS = {
+    'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
+    'cbc': 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2',
+}
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderEDIGen(TestSaleCommon):
@@ -50,3 +55,17 @@ class TestSaleOrderEDIGen(TestSaleCommon):
             xml_template = f.read().encode().replace(b'create_date_placeholder', current_date.encode()).replace(b'validity_date_placeholder', validity_date.encode())
             expected_xml = etree.fromstring(xml_template)
         self.assertXmlTreeEqual(generated_xml, expected_xml)
+
+    def test_sale_order_norwegian_customer_without_vat(self):
+        no_customer = self.env['res.partner'].create({
+            'name': 'Norwegian Customer',
+            'country_id': self.env.ref('base.no').id,
+        })
+        so = self.env['sale.order'].create({'partner_id': no_customer.id})
+
+        xml = self.env['sale.edi.xml.ubl_bis3']._export_order(so)
+        root = etree.fromstring(xml)
+
+        self.assertIsNone(
+            root.find('.//cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID', UBL_NS)
+        )
