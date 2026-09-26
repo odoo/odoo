@@ -13,9 +13,6 @@
                         <field name="force" groups="base.group_no_one"/>
                         <field name="with_demo" string="Load demo data"/>
                     </group>
-                    <group invisible="state != 'done'">
-                        <field name="import_message" nolabel="1" readonly="1"/>
-                    </group>
                     <footer>
                         <div invisible="state != 'init'">
                             <button name="import_module" string="Install" type="object" class="btn-primary" data-hotkey="q"/>
