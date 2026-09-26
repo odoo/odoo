@@ -63,3 +63,32 @@ class TestRepairPurchaseFlow(PurchaseTestCommon):
         purchase.button_confirm()
         self.assertEqual(repair.purchase_count, 1)
         self.assertEqual(purchase.repair_count, 1)
+
+    def test_repair_smart_buttons_with_purchase_mtso_link(self):
+        "Test that repair and purchase smart buttons open the related orders when using MTSO."
+        self.route_mto.active = True
+        self.warehouse.repair_mto_pull_id.procure_method = 'mts_else_mto'
+        self.product.write({
+            'route_ids': [Command.set(self.route_mto.ids)],
+            'seller_ids': [Command.create({
+                'partner_id': self.vendor.id,
+                'price': 150,
+            })],
+        })
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
+        repair = self.env['repair.order'].create({
+            'move_ids': [Command.create({
+                'repair_line_type': 'add',
+                'product_id': self.product.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        repair.action_validate()
+        purchase = repair.reference_ids.purchase_ids
+        self.assertRecordValues(purchase.order_line, [{
+            'product_id': self.product.id,
+            'product_qty': 1.0,
+        }])
+        self.assertFalse(purchase.order_line.move_dest_ids.repair_id)
+        self.assertEqual(repair.action_view_purchase_orders()['res_id'], purchase.id)
+        self.assertEqual(purchase.action_view_repair_orders()['res_id'], repair.id)
