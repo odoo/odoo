@@ -438,9 +438,13 @@ class MrpWorkorder(models.Model):
         if not workcenter.resource_calendar_id:
             duration_in_seconds = self.duration_expected * 60
             return (date_start or self.date_start) + timedelta(seconds=duration_in_seconds)
+        domain = [('time_type', 'in', ['leave', 'other'])]
+        if self.leave_id:
+            domain.append(('id', '!=', self.leave_id.id))
         return workcenter.resource_calendar_id.plan_hours(
             self.duration_expected / 60.0, date_start or self.date_start,
-            compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
+            compute_leaves=True, domain=domain,
+            resource=workcenter.resource_id,
         )
 
     @api.onchange('date_finished')
