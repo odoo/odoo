@@ -120,7 +120,6 @@ class PosOrder(models.Model):
         return {
             'id': order.get('id'),
             'table_stand_number': order.get('table_stand_number'),
-            'access_token': order.get('access_token'),
             'customer_count': order.get('customer_count'),
             'table_id': table.id if table else None,
             'last_order_preparation_change': order.get('last_order_preparation_change'),
@@ -140,7 +139,6 @@ class PosOrder(models.Model):
             'email': order.get('email'),
             'mobile': order.get('mobile'),
             'state': order.get('state'),
-            'account_move': order.get('account_move'),
             'floating_order_name': order.get('floating_order_name'),
             'general_note': order.get('general_note'),
             'nb_print': order.get('nb_print'),
