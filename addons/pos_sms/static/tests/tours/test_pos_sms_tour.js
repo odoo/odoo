@@ -21,5 +21,15 @@ registry.category("web_tour.tours").add("AutofillTour", {
             FeedbackScreen.isShown(),
             // Check pre-filled partner phone
             Sms.CheckNumber("9876543210"),
+            Dialog.cancel(),
+            FeedbackScreen.clickNextOrder(),
+            ProductScreen.createPartner({ name: "A test partner", phone: 2345678901 }),
+            ProductScreen.addOrderline("Letter Tray", "10", "5"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            Sms.CheckNumber("+1 234-567-8901"),
         ].flat(),
 });

@@ -226,6 +226,43 @@ export function clickPartnerButton() {
         },
     ];
 }
+
+export function createPartner(partnerData = {}) {
+    const steps = [
+        clickReview(),
+        {
+            content: "click customer button",
+            trigger: ".product-screen .set-partner",
+            run: "click",
+        },
+        {
+            content: "click customer create button",
+            trigger: ".modal .modal-header button:contains(Create)",
+            run: "click",
+        },
+    ];
+    if (partnerData.name) {
+        steps.push({
+            content: "edit customer name",
+            trigger: "div.o_field_field_partner_autocomplete .o-autocomplete input",
+            run: `edit ${partnerData.name}`,
+        });
+    }
+    if (partnerData.phone) {
+        steps.push({
+            content: "edit customer phone",
+            trigger: "div.o_field_phone input",
+            run: `edit ${partnerData.phone}`,
+        });
+    }
+    steps.push({
+        content: "click save button",
+        trigger: ".modal-footer button.o_form_button_save",
+        run: "click",
+    });
+
+    return steps;
+}
 export function clickCustomer(name, pressEnter = false) {
     return [
         ...PartnerList.searchCustomerValue(name, pressEnter),
