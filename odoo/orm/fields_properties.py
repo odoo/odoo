@@ -262,7 +262,13 @@ class Properties(Field):
                     continue
 
                 if type_ == 'many2one':
-                    default = [default] if default else []
+                    if default:
+                        if isinstance(default, int):
+                            default = [default]
+                        elif 'id' in default:
+                            default = [default['id']]
+                        else:
+                            default = []
                     property_value = [property_value] if isinstance(property_value, int) else []
                 elif not is_list_of(property_value, int):
                     property_value = []
@@ -533,9 +539,11 @@ class Properties(Field):
                 property_value = [tag for tag in property_value if tag in all_tags]
 
             elif property_type == 'many2one':
+                if isinstance(property_value, dict) and 'id' in property_value:
+                    property_value = property_value['id']
                 if not isinstance(property_value, int) \
-                        or res_model not in env \
-                        or property_value not in res_ids_per_model[res_model]:
+                    or res_model not in env \
+                    or property_value not in res_ids_per_model[res_model]:
                     property_value = False
 
             elif property_type == 'many2many':
@@ -611,7 +619,7 @@ class Properties(Field):
                 if property_type == 'many2many' and property_value and not is_list_of(property_value, int):
                     raise ValueError(f"Wrong many2many value {property_value!r}")
 
-                if property_type == 'many2one' and not isinstance(property_value, int):
+                if property_type == 'many2one' and not (isinstance(property_value, int) or 'id' in property_value):
                     raise ValueError(f"Wrong many2one value {property_value!r}")
 
             dict_value[property_definition['name']] = property_value
