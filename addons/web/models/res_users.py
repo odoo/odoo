@@ -23,5 +23,21 @@ class ResUsers(models.Model):
                 user_list = [user_tuple[0], *user_list[:-1]]
         return user_list
 
+    @api.model
+    @api.readonly
+    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
+        # if we have a search with a limit, move current user as the first result
+        user_list = super().web_search_read(domain, specification, offset, limit, order, count_limit)
+        uid = self._uid
+        if index := next((i for (i, rec) in enumerate(user_list['records']) if rec['id'] == uid), False):
+            # move found user first
+            user_record = user_list['records'].pop(index)
+            user_list['records'].insert(0, user_record)
+        elif limit is not None and user_list.length == limit:
+            # user not found and limit reached, try to find the user again
+            if user_record := super().web_search_read(expression.AND([domain or [], [('id', '=', uid)]]), specification, offset, limit=1, order=order, count_limit=count_limit):
+                user_list['records'] = [user_record['records'][0], *user_list['records'][:-1]]
+        return user_list
+
     def _on_webclient_bootstrap(self):
         self.ensure_one()
