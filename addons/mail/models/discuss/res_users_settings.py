@@ -17,10 +17,13 @@ class ResUsersSettings(models.Model):
         "Channel Notifications",
         help="This setting will only be applied to channels. Mentions only if not specified.",
     )
+    chat_push = fields.Boolean(default=True)
+    channel_push = fields.Boolean(default=True)
+    inbox_push = fields.Boolean(default=True)
 
     def _store_settings_fields(self, res: Store.FieldList):
         """Fields to send to the store settings singleton. Modules override to add theirs."""
-        res.extend(["channel_notifications"])
+        res.extend(["channel_notifications", "chat_push", "channel_push", "inbox_push"])
         res.many("volume_settings_ids", "_store_volume_fields")
 
     def _sync_field_names(self, res):
