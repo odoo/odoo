@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_discount_supervisor" model="res.groups">
+        <field name="name">Supervisor de Descuentos</field>
+        <field name="sequence">40</field>
+        <field name="privilege_id" ref="sales_team.res_groups_privilege_sales"/>
+        <field name="implied_ids" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        <field name="comment">
+            Puede aprobar pedidos de venta retenidos por superar el descuento máximo permitido.
+        </field>
+    </record>
+</odoo>

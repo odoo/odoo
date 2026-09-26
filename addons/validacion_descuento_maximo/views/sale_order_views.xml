@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_form_discount_limit" model="ir.ui.view">
+        <field name="name">sale.order.form.discount.limit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_approve_discount"
+                        string="Aprobar descuento"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'requires_review' or not discount_exceeds_limit"
+                        groups="validacion_descuento_maximo.group_discount_supervisor"/>
+                <button name="action_confirm"
+                        string="Confirmar"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'requires_review' or discount_exceeds_limit"/>
+            </xpath>
+            <xpath expr="//field[@name='state'][@widget='statusbar']" position="attributes">
+                <attribute name="statusbar_visible">draft,sent,requires_review,sale</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <field name="discount_exceeds_limit" invisible="1"/>
+                <div class="alert alert-warning"
+                     role="alert"
+                     invisible="state != 'requires_review' or not discount_exceeds_limit">
+                    <strong>Requiere revisión:</strong>
+                    este pedido supera el descuento máximo permitido y debe ser aprobado
+                    por un supervisor.
+                </div>
+                <div class="alert alert-info"
+                     role="alert"
+                     invisible="state != 'requires_review' or discount_exceeds_limit">
+                    <strong>Descuento corregido:</strong>
+                    el pedido ya respeta el límite configurado y puede confirmarse nuevamente.
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='order_details']/field[@name='payment_term_id']"
+                   position="after">
+                <field name="descuento_maximo_permitido"
+                       readonly="state not in ['draft', 'sent', 'requires_review']"
+                       groups="validacion_descuento_maximo.group_discount_supervisor"/>
+                <field name="descuento_maximo_permitido"
+                       readonly="1"
+                       groups="!validacion_descuento_maximo.group_discount_supervisor"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
