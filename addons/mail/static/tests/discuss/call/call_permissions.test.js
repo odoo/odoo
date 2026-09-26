@@ -29,6 +29,20 @@ test("Starting a video call asks for permissions", async () => {
     await contains(".o-discuss-CallActionList button[title='Stop camera']");
 });
 
+test("Starting a new meeting opens the meeting view before camera permissions", async () => {
+    mockGetMedia();
+    mockPermissionsPrompt();
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss();
+    await click("[title='New Meeting']");
+    await contains(".o-mail-Meeting");
+    await contains(".modal[role='dialog']", { count: 1 });
+    rtc.cameraPermission = "granted";
+    await click(".modal-footer button:text('Use Camera')");
+    await contains(".o-discuss-CallActionList button[title='Stop camera']");
+});
+
 test("Turning on the microphone asks for permissions", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
