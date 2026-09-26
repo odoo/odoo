@@ -324,6 +324,14 @@ export class PosOrder extends PosOrderAccounting {
     setPricelist(pricelist) {
         this.pricelist_id = pricelist ? pricelist : false;
 
+        // `lines` may not be initialized yet while the order is being created
+        // (createNewOrder calls setPricelist right after create). There is
+        // nothing to reprice on an order without lines; guard against the
+        // resulting `undefined.filter(...)` in getLinesToCompute below.
+        if (!this.lines) {
+            return;
+        }
+
         const lines_to_recompute = this.getLinesToCompute();
 
         for (const line of lines_to_recompute) {
