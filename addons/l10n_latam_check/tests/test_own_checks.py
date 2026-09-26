@@ -93,6 +93,37 @@ class TestOwnChecks(L10nLatamCheckTest):
         payment.action_post()
         self.assertEqual(payment.amount, 120)
 
+    def test_pay_bill_with_several_checks_single_payment(self):
+        """ Paying a bill with multiple own checks in a single payment must keep the bill 'In Payment'
+        and the payment 'In Process' (one outstanding line per check) until the checks are reconciled
+        with the bank, exactly as when paying with one check per payment. """
+        self.ensure_installed('l10n_ar')
+        invoice = self._create_invoice(
+            company_id=self.company_data_3['company'].id,
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[self._prepare_invoice_line(price_unit=100, product_id=self.product_a)],
+            move_type='in_invoice',
+            l10n_latam_document_type_id=self.env.ref('l10n_ar.dc_liq_uci_a'),
+            l10n_latam_document_number="001-00002",
+            post=True,
+        )
+
+        payment_method_line = self.bank_journal._get_available_payment_method_lines('outbound').filtered_domain([('code', '=', 'own_checks')])[:1]
+        action = invoice.action_register_payment()
+        wizard = self.env[action['res_model']].with_context(action['context']).create({
+            'journal_id': self.bank_journal.id,
+            'payment_method_line_id': payment_method_line.id,
+            'l10n_latam_new_check_ids': [
+                Command.create({'name': '0000010', 'payment_date': fields.Date.today(), 'amount': 100.0}),
+                Command.create({'name': '0000011', 'payment_date': fields.Date.today(), 'amount': 15.0}),
+            ],
+        })
+        payment = self.env['account.payment'].browse(wizard.action_create_payments()['res_id'])
+
+        self.assertEqual(payment.state, 'in_process', "Payment must stay 'In Process' until the checks are reconciled.")
+        self.assertEqual(invoice.payment_state, 'in_payment', "Bill must stay 'In Payment' until the checks are reconciled.")
+        self.assertEqual(len(payment.l10n_latam_new_check_ids.outstanding_line_id), 2, "Each check must own a dedicated outstanding line on the payment move (the essence of the split)")
+
     def test_invoice_status_after_voided_check(self):
         self.ensure_installed('l10n_ar')
         invoice = self._create_invoice(
