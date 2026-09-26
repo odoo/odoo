@@ -1448,7 +1448,7 @@ class TestQueries(TransactionCase):
             SELECT "res_partner_title"."id"
             FROM "res_partner_title"
             WHERE (COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>%s) LIKE %s)
-            ORDER BY COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>%s)
+            ORDER BY COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>%s), "res_partner_title"."id"
         ''']):
             Model.search([('name', 'like', 'foo')])
 
@@ -1481,7 +1481,7 @@ class TestQueries(TransactionCase):
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE ("res_users"."active" = %s)
             AND (("res_users"."id" = %s) AND ("res_users__partner_id"."id" = %s))
-            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+            ORDER BY "res_users__partner_id"."name", "res_users"."login", "res_users"."id"
         ''']):
             Model.search([])
 
@@ -1498,7 +1498,7 @@ class TestQueries(TransactionCase):
                 ("ir_model"."name"->>%s ILIKE %s)
                 OR ("ir_model"."model" ILIKE %s)
             )
-            ORDER BY "ir_model"."model"
+            ORDER BY "ir_model"."model", "ir_model"."id"
             LIMIT %s
         ''']):
             Model.name_search('foo')
@@ -1510,7 +1510,7 @@ class TestQueries(TransactionCase):
                 (("ir_model"."name"->>%s NOT ILIKE %s) OR "ir_model"."name"->>%s IS NULL)
                 AND (("ir_model"."model" NOT ILIKE %s) OR "ir_model"."model" IS NULL)
             )
-            ORDER BY "ir_model"."model"
+            ORDER BY "ir_model"."model", "ir_model"."id"
             LIMIT %s
         ''']):
             Model.name_search('foo', operator='not ilike')
@@ -1530,7 +1530,7 @@ class TestMany2one(TransactionCase):
             LEFT JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE ("res_users__partner_id"."name" LIKE %s)
-            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+            ORDER BY "res_users__partner_id"."name", "res_users"."login", "res_users"."id"
         ''']):
             self.User.search([('name', 'like', 'foo')])
 
@@ -1542,7 +1542,7 @@ class TestMany2one(TransactionCase):
             LEFT JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE ("res_users__partner_id"."name" LIKE %s)
-            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+            ORDER BY "res_users__partner_id"."name", "res_users"."login", "res_users"."id"
         ''']):
             self.User.search([('partner_id.name', 'like', 'foo')])
 
