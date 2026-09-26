@@ -1,4 +1,5 @@
 /** @odoo-module **/
+import { Markup } from 'web.utils';
 
 export const nbsp = "\u00a0";
 
@@ -315,4 +316,14 @@ export function unaccent(str, caseSensitive) {
         return diacriticsMap[accented] || accented;
     });
     return caseSensitive ? str : str.toLowerCase();
+}
+
+export function ScriptSafe(s) {
+    return Markup(s
+        .replace(/&/g, String.raw`\u0026`)
+        .replace(/</g, String.raw`\u003c`)
+        .replace(/>/g, String.raw`\u003e`)
+        .replace(/\u2028/g, String.raw`\u2028`)
+        .replace(/\u2029/g, String.raw`\u2029`)
+    );
 }
