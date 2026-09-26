@@ -77,7 +77,7 @@ class ChangeProductionQty(models.TransientModel):
             self._update_finished_moves(production, new_production_qty, old_production_qty)
             production.write({'product_qty': new_production_qty})
             if not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding) and\
-               not production.workorder_ids:
+               not production.workorder_ids and self.env.context.get('skip_activity'):
                 production.qty_producing = new_production_qty
                 production._set_qty_producing()
 
