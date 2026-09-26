@@ -179,7 +179,14 @@ class ProductProduct(models.Model):
             elif location_final:
                 location = location_final
             else:
-                location = order.picking_type_id.default_location_dest_id
+                # For a line not linked to an orderpoint/procurement (e.g. a
+                # product added manually to a RFQ) resolve the final stock
+                # location the same way the receipt move will
+                # (_prepare_stock_move_vals). Using the operation type's
+                # immediate destination would point to the input location with
+                # a multi-step receipt, so the incoming quantity would never be
+                # attributed to the stock location watched by the rule.
+                location = order._get_final_location_record()
             product_qty = uom._compute_quantity(product_qty_sum, product.uom_id, round=False)
             qty_by_product_location[(product.id, location.id)] += product_qty
             qty_by_product_wh[(product.id, location.warehouse_id.id)] += product_qty
@@ -199,7 +206,9 @@ class ProductProduct(models.Model):
                     '|',
                         '&',
                             ('location_final_id', '=', False),
-                            ('order_id.picking_type_id.default_location_dest_id', 'in', location_ids),
+                            '|',
+                                ('order_id.picking_type_id.default_location_dest_id', 'in', location_ids),
+                                ('order_id.picking_type_id.warehouse_id.lot_stock_id', 'in', location_ids),
                         '&',
                             ('move_ids', '=', False),
                             ('location_final_id', 'child_of', location_ids),

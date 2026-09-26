@@ -356,6 +356,58 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(pol.product_qty, 2.0)
         self.assertEqual(rr.qty_to_order, 0.0)
 
+    def test_reordering_rule_manual_rfq_multi_step_receipt(self):
+        """ A product added manually to a draft RFQ (no orderpoint link and no
+        location_final_id) must be accounted for by a reordering rule even when
+        the warehouse receives in several steps.
+
+        The incoming quantity has to be attributed to the final stock location
+        watched by the rule, and not to the input location of the receipt.
+        Otherwise the rule keeps asking to reorder although an RFQ already
+        covers the need. With a single step receipt this works because the
+        receipt destination is the stock location, this test covers the
+        multi-step case.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+        stock_location = warehouse.lot_stock_id
+
+        # A rule that wants to keep 10 units in stock, so it asks to order 10.
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': stock_location.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 10,
+            'product_max_qty': 10,
+        })
+        self.assertEqual(orderpoint._quantity_in_progress()[orderpoint.id], 0.0)
+        self.assertEqual(orderpoint.qty_to_order, 10.0)
+
+        # Add the product manually to a draft RFQ: no orderpoint link, no
+        # location_final_id, and a receipt going to the input location.
+        self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': warehouse.in_type_id.id,
+            'order_line': [Command.create({
+                'product_id': self.product_01.id,
+                'product_qty': 10,
+            })],
+        })
+        pol = self.env['purchase.order.line'].search([('product_id', '=', self.product_01.id)])
+        self.assertFalse(pol.orderpoint_id)
+        self.assertFalse(pol.location_final_id)
+
+        # The draft RFQ is attributed to the final stock location
+        qty_by_product_loc = self.product_01._get_quantity_in_progress(location_ids=stock_location.ids)[0]
+        self.assertEqual(qty_by_product_loc[self.product_01.id, stock_location.id], 10.0)
+
+        # so the rule sees the RFQ and there is nothing left to order.
+        self.assertEqual(orderpoint._quantity_in_progress()[orderpoint.id], 10.0)
+        orderpoint.invalidate_recordset()
+        orderpoint._compute_qty_to_order_computed()
+        self.assertEqual(orderpoint.qty_forecast, 10.0)
+        self.assertEqual(orderpoint.qty_to_order, 0.0)
+
     def test_replenish_report_1(self):
         """Tests the auto generation of manual orderpoints.
 
