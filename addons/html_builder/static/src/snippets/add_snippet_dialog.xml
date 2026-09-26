@@ -34,11 +34,13 @@
                             <i class="oi" data-icon="search" aria-hidden="true"></i>
                         </span>
                     </div>
-                    <div class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto"
+                    <div t-if="!this.state.search"
+                         t-ref="this.tabListRef"
+                         class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto"
                          role="tablist"
                          aria-orientation="vertical"
                          aria-label="Block Categories">
-                        <t t-if="!this.state.search" t-foreach="this.snippetGroups" t-as="snippetGroup" t-key="snippetGroup.id">
+                        <t t-foreach="this.snippetGroups" t-as="snippetGroup" t-key="snippetGroup.id">
                             <t t-set="isActive" t-value="this.state.groupSelected === snippetGroup.groupName"/>
                             <button class="list-group-item list-group-item-action p-3"
                                     role="tab"
@@ -46,9 +48,7 @@
                                     t-att-id="'tab_' + snippetGroup.groupName"
                                     t-att-aria-controls="'tabpanel_' + snippetGroup.groupName"
                                     t-att-aria-selected="isActive ? 'true' : 'false'"
-                                    t-att-tabindex="isActive ? '0' : '-1'"
-                                    t-on-click="() => this.selectGroup(snippetGroup)"
-                                    t-on-keydown="this.onTabKeydown">
+                                    t-on-click="() => this.selectGroup(snippetGroup)">
                                 <t t-out="snippetGroup.title"/>
                             </button>
                         </t>

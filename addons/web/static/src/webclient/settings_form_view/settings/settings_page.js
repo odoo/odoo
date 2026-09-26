@@ -2,7 +2,7 @@ import { Component, computed, proxy, signal, t, useProps } from "@odoo/owl";
 import { location } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useService } from "@web/core/utils/hooks";
+import { useService, useTabsKeyboardNavigation } from "@web/core/utils/hooks";
 import { useLayoutEffect } from "@web/owl2/utils";
 
 export class SettingsPage extends Component {
@@ -15,11 +15,18 @@ export class SettingsPage extends Component {
         slots: t.object(),
     });
     settingsRef = signal.ref();
+    tabListRef = signal.ref();
     setup() {
         this.uiService = useService("ui");
         this.state = proxy({
             selectedTab: "",
             search: this.env.searchState,
+        });
+        useTabsKeyboardNavigation({
+            ref: this.tabListRef,
+            isTabActive: (el) =>
+                this.state.selectedTab === el.dataset.key && this.state.search.value.length === 0,
+            loop: true,
         });
 
         if (this.props.modules) {

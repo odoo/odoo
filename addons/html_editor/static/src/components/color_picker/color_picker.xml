@@ -3,7 +3,7 @@
     <div t-attf-class="o_font_color_selector user-select-none {{this.props.className}}"
         t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="this.rootRef"
         t-on-mouseenter="this.onMouseEnter">
-        <div class="px-1 mb-1 pt-2 d-flex">
+        <div class="px-1 mb-1 pt-2 d-flex" t-ref="this.tabListRef">
             <t t-if="this.isMobileOS">
                 <Dropdown>
                     <button class="btn btn-light d-flex justify-content-between w-100 border border-dark">
@@ -23,6 +23,7 @@
             <t t-else="">
                 <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
                     <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.state.activeTab === tab.id ? 'active' : ''}"
+                        role="tab"
                         t-on-click="() => this.setTab(tab.id)">
                         <t t-out="tab.name" />
                     </button>

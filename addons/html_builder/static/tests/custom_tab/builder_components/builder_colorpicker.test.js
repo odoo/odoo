@@ -282,12 +282,12 @@ describe("Custom colorpicker: preview and commit", () => {
         expect(".options-container").toBeDisplayed();
         await contains(".we-bg-options-container .o_we_color_preview").click();
         await waitFor(".o-overlay-item button:contains('Custom')");
-        await press("Tab");
+        await press("ArrowRight");
         await press("Enter");
         await waitFor(".o-overlay-item .o_color_pick_area");
         expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
         // Press shift+tab until it gets to the colorpicker area.
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 5; i++) {
             await press("Tab", { shiftKey: true });
         }
         expect(".o-overlay-item .o_color_pick_area .o_picker_pointer").toBeFocused();
