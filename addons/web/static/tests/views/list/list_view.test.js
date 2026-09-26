@@ -22014,8 +22014,12 @@ test(`column tag: required styling is applied to the required sub-field`, async 
     const groupFields = queryAll(`.o_selected_row td[name='foo'] .o_column_group_field`);
     expect(groupFields[0]).toHaveClass("o_required_modifier");
     expect(groupFields[1]).not.toHaveClass("o_required_modifier");
-    expect(groupFields[0]).toHaveStyle({ "border-bottom-width": "1px" });
-    expect(groupFields[1]).toHaveStyle({ "border-bottom-width": "0px" });
+    expect(groupFields[0]).toHaveStyle({ "border-bottom-width": "0px" });
+    expect(`.o_selected_row td[name='foo']`).toHaveStyle({ "border-bottom-width": "0px" });
+    // the cell stacks several fields, so the underline is carried by the input
+    expect(`.o_selected_row .o_field_widget[name='foo'] .o_input`).toHaveStyle({
+        "border-bottom-width": "1px",
+    });
 });
 
 test.tags("desktop");

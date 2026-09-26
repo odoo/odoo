@@ -504,15 +504,28 @@
     }
 
     .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
+        // a lone field is marked on the cell...
         &.o_required_modifier,
-        > .o_column_group_field.o_required_modifier:not(.o_readonly_modifier) {
+        &:has(> .o_column_group_field.o_required_modifier:not(.o_readonly_modifier):only-child) {
             border-bottom: 1px solid $o-input-border-required;
         }
 
         &.o_invalid_cell:not(:focus-within),
-        > .o_column_group_field.o_invalid_cell:not(.o_readonly_modifier):not(:focus-within) {
+        &:has(> .o_column_group_field.o_invalid_cell:not(.o_readonly_modifier):only-child):not(:focus-within) {
             border-bottom: 1px solid $danger;
             background-color: $o-input-invalid-bg;
+        }
+
+        // ...stacked ones on their own input, to keep it off the many2one buttons
+        > .o_column_group_field:not(.o_readonly_modifier):not(:only-child) {
+            &.o_required_modifier .o_input {
+                border-bottom: $input-border-width solid $o-input-border-required;
+            }
+
+            &.o_invalid_cell:not(:focus-within) .o_input {
+                border-bottom: $input-border-width solid $danger;
+                background-color: $o-input-invalid-bg;
+            }
         }
     }
 
