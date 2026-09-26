@@ -53,12 +53,31 @@ class ProductTemplateAttributeValue(models.Model):
     _inherit = ['product.template.attribute.value', 'pos.load.mixin']
 
     @api.model
+<<<<<<< 088a2b5d8125ac033ffd936cbe1e44830d013182
     def _load_pos_data_domain(self, data):
         ptav_ids = data['product.product'].product_template_variant_value_ids.ids + data['product.template.attribute.line'].product_template_value_ids.ids
 
+||||||| 57fad2e46286b74d3832a3c7cea4a84327268224
+    def _load_pos_data_domain(self, data, config):
+        ptav_ids = {ptav_id for p in data['product.product'] for ptav_id in p['product_template_variant_value_ids']}
+        ptav_ids.update({ptav_id for ptal in data['product.template.attribute.line'] for ptav_id in ptal['product_template_value_ids']})
+=======
+    def _load_pos_data_domain(self, data, config):
+        ptav_ids = {ptav_id for p in data['product.product'] for ptav_id in p['product_template_variant_value_ids']}
+        ptav_ids.update({ptav_id for ptal in data['product.template.attribute.line'] for ptav_id in ptal['product_template_value_ids']})
+        # On an incremental load, data['product.attribute'] only holds the attributes
+        # modified since the last sync, not all the loaded ones.
+        attribute_domain = self.env['product.attribute']._load_pos_data_domain(data, config)
+>>>>>>> 25086e16c2a910fb71f485e2f0a47e12a2f52f7b
         return [
             ('ptav_active', '=', True),
+<<<<<<< 088a2b5d8125ac033ffd936cbe1e44830d013182
             ('attribute_id', 'in', data['product.attribute'].ids),
+||||||| 57fad2e46286b74d3832a3c7cea4a84327268224
+            ('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']]),
+=======
+            ('attribute_id', 'any', attribute_domain),
+>>>>>>> 25086e16c2a910fb71f485e2f0a47e12a2f52f7b
             ('id', 'in', list(ptav_ids)),
         ]
 
