@@ -7,6 +7,7 @@ from contextlib import contextmanager
 
 from functools import partial
 from collections import defaultdict
+from unittest.mock import patch
 
 from lxml import etree
 from lxml.builder import E
@@ -3805,6 +3806,67 @@ Forbidden use of `__comp__` in arch."""
                 'key': 'website.test_view_e6',
             })
         self.assertIn("Element '<e4>' cannot be located in parent view", str(catcher.exception.args[0]))
+
+    def test_check_primary_skip_unloaded_siblings_during_base_update(self):
+        """ During `-u base`, a sibling primary view of a module that is not
+        loaded yet must not be checked when a base view of its tree is updated.
+        """
+        # P: primary, E: extension
+        #
+        #       P1
+        #      /  \
+        #    E1    E2
+        #            \
+        #             P2
+        #
+        # P1 belongs to base, E1, E2 and P2 to a module that is not loaded yet.
+        # P2 targets <e1/>, added by E1, which is left out while base loads.
+        p1 = self.View.create({
+            'name': 'test_view_p1',
+            'type': 'qweb',
+            'arch_db': '<div><p1/></div>',
+        })
+        e1 = self.View.create({
+            'name': 'test_view_e1',
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'arch_db': '<div position="inside"><e1/></div>',
+        })
+        e2 = self.View.create({
+            'name': 'test_view_e2',
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'arch_db': '<div position="inside"><e2/></div>',
+        })
+        p2 = self.View.create({
+            'name': 'test_view_p2',
+            'mode': 'primary',
+            'inherit_id': e2.id,
+            'arch_db': '<e1 position="replace"><p2/></e1>',
+        })
+        self.env['ir.model.data'].create([{
+            'module': module,
+            'name': view.name,
+            'model': 'ir.ui.view',
+            'res_id': view.id,
+        } for module, view in [
+            ('base', p1),
+            ('test_not_loaded_yet', e1),
+            ('test_not_loaded_yet', e2),
+            ('test_not_loaded_yet', p2),
+        ]])
+
+        # simulate the registry state while base is being updated: no module is fully loaded yet
+        with (
+            patch.object(self.registry, '_init', True),
+            patch.object(self.registry, '_init_modules', set()),
+            patch.object(self.registry, 'loaded_xmlids', set()),
+        ):
+            # base rewrites its own view from the XML file, which triggers the check of P2
+            p1.with_context(install_module='base').arch_db = '<div><p1/></div>'
+
+        # once all modules are loaded, P2 is valid
+        self.assertEqual(p2.get_combined_arch(), '<div><p1/><p2/><e2/></div>')
 
 
 @tagged('post_install', '-at_install')
