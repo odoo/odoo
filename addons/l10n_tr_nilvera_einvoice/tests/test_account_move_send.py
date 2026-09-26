@@ -141,3 +141,14 @@ class TestTRAccountMoveSend(TestAccountMoveSendCommon, TestUBLTRCommon):
 
         self.assertIn('SENT', full_note_text)
         self.assertNotIn('CENTS', full_note_text)
+
+    def test_nilvera_get_sale_pdf(self):
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            invoice_date='2025-11-28',
+            amounts=[1000],
+            taxes=self.tax_sale_a,
+        )
+        invoice.l10n_tr_nilvera_send_status = 'succeed'
+        self.env['account.move']._cron_nilvera_get_sale_pdf()
+        self.assertFalse(invoice.message_main_attachment_id)
