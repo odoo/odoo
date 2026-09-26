@@ -233,6 +233,7 @@ declare module "plugins" {
         should_show_power_buttons_predicates: should_show_power_buttons_predicates;
         would_feff_be_legit_predicates: would_feff_be_legit_predicates;
         are_inlines_allowed_at_root_predicates: are_inlines_allowed_at_root_predicates;
+        set_tag_target_predicates: set_tag_target_predicates;
 
         // Processors
         apply_background_color_processors: apply_background_color_processors;
