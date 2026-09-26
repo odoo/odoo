@@ -81,6 +81,28 @@ class TestResourceCalendar(TransactionCase):
         self.assertTrue(start_dt <= result_per_resource_id[flex_resource.id]._items[0][0], "First attendance interval should not start before start_dt")
         self.assertTrue(end_dt >= result_per_resource_id[flex_resource.id]._items[4][1], "Last attendance interval should not end after end_dt")
 
+    def test_flexible_resource_without_hours_per_day(self):
+        flex_resource = self.env['resource.resource'].create({
+            'name': 'Test FlexResource',
+            'calendar_id': False,
+            'hours_per_week': 35.0,
+            'hours_per_day': 0.0,
+            'tz': 'UTC',
+        })
+        start_dt = datetime(2025, 6, 2, 0, 0, 0).astimezone(UTC)
+        end_dt = datetime(2025, 6, 7, 23, 59, 59).astimezone(UTC)
+        resources_per_tz = {
+            UTC: flex_resource
+        }
+        result_per_resource_id = self.env['resource.calendar']._attendance_intervals_batch(
+            start_dt, end_dt, resources_per_tz=resources_per_tz
+        )
+        interval = result_per_resource_id[flex_resource.id]
+        self.assertTrue(bool(interval))
+        attendance_start, attendance_stop = interval._items[0][:2]
+        self.assertEqual(attendance_start, start_dt)
+        self.assertEqual(attendance_stop, end_dt)
+
     def test_public_holiday_calendar_no_company(self):
         self.env['resource.calendar.leaves'].create([{
             'name': "Public Holiday for company",
