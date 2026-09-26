@@ -876,6 +876,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'prefix': bank_prefix,
                 'code_digits': code_digits,
                 'account_type': 'asset_current',
+                'tag_ids': False,
             },
             'account_journal_early_pay_discount_loss_account_id': {
                 'name': _("Cash Discount Loss"),
@@ -908,6 +909,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'code_digits': code_digits,
                 'account_type': 'asset_current',
                 'reconcile': True,
+                'tag_ids': False,
             },
         }
 
@@ -957,6 +959,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'code_digits': code_digits,
                 'account_type': 'asset_current',
                 'reconcile': True,
+                'tag_ids': False,
             },
             'account_journal_payment_credit_account_id': {
                 'name': _("Outstanding Payments"),
@@ -965,6 +968,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'code_digits': code_digits,
                 'account_type': 'asset_current',
                 'reconcile': True,
+                'tag_ids': False,
             },
         }
         self.env['account.account']._load_records([
