@@ -1426,8 +1426,16 @@ class PosConfig(models.Model):
         return {
             "has_pos_config": has_pos_config,
             "has_chart_template": has_chart_template,
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
             "is_restaurant_installed": bool(self.env['ir.module.module'].search_count([('name', '=', 'pos_restaurant'), ('state', '=', 'installed')])),
             "is_main_company": (main_company and self.env.company.id == main_company.id) or False,
+||||||| 7ae5701d5d9af17d2b9f676678a211df47c86975
+            "is_restaurant_installed": bool(self.env['ir.module.module'].search_count([('name', '=', 'pos_restaurant'), ('state', '=', 'installed')])),
+            "is_main_company": main_company and self.env.company.id == main_company.id or False
+=======
+            "is_restaurant_installed": bool(self.env['ir.module.module'].sudo().search_count([('name', '=', 'pos_restaurant'), ('state', '=', 'installed')])),
+            "is_main_company": main_company and self.env.company.id == main_company.id or False
+>>>>>>> d699771290cfa8224cd0d78c5fe04827a156be5b
         }
 
     @api.model
