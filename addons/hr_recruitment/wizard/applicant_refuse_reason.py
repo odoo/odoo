@@ -205,7 +205,7 @@ class ApplicantRefuseSingle(models.TransientModel):
     def _compute_applicant_id(self):
         """ Set the applicant to the only record this wizard refuses. """
         for wizard in self:
-            wizard.applicant_id = wizard.applicant_ids[:1]
+            wizard.applicant_id = wizard.with_context(active_test=False).applicant_ids[:1]
 
     @api.depends('applicant_ids')
     def _compute_can_edit_body(self):
