@@ -5,13 +5,13 @@
             <t t-if="product?.event_id">
                 <span class="o-so-tabular-nums fs-4 fw-bold text-primary" t-out="this.ticketAvailabilityText"/>
             </t>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
         <xpath expr="//div[hasclass('product_img')]/img" position="replace">
             <t t-if="product?.event_id">
                 <img class="object-fit-cover rounded-4" t-att-src="this.selfOrder.eventImageUrl(product.event_id)" loading="lazy" alt="Event Image"/>
             </t>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
     </t>
 </templates>

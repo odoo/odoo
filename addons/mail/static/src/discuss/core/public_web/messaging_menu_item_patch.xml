@@ -11,7 +11,7 @@
             <i class="oi o-xsmaller o-mx-0_5 flex-shrink-0 opacity-75" data-icon="chevron_forward"/>
             <span class="text-truncate" t-out="this.channel.thread.displayName"/>
         </div>
-        <t t-else="">$0</t>
+        <t t-else="" t-replaced=""/>
     </xpath>
     <xpath expr="//t[@name='itemName']" position="after">
         <span t-if="this.meetingStartText" class="o-mail-MessagingMenuItem-meetingStart flex-shrink-0 align-self-baseline fw-normal text-muted smaller ms-1">@ <t t-out="this.meetingStartText"/></span>

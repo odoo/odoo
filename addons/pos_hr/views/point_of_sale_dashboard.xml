@@ -9,7 +9,7 @@
                 <t t-if="record.logged_employee_ids.raw_value.length">
                     <field class="mt-2" name="logged_employee_ids" widget="many2many_avatar_employee" options="{'tag_limit': 5}"/>
                 </t>
-                <t t-else="">$0</t>
+                <t t-else="" t-replaced=""/>
             </xpath>
         </field>
     </record>

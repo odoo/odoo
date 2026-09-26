@@ -102,7 +102,7 @@ test("translation-context: xpath position replace (outer)", async () => {
     `);
 });
 
-test("translation-context: xpath position replace (outer) with $0", async () => {
+test("translation-context: xpath position replace (outer) with t-replaced", async () => {
     registerTemplates(
         { name: "A", content: `<div class="o_test_component" title="title"> text </div>` },
         {
@@ -111,7 +111,7 @@ test("translation-context: xpath position replace (outer) with $0", async () => 
                 <xpath expr="div" position="replace">
                     <div class="o_test_component" title="title">
                         text
-                        <div title="title2">$0</div>
+                        <div title="title2" t-replaced=""/>
                     </div>
                 </xpath>
             `,
@@ -410,7 +410,7 @@ test("translation-context: wrappers texts in t tags (3)", async () => {
                 <xpath expr="div" position="replace">
                     <div class="o_test_component" title="title">
                         text
-                        <div title="title2">$0</div>
+                        <div title="title2" t-replaced=""/>
                     </div>
                 </xpath>
             `,

@@ -10,7 +10,7 @@
         </xpath>
         <xpath expr="//span[hasclass('o-mail-MessagingMenuItem-body')]" position="replace">
             <span t-if="this.channel?.livechat_status === 'need_help' and this.channel?.description" t-att-title="this.channel.description" t-out="this.channel.description"/>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
     </t>
 </templates>

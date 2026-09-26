@@ -265,7 +265,7 @@ function replace(root, target, operation) {
     switch (mode) {
         case "outer": {
             const result = operation.ownerDocument.evaluate(
-                ".//*[text()='$0']",
+                ".//*[@t-replaced]",
                 operation,
                 null,
                 XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
@@ -273,7 +273,8 @@ function replace(root, target, operation) {
             target.setAttribute(TCTX, getTranslationContext(target));
             for (let i = 0; i < result.snapshotLength; i++) {
                 const loc = result.snapshotItem(i);
-                loc.firstChild.replaceWith(deepClone(target));
+                loc.removeAttribute("t-replaced");
+                loc.replaceChildren(deepClone(target));
             }
             if (target.parentElement) {
                 const nodes = getNodes(target, operation);

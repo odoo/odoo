@@ -820,7 +820,7 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
 
     def test_replace(self):
         spec = E.xpath(
-            E.div("$0", {'class': "some"}),
+            E.div("", {'class': "some", 't-replaced': ""}),
             expr="//p", position="replace")
 
         self.apply_spec(spec)
@@ -1113,7 +1113,7 @@ class TestTemplating(ViewCase):
             'inherit_id': view1.id,
             'arch': """<xpath expr="//div[@role='search']" position="replace">
                 <form>
-                    <t>$0</t>
+                    <t t-replaced=""/>
                 </form>
             </xpath>
             """

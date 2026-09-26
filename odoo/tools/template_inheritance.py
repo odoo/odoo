@@ -160,8 +160,9 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
             if pos == 'replace':
                 mode = spec.get('mode', 'outer')
                 if mode == "outer":
-                    for loc in spec.xpath(".//*[text()='$0']"):
+                    for loc in spec.xpath(".//*[@t-replaced]"):
                         loc.text = ''
+                        del loc.attrib['t-replaced']
                         copied_node = copy.deepcopy(node)
                         # TODO: Remove 'inherit_branding' logic if possible;
                         # currently needed to track node removal for branding

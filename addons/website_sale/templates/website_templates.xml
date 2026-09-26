@@ -412,7 +412,7 @@
         <t t-call="website.placeholder_header_language_selector" position="replace">
             <li class="d-flex align-items-center">
                 <ul class="navbar-nav flex-row align-items-center gap-2">
-                    <t>$0</t>
+                    <t t-replaced=""/>
                     <t
                         t-call="website_sale.placeholder_header_pricelist_selector"
                         _div_classes.f="d-flex align-items-center h-100"
@@ -583,7 +583,7 @@ Disallow: /*/shop/confirmation
     >
         <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
             <div class="d-flex flex-column-reverse flex-md-row align-items-center gap-2">
-                <div class="flex-md-shrink-0">$0</div>
+                <div class="flex-md-shrink-0" t-replaced=""/>
                 <div class="d-flex align-items-center gap-2 min-w-0 mw-100">
                     <t
                         t-call="website_sale.pricelist_selector"
