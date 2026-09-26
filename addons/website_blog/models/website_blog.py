@@ -171,6 +171,7 @@ class BlogPost(models.Model):
     _website_track_field = 'blog_post_id'
     _order = 'id DESC'
     _mail_post_access = 'read'
+    _add_seo_rels = True
 
     def _compute_website_url(self):
         super(BlogPost, self)._compute_website_url()

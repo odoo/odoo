@@ -6,6 +6,7 @@ from . import test_forum_internals
 from . import test_forum_karma_access
 from . import test_forum_notifications
 from . import test_forum_post
+from . import test_forum_post_comment
 from . import test_forum_tag
 from . import test_forum_tours
 from . import test_performance

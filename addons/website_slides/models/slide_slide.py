@@ -41,6 +41,7 @@ class SlideSlide(models.Model):
     }
     _order = 'sequence asc, is_category asc, id asc'
     _partner_unfollow_enabled = True
+    _add_seo_rels = True
 
     YOUTUBE_VIDEO_ID_REGEX = r'^(?:(?:https?:)?//)?(?:www\.|m\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|shorts/|live/|watch\?v=|watch\?.+&v=))((?:\w|-){11})\S*$'
     GOOGLE_DRIVE_DOCUMENT_ID_REGEX = r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)'

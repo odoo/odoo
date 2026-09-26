@@ -89,3 +89,12 @@ class TestForumPost(TestForumCommon):
         })
         with self.assertRaises(UserError):
             answer.parent_id = self.post
+
+    def test_add_seo_rels_to_new_posts_created_by_users(self):
+        self.user_employee.karma = KARMA['post']
+        post = self.env['forum.post'].with_user(self.user_employee).create({
+            'content': 'hello <a href="#">world</a>',
+            'forum_id': self.forum.id,
+        })
+
+        self.assertEqual(post['content'], '<p>hello <a href="#" rel="nofollow noopener noreferrer ugc">world</a></p>')

@@ -47,6 +47,7 @@ class ProductTemplate(models.Model):
     ]
     _mail_post_access = "read"
     _check_company_auto = True
+    _add_seo_rels = True
 
     # === DEFAULT METHODS ===#
 
