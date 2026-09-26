@@ -30,7 +30,7 @@ class L10nEgEdiEtaSubmission(models.Model):
         if alerts := self.move_id._get_l10n_eg_edi_alerts():
             return self.env['account.move.send']._raise_danger_alerts(alerts)
 
-        if error := self.move_id._l10n_eg_eta_send_invoice(notify=True):
+        if error := self.move_id._l10n_eg_edi_send_invoices_in_batch(notify=True):
             if isinstance(error.get('error'), dict):
                 message = error['error'].get('message')
             else:
@@ -39,7 +39,7 @@ class L10nEgEdiEtaSubmission(models.Model):
 
     def action_resign(self):
         self.ensure_one()
-        if alerts := self.move_id._get_l10n_eg_edi_alerts():
+        if alerts := self.move_id._get_l10n_eg_edi_alerts(check_sign=False):
             return self.env['account.move.send']._raise_danger_alerts(alerts)
         return self.move_id.action_post_sign_invoices()
 
