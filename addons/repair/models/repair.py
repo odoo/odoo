@@ -513,7 +513,7 @@ class Repair(models.Model):
 
             # Try to create move with the appropriate owner
             owner_id = False
-            available_qty_owner = self.env['stock.quant']._get_available_quantity(repair.product_id, repair.location_id, repair.lot_id, owner_id=repair.partner_id, strict=True)
+            available_qty_owner = self.env['stock.quant']._get_available_quantity(repair.product_id, repair.product_location_src_id, repair.lot_id, owner_id=repair.partner_id, strict=True)
             if float_compare(available_qty_owner, repair.product_qty, precision_digits=precision) >= 0:
                 owner_id = repair.partner_id.id
 
