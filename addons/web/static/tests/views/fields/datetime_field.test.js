@@ -2,6 +2,7 @@ import { after, expect, test } from "@odoo/hoot";
 import {
     click,
     edit,
+    keyDown,
     queryAll,
     queryAllProperties,
     queryAllTexts,
@@ -14,10 +15,14 @@ import {
     defineModels,
     defineParams,
     fields,
+    getService,
     models,
     mountView,
+    mountWithCleanup,
     onRpc,
 } from "@web/../tests/web_test_helpers";
+import { WebClient } from "@web/webclient/webclient";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import {
     getPickerApplyButton,
     getPickerCell,
@@ -659,4 +664,64 @@ test("list datetime: column widths (show_time=false)", async () => {
 
     expect(queryAllTexts(".o_data_row:eq(0) .o_data_cell")).toEqual(["02/08/2017", "partner,1"]);
     expect(queryAllProperties(".o_list_table thead th", "offsetWidth")).toEqual([40, 83, 677]);
+});
+
+test("value picked in a still-open popover is committed when the record is saved", async () => {
+    mockTimeZone(+2);
+
+    Partner._views.form = /* xml */ `<form><field name="datetime"/></form>`;
+    onRpc("web_save", ({ args }) => {
+        expect.step(args[1].datetime);
+    });
+
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, { resModel: "partner", resId: 1 });
+    await animationFrame();
+
+    await click(".o_field_datetime input");
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+
+    // Picking a day on a datetime keeps the popover open, so the value is held by
+    // the picker and has not been applied to the record yet. It also moves the
+    // focus out of the input, which is what lets the dialog hotkey through.
+    await click(getPickerCell("15"));
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+
+    // "control+enter" clicks the first footer button: the record is saved without
+    // the popover ever being closed by a click away.
+    await keyDown("control+enter");
+    await animationFrame();
+    await animationFrame();
+
+    expect.verifySteps(["2017-02-15 10:00:00"]);
+});
+
+test("datetime is not altered when the record is saved without opening the picker", async () => {
+    mockTimeZone(+2);
+
+    // "show_time=false" makes the input display only the date part, hiding the time,
+    // just like the pre-filled datetimes of a gantt "create a task" dialog.
+    Partner._views.form = /* xml */ `<form><field name="datetime" options="{'show_time': false}"/></form>`;
+    onRpc("web_save", ({ args }) => {
+        expect.step(args[1].datetime);
+    });
+
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+        context: { default_datetime: "2017-02-08 10:00:00" },
+    });
+    await animationFrame();
+    expect(".o_field_datetime input").toHaveValue("02/08/2017");
+
+    // The picker is never opened, so it holds nothing pending. Saving must not
+    // round-trip the value through the partial text shown by the input: re-reading
+    // it would drop the time and shift the datetime.
+    await click(".o_dialog .modal-footer .o_form_button_save");
+    await animationFrame();
+
+    // The value reaches the record untouched, keeping its time part.
+    expect.verifySteps(["2017-02-08 10:00:00"]);
 });

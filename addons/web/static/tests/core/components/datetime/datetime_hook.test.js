@@ -144,6 +144,64 @@ test("value is not updated if it did not change", async () => {
     expect.verifySteps(["2023-07-07"]);
 });
 
+test("value is not applied when owner component is unmounted", async () => {
+    class Child extends Component {
+        static components = { DateTimeInput };
+        static props = [];
+        static template = xml`
+            <div>
+                <input type="text" class="datetime_hook_input" t-ref="start-date"/>
+            </div>
+        `;
+
+        setup() {
+            useDateTimePicker({
+                pickerProps: {
+                    value: false,
+                    type: "date",
+                },
+                onApply: () => expect.step("onApply"),
+            });
+        }
+    }
+
+    const { resolve: hideChild, promise } = Promise.withResolvers();
+
+    class DateTimeToggler extends Component {
+        static components = { Child };
+        static props = [];
+        static template = xml`<Child t-if="!state.hidden"/>`;
+
+        setup() {
+            this.state = useState({
+                hidden: false,
+            });
+            promise.then(() => {
+                this.state.hidden = true;
+            });
+        }
+    }
+
+    await mountWithCleanup(DateTimeToggler);
+
+    await click("input.datetime_hook_input");
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+
+    // The picker now holds a value that has not been applied yet.
+    await edit("06/06/2023");
+
+    // Same as above: a click away would close the popover properly, so the owner
+    // is unmounted directly to reproduce a dialog being closed by its buttons.
+    hideChild();
+    await animationFrame();
+    await animationFrame();
+
+    expect(".o_datetime_picker").toHaveCount(0);
+    // Applying here would run "onApply" on a component about to be destroyed.
+    expect.verifySteps([]);
+});
+
 test("close popover when owner component is unmounted", async() => {
     class Child extends Component {
         static components = { DateTimeInput };
