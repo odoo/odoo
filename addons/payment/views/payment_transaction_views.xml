@@ -115,10 +115,10 @@
                                 <field name="token_id" invisible="not token_id"/>
                             </group>
                         </page>
+                        <page string="Message" invisible="not state_message">
+                            <field name="state_message" nolabel="1"/>
+                        </page>
                     </notebook>
-                    <group string="Message" invisible="not state_message">
-                        <field name="state_message" colspan="2" nolabel="1"/>
-                    </group>
                 </sheet>
             </form>
         </field>
