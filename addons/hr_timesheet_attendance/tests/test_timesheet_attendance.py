@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import date, datetime
 
 from odoo.tests import tagged
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
+
 
 @tagged('post_install', '-at_install')
 class TestTimesheetAttendance(TestCommonTimesheet):
@@ -22,11 +22,10 @@ class TestTimesheetAttendance(TestCommonTimesheet):
             'name': 'Test timesheet 1',
             'project_id': self.project_customer.id,
             'unit_amount': 6.0,
-            'date': datetime(2022, 2, 9),
+            'date': date(2022, 2, 9),
         })
         total_timesheet, total_attendance = self.env['hr.timesheet.attendance.report']._read_group(
-            [('employee_id', '=', self.empl_employee.id),
-            ('date', '>=', datetime(2022, 2, 9, 8, 0)), ('date', '<=', datetime(2022, 2, 9, 16, 0))],
+            [('employee_id', '=', self.empl_employee.id), ('date', '=', date(2022, 2, 9))],
             aggregates=['total_timesheet:sum', 'total_attendance:sum'],
         )[0]
         self.assertEqual(total_timesheet, 6.0, "Total timesheet in report should be 4.0")
@@ -46,8 +45,7 @@ class TestTimesheetAttendance(TestCommonTimesheet):
         })
         self.env.flush_all()
         timesheets_cost, attendance_cost, cost_difference = self.env['hr.timesheet.attendance.report']._read_group(
-            [('employee_id', '=', self.empl_employee.id),
-             ('date', '>=', datetime(2022, 2, 9, 8, 0)), ('date', '<=', datetime(2022, 2, 9, 16, 0))],
+            [('employee_id', '=', self.empl_employee.id), ('date', '=', date(2022, 2, 9))],
             aggregates=['timesheets_cost:sum', 'attendance_cost:sum', 'cost_difference:sum'],
         )[0]
         self.assertEqual(timesheets_cost, 60.0, "6 timesheeted hours at a cost of 10/hour")
