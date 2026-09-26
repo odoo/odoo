@@ -703,6 +703,8 @@ describe("Normalize styles", () => {
     });
 
     test("add number heights to parents of elements with percent heights", async () => {
+        // Attached, so the parents have a rendered height.
+        getFixture().append(editable);
         editable.innerHTML = `<table><tbody><tr style="height: 100%;"><td>yup</td></tr></tbody></table>`;
         formatTables(editable);
         expect(editable).toHaveInnerHTML(
@@ -724,6 +726,16 @@ describe("Normalize styles", () => {
             {
                 message:
                     "should have changed the height of the grandparent of a 100% height element",
+            }
+        );
+
+        editable.innerHTML = `<div style="height: 200px;"><div style="height: 50%;"><table style="height: 100%;"><tbody><tr><td>yup</td></tr></tbody></table></div></div>`;
+        formatTables(editable);
+        expect(editable).toHaveInnerHTML(
+            `<div style="height: 200px;"><div style="height: 50%;"><table style="height: 100%;"><tbody><tr><td>yup</td></tr></tbody></table></div></div>`,
+            {
+                message:
+                    "should have kept the fixed height of the grandparent of a 100% height element",
             }
         );
     });
