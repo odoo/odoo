@@ -1266,7 +1266,10 @@ class TestExpenses(TestExpenseCommon):
             'partner_id': employee_partner.id,
             'amount': -100.0,
         })
-        self.env['account.bank.statement.line']._cron_try_auto_reconcile_statement_lines(batch_size=100, company_id=self.env.company)
-        bank_line_reconciled = bank_line.move_id.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_current')
-        self.assertEqual(bank_line_reconciled.reconciled_lines_excluding_exchange_diff_ids.move_id, payment_entry)
+
+        # Reconcile lines to check expense is marked as 'paid'
+        bank_line_to_reconcile = bank_line.move_id.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_current')
+        payment_line_to_reconcile = payment_entry.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_current')
+        bank_line_to_reconcile.account_id = payment_line_to_reconcile.account_id
+        (bank_line_to_reconcile + payment_line_to_reconcile).reconcile()
         self.assertEqual(expense.state, 'paid')

@@ -29,11 +29,11 @@
                            groups="analytic.group_analytic_accounting"
                            readonly="not (is_editable or can_edit_account)"
                            options="{'product_field': 'product_id', 'business_domain': 'expense'}"/>
-                    <field name="account_id" optional="hide" groups="account.group_account_readonly"
+                    <field name="account_id" optional="hide" groups="account.group_account_invoice"
                            readonly="not (is_editable or can_edit_account)"/>
-                    <field name="journal_id" optional="hide" groups="account.group_account_readonly"
+                    <field name="journal_id" optional="hide" groups="account.group_account_invoice"
                            readonly="True"/>
-                    <field name="payment_method_line_id" optional="hide" groups="account.group_account_readonly"
+                    <field name="payment_method_line_id" optional="hide" groups="account.group_account_invoice"
                            readonly="not is_editable"/>
                     <field name="manager_id" optional="hide" readonly="not is_editable"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" readonly="True"/>
@@ -41,10 +41,10 @@
                            options="{'currency_field': 'company_currency_id', 'field_digits': True}" readonly="True"/>
                     <field name="quantity" optional="hide" readonly="not is_editable or not product_has_cost"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tax_tags"
-                           groups="account.group_account_invoice,account.group_account_readonly"
+                           groups="account.group_account_invoice"
                            readonly="not is_editable or not product_has_cost"/>
                     <field name="tax_amount" sum="Total Taxes" readonly="True"
-                           optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
+                           optional="hide" groups="account.group_account_invoice"/>
                     <field name="nb_attachment" widget="nb_attachment" nolabel="1" readonly="True"/>
                     <field name="total_amount" sum="Total Amount" widget='monetary'
                            readonly="not is_editable or product_has_cost"
@@ -316,7 +316,7 @@
                                        options="{'no_label_element_id': 'direct_expense', 'yes_label_element_id': 'match_bill', 'first_element': false}"
                                        readonly="not is_editable"
                                        style="width: 60%"
-                                       groups="account.group_account_readonly"/>
+                                       groups="account.group_account_invoice"/>
                                 <template id="direct_expense">No (Direct Expense)</template>
                                 <template id="match_bill">Yes (Match to Bill)</template>
 
@@ -329,7 +329,7 @@
                                        context="{'name_as_amount_residual': 1, 'list_view_ref': 'hr_expense.view_move_list_expense'}"
                                        readonly="not is_editable"
                                        options="{'no_create': True}"
-                                       groups="account.group_account_readonly"/>
+                                       groups="account.group_account_invoice"/>
                             </div>
 
                             <field name="account_id" options="{'no_create': True}"
@@ -343,7 +343,7 @@
                                             ('company_ids', 'parent_of', company_id)
                                         ]
                                    "
-                                   groups="account.group_account_readonly"
+                                   groups="account.group_account_invoice"
                                    readonly="not (is_editable or can_edit_account)"
                                    context="{'default_company_id': company_id}"/>
                             <field name="payment_method_line_id"
