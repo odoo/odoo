@@ -1,6 +1,13 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import math
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from dateutil.relativedelta import relativedelta
+
 from odoo.fields import Domain, parse_field_expr
+from odoo.tools.intervals import Intervals
 
 # Default hour per day value. The one should
 # only be used when the one from the calendar
@@ -132,6 +139,23 @@ def get_light_color(color, factor, is_open_shift):
     g = round(g + (255 - g) * factor)
     b = round(b + (255 - b) * factor)
     return f"#{r:02x}{g:02x}{b:02x}"
+
+
+def localize_intervals(intervals, tz):
+    """
+    Converts an Intervals object so that all elements are localized to the selected timezone
+
+    :param intervals: The intervals on which the changes will be applied
+    :param tz: The timezone to convert to
+    :return: The converted intervals
+    """
+    assert intervals and isinstance(intervals[0][0], datetime) and intervals[0][0].tzinfo is None
+    localized_list = []
+    tz_info = ZoneInfo(tz)
+    for interval in intervals:
+        for start, stop, meta in interval:
+            localized_list.append((start.replace(tzinfo=tz_info), stop.replace(tzinfo=tz_info), meta))
+    return Intervals(localized_list)
 
 
 def extended_gcd(a, b):
