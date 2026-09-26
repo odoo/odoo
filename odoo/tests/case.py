@@ -26,7 +26,7 @@ class _Outcome(object):
     def testPartExecutor(self, test_case, isTest=False):
         try:
             yield
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, SystemExit):
             raise
         except SkipTest as e:
             self.success = False
