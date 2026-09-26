@@ -214,10 +214,10 @@ class AccountBankStatement(models.Model):
         for statement in self:
             statement.journal_id = statement.line_ids.journal_id
 
-    @api.depends('balance_end', 'balance_end_real', 'line_ids.amount', 'line_ids.state')
+    @api.depends('balance_end', 'balance_end_real', 'line_ids.amount', 'line_ids.state', 'currency_id')
     def _compute_is_complete(self):
         for stmt in self:
-            stmt.is_complete = len(stmt.line_ids) == 0 or (stmt.line_ids.filtered(lambda x: x.state in {'draft', 'posted'}) and stmt.currency_id.compare_amounts(stmt.balance_end, stmt.balance_end_real) == 0)
+            stmt.is_complete = len(stmt.line_ids) == 0 or (stmt.line_ids.filtered(lambda x: x.state in {'draft', 'posted'}) and stmt.currency_id and stmt.currency_id.compare_amounts(stmt.balance_end, stmt.balance_end_real) == 0)
 
     @api.depends('balance_end', 'balance_end_real')
     def _compute_is_valid(self):
