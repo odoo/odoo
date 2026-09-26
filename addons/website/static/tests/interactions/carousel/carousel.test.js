@@ -1,17 +1,30 @@
-import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList } from "@web/../tests/public/helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { hover, leave, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, advanceTime } from "@odoo/hoot-mock";
-import { defaultCarouselStyleSnippet, imageGalleryCarouselStyleSnippet } from "./carousel_helpers";
+import { startInteractionsWithSnippet } from "../helpers";
 
 setupInteractionWhiteList("website.carousel_bootstrap_upgrade_fix");
 
 describe.current.tags("interaction_dev");
 
+function processCarouselSnippet(bsRide, bsInterval, snippetName = "s_carousel") {
+    return (html) => {
+        const snippetEl = html.querySelector(`[data-snippet='${snippetName}']`) || html;
+        const carouselEl = snippetEl.querySelector(".carousel");
+        Object.assign(carouselEl.dataset, {
+            bsRide,
+            bsInterval,
+        });
+    };
+}
+
 // TODO : Fix this test
 // -> It seems like the first slide of the carousel happen after more than 3s
 test.skip("Carousel - Autoplay: Always - 3s - s_carousel", async () => {
-    const { core } = await startInteractions(defaultCarouselStyleSnippet("carousel", "3000"));
+    const { core } = await startInteractionsWithSnippet("s_carousel", {
+        processHTML: processCarouselSnippet("carousel", 3000),
+    });
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
@@ -28,7 +41,9 @@ test.skip("Carousel - Autoplay: Always - 3s - s_carousel", async () => {
 // TODO : Fix this test
 // -> It seems like the first slide of the carousel happen after more than 3s
 test.skip("Carousel - Autoplay: Always - 3s - s_image_gallery", async () => {
-    const { core } = await startInteractions(imageGalleryCarouselStyleSnippet("carousel", "3000"));
+    const { core } = await startInteractionsWithSnippet("s_image_gallery", {
+        processHTML: processCarouselSnippet("carousel", 3000, "s_image_gallery"),
+    });
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
@@ -44,7 +59,9 @@ test.skip("Carousel - Autoplay: Always - 3s - s_image_gallery", async () => {
 
 test.tags("desktop");
 test("Carousel - Autoplay: After First Hover - 3s - s_carousel", async () => {
-    const { core } = await startInteractions(defaultCarouselStyleSnippet("true", "3000"));
+    const { core } = await startInteractionsWithSnippet("s_carousel", {
+        processHTML: processCarouselSnippet("true", 3000),
+    });
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
@@ -69,7 +86,9 @@ test("Carousel - Autoplay: After First Hover - 3s - s_carousel", async () => {
 
 test.tags("desktop");
 test("Carousel - Autoplay: After First Hover - 3s - s_image_gallery", async () => {
-    const { core } = await startInteractions(imageGalleryCarouselStyleSnippet("true", "3000"));
+    const { core } = await startInteractionsWithSnippet("s_image_gallery", {
+        processHTML: processCarouselSnippet("true", 3000),
+    });
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
@@ -93,7 +112,9 @@ test("Carousel - Autoplay: After First Hover - 3s - s_image_gallery", async () =
 });
 
 test("Carousel - Autoplay: Never - 3s - s_carousel", async () => {
-    const { core } = await startInteractions(defaultCarouselStyleSnippet("false", "3000"));
+    const { core } = await startInteractionsWithSnippet("s_carousel", {
+        processHTML: processCarouselSnippet("false", 3000),
+    });
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
@@ -108,7 +129,9 @@ test("Carousel - Autoplay: Never - 3s - s_carousel", async () => {
 });
 
 test("Carousel - Autoplay: Never - 3s - s_image_gallery", async () => {
-    const { core } = await startInteractions(imageGalleryCarouselStyleSnippet("false", "3000"));
+    const { core } = await startInteractionsWithSnippet("s_image_gallery", {
+        processHTML: processCarouselSnippet("false", 3000, "s_image_gallery"),
+    });
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
