@@ -43,6 +43,10 @@
     @include print-variable(o-caret-color, map-get($theme-colors, 'danger'));
 }
 
+.o_field_invalid:focus-within {
+    @include print-variable(o-input-border-color, map-get($theme-colors, 'danger'));
+}
+
 //------------------------------------------------------------------------------
 // Generic input
 //------------------------------------------------------------------------------
@@ -69,7 +73,6 @@
     &.o_input, > .o_input, &.o_form_label {
         color: o-text-color('danger');
     }
-
     &:not(.o_form_label) {
         --o-input-background-color: #{$o-input-invalid-bg};
     }

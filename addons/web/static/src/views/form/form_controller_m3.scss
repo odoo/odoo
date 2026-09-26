@@ -20,6 +20,9 @@
                 --o-field-box-border-color: #{o-text-color('danger')};
                 background-color: #{$o-input-invalid-bg};
             }
+            &:has(.o_field_invalid):has(:focus-within) {
+                --o-field-box-border-color: #{o-text-color('danger')};
+            }
             &:focus-within {
                 --o-field-box-border-color: #{$o-action};
             }
