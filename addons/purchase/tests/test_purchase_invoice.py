@@ -830,6 +830,31 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertEqual(analytic_account.purchase_order_count, 1)
         self.assertEqual(analytic_account.action_view_purchase_orders()['domain'], [['id', 'in', purchase_order.ids]])
 
+    def test_invoice_line_name_partner_specific_code_not_duplicated(self):
+        """When a vendor has their own product code (product.supplierinfo),
+        the purchase order line description uses it (e.g. "[CUSTOM-CODE] Product").
+        Billing must not re-resolve the product's display_name without that
+        vendor in context, or it would find a different string ("[DEFAULT-CODE]
+        Product") and prepend it, duplicating the product name on the bill.
+        """
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_order.product_tmpl_id.id,
+            'product_code': 'CUSTOM-CODE',
+        })
+        po = self.init_purchase(partner=self.partner_a, confirm=True, products=[self.product_order])
+        # The Form above goes through the same onchange as the web client, so
+        # the line description already carries the vendor-specific code.
+        self.assertIn('CUSTOM-CODE', po.order_line.name)
+        po.order_line.qty_received = 1
+
+        bill = self.env['account.move'].browse(po.action_create_invoice()['res_id'])
+        self.assertEqual(
+            bill.invoice_line_ids.name, po.order_line.name,
+            "Billing shouldn't duplicate the product name when the order line "
+            "already used a vendor-specific product code",
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
