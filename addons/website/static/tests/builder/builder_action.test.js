@@ -24,6 +24,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     toggleMobilePreview,
+    setupWebsiteBuilderOeId,
 } from "./website_helpers";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 
@@ -92,7 +93,7 @@ test("getRecordInfo retrieves the info from the #wrap element", async () => {
     await expandToolbar();
     await click(".o-we-toolbar .btn[name=test_btn]");
 
-    expect.verifySteps(['getRecordInfo {"resModel":"ir.ui.view","resId":"539","field":"arch"}']);
+    expect.verifySteps([`getRecordInfo ${JSON.stringify({resModel:"ir.ui.view",resId:setupWebsiteBuilderOeId,field:"arch"})}`]);
 });
 
 test("elements within iframe can't be clicked while the builder is being set up", async () => {
