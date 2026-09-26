@@ -213,6 +213,11 @@ def change(root: etree._ElementTree, path: str) -> bool:
     )
     for tcall in inherit_tcalls:
         parent = tcall.getparent()
+        if parent is None and tcall is root:
+            data_root = etree.Element('data')
+            data_root.append(tcall)
+            root = data_root
+            parent = tcall.getparent()
         index = parent.index(tcall)
         indent = get_indentation(tcall)
         before = None
