@@ -3,9 +3,26 @@ import { fields } from "@web/../tests/web_test_helpers";
 
 export class ResUsers extends hrModels.ResUsers {
     leave_date_to = fields.Date({ related: false });
+    leave_date_from = fields.Datetime({ related: false });
+    leave_request_date_from_period = fields.Selection({
+        selection: [
+            ["am", "Morning"],
+            ["pm", "Afternoon"],
+        ],
+    });
 
     _store_main_user_fields(res) {
         super._store_main_user_fields(res);
-        res.many("all_employee_ids", ["leave_date_to"], { internal: true });
+        res.many(
+            "all_employee_ids",
+            [
+                "leave_date_to",
+                "leave_date_from",
+                "leave_request_date_from_period",
+                "next_working_day_on_leave",
+                "leave_request_duration",
+            ],
+            { internal: true }
+        );
     }
 }

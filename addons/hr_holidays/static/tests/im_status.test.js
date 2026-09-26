@@ -11,13 +11,20 @@ import { ImStatusMixin } from "@mail/core/common/im_status_mixin";
 
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+
+const { DateTime } = luxon;
 
 describe.current.tags("desktop");
 defineHrHolidaysModels();
 
 test("change icon on change partner im_status for leave variants", async () => {
     const pyEnv = await startServer();
-    pyEnv["hr.employee"].create({ user_id: serverState.userId, leave_date_to: "2023-01-01" });
+    pyEnv["hr.employee"].create({
+        user_id: serverState.userId,
+        leave_date_from: serializeDateTime(DateTime.now().minus({ days: 2 })),
+        leave_date_to: serializeDate(DateTime.now().plus({ days: 3 })),
+    });
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     patchWithCleanup(ImStatusMixin, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     await start();

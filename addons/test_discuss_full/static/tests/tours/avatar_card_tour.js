@@ -1,6 +1,22 @@
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
+
+function mockDate() {
+    const now = "2024-06-12T08:00:00";
+    class MockDate extends Date {
+        static now() {
+            return new Date(now).getTime();
+        }
+    }
+    return patch(window, { Date: MockDate });
+}
 
 const steps = [
+    {
+        content: "Mock the date so the employee's holiday status is stable",
+        trigger: "body",
+        run: () => mockDate(),
+    },
     {
         content: "Open the avatar card popover",
         trigger: ".o-mail-Message-avatar",
