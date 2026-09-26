@@ -13,7 +13,7 @@ class SurveyInvite(models.TransientModel):
 
     def _get_done_partners_emails(self, existing_answers):
         partners_done, emails_done, answers = super()._get_done_partners_emails(existing_answers)
-        if self.applicant_id.response_ids.filtered(lambda res: res.survey_id.id == self.survey_id.id):
+        if self.applicant_id and self.applicant_id.response_ids.filtered(lambda res: res.survey_id.id == self.survey_id.id):
             if existing_answers and self.existing_mode == 'resend':
                 partners_done |= self.applicant_id.partner_id
         return partners_done, emails_done, answers
