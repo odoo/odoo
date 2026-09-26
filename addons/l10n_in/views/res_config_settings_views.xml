@@ -73,7 +73,7 @@
                                      groups="base.group_no_one">
                                 <field name="l10n_in_edi_production_env"/>
                                 <div class='mt8'
-                                    invisible="not l10n_in_edi_production_env or (not module_l10n_in_edi and not l10n_in_gstin_status_feature and not module_l10n_in_ewaybill and not l10n_in_gst_efiling_feature)">
+                                    invisible="not l10n_in_edi_production_env or (not module_l10n_in_edi and not l10n_in_gstin_status_feature and not module_l10n_in_ewaybill)">
                                     <button name="l10n_in_edi_buy_iap"
                                             title="Costs 1 credit per transaction. Free 200 credits will be available for the first time."
                                             icon="arrow_forward"
@@ -106,12 +106,6 @@
                                         Save this page and come back here to set up the feature.
                                     </div>
                                 </div>
-                            </setting>
-                            <setting name="india_gstr"
-                                     help="Enable to access GST Reports &amp; return filing process"
-                                     company_dependent="1"
-                                     documentation="/applications/finance/fiscal_localizations/india.html#india-gstr">
-                                <field name="l10n_in_gst_efiling_feature" widget="upgrade_boolean"/>
                             </setting>
                             <setting name="india_gstin_status_api_settings"
                                      string="Check GST Number Status"
