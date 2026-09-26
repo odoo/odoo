@@ -19,7 +19,7 @@ from odoo.tools.translate import LazyTranslate
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website.models.ir_http import sitemap_qs2dom, sitemap_group
 from odoo.addons.website_sale.const import MAX_EXPANDED_FILTER_SECTIONS, SHOP_PATH
 from odoo.addons.website_sale.models.website import PRICELIST_SELECTED_SESSION_CACHE_KEY
 
@@ -178,6 +178,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return Domain.AND(domains)
 
+    @sitemap_group("products")
     def sitemap_shop(env, _rule, qs):  # noqa: N805
         if env.website and env.website.ecommerce_access == "logged_in" and not qs:
             # Make sure urls are not listed in sitemap when restriction is active
@@ -190,11 +191,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         Category = env["product.public.category"]
         dom = sitemap_qs2dom(qs, f"{SHOP_PATH}/category", Category._rec_name)
         dom &= env.website.website_domain()
-        for cat in Category.search(dom):
+        # `website_url` walks `parents_and_self`, so fetch what `_slug` reads too.
+        for cat in Category.search_fetch(dom, ["parent_path", "name", "seo_name"]):
             loc = cat.website_url
             if not qs or qs.lower() in loc:
                 yield {"loc": loc}
 
+    @sitemap_group("products")
     def sitemap_products(env, _rule, qs):  # noqa: N805
         if env.website and env.website.ecommerce_access == "logged_in" and not qs:
             # Make sure urls are not listed in sitemap when restriction is active
@@ -204,10 +207,31 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductTemplate = env["product.template"]
         dom = sitemap_qs2dom(qs, SHOP_PATH, ProductTemplate._rec_name)
         dom &= Domain(env.website.sale_product_domain())
-        for product in ProductTemplate.with_context(prefetch_fields=False).search(dom):
+        # Fetch only what the loop reads, not the HTML columns.
+        products = ProductTemplate.search_fetch(
+            dom, ["seo_name", "name", "default_code", "write_date"],
+        )
+        # The product page renders its images, attribute lines and attribute
+        # values (e.g. extra prices): a change to any of them must advance the
+        # recrawl signal. Variants stay out: stock valuation rewrites their cost
+        # on each move, and their visible changes reach the template or its images.
+        products_lastmod = {template.id: template.write_date for template in products}
+        for comodel in (
+            'product.image',
+            'product.template.attribute.line',
+            'product.template.attribute.value',
+        ):
+            for template, lastmod in env[comodel]._read_group(
+                # Pass the search as a subquery, a large catalog's id list would
+                # bloat each query.
+                [('product_tmpl_id', 'in', ProductTemplate._search(dom))],
+                groupby=['product_tmpl_id'], aggregates=['write_date:max'],
+            ):
+                products_lastmod[template.id] = max(products_lastmod[template.id], lastmod)
+        for product in products:
             loc = product.website_url
             if not qs or qs.lower() in loc:
-                yield {"loc": loc}
+                yield {"loc": loc, "lastmod": products_lastmod[product.id]}
 
     def _get_search_options(
         self,

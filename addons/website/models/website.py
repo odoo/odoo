@@ -21,7 +21,7 @@ from urllib.parse import urlparse, urlsplit
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, release
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website.models.ir_http import SITEMAP_GROUPS, sitemap_qs2dom
 from odoo.addons.website.tools import (
     adapt_dark_palette_content,
     get_base_domain,
@@ -1753,15 +1753,19 @@ class Website(models.CachedModel):
             controllers for dynamic pages (e.g. blog).
             By default, returns template views marked as pages.
 
+            The URLs of a ``sitemap`` callable land in the section named by
+            ``@sitemap_group``, on itself or on the function it overrides,
+            else after its module.
+
             :param str query_string: a (user-provided) string, fetches pages
                                      matching the string
 
-            :param boolean ignore_custom_homepage: used to exclude the hompage url
+            :param boolean ignore_custom_homepage: used to exclude the homepage url
                 from the page list if the homepage is not ``/``
-            :returns: a list of mappings with two keys: ``name`` is the displayable
-                      name of the resource (page), ``url`` is the absolute URL
-                      of the same.
-            :rtype: list({name: str, url: str})
+            :returns: one mapping per URL: ``loc`` is the URL, ``group`` its
+                      sitemap section, ``lastmod`` its last change, a
+                      ``datetime``, when known
+            :rtype: Iterator[dict]
         """
         self = self.with_context(website_id=self.id)  # noqa: PLW0642
 
@@ -1788,12 +1792,12 @@ class Website(models.CachedModel):
         for page in pages:
             if ignore_custom_homepage and homepage_url == page['url']:
                 continue
-            record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
+            record = {'loc': page['url'], 'id': page['id'], 'name': page['name'], 'group': 'pages'}
             if page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
             last_dates = [d for d in (page.write_date, page.view_write_date) if d]
             if last_dates:
-                record['lastmod'] = max(last_dates).date()
+                record['lastmod'] = max(last_dates)
             yield record
 
         # ==== CONTROLLERS ====
@@ -1819,12 +1823,50 @@ class Website(models.CachedModel):
                 return f.__func__
             return f
 
+        def _route_module(rule):
+            """
+            Name the sitemap group after the module defining the rule's sitemap
+            function. Rules without a sitemap function, and the static routes
+            owned by `website` itself, fall back on `pages`.
+
+            :param rule: routing rule whose `sitemap` entry names the owner
+            :type rule: werkzeug.routing.Rule
+            :rtype: str
+            """
+            sitemap_func = rule.endpoint.routing.get('sitemap')
+            # Without one there is no stable owner: `rule.endpoint.func` is the
+            # merged leaf of the controller chain, so it would move to whichever
+            # module last overrode the handler, renaming a submitted sub-sitemap.
+            if not callable(sitemap_func):
+                return 'pages'
+            module = _unwrap_callable(sitemap_func).__module__.split('.')[2]
+            # `website` contributes the homepage, which belongs with the CMS
+            # pages already yielded under `pages`.
+            if module == 'website':
+                return 'pages'
+            return module.removeprefix('website_').replace('_', '-')
+
+        # Grouping needs every rule known before the first loc is yielded, so
+        # sweep the routing map once and keep what the loop below needs.
+        sitemap_rules = []
+        sitemap_group_modules = set()
         for rule in router.iter_rules():
             sitemap_func = rule.endpoint.routing.get('sitemap')
             if sitemap_func is False:
                 continue
 
-            if rule.endpoint.routing.get('sitemap') is True:
+            # A sitemap function generates the URLs itself; only without one
+            # does the rule have to be enumerable by the router.
+            listed = callable(sitemap_func) or self.rule_is_enumerable(rule)
+            module = _route_module(rule)
+            sitemap_rules.append((rule, sitemap_func, listed, module))
+            # A module earns its own group once one of its listed routes has a
+            # dynamic segment (/shop/<product>); modules with none stay in `pages`.
+            if listed and rule._converters:
+                sitemap_group_modules.add(module)
+
+        for rule, sitemap_func, listed, module in sitemap_rules:
+            if sitemap_func is True:
                 source = inspect.getsource(rule.endpoint.func)
                 if ('return request.redirect' in source or 'return redirect(' in source):
                     logger.warning(
@@ -1836,20 +1878,24 @@ class Website(models.CachedModel):
                         ', '.join(rule.endpoint.routing['routes']),
                     )
 
+            group = module if module in sitemap_group_modules else 'pages'
             if callable(sitemap_func):
+                # Routes sharing a sitemap function are yielded once, under the
+                # group declared on it, else on the same-named function it overrides.
                 func_key = _unwrap_callable(sitemap_func)
+                group = getattr(func_key, '_sitemap_group', SITEMAP_GROUPS.get(func_key.__name__, group))
                 if func_key in sitemap_endpoint_done:
                     continue
                 sitemap_endpoint_done.add(func_key)
                 for loc in sitemap_func(self.with_context(lang=self.default_lang_id.code).env, rule, query_string):
-                    loc_norm = {**loc, 'loc': _norm(loc['loc'])}
+                    loc_norm = {**loc, 'group': group, 'loc': _norm(loc['loc'])}
                     url = loc_norm['loc']
                     if url not in url_set:
                         yield loc_norm
                         url_set.add(url)
                 continue
 
-            if not self.rule_is_enumerable(rule):
+            if not listed:
                 continue
 
             # Warn only if the 'sitemap' key is absent from routing (legacy behavior)
@@ -1891,7 +1937,7 @@ class Website(models.CachedModel):
                 url = _norm(url)
                 pattern = query_string and '*%s*' % "*".join(query_string.split('/'))
                 if not query_string or fnmatch.fnmatch(url.lower(), pattern):
-                    page = {'loc': url}
+                    page = {'loc': url, 'group': group}
                     if url in url_set:
                         continue
                     url_set.add(url)
@@ -1940,6 +1986,27 @@ class Website(models.CachedModel):
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
         pages = pages.with_context(website_id=self.env.website.id)._get_most_specific_pages()
         return pages
+
+    def _get_views_lastmod(self, views):
+        """ Last change of each of ``views`` as shown on this website.
+
+        The builder saves an edit in this website's copy of the view (same
+        key), or in an extension view holding just the edited area (child of
+        that key). The shared view a record points to keeps its old date.
+
+        :rtype: dict[ir.ui.view, datetime]
+        """
+        views = views.sudo()
+        lastmod = {view.key: view.write_date for view in views}
+        edited_views = self.env['ir.ui.view'].sudo().search_fetch(
+            (Domain('key', 'in', list(lastmod)) | Domain('inherit_id.key', 'in', list(lastmod)))
+            & self.website_domain(),
+            ['key', 'inherit_id', 'write_date'],
+        )
+        for view in edited_views:
+            key = view.key if view.key in lastmod else view.inherit_id.key
+            lastmod[key] = max(lastmod[key], view.write_date)
+        return {view: lastmod[view.key] for view in views}
 
     def search_pages(self, needle=None, limit=None):
         name = self.env['ir.http']._slugify(needle, max_length=50, path=True)

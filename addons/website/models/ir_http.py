@@ -2,6 +2,7 @@
 import contextlib
 import functools
 import logging
+import re
 import unittest
 from zoneinfo import ZoneInfoNotFoundError, ZoneInfo
 
@@ -20,6 +21,28 @@ from odoo.addons.http_routing.models import ir_http
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 logger = logging.getLogger(__name__)
+
+SITEMAP_GROUPS = {}
+
+
+def sitemap_group(name):
+    """ Declare which ``/sitemap.xml`` group a sitemap function feeds.
+
+    An undecorated function takes the group of the decorated function it
+    overrides, matched by name, else the module it is defined in.
+
+    :param str name: lowercase letters, digits and dashes only, as it becomes
+                     part of the sub-sitemap URL
+    """
+    if not re.fullmatch(r'[a-z0-9-]+', name):
+        raise ValueError(f"Invalid sitemap group {name!r}: use lowercase letters,"
+                         " digits and dashes only.")
+
+    def decorate(func):
+        func._sitemap_group = name
+        SITEMAP_GROUPS[func.__name__] = name
+        return func
+    return decorate
 
 
 def sitemap_qs2dom(qs, route, field='name'):
