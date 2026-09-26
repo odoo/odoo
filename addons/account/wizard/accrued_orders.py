@@ -3,7 +3,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 import json
 from odoo import models, fields, api, _, Command
-from odoo.tools import float_is_zero, format_date
+from odoo.tools import float_compare, float_is_zero, format_date
 from odoo.exceptions import UserError
 from odoo.tools import date_utils
 from odoo.tools.misc import formatLang
@@ -45,15 +45,37 @@ class AccountAccruedOrdersWizard(models.TransientModel):
     currency_id = fields.Many2one(related='company_id.currency_id', string='Company Currency',
         readonly=True, store=True,
         help='Utility field to express amount currency')
+    account_types = fields.Json(compute='_compute_account_types')
     account_id = fields.Many2one(
         comodel_name='account.account',
         required=True,
         string='Accrual Account',
         check_company=True,
-        domain="[('account_type', '=', 'liability_current')] if context.get('active_model') in ['purchase.order', 'purchase.order.line'] else [('account_type', '=', 'asset_current')]",
+        domain="[('account_type', 'in', account_types)]",
     )
     preview_data = fields.Text(compute='_compute_preview_data')
     display_amount = fields.Boolean(compute='_compute_display_amount')
+
+    @api.depends_context('active_model', 'active_ids')
+    def _compute_account_types(self):
+        active_model = self.env.context.get('active_model')
+        active_ids = self.env.context.get('active_ids') or []
+        lines = self.env[active_model].browse(active_ids)
+        if active_model.endswith('.order'):
+            lines = lines.order_line
+        account_types = set()
+        sign = 1 if active_model in ('purchase.order.line', 'purchase.order') else -1
+        for line in lines.filtered(lambda l: l.display_type not in ('line_note', 'line_section', 'line_subsection')):
+            receipt_field = line.qty_received_at_date if line._name == 'purchase.order.line' else line.qty_delivered_at_date
+            rounding = line.product_uom_id.rounding
+            if float_compare((line.qty_invoiced_at_date - receipt_field) * sign, 0, precision_rounding=rounding) > 0:
+                account_types |= {'asset_current'}
+            elif float_compare((receipt_field - line.qty_invoiced_at_date) * sign, 0, precision_rounding=rounding) > 0:
+                account_types |= {'liability_current'}
+            elif float_is_zero((receipt_field - line.qty_invoiced_at_date) * sign, precision_rounding=rounding):
+                account_types |= {'liability_current', 'asset_current'}
+        for record in self:
+            record.account_types = list(account_types)
 
     @api.depends('date', 'amount')
     def _compute_display_amount(self):
