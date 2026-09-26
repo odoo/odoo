@@ -90,7 +90,10 @@ The kernel of Odoo, needed for all installation.
     ],
     'assets': {
         'web.assets_tests': [
-            'base/static/tests/**/*',
+            'base/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'base/static/tests/**/*.test.js',
         ],
     },
     'auto_install': True,

@@ -117,6 +117,7 @@ This module provides the core of the Odoo Web Client.
 
             'base/static/src/scss/res_partner.scss',
             'base/static/src/scss/res_users.scss',
+            'base/static/src/components/account_number_widget/*',
 
             # Form style should be computed before
             'web/static/src/views/form/button_box/*.scss',
