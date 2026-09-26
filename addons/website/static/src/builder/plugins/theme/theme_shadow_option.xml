@@ -3,9 +3,9 @@
 
 <t t-name="website.ThemeShadowOption">
     <BuilderContext action="'customizeWebsiteVariable'">
-        <BuilderRow label.translate="Small" initialExpandAnim="this.env.targetRowId === 'shadow-sm'" tooltip.translate="Horizontal and Vertical offset">
-            <BuilderNumberInput actionParam="'box-shadow-sm-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
-            <BuilderNumberInput actionParam="'box-shadow-sm-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
+        <BuilderRow label.translate="Small" initialExpandAnim="this.env.targetRowId === 'shadow-sm'" tooltip.translate="Vertical and Horizontal offset">
+            <BuilderNumberInput actionParam="'box-shadow-sm-offset-y'" unit="'px'" saveUnit="'rem'" tooltip.translate="Vertical offset" prefixIcon="'height'"/>
+            <BuilderNumberInput actionParam="'box-shadow-sm-offset-x'" unit="'px'" saveUnit="'rem'" tooltip.translate="Horizontal offset" prefixIcon="'arrow_range'"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Color" level="1">
                     <BuilderColorPicker actionParam="'box-shadow-sm-color'" enabledTabs="['solid', 'custom']"/>
@@ -18,9 +18,9 @@
                 </BuilderRow>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Normal" initialExpandAnim="this.env.targetRowId === 'shadow'" tooltip.translate="Horizontal and Vertical offset">
-            <BuilderNumberInput actionParam="'box-shadow-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
-            <BuilderNumberInput actionParam="'box-shadow-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
+        <BuilderRow label.translate="Normal" initialExpandAnim="this.env.targetRowId === 'shadow'" tooltip.translate="Vertical and Horizontal offset">
+            <BuilderNumberInput actionParam="'box-shadow-offset-y'" unit="'px'" saveUnit="'rem'" tooltip.translate="Vertical offset" prefixIcon="'height'"/>
+            <BuilderNumberInput actionParam="'box-shadow-offset-x'" unit="'px'" saveUnit="'rem'" tooltip.translate="Horizontal offset" prefixIcon="'arrow_range'"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Color" level="1">
                     <BuilderColorPicker actionParam="'box-shadow-color'" enabledTabs="['solid', 'custom']"/>
@@ -33,9 +33,9 @@
                 </BuilderRow>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Large" initialExpandAnim="this.env.targetRowId === 'shadow-lg'" tooltip.translate="Horizontal and Vertical offset">
-            <BuilderNumberInput actionParam="'box-shadow-lg-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
-            <BuilderNumberInput actionParam="'box-shadow-lg-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
+        <BuilderRow label.translate="Large" initialExpandAnim="this.env.targetRowId === 'shadow-lg'" tooltip.translate="Vertical and Horizontal offset">
+            <BuilderNumberInput actionParam="'box-shadow-lg-offset-y'" unit="'px'" saveUnit="'rem'" tooltip.translate="Vertical offset" prefixIcon="'height'"/>
+            <BuilderNumberInput actionParam="'box-shadow-lg-offset-x'" unit="'px'" saveUnit="'rem'" tooltip.translate="Horizontal offset" prefixIcon="'arrow_range'"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Color" level="1">
                     <BuilderColorPicker actionParam="'box-shadow-lg-color'" enabledTabs="['solid', 'custom']"/>

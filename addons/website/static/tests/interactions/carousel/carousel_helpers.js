@@ -3,11 +3,11 @@ export const defaultCarouselStyleSnippet = (bsRide, bsInterval) => /*xml*/ `
         <div id="slideshow_sample" class="s_carousel s_carousel_default carousel slide o_colored_level" data-bs-ride="${bsRide}" data-bs-interval="${bsInterval}">
             <div class="o_carousel_controllers">
                 <button class="o_carousel_pause o_snippet_not_selectable o_not_editable btn z-2" t-attf-aria-controls="slideshow_sample" title="Pause slides">
-                    <span class="o_carousel_pause_icon oi oi-filled" data-icon="pause" aria-hidden="true"/>
+                    <span class="o_carousel_pause_icon oi oi-filled" data-icon="pause" role="img" aria-hidden="true"/>
                     <span class="visually-hidden">Pause slides</span>
                 </button>
                 <button class="carousel-control-prev o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                    <span class="carousel-control-prev-icon" role="img" aria-hidden="true"/>
                     <span class="visually-hidden">Previous</span>
                 </button>
                 <div class="carousel-indicators">
@@ -25,7 +25,7 @@ export const defaultCarouselStyleSnippet = (bsRide, bsInterval) => /*xml*/ `
                     </button>
                 </div>
                 <button class="carousel-control-next o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"/>
+                    <span class="carousel-control-next-icon" role="img" aria-hidden="true"/>
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
@@ -49,11 +49,11 @@ export const imageGalleryCarouselStyleSnippet = (bsRide, bsInterval) => /*xml*/ 
             <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="${bsRide}" data-bs-interval="${bsInterval}">
                 <div class="o_carousel_controllers">
                     <button class="o_carousel_pause o_snippet_not_selectable o_not_editable btn z-2" t-attf-aria-controls="slideshow_sample" title="Pause slides">
-                        <span class="o_carousel_pause_icon oi oi-filled" data-icon="pause" aria-hidden="true"/>
+                        <span class="o_carousel_pause_icon oi oi-filled" data-icon="pause" role="img" aria-hidden="true"/>
                         <span class="visually-hidden">Pause slides</span>
                     </button>
                     <button class="carousel-control-prev o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                        <span class="carousel-control-prev-icon" role="img" aria-hidden="true"/>
                         <span class="visually-hidden">Previous</span>
                     </button>
                     <div class="carousel-indicators">
@@ -71,7 +71,7 @@ export const imageGalleryCarouselStyleSnippet = (bsRide, bsInterval) => /*xml*/ 
                         </button>
                     </div>
                     <button class="carousel-control-next o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"/>
+                        <span class="carousel-control-next-icon" role="img" aria-hidden="true"/>
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>

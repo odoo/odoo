@@ -3,13 +3,13 @@
 <t t-name="website.WebsiteSwitcherSystrayItem">
     <div class="o_menu_systray_item o_website_switcher_container">
         <Dropdown menuClass="{'mw-100': false}">
-            <button data-hotkey="w" class="mx-1 border-0">
+            <button data-hotkey="w" class="mx-1 border-0" aria-label="Load another website">
                 <div class="d-none d-md-flex align-items-md-center">
                     <span t-out="this.websiteService.currentWebsite?.name" class="me-2 text-truncate" style="max-width: 200px"/>
-                    <i class="oi" data-icon="arrow_drop_down"/>
+                    <i class="oi" data-icon="arrow_drop_down" role="img" aria-hidden="true"/>
                 </div>
                 <div class="d-md-none">
-                    <i class="oi" data-icon="public"/>
+                    <i class="oi" data-icon="public" role="img" aria-hidden="true"/>
                 </div>
             </button>
             <t t-set-slot="content">
@@ -19,7 +19,7 @@
                         class="element.class"
                         attrs="element.dataset">
                         <t t-if="!element.domain">
-                            <span class="oi me-2 text-warning" data-icon="warning"/>
+                            <span class="oi me-2 text-warning" data-icon="warning" role="img" aria-label="Warning"/>
                         </t>
                         <t t-out="element.name"/>
                     </DropdownItem>

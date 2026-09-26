@@ -4,10 +4,10 @@
         <xpath expr="//t[@name='tools']" position="replace">
             <t t-if="this.activity().request_partner_id and this.activity().res_model === 'slide.channel'">
                 <button class="btn btn-link" t-on-click="this.onGrantAccess">
-                    <i class="oi" data-icon="check"/> Grant Access
+                    <i class="oi" data-icon="check" role="img" aria-hidden="true"/> Grant Access
                 </button>
                 <button class="btn btn-link" t-on-click="this.onRefuseAccess">
-                    <i class="oi" data-icon="close"/> Refuse Access
+                    <i class="oi" data-icon="close" role="img" aria-hidden="true"/> Refuse Access
                 </button>
             </t>
             <t t-else="">$0</t>

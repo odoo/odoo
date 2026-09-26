@@ -45,9 +45,9 @@
     <div class="container-fluid py-3 py-xl-4">
         <div class="row g-0" t-ref="this.container">
             <div t-if="this.props.isCustom and !this.props.templates.length" class="col-12 alert alert-info d-flex">
-                <i class="oi oi-2x me-3" data-icon="info"/>
-                To add your page to this category, open the page properties: "Site -&gt; Properties".<br/>
-                Then enable the "Is a Template" option.
+                <i class="oi oi-2x me-3" data-icon="info" role="img" aria-hidden="true"/>
+                <p>To add your page to this category, open the page properties: "Site <i class="oi" data-icon="arrow_forward" role="img" aria-hidden="true"/><span class="visually-hidden">menu, then</span> Properties".<br/>
+                Then enable the "Is a Template" option.</p>
             </div>
             <t t-foreach="[...this.columns.entries()]" t-as="column" t-key="column[0]">
                 <div class="col-lg-4 col-12">
@@ -75,7 +75,7 @@
             <div t-if="!this.state.activePageId" class="d-flex flex-column h-100" >
                 <div t-ref="this.tabsRef" class="list-group list-group-flush overflow-y-auto flex-grow-1">
                     <button type="button" class="list-group-item list-group-item-action p-3 fw-bold" t-on-click="this.addBlankPage">
-                        <i class="oi me-2" data-icon="add"/>Blank Page
+                        <i class="oi me-2" data-icon="add" role="img" aria-hidden="true"/>Blank Page
                     </button>
                     <t t-foreach="this.state.pages" t-as="page" t-key="page.id">
                         <button t-att-data-id="page.id"
@@ -83,10 +83,10 @@
                             t-att-disabled="page.isPreloading ? true : undefined"
                             t-on-click="() => this.onTabListBtnClick(page.id)">
                             <span>
-                                <span t-if="page.isPreloading" class="oi oi-spin me-1" data-icon="autorenew"/>
+                                <span t-if="page.isPreloading" class="oi oi-spin me-1" data-icon="autorenew" role="img" aria-label="Loading"/>
                                 <t t-out="page.title"/>
                             </span>
-                            <i class="oi text-muted small" data-icon="chevron_right"/>
+                            <i class="oi text-muted small" data-icon="chevron_right" role="img" aria-hidden="true"/>
                         </button>
                     </t>
                 </div>
@@ -95,7 +95,7 @@
             <div t-else="" class="d-flex flex-column h-100">
                 <div class="border-bottom px-2 py-1">
                     <button type="button" class="btn btn-link text-decoration-none fw-bold text-uppercase ps-0" t-on-click="this.onMobileBackClick">
-                        <i class="oi me-1" data-icon="chevron_left"/>Back
+                        <i class="oi me-1" data-icon="chevron_left" role="img" aria-hidden="true"/>Back
                     </button>
                 </div>
                 <div class="overflow-y-scroll flex-grow-1 bg-200">
@@ -132,7 +132,7 @@
                             t-att-aria-controls="'pane_' + page.id"
                             t-ref="this.state.activePageId === page.id ? this.autofocusRef : this.inactiveTabRef"
                         >
-                            <span t-if="page.isPreloading" class="oi oi-spin me-1" data-icon="autorenew"/>
+                            <span t-if="page.isPreloading" class="oi oi-spin me-1" data-icon="autorenew" role="img" aria-hidden="true"/>
                             <t t-out="page.title"/>
                         </button>
                     </t>

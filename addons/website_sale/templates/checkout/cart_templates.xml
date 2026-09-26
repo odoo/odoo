@@ -155,7 +155,7 @@
                                 title="Remove"
                                 aria-label="Remove"
                             >
-                                <i class="oi oi-fw" data-icon="delete"/>
+                                <i class="oi oi-fw" data-icon="delete" role="img" aria-hidden="true"/>
                             </button>
                         </div>
                     </div>
@@ -190,7 +190,7 @@
                     t-att-aria-label="minus_button_title"
                     t-att-title="minus_button_title"
                 >
-                    <i class="oi position-relative z-1" data-icon="remove"/>
+                    <i class="oi position-relative z-1" data-icon="remove" role="img" aria-hidden="true"/>
                 </button>
                 <input
                     type="text"
@@ -216,7 +216,7 @@
                     aria-label="Add one"
                     title="Add one"
                 >
-                    <i class="oi position-relative z-1" data-icon="add"/>
+                    <i class="oi position-relative z-1" data-icon="add" role="img" aria-hidden="true"/>
                 </button>
             </t>
             <t t-else="">
@@ -360,7 +360,7 @@
                 aria-controls="quick_reorder_sidebar"
                 t-att-disabled="not order_history"
             >
-                <i class="oi me-2" data-icon="undo"/>Quick reorder
+                <i class="oi me-2" data-icon="undo" role="img" aria-hidden="true"/>Quick reorder
             </button>
         </span>
         <t t-call="website_sale.quick_reorder_sidebar"/>
@@ -471,6 +471,7 @@
                             <button
                                 type="button"
                                 title="Press 'Enter' to add to cart"
+                                aria-label="Add to cart"
                                 class="o_wsale_quick_reorder_product_button btn btn-outline-primary"
                                 t-att-data-quantity="order_line.product_uom_qty"
                                 t-att-data-product-id="order_line.product_id.id"
@@ -478,7 +479,7 @@
                                 t-att-data-product-type="order_line.product_id.type"
                                 t-att-data-selected-combo-items="json.dumps(order_line._get_selected_combo_items())"
                             >
-                                <i class="oi" data-icon="add_shopping_cart"/>
+                                <i class="oi" data-icon="add_shopping_cart" role="img" aria-hidden="true"/>
                             </button>
                         </div>
                     </div>
@@ -553,7 +554,7 @@
                                 t-att-data-product-type="product.type"
                                 t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                             >
-                                <i class="oi d-md-none" data-icon="shopping_cart" role="presentation"/>
+                                <i class="oi d-md-none" data-icon="shopping_cart" role="img" aria-hidden="true"/>
                                 <span class="d-none d-md-inline">Add to cart</span>
                             </button>
                         </div>
@@ -590,7 +591,7 @@
                 title="Wishlist"
                 aria-label="Wishlist"
             >
-                <i class="oi oi-fw" data-icon="favorite"/>
+                <i class="oi oi-fw" data-icon="favorite" role="img" aria-hidden="true"/>
             </button>
         </xpath>
     </template>

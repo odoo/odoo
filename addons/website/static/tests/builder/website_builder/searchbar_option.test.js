@@ -15,7 +15,7 @@ const searchbarHTML = (orderBy) => `
             <div role="search" class="input-group ">
                 <input type="search" name="search" class="search-query form-control oe_search_box" placeholder="Search..." data-limit="5" data-order-by="${orderBy}" autocomplete="off" data-search-type="pages" data-display-description="true">
                 <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button btn-primary">
-                    <i class="oi" data-icon="search" contenteditable="false"></i>
+                    <i class="oi" data-icon="search" role="img" aria-hidden="true" contenteditable="false"></i>
                 </button>
             </div>
         <input name="order" type="hidden" class="o_search_order_by" value="${orderBy}">
@@ -31,7 +31,7 @@ const headerSearchbarHTML = (orderBy) => `
                     placeholder="Search..." data-limit="5" data-order-by="${orderBy}"
                     autocomplete="off" data-search-type="pages">
                 <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button btn-primary">
-                    <i class="oi" data-icon="search" contenteditable="false"></i>
+                    <i class="oi" data-icon="search" role="img" aria-hidden="true" contenteditable="false"></i>
                 </button>
             </div>
             <input name="order" type="hidden" class="o_search_order_by" value="${orderBy}">

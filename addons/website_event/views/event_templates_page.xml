@@ -27,11 +27,11 @@
         <!-- Mobile -->
         <div id="o_wevent_submenu_mobile" class="container d-flex d-lg-none align-items-center py-3 pb-lg-2">
             <a t-if="navbar_back_url" t-att-href="navbar_back_url" t-att-title="navbar_back_title or 'Go back'">
-                <i class="oi" data-icon="chevron_backward"/>
+                <i class="oi" data-icon="chevron_backward" role="img" aria-hidden="true"/>
                 <span t-out="navbar_back_text or 'Go back'"/>
             </a>
             <a t-else="" href="/event" title="All Events">
-                <i class="oi" data-icon="chevron_backward"/>
+                <i class="oi" data-icon="chevron_backward" role="img" aria-hidden="true"/>
                 <span>All Events</span>
             </a>
             <!-- Add Register additional CTA button, in addition to menus -->

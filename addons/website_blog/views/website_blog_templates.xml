@@ -63,7 +63,7 @@ list of filtered posts (by date or tag).
         <t t-set="opt_posts_loop_show_stats" t-value="is_view_active('website_blog.opt_posts_loop_show_stats')"/>
         <t t-set="opt_posts_loop_show_author" t-value="is_view_active('website_blog.opt_posts_loop_show_author')"/>
         <t t-set="opt_posts_loop_show_date" t-value="is_view_active('website_blog.opt_posts_loop_show_date')"/>
-        
+
         <!-- Sidebar options -->
         <t t-set="opt_sidebar_about_us" t-value="not is_view_active('website_blog.opt_sidebar_blog_index_about_us')"/>
         <t t-set="opt_sidebar_follow_us" t-value="is_view_active('website_blog.opt_sidebar_blog_index_follow_us')"/>
@@ -71,7 +71,7 @@ list of filtered posts (by date or tag).
         <t t-set="opt_sidebar_tags" t-value="is_view_active('website_blog.opt_sidebar_blog_index_tags')"/>
         <!-- Sidebar shows automatically when any content option is enabled, but never in split grid layout -->
         <t t-set="opt_blog_sidebar_show" t-value="not opt_blog_split_grid_view and (opt_sidebar_about_us or opt_sidebar_follow_us or opt_sidebar_archives or opt_sidebar_tags)"/>
-        
+
         <!-- Page layout -->
         <div id="o_wblog_blog_top" t-att-class="blog and 'o_wblog_single_blog_top'">
             <!-- Selectively display droppable-areas for 'all blogs' or single-blog pages -->
@@ -236,7 +236,7 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
         <t t-set="opt_blog_post_split_cover" t-value="is_view_active('website_blog.opt_blog_post_split_cover')"/>
         <t t-set="opt_blog_post_title_inside_cover" t-value="not opt_blog_post_regular_cover and not opt_blog_post_split_cover"/>
-        
+
         <t t-set="opt_blog_post_header_author_avatar_display" t-value="is_view_active('website_blog.opt_blog_post_header_author_avatar_display')"/>
         <t t-set="opt_blog_post_header_share_links_display" t-value="is_view_active('website_blog.opt_blog_post_header_share_links_display')"/>
         <t t-set="opt_blog_post_header_tags_display" t-value="is_view_active('website_blog.opt_blog_post_header_tags_display')"/>
@@ -313,7 +313,7 @@ list of filtered posts (by date or tag).
                 <t t-set="containerClasses" t-value="'o_container_small' if not opt_blog_post_sidebar and opt_blog_post_small_container else ('container-fluid' if opt_blog_post_full_container else 'container')"/>
                 <t t-set="contentColClasses" t-value="'col-12' if not opt_blog_post_sidebar else ('col-lg-6 offset-lg-1' if opt_blog_post_small_container else 'col-lg-9')"/>
                 <t t-set="sidebarColClasses" t-valuef="col-lg-3 #{opt_blog_post_small_container and 'offset-lg-1'}"/>
-            </t> 
+            </t>
             <!-- Content -->
             <div t-attf-class="#{containerClasses}">
                 <div class="row">
@@ -326,7 +326,7 @@ list of filtered posts (by date or tag).
                         <t t-call="website_blog.blog_post_sidebar"/>
                     </div>
                 </div>
-            </div> 
+            </div>
         </section>
         <section id="o_wblog_post_footer"/>
     </t>
@@ -652,7 +652,7 @@ list of filtered posts (by date or tag).
 
                 <div t-attf-class="o_wblog_toggle mt-4 mb-n4">
                     <span class="h4 d-inline-block py-1 px-2 rounded-1 cursor-pointer">
-                        <i class="oi oi-3x" data-icon="keyboard_arrow_right" aria-label="Read next" title="Read Next"/>
+                        <i class="oi oi-3x" data-icon="keyboard_arrow_right" role="img" aria-label="Read next" title="Read Next"/>
                     </span>
                 </div>
             </div>
