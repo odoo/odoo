@@ -420,3 +420,33 @@ registry.category("web_tour.tours").add("test_ticket_screen_keeps_variants_colla
             ProductScreen.productCardCountIs("Variant Soup", 1),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_synced_products_keep_variants_collapsed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.productCardCountIs("Variant Soup", 1),
+            {
+                content: "receive the paid order's products as another device would",
+                trigger: ".pos",
+                run: async () => {
+                    const pos = odoo.__WOWL_DEBUG__.root.env.services.pos;
+                    const [order] = await pos.data.orm.searchRead(
+                        "pos.order",
+                        [["pos_reference", "=", "Test/0001"]],
+                        ["id"]
+                    );
+                    const data = await pos.data.orm.call(
+                        "pos.order",
+                        "get_ticket_screen_order_data",
+                        [[order.id]]
+                    );
+                    await pos.deviceSync.processStaticRecords({
+                        "product.product": data["product.product"],
+                    });
+                },
+            },
+            ProductScreen.productCardCountIs("Variant Soup", 1),
+        ].flat(),
+});

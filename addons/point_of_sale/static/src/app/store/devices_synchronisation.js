@@ -121,7 +121,12 @@ export default class DevicesSynchronisation {
      * @param {Object} staticRecords - Records data that need to be synchronized.
      */
     processStaticRecords(staticRecords) {
-        return this.models.loadData(staticRecords, [], false);
+        const results = this.models.loadData(staticRecords, [], false);
+        if (results["product.product"]?.length) {
+            // Reloaded variants come back with available_in_pos = true.
+            this.pos.processProductAttributesByProducts(results["product.product"]);
+        }
+        return results;
     }
 
     /**
