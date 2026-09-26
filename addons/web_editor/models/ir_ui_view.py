@@ -315,7 +315,11 @@ class IrUiView(models.Model):
         if not self._are_archs_equal(old_arch, new_arch):
             self._set_noupdate()
             self.write({'arch': etree.tostring(new_arch, encoding='unicode')})
-            self._copy_custom_snippet_translations(self, 'arch_db')
+            view = self._get_written_view()
+            view._copy_custom_snippet_translations(view, 'arch_db')
+
+    def _get_written_view(self):
+        return self
 
     @api.model
     def _view_get_inherited_children(self, view):
