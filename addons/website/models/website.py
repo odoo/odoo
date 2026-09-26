@@ -140,6 +140,7 @@ class Website(models.CachedModel):
         ondelete='restrict',
     )
     configurator_done = fields.Boolean(help='True if configurator has been completed or ignored')
+    brief = fields.Text(string="Brief", help="A short description of what this website is about: industry, aim of the website, vibe. AI features read it to tailor their output.")
     block_third_party_domains = fields.Boolean(
         'Block 3rd-party domains',
         help="Block 3rd-party domains that may track users (YouTube, Google Maps, etc.).",
@@ -937,6 +938,21 @@ class Website(models.CachedModel):
         website = self.env['website'].browse(website.id)
 
         website.configurator_done = True
+
+        website_aims = {
+            'business': self.env._('present the business and get contacted'),
+            'ecommerce': self.env._('sell products online'),
+            'blog': self.env._('publish blog posts'),
+            'event': self.env._('promote events and sell tickets'),
+            'elearning': self.env._('sell and deliver online courses'),
+        }
+        brief_description = [self.env._('Industry: %s', kwargs['industry_name'])]
+        if website_aim := website_aims.get(kwargs.get('website_type')):
+            brief_description.append(self.env._('Website aim: %s', website_aim))
+        if (website_purpose := kwargs.get('website_purpose')) and website_purpose != 'general':
+            # Some users make a website purpose too long, we limit it here.
+            brief_description.append(self.env._('Vibe: %s', website_purpose[:50]))
+        website.brief = '\n'.join(brief_description)
 
         # Enable tour
         tour_asset_id = self.env.ref('website.configurator_tour')
