@@ -1625,3 +1625,17 @@ class ResCompany(models.Model):
         if isinstance(value, datetime):
             return value
         return datetime.combine(value, time.max)
+
+    def _get_or_create_chart_template_record(self, model, xmlid, chart_template_data=None):
+        self.ensure_one()
+        ChartTemplate = self.env['account.chart.template'].with_company(self)
+        record = ChartTemplate.ref(xmlid, raise_if_not_found=False) or self.env[model]
+        if record or not self.chart_template:
+            return record
+        if not chart_template_data:
+            chart_template_data = ChartTemplate._get_chart_template_data(self.chart_template)
+        record_data = chart_template_data[model].get(xmlid)
+        if not record_data:
+            return record
+        created_records = ChartTemplate._load_data({model: {xmlid: record_data}}) or {}
+        return created_records.get(model) or self.env[model]
