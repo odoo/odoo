@@ -121,6 +121,19 @@ class PaymentTransaction(models.Model):
                 tx.with_company(tx.company_id)._create_payment()
 
             if tx.payment_id:
+                # The memo is also updated, since the payment was being created without the provider reference,
+                # which differed from Odoo's native process when the payment is made through a payment link.
+                if tx.provider_reference and tx.provider_reference not in (tx.payment_id.memo or ""):
+                    reference = f"{tx.reference} - {tx.provider_reference}"
+                    tx.payment_id.memo = reference
+                    liquidity_lines, counterpart_lines, _writeoff_lines = (
+                        tx.payment_id._seek_for_lines()
+                    )
+                    name = f"{tx.payment_id.payment_method_line_id.name}: {reference}"
+
+                    (liquidity_lines + counterpart_lines).write({
+                        "name": name,
+                    })
                 message = _(
                     "The payment related to transaction %(ref)s has been posted: %(link)s",
                     ref=tx._get_html_link(),
