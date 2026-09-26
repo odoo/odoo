@@ -74,7 +74,7 @@ self.addEventListener("message", ({ data }) => {
 });
 
 async function handlePushEvent(notification) {
-    const { model, res_id } = notification.options?.data || {};
+    const { model, res_id, message_id } = notification.options?.data || {};
     const correlationId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     let timeoutId;
     let promResolve;
@@ -92,7 +92,7 @@ async function handlePushEvent(notification) {
             clients.forEach((client) =>
                 client.postMessage({
                     type: "notification-display-request",
-                    payload: { correlationId, model, res_id },
+                    payload: { correlationId, model, res_id, message_id },
                 })
             );
         });
