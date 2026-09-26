@@ -31,6 +31,7 @@ export class ActivityCell extends Component {
         resModel: String,
         summaries: Array,
         userAssignedIds: Array,
+        canCreate: { type: Boolean, optional: true },
     };
     static template = "mail.ActivityCell";
 
@@ -76,6 +77,7 @@ export class ActivityCell extends Component {
                 },
                 resId: this.props.resId,
                 resModel: this.props.resModel,
+                canCreate: this.props.canCreate,
             });
         }
     }

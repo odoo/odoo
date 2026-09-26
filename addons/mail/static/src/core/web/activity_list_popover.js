@@ -26,6 +26,7 @@ export class ActivityListPopover extends Component {
         /** Ids of record selection used to schedule activities in batch; it must include resId. */
         "resIds?",
         "resModel",
+        "canCreate?",
     ];
     static template = "mail.ActivityListPopover";
 

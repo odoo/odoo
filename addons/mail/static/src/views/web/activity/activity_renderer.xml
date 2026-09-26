@@ -88,13 +88,14 @@
                       reloadFunc="props.onReloadData"
                       resId="record.resId" resModel="record.resModel"
                       userAssignedIds="activityGroup.user_assigned_ids"
+                      canCreate="props.archInfo.activeActions.create"
         />
     </td>
     <td t-else=""
         class="o_activity_summary_cell o_activity_empty_cell cursor-pointer"
         t-attf-class="{{ activeFilter.resIds.has(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}"
-        t-on-click.prevent.stop="() => props.onEmptyCell(resId, type.id)">
-        <i data-tooltip="Create" class="text-center fa fa-plus mt-2 align-items-center justify-content-center h-100"/>
+        t-on-click.prevent.stop="() => props.archInfo.activeActions.create ? props.onEmptyCell(resId, type.id) : false">
+        <i t-if="props.archInfo.activeActions.create" data-tooltip="Create" class="text-center fa fa-plus mt-2 align-items-center justify-content-center h-100"/>
     </td>
 </t>
 
@@ -117,7 +118,7 @@
         t-attf-style="max-width: {{activeColumns.length &gt; 4 ? 100 : 20 * (activeColumns.length + 1) }}%; min-width: 600px;">
         <t t-call="mail.ActivityViewHeader"/>
         <t t-call="mail.ActivityViewBody"/>
-        <t t-call="mail.ActivityViewFooter"/>
+        <t t-call="mail.ActivityViewFooter" t-if="props.archInfo.activeActions.create"/>
     </table>
 </div>
 
