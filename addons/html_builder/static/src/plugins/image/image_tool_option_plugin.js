@@ -225,7 +225,29 @@ export class SetUrlAction extends BuilderAction {
     }
     apply({ editingElement, value }) {
         const linkEl = searchSupportedParentLinkEl(editingElement);
+<<<<<<< e66104c5bff5b7ffcf5cd11db997b1b0313914ec
         setHrefUrl(linkEl, value);
+||||||| 4dbcc72ecf4ddfdc481714c6471b962c9612b4c5
+        let url = value;
+        if (!url) {
+            // As long as there is no URL, the image is not considered a link.
+            linkEl.removeAttribute("href");
+            return;
+        }
+        if (!url.startsWith("/") && !url.startsWith("#") && !/^([a-zA-Z]*.):.+$/gm.test(url)) {
+            // We permit every protocol (http:, https:, ftp:, mailto:,...).
+            // If none is explicitly specified, we assume it is a http.
+            url = "http://" + url;
+        }
+        linkEl.setAttribute("href", url);
+=======
+        if (!value) {
+            // As long as there is no URL, the image is not considered a link.
+            linkEl.removeAttribute("href");
+            return;
+        }
+        linkEl.setAttribute("href", value);
+>>>>>>> e0729fdbcbbeaa0a2488dff2ee6a5a9897b39677
     }
     getValue({ editingElement }) {
         const linkEl = searchSupportedParentLinkEl(editingElement);
