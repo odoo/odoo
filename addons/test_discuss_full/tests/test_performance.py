@@ -942,7 +942,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
+<<<<<<< 7da6141a7256552f615b29104775934b10e13526
                 "livechat_lang_id": self.channel_livechat_1.livechat_lang_id.id,
+||||||| 2a40286fdb7a2cfd1d1e811a96930b66596cb526
+=======
+                "livechat_channel_has_agents": True,
+>>>>>>> a6ead62e88fdccca65fdcd7ddb7ac524e4dbab04
                 "livechat_channel_id": self.im_livechat_channel.id,
                 "livechat_channel_member_history_ids": self.channel_livechat_1.livechat_channel_member_history_ids.ids,
                 "livechat_note": False,
@@ -972,7 +977,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
+<<<<<<< 7da6141a7256552f615b29104775934b10e13526
                 "livechat_lang_id": self.channel_livechat_2.livechat_lang_id.id,
+||||||| 2a40286fdb7a2cfd1d1e811a96930b66596cb526
+=======
+                "livechat_channel_has_agents": True,
+>>>>>>> a6ead62e88fdccca65fdcd7ddb7ac524e4dbab04
                 "livechat_channel_id": self.im_livechat_channel.id,
                 "livechat_channel_member_history_ids": self.channel_livechat_2.livechat_channel_member_history_ids.ids,
                 "livechat_note": False,
