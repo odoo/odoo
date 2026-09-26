@@ -562,6 +562,7 @@
     </record>
 
     <!-- Confirm some Sales Orders-->
+    <!-- FIXME : When post-loading demo data with stock installed, following call takes all availables quantities which lead to problem further (e.g. Helpdesk)-->
     <function model="sale.order" name="action_confirm" eval="[[
         ref('sale_order_4'),
         ref('sale_order_6'),
