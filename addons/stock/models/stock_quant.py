@@ -779,11 +779,27 @@ class StockQuant(models.Model):
         order = self._get_removal_strategy_order(removal_strategy)
 
         quants_cache = self.env.context.get('quants_cache')
+        non_strict_quants_cache = self.env.context.get('non_strict_quants_cache')
         if quants_cache is not None and strict and removal_strategy != 'least_packages':
             res = self.env['stock.quant']
             if lot_id:
                 res |= quants_cache[product_id.id, location_id.id, lot_id.id, package_id.id, owner_id.id]
             res |= quants_cache[product_id.id, location_id.id, False, package_id.id, owner_id.id]
+        elif (
+            non_strict_quants_cache is not None and not strict and removal_strategy != 'least_packages'
+            and not lot_id and not package_id and not owner_id
+            and not self.env.context.get('with_expiration')
+        ):
+            # rebind onto self's env (not the cache's prefetch-time env) so a downstream re-`_gather`
+            # call on the result (e.g. `_get_available_quantity`'s own internal call) still sees
+            # `non_strict_quants_cache` in context instead of silently falling back to a live search.
+            location_path = location_id.parent_path
+            res = self.browse(non_strict_quants_cache[product_id.id].filtered(
+                lambda q: q.location_id.parent_path.startswith(location_path)).ids)
+            if order == 'in_date ASC, id':
+                res = res.sorted(key=lambda q: (q.in_date is False, q.in_date, q.id))
+            elif order == 'in_date DESC, id DESC':
+                res = res.sorted(key=lambda q: (q.in_date is False, q.in_date, q.id), reverse=True)
         else:
             res = self.search(domain, order=order)
         if removal_strategy == "closest":
@@ -929,6 +945,29 @@ class StockQuant(models.Model):
             )
             for product, loc, lot, package, owner, quants in needed_quants:
                 res[product.id, loc.id, lot.id, package.id, owner.id] = quants
+        return res
+
+    def _get_quants_by_products_locations_non_strict(self, product_ids, location_ids):
+        """ Prefetch, in one search, every quant under `location_ids` for `product_ids`.
+
+        Meant for `_gather`'s non-strict (no lot/package/owner) case, e.g. reserving a plain
+        make-to-stock move: the domain there is just `product_id = X AND location_id child_of Y`,
+        and many moves in one `_action_assign` batch share the same (product, location) pair.
+        Grouping only has to be done by product here (not by exact location like
+        `_get_quants_by_products_locations`), since callers filter each product's quants down to
+        one location's subtree themselves via `location_id.parent_path`.
+
+        Safe to compute once per batch: reserving quantity only changes `reserved_quantity` on
+        quants already in this set, it never creates or removes quants, so the set of ids stays
+        correct for the whole batch even though it is fetched only once.
+        """
+        res = defaultdict(lambda: self.env['stock.quant'])
+        if product_ids and location_ids:
+            for quant in self.env['stock.quant'].search([
+                ('product_id', 'in', product_ids.ids),
+                ('location_id', 'child_of', location_ids.ids),
+            ]):
+                res[quant.product_id.id] |= quant
         return res
 
     @api.onchange('location_id', 'product_id', 'lot_id', 'package_id', 'owner_id')
