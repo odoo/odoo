@@ -243,6 +243,8 @@ class StockRule(models.Model):
                 return move._push_apply()[:1]
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
+            if move.product_uom.is_zero(new_move_vals['product_uom_qty']):
+                return self.env['stock.move']
             new_move = move.sudo().copy(new_move_vals)
             # when no more push we should reach final destination
             if new_move._skip_push():
