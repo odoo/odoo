@@ -1,6 +1,6 @@
 from collections import defaultdict
 from contextlib import contextmanager, ExitStack
-from datetime import date
+from datetime import date, timedelta
 import logging
 import re
 
@@ -3016,7 +3016,12 @@ class AccountMoveLine(models.Model):
             return
 
         journal = self._get_exchange_journal(company)
-        accounting_exchange_date = journal.with_context(move_date=exchange_date).accounting_date if journal else date.min
+        if journal:
+            accounting_exchange_date = exchange_date
+            if lock_dates := company._get_violated_lock_dates(exchange_date, False, journal):
+                accounting_exchange_date = lock_dates[-1][0] + timedelta(days=1)
+        else:
+            accounting_exchange_date = date.min
 
         move_vals = {
             'move_type': 'entry',
