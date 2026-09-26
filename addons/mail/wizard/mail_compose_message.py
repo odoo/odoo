@@ -358,7 +358,7 @@ class MailComposer(models.TransientModel):
             if updated_author_id:
                 composer.author_id = updated_author_id
 
-    @api.depends('res_domain', 'res_ids')
+    @api.depends('res_domain', 'res_ids', 'composition_mode')
     def _compute_composition_batch(self):
         """ Determine if batch mode is activated:
 
@@ -372,7 +372,10 @@ class MailComposer(models.TransientModel):
                 composer.composition_batch = True
                 continue
             res_ids = composer._evaluate_res_ids()
-            composer.composition_batch = len(res_ids) > 1 if res_ids else False
+            if composer.composition_mode == 'mass_mail':
+                composer.composition_batch = bool(res_ids)
+            else:
+                composer.composition_batch = len(res_ids) > 1 if res_ids else False
 
     @api.depends('composition_mode', 'parent_id')
     def _compute_model(self):
