@@ -10,7 +10,7 @@ from urllib.parse import unquote
 from odoo.exceptions import UserError, ValidationError, AccessError
 
 from odoo import api, fields, models, _, service
-from odoo.tools import file_open, split_every
+from odoo.tools import split_every
 from odoo.service.common import exp_version
 
 
