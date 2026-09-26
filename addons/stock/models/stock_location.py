@@ -574,7 +574,24 @@ class StockRoute(models.Model):
                 rules.action_unarchive()
             else:
                 rules.action_archive()
-        return super().write(vals)
+        if 'warehouse_ids' in vals:
+            old_warehouses = {route.id: route.warehouse_ids for route in self}
+        res = super().write(vals)
+        if 'warehouse_ids' in vals:
+            changed_warehouses = {
+                route: (old_warehouses[route.id] - route.warehouse_ids) | (route.warehouse_ids - old_warehouses[route.id])
+                for route in self
+            }
+            warehouse_ids_to_sync = set()
+            for route, warehouses in changed_warehouses.items():
+                for warehouse in warehouses:
+                    if warehouse.id in warehouse_ids_to_sync:
+                        continue
+                    if any(warehouse[rule].route_id == route for rule in warehouse._get_global_route_rules_values()):
+                        warehouse_ids_to_sync.add(warehouse.id)
+            for warehouse in self.env['stock.warehouse'].browse(warehouse_ids_to_sync):
+                warehouse._create_or_update_global_routes_rules()
+        return res
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
