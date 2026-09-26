@@ -1376,7 +1376,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
     def test_journal_follower_gets_pdf_on_send_and_print(self):
         watcher_email = 'watcher@example.com; bob@example.com'
         journal = self.company_data['default_journal_sale']
-        journal.incoming_einvoice_notification_email = watcher_email
+        journal.journal_notification_emails = watcher_email
 
         invoice = self.init_invoice("out_invoice", amounts=[1000], partner=self.partner_a, post=True)
         wizard = self.create_send_and_print(invoice)
