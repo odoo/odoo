@@ -10,3 +10,29 @@
         margin-right: $o-default-report-margins;
     }
 }
+
+@include media-breakpoint-down(md) {
+    .header:has(> .o_folder_header_container) {
+        height: auto !important;
+    }
+
+    .o_folder_header_container {
+        > svg {
+            height: 230px;
+            rect {
+                height: 100%;
+            }
+        }
+    }
+
+    .o_folder_company_info {
+        .o_company_logo_big {
+            max-height: 5.5rem;
+            max-width: 11rem;
+        }
+    }
+
+    .o_report_layout_folder {
+        margin-top: 0 !important;
+    }
+}
