@@ -42,7 +42,7 @@ export class WebsiteBuilder extends Component {
         this.websiteService = useService("website");
         this.dialog = useService("dialog");
         this.websiteEditService =
-            this.websiteService.websiteRootInstance?.bindService("website_edit");
+            this.websiteService.websiteRootInstance?.env?.services?.website_edit;
         useSetupAction({
             beforeUnload: (ev) => this.onBeforeUnload(ev),
             beforeLeave: () => this.onBeforeLeave(),
