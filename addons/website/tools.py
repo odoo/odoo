@@ -9,8 +9,10 @@ from werkzeug.exceptions import NotFound
 from werkzeug.test import EnvironBuilder
 
 import odoo
+from odoo import _
+from odoo.exceptions import AccessDenied
 from odoo.tests.common import HttpCase, HOST
-from odoo.tools.misc import hmac, DotDict, frozendict
+from odoo.tools.misc import hmac, DotDict, frozendict, verify_hash_signed
 
 
 @contextlib.contextmanager
@@ -239,3 +241,32 @@ def add_form_signature(html_fragment, env_sudo):
             hash_value += ':email_cc'
         hash_node = etree.Element('input', attrib={'type': "hidden", 'value': hash_value, 'class': "form-control s_website_form_input s_website_form_custom", 'name': "website_form_signature"})
         form_values['email_to'].addnext(hash_node)
+
+
+def assert_form_signature(form_data: dict, model: odoo.models.BaseModel) -> None:
+    signature = form_data.pop('__sign__', None)
+    if signature is None:
+        raise AccessDenied(_("The form must be signed to be valid"))
+
+    signed_fields: dict[str, str | None]
+    try:
+        signed_fields, signed_model_name = verify_hash_signed(model.sudo().env, 'website_form_sign', signature)
+    except (TypeError, ValueError):
+        raise AccessDenied(_("The form's integrity is not verified (the signature is malformed)"))
+
+    if model._name != signed_model_name:
+        raise AccessDenied(_("The form's integrity is not verified (the model is not correct: %s expected)", signed_model_name))
+
+    for name, value in form_data.items():
+        if name not in model._fields:
+            continue
+        if name not in signed_fields:
+            raise AccessDenied(_("The form's integrity is not verified (%s has been added)", name))
+        expected_value = signed_fields.pop(name)
+        if expected_value is None:
+            continue
+        if expected_value != value:
+            raise AccessDenied(_("The form's integrity is not verified (%s has been modified)", name))
+
+    if removed_entry_names := [name for name, value in signed_fields.items() if value is not None]:
+        raise AccessDenied(_("The form's integrity is not verified (%s is missing)", ', '.join(removed_entry_names)))

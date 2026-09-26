@@ -11,10 +11,10 @@ from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID, _, _lt
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
+from odoo.addons.website.tools import assert_form_signature
 from odoo.http import request
 from odoo.tools import plaintext2html
-from odoo.exceptions import AccessDenied, ValidationError, UserError
-from odoo.tools.misc import hmac, consteq
+from odoo.exceptions import ValidationError, UserError
 
 
 class WebsiteForm(http.Controller):
@@ -75,15 +75,6 @@ class WebsiteForm(http.Controller):
                 # for the email queue to process
 
                 if model_name == 'mail.mail':
-                    form_has_email_cc = {'email_cc', 'email_bcc'} & kwargs.keys() or \
-                        'email_cc' in kwargs["website_form_signature"]
-                    # remove the email_cc information from the signature
-                    kwargs["website_form_signature"] = kwargs["website_form_signature"].split(':')[0]
-                    if kwargs.get("email_to") or form_has_email_cc:
-                        value = kwargs.get('email_to', '') + (':email_cc' if form_has_email_cc else '')
-                        hash_value = hmac(model_record.env, 'website_form_signature', value)
-                        if not consteq(kwargs["website_form_signature"], hash_value):
-                            raise AccessDenied('invalid website_form_signature')
                     request.env[model_name].sudo().browse(id_record).send()
 
         # Some fields have additional SQL constraints that we can't check generically
@@ -148,6 +139,7 @@ class WebsiteForm(http.Controller):
     # Extract all data sent by the form and sort its on several properties
     def extract_data(self, model, values):
         dest_model = request.env[model.sudo().model]
+        assert_form_signature(values, dest_model)
 
         data = {
             'record': {},        # Values to create record
@@ -205,7 +197,7 @@ class WebsiteForm(http.Controller):
                     custom_fields.append((_('email'), field_value))
 
             # If it's a custom field
-            elif field_name not in ('context', 'website_form_signature'):
+            elif field_name != 'context':
                 custom_fields.append((field_name, field_value))
 
         data['custom'] = "\n".join([u"%s : %s" % v for v in custom_fields])

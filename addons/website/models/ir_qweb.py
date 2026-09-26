@@ -4,6 +4,7 @@ import re
 import logging
 
 from collections import OrderedDict
+from lxml import etree, html
 
 from odoo import models
 from odoo.http import request
@@ -13,6 +14,7 @@ from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.osv import expression
 from odoo.addons.website.models import ir_http
 from odoo.exceptions import AccessError
+from odoo.tools.misc import hash_sign
 
 
 _logger = logging.getLogger(__name__)
@@ -31,6 +33,98 @@ class IrQWeb(models.AbstractModel):
         'script': 'src',
         'img': 'src',
     }
+
+    def _generate_code(self, template):
+        ctx = dict(self.env.context)
+        ctx.pop('dynamic_form_ctx', None)
+        return super(IrQWeb, self.with_context(ctx))._generate_code(template)
+
+    def _is_static_node(self, el, compile_context):
+        # Website forms get a signature `<input>` injected at compile time.
+        # The deferred (dynamic) signature relies on a `t-att-value`, so such
+        # forms must not be short-circuited to static compilation. Only website
+        # forms are concerned; other forms keep their static optimization.
+        if el.tag != 'form' and el.get('action') == '/website/form':
+            return False
+        return super()._is_static_node(el, compile_context)
+
+    def _compile_directives(self, el, compile_context, level) -> list:
+        """ Pre-compile website forms before code generation """
+        if el.tag == 'form' and el.get('action') == '/website/form/':
+            self._pre_compile_form_signature(el, compile_context)
+        if el.tag == 'span' and el.get('data-for'):
+            self._pre_compile_data_for(el, compile_context)
+        return super()._compile_directives(el, compile_context, level)
+
+    def _pre_compile_data_for(self, el, compile_context) -> None:
+        if (form_id := el.get('data-for')) and el.get('t-att-data-values'):
+            compile_context.setdefault('dynamic_form_ctx', {})[form_id] = el.get('t-att-data-values')
+
+    def _pre_compile_form_signature(self, el, compile_context) -> None:
+        model_name = el.get('data-model_name') or el.get('data-force_action')
+        if model_name not in self.env:
+            return  # `assert_form_signature` will reject
+        model_fields = self.env[model_name]._fields
+
+        existing_sign_el = el.find('.//input[@name="__sign__"]')
+        if existing_sign_el is not None:
+            existing_sign_el.getparent().remove(existing_sign_el)
+        sign_el = html.Element('input', type='hidden', name='__sign__')
+        el.insert(0, sign_el)
+
+        field_entries: dict[str, etree._Element | None]
+        field_to_sign: dict[str, str | None]
+
+        field_entries = {
+            input_el.get("name"): input_el if input_el.get('type') == 'hidden' else None
+            for input_el in el.xpath(".//*[@name and contains(concat(' ', normalize-space(@class), ' '), ' s_website_form_input ')]")
+            if input_el.get("name") in model_fields
+        }
+
+        # Determine the dynamic context of the form
+        dynamic_ctx: str | None = None
+        dynamic_form_ctx = compile_context.get('dynamic_form_ctx')
+        form_id = el.get('id')
+        if dynamic_form_ctx and form_id:
+            dynamic_ctx = dynamic_form_ctx.pop(form_id, None)
+
+        if dynamic_ctx is None:  # Compute signature statically
+            field_to_sign = {name: el.get('value') if el is not None else None for name, el in field_entries.items()}
+            sign_el.set('value', self._runtime_form_signature(field_to_sign, model_name))
+            return
+
+        # Defer computation of signature during rendering
+        field_to_sign = {}
+        for name, el in field_entries.items():
+            if el is None:
+                field_to_sign[name] = None
+                continue
+            static_value = el.get('value', None)
+            dynamic_value = el.get('t-att-value', "''")
+            dynamic_format_value = el.get('t-attf-value', "''")
+            predefined_value = [
+                f'{dynamic_ctx!s}.get({name!r})',
+                f'{dynamic_value!s} or {dynamic_format_value!s}',
+                f'{static_value!r}',
+            ]
+            # data-for takes priority over default values but `email_to` is an exception
+            if name == 'email_to':
+                predefined_value.reverse()
+            field_to_sign[name] = ' or '.join(predefined_value)
+        field_to_sign = '{' + ','.join(f'{k!r}: {v!s}' for k, v in field_to_sign.items()) + '}'
+        sign_el.set('t-att-value', f"env['ir.qweb']._runtime_form_signature({field_to_sign!s}, {model_name!r})")
+
+    def _runtime_form_signature(self, data: dict, model_name: str) -> str:
+        expected_client_data = {}
+        for name, value in data.items():
+            if not value:
+                value = None
+            elif isinstance(value, bool):
+                value = str(value).lower()
+            else:
+                value = str(value)
+            expected_client_data[name] = value
+        return hash_sign(self.sudo().env, 'website_form_sign', (expected_client_data, model_name))
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
