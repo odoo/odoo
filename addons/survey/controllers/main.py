@@ -308,7 +308,10 @@ class Survey(http.Controller):
             else:
                 if 'next_skipped_page' in post:
                     next_page_or_question = answer_sudo._get_next_skipped_page_or_question()
-                if not next_page_or_question:
+                    if not next_page_or_question:
+                        answer_sudo._mark_done()
+                        return self._prepare_survey_finished_values(survey_sudo, answer_sudo)
+                elif not next_page_or_question:
                     next_page_or_question = survey_sudo._get_next_page_or_question(
                         answer_sudo,
                         answer_sudo.last_displayed_page_id.id if answer_sudo.last_displayed_page_id else 0)
