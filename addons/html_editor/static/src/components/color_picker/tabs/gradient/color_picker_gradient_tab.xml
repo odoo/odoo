@@ -1,20 +1,30 @@
 <templates xml:space="preserve">
 <t t-name="html_editor.ColorPickerGradientTab">
     <t t-set="currentGradient" t-value="this.getCurrentGradientColor()" />
-    <div class="o_colorpicker_sections p-2 d-grid gap-1" style="grid-template-columns: 1fr 1fr;"
-        t-on-click="this.props.onColorClick" t-on-mouseover="this.props.onColorPointerOver"
+    <div t-on-click="this.props.onColorClick" t-on-mouseover="this.props.onColorPointerOver"
         t-on-mouseout="this.props.onColorPointerOut" t-on-focusin="this.props.onFocusin" t-on-focusout="this.props.onFocusout">
-        <t t-set="gradientsWithOpacity" t-value="this.DEFAULT_GRADIENT_COLORS.map((gradient) => this.applyOpacityToGradient(gradient, this.props.defaultOpacity))" />
-        <t t-foreach="gradientsWithOpacity" t-as="gradient" t-key="gradient">
-            <button class="w-100 m-0 o_color_button o_color_picker_button o_gradient_color_button btn p-0"
-                t-att-class="{'selected': currentGradient?.includes(gradient)}"
-                t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
-        </t>
+        <div t-if="this.state.showGradientPicker" class="o_used_gradients_section d-grid gap-1" style="grid-template-columns: 1fr 1fr;">
+            <t t-foreach="this.usedCustomGradients" t-as="gradient" t-key="gradient_index">
+                <button t-if="gradient !== this.standardizeGradient(currentGradient) &amp;&amp; !this.DEFAULT_GRADIENTS_WITH_OPACITY.includes(gradient)"
+                    class="o_color_button w-100 m-0 o_color_picker_button o_gradient_color_button btn p-0" t-att-data-color="gradient"
+                    t-attf-style="background-image: {{gradient}}"/>
+            </t>
+            <button t-if="!!currentGradient &amp;&amp; !this.DEFAULT_GRADIENTS_WITH_OPACITY.includes(this.standardizeGradient(currentGradient))" class="selected o_color_button w-100 m-0 o_color_picker_button o_gradient_color_button btn p-0"
+                t-attf-style="background-image: {{currentGradient}}"
+                t-att-data-color="currentGradient"/>
+        </div>
+        <div class="p-2 d-grid gap-1" style="grid-template-columns: 1fr 1fr;">
+            <t t-foreach="this.DEFAULT_GRADIENTS_WITH_OPACITY" t-as="gradient" t-key="gradient">
+                <button class="w-100 m-0 o_color_button o_color_picker_button o_gradient_color_button btn p-0"
+                    t-att-class="{'selected': currentGradient?.includes(gradient)}"
+                    t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
+            </t>
+        </div>
     </div>
     <div class="px-2">
         <button t-ref="this.customGradientButton" t-attf-style="{{ currentGradient ? `background-image: ${currentGradient}` : '' }};"
             class="w-50 btn mb-2 o_custom_gradient_button o_color_picker_button"
-            t-att-class="{'selected': currentGradient and !gradientsWithOpacity.includes(currentGradient)}"
+            t-att-class="{'selected': currentGradient and !this.DEFAULT_GRADIENTS_WITH_OPACITY.includes(currentGradient)}"
             t-att-data-color="currentGradient" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">
             Custom
         </button>

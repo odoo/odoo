@@ -24,6 +24,8 @@ import { expectElementCount } from "./_helpers/ui_expectations";
 import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
 import { getIframeInput } from "./_helpers/iframe_input";
+import { undo } from "./_helpers/user_actions";
+import { DEFAULT_GRADIENT_COLORS } from "@html_editor/components/color_picker/tabs/gradient/color_picker_gradient_tab";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -214,6 +216,155 @@ test("custom background colors used in the editor are shown in the colorpicker",
     expect("button[data-color='#6632CD66']").toHaveStyle({
         backgroundColor: "rgba(102, 50, 205, 0.4)",
     });
+});
+
+test("text gradients used in the editor are shown in gradient picker", async () => {
+    await setupEditor(
+        `<p>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(91, 189, 245) 0%, rgb(108, 53, 130) 100%);">test</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%);">[test]</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%);">test</font>
+            <font style="background-image: linear-gradient(135deg, rgb(255, 222, 69) 0%, rgb(69, 33, 0) 100%);">test</font>
+        </p>`
+    );
+    await expectElementCount(".o-we-toolbar", 1);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await contains(".o_custom_gradient_button").click();
+    await expectElementCount(".o_colorpicker_widget", 1);
+
+    const usedGradientButtons = queryAll(".o_used_gradients_section button[data-color]");
+    expect(usedGradientButtons).toHaveCount(3);
+
+    const gradients = usedGradientButtons.map((button) => button.style.backgroundImage);
+    expect(gradients).toMatchObject([
+        "linear-gradient(135deg, rgb(91, 189, 245) 0%, rgb(108, 53, 130) 100%)",
+        "linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        "linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%)",
+    ]);
+    expect(usedGradientButtons[2]).toHaveClass("selected");
+});
+
+test.tags("desktop");
+test("preview and apply used gradient in gradient picker", async () => {
+    const { editor } = await setupEditor(
+        `<p>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(91, 189, 245) 0%, rgb(108, 53, 130) 100%);">test</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%);">[test]</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%);">test</font>
+        </p>`
+    );
+    await expectElementCount(".o-we-toolbar", 1);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await contains(".o_custom_gradient_button").click();
+    await expectElementCount(".o_colorpicker_widget", 1);
+
+    const usedGradientButtons = queryAll(".o_used_gradients_section button[data-color]");
+    const targetFont = queryAll("font")[1];
+    // Hover
+    await hover(usedGradientButtons[1]);
+    expect(targetFont).toHaveOuterHTML(
+        '<font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%);">test</font>'
+    );
+
+    // Apply
+    await click(usedGradientButtons[1]);
+    await expectElementCount(".o_font_color_selector", 0);
+    expect(targetFont).toHaveOuterHTML(
+        '<font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%);">test</font>'
+    );
+
+    undo(editor);
+    expect(targetFont).toHaveOuterHTML(
+        '<font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%);">test</font>'
+    );
+});
+
+test("background gradients used in the editor are shown in gradient picker", async () => {
+    await setupEditor(
+        `<p>
+            <font style="background-image: linear-gradient(135deg, rgb(91, 189, 245) 0%, rgb(108, 53, 130) 100%);">test</font>
+            <font style="background-image: linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%);">[test]</font>
+            <font style="background-image: linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%);">test</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 222, 69) 0%, rgb(69, 33, 0) 100%);">test</font>
+        </p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-background");
+    await animationFrame();
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await contains(".o_custom_gradient_button").click();
+    await expectElementCount(".o_colorpicker_widget", 1);
+
+    const usedGradientButtons = queryAll(".o_used_gradients_section button[data-color]");
+    expect(usedGradientButtons).toHaveCount(3);
+
+    const gradients = usedGradientButtons.map((button) => button.style.backgroundImage);
+    expect(gradients).toMatchObject([
+        "linear-gradient(135deg, rgb(91, 189, 245) 0%, rgb(108, 53, 130) 100%)",
+        "linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        "linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%)",
+    ]);
+    expect(usedGradientButtons[2]).toHaveClass("selected");
+});
+
+test("should not repeat used gradients in gradient picker", async () => {
+    await setupEditor(
+        `<p>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%);">test</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%);">test</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%);">test</font>
+            [test]
+        </p>`
+    );
+    await expectElementCount(".o-we-toolbar", 1);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await contains(".o_custom_gradient_button").click();
+    await expectElementCount(".o_colorpicker_widget", 1);
+
+    const usedGradientButtons = queryAll(".o_used_gradients_section button[data-color]");
+    expect(usedGradientButtons).toHaveCount(2);
+
+    const gradients = usedGradientButtons.map((button) => button.style.backgroundImage);
+    expect(gradients).toMatchObject([
+        "linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%)",
+        "linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+    ]);
+    expect(usedGradientButtons[1]).toHaveClass("selected");
+});
+
+test("should not show default gradient colors as used gradients in gradient picker", async () => {
+    await setupEditor(
+        `<p>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%);">[test]</font>
+            <font class="text-gradient" style="background-image: ${DEFAULT_GRADIENT_COLORS[0]};">test</font>
+        </p>`
+    );
+    await expectElementCount(".o-we-toolbar", 1);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await contains(".o_custom_gradient_button").click();
+    await expectElementCount(".o_colorpicker_widget", 1);
+
+    const usedGradientButtons = queryAll(".o_used_gradients_section button[data-color]");
+    expect(usedGradientButtons).toHaveCount(1);
+
+    const gradients = usedGradientButtons.map((button) => button.style.backgroundImage);
+    expect(gradients).toMatchObject([
+        "linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%)",
+    ]);
 });
 
 test("applied custom color should be shown in colorpicker after switching tab", async () => {

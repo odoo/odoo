@@ -728,7 +728,7 @@ test("Change the background position when multiple background layer is applied",
     expect(section).toHaveStyle("background-size: cover");
     await contains("[data-label='Background'] .o_we_color_preview").click();
     await contains(".o_font_color_selector .gradient-tab").click();
-    await contains(".o_colorpicker_sections .o_gradient_color_button").click();
+    await contains(".o_font_color_selector .o_gradient_color_button").click();
     await contains("[data-label='Position'] .dropdown-toggle").click();
     await contains("[data-action-value='repeat-pattern']").click();
     expect(section).toHaveClass("o_bg_img_opt_repeat");
