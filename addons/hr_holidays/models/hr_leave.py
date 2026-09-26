@@ -2329,6 +2329,21 @@ class HrLeave(models.Model):
             'domain': domain,
             'context': context,
         }
+
+    def _get_time_off_overview_action(self):
+        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            action = self.env['ir.actions.act_window']._for_xml_id('hr_holidays.hr_leave_action_action_approve_department')
+            gantt_views = [view for view in action['views'] if view[1] == 'gantt']
+            if gantt_views:
+                action['views'] = gantt_views
+                action['view_mode'] = 'gantt'
+                action['context'] = {
+                    'search_default_current_year': 1,
+                    'hide_employee_name': 1,
+                }
+        else:
+            action = self.env['ir.actions.act_window']._for_xml_id('hr_holidays.action_hr_holidays_dashboard')
+        return action
     # ------------------------------------------------------------
     # Activity methods
     # ------------------------------------------------------------
