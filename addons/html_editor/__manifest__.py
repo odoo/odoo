@@ -13,7 +13,9 @@ This addon provides an extensible, maintainable editor.
     'data': [
         'security/ir.access.csv',
     ],
-    'auto_install': True,
+    # 'http_routing' is not auto installed and is only needed to override one
+    # of its methods, it must not prevent the auto installation (grep: 'ir.http')
+    'auto_install': ['base', 'bus', 'web'],
     'assets': {
         'web._assets_primary_variables': [
             ('after', 'web/static/src/scss/primary_variables.scss', 'html_editor/static/src/scss/html_editor.variables.scss'),
