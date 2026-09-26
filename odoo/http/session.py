@@ -17,6 +17,7 @@ from collections.abc import MutableMapping
 from contextlib import suppress
 from datetime import datetime
 from http import HTTPStatus
+from werkzeug.http import quote_header_value
 from zlib import adler32
 
 from odoo.api import Environment
@@ -97,6 +98,7 @@ class Session(MutableMapping):
         'can_save',
         'is_dirty',
         'is_new',
+        'should_dbsc',
         'should_rotate',
         'sid',
     )
@@ -107,6 +109,7 @@ class Session(MutableMapping):
         self.update(data)
         self.is_dirty: bool = False
         self.is_new = new
+        self.should_dbsc: bool = False
         self.should_rotate: bool = False
         self.sid = sid
 
@@ -193,6 +196,7 @@ class Device(typing.TypedDict):
     country: str
     city: str
     trusted: typing.NotRequired[bool]
+    dbsc_trusted: typing.NotRequired[bool]
 
 
 def get_default_session() -> dict:
@@ -273,6 +277,9 @@ def finalize(session: Session, env: Environment) -> None:
     env = env(user=uid)
     user_context = dict(env['res.users'].context_get())
 
+    if env['ir.config_parameter'].sudo().get_bool('web.dbsc'):
+        session.should_dbsc = True
+
     session.should_rotate = True
     session.update({
         'db': env.registry.db_name,
@@ -342,6 +349,8 @@ def get_device(session: Session, request: Request) -> Device:
         'country': geoip.country.name,
         'city': geoip.city.name,
         'trusted': not session['_devices'],  # First device in a session is always trusted
+        # If session is DBSC linked, the new device must be verified
+        'dbsc_trusted': not session.get('dbsc'),
     }
     session.is_dirty = True
     return new_device
@@ -671,6 +680,13 @@ def save_session(request: Request, env: Environment | None = None) -> None:
 
     if not sess.can_save:
         return
+
+    if sess.should_dbsc:
+        sess['dbsc_register_challenge'] = challenge = secrets.token_urlsafe()
+        path = quote_header_value('/dbsc/register')
+        challenge = quote_header_value(challenge, allow_token=False)
+        request.future_response.headers['Secure-Session-Registration'] = \
+            f'(ES256 RS256); path={path}; challenge={challenge}'
 
     if sess.should_rotate:
         session_store().rotate(sess, env)  # it saves
