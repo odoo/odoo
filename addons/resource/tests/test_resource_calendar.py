@@ -2,7 +2,7 @@
 import pytz
 from datetime import datetime
 
-from odoo.tests.common import TransactionCase
+from odoo.tests import Form, TransactionCase
 
 
 class TestResourceCalendar(TransactionCase):
@@ -104,3 +104,25 @@ class TestResourceCalendar(TransactionCase):
             '2019-05-31': False,
         }
         self.assertEqual(days, expected_res)
+
+    def test_company_change_attendance_persistence(self):
+        """
+        Test to ensure that altering the company does not wipe the current schedule.
+        """
+        work_schedule = self.env['resource.calendar'].create({
+            'name': 'Test Work Schedule',
+            'company_id': False,
+            'attendance_ids': False
+        })
+        attendance_1 = self.env['resource.calendar.attendance'].create({
+            'name': 'Attendance 1',
+            'calendar_id': work_schedule.id,
+            'dayofweek': '1',
+            'hour_from': 8,
+            'hour_to': 17,
+        })
+        self.env.user.groups_id += self.env.ref('base.group_multi_company')
+        with Form(work_schedule) as form:
+            form.company_id = self.env.company
+
+        self.assertEqual(work_schedule.attendance_ids, attendance_1)
