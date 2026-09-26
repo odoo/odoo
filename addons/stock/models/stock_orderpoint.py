@@ -95,7 +95,7 @@ class StockWarehouseOrderpoint(models.Model):
         default=lambda self: self.env.company)
     allowed_location_ids = fields.One2many(comodel_name='stock.location', compute='_compute_allowed_location_ids')
 
-    rule_ids = fields.Many2many('stock.rule', string='Rules used', compute='_compute_rules')
+    rule_ids = fields.Many2many('stock.rule', string='Rules used', compute='_compute_rules', compute_sudo=True)
     lead_horizon_date = fields.Date(compute='_compute_lead_days')
     lead_days = fields.Float(compute='_compute_lead_days')
     route_id = fields.Many2one(
@@ -208,7 +208,8 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
         for orderpoint in orderpoints_to_compute:
             values = orderpoint._get_lead_days_values()
-            lead_days, _ = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, bypass_delay_description=True, **values)
+            # sudo() required for inter-company resupply, as half the rules are in the other company
+            lead_days, _ = orderpoint.sudo().rule_ids._get_lead_days(orderpoint.product_id, bypass_delay_description=True, **values)
             orderpoint.lead_horizon_date = fields.Date.today() + relativedelta(days=lead_days['total_delay'] + lead_days['horizon_time'])
             orderpoint.lead_days = lead_days['total_delay']
         (self - orderpoints_to_compute).lead_horizon_date = False
