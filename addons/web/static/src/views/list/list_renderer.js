@@ -1240,6 +1240,27 @@ export class ListRenderer extends Component {
     }
 
     /**
+     * Only use a tooltip template if we're in debug mode (advanced tooltip) or
+     * if the field has an help message. If not, the tooltip will only display
+     * the field's label. By not defining a template, we allow the tooltip
+     * service to decide not to display the tooltip if its content is the same as
+     * the column header.
+     *
+     * @param {Column} column
+     * @returns {string | undefined }
+     */
+    getColumnTooltipTemplate(column) {
+        if (this.debugMode.isActive()) {
+            return "web.FieldTooltip";
+        }
+        // the help can be defined in the arch, or on the field itself (same
+        // resolution as in getTooltipInfo)
+        if (column.help ?? this.fields[column.name].help) {
+            return "web.ListHeaderHelpTooltip";
+        }
+    }
+
+    /**
      * Classes to apply on the element displaying a given field of a column group.
      * When the field is displayed by the Field component, that component already
      * applies the arch class and the decorations itself.
