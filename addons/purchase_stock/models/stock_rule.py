@@ -30,6 +30,11 @@ class StockRule(models.Model):
         })
         return message_dict
 
+    def _get_custom_move_fields(self):
+        fields = super()._get_custom_move_fields()
+        fields += ['purchase_line_id', 'partner_id']
+        return fields
+
     @api.depends('action')
     def _compute_picking_type_code_domain(self):
         super()._compute_picking_type_code_domain()
@@ -360,9 +365,10 @@ class StockRule(models.Model):
 
     def _push_prepare_move_copy_values(self, move_to_copy):
         res = super()._push_prepare_move_copy_values(move_to_copy)
-        res['purchase_line_id'] = None
         if self.location_dest_id.usage == "supplier":
             res['purchase_line_id'], res['partner_id'] = move_to_copy._get_purchase_line_and_partner_from_chain()
+        else:
+            res['purchase_line_id'] = move_to_copy.purchase_line_id.id
         return res
 
     def _find_procurement_supplier(self, company, procurement):
