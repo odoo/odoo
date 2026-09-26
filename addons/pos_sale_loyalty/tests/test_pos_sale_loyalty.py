@@ -90,7 +90,9 @@ class TestPoSSaleLoyalty(TestPointOfSaleHttpCommon):
                 'price_unit': 100,
             })]
         })
-        sale_order.action_open_reward_wizard()
+        sale_order._update_programs_and_rewards()
+        wizard = self.env["sale.loyalty.reward.wizard"].create({"order_id": sale_order.id})  # noqa: OLS03001
+        wizard.action_apply()
         self.assertEqual(sale_order.amount_total, 90)
         self.main_pos_config.open_ui()
         self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, "test_pos_sale_loyalty_ignored_in_pos", login="accountman")
