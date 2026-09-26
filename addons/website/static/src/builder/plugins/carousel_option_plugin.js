@@ -9,6 +9,7 @@ import { between } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW } from "@website/builder/option_sequence";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { reactive } from "@odoo/owl";
 
 /**
  * @typedef { Object } CarouselOptionShared
@@ -50,7 +51,11 @@ export class CarouselCardsOption extends BaseOptionComponent {
 export class CarouselOptionPlugin extends Plugin {
     static id = "carouselOption";
     static dependencies = ["clone", "builderOptions", "builderActions"];
-    static shared = ["addSlide", "removeSlide", "slideCarousel"];
+    static shared = ["addSlide", "removeSlide", "slideCarousel", "getTransitionState"];
+
+    transitionState = reactive({
+        isTransitioning: false,
+    });
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -72,6 +77,7 @@ export class CarouselOptionPlugin extends Plugin {
                     }
                 },
                 applyAction: this.dependencies.builderActions.applyAction,
+                transitionState: this.transitionState,
             },
         },
         container_title: {
@@ -110,6 +116,10 @@ export class CarouselOptionPlugin extends Plugin {
                 }
             });
         }
+    }
+
+    getTransitionState() {
+        return this.transitionState;
     }
 
     getTitleExtraInfo(editingElement) {
@@ -203,6 +213,7 @@ export class CarouselOptionPlugin extends Plugin {
             this.slideTimestamp = window.performance.now();
         });
 
+        this.transitionState.isTransitioning = true;
         return new Promise((resolve) => {
             editingElement.addEventListener(
                 "slid.bs.carousel",
@@ -230,6 +241,7 @@ export class CarouselOptionPlugin extends Plugin {
                         this.dependencies["builderOptions"].setNextTarget(activeItemEl);
 
                         resolve();
+                        this.transitionState.isTransitioning = false;
                     }, 0.2 * slideDuration);
                 },
                 { once: true }
