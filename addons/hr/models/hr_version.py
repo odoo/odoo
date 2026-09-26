@@ -45,15 +45,6 @@ class HrVersion(models.Model):
         address = self.env.company.partner_id.address_get(['default'])
         return address['default'] if address else False
 
-    def _get_default_work_location_id(self):
-        if self.env['hr.work.location'].has_access('read'):
-            work_location_id = self.env['hr.work.location'].search([('company_id', '=', self.env.company.id)])
-            if len(work_location_id) == 1 and self.env.company.country_code == 'BE':
-                return work_location_id
-            elif work_location_id and self.env.company.country_code != 'BE':
-                return work_location_id[0]
-        return False
-
     def _default_salary_structure(self):
         return (
                 self.env['hr.payroll.structure.type'].sudo().search([('country_id', '=', self.env.company.country_id.id)], limit=1)
@@ -144,7 +135,8 @@ class HrVersion(models.Model):
         readonly=False,
         check_company=True,
         tracking=1)
-    work_location_id = fields.Many2one('hr.work.location', 'Work Location', default=lambda self: self._get_default_work_location_id(),
+    work_location_id = fields.Many2one('hr.work.location', 'Work Location', compute='_compute_work_location_id',
+                                       store=True, readonly=False,
                                        domain="[('address_id', '=', address_id)]", index=True, tracking=1)
 
     departure_id = fields.Many2one('hr.employee.departure', string="Departure", copy=False, index='btree_not_null')
@@ -219,6 +211,19 @@ class HrVersion(models.Model):
         for version in self:
             if version.employee_id:
                 version.company_id = version.employee_id.company_id
+
+    @api.depends('company_id')
+    def _compute_work_location_id(self):
+        for version in self:
+            if version.work_location_id and version.work_location_id.company_id in version.company_id.parent_ids:
+                continue
+            work_locations = self.env['hr.work.location']
+            if version.company_id and self.env['hr.work.location'].has_access('read'):
+                work_locations = self.env['hr.work.location'].search([
+                    ('company_id', 'in', version.company_id.parent_ids.ids),
+                    ('location_type', '=', 'office'),
+                ])
+            version.work_location_id = work_locations if len(work_locations) == 1 else False
 
     @api.depends('job_id.name')
     def _compute_job_title(self):
