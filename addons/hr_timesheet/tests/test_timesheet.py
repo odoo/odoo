@@ -2,6 +2,7 @@
 
 from freezegun import freeze_time
 from unittest.mock import patch
+from datetime import timedelta
 
 from odoo import fields
 from odoo.fields import Command
@@ -1115,3 +1116,70 @@ class TestTimesheet(TestCommonTimesheet):
         self.timesheet.write({'project_id': self.project_customer.id})
         self.assertFalse(self.timesheet.task_id)
         self.assertEqual(self.timesheet.project_id, self.project_customer)
+
+    def test_archive_employee_timesheet_handling(self):
+        """ Test how registering departure via wizard affects employee timesheets based on departure date. """
+        Timesheet = self.env['account.analytic.line']
+        today = fields.Date.context_today(self.env.user)
+        yesterday = today - timedelta(days=1)
+        two_days_ago = today - timedelta(days=2)
+        tomorrow = today + timedelta(days=1)
+
+        past_timesheet = Timesheet.create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'Past Timesheet (Before Departure)',
+            'unit_amount': 2,
+            'employee_id': self.empl_employee.id,
+            'date': two_days_ago,
+        })
+
+        departure_day_timesheet = Timesheet.create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'Departure Day Timesheet',
+            'unit_amount': 2,
+            'employee_id': self.empl_employee.id,
+            'date': yesterday,
+        })
+
+        today_timesheet = Timesheet.create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'Today Timesheet (After Departure)',
+            'unit_amount': 2,
+            'employee_id': self.empl_employee.id,
+            'date': today,
+        })
+
+        future_timesheet = Timesheet.create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'Future Timesheet',
+            'unit_amount': 2,
+            'employee_id': self.empl_employee.id,
+            'date': tomorrow,
+        })
+
+        employee_no_wizard = self.env['hr.employee'].create({'name': 'Test Employee No Wizard'})
+        future_timesheet_no_wizard = Timesheet.create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'Future Timesheet (Archived Manually)',
+            'unit_amount': 2,
+            'employee_id': employee_no_wizard.id,
+            'date': tomorrow,
+        })
+
+        self.env['hr.departure.wizard'].with_context(employee_termination=True).create({
+            'employee_ids': [Command.set([self.empl_employee.id])],
+            'departure_date': yesterday,
+        }).action_register_departure()
+        employee_no_wizard.action_archive()
+        self.assertFalse(self.empl_employee.active, "The first employee should be archived.")
+        self.assertTrue(past_timesheet.exists(), "Timesheets before departure should not be deleted.")
+        self.assertTrue(departure_day_timesheet.exists(), "Timesheets on the day of departure should not be deleted.")
+        self.assertFalse(today_timesheet.exists(), "Timesheets strictly after the departure date must be deleted.")
+        self.assertFalse(future_timesheet.exists(), "Future timesheets must be deleted when an employee with a departure date is archived.")
+        self.assertFalse(employee_no_wizard.active, "The second employee should be archived.")
+        self.assertTrue(future_timesheet_no_wizard.exists(), "Future timesheets must NOT be deleted when an employee is archived without the departure wizard.")
