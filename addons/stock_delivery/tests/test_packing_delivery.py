@@ -135,7 +135,10 @@ class TestPackingDelivery(TestPackingCommon):
     def test_pack_in_pack_weight_wizard(self):
         """ Check that de default weight is correctly set by default when using the 'stock.put.in.pack' wizard on packages.
         """
-        package_type = self.env['stock.package.type'].create({'name': 'Locked Box'})
+        package_type, outer_package_type = self.env['stock.package.type'].create([
+            {'name': 'Locked Box'},
+            {'name': 'Locked Crate'},
+        ])
         self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 5.0)
         self.env['stock.quant']._update_available_quantity(self.product_bw, self.stock_location, 5.0)
 
@@ -183,7 +186,7 @@ class TestPackingDelivery(TestPackingCommon):
         # Pack both packages into a new package
         wizard = Form.from_action(self.env, delivery.action_put_in_pack())
         self.assertEqual(wizard.shipping_weight, 18)  # 15 + 3
-        wizard.package_type_id = package_type
+        wizard.package_type_id = outer_package_type
         wizard.shipping_weight = 20
         wizard.save().action_put_in_pack()
         self.assertEqual(delivery.shipping_weight, 20)

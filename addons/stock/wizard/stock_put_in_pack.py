@@ -16,6 +16,7 @@ class StockPutInPack(models.TransientModel):
     package_capacity = fields.Float('Package Size', compute='_compute_package_capacity', store=True, readonly=False)
     package_uom = fields.Char('Unit', compute='_compute_package_uom')
     show_package_capacity = fields.Boolean(compute='_compute_show_package_capacity')
+    pack_in_pack_message = fields.Text(help="Pack-in-pack warning message", compute='_compute_pack_in_pack_message', readonly=True)
 
     @api.depends('move_line_ids')
     def _compute_package_type_id(self):
@@ -70,6 +71,18 @@ class StockPutInPack(models.TransientModel):
     def _compute_show_package_capacity(self):
         for wizard in self:
             wizard.show_package_capacity = len(wizard.move_line_ids) == 1
+
+    @api.depends('package_ids')
+    def _compute_pack_in_pack_message(self):
+        for wizard in self:
+            if len(wizard.package_ids) > 1:
+                wizard.pack_in_pack_message = self.env._(
+                    "Are you sure you want to put %(package)s (and %(count)s more) into another package?",
+                    package=wizard.package_ids[0].name, count=len(wizard.package_ids) - 1)
+            else:
+                wizard.pack_in_pack_message = self.env._(
+                    "Are you sure you want to put %(package)s into another package?",
+                    package=wizard.package_ids.name)
 
     def action_put_in_pack(self):
         context = self._get_put_in_pack_context()
