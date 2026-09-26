@@ -96,7 +96,6 @@ export const testTextareaRange = (editor, { el, value, range }, message) => {
 const TOOLBAR = (language) =>
     unformat(
         `<div class="o_code_toolbar">
-        <div data-prevent-closing-overlay="true">
             <button class="btn o-dropdown dropdown-toggle dropdown" name="language" title="${language}" aria-expanded="false">
                 <span class="px-1">${language}</span>
                 <i class="oi" data-icon="arrow_drop_down"></i>
@@ -110,7 +109,6 @@ const TOOLBAR = (language) =>
                 <span>Wrap</span>
             </button>
             <button class="text-nowrap btn"><span class="oi mx-1" data-icon="format_paragraph" title="Convert to paragraph"></span></button>
-        </div>
     </div>`
     );
 
