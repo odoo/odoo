@@ -232,11 +232,12 @@ class AccountMoveSend(models.AbstractModel):
 
         attachments = []
         for extra_mail_template in extra_mail_templates:
-            filename = move._get_invoice_mail_template_dynamic_report_filename(extra_mail_template) or f'{extra_mail_template.name.lower()}_{move.name}.pdf'
+            extension = extra_mail_template.report_type.removeprefix("qweb-")
+            filename = move._get_invoice_mail_template_dynamic_report_filename(extra_mail_template, extension) or f'{extra_mail_template.name.lower()}_{move.name}.{extension}'
             attachments.append({
                 'id': f'placeholder_{extra_mail_template.name.lower()}_{filename}',
                 'name': filename,
-                'mimetype': 'application/pdf',
+                'mimetype': f'application/{extension}',
                 'placeholder': True,
                 'dynamic_report': extra_mail_template.report_name,
             })
@@ -559,7 +560,7 @@ class AccountMoveSend(models.AbstractModel):
                 attachments_to_create.append({
                     'raw': content,
                     'name': dynamic_report['name'],
-                    'mimetype': 'application/pdf',
+                    'mimetype': dynamic_report["mimetype"],
                     'res_model': move._name,
                     'res_id': move.id,
                 })
