@@ -12,7 +12,7 @@ class ProjectTaskStagePersonal(models.Model):
 
     task_id = fields.Many2one('project.task', required=True, ondelete='cascade', index=True, export_string_translation=False)
     user_id = fields.Many2one('res.users', required=True, ondelete='cascade', index=True, export_string_translation=False)
-    stage_id = fields.Many2one('project.task.type', domain="[('user_id', '=', user_id)]", ondelete='set null', export_string_translation=False)
+    stage_id = fields.Many2one('project.task.type', domain="[('user_id', '=', user_id)]", ondelete='restrict', export_string_translation=False)
 
     _project_personal_stage_unique = models.Constraint(
         'UNIQUE (task_id, user_id)',

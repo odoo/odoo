@@ -28,6 +28,9 @@ class MailCallArtifact(models.Model):
     media_id = fields.Many2one(
         "ir.attachment", string="Media Attachment", compute="_compute_media_id",
     )
+    media_ids = fields.One2many(
+        "ir.attachment", "res_id", string="Media Attachment (all)",
+    )
     start_ms = fields.Integer(
         string="Start (ms)", default=0, required=True,
         help="Offset from the start of the call in milliseconds",
@@ -81,14 +84,10 @@ class MailCallArtifact(models.Model):
     # ---------------------------------------------------------------------
     # Computes
 
+    @api.depends('media_ids')
     def _compute_media_id(self):
-        attachments = self.env["ir.attachment"].search_fetch([
-            ("res_model", "=", self._name),
-            ("res_id", "in", self.ids),
-        ], ['res_id'])
-        attachment_by_res_id = attachments.grouped('res_id')
         for artifact in self:
-            artifact.media_id = attachment_by_res_id.get(artifact.id)
+            artifact.media_id = artifact.media_ids[:1]
 
     # ---------------------------------------------------------------------
     # Methods
@@ -156,6 +155,6 @@ class MailCallArtifact(models.Model):
         # sudo: mail.mail - recording callbacks queue mail for the authenticated starters.
         self.env["mail.mail"].sudo().create(mail_values)
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_cleanup_media_attachment(self):
-        self.media_id.sudo().unlink()
+    def _delete_collect_extra(self):
+        yield from super()._delete_collect_extra()
+        yield self.media_id

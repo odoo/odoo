@@ -34,9 +34,9 @@ class DiscussCallHistory(models.Model):
     )
     _channel_id_end_dt_idx = models.Index("(channel_id, end_dt) WHERE end_dt IS NULL")
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_cleanup_artifacts_attachments(self):
-        self.artifact_ids.unlink()
+    def _delete_collect_extra(self):
+        yield from super()._delete_collect_extra()
+        yield self.artifact_ids
 
     @api.depends("channel_id.display_name", "start_dt")
     @api.depends_context("lang", "tz", "uid")

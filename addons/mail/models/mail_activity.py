@@ -166,11 +166,14 @@ class MailActivity(models.Model):
 
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
-        free = self.filtered(lambda a: not a.res_model or not a.res_id)
-        free.res_name = False
-        for activity in (self - free):
-            activity.res_name = activity.res_model and \
-                self.env[activity.res_model].browse(activity.res_id).display_name
+        for activity in self:
+            name = False
+            if activity.res_model and activity.res_id:
+                try:  # noqa: SIM105
+                    name = self.env[activity.res_model].browse(activity.res_id).display_name
+                except MissingError:
+                    pass
+            activity.res_name = name
 
     @api.depends('active', 'date_deadline')
     def _compute_state(self):
