@@ -925,7 +925,9 @@ class ProductTemplate(models.Model):
             "product_template_id": self.id,
             "display_name": display_name,
             "is_combination_possible": self._is_combination_possible(combination=combination),
-            **self.with_context(**price_context)._get_additional_combination_info(
+            **self.with_context(
+                **price_context, has_is_custom_value=bool(combination.filtered("is_custom"))
+            )._get_additional_combination_info(
                 product_or_template=product_or_template,
                 quantity=add_qty or 1.0,
                 uom=uom,
@@ -972,14 +974,35 @@ class ProductTemplate(models.Model):
         pricelist = pricelist.with_context(self.env.context)
         currency = website.currency_id.with_context(self.env.context)
 
+        pricing_quantity = quantity
+        if (
+            self.env.context.get("website_sale_product_page")
+            and product_or_template.is_product_variant
+            and not self.env.context.get("has_is_custom_value")
+        ):
+            # Lines with custom attribute values are not mergeable
+            mergeable_lines = request.cart._get_common_product_lines(
+                product_or_template.id
+            ).filtered(lambda sol: not sol.product_custom_attribute_value_ids)
+            cart_qty = sum(
+                mergeable_lines.mapped(
+                    lambda sol: sol.product_uom_id._compute_quantity(
+                        sol.product_uom_qty, sol.product_id.uom_id
+                    )
+                )
+            )
+            pricing_quantity += product_or_template.uom_id._compute_quantity(
+                cart_qty, uom, round=False
+            )
+
         # Pricelist price doesn't have to be converted
         pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(
-            product=product_or_template, quantity=quantity, uom=uom, currency=currency
+            product=product_or_template, quantity=pricing_quantity, uom=uom, currency=currency
         )
 
         pricelist_item = self.env["product.pricelist.item"].browse(pricelist_rule_id)
         price_before_discount = self._get_price_before_discount(
-            pricelist_item, pricelist_price, product_or_template, quantity, uom, currency
+            pricelist_item, pricelist_price, product_or_template, pricing_quantity, uom, currency
         )
 
         has_discounted_price = currency.compare_amounts(price_before_discount, pricelist_price) == 1
