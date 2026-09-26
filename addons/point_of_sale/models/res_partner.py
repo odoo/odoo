@@ -1,6 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
+import re
+
+from lxml import etree
+
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
+
+# Matches the static registration of a field widget, i.e.
+# registry.category("fields").add("widget_name", ...).
+FIELD_WIDGET_REGISTRATION_RE = re.compile(
+    r"""category\(\s*["']fields["']\s*\)\s*\.\s*add\(\s*["']([\w.]+)["']"""
+)
 
 
 class ResPartner(models.Model):
@@ -13,6 +23,63 @@ class ResPartner(models.Model):
         groups="point_of_sale.group_pos_user",
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
+
+    @api.model
+    def get_views(self, views, options=None):
+        # The action context is not part of what the web client sends along
+        # with get_views (it only forwards lang and *_view_ref), so the POS
+        # partner editor is recognized through the action id the client always
+        # passes instead.
+        if options and options.get('action_id'):
+            action = self.env.ref(
+                'point_of_sale.res_partner_action_edit_pos', raise_if_not_found=False
+            )
+            if action and options['action_id'] == action.id:
+                self = self.with_context(from_pos_partner_editor=True)
+        return super(ResPartner, self).get_views(views, options)
+
+    @api.model
+    def get_view(self, view_id=None, view_type='form', **options):
+        result = super().get_view(view_id, view_type, **options)
+        if view_type == 'form' and self.env.context.get('from_pos_partner_editor'):
+            # The POS UI opens the regular partner form, but its asset bundle
+            # only ships a subset of the backend field widgets: every widget
+            # the form inheritance chain brings along that is not part of the
+            # bundle falls back to the default widget of its field type after
+            # logging a "Missing widget" console warning. Strip those widget
+            # attributes so the fallback happens silently. This runs after the
+            # view cache on purpose: the stripping is context-dependent, and it
+            # must also catch widgets other modules stamp dynamically in their
+            # own _get_view overrides (e.g. partner_autocomplete).
+            available = self._get_pos_available_field_widgets()
+            arch = etree.fromstring(result['arch'])
+            stripped = False
+            for node in arch.xpath('//field[@widget]'):
+                if node.get('widget') not in available:
+                    node.attrib.pop('widget')
+                    stripped = True
+            if stripped:
+                result['arch'] = etree.tostring(arch, encoding='unicode')
+        return result
+
+    @tools.ormcache()
+    def _get_pos_available_field_widgets(self):
+        """Return the names of the field widgets registered by the assets of
+        the POS bundle, by scanning its resolved file list for static
+        ``registry.category("fields").add(...)`` registrations."""
+        widgets = set()
+        for _path, full_path, *_ in self.env['ir.asset']._get_asset_paths(
+            'point_of_sale._assets_pos', {}
+        ):
+            if not full_path or not str(full_path).endswith('.js'):
+                continue
+            try:
+                with open(full_path, encoding='utf-8') as asset_file:
+                    content = asset_file.read()
+            except OSError:
+                continue
+            widgets.update(FIELD_WIDGET_REGISTRATION_RE.findall(content))
+        return frozenset(widgets)
 
     @api.model
     def _load_pos_data_domain(self, data):
