@@ -1116,6 +1116,7 @@ class PosSession(models.Model):
                 partner,
                 metadata['foreign_currency_id'].id,
                 metadata['amount_currency'],
+                move=move,
             )
 
         payment_lines = payment_lines.filtered(

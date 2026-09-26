@@ -429,21 +429,20 @@ class PosPaymentMethod(models.Model):
     ##############################################################
     #                 Accounting related methods                 #
     ##############################################################
-    def _create_payment_line(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None):
+    def _create_payment_line(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None, move=None):
         if self.type == 'cash':
             return self._create_cash_payment_line(session, amount, account, message, partner, foreign_currency, amount_currency)
         if self.type == 'bank':
-            return self._create_bank_payment_line(session, amount, account, message, partner, foreign_currency, amount_currency)
+            return self._create_bank_payment_line(session, amount, account, message, partner, foreign_currency, amount_currency, move=move)
 
         return self.env['account.move.line']
 
-    def _create_bank_payment_line(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None):
+    def _get_bank_payment_line_vals(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None, move=None):
         self.ensure_one()
         outstanding_account = self.outstanding_account_id
         pm_account = self.receivable_account_id
         session_account = session._get_receivable_account()
         destination_account = account or pm_account or session_account
-        rounding = session.currency_id.rounding
 
         # TODO: add a list of pos.order that was paid though this combined PM
         session_ref = _(
@@ -473,6 +472,14 @@ class PosPaymentMethod(models.Model):
                 'amount': abs(amount_currency),
             })
 
+        return payment_vals
+
+    def _create_bank_payment_line(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None, move=None):
+        self.ensure_one()
+        destination_account = account or self.receivable_account_id or session._get_receivable_account()
+        rounding = session.currency_id.rounding
+
+        payment_vals = self._get_bank_payment_line_vals(session, amount, account, message, partner, foreign_currency, amount_currency, move=move)
         account_payment = self.env['account.payment'].sudo().create(payment_vals)
 
         if float_compare(amount, 0, precision_rounding=rounding) < 0:
