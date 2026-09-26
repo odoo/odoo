@@ -51,6 +51,7 @@ class Access:
         should_migrate: bool = True,
         from_perm: Access | None = None,  # result of migration
         from_rule: Access | None = None,  # result of migration
+        active: bool = True,  # result of migration
     ):
         self.id = id
         self.name = name
@@ -62,6 +63,7 @@ class Access:
         self.should_migrate = should_migrate
         self.from_perm = from_perm
         self.from_rule = from_rule
+        self.active = active
 
     def replace(self, **kwargs):
         return self.__class__(**(self.__dict__ | kwargs))
@@ -210,12 +212,15 @@ def convert[A](permrules: list[A], group_defs: SetDefinitions) -> list[A]:
 
     # add global rules, and check for orphan rules
     for rule in rules:
-        if not rule.should_migrate:
+        if not rule.should_migrate or rule.id in migrated:
             continue
         if not rule.group:
             accesses.append(rule.replace(from_rule=rule))
             continue
-        if rule.id in migrated or FALSE_DOMAIN_RE.match(rule.domain):
+
+        accesses.append(rule.replace(from_rule=rule, active=False))
+
+        if FALSE_DOMAIN_RE.match(rule.domain):
             continue
         # orphan ir.rules with a non-falsy domain look like a bug; mention
         # alternative groups that provide access and could be implied
@@ -249,11 +254,12 @@ class FAccess(Access):
         should_migrate: bool = True,
         from_perm: Access | None = None,  # result of migration
         from_rule: Access | None = None,  # result of migration
+        active: bool = True,  # result of migration
         modified_by: str | None = None,   # the module that modifies the access
         module_deps: set[str] | None = None,  # self.module's dependencies
     ):
         super().__init__(
-            id, name, model, group, operations, domain, type, should_migrate, from_perm, from_rule,
+            id, name, model, group, operations, domain, type, should_migrate, from_perm, from_rule, active,
         )
         self.modified_by = modified_by
         self.module_deps = module_deps
@@ -357,6 +363,8 @@ class upgrade:
 
         # group and deduplicate accesses subsumed by other accesses
         for access in accesses:
+            if not access.active:
+                continue
             if (rule := access.from_rule) and (perm := access.from_perm) and not perm.active_when(rule):
                 # rule only applies when perm is present; move access to perm's module
                 access.module = perm.module
