@@ -409,6 +409,12 @@ class Website(models.CachedModel):
             lambda b: (b.res_id, b.checksum) not in mirrored,
         ).copy({'res_field': False})
 
+    def _website_xmlid(self, xmlid):
+        module_name = 'website'
+        if '.' in xmlid:
+            module_name, xmlid = xmlid.split('.', 1)
+        return f"{module_name}.{self.id}_{xmlid}"
+
     @api.model
     def _handle_create_write(self, vals):
         self._handle_favicon(vals)
@@ -1338,7 +1344,7 @@ class Website(models.CachedModel):
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         if not self.menu_id and (default_menu := self.env.ref('website.main_menu', raise_if_not_found=False)):
-            self.copy_menu_hierarchy(default_menu)
+            default_menu._copy_menu_hierarchy(self)
         home_menu = self.env['website.menu'].search([('website_id', '=', self.id), ('url', '=', '/')])
         home_menu.page_id = homepage_page
 
@@ -1374,22 +1380,6 @@ class Website(models.CachedModel):
         one is used."""
         match = re.search(r'--o-icon-font-family:\s*"([^"]*)"', self._get_scss_exports())
         return match[1] if match else ''
-
-    def copy_menu_hierarchy(self, top_menu):
-        def copy_menu(menu, t_menu):
-            new_menu = menu.copy({
-                'parent_id': t_menu.id,
-                'website_id': self.id,
-            })
-            for submenu in menu.child_id:
-                copy_menu(submenu, new_menu)
-        for website in self:
-            new_top_menu = top_menu.copy({
-                'name': _('Top Menu for Website %s', website.id),
-                'website_id': website.id,
-            })
-            for submenu in top_menu.child_id:
-                copy_menu(submenu, new_top_menu)
 
     @api.model
     def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None, sections_arch=None, page_title=None):
