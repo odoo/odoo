@@ -194,6 +194,49 @@ class PurchaseRequisitionLine(models.Model):
         string="Parent Section Line",
         compute='_compute_parent_id',
     )
+    received_qty = fields.Float(compute='_compute_received_qty', string="Received")
+    lead_time = fields.Integer(compute='_compute_lead_time', string="Lead Time", readonly=False)
+
+    @api.depends('product_id', 'requisition_id.vendor_id', 'uom_id', "supplier_info_ids.delay")
+    def _compute_lead_time(self):
+        for line in self:
+            if line.supplier_info_ids:
+                line.lead_time = line.supplier_info_ids[0].delay
+            elif line.product_id and line.requisition_id.vendor_id:
+                seller = line.product_id._select_seller(
+                    partner_id=line.requisition_id.vendor_id,
+                    uom_id=line.uom_id
+                )
+                line.lead_time = seller.delay if seller else 0
+            # 3. Fallback default
+            else:
+                line.lead_time = 0
+
+    @api.depends('requisition_id.purchase_ids.state', 'requisition_id.purchase_ids.order_line.qty_received')
+    def _compute_received_qty(self):
+        for line in self:
+            if line.display_type:
+                line.received_qty = 0.0
+                continue
+
+            total_received = 0.0
+            confirmed_pos = line.requisition_id.purchase_ids.filtered(
+                lambda po: po.state in ('purchase', 'done')
+            )
+
+            for po in confirmed_pos:
+                matching_lines = po.order_line.filtered(
+                    lambda po_line: po_line.product_id == line.product_id
+                )
+                for po_line in matching_lines:
+                    if po_line.uom_id != line.uom_id:
+                        total_received += po_line.uom_id._compute_quantity(
+                            po_line.qty_received, line.uom_id
+                        )
+                    else:
+                        total_received += po_line.qty_received
+
+            line.received_qty = total_received
 
     @api.constrains('display_type', 'product_id')
     def _check_line_type(self):
@@ -290,6 +333,11 @@ class PurchaseRequisitionLine(models.Model):
         if vals.get('display_type'):
             vals = dict(vals, **self._get_display_line_vals())
         res = super().write(vals)
+        if "lead_time" in vals:
+            for line in self:
+                if line.supplier_info_ids:
+                    line.supplier_info_ids.write({"delay": line.lead_time})
+
         if 'price_unit' not in vals:
             return res
         if vals['price_unit'] <= 0.0 and any(
@@ -327,6 +375,9 @@ class PurchaseRequisitionLine(models.Model):
                 'price': self.price_unit,
                 'currency_id': self.requisition_id.currency_id.id,
                 'purchase_requisition_line_id': self.id,
+                'date_start': self.requisition_id.date_start,
+                'date_end': self.requisition_id.date_end,
+                'delay': self.lead_time,
             })
 
     def _get_section_totals(self, totals_field):
