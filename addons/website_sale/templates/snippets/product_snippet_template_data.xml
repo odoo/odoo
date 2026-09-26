@@ -58,6 +58,7 @@
                             variant=product_variant if not data.get('hide_variants') else None,
                         )"
                     />
+                    <t t-set="ribbon_price_vals" t-value="data"/>
                     <t
                         t-if="not data.get('is_sample')"
                         t-call="website_sale.product_image_and_ribbon"
