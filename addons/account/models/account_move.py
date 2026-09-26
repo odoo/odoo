@@ -5085,6 +5085,21 @@ class AccountMove(models.Model):
         if self.invoice_line_ids:
             return self.env._("The invoice already contains lines.")
 
+    def _notify_attachment_not_imported(self, file_data, reason):
+        # EXTENDS 'account.document.import.mixin'
+
+        if reason == self._reason_cannot_decode_has_invoice_lines():
+            self.env.user._bus_send('simple_notification', {
+                'type': 'warning',
+                'message': self.env._(
+                    "Attachment %(filename)s not imported: %(reason)s",
+                    filename=file_data['name'],
+                    reason=reason,
+                ),
+            })
+            return
+        super()._notify_attachment_not_imported(file_data, reason)
+
     @api.model
     def _post_process_link_to_purchase_order(self, invoice):
         # To be implemented in modules needing to process the invoice after it was linked (or not) to a PO
