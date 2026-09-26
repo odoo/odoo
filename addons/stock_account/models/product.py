@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
-from datetime import date, datetime, time
+from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -183,12 +183,7 @@ class ProductProduct(models.Model):
         self.company_currency_id = company_id.currency_id
         products = self._with_valuation_context()
 
-        at_date = self.env.context.get('to_date')
-        original_value = at_date
-        at_date = fields.Datetime.to_datetime(at_date)
-        if (isinstance(original_value, date) and not isinstance(original_value, datetime)) or \
-            (isinstance(original_value, str) and len(original_value) == 10):
-            at_date = datetime.combine(at_date.date(), time.max)
+        at_date = self._to_date_upper_bound(self.env.context.get('to_date'))
 
         if at_date:
             products = products.with_context(at_date=at_date, to_date=at_date)
