@@ -345,7 +345,10 @@ test("manual tour with alternative trigger", async () => {
         `;
     }
     await mountWithCleanup(Root);
-    await getService("tour_service").startTour("tour_des_flandres_2", { mode: "manual" });
+    await getService("tour_service").startTour("tour_des_flandres_2", {
+        mode: "manual",
+        fromDB: true,
+    });
     await contains(".button2").click();
     await contains(".button4").click();
     await contains(".button5").click();
@@ -888,10 +891,10 @@ test("start a tour that no longer exist should clear tourstate", async () => {
             `;
     }
     await mountWithCleanup(Root);
-    await getService("tour_service").startTour("tour69", { mode: "manual" });
+    await getService("tour_service").startTour("tour69", { mode: "manual", fromDB: true });
     expect(browser.localStorage.getItem("current_tour")).toBe("tour69");
     registry.category("web_tour.tours").remove("tour69");
-    await getService("tour_service").startTour("tour69", { mode: "manual" });
+    await getService("tour_service").startTour("tour69", { mode: "manual", fromDB: true });
     expect(browser.localStorage.getItem("current_tour")).toBe(null);
 });
 
