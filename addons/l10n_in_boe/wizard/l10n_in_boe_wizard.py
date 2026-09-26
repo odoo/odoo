@@ -138,14 +138,6 @@ class L10n_InBoeWizard(models.TransientModel):
     def action_on_submit_boe(self):
         self.ensure_one()
 
-        if any(product.cost_method not in ('fifo', 'average') for product in self.line_ids.product_id):
-            raise UserError(
-                self.env._(
-                    "You cannot apply landed costs on the chosen transfers\n"
-                    "Landed costs can only be applied for products with FIFO or average costing method.",
-                ),
-            )
-
         custom_duty_product = self._get_l10n_in_find_or_create_custom_duty_product()
         custom_duty_account = custom_duty_product.product_tmpl_id.get_product_accounts().get('expense')
 
