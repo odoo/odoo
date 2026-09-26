@@ -1,3 +1,4 @@
+import { getInnerContent } from "@html_builder/../tests/helpers";
 import { Builder } from "@html_builder/builder";
 import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
@@ -27,6 +28,7 @@ const websiteServiceWithUserModelName = {
     },
     // Minimal context to avoid crashes.
     context: {},
+    currentWebsite: { id: 1, metadata: {} },
     websites: [
         {
             id: 1,
@@ -108,9 +110,12 @@ test("Add image as cover", async () => {
 
     await contains(".o-snippets-top-actions button[data-action='save']").click();
     expect.verifySteps(["save attachment", "save cover"]);
+    expect(":iframe .o_record_cover_container").not.toHaveAttribute(
+        "data-cover-properties-to-be-saved"
+    );
 });
 
-test("Cover container with data-res-model is savable but not editable", async () => {
+test("Cover container with data-res-model is neither savable nor editable", async () => {
     await setupWebsiteBuilder(`
         <div class="o_record_cover_container" data-res-model="blog.post" data-res-id="3">
             <div class="o_record_cover_image"/>
@@ -118,6 +123,41 @@ test("Cover container with data-res-model is savable but not editable", async ()
         </div>
     `);
 
-    expect(":iframe .o_record_cover_container").toHaveClass("o_savable");
-    expect(":iframe .o_record_cover_container").toHaveAttribute("contenteditable", "false");
+    expect(":iframe .o_record_cover_container").not.toHaveClass("o_savable");
+    expect(":iframe .o_record_cover_container").not.toHaveAttribute("contenteditable", "true");
+});
+
+test("No dropzone is created in a record cover", async () => {
+    // Covers are placed outside `#wrap`, like on a real record page, where
+    // `#wrap` carries no branding.
+    await setupWebsiteBuilder("", {
+        headerContent: `
+            <div class="o_record_cover_container" data-res-model="blog.post" data-res-id="3">
+                <div class="o_record_cover_image"/>
+                <div class="o_cover_title">
+                    <h1 data-oe-model="blog.post" data-oe-id="3" data-oe-field="name" data-oe-type="char">Title</h1>
+                </div>
+                <nav style="min-height: 40px;"><ol><li><a href="#">Home</a></li></ol></nav>
+                <div data-oe-model="blog.post" data-oe-id="3" data-oe-field="content" data-oe-type="html">
+                    <div><h1>Content</h1></div>
+                </div>
+            </div>`,
+        snippets: {
+            snippet_content: [
+                getInnerContent({
+                    name: "Quote",
+                    content: `<blockquote class="s_blockquote" data-snippet="s_blockquote" data-name="Quote">Quote</blockquote>`,
+                }),
+            ],
+        },
+    });
+
+    await contains(".o-snippets-menu #snippet_content .o_snippet_thumbnail").drag();
+    // Next to a field of the cover, and inside an element of the cover: both
+    // would be saved through the cover, which only writes back its
+    // `cover_properties`.
+    expect(":iframe .o_cover_title .oe_drop_zone").toHaveCount(0);
+    expect(":iframe .o_record_cover_container > nav .oe_drop_zone").toHaveCount(0);
+    // The html field is savable on its own and still accepts blocks.
+    expect(":iframe [data-oe-field='content'] .oe_drop_zone").toHaveCount(2);
 });
