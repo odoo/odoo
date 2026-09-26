@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from odoo.tests import Form, TransactionCase
 from odoo import Command
+from odoo.tools import format_date
 
 
 class TestReportsCommon(TransactionCase):
@@ -530,6 +531,79 @@ class TestReports(TestReportsCommon):
         self.assertEqual(line2['replenishment_filled'], True)
         self.assertEqual(line2['document_in']['id'], receipt2.id)
         self.assertEqual(line2['document_out']['id'], delivery.id)
+
+    def _forecast_lines_scenario(self):
+        """ Stock, a receipt and two deliveries, so the report shows reserved,
+        taken, replenished and unfilled lines for the same product. """
+        warehouse = self.stock_location.warehouse_id
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 3)
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 10,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        })
+        deliveries = self.env['stock.picking'].create([{
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.partner.property_stock_customer.id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': qty,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.partner.property_stock_customer.id,
+            })],
+        } for qty in (5, 4)])
+        (receipt + deliveries).action_confirm()
+        deliveries[0].action_assign()
+        report = self.env['stock.forecasted_product_product'].with_context(warehouse_id=warehouse.id)
+        wh_location_ids = self.env['stock.location'].search([('id', 'child_of', warehouse.view_location_id.id)]).ids
+        return report, wh_location_ids, warehouse.lot_stock_id
+
+    def test_report_forecast_lines_read_values(self):
+        """ The lines built for the client hold the same values as a read of
+        their records, whatever the path that produced them. """
+        report, wh_location_ids, stock_location = self._forecast_lines_scenario()
+        full_lines = report._get_report_lines(False, self.product.ids, wh_location_ids, stock_location, read=True)
+        record_lines = report._get_report_lines(False, self.product.ids, wh_location_ids, stock_location, read=False)
+        self.assertEqual(len(full_lines), len(record_lines))
+        self.assertTrue(any(line['move_in'] for line in record_lines))
+        self.assertTrue(any(line['move_out'] and line['move_out'].picking_id for line in record_lines))
+        move_fields = report._get_report_moves_fields()
+        for full_line, record_line in zip(full_lines, record_lines, strict=True):
+            self.assertEqual(full_line['uom_id'], record_line['uom_id'].read()[0])
+            for key, date_key in (('move_in', 'receipt_date'), ('move_out', 'delivery_date')):
+                move = record_line[key]
+                if not move:
+                    self.assertFalse(full_line[key])
+                    self.assertFalse(full_line[date_key])
+                    continue
+                expected = move.read(fields=move_fields)[0]
+                if key == 'move_out' and move.picking_id:
+                    expected['picking_id'] = move.picking_id.read(fields=['id', 'priority'])[0]
+                self.assertEqual(full_line[key], expected)
+                self.assertEqual(full_line[date_key], format_date(self.env, move.date))
+            for key in ('quantity', 'replenishment_filled', 'in_transit', 'is_late', 'document_in', 'document_out'):
+                self.assertEqual(full_line[key], record_line[key])
+
+    def test_report_forecast_availability_only_lines(self):
+        """ The availability compute gets the four keys it reads, with the same
+        values the full lines carry. """
+        report, wh_location_ids, stock_location = self._forecast_lines_scenario()
+        keys = ('quantity', 'move_out', 'move_in', 'replenishment_filled')
+        full_lines = report._get_report_lines(False, self.product.ids, wh_location_ids, stock_location, read=False)
+        light_lines = report.with_context(forecast_availability_only=True)._get_report_lines(
+            False, self.product.ids, wh_location_ids, stock_location, read=False)
+        self.assertTrue(all(set(line) == set(keys) for line in light_lines))
+        self.assertEqual(
+            [tuple(line[key] for key in keys) for line in light_lines],
+            [tuple(line[key] for key in keys) for line in full_lines],
+        )
 
     def test_report_forecast_2_replenishments_order(self):
         """ Creates a receipt then creates a delivery using half of the receipt quantity.
