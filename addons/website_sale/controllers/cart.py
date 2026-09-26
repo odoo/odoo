@@ -127,11 +127,16 @@ class Cart(PaymentPortal):
                 "The given product does not exist therefore it cannot be added to cart."
             ))
 
-        if product.type == 'combo':
+        def check_selected_combo_items(combo_product):
             combo_item_products = [
-                product for product in linked_products or [] if product.get('combo_item_id')
+                linked_product for linked_product in linked_products or []
+                if (
+                    linked_product.get('combo_item_id')
+                    and linked_product.get('parent_product_template_id')
+                    == combo_product.product_tmpl_id.id
+                )
             ]
-            combos_sudo = product.sudo().product_tmpl_id.combo_ids
+            combos_sudo = combo_product.sudo().product_tmpl_id.combo_ids
             selected_combos_sudo = request.env['product.combo.item'].sudo().browse([
                 combo_item['combo_item_id'] for combo_item in combo_item_products
             ]).combo_id
@@ -143,6 +148,9 @@ class Cart(PaymentPortal):
                     "The number of selected combo items must match the number of available"
                     " combo choices."
                 ))
+
+        if product.type == 'combo':
+            check_selected_combo_items(product)
 
         added_qty_per_line = {}
         values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
@@ -166,6 +174,8 @@ class Cart(PaymentPortal):
                 product_sudo = request.env['product.product'].sudo().browse(
                     product_data['product_id']
                 ).exists()
+                if product_sudo.type == 'combo':
+                    check_selected_combo_items(product_sudo)
                 if product_data['quantity'] and (
                     not product_sudo
                     or (
@@ -222,14 +232,31 @@ class Cart(PaymentPortal):
             warning = updated_line.shop_warning
             values['quantity'] = updated_line.product_uom_qty
 
+        optional_combo_lines = request.env['sale.order.line']
+        for linked_product_data in linked_products or []:
+            if not linked_product_data.get('combo_item_id'):
+                optional_line = request.env['sale.order.line'].browse(
+                    line_ids.get(linked_product_data['product_template_id'])
+                )
+                if optional_line.product_type == 'combo':
+                    optional_combo_lines |= optional_line
+                    if order_sudo._check_combo_quantities(optional_line):
+                        added_qty_per_line.update({
+                            line.id: optional_line.product_uom_qty
+                            for line in (optional_line + optional_line.linked_line_ids)
+                        })
+                        warning = optional_line.shop_warning
+
         # Recompute delivery prices & other cart stuff (loyalty rewards)
         order_sudo._verify_cart_after_update()
 
         # The validity of a combo product line can only be checked after creating all of its combo
-        # item lines.
+        # item lines. This applies to both the main product and any optional combo products.
         main_product_line = request.env['sale.order.line'].browse(values['line_id'])
         if main_product_line.product_type == 'combo':
             main_product_line._check_validity()
+        for optional_combo_line in optional_combo_lines:
+            optional_combo_line._check_validity()
 
         positive_added_qty_per_line = {
             line_id: qty for line_id, qty in added_qty_per_line.items() if qty > 0

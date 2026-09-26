@@ -52,6 +52,12 @@ async function applyProduct(record, product) {
         // and the value isn't expected to change anyway.
         update_values.product_uom_id = product.uom;
     }
+    if (product.product_type === "combo" && product.selectedComboItems?.length) {
+        update_values.selected_combo_items = JSON.stringify(
+            product.selectedComboItems.map(serializeComboItem)
+        );
+        update_values.virtual_id = product.virtual_id || uuid();
+    }
     await record._update(update_values);
 }
 
@@ -362,10 +368,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         await saleOrder.order_line._sort();
 
         if (hasOptionalProducts && !edit) {
-            const selectedComboProducts = selectedComboItems.map(
-                item => ({ name: item.product.display_name })
-            );
-            await this._openProductConfigurator(false, selectedComboProducts);
+            await this._openProductConfigurator(false, selectedComboItems);
         }
     }
 
