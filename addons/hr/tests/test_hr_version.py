@@ -661,7 +661,6 @@ class TestHrVersion(TestHrCommon):
             "is_future",
             "is_in_contract",
             "is_past",
-            "job_title",
             "last_modified_date",
             "last_modified_on",
             "last_modified_uid",

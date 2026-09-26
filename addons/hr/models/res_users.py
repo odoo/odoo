@@ -98,7 +98,7 @@ class ResUsers(models.Model):
         compute='_compute_company_employee', search='_search_company_employee', readonly=True)
     department_id = fields.Many2one(related='employee_id.department_id', string='Department')
 
-    job_title = fields.Char(**related_employee_field('job_title'), user_writeable=True)
+    job_id = fields.Many2one('hr.job', **related_employee_field('job_id'), user_writeable=True)
     work_phone = fields.Char(**related_employee_field('work_phone'), user_writeable=True)
     mobile_phone = fields.Char(**related_employee_field('mobile_phone'), user_writeable=True)
     work_email = fields.Char(**related_employee_field('work_email'), user_writeable=True)
