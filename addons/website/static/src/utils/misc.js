@@ -79,3 +79,13 @@ export function verifyHttpsUrl(link) {
     }
     return url;
 }
+
+export function deleteQueryParam(param, target = window, adaptBrowserUrl = false) {
+    const url = new URL(target.location.href);
+    url.searchParams.delete(param);
+    // TODO: maybe to use in the action service
+    target.history.replaceState(target.history.state, null, url);
+    if (adaptBrowserUrl) {
+        deleteQueryParam(param);
+    }
+}

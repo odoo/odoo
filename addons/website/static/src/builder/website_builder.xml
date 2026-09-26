@@ -11,9 +11,17 @@
                     <span class="d-inline-block mw-100 align-bottom"
                         data-text-truncate-tooltip="">Discard</span>
                 </button>
+                <t t-if="this.websiteService.isDraftPreview">
+                    <button type="button" t-on-click="this.deleteDraft" class="o-hb-btn btn btn-danger" data-action="remove" title="Delete draft">
+                        <i class="fa fa-trash fa-fw"/>
+                    </button>
+                    <button type="button" t-on-click="this.publishDraft" class="o-hb-btn btn btn-primary" data-action="publish" title="Publish draft">
+                        <i class="fa fa-cloud-upload fa-fw" />
+                    </button>
+                </t>
                 <button type="button" t-on-click="this.save"
                     class="o-hb-btn btn btn-success px-3" data-action="save"
-                    accesskey="s">
+                    accesskey="s" t-attf-class="{{ this.websiteService.isDraftPreview ? 'px-2' : 'px-3' }}">
                     <span class="d-inline-block mw-100 align-bottom"
                         data-text-truncate-tooltip="">Save</span>
                 </button>

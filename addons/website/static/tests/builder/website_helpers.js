@@ -51,6 +51,13 @@ class IrUiView extends models.Model {
     }
 }
 
+class ResConfigSettings extends models.Model {
+    _name = "res.config.settings";
+    is_draft_preview_enabled() {
+        return false;
+    }
+}
+
 export const setupWebsiteBuilderOeId = 539;
 
 export const invisibleEl =
@@ -61,7 +68,7 @@ export function defineWebsiteModels({ includeMailModels = true } = {}) {
     if (includeMailModels) {
         defineMailModels();
     }
-    defineModels([Website, IrUiView]);
+    defineModels([Website, IrUiView, ResConfigSettings]);
     onRpc("/website/get_current_website_id", () => 1);
     onRpc("/website/theme_customize_data_get", () => []);
     onRpc("website", "get_search_scopes", () => [
@@ -520,6 +527,7 @@ export const websiteServiceInTranslateMode = {
             metadata: {},
         },
     ],
+    getCanHaveDraftPreview: () => false,
 };
 
 export async function setupSidebarBuilderForTranslation(options) {

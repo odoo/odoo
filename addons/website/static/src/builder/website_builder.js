@@ -19,6 +19,8 @@ import {
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
 import { router } from "@web/core/browser/router";
+import { deleteQueryParam } from "@website/utils/misc";
+import { DraftActionDialog, getSkipDialogKey } from "../components/dialog/draft_dialog";
 
 // Other Plugins depend on those 2 plugins, but they are not used in translation
 // mode.
@@ -43,6 +45,7 @@ export class WebsiteBuilder extends Component {
         this.dialog = useService("dialog");
         this.websiteEditService =
             this.websiteService.websiteRootInstance?.env.services["website_edit"];
+        this.orm = useService("orm");
         useSetupAction({
             beforeUnload: (ev) => this.onBeforeUnload(ev),
             beforeLeave: () => this.onBeforeLeave(),
@@ -162,8 +165,11 @@ export class WebsiteBuilder extends Component {
      * @param {boolean} [options.reloadIframe=true] - If `true`, the iframe will
      *   be reloaded after the save operation; if `false`, the iframe remains as
      *   is.
+     * @param {boolean} [options.shouldClose=true] - If `true`, the builder will
+     *   be closed after the save operation; if `false`, the builder remains
+     *   open.
      */
-    async save({ reloadIframe = true }) {
+    async save({ reloadIframe = true, shouldClose = true }) {
         if (this.editor.shared.operation.hasTimedOut()) {
             const shouldContinue = await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
@@ -187,11 +193,81 @@ export class WebsiteBuilder extends Component {
         await this.editor.shared.operation.next(
             async () => {
                 await this.editor.shared.savePlugin.save();
-                this.props.builderProps.closeEditor(reloadIframe);
+                if (shouldClose) {
+                    this.props.builderProps.closeEditor();
+                }
             },
             { withLoadingEffect: false, canTimeout: false }
         );
         this.reloadAfterTimeout();
+    }
+
+    async publishDraft() {
+        const url = new URL(window.location.href);
+        const websiteId = this.websiteService.currentWebsiteId;
+
+        const localStorageKey = getSkipDialogKey(true, true);
+        let removeDialog = () => {};
+        if (!browser.localStorage.getItem(localStorageKey)) {
+            const shouldPublish = await new Promise((resolve) => {
+                removeDialog = this.dialog.add(DraftActionDialog, {
+                    pageOnly: true,
+                    isPublishing: true,
+                    confirm: () => resolve(true),
+                    discard: () => resolve(false),
+                });
+            });
+            removeDialog();
+            if (!shouldPublish) {
+                return;
+            }
+        }
+        await this.save({ shouldClose: false });
+        await this.editor.shared.operation.next(
+            async () => {
+                await this.orm.call("website.page", "publish_draft", [url.pathname, websiteId]);
+                deleteQueryParam("draft_preview", this.websiteService.contentWindow, true);
+                this.websiteService.isDraftPreview = false;
+                this.props.builderProps.closeEditor();
+            },
+            { withLoadingEffect: true, canTimeout: false }
+        );
+    }
+
+    async deleteDraft() {
+        const url = new URL(window.location.href);
+        const websiteId = this.websiteService.currentWebsiteId;
+
+        let removeDialog = () => {};
+        const localStorageKey = getSkipDialogKey(false, true);
+        if (!browser.localStorage.getItem(localStorageKey)) {
+            const shouldPublish = await new Promise((resolve) => {
+                removeDialog = this.dialog.add(DraftActionDialog, {
+                    pageOnly: true,
+                    isPublishing: false,
+                    confirm: () => resolve(true),
+                    discard: () => resolve(false),
+                });
+            });
+            removeDialog();
+            if (!shouldPublish) {
+                return;
+            }
+        }
+
+        await this.editor.shared.operation.next(
+            async () => {
+                await this.orm.call("website.page", "delete_draft", [
+                    url.pathname,
+                    websiteId,
+                    false,
+                ]);
+                deleteQueryParam("draft_preview", this.websiteService.contentWindow, true);
+                this.websiteService.isDraftPreview = false;
+                this.props.builderProps.closeEditor();
+            },
+            { withLoadingEffect: true, canTimeout: false }
+        );
     }
 
     get builderProps() {

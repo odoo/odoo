@@ -46,7 +46,13 @@ export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "domObserver", "savePlugin", "edit_interaction", "websiteBridge"];
+    static dependencies = [
+        "builderActions",
+        "domObserver",
+        "savePlugin",
+        "edit_interaction",
+        "websiteBridge",
+    ];
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
@@ -100,6 +106,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 enable: [...this.viewsToEnableOnSave],
                 disable: [...this.viewsToDisableOnSave],
                 reset_view_arch: false,
+                draft: this.services.website.isDraftPreview,
             });
         }
     }
@@ -232,11 +239,17 @@ export class CustomizeWebsitePlugin extends Plugin {
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
         });
-        await this.services.orm.call("website.assets", "make_scss_customization", [url, values]);
+        await this.services.orm.call("website.assets", "make_scss_customization", [
+            url,
+            values,
+            this.services.website.isDraftPreview,
+        ]);
     }
     reloadBundles = debounce(this._reloadBundles.bind(this), 0);
     async _reloadBundles() {
-        const bundles = await rpc("/website/theme_customize_bundle_reload");
+        const bundles = await rpc("/website/theme_customize_bundle_reload", {
+            draft: this.services.website.isDraftPreview,
+        });
         const documents = [this.document, this.config.extraPreviewDocument].filter(Boolean);
         const allLinksIframeEls = [];
         const proms = [];
@@ -316,6 +329,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     rpc("/website/theme_customize_data_get", {
                         keys,
                         is_view_data: isViewData,
+                        draft: this.services.website.isDraftPreview,
                     }).then((r) => {
                         if (!this.isDestroyed) {
                             for (const key of keys) {
@@ -365,7 +379,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 "ir.ui.view",
                 "render_public_asset",
                 [`${key}`, {}],
-                { context: this.dependencies.websiteBridge.getWebsiteContextLang() },
+                { context: this.dependencies.websiteBridge.getWebsiteContextLang() }
             );
         }
         return this.getTemplateKey(key);
@@ -819,6 +833,7 @@ export class WebsiteConfigAction extends BuilderAction {
                     enable: [...aggregatedToEnable],
                     disable: [...aggregatedToDisable],
                     reset_view_arch: shouldReset,
+                    draft: this.services.website.isDraftPreview,
                 })
                     .then(() => Promise.all(defs.map((def) => def.resolve())))
                     .catch(() => Promise.all(defs.map((def) => def.reject())));
