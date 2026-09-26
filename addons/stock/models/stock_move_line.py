@@ -10,6 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import OrderedSet, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.misc import clean_context
 
 
 class StockMoveLine(models.Model):
@@ -1129,6 +1130,8 @@ class StockMoveLine(models.Model):
         return package
 
     def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False):
+        if self.env.context.get('sml_specific_default'):
+            self = self.with_context(clean_context(self.env.context))  # noqa: PLW0642
         move_lines = self
         if self.env.context.get('all_move_line_ids'):
             move_lines = self.env['stock.move.line'].browse(self.env.context['all_move_line_ids'])
