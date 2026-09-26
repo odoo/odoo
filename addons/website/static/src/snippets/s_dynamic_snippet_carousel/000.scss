@@ -2,6 +2,24 @@
     .carousel {
         --o-carousel-item-padding-v: #{map-get($spacers, 3)};
         --o-carousel-item-width-percentage: calc(100% / var(--o-carousel-chunk-size) - (var(--o-carousel-gap, var(--gutter-x) * .5) * (var(--o-carousel-chunk-size) - 1) / var(--o-carousel-chunk-size)));
+
+        // Add a gap between slides during the carousel transition to match the
+        // gutter between items within slides.
+        --o-carousel-transition-gap: #{map-get($spacers, 3)};
+
+        &.o_carousel_multi_items {
+            @include media-breakpoint-up(md) {
+                --o-carousel-transition-gap: 0px;
+            }
+        }
+        .carousel-item-next:not(.carousel-item-start),
+        .active.carousel-item-end {
+            transform: translateX(calc(100% + var(--o-carousel-transition-gap)));
+        }
+        .carousel-item-prev:not(.carousel-item-end),
+        .active.carousel-item-start {
+            transform: translateX(calc(-100% - var(--o-carousel-transition-gap)));
+        }
     }
 
     .s_dynamic_snippet_arrows {
