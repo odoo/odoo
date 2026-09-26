@@ -456,6 +456,23 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(return_move.value, 18)
         self.assertEqual(self.product.total_value, -9)
 
+    def test_return_lot_valuated_with_different_costs(self):
+        self.product.categ_id = self.category_fifo_auto
+        self._make_in_move(self.product, 15, 100, lot_ids=[self.lot1])
+        self._make_in_move(self.product, 5, 200, lot_ids=[self.lot2])
+
+        move = self._make_out_move(
+            self.product, 20, create_picking=True,
+            lot_ids=[self.lot1, self.lot1, self.lot1, self.lot2],
+        )
+        self.assertEqual(move.value, 2500)
+
+        return_move = self._make_return(move, 10)
+        self.assertEqual(return_move.move_line_ids.lot_id, self.lot1)
+        self.assertEqual(return_move.value, 1000)
+        self.assertEqual(self.lot1.standard_price, 100)
+        self.assertEqual(self.lot2.standard_price, 200)
+
     def test_lot_inventory(self):
         """Test setting quantity for a new lot via inventory adjustment fallback on the product cost
         The product is set to avco cost """
