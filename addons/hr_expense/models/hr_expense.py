@@ -1560,18 +1560,24 @@ class HrExpense(models.Model):
         # Counting the expenses to display in the dashboard:
         # - To Submit: contains the expenses paid either by the employee or by the company, and that are draft or reported
         # - Waiting approval: contains expenses paid by the employee or paid by the company, and that have been submitted but still need to be approved/refused
-        # - To be reimbursed: contains ONLY expenses paid by the employee that are approved, the payment has not yet been made
+        # - To be reimbursed: contains ONLY expenses paid by the employee that are approved or posted, the payment has not yet been made
         base_domain = [
             ('employee_id', 'child_of', self.env.user.employee_ids.ids),
             '|', ('state', 'in', ('draft', 'submitted')),
+<<<<<<< 217647159d25f006ad37a57375dc15f62e952dc8
             '&', ('payment_mode', '=', 'own_account'), ('state', '=', 'approved')
+||||||| 0164b2ba0eabfba25b563c130b4ed10c0848342a
+            '&', ('payment_mode', '!=', 'company_account'), ('state', '=', 'approved')
+=======
+            '&', ('payment_mode', '!=', 'company_account'), ('state', 'in', {'approved', 'posted'})
+>>>>>>> a3569b94d31cf5c4309e7cbcc37cc7f6cd6fcde4
         ]
         if domain:
             base_domain = Domain.AND([base_domain, domain])
 
         fetched_expenses = self._read_group(base_domain, ['state'], ['total_amount:sum'])
         for state, total_amount_sum in fetched_expenses:
-            expense_state[state]['amount'] += total_amount_sum
+            expense_state['approved' if state == 'posted' else state]['amount'] += total_amount_sum
         return expense_state
 
     def action_approve_duplicates(self):
