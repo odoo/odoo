@@ -14,6 +14,13 @@ class TestPortalAdditionalIdentifiers(BaseCommon, HttpCase):
         super().setUpClass()
         cls.country_fr = cls.quick_ref('base.fr')
         cls.country_be = cls.quick_ref('base.be')
+
+        # additional identifiers are opt-in, whitelist FR_CN for the test
+        cls.classPatch(
+            cls.env.registry['res.partner'],
+            '_get_portal_additional_identifiers_whitelist',
+            lambda self, company=None, country=None: ['FR_CN'],
+        )
         cls.portal_user = cls._create_new_portal_user()
         cls.partner = cls.portal_user.partner_id
         cls.partner.country_id = cls.country_fr

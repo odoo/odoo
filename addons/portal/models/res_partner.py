@@ -22,6 +22,14 @@ class ResPartner(models.Model):
         self.ensure_one()
         return True
 
+    @api.model
+    def _get_portal_additional_identifiers_whitelist(self, company=None, country=None):
+        """ Returns the list of additional identifier keys that should be
+        exposed on the portal and eCommerce checkout address forms.
+        TO BE OVERRIDDEN
+        """
+        return []
+
     def _has_confirmed_documents(self):
         """Return whether customer has any confirm documents or not."""
         self.ensure_one()
