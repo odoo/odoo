@@ -430,13 +430,15 @@ class StockMove(models.Model):
                 descriptions.append(return_data['description'])
 
         # 4. standard_price
+        used_std_price = False
         if remaining_qty:
             std_price_data = self._get_value_from_std_price(remaining_qty, forced_std_price, at_date)
             value += std_price_data['value']
             descriptions.append(std_price_data.get('description'))
+            used_std_price = True
 
         if add_extra_value:
-            extra_data = self._get_value_from_extra(valued_qty, at_date)
+            extra_data = self._get_value_from_extra(valued_qty, at_date, from_std_price=used_std_price)
             value += extra_data['value']
             if extra_data.get('description'):
                 descriptions.append(extra_data['description'])
@@ -516,7 +518,7 @@ class StockMove(models.Model):
             ),
         }
 
-    def _get_value_from_extra(self, quantity, at_date=None):
+    def _get_value_from_extra(self, quantity, at_date=None, from_std_price=False):
         return dict(VALUATION_DICT)
 
     def _get_move_directions(self):

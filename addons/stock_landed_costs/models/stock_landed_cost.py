@@ -53,6 +53,7 @@ class StockLandedCost(models.Model):
         store=True, tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
+        ('in_progress', 'In Progress'),
         ('done', 'Posted'),
         ('cancel', 'Cancelled')], 'State', default='draft',
         copy=False, readonly=True, tracking=True)
@@ -142,7 +143,9 @@ class StockLandedCost(models.Model):
             #             lot.sudo().with_context(disable_auto_svl=True).standard_price += value / lot.quantity_svl
 
             # We will only create the accounting entry when there are defined lines (the lines will be those linked to products of real_time valuation category).
-            cost_vals = {'state': 'done'}
+            # `in_progress` marks the cost being revalued so `_get_value_from_extra` can tell it
+            # apart from already-validated costs already embedded in the standard price.
+            cost_vals = {'state': 'in_progress'}
             if move_vals.get("line_ids"):
                 move = move.create(move_vals)
                 cost_vals.update({'account_move_id': move.id})
@@ -150,6 +153,7 @@ class StockLandedCost(models.Model):
             if cost.account_move_id:
                 move._post()
             cost.valuation_adjustment_lines.move_id._set_value()
+            cost.state = 'done'
         return True
 
     def get_valuation_lines(self):
