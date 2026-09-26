@@ -137,7 +137,25 @@ export class PosData {
         return await this.indexedDB.delete(model, ids);
     }
 
+    requestPersistentStorage() {
+        // Ask the browser to exempt this origin's storage (incl. indexedDB) from
+        // automatic eviction under disk pressure. Best-effort: the browser may
+        // deny (or prompt, on Firefox), so don't await it in the startup path.
+        if (navigator.storage?.persist) {
+            navigator.storage.persisted().then(async (persisted) => {
+                const granted = persisted || (await navigator.storage.persist());
+                logPosMessage(
+                    "DataService",
+                    "requestPersistentStorage",
+                    `Persistent storage ${granted ? "granted" : "denied by the browser"}`,
+                    CONSOLE_COLOR
+                );
+            });
+        }
+    }
+
     async initIndexedDB(relations) {
+        this.requestPersistentStorage();
         // This method initializes indexedDB with all models loaded into the PoS. The default key is ID.
         // But some models have another key configured in data_service_options.js. These models are
         // generally those that can be created in the frontend.
