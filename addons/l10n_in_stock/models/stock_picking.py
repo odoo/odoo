@@ -31,3 +31,10 @@ class StockPicking(models.Model):
         returns fiscal position from order
         """
         pass
+
+    def _l10n_in_related_account_moves(self):
+        """
+        To be inherited by `l10n_in_*_stock` will be ideal to use it for `l10n_in_ewaybill_stock`
+        returns related account.move if any exists
+        """
+        pass

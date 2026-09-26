@@ -16,3 +16,8 @@ class AccountMove(models.Model):
             if len(company_shipping_id) == 1:
                 return company_shipping_id
         return res
+
+    def _l10n_in_related_pickings(self):
+        if purchase_lines := self.invoice_line_ids.purchase_line_id:
+            return purchase_lines.move_ids.picking_id
+        return super()._l10n_in_related_pickings()
