@@ -296,10 +296,15 @@ export class PosData extends Reactive {
 
         this.models.loadData(data, this.modelToLoad);
         const dbData = await this.loadIndexedDBData();
+        // Orders finalized locally but not yet synced still exist as draft on the server:
+        // the local version must not be overwritten by the server one.
+        const unsyncedOrderIds = new Set(
+            this.models["pos.order"].filter((o) => o.isUnsyncedPaid).map((o) => o.id)
+        );
         this.models.loadData({
-            "pos.order": order,
-            "pos.order.line": orderlines,
-            "pos.payment": payments,
+            "pos.order": order.filter((o) => !unsyncedOrderIds.has(o.id)),
+            "pos.order.line": orderlines.filter((l) => !unsyncedOrderIds.has(l.order_id)),
+            "pos.payment": payments.filter((p) => !unsyncedOrderIds.has(p.pos_order_id)),
         });
         this.loadedIndexedDBProducts = dbData ? dbData["product.product"] : [];
         this.network.loading = false;

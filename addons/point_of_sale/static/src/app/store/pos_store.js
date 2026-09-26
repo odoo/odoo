@@ -162,6 +162,9 @@ export class PosStore extends Reactive {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
         });
+        // The server can become reachable again without any browser "online" event
+        // (e.g. server restart, proxy or ISP outage): flush the pending orders as well.
+        this.data.bus.addEventListener("reconnect", () => this.syncAllOrdersDebounced());
 
         initLNA(this.notification);
         this.canUserCreateProduct = await user.checkAccessRight("product.product", "create");
@@ -1306,6 +1309,7 @@ export class PosStore extends Reactive {
 
                 await this.postSyncAllOrders(newData["pos.order"]);
                 this.removePendingOrder(order);
+                order.uiState.finalizedNotSynced = false;
                 syncedOrders.push(...newData["pos.order"]);
                 order.clearCommands();
                 newSession = newSession || data["pos.session"].length > 0;
