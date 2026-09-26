@@ -969,6 +969,11 @@ export async function toInline(element, cssRules) {
         }
     }
 
+    // Fix mx-auto, ms-auto image display.
+    for (const centeredImage of element.querySelectorAll("img.mx-auto, img.ms-auto")) {
+        centeredImage.style.setProperty("display", "block");
+    }
+
     // Remove contenteditable attributes
     [element, ...element.querySelectorAll("[contenteditable]")].forEach((node) =>
         node.removeAttribute("contenteditable")
