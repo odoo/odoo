@@ -121,6 +121,27 @@
         </t>
         <t t-set="x_icon" t-value="website.image_url(website, 'favicon')"/>
     </xpath>
+
+    <xpath expr="//head/*[last()]" position="after">
+        <t t-set="record" t-value="seo_object or main_object"/>
+        <t t-if="record and 'website_lcp_image_desktop' in record._fields">
+            <link
+                t-if="record.website_lcp_image_mobile"
+                rel="preload"
+                as="image"
+                fetchpriority="high"
+                t-att-href="website.get_cdn_url(record.website_lcp_image_mobile) if website.cdn_activated else record.website_lcp_image_mobile"
+                media="(max-width: 991.98px)"/>
+            <link
+                t-if="record.website_lcp_image_desktop"
+                rel="preload"
+                as="image"
+                fetchpriority="high"
+                t-att-href="website.get_cdn_url(record.website_lcp_image_desktop) if website.cdn_activated else record.website_lcp_image_desktop"
+                media="(min-width: 992px)"/>
+        </t>
+    </xpath>
+
     <xpath expr="//head/meta[last()]" position="after">
         <meta name="generator" content="Odoo"/>
         <t t-set="website_meta" t-value="seo_object and seo_object.sudo().get_website_meta() or {}"/>

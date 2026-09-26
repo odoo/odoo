@@ -28,6 +28,7 @@ import { Registry, registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
+import { LcpMarkingPlugin } from "@website/builder/plugins/lcp_marking_plugin";
 import { WebsiteBridgePlugin } from "@website/builder/plugins/website_bridge_plugin";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
@@ -39,6 +40,7 @@ import { session } from "@web/session";
 import { getTranslatedElements } from "./translated_elements_getter.hoot";
 import { BackgroundShapeOptionPlugin } from "@html_builder/plugins/background_option/background_shape_option_plugin";
 import { _t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
+const originalElectImageUrl = LcpMarkingPlugin.prototype.electImageUrl;
 
 class Website extends models.Model {
     _name = "website";
@@ -294,6 +296,14 @@ export async function setupWebsiteBuilder(
             );
         },
     });
+
+    if (LcpMarkingPlugin.prototype.electImageUrl === originalElectImageUrl) {
+        patchWithCleanup(LcpMarkingPlugin.prototype, {
+            async electImageUrl() {
+                return undefined;
+            },
+        });
+    }
 
     patchWithCleanup(WebsiteBridgePlugin.prototype, {
         getSession() {
