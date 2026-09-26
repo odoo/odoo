@@ -14,14 +14,14 @@
 # Katja Deržič, 2024
 # Grega Vavtar <grega@hbs.si>, 2024
 # Aleš Pipan, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-08-06 23:15+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-09-21 14:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-17/"
 "resource/sl/>\n"
 "Language: sl\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: resource
 #. odoo-python
@@ -88,7 +88,7 @@ msgstr ""
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Attendances can't overlap."
-msgstr ""
+msgstr "Prisotnosti se ne smejo prekrivati."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
@@ -100,6 +100,8 @@ msgstr "Povprečna ura na dan"
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
 msgstr ""
+"Povprečno število ur na dan, ki naj bi jih vir opravil v skladu s tem "
+"koledarjem."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
@@ -226,7 +228,7 @@ msgstr "Prva"
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "First week"
-msgstr ""
+msgstr "Prvi teden"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -238,14 +240,14 @@ msgstr "Petek"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Friday Afternoon"
-msgstr ""
+msgstr "Petek popoldne"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Friday Lunch"
-msgstr ""
+msgstr "Petkovo kosilo"
 
 #. module: resource
 #. odoo-python
@@ -257,12 +259,12 @@ msgstr "Petek jutranji"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
-msgstr ""
+msgstr "Določa zaporedje te vrstice pri prikazu koledarja virov."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
 msgid "Global Time Off"
-msgstr ""
+msgstr "Globalne odsotnosti"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -295,6 +297,8 @@ msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
 msgstr ""
+"Če je prazno, gre za splošno odsotnost za podjetje. Če je določen vir, je "
+"odsotnost samo za ta vir"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -311,6 +315,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
+"Če je aktivno polje nastavljeno na »false«, lahko skrijete delovni čas, ne "
+"da bi ga odstranili."
 
 #. module: resource
 #. odoo-python
@@ -318,7 +324,7 @@ msgstr ""
 #, python-format
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
-msgstr ""
+msgstr "V koledarju z dvotedenskim načinom morajo biti vsa obdobja v razdelkih."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -352,14 +358,14 @@ msgstr "Ponedeljek"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Monday Afternoon"
-msgstr ""
+msgstr "Ponedeljek popoldne"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Monday Lunch"
-msgstr ""
+msgstr "Ponedeljkovo kosilo"
 
 #. module: resource
 #. odoo-python
@@ -453,7 +459,7 @@ msgstr "Viri"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr ""
+msgstr "Prosti čas virov"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -480,7 +486,7 @@ msgstr "Iskanje vira"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Time Off"
-msgstr ""
+msgstr "Iskanje odsotnosti v delovnem obdobju"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -497,7 +503,7 @@ msgstr "Sekunda"
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "Second week"
-msgstr ""
+msgstr "Drugi teden"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
@@ -538,7 +544,7 @@ msgstr "Začetni datum"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Time Off"
-msgstr ""
+msgstr "Začetni datum odsotnosti"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -558,7 +564,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Tehnično polje za namene UX."
 
 #. module: resource
 #. odoo-python
@@ -572,7 +578,7 @@ msgstr ""
 #: code:addons/resource/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
-msgstr ""
+msgstr "Začetni datum odsotnosti mora biti pred končnim datumom."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -608,14 +614,14 @@ msgstr "Četrtek"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Thursday Afternoon"
-msgstr ""
+msgstr "Četrtek popoldne"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Thursday Lunch"
-msgstr ""
+msgstr "Četrtkovo kosilo"
 
 #. module: resource
 #. odoo-python
@@ -634,7 +640,7 @@ msgstr "Odsotnost"
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Time Off Detail"
-msgstr ""
+msgstr "Podrobnosti odsotnosti"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -668,14 +674,14 @@ msgstr "Torek"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Tuesday Afternoon"
-msgstr ""
+msgstr "Torek popoldne"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Tuesday Lunch"
-msgstr ""
+msgstr "Torkovo kosilo"
 
 #. module: resource
 #. odoo-python
@@ -707,14 +713,14 @@ msgstr "Sreda"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Wednesday Afternoon"
-msgstr ""
+msgstr "Sreda popoldne"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Wednesday Lunch"
-msgstr ""
+msgstr "Sredino kosilo"
 
 #. module: resource
 #. odoo-python
@@ -733,6 +739,8 @@ msgstr "Številka tedna"
 msgid ""
 "Whether this should be computed as a time off or as work time (eg: formation)"
 msgstr ""
+"Ali naj se to izračuna kot odsotnost ali kot delovni čas (npr.: "
+"izobraževanje)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -787,21 +795,21 @@ msgstr "Delovni čas"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "You can't delete section between weeks."
-msgstr ""
+msgstr "Odseka med tedni ne morete izbrisati."
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "first"
-msgstr ""
+msgstr "Prva"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "other week"
-msgstr ""
+msgstr "drug teden"
 
 #. module: resource
 #. odoo-python

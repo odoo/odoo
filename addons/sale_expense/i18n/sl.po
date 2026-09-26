@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_expense
+# * sale_expense
 #
 # Translators:
 # Jasmina Macur <jasmina@hbs.si>, 2023
@@ -9,14 +9,14 @@
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
 # Martin Trigaux, 2024
 # Aleš Pipan, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-08-03 21:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-09-25 14:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-17/"
 "sale_expense/sl/>\n"
 "Language: sl\n"
@@ -25,12 +25,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
 msgid "# of Expenses"
-msgstr ""
+msgstr "Št. stroškov"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
@@ -42,7 +42,7 @@ msgstr "Lahko se ponovno zaračuna"
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
 msgid "Customer to Reinvoice"
-msgstr ""
+msgstr "Stranka za ponovno fakturiranje"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -53,7 +53,7 @@ msgstr "Strošek"
 #: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
 #: model:ir.model.fields,field_description:sale_expense.field_product_template__expense_policy_tooltip
 msgid "Expense Policy Tooltip"
-msgstr ""
+msgstr "Namig pravilnika o stroških"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_sheet
@@ -77,7 +77,7 @@ msgstr "Stroški"
 #: code:addons/sale_expense/models/product_template.py:0
 #, python-format
 msgid "Expenses of this category may not be added to a Sales Order."
-msgstr ""
+msgstr "Stroškov te kategorije ni mogoče dodati prodajnemu naročilu."
 
 #. module: sale_expense
 #. odoo-python
@@ -86,6 +86,8 @@ msgstr ""
 msgid ""
 "Expenses will be added to the Sales Order at their actual cost when posted."
 msgstr ""
+"Stroški bodo ob knjiženju dodani prodajnemu naročilu po svojih dejanskih "
+"stroških."
 
 #. module: sale_expense
 #. odoo-python
@@ -95,6 +97,8 @@ msgid ""
 "Expenses will be added to the Sales Order at their sales price (product "
 "price, pricelist, etc.) when posted."
 msgstr ""
+"Stroški bodo ob knjiženju dodani prodajnemu naročilu po svoji prodajni ceni "
+"(ceni izdelka, ceniku itd.)."
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
@@ -102,6 +106,8 @@ msgid ""
 "If the category has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
+"Če ima kategorija politiko stroškov, bodo stroški ponovno zaračunani na tem "
+"prodajnem naročilu"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
