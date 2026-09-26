@@ -1,7 +1,7 @@
 from stdnum.fr import siret
 
 from odoo import models, Command
-from odoo.tools import formatLang, frozendict, html2plaintext
+from odoo.tools import float_compare, formatLang, frozendict, html2plaintext
 from odoo.tools.misc import NON_BREAKING_SPACE
 from datetime import datetime
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
@@ -1183,6 +1183,7 @@ class AccountEdiCii(models.AbstractModel):
         currency = collected_values['currency_values']['currency']
 
         line_total_amount_str = line_tree.findtext('.//{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount')
+        gross_price_amount_str = line_tree.findtext('.//{*}GrossPriceProductTradePrice/{*}ChargeAmount')
         price_amount_str = line_tree.findtext('.//{*}NetPriceProductTradePrice/{*}ChargeAmount')
         billed_quantity_str = line_tree.findtext('.//{*}BilledQuantity')
         base_quantity_str = (
@@ -1191,6 +1192,7 @@ class AccountEdiCii(models.AbstractModel):
         )
 
         line_total_amount = line_total_amount_str and float(line_total_amount_str) * file_document_sign
+        gross_price_amount = gross_price_amount_str and float(gross_price_amount_str)
         price_amount = price_amount_str and float(price_amount_str)
         billed_quantity = billed_quantity_str and float(billed_quantity_str) * file_document_sign
         base_quantity = base_quantity_str and float(base_quantity_str)
@@ -1272,7 +1274,14 @@ class AccountEdiCii(models.AbstractModel):
             # quantity = 6.0
             # discount_amount = 300.0
             if not currency.is_zero(price_subtotal):
-                price_unit = round((price_subtotal + price_discount_amount) / price_quantity, 2)
+                reconstructed_gross_price = price_subtotal + price_discount_amount
+                if (
+                    gross_price_amount is not None
+                    and float_compare(gross_price_amount, reconstructed_gross_price, precision_digits=6) == 0
+                ):
+                    price_unit = gross_price_amount / price_quantity
+                else:
+                    price_unit = round(reconstructed_gross_price / price_quantity, 2)
                 discount_amount += price_discount_amount * quantity / price_quantity
         else:
             quantity = 0.0
@@ -1290,6 +1299,15 @@ class AccountEdiCii(models.AbstractModel):
 
         # Turn discount_amount to a percentage
         gross_subtotal = price_unit * quantity
+        line_subtotal = gross_subtotal - discount_amount
+        # Line allowances/charges and their total can be rounded independently.
+        # Prefer the explicit line total only for a small rounding gap.
+        if (
+            line_total_amount is not None
+            and (total_allowances or total_charges)
+            and currency.compare_amounts(abs(line_subtotal - line_total_amount), 0.03) <= 0
+        ):
+            discount_amount = gross_subtotal - line_total_amount
         discount = (discount_amount * 100 / gross_subtotal) if gross_subtotal else 0.0
 
         to_write = collected_values['to_write']
