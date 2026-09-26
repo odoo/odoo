@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.AvatarCard">
-        <div class="o_avatar_card card">
+        <PopoverCard class="'o_avatar_card'">
             <div class="card-body bg-inherit">
                 <div class="d-flex align-items-start gap-2 bg-inherit">
                     <span t-if="this.displayAvatar" class="o_avatar pt-1 position-relative o_card_avatar bg-inherit">
@@ -29,6 +29,6 @@
                 </div>
             </div>
             <div t-if="this.hasFooter" class="o_avatar_card_details card-footer d-flex flex-column gap-3 bg-100"/>
-        </div>
+        </PopoverCard>
     </t>
 </templates>

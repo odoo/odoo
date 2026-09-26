@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityAssignPopover">
-        <div class="o-mail-ActivityAssignPopover">
-            <h6 t-if="this.hasHeader" class="p-2 fw-bolder bg-200 border-bottom">Assign</h6>
-            <div class="py-2 px-3">
+        <PopoverCard class="'o-mail-ActivityAssignPopover'">
+            <t t-if="this.hasHeader" t-set-slot="header">
+                <h6>Assign</h6>
+            </t>
+            <div class="card-body bg-inherit">
                 <div class="d-flex align-items-center">
                     <i class="oi oi-filled me-2" data-icon="person" role="img" aria-label="User"/>
                     <img t-if="this.userId()"
@@ -41,6 +43,6 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </PopoverCard>
     </t>
 </templates>

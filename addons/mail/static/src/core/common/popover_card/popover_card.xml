@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.PopoverCard">
+        <div t-attf-class="o_popover_card card {{this.props.class || ''}}">
+            <div t-if="this.props.slots.header" class="card-header bg-inherit pb-0">
+                <t t-slot="header"/>
+            </div>
+            <t t-slot="default"/>
+        </div>
+    </t>
+</templates>
