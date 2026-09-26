@@ -91,6 +91,7 @@ class TestPayrollFieldsAccess(TransactionCase):
             'is_non_resident',
             'structure_id',
             'attendance_based',
+            'external_code'
         ]
         if self.env['ir.module.module']._get('hr_payroll').state != 'installed':
             # payroll is not installed, payroll-specific fields are not there
