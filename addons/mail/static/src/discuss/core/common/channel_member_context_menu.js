@@ -1,6 +1,5 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
-import { propSignal } from "@mail/utils/common/hooks";
 
 import { Component, t, useProps } from "@odoo/owl";
 
@@ -16,11 +15,11 @@ export class ChannelMemberContextMenu extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = useProps({
+            /** Anchor element, owned by the parent and bound here with `t-ref`. */
+            anchorRef: t.signal(t.instanceOf(HTMLElement), { settable: true }),
             dropdownState: t.instanceOf(DropdownState),
             member: t.instanceOf(this.store["discuss.channel.member"]),
         });
-        /** Anchor element, owned by the parent and bound here with `t-ref`. */
-        this.anchorRef = propSignal("anchorRef", t.instanceOf(HTMLElement));
         this.memberActions = useChannelMemberActions({ member: () => this.props.member });
     }
 }
