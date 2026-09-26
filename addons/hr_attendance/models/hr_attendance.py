@@ -663,6 +663,13 @@ class HrAttendance(models.Model):
     def _get_time_rule_break_hours(self):
         return self.break_duration or 0.0
 
+    def _get_time_rule_split_break_vals(self, src_span_secs, src_break_h, iv_start_utc, iv_end_utc):
+        # prorate the source's break proportionally to the sub-interval's share of the full span
+        if not src_break_h or src_span_secs <= 0:
+            return {}
+        iv_secs = (iv_end_utc - iv_start_utc).total_seconds()
+        return {'break_duration': iv_secs / src_span_secs * src_break_h}
+
     def _get_write_source_extra_source_fields(self):
         return {'work_entry_type_id', 'state', 'break_duration'}
 

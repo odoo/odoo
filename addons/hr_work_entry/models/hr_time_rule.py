@@ -675,6 +675,12 @@ class HrTimeRule(models.Model):
                 src_start_local = _from_utc(source[start_field], tz)
                 src_stop_local = _from_utc(source[source._time_rule_span_end_field], tz)
                 source_wet_id = source.work_entry_type_id.id
+                # capture before any write so proration uses the original span/break
+                src_break_h = source._get_time_rule_break_hours()
+                src_span_secs = (
+                    (source[source._time_rule_span_end_field] - source[start_field]).total_seconds()
+                    if source[source._time_rule_span_end_field] and source[start_field] else 0
+                )
 
                 out_union = Intervals([(s, e, dummy) for s, e, *_ in output_intervals], keep_distinct=True)
                 src_iv = (
@@ -686,11 +692,18 @@ class HrTimeRule(models.Model):
 
                 min_out_start_utc = min(_to_utc(iv.start, tz) for iv in output_intervals)
                 src_start_utc = source[start_field]
+                # single-day sources: the break belongs entirely to the pre-excess (source)
+                # portion, no need to prorate it into the output records.
+                # multi-day sources: break spans the whole original span, so each slice
+                # must carry its proportional share.
+                src_is_multiday = src_start_local.date() != src_stop_local.date()
 
                 if min_out_start_utc <= src_start_utc:
                     first = output_intervals[0]
                     first_end_utc = _to_utc(first.end, tz)
                     extra_vals = first.rule._get_source_annotation_vals(accumulated_pp=first.pp)
+                    first_break_vals = source._get_time_rule_split_break_vals(
+                        src_span_secs, src_break_h, src_start_utc, first_end_utc)
                     if not (
                         source.work_entry_type_id == first.wet
                         and source.time_rule_id == first.rule
@@ -701,30 +714,45 @@ class HrTimeRule(models.Model):
                             'time_rule_id': first.rule.id,
                             **source._get_time_rule_end_write_vals(first_end_utc, first.end),
                             **extra_vals,
+                            **first_break_vals,
                         })
-                    elif extra_vals:
-                        # main fields already match but pp categories may still need updating
-                        source.sudo().with_context(**source._time_rule_write_ctx).write(extra_vals)
+                    elif extra_vals or first_break_vals:
+                        # main fields already match but pp or break may still need updating
+                        source.sudo().with_context(**source._time_rule_write_ctx).write({
+                            **extra_vals,
+                            **first_break_vals,
+                        })
                     for seg_s, seg_e, _ in remainder_segments:
                         create_vals.append(source._get_time_rule_remainder_vals(_to_utc(seg_s, tz), _to_utc(seg_e, tz))
                                            | {'work_entry_type_id': source_wet_id})
                     # in-place: source record IS the output (its WET/time_rule_id were changed);
                     excess_alloc.append([employee, first.rule, (first.end - first.start).total_seconds() / 3600, source, source])
                     subsequent = output_intervals[1:]
+                    prorate_subsequent = True
                 else:
                     min_out_start_local = min(iv.start for iv in output_intervals)
-                    source.sudo().with_context(**source._time_rule_write_ctx).write(
-                        source._get_time_rule_end_write_vals(min_out_start_utc, min_out_start_local)
-                    )
+                    source.sudo().with_context(**source._time_rule_write_ctx).write({
+                        **source._get_time_rule_end_write_vals(min_out_start_utc, min_out_start_local),
+                        **(source._get_time_rule_split_break_vals(
+                            src_span_secs, src_break_h, src_start_utc, min_out_start_utc)
+                           if src_is_multiday else {}),
+                    })
                     for seg_s, seg_e, _ in remainder_segments[1:]:
                         create_vals.append(source._get_time_rule_remainder_vals(_to_utc(seg_s, tz), _to_utc(seg_e, tz))
                                            | {'work_entry_type_id': source_wet_id})
                     subsequent = output_intervals
+                    prorate_subsequent = src_is_multiday
 
                 for iv in subsequent:
+                    iv_start_utc = _to_utc(iv.start, tz)
+                    iv_end_utc = _to_utc(iv.end, tz)
                     # new output record being created; log_source resolved to it after create()
                     pending_log_sources.append((len(excess_alloc), len(create_vals)))
-                    create_vals.append(source._get_time_rule_output_vals(iv.rule, _to_utc(iv.start, tz), _to_utc(iv.end, tz), iv.pp))
+                    create_vals.append(
+                        source._get_time_rule_output_vals(iv.rule, iv_start_utc, iv_end_utc, iv.pp)
+                        | (source._get_time_rule_split_break_vals(src_span_secs, src_break_h, iv_start_utc, iv_end_utc)
+                           if prorate_subsequent else {})
+                    )
                     excess_alloc.append([employee, iv.rule, (iv.end - iv.start).total_seconds() / 3600, source, None])
 
         any_source = next(
@@ -843,16 +871,25 @@ class HrTimeRule(models.Model):
             span_secs = src_span_secs_cache.get(source, 0)
             for r_start, r_stop, _ in intervals_by_source[source]:
                 iv_secs = (r_stop - r_start).total_seconds()
-                # effective duration: subtract prorated break so it stays in the source portion
-                effective_iv = iv_secs / 3600 - (
-                    iv_secs / span_secs * break_hours if span_secs > 0 and break_hours else 0.0
-                )
-                if remaining_expected >= effective_iv:
+                # exclude prorated break from the threshold calculation
+                prorated_break = iv_secs / span_secs * break_hours if span_secs > 0 and break_hours else 0.0
+                effective_iv = iv_secs / 3600 - prorated_break
+
+                if effective_iv <= remaining_expected:
+                    # interval fits entirely in expected time; consume and move on
                     remaining_expected -= effective_iv
                     continue
-                excess_duration = effective_iv - remaining_expected if remaining_expected else effective_iv
-                excess_start = r_stop - timedelta(hours=excess_duration)
+
+                # interval crosses into excess territory
+                excess_duration = effective_iv - remaining_expected
+                if remaining_expected:
+                    # excess begins partway through interval
+                    excess_start = r_stop - timedelta(hours=excess_duration)
+                else:
+                    # entire interval is excess from the start
+                    excess_start = r_start
                 remaining_expected = 0
+
                 excess_by_source[source].append((excess_start, r_stop, self))
                 remaining_excess -= excess_duration
                 if remaining_excess <= 0:

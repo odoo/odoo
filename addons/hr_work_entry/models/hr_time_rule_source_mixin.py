@@ -52,6 +52,9 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     def _get_time_rule_break_hours(self):
         return 0.0
 
+    def _get_time_rule_split_break_vals(self, src_span_secs, src_break_h, iv_start_utc, iv_end_utc):
+        return {}
+
     def _get_time_rule_end_write_vals(self, end_utc, stop_local):
         """Write vals dict for updating the span-end field.
 

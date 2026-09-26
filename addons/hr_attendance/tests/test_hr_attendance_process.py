@@ -302,6 +302,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
     @freeze_time("2026-02-26 07:00:00")
     def test_auto_check_out_specific_time(self):
         """Test various check-in times with 06:00 cutoff"""
+        self.env['hr.time.rule'].search([]).write({'active': False})
         self.company.write({
             'auto_check_out': True,
             'auto_check_out_mode': 'specific_time',
@@ -351,6 +352,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
     @freeze_time("2026-02-27 00:30:00")
     def test_auto_check_out_specific_time_edge_times(self):
         """Test cutoff times at start and end of day"""
+        self.env['hr.time.rule'].search([]).write({'active': False})
         self.company.write({
             'auto_check_out': True,
             'auto_check_out_mode': 'specific_time',
