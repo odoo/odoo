@@ -114,7 +114,9 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
             sectionMap.set(id, {name, sequence, line_count});
         }
         this.state.sections = sectionMap;
-        this.setSelectedSection(sectionMap.size > 0 ? [...sectionMap.keys()][0] : null);
+        // Avoid "No Section", which always sorts first.
+        const sectionIds = [...sectionMap.keys()];
+        this.setSelectedSection(sectionIds.length > 0 ? sectionIds[sectionIds.length - 1] : null);
     }
 
     async reorderSections(moveId, targetId) {
