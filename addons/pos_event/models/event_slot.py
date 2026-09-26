@@ -17,4 +17,4 @@ class EventSlot(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'date', 'display_name', 'event_id', 'registration_ids', 'seats_available', 'start_datetime']
+        return ['id', 'date', 'display_name', 'event_id', 'registration_ids', 'seats_available', 'start_datetime', 'color']
