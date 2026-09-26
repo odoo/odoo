@@ -516,6 +516,18 @@
                 <field name="name@ro">TVA Total Tax COLECTAT</field>
                 <field name="code">total_tax_ro_tva_col</field>
                 <field name="aggregation_formula">tax_ro_tva_intracom_eu.balance + tax_ro_tva_livrari.balance</field>
+                <field name="expression_ids">
+                    <!-- Reproduces the D300 settlement (_compute_d300_settlement in d300_report.py,
+                         used to build the official ANAF filing): collected minus deducted, adjusted by
+                         rows 39 and 42. R35_2/R38_2 in that logic are always 0 (no report line ever
+                         populates them), so they're omitted here without loss. Positive = payable,
+                         negative = refundable - same sign convention as the rest of this mechanism. -->
+                    <record id="account_tax_report_ro_tva_col_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">total_tax_ro_tva_col.balance - tax_ro_tva_rd32.balance + tax_ro_tva_rd40.balance - tax_ro_tva_rd43.balance</field>
+                    </record>
+                </field>
             </record>
             <record id="account_tax_report_ro_baza_intracom_eu_achiz" model="account.report.line">
                 <field name="name">TAX BASIS OF INTRA-COMMUNITY ACQUISITIONS OF GOODS AND OTHER TAXABLE ACQUISITIONS OF GOODS AND SERVICES IN ROMANIA</field>

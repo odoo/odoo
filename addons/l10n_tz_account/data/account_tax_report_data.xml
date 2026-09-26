@@ -313,6 +313,11 @@
                         <field name="carryover_target">tz_credit_bought_forward._applied_carryover_amount</field>
                         <field name="subformula">if_below(TSH(0))</field>
                     </record>
+                    <record id="tz_total_vat_due_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">tz_total_vat_due.amount</field>
+                    </record>
                 </field>
             </record>
         </field>

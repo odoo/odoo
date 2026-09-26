@@ -188,6 +188,12 @@
                                 <field name="formula">CG_VAT_DEDUCT.tax - CG_SALES.tax</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
+                            <record id="account_tax_report_line_cg_credit_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CG_VAT_CREDIT.tax</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="account_tax_report_line_cg_to_pay" model="account.report.line">
@@ -199,6 +205,12 @@
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CG_SALES.tax - CG_VAT_DEDUCT.tax</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="account_tax_report_line_cg_to_pay_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CG_VAT_TO_PAY.tax</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
                         </field>

@@ -231,7 +231,18 @@
                         <field name="name@de">105 - Überschuss</field>
                         <field name="name@lb">105 - Iwwerschreiden Betrag</field>
                         <field name="code">LUTAX_105</field>
-                        <field name="aggregation_formula">LUTAX_103.balance - LUTAX_102.balance</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_4c_exceeding_amount_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LUTAX_103.balance - LUTAX_102.balance</field>
+                            </record>
+                            <record id="account_tax_report_line_4c_exceeding_amount_closing" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LUTAX_105.balance</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>

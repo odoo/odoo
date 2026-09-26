@@ -245,6 +245,11 @@
                         <field name="engine">aggregation</field>
                         <field name="formula">sa_13.tax + sa_14.tax + sa_15.tax</field>
                     </record>
+                    <record id="tax_report_line_net_vat_due_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_16.tax</field>
+                    </record>
                 </field>
             </record>
         </field>

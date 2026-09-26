@@ -822,6 +822,12 @@
                                 <field name="formula">hr41.tax_amount - hr42.tax_amount + hr43.tax_amount - hr44.tax_amount</field>
                                 <field name="subformula">if_above(HRK(0))</field>
                             </record>
+                            <record id="tax_report_line_VI_1_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">hr45.tax_amount</field>
+                                <field name="subformula">if_above(HRK(0))</field>
+                            </record>
                         </field>
                      </record>
                     <record id="tax_report_line_VI_2" model="account.report.line">
@@ -833,6 +839,12 @@
                                 <field name="label">tax_amount</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">-hr41.tax_amount + hr42.tax_amount - hr43.tax_amount + hr44.tax_amount</field>
+                                <field name="subformula">if_above(HRK(0))</field>
+                            </record>
+                            <record id="tax_report_line_VI_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">hr46.tax_amount</field>
                                 <field name="subformula">if_above(HRK(0))</field>
                             </record>
                         </field>

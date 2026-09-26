@@ -156,9 +156,18 @@
             <record id="account_tax_report_line_vat_statement" model="account.report.line">
                 <field name="name">VAT declaration (positive amount = pay, negative amount = money owed)</field>
                 <field name="name@da_DK">Momsangivelse (positivt beløb = betale, negativt beløb = penge tilgode)</field>
+                <field name="code">VAT_STATEMENT</field>
                 <field name="aggregation_formula">DUE_VAT.balance - VAT_TO_DEDUCED.balance</field>
                 <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_vat_statement_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">VAT_STATEMENT.balance</field>
+                    </record>
+                </field>
             </record>
+
             <record id="account_tax_report_line_additional_info" model="account.report.line">
                 <field name="name">Supplementary information</field>
                 <field name="name@da_DK">Supplerende oplysninger</field>
