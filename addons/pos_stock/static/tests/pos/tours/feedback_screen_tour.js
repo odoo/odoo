@@ -22,7 +22,8 @@ registry.category("web_tour.tours").add("StockFeedbackScreenTour", {
             OfflineUtil.setOfflineMode(),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("APartner Full"),
+            // Offline: no server search, the partner is already loaded locally.
+            ProductScreen.clickCustomer("APartner Full", false),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
