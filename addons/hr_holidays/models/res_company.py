@@ -7,7 +7,7 @@ class ResCompany(models.Model):
 
     @api.constrains('country_id')
     def _check_country_change_holidays(self):
-        if tools.config['test_enable'] or modules.module.current_test:
+        if tools.config['test_enable'] or modules.module.current_test or self.env.context.get('install_mode'):
             return
         for record in self:
             conflict_domain = [
