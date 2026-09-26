@@ -48,6 +48,21 @@ class TestProjectUpdateAccessRights(TestProjectCommon):
     def test_project_update_admin_unlink(self):
         self.project_update_1.with_user(self.env.user).unlink()
 
+    @users('Project user')
+    def test_project_update_user_unlink(self):
+        project_update_2 = self.env['project.update'].with_user(self.env.user).create({
+            'name': "Test Project Update 2",
+            'project_id': self.project_pigs.id,
+            'status': 'on_track',
+        })
+        self.assertEqual(self.project_pigs.last_update_id, project_update_2)
+        project_update_2.unlink()
+        self.assertEqual(
+            self.project_pigs.last_update_id, self.project_update_1,
+            "Deleting the last update should fall back to the previous one, "
+            "even for a user who cannot write on the project.",
+        )
+
     @users('Portal user')
     def test_project_update_portal_user_no_read(self):
         with self.assertRaises(AccessError, msg=f"{self.env.user.name} should not be able to read in the project update"):
