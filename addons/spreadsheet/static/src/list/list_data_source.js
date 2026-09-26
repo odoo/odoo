@@ -1,5 +1,5 @@
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
-import { EvaluationError } from "@odoo/o-spreadsheet";
+import { EvaluationError, Registry } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 import {
     formatDateTime,
@@ -32,6 +32,12 @@ const { DEFAULT_LOCALE } = spreadsheet.constants;
 
 export const SEARCH_COUNT_LIMIT = 10_000;
 
+/**
+ * Data source implementations, keyed by the `type` of the list definition.
+ * A list without a `type` uses the standard `ListDataSource`.
+ */
+export const listDataSourceRegistry = new Registry();
+
 export class ListDataSource extends OdooViewsDataSource {
     /**
      * @override
@@ -45,6 +51,8 @@ export class ListDataSource extends OdooViewsDataSource {
         this.maxPosition = 0;
         this.maxPositionFetched = 0;
         this.data = [];
+        /** @private @type {Map<number, number> | undefined} record id -> position */
+        this._positionsById = undefined;
         this.fieldPathsToFetch = new Set(["id"]);
         this.fieldPathDefinitionsToFetch = new Set(params.columns.map((col) => col.name));
         this.definitionColumns = params.columns
@@ -141,6 +149,7 @@ export class ListDataSource extends OdooViewsDataSource {
         this.alreadyFetchedFieldPaths = new Set([...this.fieldPathsToFetch]);
         if (this.maxPosition === 0) {
             this.data = [];
+            this._positionsById = undefined;
             return;
         }
         const { records } = await this._orm.webSearchRead(this._metaData.resModel, domain, {
@@ -150,6 +159,7 @@ export class ListDataSource extends OdooViewsDataSource {
             context,
         });
         this.data = records;
+        this._positionsById = undefined;
         this.maxPositionFetched = this.maxPosition;
     }
 
@@ -250,6 +260,23 @@ export class ListDataSource extends OdooViewsDataSource {
         this.assertIsValid();
         const record = this.data[position];
         return record ? record.id : undefined;
+    }
+
+    getIds() {
+        this.assertIsValid();
+        return this.data.map((record) => record?.id);
+    }
+
+    /**
+     * @param {number} id
+     * @returns {number | undefined} position of the record, if it's loaded
+     */
+    getPositionFromId(id) {
+        this.assertIsValid();
+        this._positionsById ??= new Map(
+            this.data.map((record, position) => [record?.id, position])
+        );
+        return this._positionsById.get(id);
     }
 
     /**

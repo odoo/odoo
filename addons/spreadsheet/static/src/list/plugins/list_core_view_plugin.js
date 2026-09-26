@@ -1,8 +1,8 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getFirstListFunction, getListFunctions } from "../list_helpers";
 import { Domain } from "@web/core/domain";
-import { ListDataSource } from "../list_data_source";
 import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
+import { ListDataSource, listDataSourceRegistry } from "../list_data_source";
 import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";
 import { computeFormatFromCurrency } from "@spreadsheet/currency/helpers";
 
@@ -154,8 +154,12 @@ export class ListCoreViewPlugin extends OdooEvaluationPlugin {
 
     _setupList(listId, limit) {
         if (!(listId in this.lists)) {
+            const { type } = this.getters.getListDefinition(listId);
+            const DataSource = listDataSourceRegistry.contains(type)
+                ? listDataSourceRegistry.get(type)
+                : ListDataSource;
             const definition = this._getListModelDefinition(listId);
-            const dataSource = new ListDataSource(this.custom, { ...definition, limit });
+            const dataSource = new DataSource(this.custom, { ...definition, limit });
             this.lists[listId] = {
                 id: listId,
                 definition,
