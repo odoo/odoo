@@ -29,6 +29,7 @@ class HrWorkEntryType(models.Model):
     country_id = fields.Many2one(
         'res.country',
         string="Country",
+        default=lambda self: self.env.company.country_id,
         tracking=True,
         domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)]
     )
