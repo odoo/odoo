@@ -188,6 +188,8 @@ class HrVersion(models.Model):
             employee = version.employee_id
             calendar = version.resource_calendar_id
             resource = employee.resource_id
+            if resource.id not in attendances_by_resource:
+                continue
             # if the version is fully flexible, we refer to the employee's timezone
             tz = pytz.timezone(resource.tz) if version._is_fully_flexible() else pytz.timezone(calendar.tz)
             attendances = attendances_by_resource[resource.id]
