@@ -208,6 +208,71 @@ class TestMrpReplenish(TestMrpCommon):
             loads(repl_info.json_lead_days)['lead_horizon_date'], '%m/%d/%Y').date()
         self.assertEqual(lead_horizon_date, fields.Date.today() + timedelta(days=365))
 
+    def test_batch_lead_days_respect_product_routes(self):
+        """Batch lead-time computation must respect each product's routes."""
+        self.env.company.horizon_days = 0
+        warehouse = self.warehouse_1
+        warehouse.manufacture_steps = 'pbm'
+
+        # Both rules move components from Stock to Pre-Production. Each product
+        # selects a different route, so their transfer delays are different.
+        route_a, route_b = self.env['stock.route'].create([{
+            'name': 'Pre-production route A',
+        }, {
+            'name': 'Pre-production route B',
+        }])
+        self.env['stock.rule'].create([{
+            'name': 'Pre-production rule A',
+            'route_id': route_a.id,
+            'location_src_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.pbm_loc_id.id,
+            'action': 'pull',
+            'procure_method': 'make_to_stock',
+            'delay': 3,
+            'picking_type_id': warehouse.pbm_type_id.id,
+            'warehouse_id': warehouse.id,
+            'company_id': warehouse.company_id.id,
+        }, {
+            'name': 'Pre-production rule B',
+            'route_id': route_b.id,
+            'location_src_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.pbm_loc_id.id,
+            'action': 'pull',
+            'procure_method': 'make_to_stock',
+            'delay': 7,
+            'picking_type_id': warehouse.pbm_type_id.id,
+            'warehouse_id': warehouse.id,
+            'company_id': warehouse.company_id.id,
+        }])
+        product_a, product_b = self.env['product.product'].create([{
+            'name': 'Manufactured with route A',
+            'is_storable': True,
+            'route_ids': [Command.link(route_a.id)],
+        }, {
+            'name': 'Manufactured with route B',
+            'is_storable': True,
+            'route_ids': [Command.link(route_b.id)],
+        }])
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1,
+        } for product in (product_a, product_b)])
+        orderpoints = self.env['stock.warehouse.orderpoint'].create([{
+            'product_id': product.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'route_id': warehouse.manufacture_pull_id.route_id.id,
+        } for product in (product_a, product_b)])
+
+        # Establish the lead time expected from each product's own route.
+        for orderpoint in orderpoints:
+            orderpoint._compute_lead_days()
+        individual_lead_days = orderpoints.mapped('lead_days')
+        self.assertEqual(individual_lead_days, [3, 7])
+
+        # Computing both orderpoints together must give the same result.
+        orderpoints._compute_lead_days()
+        self.assertEqual(orderpoints.mapped('lead_days'), individual_lead_days)
+
     def test_orderpoint_onchange_reordering_rule(self):
         """ Ensure onchange logic works properly when editing a reordering rule
             linked to a confirmed MO, which is started but not finished by the
