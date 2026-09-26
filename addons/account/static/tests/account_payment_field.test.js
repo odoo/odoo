@@ -36,6 +36,31 @@ class AccountMove extends models.Model {
                 title: "Less Payment",
             },
         },
+        {
+            // What the server sends for a payment in the company of the invoice,
+            // without a foreign currency and without a payment method.
+            id: 2,
+            invoice_payments_widget: {
+                content: [
+                    {
+                        amount: 100,
+                        amount_company_currency: "$100.00",
+                        amount_foreign_currency: null,
+                        company_name: false,
+                        currency_id: 1,
+                        date: "2026-09-16",
+                        journal_name: "Miscellaneous Operations",
+                        move_id: 4,
+                        partial_id: 5,
+                        payment_method_name: false,
+                        ref: "MISC/2026/09/0001",
+                    },
+                ],
+                exchange_info: {},
+                outstanding: false,
+                title: "Less Payment",
+            },
+        },
     ];
 
     _views = {
@@ -62,4 +87,15 @@ test("payment popover can unreconcile a payment", async () => {
 
     await contains(".js_unreconcile_payment").click();
     expect.verifySteps(["unreconcile"]);
+});
+
+test("payment popover opens without a company, a foreign currency or a payment method", async () => {
+    await mountView({
+        type: "form",
+        resModel: "account.move",
+        resId: 2,
+    });
+
+    await contains(".js_payment_info").click();
+    expect(".account_payment_popover").toHaveText(/MISC\/2026\/09\/0001/);
 });
