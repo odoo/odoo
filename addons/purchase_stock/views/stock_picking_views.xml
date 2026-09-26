@@ -8,11 +8,7 @@
             </t>
         </xpath>
         <xpath expr="//p[@name='bottom_help_message']" position="after">
-            <a t-if="picking_type_code == 'incoming'"
-                class="btn btn-secondary"
-                name="purchase.purchase_form_action"
-                type="action"
-                groups="base.group_user_regular">Purchase Orders</a>
+            <a t-if="picking_type_code == 'incoming'" class="btn btn-secondary" name="purchase.purchase_form_action" type="action">Purchase Orders</a>
         </xpath>
     </template>
     <record model="ir.ui.view" id="view_picking_form">

@@ -143,7 +143,9 @@ class HrEmployee(models.Model):
                         break
 
         remaining = self.browse(min_dts)
-        remaining.version_ids.fetch()  # prefetch data
+        # sudo: hr.version - prefetch only, the leave status is read by every
+        # internal user (presence icon, avatar card) and not only by officers.
+        remaining.sudo().version_ids.fetch()  # prefetch data FIXME let's use cache pollution, and maybe crash later
         remaining.resource_id.employee_id  # prefetch data
         lookahead_days = [7, 30, 90, 180, 365, 730]
 

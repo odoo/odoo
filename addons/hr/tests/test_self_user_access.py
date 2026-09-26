@@ -108,7 +108,7 @@ class TestSelfAccessRights(TestHrCommon):
     @classmethod
     def setUpClass(cls):
         super(TestSelfAccessRights, cls).setUpClass()
-        cls.richard = new_test_user(cls.env, login='ric', groups='base.group_user', name='Simple employee', email='ric@example.com')
+        cls.richard = new_test_user(cls.env, login='ric', groups='base.group_user,base.group_user_regular', name='Simple employee', email='ric@example.com')
         cls.richard_emp = cls.env['hr.employee'].create({
             'name': 'Richard',
             'user_id': cls.richard.id,
