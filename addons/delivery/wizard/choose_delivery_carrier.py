@@ -107,19 +107,6 @@ class ChooseDeliveryCarrier(models.TransientModel):
 
         self._set_delivery_vals(delivery_vals)
 
-    def update_price(self):
-        vals = self._get_carrier_delivery_rate(self.carrier_id)
-        self._handle_delivery_vals(vals)
-        return {
-            "name": self.env._("Add a delivery method"),
-            "type": "ir.actions.act_window",
-            "view_mode": "form",
-            "res_model": "choose.delivery.carrier",
-            "res_id": self.id,
-            "target": "new",
-            "context": vals,
-        }
-
     def _get_carrier_delivery_rate(self, carrier):
         self.ensure_one()
 
