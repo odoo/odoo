@@ -6,7 +6,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { Component, useState } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { unaccent } from "@web/core/utils/strings";
+import { escapeRegExp, unaccent } from "@web/core/utils/strings";
 
 export class PartnerList extends Component {
     static components = { PartnerLine, Dialog, Input };
@@ -85,14 +85,19 @@ export class PartnerList extends Component {
         const isSearchWordNumber = /^[0-9]+$/.test(numberString);
 
         const patternBase = isSearchWordNumber ? numberString : searchWord;
-        // Build a RegExp that mimics SQL ILIKE behavior:
+        // Build a RegExp that mimics SQL ILIKE behavior, word by word so that
+        // words separated by whitespace can match with a gap between them
+        // (e.g. "jose ramirez" matching "Jose Alberto Ramirez Mendoza"):
         // 1) Escape all RegExp metacharacters so user input is treated literally
         //    (e.g. '.', '+', '[', ']' should not change regex meaning or cause errors)
         // 2) Replace SQL wildcard '%' with RegExp wildcard '.*'
+        // 3) Join the words with '.*' so anything can appear between them
         const regex = new RegExp(
             patternBase
-                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&") // escape regex special characters
-                .replace(/%/g, ".*") // convert SQL wildcard to regex wildcard
+                .split(/\s+/)
+                .filter(Boolean)
+                .map((word) => escapeRegExp(word).replace(/%/g, ".*"))
+                .join(".*")
         );
 
         const availablePartners = searchWord
@@ -147,9 +152,22 @@ export class PartnerList extends Component {
                 "country_id",
                 "vat",
             ];
+            // Split on whitespace and join with '%' so that words separated by a gap
+            // can still match (e.g. "jose ramirez" matching "Jose Alberto Ramirez
+            // Mendoza"). Escape the SQL LIKE special characters in each word so
+            // that user-typed '%'/'_' are searched for literally; '=ilike' is used
+            // instead of 'ilike' so the ORM doesn't wrap the pattern in extra '%'.
+            const pattern =
+                "%" +
+                this.state.query
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .map((word) => word.replace(/[\\%_]/g, "\\$&"))
+                    .join("%") +
+                "%";
             domain = [
                 ...Array(search_fields.length - 1).fill("|"),
-                ...search_fields.map((field) => [field, "ilike", this.state.query + "%"]),
+                ...search_fields.map((field) => [field, "=ilike", pattern]),
             ];
         }
 
