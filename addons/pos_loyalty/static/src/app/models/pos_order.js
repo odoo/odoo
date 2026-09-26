@@ -122,6 +122,7 @@ patch(PosOrder.prototype, {
         return rewards;
     },
     /**
+<<<<<<< 72d9be2f10f1a3f6a036c04c5f5ee26e9c0b64f8
      * Appply a payment program for the current order and create a new orderline for it
      * If the amount is set, the orderline will have the minimum between the order total
      * and the amount. If the amount is undefined the value will be the minimum between
@@ -129,6 +130,33 @@ patch(PosOrder.prototype, {
      * @param {loyalty_reward} reward - the payment reward to apply
      * @param {loyalty_card} card - the card being spent from
      * @param {number} [amount] - the amount the user chose to spend, capped by balance and order total
+||||||| 277f865d46ce497bbe244b57736fccc55013b78f
+     * Refreshes the currently applied rewards, if they are not applicable anymore they are removed.
+=======
+     * `_code_activated_coupon_ids` is a local field: it is lost when the order is
+     * rebuilt from the server or from IndexedDB, while the reward lines it justified
+     * are persisted with their `coupon_id`. Re-link those coupons so that
+     * `_updateRewardLines` does not consider their rewards unclaimed and delete them.
+     */
+    _restoreCodeActivatedCoupons() {
+        for (const line of this._get_reward_lines()) {
+            const coupon = line.coupon_id;
+            if (
+                !coupon ||
+                coupon.id <= 0 ||
+                !coupon.program_id ||
+                coupon.program_id.is_nominative ||
+                this.uiState.couponPointChanges[coupon.id] ||
+                this._code_activated_coupon_ids.some((c) => c.id === coupon.id)
+            ) {
+                continue;
+            }
+            this._code_activated_coupon_ids = [["link", coupon]];
+        }
+    },
+    /**
+     * Refreshes the currently applied rewards, if they are not applicable anymore they are removed.
+>>>>>>> 8c7f085ae08dd109ec708bdaba606146f2ef726c
      */
     applyPaymentProgram(reward, card, amount) {
         if (!reward || !card) {
