@@ -1,8 +1,18 @@
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { AccountMoveFormController } from "@account/components/account_move_form/account_move_form";
+
+const SALE_MOVE_TYPES = ['out_invoice', 'out_refund', 'out_receipt'];
+
+/**
+ * Mirrors the `_check_draftable` and `_unlink_except_sent_peppol` conditions of `account.move`:
+ * an invoice sent via Peppol / PDP can neither be reset to draft nor deleted.
+ */
+export function isSentInvoice(record) {
+    return record.peppol_is_sent && SALE_MOVE_TYPES.includes(record.move_type);
+}
 
 
 patch(AccountMoveFormController.prototype, {
@@ -34,6 +44,19 @@ patch(AccountMoveFormController.prototype, {
 
         if (model === 'account.move') {
             const record = this.model.root.data;
+
+            if (isSentInvoice(record)) {
+                // A sent invoice can neither be deleted nor reset to draft: the only way out is
+                // a credit or debit note. Cancelling it stays possible from the header button.
+                this.dialogService.add(AlertDialog, {
+                    title: _t("Peppol Documents: Cannot Delete Invoice"),
+                    body: _t(
+                        "Invoices sent via Peppol / PDP cannot be deleted.\n\n" +
+                        "If you need to modify this one, you must issue a credit or debit note."
+                    ),
+                });
+                return;
+            }
 
             if (record.peppol_message_uuid && record.state !== 'cancel') {
                 if (record.state === 'draft') {
