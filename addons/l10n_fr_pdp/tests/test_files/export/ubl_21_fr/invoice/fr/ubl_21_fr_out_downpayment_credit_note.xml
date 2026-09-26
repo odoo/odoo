@@ -3,25 +3,25 @@
 	<cbc:ProfileID>B2</cbc:ProfileID>
 	<cbc:ID>RINV/2024/00001</cbc:ID>
 	<cbc:IssueDate>2024-12-05</cbc:IssueDate>
-	<cbc:CreditNoteTypeCode>381</cbc:CreditNoteTypeCode>
-	<cbc:Note>test narration</cbc:Note>
+	<cbc:CreditNoteTypeCode>503</cbc:CreditNoteTypeCode>
 	<cbc:Note>#PMT#In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce).</cbc:Note>
 	<cbc:Note>#PMD#Late payment penalties at an annual rate of 10% are applied if the payment is made after the due date.</cbc:Note>
 	<cbc:Note>#AAB#No discount for early payment.</cbc:Note>
 	<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
 	<cac:OrderReference>
-		<cbc:ID>Reversal of: INV/2017/00001</cbc:ID>
+		<cbc:ID>___ignore___</cbc:ID>
+		<cbc:SalesOrderID>___ignore___</cbc:SalesOrderID>
 	</cac:OrderReference>
 	<cac:BillingReference>
 		<cac:InvoiceDocumentReference>
-			<cbc:ID>INV/2017/00001</cbc:ID>
-			<cbc:IssueDate>2017-01-01</cbc:IssueDate>
+			<cbc:ID>INV/2024/00001</cbc:ID>
+			<cbc:IssueDate>2024-12-05</cbc:IssueDate>
 		</cac:InvoiceDocumentReference>
 	</cac:BillingReference>
 	<cac:AdditionalDocumentReference>
 		<cbc:ID>RINV_2024_00001.pdf</cbc:ID>
 		<cac:Attachment>
-      <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="RINV_2024_00001.pdf">___ignore___</cbc:EmbeddedDocumentBinaryObject>
+			<cbc:EmbeddedDocumentBinaryObject filename="RINV_2024_00001.pdf" mimeCode="application/pdf">___ignore___</cbc:EmbeddedDocumentBinaryObject>
 		</cac:Attachment>
 	</cac:AdditionalDocumentReference>
 	<cac:AccountingSupplierParty>
@@ -113,24 +113,13 @@
 		<cbc:PaymentID>RINV/2024/00001</cbc:PaymentID>
 	</cac:PaymentMeans>
 	<cac:TaxTotal>
-		<cbc:TaxAmount currencyID="EUR">185.00</cbc:TaxAmount>
+		<cbc:TaxAmount currencyID="EUR">28.00</cbc:TaxAmount>
 		<cac:TaxSubtotal>
-			<cbc:TaxableAmount currencyID="EUR">500.00</cbc:TaxableAmount>
-			<cbc:TaxAmount currencyID="EUR">100.00</cbc:TaxAmount>
+			<cbc:TaxableAmount currencyID="EUR">140.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="EUR">28.00</cbc:TaxAmount>
 			<cac:TaxCategory>
 				<cbc:ID>S</cbc:ID>
 				<cbc:Percent>20.0</cbc:Percent>
-				<cac:TaxScheme>
-					<cbc:ID>VAT</cbc:ID>
-				</cac:TaxScheme>
-			</cac:TaxCategory>
-		</cac:TaxSubtotal>
-		<cac:TaxSubtotal>
-			<cbc:TaxableAmount currencyID="EUR">1000.00</cbc:TaxableAmount>
-			<cbc:TaxAmount currencyID="EUR">85.00</cbc:TaxAmount>
-			<cac:TaxCategory>
-				<cbc:ID>S</cbc:ID>
-				<cbc:Percent>8.5</cbc:Percent>
 				<cac:TaxScheme>
 					<cbc:ID>VAT</cbc:ID>
 				</cac:TaxScheme>
@@ -138,18 +127,18 @@
 		</cac:TaxSubtotal>
 	</cac:TaxTotal>
 	<cac:LegalMonetaryTotal>
-		<cbc:LineExtensionAmount currencyID="EUR">1500.00</cbc:LineExtensionAmount>
-		<cbc:TaxExclusiveAmount currencyID="EUR">1500.00</cbc:TaxExclusiveAmount>
-		<cbc:TaxInclusiveAmount currencyID="EUR">1685.00</cbc:TaxInclusiveAmount>
-		<cbc:PrepaidAmount currencyID="EUR">1685.00</cbc:PrepaidAmount>
+		<cbc:LineExtensionAmount currencyID="EUR">140.00</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR">140.00</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR">168.00</cbc:TaxInclusiveAmount>
+		<cbc:PrepaidAmount currencyID="EUR">168.00</cbc:PrepaidAmount>
 		<cbc:PayableAmount currencyID="EUR">0.00</cbc:PayableAmount>
 	</cac:LegalMonetaryTotal>
 	<cac:CreditNoteLine>
 		<cbc:ID>1</cbc:ID>
 		<cbc:CreditedQuantity unitCode="C62">1.0</cbc:CreditedQuantity>
-		<cbc:LineExtensionAmount currencyID="EUR">500.00</cbc:LineExtensionAmount>
+		<cbc:LineExtensionAmount currencyID="EUR">100.00</cbc:LineExtensionAmount>
 		<cac:Item>
-			<cbc:Name>product_a</cbc:Name>
+			<cbc:Name>Down payment of 20.00%</cbc:Name>
 			<cac:ClassifiedTaxCategory>
 				<cbc:ID>S</cbc:ID>
 				<cbc:Percent>20.0</cbc:Percent>
@@ -159,34 +148,34 @@
 			</cac:ClassifiedTaxCategory>
 		</cac:Item>
 		<cac:Price>
-			<cbc:PriceAmount currencyID="EUR">500.0</cbc:PriceAmount>
+			<cbc:PriceAmount currencyID="EUR">100.0</cbc:PriceAmount>
 			<cac:AllowanceCharge>
 				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 				<cbc:Amount currencyID="EUR">0.0</cbc:Amount>
-				<cbc:BaseAmount currencyID="EUR">500.0</cbc:BaseAmount>
+				<cbc:BaseAmount currencyID="EUR">100.0</cbc:BaseAmount>
 			</cac:AllowanceCharge>
 		</cac:Price>
 	</cac:CreditNoteLine>
 	<cac:CreditNoteLine>
 		<cbc:ID>2</cbc:ID>
-		<cbc:CreditedQuantity unitCode="DZN">1.0</cbc:CreditedQuantity>
-		<cbc:LineExtensionAmount currencyID="EUR">1000.00</cbc:LineExtensionAmount>
+		<cbc:CreditedQuantity unitCode="C62">1.0</cbc:CreditedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">40.00</cbc:LineExtensionAmount>
 		<cac:Item>
-			<cbc:Name>product_b</cbc:Name>
+			<cbc:Name>Down payment of 20.00%</cbc:Name>
 			<cac:ClassifiedTaxCategory>
 				<cbc:ID>S</cbc:ID>
-				<cbc:Percent>8.5</cbc:Percent>
+				<cbc:Percent>20.0</cbc:Percent>
 				<cac:TaxScheme>
 					<cbc:ID>VAT</cbc:ID>
 				</cac:TaxScheme>
 			</cac:ClassifiedTaxCategory>
 		</cac:Item>
 		<cac:Price>
-			<cbc:PriceAmount currencyID="EUR">1000.0</cbc:PriceAmount>
+			<cbc:PriceAmount currencyID="EUR">40.0</cbc:PriceAmount>
 			<cac:AllowanceCharge>
 				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 				<cbc:Amount currencyID="EUR">0.0</cbc:Amount>
-				<cbc:BaseAmount currencyID="EUR">1000.0</cbc:BaseAmount>
+				<cbc:BaseAmount currencyID="EUR">40.0</cbc:BaseAmount>
 			</cac:AllowanceCharge>
 		</cac:Price>
 	</cac:CreditNoteLine>
