@@ -135,8 +135,6 @@ class ProductTemplate(models.Model):
     # Last update date of the optional, accessory and alternative products.
     suggested_products_last_update = fields.Datetime(string="Last update of suggested products")
 
-    website_size_x = fields.Integer(string="Size X", default=1)
-    website_size_y = fields.Integer(string="Size Y", default=1)
     website_ribbon_id = fields.Many2one(string="Ribbon", comodel_name="product.ribbon")
     minimum_quantity = fields.Integer(string="Minimum Quantity")
     website_sequence = fields.Integer(
@@ -1418,12 +1416,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_website_sale_search_fields(self, search_in_description=True):
-        search_fields = [
-            "name",
-            "variants_default_code",
-            "barcode",
-            "product_variant_ids.barcode",
-        ]
+        search_fields = ["name", "variants_default_code", "barcode", "product_variant_ids.barcode"]
         if search_in_description:
             search_fields.append("description_ecommerce")
         search_fields.extend((
@@ -1989,13 +1982,14 @@ class ProductTemplate(models.Model):
         return data
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
-        if (
-            message_operation == "create"
-            and not self.env.user._is_internal()
-        ):
-            website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
-            if not website.with_context(website_id=website.id).is_view_active('website_sale.product_comment'):
-                return [(Domain.TRUE, 'write')]
+        if message_operation == "create" and not self.env.user._is_internal():
+            website = self.env.website or self.env["website"].browse(
+                self.env.context.get("host_id")
+            )
+            if not website.with_context(website_id=website.id).is_view_active(
+                "website_sale.product_comment"
+            ):
+                return [(Domain.TRUE, "write")]
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
 
     @api.model
