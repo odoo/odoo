@@ -194,19 +194,21 @@ class PosOrder(models.Model):
         # Recompute amount paid because we don't trust the client
         order.write({'amount_paid': order._compute_amount_paid()})
 
-        if not draft and not float_is_zero(pos_order['amount_return'], prec_acc):
-            cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
-            if not cash_payment_method:
-                raise UserError(_("No cash statement found for this session. Unable to record returned cash."))
-            return_payment_vals = {
-                'name': _('return'),
-                'pos_order_id': order.id,
-                'amount': pos_order['amount_return'],
-                'payment_date': fields.Datetime.now(),
-                'payment_method_id': cash_payment_method.id,
-                'is_change': True,
-            }
-            order.add_payment(return_payment_vals)
+        has_return = not float_is_zero(pos_order['amount_return'], prec_acc)
+        if not draft and (has_return or order.config_id.cash_rounding):
+            if has_return:
+                cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
+                if not cash_payment_method:
+                    raise UserError(_("No cash statement found for this session. Unable to record returned cash."))
+                return_payment_vals = {
+                    'name': _('return'),
+                    'pos_order_id': order.id,
+                    'amount': pos_order['amount_return'],
+                    'payment_date': fields.Datetime.now(),
+                    'payment_method_id': cash_payment_method.id,
+                    'is_change': True,
+                }
+                order.add_payment(return_payment_vals)
             order._compute_prices()
 
     def _prepare_tax_base_line_values(self):
