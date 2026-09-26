@@ -317,7 +317,7 @@ according to the enabled options.
 <template id="post_info">
     <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between small #{_info_classes or 'flex-grow-1 my-2'}">
         <div class="px-2 d-none d-xl-block">
-            <span class="text-nowrap" title="Comments"><i class="oi oi-filled text-muted me-1" data-icon="chat_bubble"/><t t-out="len(blog_post.message_ids)"/></span>
+            <span class="text-nowrap" title="Comments"><i class="oi oi-filled text-muted me-1" data-icon="chat_bubble"/><t t-out="blog_post.message_counter()"/></span>
             <span class="text-nowrap ps-2" title="Views"><i class="oi text-muted me-1" data-icon="bar_chart"/><t t-out="blog_post.visits"/></span>
         </div>
     </div>
