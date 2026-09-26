@@ -543,6 +543,27 @@ class IrModuleModule(models.Model):
                 timeout=5.0,
             )
             resp.raise_for_status()
+            account_module = self.env['ir.module.module'].sudo().search([('name', '=', 'account'), ('state', '!=', 'installed')], limit=1)
+            if account_module:
+                account_module.button_immediate_install()
+            if 'account.chart.template' in self.env:
+                AccountChartTemplate = self.env['account.chart.template']
+                company = self.env.company
+                template_code = AccountChartTemplate._guess_chart_template(company.account_fiscal_country_id)
+                if template_code:
+                    chart_template_mapping = AccountChartTemplate._get_chart_template_mapping()[template_code]
+                    l10n_module_name = chart_template_mapping.get('module')
+                    l10n_industry_module_name = f"{l10n_module_name}_{module_name}"
+                    try:
+                        l10n_resp = requests.get(
+                        f"{APPS_URL}/loempia/download/data_app/{l10n_industry_module_name}/{major_version}",
+                        timeout=5.0,
+                    )
+                        l10n_resp.raise_for_status()
+                    except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError):
+                        pass
+                    else:
+                        resp = l10n_resp
             missing_dependencies_description, unavailable_modules = self._get_missing_dependencies(resp.content)
             if unavailable_modules:
                 raise UserError(missing_dependencies_description)
