@@ -124,8 +124,7 @@ export class QuickReorder extends Interaction {
             );
             quantity = updatedQty;
             linkedProducts = combos
-                .map(combo => new ProductCombo(combo).selectedComboItem)
-                .filter(Boolean)
+                .flatMap(combo => new ProductCombo(combo).selectedComboItems)
                 .map(comboItem => ({
                     product_template_id: comboItem.product.product_tmpl_id,
                     parent_product_template_id: productTemplateId,

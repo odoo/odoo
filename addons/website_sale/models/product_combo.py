@@ -22,4 +22,7 @@ class ProductCombo(models.Model):
             item.product_id._get_max_quantity(website, sale_order, **kwargs)
             for item in self.combo_item_ids
         ]
-        return max(max_quantities) if (None not in max_quantities) else None
+        if None in max_quantities:
+            return None
+        included_qty = self.included_qty or 1
+        return max(int(max_quantity // included_qty) for max_quantity in max_quantities)

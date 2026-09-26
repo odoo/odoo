@@ -46,6 +46,7 @@ export function serializeComboItem(comboItem) {
                 custom_value: customPtav.value,
             })
         ),
+        selected_combo_item_qty: comboItem.selected_qty,
     }
 }
 
@@ -128,5 +129,6 @@ export async function getSelectedComboItems(orm, comboLineRecord, edit) {
         id: record.data.combo_item_id?.id,
         no_variant_ptav_ids: edit ? getNoVariantPtavIds(record.data) : [],
         custom_ptavs: edit ? await getCustomPtavs(orm, record.data) : [],
+        quantity: record.data.selected_combo_item_qty,
     })));
 }

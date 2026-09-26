@@ -419,6 +419,11 @@ class SaleOrderLine(models.Model):
     collapse_composition = fields.Boolean(
         string="Collapse Composition", copy=True, default=False
     )  # Whether this section's lines will be hidden in reports and in the portal.
+    selected_combo_item_qty = fields.Integer(
+        string="Selected Quantity",
+        help="Remembers the initial quantity selected for this combo item.",
+        default=1,
+    )
 
     mandatory_product = fields.Boolean(
         string="Is Product Mandatory", compute="_compute_mandatory_product"
@@ -957,6 +962,8 @@ class SaleOrderLine(models.Model):
                 company=self.company_id,
                 date=self.order_id.date_order,
             )
+            # `included_qty` is 0 for POS upsell combos; weigh them as 1 item in Sales.
+            * (combo_id.included_qty or 1)
             for combo_id in combo_line.product_template_id.sudo().combo_ids
         }
         total_combo_base_price = sum(combo_base_prices.values())
@@ -991,7 +998,10 @@ class SaleOrderLine(models.Model):
             company=self.company_id,
             date=self.order_id.date_order,
         )
-        return combo_prices[self.combo_item_id.combo_id] + extra_price
+        return (
+            combo_prices[self.combo_item_id.combo_id]
+            / (self.combo_item_id.combo_id.included_qty or 1)
+        ) + extra_price
 
     @api.depends("product_id", "product_uom_id", "product_uom_qty")
     def _compute_discount(self):
@@ -1727,7 +1737,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             linked_line = line._get_linked_line()
-            allowed_combo_items = linked_line.product_template_id.combo_ids.combo_item_ids
+            allowed_combo_items = linked_line.product_template_id.sudo().combo_ids.combo_item_ids
             if line.combo_item_id and line.combo_item_id not in allowed_combo_items:
                 raise ValidationError(
                     line.env._(
