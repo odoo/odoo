@@ -2,11 +2,11 @@ from unittest.mock import patch
 
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.base.tests.common import BaseCommon
 
 
 @tagged('post_install', '-at_install')
-class TestPartnerRoutingFields(AccountTestInvoicingCommon):
+class TestPartnerRoutingFields(BaseCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 

@@ -73,7 +73,8 @@ class TestUblExportBis3PartyNodes(TestUblBis3Common, TestUblCiiBECommon):
         self.assertEqual(nodes['identification'], identification or [], "PartyIdentification mismatch")
 
     def _make_customer(self, country_xmlid, **values):
-        return self.env['res.partner'].create({
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
+        return self.env['res.partner'].with_context(**MAIL_OFF).create({
             **self._create_partner_default_values(),
             'name': f"partner_{country_xmlid.split('.')[-1]}",
             'street': "Main Street 1",

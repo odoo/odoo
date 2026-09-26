@@ -1,14 +1,13 @@
 from unittest.mock import patch
 
 from odoo.exceptions import UserError
-from odoo.tests.common import HttpCase, freeze_time, tagged
+from odoo.tests.common import HttpCase, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.account_peppol.tests.common import mock_can_connect, mock_connect, mock_lookup_not_found
 from odoo.addons.account_peppol.tools.peppol_iap_connector import PeppolIAPConnector
 
 
-@freeze_time('2026-01-01')
 @tagged('-at_install', 'post_install')
 class TestPeppolKYC(HttpCase):
     def setUp(self):
