@@ -393,6 +393,9 @@ class AccountEdiProxyClientUser(models.Model):
 
             move.peppol_move_state = content['state']
             move._message_log(body=self._peppol_get_message_status_update_body(move, content))
+            if content.get('direction') == 'incoming':
+                # Incoming messages are ack by _peppol_get_new_documents
+                continue
             processed_message_uuids.append(uuid)
         return processed_message_uuids
 
