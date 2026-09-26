@@ -124,6 +124,7 @@ class PosPaymentMethod(models.Model):
             {"type": "terminal", "provider": "dpopay", "module": "pos_dpopay", "name": "DPO Pay"},
             {"type": "terminal", "provider": "mollie", "module": "pos_mollie", "name": "Mollie"},
             {"type": "terminal", "provider": "safaricom", "module": "pos_safaricom", "name": "Safaricom"},
+            {"type": "terminal", "provider": "square", "module": "pos_square", "name": "Square"},
             {"type": "external_qr", "provider": "bancontact_pay", "module": "pos_bancontact_pay", "name": "Bancontact Pay"},
             {"type": "cash_machine", "provider": "glory", "module": "pos_glory_cash", "name": "Glory"},
             {"type": "cash_machine", "provider": "cashdro", "module": "pos_cashdro", "name": "Cashdro"},
