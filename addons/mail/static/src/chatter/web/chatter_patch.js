@@ -24,6 +24,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
 import { usePopoutAttachment } from "@mail/core/common/attachment_view";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export const DELAY_FOR_SPINNER = 1000;
 
@@ -97,6 +98,7 @@ patch(Chatter.prototype, {
         this.loadingAttachmentTimeout = null;
         /** @type {Map<string, Function>} */
         this.uploadHandlers = new Map();
+        this.isMobileOS = isMobileOS();
         useCustomDropzone(this.rootRef, MailAttachmentDropzone, {
             extraClass: "o-mail-Chatter-dropzone",
             /** @param {Event} ev */

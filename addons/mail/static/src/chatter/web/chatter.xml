@@ -34,7 +34,7 @@
                         <i class="oi oi-search" role="img"/>
                     </button>
                 </t>
-                <button t-if="props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action" t-on-click="popoutAttachment">
+                <button t-if="!isMobileOS and props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action" t-on-click="popoutAttachment">
                     <i class="fa fa-window-restore" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
                 <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded="onUploaded(undefined, { thread: state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="state.thread.localId" >
