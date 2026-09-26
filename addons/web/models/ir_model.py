@@ -90,7 +90,7 @@ class IrModel(models.Model):
             model_definitions[model_name] = {
                 'description': model._description,
                 'fields': fields_data_by_fname,
-                'inherit': [model_name for model_name in model._inherit_module if model_name in model_names],
+                'inherit': [model_name for model_name in model._inherit_module__ if model_name in model_names],
                 'order': model._order,
                 'parent_name': model._parent_name,
                 'rec_name': model._rec_name,
