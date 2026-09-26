@@ -2291,39 +2291,37 @@ export class PosStore extends WithLazyGetterTrap {
                           bodyClass: "pb-4",
                       });
         }
+        preset ??= this.config.default_preset_id;
+        order.setPreset(preset);
 
-        if (preset) {
-            order.setPreset(preset);
-
-            if (preset.needsPartner) {
-                const partner = order.partner_id || (await this.selectPartner(order));
-                if (!partner) {
+        if (preset.needsPartner) {
+            const partner = order.partner_id || (await this.selectPartner(order));
+            if (!partner) {
+                return;
+            }
+            if (!(partner.street || partner.street2)) {
+                this.notification.add(_t("Customer address is required"), { type: "warning" });
+                await this.editPartner(partner);
+                if (!(partner.street || partner.street2)) {
                     return;
                 }
-                if (!(partner.street || partner.street2)) {
-                    this.notification.add(_t("Customer address is required"), { type: "warning" });
-                    await this.editPartner(partner);
-                    if (!(partner.street || partner.street2)) {
-                        return;
-                    }
-                }
             }
+        }
 
-            if (preset.identification === "name") {
-                await this.handleSelectNamePreset(order);
-                // re-set the order in case an order was selected from the current orders list in the EditOrderNamePopup
-                order = this.getOrder();
-            }
+        if (preset.identification === "name") {
+            await this.handleSelectNamePreset(order);
+            // re-set the order in case an order was selected from the current orders list in the EditOrderNamePopup
+            order = this.getOrder();
+        }
 
-            if (preset.use_timing && !order.preset_time) {
-                await this.openPresetTiming(order);
-                if (!order.preset_time) {
-                    await this.syncPresetSlotAvaibility(preset);
-                    order.preset_time = preset.nextSlot?.datetime || false;
-                }
-            } else if (!preset.use_timing) {
-                order.preset_time = false;
+        if (preset.use_timing && !order.preset_time) {
+            await this.openPresetTiming(order);
+            if (!order.preset_time) {
+                await this.syncPresetSlotAvaibility(preset);
+                order.preset_time = preset.nextSlot?.datetime || false;
             }
+        } else if (!preset.use_timing) {
+            order.preset_time = false;
         }
     }
     orderUsageUTCtoLocal(data) {
