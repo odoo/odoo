@@ -6,7 +6,6 @@ import re
 from odoo import api, fields, models
 from odoo.tools.urls import urljoin
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_adyen import const
 
@@ -92,6 +91,19 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS === #
 
+    def _get_amount_precision(self, currency, **kwargs):
+        """Override of `payment` to return the amount precision for Adyen.
+
+        :param recordset currency: The currency of the transaction, as a `res.currency` record.
+        :return: The number of decimal places.
+        :rtype: int
+        """
+        precision = super()._get_amount_precision(currency, **kwargs)
+        if self.code != "adyen":
+            return precision
+
+        return const.CURRENCY_DECIMALS.get(currency.name, precision)
+
     def _adyen_get_inline_form_values(self, pm_code, amount=None, currency=None):
         """Return a serialized JSON of the required values to render the inline form.
 
@@ -124,11 +136,7 @@ class PaymentProvider(models.Model):
         """
         currency_code = currency and currency.name
         converted_amount = (
-            amount
-            and currency_code
-            and payment_utils.to_minor_currency_units(
-                amount, currency, const.CURRENCY_DECIMALS.get(currency_code)
-            )
+            amount and currency_code and self._to_minor_currency_units(amount, currency)
         )
         return {"value": converted_amount, "currency": currency_code}
 
