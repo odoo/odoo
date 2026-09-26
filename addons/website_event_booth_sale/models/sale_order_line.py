@@ -12,3 +12,7 @@ class SaleOrderLine(models.Model):
         for record in wbooth:
             record.name_short = record.event_booth_pending_ids.event_id.name
         super(SaleOrderLine, self - wbooth)._compute_name_short()
+
+    def _is_custom_cart_line(self):
+        # Event Booth lines should not be modified during the ecommerce checkout.
+        return super()._is_custom_cart_line() or self.event_booth_registration_ids
