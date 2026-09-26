@@ -24,6 +24,8 @@ export class Many2OneResourceCalendarField extends Component {
                     duration_hours: {},
                 },
             },
+            days_per_week: {},
+            hours_per_week: {},
         };
     }
 
@@ -47,18 +49,9 @@ export class Many2OneResourceCalendarField extends Component {
     }
 
     variableSummary(record) {
-        const days = new Set();
-        let hours = 0;
-        for (const attendance of record.attendance_ids || []) {
-            if (attendance.date) {
-                days.add(attendance.date);
-            }
-            hours += attendance.duration_hours;
-        }
-        return _t("Variable (%(days)s %(dayLabel)s - %(hours)sh)", {
-            days: days.size,
-            dayLabel: days.size === 1 ? _t("day") : _t("days"),
-            hours: this.formatHours(hours),
+        return _t("Variable (%(hours)sh on %(days)s days / week)", {
+            hours: this.formatHours(record.hours_per_week),
+            days: record.days_per_week,
         });
     }
 

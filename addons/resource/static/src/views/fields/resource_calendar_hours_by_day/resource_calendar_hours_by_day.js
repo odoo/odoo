@@ -53,18 +53,10 @@ export class CalendarHoursByDay extends Component {
     }
 
     get variableScheduleSummary() {
-        const days = new Set();
-        let hours = 0;
-        for (const attendance of this.attendances) {
-            const { date, duration_hours } = attendance.data;
-            if (date) {
-                days.add(date.toISODate());
-            }
-            hours += duration_hours;
-        }
-        return _t("Variable (%(days)s days - %(hours)sh)", {
-            days: days.size,
-            hours: hours % 1 === 0 ? hours : hours.toFixed(1),
+        const hours_per_week = this.props.record.data.hours_per_week;
+        return _t("Variable (%(hours)sh on %(days)s days / week)", {
+            hours: hours_per_week % 1 === 0 ? hours_per_week : hours_per_week.toFixed(1),
+            days: this.props.record.data.days_per_week,
         });
     }
 }
@@ -73,7 +65,11 @@ export const calendarHoursByDay = {
     component: CalendarHoursByDay,
     displayName: _t("Working Hours by Day"),
     supportedTypes: ["one2many"],
-    fieldDependencies: [{ name: "calendar_type", type: "selection" }],
+    fieldDependencies: [
+        { name: "calendar_type", type: "selection" },
+        { name: "days_per_week", type: "float" },
+        { name: "hours_per_week", type: "float" },
+    ],
     relatedFields: () => [
         { name: "dayofweek", type: "selection" },
         { name: "date", type: "date" },
