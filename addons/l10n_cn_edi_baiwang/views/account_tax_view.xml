@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tax_form_inherit_l10n_cn_baiwang" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit.l10n_cn_baiwang</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="E-Fapiao settings" name="baiwang_settings" invisible="country_code != 'CN'">
+                    <group string="Policies &amp; Marks">
+                        <field name="l10n_cn_vat_special_policy"/>
+                        <field name="l10n_cn_free_tax_mark"/>
+                        <field name="l10n_cn_reduced_tax_code"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
