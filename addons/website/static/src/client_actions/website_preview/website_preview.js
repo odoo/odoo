@@ -36,6 +36,21 @@ class BlockPreview extends Component {
     static props = {};
 }
 
+/**
+ * Makes `targetEl` carry exactly the attributes of `sourceEl`.
+ *
+ * @param {HTMLElement} sourceEl
+ * @param {HTMLElement} targetEl
+ */
+function replaceAttributes(sourceEl, targetEl) {
+    for (const name of targetEl.getAttributeNames()) {
+        targetEl.removeAttribute(name);
+    }
+    for (const { name, value } of sourceEl.attributes) {
+        targetEl.setAttribute(name, value);
+    }
+}
+
 export class WebsitePreview extends Component {
     static template = "website.WebsitePreview";
     static components = {
@@ -492,7 +507,9 @@ export class WebsitePreview extends Component {
         this.iframe.el.contentDocument.addEventListener('keyup', ev => {
             this.iframe.el.dispatchEvent(new KeyboardEvent('keyup', ev));
         });
-        this.iframefallback.el?.contentDocument.documentElement.replaceChildren();
+        // Emptying the whole document would also drop the stylesheets the
+        // fallback loaded, which it reuses for every page it copies.
+        this.iframefallback.el?.contentDocument.body?.replaceChildren();
     }
 
     /**
@@ -514,6 +531,22 @@ export class WebsitePreview extends Component {
         browser.localStorage.setItem("ace_editor_width", width);
     }
 
+    /**
+     * Tells whether the stylesheets the fallback iframe loaded still cover the
+     * page being left, i.e. whether the asset bundles kept the same URLs.
+     *
+     * @private
+     * @param {Document} websiteDoc the page being left
+     * @param {Document} fallbackDoc the fallback iframe's document
+     * @returns {boolean}
+     */
+    _hasIframeFallbackStyles(websiteDoc, fallbackDoc) {
+        const frontendHref = (doc) =>
+            doc.head.querySelector('link[rel="stylesheet"][href*="web.assets_frontend"]')?.href;
+        const fallbackHref = frontendHref(fallbackDoc);
+        return !!fallbackHref && fallbackHref === frontendHref(websiteDoc);
+    }
+
     _onPageUnload() {
         this.iframe.el.setAttribute('is-ready', 'false');
         // Before leaving the iframe, its content is replicated on an
@@ -524,11 +557,16 @@ export class WebsitePreview extends Component {
         // The iframefallback is hidden in test mode
         const websiteDoc = this.iframe.el?.contentDocument;
         const fallbackDoc = this.iframefallback.el?.contentDocument;
-        if (!this.websiteContext.edition && websiteDoc && fallbackDoc) {
-            fallbackDoc.documentElement.replaceWith(websiteDoc.documentElement.cloneNode(true));
-            this.iframefallback.el.classList.remove("d-none");
-            getScrollingElement(fallbackDoc).scrollTop = getScrollingElement(websiteDoc).scrollTop;
-            this._cleanIframeFallback();
+        if (!this.websiteContext.edition && websiteDoc?.body && fallbackDoc?.body) {
+            if (this._hasIframeFallbackStyles(websiteDoc, fallbackDoc)) {
+                replaceAttributes(websiteDoc.documentElement, fallbackDoc.documentElement);
+                fallbackDoc.body.replaceWith(websiteDoc.body.cloneNode(true));
+                this.iframefallback.el.classList.remove("d-none");
+                getScrollingElement(fallbackDoc).scrollTop = getScrollingElement(websiteDoc).scrollTop;
+                this._cleanIframeFallback();
+            } else if (fallbackDoc.readyState === "complete") {
+                this.iframefallback.el.src = this.iframeFallbackUrl;
+            }
         }
     }
     _onPageHide() {
