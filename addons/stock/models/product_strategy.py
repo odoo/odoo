@@ -130,7 +130,10 @@ class StockPutawayRule(models.Model):
             order='date desc'
         ).location_dest_id
 
-    def _get_putaway_location(self, product, quantity=0, package=None, packaging=None, qty_by_location=None):
+    def _get_putaway_location(
+        self, product, quantity=0, package=None, packaging=None, qty_by_location=None,
+        package_products=None, excluded_sml_ids=None,
+    ):
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
         if package:
@@ -150,7 +153,10 @@ class StockPutawayRule(models.Model):
             if not putaway_rule.storage_category_id:
                 if location_out in checked_locations:
                     continue
-                if location_out._check_can_be_used(product, quantity, package, qty_by_location[location_out.id]):
+                if location_out._check_can_be_used(
+                    product, quantity, package, qty_by_location[location_out.id],
+                    package_products=package_products, excluded_sml_ids=excluded_sml_ids,
+                ):
                     return location_out
                 continue
             else:
@@ -162,12 +168,18 @@ class StockPutawayRule(models.Model):
                     continue
                 if package_type:
                     if location.quant_ids.filtered(lambda q: q.package_id and q.package_id.package_type_id == package_type):
-                        if location._check_can_be_used(product, quantity, package=package, location_qty=qty_by_location[location.id]):
+                        if location._check_can_be_used(
+                            product, quantity, package=package, location_qty=qty_by_location[location.id],
+                            package_products=package_products, excluded_sml_ids=excluded_sml_ids,
+                        ):
                             return location
                         else:
                             checked_locations.add(location)
                 elif product.uom_id.compare(qty_by_location[location.id], 0) > 0:
-                    if location._check_can_be_used(product, quantity, location_qty=qty_by_location[location.id]):
+                    if location._check_can_be_used(
+                        product, quantity, location_qty=qty_by_location[location.id],
+                        package_products=package_products, excluded_sml_ids=excluded_sml_ids,
+                    ):
                         return location
                     else:
                         checked_locations.add(location)
@@ -176,7 +188,10 @@ class StockPutawayRule(models.Model):
             for location in child_locations.filtered(lambda l: l.storage_category_id == putaway_rule.storage_category_id):
                 if location in checked_locations:
                     continue
-                if location._check_can_be_used(product, quantity, package, qty_by_location[location.id]):
+                if location._check_can_be_used(
+                    product, quantity, package, qty_by_location[location.id],
+                    package_products=package_products, excluded_sml_ids=excluded_sml_ids,
+                ):
                     return location
                 checked_locations.add(location)
 

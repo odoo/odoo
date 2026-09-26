@@ -290,15 +290,23 @@ class StockLocation(models.Model):
         self.invalidate_model(['warehouse_id'])
         return res
 
-    def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):
+    def _get_putaway_strategy(
+        self, product, quantity=0, package=None, packaging=None, additional_qty=None,
+        package_products=None, locations=None, excluded_sml_ids=None,
+    ):
         """Returns the location where the product has to be put, if any compliant
         putaway strategy is found. Otherwise returns self.
         The quantity should be in the default UOM of the product, it is used when
         no package is specified.
+
+        :param package_products: the products contained in the package to put away,
+            for a package with a type, where `product` is not set
+        :param locations: candidate locations, defaults to the child internal locations
+        :param excluded_sml_ids: ids of the move lines to ignore when computing
+            the occupation of the locations
         """
         self = self._check_access_putaway()
-        products = self.env.context.get('products', self.env['product.product'])
-        products |= product
+        products = (package_products or self.env['product.product']) | product
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
         if package:
@@ -324,16 +332,16 @@ class StockLocation(models.Model):
                                              reverse=True)
 
         putaway_location = None
-        locations = self.env.context.get("locations")
         if not locations:
             locations = self.child_internal_location_ids
+        excluded_sml_ids = excluded_sml_ids or set()
         if putaway_rules:
             # get current product qty (qty in current quants and future qty on assigned ml) of all child locations
             qty_by_location = defaultdict(lambda: 0)
             if locations.storage_category_id:
                 if package and package.package_type_id:
                     move_line_data = self.env['stock.move.line']._read_group([
-                        ('id', 'not in', list(self.env.context.get('exclude_sml_ids', set()))),
+                        ('id', 'not in', list(excluded_sml_ids)),
                         ('result_package_id.package_type_id', '=', package_type.id),
                         ('state', 'not in', ['draft', 'cancel', 'done']),
                     ], ['location_dest_id'], ['result_package_id:count_distinct'])
@@ -346,7 +354,7 @@ class StockLocation(models.Model):
                         qty_by_location[location.id] += count
                 else:
                     move_line_data = self.env['stock.move.line']._read_group([
-                        ('id', 'not in', list(self.env.context.get('exclude_sml_ids', set()))),
+                        ('id', 'not in', list(excluded_sml_ids)),
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
                         ('state', 'not in', ['draft', 'done', 'cancel'])
@@ -364,7 +372,10 @@ class StockLocation(models.Model):
             if additional_qty:
                 for location_id, qty in additional_qty.items():
                     qty_by_location[location_id] += qty
-            putaway_location = putaway_rules._get_putaway_location(product, quantity, package, packaging, qty_by_location)
+            putaway_location = putaway_rules._get_putaway_location(
+                product, quantity, package, packaging, qty_by_location,
+                package_products=package_products, excluded_sml_ids=excluded_sml_ids,
+            )
 
         if not putaway_location:
             putaway_location = locations[0] if locations and self.usage == 'view' else self
@@ -411,7 +422,10 @@ class StockLocation(models.Model):
     def _check_access_putaway(self):
         return self
 
-    def _check_can_be_used(self, product, quantity=0, package=None, location_qty=0):
+    def _check_can_be_used(
+        self, product, quantity=0, package=None, location_qty=0,
+        package_products=None, excluded_sml_ids=None,
+    ):
         """Check if product/package can be stored in the location. Quantity
         should in the default uom of product, it's only used when no package is
         specified."""
@@ -423,9 +437,8 @@ class StockLocation(models.Model):
                 return False
             # check if only allow same product
             if self.storage_category_id.allow_new_product == "same":
-                # In case it's a package, `product` is not defined, so try to get
-                # the package products from the context
-                product = product or self.env.context.get('products')
+                # In case it's a package, use `package_products` when `product` is not defined
+                product = product or package_products
                 if (positive_quant and positive_quant.product_id != product) or len(product) > 1:
                     return False
                 if self.env['stock.move.line'].search_count([
@@ -434,7 +447,7 @@ class StockLocation(models.Model):
                     ('location_dest_id', '=', self.id),
                 ], limit=1):
                     return False
-            forecast_weight = self._get_weight(self.env.context.get('exclude_sml_ids', set()))[self]['forecast_weight']
+            forecast_weight = self._get_weight(excluded_sml_ids)[self]['forecast_weight']
             # check if enough space
             if package and package.package_type_id:
                 # check weight
