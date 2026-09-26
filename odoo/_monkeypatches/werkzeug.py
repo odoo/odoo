@@ -1028,8 +1028,8 @@ def url_join(
 
 
 def patch_module():
-    from odoo.tools.json import scriptsafe
-    Request.json_module = Response.json_module = scriptsafe
+    from odoo.tools.json import simple
+    Request.json_module = Response.json_module = simple
 
     FileStorage.save = lambda self, dst, buffer_size=(1 << 20): copyfileobj(self.stream, dst, buffer_size)
 
