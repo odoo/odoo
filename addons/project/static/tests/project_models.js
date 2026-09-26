@@ -112,6 +112,10 @@ export class ProjectTask extends models.Model {
         relation: "res.users",
         falsy_value_label: "👤 Unassigned",
     });
+    project_sharing_portal_user_ids = fields.Many2many({
+        string: "Assignable Portal Users",
+        relation: "res.users",
+    });
     priority = fields.Selection({
         selection: [
             ["0", "Low"],
