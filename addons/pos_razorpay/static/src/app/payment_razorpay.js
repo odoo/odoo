@@ -94,19 +94,15 @@ export class PaymentRazorpay extends PaymentInterface {
             return Promise.resolve();
         }
 
-        const orderId = order.name.replace(" ", "").replaceAll("-", "").toUpperCase();
-        const referencePrefix = this.pos.config.name.replace(/\s/g, "").slice(0, 4);
-        localStorage.setItem(
-            "referenceId",
-            referencePrefix + "/" + orderId + "/" + crypto.randomUUID().replaceAll("-", "")
-        );
+        const referenceId = `${this.pos.config.id}/${order.uuid}/${this.payment_method_id.id}/${this.pos.config.currency_id.name}/${line.amount}`;
+        localStorage.setItem("referenceId", referenceId);
         const data = {
             amount: line.amount,
-            referenceId: localStorage.getItem("referenceId"),
+            referenceId: referenceId,
         };
-        return this._call_razorpay(data, "razorpay_make_payment_request").then((data) => {
-            return this._razorpay_handle_response(data);
-        });
+        return this._call_razorpay(data, "razorpay_make_payment_request").then((data) =>
+            this._razorpay_handle_response(data)
+        );
     }
 
     /**
