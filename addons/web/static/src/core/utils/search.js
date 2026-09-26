@@ -147,7 +147,7 @@ export function fuzzyLevenshteinLookup(pattern, items, errorRatio = 3) {
     for (const item of items) {
         const nCandidate = normalize(item);
         if (nCandidate.includes(nPattern)) {
-            results.push({ distance: 0, item: nPattern });
+            results.push({ distance: 0, item });
         } else {
             const distance = getLevenshteinDistance(nPattern, nCandidate);
             if (distance >= 0 && distance <= maxNbrCorrection) {
