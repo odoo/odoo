@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.crm.typesafe</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="crm.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting name="predictive_lead_setting_container" position="after">
+                <setting string="AI Lead Qualification" name="typesafe_lead_setting_container"
+                    help="Prioritize new leads and detect spam with TypeSafe's System One model (Jev)"
+                    documentation="https://docs.typesafe.ai">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label for="typesafe_api_key" class="col-lg-3 o_light_label"/>
+                            <field name="typesafe_api_key" password="True"/>
+                        </div>
+                        <div class="row">
+                            <label for="typesafe_provider" class="col-lg-3 o_light_label"/>
+                            <field name="typesafe_provider"/>
+                        </div>
+                        <div class="row">
+                            <label for="typesafe_model" class="col-lg-3 o_light_label"/>
+                            <field name="typesafe_model" placeholder="Provider default"/>
+                        </div>
+                        <div class="row">
+                            <label for="typesafe_qualify_auto" class="col-lg-3 o_light_label"/>
+                            <field name="typesafe_qualify_auto" widget="radio" required="True"/>
+                        </div>
+                    </div>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>
