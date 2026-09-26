@@ -44,10 +44,26 @@
                 </form>
             </field>
         </record>
+        <record id="res_role_view_kanban" model="ir.ui.view">
+            <field name="name">res.role.kanban</field>
+            <field name="model">res.role</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" sample="1">
+                    <templates>
+                        <t t-name="card">
+                            <field name="name" class="fw-bolder"/>
+                            <footer>
+                                <field name="user_ids" widget="many2many_avatar_user" class="ms-auto"/>
+                            </footer>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <record id="res_role_action" model="ir.actions.act_window">
             <field name="name">Roles</field>
             <field name="res_model">res.role</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="search_view_id" ref="res_role_view_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">No roles found. Let's create one!</p>
