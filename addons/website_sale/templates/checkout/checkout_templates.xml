@@ -5,6 +5,35 @@
         <t t-call="website.step_wizard" wizard_step="website._get_checkout_breadcrumb_steps(website_sale_order)"/>
     </template>
 
+    <!-- The "Shipping" step's label doesn't apply to orders without deliverable products: they
+         never show a delivery method, only the contact/billing details. -->
+    <template id="website_sale.wizard_checkout_step_label" inherit_id="website.step_wizard">
+        <xpath expr="//t[@t-set='is_current_step']" position="after">
+            <t
+                t-set="show_step_as_contact"
+                t-value="bool(website_sale_order) and step.step_href == '/shop/checkout' and not website_sale_order._has_deliverable_products()"
+            />
+        </xpath>
+        <!-- Current step (not a link). -->
+        <xpath
+            expr="//div[@name='step_name']/p[@class='text-center mb-0']/span[@t-field='step.name']"
+            position="replace"
+        >
+            <span t-if="show_step_as_contact">Contact</span>
+            <span t-else="" t-field="step.name"/>
+        </xpath>
+        <!-- Past/future steps (rendered as a link): same two-node structure, only reachable via a
+             second, unambiguous xpath since `locate_node` only ever matches the first occurrence
+             of a given expression. -->
+        <xpath
+            expr="//a/div[@class='d-flex align-items-center']/p[@class='text-center mb-0']/span[@t-field='step.name']"
+            position="replace"
+        >
+            <span t-if="show_step_as_contact">Contact</span>
+            <span t-else="" t-field="step.name"/>
+        </xpath>
+    </template>
+
     <!-- Called in `website_sale.reduction_code`. -->
     <template id="website_sale.coupon_form" name="Coupon form">
         <!-- Checkout context:
@@ -64,7 +93,7 @@
                 <t t-else="">
                     <a role="button" name="website_sale_main_button"
                         t-attf-class="btn btn-primary #{cart_has_blocking_alerts and 'disabled'} w-100"
-                        t-att-href="next_website_checkout_step_href">
+                        t-att-href="False if show_address_form else next_website_checkout_step_href">
                         <span t-field="next_website_checkout_step.main_button_label"/>
                         <i class="oi ms-2 fw-light" data-icon="keyboard_arrow_right"/>
                     </a>

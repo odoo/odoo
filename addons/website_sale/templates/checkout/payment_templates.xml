@@ -25,12 +25,21 @@
                 t-att-data-payment-tracking-info="json.dumps(payment_tracking_info)"
             />
 
+            <t t-if="show_address_form">
+                <div class="o_customer_address_fill mb-4">
+                    <t t-call="website_sale.checkout_address_form"/>
+                    <a role="button" name="website_sale_main_button" class="btn btn-primary w-100 mt-2">
+                        Continue to payment
+                        <i class="oi ms-2 fw-light" data-icon="keyboard_arrow_right"/>
+                    </a>
+                </div>
+            </t>
             <div t-if="not cart_has_blocking_alerts and website_sale_order.amount_total" name="website_sale_non_free_cart">
                 <div id="payment_method" class="o_not_editable mb-3">
                     <t t-call="payment.form"/>
                 </div>
             </div>
-            <h4 t-else="" class="mb-3">
+            <h4 t-elif="not show_address_form" class="mb-3">
                 Confirm order
             </h4>
             <div id="address_on_payment">

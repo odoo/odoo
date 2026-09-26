@@ -8,17 +8,67 @@
             redirect.f="/shop/checkout"
             same_shipping="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)">
             <div id="shop_checkout">
+                <t t-if="show_address_form">
+                    <div class="o_customer_address_fill mb-4">
+                        <t t-call="website_sale.checkout_address_form"/>
+                    </div>
+                </t>
                 <t t-if="order._has_deliverable_products()">
+                    <t t-if="not show_address_form">
+                        <div class="mb-4">
+                            <t t-call="website_sale.delivery_address_list" addresses="delivery_addresses"/>
+                        </div>
+                    </t>
                     <div class="mb-4">
                         <t t-call="website_sale.delivery_form" selected_dm_id="order.carrier_id.id"/>
                     </div>
-                    <div class="mb-4">
-                        <t t-call="website_sale.delivery_address_list" addresses="delivery_addresses"/>
-                    </div>
                 </t>
-                <t t-call="website_sale.billing_address_list" addresses="billing_addresses"/>
+                <t t-if="not show_address_form">
+                    <t t-call="website_sale.billing_address_list" addresses="billing_addresses"/>
+                </t>
+                <t t-if="not show_address_form">
+                    <t t-call="website_sale.edit_address_modal"/>
+                </t>
             </div>
         </t>
+    </template>
+
+    <!-- Opened from the pencil icon on an address card: lets the customer edit an address
+         without leaving the checkout page. -->
+    <template id="website_sale.edit_address_modal" name="Edit address dialog">
+        <div
+            class="modal fade"
+            id="o_wsale_edit_address_modal"
+            tabindex="-1"
+            aria-hidden="true"
+            aria-labelledby="o_wsale_edit_address_modal_label"
+        >
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="o_wsale_edit_address_modal_label">
+                            Edit address
+                        </h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        />
+                    </div>
+                    <div class="modal-body"/>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            id="o_wsale_edit_address_modal_save"
+                            class="btn btn-primary w-100"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </template>
 
     <template id="website_sale.delivery_form">
@@ -27,7 +77,7 @@
             - selected_dm_id: The selected delivery method id.
         -->
         <form id="o_delivery_form" class="o_delivery_form">
-            <h4 class="mb-3">Delivery method</h4>
+            <h5 class="mb-3">Shipping Method</h5>
             <ul t-if="delivery_methods" id="o_delivery_methods" class="list-group">
                 <t t-foreach="delivery_methods" t-as="dm">
                     <li name="o_delivery_method" class="list-group-item">
@@ -136,7 +186,7 @@
         />
         <div id="delivery_address_list">
             <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                <h5 name="delivery_address_title" class="mb-0">Delivery address</h5>
+                <h5 name="delivery_address_title" class="mb-0">Ship to</h5>
                 <!-- We don't allow public users to have multiple delivery addresses. -->
                 <a
                     t-if="not order.website_id.is_public_user()"
@@ -223,6 +273,43 @@
         </t>
     </template>
 
+    <!-- Called in `website_sale.checkout` (inline, for anonymous carts) and `website_sale.address`
+         (standalone add/edit address page). -->
+    <template id="website_sale.checkout_address_form" name="Checkout address form">
+        <div id="errors"/> <!-- for js -->
+        <form
+            action="/shop/address/submit"
+            method="post"
+            name="address_form"
+            class="address_autoformat o_address_autocomplete"
+            t-att-data-company-country-code="res_company.country_id.code"
+            t-att-data-default-required-fields="','.join(required_fields)"
+            t-att-data-submit-url="'/shop/address/submit'"
+        >
+            <t t-if="is_anonymous_cart">
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-1">
+                    <h5 class="w-100 w-md-auto">Contact</h5>
+                    <div
+                        t-if="website.account_on_checkout != 'disabled'"
+                        class="o_address_signin d-flex d-md-block justify-content-between align-items-center p-3 p-md-0 w-100 text-md-end"
+                    >
+                        <span class="align-middle">Already have an account?</span>
+                        <a
+                            role="button"
+                            href='/web/login?redirect=/shop/checkout'
+                            class="btn btn-primary ms-2"
+                        >
+                            Sign in
+                        </a>
+                    </div>
+                </div>
+            </t>
+            <div class="row">
+                <t t-call="website_sale.address_form_fields"/>
+            </div>
+        </form>
+    </template>
+
     <!-- /shop/address route -->
     <template id="website_sale.address" name="Address Management">
         <t t-call="website_sale.checkout_layout">
@@ -246,38 +333,7 @@
                             <a class="o_translate_inline" href="/shop/address?address_type=billing">new address</a>.
                         </p>
                     </div>
-                    <div id="errors"/> <!-- for js -->
-                    <form
-                        action="/shop/address/submit"
-                        method="post"
-                        name="address_form"
-                        class="address_autoformat o_address_autocomplete"
-                        t-att-data-company-country-code="res_company.country_id.code"
-                        t-att-data-default-required-fields="','.join(required_fields)"
-                        t-att-data-submit-url="'/shop/address/submit'"
-                    >
-                        <t t-if="is_anonymous_cart">
-                            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-1">
-                                <h4 class="w-100 w-md-auto">Details</h4>
-                                <div
-                                    t-if="website.account_on_checkout != 'disabled'"
-                                    class="o_address_signin d-flex d-md-block justify-content-between align-items-center p-3 p-md-0 w-100 text-md-end"
-                                >
-                                    <span class="align-middle">Already have an account?</span>
-                                    <a
-                                        role="button"
-                                        href='/web/login?redirect=/shop/checkout'
-                                        class="btn btn-primary ms-2"
-                                    >
-                                        Sign in
-                                    </a>
-                                </div>
-                            </div>
-                        </t>
-                        <div class="row">
-                            <t t-call="website_sale.address_form_fields"/>
-                        </div>
-                    </form>
+                    <t t-call="website_sale.checkout_address_form"/>
                 </div>
             </div>
         </t>

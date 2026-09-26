@@ -1211,6 +1211,27 @@ class WebsiteSale(payment_portal.PaymentPortal):
         checkout_page_values.update(
             self.env.website._get_checkout_step_values("/shop/checkout", order_sudo)
         )
+
+        # Anonymous carts have no address yet: show the address form inline instead of forcing a
+        # detour through `/shop/address`, so the customer fills in their details and picks a
+        # delivery method on a single page. Once submitted, skip straight to the next checkout
+        # step (instead of reloading `/shop/checkout`) if it is already reachable, e.g. because a
+        # delivery method could be auto-selected above.
+        checkout_page_values["show_address_form"] = order_sudo._is_anonymous_cart()
+        if checkout_page_values["show_address_form"]:
+            partner_sudo, address_type = self._prepare_address_update(
+                order_sudo, address_type="billing"
+            )
+            checkout_page_values.update(
+                self._prepare_address_form_values(
+                    partner_sudo,
+                    address_type=address_type,
+                    order_sudo=order_sudo,
+                    use_delivery_as_billing=True,
+                    callback=checkout_page_values["next_website_checkout_step_href"],
+                )
+            )
+
         if try_skip_step and can_skip_delivery:
             return request.redirect(checkout_page_values["next_website_checkout_step_href"])
 
@@ -1287,6 +1308,43 @@ class WebsiteSale(payment_portal.PaymentPortal):
             self.env.website._get_checkout_step_values("/shop/address", order_sudo)
         )
         return request.render("website_sale.address", address_form_values)
+
+    @route("/shop/address/dialog", type="jsonrpc", auth="public", website=True)
+    def shop_address_dialog(
+        self, partner_id=None, address_type="billing", use_delivery_as_billing=None
+    ):
+        """Return the rendered address form, to be displayed in the address edit dialog.
+
+        Same parameters as `shop_address`, but returns only the form fragment instead of a full
+        page, so that it can be injected into a modal opened from an address card.
+
+        :param str partner_id: The partner whose address to update with the address form, if any.
+        :param str address_type: The type of the address: 'billing' or 'delivery'.
+        :param str use_delivery_as_billing: Whether the provided address should be used as both the
+                                            delivery and the billing address. 'true' or 'false'.
+        :return: The rendered address form.
+        :rtype: str
+        """
+        order_sudo = request.cart
+        use_delivery_as_billing = str2bool(use_delivery_as_billing or "false")
+
+        partner_sudo, address_type = self._prepare_address_update(
+            order_sudo, partner_id=partner_id and int(partner_id), address_type=address_type
+        )
+        if partner_sudo:  # If editing an existing partner.
+            use_delivery_as_billing = (
+                partner_sudo == order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
+            )
+
+        address_form_values = self._prepare_address_form_values(
+            partner_sudo,
+            address_type=address_type,
+            order_sudo=order_sudo,
+            use_delivery_as_billing=use_delivery_as_billing,
+        )
+        return self.env.website._render_template(
+            "website_sale.checkout_address_form", address_form_values
+        )
 
     def _prepare_address_form_values(self, *args, callback="", order_sudo=False, **kwargs):
         """Prepare the rendering values of the address form.
@@ -1716,10 +1774,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
     # === CHECKOUT FLOW - PAYMENT/CONFIRMATION METHODS === #
 
     def _get_shop_payment_values(self, order, **_kwargs):
+        # Orders without deliverable products skip the address step entirely, so an anonymous
+        # customer may reach payment without ever having provided their (billing) address.
+        show_address_form = order._is_anonymous_cart()
         checkout_page_values = {
             "sale_order": order,
             "website_sale_order": order,
-            "cart_has_blocking_alerts": order._has_blocking_alerts(),
+            "cart_has_blocking_alerts": order._has_blocking_alerts() or show_address_form,
+            "show_address_form": show_address_form,
             "partner": order.partner_invoice_id,
             "order": order,
             "only_services": order.only_services,
@@ -1728,6 +1790,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order._get_order_tracking_info() if self.env.website.google_analytics_key else {}
             ),
         }
+        if show_address_form:
+            partner_sudo, address_type = self._prepare_address_update(order, address_type="billing")
+            checkout_page_values.update(
+                self._prepare_address_form_values(
+                    partner_sudo,
+                    address_type=address_type,
+                    order_sudo=order,
+                    use_delivery_as_billing=True,
+                    callback="/shop/payment",
+                )
+            )
         payment_form_values = {
             **sale_portal.CustomerPortal._get_payment_values(
                 self, order, website_id=self.env.website.id
