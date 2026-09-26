@@ -7,6 +7,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, modules, tools
 from odoo.addons.base.models.ir_qweb import QWebError
+from odoo.exceptions import ValidationError
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
 
@@ -68,6 +69,24 @@ class EventMail(models.Model):
     notification_type = fields.Selection([('mail', 'Mail')], string='Send', compute='_compute_notification_type')
     template_ref = fields.Reference(string='Template', ondelete={'mail.template': 'cascade'}, required=True, selection=[('mail.template', 'Mail')])
 
+    @api.constrains('scheduled_date')
+    def _check_scheduled_date_before_event_end(self):
+        """ Warn users when a mail is configured such that its scheduled_date is after the event's
+        end date. Such mail will never be sent and would be cancelled by the CRON scheduler."""
+        for scheduler in self:
+            if (
+                scheduler.interval_type in ('before_event', 'after_event_start')
+                and scheduler.scheduled_date >= scheduler.event_id.date_end
+            ):
+                raise ValidationError(_(
+                    "The mail \"%(template)s\" is scheduled for %(scheduled_date)s, "
+                    "which is after the event end date %(event_end)s. "
+                    "It would never be sent. Please adjust the sending time.",
+                    template=scheduler.template_ref.display_name,
+                    scheduled_date=scheduler.scheduled_date,
+                    event_end=scheduler.event_id.date_end,
+                ))
+
     @api.depends('event_id.date_begin', 'event_id.date_end', 'interval_type', 'interval_unit', 'interval_nbr')
     def _compute_scheduled_date(self):
         for scheduler in self:
@@ -86,12 +105,18 @@ class EventMail(models.Model):
 
     @api.depends('error_datetime', 'interval_type', 'mail_done', 'event_id')
     def _compute_mail_state(self):
+        now = fields.Datetime.now()
         for scheduler in self:
             # issue detected
             if scheduler.error_datetime:
                 scheduler.mail_state = 'error'
-            # event cancelled
-            elif not scheduler.mail_done and scheduler.event_id.kanban_state == 'cancel':
+            # event cancelled, or event ended while the communication was
+            # scheduled before/during it, meaning it can never be sent anymore
+            elif not scheduler.mail_done and (
+                scheduler.event_id.kanban_state == 'cancel'
+                or (scheduler.interval_type in ('before_event', 'after_event_start')
+                    and scheduler.event_id.date_end <= now)
+            ):
                 scheduler.mail_state = 'cancelled'
             # registrations based
             elif scheduler.interval_type == 'after_sub':
@@ -470,7 +495,7 @@ class EventMail(models.Model):
             ('scheduled_date', '<=', fields.Datetime.now()),
             # event-based: todo / attendee-based: running until event is not done
             ('mail_done', '=', False),
-            '|', ('interval_type', '!=', 'after_sub'), ('event_id.date_end', '>', self.env.cr.now()),
+            '|', ('interval_type', 'in', ('after_event', 'before_event_end')), ('event_id.date_end', '>', self.env.cr.now()),
         ])
 
         for scheduler in schedulers:
