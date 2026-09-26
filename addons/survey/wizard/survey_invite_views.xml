@@ -53,7 +53,7 @@
                         <field name="can_edit_body" invisible="1"/>
                         <field name="body" class="oe-bordered-editor border border-1 m-3 p-0 flex-fill"
                             widget="html_mail"
-                            options="{'height': 380}"
+                            options="{'height': 380, 'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'render_model'}"
                             invisible="not send_email"
                             readonly="not can_edit_body" force_save="1"/>
                         <group invisible="not send_email">
