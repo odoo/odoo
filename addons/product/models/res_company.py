@@ -14,9 +14,6 @@ class ResCompany(models.Model):
 
     def _activate_or_create_pricelists(self):
         """ Manage the default pricelists for needed companies. """
-        if self.env.context.get('disable_company_pricelist_creation'):
-            return
-
         if self.env.user.has_group('product.group_product_pricelist'):
             companies = self or self.env['res.company'].search([])
             ProductPricelist = self.env['product.pricelist'].sudo()
@@ -49,21 +46,3 @@ class ResCompany(models.Model):
             'sequence': 10,
         })
         return values
-
-    def write(self, vals):
-        """Delay the automatic creation of pricelists post-company update.
-
-        This makes sure that the pricelist(s) automatically created are created with the right
-        currency.
-        """
-        if not vals.get('currency_id'):
-            return super().write(vals)
-
-        enabled_pricelists = self.env.user.has_group('product.group_product_pricelist')
-        res = super(
-            ResCompany, self.with_context(disable_company_pricelist_creation=True)
-        ).write(vals)
-        if not enabled_pricelists and self.env.user.has_group('product.group_product_pricelist'):
-            self.browse()._activate_or_create_pricelists()
-
-        return res

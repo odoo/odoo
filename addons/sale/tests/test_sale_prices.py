@@ -1405,3 +1405,46 @@ class TestSalePrices(SaleCommon):
         order.pricelist_id = eur_pricelist
         order._recompute_prices()
         self.assertAlmostEqual(order.amount_total, (100 + 50 + 10) * eur_curr.rate, 2)
+
+
+@tagged("post_install", "-at_install")
+class TestSaleCurrencyWithoutPricelists(SaleCommon):
+    """Multi-currency sales flows must work without the pricelist feature."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.other_currency = cls.setup_other_currency("EUR", rates=[("2024-01-01", 2.0)])
+        cls.product.list_price = 100.0
+
+    def setUp(self):
+        super().setUp()
+        with mute_logger("odoo.models.unlink"):
+            self.env["res.currency.rate"].sudo().search([
+                ("currency_id", "=", self.env.company.currency_id.id)
+            ]).unlink()
+
+    def test_multi_currency_does_not_enable_pricelists(self):
+        self.assertTrue(self.env.user.has_group("base.group_multi_currency"))
+        self.assertFalse(self.env.user.has_group("product.group_product_pricelist"))
+        self.assertFalse(self.env["product.pricelist"].search([]))
+
+    def test_price_unit_converted_to_order_currency(self):
+        order = self._create_so(currency_id=self.other_currency.id)
+
+        self.assertFalse(order.pricelist_id)
+        self.assertEqual(order.currency_id, self.other_currency)
+        self.assertEqual(order.currency_rate, 2.0)
+        self.assertEqual(order.order_line.price_unit, 200.0)
+
+    def test_currency_change_recomputes_prices(self):
+        with Form(self.env["sale.order"]) as order_form:
+            order_form.partner_id = self.partner
+            with order_form.order_line.new() as line_form:
+                line_form.product_id = self.product
+            order_form.currency_id = self.other_currency
+        order = order_form.record
+
+        self.assertEqual(order.currency_id, self.other_currency)
+        self.assertEqual(order.order_line.price_unit, 200.0)
