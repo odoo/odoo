@@ -894,16 +894,42 @@ class StockPicking(models.Model):
         'move_line_ids.result_package_id.outermost_package_id', 'move_line_ids.result_package_id.outermost_package_id.package_type_id', 'move_line_ids.result_package_id.outermost_package_id.shipping_weight',
         'weight_bulk')
     def _compute_shipping_weight(self):
+        all_packages = self.move_line_ids.result_package_id.outermost_package_id.sudo()
+        if all_packages:
+            # Batched over all pickings in self instead of one _get_weight() call per picking,
+            # which turned this compute into an N+1 (2 extra queries per picking).
+            children_by_dest_pack, all_pack_ids = all_packages._get_all_children_package_dest_ids()
+            base_weight_per_package = {
+                pack.id: weight for pack, weight in self.env['stock.package'].sudo()._read_group(
+                    domain=[('id', 'in', all_pack_ids)],
+                    groupby=['id', 'package_type_id.base_weight'],
+                )
+            }
+            move_line_groups = self.env['stock.move.line'].sudo()._read_group(
+                [('result_package_id', 'in', all_pack_ids), ('product_id', '!=', False), ('picking_id', 'in', self.ids)],
+                ['picking_id', 'result_package_id', 'product_id', 'product_uom_id', 'quantity'],
+                ['__count'],
+            )
+            product_weight_by_picking_package = defaultdict(float)
+            for picking_g, result_package, product, product_uom, quantity, count in move_line_groups:
+                product_weight_by_picking_package[picking_g.id, result_package.id] += (
+                    count
+                    * product_uom._compute_quantity(quantity, product.uom_id)
+                    * product.weight
+                )
+
         for picking in self:
             # if shipping weight is not assigned => default to calculated product weight
             shipping_weight = picking.weight_bulk
             relevant_packages = picking.move_line_ids.result_package_id.outermost_package_id
-            packages_weight = relevant_packages.sudo()._get_weight(picking.id)
             for package in relevant_packages:
                 if package.shipping_weight:
                     shipping_weight += package.shipping_weight
-                else:
-                    shipping_weight += packages_weight.get(package, 0)
+                    continue
+                weight = base_weight_per_package.get(package.id, 0) + product_weight_by_picking_package[picking.id, package.id]
+                for child_id in children_by_dest_pack.get(package, []):
+                    weight += base_weight_per_package.get(child_id, 0) + product_weight_by_picking_package[picking.id, child_id]
+                shipping_weight += weight
             picking.shipping_weight = shipping_weight
 
     def _compute_shipping_volume(self):
