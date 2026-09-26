@@ -104,6 +104,21 @@ export function checkProduct(name, price, quantity = "1") {
     };
 }
 
+export function removeProduct(name) {
+    return {
+        content: `Remove product ${name} from the cart`,
+        trigger: `.product-cart-item:has(div:contains("${name}")) button:has([data-icon="delete"])`,
+        run: "click",
+    };
+}
+
+export function checkNoProduct(name) {
+    return {
+        content: `Check that product ${name} is no longer in the cart`,
+        trigger: `.order_box:not(:has(.product-cart-item div:contains("${name}")))`,
+    };
+}
+
 export function checkAttribute(productName, attributes) {
     let attributeString = "";
     let attributeStringReadable = "";

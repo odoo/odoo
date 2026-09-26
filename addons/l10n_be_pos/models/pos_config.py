@@ -14,7 +14,7 @@ class PosConfig(models.Model):
                 rounding_method = self.env['account.cash.rounding'].search([
                     ('company_id', '=', company_id.id),
                     ('name', '=', 'Round to 0.05'),
-                    ], limit=1)
+                ], limit=1)
                 if rounding_method:
                     val['cash_rounding'] = True
                     val['rounding_method'] = rounding_method.id

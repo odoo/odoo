@@ -37,6 +37,7 @@ export class InvoiceButton extends Component {
                 [orderId]
             );
             await this.pos.action.doAction(downloadAction);
+            return downloadAction;
         } catch (error) {
             if (error instanceof Error) {
                 throw error;
@@ -99,6 +100,7 @@ export class InvoiceButton extends Component {
         await this._downloadInvoice(orderId);
         await this.pos.data.loadServerOrders([["id", "=", orderId]]);
         this.props.onInvoiceOrder(orderId);
+        return true;
     }
     async click() {
         if (this.lock) {

@@ -31,7 +31,7 @@
                     </button>
                     <button
                         class="btn-switchpane new-button btn btn-lg flex-grow-1 lh-sm btn-secondary"
-                        t-on-click="() => this.pos.showDefault()"
+                        t-on-click="() => this.clickNew()"
                         t-if="!this.currentOrder.isDirectSale and !this.nbrOfChanges and !this.currentOrder.isEmpty()"
                     >
                         <span>New</span>

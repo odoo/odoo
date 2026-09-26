@@ -37,9 +37,14 @@ export class ConfirmationPage extends Component {
             await this.initOrder();
             // Init the order before trying to print anything
             try {
-                await this.printOrder();
-                if (!this.selfOrder.hasPaymentMethod() || this.confirmedOrder.state === "paid") {
-                    await this.printOrderChanges();
+                if (await this.beforePrintOrder()) {
+                    await this.printOrder();
+                    if (
+                        !this.selfOrder.hasPaymentMethod() ||
+                        this.confirmedOrder.state === "paid"
+                    ) {
+                        await this.printOrderChanges();
+                    }
                 }
             } finally {
                 this.state.continueDisabled = false;
@@ -84,6 +89,16 @@ export class ConfirmationPage extends Component {
             this.confirmedOrder &&
             (!this.confirmedOrder.nb_print || this.confirmedOrder.nb_print < 1)
         );
+    }
+
+    /**
+     * Hook called once the order is loaded and before anything is printed.
+     * Overrides may prepare the order here (e.g. have it signed by a fiscal
+     * data module); returning a falsy value cancels the printing.
+     */
+    async beforePrintOrder() {
+        // meant to be overriden.
+        return true;
     }
 
     /**

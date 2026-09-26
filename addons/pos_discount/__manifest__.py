@@ -19,7 +19,7 @@ discount to a customer.
         'views/pos_config_views.xml',
         'views/pos_session_sales_details.xml',
         'receipt/pos_order_receipt.xml',
-        ],
+    ],
     'assets': {
         'point_of_sale._assets_pos': [
             'pos_discount/static/src/**/*',
