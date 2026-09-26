@@ -6,6 +6,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { patch } from "@web/core/utils/patch";
 
 /**
  * @typedef {Map<HTMLElement, ElementTranslationInfo} ElToTranslationInfoMap
@@ -82,6 +83,7 @@ export class TranslationPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        force_background_translation_state_selectors: ["a[role]", "a.nav-link"],
         clean_for_save_processors: this.cleanForSave.bind(this),
         dirty_els_providers: this.getDirtyTranslations.bind(this),
         on_replicated_handlers: ({ sourceEl, targetEl }) => {
@@ -129,8 +131,38 @@ export class TranslationPlugin extends Plugin {
         this.websiteService = this.services.website;
         this.notificationService = this.services.notification;
         this.dialogService = this.services.dialog;
-        this.nonTranslatedSelector =
-            `:not(${this.config.translatedElements.join(", ")})` + `:not(.o_translate_inline)`;
+        this.nonTranslatedSelector = `:not(${this.config.translatedElements.join(", ")})`;
+
+        this.unpatchDropdown = this.window.Dropdown // null in tests without loadAssetsFrontendJS
+            ? patch(this.window.Dropdown, {
+                  getOrCreateInstance(element, config = {}) {
+                      const existingInstance = this.getInstance(element);
+                      if (existingInstance) {
+                          return existingInstance;
+                      } else {
+                          const newDropdown = new this(
+                              element,
+                              typeof config === "object" ? config : null
+                          );
+                          if (element.parentNode.matches("span[data-oe-translation-state]")) {
+                              const translationSpan = element.parentNode;
+                              // adapted from bootstrap's dropdown's contructor
+                              // to take the translation span into account
+                              newDropdown._parent = translationSpan.parentNode;
+                              const SELECTOR_MENU =
+                                  ".dropdown-menu:not(.o-dropdown--menu, span[data-oe-translation-state])";
+                              newDropdown._menu = newDropdown._parent.querySelector(SELECTOR_MENU);
+                          }
+                          return newDropdown;
+                      }
+                  },
+              })
+            : () => {};
+    }
+
+    destroy() {
+        super.destroy();
+        this.unpatchDropdown();
     }
 
     prepareTranslation() {
