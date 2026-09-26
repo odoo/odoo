@@ -727,9 +727,11 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard.action_send_and_print()
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
-        # invoices are generated, but only partner_b got an email, without raising any errors
+        # invoices are generated, but only partner_b got an email
         self.assertTrue(invoice1.invoice_pdf_report_id)
         self.assertFalse(self._get_mail_message(invoice1, limit=None).partner_ids)
+        # invoice1 has no applicable sending method (missing email), so it is flagged as generated but not sent
+        self.assertIn('Invoice generated but not sent.', self._get_mail_message(invoice1).body)
         self.assertTrue(invoice2.invoice_pdf_report_id)
         self.assertTrue(self._get_mail_message(invoice2, limit=None).partner_ids)
 

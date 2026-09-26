@@ -43,12 +43,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
 
             for move in wizard.move_ids._origin:
                 edi_counter += Counter([edi for edi in self._get_default_extra_edis(move)])
-                sending_settings = self._get_default_sending_settings(move)
-                sending_method_counter += Counter([
-                    sending_method
-                    for sending_method in self._get_default_sending_methods(move)
-                    if self._is_applicable_to_move(sending_method, move, **sending_settings)
-                ])
+                sending_method_counter += Counter(self._get_applicable_sending_methods(move))
 
             summary_data = dict()
             for edi, edi_count in edi_counter.items():
