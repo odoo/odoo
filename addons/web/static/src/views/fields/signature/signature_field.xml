@@ -3,14 +3,22 @@
 
     <t t-name="web.SignatureField" owl="1">
         <t t-if="props.value">
-            <img class="o_signature img img-fluid"
-                alt="Binary file"
-                t-att-src="this.getUrl"
-                t-att-name="props.name"
-                t-att-style="sizeStyle"
-                t-on-click="onClickSignature"
-                t-on-error.stop="onLoadFailed"
+            <div class="position-relative d-inline-block">
+                <img class="o_signature img img-fluid"
+                    alt="Binary file"
+                    t-att-src="this.getUrl"
+                    t-att-name="props.name"
+                    t-att-style="sizeStyle"
+                    t-on-click="onClickSignature"
+                    t-on-error.stop="onLoadFailed"
                 />
+                <button
+                    class="position-absolute top-0 end-0 btn btn-secondary fa fa-trash o_clear_file_button"
+                    data-tooltip="Clear"
+                    aria-label="Clear"
+                    t-on-click="onClickRemoveSignature"
+                />
+            </div>
         </t>
         <t t-else="">
             <div class="o_signature o_signature_empty" t-att-style="sizeStyle" t-on-click="onClickSignature">
