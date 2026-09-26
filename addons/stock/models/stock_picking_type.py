@@ -264,11 +264,11 @@ class StockPickingType(models.Model):
     batch_auto_confirm = fields.Boolean("Auto-confirm", default=True)
     batch_properties_definition = fields.PropertiesDefinition('Batch Properties')
 
-    @api.constrains(lambda self: self._get_batch_group_by_keys() + ['auto_batch'])
+    @api.constrains(lambda self: self._get_batch_and_wave_group_by_keys() + ['batch_creation_type'])
     def _check_auto_batch_options(self):
         group_by_keys = self._get_batch_and_wave_group_by_keys()
         for picking_type in self:
-            if not picking_type.auto_batch:
+            if picking_type.batch_creation_type == 'manual':
                 continue
             if not any(picking_type[key] for key in group_by_keys):
                 raise ValidationError(_("If the Automatic Batches feature is enabled, at least one 'Grouping by' option must be selected."))
