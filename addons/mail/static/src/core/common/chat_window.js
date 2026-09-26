@@ -111,6 +111,26 @@ export class ChatWindow extends Component {
         return this.props.chatWindow.channel;
     }
 
+    get displayNameFontSizeClass() {
+        return this.ui.isSmall ? "fs-4" : "fs-5";
+    }
+
+    get displayNameMarginClass() {
+        return "o-mx-0_5";
+    }
+
+    get displayNamePaddingClass() {
+        return "py-1";
+    }
+
+    get displayNameAttClass() {
+        return {
+            [this.displayNameFontSizeClass]: Boolean(this.displayNameFontSizeClass),
+            [this.displayNameMarginClass]: Boolean(this.displayNameMarginClass),
+            [this.displayNamePaddingClass]: Boolean(this.displayNamePaddingClass),
+        };
+    }
+
     get attClass() {
         return {
             "w-100 h-100 o-mobile": this.ui.isSmall,

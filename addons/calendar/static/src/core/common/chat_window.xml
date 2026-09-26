@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow.headerContent" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-ChatWindow-displayName')]" position="replace">
+            <div class="o-mail-ChatWindow-nameBox d-flex flex-column min-w-0 o-mx-0_5 text-start" t-att-class="{ 'lh-sm': this.inMeetingEndText, 'py-1': !this.inMeetingEndText }">
+                <t>$0</t>
+                <span t-if="this.inMeetingEndText" class="o-mail-ChatWindow-inMeetingEndText text-success smaller fw-bold opacity-75 text-truncate" t-out="this.inMeetingEndText"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

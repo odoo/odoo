@@ -78,6 +78,19 @@ export class DiscussContent extends Component {
         );
     }
 
+    /** Compact header layout when a subtitle is shown (local time, meeting, out-of-office, …). */
+    get hasHeaderSubline() {
+        return this.showsChatLocalDateTime;
+    }
+
+    get threadNameAttClass() {
+        return {
+            "o-mail-DiscussContent-threadNameBox fw-bold flex-shrink-0 py-0": true,
+            "fs-5": this.hasHeaderSubline,
+            "fs-4": !this.hasHeaderSubline,
+        };
+    }
+
     get isThreadAvatarEditable() {
         return (
             !this.thread.channel?.parent_channel_id &&
