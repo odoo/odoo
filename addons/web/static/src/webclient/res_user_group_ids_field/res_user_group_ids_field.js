@@ -21,9 +21,11 @@ class ResUserGroupIdsField extends Component {
     static props = { ...standardFieldProps };
 
     setup() {
-        const { groups, privileges, categories } = toRaw(
-            this.props.record.data.view_group_hierarchy
-        );
+        const {
+            groups = {},
+            privileges = {},
+            categories = [],
+        } = toRaw(this.props.record.data.view_group_hierarchy) || {};
 
         // Generate the "other" category (for privileges that do not belong to any category)
         const privilegesWithoutCategory = Object.values(privileges)
