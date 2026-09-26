@@ -517,6 +517,13 @@ export class PosOrder extends PosOrderAccounting {
 
     electronicPaymentInProgress() {
         return this.payment_ids.some(function (pl) {
+            // Nothing is in flight for a pending QR code, it is only generated on "Send".
+            if (
+                pl.payment_status === "pending" &&
+                pl.payment_method_id.payment_method_type === "qr_code"
+            ) {
+                return false;
+            }
             if (pl.payment_status) {
                 return !["done", "reversed"].includes(pl.payment_status);
             } else {
