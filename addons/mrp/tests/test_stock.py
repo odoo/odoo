@@ -254,6 +254,57 @@ class TestWarehouseMrp(common.TestMrpCommon):
 #        scrap_move = production_3.move_raw_ids.filtered(lambda x: x.product_id == self.product_2 and x.location_dest_usage == 'inventory')
 #        self.assertTrue(scrap_move, "There are no any scrap move created for production order.")
 
+    def test_scrap_component_reserved_by_mo(self):
+        """ Scrapping a lot-tracked component from an MO must work even when
+        the MO's own move has already reserved the whole available stock for
+        that lot.
+        """
+        self.product_2.tracking = 'lot'
+
+        self.env['stock.quant']._update_available_quantity(
+            self.product_4, self.warehouse_1.lot_stock_id, 100)
+        self.env['stock.quant']._update_available_quantity(
+            self.product_3, self.warehouse_1.lot_stock_id, 100)
+        lot_product_2 = self.env['stock.lot'].create({
+            'name': '0000000000002',
+            'product_id': self.product_2.id,
+        })
+        self.env['stock.quant']._update_available_quantity(
+        self.product_2, self.warehouse_1.lot_stock_id, 6, lot_id=lot_product_2)
+
+        production = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': self.bom_3.id,
+            'product_qty': 12,
+            'uom_id': self.product_6.uom_id.id,
+        })
+        production.action_confirm()
+
+        free_qty = self.product_2.with_context(location=self.warehouse_1.lot_stock_id.id, lot_id=lot_product_2.id).free_qty
+        self.assertEqual(free_qty, 0)
+
+        scrap_qty = 4
+        scrap_move = self.env['stock.move'].with_context(active_model='mrp.production', active_id=production.id).create({
+            'is_scrap': True,
+            'product_id': self.product_2.id,
+            'quantity': scrap_qty,
+            'uom_id': self.product_2.uom_id.id,
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'location_dest_id': self.scrap_location.id,
+            'lot_ids': lot_product_2.ids,
+            'production_id': production.id,
+            'company_id': self.env.company.id,
+        })
+        scrap_move._action_scrap()
+
+        self.assertEqual(scrap_move.state, 'done')
+        self.assertRecordValues(scrap_move.move_line_ids, [{'lot_id': lot_product_2.id, 'quantity': scrap_qty}])
+
+        raw_move = production.move_raw_ids.filtered(lambda m: m.product_id == self.product_2)
+        raw_move.invalidate_recordset()
+        self.assertEqual(raw_move.quantity, 2)
+        self.assertEqual(raw_move.state, 'partially_available')
+
     def test_putaway_after_manufacturing_3(self):
         """ This test checks a tracked manufactured product will go to location
         defined in putaway strategy when the production is recorded with

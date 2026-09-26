@@ -702,9 +702,10 @@ Please change the quantity done or the rounding precision in your settings.""",
                     for quant in quants_to_reserve:
                         if reserved and product.uom_id.compare(extra_uom_qty, 0.0) <= 0:
                             break
-                        if not quant.lot_id or product.uom_id.compare(quant.available_quantity, 0.0) <= 0:
+                        quant_qty = quant.quantity if move.is_scrap else quant.available_quantity
+                        if not quant.lot_id or product.uom_id.compare(quant_qty, 0.0) <= 0:
                             continue
-                        quantity_to_reserve = min(quant.available_quantity, max(extra_uom_qty if reserved else extra_uom_qty + 1, 1))
+                        quantity_to_reserve = min(quant_qty, max(extra_uom_qty if reserved else extra_uom_qty + 1, 1))
                         if product.uom_id.compare(quantity_to_reserve, 0.0) > 0:
                             move_line_vals = self._prepare_move_line_vals(quantity=quantity_to_reserve, reserved_quant=quant)
                             move_line_vals.update({'lot_id': lot.id, 'lot_name': lot.name})
