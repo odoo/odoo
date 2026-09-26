@@ -37,9 +37,10 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Wait for the review tab chatter to be ready",
-            trigger: ":iframe #chatterRoot:not(:visible)",
-            run: () => odoo.portalChatterReady,
+            content:
+                "The chatter of the inactive discuss tab must not boot on its own, so that " +
+                "its bundle can never load in the middle of the edit mode startup",
+            trigger: ":iframe #discuss .o_portal_chatter:hidden:not(:has(#chatterRoot))",
         },
         ...clickOnEditAndWaitEditMode(),
         selectText(".s_text_block > p"),
@@ -68,6 +69,17 @@ registerWebsitePreviewTour(
                 ":iframe .o_wslides_lesson_content_type p span.o_text_highlight > svg.o_text_highlight_svg",
         },
         ...clickOnSave(),
+        {
+            content: "Reveal the discuss tab",
+            trigger: ":iframe a[href='#discuss']",
+            run: "click",
+        },
+        {
+            content:
+                "Revealing the tab must boot the chatter that stayed dormant until now, so " +
+                "that deferring the boot never costs the user the chatter itself",
+            trigger: ":iframe #chatterRoot:shadow .o-mail-Chatter",
+        },
         {
             content: "Click on the fullscreen button",
             trigger: ':iframe #wrapwrap a[aria-label="Fullscreen"]',

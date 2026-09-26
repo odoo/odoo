@@ -11,6 +11,20 @@ registry
                 expectUnloadPage: true,
             },
             {
+                content: "The collapsed reviews must not have booted the chatter",
+                trigger: '#o_product_page_reviews_content:hidden:not(:has(#chatterRoot))',
+                run: () => {
+                    const requested = performance
+                        .getEntriesByType('resource')
+                        .some(entry => entry.name.includes('/web/bundle/portal.assets_chatter'));
+                    if (requested) {
+                        throw new Error(
+                            "portal.assets_chatter was loaded although the reviews are collapsed"
+                        );
+                    }
+                },
+            },
+            {
                 trigger: '.o_product_page_reviews_title',
                 run: "click",
             },
