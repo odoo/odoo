@@ -118,24 +118,15 @@ if hasattr(NameObject, 'renumber_table'):
     })
 
 
-if hasattr(PdfWriter, 'write_stream'):
-    # >= 2.x has a utility `write` which can open a path, so `write_stream` could be called directly
-    class BrandedFileWriter(PdfWriter):
-        def write_stream(self, *args, **kwargs):
-            self.add_metadata({
-                '/Creator': "Odoo",
-                '/Producer': "Odoo",
-            })
-            super().write_stream(*args, **kwargs)
-else:
-    # 1.x has a monolithic write method
-    class BrandedFileWriter(PdfWriter):
-        def write(self, *args, **kwargs):
-            self.addMetadata({
-                '/Creator': "Odoo",
-                '/Producer': "Odoo",
-            })
-            super().write(*args, **kwargs)
+# `write` is the actual public entry point on every backend (1.x's is monolithic and
+# doesn't call `write_stream`, so branding must hook `write` itself, not `write_stream`).
+class BrandedFileWriter(PdfWriter):
+    def write(self, *args, **kwargs):
+        self.add_metadata({
+            '/Creator': "Odoo",
+            '/Producer': "Odoo",
+        })
+        super().write(*args, **kwargs)
 
 
 PdfFileWriter = BrandedFileWriter
