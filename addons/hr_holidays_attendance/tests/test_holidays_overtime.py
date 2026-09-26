@@ -10,6 +10,7 @@ from odoo.exceptions import ValidationError
 
 from freezegun import freeze_time
 import time
+import pytz
 
 @tagged('post_install', '-at_install', 'holidays_attendance')
 class TestHolidaysOvertime(TransactionCase):
@@ -566,3 +567,99 @@ class TestHolidaysOvertime(TransactionCase):
         leave.action_approve()
 
         self.assertAlmostEqual(self.employee.total_overtime, 0.0, 2)
+
+    def test_flexible_schedule_global_leave_timezone(self):
+        """
+        Test that flexible working schedules correctly allocate the full average daily hours
+        (e.g., 8 hours) for a public holiday, regardless of timezone offsets.
+
+        Prior to the fix, converting the UTC leave boundaries into local time caused partial
+        overlaps (or, in some cases, spillover onto the wrong day) in timezones offset from
+        UTC, producing fractional hours (e.g., 2 or 3 hours) instead of the full daily average
+        in timezones like UTC-1 or UTC+3, and in some versions shifted the leave hours onto
+        the previous day entirely (e.g., UTC-1).
+        """
+        # 1. Setup Flexible Calendars across positive, negative, and the originally-working offset
+        calendars = {
+            'Europe/Paris': self.env['resource.calendar'].create({
+                'name': 'Flexible Paris (UTC+1)',
+                'tz': 'Europe/Paris',
+                'flexible_hours': True,
+                'hours_per_day': 8.0,
+                'hours_per_week': 40.0,
+            }),
+            'Atlantic/Azores': self.env['resource.calendar'].create({
+                'name': 'Flexible Azores (UTC-1)',
+                'tz': 'Atlantic/Azores',
+                'flexible_hours': True,
+                'hours_per_day': 8.0,
+                'hours_per_week': 40.0,
+            }),
+            'Africa/Nairobi': self.env['resource.calendar'].create({
+                'name': 'Flexible Nairobi (UTC+3)',
+                'tz': 'Africa/Nairobi',
+                'flexible_hours': True,
+                'hours_per_day': 8.0,
+                'hours_per_week': 40.0,
+            }),
+        }
+
+        for tz_name, calendar in calendars.items():
+            self.env['hr.employee'].create({
+                'name': f'Flex Worker {tz_name}',
+                'resource_calendar_id': calendar.id,
+                'tz': tz_name,
+            })
+
+        # 2. Create a Global Leave (Public Holiday) for Jan 15th, stored in UTC,
+        # not tied to a specific calendar_id
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Global Holiday',
+            'calendar_id': False,
+            'company_id': self.env.company.id,
+            'time_type': 'leave',
+            'date_from': datetime(2024, 1, 15, 0, 0, 0),
+            'date_to': datetime(2024, 1, 15, 23, 59, 59),
+        })
+
+        # 3. For each timezone, check that the holiday's local day gets exactly the full
+        # average daily hours as leave, no working hours, and that nothing spills onto
+        # the previous or next local day.
+        for tz_name, calendar in calendars.items():
+            tz = pytz.timezone(tz_name)
+            day_start = pytz.utc.localize(datetime(2024, 1, 15, 0, 0, 0))
+            day_end = pytz.utc.localize(datetime(2024, 1, 15, 23, 59, 59))
+            prev_day_start = tz.localize(datetime(2024, 1, 14, 0, 0, 0))
+            prev_day_end = tz.localize(datetime(2024, 1, 14, 23, 59, 59))
+            next_day_start = tz.localize(datetime(2024, 1, 16, 0, 0, 0))
+            next_day_end = tz.localize(datetime(2024, 1, 16, 23, 59, 59))
+
+            attendance = calendar.get_work_duration_data(day_start, day_end, compute_leaves=False)
+            work = calendar.get_work_duration_data(day_start, day_end, compute_leaves=True)
+            leave_hours = attendance['hours'] - work['hours']
+
+            self.assertEqual(
+                leave_hours, 8.0,
+                f"{tz_name}: Flexible calendar should compute exactly 8 leave hours on the "
+                f"holiday's local day."
+            )
+            self.assertEqual(
+                work['hours'], 0.0,
+                f"{tz_name}: There should be 0 working hours on a full-day public holiday."
+            )
+
+            # Guard against the leave hours leaking onto the previous local day
+            prev_attendance = calendar.get_work_duration_data(prev_day_start, prev_day_end, compute_leaves=False)
+            prev_work = calendar.get_work_duration_data(prev_day_start, prev_day_end, compute_leaves=True)
+            self.assertEqual(
+                prev_attendance['hours'] - prev_work['hours'], 0.0,
+                f"{tz_name}: No leave hours should be attributed to the day before the holiday."
+            )
+
+            # Guard against the leave hours leaking onto the next local day
+            next_attendance = calendar.get_work_duration_data(next_day_start, next_day_end, compute_leaves=False)
+            next_work = calendar.get_work_duration_data(next_day_start, next_day_end, compute_leaves=True)
+            self.assertEqual(
+                next_attendance['hours'] - next_work['hours'], 0.0,
+                f"{tz_name}: No leave hours should be attributed to the day after the holiday."
+            )
