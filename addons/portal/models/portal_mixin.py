@@ -66,8 +66,11 @@ class PortalMixin(models.AbstractModel):
         if pid:
             params['pid'] = pid
             params['hash'] = self._sign_token(pid)
-        if signup_partner and hasattr(self, 'partner_id') and self.partner_id:
-            params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
+        if hasattr(self, 'partner_id') and self.partner_id:
+            if signup_partner:
+                params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
+            if self.partner_id.lang:
+                params['frontend_lang'] = self.partner_id.lang
 
         return '%s?%s' % ('/mail/view' if redirect else self.access_url, url_encode(params))
 
