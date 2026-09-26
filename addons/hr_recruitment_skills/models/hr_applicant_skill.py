@@ -16,6 +16,7 @@ class HrApplicantSkill(models.Model):
         index=True,
         ondelete="cascade",
     )
+    company_id = fields.Many2one(related='applicant_id.company_id')
 
     def _linked_field_name(self):
         return "applicant_id"
@@ -26,7 +27,7 @@ class HrApplicantSkill(models.Model):
         today = fields.Date.context_today(self)
         for (applicant, skill), applicant_skills in applicant_skill_grouped.items():
             filtered_applicant_skills = applicant_skills.filtered(
-                lambda a_s: not a_s.valid_to or a_s.valid_to >= today,
+                lambda a_s: (not a_s.valid_to or a_s.valid_to >= today) and (not a_s.skill_type_id.company_id or a_s.skill_type_id.company_id == a_s.company_id),
             )
             if skill.skill_type_id.is_certification and not filtered_applicant_skills:
                 most_recent_certification = max(applicant_skills, key=lambda a_s: a_s.valid_to)

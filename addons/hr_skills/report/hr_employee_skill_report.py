@@ -40,7 +40,7 @@ class HrEmployeeSkillReport(models.BaseModel):
             LEFT OUTER JOIN hr_employee_skill s ON e.id = s.employee_id
             LEFT OUTER JOIN hr_skill_level sl ON sl.id = s.skill_level_id
             LEFT OUTER JOIN hr_skill_type st ON st.id = sl.skill_type_id
-            WHERE st.active IS True AND st.is_certification IS NOT TRUE AND s.valid_to IS NULL
+            WHERE st.active IS True AND st.is_certification IS NOT TRUE AND s.valid_to IS NULL AND (st.company_id IS NULL OR st.company_id = e.company_id)
         )
         """ % (self._table, ))
 
