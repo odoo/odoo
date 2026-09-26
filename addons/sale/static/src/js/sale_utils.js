@@ -130,3 +130,25 @@ export async function getSelectedComboItems(orm, comboLineRecord, edit) {
         custom_ptavs: edit ? await getCustomPtavs(orm, record.data) : [],
     })));
 }
+
+/**
+ * Get the PTAVs that must be stored on the order line of the provided configured product.
+ *
+ * @param {Object} product The product, as returned by the product configurator.
+ * @return {{customPtavs: Object[], noVariantPtavIds: Number[]}} The selected custom PTAVs, with
+ *     their value, and the ids of the selected `no_variant` PTAVs.
+ */
+export function getConfiguredPtavs(product) {
+    const customPtavs = [];
+    const noVariantPtavIds = [];
+    for (const ptal of product.attribute_lines) {
+        const selectedCustomPtav = getSelectedCustomPtav(ptal);
+        if (selectedCustomPtav) {
+            customPtavs.push({ id: selectedCustomPtav.id, value: ptal.customValue });
+        }
+        if (ptal.create_variant === "no_variant") {
+            noVariantPtavIds.push(...ptal.selected_attribute_value_ids);
+        }
+    }
+    return { customPtavs, noVariantPtavIds };
+}
