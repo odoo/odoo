@@ -21,6 +21,7 @@ from odoo.tools import (
 )
 
 _logger = logging.getLogger(__name__)
+TRACKING_NUMBER_SEQUENCE_CODE = 'pos.order.tracking.number'
 
 
 class PosOrder(models.Model):
@@ -249,6 +250,24 @@ class PosOrder(models.Model):
             .sorted(lambda x: x.date)
         return moves._get_price_unit()
 
+    @api.model
+    def _cron_reset_tracking_numbers(self):
+        sequence = self.env['ir.sequence'].sudo().search([('code', '=', TRACKING_NUMBER_SEQUENCE_CODE)])
+        if sequence.exists():
+            sequence.write({'number_next': 1})
+
+    @api.model
+    def _default_tracking_number(self):
+        sequence = self.env['ir.sequence'].sudo().search([('code', '=', TRACKING_NUMBER_SEQUENCE_CODE)])
+        if not sequence.exists():
+            sequence = self.env['ir.sequence'].sudo().create({
+                'name': 'PoS Order Tracking Number',
+                'implementation': 'no_gap',
+                'company_id': self.env.company.id,
+                'code': TRACKING_NUMBER_SEQUENCE_CODE,
+            })
+        return sequence._next()
+
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
@@ -307,7 +326,7 @@ class PosOrder(models.Model):
     refunded_order_id = fields.Many2one('pos.order', compute='_compute_refund_related_fields', help="Order from which items were refunded in this order")
     has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')
     ticket_code = fields.Char(help='5 digits alphanumeric code to be used by portal user to request an invoice')
-    tracking_number = fields.Char(string="Order Number", readonly=True, copy=False)
+    tracking_number = fields.Char(string="Order Number", readonly=True, copy=False, default=lambda self: self._default_tracking_number())
     uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
     email = fields.Char(string='Email', compute="_compute_contact_details", readonly=False, store=True)
     mobile = fields.Char(string='Mobile', compute="_compute_contact_details", readonly=False, store=True)
@@ -502,9 +521,8 @@ class PosOrder(models.Model):
             values.setdefault('preset_id', session.config_id.default_preset_id.id)
 
         if not values.get('pos_reference'):
-            reference, tracking_number = session.config_id._get_next_order_refs()
+            reference = session.config_id._get_next_order_refs()
             values['pos_reference'] = reference
-            values['tracking_number'] = tracking_number
 
         if not values.get('sequence_number'):
             self._update_sequence_number(session, values)
@@ -962,7 +980,7 @@ class PosOrder(models.Model):
 
     def _prepare_refund_values(self, current_session):
         self.ensure_one()
-        pos_reference, tracking_number = current_session.config_id._get_next_order_refs()
+        pos_reference = current_session.config_id._get_next_order_refs()
         return {
             'name': _('%(name)s REFUND', name=self.name),
             'session_id': current_session.id,
@@ -972,7 +990,6 @@ class PosOrder(models.Model):
             'amount_paid': 0,
             'is_total_cost_computed': False,
             'is_refund': True,
-            'tracking_number': tracking_number,
         }
 
     def _prepare_mail_values(self, email, ticket, basic_ticket):

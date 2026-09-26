@@ -99,3 +99,48 @@ class TestBackend(TestPoSCommon):
             pm.payment_method_type = 'none'
             pm._onchange_payment_method_type()
             self.assertFalse(pm.payment_provider)
+
+    def test_backend_tracking_number(self):
+        # Ensure the test begins with a clean slate for tracking numbers
+        self.env['pos.order']._cron_reset_tracking_numbers()
+        basic = self.basic_config
+        other = self.other_currency_config
+        self.pricelist = self.env['product.pricelist']
+        product1 = self.create_product('Product 1', self.categ_basic, 10, 15)
+        product2 = self.create_product('Product 2', self.categ_basic, 50, 100)
+
+        basic.open_ui()
+        self.pos_session = basic.current_session_id
+        self.pos_session.set_opening_control(0, "")
+        self.assertEqual(self.pos_session.state, 'opened')
+        self.config = basic
+        order_data = [
+            self.create_ui_order_data([(product1, 1)]),
+            self.create_ui_order_data([(product2, 1)]),
+            self.create_ui_order_data([(product1, 2), (product2, 2)])
+        ]
+        orders = self.env['pos.order'].create(order_data)
+        self.assertEqual(orders.mapped('tracking_number'), ['1', '2', '3'])
+
+        other.open_ui()
+        self.pos_session = other.current_session_id
+        self.pos_session.set_opening_control(0, "")
+        self.assertEqual(self.pos_session.state, 'opened')
+        self.config = other
+        order_data = [
+            self.create_ui_order_data([(product1, 1)]),
+            self.create_ui_order_data([(product2, 1)]),
+            self.create_ui_order_data([(product1, 2), (product2, 2)])
+        ]
+        orders = self.env['pos.order'].create(order_data)
+        self.assertEqual(orders.mapped('tracking_number'), ['4', '5', '6'])
+
+        # Test if the cron correctly resets the tracking numbers
+        self.env['pos.order']._cron_reset_tracking_numbers()
+        order_data = [
+            self.create_ui_order_data([(product1, 1)]),
+            self.create_ui_order_data([(product2, 1)]),
+            self.create_ui_order_data([(product1, 2), (product2, 2)])
+        ]
+        orders = self.env['pos.order'].create(order_data)
+        self.assertEqual(orders.mapped('tracking_number'), ['1', '2', '3'])
