@@ -98,7 +98,7 @@ class ResourceCalendarLeaves(models.Model):
                 cal_attendance_intervals_params_entry['date_from'],
                 cal_attendance_intervals_params_entry['date_to'],
                 cal_attendance_intervals_params_entry['resources'],
-                tz=utc
+                tz=timezone(calendar.tz)
             )
             for leave in cal_attendance_intervals_params_entry['leaves']:
                 leave_date_from = utc.localize(leave.date_from)
