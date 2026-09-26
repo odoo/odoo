@@ -442,8 +442,10 @@ We can redirect you to the public employee list."""
     def _verify_barcode(self):
         for employee in self:
             if employee.barcode:
-                if not (re.match(r'^[A-Za-z0-9]+$', employee.barcode) and len(employee.barcode) <= 18):
-                    raise ValidationError(_("The Badge ID must be alphanumeric without any accents and no longer than 18 characters."))
+                # [ -~] is a character range from space (ASCII 32) to tilde (ASCII 126),
+                # matching all printable ASCII characters
+                if not (re.match(r'^[ -~]+$', employee.barcode) and len(employee.barcode) <= 18):
+                    raise ValidationError(_("The Badge ID must be ASCII printable characters only and no longer than 18 characters."))
 
     @api.constrains('ssnid')
     def _check_ssnid(self):

@@ -432,8 +432,7 @@ class TestHrEmployee(TestHrCommon):
 
         employee_form = Form(employee)
         employee_form.barcode = 'Test@badge1'
-        with self.assertRaises(ValidationError):
-            employee_form.save()
+        employee_form.save()
 
         employee_form.barcode = 'Testàë@badge'
         with self.assertRaises(ValidationError):
