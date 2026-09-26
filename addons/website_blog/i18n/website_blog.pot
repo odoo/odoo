@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 17:40+0000\n"
-"PO-Revision-Date: 2026-09-18 17:40+0000\n"
+"POT-Creation-Date: 2026-09-25 17:39+0000\n"
+"PO-Revision-Date: 2026-09-25 17:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -513,7 +513,7 @@ msgstr ""
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
-msgid "Adapt the size of the blog post content"
+msgid "Adapt the size of the blog post page"
 msgstr ""
 
 #. module: website_blog
@@ -541,6 +541,7 @@ msgstr ""
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option_plugin.js:0
+#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 msgid "All blog posts"
 msgstr ""
 
@@ -821,7 +822,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_res_users__blog_post_ids
 #: model:ir.model.fields,field_description:website_blog.field_website_visitor__blog_post_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_post_pages
-#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog_visitor_page_view_search
 msgid "Blog Posts"
@@ -1119,12 +1119,6 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
-msgid "Default"
-msgstr ""
-
-#. module: website_blog
-#. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Dexter"
 msgstr ""
@@ -1161,6 +1155,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Display the number of comments and views for each blog post"
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Display the title on the 'All blogs' page"
 msgstr ""
 
 #. module: website_blog
@@ -1350,6 +1350,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Full"
 msgstr ""
@@ -1531,7 +1532,6 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Large"
 msgstr ""
@@ -2112,6 +2112,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Regular"
 msgstr ""
@@ -2241,6 +2242,12 @@ msgid "Share this post"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Show Title"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Shown as a preview on the /blog page"
 msgstr ""
@@ -2262,6 +2269,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Size"
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+msgid "Small"
 msgstr ""
 
 #. module: website_blog

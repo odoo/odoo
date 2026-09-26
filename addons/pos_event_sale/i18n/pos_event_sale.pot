@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.5a1\n"
+"Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-25 17:38+0000\n"
+"PO-Revision-Date: 2026-09-25 17:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,7 @@ msgstr ""
 #. module: pos_event_sale
 #: model:ir.model.fields,field_description:pos_event_sale.field_event_registration__display_name
 #: model:ir.model.fields,field_description:pos_event_sale.field_event_sale_report__display_name
+#: model:ir.model.fields,field_description:pos_event_sale.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -34,6 +35,7 @@ msgstr ""
 #. module: pos_event_sale
 #: model:ir.model.fields,field_description:pos_event_sale.field_event_registration__id
 #: model:ir.model.fields,field_description:pos_event_sale.field_event_sale_report__id
+#: model:ir.model.fields,field_description:pos_event_sale.field_sale_order_line__id
 msgid "ID"
 msgstr ""
 
@@ -43,6 +45,17 @@ msgid "Link module between pos_sale and pos_event"
 msgstr ""
 
 #. module: pos_event_sale
+#. odoo-javascript
+#: code:addons/pos_event_sale/static/src/app/services/pos_store.js:0
+msgid "No more seats available for %s"
+msgstr ""
+
+#. module: pos_event_sale
 #: model:ir.module.module,shortdesc:base.module_pos_event_sale
 msgid "PoS - Event Sale"
+msgstr ""
+
+#. module: pos_event_sale
+#: model:ir.model,name:pos_event_sale.model_sale_order_line
+msgid "Sales Order Line"
 msgstr ""

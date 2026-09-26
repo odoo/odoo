@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-09-18 17:38+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
+"PO-Revision-Date: 2026-09-25 17:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -407,6 +407,24 @@ msgstr ""
 msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
+msgstr ""
+
+#. module: stock
+#: model:mail.template,body_html:stock.mail_template_data_stock_move_line_recall
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.picking_partner_id.display_name or ''\"/><br/><br/>\n"
+"        We would like to issue a product recall regarding the following product:<br/><br/>\n"
+"        Product:<br/>\n"
+"        <t t-out=\"object.product_id.display_name or ''\"/><br/><br/>\n"
+"        Lot / Serial Number:<br/>\n"
+"        <t t-out=\"object.lot_id.name or object.lot_name or ''\"/><br/><br/>\n"
+"        We apologize for the inconvenience caused.<br/><br/>\n"
+"        Best wishes,\n"
+"    </p>\n"
+"</div>\n"
+"        "
 msgstr ""
 
 #. module: stock
@@ -1993,14 +2011,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid "Cannot remove the location of a non empty package"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"Cannot reset move to draft.\n"
-"Quantity not enough, product might have been used in some transfer."
 msgstr ""
 
 #. module: stock
@@ -7425,6 +7435,16 @@ msgid "Product barcode"
 msgstr ""
 
 #. module: stock
+#: model:mail.template,description:stock.mail_template_data_stock_move_line_recall
+msgid "Product recall from lot/serial number"
+msgstr ""
+
+#. module: stock
+#: model:mail.template,subject:stock.mail_template_data_stock_move_line_recall
+msgid "Product recall: {{ object.product_id.display_name or 'n/a' }}"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid ""
 "Product this lot/serial number contains. You cannot change it anymore if it "
@@ -9354,6 +9374,11 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_move
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_move_ids
 msgid "Stock Move"
+msgstr ""
+
+#. module: stock
+#: model:mail.template,name:stock.mail_template_data_stock_move_line_recall
+msgid "Stock Move Line: Product Recall"
 msgstr ""
 
 #. module: stock
