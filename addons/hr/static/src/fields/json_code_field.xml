@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_payroll.JsonCodeField">
+        <div class="oe_form_field o_ace_view_editor w-100">
+            <CodeEditor
+                value="this.state.stringValue"
+                mode="'json'"
+                readonly="this.props.readonly"
+                onBlur.bind="this.commitChanges"
+                onChange.bind="this.handleChange"
+                class="'ace-view-editor'"
+                theme="'monokai'"
+                maxLines="200"
+            />
+        </div>
+    </t>
+</templates>
