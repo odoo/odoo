@@ -358,3 +358,18 @@ class TestLoyalty(TransactionCase):
         product.invalidate_recordset(['name'])
         self.assertEqual(product.with_context(lang='en_US').name, 'Test Discount EN')
         self.assertEqual(product.with_context(lang='fr_FR').name, 'Test Discount FR')
+
+    def test_loyalty_program_copy_with_discount_code(self):
+        program = self.env['loyalty.program'].create({
+            'name': 'Test Program',
+            'program_type': 'promo_code',
+            'rule_ids': [Command.create({'code': 'TEST_CODE'})],
+            'reward_ids': [
+                Command.create({
+                    'reward_type': 'product',
+                })
+            ],
+        })
+        copied_program = program.copy()
+        self.assertTrue(copied_program.rule_ids)
+        self.assertEqual(copied_program.rule_ids.code, "TEST_CODE (copy)")
