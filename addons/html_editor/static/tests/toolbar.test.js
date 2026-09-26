@@ -239,6 +239,33 @@ test("should move focus from toolbar to editable on escape", async () => {
 });
 
 test.tags("desktop");
+test("expanding toolbar from table cell selection should focus first expanded button", async () => {
+    const contentBefore = unformat(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td><p>[<br></p></td>
+                    <td><p>]<br></p></td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+    await setupEditor(contentBefore);
+    await waitFor(".o-we-toolbar");
+
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "table");
+    await expandToolbar();
+
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+    const toolbarBtns = queryAll(".o-we-toolbar button:not([disabled])");
+    expect(toolbarBtns[0]).toBeFocused();
+});
+
+test.tags("desktop");
 test("pressing Escape closes dropdown and returns focus to dropdown button, then editable", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
