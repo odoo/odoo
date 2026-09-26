@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { AnimateText } from "./animate_text";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { ancestors, closestElement, findFurthest } from "@html_editor/utils/dom_traversal";
+import { closestBlock } from "@html_editor/utils/blocks";
 import { ANIMATE } from "@html_builder/utils/option_sequence";
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -234,6 +235,7 @@ export class AnimateOptionPlugin extends Plugin {
      * (null if splits are prevented by an unsplittable node)
      */
     splitForAnimatedText({ anchorNode, focusNode, commonAncestorContainer }) {
+        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
         let commonAncestor = commonAncestorContainer;
         for (let [node, forward] of [
             [anchorNode, true],
@@ -255,7 +257,13 @@ export class AnimateOptionPlugin extends Plugin {
                 }
                 const updatingCommonAncestor = commonAncestor === node.parentNode;
                 const splitIndex = childNodeIndex(node);
-                if (forward ? splitIndex > 0 : splitIndex < node.parentNode.childNodes.length - 1) {
+                const siblingEls = [...node.parentNode.childNodes];
+                const hasContentToSplitOut = (
+                    forward ? siblingEls.slice(0, splitIndex) : siblingEls.slice(splitIndex + 1)
+                ).some(
+                    (sibling) => !(systemNodeSelectors && sibling.matches?.(systemNodeSelectors))
+                );
+                if (hasContentToSplitOut) {
                     // Split the node if needed, abort if unsplittable (unless it is animated text)
                     if (
                         this.dependencies.split.isUnsplittable(node.parentNode) &&
@@ -306,7 +314,11 @@ export class AnimateOptionPlugin extends Plugin {
         If these splits would split an unsplittable node, we abort
         */
         const selection = this.dependencies.split.splitSelection();
-        const commonAncestor = this.splitForAnimatedText(selection);
+        const commonAncestor = this.splitForAnimatedText({
+            anchorNode: selection.anchorNode,
+            focusNode: selection.focusNode,
+            commonAncestorContainer: closestBlock(selection.commonAncestorContainer),
+        });
         if (!commonAncestor) {
             return {};
         }
