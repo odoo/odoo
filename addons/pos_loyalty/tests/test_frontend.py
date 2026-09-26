@@ -4055,3 +4055,37 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosLoyaltyPartnerListAfterCouponRemoval')
+
+
+@tagged('post_install', '-at_install')
+class TestPosSessionError(TestPointOfSaleHttpCommon):
+
+    def test_missing_gift_card_print_report(self):
+        self.env['loyalty.program'].search([]).active = False
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.main_pos_config.current_session_id.close_session_from_ui()
+        program = self.env['loyalty.program'].browse(
+            self.env['loyalty.program'].create_from_template('gift_card')['res_id']
+        )
+        program.write({
+            'pos_report_print_id': False,
+            'pos_config_ids': [Command.clear()],
+            'currency_id': self.main_pos_config.currency_id.id,
+        })
+        program.rule_ids.product_ids.available_in_pos = True
+        self.assertTrue(program.mail_template_id)
+        self.authenticate('pos_user', 'pos_user')
+        message = 'There is no print report on the gift card program'
+        for debug in ('0', '1'):
+            for url in (f'/pos/ui/{self.main_pos_config.id}',
+                        f'/pos/ui?config_id={self.main_pos_config.id}'):
+                with self.subTest(debug=debug, url=url):
+                    separator = '&' if '?' in url else '?'
+                    response = self.url_open(f'{url}{separator}debug={debug}')
+                    self.assertEqual(response.status_code, 422)
+                    self.assertIn(message, response.text)
+                    self.assertIn('Oops! Something went wrong.', response.text)
+                    self.assertEqual('id="exception_traceback"' in response.text, debug == '1')
+                    if debug == '1':
+                        self.assertIn('_check_before_creating_new_session', response.text)
+                    self.assertFalse(self.main_pos_config.current_session_id)
