@@ -9,6 +9,7 @@ import {
     listGroupToTable,
     normalizeColors,
     normalizeRem,
+    toInline,
 } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { enableTransitions } from "@odoo/hoot-mock";
@@ -755,6 +756,41 @@ describe("Convert snippets and mailing bodies to tables", () => {
     // Test addTables
     beforeEach(() => {
         editable = document.createElement("div");
+    });
+
+    test("keep the vertical alignment of a row when stacking its columns", async () => {
+        editable.style.setProperty("width", TEST_WIDTH + "px");
+        getFixture().append(editable);
+        editable.innerHTML = `<div class="container o_mail_wrapper"><div class="row align-items-center"><div class="col-3"><p>Issue<br><strong>#42</strong></p></div><div class="col-9"><p style="height: 100px">Logo</p></div></div></div>`;
+
+        await toInline(editable, getCSSRules(document));
+
+        expect(
+            [...editable.querySelectorAll("div.o_stacking_wrapper")].map(
+                (wrapper) => wrapper.style.verticalAlign
+            )
+        ).toEqual(["middle", "middle"], {
+            message: "should have kept the columns vertically centered",
+        });
+        expect(editable.innerHTML.includes('valign="middle"')).toBe(true, {
+            message: "should have kept the columns vertically centered in Outlook",
+        });
+    });
+
+    test("ignore the alignment of a row that stacks its columns vertically", async () => {
+        editable.style.setProperty("width", TEST_WIDTH + "px");
+        getFixture().append(editable);
+        editable.innerHTML = `<div class="container o_mail_wrapper"><div class="row flex-column align-items-center"><div class="col-3"><p>Issue<br><strong>#42</strong></p></div><div class="col-9"><p style="height: 100px">Logo</p></div></div></div>`;
+
+        await toInline(editable, getCSSRules(document));
+
+        expect(
+            [...editable.querySelectorAll("div.o_stacking_wrapper")].map(
+                (wrapper) => wrapper.style.verticalAlign
+            )
+        ).toEqual(["top", "top"], {
+            message: "should not have read a horizontal alignment as a vertical one",
+        });
     });
 
     test("convert snippets to tables", async () => {
