@@ -5,8 +5,10 @@ import uuid
 from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import config, file_open
+from odoo.tests import tagged
 
 
+@tagged('TestUblCiiCommon')
 class TestUblCiiCommon(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
@@ -24,7 +26,9 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
     def _create_company(cls, **create_values):
         # EXTENDS 'account'
         create_values.setdefault('currency_id', cls.env.ref('base.EUR').id)
+        create_values.setdefault('terms_type', 'plain')
         company = super()._create_company(**create_values)
+        company.currency_id = create_values['currency_id']  # the coa may have reset it to USD
         company.tax_calculation_rounding_method = 'round_globally'
         return company
 
@@ -273,7 +277,6 @@ class TestUblCiiBECommon(TestUblCiiCommon):
     @classmethod
     def _create_company(cls, **create_values):
         company = super()._create_company(**create_values)
-
         company.partner_id.write({
             'street': "Chaussée de Namur 40",
             'zip': "1367",
@@ -298,7 +301,6 @@ class TestUblCiiFRCommon(TestUblCiiCommon):
     @classmethod
     def _create_company(cls, **create_values):
         company = super()._create_company(**create_values)
-
         company.partner_id.write({
             'street': "Rue Grand Port 1",
             'zip': "35400",

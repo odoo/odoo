@@ -28,6 +28,14 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
             'phone': '+33 499 65 43 21',
             'additional_identifiers': False,
         })
+        # clear first, else the old SIRET routing value just gets recomputed back
+        company.partner_id.routing_scheme = False
+        company.partner_id.routing_endpoint = False
+        identifier_vals = company.partner_id._get_preferred_routing_identifier_vals(force_recompute=True)
+        company.partner_id.write({
+            'routing_scheme': identifier_vals.get('scheme') or False,
+            'routing_endpoint': identifier_vals.get('value') or False,
+        })
         return company
 
     @classmethod

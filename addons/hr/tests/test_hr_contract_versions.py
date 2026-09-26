@@ -26,10 +26,7 @@ class TestHrContractVersions(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company = cls.env['res.company'].create({
-            'name': 'Test Company',
-            'country_id': cls.env.ref('base.us').id,
-        })
+        cls.company = cls.env.ref('base.test_company')
         cls.env.user.company_id = cls.company
         cls.employee = cls.env['hr.employee'].create({
             'name': 'John Doe',

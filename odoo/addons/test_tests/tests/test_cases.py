@@ -46,6 +46,28 @@ class TestTransactionCase(TransactionCase):
         self.assertEqual(partner, partner2, "browse_ref() should resolve xid to browse records")
 
 
+@tagged('at_install', '-post_install')
+class TestForbiddenCreate(TransactionCase):
+    _monitored_create_models = (('test_testing_utilities.c', 'raise'),)
+
+    def test_create_is_forbidden(self):
+        with self.assertRaisesRegex(AssertionError, 'Creating test_testing_utilities.c records is disabled'):
+            self.env['test_testing_utilities.c'].create({'name': 'forbidden'})
+
+    def test_create_escape_hatch(self):
+        with self.allow_model_create('test_testing_utilities.c'):
+            record = self.env['test_testing_utilities.c'].create({'name': 'allowed'})
+        self.assertTrue(record)
+
+        with self.assertRaisesRegex(AssertionError, 'Creating test_testing_utilities.c records is disabled'):
+            self.env['test_testing_utilities.c'].create({'name': 'forbidden again'})
+
+    def test_escape_hatch_rejects_unguarded_models(self):
+        with self.assertRaisesRegex(ValueError, 'Models are not guarded against create: res.partner'):
+            with self.allow_model_create('res.partner'):
+                pass
+
+
 class TestHttpCase(HttpCase):
 
     def test_console_error_string(self):
@@ -303,9 +325,7 @@ class TestEnv(TransactionCase):
         The main goal of the test is actually to check the values of the
         environment after this test execution (see test_env_company_part_02)
         """
-        company = self.env['res.company'].create({
-            "name": "Test Company",
-        })
+        company = self.env.ref('base.test_company')
         self.env.user.write({
             'company_id': company.id,
             'company_ids': [(4, company.id), (4, self.env.company.id)],

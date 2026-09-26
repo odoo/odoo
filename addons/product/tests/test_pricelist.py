@@ -215,7 +215,7 @@ class TestPricelist(ProductVariantsCommon):
 
     def test_pricelists_multi_comp_checks(self):
         first_company = self.env.company
-        second_company = self.env['res.company'].sudo().create({'name': 'Test Company'})
+        second_company = self.env.ref('base.test_company')
         self.env.user.company_ids += second_company
 
         shared_pricelist = self.env['product.pricelist'].create({

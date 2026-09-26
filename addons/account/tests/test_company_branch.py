@@ -14,18 +14,13 @@ from odoo.tests import tagged, Form
 class TestCompanyBranch(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
+    _test_independent_company_xmlid = 'base.test_company_with_branch'
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.other_currency = cls.setup_other_currency('EUR')
 
-        cls.company_data['company'].write({
-            'child_ids': [
-                Command.create({'name': 'Branch A'}),
-                Command.create({'name': 'Branch B'}),
-            ],
-        })
         cls.cr.precommit.run()  # load the CoA
 
         cls.root_company = cls.company_data['company']

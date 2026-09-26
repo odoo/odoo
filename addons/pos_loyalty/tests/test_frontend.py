@@ -3551,6 +3551,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         processing (_process_loyalty) runs once per order: 6 times in this tour
         (6 orders created).
         """
+        self.env.user.company_ids = self.env.company  # else other companies' payment methods leak in
         self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
         pos_order = self.env.registry.models['pos.order']
         sync_counter = {'count': 0}

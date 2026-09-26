@@ -56,7 +56,7 @@ class TestSaleOrder(WebsiteSaleCommon):
         self.assertEqual(self.cart.website_id, invoice.website_id)
 
     def test_change_company_on_sale_order(self):
-        company = self.env["res.company"].sudo().create({"name": "Test Company"})
+        company = self.env.ref('base.test_company')
         self.env.user.sudo().company_ids |= company
         self.cart.action_confirm()
         with self.assertRaises(UserError):

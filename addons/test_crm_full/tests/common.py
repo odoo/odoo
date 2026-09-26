@@ -3,11 +3,12 @@
 
 from datetime import datetime
 
-from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.addons.crm.tests.common import TestCrmCommon, tagged
 from odoo.addons.crm_iap_mine.tests.common import MockIAPReveal  # MockIAPEnrich
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
 
 
+@tagged('TestCrmFullCommon')
 class TestCrmFullCommon(TestCrmCommon, MockIAPReveal, MockVisitor):
 
     @classmethod

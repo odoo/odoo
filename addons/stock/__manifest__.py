@@ -95,6 +95,9 @@
         'views/digest_digest_views.xml',
         'security/ir.access.csv',
     ],
+    'test_data': [
+        'tests/data/stock_warehouse.xml',
+    ],
     'application': True,
     'pre_init_hook': 'pre_init_hook',
     'post_init_hook': 'post_init_hook',
