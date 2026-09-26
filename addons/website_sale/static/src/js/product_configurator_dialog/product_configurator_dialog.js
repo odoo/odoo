@@ -56,10 +56,20 @@ patch(ProductConfiguratorDialog.prototype, {
         return this.props.isFrontend && !this.props.edit;
     },
 
+    async _setQuantity(productTmplId, quantity) {
+        if (this.props.isFrontend && !this._findProduct(productTmplId)?.uom.is_continuous) {
+            quantity = Math.trunc(quantity);
+        }
+        return super._setQuantity(productTmplId, quantity);
+    },
+
     _handleUnitOfMeasureUpdate(product, combination, uomId) {
         super._handleUnitOfMeasureUpdate(...arguments);
         if (this.props.isFrontend && combination.strikethrough_price) {
             product.strikethrough_price = parseFloat(combination.strikethrough_price);
+        }
+        if (this.props.isFrontend && !product.uom.is_continuous) {
+            product.quantity = Math.trunc(product.quantity) || 1;
         }
     },
 

@@ -215,6 +215,12 @@ class UomUom(models.Model):
         else:
             return self.browse(set(linked_model_data.mapped('res_id')))
 
+    def _is_continuous(self) -> bool:
+        """ Check if `self` is a measurable unit (kg, L, m, ...), i.e. not based on the Units reference """
+        if not self:
+            return False
+        return not self._has_common_reference(self.env.ref('uom.product_uom_unit'))
+
     def _has_common_reference(self, other_uom: Self) -> bool:
         """ Check if `self` and `other_uom` have a common reference unit """
         self.ensure_one()

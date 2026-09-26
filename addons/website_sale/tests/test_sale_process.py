@@ -84,6 +84,26 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
     def test_01_cart_update_check(self):
         self.start_tour('/', 'shop_update_cart', login='admin')
 
+    def test_01_cart_quantity_decimals(self):
+        washer, _powder = self.env['product.template'].create([{
+            'name': 'Decimal Washer',
+            'list_price': 1.0,
+            'website_published': True,
+        }, {
+            'name': 'Decimal Powder',
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+            'list_price': 10.0,
+            'website_published': True,
+        }])
+        self.env['product.template'].create({
+            'name': 'Decimal Bolt',
+            'list_price': 1.0,
+            'website_published': True,
+            # Opens the product configurator when added to the cart
+            'optional_product_ids': [Command.set(washer.ids)],
+        })
+        self.start_tour('/', 'website_sale_cart_quantity_decimals', login='admin')
+
     def test_02_admin_checkout(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")

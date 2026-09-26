@@ -26,7 +26,7 @@ const VariantMixin = {
             'product_template_id': parseInt(parent.querySelector('.product_template_id')?.value),
             'product_id': this._getProductId(parent),
             'combination': combination,
-            'add_qty': parseInt(parent.querySelector('input[name="add_qty"]')?.value),
+            'add_qty': parseFloat(parent.querySelector('input[name="add_qty"]')?.value),
             'uom_id': this._getUoMId(parent),
             'context': this.context,
             ...this._getOptionalCombinationInfoParam(parent),
@@ -268,6 +268,13 @@ const VariantMixin = {
      * @param {Array} combination
      */
     _onChangeCombination(ev, parent, combination) {
+        const addQtyInput = parent.querySelector('input[name="add_qty"]');
+        const addQty = parseFloat(addQtyInput?.value);
+        if (addQtyInput && !combination.uom_is_continuous && !Number.isInteger(addQty)) {
+            addQtyInput.value = Math.max(
+                Math.trunc(addQty) || 0, parseFloat(addQtyInput.dataset.min || 1)
+            );
+        }
         const isCombinationPossible = !!combination.is_combination_possible;
         const precision = combination.currency_precision;
         const productPrice = parent.querySelector('.product_price');
