@@ -189,7 +189,9 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Check the allow_billable',
     async run(actions) {
         if (!this.anchor.checked) {
-            await actions.click();
+            setTimeout(async () => {
+                await actions.click();
+            }, 1000);
         }
     }
 }, {
