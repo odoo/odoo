@@ -901,7 +901,7 @@ class Website(Home):
                     modified = True
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({img['field']: new_html_content})
+                record.with_context(delay_translations=True).write({img['field']: new_html_content})
 
     @staticmethod
     def _get_image_id(model, model_id, field, index):
@@ -928,7 +928,7 @@ class Website(Home):
                     modified = True
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({link['field']: new_html_content})
+                record.with_context(delay_translations=True).write({link['field']: new_html_content})
 
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, readonly=True)
     def get_seo_data(self, res_id, res_model):
