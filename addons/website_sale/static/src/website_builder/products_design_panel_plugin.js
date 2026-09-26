@@ -34,9 +34,12 @@ export class ProductsDesignPanelPlugin extends Plugin {
                 };
 
                 const gapToSave = el.style.getPropertyValue("--o-wsale-products-grid-gap");
-                if (gapToSave !== undefined) {
+                if (gapToSave) {
                     updateData.shop_gap = gapToSave;
                 }
+
+                updateData.shop_opt_products_thumb_bg =
+                    el.style.getPropertyValue("--wsale-product-thumb-bg") || false;
                 return updateData;
             },
         },
