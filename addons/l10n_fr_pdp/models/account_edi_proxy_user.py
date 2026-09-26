@@ -376,6 +376,7 @@ class AccountEdiProxyClientUser(models.Model):
                 bodies={move.id: log_message for move in reference_moves},
             )
             return
+        response_info = dict(zip(reference_moves, response.get('messages')))
         responses = self.env['account.peppol.response'].create([
             {
                 'peppol_message_uuid': message['message_uuid'],
@@ -390,7 +391,7 @@ class AccountEdiProxyClientUser(models.Model):
                 'pdp_issue_date': issue_time,
                 'pdp_flow_number': '2',
             }
-            for message, move in zip(response.get('messages'), reference_moves)
+            for move, message in response_info.items()
             if message.get('message_uuid')
         ])
 
@@ -407,7 +408,7 @@ class AccountEdiProxyClientUser(models.Model):
         )
         message_bodies = {
             **{move.id: sent_message for move in sent_moves},
-            **{move.id: unsent_message for move in unsent_moves},
+            **{move.id: unsent_message + (Markup('<br/>') + error if (error := response_info.get(move, {}).get('error', {}).get('message')) else "") for move in unsent_moves},
         }
         reference_moves._message_log_batch(bodies=message_bodies)
 
@@ -883,24 +884,31 @@ class AccountEdiProxyClientUser(models.Model):
             return xml_tree.findtext('.//{*}ExchangedDocument/{*}TypeCode')
         return super()._get_type_code(attachment)
 
+    @api.model
+    def _pdp_get_send_lifecycles_moves(self, company, limit):
+        return self.env['account.move'].search(
+            [
+                ('company_id', '=', company.id),
+                ('pdp_ppf_move_state', 'in', ['sent', 'done']),
+                ('pdp_lifecycle_residual', '!=', 0.0),
+            ],
+            limit=limit,
+        )
+
     def _pdp_send_lifecycles(self, batch_size=None):
         job_count = batch_size or BATCH_SIZE
         need_retrigger = False
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
             company = edi_user.company_id
-            collected_moves = self.env['account.move'].search(
-                [
-                    ('company_id', '=', company.id),
-                    ('pdp_ppf_move_state', 'in', ['sent', 'done']),
-                    ('pdp_lifecycle_residual', '!=', 0.0),
-                ],
-                limit=job_count + 1,
-            )
+            collected_moves = self._pdp_get_send_lifecycles_moves(company, job_count + 1)
             move_count = len(collected_moves)
             _logger.info("At least %s moves need payment lifecycles in company '%s'.", move_count, company.name)
             if not collected_moves:
                 continue
+            existing_responses = collected_moves.peppol_response_ids.filtered(
+                lambda r: r.response_code == 'PD' and r.pdp_flow_number == '2',
+            )
             need_retrigger = need_retrigger or move_count > job_count
             try:
                 wizard = self.env['pdp.response.wizard'].create({
@@ -911,6 +919,31 @@ class AccountEdiProxyClientUser(models.Model):
             except Exception:  # noqa: BLE001
                 _logger.exception('Error while sending payment lifecycles: %s')
                 continue
+            finally:
+                # Make sure that we only try to send the information once.
+                # I.e. we want to avoid the issue that the cron sends the same info again and again.
+                # This could happen if the `button_send` fails to create the 'account.peppol.response' records.
+                # Then the `pdp_lifecycle_residual` remains unchanged and we will send the same info again.
+                # This can i.e. lead to problems on IAP side in case of repeated retriggers.
+                new_responses = (collected_moves.peppol_response_ids - existing_responses).filtered(
+                    lambda r: r.response_code == 'PD' and r.pdp_flow_number == '2',
+                )
+                failed_moves = collected_moves - new_responses.move_id
+                self.env['account.peppol.response'].create([
+                    {
+                        'peppol_message_uuid': False,
+                        'peppol_state': 'error',
+                        'response_code': 'PD',
+                        'move_id': move.id,
+                        'pdp_payment_info': self.env['pdp.response.wizard']._get_payments_data(move),
+                        'pdp_issue_date': fields.Datetime.now(),
+                        'pdp_flow_number': '2',
+                    }
+                    for move in failed_moves
+                ])
+                message_bodies = {move.id: self.env._("The payment info could not be sent to the Approved Platform") for move in collected_moves}
+                failed_moves._message_log_batch(bodies=message_bodies)
+
         if need_retrigger:
             self.env.ref('l10n_fr_pdp.ir_cron_pdp_send_lifecycles')._trigger()
 

@@ -9,6 +9,7 @@ from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged
 from odoo.tools.misc import file_open
+from odoo.tools import mute_logger
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 
@@ -830,6 +831,97 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             ],
             'move_id': move.id,
         }])
+
+    def test_paid_lifecycle_cron_response_not_created(self):
+        def mocked_pdp_send_response(self, reference_moves, status, additional_info=None):
+            # Do not do anything; i.e. do not create responses
+            return None
+
+        move = self._create_french_invoice()
+        move.action_post()
+
+        send_wizard = self.create_send_and_print(move)
+        send_wizard.action_send_and_print()
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+        self.assertEqual(move.peppol_move_state, 'done')
+        self._pay(move)
+        # We only sent the payment lifecycle automatically in case the Flow 1 succeeded
+        move.pdp_ppf_move_state = 'sent'
+        self.assertEqual(move.payment_state, 'paid')
+        self.assertEqual(move.pdp_lifecycle_residual, move.amount_total)
+        self.assertFalse(move.peppol_response_ids)
+
+        with patch(
+            'odoo.addons.l10n_fr_pdp.models.account_edi_proxy_user.AccountEdiProxyClientUser._pdp_send_response',
+            mocked_pdp_send_response,
+        ):
+            self.env.ref('l10n_fr_pdp.ir_cron_pdp_send_lifecycles').method_direct_trigger()
+
+        paid_response = move.peppol_response_ids
+        self.assertRecordValues(paid_response, [{
+            'peppol_state': 'error',
+            'pdp_flow_number': '2',
+            'response_code': 'PD',
+            'pdp_ppf_state': False,
+            'pdp_payment_info': [
+                {'amount_changed': False, 'type_code': 'MEN', 'amount': '600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
+                {'amount_changed': False, 'type_code': 'MEN', 'amount': '1085.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+            ],
+            'move_id': move.id,
+        }])
+        self.assertEqual(move.pdp_lifecycle_residual, 0)
+        self.assertFalse(self.env['account_edi_proxy_client.user']._pdp_get_send_lifecycles_moves(move.company_id, 100))
+
+        with patch(
+            'odoo.addons.l10n_fr_pdp.wizard.pdp_response_wizard.PdpResponseWizard.button_send',
+        ) as button_send:
+            self.env.ref('l10n_fr_pdp.ir_cron_pdp_send_lifecycles').method_direct_trigger()
+            self.assertFalse(button_send.called)
+
+    def test_paid_lifecycle_cron_sending_exception(self):
+        def mocked_button_send_raises(self):
+            raise Exception("test")
+
+        move = self._create_french_invoice()
+        move.action_post()
+
+        send_wizard = self.create_send_and_print(move)
+        send_wizard.action_send_and_print()
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+        self.assertEqual(move.peppol_move_state, 'done')
+        self._pay(move)
+        # We only sent the payment lifecycle automatically in case the Flow 1 succeeded
+        move.pdp_ppf_move_state = 'sent'
+        self.assertEqual(move.payment_state, 'paid')
+        self.assertEqual(move.pdp_lifecycle_residual, move.amount_total)
+        self.assertFalse(move.peppol_response_ids)
+
+        with mute_logger('odoo.addons.l10n_fr_pdp.models.account_edi_proxy_user'), patch(
+            'odoo.addons.l10n_fr_pdp.wizard.pdp_response_wizard.PdpResponseWizard.button_send',
+            mocked_button_send_raises,
+        ):
+            self.env.ref('l10n_fr_pdp.ir_cron_pdp_send_lifecycles').method_direct_trigger()
+
+        paid_response = move.peppol_response_ids
+        self.assertRecordValues(paid_response, [{
+            'peppol_state': 'error',
+            'pdp_flow_number': '2',
+            'response_code': 'PD',
+            'pdp_ppf_state': False,
+            'pdp_payment_info': [
+                {'amount_changed': False, 'type_code': 'MEN', 'amount': '600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
+                {'amount_changed': False, 'type_code': 'MEN', 'amount': '1085.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+            ],
+            'move_id': move.id,
+        }])
+        self.assertEqual(move.pdp_lifecycle_residual, 0)
+        self.assertFalse(self.env['account_edi_proxy_client.user']._pdp_get_send_lifecycles_moves(move.company_id, 100))
+
+        with patch(
+            'odoo.addons.l10n_fr_pdp.wizard.pdp_response_wizard.PdpResponseWizard.button_send',
+        ) as button_send:
+            self.env.ref('l10n_fr_pdp.ir_cron_pdp_send_lifecycles').method_direct_trigger()
+            self.assertFalse(button_send.called)
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
