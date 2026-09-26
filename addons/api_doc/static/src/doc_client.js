@@ -27,7 +27,11 @@ export class DocClient extends Component {
         this.modelStore = proxy(new ModelStore());
         useSubEnv({ modelStore: this.modelStore });
 
-        this.state = proxy({ showSearchModal: false });
+        this.state = proxy({
+            showSearchModal: false,
+            showSidebar: true,
+            showAside: true,
+        });
 
         onMounted(async () => {
             await this.modelStore.loadModels();
