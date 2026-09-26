@@ -12,6 +12,7 @@ chardet==4.0.0 ; python_version < '3.11'  # (Jammy)
 chardet==5.2.0 ; python_version >= '3.11'
 cryptography==3.4.8; python_version < '3.12'  # incompatibility between pyopenssl 19.0.0 and cryptography>=37.0.0
 cryptography==42.0.8 ; python_version >= '3.12'  # (Noble) min 41.0.7, pinning 42.0.8 for security fixes
+device_detector==6.4.0  # reproducer: 6.3.0+ pulls yaml-rs, whose wheels embed mimalloc
 docutils==0.17 ; python_version < '3.11'  # (Jammy)
 docutils==0.20.1 ; python_version >= '3.11'
 freezegun==1.1.0 ; python_version < '3.11'  # (Jammy)

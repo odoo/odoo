@@ -52,6 +52,7 @@ from . import test_qweb_field
 from . import test_qweb
 from . import test_res_config
 from . import test_res_lang
+from . import test_rlimit_as
 from . import test_search
 from . import test_split_table
 from . import test_sql
