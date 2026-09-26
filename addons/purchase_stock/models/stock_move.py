@@ -172,13 +172,21 @@ class StockMove(models.Model):
             )
             rslt['debit_line_vals']['currency_id'] = purchase_currency.id
             rslt['credit_line_vals']['currency_id'] = purchase_currency.id
-        else:
+        elif svl.account_move_line_id.currency_id != company_currency:
             rslt['credit_line_vals']['amount_currency'] = 0
             rslt['debit_line_vals']['amount_currency'] = 0
             rslt['debit_line_vals']['currency_id'] = purchase_currency.id
             rslt['credit_line_vals']['currency_id'] = purchase_currency.id
             if not svl.price_diff_value:
                 return rslt
+            # `price_diff_value` is expressed in the bill currency, which is not necessarily the PO one
+            bill_aml = svl.account_move_line_id
+            price_diff_value = bill_aml.currency_id._convert(
+                svl.price_diff_value,
+                purchase_currency,
+                self.company_id,
+                bill_aml.move_id.invoice_date or bill_aml.date or fields.Date.context_today(self),
+            )
             # The idea is to force using the company currency during the reconciliation process
             rslt['debit_line_vals_curr'] = {
                 'name': _("Currency exchange rate difference"),
@@ -189,7 +197,7 @@ class StockMove(models.Model):
                 'balance': 0,
                 'account_id': debit_account_id,
                 'currency_id': purchase_currency.id,
-                'amount_currency': -svl.price_diff_value,
+                'amount_currency': -price_diff_value,
             }
             rslt['credit_line_vals_curr'] = {
                 'name': _("Currency exchange rate difference"),
@@ -200,7 +208,7 @@ class StockMove(models.Model):
                 'balance': 0,
                 'account_id': credit_account_id,
                 'currency_id': purchase_currency.id,
-                'amount_currency': svl.price_diff_value,
+                'amount_currency': price_diff_value,
             }
         return rslt
 
