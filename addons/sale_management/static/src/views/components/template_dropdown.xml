@@ -12,7 +12,7 @@
         >
             New
         </button>
-        <Dropdown t-else="">
+        <Dropdown t-else="" navigationOptions="this.navigationOptions">
             <button
                 t-attf-class="{{ this.props.newButtonClasses }}
                 o-dropdown-caret"
@@ -31,16 +31,17 @@
                     New Quotation
                 </DropdownItem>
                 <div role="separator" class="dropdown-divider"/>
+                <div class="dropdown-header">Quotation Templates</div>
                 <t t-foreach="this.state.quotationTemplates" t-as="template" t-key="template.id">
                     <DropdownItem
-                        tag="'button'"
+                        tag="'span'"
                         class="'btn btn-link o-dropdown-item-indent o_sale_management_template d-flex align-items-center pe-0'"
                         onSelected="() => this.createQuotation({ additionalContext: { default_sale_order_template_id: template.id } })"
                     >
                         <span class="text-truncate" style="max-width: 400px;" t-out="template.name"/>
-                        <div class="btn-group o_template_icon_group ms-auto d-flex ps-1" t-if="this.state.canManageTemplates">
-                            <i role="button" t-on-click.stop="() => this.onEditClick(template.id)" class="oi oi-filled btn btn-link fs-3" data-icon="edit"/>
-                            <i role="button" t-on-click.stop="() => this.onDeleteClick(template.id)" class="oi oi-filled btn text-danger fs-3" data-icon="delete"/>
+                        <div class="o_template_icon_group ms-auto d-flex align-items-center gap-1 ps-2 pe-1" t-if="this.state.canManageTemplates">
+                            <button type="button" role="menuitem" t-on-click.stop="() => this.onEditClick(template.id)" class="o-navigable oi oi-filled btn btn-link p-1 text-action" data-icon="edit" aria-label="Edit template" title="Edit template"/>
+                            <button type="button" role="menuitem" t-on-click.stop="() => this.onDeleteClick(template.id)" class="o-navigable oi oi-filled btn btn-link p-1 text-danger" data-icon="delete" aria-label="Delete template" title="Delete template"/>
                         </div>
                     </DropdownItem>
                 </t>

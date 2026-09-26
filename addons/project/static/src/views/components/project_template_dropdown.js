@@ -3,7 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-import { ProjectTemplateButtons } from "./project_template_buttons";
+import { ProjectTemplateButtons, templateButtonsNavigationOptions } from "./project_template_buttons";
 
 export class ProjectTemplateDropdown extends Component {
     static template = "project.ProjectTemplateDropdown";
@@ -25,6 +25,7 @@ export class ProjectTemplateDropdown extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
+        this.navigationOptions = templateButtonsNavigationOptions;
         this.state = proxy({ projectTemplates: [] });
         onWillStart(this.onWillStart);
     }

@@ -112,14 +112,14 @@ for (const [viewType, newButtonClass] of [
         expect("button.dropdown-item:contains('New Task')").toHaveCount(1, {
             message: "The “New Task” button should be in the dropdown",
         });
-        expect("button.dropdown-item:contains('Template Task 1')").toHaveCount(1, {
-            message: "There should be a button named after the task template",
+        expect("span.dropdown-item:contains('Template Task 1')").toHaveCount(1, {
+            message: "There should be an item named after the task template",
         });
 
-        await hover("button.dropdown-item:contains('Template Task 1')");
+        await hover("span.dropdown-item:contains('Template Task 1')");
         await animationFrame();
 
-        await contains(".o_template_icon_group:first > i[data-icon='delete'].oi-filled").click();
+        await contains(".o_template_icon_group:first > button[data-icon='delete'].oi-filled").click();
         expect(".modal-body").toHaveCount(1, {
             message: "A confirmation modal should appear when deleting a template",
         });
@@ -128,7 +128,7 @@ for (const [viewType, newButtonClass] of [
         expect.verifySteps(["unlink"]);
 
         await animationFrame();
-        await contains(".o_template_icon_group:first > i[data-icon='edit']").click();
+        await contains(".o_template_icon_group:first > button[data-icon='edit']").click();
         expect.verifySteps(["task template opened"]);
 
     });

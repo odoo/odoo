@@ -6,7 +6,7 @@ import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { user } from "@web/core/user";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { ProjectTemplateButtons } from "./project_template_buttons";
+import { ProjectTemplateButtons, templateButtonsNavigationOptions } from "./project_template_buttons";
 
 export class ProjectTaskTemplateDropdown extends Component {
     static template = "project.TemplateDropdown";
@@ -32,6 +32,7 @@ export class ProjectTaskTemplateDropdown extends Component {
         this.orm = useService("orm");
         this.offlinePlugin = usePlugin(OfflinePlugin);
         this.addDialog = useOwnedDialogs();
+        this.navigationOptions = templateButtonsNavigationOptions;
         this.displayTasksLimit = 10;
         this.state = proxy({ taskTemplates: [] });
         this.isProjectManager = false;
@@ -47,7 +48,7 @@ export class ProjectTaskTemplateDropdown extends Component {
     }
 
     get taskTemplateButtonClasses() {
-        let classes = 'btn btn-link o-dropdopwn-item-indent o-task-template d-flex align-items-center';
+        let classes = 'btn btn-link o-dropdown-item-indent o-task-template d-flex align-items-center';
         if (this.isProjectManager) {
             classes += ' pe-0';
         }
