@@ -318,11 +318,12 @@ class AddPageTemplatePreview extends Component {
         for (const textHighlightEl of wrapEl.querySelectorAll(".o_text_highlight")) {
             removeTextHighlight(textHighlightEl);
         }
-        this.env.addPage(
-            wrapEl.innerHTML,
-            this.props.template.name && _t("Copy of %s", this.props.template.name),
-            templateId
-        );
+        if (this.props.template.name) {
+            const newName = _t("Copy of %s", this.props.template.name);
+            this.env.addPage("", newName, templateId, this.props.template.key);
+        } else {
+            this.env.addPage(wrapEl.innerHTML, "", templateId, "");
+        }
     }
 }
 
@@ -526,8 +527,8 @@ export class AddPageDialog extends Component {
         this.lastTabName = "";
 
         useSubEnv({
-            addPage: (sectionsArch, name, templateId) =>
-                this.addPage(sectionsArch, name, templateId),
+            addPage: (sectionsArch, name, templateId, pageKey) =>
+                this.addPage(sectionsArch, name, templateId, pageKey),
             getCssLinkEls: () => this.getCssLinkEls(),
         });
     }
@@ -536,15 +537,17 @@ export class AddPageDialog extends Component {
         this.lastTabName = name;
     }
 
-    async addPage(sectionsArch, name, templateId) {
-        if (this.props.forcedURL) {
+    async addPage(sectionsArch, name, templateId, pageKey) {
+        const forcedURL = this.props.forcedURL;
+        if (forcedURL) {
             // We also skip the possibility to choose to add in menu in that
             // case (e.g. in creation from 404 page button). The user can still
             // create its menu afterwards if needed.
-            await this.createPage(sectionsArch, this.props.forcedURL, false, this.props.pageTitle);
+            await this.createPage(sectionsArch, forcedURL, false, this.props.pageTitle, pageKey);
         } else {
             this.dialogs.add(AddPageConfirmDialog, {
-                createPage: (...args) => this.createPage(...args),
+                createPage: (sectionsArch, name, addMenu) =>
+                    this.createPage(sectionsArch, name, addMenu, "", pageKey),
                 name: name || this.lastTabName,
                 sectionsArch: sectionsArch || "",
                 templateId: templateId || "",
@@ -552,7 +555,7 @@ export class AddPageDialog extends Component {
         }
     }
 
-    async createPage(sectionsArch, name = "", addMenu = false, pageTitle = "") {
+    async createPage(sectionsArch, name = "", addMenu = false, pageTitle = "", pageKey = "") {
         // Remove any leading slash.
         const pageName = name.replace(/^\/*/, "") || _t("New Page");
         const data = await this.http.post(`/website/add/${encodeURIComponent(pageName)}`, {
@@ -564,6 +567,7 @@ export class AddPageDialog extends Component {
             website_id: this.props.websiteId,
             csrf_token: odoo.csrf_token,
             page_title: pageTitle,
+            template: pageKey,
         });
         if (data.view_id) {
             this.action.doAction({
@@ -578,6 +582,7 @@ export class AddPageDialog extends Component {
                 path: data.url,
                 edition: true,
                 websiteId: this.props.websiteId,
+                lang: "default",
             });
         }
         this.props.onAddPage({ createdUrl: data.url });
