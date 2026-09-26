@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-09-09 13:57+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -101,11 +101,6 @@ msgid "Add this key in your Authenticator app"
 msgstr "Lisää tämä avain tunnistautumissovellukseesi"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Authentication Code"
-msgstr "Vahvistuskoodi"
-
-#. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_device
 msgid "Authentication Device"
 msgstr "Varmennuslaite"
@@ -125,6 +120,13 @@ msgstr "Peruuta"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
 msgstr "Etkö pysty skannaamaan QR-koodia?"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"Check your Authenticator app for your code.\n"
+"                        <br/>"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
@@ -190,6 +192,16 @@ msgid "Enable Two-Factor Authentication"
 msgstr "Ota käyttöön kaksivaiheinen todennus"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter code"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter verification code"
+msgstr ""
+
+#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
 msgid "Expiration Date"
 msgstr "Viimeinen voimassaolopäivä"
@@ -230,11 +242,6 @@ msgstr "Viimeksi päivittänyt"
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_date
 msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Learn More"
-msgstr "Lue lisää"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__limit_type
@@ -293,17 +300,6 @@ msgid "The verification code should only contain numbers"
 msgstr "Vahvistuskoodin tulee sisältää vain numeroita"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid ""
-"To login, enter below the six-digit authentication code provided by your "
-"Authenticator app.\n"
-"                        <br/>"
-msgstr ""
-"Kirjautuaksesi sisään, syötä alle kuusinumeroinen vahvistuskoodi "
-"varmennussovelluksestasi.\n"
-"                        <br/>"
-
-#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_last_counter
 msgid "Totp Last Counter"
 msgstr "Totp Last Counter"
@@ -330,7 +326,6 @@ msgid "Two-Factor Authentication Activation"
 msgstr "Kaksivaiheisen tunnistautumisen aktivointi"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
@@ -450,7 +445,20 @@ msgstr ""
 "Olet saavuttanut tilisi koodivahvistusten enimmäismäärän. Yritä myöhemmin "
 "uudelleen."
 
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "e.g. 123456"
-msgstr "esim. 123456"
+#~ msgid "Authentication Code"
+#~ msgstr "Vahvistuskoodi"
+
+#~ msgid "Learn More"
+#~ msgstr "Lue lisää"
+
+#~ msgid ""
+#~ "To login, enter below the six-digit authentication code provided by your "
+#~ "Authenticator app.\n"
+#~ "                        <br/>"
+#~ msgstr ""
+#~ "Kirjautuaksesi sisään, syötä alle kuusinumeroinen vahvistuskoodi "
+#~ "varmennussovelluksestasi.\n"
+#~ "                        <br/>"
+
+#~ msgid "e.g. 123456"
+#~ msgstr "esim. 123456"

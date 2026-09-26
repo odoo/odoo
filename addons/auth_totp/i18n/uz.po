@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 14:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -102,12 +102,6 @@ msgid "Add this key in your Authenticator app"
 msgstr "Bu kalitni Autentifikator ilovangizga qo‘shing"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#, fuzzy
-msgid "Authentication Code"
-msgstr "Tasdiqlash kodi"
-
-#. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_device
 #, fuzzy
 msgid "Authentication Device"
@@ -130,6 +124,13 @@ msgstr "Bekor qilish"
 #, fuzzy
 msgid "Cannot scan it?"
 msgstr "Skanerlash imkonsizmi?"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"Check your Authenticator app for your code.\n"
+"                        <br/>"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
@@ -206,6 +207,16 @@ msgid "Enable Two-Factor Authentication"
 msgstr "Ikki omilli tasdiqlashni yoqish"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter code"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter verification code"
+msgstr ""
+
+#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
 #, fuzzy
 msgid "Expiration Date"
@@ -252,12 +263,6 @@ msgstr "Oxirgi yangilangan:"
 #, fuzzy
 msgid "Last Updated on"
 msgstr "Oxirgi yangilangan sana"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#, fuzzy
-msgid "Learn More"
-msgstr "Batafsil ma'lumot"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__limit_type
@@ -323,17 +328,6 @@ msgid "The verification code should only contain numbers"
 msgstr "Tasdiqlash kodi faqat raqamlardan iborat bo‘lishi kerak"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#, fuzzy
-msgid ""
-"To login, enter below the six-digit authentication code provided by your "
-"Authenticator app.\n"
-"                        <br/>"
-msgstr ""
-"Kirish uchun Autentifikator ilovangiz taqdim etgan olti xonali tasdiqlash "
-"kodini quyida kiriting. <br/>"
-
-#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_last_counter
 #, fuzzy
 msgid "Totp Last Counter"
@@ -364,7 +358,6 @@ msgid "Two-Factor Authentication Activation"
 msgstr "Ikki omilli tasdiqlashni faollashtirish"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 #, fuzzy
@@ -501,8 +494,23 @@ msgstr ""
 "Hisobingiz uchun kod tasdiqlash urinishlari chegarasiga yetdingiz, iltimos "
 "keyinroq qayta urinib ko‘ring"
 
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #, fuzzy
-msgid "e.g. 123456"
-msgstr "masalan, 123456"
+#~ msgid "Authentication Code"
+#~ msgstr "Tasdiqlash kodi"
+
+#, fuzzy
+#~ msgid "Learn More"
+#~ msgstr "Batafsil ma'lumot"
+
+#, fuzzy
+#~ msgid ""
+#~ "To login, enter below the six-digit authentication code provided by your "
+#~ "Authenticator app.\n"
+#~ "                        <br/>"
+#~ msgstr ""
+#~ "Kirish uchun Autentifikator ilovangiz taqdim etgan olti xonali tasdiqlash "
+#~ "kodini quyida kiriting. <br/>"
+
+#, fuzzy
+#~ msgid "e.g. 123456"
+#~ msgstr "masalan, 123456"

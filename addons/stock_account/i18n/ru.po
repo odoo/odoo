@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 20:29+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -52,16 +52,29 @@ msgstr " [Учтено на %s]"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
-msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
-msgstr ""
-"%(lot)s: цена изменена с %(old_price)s на %(new_price)s пользователем %"
+msgid ""
+"%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
 "(user)s"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product_value.py:0
+msgid ""
+"%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
+"%(user)s"
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "%(quantity)s %(uom)s at product's cost"
 msgstr "%(quantity)s %(uom)s по себестоимости товара"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_form
+msgid "<span class=\"o_stat_text\">Product Value</span>"
+msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -96,6 +109,11 @@ msgstr "Стоимость по средней цене (AVCO)"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_groups
 msgid "Access Groups"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
+msgid "Account Move"
 msgstr ""
 
 #. module: stock_account
@@ -150,6 +168,16 @@ msgstr "Корректировка оценки: %(product)s"
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjusted on %(date)s by %(user)s"
 msgstr "Скорректировано %(date)s пользователем %(user)s"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__adjustment
+msgid "Adjustment"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
+msgid "Adjustments"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -271,6 +299,13 @@ msgid "Cost of Production"
 msgstr "Себестоимость производства"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
 msgid "Costing Method"
 msgstr "Метод калькуляции себестоимости"
@@ -373,6 +408,11 @@ msgid "Display Serial & Lot Number on Invoices"
 msgstr "Отображение серийного номера и номера партии в счетах-фактурах"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
+msgid "Done By"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
 msgid ""
 "Expense account used to re-qualify products removed from stock and sent to "
@@ -440,6 +480,13 @@ msgstr ""
 "серийному номеру."
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_move__order_partner_id
+msgid ""
+"If the move originates from a document from another company, contains that "
+"company's partner, otherwise the move's partner."
+msgstr ""
+
+#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_location.py:0
 msgid "Invalid search operator or value"
@@ -504,6 +551,8 @@ msgid "Is valued inside the company"
 msgstr "Оценивается внутри компании"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product_value.py:0
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
 msgstr "Запись в журнале"
@@ -564,9 +613,25 @@ msgid "Move"
 msgstr "Переместить"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__new_cost
+msgid "New Unit Cost"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__new_value
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "New Value"
 msgstr "Новая стоимость"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__old_cost
+msgid "Old Unit Cost"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__old_value
+msgid "Old Value"
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
@@ -574,6 +639,23 @@ msgstr "Новая стоимость"
 msgid "Only is set (= True) is supported in search for remaining_qty."
 msgstr ""
 "Для поиска по remaining_qty поддерживается только условие is set (= True)."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_move__origin_company_id
+msgid ""
+"Only set if the move is generated from a document belonging to another "
+"company"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
+msgid "Order Partner"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__origin_company_id
+msgid "Origin Company"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -586,15 +668,10 @@ msgid "Price Unit"
 msgstr "Единица цены"
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid "Price update from %(old_price)s to %(new_price)s by %(user)s"
-msgstr "Цена изменена с %(old_price)s на %(new_price)s пользователем %(user)s"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
 #: model:ir.model.fields,field_description:stock_account.field_product_value__product_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__product_id
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Product"
 msgstr "Товар"
 
@@ -621,7 +698,12 @@ msgid "Product Quantity Updated"
 msgstr "Кол-во товара обновлено"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/account_move.py:0
 #: model:ir.model,name:stock_account.model_product_value
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__product_value_id
+#: model:ir.model.fields,field_description:stock_account.field_account_move__product_value_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__product_value_ids
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__product_value
 msgid "Product Value"
 msgstr "Стоимость товара"
@@ -652,6 +734,11 @@ msgstr "Счет накладных расходов НЗП по произво�
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quant"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__quantity
+msgid "Quantity"
 msgstr ""
 
 #. module: stock_account
@@ -732,6 +819,13 @@ msgid "Stock Valuation Account"
 msgstr "Счет оценки запасов"
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_value__product_tracking
+msgid ""
+"Technical field holding the tracking method. False on a storable product "
+"means it's tracked by quantity only."
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
 msgid ""
 "Technical field to correctly show the currently selected company's currency "
@@ -797,6 +891,11 @@ msgid "Total Value"
 msgstr "Общая стоимость"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__product_tracking
+msgid "Tracking Method"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
 msgstr "Перевод"
@@ -845,6 +944,12 @@ msgid "Valuation"
 msgstr "Оценка"
 
 #. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.product_value_list_action
+#: model:ir.ui.menu,name:stock_account.valuation_adjustments_menu
+msgid "Valuation Adjustments"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__company_currency_id
 msgid "Valuation Currency"
@@ -884,6 +989,12 @@ msgid "Value based on original move %(reference)s"
 msgstr "Стоимость на основе исходного перемещения %(reference)s"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Value from previous move %(references)s"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
 msgid ""
 "Value of the lot (automatically computed in AVCO).\n"
@@ -896,6 +1007,11 @@ msgstr ""
 "        Используется для оценки товара, когда стоимость закупки неизвестна "
 "(например, при инвентаризации).\n"
 "        Также используется для расчета маржи по заказам на продажу."
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
+msgid "View Account Move"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
@@ -941,6 +1057,15 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "единицы"
+
+#~ msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
+#~ msgstr ""
+#~ "%(lot)s: цена изменена с %(old_price)s на %(new_price)s пользователем %"
+#~ "(user)s"
+
+#~ msgid "Price update from %(old_price)s to %(new_price)s by %(user)s"
+#~ msgstr ""
+#~ "Цена изменена с %(old_price)s на %(new_price)s пользователем %(user)s"
 
 #~ msgid "Account"
 #~ msgstr "Учетная запись"

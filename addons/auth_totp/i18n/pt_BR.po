@@ -8,11 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 14:00+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
+"PO-Revision-Date: 2026-09-24 05:54+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/auth_totp/pt_BR/>\n"
+"20/auth_totp/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +37,23 @@ msgid ""
 "where it is enabled. In order to be able to execute RPC scripts, the user\n"
 "can setup API keys to replace their main password.\n"
 msgstr ""
+"\n"
+"Autenticação de Dois Fatores (TOTP)\n"
+"================================\n"
+"Permite que os usuários configurem a autenticação de dois fatores em suas "
+"contas\n"
+"para segurança adicional, utilizando senhas de uso único baseadas em tempo "
+"(TOTP).\n"
+"\n"
+"Uma vez ativada, o usuário precisará inserir um código de 6 dígitos "
+"fornecido\n"
+"pelo aplicativo autenticador antes de ter acesso concedido ao sistema.\n"
+"Todos os aplicativos autenticadores populares são compatíveis.\n"
+"\n"
+"Observação: logicamente, a autenticação de dois fatores impede o acesso RPC "
+"baseado em senha para usuários\n"
+"nos quais ela estiver ativada. Para poder executar scripts RPC, o usuário\n"
+"pode configurar chaves de API para substituir sua senha principal.\n"
 
 #. module: auth_totp
 #. odoo-python
@@ -100,11 +117,6 @@ msgid "Add this key in your Authenticator app"
 msgstr "Adicione esta chave no seu aplicativo Authenticator"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Authentication Code"
-msgstr "Código de autenticação"
-
-#. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_device
 msgid "Authentication Device"
 msgstr "Dispositivo de autenticação"
@@ -124,6 +136,15 @@ msgstr "Cancelar"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
 msgstr "Não consegue escanear?"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"Check your Authenticator app for your code.\n"
+"                        <br/>"
+msgstr ""
+"Verifique seu aplicativo Authenticator para obter o código.\n"
+"                       <br/>"
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
@@ -189,6 +210,16 @@ msgid "Enable Two-Factor Authentication"
 msgstr "Ativar a autenticação de dois fatores"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter code"
+msgstr "Digite o código"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter verification code"
+msgstr "Digite o código de verificação"
+
+#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
 msgid "Expiration Date"
 msgstr "Data de expiração"
@@ -229,11 +260,6 @@ msgstr "Última atualização por"
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_date
 msgid "Last Updated on"
 msgstr "Última atualização em"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Learn More"
-msgstr "Saiba mais"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__limit_type
@@ -292,17 +318,6 @@ msgid "The verification code should only contain numbers"
 msgstr "O código de verificação deve conter apenas números"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid ""
-"To login, enter below the six-digit authentication code provided by your "
-"Authenticator app.\n"
-"                        <br/>"
-msgstr ""
-"Para fazer login, insira abaixo o código de autenticação fornecido pelo app "
-"de autenticação.\n"
-"                        <br/>"
-
-#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_last_counter
 msgid "Totp Last Counter"
 msgstr "Último contador do Totp"
@@ -320,7 +335,7 @@ msgstr "Dispositivos confiáveis"
 #. module: auth_totp
 #: model:ir.module.module,shortdesc:base.module_auth_totp
 msgid "Two-Factor Authentication (TOTP)"
-msgstr ""
+msgstr "Autenticação de dois fatores (TOTP)"
 
 #. module: auth_totp
 #. odoo-python
@@ -329,7 +344,6 @@ msgid "Two-Factor Authentication Activation"
 msgstr "Ativação da autenticação de dois fatores"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
@@ -449,7 +463,20 @@ msgstr ""
 "Você atingiu o limite de verificações de código para sua conta, tente "
 "novamente mais tarde."
 
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "e.g. 123456"
-msgstr "ex: 123456"
+#~ msgid "Authentication Code"
+#~ msgstr "Código de autenticação"
+
+#~ msgid "Learn More"
+#~ msgstr "Saiba mais"
+
+#~ msgid ""
+#~ "To login, enter below the six-digit authentication code provided by your "
+#~ "Authenticator app.\n"
+#~ "                        <br/>"
+#~ msgstr ""
+#~ "Para fazer login, insira abaixo o código de autenticação fornecido pelo "
+#~ "app de autenticação.\n"
+#~ "                        <br/>"
+
+#~ msgid "e.g. 123456"
+#~ msgstr "ex: 123456"

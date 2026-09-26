@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-09-09 14:11+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -31,32 +31,26 @@ msgid ""
 msgstr ""
 
 #. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_manager_employee_ids
+msgid " Full access, including reporting, cash management, and session close."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_cashier_employee_ids
+msgid ""
+" Full register access. Can process sales, discounts, refunds, and close out "
+"payments."
+msgstr ""
+
+#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Abigal Peterson"
 msgstr "Abigal Peterson"
 
 #. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "Access Denied"
-msgstr "Käyttö estetty"
-
-#. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__add_report_per_employee
 msgid "Add a report per each employee"
 msgstr "Lisää raportti kutakin työntekijää kohden"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Advanced rights"
-msgstr "Edistyneet oikeudet"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "All Employees"
-msgstr "Kaikki työntekijät"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__logged_employee_ids
@@ -74,10 +68,24 @@ msgid "Bank Statement Line"
 msgstr "Pankkitiliotteen rivi"
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Basic rights"
-msgstr "Perusoikeudet"
+#: model:ir.model.fields,help:pos_hr.field_pos_config__restrictive_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_restrictive_employee_ids
+msgid ""
+"Can process sales and close payments, but not apply discounts, refunds, or "
+"cancel orders."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__supervised_employee_ids
+msgid ""
+"Can process sales, but a higher level must approve before payment is closed"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_supervised_employee_ids
+msgid ""
+"Can process sales, but a higher level must approve before payment is closed."
+msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_daily_sales_reports_wizard
@@ -98,7 +106,9 @@ msgstr "Käteinen sisään / ulos"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_payment__employee_id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_session__employee_id
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Cashier"
 msgstr "Myyjä"
 
@@ -183,49 +193,51 @@ msgid "Employee:"
 msgstr "Työntekijä:"
 
 #. module: pos_hr
-#. odoo-python
-#: code:addons/pos_hr/models/hr_employee.py:0
-msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
-msgstr "Työntekijä: %(employee)s - Kassojen asetukset: %(config_list)s \n"
-
-#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_session_form_inherit_pos_hr
 msgid "Employees"
 msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid ""
-"Employees linked to users with the PoS Manager role are automatically added "
-"to this list"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__cashier_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_cashier_employee_ids
+msgid "Employees with cashier level access"
 msgstr ""
-"Kassajärjestelmän ylläpitäjäkäyttäjiin linkitetyt työntekijät lisätään "
-"automaattisesti tähän luetteloon"
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
-msgid "Employees with basic access"
-msgstr "Työntekijät, joilla on perusoikeudet"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__manager_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_manager_employee_ids
+msgid "Employees with manager level access"
+msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid "Employees with manager access"
-msgstr "Työntekijät, joilla on esimiehen oikeudet"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__restrictive_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_restrictive_employee_ids
+msgid "Employees with restrictive level access"
+msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__minimal_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_minimal_employee_ids
-msgid "Employees with minimal access"
-msgstr "Työntekijät minimioikeuksilla"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__supervised_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_supervised_employee_ids
+msgid "Employees with supervised level access"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
 msgstr "Anna PIN-koodi"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__manager_employee_ids
+msgid "Full access, including reporting, cash management, and session close."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__cashier_employee_ids
+msgid ""
+"Full register access. Can process sales, discounts, refunds, and close out "
+"payments."
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_account_bank_statement_line__id
@@ -243,14 +255,6 @@ msgstr "Anna PIN-koodi"
 #: model:ir.model.fields,field_description:pos_hr.field_res_partner__id
 msgid "ID"
 msgstr "Tunnus"
-
-#. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_pos_config__minimal_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
-msgid "If left empty, all employees can log in to PoS"
-msgstr "Jos tyhjä, kaikki työntekijät voivat kirjautua kassaan"
 
 #. module: pos_hr
 #: model:ir.module.module,summary:base.module_pos_hr
@@ -273,8 +277,8 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Minimal rights"
-msgstr "Minimioikeudet"
+msgid "Manager"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
@@ -284,7 +288,7 @@ msgstr "Lisää…"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "No Cashiers"
 msgstr "Ei kassahenkilöitä"
 
@@ -324,7 +328,8 @@ msgstr "Muut"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "PIN not found"
 msgstr "PIN-koodia ei löydy"
 
@@ -335,7 +340,7 @@ msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
 msgid "Password?"
 msgstr "Salasana?"
 
@@ -386,6 +391,12 @@ msgid "Product Variant"
 msgstr "Tuotevariantti"
 
 #. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Restrictive"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/components/popups/cashier_selection_popup/cashier_selection_popup.xml:0
 msgid "Select Cashier"
@@ -401,6 +412,12 @@ msgstr "Valitse työntekijät"
 #: model:ir.model,name:pos_hr.model_report_pos_hr_single_employee_sales_report
 msgid "Session sales details for a single employee"
 msgstr "Yhden työntekijän istunnon myyntitiedot"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Supervised"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_session__employee_id
@@ -420,7 +437,7 @@ msgstr "Kassakonetta käyttävä työntekijä."
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "There is no cashier available."
 msgstr "Kassalla ei ole kassahenkilöä."
 
@@ -432,25 +449,66 @@ msgstr "Kassalippaan lukituksen avaaminen"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "Wrong PIN"
 msgstr "Väärä PIN-koodi"
-
-#. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "You are not allowed to change the price of a product."
-msgstr "Tuotteen hintaa ei saa muuttaa."
 
 #. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
 msgid ""
-"You cannot delete an employee that may be used in an active PoS session, "
-"close the session(s) first: \n"
+"You cannot delete an employee that may be used in an active PoS session. "
+"Close the session(s) first:\n"
+"Employee: %(employee)s - PoS Config(s): %(config_list)s"
 msgstr ""
-"Et voi poistaa työntekijää, jota voidaan käyttää aktiivisessa "
-"kassaistunnossa, sulje istunnot ensin: \n"
 
-msgid "Closed Register"
-msgstr "Suljettu kassalipas"
+#~ msgid "Access Denied"
+#~ msgstr "Käyttö estetty"
+
+#~ msgid "Advanced rights"
+#~ msgstr "Edistyneet oikeudet"
+
+#~ msgid "All Employees"
+#~ msgstr "Kaikki työntekijät"
+
+#~ msgid "Basic rights"
+#~ msgstr "Perusoikeudet"
+
+#~ msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
+#~ msgstr "Työntekijä: %(employee)s - Kassojen asetukset: %(config_list)s \n"
+
+#~ msgid ""
+#~ "Employees linked to users with the PoS Manager role are automatically "
+#~ "added to this list"
+#~ msgstr ""
+#~ "Kassajärjestelmän ylläpitäjäkäyttäjiin linkitetyt työntekijät lisätään "
+#~ "automaattisesti tähän luetteloon"
+
+#~ msgid "Employees with basic access"
+#~ msgstr "Työntekijät, joilla on perusoikeudet"
+
+#~ msgid "Employees with manager access"
+#~ msgstr "Työntekijät, joilla on esimiehen oikeudet"
+
+#~ msgid "Employees with minimal access"
+#~ msgstr "Työntekijät minimioikeuksilla"
+
+#~ msgid "If left empty, all employees can log in to PoS"
+#~ msgstr "Jos tyhjä, kaikki työntekijät voivat kirjautua kassaan"
+
+#~ msgid "Minimal rights"
+#~ msgstr "Minimioikeudet"
+
+#~ msgid "You are not allowed to change the price of a product."
+#~ msgstr "Tuotteen hintaa ei saa muuttaa."
+
+#~ msgid ""
+#~ "You cannot delete an employee that may be used in an active PoS session, "
+#~ "close the session(s) first: \n"
+#~ msgstr ""
+#~ "Et voi poistaa työntekijää, jota voidaan käyttää aktiivisessa "
+#~ "kassaistunnossa, sulje istunnot ensin: \n"
+
+#~ msgid "Closed Register"
+#~ msgstr "Suljettu kassalipas"

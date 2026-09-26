@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 20:29+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -53,14 +53,28 @@ msgstr " [회계 처리 %s]"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
-msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
+msgid ""
+"%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
+"(user)s"
 msgstr ""
-"%(lot)s 가격 업데이트: %(old_price)s 에서 %(new_price)s 으로 %(user)s 작업"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product_value.py:0
+msgid ""
+"%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
+"%(user)s"
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "%(quantity)s %(uom)s at product's cost"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_form
+msgid "<span class=\"o_stat_text\">Product Value</span>"
 msgstr ""
 
 #. module: stock_account
@@ -94,6 +108,11 @@ msgstr "AVCO 값"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_groups
 msgid "Access Groups"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
+msgid "Account Move"
 msgstr ""
 
 #. module: stock_account
@@ -146,6 +165,16 @@ msgstr "가치 조정: %(product)s"
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjusted on %(date)s by %(user)s"
 msgstr "수정일 %(date)s 수정 작업자 %(user)s"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__adjustment
+msgid "Adjustment"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
+msgid "Adjustments"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -267,6 +296,13 @@ msgid "Cost of Production"
 msgstr "생산원가"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
 msgid "Costing Method"
 msgstr "원가계산법"
@@ -368,6 +404,11 @@ msgid "Display Serial & Lot Number on Invoices"
 msgstr "청구서에 일련번호 및 로트 번호 표시"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
+msgid "Done By"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
 msgid ""
 "Expense account used to re-qualify products removed from stock and sent to "
@@ -427,6 +468,13 @@ msgstr ""
 #: model:ir.model.fields,help:stock_account.field_stock_lot__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr "이 옵션을 선택하면 평가가 로트/일련번호에만 적용됩니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_move__order_partner_id
+msgid ""
+"If the move originates from a document from another company, contains that "
+"company's partner, otherwise the move's partner."
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
@@ -493,6 +541,8 @@ msgid "Is valued inside the company"
 msgstr "회사 내 가치 평가 여부"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product_value.py:0
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
 msgstr "전표 입력"
@@ -553,14 +603,47 @@ msgid "Move"
 msgstr "이동"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__new_cost
+msgid "New Unit Cost"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__new_value
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "New Value"
 msgstr "신규 가격"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__old_cost
+msgid "Old Unit Cost"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__old_value
+msgid "Old Value"
+msgstr ""
+
+#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Only is set (= True) is supported in search for remaining_qty."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_move__origin_company_id
+msgid ""
+"Only set if the move is generated from a document belonging to another "
+"company"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
+msgid "Order Partner"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__origin_company_id
+msgid "Origin Company"
 msgstr ""
 
 #. module: stock_account
@@ -574,15 +657,10 @@ msgid "Price Unit"
 msgstr "가격 단위"
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid "Price update from %(old_price)s to %(new_price)s by %(user)s"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
 #: model:ir.model.fields,field_description:stock_account.field_product_value__product_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__product_id
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Product"
 msgstr "품목"
 
@@ -609,7 +687,12 @@ msgid "Product Quantity Updated"
 msgstr "품목 수량이 업데이트되었습니다"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/account_move.py:0
 #: model:ir.model,name:stock_account.model_product_value
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__product_value_id
+#: model:ir.model.fields,field_description:stock_account.field_account_move__product_value_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__product_value_ids
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__product_value
 msgid "Product Value"
 msgstr "품목 금액"
@@ -641,6 +724,11 @@ msgstr "프로덕션 WIP 간접비 계정"
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quant"
 msgstr "수량"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__quantity
+msgid "Quantity"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
@@ -720,6 +808,13 @@ msgid "Stock Valuation Account"
 msgstr "재고 평가 계정"
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_value__product_tracking
+msgid ""
+"Technical field holding the tracking method. False on a storable product "
+"means it's tracked by quantity only."
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
 msgid ""
 "Technical field to correctly show the currently selected company's currency "
@@ -784,6 +879,11 @@ msgid "Total Value"
 msgstr "총계"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__product_tracking
+msgid "Tracking Method"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
 msgstr "전송"
@@ -830,6 +930,12 @@ msgid "Valuation"
 msgstr "평가"
 
 #. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.product_value_list_action
+#: model:ir.ui.menu,name:stock_account.valuation_adjustments_menu
+msgid "Valuation Adjustments"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__company_currency_id
 msgid "Valuation Currency"
@@ -869,6 +975,12 @@ msgid "Value based on original move %(reference)s"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Value from previous move %(references)s"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
 msgid ""
 "Value of the lot (automatically computed in AVCO).\n"
@@ -880,6 +992,11 @@ msgstr ""
 "        구매 비용을 알 수 없는 경우 (예: 재고 조정) 제품의 가치를 계산하는 "
 "데 사용됩니다. \n"
 "        또한 판매 주문의 마진 계산에도 사용됩니다."
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
+msgid "View Account Move"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
@@ -918,6 +1035,10 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "기준"
+
+#~ msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
+#~ msgstr ""
+#~ "%(lot)s 가격 업데이트: %(old_price)s 에서 %(new_price)s 으로 %(user)s 작업"
 
 #~ msgid "Account"
 #~ msgstr "계정"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
 "PO-Revision-Date: 2026-08-31 13:46+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -2793,12 +2793,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Counted"
 msgstr "Sayılan"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Counterpart for invoice payment %s"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_country
@@ -6161,6 +6155,12 @@ msgid "Online reservation for Point of Sale"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
@@ -8518,12 +8518,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Reversal for %s"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Reversal of %s"
 msgstr ""
@@ -9714,6 +9708,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos_button.xml:0
 msgid "Test"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/controllers/main.py:0
+msgid "The %s must be filled in your details."
 msgstr ""
 
 #. module: point_of_sale
@@ -11467,6 +11467,25 @@ msgstr ""
 msgid ""
 "You cannot have more than one cash payment method on a point of sale "
 "configuration."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order_line.py:0
+msgid "You cannot refund more than the outstanding quantity for this product."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "You cannot remove %(pms)s from %(config)s while it has an open session."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"You cannot remove '%(pm)s' from %(configs)s while it has an open session."
 msgstr ""
 
 #. module: point_of_sale

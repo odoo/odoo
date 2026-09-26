@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 16:09+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -96,9 +96,8 @@ msgid ""
 "    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid "
 "#dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-"
 "radius: 5px;\"/>\n"
+"    <p><small>Expires in <t t-out=\"expiration\"/>.</small></p>\n"
 "</div>\n"
-"<small>Please note that this code expires in <t t-out=\"expiration\"/>.</"
-"small>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px;\">\n"
 "    If you did NOT initiate this log-in,\n"
@@ -120,17 +119,6 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
-
-#. module: auth_totp_mail
-#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
-msgid ""
-"<i class=\"oi\" data-icon=\"mail\"/>\n"
-"                To login, enter below the six-digit authentication code just "
-"sent via email to"
-msgstr ""
-"<i class=\"oi\" data-icon=\"mail\"/>\n"
-"                Sisse logimiseks sisesta kuue kohaline kood, mis on saadetud "
-"e-mailile"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
@@ -173,6 +161,11 @@ msgstr "Autentimisseade"
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
 msgstr "Ei saa saata e-kirja: kasutajal %s ei ole seatud e-posti aadressi."
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid "Check your inbox! We sent a code to"
+msgstr ""
 
 #. module: auth_totp_mail
 #. odoo-javascript
@@ -261,11 +254,6 @@ msgstr "Kutsu kasutama kahe astmelist autentimist"
 #: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
 msgid "Invite to use two-factor authentication"
 msgstr "Kutsu kasutama kahe astmelist autentimist"
-
-#. module: auth_totp_mail
-#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
-msgid "Learn More"
-msgstr "Lisateave"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -375,17 +363,6 @@ msgid "We sent a 6-digit code to your email address."
 msgstr ""
 
 #. module: auth_totp_mail
-#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
-msgid ""
-"We strongly recommend enabling the two-factor authentication using an "
-"authenticator app to help secure your account.\n"
-"                <br/>"
-msgstr ""
-"Tugevalt soovitame sisse lülitada kaheastmeline autentimine kasutades "
-"autentimise rakendust.\n"
-"<br/>"
-
-#. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code
 msgid "Your two-factor authentication code"
 msgstr "Teie kahe-etapilise tuvastamise kood"
@@ -394,3 +371,24 @@ msgstr "Teie kahe-etapilise tuvastamise kood"
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
 msgid "activating Two-factor Authentication"
 msgstr "Kaheastmelise autentimise aktiveerimine"
+
+#~ msgid ""
+#~ "<i class=\"oi\" data-icon=\"mail\"/>\n"
+#~ "                To login, enter below the six-digit authentication code "
+#~ "just sent via email to"
+#~ msgstr ""
+#~ "<i class=\"oi\" data-icon=\"mail\"/>\n"
+#~ "                Sisse logimiseks sisesta kuue kohaline kood, mis on "
+#~ "saadetud e-mailile"
+
+#~ msgid "Learn More"
+#~ msgstr "Lisateave"
+
+#~ msgid ""
+#~ "We strongly recommend enabling the two-factor authentication using an "
+#~ "authenticator app to help secure your account.\n"
+#~ "                <br/>"
+#~ msgstr ""
+#~ "Tugevalt soovitame sisse lülitada kaheastmeline autentimine kasutades "
+#~ "autentimise rakendust.\n"
+#~ "<br/>"

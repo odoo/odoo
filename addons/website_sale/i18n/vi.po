@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 14:10+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -1330,8 +1330,7 @@ msgid ""
 "                                                <span style=\"white-space: "
 "nowrap;\">\n"
 "                                                    <t t-"
-"if=\"object.website_id.show_line_subtotals_tax_selection == "
-"'tax_excluded'\">\n"
+"if=\"object.company_price_include == 'tax_excluded'\">\n"
 "                                                        <t t-"
 "out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
 "10.00</t>\n"
@@ -1513,6 +1512,11 @@ msgstr "Về sản phẩm bán chéo"
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Accept Terms"
 msgstr "Chấp nhận điều khoản"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
+msgid "Access Code"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_groups
@@ -1810,7 +1814,7 @@ msgstr "Sản phẩm thay thế"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "Amount"
@@ -2357,7 +2361,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 msgid "Choose Your Amount"
 msgstr ""
 
@@ -2373,11 +2377,6 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Choose your"
 msgstr ""
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_christmas
-msgid "Christmas"
-msgstr "Giáng sinh"
 
 #. module: website_sale
 #. odoo-python
@@ -2505,11 +2504,6 @@ msgstr "Màu sắc"
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Columns"
 msgstr "Cột"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_product_combos
-msgid "Combo Choices"
-msgstr "Lựa chọn combo"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2785,6 +2779,7 @@ msgstr "Danh mục hiện tại hoặc Tất cả"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "Custom Amount"
@@ -2906,6 +2901,11 @@ msgstr "Xác định danh mục mới"
 #: model_terms:ir.actions.act_window,help:website_sale.product_ribbon_action
 msgid "Define a new ribbon"
 msgstr "Xác định một ruy-băng mới"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Defined on website"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_ribbon__assign
@@ -3178,6 +3178,8 @@ msgid "Display Options"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__show_line_subtotals_tax_selection
+#: model:ir.model.fields,field_description:website_sale.field_website__show_line_subtotals_tax_selection
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Display Product Prices"
 msgstr "Hiển thị giá sản phẩm"
@@ -3349,12 +3351,7 @@ msgstr ""
 "Thông tin bổ sung về thương mại điện tử được hiển thị trên trang sản phẩm"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
-msgid "E-commerce Promotional Code"
-msgstr "Mã khuyến mại cho thương mại điện tử"
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_europe
+#: model:product.pricelist,name:website_sale.list_eur
 msgid "EUR"
 msgstr "EUR"
 
@@ -4420,12 +4417,6 @@ msgid "Lightbulb sold separately"
 msgstr "Bóng đèn được bán riêng"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__show_line_subtotals_tax_selection
-#: model:ir.model.fields,field_description:website_sale.field_website__show_line_subtotals_tax_selection
-msgid "Line Subtotals Tax Display"
-msgstr "Hiển thị mục thuế tổng phụ"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Link Color"
@@ -4691,7 +4682,7 @@ msgid "New!"
 msgstr "Mới!"
 
 #. module: website_sale
-#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_arrivals
 msgid "Newest"
 msgstr ""
 
@@ -5316,6 +5307,11 @@ msgid "Page Width"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Paid"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
 msgid "Parent"
 msgstr "Chính"
@@ -5493,6 +5489,11 @@ msgid "Price - Low to High"
 msgstr "Giá - Thấp tới cao"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Price Display"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
 msgid "Price Range"
 msgstr ""
@@ -5522,7 +5523,7 @@ msgstr "Giá sẽ được cập nhật sau khi chọn phương thức giao hàn
 #: model:ir.model,name:website_sale.model_product_pricelist
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__pricelist_id
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__pricelist_id
-#: model_terms:ir.ui.view,arch_db:website_sale.pricelist_list
+#: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_search
 msgid "Pricelist"
 msgstr "Bảng giá"
@@ -5533,8 +5534,20 @@ msgid "Pricelist Rule"
 msgstr "Quy tắc bảng giá"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/footer_copyright_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/header_elements_option.xml:0
+msgid "Pricelist Selector"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.pricelist_selector
+msgid "Pricelist: {{0}}"
 msgstr ""
 
 #. module: website_sale
@@ -5874,6 +5887,11 @@ msgstr "Sản phẩm gần đây được bán kèm theo sản phẩm"
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr "Lượt xem sản phẩm"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_b2b
+msgid "Professional Prices"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -7087,12 +7105,19 @@ msgid "Target"
 msgstr "Mục tiêu"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__tax_display
+msgid "Tax Display"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
+#: model:ir.model.fields.selection,name:website_sale.selection__website__tax_display__tax_excluded
 msgid "Tax Excluded"
 msgstr "Chưa gồm thuế"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_included
+#: model:ir.model.fields.selection,name:website_sale.selection__website__tax_display__tax_included
 msgid "Tax Included"
 msgstr "Bao gồm thuế"
 
@@ -7111,6 +7136,16 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_sale_order__amount_delivery
 msgid "Tax included or excluded depending on the website configuration."
 msgstr "Bao gồm hoặc loại trừ thuế tùy thuộc vào cấu hình trang web."
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_excluded
+msgid "Taxes Excluded"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_included
+msgid "Taxes Included"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -7605,6 +7640,11 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
 msgid "URL of a video for showcasing your product."
 msgstr "URL video dùng để giới thiệu sản phẩm của bạn."
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_default
+msgid "USD"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -8264,6 +8304,14 @@ msgid "Your order will be confirmed after payment is received."
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/payment_transaction.py:0
+msgid ""
+"Your payment of %(formatted_amount)s has been processed. Pay the remaining "
+"amount to confirm your order."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "Giỏ hàng trước đó của bạn đã được hoàn thành."
@@ -8363,6 +8411,11 @@ msgstr "Mô tả thương mại điện tử"
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 msgid "eCommerce Filter Visibility"
 msgstr "Chế độ hiển thị bộ lọc thương mại điện tử"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__tax_display
+msgid "eCommerce Price Display"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -8538,6 +8591,18 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "Christmas"
+#~ msgstr "Giáng sinh"
+
+#~ msgid "Combo Choices"
+#~ msgstr "Lựa chọn combo"
+
+#~ msgid "E-commerce Promotional Code"
+#~ msgstr "Mã khuyến mại cho thương mại điện tử"
+
+#~ msgid "Line Subtotals Tax Display"
+#~ msgstr "Hiển thị mục thuế tổng phụ"
 
 #~ msgid "<i class=\"oi me-2\" data-icon=\"add\"/>Add Address"
 #~ msgstr "<i class=\"oi me-2\" data-icon=\"add\"/>Thêm địa chỉ"

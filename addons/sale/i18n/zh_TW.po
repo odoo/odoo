@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-25 17:38+0000\n"
 "PO-Revision-Date: 2026-09-11 09:33+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -411,8 +411,7 @@ msgid ""
 "                                                    <span style=\"white-"
 "space: nowrap;\">\n"
 "                                                        <t t-"
-"if=\"hasattr(object, 'website_id') and "
-"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"if=\"object.company_price_include == 'tax_excluded'\">\n"
 "                                                            <t t-"
 "out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
 "10.00</t>\n"
@@ -496,15 +495,6 @@ msgid ""
 "align=\"left\"><strong>Total</strong></td>\n"
 "                                    <td style=\"width: 80%; padding-top: "
 "4px; border-top: 1px solid #343a40; font-weight: bold; \" align=\"right\">\n"
-"                                        <span style=\"display: inline-block; "
-"margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-"
-"radius: 4px;\">\n"
-"                                            <span t-attf-style=\"color: "
-"#{color}; font-weight: bold;\">\n"
-"                                                <t t-"
-"out=\"tx_sudo.provider_id.sudo().name or ''\"/>\n"
-"                                            </span>\n"
-"                                        </span>\n"
 "                                        <span style=\"opacity: 0.9;\"><t t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
 "10.00</t></span>\n"
@@ -792,7 +782,7 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<i class=\"oi me-1\" data-icon=\"refresh\"/>Order Again"
+msgid "<i class=\"oi me-1\" data-icon=\"redo\"/>Order Again"
 msgstr ""
 
 #. module: sale
@@ -919,13 +909,6 @@ msgid ""
 msgstr ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid ""
-"<span>1 Units</span>\n"
-"                                            <span>×</span>"
-msgstr ""
 
 #. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
@@ -1210,7 +1193,6 @@ msgstr "需要採取行動"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_ids
-#: model:ir.ui.menu,name:sale.sale_menu_config_activities
 msgid "Activities"
 msgstr "活動"
 
@@ -1226,7 +1208,6 @@ msgstr "活動異常圖示"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_plans_ids
-#: model:ir.ui.menu,name:sale.sale_menu_config_activity_plan
 msgid "Activity Plans"
 msgstr "活動計劃"
 
@@ -1242,19 +1223,8 @@ msgstr "活動類型圖示"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
-#: model:ir.ui.menu,name:sale.sale_menu_config_activity_type
 msgid "Activity Types"
 msgstr "活動類型"
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
-msgid ""
-"Activity plans are used to assign a list of activities in just a few clicks\n"
-"                (e.g. \"Delivery scheduling\", \"Order Payment Follow-"
-"up\", ...)"
-msgstr ""
-"「活動計劃」用於簡易分配一系列活動，按幾下便完成。\n"
-"                （例如：送貨排程、訂單付款跟進等）"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1380,11 +1350,6 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay to avoid double payment or double invoicing."
 msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Amount paid:"
-msgstr "已付金額："
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -1691,11 +1656,6 @@ msgid "Catalog"
 msgstr "目錄"
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_product_categories
-msgid "Categories"
-msgstr "類別"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 #, fuzzy
 msgid "Category"
@@ -1757,9 +1717,10 @@ msgid "Collapse Prices"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_product_combos
-msgid "Combo Choices"
-msgstr "組合選擇"
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/combo_menu_widget.xml:0
+msgid "Combo"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
@@ -1921,11 +1882,6 @@ msgstr "建立發票"
 #: model:ir.model,website_form_label:sale.model_res_partner
 msgid "Create a Customer"
 msgstr "建立客戶"
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
-msgid "Create a Sale Order Activity Plan"
-msgstr "建立銷售單活動計劃"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -2152,6 +2108,7 @@ msgstr ""
 
 #. module: sale
 #. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Delete"
 msgstr "刪除"
@@ -2337,6 +2294,8 @@ msgid "Discount:"
 msgstr "折扣："
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/discount_menu_widget.xml:0
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_discount_per_so_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discounts"
@@ -2467,11 +2426,6 @@ msgid "Down Payments"
 msgstr "首期付款"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Down payment"
-msgstr "首期付款"
-
-#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
 msgstr "首期付款（固定金額）"
@@ -2502,6 +2456,11 @@ msgstr "首期付款發票"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "Down payment of %s%%"
 msgstr "%s%% 首期付款"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Down payment:"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -2566,6 +2525,11 @@ msgstr ""
 #: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
 msgstr "輸入自訂值"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Enter a description..."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2815,6 +2779,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
 msgstr "有預付款"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Hide Composition"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Hide Prices"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_accrued_orders_wizard__id
@@ -3223,6 +3197,14 @@ msgstr ""
 "%s"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+msgid ""
+"It seems that there is already a payment in progress for your order; you "
+"can't modify it anymore."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
 msgid "Journal"
 msgstr ""
@@ -3306,6 +3288,11 @@ msgid "Let’s create a beautiful quotation in a few clicks ."
 msgstr "讓我們試試，只需按幾下，即可製作精美報價單。"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Line"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__show_sol_numbers
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__show_sol_numbers
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_sol_numbers
@@ -3356,18 +3343,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
-msgid "M%:"
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
-msgid "M:"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
@@ -3393,6 +3368,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
 msgid "Manual"
 msgstr "手動"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/discount_menu_widget.xml:0
+msgid "Manual Discount"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__manual
@@ -3572,6 +3553,12 @@ msgstr "下一活動類型"
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__no
 msgid "No"
 msgstr "否"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/combo_menu_widget.xml:0
+msgid "No Combo Product Available"
+msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -3914,6 +3901,11 @@ msgstr ""
 #: code:addons/sale/static/src/js/product/product.js:0
 msgid "Packaging"
 msgstr "包裝"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Paid:"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
@@ -4561,11 +4553,6 @@ msgid "Sale Order Count"
 msgstr "銷售訂單數目"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
-msgid "Sale Order Plans"
-msgstr "銷售訂單計劃"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
 msgstr "銷售訂單警告"
@@ -4769,11 +4756,6 @@ msgid "Sales Team"
 msgstr "銷售團隊"
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.sales_team_config
-msgid "Sales Teams"
-msgstr "銷售團隊"
-
-#. module: sale
 #: model:ir.module.module,summary:base.module_sale
 msgid "Sales internal machinery"
 msgstr ""
@@ -4842,6 +4824,7 @@ msgstr "搜尋銷售訂單"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section"
 msgstr "分節"
 
@@ -4851,8 +4834,6 @@ msgid "Section Name (eg. Products, Services)"
 msgstr "分節名稱(如:產品，服務)"
 
 #. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/section_qty_field/section_qty_field.js:0
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__section_qty
 msgid "Section Quantity"
 msgstr ""
@@ -4866,12 +4847,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__section_uom_id
 msgid "Section Unit of Measure"
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/section_uom_field/section_uom_field.js:0
-msgid "Section UoM"
 msgstr ""
 
 #. module: sale
@@ -5265,6 +5240,11 @@ msgid ""
 msgstr ""
 "%(team_name)s 團隊有 %(sale_order_count)s 張生效的銷售訂單。請考慮取消它們，"
 "或將團隊封存。"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.sales_team_config
+msgid "Teams"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
@@ -5809,12 +5789,6 @@ msgid "Unit Price"
 msgstr "單價"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Unit Price:"
-msgstr "單價:"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.uom_uom_menu_list
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Units & Packagings"
 msgstr "單位及包裝"
@@ -6251,6 +6225,39 @@ msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and '報價"
 "單' or '訂單' }} {{ object.name or '(參考編號不適用)' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
+
+#~ msgid ""
+#~ "Activity plans are used to assign a list of activities in just a few "
+#~ "clicks\n"
+#~ "                (e.g. \"Delivery scheduling\", \"Order Payment Follow-"
+#~ "up\", ...)"
+#~ msgstr ""
+#~ "「活動計劃」用於簡易分配一系列活動，按幾下便完成。\n"
+#~ "                （例如：送貨排程、訂單付款跟進等）"
+
+#~ msgid "Amount paid:"
+#~ msgstr "已付金額："
+
+#~ msgid "Categories"
+#~ msgstr "類別"
+
+#~ msgid "Combo Choices"
+#~ msgstr "組合選擇"
+
+#~ msgid "Create a Sale Order Activity Plan"
+#~ msgstr "建立銷售單活動計劃"
+
+#~ msgid "Down payment"
+#~ msgstr "首期付款"
+
+#~ msgid "Sale Order Plans"
+#~ msgstr "銷售訂單計劃"
+
+#~ msgid "Sales Teams"
+#~ msgstr "銷售團隊"
+
+#~ msgid "Unit Price:"
+#~ msgstr "單價:"
 
 #~ msgid "Margins"
 #~ msgstr "毛利"

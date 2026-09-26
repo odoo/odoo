@@ -17,11 +17,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-09-09 13:53+0000\n"
+"POT-Creation-Date: 2026-09-25 17:39+0000\n"
+"PO-Revision-Date: 2026-09-24 12:16+0000\n"
 "Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-master/web/"
-"fr/>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/web/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -535,7 +534,7 @@ msgstr "Votre nouvelle action requiert un nom."
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page. You can also copy the link "
@@ -686,7 +685,7 @@ msgstr "Activer le mode développeur (avec les assets test)"
 #. odoo-javascript
 #: code:addons/web/static/src/core/session/check_identity.xml:0
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #. module: web
 #. odoo-javascript
@@ -924,7 +923,7 @@ msgstr "Un filtre avec le même nom existe déjà."
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
 msgid "An error occurred while uploading."
-msgstr ""
+msgstr "Une erreur s'est produite lors du téléchargement."
 
 #. module: web
 #. odoo-javascript
@@ -1464,7 +1463,7 @@ msgstr "Le verrouillage des majuscules est activé !"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_record.js:0
 msgid "Card: no action for type: %(type)s"
-msgstr ""
+msgstr "Carte : aucune action pour le type : %(type)s"
 
 #. module: web
 #. odoo-javascript
@@ -1914,6 +1913,7 @@ msgstr "Convertir en WebP"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copied"
@@ -1922,9 +1922,15 @@ msgstr "Copié"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "Copy"
 msgstr "Copier"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+msgid "Copy Arch"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2472,6 +2478,12 @@ msgstr "Désactiver l'option 'Créer'"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.js:0
+msgid "Disable RPC Cache"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 msgid "Disable creation"
@@ -2564,6 +2576,12 @@ msgstr "Annuler les modifications hors ligne"
 #: model:ir.model.fields,field_description:web.field_res_users_settings_embedded_action__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Display action buttons"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2896,6 +2914,12 @@ msgstr "Adresse e-mail vide"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.js:0
+msgid "Enable RPC Cache"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/text/text_field.js:0
 msgid "Enable line breaks"
 msgstr "Activer les sauts de ligne"
@@ -2964,7 +2988,7 @@ msgstr "Nombre d'entrées"
 #. odoo-javascript
 #: code:addons/web/static/src/core/offline/offline_plugin.js:0
 msgid "Error"
-msgstr ""
+msgstr "Erreur"
 
 #. module: web
 #. odoo-javascript
@@ -3184,6 +3208,12 @@ msgstr "Fichier"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+msgid "Filter name"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 msgid "Filters"
@@ -3343,7 +3373,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/phone/phone_field.js:0
 msgid "Formatted Field"
-msgstr ""
+msgstr "Champ mis en forme"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
@@ -4665,7 +4695,7 @@ msgstr "Sujet de la réunion"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Memory (heuristic)"
-msgstr ""
+msgstr "Mémoire (heuristique)"
 
 #. module: web
 #. odoo-javascript
@@ -4896,6 +4926,12 @@ msgstr "mère"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Mount Fuji"
 msgstr "Mont Fuji"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/multi_drag.js:0
+msgid "Move %(count)s records"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5234,7 +5270,7 @@ msgstr "Aucun résultat"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "No view of type '%s' could be found in the current action."
 msgstr "Aucune vue du type '%s' n'a pu être trouvée dans l'action en cours."
 
@@ -6285,7 +6321,7 @@ msgstr "Champ d'icône associé"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 msgid "Related:"
-msgstr ""
+msgstr "En rapport:"
 
 #. module: web
 #. odoo-javascript
@@ -6379,7 +6415,7 @@ msgstr "Remplacer le fichier actuel"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "Report"
 msgstr "Rapport"
 
@@ -6582,12 +6618,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
-msgid "Save current search"
-msgstr "Enregistrer la recherche actuelle"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 msgid "Save default"
 msgstr "Enregistrer comme valeur par défaut"
@@ -6600,9 +6630,15 @@ msgstr "Enregistrer manuellement"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+msgid "Save search"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/translation/translation_button.js:0
 msgid "Save this record and its parent to translate"
-msgstr ""
+msgstr "Enregistrez cet enregistrement et son parent pour les traduire"
 
 #. module: web
 #. odoo-javascript
@@ -6640,6 +6676,12 @@ msgstr "Rechercher"
 #: code:addons/web/static/src/views/calendar/calendar_filter_section/calendar_filter_section.js:0
 msgid "Search More..."
 msgstr "Recherche avancée..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Search a record..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6778,6 +6820,12 @@ msgstr "Sélectionner un champ"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Select a model to add a filter."
 msgstr "Sélectionnez un modèle pour ajouter un filtre."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Select a model..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7721,7 +7769,7 @@ msgstr "Temps"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Time Limit (seconds)"
-msgstr ""
+msgstr "Limite de temps (secondes)"
 
 #. module: web
 #. odoo-javascript
@@ -7895,7 +7943,7 @@ msgstr "triton"
 #. odoo-javascript
 #: code:addons/web/static/src/core/session/check_identity.xml:0
 msgid "Trouble signing in?"
-msgstr ""
+msgstr "Problème de connexion ?"
 
 #. module: web
 #. odoo-javascript
@@ -8012,6 +8060,8 @@ msgid ""
 "Unable to find the PDF engine on this system. The report will be shown in "
 "html."
 msgstr ""
+"Impossible de trouver le moteur PDF sur ce système. Le rapport sera affiché "
+"au format HTML."
 
 #. module: web
 #. odoo-javascript
@@ -8360,7 +8410,7 @@ msgstr "Les valeurs définies ici sont propres à l'entreprise."
 #. odoo-javascript
 #: code:addons/web/static/src/core/session/check_identity.xml:0
 msgid "Verify your identity"
-msgstr ""
+msgstr "Vérifiez votre identité"
 
 #. module: web
 #. odoo-javascript
@@ -8708,6 +8758,8 @@ msgstr "Vous ne pouvez pas lire cette définition de champ."
 #: model:ir.model.fields,help:web.field_base_document_layout__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
 msgstr ""
+"Vous pouvez utiliser '/' pour indiquer que le client ne possède pas de "
+"numéro d'identification fiscale."
 
 #. module: web
 #. odoo-javascript
@@ -8773,6 +8825,8 @@ msgid ""
 "You should upgrade your version of the PDF engine in order to get a correct "
 "render it."
 msgstr ""
+"Vous devriez mettre à jour la version de votre moteur PDF afin d'obtenir un "
+"rendu correct."
 
 #. module: web
 #. odoo-javascript
@@ -8788,6 +8842,8 @@ msgid ""
 "Your installation of PDF engine seems to be broken, check with the "
 "administrator. The report will be shown in html."
 msgstr ""
+"Votre installation du moteur PDF semble défectueuse ; veuillez consulter "
+"l'administrateur. Le rapport sera affiché au format HTML."
 
 #. module: web
 #. odoo-javascript
@@ -25211,7 +25267,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
 msgid "this.props.placeholder"
-msgstr ""
+msgstr "this.props.placeholder"
 
 #. module: web
 #. odoo-javascript
@@ -27864,6 +27920,9 @@ msgstr "秘"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr "空"
+
+#~ msgid "Save current search"
+#~ msgstr "Enregistrer la recherche actuelle"
 
 #~ msgid "%(property_string)s (%(parent_name)s)"
 #~ msgstr "%(property_string)s (%(parent_name)s)"

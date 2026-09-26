@@ -12,10 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-09-09 13:52+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
+"PO-Revision-Date: 2026-09-21 13:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "maintenance/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -30,6 +30,8 @@ msgid ""
 "\n"
 "Track equipment and maintenance requests"
 msgstr ""
+"\n"
+"Verfolgen Sie Ihre Ausrüstung und Wartungsanfragen"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -946,7 +948,7 @@ msgstr "Wartungstyp"
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_type_icon
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material-Symbols-Icon, z. B. Checkliste"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1064,7 +1066,7 @@ msgstr "Nächster Aktivitätstyp"
 #. module: maintenance
 #: model:res.groups.privilege,placeholder:maintenance.res_groups_privilege_maintenance
 msgid "No"
-msgstr ""
+msgstr "Nein"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__2
@@ -1340,6 +1342,15 @@ msgid "Scheduled Date"
 msgstr "Geplantes Datum"
 
 #. module: maintenance
+#. odoo-python
+#: code:addons/maintenance/models/maintenance.py:0
+msgid ""
+"Scheduled Date and Scheduled End must either both be set or both be empty."
+msgstr ""
+"„Geplantes Datum“ und „Geplantes Ende“ müssen entweder beide festgelegt oder "
+"beide leer sein."
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__schedule_end
 msgid "Scheduled End"
 msgstr "Geplantes Ende"
@@ -1551,7 +1562,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.module.module,summary:base.module_maintenance
 msgid "Track equipment and manage maintenance requests"
-msgstr ""
+msgstr "Verfolgung von Ausrüstung und Verwaltung von Wartungsanfragen"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration

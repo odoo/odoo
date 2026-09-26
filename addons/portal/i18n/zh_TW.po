@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:44+0000\n"
+"POT-Creation-Date: 2026-09-18 17:40+0000\n"
 "PO-Revision-Date: 2026-09-09 14:03+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -43,6 +43,30 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
 msgstr "\" 以驗證你的動作。"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "\"Authorization\": f\"bearer {mcp_key}\","
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "\"Content-Type\": \"application/json\","
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "# Store the API key securely, not in the code."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "%(model_name)s shared with %(partner_names)s"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
@@ -285,6 +309,12 @@ msgid "Already Registered"
 msgstr "已經註冊"
 
 #. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "An email invitation has been sent to the selected users."
+msgstr ""
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_profile_editor.js:0
 msgid "An error occurred while saving your profile."
@@ -416,12 +446,6 @@ msgstr "配置連線參數"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_security.js:0
-msgid "Confirm"
-msgstr "確認"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/interactions/portal_security.js:0
 msgid "Confirm Password"
 msgstr "確認密碼"
 
@@ -451,6 +475,12 @@ msgstr "聯絡人"
 
 #. module: portal
 #. odoo-javascript
+#: code:addons/portal/static/src/interactions/portal_security.js:0
+msgid "Copied to clipboard"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_composer.js:0
 msgid "Could not save file %s"
 msgstr "未能儲存檔案 %s"
@@ -465,6 +495,12 @@ msgstr "國家"
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country..."
 msgstr "國家/地區⋯"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/interactions/portal_security.js:0
+msgid "Create Key"
+msgstr ""
 
 #. module: portal
 #: model:ir.model,website_form_label:portal.model_res_partner
@@ -633,12 +669,6 @@ msgid "Email Thread"
 msgstr "電郵對話串"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Enter a description of and purpose for the key."
-msgstr "輸入密鑰的描述和用途."
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Expiration Date"
 msgstr "過期日期"
@@ -646,14 +676,14 @@ msgstr "過期日期"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Forgot password?"
-msgstr "忘記密碼?"
+msgid "Expires"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Give a duration for the key's validity"
-msgstr "提供密鑰的有效期長度"
+msgid "Forgot password?"
+msgstr "忘記密碼?"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -680,16 +710,6 @@ msgstr "授予網站登入存取權限"
 #: model:ir.model,name:portal.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 路由"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid ""
-"Here is your new API key, use it instead of a password for RPC access.\n"
-"                Your login is still necessary for interactive usage."
-msgstr ""
-"這是你的新 API 密鑰，請使用它代替密碼，進行遠端程序呼叫（RPC）存取。\n"
-"                互動式操作仍需要用戶名稱及密碼登入。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -734,12 +754,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
 msgid "Image"
 msgstr "圖片"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Important:"
-msgstr "重要提示:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -792,12 +806,8 @@ msgstr "發送報價以測試客戶網站登入介面"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid ""
-"It is very important that this description be clear\n"
-"                and complete,"
+msgid "Key Name — your only way to identify that key"
 msgstr ""
-"將這段描述寫得清晰、完整，\n"
-"                是非常重要的。"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__write_uid
@@ -874,12 +884,6 @@ msgstr "我的地址"
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Name"
 msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Name your key"
-msgstr "為你的密鑰命名"
 
 #. module: portal
 #. odoo-javascript
@@ -1062,6 +1066,8 @@ msgid "Save Address"
 msgstr "儲存地址"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Scope"
 msgstr "範圍"
@@ -1112,6 +1118,12 @@ msgstr "發送"
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
 msgstr "共用文件"
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "Shared successfully"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
@@ -1236,18 +1248,6 @@ msgid "The contact \"%s\" has the same email as an existing user"
 msgstr "聯絡人\"%s\"跟現有用戶的電子郵件相同"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "The key cannot be retrieved later and provides"
-msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "The key will be deleted once this period has elapsed."
-msgstr ""
-
-#. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The new password and its confirmation must be identical."
@@ -1292,6 +1292,14 @@ msgid "This is a preview of the customer portal."
 msgstr "這是客戶頁面的預覽。"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid ""
+"This key won't be shown again. Please copy it and store it securely. Treat "
+"it like a password, it grants full access to your account."
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This partner is linked to an internal User and already has access to the "
@@ -1312,6 +1320,12 @@ msgstr "這段文字會被包含在發給網站登入的新使用者的信件中
 #: model:ir.model.fields,field_description:portal.field_portal_entry__name
 msgid "Title of Card"
 msgstr "卡片標題"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "To login, use the following parameters (Python):"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -1367,12 +1381,6 @@ msgstr "驗證新密碼:"
 #: model:ir.model,name:portal.model_ir_ui_view
 msgid "View"
 msgstr "檢視"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "What's this key for?"
-msgstr "這個密鑰(密碼)用於?"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -1456,8 +1464,8 @@ msgstr "郵政編碼"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "full access"
-msgstr "完全存取權限"
+msgid "e.g. \"Odoo MCP\""
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -1467,18 +1475,26 @@ msgstr "邀請你存取以下內容："
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid ""
-"it will be the only way to\n"
-"                identify the key once created"
+msgid "headers = {"
 msgstr ""
-"建立後，它將是\n"
-"                識別密鑰的唯一方法"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "import requests"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "logged in"
 msgstr "登入"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "mcp_key = os.environ[\"ODOO_MCP_KEY\"]"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -1499,13 +1515,55 @@ msgstr "以張貼評論。"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "to your user account, it is very important to store it securely."
+msgid "url = \""
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "你的帳戶詳情"
+
+#~ msgid "Confirm"
+#~ msgstr "確認"
+
+#~ msgid "Enter a description of and purpose for the key."
+#~ msgstr "輸入密鑰的描述和用途."
+
+#~ msgid "Give a duration for the key's validity"
+#~ msgstr "提供密鑰的有效期長度"
+
+#~ msgid ""
+#~ "Here is your new API key, use it instead of a password for RPC access.\n"
+#~ "                Your login is still necessary for interactive usage."
+#~ msgstr ""
+#~ "這是你的新 API 密鑰，請使用它代替密碼，進行遠端程序呼叫（RPC）存取。\n"
+#~ "                互動式操作仍需要用戶名稱及密碼登入。"
+
+#~ msgid "Important:"
+#~ msgstr "重要提示:"
+
+#~ msgid ""
+#~ "It is very important that this description be clear\n"
+#~ "                and complete,"
+#~ msgstr ""
+#~ "將這段描述寫得清晰、完整，\n"
+#~ "                是非常重要的。"
+
+#~ msgid "Name your key"
+#~ msgstr "為你的密鑰命名"
+
+#~ msgid "What's this key for?"
+#~ msgstr "這個密鑰(密碼)用於?"
+
+#~ msgid "full access"
+#~ msgstr "完全存取權限"
+
+#~ msgid ""
+#~ "it will be the only way to\n"
+#~ "                identify the key once created"
+#~ msgstr ""
+#~ "建立後，它將是\n"
+#~ "                識別密鑰的唯一方法"
 
 #~ msgid ""
 #~ "<small class=\"form-text text-muted\">\n"

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-25 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 21:07+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/web/th/"
@@ -494,7 +494,7 @@ msgstr "จำเป็นต้องมีชื่อสำหรับกา
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page. You can also copy the link "
@@ -1848,6 +1848,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copied"
@@ -1856,9 +1857,15 @@ msgstr "ทำสำเนาแล้ว"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "Copy"
 msgstr "คัดลอก"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+msgid "Copy Arch"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2398,6 +2405,12 @@ msgstr "ปิดการใช้งานตัวเลือก 'สร้�
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.js:0
+msgid "Disable RPC Cache"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 msgid "Disable creation"
@@ -2490,6 +2503,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:web.field_res_users_settings_embedded_action__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Display action buttons"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2815,6 +2834,12 @@ msgstr "ที่อยู่อีเมลว่างเปล่า"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.js:0
+msgid "Enable RPC Cache"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/text/text_field.js:0
 msgid "Enable line breaks"
 msgstr "เปิดใช้งานการแบ่งบรรทัด"
@@ -3098,6 +3123,12 @@ msgstr "ฟิลด์ที่จะนำออก"
 #: code:addons/web/static/src/views/fields/binary/binary_field.js:0
 msgid "File"
 msgstr "ไฟล์"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+msgid "Filter name"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4773,6 +4804,12 @@ msgstr "ภูเขาไฟฟูจิ"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/multi_drag.js:0
+msgid "Move %(count)s records"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Move to %s..."
 msgstr "ย้ายไปที่ %s..."
@@ -5108,7 +5145,7 @@ msgstr "ไม่มีผลลัพธ์"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "No view of type '%s' could be found in the current action."
 msgstr "ไม่มีมุมมองของประเภท '%s' สามารถพบได้ในการดำเนินการปัจจุบัน"
 
@@ -6229,7 +6266,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "Report"
 msgstr "รายงาน"
 
@@ -6432,12 +6469,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
-msgid "Save current search"
-msgstr "บันทึกการค้นหาปัจจุบัน"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 msgid "Save default"
 msgstr "บันทึกค่าเริ่มต้น"
@@ -6447,6 +6478,12 @@ msgstr "บันทึกค่าเริ่มต้น"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 msgid "Save manually"
 msgstr "บันทึกด้วยตนเอง"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+msgid "Save search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6490,6 +6527,12 @@ msgstr "ค้นหา"
 #: code:addons/web/static/src/views/calendar/calendar_filter_section/calendar_filter_section.js:0
 msgid "Search More..."
 msgstr "ค้นหาเพิ่มเติม..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Search a record..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6628,6 +6671,12 @@ msgstr "เลือกฟิลด์"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Select a model to add a filter."
 msgstr "เลือกแบบจำลองเพื่อเพิ่มตัวกรอง"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Select a model..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -27646,6 +27695,9 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
+
+#~ msgid "Save current search"
+#~ msgstr "บันทึกการค้นหาปัจจุบัน"
 
 #~ msgid "%(property_string)s (%(parent_name)s)"
 #~ msgstr "%(property_string)s (%(parent_name)s)"

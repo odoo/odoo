@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:44+0000\n"
+"POT-Creation-Date: 2026-09-18 17:40+0000\n"
 "PO-Revision-Date: 2026-08-31 14:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -50,6 +50,30 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
 msgstr "pentru a vă valida acțiunea."
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "\"Authorization\": f\"bearer {mcp_key}\","
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "\"Content-Type\": \"application/json\","
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "# Store the API key securely, not in the code."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "%(model_name)s shared with %(partner_names)s"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
@@ -285,6 +309,12 @@ msgid "Already Registered"
 msgstr "Deja înregistrat"
 
 #. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "An email invitation has been sent to the selected users."
+msgstr ""
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_profile_editor.js:0
 msgid "An error occurred while saving your profile."
@@ -416,12 +446,6 @@ msgstr "Configurați parametrii conexiunii"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_security.js:0
-msgid "Confirm"
-msgstr "Confirmă"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/interactions/portal_security.js:0
 msgid "Confirm Password"
 msgstr "Confirmare parolă"
 
@@ -451,6 +475,12 @@ msgstr "Contacte"
 
 #. module: portal
 #. odoo-javascript
+#: code:addons/portal/static/src/interactions/portal_security.js:0
+msgid "Copied to clipboard"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_composer.js:0
 msgid "Could not save file %s"
 msgstr "Nu s-a putut salva fișierul %s"
@@ -464,6 +494,12 @@ msgstr "Țară"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country..."
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/interactions/portal_security.js:0
+msgid "Create Key"
 msgstr ""
 
 #. module: portal
@@ -634,12 +670,6 @@ msgid "Email Thread"
 msgstr "Fir E-mail"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Enter a description of and purpose for the key."
-msgstr "Introduceți o descriere a cheii și scopul acesteia."
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Expiration Date"
 msgstr "Data expirării"
@@ -647,14 +677,14 @@ msgstr "Data expirării"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Forgot password?"
-msgstr "Ați uitat parola?"
+msgid "Expires"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Give a duration for the key's validity"
-msgstr ""
+msgid "Forgot password?"
+msgstr "Ați uitat parola?"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -681,14 +711,6 @@ msgstr "Permite acces portal"
 #: model:ir.model,name:portal.model_ir_http
 msgid "HTTP Routing"
 msgstr "Rutare HTTP"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid ""
-"Here is your new API key, use it instead of a password for RPC access.\n"
-"                Your login is still necessary for interactive usage."
-msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -734,12 +756,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
 msgid "Image"
 msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Important:"
-msgstr "Important:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -792,9 +808,7 @@ msgstr "Este portalul"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid ""
-"It is very important that this description be clear\n"
-"                and complete,"
+msgid "Key Name — your only way to identify that key"
 msgstr ""
 
 #. module: portal
@@ -874,12 +888,6 @@ msgstr "Adresele mele"
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Name"
 msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Name your key"
-msgstr "Denumiți cheia"
 
 #. module: portal
 #. odoo-javascript
@@ -1064,6 +1072,8 @@ msgid "Save Address"
 msgstr "Salvați adresa"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Scope"
 msgstr "Scope"
@@ -1117,6 +1127,12 @@ msgstr "Trimite"
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
 msgstr "Documente partajate"
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "Shared successfully"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
@@ -1248,18 +1264,6 @@ msgid "The contact \"%s\" has the same email as an existing user"
 msgstr "Contactul „%s” are aceeași adresă de e-mail ca un utilizator existent"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "The key cannot be retrieved later and provides"
-msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "The key will be deleted once this period has elapsed."
-msgstr ""
-
-#. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The new password and its confirmation must be identical."
@@ -1308,6 +1312,14 @@ msgid "This is a preview of the customer portal."
 msgstr "Aceasta este o previzualizare pentru portalului clientului."
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid ""
+"This key won't be shown again. Please copy it and store it securely. Treat "
+"it like a password, it grants full access to your account."
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This partner is linked to an internal User and already has access to the "
@@ -1332,6 +1344,12 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__name
 msgid "Title of Card"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "To login, use the following parameters (Python):"
 msgstr ""
 
 #. module: portal
@@ -1388,12 +1406,6 @@ msgstr "Verificare Parola Nouă:"
 #: model:ir.model,name:portal.model_ir_ui_view
 msgid "View"
 msgstr "Afișare"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "What's this key for?"
-msgstr "Pentru ce este această cheie?"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -1477,8 +1489,8 @@ msgstr "Cod poștal"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "full access"
-msgstr "ACCES COMPLET"
+msgid "e.g. \"Odoo MCP\""
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -1488,18 +1500,26 @@ msgstr "v-a invitat să accesați următoarele"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid ""
-"it will be the only way to\n"
-"                identify the key once created"
+msgid "headers = {"
 msgstr ""
-"va fi singura modalitate de a\n"
-"                identifica cheia odată creată"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "import requests"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "logged in"
 msgstr "conectat"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "mcp_key = os.environ[\"ODOO_MCP_KEY\"]"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -1520,13 +1540,38 @@ msgstr ""
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "to your user account, it is very important to store it securely."
+msgid "url = \""
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "detaliile contului dvs."
+
+#~ msgid "Confirm"
+#~ msgstr "Confirmă"
+
+#~ msgid "Enter a description of and purpose for the key."
+#~ msgstr "Introduceți o descriere a cheii și scopul acesteia."
+
+#~ msgid "Important:"
+#~ msgstr "Important:"
+
+#~ msgid "Name your key"
+#~ msgstr "Denumiți cheia"
+
+#~ msgid "What's this key for?"
+#~ msgstr "Pentru ce este această cheie?"
+
+#~ msgid "full access"
+#~ msgstr "ACCES COMPLET"
+
+#~ msgid ""
+#~ "it will be the only way to\n"
+#~ "                identify the key once created"
+#~ msgstr ""
+#~ "va fi singura modalitate de a\n"
+#~ "                identifica cheia odată creată"
 
 #~ msgid "Company Name"
 #~ msgstr "Numele companiei"

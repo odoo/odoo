@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 18:09+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -167,12 +167,6 @@ msgid "Billable Type"
 msgstr ""
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid "Cancelled"
-msgstr "Preklicano"
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_line_search
 msgid "Category"
 msgstr ""
@@ -299,12 +293,6 @@ msgid "Display Sales Order"
 msgstr "Prikaz prodajnega naročila"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid "Done"
-msgstr "Opravljeno"
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
 msgstr ""
@@ -332,12 +320,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__id
 msgid "ID"
 msgstr ""
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid "In Progress"
-msgstr "V teku"
 
 #. module: sale_project
 #. odoo-python
@@ -402,6 +384,12 @@ msgid "Margins"
 msgstr ""
 
 #. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Materials"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
 msgstr "Način za posodabljanje dostavljene količine"
@@ -443,13 +431,15 @@ msgid "Office Furniture Set (task)"
 msgstr ""
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__30_other_costs
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Other Costs"
 msgstr ""
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__11_other_revenues
-msgid "Other Revenues"
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Other Revenue"
 msgstr ""
 
 #. module: sale_project
@@ -591,22 +581,7 @@ msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__revenues
-msgid "Revenues"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__01_revenues_fixed
-msgid "Revenues (Fixed Price)"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__07_revenues_manual
-msgid "Revenues (Manual)"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__05_revenues_milestones
-msgid "Revenues (Milestones)"
+msgid "Revenue"
 msgstr ""
 
 #. module: sale_project
@@ -751,8 +726,27 @@ msgid "Service Invoicing Policy"
 msgstr "Politika izdajanja računov za storitve"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__10_service_revenues
-msgid "Service Revenues"
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Service Revenue (Fixed Price)"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Service Revenue (Manual)"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Service Revenue (Milestones)"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Service Revenue (Time & Materials)"
 msgstr ""
 
 #. module: sale_project
@@ -853,12 +847,6 @@ msgid "This task has been created from: %(order_link)s (%(product_name)s)"
 msgstr ""
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid "To Do"
-msgstr "Opravek"
-
-#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
 msgstr "Za obračun"
@@ -887,10 +875,10 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
 #: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills_dashboard
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__12_vendor_bill
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Vendor Bills"
 msgstr "Prejeti računi"
@@ -942,3 +930,15 @@ msgstr ""
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
 msgstr ""
+
+#~ msgid "Cancelled"
+#~ msgstr "Preklicano"
+
+#~ msgid "Done"
+#~ msgstr "Opravljeno"
+
+#~ msgid "In Progress"
+#~ msgstr "V teku"
+
+#~ msgid "To Do"
+#~ msgstr "Opravek"

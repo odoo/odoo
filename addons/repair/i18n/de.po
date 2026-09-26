@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-09-09 14:05+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
@@ -505,13 +505,6 @@ msgid "End Repair"
 msgstr "Reparatur beenden"
 
 #. module: repair
-#: model:ir.model.fields,help:repair.field_repair_order__tracking
-msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr ""
-"Stellen Sie die Rückverfolgbarkeit eines lagerfähigen Produkts in Ihrem "
-"Lager sicher."
-
-#. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Exp %s"
@@ -638,6 +631,11 @@ msgstr "Lagerbewegung"
 #: model:ir.actions.act_window,name:repair.action_repair_move_lines
 msgid "Inventory Moves"
 msgstr "Lagerbewegungen"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__invisible
+msgid "Invisible"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_ids
@@ -936,6 +934,11 @@ msgstr "Kommissionierart sichtbar"
 #: code:addons/repair/models/repair.py:0
 msgid "Please set the first Serial Number or a default sequence"
 msgstr "Bitte legen Sie die erste Seriennummer oder eine Standardsequenz fest"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__primary
+msgid "Primary"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__priority
@@ -1330,6 +1333,11 @@ msgid "Search Repair Orders"
 msgstr "Reparaturaufträge suchen"
 
 #. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__secondary
+msgid "Secondary"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__sequence
 msgid "Sequence"
 msgstr "Sequenz"
@@ -1418,6 +1426,13 @@ msgstr "Stichwortbezeichnung existiert bereits!"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_tree
 msgid "Tags"
 msgstr "Stichwörter"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__tracking
+msgid ""
+"Technical field holding the tracking method. False on a storable product "
+"means it's tracked by quantity only."
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
@@ -1602,6 +1617,11 @@ msgid "Urgent"
 msgstr "Dringend"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__validate_button_style
+msgid "Validate Button Style"
+msgstr ""
+
+#. module: repair
 #: model:ir.model,name:repair.model_stock_warehouse
 msgid "Warehouse"
 msgstr "Lagerhaus"
@@ -1705,20 +1725,26 @@ msgstr "sale_order_id"
 msgid "text"
 msgstr "Text"
 
-msgid "Operation Category"
-msgstr "Vorgangskategorie"
+#~ msgid "Ensure the traceability of a storable product in your warehouse."
+#~ msgstr ""
+#~ "Stellen Sie die Rückverfolgbarkeit eines lagerfähigen Produkts in Ihrem "
+#~ "Lager sicher."
 
-msgid "Reserved"
-msgstr "Reserviert"
+#~ msgid "Operation Category"
+#~ msgstr "Vorgangskategorie"
 
-msgid "You can only have one invoice linked to a repair order."
-msgstr "Es kann nur eine Rechnung mit einem Reparaturauftrag verknüpft werden."
+#~ msgid "Reserved"
+#~ msgstr "Reserviert"
 
-msgid "Check availability"
-msgstr "Verfügbarkeit prüfen"
+#~ msgid "You can only have one invoice linked to a repair order."
+#~ msgstr ""
+#~ "Es kann nur eine Rechnung mit einem Reparaturauftrag verknüpft werden."
 
-msgid "Website Messages"
-msgstr "Website-Nachrichten"
+#~ msgid "Check availability"
+#~ msgstr "Verfügbarkeit prüfen"
 
-msgid "Website communication history"
-msgstr "Website-Kommunikationsverlauf"
+#~ msgid "Website Messages"
+#~ msgstr "Website-Nachrichten"
+
+#~ msgid "Website communication history"
+#~ msgstr "Website-Kommunikationsverlauf"

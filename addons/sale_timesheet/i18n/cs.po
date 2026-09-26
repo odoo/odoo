@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-18 17:40+0000\n"
 "PO-Revision-Date: 2026-08-31 19:47+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -99,6 +99,11 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the analytic "
 "distribution of the sale order item '%(so_line_name)s' linked to the "
 "timesheet."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.actions.report,print_report_name:sale_timesheet.timesheet_report_account_move
+msgid "('%s Timesheets' % (object.name))"
 msgstr ""
 
 #. module: sale_timesheet
@@ -393,7 +398,6 @@ msgid "Billable Time"
 msgstr "Fakturovaný čas"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__billable_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_type
 msgid "Billable Type"
 msgstr "Fakturovatelný typ"
@@ -493,6 +497,7 @@ msgstr "Objevte naše produkty."
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__display_name
@@ -507,12 +512,6 @@ msgstr "Objevte naše produkty."
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__display_name
 msgid "Display Name"
 msgstr "Zobrazovací název"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__display_timesheet_portal_link
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_timesheet_portal_link
-msgid "Display Timesheet Portal Link"
-msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -649,6 +648,7 @@ msgstr "Zbývající hodiny)"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_send__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__id
@@ -942,16 +942,6 @@ msgid "Order"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__30_other_costs
-msgid "Other Costs"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__11_other_revenues
-msgid "Other Revenues"
-msgstr ""
-
-#. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
@@ -1069,21 +1059,6 @@ msgstr "Zbývající hodiny k dispozici"
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Responsibilities"
 msgstr "Odpovědnosti"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__01_revenues_fixed
-msgid "Revenues (Fixed Price)"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__07_revenues_manual
-msgid "Revenues (Manual)"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__05_revenues_milestones
-msgid "Revenues (Milestones)"
-msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -1216,11 +1191,6 @@ msgid "Senior Architect (Invoice on Timesheets)"
 msgstr "Senior architekt (faktura podle pracovního výkazu)"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__10_service_revenues
-msgid "Service Revenues"
-msgstr "Příjmy ze služeb"
-
-#. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheets"
 msgstr "Služba v časových výkazech"
@@ -1242,6 +1212,11 @@ msgstr ""
 #: model:project.project,label_tasks:sale_timesheet.project_support
 msgid "Services"
 msgstr "Servisní služby"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_move_send
+msgid "Shared Send Invoice Wizard Functions"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
@@ -1424,15 +1399,33 @@ msgid "Timesheets"
 msgstr "Časové výkazy"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__02_billable_fixed
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__02_billable_fixed
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Fixed Price)"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__09_non_billable
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__09_non_billable
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_analytic_line.py:0
+msgid "Timesheets (Manual)"
+msgstr ""
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_analytic_line.py:0
+msgid "Timesheets (Milestones)"
+msgstr ""
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Non-Billable)"
+msgstr ""
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_analytic_line.py:0
+msgid "Timesheets (Time & Materials)"
 msgstr ""
 
 #. module: sale_timesheet
@@ -1481,24 +1474,6 @@ msgstr "Zohlednění časových výkazů při fakturaci vašeho času"
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Timesheets taken when invoicing time spent"
 msgstr "Časové výkazy pořízené při fakturaci stráveného času"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__08_billable_manual
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__08_billable_manual
-msgid "Timesheets (Manual) "
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__06_billable_milestones
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__06_billable_milestones
-msgid "Timesheets (Milestones)"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__04_billable_time
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__04_billable_time
-msgid "Timesheets (Time & Materials)"
-msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_list_inherited
@@ -1566,11 +1541,6 @@ msgstr ""
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Valid work permit for Belgium"
 msgstr "Platné pracovní povolení pro Belgii"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__12_vendor_bill
-msgid "Vendor Bills"
-msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
@@ -1655,6 +1625,9 @@ msgstr ""
 #: code:addons/sale_timesheet/models/account_move.py:0
 msgid "project_id"
 msgstr "project_id"
+
+#~ msgid "Service Revenues"
+#~ msgstr "Příjmy ze služeb"
 
 #~ msgid "- Timesheet product"
 #~ msgstr "- Produkt Timesheet"

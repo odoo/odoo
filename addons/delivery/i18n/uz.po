@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 16:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -218,12 +218,6 @@ msgstr "Qo‘shish"
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "Add a delivery method"
 msgstr ""
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
-#, fuzzy
-msgid "Add shipping"
-msgstr "Yetkazib berishni qo‘shish"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -756,7 +750,7 @@ msgstr "Narxni olish va jo‘natmani yaratish"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+#: code:addons/delivery/static/src/backend/widgets/carrier_rates_loader.xml:0
 msgid "Get all rates"
 msgstr ""
 
@@ -891,7 +885,7 @@ msgstr "Oxirgi yangilangan sana"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+#: code:addons/delivery/static/src/backend/widgets/carrier_rates_loader.xml:0
 msgid "Loading Rates"
 msgstr ""
 
@@ -1193,6 +1187,11 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "Shipped"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Shipping"
 msgstr ""
 
 #. module: delivery
@@ -1531,6 +1530,10 @@ msgid ""
 "{{ object.so_id.company_id.name }} Shipping Confirmation (Ref "
 "{{ object.so_id.name or 'n/a' }})"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add shipping"
+#~ msgstr "Yetkazib berishni qo‘shish"
 
 #, fuzzy
 #~ msgid "cash on delivery not allowed by selected delivery method"

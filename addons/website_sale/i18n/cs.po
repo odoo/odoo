@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 14:04+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -1168,8 +1168,7 @@ msgid ""
 "                                                <span style=\"white-space: "
 "nowrap;\">\n"
 "                                                    <t t-"
-"if=\"object.website_id.show_line_subtotals_tax_selection == "
-"'tax_excluded'\">\n"
+"if=\"object.company_price_include == 'tax_excluded'\">\n"
 "                                                        <t t-"
 "out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
 "10.00</t>\n"
@@ -1346,6 +1345,11 @@ msgstr "O křížovém prodeji produktů"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Accept Terms"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
+msgid "Access Code"
 msgstr ""
 
 #. module: website_sale
@@ -1643,7 +1647,7 @@ msgstr "Alternativní produkty"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "Amount"
@@ -2183,7 +2187,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 msgid "Choose Your Amount"
 msgstr ""
 
@@ -2199,11 +2203,6 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Choose your"
 msgstr ""
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_christmas
-msgid "Christmas"
-msgstr "Vánoce"
 
 #. module: website_sale
 #. odoo-python
@@ -2331,11 +2330,6 @@ msgstr "Barvy"
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Columns"
 msgstr "Sloupce"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_product_combos
-msgid "Combo Choices"
-msgstr "Produktové sety"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2611,6 +2605,7 @@ msgstr "Běžná kategorie nebo vše"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "Custom Amount"
@@ -2732,6 +2727,11 @@ msgstr "Definovat novou kategorii"
 #: model_terms:ir.actions.act_window,help:website_sale.product_ribbon_action
 msgid "Define a new ribbon"
 msgstr "Definovat novou stuhu"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Defined on website"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_ribbon__assign
@@ -2996,6 +2996,8 @@ msgid "Display Options"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__show_line_subtotals_tax_selection
+#: model:ir.model.fields,field_description:website_sale.field_website__show_line_subtotals_tax_selection
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Display Product Prices"
 msgstr "Zobrazit ceny produktů"
@@ -3162,12 +3164,7 @@ msgid "E-Commerce Extra Info Shown on product page"
 msgstr "E-shop dodatečné informace, zobrazené na produktové stránce"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
-msgid "E-commerce Promotional Code"
-msgstr "Propagační kód e-shopu"
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_europe
+#: model:product.pricelist,name:website_sale.list_eur
 msgid "EUR"
 msgstr "EUR"
 
@@ -4230,12 +4227,6 @@ msgid "Lightbulb sold separately"
 msgstr "Žárovka se prodávána samostatně"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__show_line_subtotals_tax_selection
-#: model:ir.model.fields,field_description:website_sale.field_website__show_line_subtotals_tax_selection
-msgid "Line Subtotals Tax Display"
-msgstr "Zobrazení daně mezisoučty řádků"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Link Color"
@@ -4501,7 +4492,7 @@ msgid "New!"
 msgstr "Novinka!"
 
 #. module: website_sale
-#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_arrivals
 msgid "Newest"
 msgstr ""
 
@@ -5124,6 +5115,11 @@ msgid "Page Width"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Paid"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
 msgid "Parent"
 msgstr "Nadřazená"
@@ -5301,6 +5297,11 @@ msgid "Price - Low to High"
 msgstr "Od nejlevnějšího"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Price Display"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
 msgid "Price Range"
 msgstr ""
@@ -5330,7 +5331,7 @@ msgstr "Cena bude aktualizována po výběru metody doručení"
 #: model:ir.model,name:website_sale.model_product_pricelist
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__pricelist_id
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__pricelist_id
-#: model_terms:ir.ui.view,arch_db:website_sale.pricelist_list
+#: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_search
 msgid "Pricelist"
 msgstr "Ceník"
@@ -5341,8 +5342,20 @@ msgid "Pricelist Rule"
 msgstr "Pravidlo ceníku"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/footer_copyright_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/header_elements_option.xml:0
+msgid "Pricelist Selector"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.pricelist_selector
+msgid "Pricelist: {{0}}"
 msgstr ""
 
 #. module: website_sale
@@ -5682,6 +5695,11 @@ msgstr "Produkty nedávno prodány s produktem"
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr "Zobrazení produktů"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_b2b
+msgid "Professional Prices"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -6889,12 +6907,19 @@ msgid "Target"
 msgstr "Cíl"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__tax_display
+msgid "Tax Display"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
+#: model:ir.model.fields.selection,name:website_sale.selection__website__tax_display__tax_excluded
 msgid "Tax Excluded"
 msgstr "Bez daně"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_included
+#: model:ir.model.fields.selection,name:website_sale.selection__website__tax_display__tax_included
 msgid "Tax Included"
 msgstr "Včetně daně"
 
@@ -6914,6 +6939,16 @@ msgstr ""
 msgid "Tax included or excluded depending on the website configuration."
 msgstr ""
 "Daň je zahrnuta nebo nezahrnuta v závislosti na konfiguraci webových stránek."
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_excluded
+msgid "Taxes Excluded"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_included
+msgid "Taxes Included"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -7397,6 +7432,11 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
 msgid "URL of a video for showcasing your product."
 msgstr "URL videa pro představení vašeho produktu."
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_default
+msgid "USD"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -8046,6 +8086,14 @@ msgid "Your order will be confirmed after payment is received."
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/payment_transaction.py:0
+msgid ""
+"Your payment of %(formatted_amount)s has been processed. Pay the remaining "
+"amount to confirm your order."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "Váš předchozí košík již byl dokončen."
@@ -8145,6 +8193,11 @@ msgstr "Popis eShopu"
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 msgid "eCommerce Filter Visibility"
 msgstr "Viditelnost filtru eShopu"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__tax_display
+msgid "eCommerce Price Display"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -8320,6 +8373,18 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "Christmas"
+#~ msgstr "Vánoce"
+
+#~ msgid "Combo Choices"
+#~ msgstr "Produktové sety"
+
+#~ msgid "E-commerce Promotional Code"
+#~ msgstr "Propagační kód e-shopu"
+
+#~ msgid "Line Subtotals Tax Display"
+#~ msgstr "Zobrazení daně mezisoučty řádků"
 
 #~ msgid ""
 #~ "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "

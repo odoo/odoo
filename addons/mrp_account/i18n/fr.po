@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 15:15+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -151,6 +151,16 @@ msgid "Analytic accounting in Manufacturing"
 msgstr ""
 
 #. module: mrp_account
+#: model:ir.model,name:mrp_account.model_report_mrp_report_bom_structure
+msgid "BOM Overview Report"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_bom
+msgid "Bill of Material"
+msgstr ""
+
+#. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/analytic_account.py:0
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
@@ -233,6 +243,7 @@ msgstr "Crédit"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__currency_id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__currency_id
 msgid "Currency"
 msgstr "Devise"
 
@@ -255,6 +266,7 @@ msgstr "Débit"
 #: model:ir.model.fields,field_description:mrp_account.field_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__display_name
@@ -262,6 +274,7 @@ msgstr "Débit"
 #: model:ir.model.fields,field_description:mrp_account.field_product_category__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_bom_structure__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
@@ -284,6 +297,20 @@ msgid "Expense Account"
 msgstr "Compte de charges"
 
 #. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.mo_overview_components
+msgid "Extra BoM Cost"
+msgstr ""
+
+#. module: mrp_account
+#. odoo-javascript
+#: code:addons/mrp_account/static/src/components/bom_overview_extra_bom_cost_line/bom_overview_extra_bom_cost_line.xml:0
+#: code:addons/mrp_account/static/src/components/mo_overview_extra_bom_cost_line/mo_overview_extra_bom_cost_line.xml:0
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__extra_cost
+#: model_terms:ir.ui.view,arch_db:mrp_account.mrp_account_inherits_mrp_bom_form_view
+msgid "Extra Cost"
+msgstr ""
+
+#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Unit Cost"
 msgstr "Coût de l'unité supplémentaire"
@@ -297,6 +324,7 @@ msgstr "Coût de l'unité supplémentaire"
 #: model:ir.model.fields,field_description:mrp_account.field_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__id
@@ -304,6 +332,7 @@ msgstr "Coût de l'unité supplémentaire"
 #: model:ir.model.fields,field_description:mrp_account.field_product_category__id
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__id
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__id
+#: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_bom_structure__id
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__id
 #: model:ir.model.fields,field_description:mrp_account.field_res_company__id
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
@@ -479,6 +508,12 @@ msgstr ""
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Reversal of: %s"
 msgstr "Extourne de : %s"
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_bom__extra_cost
+msgid ""
+"Set an additional cost per manufactured unit (e.g. labour, energy, packaging)"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation

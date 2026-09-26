@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
 "PO-Revision-Date: 2026-09-11 09:32+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -1012,6 +1012,12 @@ msgid ""
 msgstr ""
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
+msgid "<i class=\"me-2 oi\" data-icon=\"arrow_forward\"/>Manage my calendars"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled mt-1\" data-icon=\"schedule\" title=\"Dates\"/>"
 msgstr ""
@@ -1062,6 +1068,11 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"oi\" data-icon=\"calendar_today\" title=\"Calendar\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi\" data-icon=\"close\" title=\"Remove\"/>"
 msgstr ""
 
@@ -1091,16 +1102,6 @@ msgstr ""
 "'weekly')\">重複在</span>"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
-msgstr "<span class=\"me-1 o_form_label\">Google 日曆</span>"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
-msgstr "<span class=\"me-1 o_form_label\">Outlook 日曆</span>"
-
-#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"me-1\">Not available at the selected time:</span>"
 msgstr ""
@@ -1110,6 +1111,20 @@ msgstr ""
 msgid ""
 "<span class=\"mx-1\"><i class=\"oi me-1\" data-icon=\"add\"/>Video "
 "conference</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
+msgid ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share or id != "
+"uid\">Calendar</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
+msgid ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share\">Calendar</"
+"span>"
 msgstr ""
 
 #. module: calendar
@@ -1130,9 +1145,39 @@ msgid "<span invisible=\"allday\"> or </span>"
 msgstr ""
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
-msgid "<span>Are you sure you want to delete this event? <br/></span>"
-msgstr "<span>確定要刪除此活動嗎？<br/></span>"
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid ""
+"<span invisible=\"block_mail\">Notify attendees of confirmed events that the "
+"event was canceled?</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid ""
+"<span invisible=\"requested_action != 'unlink'\">Are you sure you want to "
+"delete these events ?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">Are "
+"you sure you want to archive these events ?</span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'unlink'\">\n"
+"                        Some events containing recurrence are selected, only "
+"this occurrence will be unlinked.\n"
+"                    </span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'archive'\">\n"
+"                        Some events containing recurrence are selected, only "
+"this occurrence will be archived.\n"
+"                    </span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+msgid ""
+"<span invisible=\"requested_action != 'unlink'\">Are you sure you want to "
+"delete this event ?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">Are "
+"you sure you want to archive this event ?</span>"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1146,6 +1191,17 @@ msgstr ""
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr "<strong>儲存</strong>此頁面並返回此處以設定該功能。"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_calendar.py:0
+msgid "A primary calendar cannot be deleted."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.constraint,message:calendar.constraint_calendar_event_check_no_recurrent_draft
+msgid "A recurring event cannot be a draft."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
@@ -1162,6 +1218,12 @@ msgstr "接受"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
 msgid "Accepted Count"
 msgstr "已接受數目"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__user_access_role
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__access_role
+msgid "Access Role"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_access_token_unique
@@ -1288,6 +1350,12 @@ msgid "All Day, %(day)s"
 msgstr "全天，%(day)s"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "All calendars"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "All day"
 msgstr ""
@@ -1300,10 +1368,49 @@ msgid "All events"
 msgstr "所有活動"
 
 #. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__all_events
+msgid "All the events"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid "Archive"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Archive event"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Archive events"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+msgid "Archive or Delete Event"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid "Archive or Delete Events"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Archived"
 msgstr "已封存"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Are you sure you want to unsubscribe from this calendar?"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
@@ -1325,6 +1432,11 @@ msgstr "參加者"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
 msgid "Attendees Count"
 msgstr "參加者數目"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Attendees will be notified upon confirmation."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
@@ -1358,7 +1470,13 @@ msgid "Base Event"
 msgstr "基本活動"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body_has_template_value
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__block_mail
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__block_mail
+msgid "Block Mail"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr "正文內容與範本相同"
 
@@ -1378,17 +1496,18 @@ msgid "By day"
 msgstr "按天"
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
-msgid "Bye-bye, record!"
-msgstr "永別了，記錄！"
-
-#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_calendar.py:0
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__calendar_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_id
+#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_ids
 #: model:ir.module.module,shortdesc:base.module_calendar
 #: model:ir.ui.menu,name:calendar.calendar_event_menu
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 msgid "Calendar"
 msgstr "日曆"
 
@@ -1405,18 +1524,28 @@ msgid "Calendar Attendee Information"
 msgstr "日曆出席者資訊"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_default_privacy
-#: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_default_privacy
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_default_privacy
 msgid "Calendar Default Privacy"
 msgstr "日曆預設私隱設定"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__calendar_event_ids
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
 #: model:ir.model.fields,field_description:calendar.field_discuss_channel__calendar_event_ids
 msgid "Calendar Event"
 msgstr "日曆活動"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event_archive_or_unlink_wizard
+msgid "Calendar Event Archive Or Unlink Wizard"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event_multi_archive_or_unlink_wizard
+msgid "Calendar Event Multi Archive Or Unlink Wizard"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
@@ -1434,14 +1563,9 @@ msgid "Calendar Meeting"
 msgstr "日曆會議"
 
 #. module: calendar
-#: model:ir.model,name:calendar.model_calendar_popover_delete_wizard
-msgid "Calendar Popover Delete Wizard"
-msgstr "日曆彈出區塊刪除精靈"
-
-#. module: calendar
-#: model:ir.model,name:calendar.model_calendar_provider_config
-msgid "Calendar Provider Configuration Wizard"
-msgstr "日曆提供程式配置精靈"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__members_only
+msgid "Calendar Members Only"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -1449,8 +1573,23 @@ msgid "Calendar Settings"
 msgstr "日曆設定"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_user_ids
+msgid "Calendar User"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_user
+msgid "Calendar User Manager"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Calendar description"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
+msgid "Calendar name"
 msgstr ""
 
 #. module: calendar
@@ -1460,8 +1599,8 @@ msgstr "日曆：已更新日期"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
-msgid "Calendar: Event Deleted"
-msgstr "日曆：事件已刪除"
+msgid "Calendar: Event Canceled"
+msgstr ""
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -1484,9 +1623,21 @@ msgid "Calendar: Reminder"
 msgstr "例如:日曆：提醒"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
+#: model:ir.actions.act_window,name:calendar.action_calendar_calendar
+#: model:ir.ui.menu,name:calendar.menu_calendar_calendars
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_list
+msgid "Calendars"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__can_edit_body
 msgid "Can Edit Body"
 msgstr "允許編輯內文"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_delete_event
+msgid "Canceled event: {{ object.name }}"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -1499,11 +1650,6 @@ msgstr ""
 "        活動（僅當組織者不是唯一的參與者時）"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__external_calendar_provider
-msgid "Choose an external calendar to configure"
-msgstr "選擇要配置的外部日曆"
-
-#. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
 msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
@@ -1511,17 +1657,10 @@ msgid ""
 msgstr "選擇如何處理循環活動中的其他活動。修改日期或時間時不允許更新所有活動"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "Client ID"
-msgstr "客戶端 ID"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "Client Secret"
-msgstr "客戶秘鑰"
-
-#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__color
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__calendar_color
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__filter_color
 msgid "Color"
 msgstr "顏色"
 
@@ -1543,20 +1682,9 @@ msgstr "配置"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Confirm"
 msgstr ""
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/components/calendar_provider_config/calendar_connect_provider.xml:0
-msgid "Connect"
-msgstr "連接"
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
-msgid "Connect your Calendar"
-msgstr "連接日曆"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
@@ -1583,7 +1711,7 @@ msgid "Contact created through Calendar sync."
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__body
 msgid "Contents"
 msgstr "內容"
 
@@ -1593,6 +1721,12 @@ msgid "Count"
 msgstr "個數"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Create Calendar"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model,website_form_label:calendar.model_res_partner
 msgid "Create a Customer"
 msgstr "建立客戶"
@@ -1600,24 +1734,28 @@ msgstr "建立客戶"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__create_uid
 msgid "Created by"
 msgstr "建立人員"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__create_date
 msgid "Created on"
 msgstr "建立於"
 
@@ -1625,6 +1763,11 @@ msgstr "建立於"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_attendee
 msgid "Current Attendee"
 msgstr "當前參加者"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_id
+msgid "Current Membership Record"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
@@ -1695,45 +1838,27 @@ msgid "Default Privacy"
 msgstr "預設私隱設定"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
-msgid "Default privacy setting for whom the calendar events will be visible."
-msgstr "預設私隱設定，表示向誰人顯示日曆事件。"
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
+msgid "Default visibility"
+msgstr ""
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__delete
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Delete"
 msgstr "刪除"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
-msgid "Delete Event"
-msgstr "刪除活動"
+msgid "Delete event"
+msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__all
-msgid "Delete all the events"
-msgstr "刪除所有活動"
-
-#. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__next
-msgid "Delete this and following events"
-msgstr "刪除此活動及後續活動"
-
-#. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__one
-msgid "Delete this event"
-msgstr "刪除此活動"
-
-#. module: calendar
-#: model:mail.template,subject:calendar.calendar_template_delete_event
-msgid "Deleted event: {{ object.name }}"
-msgstr "已刪除事件：{{ object.name }}"
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Delete events"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -1771,12 +1896,14 @@ msgstr "顯示說明"
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__display_name
 #: model:ir.model.fields,field_description:calendar.field_discuss_channel__display_name
 #: model:ir.model.fields,field_description:calendar.field_ir_http__display_name
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__display_name
@@ -1805,6 +1932,12 @@ msgid "Document Model Name"
 msgstr "單據模型名稱"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Draft"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
 msgid "Dtstart"
 msgstr "開始日期時間"
@@ -1828,9 +1961,21 @@ msgstr "電郵"
 
 #. module: calendar
 #. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Edit Calendar"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 msgid "Edit Recurrent event"
 msgstr "編輯循環活動"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.xml:0
+msgid "Edit filter"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1847,6 +1992,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__email
 msgid "Email"
 msgstr "電郵"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1_day
+msgid "Email - 1 day"
+msgstr ""
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
@@ -1896,11 +2046,6 @@ msgid "Event Alarm Manager"
 msgstr "活動提醒管理"
 
 #. module: calendar
-#: model:ir.actions.act_window,name:calendar.action_event_delete_wizard
-msgid "Event Delete Wizard"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
 msgstr "活動會議類型"
@@ -1928,6 +2073,11 @@ msgstr ""
 #. module: calendar
 #: model:mail.message.subtype,description:calendar.mt_calendar_event_updated
 msgid "Event updated"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__event_ids
+msgid "Events"
 msgstr ""
 
 #. module: calendar
@@ -2032,6 +2182,11 @@ msgid "Feedback: %s"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_checked
+msgid "Filter Enabled"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__1
 msgid "First"
@@ -2100,7 +2255,6 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__google
 msgid "Google"
 msgstr "Google"
 
@@ -2115,26 +2269,6 @@ msgid "Google Calendar URL"
 msgstr ""
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "Google Calendar icon"
-msgstr "Google日曆圖示"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_id
-msgid "Google Client_id"
-msgstr "Google Client_id"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_secret
-msgid "Google Client_key"
-msgstr "Google Client_key"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_sync_paused
-msgid "Google Synchronization Paused"
-msgstr "Google 同步已暫停"
-
-#. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 路由"
@@ -2145,8 +2279,8 @@ msgid "Has Message"
 msgstr "有訊息"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_hide_my
-msgid "Hide My Calendar from Calendar"
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__has_recurrent_events
+msgid "Has Recurrent Events"
 msgstr ""
 
 #. module: calendar
@@ -2158,12 +2292,14 @@ msgstr "小時"
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__id
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__id
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__id
 #: model:ir.model.fields,field_description:calendar.field_discuss_channel__id
 #: model:ir.model.fields,field_description:calendar.field_ir_http__id
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__id
@@ -2218,7 +2354,17 @@ msgstr ""
 "如果顯示為 \"空閒\"，則表示您在該時間段內有空。"
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__confidential
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid ""
+"If you are the only person using this calendar, all of its events will be "
+"deleted. Are you sure you want to proceed?\n"
+"\n"
+"This action cannot be reversed."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__confidential
 msgid "Internal users only"
 msgstr "只限內部使用者"
 
@@ -2269,7 +2415,7 @@ msgid "Invitations"
 msgstr "邀請"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__is_mail_template_editor
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__is_mail_template_editor
 msgid "Is Editor"
 msgstr "是編輯器"
 
@@ -2277,6 +2423,11 @@ msgstr "是編輯器"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
 msgid "Is Follower"
 msgstr "是關注人"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_draft
+msgid "Is draft"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
@@ -2295,7 +2446,18 @@ msgid "Join Meeting"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__lang
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Keep this calendar"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__name
+msgid "Label"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__lang
 msgid "Language"
 msgstr "語言"
 
@@ -2308,24 +2470,28 @@ msgstr "最後"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__write_uid
 msgid "Last Updated by"
 msgstr "最後更新者"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__write_date
 msgid "Last Updated on"
 msgstr "最後更新於"
 
@@ -2368,7 +2534,7 @@ msgid "Logo"
 msgstr "Logo"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__template_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__template_id
 msgid "Mail Template"
 msgstr "信件範本"
 
@@ -2461,11 +2627,6 @@ msgid "Messages"
 msgstr "訊息"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "Microsoft Outlook icon"
-msgstr "Microsoft Outlook 圖示"
-
-#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
 msgid "Minutes"
 msgstr "分鐘"
@@ -2505,13 +2666,13 @@ msgstr "月"
 
 #. module: calendar
 #. odoo-javascript
-#: code:addons/calendar/static/src/views/calendar_form/calendar_quick_create.xml:0
+#: code:addons/calendar/static/src/views/calendar_form/calendar_event_quick_create.xml:0
 msgid "More Options"
 msgstr "更多選項"
 
 #. module: calendar
 #. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.js:0
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Activities"
 msgstr ""
@@ -2527,15 +2688,11 @@ msgid "My Meetings"
 msgstr "我的會議"
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.xml:0
-msgid "My calendars"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__name
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_user_view_form
 msgid "Name"
 msgstr "名稱"
 
@@ -2549,6 +2706,12 @@ msgstr "需要採取行動"
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "New"
 msgstr "新增"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "New Calendar"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_calendar_event_id
@@ -2609,6 +2772,11 @@ msgid "No Meetings"
 msgstr ""
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "No calendar"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "No email"
@@ -2623,12 +2791,6 @@ msgstr "尚未回應"
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "No meetings found. Let's schedule one!"
 msgstr "未找到會議。讓我們安排一個！"
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
-msgid "No, keep it"
-msgstr "不，保留它"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__notes
@@ -2737,9 +2899,14 @@ msgstr "僅限內部使用者"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__confidential
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
-#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__confidential
 msgid "Only internal users"
 msgstr "只限內部使用者"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_calendar.py:0
+msgid "Only the calendar owner can modify these fields: %(fields)s"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -2752,7 +2919,7 @@ msgid "Optional message"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_popover_delete_wizard__lang
+#: model:ir.model.fields,help:calendar.field_calendar_event_archive_or_unlink_wizard__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the main partner's language will be used. This should "
@@ -2783,7 +2950,6 @@ msgstr "舉辦方"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__microsoft
 msgid "Outlook"
 msgstr "Outlook"
 
@@ -2793,19 +2959,16 @@ msgid "Outlook Calendar"
 msgstr "Outlook 行事曆"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
-msgid "Outlook Client Id"
-msgstr "Outlook 客戶端識別碼"
+#: model:ir.model.fields,field_description:calendar.field_res_users__owned_calendar_ids
+msgid "Owned Calendar"
+msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_secret
-msgid "Outlook Client Secret"
-msgstr "Outlook 客戶端秘密"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_sync_paused
-msgid "Outlook Synchronization Paused"
-msgstr "Outlook 同步已暫停"
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__owner_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_owner_id
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__owner
+msgid "Owner"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -2833,9 +2996,18 @@ msgid "Phone"
 msgstr "電話"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__is_primary
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__is_primary
+msgid "Primary"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users__primary_calendar_id
+msgid "Primary Calendar"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
-#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
-#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendar_default_privacy
 msgid "Privacy"
 msgstr "私隱"
 
@@ -2847,31 +3019,29 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__private
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
-#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__private
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Private"
 msgstr "私密"
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__private
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__private
 msgid "Private by default"
 msgstr "預設私密"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__public
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
-#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__public
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Public"
 msgstr "公開"
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__public
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__public
 msgid "Public by default"
 msgstr "預設公開"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__recipient_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recipient_ids
 msgid "Recipients"
 msgstr "接收者"
 
@@ -2879,6 +3049,11 @@ msgstr "接收者"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
 msgid "Recurrence"
 msgstr "循環活動"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recurrence_choice
+msgid "Recurrence Choice"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
@@ -2897,7 +3072,13 @@ msgid "Recurrence Update"
 msgstr "循環活動更新"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__recurrence_ids
+msgid "Recurrences"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recurrency
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Recurrent"
 msgstr "循環"
@@ -2926,7 +3107,7 @@ msgid "Reminders"
 msgstr "提醒"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__render_model
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__render_model
 msgid "Rendering Model"
 msgstr "呈現模型"
 
@@ -2959,6 +3140,12 @@ msgstr "重複間隔 (日/周/月/年)"
 #: model:ir.model.fields,help:calendar.field_calendar_event__count
 msgid "Repeat x times"
 msgstr "重複 x 次"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__requested_action
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__requested_action
+msgid "Requested Action"
+msgstr ""
 
 #. module: calendar
 #. odoo-javascript
@@ -3060,7 +3247,14 @@ msgid "Send Mail"
 msgstr "發送信件"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid "Send and archive"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Send and delete"
 msgstr "傳送並刪除"
 
@@ -3094,6 +3288,18 @@ msgid "Settings"
 msgstr "設定"
 
 #. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__members_only
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__members_only
+msgid "Shared Calendar Members Only"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__share_user_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_share_user_ids
+msgid "Shared with"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
 msgid "Should Show Status"
 msgstr "應顯示狀態"
@@ -3112,6 +3318,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show as"
 msgstr "顯示全部"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_active
+msgid "Shown in Filters List"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
@@ -3170,16 +3381,11 @@ msgid "Stop date of an event, without time for full days events"
 msgstr "一個活動的結束日期，不包括全天活動的時間"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__subject
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__subject
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "Subject"
 msgstr "主題"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
-msgid "Submit"
-msgstr "提交"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sun
@@ -3212,13 +3418,11 @@ msgid "Synchronize with"
 msgstr "同步至"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Synchronize your calendar with Google Calendar"
 msgstr "將你的日曆與 Google 日曆同步"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Synchronize your calendar with Outlook"
 msgstr "將你的日曆與 Outlook 同步"
@@ -3324,6 +3528,12 @@ msgid "There are no attendees on these events"
 msgstr "這些活動沒有參加者"
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_user.py:0
+msgid "These fields cannot be modified: %(fields)s"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__3
 msgid "Third"
@@ -3333,6 +3543,7 @@ msgstr "第三個"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__future_events
 msgid "This and following events"
 msgstr "此活動和以下活動"
 
@@ -3340,8 +3551,16 @@ msgstr "此活動和以下活動"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__self_only
 msgid "This event"
 msgstr "此活動"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event_archive_or_unlink_wizard__recurrence_choice
+msgid ""
+"This field allows to perform the archiving or deletion on several events "
+"belonging to the         selected event's recurrence."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -3446,6 +3665,12 @@ msgid "Unit"
 msgstr "單位"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Unsubscribe from calendar"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Until"
@@ -3465,8 +3690,14 @@ msgstr "用於手動通知參加者"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__user_id
 msgid "User"
 msgstr "使用者"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_calendar
+msgid "User Calendar"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
@@ -3482,6 +3713,11 @@ msgstr "使用者設定"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "User default"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_ids
+msgid "Users"
 msgstr ""
 
 #. module: calendar
@@ -3505,6 +3741,17 @@ msgstr ""
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.message_meeting_activity_done
 msgid "View Meeting"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_list
+msgid "Visibility"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Warning"
 msgstr ""
 
 #. module: calendar
@@ -3537,6 +3784,17 @@ msgid "Weeks"
 msgstr "星期"
 
 #. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__is_draft
+msgid ""
+"When True, this field mutes the notifications of the event. It allows to "
+"save the event without         confirming it and avoids notifying attendees "
+"with update messages because some information was unknown at         the "
+"creation of the event. To prevent event's flow issues, the draft state "
+"should be set at the creation         of the event and never reset once it "
+"is removed."
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__notify_responsible
 msgid "When activated, the event organizer will also receive this reminder."
 msgstr ""
@@ -3553,6 +3811,16 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__effective_privacy
 msgid "Whether the event is private, considering the user privacy"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users__writable_calendar_ids
+msgid "Writable Calendar"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__writer
+msgid "Writer"
 msgstr ""
 
 #. module: calendar
@@ -3580,12 +3848,24 @@ msgid "Yes I'm going."
 msgstr "我將出席。"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Yes, delete this calendar"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Yes, unsubscribe"
+msgstr ""
+
+#. module: calendar
 #. odoo-python
-#: code:addons/calendar/models/res_users.py:0
+#: code:addons/calendar/models/calendar_calendar.py:0
 msgid ""
-"You are not allowed to change the calendar default privacy of another user "
-"due to privacy constraints."
-msgstr "由於私隱限制，你不可更改其他使用者的日曆預設私隱設定。"
+"You are not allowed to change the default privacy of a calendar you do not "
+"own."
+msgstr ""
 
 #. module: calendar
 #. odoo-python
@@ -3612,9 +3892,29 @@ msgid "You're alone in this meeting"
 msgstr "今次會議只有你一個人"
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "[Draft]"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
+msgid "[Draft] %s"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "accepted"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__requested_action__archive
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_multi_archive_or_unlink_wizard__requested_action__archive
+msgid "archive"
 msgstr ""
 
 #. module: calendar
@@ -3627,6 +3927,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "declined"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__requested_action__unlink
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_multi_archive_or_unlink_wizard__requested_action__unlink
+msgid "delete"
 msgstr ""
 
 #. module: calendar
@@ -3701,6 +4007,96 @@ msgstr "{{ object.event_id.name }}：更新日期"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}：活動更新"
+
+#~ msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
+#~ msgstr "<span class=\"me-1 o_form_label\">Google 日曆</span>"
+
+#~ msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
+#~ msgstr "<span class=\"me-1 o_form_label\">Outlook 日曆</span>"
+
+#~ msgid "<span>Are you sure you want to delete this event? <br/></span>"
+#~ msgstr "<span>確定要刪除此活動嗎？<br/></span>"
+
+#~ msgid "Bye-bye, record!"
+#~ msgstr "永別了，記錄！"
+
+#~ msgid "Calendar Popover Delete Wizard"
+#~ msgstr "日曆彈出區塊刪除精靈"
+
+#~ msgid "Calendar Provider Configuration Wizard"
+#~ msgstr "日曆提供程式配置精靈"
+
+#~ msgid "Calendar: Event Deleted"
+#~ msgstr "日曆：事件已刪除"
+
+#~ msgid "Choose an external calendar to configure"
+#~ msgstr "選擇要配置的外部日曆"
+
+#~ msgid "Client ID"
+#~ msgstr "客戶端 ID"
+
+#~ msgid "Client Secret"
+#~ msgstr "客戶秘鑰"
+
+#~ msgid "Connect"
+#~ msgstr "連接"
+
+#~ msgid "Connect your Calendar"
+#~ msgstr "連接日曆"
+
+#~ msgid ""
+#~ "Default privacy setting for whom the calendar events will be visible."
+#~ msgstr "預設私隱設定，表示向誰人顯示日曆事件。"
+
+#~ msgid "Delete Event"
+#~ msgstr "刪除活動"
+
+#~ msgid "Delete all the events"
+#~ msgstr "刪除所有活動"
+
+#~ msgid "Delete this and following events"
+#~ msgstr "刪除此活動及後續活動"
+
+#~ msgid "Delete this event"
+#~ msgstr "刪除此活動"
+
+#~ msgid "Deleted event: {{ object.name }}"
+#~ msgstr "已刪除事件：{{ object.name }}"
+
+#~ msgid "Google Calendar icon"
+#~ msgstr "Google日曆圖示"
+
+#~ msgid "Google Client_id"
+#~ msgstr "Google Client_id"
+
+#~ msgid "Google Client_key"
+#~ msgstr "Google Client_key"
+
+#~ msgid "Google Synchronization Paused"
+#~ msgstr "Google 同步已暫停"
+
+#~ msgid "Microsoft Outlook icon"
+#~ msgstr "Microsoft Outlook 圖示"
+
+#~ msgid "No, keep it"
+#~ msgstr "不，保留它"
+
+#~ msgid "Outlook Client Id"
+#~ msgstr "Outlook 客戶端識別碼"
+
+#~ msgid "Outlook Client Secret"
+#~ msgstr "Outlook 客戶端秘密"
+
+#~ msgid "Outlook Synchronization Paused"
+#~ msgstr "Outlook 同步已暫停"
+
+#~ msgid "Submit"
+#~ msgstr "提交"
+
+#~ msgid ""
+#~ "You are not allowed to change the calendar default privacy of another "
+#~ "user due to privacy constraints."
+#~ msgstr "由於私隱限制，你不可更改其他使用者的日曆預設私隱設定。"
 
 #~ msgid "Checked"
 #~ msgstr "已檢查"

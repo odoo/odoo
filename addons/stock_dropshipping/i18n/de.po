@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-25 17:39+0000\n"
 "PO-Revision-Date: 2026-09-09 14:11+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
@@ -47,6 +47,7 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__display_name
@@ -54,6 +55,7 @@ msgstr "Unternehmen"
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__display_name
@@ -89,6 +91,7 @@ msgid "Dropships"
 msgstr "Streckengeschäfte"
 
 #. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_account_move_line__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__id
@@ -96,6 +99,7 @@ msgstr "Streckengeschäfte"
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_move_line__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__id
@@ -109,6 +113,11 @@ msgid "Is a Dropship"
 msgstr "Ist Streckengeschäft"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_lot
 msgid "Lot/Serial"
 msgstr "Los/Serie"
@@ -117,6 +126,11 @@ msgstr "Los/Serie"
 #: model:ir.model,name:stock_dropshipping.model_stock_picking_type
 msgid "Picking Type"
 msgstr "Kommissionierart"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_replenish_mixin
@@ -168,5 +182,5 @@ msgstr "Transfer"
 msgid "Type of Operation"
 msgstr "Vorgangsart"
 
-msgid "Operation Category"
-msgstr "Vorgangskategorie"
+#~ msgid "Operation Category"
+#~ msgstr "Vorgangskategorie"

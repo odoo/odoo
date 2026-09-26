@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 15:30+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/repair/"
@@ -508,11 +508,6 @@ msgid "End Repair"
 msgstr "สิ้นสุดการซ่อม"
 
 #. module: repair
-#: model:ir.model.fields,help:repair.field_repair_order__tracking
-msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr "แน่ใจว่ามีการตรวจสอบย้อนกลับของสินค้าที่จัดเก็บได้ในคลังสินค้าของคุณ"
-
-#. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Exp %s"
@@ -636,6 +631,11 @@ msgstr "การเคลื่อนย้ายคลังสินค้า
 #: model:ir.actions.act_window,name:repair.action_repair_move_lines
 msgid "Inventory Moves"
 msgstr "การย้ายคลังสินค้า"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__invisible
+msgid "Invisible"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_ids
@@ -932,6 +932,11 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 msgid "Please set the first Serial Number or a default sequence"
 msgstr "โปรดตั้งค่าหมายเลขซีเรียลแรกหรือลำดับเริ่มต้น"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__primary
+msgid "Primary"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__priority
@@ -1326,6 +1331,11 @@ msgid "Search Repair Orders"
 msgstr "ค้นหาคำสั่งซ่อม"
 
 #. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__secondary
+msgid "Secondary"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__sequence
 msgid "Sequence"
 msgstr ""
@@ -1412,6 +1422,13 @@ msgstr "มีชื่อแท็กแล้ว!"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_tree
 msgid "Tags"
 msgstr "แท็ก"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__tracking
+msgid ""
+"Technical field holding the tracking method. False on a storable product "
+"means it's tracked by quantity only."
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
@@ -1581,6 +1598,11 @@ msgid "Urgent"
 msgstr "เร่งด่วน"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__validate_button_style
+msgid "Validate Button Style"
+msgstr ""
+
+#. module: repair
 #: model:ir.model,name:repair.model_stock_warehouse
 msgid "Warehouse"
 msgstr "โกดังสินค้า"
@@ -1677,11 +1699,14 @@ msgstr ""
 msgid "text"
 msgstr ""
 
-msgid "Check availability"
-msgstr "ตรวจสอบความพร้อม"
+#~ msgid "Ensure the traceability of a storable product in your warehouse."
+#~ msgstr "แน่ใจว่ามีการตรวจสอบย้อนกลับของสินค้าที่จัดเก็บได้ในคลังสินค้าของคุณ"
 
-msgid "Website Messages"
-msgstr "ข้อความเว็บไซต์"
+#~ msgid "Check availability"
+#~ msgstr "ตรวจสอบความพร้อม"
 
-msgid "Website communication history"
-msgstr "ประวัติการสื่อสารของเว็บไซต์"
+#~ msgid "Website Messages"
+#~ msgstr "ข้อความเว็บไซต์"
+
+#~ msgid "Website communication history"
+#~ msgstr "ประวัติการสื่อสารของเว็บไซต์"

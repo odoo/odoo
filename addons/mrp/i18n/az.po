@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
 "PO-Revision-Date: 2026-08-31 14:24+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -178,11 +178,6 @@ msgid "'Bom Overview - %s' % object.display_name"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.report,print_report_name:mrp.action_report_finished_product
-msgid "'Finished products - %s' % object.name"
-msgstr "Bitmiş məhsullar - %s' % object.name"
-
-#. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
 msgstr ""
@@ -304,7 +299,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
-"<i class=\"oi mx-1 mt-1\" data-icon=\"inventory_2\" role=\"img\" "
+"<i class=\"oi mx-1 mt-1\" data-icon=\"package_2\" role=\"img\" "
 "title=\"Components Availability\"/>"
 msgstr ""
 
@@ -512,11 +507,24 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
+msgid ""
+"<span>\n"
+"                                    Serial Numbers\n"
+"                                </span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid ""
 "<span>\n"
 "            Components\n"
 "        </span>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
+msgid "<span>/</span>"
 msgstr ""
 
 #. module: mrp
@@ -566,11 +574,6 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Barcode</strong>"
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Deadline:</strong><br/>"
 msgstr ""
 
@@ -616,7 +619,12 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Quantity Producing:</strong><br/>"
+msgid "<strong>Production Date:</strong><br/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Quantity Produced:</strong><br/>"
 msgstr ""
 
 #. module: mrp
@@ -642,14 +650,19 @@ msgid "<strong>Source:</strong><br/>"
 msgstr "<strong>Mənbə:</strong><br/>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Start/Stop</strong>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "<strong>Unit Cost</strong>"
 msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>WorkCenter</strong>"
-msgstr "<strong>İş mərkəzi</strong>"
+msgid "<strong>Work Center</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
@@ -1083,6 +1096,11 @@ msgid "Available"
 msgstr "Mövcud"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__available_packaging_ids
+msgid "Available Packaging"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__produce_delay
 msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
@@ -1182,7 +1200,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__barcode
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Barcode"
 msgstr "Barkod"
 
@@ -1344,19 +1361,6 @@ msgstr "Məhsul Resepti"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "BoM Components"
 msgstr "Məhsul Reseptinin Komponentləri"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-msgid "BoM Cost"
-msgstr "Məhsul Reseptinin Dəyəri"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-msgid "BoM Costs"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
@@ -1622,6 +1626,11 @@ msgid "Color Index"
 msgstr "Rəng İndeksi"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__columns
+msgid "Columns"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_res_company
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__company_id
@@ -1726,6 +1735,7 @@ msgid "Configuration"
 msgstr "Konfiqurasiya"
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_confirm
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Confirm"
@@ -1752,11 +1762,13 @@ msgid "Conflicts"
 msgstr ""
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_consumed_qty_uom
+#: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Consumed"
 msgstr "İstehlak"
 
@@ -1776,6 +1788,11 @@ msgid "Consumed in Operation"
 msgstr "Əməliyyatda İstehlak olunur"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
+msgid "Consumed/To Consume"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_consumption_warning
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Consumption Warning"
@@ -1784,6 +1801,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__continuous
 msgid "Continuous Production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__custom_quantity
+msgid "Copies"
 msgstr ""
 
 #. module: mrp
@@ -1821,32 +1843,8 @@ msgid "Cost Share (%)"
 msgstr ""
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-msgid "Cost as it is currently accumulated"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__cost_mode
 msgid "Cost based on"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-msgid "Cost based on cost projection"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-msgid "Cost based on related replenishments. Otherwise cost from product form"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-msgid "Cost based on the BoM"
 msgstr ""
 
 #. module: mrp
@@ -1947,6 +1945,7 @@ msgstr "Yaradılmış Məhsul Sifarişləri"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__create_uid
@@ -1975,6 +1974,7 @@ msgstr "Tərəfindən yaradılıb"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__create_date
@@ -2003,7 +2003,7 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Creates a new serial number"
+msgid "Creates new serial numbers"
 msgstr ""
 
 #. module: mrp
@@ -2158,8 +2158,8 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
 msgid ""
-"Define the working schedule of the resource. If not set, the resource will "
-"have fully flexible working hours."
+"Define the working schedule of the resource. Assign a flexible calendar for "
+"fully flexible working hours."
 msgstr ""
 
 #. module: mrp
@@ -2249,6 +2249,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__display_name
@@ -2271,7 +2272,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_template__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_uom__display_name
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_label_production_view_pdf__display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure__display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__display_name
@@ -2400,6 +2400,16 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Edit Serial Numbers"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Edit generated serial numbers"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__effective_bom_id
 msgid "Effective Bill of Materials"
 msgstr ""
@@ -2432,14 +2442,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "End Date"
 msgstr "Bitmə Tarixi"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line__tracking
-#: model:ir.model.fields,help:mrp.field_mrp_production__product_tracking
-#: model:ir.model.fields,help:mrp.field_mrp_unbuild__has_tracking
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__product_tracking
-msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr "Anbarınızda  saxlanıla bilən məhsulunun izlənməsini təmin edin."
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
@@ -2511,6 +2513,11 @@ msgid "Exploded BoM Lines"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__extra_html
+msgid "Extra Content"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_list
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
@@ -2528,14 +2535,19 @@ msgid "Finished Product"
 msgstr "Tamamlanmış Məhsul"
 
 #. module: mrp
-#: model:ir.actions.report,name:mrp.action_report_finished_product
+#: model:ir.actions.server,name:mrp.action_print_finished_product_pdf
 msgid "Finished Product Label (PDF)"
 msgstr "Tamamlanmış Məhsul Etiketi (PDF)"
 
 #. module: mrp
-#: model:ir.actions.report,name:mrp.label_manufacture_template
+#: model:ir.actions.server,name:mrp.action_print_finished_product_zpl
 msgid "Finished Product Label (ZPL)"
 msgstr "Tamamlanmış Məhsul Etiketi (PDF)"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_finished_product_label_layout
+msgid "Finished Product Label Layout"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_finished_ids
@@ -2629,6 +2641,11 @@ msgid "Forecasted Location"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__print_format
+msgid "Format"
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -2675,15 +2692,11 @@ msgstr "Yaratmaq"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Generate Lot"
+msgid "Generate Lot Number"
 msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Generate Serial"
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 msgid "Generate Serial Numbers"
 msgstr ""
@@ -2772,22 +2785,13 @@ msgid "Hours"
 msgstr "Saatlar"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__hours_per_day
-msgid "Hours per Day"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__hours_per_week
-msgid "Hours per Week"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__id
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__id
@@ -2810,7 +2814,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__id
 #: model:ir.model.fields,field_description:mrp.field_product_template__id
 #: model:ir.model.fields,field_description:mrp.field_product_uom__id
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_label_production_view_pdf__id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure__id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mo_overview__id
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__id
@@ -3036,6 +3039,11 @@ msgstr ""
 "hərəkətləri"
 
 #. module: mrp
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_production__validate_button_style__invisible
+msgid "Invisible"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_delayed
 msgid "Is Delayed"
 msgstr ""
@@ -3155,6 +3163,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__write_uid
@@ -3183,6 +3192,7 @@ msgstr "Son Yeniləyən"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__write_date
@@ -3416,11 +3426,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_boolean_icon_field.js:0
 msgid "MRP Boolean Icon"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_report_mrp_label_production_view_pdf
-msgid "MRP Finished Product Label Report"
 msgstr ""
 
 #. module: mrp
@@ -3717,6 +3722,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__move_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__move_ids
 msgid "Move"
 msgstr ""
 
@@ -4322,13 +4328,6 @@ msgid "Overall Equipment Effectiveness: no working or blocked time"
 msgstr "Ümumi Avadanlıq Effektivliyi: işləyən və ya bloklanmış vaxt yoxdur"
 
 #. module: mrp
-#: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__pdf
-#: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__generated_mrp_lot_label_to_print__pdf
-#: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__mrp_product_label_to_print__pdf
-msgid "PDF"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_stock_package
 msgid "Package"
 msgstr ""
@@ -4364,6 +4363,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__packages_count
 msgid "Packages Count"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__packaging_id
+msgid "Packaging"
 msgstr ""
 
 #. module: mrp
@@ -4469,11 +4473,6 @@ msgid "Picking before Manufacturing Location"
 msgstr "İstehsal Sahəsindən əvvəl Seçim"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-msgid "Pieces"
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.server,name:mrp.action_plan_workorders
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
@@ -4518,6 +4517,14 @@ msgstr "Planlaşdırılmış"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_start
 msgid "Planned Date"
+msgstr ""
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
+msgid ""
+"Planned cost before the MO is done. Once the MO is done its actual cost "
+"based on consumption."
 msgstr ""
 
 #. module: mrp
@@ -4577,18 +4584,6 @@ msgid "Please specify the produced serial numbers."
 msgstr ""
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_workorder.py:0
-msgid "Please unblock the work center to start the work order."
-msgstr ""
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_workorder.py:0
-msgid "Please unblock the work center to validate the work order"
-msgstr ""
-
-#. module: mrp
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
 msgid "Ply Layer"
 msgstr ""
@@ -4629,6 +4624,16 @@ msgid "Previous Date Start"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__pricelist_id
+msgid "Pricelist"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_production__validate_button_style__primary
+msgid "Primary"
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
@@ -4636,13 +4641,23 @@ msgid "Print"
 msgstr "Çap edin"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__print_packaging
+msgid "Print Packaging"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__with_price
+msgid "Print With Price"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print label as:"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-msgid "Print labels as:"
+#: model:ir.model.fields,help:mrp.field_mrp_finished_product_label_layout__print_packaging
+msgid "Print labels with each delivery order line's packaging."
 msgstr ""
 
 #. module: mrp
@@ -4736,6 +4751,7 @@ msgstr "Əməliyyatda İstehsal olunan"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_tmpl_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_tmpl_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__product_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_id
@@ -4746,12 +4762,16 @@ msgstr "Əməliyyatda İstehsal olunan"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 msgid "Product"
 msgstr "Məhsul"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
+msgid "Product Barcode"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity_ids
@@ -4815,6 +4835,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_tmpl_id
 msgid "Product Template"
 msgstr "Məhsul Şablonu"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__product_tmpl_ids
+msgid "Product Tmpl"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__product_uom_ids
+msgid "Product Uom"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -4959,6 +4989,7 @@ msgstr "Məhsuldarlıq Zərərləri"
 #: model:ir.actions.act_window,name:mrp.product_template_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
 #: model:ir.ui.menu,name:mrp.menu_mrp_product_form
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Products"
 msgstr "Məhsullar"
 
@@ -5078,6 +5109,11 @@ msgid "Quantity that can be produced with the current stock of components"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__move_quantity
+msgid "Quantity to print"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "RAM"
 msgstr ""
@@ -5104,19 +5140,6 @@ msgstr "İşlənməmiş yerdəyişmələr"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Ready"
 msgstr "Hazır"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-msgid "Real Cost"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-msgid "Real Costs"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
@@ -5241,13 +5264,6 @@ msgid "Reserve"
 msgstr ""
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-msgid "Reserved"
-msgstr "Rezerv edilib"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Reset to Draft"
 msgstr ""
@@ -5295,6 +5311,11 @@ msgstr "Marşrutlaşdırma xətləri"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Routing Work Centers"
 msgstr "Marşrutlaşdırma İş Mərkəzləri"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__rows
+msgid "Rows"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -5389,6 +5410,11 @@ msgid "Search for mrp workcenter"
 msgstr "MTP iş mərkəzini axtarın"
 
 #. module: mrp
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_production__validate_button_style__secondary
+msgid "Secondary"
+msgstr ""
+
+#. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
 msgid "Select Operations to Copy"
@@ -5416,6 +5442,7 @@ msgstr "Ardıcıllıq"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 msgid "Serial Numbers"
 msgstr ""
@@ -5840,6 +5867,16 @@ msgid "Technical field for workcenter views"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line__tracking
+#: model:ir.model.fields,help:mrp.field_mrp_production__product_tracking
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__has_tracking
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__product_tracking
+msgid ""
+"Technical field holding the tracking method. False on a storable product "
+"means it's tracked by quantity only."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
 msgid "Technical field to check when we can reserve quantities"
 msgstr ""
@@ -6064,7 +6101,6 @@ msgstr ""
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "There is no defined calendar on workcenter %s."
 msgstr ""
@@ -6284,6 +6320,7 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "To Produce"
 msgstr "İstehsal Etmək Üçün"
 
@@ -6363,6 +6400,11 @@ msgid "Total Pending Orders"
 msgstr "Cəmi Gözləyən Sifarişlər"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_view_backorders
+msgid "Total Produced"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total Qty"
@@ -6438,8 +6480,8 @@ msgstr "İzləmə imkanı haqqında hesabat"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_tracking
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__has_tracking
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_tracking
-msgid "Tracking"
-msgstr "İzləmə"
+msgid "Tracking Method"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
@@ -6450,6 +6492,11 @@ msgstr "Köçürmə"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Transfers"
 msgstr "Transferlər"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__barcode_format
+msgid "Type"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
@@ -6568,8 +6615,8 @@ msgid ""
 msgstr "Ölçü Vahid inventar nəzarəti üçün ölçü vahididir"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#: model_terms:ir.ui.view,arch_db:mrp.report_simple_label4x12
 msgid "Units"
 msgstr "Ədəd"
 
@@ -6664,6 +6711,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Validate"
 msgstr "Təsdiqləyin"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__validate_button_style
+msgid "Validate Button Style"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -6819,6 +6871,12 @@ msgid "Work Center"
 msgstr "İş Mərkəzi"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_workcenter.py:0
+msgid "Work Center Blocked: %s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_capacity
 msgid "Work Center Capacity"
 msgstr ""
@@ -6838,6 +6896,12 @@ msgstr "İş Mərkəzi Yükləri"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Work Center Name"
 msgstr "İş Mərkəzinin Adı"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_workcenter.py:0
+msgid "Work Center Unblocked"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
@@ -7272,10 +7336,55 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
-#: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__generated_mrp_lot_label_to_print__zpl
-#: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__mrp_product_label_to_print__zpl
-msgid "ZPL"
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__zpl_preview
+msgid "ZPL Preview"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_finished_product_label_layout__zpl_template
+msgid "ZPL Template"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.finished_product_zpl_label
+msgid "^FO14,67^BY2^BCN,74,N^FH^FD"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.finished_product_zpl_label
+msgid "^FO14,90^A0N,22^FB378,1,0,C^FDNo barcode available^FS"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.finished_product_zpl_label
+msgid "^FO222,159^A0N,21,16^FB170,1,0,R^FH^FD"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.finished_product_zpl_label
+msgid "^FS"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.finished_product_zpl_label
+msgid ""
+"^FS\n"
+"^FO14,159^A0N,21,16^FB170,1,0,L^FH^FD"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.finished_product_zpl_label
+msgid ""
+"^FS\n"
+"^FO250,23^A0N,23,18^FB142,1,0,R^FH^FD"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.finished_product_zpl_label
+msgid ""
+"^PW406\n"
+"^LL203\n"
+"^FO14,23^A0N,23^FB235,1,0,L^FH^FD"
 msgstr ""
 
 #. module: mrp
@@ -7378,6 +7487,24 @@ msgstr "Real Müddət"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr ""
+
+#~ msgid "<strong>WorkCenter</strong>"
+#~ msgstr "<strong>İş mərkəzi</strong>"
+
+#~ msgid "'Finished products - %s' % object.name"
+#~ msgstr "Bitmiş məhsullar - %s' % object.name"
+
+#~ msgid "BoM Cost"
+#~ msgstr "Məhsul Reseptinin Dəyəri"
+
+#~ msgid "Ensure the traceability of a storable product in your warehouse."
+#~ msgstr "Anbarınızda  saxlanıla bilən məhsulunun izlənməsini təmin edin."
+
+#~ msgid "Reserved"
+#~ msgstr "Rezerv edilib"
+
+#~ msgid "Tracking"
+#~ msgstr "İzləmə"
 
 #~ msgid "Create backorder"
 #~ msgstr "Təxirə salınmış sifariş yarat"

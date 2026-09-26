@@ -12,10 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:45+0000\n"
-"PO-Revision-Date: 2026-09-09 14:03+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
+"PO-Revision-Date: 2026-09-21 12:14+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "base_geolocalize/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,9 @@ msgid ""
 "Partners Geolocation\n"
 "========================\n"
 msgstr ""
+"\n"
+"Geolokalisierung von Partnern\n"
+"========================\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
@@ -109,6 +112,11 @@ msgid "Geo Provider"
 msgstr "Geo-Anbieter"
 
 #. module: base_geolocalize
+#: model:ir.actions.server,name:base_geolocalize.ir_cron_geolocalize_required_partners_ir_actions_server
+msgid "Geolocalize Partners"
+msgstr "Partner geolokalisieren"
+
+#. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocation"
 msgstr "Geolokalisierung"
@@ -133,9 +141,19 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base_geolocalize
+#: model:ir.model.fields,help:base_geolocalize.field_res_partner__should_be_geolocalized
+#: model:ir.model.fields,help:base_geolocalize.field_res_users__should_be_geolocalized
+msgid ""
+"Indicates whether the partner's address has changed, so we should "
+"geolocalize them from their new address."
+msgstr ""
+"Gibt an, ob sich die Adresse des Partners geändert hat, sodass wir ihn "
+"anhand seiner neuen Adresse geolokalisieren sollten."
+
+#. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key"
-msgstr ""
+msgstr "Schlüssel"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
@@ -172,12 +190,12 @@ msgstr "Partnerzuweisung"
 #. module: base_geolocalize
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
 msgid "Partners Geolocation"
-msgstr ""
+msgstr "Geolokalisierung von Partnern"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Provider"
-msgstr ""
+msgstr "Anbieter"
 
 #. module: base_geolocalize
 #. odoo-python
@@ -189,6 +207,12 @@ msgstr "Anbieter %s ist für den Geolokalisierungsdienst nicht implementiert."
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Refresh"
 msgstr "Aktualisieren"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__should_be_geolocalized
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users__should_be_geolocalized
+msgid "Should Be Geolocalized"
+msgstr "Sollte geolokalisiert werden"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name

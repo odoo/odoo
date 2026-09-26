@@ -20,11 +20,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
-"PO-Revision-Date: 2026-09-01 08:10+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
+"PO-Revision-Date: 2026-09-23 11:34+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/stock/"
-"es/>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/stock/es/"
+">\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -324,6 +324,11 @@ msgstr ""
 "en las cantidades hechas."
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.lot_barcode_4x12_label
+msgid "&amp;nbsp;"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Count Sheet'"
 msgstr "'Hoja de recuento'"
@@ -333,21 +338,6 @@ msgstr "'Hoja de recuento'"
 msgid "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
 "'Albarán de entrega - %s - %s' % (object.partner_id.name or '', object.name)"
-
-#. module: stock
-#: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
-msgid "'Location - %s' % object.name"
-msgstr "'Ubicación- %s' % object.name"
-
-#. module: stock
-#: model:ir.actions.report,print_report_name:stock.action_report_lot_label
-msgid "'Lot-Serial - %s' % object.name"
-msgstr "'Lote-Serie - %s' % object.name"
-
-#. module: stock
-#: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
-msgid "'Operation-type - %s' % object.name"
-msgstr "'Tipo de operación - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
@@ -492,30 +482,9 @@ msgid "1 Week"
 msgstr "1 Semana"
 
 #. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7
-msgid "2 x 7"
-msgstr "2 x 7"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x12
 msgid "4 x 12"
 msgstr "4 x 12"
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_lots
-msgid "4 x 12 - One per lot/SN"
-msgstr "4 x 12 - uno por número de lote o serie"
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_units
-msgid "4 x 12 - One per unit"
-msgstr "4 x 12 - uno por unidad"
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7
-msgid "4 x 7"
-msgstr "4 x 7"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -564,6 +533,27 @@ msgid ""
 msgstr ""
 "<br>Los productos se moverán a <b>%(destination)s</b>, <br/> como se "
 "especificó en el destino <b>%(operation)s</b>."
+
+#. module: stock
+#: model:mail.template,body_html:stock.mail_template_data_stock_move_line_recall
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.picking_partner_id.display_name or ''\"/><br/"
+"><br/>\n"
+"        We would like to issue a product recall regarding the following "
+"product:<br/><br/>\n"
+"        Product:<br/>\n"
+"        <t t-out=\"object.product_id.display_name or ''\"/><br/><br/>\n"
+"        Lot / Serial Number:<br/>\n"
+"        <t t-out=\"object.lot_id.name or object.lot_name or ''\"/><br/><br/"
+">\n"
+"        We apologize for the inconvenience caused.<br/><br/>\n"
+"        Best wishes,\n"
+"    </p>\n"
+"</div>\n"
+"        "
+msgstr ""
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -875,11 +865,6 @@ msgid "<span>OBTRETU</span>"
 msgstr "<span>OBTRETU</span>"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "<span>Package Type: </span>"
-msgstr "<span>Tipo de paquete:</span>"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
 msgstr "<span>Cantidades restantes aún no entregadas:</span>"
@@ -1066,7 +1051,8 @@ msgstr ""
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
-"<strong>Guarda</strong> esta página y regresa para configurar la función."
+"<strong>Guarda</strong> esta página y vuelve aquí para configurar la "
+"funcionalidad."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1285,12 +1271,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Add a Product"
 msgstr "Añadir un producto"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
-msgid "Add a description"
-msgstr "Añadir una descripción"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -2009,11 +1989,6 @@ msgid "Barcode"
 msgstr "Código de barras"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "Barcode Demo"
-msgstr "Demostración de código de barras"
-
-#. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
 msgstr "Nomenclaturas de código de barras"
@@ -2188,16 +2163,18 @@ msgid "Buy Odoo Enterprise now to get more providers."
 msgstr "Compra Odoo Enterprise ahora para acceder a más proveedores."
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__product_template__store_by__lot
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
 msgid "By Lots"
 msgstr "Por lotes"
 
 #. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__none
+#: model:ir.model.fields.selection,name:stock.selection__product_template__store_by__quantity
 msgid "By Quantity"
 msgstr "Por cantidad"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__product_template__store_by__serial
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__serial
 msgid "By Unique Serial Number"
 msgstr "Por número de serie único"
@@ -2306,14 +2283,6 @@ msgstr "No es posible mover un paquete vacío"
 #: code:addons/stock/models/stock_package.py:0
 msgid "Cannot remove the location of a non empty package"
 msgstr "No se puede eliminar la ubicación de un paquete que no esté vacío"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"Cannot reset move to draft.\n"
-"Quantity not enough, product might have been used in some transfer."
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
@@ -2820,7 +2789,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Create products easily by scanning using"
-msgstr "Cree productos fácilmente por escanear con"
+msgstr "Crea productos fácilmente al escanearlos con"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
@@ -2841,6 +2810,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_warning__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_location__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_location_label_layout__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_lot__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__create_uid
@@ -2849,11 +2819,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_package__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_package_label_layout__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking_to_batch__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type_label_layout__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_quant__create_uid
@@ -2888,6 +2860,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_warning__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_location__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_location_label_layout__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_lot__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__create_date
@@ -2896,11 +2869,13 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:stock.field_stock_package__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_package_label_layout__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking_to_batch__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type_label_layout__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_quant__create_date
@@ -2983,6 +2958,7 @@ msgid "Current stock"
 msgstr "Stock actual"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__mrp_finished_product_label_layout__move_quantity__custom
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__custom
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__custom
 msgid "Custom"
@@ -3003,9 +2979,13 @@ msgid "Custom Lot/Serial"
 msgstr "Número de serie/lote personalizado"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_lot_label_layout__custom_quantity
+msgid "Custom Quantity"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__customer
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
-#: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Customer"
 msgstr "Cliente"
 
@@ -3022,6 +3002,7 @@ msgstr "Ubicaciones de cliente"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
+#: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Customers"
 msgstr "Clientes"
 
@@ -3666,12 +3647,6 @@ msgid "Detailed Operations"
 msgstr "Operaciones detalladas"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.stock_quant_action
-#: model:ir.ui.menu,name:stock.menu_valuation
-msgid "Detailed Stock"
-msgstr "Stock detallado"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_view_list_from_batch
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Details"
@@ -3745,9 +3720,7 @@ msgstr "Mostrar números de lote y de serie en albaranes de entrega"
 #: model:ir.model.fields,field_description:stock.field_product_removal__display_name
 #: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:stock.field_product_template__display_name
-#: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__display_name
-#: model:ir.model.fields,field_description:stock.field_report_stock_report_lot_label__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__display_name
@@ -3764,6 +3737,7 @@ msgstr "Mostrar números de lote y de serie en albaranes de entrega"
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_warning__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_location__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_location_label_layout__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__display_name
@@ -3772,11 +3746,13 @@ msgstr "Mostrar números de lote y de serie en albaranes de entrega"
 #: model:ir.model.fields,field_description:stock.field_stock_package__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_package_label_layout__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_picking_to_batch__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type_label_layout__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_quant__display_name
@@ -3889,11 +3865,6 @@ msgid "Duplicated Serial Number"
 msgstr "Número de serie duplicado"
 
 #. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__dymo
-msgid "Dymo"
-msgstr "Dymo"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
@@ -3978,19 +3949,15 @@ msgstr ""
 "de código de barras."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_product_product__tracking
-#: model:ir.model.fields,help:stock.field_product_template__tracking
-#: model:ir.model.fields,help:stock.field_stock_move__has_tracking
-#: model:ir.model.fields,help:stock.field_stock_move_line__tracking
-#: model:ir.model.fields,help:stock.field_stock_quant__tracking
+#: model:ir.model.fields,help:stock.field_product_product__store_by
+#: model:ir.model.fields,help:stock.field_product_template__store_by
 msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr "Asegure la trazabilidad de un producto almacenable en su almacén."
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
-msgid "Enter a description"
-msgstr "Ingresar una descripción"
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Enter a Description..."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_orderpoint_suggest__based_on
@@ -4560,9 +4527,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_removal__id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__id
 #: model:ir.model.fields,field_description:stock.field_product_template__id
-#: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__id
-#: model:ir.model.fields,field_description:stock.field_report_stock_report_lot_label__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_res_company__id
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__id
@@ -4579,6 +4544,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_warning__id
 #: model:ir.model.fields,field_description:stock.field_stock_location__id
+#: model:ir.model.fields,field_description:stock.field_stock_location_label_layout__id
 #: model:ir.model.fields,field_description:stock.field_stock_lot__id
 #: model:ir.model.fields,field_description:stock.field_stock_move__id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__id
@@ -4587,11 +4553,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_package__id
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__id
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__id
+#: model:ir.model.fields,field_description:stock.field_stock_package_label_layout__id
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_to_batch__id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type_label_layout__id
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__id
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__id
@@ -4776,6 +4744,15 @@ msgstr ""
 "contenido de un albarán de preparación de pedidos cuando se valide."
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the product labels "
+"of a picking when it is validated."
+msgstr ""
+"Si esta casilla está marcada, Odoo imprimirá automáticamente las etiquetas "
+"del producto de un albarán de preparación de pedidos cuando se valide."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
@@ -4812,13 +4789,6 @@ msgid ""
 msgstr ""
 "Si esta casilla está seleccionada, Odoo mostrará automáticamente el informe "
 "de asignación (si hay movimientos por asignar) al validar."
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
-msgid ""
-"If this checkbox is ticked, Odoo will show the allocation report (if there "
-"are moves to allocate to.)"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
@@ -5254,6 +5224,11 @@ msgid "Inventory at Date"
 msgstr "Inventario a la fecha"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking__validate_button_style__invisible
+msgid "Invisible"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
 msgid "Is Date Editable"
 msgstr "La fecha se puede editar"
@@ -5542,6 +5517,7 @@ msgstr "Último inventario"
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_warning__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_location__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_location_label_layout__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_lot__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__write_uid
@@ -5550,11 +5526,13 @@ msgstr "Último inventario"
 #: model:ir.model.fields,field_description:stock.field_stock_package__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_package_label_layout__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking_to_batch__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type_label_layout__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_quant__write_uid
@@ -5589,6 +5567,7 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_warning__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_location__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_location_label_layout__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_lot__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_move__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__write_date
@@ -5597,11 +5576,13 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:stock.field_stock_package__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_package_label_layout__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking_to_batch__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type_label_layout__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_quant__write_date
@@ -5751,7 +5732,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Lines"
-msgstr ""
+msgstr "Líneas"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -5805,12 +5786,12 @@ msgid "Location"
 msgstr "Ubicación"
 
 #. module: stock
-#: model:ir.actions.report,name:stock.action_report_location_barcode
+#: model:ir.actions.server,name:stock.action_print_location_label_pdf
 msgid "Location Barcode (PDF)"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.report,name:stock.action_label_location_template
+#: model:ir.actions.server,name:stock.action_print_location_label_zpl
 msgid "Location Barcode (ZPL)"
 msgstr ""
 
@@ -5867,7 +5848,6 @@ msgstr "Ubicación: cuando llega a"
 #: model:ir.actions.act_window,name:stock.action_storage_category_locations
 #: model:ir.ui.menu,name:stock.menu_action_location_form
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.report_location_barcode
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
@@ -5894,6 +5874,7 @@ msgid "Logistics"
 msgstr "Logística"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_lot_label_layout__lot_ids
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__lot
 msgid "Lot"
 msgstr "Lote"
@@ -5902,12 +5883,6 @@ msgstr "Lote"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
 msgid "Lot Label Format to auto-print"
 msgstr "Formato de etiqueta de lote para autoimprimir"
-
-#. module: stock
-#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
-#: model:ir.model,name:stock.model_report_stock_report_lot_label
-msgid "Lot Label Report"
-msgstr "Informe de etiqueta del lote"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking_batch
@@ -5964,12 +5939,12 @@ msgid "Lot/Serial Number"
 msgstr "Número de lote/serie"
 
 #. module: stock
-#: model:ir.actions.report,name:stock.action_report_lot_label
+#: model:ir.actions.server,name:stock.action_print_lot_label_pdf
 msgid "Lot/Serial Number (PDF)"
 msgstr "Numero de serie/lote (PDF)"
 
 #. module: stock
-#: model:ir.actions.report,name:stock.label_lot_template
+#: model:ir.actions.server,name:stock.action_print_lot_label_zpl
 msgid "Lot/Serial Number (ZPL)"
 msgstr "Número de serie/lote (ZPL)"
 
@@ -6347,7 +6322,7 @@ msgstr "Número de líneas de movimiento"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+#: code:addons/stock/static/src/views/picking_form/stock_move_one2many.xml:0
 msgid "Move a Pack"
 msgstr "Mover un paquete"
 
@@ -6456,11 +6431,6 @@ msgstr "Mis traslados"
 #: model_terms:ir.ui.view,arch_db:stock.stock_reference_search_view
 msgid "Name"
 msgstr "Nombre"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "Name Demo"
-msgstr "Nombre de demostración"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_in
@@ -6701,7 +6671,7 @@ msgid "No transfer found. Let's create one!"
 msgstr "No se encontraron traslados. ¡Creemos uno!"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
+#: model:ir.model.fields.selection,name:stock.selection__product_template__store_by__untracked
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "None"
 msgstr "Ninguno"
@@ -6896,6 +6866,7 @@ msgid "Operation Category"
 msgstr "Categoría de operación"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__mrp_finished_product_label_layout__move_quantity__move
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
 msgid "Operation Quantities"
 msgstr "Cantidades de operación"
@@ -6921,7 +6892,6 @@ msgid "Operation Type for Returns"
 msgstr "Tipo de operación para devoluciones"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking_type_label
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -6946,12 +6916,12 @@ msgid "Operation type"
 msgstr "Tipo de operación"
 
 #. module: stock
-#: model:ir.actions.report,name:stock.action_report_picking_type_label
+#: model:ir.actions.server,name:stock.action_print_picking_type_label_pdf
 msgid "Operation type (PDF)"
 msgstr "Tipo de operación (PDF)"
 
 #. module: stock
-#: model:ir.actions.report,name:stock.label_picking_type
+#: model:ir.actions.server,name:stock.action_print_picking_type_label_zpl
 msgid "Operation type (ZPL)"
 msgstr "Tipo de operación (ZPL)"
 
@@ -7217,12 +7187,7 @@ msgid "Pack Date"
 msgstr "Fecha de empaquetado"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "Pack Date Demo"
-msgstr "Fecha de empaquetado de demostración"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+#: model_terms:ir.ui.view,arch_db:stock.package_pdf_label
 msgid "Pack Date:"
 msgstr "Fecha de empaquetado:"
 
@@ -7270,14 +7235,14 @@ msgid "Package B"
 msgstr "Paquete B"
 
 #. module: stock
-#: model:ir.actions.report,name:stock.action_report_package_barcode_small
-#: model:ir.actions.report,name:stock.action_report_package_history_barcode_small
+#: model:ir.actions.server,name:stock.action_print_package_history_label_pdf
+#: model:ir.actions.server,name:stock.action_print_package_label_pdf
 msgid "Package Barcode (PDF)"
 msgstr "Código de barras del paquete (PDF)"
 
 #. module: stock
-#: model:ir.actions.report,name:stock.label_package_history_template
-#: model:ir.actions.report,name:stock.label_package_template
+#: model:ir.actions.server,name:stock.action_print_package_history_label_zpl
+#: model:ir.actions.server,name:stock.action_print_package_label_zpl
 msgid "Package Barcode (ZPL)"
 msgstr "Código de barras del paquete (ZPL)"
 
@@ -7362,18 +7327,13 @@ msgid "Package Type"
 msgstr "Tipo de paquete"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "Package Type Demo"
-msgstr "Tipo de paquete de demostración"
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package_type.py:0
 msgid "Package Type Sequence %(code)s"
 msgstr "Secuencia del tipo de paquetes %(code)s"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+#: model_terms:ir.ui.view,arch_db:stock.package_pdf_label
 msgid "Package Type:"
 msgstr "Tipo de paquete:"
 
@@ -7462,11 +7422,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_id
 msgid "Packaging"
 msgstr "Embalaje"
-
-#. module: stock
-#: model:ir.actions.report,name:stock.label_packaging_barcode
-msgid "Packaging Barcodes (ZPL)"
-msgstr "Códigos de barras de embalaje (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
@@ -7722,6 +7677,21 @@ msgid "Prepare Batch"
 msgstr ""
 
 #. module: stock
+#: model:ir.model,name:stock.model_stock_location_label_layout
+msgid "Prepare Location Labels"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_picking_type_label_layout
+msgid "Prepare Operation Type Labels"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_package_label_layout
+msgid "Prepare Package Labels"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the operation category."
 msgstr "La presencia depende de la categoría de la operación."
@@ -7743,6 +7713,7 @@ msgid "Price Unit"
 msgstr "Unidad de precio"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking__validate_button_style__primary
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__open_button_style__primary
 msgid "Primary"
 msgstr ""
@@ -7775,9 +7746,19 @@ msgid "Print Labels"
 msgstr "Imprimir etiquetas"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_label_layout__print_packaging
+msgid "Print Packaging"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print label as:"
 msgstr "Imprimir etiqueta como:"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_product_label_layout__print_packaging
+msgid "Print labels with each delivery order line's packaging."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -8008,6 +7989,16 @@ msgstr "Variante de producto"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
 msgid "Product barcode"
 msgstr "Código de barras del producto"
+
+#. module: stock
+#: model:mail.template,description:stock.mail_template_data_stock_move_line_recall
+msgid "Product recall from lot/serial number"
+msgstr ""
+
+#. module: stock
+#: model:mail.template,subject:stock.mail_template_data_stock_move_line_recall
+msgid "Product recall: {{ object.product_id.display_name or 'n/a' }}"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -9164,12 +9155,7 @@ msgid "SMS Delivery error"
 msgstr "Error de envío del SMS"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "SSCC Demo"
-msgstr "Demo SSCC"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+#: model_terms:ir.ui.view,arch_db:stock.package_pdf_label
 msgid "SSCC:"
 msgstr "SSCC:"
 
@@ -9356,6 +9342,7 @@ msgid "Search not supported without a value."
 msgstr "La búsqueda no es posible sin un valor."
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking__validate_button_style__secondary
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__open_button_style__secondary
 msgid "Secondary"
 msgstr ""
@@ -9378,6 +9365,11 @@ msgstr "Seleccionar ruta"
 #: model_terms:ir.ui.view,arch_db:stock.stock_put_in_pack_form
 msgid "Select a Package Type"
 msgstr "Seleccione un tipo de paquete"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Select a Product..."
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -10075,6 +10067,11 @@ msgid "Stock Move"
 msgstr "Movimiento de stock"
 
 #. module: stock
+#: model:mail.template,name:stock.mail_template_data_stock_move_line_recall
+msgid "Stock Move Line: Product Recall"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_reference__move_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -10189,6 +10186,12 @@ msgstr "Confirmación por texto en movimientos de stock"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Stock To Reserve:"
 msgstr "Stock a reservar:"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.stock_quant_action
+#: model:ir.ui.menu,name:stock.menu_valuation
+msgid "Stock by Location"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_info
@@ -10419,6 +10422,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Technical Information"
 msgstr "Información técnica"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_product_product__tracking
+#: model:ir.model.fields,help:stock.field_product_template__tracking
+#: model:ir.model.fields,help:stock.field_stock_move__has_tracking
+#: model:ir.model.fields,help:stock.field_stock_move_line__tracking
+#: model:ir.model.fields,help:stock.field_stock_quant__tracking
+msgid ""
+"Technical field holding the tracking method. False on a storable product "
+"means it's tracked by quantity only."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
@@ -11377,12 +11391,18 @@ msgid "Tracked Stock"
 msgstr "Stock con seguimiento"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__store_by
+#: model:ir.model.fields,field_description:stock.field_product_template__store_by
+msgid "Tracking"
+msgstr "Rastreo"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__tracking
 #: model:ir.model.fields,field_description:stock.field_product_template__tracking
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__tracking
 #: model:ir.model.fields,field_description:stock.field_stock_quant__tracking
-msgid "Tracking"
-msgstr "Rastreo"
+msgid "Tracking Method"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
@@ -11751,6 +11771,11 @@ msgid "Validate"
 msgstr "Validar"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__validate_button_style
+msgid "Validate Button Style"
+msgstr ""
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
 msgid "Validate Inventory"
@@ -11840,7 +11865,6 @@ msgid "WH/Outgoing"
 msgstr "WH/Outgoing"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/Stock"
 msgstr "WH/Stock"
@@ -12374,11 +12398,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/res_config_settings.py:0
 msgid ""
-"You can't deactivate the multi-location if you have more than once warehouse "
-"by company"
+"You can't deactivate the multi-location feature if you have more than one "
+"warehouse per company"
 msgstr ""
-"No puede desactivar las ubicaciones múltiples si tiene más de un almacén por "
-"empresa"
 
 #. module: stock
 #. odoo-python
@@ -12696,19 +12718,8 @@ msgstr "ZPL"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__zpl
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__zpl
 msgid "ZPL Labels"
 msgstr "Etiquetas ZPL"
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_lots
-msgid "ZPL Labels - One per lot/SN"
-msgstr "Etiquetas ZPL - Una por número de lote o serie"
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_units
-msgid "ZPL Labels - One per unit"
-msgstr "Etiquetas ZPL - Una por unidad"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_zero_demand_confirmation
@@ -12726,6 +12737,93 @@ msgstr "Advertencia de demanda cero"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "]<br/>min:"
 msgstr "]<br/>min:"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_zpl_label
+msgid "^A0N,44,33^FH^FDPack Date:"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_zpl_label
+msgid "^A0N,44,33^FH^FDPackage Type:"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_zpl_label
+msgid ""
+"^FO100,50\n"
+"^A0N,44,33^FH^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_zpl_label
+msgid ""
+"^FO100,50^BY3\n"
+"^BXN,10,200\n"
+"^FH^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_zpl_label
+msgid "^FO310,150^BY3"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_zpl_label
+msgid ""
+"^FO310,50\n"
+"^A0N,44,33^FH^FDSSCC:"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.location_barcode_zpl_label
+#: model_terms:ir.ui.view,arch_db:stock.picking_type_barcode_zpl_label
+msgid "^FO5,100^BY3^BCN,110,N,N,N^FH^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.location_barcode_zpl_label
+msgid "^FO5,215^A0N,22,17^FB366,1,0,C^FH^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.location_barcode_zpl_label
+#: model_terms:ir.ui.view,arch_db:stock.package_zpl_label
+#: model_terms:ir.ui.view,arch_db:stock.picking_type_barcode_zpl_label
+msgid "^FS"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_zpl_label
+msgid ""
+"^FS\n"
+"^FO100,100^BY3\n"
+"^BCN,100,Y,N,N\n"
+"^FH^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_zpl_label
+msgid ""
+"^FS\n"
+"^FO310,100^BY3"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.picking_type_barcode_zpl_label
+msgid ""
+"^FS\n"
+"^FO5,215^A0N,22,17^FB366,1,0,C^FH^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.location_barcode_zpl_label
+#: model_terms:ir.ui.view,arch_db:stock.picking_type_barcode_zpl_label
+msgid ""
+"^PW376\n"
+"^LL297\n"
+"^FO5,60^A0N,30,24^FB366,1,0,C^FH^FD"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_add_to_wave__mode__new
@@ -12988,13 +13086,75 @@ msgstr ""
 "{{ object.company_id.name }} Orden de entrega (Ref {{ object.name or 'n/"
 "a' }})"
 
+#~ msgid "'Location - %s' % object.name"
+#~ msgstr "'Ubicación- %s' % object.name"
+
+#~ msgid "'Lot-Serial - %s' % object.name"
+#~ msgstr "'Lote-Serie - %s' % object.name"
+
+#~ msgid "'Operation-type - %s' % object.name"
+#~ msgstr "'Tipo de operación - %s' % object.name"
+
+#~ msgid "2 x 7"
+#~ msgstr "2 x 7"
+
+#~ msgid "4 x 12 - One per lot/SN"
+#~ msgstr "4 x 12 - uno por número de lote o serie"
+
+#~ msgid "4 x 12 - One per unit"
+#~ msgstr "4 x 12 - uno por unidad"
+
+#~ msgid "4 x 7"
+#~ msgstr "4 x 7"
+
+#~ msgid "<span>Package Type: </span>"
+#~ msgstr "<span>Tipo de paquete:</span>"
+
+#~ msgid "Add a description"
+#~ msgstr "Añadir una descripción"
+
+#~ msgid "Barcode Demo"
+#~ msgstr "Demostración de código de barras"
+
+#~ msgid "Detailed Stock"
+#~ msgstr "Stock detallado"
+
+#~ msgid "Dymo"
+#~ msgstr "Dymo"
+
+#~ msgid "Enter a description"
+#~ msgstr "Ingresar una descripción"
+
+#~ msgid "Lot Label Report"
+#~ msgstr "Informe de etiqueta del lote"
+
+#~ msgid "Name Demo"
+#~ msgstr "Nombre de demostración"
+
+#~ msgid "Pack Date Demo"
+#~ msgstr "Fecha de empaquetado de demostración"
+
+#~ msgid "Package Type Demo"
+#~ msgstr "Tipo de paquete de demostración"
+
+#~ msgid "Packaging Barcodes (ZPL)"
+#~ msgstr "Códigos de barras de embalaje (ZPL)"
+
+#~ msgid "SSCC Demo"
+#~ msgstr "Demo SSCC"
+
 #~ msgid ""
-#~ "If this checkbox is ticked, Odoo will automatically print the product "
-#~ "labels of a picking when it is validated."
+#~ "You can't deactivate the multi-location if you have more than once "
+#~ "warehouse by company"
 #~ msgstr ""
-#~ "Si esta casilla está marcada, Odoo imprimirá automáticamente las "
-#~ "etiquetas del producto de un albarán de preparación de pedidos cuando se "
-#~ "valide."
+#~ "No puede desactivar las ubicaciones múltiples si tiene más de un almacén "
+#~ "por empresa"
+
+#~ msgid "ZPL Labels - One per lot/SN"
+#~ msgstr "Etiquetas ZPL - Una por número de lote o serie"
+
+#~ msgid "ZPL Labels - One per unit"
+#~ msgstr "Etiquetas ZPL - Una por unidad"
 
 #~ msgid "View Forecast"
 #~ msgstr "Ver previsión"

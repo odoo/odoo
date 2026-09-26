@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 14:10+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -1205,8 +1205,7 @@ msgid ""
 "                                                <span style=\"white-space: "
 "nowrap;\">\n"
 "                                                    <t t-"
-"if=\"object.website_id.show_line_subtotals_tax_selection == "
-"'tax_excluded'\">\n"
+"if=\"object.company_price_include == 'tax_excluded'\">\n"
 "                                                        <t t-"
 "out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
 "10.00</t>\n"
@@ -1396,6 +1395,11 @@ msgstr "Qo‘shimcha sotish mahsulotlari haqida"
 #, fuzzy
 msgid "Accept Terms"
 msgstr "Shartlarni qabul qilish"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
+msgid "Access Code"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_groups
@@ -1724,7 +1728,7 @@ msgstr "Muqobil mahsulotlar"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "Amount"
@@ -2335,7 +2339,7 @@ msgstr "Chiplar"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 msgid "Choose Your Amount"
 msgstr ""
 
@@ -2354,12 +2358,6 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Choose your"
 msgstr ""
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_christmas
-#, fuzzy
-msgid "Christmas"
-msgstr "Yangi yil"
 
 #. module: website_sale
 #. odoo-python
@@ -2504,12 +2502,6 @@ msgstr "Ranglar"
 #, fuzzy
 msgid "Columns"
 msgstr "Ustunlar"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_product_combos
-#, fuzzy
-msgid "Combo Choices"
-msgstr "Birlashtirilgan tanlovlar"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2820,6 +2812,7 @@ msgstr "Joriy turkum yoki barchasi"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "Custom Amount"
@@ -2954,6 +2947,11 @@ msgstr "Yangi toifani aniqlash"
 #, fuzzy
 msgid "Define a new ribbon"
 msgstr "Yangi tasmani aniqlash"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Defined on website"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_ribbon__assign
@@ -3252,6 +3250,8 @@ msgid "Display Options"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__show_line_subtotals_tax_selection
+#: model:ir.model.fields,field_description:website_sale.field_website__show_line_subtotals_tax_selection
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #, fuzzy
 msgid "Display Product Prices"
@@ -3436,13 +3436,7 @@ msgstr ""
 "Mahsulot sahifasida ko‘rsatiladigan elektron tijorat qo‘shimcha ma'lumotlari"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
-#, fuzzy
-msgid "E-commerce Promotional Code"
-msgstr "Elektron tijorat aksiya kodi"
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_europe
+#: model:product.pricelist,name:website_sale.list_eur
 #, fuzzy
 msgid "EUR"
 msgstr "YEVRO"
@@ -4625,13 +4619,6 @@ msgid "Lightbulb sold separately"
 msgstr "Lampochka alohida sotiladi"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__show_line_subtotals_tax_selection
-#: model:ir.model.fields,field_description:website_sale.field_website__show_line_subtotals_tax_selection
-#, fuzzy
-msgid "Line Subtotals Tax Display"
-msgstr "Qator jami soliqlarni ko‘rsatish"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Link Color"
@@ -4931,7 +4918,7 @@ msgid "New!"
 msgstr "Yangi!"
 
 #. module: website_sale
-#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_arrivals
 msgid "Newest"
 msgstr ""
 
@@ -5609,6 +5596,11 @@ msgid "Page Width"
 msgstr "Sahifa kengligi"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Paid"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
 #, fuzzy
 msgid "Parent"
@@ -5806,6 +5798,11 @@ msgid "Price - Low to High"
 msgstr "Narx - Pastdan yuqoriga"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Price Display"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
 msgid "Price Range"
 msgstr ""
@@ -5838,7 +5835,7 @@ msgstr "Yetkazib berish usuli tanlangandan so‘ng narx yangilanadi"
 #: model:ir.model,name:website_sale.model_product_pricelist
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__pricelist_id
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__pricelist_id
-#: model_terms:ir.ui.view,arch_db:website_sale.pricelist_list
+#: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_search
 #, fuzzy
 msgid "Pricelist"
@@ -5851,8 +5848,20 @@ msgid "Pricelist Rule"
 msgstr "Narxlar ro‘yxati qoidasi"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/footer_copyright_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/header_elements_option.xml:0
+msgid "Pricelist Selector"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.pricelist_selector
+msgid "Pricelist: {{0}}"
 msgstr ""
 
 #. module: website_sale
@@ -6239,6 +6248,11 @@ msgstr "Mahsulot bilan yaqinda sotilgan mahsulotlar"
 #, fuzzy
 msgid "Products Views"
 msgstr "Mahsulotlar ko‘rinishlari"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_b2b
+msgid "Professional Prices"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -7591,13 +7605,20 @@ msgid "Target"
 msgstr "Maqsad"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__tax_display
+msgid "Tax Display"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
+#: model:ir.model.fields.selection,name:website_sale.selection__website__tax_display__tax_excluded
 #, fuzzy
 msgid "Tax Excluded"
 msgstr "Soliqsiz narx"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_included
+#: model:ir.model.fields.selection,name:website_sale.selection__website__tax_display__tax_included
 #, fuzzy
 msgid "Tax Included"
 msgstr "Soliq kiritilgan narx"
@@ -7619,6 +7640,16 @@ msgstr ""
 #, fuzzy
 msgid "Tax included or excluded depending on the website configuration."
 msgstr "Veb-sayt sozlamalariga qarab soliq kiritilgan yoki kiritilmagan."
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_excluded
+msgid "Taxes Excluded"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_included
+msgid "Taxes Included"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -8163,6 +8194,11 @@ msgstr ""
 #, fuzzy
 msgid "URL of a video for showcasing your product."
 msgstr "Mahsulotingizni namoyish qilish uchun video havolasi"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_default
+msgid "USD"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -8890,6 +8926,14 @@ msgid "Your order will be confirmed after payment is received."
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/payment_transaction.py:0
+msgid ""
+"Your payment of %(formatted_amount)s has been processed. Pay the remaining "
+"amount to confirm your order."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 #, fuzzy
 msgid "Your previous cart has already been completed."
@@ -8998,6 +9042,11 @@ msgstr "Elektron tijorat tavsifi"
 #, fuzzy
 msgid "eCommerce Filter Visibility"
 msgstr "Elektron tijorat filtri ko‘rinishi"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__tax_display
+msgid "eCommerce Price Display"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -9181,6 +9230,22 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Christmas"
+#~ msgstr "Yangi yil"
+
+#, fuzzy
+#~ msgid "Combo Choices"
+#~ msgstr "Birlashtirilgan tanlovlar"
+
+#, fuzzy
+#~ msgid "E-commerce Promotional Code"
+#~ msgstr "Elektron tijorat aksiya kodi"
+
+#, fuzzy
+#~ msgid "Line Subtotals Tax Display"
+#~ msgstr "Qator jami soliqlarni ko‘rsatish"
 
 #, fuzzy
 #~ msgid ""

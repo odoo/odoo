@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 19:43+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -28,12 +28,6 @@ msgid ""
 "\n"
 "Convert employee's extra hours to leave allocations.\n"
 msgstr ""
-
-#. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_work_entry_type.py:0
-msgid "%s hours available"
-msgstr "%s時間利用可能"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_accrual_level_view_form
@@ -74,19 +68,24 @@ msgid "Archived Employees"
 msgstr "アーカイブ済の従業員"
 
 #. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.module.module,summary:base.module_hr_holidays_attendance
 msgid "Attendance Holidays"
 msgstr ""
 
 #. module: hr_holidays_attendance
-#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance_overtime_line
-msgid "Attendance Overtime Line"
-msgstr "勤怠残業明細"
-
-#. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
 msgid "Attendance Records"
 msgstr "勤怠記録"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_company__attendance_work_entry_type_id
+msgid "Attendance Time Type"
+msgstr ""
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_attendance_report
@@ -99,33 +98,15 @@ msgid "Attendances"
 msgstr "勤怠"
 
 #. module: hr_holidays_attendance
-#. odoo-javascript
-#: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
-msgid "Available"
-msgstr "処理可能"
-
-#. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__compensable_as_leave
-msgid "Compensable as Time Off"
-msgstr "代休として取得可能"
+#: model:ir.model,name:hr_holidays_attendance.model_res_company
+msgid "Company"
+msgstr ""
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__date
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
 msgid "Date"
 msgstr "日付"
-
-#. module: hr_holidays_attendance
-#. odoo-javascript
-#: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
-msgid "Days"
-msgstr "日"
-
-#. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_work_entry_type__overtime_deductible
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
-msgid "Deduct Extra Hours"
-msgstr "時間外労働の控除"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__department_id
@@ -139,15 +120,16 @@ msgid "Difference"
 msgstr "差異"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__display_name
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__display_name
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_time_rule__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_resource_calendar_leaves__display_name
 msgid "Display Name"
 msgstr "表示名"
@@ -165,10 +147,9 @@ msgid "Employee"
 msgstr "従業員"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
-msgid "Employee Overtime"
-msgstr "従業員残業"
+#: model:ir.model,name:hr_holidays_attendance.model_hr_version
+msgid "Employee Contract"
+msgstr ""
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
@@ -181,21 +162,9 @@ msgid "Expected Hours"
 msgstr "想定勤務時間"
 
 #. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
-msgid "Extra Hours Available"
-msgstr "時間外労働時間利用可能"
-
-#. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency
 msgid "Frequency"
 msgstr "頻度"
-
-#. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__compensable_as_leave
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_overtime_rule_view_form
-msgid "Give back as time off"
-msgstr "代休として返す"
 
 #. module: hr_holidays_attendance
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
@@ -203,22 +172,16 @@ msgid "HR Attendance Holidays"
 msgstr ""
 
 #. module: hr_holidays_attendance
-#. odoo-javascript
-#: code:addons/hr_holidays_attendance/static/src/views/calendar/attendance_calendar_overview.xml:0
-#: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
-msgid "Hours"
-msgstr "時間"
-
-#. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__id
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__id
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_time_rule__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_version__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "ID"
@@ -244,17 +207,6 @@ msgid "Last 2 Months"
 msgstr "直近2か月"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__leave_compensation_rate
-msgid "Leave Compensation Rate"
-msgstr "代休換算率"
-
-#. module: hr_holidays_attendance
-#. odoo-javascript
-#: code:addons/hr_holidays_attendance/static/src/views/calendar/attendance_calendar_overview.xml:0
-msgid "Left"
-msgstr "残"
-
-#. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_ir_ui_menu
 msgid "Menu"
 msgstr "メニュー"
@@ -265,49 +217,14 @@ msgid "Missing Hours"
 msgstr "不足時間"
 
 #. module: hr_holidays_attendance
-#. odoo-javascript
-#: code:addons/hr_holidays_attendance/static/src/views/calendar/attendance_calendar_overview.xml:0
-msgid "NEW TIMEOFF REQUEST"
-msgstr "新しい休暇申請"
-
-#. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
 msgstr "休暇割当申請"
 
 #. module: hr_holidays_attendance
-#. odoo-javascript
-#: code:addons/hr_holidays_attendance/static/src/views/calendar/attendance_calendar_overview.js:0
-msgid "New Time Off"
-msgstr "新しい休暇"
-
-#. module: hr_holidays_attendance
-#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_work_entry_type__overtime_deductible
-msgid ""
-"Once a time off of this type is approved, extra hours in attendances will be "
-"deducted."
-msgstr "このタイプの休暇が承認されると、勤務時間の超過が差し引かれます。"
-
-#. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
-msgid ""
-"Only an Officer or Administrator is allowed to edit the allocation duration "
-"in this status."
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_search_inherit_holidays
+msgid "Overtime Entries"
 msgstr ""
-"このステータスでは、割当期間の編集は、役員または管理者のみが行うことができま"
-"す。"
-
-#. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
-msgid "Overtime Deductible"
-msgstr "残業控除"
-
-#. module: hr_holidays_attendance
-#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance_overtime_rule
-msgid "Overtime Rule"
-msgstr "残業規則"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency__worked_hours
@@ -315,14 +232,14 @@ msgid "Per Hour Worked"
 msgstr "1時間の労働ごとに"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__leave_compensation_rate
-msgid "Rate of leave compensation"
-msgstr "休暇補償率"
-
-#. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
 msgstr "リソースの休暇詳細"
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_overtime_leave_form
+msgid "Rules Outputs"
+msgstr ""
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
@@ -330,21 +247,8 @@ msgid "Save"
 msgstr "保存"
 
 #. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
-msgid "The employee does not have enough extra hours to request this leave."
-msgstr "この休暇を申請するには、従業員の時間外労働時間が不足しています。"
-
-#. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
-msgid "The employee does not have enough overtime hours to request this leave."
-msgstr "この休暇を申請するには、従業員の時間外労働時間が不足しています。"
-
-#. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
-msgid "This leave request exceeds the allowed negative leave balance cap"
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_search_inherit_holidays
+msgid "Source Attendances"
 msgstr ""
 
 #. module: hr_holidays_attendance
@@ -358,12 +262,6 @@ msgid "Time Off Allocation"
 msgstr "休暇割当"
 
 #. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_overtime_analysis_list_view
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_overtime_analysis_view_filter
-msgid "Time Off Eligible"
-msgstr "休暇取得資格あり"
-
-#. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_attendance_report_action
 #: model:ir.ui.menu,name:hr_holidays_attendance.hr_leave_attendance_report
 msgid "Time Off Ledger"
@@ -375,9 +273,9 @@ msgid "Time Offs"
 msgstr "休暇"
 
 #. module: hr_holidays_attendance
-#: model:ir.model,name:hr_holidays_attendance.model_hr_work_entry_type
-msgid "Time Type"
-msgstr "時間区分"
+#: model:ir.model,name:hr_holidays_attendance.model_hr_time_rule
+msgid "Time Rule"
+msgstr ""
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__work_entry_type_names
@@ -385,9 +283,20 @@ msgid "Time Types"
 msgstr "時間区分"
 
 #. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
-msgid "Worked Extra Hours"
-msgstr "時間外実労働時間"
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_overtime_leave_form
+msgid "Time type"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_tree_inherit_holidays
+msgid "Type"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,help:hr_holidays_attendance.field_res_company__attendance_work_entry_type_id
+msgid ""
+"Work entry type assigned to attendances and read by the time rule engine."
+msgstr ""
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__worked_hours
@@ -416,21 +325,95 @@ msgstr ""
 "れるためです。"
 
 #. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
-msgid "You do not have enough extra hours to request this leave"
-msgstr "この休暇を申請するには、時間外労働時間が不足しています。"
-
-#. module: hr_holidays_attendance
 #. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/components/accrual_levels/accrual_levels.xml:0
 msgid "every worked hour."
 msgstr "(1時間の労働ごとに)。"
 
-#. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_overtime_rule_view_form
-msgid "with a rate of"
-msgstr "以下の割合で："
+#~ msgid "%s hours available"
+#~ msgstr "%s時間利用可能"
 
-msgid "Work Entry Type"
-msgstr "勤務記録タイプ"
+#~ msgid "Attendance Overtime Line"
+#~ msgstr "勤怠残業明細"
+
+#~ msgid "Available"
+#~ msgstr "処理可能"
+
+#~ msgid "Compensable as Time Off"
+#~ msgstr "代休として取得可能"
+
+#~ msgid "Days"
+#~ msgstr "日"
+
+#~ msgid "Deduct Extra Hours"
+#~ msgstr "時間外労働の控除"
+
+#~ msgid "Employee Overtime"
+#~ msgstr "従業員残業"
+
+#~ msgid "Extra Hours Available"
+#~ msgstr "時間外労働時間利用可能"
+
+#~ msgid "Give back as time off"
+#~ msgstr "代休として返す"
+
+#~ msgid "Hours"
+#~ msgstr "時間"
+
+#~ msgid "Leave Compensation Rate"
+#~ msgstr "代休換算率"
+
+#~ msgid "Left"
+#~ msgstr "残"
+
+#~ msgid "NEW TIMEOFF REQUEST"
+#~ msgstr "新しい休暇申請"
+
+#~ msgid "New Time Off"
+#~ msgstr "新しい休暇"
+
+#~ msgid ""
+#~ "Once a time off of this type is approved, extra hours in attendances will "
+#~ "be deducted."
+#~ msgstr "このタイプの休暇が承認されると、勤務時間の超過が差し引かれます。"
+
+#~ msgid ""
+#~ "Only an Officer or Administrator is allowed to edit the allocation "
+#~ "duration in this status."
+#~ msgstr ""
+#~ "このステータスでは、割当期間の編集は、役員または管理者のみが行うことができ"
+#~ "ます。"
+
+#~ msgid "Overtime Deductible"
+#~ msgstr "残業控除"
+
+#~ msgid "Overtime Rule"
+#~ msgstr "残業規則"
+
+#~ msgid "Rate of leave compensation"
+#~ msgstr "休暇補償率"
+
+#~ msgid "The employee does not have enough extra hours to request this leave."
+#~ msgstr "この休暇を申請するには、従業員の時間外労働時間が不足しています。"
+
+#~ msgid ""
+#~ "The employee does not have enough overtime hours to request this leave."
+#~ msgstr "この休暇を申請するには、従業員の時間外労働時間が不足しています。"
+
+#~ msgid "Time Off Eligible"
+#~ msgstr "休暇取得資格あり"
+
+#~ msgid "Time Type"
+#~ msgstr "時間区分"
+
+#~ msgid "Worked Extra Hours"
+#~ msgstr "時間外実労働時間"
+
+#~ msgid "You do not have enough extra hours to request this leave"
+#~ msgstr "この休暇を申請するには、時間外労働時間が不足しています。"
+
+#~ msgid "with a rate of"
+#~ msgstr "以下の割合で："
+
+#~ msgid "Work Entry Type"
+#~ msgstr "勤務記録タイプ"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 14:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -90,11 +90,6 @@ msgid "Add this key in your Authenticator app"
 msgstr ""
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Authentication Code"
-msgstr "โค้ดรับรองความถูกต้อง"
-
-#. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_device
 msgid "Authentication Device"
 msgstr "อุปกรณ์ตรวจสอบสิทธิ์"
@@ -114,6 +109,13 @@ msgstr "ยกเลิก"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
 msgstr "ไม่สามารถสแกนได้?"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"Check your Authenticator app for your code.\n"
+"                        <br/>"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
@@ -179,6 +181,16 @@ msgid "Enable Two-Factor Authentication"
 msgstr ""
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter code"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter verification code"
+msgstr ""
+
+#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
 msgid "Expiration Date"
 msgstr "วันหมดอายุ"
@@ -219,11 +231,6 @@ msgstr "อัปเดตครั้งล่าสุดโดย"
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_date
 msgid "Last Updated on"
 msgstr "อัปเดตครั้งล่าสุดเมื่อ"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Learn More"
-msgstr "เรียนรู้เพิ่มเติม"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__limit_type
@@ -280,16 +287,6 @@ msgid "The verification code should only contain numbers"
 msgstr "รหัสยืนยันควรมีเฉพาะตัวเลข"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid ""
-"To login, enter below the six-digit authentication code provided by your "
-"Authenticator app.\n"
-"                        <br/>"
-msgstr ""
-"ในการเข้าสู่ระบบ ให้ป้อนรหัสการตรวจสอบสิทธิ์หกหลักด้านล่างที่แอป Authenticator ให้มา\n"
-"                        <br/>"
-
-#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_last_counter
 msgid "Totp Last Counter"
 msgstr ""
@@ -316,7 +313,6 @@ msgid "Two-Factor Authentication Activation"
 msgstr "การเปิดใช้งานการรับรองความถูกต้องด้วย Two-factor"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
@@ -430,7 +426,19 @@ msgid ""
 "again later."
 msgstr ""
 
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "e.g. 123456"
-msgstr "เช่น 123456"
+#~ msgid "Authentication Code"
+#~ msgstr "โค้ดรับรองความถูกต้อง"
+
+#~ msgid "Learn More"
+#~ msgstr "เรียนรู้เพิ่มเติม"
+
+#~ msgid ""
+#~ "To login, enter below the six-digit authentication code provided by your "
+#~ "Authenticator app.\n"
+#~ "                        <br/>"
+#~ msgstr ""
+#~ "ในการเข้าสู่ระบบ ให้ป้อนรหัสการตรวจสอบสิทธิ์หกหลักด้านล่างที่แอป Authenticator ให้มา\n"
+#~ "                        <br/>"
+
+#~ msgid "e.g. 123456"
+#~ msgstr "เช่น 123456"

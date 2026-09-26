@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-09-02 09:52+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/hr/"
@@ -93,19 +93,9 @@ msgid "'Badge - %s' % (object.name).replace('/', '')"
 msgstr "'バッジ - %s' % (object.name).replace('/', '')"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "/ day"
-msgstr "/日"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "/ month"
 msgstr "/ 月"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "/ week"
-msgstr "/ 週"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -1001,6 +991,12 @@ msgid "Archived"
 msgstr "アーカイブ済"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
+msgid "Are you sure you want to deactivate this user?"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "As of"
@@ -1138,17 +1134,6 @@ msgstr "アバター 256"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
 msgid "Avatar 512"
 msgstr "アバター 512"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Average Hours"
-msgstr "平均時間"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_version.py:0
-msgid "Average hours per day must be between 0 and 24."
-msgstr "1日あたりの平均時間は0から24の間にしてください。"
 
 #. module: hr
 #. odoo-python
@@ -1522,6 +1507,12 @@ msgstr "設定"
 #: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
 msgid "Confirm"
 msgstr "確定"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
+msgid "Confirmation"
+msgstr ""
 
 #. module: hr
 #. odoo-javascript
@@ -1914,7 +1905,14 @@ msgstr "曜日文字列"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/employee_user_status/employee_user_status.js:0
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
 msgid "Deactivate"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
+msgid "Deactivate & End Collaboration"
 msgstr ""
 
 #. module: hr
@@ -1960,11 +1958,9 @@ msgstr "出勤として表示されるためのEメールの最小送信数を�
 #. module: hr
 #: model:ir.model.fields,help:hr.field_resource_resource__calendar_id
 msgid ""
-"Define the working schedule of the resource. If not set, the resource will "
-"have fully flexible working hours."
+"Define the working schedule of the resource. Assign a flexible calendar for "
+"fully flexible working hours."
 msgstr ""
-"リソースの稼働スケジュールを定義します。未設定の場合、このリソースは完全に柔"
-"軟な稼働時間となります。"
 
 #. module: hr
 #. odoo-javascript
@@ -2122,6 +2118,7 @@ msgstr "住所録"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
 #: code:addons/hr/static/src/js/departure_conflict_dialog.js:0
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_create_version_wizard_view_form
@@ -2861,11 +2858,6 @@ msgid "Fleet"
 msgstr "フリート"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Flexible"
-msgstr "フレキシブル"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
@@ -3085,29 +3077,8 @@ msgstr "1日あたりの時間"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hours_per_week
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Hours Per Week"
 msgstr "週あたりの時間"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__hours_per_day
-#: model:ir.model.fields,field_description:hr.field_hr_version__hours_per_day
-#: model:ir.model.fields,field_description:hr.field_resource_resource__hours_per_day
-msgid "Hours per Day"
-msgstr "1日あたりの時間"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__hours_per_week
-#: model:ir.model.fields,field_description:hr.field_hr_version__hours_per_week
-#: model:ir.model.fields,field_description:hr.field_resource_resource__hours_per_week
-msgid "Hours per Week"
-msgstr "週あたりの時間"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_version.py:0
-msgid "Hours per week must be between 0 and 168."
-msgstr "週あたりの時間は0から168の間でなければなりません。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
@@ -3367,24 +3338,12 @@ msgid "Is Custom Job Title"
 msgstr "カスタム職位"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
-#: model:ir.model.fields,field_description:hr.field_hr_version__is_flexible
-msgid "Is Flexible"
-msgstr "フレックス"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_version__message_is_follower
 msgid "Is Follower"
 msgstr "フォロー中"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__is_fully_flexible
-#: model:ir.model.fields,field_description:hr.field_hr_version__is_fully_flexible
-msgid "Is Fully Flexible"
-msgstr "完全フレックス"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_future
@@ -3531,6 +3490,11 @@ msgstr "最後の活動"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity_time
 msgid "Last Activity Time"
 msgstr "最後の活動の時間"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__last_contract_date_end
+msgid "Last Contract Date End"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_modified_uid
@@ -4075,11 +4039,6 @@ msgid "Not Invited"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Not limited"
-msgstr "制限なし"
-
-#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__0
 msgid "Not specified"
 msgstr "指定なし"
@@ -4364,7 +4323,6 @@ msgstr "組織図"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__other
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__other
 msgid "Other"
 msgstr "その他"
@@ -5240,6 +5198,13 @@ msgstr ""
 "                クリック"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"Some of these fields %(field_name)s don't exist on this model (hr.version)."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__split_legal_name
 msgid "Split Legal Name"
 msgstr "正式氏名の分割"
@@ -6107,11 +6072,6 @@ msgid "Valid work permit for Belgium"
 msgstr "ベルギーの有効なワークパーミット"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Variable Hours"
-msgstr "変動勤務時間"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_resource_calendar__version_ids
 msgid "Version"
 msgstr ""
@@ -6815,6 +6775,49 @@ msgstr "勤務"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid "/ day"
+#~ msgstr "/日"
+
+#~ msgid "/ week"
+#~ msgstr "/ 週"
+
+#~ msgid "Average Hours"
+#~ msgstr "平均時間"
+
+#~ msgid "Average hours per day must be between 0 and 24."
+#~ msgstr "1日あたりの平均時間は0から24の間にしてください。"
+
+#~ msgid ""
+#~ "Define the working schedule of the resource. If not set, the resource "
+#~ "will have fully flexible working hours."
+#~ msgstr ""
+#~ "リソースの稼働スケジュールを定義します。未設定の場合、このリソースは完全に"
+#~ "柔軟な稼働時間となります。"
+
+#~ msgid "Flexible"
+#~ msgstr "フレキシブル"
+
+#~ msgid "Hours per Day"
+#~ msgstr "1日あたりの時間"
+
+#~ msgid "Hours per Week"
+#~ msgstr "週あたりの時間"
+
+#~ msgid "Hours per week must be between 0 and 168."
+#~ msgstr "週あたりの時間は0から168の間でなければなりません。"
+
+#~ msgid "Is Flexible"
+#~ msgstr "フレックス"
+
+#~ msgid "Is Fully Flexible"
+#~ msgstr "完全フレックス"
+
+#~ msgid "Not limited"
+#~ msgstr "制限なし"
+
+#~ msgid "Variable Hours"
+#~ msgstr "変動勤務時間"
 
 #~ msgid "Chat"
 #~ msgstr "チャット"

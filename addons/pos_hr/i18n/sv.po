@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 20:45+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -31,32 +31,26 @@ msgid ""
 msgstr ""
 
 #. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_manager_employee_ids
+msgid " Full access, including reporting, cash management, and session close."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_cashier_employee_ids
+msgid ""
+" Full register access. Can process sales, discounts, refunds, and close out "
+"payments."
+msgstr ""
+
+#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Abigal Peterson"
 msgstr "Abigal Peterson"
 
 #. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "Access Denied"
-msgstr "Åtkomst nekad"
-
-#. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__add_report_per_employee
 msgid "Add a report per each employee"
 msgstr "Lägg till en rapport för varje anställd"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Advanced rights"
-msgstr "Avancerade rättigheter"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "All Employees"
-msgstr "Alla anställda"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__logged_employee_ids
@@ -74,10 +68,24 @@ msgid "Bank Statement Line"
 msgstr "Kontoutdragslinje"
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Basic rights"
-msgstr "Grundläggande rättigheter"
+#: model:ir.model.fields,help:pos_hr.field_pos_config__restrictive_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_restrictive_employee_ids
+msgid ""
+"Can process sales and close payments, but not apply discounts, refunds, or "
+"cancel orders."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__supervised_employee_ids
+msgid ""
+"Can process sales, but a higher level must approve before payment is closed"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_supervised_employee_ids
+msgid ""
+"Can process sales, but a higher level must approve before payment is closed."
+msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_daily_sales_reports_wizard
@@ -96,7 +104,9 @@ msgstr "Inbetalningar/utbetalningar"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_payment__employee_id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_session__employee_id
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Cashier"
 msgstr "Kassör"
 
@@ -181,40 +191,32 @@ msgid "Employee:"
 msgstr "Anställd:"
 
 #. module: pos_hr
-#. odoo-python
-#: code:addons/pos_hr/models/hr_employee.py:0
-msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
-msgstr "Annställd: %(employee)s - PoS Config(s): %(config_list)s \n"
-
-#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_session_form_inherit_pos_hr
 msgid "Employees"
 msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid ""
-"Employees linked to users with the PoS Manager role are automatically added "
-"to this list"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__cashier_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_cashier_employee_ids
+msgid "Employees with cashier level access"
 msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
-msgid "Employees with basic access"
-msgstr "Anställda med grundläggande behörighet"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__manager_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_manager_employee_ids
+msgid "Employees with manager level access"
+msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid "Employees with manager access"
-msgstr "Anställda med chefsbehörighet"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__restrictive_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_restrictive_employee_ids
+msgid "Employees with restrictive level access"
+msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__minimal_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_minimal_employee_ids
-msgid "Employees with minimal access"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__supervised_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_supervised_employee_ids
+msgid "Employees with supervised level access"
 msgstr ""
 
 #. module: pos_hr
@@ -222,6 +224,18 @@ msgstr ""
 #: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
 msgstr "Ange din PIN-kod"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__manager_employee_ids
+msgid "Full access, including reporting, cash management, and session close."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__cashier_employee_ids
+msgid ""
+"Full register access. Can process sales, discounts, refunds, and close out "
+"payments."
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_account_bank_statement_line__id
@@ -239,14 +253,6 @@ msgstr "Ange din PIN-kod"
 #: model:ir.model.fields,field_description:pos_hr.field_res_partner__id
 msgid "ID"
 msgstr "ID"
-
-#. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_pos_config__minimal_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
-msgid "If left empty, all employees can log in to PoS"
-msgstr "Om den lämnas tom kan alla anställda logga in på PoS"
 
 #. module: pos_hr
 #: model:ir.module.module,summary:base.module_pos_hr
@@ -269,7 +275,7 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Minimal rights"
+msgid "Manager"
 msgstr ""
 
 #. module: pos_hr
@@ -280,7 +286,7 @@ msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "No Cashiers"
 msgstr "Inga kassörer"
 
@@ -318,7 +324,8 @@ msgstr "Övriga"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "PIN not found"
 msgstr "PIN-koden hittades inte"
 
@@ -329,7 +336,7 @@ msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
 msgid "Password?"
 msgstr "Lösenord?"
 
@@ -380,6 +387,12 @@ msgid "Product Variant"
 msgstr "Produktvariant"
 
 #. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Restrictive"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/components/popups/cashier_selection_popup/cashier_selection_popup.xml:0
 msgid "Select Cashier"
@@ -395,6 +408,12 @@ msgstr "Välj anställd(a)"
 #: model:ir.model,name:pos_hr.model_report_pos_hr_single_employee_sales_report
 msgid "Session sales details for a single employee"
 msgstr "Försäljningsuppgifter för session för en enskild anställd"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Supervised"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_session__employee_id
@@ -414,7 +433,7 @@ msgstr "Den medarbetare som använder kassaregistret."
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "There is no cashier available."
 msgstr "Det finns ingen kassör tillgänglig."
 
@@ -426,25 +445,53 @@ msgstr "Lås upp register"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "Wrong PIN"
 msgstr "Felaktig PIN-kod"
-
-#. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "You are not allowed to change the price of a product."
-msgstr "Du får inte ändra priset på en produkt."
 
 #. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
 msgid ""
-"You cannot delete an employee that may be used in an active PoS session, "
-"close the session(s) first: \n"
+"You cannot delete an employee that may be used in an active PoS session. "
+"Close the session(s) first:\n"
+"Employee: %(employee)s - PoS Config(s): %(config_list)s"
 msgstr ""
-"Du kan inte radera en användare som kan använda en aktiv kassa session, "
-"stäng sessionen först \n"
 
-msgid "Closed Register"
-msgstr "Stängt register"
+#~ msgid "Access Denied"
+#~ msgstr "Åtkomst nekad"
+
+#~ msgid "Advanced rights"
+#~ msgstr "Avancerade rättigheter"
+
+#~ msgid "All Employees"
+#~ msgstr "Alla anställda"
+
+#~ msgid "Basic rights"
+#~ msgstr "Grundläggande rättigheter"
+
+#~ msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
+#~ msgstr "Annställd: %(employee)s - PoS Config(s): %(config_list)s \n"
+
+#~ msgid "Employees with basic access"
+#~ msgstr "Anställda med grundläggande behörighet"
+
+#~ msgid "Employees with manager access"
+#~ msgstr "Anställda med chefsbehörighet"
+
+#~ msgid "If left empty, all employees can log in to PoS"
+#~ msgstr "Om den lämnas tom kan alla anställda logga in på PoS"
+
+#~ msgid "You are not allowed to change the price of a product."
+#~ msgstr "Du får inte ändra priset på en produkt."
+
+#~ msgid ""
+#~ "You cannot delete an employee that may be used in an active PoS session, "
+#~ "close the session(s) first: \n"
+#~ msgstr ""
+#~ "Du kan inte radera en användare som kan använda en aktiv kassa session, "
+#~ "stäng sessionen först \n"
+
+#~ msgid "Closed Register"
+#~ msgstr "Stängt register"

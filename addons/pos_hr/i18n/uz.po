@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 20:45+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/pos_hr/"
@@ -37,37 +37,28 @@ msgid ""
 msgstr ""
 
 #. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_manager_employee_ids
+msgid " Full access, including reporting, cash management, and session close."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_cashier_employee_ids
+msgid ""
+" Full register access. Can process sales, discounts, refunds, and close out "
+"payments."
+msgstr ""
+
+#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 #, fuzzy
 msgid "Abigal Peterson"
 msgstr "Abigal Peterson"
 
 #. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-#, fuzzy
-msgid "Access Denied"
-msgstr "Ruxsat rad etildi"
-
-#. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__add_report_per_employee
 #, fuzzy
 msgid "Add a report per each employee"
 msgstr "Har bir xodim uchun hisobot qo‘shish"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-#, fuzzy
-msgid "Advanced rights"
-msgstr "Kengaytirilgan huquqlar"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-#, fuzzy
-msgid "All Employees"
-msgstr "Barcha xodimlar"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__logged_employee_ids
@@ -86,11 +77,24 @@ msgid "Bank Statement Line"
 msgstr "Bank ko‘chirmasi qatori"
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-#, fuzzy
-msgid "Basic rights"
-msgstr "Asosiy huquqlar"
+#: model:ir.model.fields,help:pos_hr.field_pos_config__restrictive_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_restrictive_employee_ids
+msgid ""
+"Can process sales and close payments, but not apply discounts, refunds, or "
+"cancel orders."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__supervised_employee_ids
+msgid ""
+"Can process sales, but a higher level must approve before payment is closed"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_supervised_employee_ids
+msgid ""
+"Can process sales, but a higher level must approve before payment is closed."
+msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_daily_sales_reports_wizard
@@ -113,7 +117,9 @@ msgstr "Naqd pul kirim/chiqimi"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_payment__employee_id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_session__employee_id
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 #, fuzzy
 msgid "Cashier"
 msgstr "Kassir"
@@ -209,46 +215,33 @@ msgid "Employee:"
 msgstr "Xodim:"
 
 #. module: pos_hr
-#. odoo-python
-#: code:addons/pos_hr/models/hr_employee.py:0
-#, fuzzy
-msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
-msgstr ""
-"Xodim: %(employee)s - Sotuv nuqtasi konfiguratsiyasi(lari): %(config_list)s"
-
-#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_session_form_inherit_pos_hr
 msgid "Employees"
 msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid ""
-"Employees linked to users with the PoS Manager role are automatically added "
-"to this list"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__cashier_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_cashier_employee_ids
+msgid "Employees with cashier level access"
 msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
-#, fuzzy
-msgid "Employees with basic access"
-msgstr "Asosiy ruxsatga ega xodimlar"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__manager_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_manager_employee_ids
+msgid "Employees with manager level access"
+msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-#, fuzzy
-msgid "Employees with manager access"
-msgstr "Menejer ruxsatiga ega xodimlar"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__restrictive_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_restrictive_employee_ids
+msgid "Employees with restrictive level access"
+msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__minimal_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_minimal_employee_ids
-#, fuzzy
-msgid "Employees with minimal access"
-msgstr "Minimal ruxsatga ega xodimlar"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__supervised_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_supervised_employee_ids
+msgid "Employees with supervised level access"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
@@ -256,6 +249,18 @@ msgstr "Minimal ruxsatga ega xodimlar"
 #, fuzzy
 msgid "Enter your PIN"
 msgstr "PIN-kodingizni kiriting"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__manager_employee_ids
+msgid "Full access, including reporting, cash management, and session close."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__cashier_employee_ids
+msgid ""
+"Full register access. Can process sales, discounts, refunds, and close out "
+"payments."
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_account_bank_statement_line__id
@@ -274,15 +279,6 @@ msgstr "PIN-kodingizni kiriting"
 #, fuzzy
 msgid "ID"
 msgstr "ID"
-
-#. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_pos_config__minimal_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
-#, fuzzy
-msgid "If left empty, all employees can log in to PoS"
-msgstr "Agar bo‘sh qoldirilsa, barcha xodimlar Sotuv nuqtasiga kirishi mumkin"
 
 #. module: pos_hr
 #: model:ir.module.module,summary:base.module_pos_hr
@@ -306,9 +302,8 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-#, fuzzy
-msgid "Minimal rights"
-msgstr "Minimal huquqlar"
+msgid "Manager"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
@@ -318,7 +313,7 @@ msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 #, fuzzy
 msgid "No Cashiers"
 msgstr "Kassirlar yo‘q"
@@ -361,7 +356,8 @@ msgstr "Boshqalar"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 #, fuzzy
 msgid "PIN not found"
 msgstr "PIN-kod topilmadi"
@@ -373,7 +369,7 @@ msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
 #, fuzzy
 msgid "Password?"
 msgstr "Parol?"
@@ -431,6 +427,12 @@ msgid "Product Variant"
 msgstr "Mahsulot varianti"
 
 #. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Restrictive"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/components/popups/cashier_selection_popup/cashier_selection_popup.xml:0
 #, fuzzy
@@ -449,6 +451,12 @@ msgstr "Xodim(lar)ni tanlash"
 #, fuzzy
 msgid "Session sales details for a single employee"
 msgstr "Bitta xodim uchun seans sotuvi tafsilotlari"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Supervised"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_session__employee_id
@@ -471,7 +479,7 @@ msgstr "Kassa apparatini ishlatadigan xodim."
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 #, fuzzy
 msgid "There is no cashier available."
 msgstr "Hozir kassir mavjud emas."
@@ -485,29 +493,76 @@ msgstr "Kassani ochish"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 #, fuzzy
 msgid "Wrong PIN"
 msgstr "Noto‘g‘ri PIN-kod"
 
 #. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-#, fuzzy
-msgid "You are not allowed to change the price of a product."
-msgstr "Mahsulot narxini o‘zgartirishga ruxsatingiz yo‘q."
-
-#. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
-#, fuzzy
 msgid ""
-"You cannot delete an employee that may be used in an active PoS session, "
-"close the session(s) first: \n"
+"You cannot delete an employee that may be used in an active PoS session. "
+"Close the session(s) first:\n"
+"Employee: %(employee)s - PoS Config(s): %(config_list)s"
 msgstr ""
-"Faol POS seansida ishtirok etayotgan xodimni o‘chira olmaysiz, avval "
-"seans(lar)ni yakunlang:"
 
 #, fuzzy
-msgid "Closed Register"
-msgstr "Yopilgan kassa"
+#~ msgid "Access Denied"
+#~ msgstr "Ruxsat rad etildi"
+
+#, fuzzy
+#~ msgid "Advanced rights"
+#~ msgstr "Kengaytirilgan huquqlar"
+
+#, fuzzy
+#~ msgid "All Employees"
+#~ msgstr "Barcha xodimlar"
+
+#, fuzzy
+#~ msgid "Basic rights"
+#~ msgstr "Asosiy huquqlar"
+
+#, fuzzy
+#~ msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
+#~ msgstr ""
+#~ "Xodim: %(employee)s - Sotuv nuqtasi konfiguratsiyasi(lari): %"
+#~ "(config_list)s"
+
+#, fuzzy
+#~ msgid "Employees with basic access"
+#~ msgstr "Asosiy ruxsatga ega xodimlar"
+
+#, fuzzy
+#~ msgid "Employees with manager access"
+#~ msgstr "Menejer ruxsatiga ega xodimlar"
+
+#, fuzzy
+#~ msgid "Employees with minimal access"
+#~ msgstr "Minimal ruxsatga ega xodimlar"
+
+#, fuzzy
+#~ msgid "If left empty, all employees can log in to PoS"
+#~ msgstr ""
+#~ "Agar bo‘sh qoldirilsa, barcha xodimlar Sotuv nuqtasiga kirishi mumkin"
+
+#, fuzzy
+#~ msgid "Minimal rights"
+#~ msgstr "Minimal huquqlar"
+
+#, fuzzy
+#~ msgid "You are not allowed to change the price of a product."
+#~ msgstr "Mahsulot narxini o‘zgartirishga ruxsatingiz yo‘q."
+
+#, fuzzy
+#~ msgid ""
+#~ "You cannot delete an employee that may be used in an active PoS session, "
+#~ "close the session(s) first: \n"
+#~ msgstr ""
+#~ "Faol POS seansida ishtirok etayotgan xodimni o‘chira olmaysiz, avval "
+#~ "seans(lar)ni yakunlang:"
+
+#, fuzzy
+#~ msgid "Closed Register"
+#~ msgstr "Yopilgan kassa"

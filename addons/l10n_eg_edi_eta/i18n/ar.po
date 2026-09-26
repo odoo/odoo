@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 18:11+0000\n"
+"POT-Creation-Date: 2026-09-18 18:19+0000\n"
 "PO-Revision-Date: 2026-08-31 15:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -24,6 +24,29 @@ msgstr ""
 "X-Generator: Weblate 2026.8.1\n"
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid ""
+"\n"
+"                        The product description exceeds the ETA limit of 500 "
+"characters (including spaces) for some\n"
+"                        invoice lines. Please shorten the description and "
+"try again.\n"
+"                    "
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid ""
+"\n"
+"                    Error: Invoice rejected by ETA\n"
+"\n"
+"                    [%(code)s] %(message)s %(details)s\n"
+"                "
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:ir.module.module,description:base.module_l10n_eg_edi_eta
 msgid ""
 "\n"
@@ -34,11 +57,47 @@ msgid ""
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid "1. There are three modes available:"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid ""
+"2. After selecting the mode, please go to <span "
+"class=\"o_form_label\">Accounting &gt; Configuration &gt; Journals &gt; "
+"Type=Sales </span>\n"
+"                                set your ETA Branch, ETA Branch ID, and ETA "
+"Activity Code."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_normal_form_view_inherit_l10n_eg_eta_edi
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_template_only_form_view_inherit_l10n_eg_eta_edi
 msgid ""
 "<i class=\"oi text-muted me-1\" data-icon=\"arrow_forward\"/>\n"
 "                                    Check on the ETA portal"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Demo</span> - Internal Odoo validations only "
+"(No credentials or ETA connection required)"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Pre-production (Testing)</span> - Pre-"
+"production credentials needed to connect to ETA testing environment"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Production (Live)</span> - Production "
+"credentials needed to connect to the live ETA environment"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -53,17 +112,36 @@ msgid "<strong>WARNING - This code must match the ETA portal</strong>"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid ""
-"A product description exceeds the ETA limit of 500 characters (including "
-"spaces). Please shorten the description and try again."
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid "API Mode"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid "API Modes"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__account_move__l10n_eg_edi_submission_state__accepted
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__l10n_eg_edi_eta_submission__state__accepted
+msgid "Accepted"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__account_move__l10n_eg_edi_submission_state__test
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__l10n_eg_edi_eta_submission__state__test
+msgid "Accepted (Test)"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_thumb_drive__access_token
 msgid "Access Token"
 msgstr "رمز الوصول "
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_journal__l10n_eg_activity_type_id
+msgid "Activity Code"
+msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_C62
@@ -88,15 +166,14 @@ msgid "Ampere per metre"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "An error occurred in created the ETA invoice, please retry signing"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
 #. odoo-javascript
 #: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "An unexpected error has occurred"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model,name:l10n_eg_edi_eta.model_ir_attachment
+msgid "Attachment"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -150,6 +227,11 @@ msgid "Branch"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_journal__l10n_eg_branch_identifier
+msgid "Branch ID"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_company__l10n_eg_building_no
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_partner__l10n_eg_building_no
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_users__l10n_eg_building_no
@@ -177,8 +259,38 @@ msgid "Bundle"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.l10n_eg_edi_view_out_credit_note_tree_inherit
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.l10n_eg_edi_view_out_invoice_tree_inherit
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_move_form_inherit
+msgid "Cancel (ETA)"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.l10n_eg_edi_cancel_wizard_form
+msgid "Cancel Invoice"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__account_move__l10n_eg_edi_submission_state__cancel
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__l10n_eg_edi_eta_submission__state__cancel
+msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_CA
 msgid "Canister ( Can )"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Cannot cancel an invoice which is already cancelled !"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Cannot fetch PDF if the invoice company's ETA API mode is in Demo."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -212,14 +324,18 @@ msgid "Centimeter ( cm )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
-msgid ""
-"Check to start sending invoices to your e-invoicing production environment"
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.eg_partner_address_form
+msgid "City"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.eg_partner_address_form
-msgid "City"
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid "Client ID"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.l10n_eg_edi_cancel_wizard_form
+msgid "Close"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -266,6 +382,8 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_activity_type__create_uid
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_cancel_wizard__create_uid
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__create_uid
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_thumb_drive__create_uid
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_uom_code__create_uid
 msgid "Created by"
@@ -273,6 +391,8 @@ msgstr "أنشئ بواسطة"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_activity_type__create_date
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_cancel_wizard__create_date
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__create_date
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_thumb_drive__create_date
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_uom_code__create_date
 msgid "Created on"
@@ -339,10 +459,18 @@ msgid "Decitonne"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_edi_format__display_name
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__res_company__l10n_eg_edi_api_mode__demo
+msgid "Demo"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_journal__display_name
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_activity_type__display_name
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_cancel_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__display_name
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_thumb_drive__display_name
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_uom_code__display_name
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_product_product__display_name
@@ -356,15 +484,33 @@ msgid "Display Name"
 msgstr "اسم العرض "
 
 #. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "Document Cancelled"
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__eta_document_longid
+msgid "Document Long ID"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_uuid
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_uuid
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__eta_document_uuid
 msgid "Document UUID"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Document is cancelled."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Document is rejected. Please check it and try again."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Document successfully accepted!"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -373,28 +519,16 @@ msgid "Dozen"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model,name:l10n_eg_edi_eta.model_account_edi_format
-msgid "EDI format"
-msgstr "صيغة EDI "
-
-#. module: l10n_eg_edi_eta
 #: model:ir.ui.menu,name:l10n_eg_edi_eta.account_eta_menu
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_account_journal_form_inherit_l10n_eg_edi
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_move_form_inherit
 msgid "ETA"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
-msgid "ETA API Integration"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_journal__l10n_eg_activity_type_id
-msgid "ETA Activity Code"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_journal__l10n_eg_branch_identifier
-msgid "ETA Branch ID"
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "ETA Cancel"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -409,18 +543,14 @@ msgid "ETA Client ID"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_company__l10n_eg_client_secret
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_config_settings__l10n_eg_client_secret
+msgid "ETA Client Secret"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_product_product__l10n_eg_eta_code
 msgid "ETA Code"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_move_form_inherit
-msgid "ETA E-Invoice"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
-msgid "ETA E-Invoicing Settings"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -429,6 +559,12 @@ msgstr ""
 msgid ""
 "ETA Field for GS1/EGS product codes. Please use the barcode field to store "
 "GS1/EGS ETA code if possible"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_company__l10n_eg_edi_api_mode
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_config_settings__l10n_eg_edi_api_mode
+msgid "ETA Invoice Sending Mode"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -444,23 +580,44 @@ msgid "ETA Long ID"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_edi_api_mode
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_edi_api_mode
+msgid "ETA Mode"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_qr_code
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_qr_code
 msgid "ETA QR Code"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_company__l10n_eg_client_secret
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_config_settings__l10n_eg_client_secret
-msgid "ETA Secret"
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_cancel_wizard__l10n_eg_eta_cancellation_reason
+msgid "ETA Reason"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid ""
-"ETA Submission Failed: Customer Reference exceeds the ETA limit of 100 "
-"characters (including spaces). Please shorten the description and try again."
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_edi_submission_state
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_edi_submission_state
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.l10n_eg_edi_view_account_invoice_filter
+msgid "ETA State"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model,name:l10n_eg_edi_eta.model_l10n_eg_edi_eta_submission
+msgid "ETA Submission Details"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_eta_submission_ids
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_eta_submission_ids
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_move_form_inherit
+msgid "ETA Submissions"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.l10n_eg_edi_view_account_invoice_filter
+msgid "ETA Test"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -486,18 +643,23 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-msgid "ETA invoice has been received"
+msgid "ETA_INVOICE_DOC_%s"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-msgid "ETA_INVOICE_DOC_%s"
+msgid "ETA_INVOICE_PDF_%s"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_eta
 msgid "Egypt E-Invoicing"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid "Egypt E-Invoicing (ETA)"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -512,19 +674,27 @@ msgid "Egypt Tax Authority Invoice Integration"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_account_journal_form_inherit_l10n_eg_edi
-msgid "Egyptian ETA settings"
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Egyptian Tax authority PDF invoice generated for %s."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-msgid "Egyptian Tax authority JSON invoice generated for %s."
+msgid "Error occured when trying to cancel invoice: [%(code)s] %(message)s"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
-msgid "Enter your API credentials to enable ETA E-Invoicing."
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Error occured while fetching access token: [%(code)s] %(message)s"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/eta_submission.py:0
+msgid "Error occured while trying to retry sending invoice: %s"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -540,8 +710,46 @@ msgid "Error trying to connect to the middleware. Is the middleware running?"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid ""
+"Error: Invoice could not be signed.\n"
+"Cannot connect to the middleware"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid ""
+"Failed to authenticate with the ETA server. Please verify your ETA "
+"credentials!"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/lib/eta_client.py:0
+msgid "Failed to connect to ETA. Please try again later."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Failed to fetch PDFs for some invoice(s)"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_FAR
 msgid "Farad ( F )"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.actions.server,name:l10n_eg_edi_eta.action_l10n_eg_get_invoice_pdf
+msgid "Fetch PDF (ETA)"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__eta_json_filename
+msgid "File"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -552,11 +760,6 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_GPT
 msgid "Gallon per thousand"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_move_form_inherit
-msgid "Get ETA Invoice PDF"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -620,10 +823,13 @@ msgid "Hydraulic Horse Power"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_edi_format__id
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_journal__id
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_ir_attachment__id
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_activity_type__id
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_cancel_wizard__id
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__id
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_thumb_drive__id
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_uom_code__id
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_product_product__id
@@ -637,20 +843,39 @@ msgid "ID"
 msgstr "المُعرف"
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_company__l10n_eg_production_env
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_config_settings__l10n_eg_production_env
-msgid "In Production Environment"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_INH
 msgid "Inch ( “” )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_company__l10n_eg_invoicing_threshold
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_config_settings__l10n_eg_invoicing_threshold
-msgid "Invoicing Threshold"
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/lib/eta_client.py:0
+msgid "Invalid URL schema. Please check the URL and try again."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__move_id
+msgid "Invoice"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid ""
+"Invoice cancelled on ETA: \n"
+"%s"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Invoice needs to be signed before ETA submission."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_is_signed
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_is_signed
+msgid "Is Signed"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -734,13 +959,9 @@ msgid "Kilowatt ( KW )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_is_signed
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_is_signed
-msgid "L10N Eg Is Signed"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_activity_type__write_uid
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_cancel_wizard__write_uid
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__write_uid
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_thumb_drive__write_uid
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_uom_code__write_uid
 msgid "Last Updated by"
@@ -748,6 +969,8 @@ msgstr "آخر تحديث بواسطة"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_activity_type__write_date
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_cancel_wizard__write_date
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__write_date
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_thumb_drive__write_date
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_uom_code__write_date
 msgid "Last Updated on"
@@ -905,6 +1128,11 @@ msgid "Months ( Months )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_cancel_wizard__move_ids
+msgid "Move"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #. odoo-javascript
 #: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid ""
@@ -945,6 +1173,18 @@ msgid "No drive found - Make sure the thumb drive is correctly inserted"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "No valid Egyptian invoices found for cancellation."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "No valid Egyptian invoices found for fetching PDFs."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_IE
 msgid "Number of Persons ( PRS )"
 msgstr ""
@@ -970,14 +1210,35 @@ msgid "Ohm ( Ohm )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid ""
+"Only invoices from one company can be signed at a time.\n"
+"                        Please select invoices from a single company to sign "
+"and send to ETA."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_ONZ
 msgid "Ounce ( oz )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "PDF Document is not available"
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "PDF Invoice fetched successfully from ETA."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "PDFs fetched successfully from ETA."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "PDFs not fetched"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1022,26 +1283,40 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "Please add all the required fields in the branch details"
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Please configure Client ID and Secret Key for the company %s."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "Please add all the required fields in the customer details"
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Please configure Egyptian ETA Settings on the Journal(s)."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "Please configure the API domain from the system parameters"
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Please fill in the address details for the following Journal Branches"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "Please configure the token domain from the system parameters"
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Please fill in the address details for the following partners."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Please make sure that following invoice lines have a product in them."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid ""
+"Please make sure that following products have barcode or ETA Item code set "
+"on them."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1055,39 +1330,20 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "Please make sure the EGS/GS1 Barcode is set correctly on all products"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "Please make sure the invoice is signed"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "Please make sure the invoice lines UoM codes are all set up correctly"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid ""
-"Please make sure the invoice lines taxes all have the correct ETA tax code"
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Please make sure that there is tax in each invoice lines."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-msgid "Please only sign invoices from one company at a time"
+msgid "Please only sign invoices from one company at a time."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "Please set the all the ETA information on the invoice's journal"
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Please set the invoice date to be either less than or equal to today."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1108,6 +1364,11 @@ msgid "Pound per square foot"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__res_company__l10n_eg_edi_api_mode__preproduction
+msgid "Pre-production (Testing)"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:ir.model,name:l10n_eg_edi_eta.model_product_template
 msgid "Product"
 msgstr "المنتج"
@@ -1123,8 +1384,40 @@ msgid "Product Variant"
 msgstr "متغير المنتج"
 
 #. module: l10n_eg_edi_eta
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__res_company__l10n_eg_edi_api_mode__production
+msgid "Production (Live)"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_move_form_inherit
+msgid "Re-Sign"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_RL
 msgid "Reel"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__account_move__l10n_eg_edi_submission_state__rejected
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__l10n_eg_edi_eta_submission__state__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/lib/eta_client.py:0
+msgid "Request to ETA timed out. Please try again later"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__message
+msgid "Response Message"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_move_form_inherit
+msgid "Retry"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1138,15 +1431,35 @@ msgid "Sack"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid "Secret Key"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid "Select the ETA Invoice sending mode"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move_send.py:0
+msgid "Send the e-invoice to Egyptian EDI (ETA) Pre-production environment"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move_send.py:0
+msgid "Send the e-invoice to Egyptian EDI (ETA) Production environment"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_SET
 msgid "Set"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
-msgid ""
-"Set the threshold amount for invoices that won't require the VAT ID of "
-"individuals when invoicing"
+#: model:ir.model,name:l10n_eg_edi_eta.model_account_move_send
+msgid "Shared Send Invoice Wizard Functions"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1161,18 +1474,24 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_move_form_inherit
-msgid "Sign Invoice"
+msgid "Sign (ETA)"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.actions.server,name:l10n_eg_edi_eta.action_sign_invoices
-msgid "Sign invoices"
+#: model:ir.actions.server,name:l10n_eg_edi_eta.action_l10n_eg_sign_invoices
+msgid "Sign Invoice (ETA)"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_signing_time
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_signing_time
 msgid "Signing Time"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move_send.py:0
+msgid "Simulate sending e-invoice to ETA."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1216,6 +1535,7 @@ msgid "Standard cubic foot"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__state
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.eg_partner_address_form
 msgid "State"
 msgstr ""
@@ -1236,8 +1556,12 @@ msgid "Street..."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_submission_number
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_submission_number
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_move_form_inherit
+msgid "Submission Date"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__eta_submission_id
 msgid "Submission ID"
 msgstr ""
 
@@ -1247,6 +1571,19 @@ msgstr ""
 msgid ""
 "Submissions to the Egyptian Tax Authority will be silently rejected if this "
 "code does not match the one registered for this item on the ETA portal."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Success: Invoice accepted by ETA."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+#: code:addons/l10n_eg_edi_eta/models/eta_thumb_drive.py:0
+msgid "Success: Invoice signed for ETA"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1286,6 +1623,12 @@ msgid "The secret key provided by the ETA. You can input client secret 1 or 2"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "The selected invoices are not yet valid to be cancelled on ETA."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_product_template__l10n_eg_eta_code
 msgid ""
 "This can be an EGS or GS1 product code, which is needed for the e-invoice.  "
@@ -1301,21 +1644,6 @@ msgid ""
 "The best practice however is to use that code also as barcode and in that "
 "case, you should put it in the Barcode field instead and leave this field "
 "empty. "
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid ""
-"This invoice has been marked as invalid by the ETA. Please check the ETA "
-"website for more information"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid ""
-"This invoice has been sent to the ETA, but we are still awaiting validation"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1341,13 +1669,6 @@ msgid "Thousand piece"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model.fields,help:l10n_eg_edi_eta.field_res_company__l10n_eg_invoicing_threshold
-#: model:ir.model.fields,help:l10n_eg_edi_eta.field_res_config_settings__l10n_eg_invoicing_threshold
-msgid ""
-"Threshold at which you are required to give the VAT number of the customer. "
-msgstr ""
-
-#. module: l10n_eg_edi_eta
 #: model:ir.actions.act_window,name:l10n_eg_edi_eta.action_eta_thumb_drive_tree
 #: model:ir.ui.menu,name:l10n_eg_edi_eta.menu_action_eta_thumb_drive_tree
 msgid "Thumb Drive"
@@ -1361,6 +1682,29 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_TN
 msgid "Tin"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move_send.py:0
+msgid "To ETA"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move_send.py:0
+msgid "To ETA (Demo)"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move_send.py:0
+msgid "To ETA (Pre-production)"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__account_move__l10n_eg_edi_submission_state__to_send
+msgid "To Send"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1411,6 +1755,30 @@ msgid "Vial"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "View Invoices"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "View Journals"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "View Partners"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "View Products"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_VLT
 msgid "Volt ( V )"
 msgstr ""
@@ -1432,6 +1800,11 @@ msgid "Weeks ( Weeks )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model:ir.model,name:l10n_eg_edi_eta.model_l10n_eg_edi_cancel_wizard
+msgid "Wizard to cancel an invoice in ETA"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_YRD
 msgid "Yards ( yd )"
 msgstr ""
@@ -1448,22 +1821,20 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid ""
-"You cannot issue an invoice to a partner with the same VAT number as the "
-"branch."
+#: code:addons/l10n_eg_edi_eta/models/ir_attachment.py:0
+msgid "You cannot delete PDF of invoice which is already sent to ETA."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/ir_attachment.py:0
+msgid "You cannot delete the JSON attachment once invoice is sent to ETA."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.eg_partner_address_form
 msgid "ZIP"
 msgstr "رمز ZIP "
-
-#. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-msgid "an Unknown error has occurred"
-msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_BAR
@@ -1484,6 +1855,15 @@ msgstr ""
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_LB
 msgid "pounds"
 msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "view branches"
+msgstr ""
+
+#~ msgid "EDI format"
+#~ msgstr "صيغة EDI "
 
 #~ msgid "Interval"
 #~ msgstr "الفترة"

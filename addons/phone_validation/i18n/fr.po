@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:44+0000\n"
+"POT-Creation-Date: 2026-09-25 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 13:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -58,6 +58,21 @@ msgstr "Nécessite une action"
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__active
 msgid "Active"
 msgstr "Actif"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_mail_activity
+msgid "Activity"
+msgstr ""
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_mail_activity_mixin
+msgid "Activity Mixin"
+msgstr ""
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr ""
 
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
@@ -158,6 +173,9 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_activity__display_name
+#: model:ir.model.fields,field_description:phone_validation.field_mail_activity_mixin__display_name
+#: model:ir.model.fields,field_description:phone_validation.field_mail_activity_schedule__display_name
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__display_name
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__display_name
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__display_name
@@ -199,6 +217,9 @@ msgid "Has Message"
 msgstr "A un message"
 
 #. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_activity__id
+#: model:ir.model.fields,field_description:phone_validation.field_mail_activity_mixin__id
+#: model:ir.model.fields,field_description:phone_validation.field_mail_activity_schedule__id
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__id
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__id
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__id
@@ -377,6 +398,11 @@ msgstr "Liste noire des téléphones mixin"
 #: model:ir.model.fields,field_description:phone_validation.field_res_users__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
 msgstr "Téléphone sur liste noire"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_activity_schedule__phone_formatted
+msgid "Phone Formatted"
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_mobile_search

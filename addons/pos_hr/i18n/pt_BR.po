@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 20:45+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -35,32 +35,26 @@ msgid ""
 msgstr ""
 
 #. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_manager_employee_ids
+msgid " Full access, including reporting, cash management, and session close."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_cashier_employee_ids
+msgid ""
+" Full register access. Can process sales, discounts, refunds, and close out "
+"payments."
+msgstr ""
+
+#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Abigal Peterson"
 msgstr "Abigal Peterson"
 
 #. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "Access Denied"
-msgstr "Acesso negado"
-
-#. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__add_report_per_employee
 msgid "Add a report per each employee"
 msgstr "Adicionar um relatório para cada funcionário"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Advanced rights"
-msgstr "Direitos avançados"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "All Employees"
-msgstr "Todos os funcionários"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__logged_employee_ids
@@ -78,10 +72,24 @@ msgid "Bank Statement Line"
 msgstr "Linha de extrato bancário"
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Basic rights"
-msgstr "Direitos básicos"
+#: model:ir.model.fields,help:pos_hr.field_pos_config__restrictive_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_restrictive_employee_ids
+msgid ""
+"Can process sales and close payments, but not apply discounts, refunds, or "
+"cancel orders."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__supervised_employee_ids
+msgid ""
+"Can process sales, but a higher level must approve before payment is closed"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_supervised_employee_ids
+msgid ""
+"Can process sales, but a higher level must approve before payment is closed."
+msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_daily_sales_reports_wizard
@@ -102,7 +110,9 @@ msgstr "Entrada/saída de caixa"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_payment__employee_id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_session__employee_id
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Cashier"
 msgstr "Caixa"
 
@@ -187,49 +197,51 @@ msgid "Employee:"
 msgstr "Empregado:"
 
 #. module: pos_hr
-#. odoo-python
-#: code:addons/pos_hr/models/hr_employee.py:0
-msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
-msgstr "Funcionário: %(employee)s - Configurações do PDV: %(config_list)s \n"
-
-#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_session_form_inherit_pos_hr
 msgid "Employees"
 msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid ""
-"Employees linked to users with the PoS Manager role are automatically added "
-"to this list"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__cashier_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_cashier_employee_ids
+msgid "Employees with cashier level access"
 msgstr ""
-"Funcionários vinculados a usuários com a função Gerente de PDV são "
-"automaticamente adicionados a essa lista"
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
-msgid "Employees with basic access"
-msgstr "Funcionários com acesso básico"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__manager_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_manager_employee_ids
+msgid "Employees with manager level access"
+msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid "Employees with manager access"
-msgstr "Funcionários com acesso gerencial"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__restrictive_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_restrictive_employee_ids
+msgid "Employees with restrictive level access"
+msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__minimal_employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_minimal_employee_ids
-msgid "Employees with minimal access"
-msgstr "Funcionários com acesso mínimo"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__supervised_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_supervised_employee_ids
+msgid "Employees with supervised level access"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
 msgstr "Insira seu PIN"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__manager_employee_ids
+msgid "Full access, including reporting, cash management, and session close."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__cashier_employee_ids
+msgid ""
+"Full register access. Can process sales, discounts, refunds, and close out "
+"payments."
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_account_bank_statement_line__id
@@ -247,14 +259,6 @@ msgstr "Insira seu PIN"
 #: model:ir.model.fields,field_description:pos_hr.field_res_partner__id
 msgid "ID"
 msgstr "ID"
-
-#. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_pos_config__minimal_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
-msgid "If left empty, all employees can log in to PoS"
-msgstr "Se deixado em branco, todos os funcionários poderão fazer login no PDV"
 
 #. module: pos_hr
 #: model:ir.module.module,summary:base.module_pos_hr
@@ -277,8 +281,8 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Minimal rights"
-msgstr "Direitos mínimos"
+msgid "Manager"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
@@ -288,7 +292,7 @@ msgstr "Mais..."
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "No Cashiers"
 msgstr "Sem caixas"
 
@@ -328,7 +332,8 @@ msgstr "Outros"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "PIN not found"
 msgstr "PIN não encontrado"
 
@@ -339,7 +344,7 @@ msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
 msgid "Password?"
 msgstr "Senha?"
 
@@ -390,6 +395,12 @@ msgid "Product Variant"
 msgstr "Variante do produto"
 
 #. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Restrictive"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/components/popups/cashier_selection_popup/cashier_selection_popup.xml:0
 msgid "Select Cashier"
@@ -405,6 +416,12 @@ msgstr "Selecionar funcionário(s)"
 #: model:ir.model,name:pos_hr.model_report_pos_hr_single_employee_sales_report
 msgid "Session sales details for a single employee"
 msgstr "Detalhes de vendas da sessão para um único funcionário"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Supervised"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_session__employee_id
@@ -424,7 +441,7 @@ msgstr "O funcionário que usa a caixa registradora."
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "There is no cashier available."
 msgstr "Não há caixa disponível."
 
@@ -436,25 +453,68 @@ msgstr "Destrancar caixa registradora"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/plugins/access_right_plugin.js:0
+#: code:addons/pos_hr/static/src/app/services/pos_store.js:0
 msgid "Wrong PIN"
 msgstr "PIN incorreto"
-
-#. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "You are not allowed to change the price of a product."
-msgstr "Você não tem permissão para alterar o preço de um produto."
 
 #. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
 msgid ""
-"You cannot delete an employee that may be used in an active PoS session, "
-"close the session(s) first: \n"
+"You cannot delete an employee that may be used in an active PoS session. "
+"Close the session(s) first:\n"
+"Employee: %(employee)s - PoS Config(s): %(config_list)s"
 msgstr ""
-"Não é possível excluir um funcionário que pode estar sendo usado em uma "
-"sessão de PDV ativa. Encerre as sessões primeiro: \n"
 
-msgid "Closed Register"
-msgstr "Caixa registradora fechada"
+#~ msgid "Access Denied"
+#~ msgstr "Acesso negado"
+
+#~ msgid "Advanced rights"
+#~ msgstr "Direitos avançados"
+
+#~ msgid "All Employees"
+#~ msgstr "Todos os funcionários"
+
+#~ msgid "Basic rights"
+#~ msgstr "Direitos básicos"
+
+#~ msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
+#~ msgstr ""
+#~ "Funcionário: %(employee)s - Configurações do PDV: %(config_list)s \n"
+
+#~ msgid ""
+#~ "Employees linked to users with the PoS Manager role are automatically "
+#~ "added to this list"
+#~ msgstr ""
+#~ "Funcionários vinculados a usuários com a função Gerente de PDV são "
+#~ "automaticamente adicionados a essa lista"
+
+#~ msgid "Employees with basic access"
+#~ msgstr "Funcionários com acesso básico"
+
+#~ msgid "Employees with manager access"
+#~ msgstr "Funcionários com acesso gerencial"
+
+#~ msgid "Employees with minimal access"
+#~ msgstr "Funcionários com acesso mínimo"
+
+#~ msgid "If left empty, all employees can log in to PoS"
+#~ msgstr ""
+#~ "Se deixado em branco, todos os funcionários poderão fazer login no PDV"
+
+#~ msgid "Minimal rights"
+#~ msgstr "Direitos mínimos"
+
+#~ msgid "You are not allowed to change the price of a product."
+#~ msgstr "Você não tem permissão para alterar o preço de um produto."
+
+#~ msgid ""
+#~ "You cannot delete an employee that may be used in an active PoS session, "
+#~ "close the session(s) first: \n"
+#~ msgstr ""
+#~ "Não é possível excluir um funcionário que pode estar sendo usado em uma "
+#~ "sessão de PDV ativa. Encerre as sessões primeiro: \n"
+
+#~ msgid "Closed Register"
+#~ msgstr "Caixa registradora fechada"

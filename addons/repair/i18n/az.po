@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 15:28+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -497,11 +497,6 @@ msgid "End Repair"
 msgstr ""
 
 #. module: repair
-#: model:ir.model.fields,help:repair.field_repair_order__tracking
-msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr "Anbarınızda  saxlanıla bilən məhsulunun izlənməsini təmin edin."
-
-#. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Exp %s"
@@ -622,6 +617,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:repair.action_repair_move_lines
 msgid "Inventory Moves"
 msgstr "İNventar Hərəkətləri"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__invisible
+msgid "Invisible"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_ids
@@ -915,6 +915,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Please set the first Serial Number or a default sequence"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__primary
+msgid "Primary"
 msgstr ""
 
 #. module: repair
@@ -1310,6 +1315,11 @@ msgid "Search Repair Orders"
 msgstr ""
 
 #. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__secondary
+msgid "Secondary"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__sequence
 msgid "Sequence"
 msgstr ""
@@ -1396,6 +1406,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_tree
 msgid "Tags"
 msgstr "Etiketlər"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__tracking
+msgid ""
+"Technical field holding the tracking method. False on a storable product "
+"means it's tracked by quantity only."
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
@@ -1565,6 +1582,11 @@ msgid "Urgent"
 msgstr "Təcili"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__validate_button_style
+msgid "Validate Button Style"
+msgstr ""
+
+#. module: repair
 #: model:ir.model,name:repair.model_stock_warehouse
 msgid "Warehouse"
 msgstr "Anbar"
@@ -1652,11 +1674,14 @@ msgstr ""
 msgid "text"
 msgstr ""
 
-msgid "Check availability"
-msgstr "Mövcudluğunu yoxlayın"
+#~ msgid "Ensure the traceability of a storable product in your warehouse."
+#~ msgstr "Anbarınızda  saxlanıla bilən məhsulunun izlənməsini təmin edin."
 
-msgid "Website Messages"
-msgstr "Veb sayt Mesajları"
+#~ msgid "Check availability"
+#~ msgstr "Mövcudluğunu yoxlayın"
 
-msgid "Website communication history"
-msgstr "Veb saytın kommunikasiya tarixçəsi"
+#~ msgid "Website Messages"
+#~ msgstr "Veb sayt Mesajları"
+
+#~ msgid "Website communication history"
+#~ msgstr "Veb saytın kommunikasiya tarixçəsi"

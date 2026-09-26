@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-25 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 17:32+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-4/sale/"
@@ -416,8 +416,7 @@ msgid ""
 "                                                    <span style=\"white-"
 "space: nowrap;\">\n"
 "                                                        <t t-"
-"if=\"hasattr(object, 'website_id') and "
-"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"if=\"object.company_price_include == 'tax_excluded'\">\n"
 "                                                            <t t-"
 "out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
 "10.00</t>\n"
@@ -501,15 +500,6 @@ msgid ""
 "align=\"left\"><strong>Total</strong></td>\n"
 "                                    <td style=\"width: 80%; padding-top: "
 "4px; border-top: 1px solid #343a40; font-weight: bold; \" align=\"right\">\n"
-"                                        <span style=\"display: inline-block; "
-"margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-"
-"radius: 4px;\">\n"
-"                                            <span t-attf-style=\"color: "
-"#{color}; font-weight: bold;\">\n"
-"                                                <t t-"
-"out=\"tx_sudo.provider_id.sudo().name or ''\"/>\n"
-"                                            </span>\n"
-"                                        </span>\n"
 "                                        <span style=\"opacity: 0.9;\"><t t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
 "10.00</t></span>\n"
@@ -797,7 +787,7 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<i class=\"oi me-1\" data-icon=\"refresh\"/>Order Again"
+msgid "<i class=\"oi me-1\" data-icon=\"redo\"/>Order Again"
 msgstr ""
 
 #. module: sale
@@ -925,13 +915,6 @@ msgid ""
 msgstr ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid ""
-"<span>1 Units</span>\n"
-"                                            <span>×</span>"
-msgstr ""
 
 #. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
@@ -1217,7 +1200,6 @@ msgstr "조치 필요"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_ids
-#: model:ir.ui.menu,name:sale.sale_menu_config_activities
 msgid "Activities"
 msgstr "활동"
 
@@ -1233,7 +1215,6 @@ msgstr "활동 예외 장식"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_plans_ids
-#: model:ir.ui.menu,name:sale.sale_menu_config_activity_plan
 msgid "Activity Plans"
 msgstr "활동 계획"
 
@@ -1249,19 +1230,8 @@ msgstr "활동 유형 아이콘"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
-#: model:ir.ui.menu,name:sale.sale_menu_config_activity_type
 msgid "Activity Types"
 msgstr "활동 유형"
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
-msgid ""
-"Activity plans are used to assign a list of activities in just a few clicks\n"
-"                (e.g. \"Delivery scheduling\", \"Order Payment Follow-"
-"up\", ...)"
-msgstr ""
-"작업 계획은 몇 번의 클릭만으로 작업 목록을 빠르게 할당하는 데 활용됩니다.\n"
-"                (예: \"배송 예약\", \"주문 결제 후속 조치\", ...)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1387,11 +1357,6 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay to avoid double payment or double invoicing."
 msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Amount paid:"
-msgstr "결제 금액:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -1698,11 +1663,6 @@ msgid "Catalog"
 msgstr "카탈로그"
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_product_categories
-msgid "Categories"
-msgstr "카테고리"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Category"
 msgstr "카테고리"
@@ -1763,9 +1723,10 @@ msgid "Collapse Prices"
 msgstr "가격 접기"
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_product_combos
-msgid "Combo Choices"
-msgstr "콤보 선택 사항"
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/combo_menu_widget.xml:0
+msgid "Combo"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
@@ -1926,11 +1887,6 @@ msgstr "청구서 발행"
 #: model:ir.model,website_form_label:sale.model_res_partner
 msgid "Create a Customer"
 msgstr "고객 만들기"
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
-msgid "Create a Sale Order Activity Plan"
-msgstr "판매 주문 활동 계획 만들기"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -2164,6 +2120,7 @@ msgstr ""
 
 #. module: sale
 #. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Delete"
 msgstr "삭제"
@@ -2351,6 +2308,8 @@ msgid "Discount:"
 msgstr "할인:"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/discount_menu_widget.xml:0
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_discount_per_so_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discounts"
@@ -2480,11 +2439,6 @@ msgid "Down Payments"
 msgstr "선결제 허용"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Down payment"
-msgstr "선결제 금액"
-
-#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
 msgstr "선결제 (고정 금액)"
@@ -2515,6 +2469,11 @@ msgstr "선결제 청구서"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "Down payment of %s%%"
 msgstr "선결제 금액: %s%%"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Down payment:"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -2581,6 +2540,11 @@ msgstr ""
 #: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
 msgstr "사용자 지정 값 입력"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Enter a description..."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2829,6 +2793,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
 msgstr "선결제된 금액이 있습니다."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Hide Composition"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Hide Prices"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_accrued_orders_wizard__id
@@ -3239,6 +3213,14 @@ msgstr ""
 "%s"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+msgid ""
+"It seems that there is already a payment in progress for your order; you "
+"can't modify it anymore."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
 msgid "Journal"
 msgstr ""
@@ -3322,6 +3304,11 @@ msgid "Let’s create a beautiful quotation in a few clicks ."
 msgstr "완벽한 견적서를 클릭 몇 번으로 완성해 보세요."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Line"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__show_sol_numbers
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__show_sol_numbers
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_sol_numbers
@@ -3372,18 +3359,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
-msgid "M%:"
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
-msgid "M:"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
@@ -3411,6 +3386,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
 msgid "Manual"
 msgstr "수동"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/discount_menu_widget.xml:0
+msgid "Manual Discount"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__manual
@@ -3591,6 +3572,12 @@ msgstr "다음 활동 유형"
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__no
 msgid "No"
 msgstr "없음"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/combo_menu_widget.xml:0
+msgid "No Combo Product Available"
+msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -3934,6 +3921,11 @@ msgstr "견적용 청구서"
 #: code:addons/sale/static/src/js/product/product.js:0
 msgid "Packaging"
 msgstr "포장중"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Paid:"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
@@ -4581,11 +4573,6 @@ msgid "Sale Order Count"
 msgstr "판매 주문 수"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
-msgid "Sale Order Plans"
-msgstr "판매 주문 계획"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
 msgstr "판매 주문 경고"
@@ -4789,11 +4776,6 @@ msgid "Sales Team"
 msgstr "영업팀"
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.sales_team_config
-msgid "Sales Teams"
-msgstr "영업팀"
-
-#. module: sale
 #: model:ir.module.module,summary:base.module_sale
 msgid "Sales internal machinery"
 msgstr ""
@@ -4862,6 +4844,7 @@ msgstr "판매 주문 검색"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section"
 msgstr "구분"
 
@@ -4871,8 +4854,6 @@ msgid "Section Name (eg. Products, Services)"
 msgstr "구분명 (예. 제품, 서비스)"
 
 #. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/section_qty_field/section_qty_field.js:0
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__section_qty
 msgid "Section Quantity"
 msgstr ""
@@ -4886,12 +4867,6 @@ msgstr "섹션 요약"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__section_uom_id
 msgid "Section Unit of Measure"
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/section_uom_field/section_uom_field.js:0
-msgid "Section UoM"
 msgstr ""
 
 #. module: sale
@@ -5283,6 +5258,11 @@ msgid ""
 msgstr ""
 "%(team_name)s 팀에 %(sale_order_count)s개의 판매주문서가 활성화 상태입니다. "
 "확인 후 취소하거나 보관 처리하시기 바랍니다."
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.sales_team_config
+msgid "Teams"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
@@ -5840,12 +5820,6 @@ msgid "Unit Price"
 msgstr "단가"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Unit Price:"
-msgstr "단가"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.uom_uom_menu_list
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Units & Packagings"
 msgstr "단위 & 포장"
@@ -6283,6 +6257,40 @@ msgid ""
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
+
+#~ msgid ""
+#~ "Activity plans are used to assign a list of activities in just a few "
+#~ "clicks\n"
+#~ "                (e.g. \"Delivery scheduling\", \"Order Payment Follow-"
+#~ "up\", ...)"
+#~ msgstr ""
+#~ "작업 계획은 몇 번의 클릭만으로 작업 목록을 빠르게 할당하는 데 활용됩니"
+#~ "다.\n"
+#~ "                (예: \"배송 예약\", \"주문 결제 후속 조치\", ...)"
+
+#~ msgid "Amount paid:"
+#~ msgstr "결제 금액:"
+
+#~ msgid "Categories"
+#~ msgstr "카테고리"
+
+#~ msgid "Combo Choices"
+#~ msgstr "콤보 선택 사항"
+
+#~ msgid "Create a Sale Order Activity Plan"
+#~ msgstr "판매 주문 활동 계획 만들기"
+
+#~ msgid "Down payment"
+#~ msgstr "선결제 금액"
+
+#~ msgid "Sale Order Plans"
+#~ msgstr "판매 주문 계획"
+
+#~ msgid "Sales Teams"
+#~ msgstr "영업팀"
+
+#~ msgid "Unit Price:"
+#~ msgstr "단가"
 
 #~ msgid "Margins"
 #~ msgstr "마진"

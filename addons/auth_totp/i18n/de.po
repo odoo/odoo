@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-09-09 14:11+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
@@ -100,11 +100,6 @@ msgid "Add this key in your Authenticator app"
 msgstr "Fügen Sie diesen Schlüssel in Ihre Authenticator-App ein"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Authentication Code"
-msgstr "Authentifizierungscode"
-
-#. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_device
 msgid "Authentication Device"
 msgstr "Gerät zur Authentifizierung"
@@ -124,6 +119,13 @@ msgstr "Abbrechen"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
 msgstr "Scannen klappt nicht?"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"Check your Authenticator app for your code.\n"
+"                        <br/>"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
@@ -189,6 +191,16 @@ msgid "Enable Two-Factor Authentication"
 msgstr "Zwei-Faktor-Authentifizierung aktivieren"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter code"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter verification code"
+msgstr ""
+
+#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
 msgid "Expiration Date"
 msgstr "Ablaufdatum"
@@ -229,11 +241,6 @@ msgstr "Zuletzt aktualisiert von"
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_date
 msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Learn More"
-msgstr "Mehr erfahren"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__limit_type
@@ -292,17 +299,6 @@ msgid "The verification code should only contain numbers"
 msgstr "Der Verifizierungscode sollte nur Zahlen enthalten"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid ""
-"To login, enter below the six-digit authentication code provided by your "
-"Authenticator app.\n"
-"                        <br/>"
-msgstr ""
-"Geben Sie zur Anmeldung unten den sechsstelligen Authentifizierungscode ein, "
-"der von Ihrer Authentifizierungsapp bereitgestellt wird.\n"
-"<br/>"
-
-#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_last_counter
 msgid "Totp Last Counter"
 msgstr "Letzter Totp-Zähler"
@@ -329,7 +325,6 @@ msgid "Two-Factor Authentication Activation"
 msgstr "Aktivierung der Zwei-Faktor-Authentifizierung"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
@@ -453,7 +448,20 @@ msgstr ""
 "Sie haben das Limit für die Code-Verifizierungen für Ihr Konto erreicht. "
 "Versuchen Sie es später erneut."
 
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "e.g. 123456"
-msgstr "z. B. 123456"
+#~ msgid "Authentication Code"
+#~ msgstr "Authentifizierungscode"
+
+#~ msgid "Learn More"
+#~ msgstr "Mehr erfahren"
+
+#~ msgid ""
+#~ "To login, enter below the six-digit authentication code provided by your "
+#~ "Authenticator app.\n"
+#~ "                        <br/>"
+#~ msgstr ""
+#~ "Geben Sie zur Anmeldung unten den sechsstelligen Authentifizierungscode "
+#~ "ein, der von Ihrer Authentifizierungsapp bereitgestellt wird.\n"
+#~ "<br/>"
+
+#~ msgid "e.g. 123456"
+#~ msgstr "z. B. 123456"

@@ -15,10 +15,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-09-09 13:58+0000\n"
+"PO-Revision-Date: 2026-09-21 13:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/sms/"
-"de/>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/sms/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +34,11 @@ msgid ""
 "\n"
 "The service is provided by the In App Purchase Odoo platform.\n"
 msgstr ""
+"\n"
+"Dieses Modul bietet einen Rahmen für SMS-Textnachrichten\n"
+"--------------------------------------------------------\n"
+"\n"
+"Der Dienst wird durch die Odoo-Plattform für In-App-Käufe bereitgestellt.\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -126,7 +130,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "<span class=\"text-muted\">To</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">An</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -155,7 +159,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "A message can only be scheduled in comment mode"
-msgstr ""
+msgstr "Eine Nachricht kann nur im Kommentar-Modus geplant werden"
 
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
@@ -166,7 +170,7 @@ msgstr "Es besteht bereits eine UUID für diesen Datensatz"
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "A scheduled date is needed to schedule a message"
-msgstr ""
+msgstr "Um eine Nachricht zu planen, muss ein geplantes Datum angegeben werden."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__account_id
@@ -333,7 +337,7 @@ msgstr "Länderspezifische Registrierung erforderlich"
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Create an SMS Template"
-msgstr ""
+msgstr "SMS-Vorlage erstellen"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
@@ -450,12 +454,12 @@ msgstr "Duplizieren"
 #. odoo-python
 #: code:addons/sms/models/mail_scheduled_message.py:0
 msgid "Edit Scheduled SMS"
-msgstr ""
+msgstr "Geplante SMS bearbeiten"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_scheduled_message__send_method__email
 msgid "Email"
-msgstr ""
+msgstr "E-Mail"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
@@ -586,7 +590,7 @@ msgstr "Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Impossible to determine the model for the template."
-msgstr ""
+msgstr "Das Modell für die Vorlage kann nicht ermittelt werden."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
@@ -841,7 +845,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Please provide a name for the template."
-msgstr ""
+msgstr "Bitte geben Sie einen Namen für die Vorlage an."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
@@ -1113,7 +1117,7 @@ msgstr "SMS-Vorlagen wurden zurückgesetzt"
 #. module: sms
 #: model:ir.module.module,summary:base.module_sms
 msgid "SMS Text Messaging"
-msgstr ""
+msgstr "SMS-Textnachrichten"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
@@ -1128,7 +1132,7 @@ msgstr "SMS-Inhalt"
 #. module: sms
 #: model:ir.module.module,shortdesc:base.module_sms
 msgid "SMS gateway"
-msgstr ""
+msgstr "SMS-Gateway"
 
 #. module: sms
 #. odoo-python
@@ -1159,12 +1163,12 @@ msgstr "Bereinigte Nummer"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
 msgid "Save Template"
-msgstr ""
+msgstr "Vorlage speichern"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
 msgid "Save as SMS Template"
-msgstr ""
+msgstr "Als SMS-Vorlage speichern"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1174,13 +1178,13 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Geplantes Datum"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_scheduled_message
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mail_scheduled_message_id
 msgid "Scheduled Message"
-msgstr ""
+msgstr "Geplante Nachricht"
 
 #. module: sms
 #. odoo-python

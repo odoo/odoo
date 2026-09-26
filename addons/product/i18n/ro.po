@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-25 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 17:04+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -82,27 +82,21 @@ msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
 msgstr "%(percentage)s %% %(discount_type)s pe %(base)s %(extra)s"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_2x7_label
+#: model_terms:ir.ui.view,arch_db:product.barcode_4x12_label
+#: model_terms:ir.ui.view,arch_db:product.barcode_4x7_label
+#: model_terms:ir.ui.view,arch_db:product.barcode_dymo_label
+#: model_terms:ir.ui.view,arch_db:product.qr_2x7_label
+#: model_terms:ir.ui.view,arch_db:product.report_label_barcode
 #: model_terms:ir.ui.view,arch_db:product.report_label_contour_marks
-#: model_terms:ir.ui.view,arch_db:product.report_simple_label2x7
-#: model_terms:ir.ui.view,arch_db:product.report_simple_label4x12
-#: model_terms:ir.ui.view,arch_db:product.report_simple_label4x12_gs1
-#: model_terms:ir.ui.view,arch_db:product.report_simple_label4x7
-#: model_terms:ir.ui.view,arch_db:product.report_simple_label_dymo
 msgid "&amp;nbsp;"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.report,print_report_name:product.report_product_template_label_2x7
-#: model:ir.actions.report,print_report_name:product.report_product_template_label_4x12
-#: model:ir.actions.report,print_report_name:product.report_product_template_label_4x7
-#: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
+#: model:ir.actions.report,print_report_name:product.action_report_product_label_dymo
+#: model:ir.actions.report,print_report_name:product.action_report_product_label_pdf
 msgid "'Products Labels - %s' % (object.name)"
 msgstr "'Etichete produse - %s' % (object.name)"
-
-#. module: product
-#: model:ir.actions.report,print_report_name:product.report_product_packaging
-msgid "'Products packaging - %s' % (object.uom_id.name)"
-msgstr "'Ambalaje produse - %s' % (object.uom_id.name)"
 
 #. module: product
 #. odoo-python
@@ -110,12 +104,6 @@ msgstr "'Ambalaje produse - %s' % (object.uom_id.name)"
 msgid "(e.g: product description, ebook, legal notice, ...)."
 msgstr ""
 "(de ex: descrierea produsului, carte electronică, notificare legală, ...)."
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
-#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
-msgid ")^FS"
-msgstr ""
 
 #. module: product
 #. odoo-python
@@ -174,6 +162,7 @@ msgid "160x80cm, with large legs"
 msgstr "160x80cm, cu picioare mari"
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__print_format__2x7
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7
 msgid "2 x 7"
 msgstr ""
@@ -199,11 +188,13 @@ msgid "3XL"
 msgstr "3XL"
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__print_format__4x12
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
 msgid "4 x 12"
 msgstr "4 x 12"
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__print_format__4x7
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7
 msgid "4 x 7"
 msgstr ""
@@ -603,6 +594,7 @@ msgid "Allowed Uom"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__zpl_template__alternative
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__alternative
 msgid "Alternative (2.00\" x 1.00\")"
 msgstr ""
@@ -756,6 +748,11 @@ msgid "Attributes & Variants"
 msgstr "Atribute & variante"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__available_packaging_ids
+msgid "Available Packaging"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__free_qty
 msgid ""
 "Available quantity (computed as Quantity On Hand - reserved quantity - "
@@ -788,6 +785,12 @@ msgstr "Înapoi la ofertă"
 #: model:ir.model.fields,field_description:product.field_product_uom__barcode
 msgid "Barcode"
 msgstr "Cod de bare"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__barcode_format__barcode
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__barcode_format__barcode
+msgid "Barcode 1D"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_product_barcodelookup
@@ -826,7 +829,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_label_base
-msgid "Base Product Label Report"
+msgid "Base Label Report"
 msgstr ""
 
 #. module: product
@@ -992,6 +995,18 @@ msgid "Choose the sheet layout to print the labels"
 msgstr "Alegeti aspectul foii pentru a imprima etichetele"
 
 #. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/product_catalog_search_panel.xml:0
+msgid "Clear All"
+msgstr ""
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/product_catalog_search_panel.xml:0
+msgid "Close"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_brand_cocacola
 msgid "Coca-Cola"
 msgstr "Coca-Cola"
@@ -1040,7 +1055,6 @@ msgid "Combo Choice"
 msgstr "Opțiune combo"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_combo_action
 #: model:ir.model.fields,field_description:product.field_product_product__combo_ids
 #: model:ir.model.fields,field_description:product.field_product_template__combo_ids
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_tree
@@ -1515,13 +1529,10 @@ msgstr "Preț redus"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_name
 #: model:ir.model.fields,field_description:product.field_product_uom__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_label_base__display_name
-#: model:ir.model.fields,field_description:product.field_report_product_report_packagingbarcode__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__display_name
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel2x7__display_name
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12__display_name
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x7__display_name
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_dymo__display_name
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_zpl__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_product_label_dymo__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_product_label_pdf__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_product_label_zpl__display_name
 #: model:ir.model.fields,field_description:product.field_res_company__display_name
 #: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product.field_res_country_group__display_name
@@ -1611,6 +1622,7 @@ msgid "Duration"
 msgstr "Durată"
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__print_format__dymo
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
 msgstr "Dymo"
@@ -1762,6 +1774,12 @@ msgstr "Dimensiune fișier"
 #: model:product.attribute.value,name:product.pav_options_file_cabinets
 msgid "File cabinets"
 msgstr "Fișete"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/product_catalog_search_panel.xml:0
+msgid "Filters"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -2027,13 +2045,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__id
 #: model:ir.model.fields,field_description:product.field_product_uom__id
 #: model:ir.model.fields,field_description:product.field_report_product_label_base__id
-#: model:ir.model.fields,field_description:product.field_report_product_report_packagingbarcode__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__id
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel2x7__id
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12__id
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x7__id
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_dymo__id
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_zpl__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_product_label_dymo__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_product_label_pdf__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_product_label_zpl__id
 #: model:ir.model.fields,field_description:product.field_res_company__id
 #: model:ir.model.fields,field_description:product.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product.field_res_country_group__id
@@ -2273,6 +2288,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__zpl_template__jewelry
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__jewelry
 msgid "Jewelry (2.20\" x 0.50\")"
 msgstr ""
@@ -2296,6 +2312,21 @@ msgstr "L'Oréal"
 #: model:product.attribute.value,name:product.pav_brand_LG
 msgid "LG"
 msgstr "LG"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_product_label_dymo
+msgid "Label Dymo Report"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_product_label_pdf
+msgid "Label PDF Report"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_product_label_zpl
+msgid "Label ZPL Report"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -2739,6 +2770,7 @@ msgid "None"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__zpl_template__normal
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__normal
 msgid "Normal (2.25\" x 1.25\")"
 msgstr ""
@@ -2873,6 +2905,12 @@ msgstr ""
 "Ups! '%(fileName)s' nu a fost încărcat deoarece formatul nu este permis."
 
 #. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/product_catalog_search_panel.xml:0
+msgid "Open filters"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__product_id
 #: model:product.attribute,name:product.pa_options
 msgid "Options"
@@ -2927,6 +2965,7 @@ msgid "Overhead shelves"
 msgstr "Etajere suspendate"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__packaging_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__uom_id
 msgid "Packaging"
 msgstr ""
@@ -2937,11 +2976,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_uom_list_view
 msgid "Packaging Barcodes"
 msgstr "Coduri de bare pentru ambalaje"
-
-#. module: product
-#: model:ir.actions.report,name:product.report_product_packaging
-msgid "Packaging Barcodes (PDF)"
-msgstr "Coduri de bare pentru ambalaje (PDF)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_ids
@@ -3187,6 +3221,7 @@ msgstr "Tipăriți"
 #: model:ir.actions.act_window,name:product.action_open_label_layout
 #: model:ir.actions.server,name:product.action_product_print_labels
 #: model:ir.actions.server,name:product.action_product_template_print_labels
+#: model:ir.actions.server,name:product.action_product_uom_print_labels
 msgid "Print Labels"
 msgstr "Tipărire Etichete"
 
@@ -3304,64 +3339,24 @@ msgid "Product Document"
 msgstr "Document produs"
 
 #. module: product
-#: model:ir.actions.report,name:product.report_product_template_label_dymo
-msgid "Product Label (PDF)"
-msgstr "Eticheta produsului (PDF)"
-
-#. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_zpl
 msgid "Product Label (ZPL)"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.report,name:product.report_product_template_label_2x7
-msgid "Product Label 2x7 (PDF)"
-msgstr "Etichetă produs 2x7 (PDF)"
+#: model:ir.actions.report,name:product.action_report_product_label_dymo
+msgid "Product Labels (Dymo)"
+msgstr ""
 
 #. module: product
-#: model:ir.actions.report,name:product.report_product_template_label_4x12
-msgid "Product Label 4x12 (PDF)"
-msgstr "Etichetă produs 4x12 (PDF)"
-
-#. module: product
-#: model:ir.actions.report,name:product.report_product_template_label_4x7
-msgid "Product Label 4x7 (PDF)"
-msgstr "Etichetă produs 4x7 (PDF)"
-
-#. module: product
-#: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
-msgid "Product Label Report"
-msgstr "Raport etichete produs"
-
-#. module: product
-#: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
-msgid "Product Label Report 2x7"
-msgstr "Raport etichetă produs 2x7"
-
-#. module: product
-#: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12
-msgid "Product Label Report 4x12"
-msgstr "Raport etichetă produs 4x12"
-
-#. module: product
-#: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
-msgid "Product Label Report 4x7"
-msgstr "Raport etichetă produs 4x7"
-
-#. module: product
-#: model:ir.model,name:product.model_report_product_report_producttemplatelabel_zpl
-msgid "Product Label Report ZPL"
+#: model:ir.actions.report,name:product.action_report_product_label_pdf
+msgid "Product Labels (PDF)"
 msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Product Name"
 msgstr "Nume produs"
-
-#. module: product
-#: model:ir.model,name:product.model_report_product_report_packagingbarcode
-msgid "Product Packaging Barcode Report"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
@@ -3432,6 +3427,11 @@ msgid "Product Unit of Measure"
 msgstr "Unitate de măsură produs"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__product_uom_ids
+msgid "Product Uom"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__import_attribute_values
 #: model:ir.model.fields,field_description:product.field_product_template__import_attribute_values
 msgid "Product Values"
@@ -3454,13 +3454,6 @@ msgstr "Variantă produs"
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
 msgid "Product Variants"
 msgstr "Variante produs"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/report/product_label_report.py:0
-msgid "Product model not defined, Please contact your administrator."
-msgstr ""
-"Modelul produsului nu este definit, vă rugăm să contactați administratorul."
 
 #. module: product
 #. odoo-python
@@ -3509,6 +3502,11 @@ msgid "Products: %(category)s"
 msgstr "Produse: %(category)s"
 
 #. module: product
+#: model:product.template,description_sale:product.product_product_furniture_product_template
+msgid "Professional furniture assembly service"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
 msgstr "Promoții, cupoane, carduri cadou și programe de loialitate"
@@ -3542,6 +3540,12 @@ msgstr "Descriere achiziție"
 #: model:product.attribute.value,name:product.pav_color_purple
 msgid "Purple"
 msgstr "Mov"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__barcode_format__qr
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__barcode_format__qr
+msgid "QR Code"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -3791,12 +3795,6 @@ msgid "Samsung"
 msgstr ""
 
 #. module: product
-#. odoo-javascript
-#: code:addons/product/static/src/product_name_and_description/product_name_and_description.js:0
-msgid "Search a product"
-msgstr "Caută un produs"
-
-#. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
 msgid "Select"
 msgstr "Selectează"
@@ -3901,6 +3899,7 @@ msgid "Size"
 msgstr "Dimensiune"
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__zpl_template__small
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__small
 msgid "Small (1.25\" x 1.00\")"
 msgstr ""
@@ -4385,6 +4384,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__type
+#: model:ir.model.fields,field_description:product.field_product_label_layout__barcode_format
 msgid "Type"
 msgstr "Tip"
 
@@ -4406,12 +4406,6 @@ msgstr "UM"
 #: model:res.groups,name:product.group_show_uom_price
 msgid "UOM price display"
 msgstr ""
-
-#. module: product
-#. odoo-python
-#: code:addons/product/wizard/product_label_layout.py:0
-msgid "Unable to find report template for %s format"
-msgstr "Nu se poate găsi șablonul de raport pentru formatul %s"
 
 #. module: product
 #. odoo-python
@@ -4942,6 +4936,13 @@ msgstr ""
 "internet către fișierul dvs."
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_uom.py:0
+msgid ""
+"You can only print labels for packaging barcodes using the same packaging."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__image
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__image
 msgid ""
@@ -5140,6 +5141,7 @@ msgid "You need to set a positive quantity."
 msgstr "Trebuie să setați o cantitate pozitivă."
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__print_format__zpl
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__zpl
 msgid "ZPL Labels"
 msgstr ""
@@ -5160,95 +5162,332 @@ msgid "Zara"
 msgstr "Zara"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
-msgid "^FO150,165 ^A0N,25^FH ^FD"
+#: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+msgid "^FO108,29,0^A0N,15,13^TBN,320,16^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
-msgid "^FO150,210 ^A0N,25^FH ^FD("
+#: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+msgid "^FO108,49,0^A0N,15,13^TBN,320,16^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
-msgid "^FO160,185 ^A0N,18^FH ^FD("
+#: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+msgid "^FO108,4^A0N,20^TBN,322,21^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
-msgid "^FO290,165 ^A0N,30^FH ^FD"
+#: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+msgid "^FO12,51^BY2^BCN,64,Y,N,N^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
-msgid "^FO290,50 ^A0N,30^FH ^FD"
+#: model_terms:ir.ui.view,arch_db:product.qr_small_label
+msgid "^FO132,50,0^A0N,16,13^TBN,116,17^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
-msgid "^FO300,200 ^A0N,40^FH ^FD"
+#: model_terms:ir.ui.view,arch_db:product.qr_small_label
+msgid "^FO132,72,0^A0N,16,13^TBN,116,17^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
-msgid "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
+#: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+msgid "^FO155,21^A0N,22^TBN,246,23^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
-msgid "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
+#: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+msgid "^FO155,44,0^A0N,16,13^TBN,246,17^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
-msgid "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
+#: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+msgid "^FO155,64,0^A0N,16,13^TBN,246,17^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
-msgid "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
+#: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+msgid "^FO174,35^A0N,27^TBN,277,28^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
-#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
-#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
-#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
+#: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+msgid "^FO174,66,0^A0N,18,15^TBN,277,19^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+msgid "^FO174,91,0^A0N,18,15^TBN,277,19^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+msgid "^FO18,4^BXN,4,200,20,20^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+msgid "^FO18,8^BY1^BCN,76,Y,N,N^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+msgid "^FO210,29,0^A0N,15,13^TBN,232,16^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+msgid "^FO210,44,0^A0N,15,13^TBN,232,16^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+msgid "^FO210,8,0^A0N,20^TBN,232,21^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_small_label
+msgid "^FO248,145,1^A0N,25^TBN,108,26^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_small_label
+msgid "^FO248,170,1^A0N,14^TBN,108,15^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+msgid "^FO249,151,1^A0N,14^TBN,108,15^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+msgid "^FO249,151,1^A0N,25^TBN,108,26^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+msgid "^FO249,176,1^A0N,14^TBN,108,15^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+msgid "^FO30,46^BY1^BCN,70,Y,N,N^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+msgid "^FO30,54^BY2^BCN,80,Y,N,N^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+msgid "^FO401,135,1^A0N,30^TBN,187,31^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+msgid "^FO401,153,1^A0N,30^TBN,187,31^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+msgid "^FO401,156,1^A0N,16^TBN,187,17^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+msgid "^FO401,160,1^A0N,16^TBN,187,17^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+msgid "^FO401,178,1^A0N,16^TBN,187,17^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+msgid "^FO435,64,1^A0N,24^TBN,201,25^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+msgid "^FO435,86,1^A0N,12^TBN,201,13^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+msgid "^FO442,60,1^A0N,24^TBN,201,25^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+msgid "^FO442,84,1^A0N,12^TBN,201,13^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+msgid "^FO451,160,1^A0N,38^TBN,165,40^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+msgid "^FO451,195,1^A0N,18^TBN,165,19^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+msgid "^FO452,188,1^A0N,18^TBN,165,19^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+msgid "^FO452,188,1^A0N,38^TBN,165,40^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+msgid "^FO452,223,1^A0N,18^TBN,165,19^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+msgid "^FO5,151^A0N,14,12^TBN,102,15^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+msgid "^FO5,156^A0N,16,13^TBN,172,17^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+msgid "^FO5,166^A0N,14,12^TBN,102,15^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+msgid "^FO5,173^A0N,16,13^TBN,172,17^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+msgid "^FO5,188^A0N,18,15^TBN,195,19^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+msgid "^FO5,208^A0N,18,15^TBN,195,19^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+msgid "^FO5,21^BXN,7,200,20,20^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+msgid "^FO6,35^BXN,8,200,20,20^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_small_label
+msgid "^FO6,46^BXN,6,200,20,20^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+#: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+#: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+#: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+#: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+#: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+#: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+#: model_terms:ir.ui.view,arch_db:product.qr_small_label
 msgid "^FS"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+#: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
 msgid ""
 "^FS\n"
-"^FT35,48^A0N,15^FD"
+"^FO13,86^A0N,12^FB94,1,0,C^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+#: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
 msgid ""
 "^FS\n"
-"^FT35,65^A0N,20^FD"
+"^FO5,165^A0N,16^FB140,1,0,C^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
-msgid "^FT210,30^A0N,25^FD"
+#: model_terms:ir.ui.view,arch_db:product.qr_small_label
+msgid ""
+"^FS\n"
+"^FO6,173^A0N,14^FB120,1,0,C^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
-msgid "^FT35,30^A0N,15^FD"
+#: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+msgid ""
+"^FS\n"
+"^FO6,200^A0N,20^FB160,1,0,C^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
-msgid "^FT35,30^A0N,20^FD"
+#: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+msgid ""
+"^PW254\n"
+"^LL203\n"
+"^FO5,13^A0N,25^FB244,1,0,C^FH^FD"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
-msgid "^FT35,40^A0N,25^FD"
+#: model_terms:ir.ui.view,arch_db:product.qr_small_label
+msgid ""
+"^PW254\n"
+"^LL203\n"
+"^FO6,15^A0N,25,16^FB242,1,0,C^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+msgid ""
+"^PW406\n"
+"^LL203"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+msgid ""
+"^PW406\n"
+"^LL203\n"
+"^FO5,9^A0N,27^FB396,1,0,C^FH^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+#: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+msgid ""
+"^PW447\n"
+"^LL102"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+msgid ""
+"^PW457\n"
+"^LL254"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+msgid ""
+"^PW457\n"
+"^LL254\n"
+"^FO0,13^A0N,30^FB457,1,0,C^FH^FD"
 msgstr ""
 
 #. module: product
@@ -5377,6 +5616,47 @@ msgstr "la"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "'Products packaging - %s' % (object.uom_id.name)"
+#~ msgstr "'Ambalaje produse - %s' % (object.uom_id.name)"
+
+#~ msgid "Packaging Barcodes (PDF)"
+#~ msgstr "Coduri de bare pentru ambalaje (PDF)"
+
+#~ msgid "Product Label (PDF)"
+#~ msgstr "Eticheta produsului (PDF)"
+
+#~ msgid "Product Label 2x7 (PDF)"
+#~ msgstr "Etichetă produs 2x7 (PDF)"
+
+#~ msgid "Product Label 4x12 (PDF)"
+#~ msgstr "Etichetă produs 4x12 (PDF)"
+
+#~ msgid "Product Label 4x7 (PDF)"
+#~ msgstr "Etichetă produs 4x7 (PDF)"
+
+#~ msgid "Product Label Report"
+#~ msgstr "Raport etichete produs"
+
+#~ msgid "Product Label Report 2x7"
+#~ msgstr "Raport etichetă produs 2x7"
+
+#~ msgid "Product Label Report 4x12"
+#~ msgstr "Raport etichetă produs 4x12"
+
+#~ msgid "Product Label Report 4x7"
+#~ msgstr "Raport etichetă produs 4x7"
+
+#~ msgid "Product model not defined, Please contact your administrator."
+#~ msgstr ""
+#~ "Modelul produsului nu este definit, vă rugăm să contactați "
+#~ "administratorul."
+
+#~ msgid "Search a product"
+#~ msgstr "Caută un produs"
+
+#~ msgid "Unable to find report template for %s format"
+#~ msgstr "Nu se poate găsi șablonul de raport pentru formatul %s"
 
 #~ msgid ""
 #~ "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "

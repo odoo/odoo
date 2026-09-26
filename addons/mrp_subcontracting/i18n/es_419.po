@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-25 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 17:20+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -44,6 +44,11 @@ msgstr "%(qty)s a %(route)s"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
 msgid "/my/productions"
 msgstr "/my/productions"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
+msgid "<span class=\"o_stat_text\">Overview</span>"
+msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -156,10 +161,10 @@ msgstr "Detalles"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production_serials__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_workorder__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_bom_structure__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__display_name
@@ -189,10 +194,10 @@ msgstr "Siga las instrucciones de fabricación que debe completar"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production_serials__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_workorder__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_product__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_bom_structure__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_mo_overview__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__id
@@ -239,6 +244,11 @@ msgid ""
 msgstr ""
 "Lista de productos que se utilizan en la lista de materiales, se utiliza "
 "para filtrar la lista de productos en la vista del portal de subcontratación"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_mo_overview
+msgid "MO Overview Report"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -431,6 +441,11 @@ msgid "Subcontracted"
 msgstr "Subcontratado"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
+msgid "Subcontracted Productions"
+msgstr ""
+
+#. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 msgid "Subcontracted manufacturing orders cannot be merged."
@@ -482,11 +497,6 @@ msgid "Subcontracting Portal"
 msgstr "Portal de subcontratación"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
-msgid "Subcontracting Productions"
-msgstr "Producciones de subcontratación"
-
-#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
 msgid "Subcontracting Resupply Operation Type"
 msgstr "Tipo de operación de subcontratación de reabastecimiento"
@@ -520,6 +530,8 @@ msgstr "Ubicación del subcontratista"
 #. module: mrp_subcontracting
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+#: code:addons/mrp_subcontracting/static/src/components/mo_overview/mrp_mo_overview.xml:0
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mo_overview_content
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom
 msgid "Subcontractor Stock"
 msgstr "Existencias del subcontratista"
@@ -563,6 +575,12 @@ msgid "There are currently no productions for your account."
 msgstr "Por el momento no hay producciones para su cuenta."
 
 #. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/report/mrp_report_mo_overview.py:0
+msgid "To Order"
+msgstr ""
+
+#. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
 msgid "Total Consumed"
 msgstr "Total consumido"
@@ -572,6 +590,11 @@ msgstr "Total consumido"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__incoming_picking
 msgid "Transfer"
 msgstr "Trasladar"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
+msgid "Transfers"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
@@ -584,11 +607,6 @@ msgstr ""
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
 msgid "Warehouse"
 msgstr "Almacén"
-
-#. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_mrp_workorder
-msgid "Work Order"
-msgstr "Orden de trabajo"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -629,8 +647,14 @@ msgstr "Por ejemplo, PO0032"
 msgid "state"
 msgstr "estado"
 
-msgid "Check Availability"
-msgstr "Comprobar disponibilidad"
+#~ msgid "Subcontracting Productions"
+#~ msgstr "Producciones de subcontratación"
 
-msgid "Has been recorded?"
-msgstr "¿Se registró?"
+#~ msgid "Work Order"
+#~ msgstr "Orden de trabajo"
+
+#~ msgid "Check Availability"
+#~ msgstr "Comprobar disponibilidad"
+
+#~ msgid "Has been recorded?"
+#~ msgstr "¿Se registró?"

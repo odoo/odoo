@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 20:11+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Latvian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -40,25 +40,8 @@ msgid "# of Expenses"
 msgstr ""
 
 #. module: sale_expense
-#. odoo-python
-#: code:addons/sale_expense/models/account_move.py:0
-msgid "%(count)s expense receipts attached from reinvoiced expenses."
-msgstr ""
-
-#. module: sale_expense
-#. odoo-python
-#: code:addons/sale_expense/models/account_move.py:0
-msgid "1 expense receipt attached from reinvoiced expenses."
-msgstr ""
-
-#. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__attach_receipts_to_invoice
 msgid "Attach receipts to future customer invoices"
-msgstr ""
-
-#. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_post_wizard__attach_receipts_to_invoice
-msgid "Attach receipts to future related invoices"
 msgstr ""
 
 #. module: sale_expense
@@ -69,16 +52,39 @@ msgid ""
 msgstr ""
 
 #. module: sale_expense
+#. odoo-javascript
+#: code:addons/sale_expense/static/src/views/attachment_selector.js:0
+#: model:ir.model,name:sale_expense.model_expense_attachment_selection_wizard
+msgid "Attachment Selection"
+msgstr ""
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/sale_order.py:0
+msgid "Attachments Selection"
+msgstr ""
+
+#. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__can_be_reinvoiced
 msgid "Can be reinvoiced"
 msgstr ""
 
 #. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_expense.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__display_name
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__display_name
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_post_wizard__display_name
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__display_name
 #: model:ir.model.fields,field_description:sale_expense.field_product_template__display_name
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__display_name
@@ -95,11 +101,6 @@ msgstr "Avansa Norēķini"
 #: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
 #: model:ir.model.fields,field_description:sale_expense.field_product_template__expense_policy_tooltip
 msgid "Expense Policy Tooltip"
-msgstr ""
-
-#. module: sale_expense
-#: model:ir.model,name:sale_expense.model_hr_expense_post_wizard
-msgid "Expense Posting Wizard"
 msgstr ""
 
 #. module: sale_expense
@@ -139,8 +140,8 @@ msgstr ""
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_account_move__id
 #: model:ir.model.fields,field_description:sale_expense.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__id
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_post_wizard__id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__id
 #: model:ir.model.fields,field_description:sale_expense.field_product_template__id
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__id
@@ -156,9 +157,24 @@ msgid ""
 msgstr ""
 
 #. module: sale_expense
+#: model_terms:ir.ui.view,arch_db:sale_expense.expense_attachment_selection_wizard_view
+msgid "Import Attachments"
+msgstr ""
+
+#. module: sale_expense
+#: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
+msgid "Import Expense Attachments"
+msgstr ""
+
+#. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
 msgid "Invoicing"
 msgstr "Rēķini"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__is_linked_to_expense_with_attachment
+msgid "Is Linked To Expense With Attachment"
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move
@@ -169,6 +185,28 @@ msgstr ""
 #: model:ir.model,name:sale_expense.model_account_move_line
 msgid "Journal Item"
 msgstr "Kontējums"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/sale_order.py:0
+msgid "No attachment found to import from linked expense(s)"
+msgstr ""
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
+msgid "Please select at least one attachment to import."
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_product_template
@@ -184,6 +222,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
 msgid "Reinvoice to"
+msgstr ""
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__sale_order_id
+msgid "Sale Order"
 msgstr ""
 
 #. module: sale_expense
@@ -208,6 +251,12 @@ msgid "Sales Order Line"
 msgstr ""
 
 #. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_post_wizard__show_attach_receipts_to_invoice
-msgid "Show Attach Receipts To Invoice"
+#: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__selected_attachments
+msgid "Selected Attachments"
+msgstr ""
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
+msgid "The following expense receipts were attached from reinvoiced expenses."
 msgstr ""

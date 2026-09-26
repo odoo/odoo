@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
 "PO-Revision-Date: 2026-08-31 14:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -1018,6 +1018,12 @@ msgid ""
 msgstr ""
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
+msgid "<i class=\"me-2 oi\" data-icon=\"arrow_forward\"/>Manage my calendars"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled mt-1\" data-icon=\"schedule\" title=\"Dates\"/>"
 msgstr ""
@@ -1068,6 +1074,11 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"oi\" data-icon=\"calendar_today\" title=\"Calendar\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi\" data-icon=\"close\" title=\"Remove\"/>"
 msgstr ""
 
@@ -1098,18 +1109,6 @@ msgstr ""
 "'weekly') \">Takrorlanish kuni</span>"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-#, fuzzy
-msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
-msgstr "<span class=\"me-1 o_form_label\">Google Taqvim</span>"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-#, fuzzy
-msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
-msgstr "<span class=\"me-1 o_form_label\">Outlook Taqvimi</span>"
-
-#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"me-1\">Not available at the selected time:</span>"
 msgstr ""
@@ -1119,6 +1118,20 @@ msgstr ""
 msgid ""
 "<span class=\"mx-1\"><i class=\"oi me-1\" data-icon=\"add\"/>Video "
 "conference</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
+msgid ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share or id != "
+"uid\">Calendar</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
+msgid ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share\">Calendar</"
+"span>"
 msgstr ""
 
 #. module: calendar
@@ -1139,11 +1152,39 @@ msgid "<span invisible=\"allday\"> or </span>"
 msgstr ""
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
-#, fuzzy
-msgid "<span>Are you sure you want to delete this event? <br/></span>"
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid ""
+"<span invisible=\"block_mail\">Notify attendees of confirmed events that the "
+"event was canceled?</span>"
 msgstr ""
-"<span>Haqiqatan ham bu tadbirni o‘chirib tashlamoqchimisiz? <br/></span>"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid ""
+"<span invisible=\"requested_action != 'unlink'\">Are you sure you want to "
+"delete these events ?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">Are "
+"you sure you want to archive these events ?</span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'unlink'\">\n"
+"                        Some events containing recurrence are selected, only "
+"this occurrence will be unlinked.\n"
+"                    </span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'archive'\">\n"
+"                        Some events containing recurrence are selected, only "
+"this occurrence will be archived.\n"
+"                    </span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+msgid ""
+"<span invisible=\"requested_action != 'unlink'\">Are you sure you want to "
+"delete this event ?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">Are "
+"you sure you want to archive this event ?</span>"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1160,6 +1201,17 @@ msgid ""
 msgstr ""
 "Ushbu sahifani <strong>Saqlang</strong> va xususiyatni sozlash uchun bu "
 "yerga qayting."
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_calendar.py:0
+msgid "A primary calendar cannot be deleted."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.constraint,message:calendar.constraint_calendar_event_check_no_recurrent_draft
+msgid "A recurring event cannot be a draft."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
@@ -1179,6 +1231,12 @@ msgstr "Qabul qilish"
 #, fuzzy
 msgid "Accepted Count"
 msgstr "Qabul qilinganlar soni"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__user_access_role
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__access_role
+msgid "Access Role"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_access_token_unique
@@ -1324,6 +1382,12 @@ msgid "All Day, %(day)s"
 msgstr "Butun kun, %(day)s"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "All calendars"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "All day"
 msgstr ""
@@ -1337,11 +1401,50 @@ msgid "All events"
 msgstr "Barcha tadbirlar"
 
 #. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__all_events
+msgid "All the events"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid "Archive"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Archive event"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Archive events"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+msgid "Archive or Delete Event"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid "Archive or Delete Events"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 #, fuzzy
 msgid "Archived"
 msgstr "Arxivlangan"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Are you sure you want to unsubscribe from this calendar?"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
@@ -1367,6 +1470,11 @@ msgstr "Qatnashuvchilar"
 #, fuzzy
 msgid "Attendees Count"
 msgstr "Qatnashuvchilar soni"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Attendees will be notified upon confirmation."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
@@ -1406,7 +1514,13 @@ msgid "Base Event"
 msgstr "Asosiy hodisa"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body_has_template_value
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__block_mail
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__block_mail
+msgid "Block Mail"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__body_has_template_value
 #, fuzzy
 msgid "Body content is the same as the template"
 msgstr "Matn tarkibi andoza bilan bir xil"
@@ -1429,18 +1543,18 @@ msgid "By day"
 msgstr "Kunlik"
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
-#, fuzzy
-msgid "Bye-bye, record!"
-msgstr "Xayr, yozuv!"
-
-#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_calendar.py:0
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__calendar_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_id
+#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_ids
 #: model:ir.module.module,shortdesc:base.module_calendar
 #: model:ir.ui.menu,name:calendar.calendar_event_menu
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 #, fuzzy
 msgid "Calendar"
 msgstr "Taqvim"
@@ -1460,20 +1574,30 @@ msgid "Calendar Attendee Information"
 msgstr "Taqvim ishtirokchilari haqida ma'lumot"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_default_privacy
-#: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_default_privacy
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_default_privacy
 #, fuzzy
 msgid "Calendar Default Privacy"
 msgstr "Taqvimning standart maxfiylik sozlamasi"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__calendar_event_ids
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
 #: model:ir.model.fields,field_description:calendar.field_discuss_channel__calendar_event_ids
 #, fuzzy
 msgid "Calendar Event"
 msgstr "Taqvim hodisasi"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event_archive_or_unlink_wizard
+msgid "Calendar Event Archive Or Unlink Wizard"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event_multi_archive_or_unlink_wizard
+msgid "Calendar Event Multi Archive Or Unlink Wizard"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
@@ -1493,16 +1617,9 @@ msgid "Calendar Meeting"
 msgstr "Taqvim yig‘ilishi"
 
 #. module: calendar
-#: model:ir.model,name:calendar.model_calendar_popover_delete_wizard
-#, fuzzy
-msgid "Calendar Popover Delete Wizard"
-msgstr "Taqvim pop-up o‘chirish ustasi"
-
-#. module: calendar
-#: model:ir.model,name:calendar.model_calendar_provider_config
-#, fuzzy
-msgid "Calendar Provider Configuration Wizard"
-msgstr "Taqvim provayderi sozlash ustasi"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__members_only
+msgid "Calendar Members Only"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -1511,10 +1628,25 @@ msgid "Calendar Settings"
 msgstr "Taqvim sozlamalari"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_user_ids
+msgid "Calendar User"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_user
+msgid "Calendar User Manager"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, fuzzy
 msgid "Calendar description"
 msgstr "Taqvim tavsifi"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
+msgid "Calendar name"
+msgstr ""
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
@@ -1524,9 +1656,8 @@ msgstr "Taqvim: Sana yangilandi"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
-#, fuzzy
-msgid "Calendar: Event Deleted"
-msgstr "Taqvim: Hodisa o‘chirildi"
+msgid "Calendar: Event Canceled"
+msgstr ""
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -1553,10 +1684,22 @@ msgid "Calendar: Reminder"
 msgstr "Taqvim: Eslatma"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
+#: model:ir.actions.act_window,name:calendar.action_calendar_calendar
+#: model:ir.ui.menu,name:calendar.menu_calendar_calendars
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_list
+msgid "Calendars"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__can_edit_body
 #, fuzzy
 msgid "Can Edit Body"
 msgstr "Matnni tahrirlash mumkin"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_delete_event
+msgid "Canceled event: {{ object.name }}"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -1571,12 +1714,6 @@ msgstr ""
 "ishtirokchi bo‘lmasa)"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__external_calendar_provider
-#, fuzzy
-msgid "Choose an external calendar to configure"
-msgstr "Sozlash uchun tashqi taqvimni tanlang"
-
-#. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
 #, fuzzy
 msgid ""
@@ -1587,19 +1724,10 @@ msgstr ""
 "vaqt o‘zgartirilganda barcha hodisalarni yangilashga ruxsat berilmaydi"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-#, fuzzy
-msgid "Client ID"
-msgstr "Mijoz identifikatori"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-#, fuzzy
-msgid "Client Secret"
-msgstr "Mijoz maxfiy kodi"
-
-#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__color
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__calendar_color
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__filter_color
 #, fuzzy
 msgid "Color"
 msgstr "Rang"
@@ -1624,22 +1752,9 @@ msgstr "Sozlamalar"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Confirm"
 msgstr ""
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/components/calendar_provider_config/calendar_connect_provider.xml:0
-#, fuzzy
-msgid "Connect"
-msgstr "Ulanish"
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
-#, fuzzy
-msgid "Connect your Calendar"
-msgstr "Taqvimingizni ulang"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
@@ -1669,7 +1784,7 @@ msgid "Contact created through Calendar sync."
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__body
 #, fuzzy
 msgid "Contents"
 msgstr "Tarkib"
@@ -1681,6 +1796,12 @@ msgid "Count"
 msgstr "Soni"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Create Calendar"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model,website_form_label:calendar.model_res_partner
 #, fuzzy
 msgid "Create a Customer"
@@ -1689,12 +1810,14 @@ msgstr "Mijoz yaratish"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__create_uid
 #, fuzzy
 msgid "Created by"
 msgstr "Yaratuvchi"
@@ -1702,12 +1825,14 @@ msgstr "Yaratuvchi"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__create_date
 #, fuzzy
 msgid "Created on"
 msgstr "Yaratilgan sana"
@@ -1717,6 +1842,11 @@ msgstr "Yaratilgan sana"
 #, fuzzy
 msgid "Current Attendee"
 msgstr "Joriy ishtirokchi"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_id
+msgid "Current Membership Record"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
@@ -1799,16 +1929,13 @@ msgid "Default Privacy"
 msgstr "Standart maxfiylik"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
-#, fuzzy
-msgid "Default privacy setting for whom the calendar events will be visible."
-msgstr "Taqvim tadbirlari ko‘rinadigan standart maxfiylik sozlamasi."
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
+msgid "Default visibility"
+msgstr ""
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__delete
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 #, fuzzy
 msgid "Delete"
 msgstr "O‘chirish"
@@ -1816,35 +1943,14 @@ msgstr "O‘chirish"
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
-#, fuzzy
-msgid "Delete Event"
-msgstr "Tadbirni o‘chirish"
+msgid "Delete event"
+msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__all
-#, fuzzy
-msgid "Delete all the events"
-msgstr "Barcha tadbirlarni o‘chirish"
-
-#. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__next
-#, fuzzy
-msgid "Delete this and following events"
-msgstr "Ushbu va keyingi tadbirlarni o‘chirish"
-
-#. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__one
-#, fuzzy
-msgid "Delete this event"
-msgstr "Ushbu tadbirni o‘chirish"
-
-#. module: calendar
-#: model:mail.template,subject:calendar.calendar_template_delete_event
-#, fuzzy
-msgid "Deleted event: {{ object.name }}"
-msgstr "O‘chirilgan tadbir: {{ object.name }}"
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Delete events"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -1888,12 +1994,14 @@ msgstr "Tavsifni ko‘rsatish"
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__display_name
 #: model:ir.model.fields,field_description:calendar.field_discuss_channel__display_name
 #: model:ir.model.fields,field_description:calendar.field_ir_http__display_name
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__display_name
@@ -1926,6 +2034,12 @@ msgid "Document Model Name"
 msgstr "Hujjat modeli nomi"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Draft"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
 #, fuzzy
 msgid "Dtstart"
@@ -1953,10 +2067,22 @@ msgstr "ELEKTRON POCHTA"
 
 #. module: calendar
 #. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Edit Calendar"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 #, fuzzy
 msgid "Edit Recurrent event"
 msgstr "Takroriy tadbirni tahrirlash"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.xml:0
+msgid "Edit filter"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1976,6 +2102,11 @@ msgstr "Amaliy maxfiylik"
 #, fuzzy
 msgid "Email"
 msgstr "Elektron pochta"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1_day
+msgid "Email - 1 day"
+msgstr ""
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
@@ -2034,11 +2165,6 @@ msgid "Event Alarm Manager"
 msgstr "Tadbir signallari boshqaruvchisi"
 
 #. module: calendar
-#: model:ir.actions.act_window,name:calendar.action_event_delete_wizard
-msgid "Event Delete Wizard"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 #, fuzzy
 msgid "Event Meeting Type"
@@ -2069,6 +2195,11 @@ msgstr ""
 #. module: calendar
 #: model:mail.message.subtype,description:calendar.mt_calendar_event_updated
 msgid "Event updated"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__event_ids
+msgid "Events"
 msgstr ""
 
 #. module: calendar
@@ -2187,6 +2318,11 @@ msgid "Feedback: %s"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_checked
+msgid "Filter Enabled"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__1
 #, fuzzy
@@ -2266,7 +2402,6 @@ msgstr "Borasizmi?"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__google
 #, fuzzy
 msgid "Google"
 msgstr "Google"
@@ -2283,30 +2418,6 @@ msgid "Google Calendar URL"
 msgstr ""
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-#, fuzzy
-msgid "Google Calendar icon"
-msgstr "Google Taqvim belgisi"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_id
-#, fuzzy
-msgid "Google Client_id"
-msgstr "Google mijoz identifikatori"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_secret
-#, fuzzy
-msgid "Google Client_key"
-msgstr "Google mijoz kaliti"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_sync_paused
-#, fuzzy
-msgid "Google Synchronization Paused"
-msgstr "Google sinxronizatsiyasi to‘xtatib turildi"
-
-#. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 #, fuzzy
 msgid "HTTP Routing"
@@ -2319,8 +2430,8 @@ msgid "Has Message"
 msgstr "Xabar mavjud"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_hide_my
-msgid "Hide My Calendar from Calendar"
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__has_recurrent_events
+msgid "Has Recurrent Events"
 msgstr ""
 
 #. module: calendar
@@ -2333,12 +2444,14 @@ msgstr "Soat"
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__id
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__id
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__id
 #: model:ir.model.fields,field_description:calendar.field_discuss_channel__id
 #: model:ir.model.fields,field_description:calendar.field_ir_http__id
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__id
@@ -2402,7 +2515,17 @@ msgstr ""
 "foydalanuvchilar shu vaqt davomida siz bo‘sh ekanligingizni bilishadi."
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__confidential
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid ""
+"If you are the only person using this calendar, all of its events will be "
+"deleted. Are you sure you want to proceed?\n"
+"\n"
+"This action cannot be reversed."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__confidential
 #, fuzzy
 msgid "Internal users only"
 msgstr "Faqat ichki foydalanuvchilar"
@@ -2462,7 +2585,7 @@ msgid "Invitations"
 msgstr "Taklifnomalar"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__is_mail_template_editor
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__is_mail_template_editor
 #, fuzzy
 msgid "Is Editor"
 msgstr "Muharrir"
@@ -2472,6 +2595,11 @@ msgstr "Muharrir"
 #, fuzzy
 msgid "Is Follower"
 msgstr "Kuzatuvchi"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_draft
+msgid "Is draft"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
@@ -2492,7 +2620,18 @@ msgid "Join Meeting"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__lang
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Keep this calendar"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__name
+msgid "Label"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__lang
 #, fuzzy
 msgid "Language"
 msgstr "Til"
@@ -2507,12 +2646,14 @@ msgstr "Oxirgi"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__write_uid
 #, fuzzy
 msgid "Last Updated by"
 msgstr "Oxirgi yangilagan"
@@ -2520,12 +2661,14 @@ msgstr "Oxirgi yangilagan"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__write_date
 #, fuzzy
 msgid "Last Updated on"
 msgstr "Oxirgi yangilangan sana"
@@ -2574,7 +2717,7 @@ msgid "Logo"
 msgstr "Logotip"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__template_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__template_id
 #, fuzzy
 msgid "Mail Template"
 msgstr "Xat shabloni"
@@ -2678,12 +2821,6 @@ msgid "Messages"
 msgstr "Xabarlar"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-#, fuzzy
-msgid "Microsoft Outlook icon"
-msgstr "Microsoft Outlook belgisi"
-
-#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
 #, fuzzy
 msgid "Minutes"
@@ -2730,14 +2867,14 @@ msgstr "Oylar"
 
 #. module: calendar
 #. odoo-javascript
-#: code:addons/calendar/static/src/views/calendar_form/calendar_quick_create.xml:0
+#: code:addons/calendar/static/src/views/calendar_form/calendar_event_quick_create.xml:0
 #, fuzzy
 msgid "More Options"
 msgstr "Qo‘shimcha parametrlar"
 
 #. module: calendar
 #. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.js:0
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Activities"
 msgstr ""
@@ -2754,15 +2891,11 @@ msgid "My Meetings"
 msgstr "Mening uchrashuvlarim"
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.xml:0
-msgid "My calendars"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__name
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_user_view_form
 #, fuzzy
 msgid "Name"
 msgstr "Nom"
@@ -2779,6 +2912,12 @@ msgstr "Harakat talab qilinadi"
 #, fuzzy
 msgid "New"
 msgstr "Yangi"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "New Calendar"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_calendar_event_id
@@ -2842,6 +2981,11 @@ msgid "No Meetings"
 msgstr ""
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "No calendar"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "No email"
@@ -2858,13 +3002,6 @@ msgstr "Hali fikr-mulohaza yo‘q"
 #, fuzzy
 msgid "No meetings found. Let's schedule one!"
 msgstr "Hech qanday uchrashuv topilmadi. Keling, bittasini rejalashtiramiz!"
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
-#, fuzzy
-msgid "No, keep it"
-msgstr "Yo‘q, saqlang"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__notes
@@ -2993,10 +3130,15 @@ msgstr "Faqat ichki foydalanuvchilar"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__confidential
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
-#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__confidential
 #, fuzzy
 msgid "Only internal users"
 msgstr "Faqat ichki foydalanuvchilar"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_calendar.py:0
+msgid "Only the calendar owner can modify these fields: %(fields)s"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -3010,7 +3152,7 @@ msgid "Optional message"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_popover_delete_wizard__lang
+#: model:ir.model.fields,help:calendar.field_calendar_event_archive_or_unlink_wizard__lang
 #, fuzzy
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
@@ -3046,7 +3188,6 @@ msgstr "Tashkilotchi"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__microsoft
 #, fuzzy
 msgid "Outlook"
 msgstr "Outlook"
@@ -3058,22 +3199,16 @@ msgid "Outlook Calendar"
 msgstr "Outlook taqvimi"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
-#, fuzzy
-msgid "Outlook Client Id"
-msgstr "Outlook mijoz ID si"
+#: model:ir.model.fields,field_description:calendar.field_res_users__owned_calendar_ids
+msgid "Owned Calendar"
+msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_secret
-#, fuzzy
-msgid "Outlook Client Secret"
-msgstr "Outlook mijoz paroli"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_sync_paused
-#, fuzzy
-msgid "Outlook Synchronization Paused"
-msgstr "Outlook sinxronizatsiyasi to‘xtatildi"
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__owner_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_owner_id
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__owner
+msgid "Owner"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -3106,9 +3241,18 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__is_primary
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__is_primary
+msgid "Primary"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users__primary_calendar_id
+msgid "Primary Calendar"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
-#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
-#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendar_default_privacy
 #, fuzzy
 msgid "Privacy"
 msgstr "Maxfiylik"
@@ -3121,14 +3265,13 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__private
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
-#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__private
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 #, fuzzy
 msgid "Private"
 msgstr "Shaxsiy"
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__private
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__private
 #, fuzzy
 msgid "Private by default"
 msgstr "Birlamchi shaxsiy"
@@ -3136,20 +3279,19 @@ msgstr "Birlamchi shaxsiy"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__public
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
-#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__public
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 #, fuzzy
 msgid "Public"
 msgstr "Ommaviy"
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__public
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__public
 #, fuzzy
 msgid "Public by default"
 msgstr "Birlamchi ommaviy"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__recipient_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recipient_ids
 #, fuzzy
 msgid "Recipients"
 msgstr "Qabul qiluvchilar"
@@ -3159,6 +3301,11 @@ msgstr "Qabul qiluvchilar"
 #, fuzzy
 msgid "Recurrence"
 msgstr "Takrorlanish"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recurrence_choice
+msgid "Recurrence Choice"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
@@ -3180,7 +3327,13 @@ msgid "Recurrence Update"
 msgstr "Takrorlanishni yangilash"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__recurrence_ids
+msgid "Recurrences"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recurrency
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 #, fuzzy
 msgid "Recurrent"
@@ -3213,7 +3366,7 @@ msgid "Reminders"
 msgstr "Eslatmalar"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__render_model
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__render_model
 #, fuzzy
 msgid "Rendering Model"
 msgstr "Ko‘rsatish modeli"
@@ -3253,6 +3406,12 @@ msgstr "Har (kun/hafta/oy/yil) takrorlash"
 #, fuzzy
 msgid "Repeat x times"
 msgstr "x marta takrorlash"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__requested_action
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__requested_action
+msgid "Requested Action"
+msgstr ""
 
 #. module: calendar
 #. odoo-javascript
@@ -3368,7 +3527,14 @@ msgid "Send Mail"
 msgstr "Xat yuborish"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid "Send and archive"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 #, fuzzy
 msgid "Send and delete"
 msgstr "Yuborish va o‘chirish"
@@ -3411,6 +3577,18 @@ msgid "Settings"
 msgstr "Sozlamalar"
 
 #. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__members_only
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__members_only
+msgid "Shared Calendar Members Only"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__share_user_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_share_user_ids
+msgid "Shared with"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
 #, fuzzy
 msgid "Should Show Status"
@@ -3431,6 +3609,11 @@ msgstr ""
 #, fuzzy
 msgid "Show as"
 msgstr "Quyidagicha ko‘rsatish"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_active
+msgid "Shown in Filters List"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
@@ -3492,18 +3675,12 @@ msgid "Stop date of an event, without time for full days events"
 msgstr "To‘liq kunlik tadbirlar uchun vaqtsiz tadbir tugash sanasi"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__subject
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__subject
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 #, fuzzy
 msgid "Subject"
 msgstr "Mavzu"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
-#, fuzzy
-msgid "Submit"
-msgstr "Yuborish"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sun
@@ -3539,14 +3716,12 @@ msgid "Synchronize with"
 msgstr "Bilan sinxronlash"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 #, fuzzy
 msgid "Synchronize your calendar with Google Calendar"
 msgstr "Taqvimingizni Google Taqvim bilan sinxronlash"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 #, fuzzy
 msgid "Synchronize your calendar with Outlook"
@@ -3666,6 +3841,12 @@ msgid "There are no attendees on these events"
 msgstr "Bu tadbirlarda hech qanday ishtirokchi yo‘q"
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_user.py:0
+msgid "These fields cannot be modified: %(fields)s"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__3
 #, fuzzy
@@ -3676,6 +3857,7 @@ msgstr "Uchinchi"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__future_events
 #, fuzzy
 msgid "This and following events"
 msgstr "Bu va keyingi tadbirlar"
@@ -3684,9 +3866,17 @@ msgstr "Bu va keyingi tadbirlar"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__self_only
 #, fuzzy
 msgid "This event"
 msgstr "Bu tadbir"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event_archive_or_unlink_wizard__recurrence_choice
+msgid ""
+"This field allows to perform the archiving or deletion on several events "
+"belonging to the         selected event's recurrence."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -3804,6 +3994,12 @@ msgid "Unit"
 msgstr "Birlik"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Unsubscribe from calendar"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, fuzzy
@@ -3825,9 +4021,15 @@ msgstr "Ishtirokchilarni qo‘lda xabardor qilish uchun ishlatiladi"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__user_id
 #, fuzzy
 msgid "User"
 msgstr "Foydalanuvchi"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_calendar
+msgid "User Calendar"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
@@ -3847,6 +4049,11 @@ msgstr "Foydalanuvchi sozlamalari"
 #, fuzzy
 msgid "User default"
 msgstr "Foydalanuvchi uchun standart"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_ids
+msgid "Users"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3871,6 +4078,17 @@ msgstr ""
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.message_meeting_activity_done
 msgid "View Meeting"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_list
+msgid "Visibility"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Warning"
 msgstr ""
 
 #. module: calendar
@@ -3908,6 +4126,17 @@ msgid "Weeks"
 msgstr "Haftalar"
 
 #. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__is_draft
+msgid ""
+"When True, this field mutes the notifications of the event. It allows to "
+"save the event without         confirming it and avoids notifying attendees "
+"with update messages because some information was unknown at         the "
+"creation of the event. To prevent event's flow issues, the draft state "
+"should be set at the creation         of the event and never reset once it "
+"is removed."
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__notify_responsible
 msgid "When activated, the event organizer will also receive this reminder."
 msgstr ""
@@ -3932,6 +4161,16 @@ msgid "Whether the event is private, considering the user privacy"
 msgstr ""
 "Foydalanuvchi maxfiyligini hisobga olgan holda tadbir maxfiy ekanligini "
 "belgilaydi"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users__writable_calendar_ids
+msgid "Writable Calendar"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__writer
+msgid "Writer"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__yearly
@@ -3962,15 +4201,24 @@ msgid "Yes I'm going."
 msgstr "Ha, boraman."
 
 #. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/res_users.py:0
-#, fuzzy
-msgid ""
-"You are not allowed to change the calendar default privacy of another user "
-"due to privacy constraints."
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Yes, delete this calendar"
 msgstr ""
-"Maxfiylik cheklovlari tufayli boshqa foydalanuvchining taqvim standart "
-"maxfiyligini o‘zgartirishga ruxsat berilmaydi."
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Yes, unsubscribe"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_calendar.py:0
+msgid ""
+"You are not allowed to change the default privacy of a calendar you do not "
+"own."
+msgstr ""
 
 #. module: calendar
 #. odoo-python
@@ -4001,9 +4249,29 @@ msgid "You're alone in this meeting"
 msgstr "Bu uchrashuvda yolg‘izsiz"
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "[Draft]"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
+msgid "[Draft] %s"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "accepted"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__requested_action__archive
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_multi_archive_or_unlink_wizard__requested_action__archive
+msgid "archive"
 msgstr ""
 
 #. module: calendar
@@ -4016,6 +4284,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "declined"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__requested_action__unlink
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_multi_archive_or_unlink_wizard__requested_action__unlink
+msgid "delete"
 msgstr ""
 
 #. module: calendar
@@ -4094,6 +4368,128 @@ msgstr "{{ object.event_id.name }}: Sana yangilandi"
 #, fuzzy
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: Tadbir yangilanishi"
+
+#, fuzzy
+#~ msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
+#~ msgstr "<span class=\"me-1 o_form_label\">Google Taqvim</span>"
+
+#, fuzzy
+#~ msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
+#~ msgstr "<span class=\"me-1 o_form_label\">Outlook Taqvimi</span>"
+
+#, fuzzy
+#~ msgid "<span>Are you sure you want to delete this event? <br/></span>"
+#~ msgstr ""
+#~ "<span>Haqiqatan ham bu tadbirni o‘chirib tashlamoqchimisiz? <br/></span>"
+
+#, fuzzy
+#~ msgid "Bye-bye, record!"
+#~ msgstr "Xayr, yozuv!"
+
+#, fuzzy
+#~ msgid "Calendar Popover Delete Wizard"
+#~ msgstr "Taqvim pop-up o‘chirish ustasi"
+
+#, fuzzy
+#~ msgid "Calendar Provider Configuration Wizard"
+#~ msgstr "Taqvim provayderi sozlash ustasi"
+
+#, fuzzy
+#~ msgid "Calendar: Event Deleted"
+#~ msgstr "Taqvim: Hodisa o‘chirildi"
+
+#, fuzzy
+#~ msgid "Choose an external calendar to configure"
+#~ msgstr "Sozlash uchun tashqi taqvimni tanlang"
+
+#, fuzzy
+#~ msgid "Client ID"
+#~ msgstr "Mijoz identifikatori"
+
+#, fuzzy
+#~ msgid "Client Secret"
+#~ msgstr "Mijoz maxfiy kodi"
+
+#, fuzzy
+#~ msgid "Connect"
+#~ msgstr "Ulanish"
+
+#, fuzzy
+#~ msgid "Connect your Calendar"
+#~ msgstr "Taqvimingizni ulang"
+
+#, fuzzy
+#~ msgid ""
+#~ "Default privacy setting for whom the calendar events will be visible."
+#~ msgstr "Taqvim tadbirlari ko‘rinadigan standart maxfiylik sozlamasi."
+
+#, fuzzy
+#~ msgid "Delete Event"
+#~ msgstr "Tadbirni o‘chirish"
+
+#, fuzzy
+#~ msgid "Delete all the events"
+#~ msgstr "Barcha tadbirlarni o‘chirish"
+
+#, fuzzy
+#~ msgid "Delete this and following events"
+#~ msgstr "Ushbu va keyingi tadbirlarni o‘chirish"
+
+#, fuzzy
+#~ msgid "Delete this event"
+#~ msgstr "Ushbu tadbirni o‘chirish"
+
+#, fuzzy
+#~ msgid "Deleted event: {{ object.name }}"
+#~ msgstr "O‘chirilgan tadbir: {{ object.name }}"
+
+#, fuzzy
+#~ msgid "Google Calendar icon"
+#~ msgstr "Google Taqvim belgisi"
+
+#, fuzzy
+#~ msgid "Google Client_id"
+#~ msgstr "Google mijoz identifikatori"
+
+#, fuzzy
+#~ msgid "Google Client_key"
+#~ msgstr "Google mijoz kaliti"
+
+#, fuzzy
+#~ msgid "Google Synchronization Paused"
+#~ msgstr "Google sinxronizatsiyasi to‘xtatib turildi"
+
+#, fuzzy
+#~ msgid "Microsoft Outlook icon"
+#~ msgstr "Microsoft Outlook belgisi"
+
+#, fuzzy
+#~ msgid "No, keep it"
+#~ msgstr "Yo‘q, saqlang"
+
+#, fuzzy
+#~ msgid "Outlook Client Id"
+#~ msgstr "Outlook mijoz ID si"
+
+#, fuzzy
+#~ msgid "Outlook Client Secret"
+#~ msgstr "Outlook mijoz paroli"
+
+#, fuzzy
+#~ msgid "Outlook Synchronization Paused"
+#~ msgstr "Outlook sinxronizatsiyasi to‘xtatildi"
+
+#, fuzzy
+#~ msgid "Submit"
+#~ msgstr "Yuborish"
+
+#, fuzzy
+#~ msgid ""
+#~ "You are not allowed to change the calendar default privacy of another "
+#~ "user due to privacy constraints."
+#~ msgstr ""
+#~ "Maxfiylik cheklovlari tufayli boshqa foydalanuvchining taqvim standart "
+#~ "maxfiyligini o‘zgartirishga ruxsat berilmaydi."
 
 #, fuzzy
 #~ msgid "Checked"

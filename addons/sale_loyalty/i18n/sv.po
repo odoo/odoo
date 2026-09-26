@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 18:05+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -117,6 +117,8 @@ msgid "Coupon"
 msgstr "Kupong"
 
 #. module: sale_loyalty
+#. odoo-javascript
+#: code:addons/sale_loyalty/static/src/xml/discount_menu_widget.xml:0
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__coupon_code
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Coupon Code"
@@ -132,11 +134,6 @@ msgstr "Kupongpunkt"
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 msgid "Coupon not found while trying to add the following reward: %s"
 msgstr "Kupong hittades inte när du försökte lägga till följande belöning: %s"
-
-#. module: sale_loyalty
-#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
-msgid "Coupons & Loyalty"
-msgstr "Kuponger och lojalitet"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_uid
@@ -395,6 +392,14 @@ msgid "Points Cost"
 msgstr "Poängkostnad"
 
 #. module: sale_loyalty
+#: model:ir.ui.menu,name:sale_loyalty.menu_sale_promotions
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Promotions"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-javascript
+#: code:addons/sale_loyalty/static/src/xml/discount_menu_widget.xml:0
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_ids
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_id
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
@@ -665,5 +670,8 @@ msgstr ""
 msgid "order_id"
 msgstr "order_id"
 
-msgid "<span class=\"oi\" data-icon=\"assignment\"/> Copy"
-msgstr "<span class=\"oi\" data-icon=\"assignment\"/> Kopiera"
+#~ msgid "Coupons & Loyalty"
+#~ msgstr "Kuponger och lojalitet"
+
+#~ msgid "<span class=\"oi\" data-icon=\"assignment\"/> Copy"
+#~ msgstr "<span class=\"oi\" data-icon=\"assignment\"/> Kopiera"

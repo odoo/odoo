@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 14:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -102,11 +102,6 @@ msgid "Add this key in your Authenticator app"
 msgstr "Bu anahtarı Authenticator uygulamanıza ekleyin"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Authentication Code"
-msgstr "Kimlik Doğrulama Kodu"
-
-#. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_device
 msgid "Authentication Device"
 msgstr "Kimlik Doğrulama Cihazı"
@@ -126,6 +121,13 @@ msgstr "İptal"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
 msgstr "Tarayamıyor musunuz?"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"Check your Authenticator app for your code.\n"
+"                        <br/>"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
@@ -191,6 +193,16 @@ msgid "Enable Two-Factor Authentication"
 msgstr "İki Faktörlü Kimlik Doğrulamayı Etkinleştir"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter code"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Enter verification code"
+msgstr ""
+
+#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
 msgid "Expiration Date"
 msgstr "Son Kullanma Tarihi"
@@ -231,11 +243,6 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Learn More"
-msgstr "Daha Fazla Bilgi"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__limit_type
@@ -292,16 +299,6 @@ msgid "The verification code should only contain numbers"
 msgstr "Doğrulama kodu yalnızca sayıları içermelidir"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid ""
-"To login, enter below the six-digit authentication code provided by your "
-"Authenticator app.\n"
-"                        <br/>"
-msgstr ""
-"Oturum açmak için, Authenticator uygulamanız tarafından sağlanan altı haneli "
-"kimlik doğrulama kodunu aşağıya girin.                        <br/>"
-
-#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_last_counter
 msgid "Totp Last Counter"
 msgstr "Totp Son Sayaç"
@@ -328,7 +325,6 @@ msgid "Two-Factor Authentication Activation"
 msgstr "İki Faktörlü Kimlik Doğrulama Aktivasyonu"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
@@ -449,7 +445,19 @@ msgstr ""
 "Hesabınız için kod doğrulama sınırına ulaştınız, lütfen daha sonra tekrar "
 "deneyin."
 
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "e.g. 123456"
-msgstr "örn.123456"
+#~ msgid "Authentication Code"
+#~ msgstr "Kimlik Doğrulama Kodu"
+
+#~ msgid "Learn More"
+#~ msgstr "Daha Fazla Bilgi"
+
+#~ msgid ""
+#~ "To login, enter below the six-digit authentication code provided by your "
+#~ "Authenticator app.\n"
+#~ "                        <br/>"
+#~ msgstr ""
+#~ "Oturum açmak için, Authenticator uygulamanız tarafından sağlanan altı "
+#~ "haneli kimlik doğrulama kodunu aşağıya girin.                        <br/>"
+
+#~ msgid "e.g. 123456"
+#~ msgstr "örn.123456"

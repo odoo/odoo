@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 16:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -247,11 +247,6 @@ msgstr "Aggiungi"
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "Add a delivery method"
 msgstr "Aggiungi un metodo di consegna"
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
-msgid "Add shipping"
-msgstr "Aggiungi spedizione"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -745,7 +740,7 @@ msgstr "Calcolare tariffa e creare spedizione"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+#: code:addons/delivery/static/src/backend/widgets/carrier_rates_loader.xml:0
 msgid "Get all rates"
 msgstr ""
 
@@ -869,7 +864,7 @@ msgstr "Ultimo aggiornamento il"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+#: code:addons/delivery/static/src/backend/widgets/carrier_rates_loader.xml:0
 msgid "Loading Rates"
 msgstr ""
 
@@ -1138,6 +1133,11 @@ msgstr "Spedisci ordine %s"
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "Shipped"
 msgstr "Spedito"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Shipping"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__shipping_date
@@ -1450,6 +1450,9 @@ msgid ""
 msgstr ""
 "{{ object.so_id.company_id.name }} Conferma spedizione (Rif "
 "{{ object.so_id.name or 'n/a' }})"
+
+#~ msgid "Add shipping"
+#~ msgstr "Aggiungi spedizione"
 
 #~ msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Get rate"
 #~ msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>Calcola tariffa"

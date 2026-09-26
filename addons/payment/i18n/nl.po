@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:45+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-09-09 13:59+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
@@ -89,6 +89,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 msgid "<small class=\"text-600\">Save my payment details</small>"
 msgstr "<small class=\"text-600\">Mijn betaalgegevens opslaan</small>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.amount_input
+msgid "<small>Amount</small>"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -266,6 +271,11 @@ msgid "Allow Saving Payment Methods"
 msgstr "Opslaan van betaalmethoden toestaan"
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__allow_amount_selection
+msgid "Allow splitting payments across several payment methods."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
 msgstr "Reeds vastgelegd"
@@ -288,6 +298,11 @@ msgstr "Amazon-betalingsservices"
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Amount"
 msgstr "Bedrag"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__allow_amount_selection
+msgid "Amount Selection"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
@@ -1377,9 +1392,9 @@ msgstr ""
 "verzekerd dat de update een rollback kan verdragen."
 
 #. module: payment
-#: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
-msgid "Payment: Post-process transactions"
-msgstr "Betaling: transacties na verwerking"
+#: model:ir.actions.server,name:payment.post_processing_cron_ir_actions_server
+msgid "Payment: Run Post-processing"
+msgstr ""
 
 #. module: payment
 #: model:ir.actions.server,name:payment.processing_cron_ir_actions_server
@@ -2628,3 +2643,6 @@ msgstr "transaction_id"
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr "websocket berichtverwerking"
+
+#~ msgid "Payment: Post-process transactions"
+#~ msgstr "Betaling: transacties na verwerking"

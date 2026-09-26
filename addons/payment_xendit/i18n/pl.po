@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:44+0000\n"
+"POT-Creation-Date: 2026-09-25 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 13:42+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -93,26 +93,6 @@ msgid "Card"
 msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Code"
-msgstr "Kod karty"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder First Name"
-msgstr "Imię posiadacza karty"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder Last Name"
-msgstr "Nazwisko posiadacza karty"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Number"
-msgstr "Numer karty"
-
-#. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_cashalo
 msgid "Cashalo"
 msgstr ""
@@ -139,16 +119,6 @@ msgid "Display Name"
 msgstr "Nazwa wyświetlana"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Email"
-msgstr "E-mail"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Expiration"
-msgstr "Wygaśnięcie"
-
-#. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_fpx
 msgid "FPX"
 msgstr ""
@@ -170,24 +140,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Invalid CVN"
-msgstr "Nieprawidłowy kod CVN"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Invalid Card Number"
-msgstr "Nieprawidłowy numer karty"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Invalid Date"
-msgstr "Nieprawidłowa data"
-
-#. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_jcb
 msgid "JCB"
 msgstr ""
@@ -196,11 +148,6 @@ msgstr ""
 #: model:payment.method,name:payment_xendit.payment_method_jeniuspay
 msgid "JeniusPay"
 msgstr ""
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "John"
-msgstr "Jan"
 
 #. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_kredivo
@@ -226,11 +173,6 @@ msgstr ""
 #: model:payment.method,name:payment_xendit.payment_method_linkaja
 msgid "LinkAja"
 msgstr ""
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "MM"
-msgstr "MM"
 
 #. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_mandiri
@@ -273,25 +215,9 @@ msgid "Payment Transaction"
 msgstr "Transakcja płatnicza"
 
 #. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Payment processing failed"
-msgstr "Przetwarzanie płatności nie powiodło się"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Phone Number"
-msgstr "Numer telefonu"
-
-#. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_promptpay
 msgid "Prompt Pay"
 msgstr ""
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
-msgid "Public Key"
-msgstr "Klucz publiczny"
 
 #. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_qris
@@ -320,20 +246,23 @@ msgid "Siam Commerical Bank"
 msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Smith"
-msgstr "Kowalski"
-
-#. module: payment_xendit
 #. odoo-python
-#: code:addons/payment_xendit/controllers/main.py:0
-msgid "The access token doesn't match the transaction reference."
-msgstr "Token dostępu nie pasuje do numeru referencyjnego transakcji."
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid ""
+"The payment requires authentication from the customer, which isn't possible "
+"for this unattended transaction. Please ask the customer to pay manually."
+msgstr ""
 
 #. module: payment_xendit
 #: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "Kod techniczny tego dostawcy usług płatniczych."
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid "The transaction is not linked to a token."
+msgstr ""
 
 #. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_touch_n_go
@@ -416,16 +345,60 @@ msgid "Xendit Webhook Token"
 msgstr "Token webhooka Xendit"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "YYYY"
-msgstr "RRRR"
-
-#. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_zalopay
 msgid "Zalopay"
 msgstr ""
 
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "john.smith@example.com"
-msgstr "jan.kowalski@naprzyklad.com"
+#~ msgid "Card Code"
+#~ msgstr "Kod karty"
+
+#~ msgid "Card Holder First Name"
+#~ msgstr "Imię posiadacza karty"
+
+#~ msgid "Card Holder Last Name"
+#~ msgstr "Nazwisko posiadacza karty"
+
+#~ msgid "Card Number"
+#~ msgstr "Numer karty"
+
+#~ msgid "Email"
+#~ msgstr "E-mail"
+
+#~ msgid "Expiration"
+#~ msgstr "Wygaśnięcie"
+
+#~ msgid "Invalid CVN"
+#~ msgstr "Nieprawidłowy kod CVN"
+
+#~ msgid "Invalid Card Number"
+#~ msgstr "Nieprawidłowy numer karty"
+
+#~ msgid "Invalid Date"
+#~ msgstr "Nieprawidłowa data"
+
+#~ msgid "John"
+#~ msgstr "Jan"
+
+#~ msgid "MM"
+#~ msgstr "MM"
+
+#~ msgid "Payment processing failed"
+#~ msgstr "Przetwarzanie płatności nie powiodło się"
+
+#~ msgid "Phone Number"
+#~ msgstr "Numer telefonu"
+
+#~ msgid "Public Key"
+#~ msgstr "Klucz publiczny"
+
+#~ msgid "Smith"
+#~ msgstr "Kowalski"
+
+#~ msgid "The access token doesn't match the transaction reference."
+#~ msgstr "Token dostępu nie pasuje do numeru referencyjnego transakcji."
+
+#~ msgid "YYYY"
+#~ msgstr "RRRR"
+
+#~ msgid "john.smith@example.com"
+#~ msgstr "jan.kowalski@naprzyklad.com"

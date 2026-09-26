@@ -3,14 +3,15 @@
 # * l10n_fr_pdp
 #
 # "Cécile Collart (cco)" <cco@odoo.com>, 2026.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 18:12+0000\n"
-"PO-Revision-Date: 2026-09-09 13:58+0000\n"
+"POT-Creation-Date: 2026-09-18 18:19+0000\n"
+"PO-Revision-Date: 2026-09-24 12:17+0000\n"
 "Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
 "l10n_fr_pdp/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -82,10 +83,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
 msgid ""
 "<span class=\"text-muted\">\n"
-"                                    Enable e-reporting\n"
+"                                    Enable e-reporting &amp; sending of "
+"invoices to the PPF\n"
 "                                </span>\n"
 "                                <br/>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                                    Activer l’e-reporting &amp; l’envoi des "
+"factures au PPF\n"
+"                                </span>\n"
+"                                <br/>"
 
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
@@ -167,6 +174,8 @@ msgid "Action Needed"
 msgstr "Nécessite une action"
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_journal.py:0
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
 msgid "Activate Electronic Invoicing"
 msgstr "Activer la facturation électronique"
@@ -227,6 +236,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/account_move.py:0
 msgid "Address zip code must not exceed 10 characters%s."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "Admissible"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -597,6 +612,12 @@ msgstr "Démo"
 #. module: l10n_fr_pdp
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "Deposited"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 msgid "Details:"
 msgstr ""
 
@@ -639,6 +660,7 @@ msgstr "Remise accordée"
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_move_send_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_peppol_response__display_name
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_annuaire_line__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_partner_lookup__display_name
@@ -782,6 +804,17 @@ msgstr "Mode EDI"
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_registration__edi_user_id
 msgid "EDI user"
 msgstr "Utilisateur EDI"
+
+#. module: l10n_fr_pdp
+#: model:ir.model,name:l10n_fr_pdp.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_journal.py:0
+msgid "Electronic Invoicing Settings"
+msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-javascript
@@ -1056,6 +1089,7 @@ msgstr "A un message"
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_move_send__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_move_send_wizard__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_peppol_response__id
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_ir_attachment__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_annuaire_line__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_partner_lookup__id
@@ -1136,6 +1170,12 @@ msgstr ""
 "En cas de retard de paiement, une indemnité forfaitaire de 40 € pour frais "
 "de recouvrement sera facturée (articles L.441-10 et D.441-5 du Code de "
 "commerce)."
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "Inadmissible"
+msgstr ""
 
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
@@ -1671,6 +1711,12 @@ msgstr "Statut PEPPOL"
 #. module: l10n_fr_pdp
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "PPF Flow 10 response: %(status)s (%(status_code)s)."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 msgid "PPF Invoice"
 msgstr ""
 
@@ -2050,10 +2096,17 @@ msgstr "Refusée"
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 #: code:addons/l10n_fr_pdp/models/account_peppol_response.py:0
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__pdp_ref_response_code__re
 msgid "Rejected"
 msgstr "Rejeté"
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/pdp_flow.py:0
+msgid "Rejected flows are rebuilt when resent."
+msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
@@ -2667,6 +2720,12 @@ msgstr ""
 #. module: l10n_fr_pdp
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "Unknown"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 msgid "Unknown error"
 msgstr ""
 
@@ -2829,7 +2888,7 @@ msgstr ""
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
 msgid "Your french e-invoicing ID"
-msgstr "Your french e-invoicing ID"
+msgstr "L'identifiant de facturation électronique FR"
 
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
@@ -2870,8 +2929,15 @@ msgstr "format eInvoice"
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/res_partner.py:0
 msgid ""
-"endpoint must be 9 or 14 characters long and they must be numbers to enable "
-"the lookup (ie: siren, siret)"
+"endpoint must begin with a 9 or 14 digits number to enable the lookup (ie: "
+"siren, siret), followed by an optional suffix starting with an underscore "
+"(ie: 123456789_ABC)"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "error"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -2879,18 +2945,17 @@ msgstr ""
 msgid "received"
 msgstr "reçu"
 
-#~ msgid ""
-#~ "<span class=\"text-muted\">\n"
-#~ "                                    Enable e-reporting &amp; sending of "
-#~ "invoices to the PPF\n"
-#~ "                                </span>\n"
-#~ "                                <br/>"
-#~ msgstr ""
-#~ "<span class=\"text-muted\">\n"
-#~ "                                    Activer l’e-reporting &amp; l’envoi "
-#~ "des factures au PPF\n"
-#~ "                                </span>\n"
-#~ "                                <br/>"
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "sent"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "unknown"
+msgstr ""
 
 #~ msgid ""
 #~ "<span class=\"text-muted\">\n"

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 16:38+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -113,10 +113,9 @@ msgstr "%(user)s がこの経費が類似の経費と重複していないこと
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense
 msgid ""
-"'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
-"''))"
+"'Expense - %s - %s' % (object.employee_id.name, (object.name or "
+"'').replace('/', ''))"
 msgstr ""
-"'経費 - %s - %s' % (object.employee_id.name, (object.name).replace('/', ''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -169,11 +168,6 @@ msgstr "<span>@</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<span>Date:</span>"
-msgstr "<span>日付:</span>"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<span>Employee:</span>"
 msgstr "<span>従業員:</span>"
 
@@ -186,6 +180,13 @@ msgstr "<span>マネジャー:</span>"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<span>Paid by:</span>"
 msgstr "<span>支払済:</span>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
+msgid ""
+"<span>This bill was already paid by an employee and the bill has been sent "
+"to you. Don't pay the supplier</span>"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -437,13 +438,9 @@ msgid "Auto-validation"
 msgstr "自動承認"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_post_wizard__accounting_date
-msgid "Bill Date"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
-msgid "Bill date"
+#: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__bill_paid_by_employee
+#: model:ir.model.fields,field_description:hr_expense.field_account_move__bill_paid_by_employee
+msgid "Bill Paid By Employee"
 msgstr ""
 
 #. module: hr_expense
@@ -454,11 +451,6 @@ msgid ""
 msgstr ""
 "価格に含まれる税金も価格に含まれない税金も、経費については価格に含まれる税金"
 "として扱われます。"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "Business Trip"
-msgstr "出張"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__can_approve
@@ -508,9 +500,10 @@ msgid "Communication"
 msgstr "通信費"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_actions_report.py:0
 #: model:ir.model,name:hr_expense.model_res_company
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_post_wizard__company_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__company_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Company"
@@ -525,6 +518,11 @@ msgstr "構成設定"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
 msgid "Configuration"
 msgstr "設定"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__company_currency_id
+msgid "Cost Currency"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_kanban_view
@@ -564,7 +562,6 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__create_uid
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_post_wizard__create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__create_uid
@@ -575,7 +572,6 @@ msgstr "作成者"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__create_date
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_post_wizard__create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__create_date
@@ -584,13 +580,7 @@ msgid "Created on"
 msgstr "作成日"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "Credit Card"
-msgstr "クレジットカード"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__currency_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__currency_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__currency_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__currency_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -604,6 +594,7 @@ msgstr "為替レート"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Date"
 msgstr "日付"
 
@@ -649,6 +640,7 @@ msgstr "OCRとAIで領収書をデジタル化"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_account_journal__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__display_name
@@ -659,7 +651,6 @@ msgstr "OCRとAIで領収書をデジタル化"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__display_name
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_post_wizard__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__display_name
@@ -723,10 +714,13 @@ msgid ""
 msgstr "会社が支払った各経費には、それぞれ明確な専用仕訳が必要です。"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_actions_report.py:0
 #: model:ir.model,name:hr_expense.model_hr_employee
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__employee_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Employee"
 msgstr "従業員"
 
@@ -742,7 +736,6 @@ msgstr "従業員経費仕訳帳"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
-#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_account_employee_expenses
 msgid "Employee Expenses"
 msgstr "経費精算"
 
@@ -790,6 +783,12 @@ msgid "Existing Bill"
 msgstr "既存の仕入先請求書"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__existing_expense_ids
+#: model:ir.model.fields,field_description:hr_expense.field_account_move__existing_expense_ids
+msgid "Existing Expense"
+msgstr ""
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/webclient/share_target/expense_share_target_item.js:0
 #: model:account.journal,name:hr_expense.hr_expense_account_journal
@@ -803,6 +802,7 @@ msgstr "既存の仕入先請求書"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__expense_id
 #: model:ir.model.fields.selection,name:hr_expense.selection__account_analytic_applicability__business_domain__expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_view_form_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expense"
@@ -830,6 +830,11 @@ msgid "Expense Approver"
 msgstr "経費承認者"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_expense
+msgid "Expense Bills"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expense Card"
 msgstr "経費カード"
@@ -848,11 +853,6 @@ msgstr "経費のデジタル化 (OCR)"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
 msgid "Expense Manager"
 msgstr "経費マネジャー"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_expense_post_wizard
-msgid "Expense Posting Wizard"
-msgstr "経費記帳ウィザード"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_product_job_position_limit
@@ -906,6 +906,12 @@ msgstr "経費が承認されました"
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expense created from a split."
 msgstr "分割により発生した経費。"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/account_journal.py:0
+msgid "Expense linked moves"
+msgstr ""
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
@@ -1002,6 +1008,11 @@ msgid "Expenses to Process"
 msgstr "処理待ち経費"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_account_invoice_filter_inherit_expense
+msgid "Expenses to post"
+msgstr ""
+
+#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses with a similar receipt to %(other_expense_name)s"
@@ -1071,6 +1082,12 @@ msgid "Go to Account"
 msgstr "会計へ移動"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "Go to expense(s)"
+msgstr ""
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Go to the Settings tab to configure the expense approver."
@@ -1119,6 +1136,7 @@ msgstr "人事経費エイリアスドメイン"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__id
+#: model:ir.model.fields,field_description:hr_expense.field_account_journal__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__id
@@ -1129,7 +1147,6 @@ msgstr "人事経費エイリアスドメイン"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_post_wizard__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__id
@@ -1191,6 +1208,11 @@ msgid "Invalid attachments!"
 msgstr "無効な添付ファイルです！"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_account_invoice_filter_inherit_expense
+msgid "Invoices from an expense, approved but not posted yet"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
 msgid "Is Editable By Current User"
 msgstr "現在のユーザが編集可能"
@@ -1247,9 +1269,8 @@ msgid "Job Positions"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_journal
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__journal_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_post_wizard__employee_journal_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Journal"
 msgstr "仕訳帳"
 
@@ -1309,7 +1330,6 @@ msgstr "最終通知日"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__write_uid
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_post_wizard__write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__write_uid
@@ -1320,7 +1340,6 @@ msgstr "最終更新者"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__write_date
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_post_wizard__write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__write_date
@@ -1448,6 +1467,24 @@ msgid "Mitchell Admin"
 msgstr "Mitchell Admin"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_actions_report.py:0
+msgid "Multiple Managers"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_actions_report.py:0
+msgid "Multiple employees"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_actions_report.py:0
+msgid "Multiple payment modes"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "My Activities"
 msgstr "自分の活動"
@@ -1474,12 +1511,6 @@ msgstr "自分のチーム"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Name"
 msgstr "名称"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
-msgid "New expense entries"
-msgstr "新規経費仕訳"
 
 #. module: hr_expense
 #. odoo-python
@@ -1530,6 +1561,12 @@ msgid "No data yet!"
 msgstr "まだデータはありません！"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_actions_report.py:0
+msgid "No employee"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense products found. Let's create one!"
 msgstr "該当するプロダクトが見つかりませんでした。作成してみましょう!"
@@ -1543,6 +1580,12 @@ msgstr "従業員%(name)s用の雇用契約書が見つかりません。作成�
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
 msgid "None (Paid by Company)"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_actions_report.py:0
+msgid "None (automatic)"
 msgstr ""
 
 #. module: hr_expense
@@ -1650,18 +1693,12 @@ msgstr "合計金額0の値を持てるのはドラフト経費のみです。"
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid "Only expense paid by the employee can be posted with the wizard"
-msgstr "従業員が支払った経費のみがウィザードで記帳できます。"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only one expense can be linked to a particular payment"
 msgstr "特定の支払いにリンクできる経費は1つだけです。"
 
 #. module: hr_expense
 #. odoo-python
-#: code:addons/hr_expense/models/product_product.py:0
+#: code:addons/hr_expense/models/hr_expense_product_job_position_limit.py:0
 msgid "Only one generic expense limit can be defined per product."
 msgstr ""
 
@@ -1767,34 +1804,6 @@ msgstr ""
 "給与明細での支給、のいずれであるかを指定してください。"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid "Post"
-msgstr "記帳"
-
-#. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/views/list.xml:0
-msgid "Post Entries"
-msgstr "仕訳を記帳"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
-msgid "Post Expenses"
-msgstr "経費を記帳"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-msgid "Post expenses"
-msgstr "経費を記帳する"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-msgid "Post expenses paid by the employee"
-msgstr "従業員により支払済経費を記帳する"
-
-#. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__posted
 msgid "Posted"
 msgstr "記帳済"
@@ -1809,6 +1818,14 @@ msgstr "Powered by"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Price:"
 msgstr "価格:"
+
+#. module: hr_expense
+#. odoo-javascript
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
+msgid "Print"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
@@ -2097,11 +2114,6 @@ msgid "Source Document"
 msgstr "参照元ドキュメント"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__accounting_date
-msgid "Specify the bill date of the related vendor bill."
-msgstr "関連する仕入先請求書の請求日を指定します。"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
 msgid "Specify whether the product can be selected in an expense."
@@ -2313,11 +2325,6 @@ msgstr ""
 "%(expenses)s"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
-msgid "The journal used when the expense is paid by employee."
-msgstr "従業員に経費を支払う時に使用される仕訳帳"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__payment_method_line_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr "会社が費用を支払う際に使用される支払方法。"
@@ -2339,10 +2346,8 @@ msgstr "分割後の合計は同じままである必要があります。"
 msgid ""
 "The vendor is required for expenses using SEPA Credit Transfer as the "
 "payment method.\n"
-"Please set a vendor on the following expenses: %s"
+"Please set a vendor on the expenses."
 msgstr ""
-"支払方法にSEPA送金(SCT)を使用する経費には、仕入先の設定が必要です。\n"
-"以下の経費に仕入先を設定してください: %s"
 
 #. module: hr_expense
 #. odoo-python
@@ -2481,6 +2486,12 @@ msgid "Unit Price"
 msgstr "単価"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_actions_report.py:0
+msgid "Unknown"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Untaxed Amount"
 msgstr "税抜金額"
@@ -2595,20 +2606,18 @@ msgstr ""
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid ""
+"You can't create move for employee-paid expenses belonging to different "
+"companies at the same time"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/ir_attachment.py:0
 msgid ""
 "You can't delete attachments from an expense once it has been submitted."
 msgstr "経費申請を一度提出すると、添付ファイルを削除することはできません。"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-msgid ""
-"You can't post simultaneously employee-paid expenses belonging to different "
-"companies"
-msgstr ""
-"異なる会社に属する従業員によって支払済の経費を同時に投稿することはできませ"
-"ん。"
 
 #. module: hr_expense
 #. odoo-python
@@ -2623,8 +2632,8 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid "You cannot cancel an expense linked to a posted journal entry"
-msgstr "記帳済仕訳に紐づいた経費をキャンセルすることはできません。"
+msgid "You cannot cancel an expense linked to a journal entry"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2664,8 +2673,8 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid "You cannot reset to draft an expense linked to a posted journal entry."
-msgstr "記帳済の仕訳にリンクした経費をドラフトに戻すことはできません。"
+msgid "You cannot reset to draft an expense linked to a journal entry."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2695,12 +2704,6 @@ msgstr "この経費を編集する権限がありません。"
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You don't have the access rights to modify this expense."
 msgstr "この経費を編集する権限がありません。"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
-msgid "You don't have the rights to create accounting entries."
-msgstr "会計仕訳を作成する権限がありません。"
 
 #. module: hr_expense
 #. odoo-python
@@ -2793,3 +2796,74 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "同じ領収書が既に存在します。"
+
+#~ msgid ""
+#~ "'Expense - %s - %s' % (object.employee_id.name, "
+#~ "(object.name).replace('/', ''))"
+#~ msgstr ""
+#~ "'経費 - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+#~ "''))"
+
+#~ msgid "<span>Date:</span>"
+#~ msgstr "<span>日付:</span>"
+
+#~ msgid "Business Trip"
+#~ msgstr "出張"
+
+#~ msgid "Credit Card"
+#~ msgstr "クレジットカード"
+
+#~ msgid "Expense Posting Wizard"
+#~ msgstr "経費記帳ウィザード"
+
+#~ msgid "New expense entries"
+#~ msgstr "新規経費仕訳"
+
+#~ msgid "Only expense paid by the employee can be posted with the wizard"
+#~ msgstr "従業員が支払った経費のみがウィザードで記帳できます。"
+
+#~ msgid "Post"
+#~ msgstr "記帳"
+
+#~ msgid "Post Entries"
+#~ msgstr "仕訳を記帳"
+
+#~ msgid "Post Expenses"
+#~ msgstr "経費を記帳"
+
+#~ msgid "Post expenses"
+#~ msgstr "経費を記帳する"
+
+#~ msgid "Post expenses paid by the employee"
+#~ msgstr "従業員により支払済経費を記帳する"
+
+#~ msgid "Specify the bill date of the related vendor bill."
+#~ msgstr "関連する仕入先請求書の請求日を指定します。"
+
+#~ msgid "The journal used when the expense is paid by employee."
+#~ msgstr "従業員に経費を支払う時に使用される仕訳帳"
+
+#~ msgid ""
+#~ "The vendor is required for expenses using SEPA Credit Transfer as the "
+#~ "payment method.\n"
+#~ "Please set a vendor on the following expenses: %s"
+#~ msgstr ""
+#~ "支払方法にSEPA送金(SCT)を使用する経費には、仕入先の設定が必要です。\n"
+#~ "以下の経費に仕入先を設定してください: %s"
+
+#~ msgid ""
+#~ "You can't post simultaneously employee-paid expenses belonging to "
+#~ "different companies"
+#~ msgstr ""
+#~ "異なる会社に属する従業員によって支払済の経費を同時に投稿することはできませ"
+#~ "ん。"
+
+#~ msgid "You cannot cancel an expense linked to a posted journal entry"
+#~ msgstr "記帳済仕訳に紐づいた経費をキャンセルすることはできません。"
+
+#~ msgid ""
+#~ "You cannot reset to draft an expense linked to a posted journal entry."
+#~ msgstr "記帳済の仕訳にリンクした経費をドラフトに戻すことはできません。"
+
+#~ msgid "You don't have the rights to create accounting entries."
+#~ msgstr "会計仕訳を作成する権限がありません。"

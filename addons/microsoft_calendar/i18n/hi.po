@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 15:14+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -21,31 +21,31 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "%(reminder_type)s - %(duration)s Days"
 msgstr "%(reminder_type)s - %(duration)s दिन"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "%(reminder_type)s - %(duration)s Hours"
 msgstr "%(reminder_type)s - %(duration)s घंटे"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "%(reminder_type)s - %(duration)s Minutes"
 msgstr "%(reminder_type)s - %(duration)s मिनट"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "%s - At time of event"
 msgstr ""
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "(No title)"
 msgstr "(कोई शीर्षक नहीं)"
 
@@ -146,7 +146,7 @@ msgstr "डिस्प्ले का नाम"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "Due to an Outlook Calendar limitation, recurrence updates must be done "
 "directly in Outlook Calendar."
@@ -154,7 +154,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "Due to an Outlook Calendar limitation, recurrence updates must be done "
 "directly in Outlook Calendar.\n"
@@ -164,7 +164,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "Due to an Outlook Calendar limitation, recurrent events must be created "
 "directly in Outlook Calendar."
@@ -182,7 +182,7 @@ msgstr "इवेंट दोहराने का नियम"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "For a correct synchronization between Odoo and Outlook Calendar, all "
 "attendees must have an email address. However, some events do not respect "
@@ -194,7 +194,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "For having a different organizer in your event, it is necessary that the "
 "organizer have its Odoo Calendar synced with Outlook Calendar."
@@ -229,7 +229,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "It is necessary adding the proposed organizer as attendee before saving the "
 "event."
@@ -318,7 +318,7 @@ msgstr "अगला सिंक टोकन"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "Notification"
 msgstr "नोटिफ़िकेशन"
 
@@ -342,6 +342,11 @@ msgid "Outlook Calendar"
 msgstr "Outlook कैलेंडर"
 
 #. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.calendar_calendar_view_form_inherit_microsoft_calendar
+msgid "Outlook Sync"
+msgstr ""
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_synchronization_stopped
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__microsoft_synchronization_stopped
 msgid "Outlook Synchronization stopped"
@@ -349,7 +354,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "Outlook limitation: in a recurrence, an event cannot be moved to or before "
 "the day of the previous event, and cannot be moved to or after the day of "
@@ -442,29 +447,29 @@ msgstr ""
 msgid "What should happen to previously synced events?"
 msgstr ""
 
-msgid "Client Secret"
-msgstr "क्लाइंट सीक्रेट"
+#~ msgid "Client Secret"
+#~ msgstr "क्लाइंट सीक्रेट"
 
-msgid "Confirm"
-msgstr "पुष्टि करें"
+#~ msgid "Confirm"
+#~ msgstr "पुष्टि करें"
 
-msgid "Delete from Odoo"
-msgstr "Odoo से मिटाएं"
+#~ msgid "Delete from Odoo"
+#~ msgstr "Odoo से मिटाएं"
 
-msgid "Delete from both"
-msgstr "दोनों से मिटाएं"
+#~ msgid "Delete from both"
+#~ msgstr "दोनों से मिटाएं"
 
-msgid "Leave them untouched"
-msgstr "उन्हें ऐसे ही रहने दें"
+#~ msgid "Leave them untouched"
+#~ msgstr "उन्हें ऐसे ही रहने दें"
 
-msgid "Next Synchronization"
-msgstr "अगला सिंक्रोनाइज़ेशन"
+#~ msgid "Next Synchronization"
+#~ msgstr "अगला सिंक्रोनाइज़ेशन"
 
-msgid "Synchronize all existing events"
-msgstr "सभी मौजूदा इवेंट को सिंक करें"
+#~ msgid "Synchronize all existing events"
+#~ msgstr "सभी मौजूदा इवेंट को सिंक करें"
 
-msgid "Synchronize only new events"
-msgstr "सिर्फ़ नए इवेंट को सिंक करें"
+#~ msgid "Synchronize only new events"
+#~ msgstr "सिर्फ़ नए इवेंट को सिंक करें"
 
-msgid "User's Existing Events"
-msgstr "उपयोगकर्ता के मौजूदा इवेंट"
+#~ msgid "User's Existing Events"
+#~ msgstr "उपयोगकर्ता के मौजूदा इवेंट"

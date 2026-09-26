@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 14:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-"
@@ -1158,8 +1158,7 @@ msgid ""
 "                                                <span style=\"white-space: "
 "nowrap;\">\n"
 "                                                    <t t-"
-"if=\"object.website_id.show_line_subtotals_tax_selection == "
-"'tax_excluded'\">\n"
+"if=\"object.company_price_include == 'tax_excluded'\">\n"
 "                                                        <t t-"
 "out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
 "10.00</t>\n"
@@ -1333,6 +1332,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Accept Terms"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
+msgid "Access Code"
 msgstr ""
 
 #. module: website_sale
@@ -1627,7 +1631,7 @@ msgstr "Alternative produkter"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "Amount"
@@ -2167,7 +2171,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 msgid "Choose Your Amount"
 msgstr ""
 
@@ -2183,11 +2187,6 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Choose your"
 msgstr ""
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_christmas
-msgid "Christmas"
-msgstr "Jul"
 
 #. module: website_sale
 #. odoo-python
@@ -2315,11 +2314,6 @@ msgstr "Farger"
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Columns"
 msgstr "Kolonner"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_product_combos
-msgid "Combo Choices"
-msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -2593,6 +2587,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "Custom Amount"
@@ -2713,6 +2708,11 @@ msgstr "Definer en ny kategori"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_ribbon_action
 msgid "Define a new ribbon"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Defined on website"
 msgstr ""
 
 #. module: website_sale
@@ -2978,6 +2978,8 @@ msgid "Display Options"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__show_line_subtotals_tax_selection
+#: model:ir.model.fields,field_description:website_sale.field_website__show_line_subtotals_tax_selection
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Display Product Prices"
 msgstr "Vis produktpriser"
@@ -3144,12 +3146,7 @@ msgid "E-Commerce Extra Info Shown on product page"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
-msgid "E-commerce Promotional Code"
-msgstr "Kampanjekode for nettbutikk"
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_europe
+#: model:product.pricelist,name:website_sale.list_eur
 msgid "EUR"
 msgstr "EUR"
 
@@ -4203,12 +4200,6 @@ msgid "Lightbulb sold separately"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__show_line_subtotals_tax_selection
-#: model:ir.model.fields,field_description:website_sale.field_website__show_line_subtotals_tax_selection
-msgid "Line Subtotals Tax Display"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Link Color"
@@ -4474,7 +4465,7 @@ msgid "New!"
 msgstr ""
 
 #. module: website_sale
-#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_arrivals
 msgid "Newest"
 msgstr ""
 
@@ -5095,6 +5086,11 @@ msgid "Page Width"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Paid"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
 msgid "Parent"
 msgstr "Overordnet"
@@ -5272,6 +5268,11 @@ msgid "Price - Low to High"
 msgstr "Pris - lav til høy"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Price Display"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
 msgid "Price Range"
 msgstr ""
@@ -5301,7 +5302,7 @@ msgstr ""
 #: model:ir.model,name:website_sale.model_product_pricelist
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__pricelist_id
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__pricelist_id
-#: model_terms:ir.ui.view,arch_db:website_sale.pricelist_list
+#: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_search
 msgid "Pricelist"
 msgstr "Prisliste"
@@ -5312,8 +5313,20 @@ msgid "Pricelist Rule"
 msgstr "Prislisteregel"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/footer_copyright_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/header_elements_option.xml:0
+msgid "Pricelist Selector"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.pricelist_selector
+msgid "Pricelist: {{0}}"
 msgstr ""
 
 #. module: website_sale
@@ -5653,6 +5666,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr "Produktvisninger"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_b2b
+msgid "Professional Prices"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -6859,12 +6877,19 @@ msgid "Target"
 msgstr "Mål"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__tax_display
+msgid "Tax Display"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
+#: model:ir.model.fields.selection,name:website_sale.selection__website__tax_display__tax_excluded
 msgid "Tax Excluded"
 msgstr "Uten mva."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_included
+#: model:ir.model.fields.selection,name:website_sale.selection__website__tax_display__tax_included
 msgid "Tax Included"
 msgstr "Med mva."
 
@@ -6882,6 +6907,16 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__amount_delivery
 msgid "Tax included or excluded depending on the website configuration."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_excluded
+msgid "Taxes Excluded"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_included
+msgid "Taxes Included"
 msgstr ""
 
 #. module: website_sale
@@ -7355,6 +7390,11 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
 msgid "URL of a video for showcasing your product."
 msgstr "Link til en video som viser frem produktet."
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_default
+msgid "USD"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -8004,6 +8044,14 @@ msgid "Your order will be confirmed after payment is received."
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/payment_transaction.py:0
+msgid ""
+"Your payment of %(formatted_amount)s has been processed. Pay the remaining "
+"amount to confirm your order."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "Den forrige handlevognen din er allerede gjennomført."
@@ -8102,6 +8150,11 @@ msgstr "Beskrivelse i nettbutikk"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 msgid "eCommerce Filter Visibility"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__tax_display
+msgid "eCommerce Price Display"
 msgstr ""
 
 #. module: website_sale
@@ -8278,6 +8331,12 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "Christmas"
+#~ msgstr "Jul"
+
+#~ msgid "E-commerce Promotional Code"
+#~ msgstr "Kampanjekode for nettbutikk"
 
 #~ msgid "Customizable Desk"
 #~ msgstr "Tilpassbart skrivebord"

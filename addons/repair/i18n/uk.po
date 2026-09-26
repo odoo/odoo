@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 15:30+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -504,11 +504,6 @@ msgid "End Repair"
 msgstr "Завершення ремонту"
 
 #. module: repair
-#: model:ir.model.fields,help:repair.field_repair_order__tracking
-msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr "Забезпечення відстеження товару, що зберігається, на вашому складі."
-
-#. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Exp %s"
@@ -634,6 +629,11 @@ msgstr "Складське переміщення"
 #: model:ir.actions.act_window,name:repair.action_repair_move_lines
 msgid "Inventory Moves"
 msgstr "Складські переміщення"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__invisible
+msgid "Invisible"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_ids
@@ -930,6 +930,11 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 msgid "Please set the first Serial Number or a default sequence"
 msgstr "Встановіть перший серійний номер або послідовність за замовчуванням"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__primary
+msgid "Primary"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__priority
@@ -1324,6 +1329,11 @@ msgid "Search Repair Orders"
 msgstr "Пошук замовлення на ремонт"
 
 #. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__secondary
+msgid "Secondary"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__sequence
 msgid "Sequence"
 msgstr ""
@@ -1410,6 +1420,13 @@ msgstr "Така мітка вже існує!"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_tree
 msgid "Tags"
 msgstr "Мітки"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__tracking
+msgid ""
+"Technical field holding the tracking method. False on a storable product "
+"means it's tracked by quantity only."
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
@@ -1583,6 +1600,11 @@ msgid "Urgent"
 msgstr "Терміновий"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__validate_button_style
+msgid "Validate Button Style"
+msgstr ""
+
+#. module: repair
 #: model:ir.model,name:repair.model_stock_warehouse
 msgid "Warehouse"
 msgstr "Склад"
@@ -1673,11 +1695,14 @@ msgstr ""
 msgid "text"
 msgstr ""
 
-msgid "Check availability"
-msgstr "Перевірте наявність"
+#~ msgid "Ensure the traceability of a storable product in your warehouse."
+#~ msgstr "Забезпечення відстеження товару, що зберігається, на вашому складі."
 
-msgid "Website Messages"
-msgstr "Повідомлення з веб-сайту"
+#~ msgid "Check availability"
+#~ msgstr "Перевірте наявність"
 
-msgid "Website communication history"
-msgstr "Історія бесіди на сайті"
+#~ msgid "Website Messages"
+#~ msgstr "Повідомлення з веб-сайту"
+
+#~ msgid "Website communication history"
+#~ msgstr "Історія бесіди на сайті"

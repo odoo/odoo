@@ -14,11 +14,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:44+0000\n"
-"PO-Revision-Date: 2026-09-09 14:11+0000\n"
+"POT-Creation-Date: 2026-09-18 17:40+0000\n"
+"PO-Revision-Date: 2026-09-24 12:16+0000\n"
 "Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
-"portal/fr/>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/portal/"
+"fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +45,30 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
 msgstr "\" pour valider votre action."
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "\"Authorization\": f\"bearer {mcp_key}\","
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "\"Content-Type\": \"application/json\","
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "# Store the API key securely, not in the code."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "%(model_name)s shared with %(partner_names)s"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
@@ -292,6 +316,12 @@ msgid "Already Registered"
 msgstr "Déjà inscrit"
 
 #. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "An email invitation has been sent to the selected users."
+msgstr ""
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_profile_editor.js:0
 msgid "An error occurred while saving your profile."
@@ -424,12 +454,6 @@ msgstr "Configurez vos paramètres de connexion"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_security.js:0
-msgid "Confirm"
-msgstr "Confirmer"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/interactions/portal_security.js:0
 msgid "Confirm Password"
 msgstr "Confirmer le mot de passe"
 
@@ -459,6 +483,12 @@ msgstr "Contacts"
 
 #. module: portal
 #. odoo-javascript
+#: code:addons/portal/static/src/interactions/portal_security.js:0
+msgid "Copied to clipboard"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_composer.js:0
 msgid "Could not save file %s"
 msgstr "Impossible d’enregistrer le fichier %s"
@@ -473,6 +503,12 @@ msgstr "Pays"
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country..."
 msgstr "Pays..."
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/interactions/portal_security.js:0
+msgid "Create Key"
+msgstr ""
 
 #. module: portal
 #: model:ir.model,website_form_label:portal.model_res_partner
@@ -642,12 +678,6 @@ msgid "Email Thread"
 msgstr "Discussion par e-mail"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Enter a description of and purpose for the key."
-msgstr "Entrez une description et le but de la clé."
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Expiration Date"
 msgstr "Date d'expiration"
@@ -655,14 +685,14 @@ msgstr "Date d'expiration"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Forgot password?"
-msgstr "Mot de passe oublié ?"
+msgid "Expires"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Give a duration for the key's validity"
-msgstr "Définissez une durée de validité pour la clé"
+msgid "Forgot password?"
+msgstr "Mot de passe oublié ?"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -689,17 +719,6 @@ msgstr "Donner accès au portail"
 #: model:ir.model,name:portal.model_ir_http
 msgid "HTTP Routing"
 msgstr "Routage HTTP"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid ""
-"Here is your new API key, use it instead of a password for RPC access.\n"
-"                Your login is still necessary for interactive usage."
-msgstr ""
-"Voici votre nouvelle clé API, utilisez-la à la place d'un mot de passe pour "
-"l'accès RPC.\n"
-"Votre identifiant reste nécessaire pour une utilisation interactive."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -740,18 +759,12 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "If you want to modify it, update"
-msgstr ""
+msgstr "Si vous souhaitez modifier ceci, mettez à jour"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
 msgid "Image"
 msgstr "Image"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Important:"
-msgstr "Important :"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -805,10 +818,8 @@ msgstr "Est portail"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid ""
-"It is very important that this description be clear\n"
-"                and complete,"
-msgstr "Il est très important que cette description soit claire et complète,"
+msgid "Key Name — your only way to identify that key"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__write_uid
@@ -887,12 +898,6 @@ msgstr "Mes adresses"
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Name"
 msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Name your key"
-msgstr "Nommer votre clé"
 
 #. module: portal
 #. odoo-javascript
@@ -1081,6 +1086,8 @@ msgid "Save Address"
 msgstr "Enregistrer l'adresse"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Scope"
 msgstr "Portée"
@@ -1133,6 +1140,12 @@ msgstr "Envoyer"
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
 msgstr "Partager le document"
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "Shared successfully"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
@@ -1263,18 +1276,6 @@ msgid "The contact \"%s\" has the same email as an existing user"
 msgstr "Le contact \"%s\" a la même adresse e-mail qu'un utilisateur existant"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "The key cannot be retrieved later and provides"
-msgstr "La clé ne pourra plus être récupérée par la suite et donne accès"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "The key will be deleted once this period has elapsed."
-msgstr "La clé sera supprimée une fois cette période écoulée."
-
-#. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The new password and its confirmation must be identical."
@@ -1323,6 +1324,14 @@ msgid "This is a preview of the customer portal."
 msgstr "Ceci est un aperçu du portail client."
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid ""
+"This key won't be shown again. Please copy it and store it securely. Treat "
+"it like a password, it grants full access to your account."
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This partner is linked to an internal User and already has access to the "
@@ -1349,6 +1358,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_portal_entry__name
 msgid "Title of Card"
 msgstr "Titre de la carte"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "To login, use the following parameters (Python):"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -1404,12 +1419,6 @@ msgstr "Vérifier le nouveau mot de passe :"
 #: model:ir.model,name:portal.model_ir_ui_view
 msgid "View"
 msgstr "Vue"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "What's this key for?"
-msgstr "À quoi sert cette clé ?"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -1493,8 +1502,8 @@ msgstr "Code postal"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "full access"
-msgstr "accès complet"
+msgid "e.g. \"Odoo MCP\""
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -1504,18 +1513,26 @@ msgstr "vous a invité à accéder au/à la"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid ""
-"it will be the only way to\n"
-"                identify the key once created"
+msgid "headers = {"
 msgstr ""
-"ce sera le seul moyen\n"
-"                d'identifier la clé une fois qu'elle a été créée"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "import requests"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "logged in"
 msgstr "connecté"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "mcp_key = os.environ[\"ODOO_MCP_KEY\"]"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -1536,15 +1553,66 @@ msgstr "pour publier un commentaire."
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "to your user account, it is very important to store it securely."
+msgid "url = \""
 msgstr ""
-"à votre compte utilisateur, il est très important de la conserver en lieu "
-"sûr."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "les informations de votre compte"
+
+#~ msgid "Confirm"
+#~ msgstr "Confirmer"
+
+#~ msgid "Enter a description of and purpose for the key."
+#~ msgstr "Entrez une description et le but de la clé."
+
+#~ msgid "Give a duration for the key's validity"
+#~ msgstr "Définissez une durée de validité pour la clé"
+
+#~ msgid ""
+#~ "Here is your new API key, use it instead of a password for RPC access.\n"
+#~ "                Your login is still necessary for interactive usage."
+#~ msgstr ""
+#~ "Voici votre nouvelle clé API, utilisez-la à la place d'un mot de passe "
+#~ "pour l'accès RPC.\n"
+#~ "Votre identifiant reste nécessaire pour une utilisation interactive."
+
+#~ msgid "Important:"
+#~ msgstr "Important :"
+
+#~ msgid ""
+#~ "It is very important that this description be clear\n"
+#~ "                and complete,"
+#~ msgstr ""
+#~ "Il est très important que cette description soit claire et complète,"
+
+#~ msgid "Name your key"
+#~ msgstr "Nommer votre clé"
+
+#~ msgid "The key cannot be retrieved later and provides"
+#~ msgstr "La clé ne pourra plus être récupérée par la suite et donne accès"
+
+#~ msgid "The key will be deleted once this period has elapsed."
+#~ msgstr "La clé sera supprimée une fois cette période écoulée."
+
+#~ msgid "What's this key for?"
+#~ msgstr "À quoi sert cette clé ?"
+
+#~ msgid "full access"
+#~ msgstr "accès complet"
+
+#~ msgid ""
+#~ "it will be the only way to\n"
+#~ "                identify the key once created"
+#~ msgstr ""
+#~ "ce sera le seul moyen\n"
+#~ "                d'identifier la clé une fois qu'elle a été créée"
+
+#~ msgid "to your user account, it is very important to store it securely."
+#~ msgstr ""
+#~ "à votre compte utilisateur, il est très important de la conserver en lieu "
+#~ "sûr."
 
 #~ msgid "<i class=\"oi me-2\" data-icon=\"add\"/>Add Address"
 #~ msgstr "<i class=\"oi me-2\" data-icon=\"add\"/>Ajouter une adresse"

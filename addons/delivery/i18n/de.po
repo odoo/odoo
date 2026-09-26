@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-09-09 14:06+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
@@ -249,11 +249,6 @@ msgstr "Hinzufügen"
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "Add a delivery method"
 msgstr "Eine Liefermethode hinzufügen"
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
-msgid "Add shipping"
-msgstr "Versand hinzufügen"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -742,7 +737,7 @@ msgstr "Tarif erhalten und Sendung erstellen"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+#: code:addons/delivery/static/src/backend/widgets/carrier_rates_loader.xml:0
 msgid "Get all rates"
 msgstr ""
 
@@ -867,7 +862,7 @@ msgstr "Zuletzt aktualisiert am"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+#: code:addons/delivery/static/src/backend/widgets/carrier_rates_loader.xml:0
 msgid "Loading Rates"
 msgstr ""
 
@@ -1139,6 +1134,11 @@ msgstr "Bestellung %s versenden"
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "Shipped"
 msgstr "Versendet"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Shipping"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__shipping_date
@@ -1452,6 +1452,9 @@ msgid ""
 msgstr ""
 "{{ object.so_id.company_id.name }} Versandbestätigung (Ref. "
 "{{ object.so_id.name or 'n/a' }})"
+
+#~ msgid "Add shipping"
+#~ msgstr "Versand hinzufügen"
 
 #~ msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Get rate"
 #~ msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>Tarif erhalten"

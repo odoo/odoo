@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
 "PO-Revision-Date: 2026-08-31 14:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -1033,6 +1033,12 @@ msgid ""
 msgstr ""
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
+msgid "<i class=\"me-2 oi\" data-icon=\"arrow_forward\"/>Manage my calendars"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled mt-1\" data-icon=\"schedule\" title=\"Dates\"/>"
 msgstr ""
@@ -1083,6 +1089,11 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"oi\" data-icon=\"calendar_today\" title=\"Calendar\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi\" data-icon=\"close\" title=\"Remove\"/>"
 msgstr "<i class=\"oi\" data-icon=\"close\" title=\"Remove\"/>"
 
@@ -1112,16 +1123,6 @@ msgstr ""
 "'weekly')\">Tekrarla:</span>"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
-msgstr "<span class=\"me-1 o_form_label\">Google Takvim</span>"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
-msgstr "<span class=\"me-1 o_form_label\">Outlook Takvimi</span>"
-
-#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"me-1\">Not available at the selected time:</span>"
 msgstr ""
@@ -1131,6 +1132,20 @@ msgstr ""
 msgid ""
 "<span class=\"mx-1\"><i class=\"oi me-1\" data-icon=\"add\"/>Video "
 "conference</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
+msgid ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share or id != "
+"uid\">Calendar</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
+msgid ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share\">Calendar</"
+"span>"
 msgstr ""
 
 #. module: calendar
@@ -1151,9 +1166,39 @@ msgid "<span invisible=\"allday\"> or </span>"
 msgstr ""
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
-msgid "<span>Are you sure you want to delete this event? <br/></span>"
-msgstr "<span>Bu etkinliği silmek istediğinizden emin misiniz? <br/></span>"
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid ""
+"<span invisible=\"block_mail\">Notify attendees of confirmed events that the "
+"event was canceled?</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid ""
+"<span invisible=\"requested_action != 'unlink'\">Are you sure you want to "
+"delete these events ?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">Are "
+"you sure you want to archive these events ?</span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'unlink'\">\n"
+"                        Some events containing recurrence are selected, only "
+"this occurrence will be unlinked.\n"
+"                    </span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'archive'\">\n"
+"                        Some events containing recurrence are selected, only "
+"this occurrence will be archived.\n"
+"                    </span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+msgid ""
+"<span invisible=\"requested_action != 'unlink'\">Are you sure you want to "
+"delete this event ?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">Are "
+"you sure you want to archive this event ?</span>"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1170,6 +1215,17 @@ msgstr ""
 "Bu sayfayı <strong>kaydedin</strong> ve özelliği ayarlamak için buraya dönün."
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_calendar.py:0
+msgid "A primary calendar cannot be deleted."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.constraint,message:calendar.constraint_calendar_event_check_no_recurrent_draft
+msgid "A recurring event cannot be a draft."
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
 msgid "A user cannot have the same contact twice."
 msgstr "Bir kullanıcı aynı temasa iki kez sahip olamaz."
@@ -1184,6 +1240,12 @@ msgstr "Kabul Et"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
 msgid "Accepted Count"
 msgstr "Kabul Edilen Sayısı"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__user_access_role
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__access_role
+msgid "Access Role"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_access_token_unique
@@ -1313,6 +1375,12 @@ msgid "All Day, %(day)s"
 msgstr "Tüm Gün, %(day)s"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "All calendars"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "All day"
 msgstr ""
@@ -1325,10 +1393,49 @@ msgid "All events"
 msgstr "Tüm Etkinlikler"
 
 #. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__all_events
+msgid "All the events"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid "Archive"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Archive event"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Archive events"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+msgid "Archive or Delete Event"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid "Archive or Delete Events"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Archived"
 msgstr "Arşivlendi"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Are you sure you want to unsubscribe from this calendar?"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
@@ -1350,6 +1457,11 @@ msgstr "Katılımcılar"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
 msgid "Attendees Count"
 msgstr "Katılımcı Sayısı"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Attendees will be notified upon confirmation."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
@@ -1383,7 +1495,13 @@ msgid "Base Event"
 msgstr "Temel Etkinlik"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body_has_template_value
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__block_mail
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__block_mail
+msgid "Block Mail"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr "Gövde içeriği şablonla aynı"
 
@@ -1403,17 +1521,18 @@ msgid "By day"
 msgstr "Gündüz"
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
-msgid "Bye-bye, record!"
-msgstr "Güle güle, kayıt!"
-
-#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_calendar.py:0
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__calendar_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_id
+#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_ids
 #: model:ir.module.module,shortdesc:base.module_calendar
 #: model:ir.ui.menu,name:calendar.calendar_event_menu
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 msgid "Calendar"
 msgstr "Takvim"
 
@@ -1430,18 +1549,28 @@ msgid "Calendar Attendee Information"
 msgstr "Katılımcı Bilgisini Planlayın"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_default_privacy
-#: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_default_privacy
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_default_privacy
 msgid "Calendar Default Privacy"
 msgstr "Takvim Varsayılan Gizlilik"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__calendar_event_ids
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
 #: model:ir.model.fields,field_description:calendar.field_discuss_channel__calendar_event_ids
 msgid "Calendar Event"
 msgstr "Takvim Etkinliği"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event_archive_or_unlink_wizard
+msgid "Calendar Event Archive Or Unlink Wizard"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event_multi_archive_or_unlink_wizard
+msgid "Calendar Event Multi Archive Or Unlink Wizard"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
@@ -1459,14 +1588,9 @@ msgid "Calendar Meeting"
 msgstr "Takvim Toplantısı"
 
 #. module: calendar
-#: model:ir.model,name:calendar.model_calendar_popover_delete_wizard
-msgid "Calendar Popover Delete Wizard"
-msgstr "Takvim Açılır Pencere Silme Sihirbazı"
-
-#. module: calendar
-#: model:ir.model,name:calendar.model_calendar_provider_config
-msgid "Calendar Provider Configuration Wizard"
-msgstr "Takvim Sağlayıcısı Yapılandırma Sihirbazı"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__members_only
+msgid "Calendar Members Only"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -1474,9 +1598,24 @@ msgid "Calendar Settings"
 msgstr "Takvim Ayarları"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_user_ids
+msgid "Calendar User"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_user
+msgid "Calendar User Manager"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Calendar description"
 msgstr "Takvim açıklaması"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
+msgid "Calendar name"
+msgstr ""
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
@@ -1485,8 +1624,8 @@ msgstr "Takvim: Güncelleme Tarihi"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
-msgid "Calendar: Event Deleted"
-msgstr "Takvim Etkinlik Silindi"
+msgid "Calendar: Event Canceled"
+msgstr ""
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -1509,9 +1648,21 @@ msgid "Calendar: Reminder"
 msgstr "Takvim: Hatırlatma"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
+#: model:ir.actions.act_window,name:calendar.action_calendar_calendar
+#: model:ir.ui.menu,name:calendar.menu_calendar_calendars
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_list
+msgid "Calendars"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__can_edit_body
 msgid "Can Edit Body"
 msgstr "Gövdeyi Düzenleyebilir"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_delete_event
+msgid "Canceled event: {{ object.name }}"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -1525,11 +1676,6 @@ msgstr ""
 "        etkinlik (yalnızca organizatör tek katılımcı değilse)"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__external_calendar_provider
-msgid "Choose an external calendar to configure"
-msgstr "Yapılandırılacak harici takvim seçin"
-
-#. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
 msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
@@ -1539,17 +1685,10 @@ msgstr ""
 "değiştirildiğinde Tüm Etkinliklerin güncellenmesine izin verilmez"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "Client ID"
-msgstr "Müşteri ID"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "Client Secret"
-msgstr "Müşteri Gizliliği"
-
-#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__color
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__calendar_color
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__filter_color
 msgid "Color"
 msgstr "Renk"
 
@@ -1571,20 +1710,9 @@ msgstr "Ayarlar"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Confirm"
 msgstr ""
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/components/calendar_provider_config/calendar_connect_provider.xml:0
-msgid "Connect"
-msgstr "Bağlan"
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
-msgid "Connect your Calendar"
-msgstr "Takviminizi bağlayın"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
@@ -1611,7 +1739,7 @@ msgid "Contact created through Calendar sync."
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__body
 msgid "Contents"
 msgstr "İçerikler"
 
@@ -1621,6 +1749,12 @@ msgid "Count"
 msgstr "Sayı"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Create Calendar"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model,website_form_label:calendar.model_res_partner
 msgid "Create a Customer"
 msgstr "Müşteri Oluşturma"
@@ -1628,24 +1762,28 @@ msgstr "Müşteri Oluşturma"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__create_uid
 msgid "Created by"
 msgstr "Tarafından oluşturuldu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__create_date
 msgid "Created on"
 msgstr "Oluşturuldu"
 
@@ -1653,6 +1791,11 @@ msgstr "Oluşturuldu"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_attendee
 msgid "Current Attendee"
 msgstr "Geçerli Katılımcı"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_id
+msgid "Current Membership Record"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
@@ -1723,47 +1866,27 @@ msgid "Default Privacy"
 msgstr "Varsayılan Gizlilik"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
-msgid "Default privacy setting for whom the calendar events will be visible."
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
+msgid "Default visibility"
 msgstr ""
-"Takvim etkinliklerinin kimler tarafından görülebileceğini belirleyen "
-"varsayılan gizlilik ayarı."
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__delete
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Delete"
 msgstr "Sil"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
-msgid "Delete Event"
-msgstr "Etkinliği Sil"
+msgid "Delete event"
+msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__all
-msgid "Delete all the events"
-msgstr "Tüm etkinlikleri sil"
-
-#. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__next
-msgid "Delete this and following events"
-msgstr "Bunu ve bundan sonraki etkinlikleri sil"
-
-#. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__one
-msgid "Delete this event"
-msgstr "Bu etkinliği sil"
-
-#. module: calendar
-#: model:mail.template,subject:calendar.calendar_template_delete_event
-msgid "Deleted event: {{ object.name }}"
-msgstr "Silinmiş olay: {{ object.name }}"
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Delete events"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -1801,12 +1924,14 @@ msgstr "Ekran Açıklaması"
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__display_name
 #: model:ir.model.fields,field_description:calendar.field_discuss_channel__display_name
 #: model:ir.model.fields,field_description:calendar.field_ir_http__display_name
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__display_name
@@ -1835,6 +1960,12 @@ msgid "Document Model Name"
 msgstr "Belge Model Adı"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Draft"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
 msgid "Dtstart"
 msgstr "Dtstart"
@@ -1858,9 +1989,21 @@ msgstr "E-POSTA"
 
 #. module: calendar
 #. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Edit Calendar"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 msgid "Edit Recurrent event"
 msgstr "Edit Recurrent event"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.xml:0
+msgid "Edit filter"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1877,6 +2020,11 @@ msgstr "Etkili Gizlilik"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__email
 msgid "Email"
 msgstr "E-Posta"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1_day
+msgid "Email - 1 day"
+msgstr ""
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
@@ -1926,11 +2074,6 @@ msgid "Event Alarm Manager"
 msgstr "Etkinlik Alarmı Yöneticisi"
 
 #. module: calendar
-#: model:ir.actions.act_window,name:calendar.action_event_delete_wizard
-msgid "Event Delete Wizard"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
 msgstr "Etkinlik Toplantısı Türü"
@@ -1958,6 +2101,11 @@ msgstr ""
 #. module: calendar
 #: model:mail.message.subtype,description:calendar.mt_calendar_event_updated
 msgid "Event updated"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__event_ids
+msgid "Events"
 msgstr ""
 
 #. module: calendar
@@ -2061,6 +2209,11 @@ msgid "Feedback: %s"
 msgstr "Geri bildirim: %s"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_checked
+msgid "Filter Enabled"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__1
 msgid "First"
@@ -2129,7 +2282,6 @@ msgstr "Gidiyor musun?"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__google
 msgid "Google"
 msgstr "Google"
 
@@ -2144,26 +2296,6 @@ msgid "Google Calendar URL"
 msgstr ""
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "Google Calendar icon"
-msgstr "Google Takvim simgesi"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_id
-msgid "Google Client_id"
-msgstr "Google Client_id"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_secret
-msgid "Google Client_key"
-msgstr "Google Client_key"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_sync_paused
-msgid "Google Synchronization Paused"
-msgstr "Google Senkronizasyonu Duraklatıldı"
-
-#. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP Yönlendirme"
@@ -2174,8 +2306,8 @@ msgid "Has Message"
 msgstr "Mesaj Var"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_hide_my
-msgid "Hide My Calendar from Calendar"
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__has_recurrent_events
+msgid "Has Recurrent Events"
 msgstr ""
 
 #. module: calendar
@@ -2187,12 +2319,14 @@ msgstr "Saat"
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__id
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__id
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__id
 #: model:ir.model.fields,field_description:calendar.field_discuss_channel__id
 #: model:ir.model.fields,field_description:calendar.field_ir_http__id
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__id
@@ -2252,7 +2386,17 @@ msgstr ""
 "zarfında uygun olduğunuzu bilirler."
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__confidential
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid ""
+"If you are the only person using this calendar, all of its events will be "
+"deleted. Are you sure you want to proceed?\n"
+"\n"
+"This action cannot be reversed."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__confidential
 msgid "Internal users only"
 msgstr "Yalnızca dahili kullanıcılar"
 
@@ -2303,7 +2447,7 @@ msgid "Invitations"
 msgstr "Davetler"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__is_mail_template_editor
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__is_mail_template_editor
 msgid "Is Editor"
 msgstr "İş Düzenleyicisi"
 
@@ -2311,6 +2455,11 @@ msgstr "İş Düzenleyicisi"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
 msgid "Is Follower"
 msgstr "Takipçi mi"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_draft
+msgid "Is draft"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
@@ -2329,7 +2478,18 @@ msgid "Join Meeting"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__lang
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Keep this calendar"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__name
+msgid "Label"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__lang
 msgid "Language"
 msgstr "Dil"
 
@@ -2342,24 +2502,28 @@ msgstr "Sonuncu"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
@@ -2402,7 +2566,7 @@ msgid "Logo"
 msgstr "Logo"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__template_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__template_id
 msgid "Mail Template"
 msgstr "E-Posta Şablonu"
 
@@ -2495,11 +2659,6 @@ msgid "Messages"
 msgstr "Mesajlar"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
-msgid "Microsoft Outlook icon"
-msgstr "Microsoft Outlook simgesi"
-
-#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
 msgid "Minutes"
 msgstr "Dakika"
@@ -2539,13 +2698,13 @@ msgstr "Aylar"
 
 #. module: calendar
 #. odoo-javascript
-#: code:addons/calendar/static/src/views/calendar_form/calendar_quick_create.xml:0
+#: code:addons/calendar/static/src/views/calendar_form/calendar_event_quick_create.xml:0
 msgid "More Options"
 msgstr "Daha Fazla Seçenek"
 
 #. module: calendar
 #. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.js:0
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Activities"
 msgstr ""
@@ -2561,15 +2720,11 @@ msgid "My Meetings"
 msgstr "Toplantılarım"
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.xml:0
-msgid "My calendars"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__name
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_user_view_form
 msgid "Name"
 msgstr "Adı"
 
@@ -2583,6 +2738,12 @@ msgstr "Eylem Gerektiriyor"
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "New"
 msgstr "Yeni"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "New Calendar"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_calendar_event_id
@@ -2643,6 +2804,11 @@ msgid "No Meetings"
 msgstr ""
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "No calendar"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "No email"
@@ -2657,12 +2823,6 @@ msgstr "Henüz geri bildirim yok"
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "No meetings found. Let's schedule one!"
 msgstr "Toplantı bulunamadı. Bir tane ayarlayalım!"
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
-msgid "No, keep it"
-msgstr "Hayır, Kalsın"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__notes
@@ -2771,9 +2931,14 @@ msgstr "Yalnızca Dahili Kullanıcılar"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__confidential
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
-#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__confidential
 msgid "Only internal users"
 msgstr "Sadece dahili kullanıcılar"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_calendar.py:0
+msgid "Only the calendar owner can modify these fields: %(fields)s"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -2786,7 +2951,7 @@ msgid "Optional message"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_popover_delete_wizard__lang
+#: model:ir.model.fields,help:calendar.field_calendar_event_archive_or_unlink_wizard__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the main partner's language will be used. This should "
@@ -2818,7 +2983,6 @@ msgstr "Düzenleyen"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__microsoft
 msgid "Outlook"
 msgstr "Outlook"
 
@@ -2828,19 +2992,16 @@ msgid "Outlook Calendar"
 msgstr "Outlook Takvim"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
-msgid "Outlook Client Id"
-msgstr "Outlook Müşteri Kimliği"
+#: model:ir.model.fields,field_description:calendar.field_res_users__owned_calendar_ids
+msgid "Owned Calendar"
+msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_secret
-msgid "Outlook Client Secret"
-msgstr "Outlook Müşteri Gizli Anahtarı"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_sync_paused
-msgid "Outlook Synchronization Paused"
-msgstr "Outlook Senkronizasyonu Duraklatıldı"
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__owner_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_owner_id
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__owner
+msgid "Owner"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -2868,9 +3029,18 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__is_primary
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__is_primary
+msgid "Primary"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users__primary_calendar_id
+msgid "Primary Calendar"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
-#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
-#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendar_default_privacy
 msgid "Privacy"
 msgstr "Özel"
 
@@ -2882,31 +3052,29 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__private
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
-#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__private
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Private"
 msgstr "Özel"
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__private
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__private
 msgid "Private by default"
 msgstr "Varsayılan olarak özel"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__public
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
-#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__public
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Public"
 msgstr "Genel"
 
 #. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__public
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__public
 msgid "Public by default"
 msgstr "Varsayılan olarak halka açık"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__recipient_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recipient_ids
 msgid "Recipients"
 msgstr "Alıcılar"
 
@@ -2914,6 +3082,11 @@ msgstr "Alıcılar"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
 msgid "Recurrence"
 msgstr "Yinelenme"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recurrence_choice
+msgid "Recurrence Choice"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
@@ -2932,7 +3105,13 @@ msgid "Recurrence Update"
 msgstr "Yineleme Güncellemesi"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__recurrence_ids
+msgid "Recurrences"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recurrency
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Recurrent"
 msgstr "Yinelenen"
@@ -2961,7 +3140,7 @@ msgid "Reminders"
 msgstr "Hatırlatmalar"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__render_model
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__render_model
 msgid "Rendering Model"
 msgstr "İşleme Modeli"
 
@@ -2994,6 +3173,12 @@ msgstr "Tekrarlama Durumu (Gün/Hafta/Ay/Yıl)"
 #: model:ir.model.fields,help:calendar.field_calendar_event__count
 msgid "Repeat x times"
 msgstr "X kere tekrarla"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__requested_action
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__requested_action
+msgid "Requested Action"
+msgstr ""
 
 #. module: calendar
 #. odoo-javascript
@@ -3097,7 +3282,14 @@ msgid "Send Mail"
 msgstr "İleti Gönder"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
+msgid "Send and archive"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Send and delete"
 msgstr "Gönder ve sil"
 
@@ -3134,6 +3326,18 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__members_only
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__members_only
+msgid "Shared Calendar Members Only"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__share_user_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_share_user_ids
+msgid "Shared with"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
 msgid "Should Show Status"
 msgstr "Durum Gösterilmeli"
@@ -3152,6 +3356,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show as"
 msgstr "Olarak göster"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_active
+msgid "Shown in Filters List"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
@@ -3206,16 +3415,11 @@ msgid "Stop date of an event, without time for full days events"
 msgstr "Etkinlik bitiş günü, tüm gün etkinlikler için zaman olmadan"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__subject
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__subject
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
-#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "Subject"
 msgstr "Konu"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
-msgid "Submit"
-msgstr "Gönder"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sun
@@ -3248,13 +3452,11 @@ msgid "Synchronize with"
 msgstr "Şununla senkronize et:"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Synchronize your calendar with Google Calendar"
 msgstr "Kullanıcıların takvimlerini Google Takvimle eşlemesine izin ver"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Synchronize your calendar with Outlook"
 msgstr "Takviminizi Outlook ile senkronize edin"
@@ -3359,6 +3561,12 @@ msgid "There are no attendees on these events"
 msgstr "Bu etkinliklerde katılımcı yok"
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_user.py:0
+msgid "These fields cannot be modified: %(fields)s"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__3
 msgid "Third"
@@ -3368,6 +3576,7 @@ msgstr "Üçüncü"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__future_events
 msgid "This and following events"
 msgstr "Bu ve aşağıdaki olaylar"
 
@@ -3375,8 +3584,16 @@ msgstr "Bu ve aşağıdaki olaylar"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__self_only
 msgid "This event"
 msgstr "Bu etkinlik"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event_archive_or_unlink_wizard__recurrence_choice
+msgid ""
+"This field allows to perform the archiving or deletion on several events "
+"belonging to the         selected event's recurrence."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -3481,6 +3698,12 @@ msgid "Unit"
 msgstr "Birim"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Unsubscribe from calendar"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Until"
@@ -3500,8 +3723,14 @@ msgstr "Katılımcıları manuel olarak bilgilendirmek için kullanılır"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
+#: model:ir.model.fields,field_description:calendar.field_calendar_user__user_id
 msgid "User"
 msgstr "Kullanıcı"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_calendar
+msgid "User Calendar"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
@@ -3518,6 +3747,11 @@ msgstr "Kullanıcı ayarları"
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "User default"
 msgstr "Kullanıcı varsayılanı"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_ids
+msgid "Users"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3540,6 +3774,17 @@ msgstr ""
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.message_meeting_activity_done
 msgid "View Meeting"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_list
+msgid "Visibility"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Warning"
 msgstr ""
 
 #. module: calendar
@@ -3572,6 +3817,17 @@ msgid "Weeks"
 msgstr "Hafta"
 
 #. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__is_draft
+msgid ""
+"When True, this field mutes the notifications of the event. It allows to "
+"save the event without         confirming it and avoids notifying attendees "
+"with update messages because some information was unknown at         the "
+"creation of the event. To prevent event's flow issues, the draft state "
+"should be set at the creation         of the event and never reset once it "
+"is removed."
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__notify_responsible
 msgid "When activated, the event organizer will also receive this reminder."
 msgstr ""
@@ -3593,6 +3849,16 @@ msgstr ""
 msgid "Whether the event is private, considering the user privacy"
 msgstr ""
 "Kullanıcı gizliliği göz önünde bulundurularak olayın özel olup olmadığı"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users__writable_calendar_ids
+msgid "Writable Calendar"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__writer
+msgid "Writer"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__yearly
@@ -3619,14 +3885,24 @@ msgid "Yes I'm going."
 msgstr "Evet ben gidiyorum."
 
 #. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/res_users.py:0
-msgid ""
-"You are not allowed to change the calendar default privacy of another user "
-"due to privacy constraints."
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Yes, delete this calendar"
 msgstr ""
-"Gizlilik kısıtlamaları nedeniyle başka bir kullanıcının takvim varsayılan "
-"gizliliğini değiştirme yetkiniz yok."
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
+msgid "Yes, unsubscribe"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_calendar.py:0
+msgid ""
+"You are not allowed to change the default privacy of a calendar you do not "
+"own."
+msgstr ""
 
 #. module: calendar
 #. odoo-python
@@ -3653,9 +3929,29 @@ msgid "You're alone in this meeting"
 msgstr "Bu toplantıda yalnızsınız"
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "[Draft]"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
+msgid "[Draft] %s"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "accepted"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__requested_action__archive
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_multi_archive_or_unlink_wizard__requested_action__archive
+msgid "archive"
 msgstr ""
 
 #. module: calendar
@@ -3668,6 +3964,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "declined"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__requested_action__unlink
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event_multi_archive_or_unlink_wizard__requested_action__unlink
+msgid "delete"
 msgstr ""
 
 #. module: calendar
@@ -3742,6 +4044,100 @@ msgstr "{{ object.event_id.name }}: Güncelleme tarihi"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: Etkinlik güncellemesi"
+
+#~ msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
+#~ msgstr "<span class=\"me-1 o_form_label\">Google Takvim</span>"
+
+#~ msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
+#~ msgstr "<span class=\"me-1 o_form_label\">Outlook Takvimi</span>"
+
+#~ msgid "<span>Are you sure you want to delete this event? <br/></span>"
+#~ msgstr "<span>Bu etkinliği silmek istediğinizden emin misiniz? <br/></span>"
+
+#~ msgid "Bye-bye, record!"
+#~ msgstr "Güle güle, kayıt!"
+
+#~ msgid "Calendar Popover Delete Wizard"
+#~ msgstr "Takvim Açılır Pencere Silme Sihirbazı"
+
+#~ msgid "Calendar Provider Configuration Wizard"
+#~ msgstr "Takvim Sağlayıcısı Yapılandırma Sihirbazı"
+
+#~ msgid "Calendar: Event Deleted"
+#~ msgstr "Takvim Etkinlik Silindi"
+
+#~ msgid "Choose an external calendar to configure"
+#~ msgstr "Yapılandırılacak harici takvim seçin"
+
+#~ msgid "Client ID"
+#~ msgstr "Müşteri ID"
+
+#~ msgid "Client Secret"
+#~ msgstr "Müşteri Gizliliği"
+
+#~ msgid "Connect"
+#~ msgstr "Bağlan"
+
+#~ msgid "Connect your Calendar"
+#~ msgstr "Takviminizi bağlayın"
+
+#~ msgid ""
+#~ "Default privacy setting for whom the calendar events will be visible."
+#~ msgstr ""
+#~ "Takvim etkinliklerinin kimler tarafından görülebileceğini belirleyen "
+#~ "varsayılan gizlilik ayarı."
+
+#~ msgid "Delete Event"
+#~ msgstr "Etkinliği Sil"
+
+#~ msgid "Delete all the events"
+#~ msgstr "Tüm etkinlikleri sil"
+
+#~ msgid "Delete this and following events"
+#~ msgstr "Bunu ve bundan sonraki etkinlikleri sil"
+
+#~ msgid "Delete this event"
+#~ msgstr "Bu etkinliği sil"
+
+#~ msgid "Deleted event: {{ object.name }}"
+#~ msgstr "Silinmiş olay: {{ object.name }}"
+
+#~ msgid "Google Calendar icon"
+#~ msgstr "Google Takvim simgesi"
+
+#~ msgid "Google Client_id"
+#~ msgstr "Google Client_id"
+
+#~ msgid "Google Client_key"
+#~ msgstr "Google Client_key"
+
+#~ msgid "Google Synchronization Paused"
+#~ msgstr "Google Senkronizasyonu Duraklatıldı"
+
+#~ msgid "Microsoft Outlook icon"
+#~ msgstr "Microsoft Outlook simgesi"
+
+#~ msgid "No, keep it"
+#~ msgstr "Hayır, Kalsın"
+
+#~ msgid "Outlook Client Id"
+#~ msgstr "Outlook Müşteri Kimliği"
+
+#~ msgid "Outlook Client Secret"
+#~ msgstr "Outlook Müşteri Gizli Anahtarı"
+
+#~ msgid "Outlook Synchronization Paused"
+#~ msgstr "Outlook Senkronizasyonu Duraklatıldı"
+
+#~ msgid "Submit"
+#~ msgstr "Gönder"
+
+#~ msgid ""
+#~ "You are not allowed to change the calendar default privacy of another "
+#~ "user due to privacy constraints."
+#~ msgstr ""
+#~ "Gizlilik kısıtlamaları nedeniyle başka bir kullanıcının takvim varsayılan "
+#~ "gizliliğini değiştirme yetkiniz yok."
 
 #~ msgid "Checked"
 #~ msgstr "Kontrol edildi"

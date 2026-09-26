@@ -10,10 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-09-09 14:02+0000\n"
+"POT-Creation-Date: 2026-09-25 17:38+0000\n"
+"PO-Revision-Date: 2026-09-21 12:14+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "html_editor/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -30,6 +30,10 @@ msgid ""
 "==========================\n"
 "This addon provides an extensible, maintainable editor.\n"
 msgstr ""
+"\n"
+"Html-Editor\n"
+"==========================\n"
+"Dieses Add-on bietet einen erweiterbaren und wartbaren Editor.\n"
 
 #. module: html_editor
 #. odoo-javascript
@@ -48,6 +52,12 @@ msgstr ": Version von"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "(URL or Embed)"
 msgstr "(URL oder Einbetten)"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid ", as well as a direct link to an"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -82,11 +92,12 @@ msgstr "5 Sterne"
 #. module: html_editor
 #: model:ir.module.module,summary:base.module_html_editor
 msgid "A Html Editor component and plugin system."
-msgstr ""
+msgstr "Eine Komponente und ein Plug-in-System für den HTML-Editor."
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
 msgid "Accepts"
 msgstr "Akzeptiert"
 
@@ -245,6 +256,7 @@ msgstr "Anonym"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
 #: code:addons/html_editor/static/src/main/table/mobile_table_picker.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
 msgid "Apply"
 msgstr "Anwenden"
 
@@ -414,6 +426,12 @@ msgstr "Upload abbrechen"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "Canva"
+msgstr "Canva"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/align/align_plugin.js:0
 msgid "Center align"
 msgstr "Zentriert ausrichten"
@@ -424,6 +442,12 @@ msgstr "Zentriert ausrichten"
 msgid "Change the placeholder or the expression for an existing field"
 msgstr ""
 "Ändern Sie den Platzhalter oder die Bezeichnung für ein vorhandenes Feld"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Checking the video…"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -647,13 +671,13 @@ msgstr "Daten"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/date_plugin/date_plugin.js:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/date_plugin/date_plugin.js:0
 msgid "Date and Time"
-msgstr ""
+msgstr "Datum und Uhrzeit"
 
 #. module: html_editor
 #. odoo-javascript
@@ -744,6 +768,7 @@ msgstr "FEHLER: URLs konnten nicht aus Medienbibliothek abgerufen werden."
 #: code:addons/html_editor/static/src/fields/image_field_with_media_dialog/image_field_with_media_dialog.xml:0
 #: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/core/whiteboard/whiteboard.xml:0
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -773,9 +798,21 @@ msgstr "Bild einbetten"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/youtube_plugin.js:0
-msgid "Embed Youtube Video"
-msgstr "Youtube-Video einbetten"
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/embedded_whiteboard_plugin.js:0
+msgid "Embed a whiteboard or a diagram"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/embedded_whiteboard_plugin.js:0
+msgid "Embed as a whiteboard or as a diagram"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/embedded_whiteboard_plugin.js:0
+msgid "Embed as whiteboard"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -791,9 +828,9 @@ msgstr "Bild in Dokument einbetten."
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/youtube_plugin.js:0
-msgid "Embed the youtube video in the document."
-msgstr "Youtube-Video in Dokument einbetten."
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/embedded_whiteboard_plugin.js:0
+msgid "Embed whiteboard"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -857,6 +894,12 @@ msgstr "HTML-Verlauf des Felds"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "Figma"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.js:0
 msgid "File could not be saved"
 msgstr "Datei konnte nicht gespeichert werden"
@@ -884,6 +927,18 @@ msgstr "Vertikal drehen"
 #: code:addons/html_editor/static/src/main/font/font_type_plugin.js:0
 msgid "Format"
 msgstr "Format"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/whiteboard/whiteboard.xml:0
+msgid "Full preview"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "Google Docs"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1386,6 +1441,12 @@ msgstr "M:SS"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "MP4"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_plugin.js:0
 msgid "Media"
 msgstr "Medien"
@@ -1429,6 +1490,12 @@ msgstr ""
 msgid "Merged rows cannot be moved up or down."
 msgstr ""
 "Zusammengeführte Zeilen können nicht nach oben oder unten verschoben werden."
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "Miro"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1585,6 +1652,12 @@ msgstr "Nummerierte Liste (Strg + Umschalt + 7)"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Ogg"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/attachment_error.xml:0
 msgid "Ok"
 msgstr "Ok"
@@ -1669,6 +1742,12 @@ msgstr "Als URL einfügen"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "Paste your URL"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/components/color_picker/custom_color_picker/custom_color_picker.xml:0
 msgid "Pick a color from the screen"
 msgstr "Wählen Sie eine Farbe auf dem Bildschirm aus"
@@ -1710,9 +1789,9 @@ msgid "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"
 msgstr "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"
 
 #. module: html_editor
-#: model:ir.model.fields.selection,name:html_editor.selection__html_editor_converter_test__selection_str__a
-msgid "Qu'il n'est pas arrivé à Toronto"
-msgstr "Qu'il n'est pas arrivé à Toronto"
+#: model:ir.model.fields.selection,name:html_editor.selection__html_editor_converter_test__selection_str__b
+msgid "Qu'il était supposé arriver à Toronto"
+msgstr "Qu'il était supposé arriver à Toronto"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2142,6 +2221,12 @@ msgid "Solid"
 msgstr "Voll"
 
 #. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/whiteboard/whiteboard.xml:0
+msgid "Sorry, the"
+msgstr ""
+
+#. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Sorry, we could not generate a response. Please try again later."
@@ -2336,6 +2421,12 @@ msgstr "Die URL ist ungültig. Vorschau konnte nicht aktualisiert werden."
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "This URL is not supported."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.js:0
 msgid "This file is a public view attachment."
 msgstr "Diese Datei ist ein öffentlich zugänglicher Anhang."
@@ -2492,6 +2583,7 @@ msgstr "Geben Sie Ihre URL ein"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/core/whiteboard/whiteboard.xml:0
 msgid "URL"
 msgstr "URL"
 
@@ -2614,6 +2706,30 @@ msgstr "Vimeo"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "WebM"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/embedded_whiteboard_plugin.js:0
+msgid "Whiteboard"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "Whiteboard Popover"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "Whiteboard public URL"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
 msgid "Widget"
 msgstr "Widget"
@@ -2683,6 +2799,12 @@ msgstr "Sie können dieses Bild nicht in einem Feld verwenden"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/whiteboard/whiteboard.xml:0
+msgid "You can try to insert an image and link it to that URL."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/document_selector.xml:0
 msgid ""
 "You can upload documents with the button located in the top left of the "
@@ -2742,6 +2864,7 @@ msgstr "Herauszoomen"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
 msgid "and"
 msgstr "und"
 
@@ -2756,6 +2879,12 @@ msgstr "auf"
 #: code:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml:0
 msgid "deg"
 msgstr "Grad"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "diagrams"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -2784,6 +2913,7 @@ msgstr "z. B. https://www.odoo.com"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "file"
 msgstr "Datei"
 
@@ -2795,6 +2925,30 @@ msgstr "hex"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "https://docs.google.com/drawings/..."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "https://miro.com/app/board/.../?share_link_id=..."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "https://www.canva.com/design/..."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/embedded_whiteboard_plugin/whiteboard_popover.xml:0
+msgid "https://www.figma.com/design/...?node-id=..."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/separator_plugin.js:0
 msgid "line"
 msgstr "Linie"
@@ -2802,6 +2956,7 @@ msgstr "Linie"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "or"
 msgstr "oder"
 
@@ -2840,8 +2995,20 @@ msgstr "Websocket-Nachrichtbearbeitung"
 msgid "x"
 msgstr "x"
 
-#~ msgid "Qu'il était supposé arriver à Toronto"
-#~ msgstr "Qu'il était supposé arriver à Toronto"
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/whiteboard/whiteboard.xml:0
+msgid "you used is not recognized by this embedding feature."
+msgstr ""
+
+#~ msgid "Embed Youtube Video"
+#~ msgstr "Youtube-Video einbetten"
+
+#~ msgid "Embed the youtube video in the document."
+#~ msgstr "Youtube-Video in Dokument einbetten."
+
+#~ msgid "Qu'il n'est pas arrivé à Toronto"
+#~ msgstr "Qu'il n'est pas arrivé à Toronto"
 
 #~ msgid "Insert your signature"
 #~ msgstr "Ihre Signatur einfügen"

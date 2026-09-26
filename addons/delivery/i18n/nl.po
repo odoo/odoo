@@ -13,11 +13,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 16:44+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
-"delivery/nl/>\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
+"PO-Revision-Date: 2026-09-23 13:33+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/delivery/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,11 @@ msgid ""
 "You can define your own carrier for prices.\n"
 "The system is able to add and compute the shipping line.\n"
 msgstr ""
+"\n"
+"Staat je toe om verzendmethoden toe te voegen aan je verkooporders.\n"
+"==================================================\n"
+"Je kunt je eigen vervoerder voor prijzen bepalen.\n"
+"Het systeem kan de verzendlijn toevoegen en berekenen.\n"
 
 #. module: delivery
 #. odoo-python
@@ -245,11 +250,6 @@ msgstr "Toevoegen"
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "Add a delivery method"
 msgstr "Een leveringsmethode toevoegen"
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
-msgid "Add shipping"
-msgstr "Verzending toevoegen"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -739,7 +739,7 @@ msgstr "Zoek tarief een maak verzending"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+#: code:addons/delivery/static/src/backend/widgets/carrier_rates_loader.xml:0
 msgid "Get all rates"
 msgstr ""
 
@@ -863,7 +863,7 @@ msgstr "Laatst bijgewerkt op"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+#: code:addons/delivery/static/src/backend/widgets/carrier_rates_loader.xml:0
 msgid "Loading Rates"
 msgstr ""
 
@@ -1134,6 +1134,11 @@ msgstr "Order %s verzenden"
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "Shipped"
 msgstr "Verzonden"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Shipping"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__shipping_date
@@ -1443,6 +1448,9 @@ msgid ""
 msgstr ""
 "{{ object.so_id.company_id.name }} Verzendbevestiging (Ref. "
 "{{ object.so_id.name or 'n/a' }})"
+
+#~ msgid "Add shipping"
+#~ msgstr "Verzending toevoegen"
 
 #~ msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Get rate"
 #~ msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>Vraag tarief op"

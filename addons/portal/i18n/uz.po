@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:44+0000\n"
+"POT-Creation-Date: 2026-09-18 17:40+0000\n"
 "PO-Revision-Date: 2026-08-31 14:45+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/portal/"
@@ -45,6 +45,30 @@ msgstr ""
 #, fuzzy
 msgid "\" to validate your action."
 msgstr "\" harakatlaringizni tasdiqlash uchun."
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "\"Authorization\": f\"bearer {mcp_key}\","
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "\"Content-Type\": \"application/json\","
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "# Store the API key securely, not in the code."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "%(model_name)s shared with %(partner_names)s"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
@@ -297,6 +321,12 @@ msgid "Already Registered"
 msgstr "Allaqachon ro‘yxatdan o‘tgan"
 
 #. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "An email invitation has been sent to the selected users."
+msgstr ""
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_profile_editor.js:0
 msgid "An error occurred while saving your profile."
@@ -443,13 +473,6 @@ msgstr "Ulanish parametrlarini sozlash"
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_security.js:0
 #, fuzzy
-msgid "Confirm"
-msgstr "Tasdiqlash"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/interactions/portal_security.js:0
-#, fuzzy
 msgid "Confirm Password"
 msgstr "Parolni tasdiqlash"
 
@@ -482,6 +505,12 @@ msgstr "Kontaktlar"
 
 #. module: portal
 #. odoo-javascript
+#: code:addons/portal/static/src/interactions/portal_security.js:0
+msgid "Copied to clipboard"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_composer.js:0
 #, fuzzy
 msgid "Could not save file %s"
@@ -497,6 +526,12 @@ msgstr "Mamlakat"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country..."
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/interactions/portal_security.js:0
+msgid "Create Key"
 msgstr ""
 
 #. module: portal
@@ -682,13 +717,6 @@ msgid "Email Thread"
 msgstr "Elektron pochta yozishmalari"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-#, fuzzy
-msgid "Enter a description of and purpose for the key."
-msgstr "Kalit tavsifi va maqsadini kiriting."
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #, fuzzy
 msgid "Expiration Date"
@@ -697,15 +725,15 @@ msgstr "Amal qilish muddati"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-#, fuzzy
-msgid "Forgot password?"
-msgstr "Parolni unutdingizmi?"
+msgid "Expires"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "Give a duration for the key's validity"
-msgstr ""
+#, fuzzy
+msgid "Forgot password?"
+msgstr "Parolni unutdingizmi?"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -737,14 +765,6 @@ msgstr "Portalga kirishga ruxsat berish"
 #, fuzzy
 msgid "HTTP Routing"
 msgstr "HTTP yo‘naltirish"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid ""
-"Here is your new API key, use it instead of a password for RPC access.\n"
-"                Your login is still necessary for interactive usage."
-msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -794,13 +814,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
 msgid "Image"
 msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-#, fuzzy
-msgid "Important:"
-msgstr "Muhim:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -864,9 +877,7 @@ msgstr "Portalmi"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid ""
-"It is very important that this description be clear\n"
-"                and complete,"
+msgid "Key Name — your only way to identify that key"
 msgstr ""
 
 #. module: portal
@@ -958,13 +969,6 @@ msgstr "Manzillarim"
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Name"
 msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-#, fuzzy
-msgid "Name your key"
-msgstr "Kalitni nomlang"
 
 #. module: portal
 #. odoo-javascript
@@ -1182,6 +1186,8 @@ msgid "Save Address"
 msgstr "Manzilni saqlash"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #, fuzzy
 msgid "Scope"
@@ -1241,6 +1247,12 @@ msgstr "Yuborish"
 #, fuzzy
 msgid "Share Document"
 msgstr "Hujjatni ulashish"
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "Shared successfully"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
@@ -1385,18 +1397,6 @@ msgstr ""
 "ega"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "The key cannot be retrieved later and provides"
-msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "The key will be deleted once this period has elapsed."
-msgstr ""
-
-#. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, fuzzy
@@ -1451,6 +1451,14 @@ msgid "This is a preview of the customer portal."
 msgstr "Bu mijozlar portalining ko‘rinishi."
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid ""
+"This key won't be shown again. Please copy it and store it securely. Treat "
+"it like a password, it grants full access to your account."
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, fuzzy
 msgid ""
@@ -1478,6 +1486,12 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__name
 msgid "Title of Card"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "To login, use the following parameters (Python):"
 msgstr ""
 
 #. module: portal
@@ -1543,13 +1557,6 @@ msgstr "Yangi parolni tasdiqlang:"
 #, fuzzy
 msgid "View"
 msgstr "Ko‘rish"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-#, fuzzy
-msgid "What's this key for?"
-msgstr "Bu kalit nima uchun?"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -1644,9 +1651,8 @@ msgstr "Pochta indeksi"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-#, fuzzy
-msgid "full access"
-msgstr "to‘liq kirish"
+msgid "e.g. \"Odoo MCP\""
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -1657,11 +1663,14 @@ msgstr "sizni quyidagilarga kirishga taklif qildi"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-#, fuzzy
-msgid ""
-"it will be the only way to\n"
-"                identify the key once created"
-msgstr "u yaratilgandan so‘ng kalitni aniqlashning yagona usuli bo‘ladi"
+msgid "headers = {"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "import requests"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
@@ -1669,6 +1678,12 @@ msgstr "u yaratilgandan so‘ng kalitni aniqlashning yagona usuli bo‘ladi"
 #, fuzzy
 msgid "logged in"
 msgstr "tizimga kirgan"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "mcp_key = os.environ[\"ODOO_MCP_KEY\"]"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -1690,7 +1705,7 @@ msgstr ""
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
-msgid "to your user account, it is very important to store it securely."
+msgid "url = \""
 msgstr ""
 
 #. module: portal
@@ -1698,6 +1713,36 @@ msgstr ""
 #, fuzzy
 msgid "your account details"
 msgstr "hisobingiz ma'lumotlari"
+
+#, fuzzy
+#~ msgid "Confirm"
+#~ msgstr "Tasdiqlash"
+
+#, fuzzy
+#~ msgid "Enter a description of and purpose for the key."
+#~ msgstr "Kalit tavsifi va maqsadini kiriting."
+
+#, fuzzy
+#~ msgid "Important:"
+#~ msgstr "Muhim:"
+
+#, fuzzy
+#~ msgid "Name your key"
+#~ msgstr "Kalitni nomlang"
+
+#, fuzzy
+#~ msgid "What's this key for?"
+#~ msgstr "Bu kalit nima uchun?"
+
+#, fuzzy
+#~ msgid "full access"
+#~ msgstr "to‘liq kirish"
+
+#, fuzzy
+#~ msgid ""
+#~ "it will be the only way to\n"
+#~ "                identify the key once created"
+#~ msgstr "u yaratilgandan so‘ng kalitni aniqlashning yagona usuli bo‘ladi"
 
 #, fuzzy
 #~ msgid ""

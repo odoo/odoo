@@ -42,7 +42,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 15:59+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -175,6 +175,12 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "%(action)s for journal %(journal)s"
 msgstr "%(journal)s yevmiye için %(action)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "%(amount).2f %(currency)s already paid."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -331,6 +337,11 @@ msgstr ""
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
 msgstr "'%(filename)s' (tür=%(type)s)"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__vat_disabled_available
+msgid "'Not Subject to VAT' Available"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -674,13 +685,6 @@ msgid ""
 "                .\n"
 "            </t>\n"
 "        </t>\n"
-"        <t t-if=\"hasattr(object, 'display_timesheet_portal_link') and "
-"object.display_timesheet_portal_link\">\n"
-"            <br/><br/>\n"
-"            PS: you can review your timesheets <a t-att-href=\"'/my/"
-"timesheets?search_in=invoice&amp;search=%s' % object.name\">from the portal."
-"</a>\n"
-"        </t>\n"
 "        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
@@ -692,73 +696,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Sayın\n"
-"       <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-if=\"object.partner_id.name\"> \n"
-"               <t t-out=\"object.partner_id.name\"> Brandon Freeman</t> (<t "
-"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
-"           </t>\n"
-"            <t t-else=\"\"> \n"
-"               <t t-out=\"object.partner_id.parent_id.name or ''\"> Azure "
-"Interior</t>,\n"
-"           </t>\n"
-"        </t> \n"
-"       <t t-else=\"\">\n"
-"            <t t-out=\"object.partner_id.name or ''\"> Brandon Freeman</t>,\n"
-"       </t>\n"
-"        <br/> <br/> \n"
-"        İşte\n"
-"       <t t-if=\"object.name\"> \n"
-"            faturanız <span style=\"font-weight:bold;\" t-out=\"object.name "
-"or ''\">INV/2021/05/0005</span>\n"
-"        </t>\n"
-"       <t t-else=\"\"> \n"
-"            fatura\n"
-"       </t>\n"
-"        <t t-if=\"object.invoice_origin\"> \n"
-"            (referans: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-"       </t> \n"
-"       <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> "
-"tutarında $ 143.750,00</span>\n"
-"       <t t-out=\"object.company_id.name or ''\"> YourCompany</t> "
-"şirketinden.\n"
-"       <t t-if=\"object.payment_state in ('paid', 'in_payment')\"> \n"
-"            Bu fatura zaten ödenmiştir.\n"
-"       </t>\n"
-"        <t t-else=\"\"> \n"
-"            Lütfen en kısa zamanda ödemeyi gerçekleştirin.\n"
-"           <t t-if=\"object.payment_reference\">\n"
-"                <br/> <br/> \n"
-"                Ödeme işleminizde lütfen aşağıdaki bilgileri kullanın: "
-"<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
-"                <t t-if=\"object.partner_bank_id\">\n"
-"                   <strong t-out=\"object.partner_bank_id.account_number\"/"
-">\n"
-"                </t> \n"
-"                hesabına.\n"
-"           </t>\n"
-"        </t> \n"
-"       <t t-if=\"hasattr(object, 'display_timesheet_portal_link') and "
-"object.display_timesheet_portal_link\">\n"
-"            <br/> <br/> \n"
-"            Not: Çalışma saat çizelgelerinizi <a t-att-href=\"'/my/"
-"timesheets?search_in=invoice&amp;search=%s' % object.name\">portalından "
-"inceleyebilirsiniz.</a>\n"
-"        </t>\n"
-"       <br/><br/> \n"
-"        Herhangi bir sorunuz olursa lütfen bizimle iletişime geçmekten "
-"çekinmeyin.\n"
-"       <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/> <br/>\n"
-"            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></div>\n"
-"       </t>\n"
-"    </p> \n"
-"</div>\n"
-"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_self_billing_invoice
@@ -799,13 +736,6 @@ msgid ""
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            This self-billing invoice has already been paid.\n"
 "        </t>\n"
-"        <t t-if=\"hasattr(object, 'display_timesheet_portal_link') and "
-"object.display_timesheet_portal_link\">\n"
-"            <br/><br/>\n"
-"            PS: you can review your timesheets <a t-att-href=\"'/my/"
-"timesheets?search_in=invoice&amp;search=%s' % object.name\">from the portal."
-"</a>\n"
-"        </t>\n"
 "        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
@@ -817,60 +747,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Sayın\n"
-"       <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-if=\"object.partner_id.name\"> \n"
-"               <t t-out=\"object.partner_id.name\"> Brandon Freeman</t> (<t "
-"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
-"           </t>\n"
-"            <t t-else=\"\"> \n"
-"               <t t-out=\"object.partner_id.parent_id.name or ''\"> Azure "
-"Interior</t>,\n"
-"           </t>\n"
-"        </t> \n"
-"       <t t-else=\"\">\n"
-"            <t t-out=\"object.partner_id.name or ''\"> Brandon Freeman</t>,\n"
-"       </t>\n"
-"        <br/> <br/> \n"
-"        İşte\n"
-"       <t t-if=\"object.name\"> \n"
-"            kendi adına düzenlenmiş faturanız <span style=\"font-weight:bold;"
-"\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
-"        </t>\n"
-"       <t t-else=\"\"> \n"
-"            kendi adına düzenlenmiş fatura\n"
-"       </t>\n"
-"        <t t-if=\"object.invoice_origin\"> \n"
-"            (referans: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-"       </t> \n"
-"       <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> "
-"tutarında $ 143.750,00</span>\n"
-"       <t t-out=\"object.company_id.name or ''\"> YourCompany</t> "
-"adresinden.\n"
-"       <t t-if=\"object.payment_state in ('paid', 'in_payment')\"> \n"
-"            Bu kendi adına düzenlenmiş fatura zaten ödenmiştir.\n"
-"       </t>\n"
-"        <t t-if=\"hasattr(object, 'display_timesheet_portal_link') and "
-"object.display_timesheet_portal_link\"> \n"
-"           <br/><br/> \n"
-"            Not: Portal üzerinden çalışma çizelgelerinizi <a t-att-href=\"'/"
-"my/timesheets?search_in=invoice&amp;search=%s' % "
-"object.name\">inceleyebilirsiniz.</a>\n"
-"        </t>\n"
-"       <br/><br/> \n"
-"        Herhangi bir sorunuz olursa lütfen bizimle iletişime geçmekten "
-"çekinmeyin.\n"
-"       <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/> <br/>\n"
-"            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></div>\n"
-"       </t>\n"
-"    </p> \n"
-"</div>\n"
-"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1512,6 +1388,11 @@ msgstr "<span>Fatura Numarası</span>"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New</span>"
 msgstr "<span>Yeni</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
+msgid "<span>Not Subject to VAT</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2642,7 +2523,6 @@ msgstr "Hesap Adı"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__account_number
 #: model:ir.model.fields,field_description:account.field_base_document_layout__account_number
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__account_number
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Account Number"
 msgstr "Hesap Numarası"
 
@@ -2683,6 +2563,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
 msgid "Account Reconcile Model Line"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding,name:account.onboarding_onboarding_account_return_dashboard
+msgid "Account Return Dashboard Onboarding"
 msgstr ""
 
 #. module: account
@@ -3140,6 +3025,12 @@ msgstr "Aksiyon Gerekiyor"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__actionable_errors
 msgid "Actionable Errors"
 msgstr "Eylemsel Hatalar"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid "Activate E-Invoicing"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -3787,17 +3678,6 @@ msgstr "Tutar Türü"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 msgid "Amount in Currency"
 msgstr "Dövizli Tutarı"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_payment_register.py:0
-#, fuzzy
-msgid ""
-"Amount of %(amount).2f %(currency)s is already paid. Make sure you don't pay "
-"twice."
-msgstr ""
-"%(amount).2f %(currency)s Tutar zaten ödenmiştir. İki kez ödeme "
-"yapmadığınızdan emin olun."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount
@@ -4625,6 +4505,7 @@ msgstr "Banka Hesap Adı"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Bank Account Number"
 msgstr "Banka Hesap No"
 
@@ -5404,6 +5285,7 @@ msgstr "Şuraya Taşı"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: model:account.account,name:account.21_cash_journal_default_account_306
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
@@ -5532,15 +5414,11 @@ msgid "Cash Furn. Shop"
 msgstr "Nakit - Mobilya Mağazası"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 msgid "Cash In"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 msgid "Cash Out"
 msgstr ""
@@ -5695,12 +5573,6 @@ msgstr "Kontrol Et"
 #: code:addons/account/models/account_move_send.py:0
 msgid "Check Partner(s) Email(s)"
 msgstr "İş Ortaklarının Epostalarını Kontrol Et"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_payment_register.py:0
-msgid "Check payments"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -5928,6 +5800,8 @@ msgid "Companies that refers to partner"
 msgstr "İş Ortağını ilgilendiren şirketler"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/invoice_guide/invoice_guide.xml:0
 #: model:ir.model,name:account.model_res_company
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_id
@@ -6178,6 +6052,7 @@ msgstr ""
 "düşünün."
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__consolidation
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 #, fuzzy
 msgid "Consolidation"
@@ -6521,6 +6396,11 @@ msgstr "Yeni Mali Koşul Oluştur"
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
 msgid "Create a new incoterm"
 msgstr "Yeni İncoterm Oluştur"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.action_account_matching_rules
+msgid "Create a new matching rule"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_purchasable
@@ -7416,11 +7296,6 @@ msgid "Dedicated Payment Sequence"
 msgstr "Tahsis Edilmiş Ödeme Sırası"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__deductible_percentage
-msgid "Deductibility Percentage"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Default"
 msgstr "Öntanımlı"
@@ -8256,15 +8131,6 @@ msgid "Download"
 msgstr "İndir"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_tax_group__advance_tax_payment_account_id
-msgid ""
-"Downpayments posted on this account will be considered by the Tax Closing "
-"Entry."
-msgstr ""
-"Bu hesaba gönderilen peşin ödemeler Vergi Kapanış Kaydı tarafından dikkate "
-"alınacaktır."
-
-#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__draft
@@ -8759,8 +8625,7 @@ msgid "Ending Stock"
 msgstr ""
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Enter a description"
 msgstr "Açıklama girin"
 
@@ -9618,24 +9483,6 @@ msgid "Foreign tax account (%s)"
 msgstr "Yabancı vergi hesabı (%s)"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-msgid "Foreign tax account advance payment (%s)"
-msgstr "Yabancı vergi hesabı avans ödemesi ( %s )"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-msgid "Foreign tax account payable (%s)"
-msgstr "Ödenebilir yabancı vergi hesabı ( %s )"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-msgid "Foreign tax account receivable (%s)"
-msgstr "Yabancı vergi hesabı alacakları (%s)"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__formula
 msgid "Formula"
 msgstr "Formül"
@@ -9905,12 +9752,6 @@ msgid "Goods"
 msgstr "Mallar"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
-msgid "Gross Margin"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_ground_transportation
 msgid "Ground Transportation"
 msgstr "Kara Taşımacılığı"
@@ -10117,6 +9958,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_composition
 msgid "Hide Composition"
 msgstr "Bileşimi Gizle"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__hide_payment_method
+msgid "Hide Payment Method"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -10528,6 +10374,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
+"If you are not subject to VAT, you will have no sale taxes and only non "
+"deductible taxes activated"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
 "If you check this box, you will be able to collect payments using SEPA "
 "Direct Debit mandates."
 msgstr ""
@@ -10650,6 +10503,11 @@ msgid "In Payment"
 msgstr "Ödeme"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__amount
+msgid "In amount"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "In order for it to be admissible,"
 msgstr "Kabul edilebilmesi için,"
@@ -10668,6 +10526,11 @@ msgstr "Bu müşteri faturasını doğrulamak için, şunu yapmalısın"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "In payment"
 msgstr "Ödeme"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
+msgid "In percentage"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -11434,6 +11297,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_move.py:0
 #: model:ir.actions.act_window,name:account.action_move_out_invoice
 #: model:ir.actions.act_window,name:account.action_move_out_invoice_type
@@ -12848,6 +12712,17 @@ msgid "Matching #"
 msgstr "Eşleşen #"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
+msgid "Matching Order"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_matching_rules
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Matching Rules"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
 msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the "
@@ -12855,6 +12730,17 @@ msgid ""
 msgstr ""
 "Bu satır için eşleşen numara, kısmen denkleştirilmişse 'P' veya varsa tam "
 "denkleştirmenin adı."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__matching_rule
+msgid "Matching rule"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_reconcile_model.py:0
+msgid "Matching rules must be automatic."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__activity_type_icon
@@ -13331,6 +13217,11 @@ msgid "New eInvoices Notification"
 msgstr "Yeni eFatura Bildirimi"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
+msgid "Newest first"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__next_activity_type_id
 msgid "Next Activity"
 msgstr "Sonraki Aktivite"
@@ -13399,11 +13290,6 @@ msgstr "Sonraki Ödeme Tarihi"
 #: model:res.groups.privilege,placeholder:account.res_groups_privilege_accounting
 msgid "No"
 msgstr "Hayır"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
-msgid "No Bank Matching"
-msgstr "Banka Eşleştirmesi Yok"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13603,9 +13489,23 @@ msgstr "Güvenli Olmayan"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_sent_values__not_sent
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Not Sent"
 msgstr "Gönderilmedi"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_vat_disabled
+#: model:ir.model.fields,field_description:account.field_account_financial_year_op__company_vat_disabled
+#: model:ir.model.fields,field_description:account.field_account_move__company_vat_disabled
+#: model:ir.model.fields,field_description:account.field_res_company__vat_disabled
+#: model:ir.model.fields,field_description:account.field_res_config_settings__vat_disabled
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Not Subject to VAT"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__vat_disabled_available
+msgid "Not Subject to VAT Available"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
@@ -13850,6 +13750,11 @@ msgid "Office desks, chairs, shelving, etc"
 msgstr "Ofis masaları, sandalyeler, raflar, vb."
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
+msgid "Oldest first"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
 msgid "On early payment"
 msgstr "Erken ödemede"
@@ -13918,6 +13823,12 @@ msgstr "Bir veya daha fazla fatura işlenemedi."
 #: code:addons/account/models/account_move_line.py:0
 msgid "One or more lines require a 100% analytic distribution."
 msgstr "Bir veya daha fazla satır 100% analitik dağılım gerektirir."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid "Only Accounting managers can create foreign taxes."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -14236,6 +14147,11 @@ msgstr "Giden Ödeme Yöntemleri"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outgoing Payments"
 msgstr "Yapılan Ödemeler"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
+msgid "Outstanding"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
@@ -14795,6 +14711,16 @@ msgstr "Ödeme Koşulları"
 #: model:ir.model,name:account.model_account_payment_term_line
 msgid "Payment Terms Line"
 msgstr "Ödeme Koşulu Satırları"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance
+msgid "Payment Tolerance"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance_type
+msgid "Payment Tolerance Type"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_type
@@ -15502,6 +15428,11 @@ msgid "Professional"
 msgstr "Profesyonel"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__deductible_percentage
+msgid "Professional Expense Deductibility Percentage"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_us_group_62
 msgid "Professional Fees"
 msgstr "Mesleki Ücretler"
@@ -15622,6 +15553,7 @@ msgid "Purchase Lock date"
 msgstr "Satınalma Kilit Tarihi"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 msgid "Purchase Receipt"
 msgstr "Satınalma Makbuzu"
@@ -15827,6 +15759,11 @@ msgid "Receive invoices"
 msgstr "Fatura Al"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
+msgid "Recipient Account"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
 #: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
 msgid "Recipient Bank"
@@ -15834,7 +15771,6 @@ msgstr "Alıcı Banka"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
-#: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
 msgid "Recipient Bank Account"
 msgstr "Alıcı Banka Hesabı"
 
@@ -15857,7 +15793,6 @@ msgstr "Denkleştirilebilir"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__reconciled
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Reconciled"
 msgstr "Denkleştirilmiş"
 
@@ -15911,6 +15846,11 @@ msgstr "Denkleştirme Modelleri"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
 msgstr "Denkleştirme Parçaları"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__reco_model
+msgid "Reconciliation model"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__reference
@@ -16021,6 +15961,7 @@ msgstr "Reddetme"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__rejected
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Rejected"
 msgstr "Reddedildi"
 
@@ -16311,8 +16252,6 @@ msgid "Returns Bank Account"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
@@ -16551,6 +16490,11 @@ msgid "Rounding Methods"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rule_type
+msgid "Rule Type"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
 msgid "Rules for the reconciliation model"
 msgstr "Denkleştirme modeli için kurallar"
@@ -16658,6 +16602,7 @@ msgid "Sales Lock Date"
 msgstr "Satış Kilit Tarihi"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
 msgid "Sales Receipt"
 msgstr "Satış Makbuzu"
@@ -16813,6 +16758,11 @@ msgid "Search a name or Tax ID..."
 msgstr "İsim ya da Vergi Kimlik No arayın..."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Search a product"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/tax_totals/tax_totals.js:0
 msgid "Search more..."
@@ -16838,8 +16788,6 @@ msgid "Section Of"
 msgstr "Bölümü"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/product_catalog/search/search_panel/search_panel.xml:0
 #: model:ir.model.fields,field_description:account.field_account_report__section_report_ids
 msgid "Sections"
 msgstr "Bölümler"
@@ -17137,7 +17085,6 @@ msgstr "Faturalar gönderiliyor"
 #: model:ir.model.fields,field_description:account.field_account_move__move_sent_values
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_sent_values__sent
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__sent
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Sent"
@@ -17264,6 +17211,8 @@ msgid ""
 msgstr "Onarım veya temizlik gibi iş yerinizin bakımıyla ilgili hizmetler"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/invoice_guide/invoice_guide.xml:0
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
 msgid "Set Company Data"
 msgstr "Şirket Verilerini Ayarla"
@@ -17327,6 +17276,12 @@ msgstr "Vergileri belirleyin"
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Set up your chart of accounts and record initial balances."
 msgstr "Hesap planınızı oluşturun ve başlangıç bakiyelerini kaydedin."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/invoice_guide/invoice_guide.js:0
+msgid "Set your Company Data"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17457,12 +17412,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__show_journal
 msgid "Show Journal"
 msgstr "Gösteri Günlüğü"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.js:0
-msgid "Show Label Warning"
-msgstr "Etiket Uyarısını Göster"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -18249,11 +18198,6 @@ msgid "Tax 7.25%"
 msgstr "Vergi 7.25%"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_tax_group__advance_tax_payment_account_id
-msgid "Tax Advance Account"
-msgstr "Vergi Avans Hesabı"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_calculation_rounding_method
 msgid "Tax Calculation Rounding Method"
 msgstr "Vergi Hesaplaması Yuvarlama Yöntemi"
@@ -18395,20 +18339,10 @@ msgid "Tax Payable"
 msgstr "Vergi Borcu"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_tax_group__tax_payable_account_id
-msgid "Tax Payable Account"
-msgstr "Vergi Borç Hesabı"
-
-#. module: account
 #: model:account.account,name:account.21_tax_receivable
 #: model:account.account,name:account.22_account_account_us_tax_receivable
 msgid "Tax Receivable"
 msgstr "Vergi Alacağı"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_tax_group__tax_receivable_account_id
-msgid "Tax Receivable Account"
-msgstr "Vergi Alacak Hesabı"
 
 #. module: account
 #: model:account.account,name:account.21_tax_received
@@ -18469,24 +18403,6 @@ msgstr "Vergi Tipi"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
 msgid "Tax calculation rounding method"
 msgstr "Vergi hesaplama yuvarlama yöntemi"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_tax_group__tax_payable_account_id
-msgid ""
-"Tax current account used as a counterpart to the Tax Closing Entry when in "
-"favor of the authorities."
-msgstr ""
-"Vergi cari hesabı, yetkililer lehine olduğunda Vergi Kapanış Kaydının "
-"karşılığı olarak kullanılır."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_tax_group__tax_receivable_account_id
-msgid ""
-"Tax current account used as a counterpart to the Tax Closing Entry when in "
-"favor of the company."
-msgstr ""
-"Vergi cari hesabı, şirket lehine olduğunda Vergi Kapanış Kaydının karşılığı "
-"olarak kullanılır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
@@ -19534,10 +19450,22 @@ msgid "The payment that created this entry"
 msgstr "Bu kaydı oluşturan ödeme"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_reconcile_model.py:0
+msgid "The payment tolerance must be positive."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
 #: model:ir.model.fields,help:account.field_account_payment_register__currency_id
 msgid "The payment's currency."
 msgstr "Ödemenin para birimi."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_reconcile_model.py:0
+msgid "The percentage tolerance must be between 0 and 100."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19817,6 +19745,14 @@ msgid ""
 msgstr ""
 "Bu yevmiyenin sıralaması Ödemeler ve Ödeme dışı için farklıdır. Ancak siz "
 "her iki türden de bazılarını seçtiniz."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_move_line__deductible_percentage
+msgid ""
+"The share of this expense used for business purposes. VAT is only deductible "
+"on this portion; the rest is treated as a private expense. Use this for "
+"mixed-use costs (e.g. a home office, a car used partly for personal trips)."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
@@ -20358,6 +20294,13 @@ msgstr ""
 "gösterir,\n"
 "                örneğin e-posta ile göndermek veya bir grup kaydı incelemek "
 "için."
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.action_account_matching_rules
+msgid ""
+"Those can be used to automatically match journal items with your statement "
+"lines."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -21593,6 +21536,12 @@ msgid "View Partner(s)"
 msgstr "İş Ortağını(larını) Görüntüle"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "View payments"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.rounding_form_view
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Visible to all"
@@ -22577,27 +22526,9 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid "You must select a payable account for 'Tax Payable Account'."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid "You must select a receivable account for 'Tax Receivable Account'."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
 msgstr "En az 2 hesap seçmelisiniz."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid "You must use non-trade accounts for tax groups."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22736,6 +22667,12 @@ msgid "amounts for"
 msgstr "için tutar"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/invoice_guide/invoice_guide.xml:0
+msgid "and"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "and will not be posted automatically."
 msgstr "ve otomatik olarak gönderilmeyecektir."
@@ -22817,6 +22754,12 @@ msgstr "önce ödenirse vade tarihi"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "e-Invoicing & Email"
 msgstr "e-Fatura ve E-posta"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/invoice_guide/invoice_guide.xml:0
+msgid "e-invoicing"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -23258,6 +23201,321 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        Dear\n"
+#~ "        <t t-if=\"object.partner_id.parent_id\">\n"
+#~ "            <t t-if=\"object.partner_id.name\">\n"
+#~ "                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> "
+#~ "(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</"
+#~ "t>),\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+#~ "Interior</t>,\n"
+#~ "            </t>\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
+#~ "t>,\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "        Here is your\n"
+#~ "        <t t-if=\"object.name\">\n"
+#~ "            invoice <span style=\"font-weight:bold;\" t-out=\"object.name "
+#~ "or ''\">INV/2021/05/0005</span>\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            invoice\n"
+#~ "        </t>\n"
+#~ "        <t t-if=\"object.invoice_origin\">\n"
+#~ "            (with reference: <t t-out=\"object.invoice_origin or "
+#~ "''\">SUB003</t>)\n"
+#~ "        </t>\n"
+#~ "        amounting in <span style=\"font-weight:bold;\" t-"
+#~ "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+#~ "143,750.00</span>\n"
+#~ "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+#~ "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+#~ "            This invoice is already paid.\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            Please remit payment at your earliest convenience.\n"
+#~ "            <t t-if=\"object.payment_reference\">\n"
+#~ "                <br/><br/>\n"
+#~ "                Please use the following communication for your payment: "
+#~ "<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</"
+#~ "strong>\n"
+#~ "                <t t-if=\"object.partner_bank_id\">\n"
+#~ "                    on the account <strong t-"
+#~ "out=\"object.partner_bank_id.account_number\"/>\n"
+#~ "                </t>\n"
+#~ "                .\n"
+#~ "            </t>\n"
+#~ "        </t>\n"
+#~ "        <t t-if=\"hasattr(object, 'display_timesheet_portal_link') and "
+#~ "object.display_timesheet_portal_link\">\n"
+#~ "            <br/><br/>\n"
+#~ "            PS: you can review your timesheets <a t-att-href=\"'/my/"
+#~ "timesheets?search_in=invoice&amp;search=%s' % object.name\">from the "
+#~ "portal.</a>\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "        Do not hesitate to contact us if you have any questions.\n"
+#~ "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+#~ "            <br/><br/>\n"
+#~ "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/"
+#~ "><t t-out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></"
+#~ "div>\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        Sayın\n"
+#~ "       <t t-if=\"object.partner_id.parent_id\">\n"
+#~ "            <t t-if=\"object.partner_id.name\"> \n"
+#~ "               <t t-out=\"object.partner_id.name\"> Brandon Freeman</t> "
+#~ "(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</"
+#~ "t>),\n"
+#~ "           </t>\n"
+#~ "            <t t-else=\"\"> \n"
+#~ "               <t t-out=\"object.partner_id.parent_id.name or ''\"> Azure "
+#~ "Interior</t>,\n"
+#~ "           </t>\n"
+#~ "        </t> \n"
+#~ "       <t t-else=\"\">\n"
+#~ "            <t t-out=\"object.partner_id.name or ''\"> Brandon Freeman</"
+#~ "t>,\n"
+#~ "       </t>\n"
+#~ "        <br/> <br/> \n"
+#~ "        İşte\n"
+#~ "       <t t-if=\"object.name\"> \n"
+#~ "            faturanız <span style=\"font-weight:bold;\" t-"
+#~ "out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+#~ "        </t>\n"
+#~ "       <t t-else=\"\"> \n"
+#~ "            fatura\n"
+#~ "       </t>\n"
+#~ "        <t t-if=\"object.invoice_origin\"> \n"
+#~ "            (referans: <t t-out=\"object.invoice_origin or ''\">SUB003</"
+#~ "t>)\n"
+#~ "       </t> \n"
+#~ "       <span style=\"font-weight:bold;\" t-"
+#~ "out=\"format_amount(object.amount_total, object.currency_id) or ''\"> "
+#~ "tutarında $ 143.750,00</span>\n"
+#~ "       <t t-out=\"object.company_id.name or ''\"> YourCompany</t> "
+#~ "şirketinden.\n"
+#~ "       <t t-if=\"object.payment_state in ('paid', 'in_payment')\"> \n"
+#~ "            Bu fatura zaten ödenmiştir.\n"
+#~ "       </t>\n"
+#~ "        <t t-else=\"\"> \n"
+#~ "            Lütfen en kısa zamanda ödemeyi gerçekleştirin.\n"
+#~ "           <t t-if=\"object.payment_reference\">\n"
+#~ "                <br/> <br/> \n"
+#~ "                Ödeme işleminizde lütfen aşağıdaki bilgileri kullanın: "
+#~ "<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</"
+#~ "strong>\n"
+#~ "                <t t-if=\"object.partner_bank_id\">\n"
+#~ "                   <strong t-"
+#~ "out=\"object.partner_bank_id.account_number\"/>\n"
+#~ "                </t> \n"
+#~ "                hesabına.\n"
+#~ "           </t>\n"
+#~ "        </t> \n"
+#~ "       <t t-if=\"hasattr(object, 'display_timesheet_portal_link') and "
+#~ "object.display_timesheet_portal_link\">\n"
+#~ "            <br/> <br/> \n"
+#~ "            Not: Çalışma saat çizelgelerinizi <a t-att-href=\"'/my/"
+#~ "timesheets?search_in=invoice&amp;search=%s' % object.name\">portalından "
+#~ "inceleyebilirsiniz.</a>\n"
+#~ "        </t>\n"
+#~ "       <br/><br/> \n"
+#~ "        Herhangi bir sorunuz olursa lütfen bizimle iletişime geçmekten "
+#~ "çekinmeyin.\n"
+#~ "       <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+#~ "            <br/> <br/>\n"
+#~ "            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/"
+#~ "><t t-out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></"
+#~ "div>\n"
+#~ "       </t>\n"
+#~ "    </p> \n"
+#~ "</div>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        Dear\n"
+#~ "        <t t-if=\"object.partner_id.parent_id\">\n"
+#~ "            <t t-if=\"object.partner_id.name\">\n"
+#~ "                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> "
+#~ "(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</"
+#~ "t>),\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+#~ "Interior</t>,\n"
+#~ "            </t>\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
+#~ "t>,\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "        Here is your\n"
+#~ "        <t t-if=\"object.name\">\n"
+#~ "            self-billing invoice <span style=\"font-weight:bold;\" t-"
+#~ "out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            self-billing invoice\n"
+#~ "        </t>\n"
+#~ "        <t t-if=\"object.invoice_origin\">\n"
+#~ "            (with reference: <t t-out=\"object.invoice_origin or "
+#~ "''\">SUB003</t>)\n"
+#~ "        </t>\n"
+#~ "        amounting in <span style=\"font-weight:bold;\" t-"
+#~ "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+#~ "143,750.00</span>\n"
+#~ "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+#~ "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+#~ "            This self-billing invoice has already been paid.\n"
+#~ "        </t>\n"
+#~ "        <t t-if=\"hasattr(object, 'display_timesheet_portal_link') and "
+#~ "object.display_timesheet_portal_link\">\n"
+#~ "            <br/><br/>\n"
+#~ "            PS: you can review your timesheets <a t-att-href=\"'/my/"
+#~ "timesheets?search_in=invoice&amp;search=%s' % object.name\">from the "
+#~ "portal.</a>\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "        Do not hesitate to contact us if you have any questions.\n"
+#~ "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+#~ "            <br/><br/>\n"
+#~ "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/"
+#~ "><t t-out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></"
+#~ "div>\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        Sayın\n"
+#~ "       <t t-if=\"object.partner_id.parent_id\">\n"
+#~ "            <t t-if=\"object.partner_id.name\"> \n"
+#~ "               <t t-out=\"object.partner_id.name\"> Brandon Freeman</t> "
+#~ "(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</"
+#~ "t>),\n"
+#~ "           </t>\n"
+#~ "            <t t-else=\"\"> \n"
+#~ "               <t t-out=\"object.partner_id.parent_id.name or ''\"> Azure "
+#~ "Interior</t>,\n"
+#~ "           </t>\n"
+#~ "        </t> \n"
+#~ "       <t t-else=\"\">\n"
+#~ "            <t t-out=\"object.partner_id.name or ''\"> Brandon Freeman</"
+#~ "t>,\n"
+#~ "       </t>\n"
+#~ "        <br/> <br/> \n"
+#~ "        İşte\n"
+#~ "       <t t-if=\"object.name\"> \n"
+#~ "            kendi adına düzenlenmiş faturanız <span style=\"font-"
+#~ "weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+#~ "        </t>\n"
+#~ "       <t t-else=\"\"> \n"
+#~ "            kendi adına düzenlenmiş fatura\n"
+#~ "       </t>\n"
+#~ "        <t t-if=\"object.invoice_origin\"> \n"
+#~ "            (referans: <t t-out=\"object.invoice_origin or ''\">SUB003</"
+#~ "t>)\n"
+#~ "       </t> \n"
+#~ "       <span style=\"font-weight:bold;\" t-"
+#~ "out=\"format_amount(object.amount_total, object.currency_id) or ''\"> "
+#~ "tutarında $ 143.750,00</span>\n"
+#~ "       <t t-out=\"object.company_id.name or ''\"> YourCompany</t> "
+#~ "adresinden.\n"
+#~ "       <t t-if=\"object.payment_state in ('paid', 'in_payment')\"> \n"
+#~ "            Bu kendi adına düzenlenmiş fatura zaten ödenmiştir.\n"
+#~ "       </t>\n"
+#~ "        <t t-if=\"hasattr(object, 'display_timesheet_portal_link') and "
+#~ "object.display_timesheet_portal_link\"> \n"
+#~ "           <br/><br/> \n"
+#~ "            Not: Portal üzerinden çalışma çizelgelerinizi <a t-att-"
+#~ "href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % "
+#~ "object.name\">inceleyebilirsiniz.</a>\n"
+#~ "        </t>\n"
+#~ "       <br/><br/> \n"
+#~ "        Herhangi bir sorunuz olursa lütfen bizimle iletişime geçmekten "
+#~ "çekinmeyin.\n"
+#~ "       <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+#~ "            <br/> <br/>\n"
+#~ "            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/"
+#~ "><t t-out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></"
+#~ "div>\n"
+#~ "       </t>\n"
+#~ "    </p> \n"
+#~ "</div>\n"
+#~ "            "
+
+#, fuzzy
+#~ msgid ""
+#~ "Amount of %(amount).2f %(currency)s is already paid. Make sure you don't "
+#~ "pay twice."
+#~ msgstr ""
+#~ "%(amount).2f %(currency)s Tutar zaten ödenmiştir. İki kez ödeme "
+#~ "yapmadığınızdan emin olun."
+
+#~ msgid ""
+#~ "Downpayments posted on this account will be considered by the Tax Closing "
+#~ "Entry."
+#~ msgstr ""
+#~ "Bu hesaba gönderilen peşin ödemeler Vergi Kapanış Kaydı tarafından "
+#~ "dikkate alınacaktır."
+
+#~ msgid "Foreign tax account advance payment (%s)"
+#~ msgstr "Yabancı vergi hesabı avans ödemesi ( %s )"
+
+#~ msgid "Foreign tax account payable (%s)"
+#~ msgstr "Ödenebilir yabancı vergi hesabı ( %s )"
+
+#~ msgid "Foreign tax account receivable (%s)"
+#~ msgstr "Yabancı vergi hesabı alacakları (%s)"
+
+#~ msgid "No Bank Matching"
+#~ msgstr "Banka Eşleştirmesi Yok"
+
+#~ msgid "Show Label Warning"
+#~ msgstr "Etiket Uyarısını Göster"
+
+#~ msgid "Tax Advance Account"
+#~ msgstr "Vergi Avans Hesabı"
+
+#~ msgid "Tax Payable Account"
+#~ msgstr "Vergi Borç Hesabı"
+
+#~ msgid "Tax Receivable Account"
+#~ msgstr "Vergi Alacak Hesabı"
+
+#~ msgid ""
+#~ "Tax current account used as a counterpart to the Tax Closing Entry when "
+#~ "in favor of the authorities."
+#~ msgstr ""
+#~ "Vergi cari hesabı, yetkililer lehine olduğunda Vergi Kapanış Kaydının "
+#~ "karşılığı olarak kullanılır."
+
+#~ msgid ""
+#~ "Tax current account used as a counterpart to the Tax Closing Entry when "
+#~ "in favor of the company."
+#~ msgstr ""
+#~ "Vergi cari hesabı, şirket lehine olduğunda Vergi Kapanış Kaydının "
+#~ "karşılığı olarak kullanılır."
 
 #, fuzzy
 #~ msgid ""

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
 "PO-Revision-Date: 2026-09-09 14:02+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -108,11 +108,6 @@ msgid "Default Product"
 msgstr ""
 
 #. module: pos_sale
-#: model:product.template,name:pos_sale.default_sol_product_product_template
-msgid "Default Product (POS)"
-msgstr ""
-
-#. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Default Sale Product"
 msgstr ""
@@ -150,11 +145,6 @@ msgstr "Näyttönimi"
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Down Payment"
 msgstr "Ennakkomaksu"
-
-#. module: pos_sale
-#: model:product.template,name:pos_sale.default_downpayment_product_product_template
-msgid "Down Payment (POS)"
-msgstr "Käsiraha (Kassa)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
@@ -213,24 +203,6 @@ msgid "Invoiced"
 msgstr "Laskutettu"
 
 #. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
-msgid ""
-"It seems that you didn't configure a down payment product in your point of "
-"sale. You can go to your point of sale configuration to choose one."
-msgstr ""
-"Näyttää siltä, ettet ole määrittänyt ennakkomaksutuotetta "
-"Kassajärjestelmässäsi. Voit valita sellaisen Kassajärjestelmän asetuksista."
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
-msgid ""
-"It seems that you didn't configure a down payment product in your point of "
-"sale. You can go to your point of sale settings to choose one."
-msgstr ""
-
-#. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
 msgid "Journal Entry"
 msgstr "Päiväkirjan kirjaus"
@@ -261,12 +233,6 @@ msgstr "Linkitetty myyntitilaus"
 #: code:addons/pos_sale/models/pos_order.py:0
 msgid "Linked Sale Orders"
 msgstr "Linkitetyt myyntitilaukset"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
-msgid "No down payment product"
-msgstr "Ei käsirahatuotetta"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
@@ -496,6 +462,20 @@ msgstr "Tunnus"
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "Down Payment (POS)"
+#~ msgstr "Käsiraha (Kassa)"
+
+#~ msgid ""
+#~ "It seems that you didn't configure a down payment product in your point "
+#~ "of sale. You can go to your point of sale configuration to choose one."
+#~ msgstr ""
+#~ "Näyttää siltä, ettet ole määrittänyt ennakkomaksutuotetta "
+#~ "Kassajärjestelmässäsi. Voit valita sellaisen Kassajärjestelmän "
+#~ "asetuksista."
+
+#~ msgid "No down payment product"
+#~ msgstr "Ei käsirahatuotetta"
 
 #~ msgid "Amount To Pay In POS"
 #~ msgstr "Maksettava summa Kassajärjestelmässä"

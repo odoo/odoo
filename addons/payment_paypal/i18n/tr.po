@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:44+0000\n"
+"POT-Creation-Date: 2026-09-18 17:40+0000\n"
 "PO-Revision-Date: 2026-08-31 14:42+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -31,8 +31,95 @@ msgstr ""
 "X-Generator: Weblate 2026.8.1\n"
 
 #. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/controllers/main.py:0
+msgid "3D Secure authentication failed."
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "<i class=\"oi me-1\" data-icon=\"refresh\"/>Recheck Status"
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"block\" title=\"Restricted\"/>\n"
+"                    <strong>Attention:</strong> Please confirm your email "
+"address on PayPal to\n"
+"                    receive payments."
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"block\" title=\"Restricted\"/>\n"
+"                    <strong>Attention:</strong> You currently cannot receive "
+"payments due to a\n"
+"                    possible restriction on your PayPal account. Please "
+"reach out to PayPal Customer\n"
+"                    Support."
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.inline_form
+msgid "<small>Card Code (CVV)</small>"
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.inline_form
+msgid "<small>Card Number</small>"
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.inline_form
+msgid "<small>Cardholder Name</small>"
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.inline_form
+msgid "<small>Expiration (MM/YY)</small>"
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Account ID"
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_amex
+msgid "American Express"
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.module.module,summary:base.module_payment_paypal
 msgid "An American payment provider for online payments all over the world."
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Are you sure you want to disconnect?"
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_blik
+msgid "BLIK"
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_bancontact
+msgid "Bancontact"
+msgstr ""
+
+#. module: payment_paypal
+#. odoo-javascript
+#: code:addons/payment_paypal/static/src/interactions/payment_form.js:0
+msgid "Cannot display the payment form"
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_card
+msgid "Card"
 msgstr ""
 
 #. module: payment_paypal
@@ -51,21 +138,48 @@ msgid "Code"
 msgstr "Kod"
 
 #. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Connect"
+msgstr ""
+
+#. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_provider.py:0
 msgid "Could not generate a new access token."
 msgstr "Yeni bir erişim belirteci oluşturulamadı."
 
 #. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_diners
+msgid "Diners Club International"
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Disconnect"
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
 msgid "Display Name"
 msgstr "İsim Göster"
 
 #. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_eps
+msgid "EPS"
+msgstr ""
+
+#. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "Email"
 msgstr "E-Posta"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/controllers/onboarding.py:0
+msgid "Failed to retrieve access token."
+msgstr ""
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
@@ -74,24 +188,50 @@ msgstr "Web kancanızı oluşturun"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__id
 msgid "ID"
 msgstr "ID"
 
 #. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/controllers/main.py:0
-msgid "Invalid response format, can't normalize."
-msgstr "Geçersiz yanıt biçimi, normalleştirilemiyor."
+#: model:payment.method,name:payment_paypal.payment_method_jcb
+msgid "JCB"
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_maestro
+msgid "Maestro"
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
 
 #. module: payment_paypal
 #. odoo-python
-#: code:addons/payment_paypal/models/payment_transaction.py:0
-msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
-msgstr "txn_id (%(txn_id)s) veya txn_type (%(txn_type)s) için eksik değer."
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "Missing Account ID. Cannot check onboarding status."
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_multibanco
+msgid "Multibanco"
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_mybank
+msgid "MyBank"
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_p24
+msgid "P24"
+msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
+#: model:payment.method,name:payment_paypal.payment_method_paypal
 msgid "PayPal"
 msgstr "PayPal"
 
@@ -121,6 +261,21 @@ msgid "PayPal Email"
 msgstr ""
 
 #. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_paypal_paylater
+msgid "PayPal Pay Later"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_account_id
+msgid "PayPal Seller Account ID"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_setup_token_ref
+msgid "PayPal Setup Token ID"
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_transaction_form
 msgid "PayPal Transaction Type"
@@ -132,6 +287,20 @@ msgid "PayPal Webhook ID"
 msgstr "PayPal Webhook Kimliği"
 
 #. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid ""
+"PayPal credentials are missing. Please click the \"Connect\" button or fill "
+"them manually to set up your account."
+msgstr ""
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/controllers/onboarding.py:0
+msgid "PayPal did not return the authorization code or the shared id."
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_provider
 msgid "Payment Provider"
 msgstr "Ödeme Sağlayıcı"
@@ -139,6 +308,11 @@ msgstr "Ödeme Sağlayıcı"
 #. module: payment_paypal
 #: model:ir.module.module,shortdesc:base.module_payment_paypal
 msgid "Payment Provider: Paypal"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_token
+msgid "Payment Token"
 msgstr ""
 
 #. module: payment_paypal
@@ -153,8 +327,23 @@ msgid "Payment processing failed"
 msgstr "Ödeme işleme başarısız oldu"
 
 #. module: payment_paypal
-#: model:payment.method,name:payment_paypal.payment_method_paypal
-msgid "Paypal"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_confirmed
+msgid "Paypal Email Confirmed"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_is_oauth_onboarded
+msgid "Paypal Is Oauth Onboarded"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_payments_receivable
+msgid "Paypal Payments Receivable"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_seller_nonce
+msgid "Paypal Seller Nonce"
 msgstr ""
 
 #. module: payment_paypal
@@ -175,6 +364,12 @@ msgid "The moment at which the access token becomes invalid."
 msgstr "Erişim belirtecinin geçersiz hale geldiği an."
 
 #. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+msgid "The payment was declined by PayPal."
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
 msgid ""
 "The public business email solely used to identify the account with PayPal"
@@ -191,10 +386,19 @@ msgid "The technical code of this payment provider."
 msgstr "Bu ödeme sağlayıcısının teknik kodu."
 
 #. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/controllers/main.py:0
-msgid "Unable to verify the payment data"
-msgstr "Ödeme verileri doğrulanamıyor"
+#: model:payment.method,name:payment_paypal.payment_method_trustly
+msgid "Trustly"
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_visa
+msgid "VISA"
+msgstr ""
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_venmo
+msgid "Venmo"
+msgstr ""
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
@@ -202,10 +406,21 @@ msgid "Webhook ID"
 msgstr "Web kancası kimliği"
 
 #. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/models/payment_provider.py:0
-msgid "You must have an HTTPS connection to generate a webhook."
-msgstr "Bir web kancası oluşturmak için HTTPS bağlantınız olmalıdır."
+#: model:payment.method,name:payment_paypal.payment_method_ideal
+msgid "iDEAL"
+msgstr ""
 
-msgid "How to configure your paypal account?"
-msgstr "Paypal hesabınız nasıl ayarlanır?"
+#~ msgid "Invalid response format, can't normalize."
+#~ msgstr "Geçersiz yanıt biçimi, normalleştirilemiyor."
+
+#~ msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
+#~ msgstr "txn_id (%(txn_id)s) veya txn_type (%(txn_type)s) için eksik değer."
+
+#~ msgid "Unable to verify the payment data"
+#~ msgstr "Ödeme verileri doğrulanamıyor"
+
+#~ msgid "You must have an HTTPS connection to generate a webhook."
+#~ msgstr "Bir web kancası oluşturmak için HTTPS bağlantınız olmalıdır."
+
+#~ msgid "How to configure your paypal account?"
+#~ msgstr "Paypal hesabınız nasıl ayarlanır?"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:45+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 20:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/payment/"
@@ -73,6 +73,11 @@ msgstr ""
 #, fuzzy
 msgid "<small class=\"text-600\">Save my payment details</small>"
 msgstr "<small class=\"text-600\">To‘lov ma'lumotlarimni saqlash</small>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.amount_input
+msgid "<small>Amount</small>"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -254,6 +259,11 @@ msgid "Allow Saving Payment Methods"
 msgstr "To‘lov usullarini saqlashga ruxsat berish"
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__allow_amount_selection
+msgid "Allow splitting payments across several payment methods."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 #, fuzzy
 msgid "Already Captured"
@@ -280,6 +290,11 @@ msgstr "Amazon to‘lov xizmatlari"
 #, fuzzy
 msgid "Amount"
 msgstr "Miqdor"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__allow_amount_selection
+msgid "Amount Selection"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
@@ -1501,10 +1516,9 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
-#, fuzzy
-msgid "Payment: Post-process transactions"
-msgstr "To‘lov: Jarayondan keyingi operatsiyalar"
+#: model:ir.actions.server,name:payment.post_processing_cron_ir_actions_server
+msgid "Payment: Run Post-processing"
+msgstr ""
 
 #. module: payment
 #: model:ir.actions.server,name:payment.processing_cron_ir_actions_server
@@ -2861,1005 +2875,1012 @@ msgid "websocket message handling"
 msgstr ""
 
 #, fuzzy
-msgid "(ID:"
-msgstr "(ID:"
+#~ msgid "Payment: Post-process transactions"
+#~ msgstr "To‘lov: Jarayondan keyingi operatsiyalar"
 
 #, fuzzy
-msgid "7Eleven"
-msgstr "7O‘n bir"
+#~ msgid "(ID:"
+#~ msgstr "(ID:"
 
 #, fuzzy
-msgid ""
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-"                                            Enable Payment Methods"
-msgstr ""
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> To‘lov usullarini "
-"faollashtirish"
+#~ msgid "7Eleven"
+#~ msgstr "7O‘n bir"
 
 #, fuzzy
-msgid ""
-"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
-"em> button is not supported.\n"
-"                        Please use the <em>Duplicate</em> action instead."
-msgstr ""
-"<strong>Diqqat!</strong> <em>YARATISH</em> tugmasi orqali to‘lov "
-"provayderini yaratish qo‘llab-quvvatlanmaydi. Buning o‘rniga <em>Nusxalash</"
-"em> amalidan foydalaning."
+#~ msgid ""
+#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
+#~ "                                            Enable Payment Methods"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> To‘lov usullarini "
+#~ "faollashtirish"
 
 #, fuzzy
-msgid "ACH Direct Debit"
-msgstr "ACH to‘g‘ridan-to‘g‘ri debet"
+#~ msgid ""
+#~ "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
+#~ "em> button is not supported.\n"
+#~ "                        Please use the <em>Duplicate</em> action instead."
+#~ msgstr ""
+#~ "<strong>Diqqat!</strong> <em>YARATISH</em> tugmasi orqali to‘lov "
+#~ "provayderini yaratish qo‘llab-quvvatlanmaydi. Buning o‘rniga "
+#~ "<em>Nusxalash</em> amalidan foydalaning."
 
 #, fuzzy
-msgid "Abitab"
-msgstr "Abitab"
+#~ msgid "ACH Direct Debit"
+#~ msgstr "ACH to‘g‘ridan-to‘g‘ri debet"
 
 #, fuzzy
-msgid "Activate"
-msgstr "Faollashtirish"
+#~ msgid "Abitab"
+#~ msgstr "Abitab"
 
 #, fuzzy
-msgid "Active Provider"
-msgstr "Faol provayder"
+#~ msgid "Activate"
+#~ msgstr "Faollashtirish"
 
 #, fuzzy
-msgid "Affirm"
-msgstr "Tasdiqlash"
+#~ msgid "Active Provider"
+#~ msgstr "Faol provayder"
 
 #, fuzzy
-msgid "AfterPay"
-msgstr "AfterPay"
+#~ msgid "Affirm"
+#~ msgstr "Tasdiqlash"
 
 #, fuzzy
-msgid "Afterpay"
-msgstr "Afterpay"
+#~ msgid "AfterPay"
+#~ msgstr "AfterPay"
 
 #, fuzzy
-msgid "Akulaku PayLater"
-msgstr "Akulaku PayLater"
+#~ msgid "Afterpay"
+#~ msgstr "Afterpay"
 
 #, fuzzy
-msgid "AliPayHK"
-msgstr "AliPayHK"
+#~ msgid "Akulaku PayLater"
+#~ msgstr "Akulaku PayLater"
 
 #, fuzzy
-msgid "Alipay"
-msgstr "Alipay"
+#~ msgid "AliPayHK"
+#~ msgstr "AliPayHK"
 
 #, fuzzy
-msgid "Alipay+"
-msgstr "Alipay+"
+#~ msgid "Alipay"
+#~ msgstr "Alipay"
 
 #, fuzzy
-msgid "Alma"
-msgstr "Alma"
+#~ msgid "Alipay+"
+#~ msgstr "Alipay+"
 
 #, fuzzy
-msgid "Aman"
-msgstr "Aman"
+#~ msgid "Alma"
+#~ msgstr "Alma"
 
 #, fuzzy
-msgid "Amazon Pay"
-msgstr "Amazon Pay"
+#~ msgid "Aman"
+#~ msgstr "Aman"
 
 #, fuzzy
-msgid "American Express"
-msgstr "American Express"
+#~ msgid "Amazon Pay"
+#~ msgstr "Amazon Pay"
 
 #, fuzzy
-msgid "Argencard"
-msgstr "Argencard"
+#~ msgid "American Express"
+#~ msgstr "American Express"
 
 #, fuzzy
-msgid "Astropay TEF"
-msgstr "Astropay TEF"
+#~ msgid "Argencard"
+#~ msgstr "Argencard"
 
 #, fuzzy
-msgid "Atome"
-msgstr "Atome"
+#~ msgid "Astropay TEF"
+#~ msgstr "Astropay TEF"
 
 #, fuzzy
-msgid "Availability"
-msgstr "Mavjudlik"
+#~ msgid "Atome"
+#~ msgstr "Atome"
 
 #, fuzzy
-msgid "BACS Direct Debit"
-msgstr "BACS to‘g‘ridan-to‘g‘ri debet"
+#~ msgid "Availability"
+#~ msgstr "Mavjudlik"
 
 #, fuzzy
-msgid "BCA"
-msgstr "BCA"
+#~ msgid "BACS Direct Debit"
+#~ msgstr "BACS to‘g‘ridan-to‘g‘ri debet"
 
 #, fuzzy
-msgid "BECS Direct Debit"
-msgstr "BECS to‘g‘ridan-to‘g‘ri debet"
+#~ msgid "BCA"
+#~ msgstr "BCA"
 
 #, fuzzy
-msgid "BLIK"
-msgstr "BLIK"
+#~ msgid "BECS Direct Debit"
+#~ msgstr "BECS to‘g‘ridan-to‘g‘ri debet"
 
 #, fuzzy
-msgid "BRI"
-msgstr "BRI"
+#~ msgid "BLIK"
+#~ msgstr "BLIK"
 
 #, fuzzy
-msgid "BancNet"
-msgstr "BancNet"
+#~ msgid "BRI"
+#~ msgstr "BRI"
 
 #, fuzzy
-msgid "Banco Guayaquil"
-msgstr "Guayaquil banki"
+#~ msgid "BancNet"
+#~ msgstr "BancNet"
 
 #, fuzzy
-msgid "Banco Pichincha"
-msgstr "Pichincha banki"
+#~ msgid "Banco Guayaquil"
+#~ msgstr "Guayaquil banki"
 
 #, fuzzy
-msgid "Banco de Bogota"
-msgstr "Bogota banki"
+#~ msgid "Banco Pichincha"
+#~ msgstr "Pichincha banki"
 
 #, fuzzy
-msgid "Bancolombia"
-msgstr "Bancolombia"
+#~ msgid "Banco de Bogota"
+#~ msgstr "Bogota banki"
 
 #, fuzzy
-msgid "Bancontact"
-msgstr "Bancontact"
+#~ msgid "Bancolombia"
+#~ msgstr "Bancolombia"
 
 #, fuzzy
-msgid "Bangkok Bank"
-msgstr "Bangkok banki"
+#~ msgid "Bancontact"
+#~ msgstr "Bancontact"
 
 #, fuzzy
-msgid "Bank Account"
-msgstr "Bank hisobi"
+#~ msgid "Bangkok Bank"
+#~ msgstr "Bangkok banki"
 
 #, fuzzy
-msgid "Bank Installments"
-msgstr "Bank bo‘lib to‘lash"
+#~ msgid "Bank Account"
+#~ msgstr "Bank hisobi"
 
 #, fuzzy
-msgid "Bank Negara Indonesia"
-msgstr "Bank Negara Indonesia"
+#~ msgid "Bank Installments"
+#~ msgstr "Bank bo‘lib to‘lash"
 
 #, fuzzy
-msgid "Bank Permata"
-msgstr "Bank Permata"
+#~ msgid "Bank Negara Indonesia"
+#~ msgstr "Bank Negara Indonesia"
 
 #, fuzzy
-msgid "Bank Syariah Indonesia"
-msgstr "Bank Syariah Indonesia"
+#~ msgid "Bank Permata"
+#~ msgstr "Bank Permata"
 
 #, fuzzy
-msgid "Bank Transfer"
-msgstr "Bank o‘tkazmasi"
+#~ msgid "Bank Syariah Indonesia"
+#~ msgstr "Bank Syariah Indonesia"
 
 #, fuzzy
-msgid "Bank of Ayudhya"
-msgstr "Ayudhya banki"
+#~ msgid "Bank Transfer"
+#~ msgstr "Bank o‘tkazmasi"
 
 #, fuzzy
-msgid "Bank reference"
-msgstr "Bank ma'lumotnomasi"
+#~ msgid "Bank of Ayudhya"
+#~ msgstr "Ayudhya banki"
 
 #, fuzzy
-msgid "Belfius"
-msgstr "Belfius"
+#~ msgid "Bank reference"
+#~ msgstr "Bank ma'lumotnomasi"
 
 #, fuzzy
-msgid "Benefit"
-msgstr "Benefit"
+#~ msgid "Belfius"
+#~ msgstr "Belfius"
 
 #, fuzzy
-msgid "BharatQR"
-msgstr "BharatQR"
+#~ msgid "Benefit"
+#~ msgstr "Benefit"
 
 #, fuzzy
-msgid "BillEase"
-msgstr "BillEase"
+#~ msgid "BharatQR"
+#~ msgstr "BharatQR"
 
 #, fuzzy
-msgid "Billink"
-msgstr "Billink"
+#~ msgid "BillEase"
+#~ msgstr "BillEase"
 
 #, fuzzy
-msgid "Bizum"
-msgstr "Bizum"
+#~ msgid "Billink"
+#~ msgstr "Billink"
 
 #, fuzzy
-msgid "Boleto"
-msgstr "Boleto"
+#~ msgid "Bizum"
+#~ msgstr "Bizum"
 
 #, fuzzy
-msgid "Boost"
-msgstr "Boost"
+#~ msgid "Boleto"
+#~ msgstr "Boleto"
 
 #, fuzzy
-msgid "CIMB Niaga"
-msgstr "CIMB Niaga"
+#~ msgid "Boost"
+#~ msgstr "Boost"
 
 #, fuzzy
-msgid "CMR"
-msgstr "CMR"
+#~ msgid "CIMB Niaga"
+#~ msgstr "CIMB Niaga"
 
 #, fuzzy
-msgid "Cabal"
-msgstr "Cabal"
+#~ msgid "CMR"
+#~ msgstr "CMR"
 
 #, fuzzy
-msgid "Caixa"
-msgstr "Caixa"
+#~ msgid "Cabal"
+#~ msgstr "Cabal"
 
 #, fuzzy
-msgid "Card"
-msgstr "Karta"
+#~ msgid "Caixa"
+#~ msgstr "Caixa"
 
 #, fuzzy
-msgid "Card / Mobile"
-msgstr "Karta / Mobil"
+#~ msgid "Card"
+#~ msgstr "Karta"
 
 #, fuzzy
-msgid "Carnet"
-msgstr "Carnet"
+#~ msgid "Card / Mobile"
+#~ msgstr "Karta / Mobil"
 
 #, fuzzy
-msgid "Cartes Bancaires"
-msgstr "Cartes Bancaires"
+#~ msgid "Carnet"
+#~ msgstr "Carnet"
 
 #, fuzzy
-msgid "Cash App Pay"
-msgstr "Cash App Pay"
+#~ msgid "Cartes Bancaires"
+#~ msgstr "Cartes Bancaires"
 
 #, fuzzy
-msgid "Cashalo"
-msgstr "Cashalo"
+#~ msgid "Cash App Pay"
+#~ msgstr "Cash App Pay"
 
 #, fuzzy
-msgid "Cebuana"
-msgstr "Cebuana"
+#~ msgid "Cashalo"
+#~ msgstr "Cashalo"
 
 #, fuzzy
-msgid "Cencosud"
-msgstr "Cencosud"
+#~ msgid "Cebuana"
+#~ msgstr "Cebuana"
 
 #, fuzzy
-msgid "Cirrus"
-msgstr "Cirrus"
+#~ msgid "Cencosud"
+#~ msgstr "Cencosud"
 
 #, fuzzy
-msgid "Clearpay"
-msgstr "Clearpay"
+#~ msgid "Cirrus"
+#~ msgstr "Cirrus"
 
 #, fuzzy
-msgid "Codensa"
-msgstr "Codensa"
+#~ msgid "Clearpay"
+#~ msgstr "Clearpay"
 
 #, fuzzy
-msgid "Color"
-msgstr "Rang"
+#~ msgid "Codensa"
+#~ msgstr "Codensa"
 
 #, fuzzy
-msgid "Cordial"
-msgstr "Cordial"
+#~ msgid "Color"
+#~ msgstr "Rang"
 
 #, fuzzy
-msgid "Cordobesa"
-msgstr "Cordobesa"
+#~ msgid "Cordial"
+#~ msgstr "Cordial"
 
 #, fuzzy
-msgid "Credit Payment"
-msgstr "Kredit to‘lovi"
+#~ msgid "Cordobesa"
+#~ msgstr "Cordobesa"
 
 #, fuzzy
-msgid "Dana"
-msgstr "Dana"
+#~ msgid "Credit Payment"
+#~ msgstr "Kredit to‘lovi"
 
 #, fuzzy
-msgid "Dankort"
-msgstr "Dankort"
+#~ msgid "Dana"
+#~ msgstr "Dana"
 
 #, fuzzy
-msgid "Davivienda"
-msgstr "Davivienda"
+#~ msgid "Dankort"
+#~ msgstr "Dankort"
 
 #, fuzzy
-msgid "Diners Club International"
-msgstr "Diners Club International"
+#~ msgid "Davivienda"
+#~ msgstr "Davivienda"
 
 #, fuzzy
-msgid "Disabled"
-msgstr "O‘chirilgan"
+#~ msgid "Diners Club International"
+#~ msgstr "Diners Club International"
 
 #, fuzzy
-msgid "Discover"
-msgstr "Discover"
+#~ msgid "Disabled"
+#~ msgstr "O‘chirilgan"
 
 #, fuzzy
-msgid "DuitNow"
-msgstr "DuitNow"
+#~ msgid "Discover"
+#~ msgstr "Discover"
 
 #, fuzzy
-msgid "EMI"
-msgstr "EMI"
+#~ msgid "DuitNow"
+#~ msgstr "DuitNow"
 
 #, fuzzy
-msgid "EPS"
-msgstr "EPS"
+#~ msgid "EMI"
+#~ msgstr "EMI"
 
 #, fuzzy
-msgid "EasyPaisa"
-msgstr "EasyPaisa"
+#~ msgid "EPS"
+#~ msgstr "EPS"
 
 #, fuzzy
-msgid "Elo"
-msgstr "Elo"
+#~ msgid "EasyPaisa"
+#~ msgstr "EasyPaisa"
 
 #, fuzzy
-msgid "Enabled"
-msgstr "Faol"
+#~ msgid "Elo"
+#~ msgstr "Elo"
 
 #, fuzzy
-msgid "FPS"
-msgstr "FPS"
+#~ msgid "Enabled"
+#~ msgstr "Faol"
 
 #, fuzzy
-msgid "FPX"
-msgstr "FPX"
+#~ msgid "FPS"
+#~ msgstr "FPS"
 
 #, fuzzy
-msgid "Facilito"
-msgstr "Facilito"
+#~ msgid "FPX"
+#~ msgstr "FPX"
 
 #, fuzzy
-msgid "Floa Bank"
-msgstr "Floa Bank"
+#~ msgid "Facilito"
+#~ msgstr "Facilito"
 
 #, fuzzy
-msgid "Forsa"
-msgstr "Forsa"
+#~ msgid "Floa Bank"
+#~ msgstr "Floa Bank"
 
 #, fuzzy
-msgid "GCash"
-msgstr "GCash"
+#~ msgid "Forsa"
+#~ msgstr "Forsa"
 
 #, fuzzy
-msgid "GoPay"
-msgstr "GoPay"
+#~ msgid "GCash"
+#~ msgstr "GCash"
 
 #, fuzzy
-msgid "GrabPay"
-msgstr "GrabPay"
+#~ msgid "GoPay"
+#~ msgstr "GoPay"
 
 #, fuzzy
-msgid "HD Bank"
-msgstr "HD Bank"
+#~ msgid "GrabPay"
+#~ msgstr "GrabPay"
 
 #, fuzzy
-msgid "Halan"
-msgstr "Halan"
+#~ msgid "HD Bank"
+#~ msgstr "HD Bank"
 
 #, fuzzy
-msgid "Has Enabled Provider"
-msgstr "Faol provayderi bor"
+#~ msgid "Halan"
+#~ msgstr "Halan"
 
 #, fuzzy
-msgid "Hipercard"
-msgstr "Hipercard"
+#~ msgid "Has Enabled Provider"
+#~ msgstr "Faol provayderi bor"
 
 #, fuzzy
-msgid "Hoolah"
-msgstr "Hoolah"
+#~ msgid "Hipercard"
+#~ msgstr "Hipercard"
 
 #, fuzzy
-msgid "Humm"
-msgstr "Humm"
+#~ msgid "Hoolah"
+#~ msgstr "Hoolah"
 
 #, fuzzy
-msgid ""
-"In test mode, a fake payment is processed through a test payment interface.\n"
-"This mode is advised when setting up the provider."
-msgstr ""
-"Sinov rejimida soxta to‘lov test to‘lov interfeysi orqali amalga oshiriladi. "
-"Bu rejim provayderlarni sozlashda tavsiya etiladi."
+#~ msgid "Humm"
+#~ msgstr "Humm"
 
 #, fuzzy
-msgid "JCB"
-msgstr "JCB"
+#~ msgid ""
+#~ "In test mode, a fake payment is processed through a test payment "
+#~ "interface.\n"
+#~ "This mode is advised when setting up the provider."
+#~ msgstr ""
+#~ "Sinov rejimida soxta to‘lov test to‘lov interfeysi orqali amalga "
+#~ "oshiriladi. Bu rejim provayderlarni sozlashda tavsiya etiladi."
 
 #, fuzzy
-msgid "JazzCash"
-msgstr "JazzCash"
+#~ msgid "JCB"
+#~ msgstr "JCB"
 
 #, fuzzy
-msgid "JeniusPay"
-msgstr "JeniusPay"
+#~ msgid "JazzCash"
+#~ msgstr "JazzCash"
 
 #, fuzzy
-msgid "Jkopay"
-msgstr "Jkopay"
+#~ msgid "JeniusPay"
+#~ msgstr "JeniusPay"
 
 #, fuzzy
-msgid "KBC/CBC"
-msgstr "KBC/CBC"
+#~ msgid "Jkopay"
+#~ msgstr "Jkopay"
 
 #, fuzzy
-msgid "KNET"
-msgstr "KNET"
+#~ msgid "KBC/CBC"
+#~ msgstr "KBC/CBC"
 
 #, fuzzy
-msgid "KakaoPay"
-msgstr "KakaoPay"
+#~ msgid "KNET"
+#~ msgstr "KNET"
 
 #, fuzzy
-msgid "Kasikorn Bank"
-msgstr "Kasikorn banki"
+#~ msgid "KakaoPay"
+#~ msgstr "KakaoPay"
 
 #, fuzzy
-msgid "Kiosk"
-msgstr "Kiosk"
+#~ msgid "Kasikorn Bank"
+#~ msgstr "Kasikorn banki"
 
 #, fuzzy
-msgid "Klarna"
-msgstr "Klarna"
+#~ msgid "Kiosk"
+#~ msgstr "Kiosk"
 
 #, fuzzy
-msgid "Klarna - Pay Now"
-msgstr "Klarna - Hozir to‘lash"
+#~ msgid "Klarna"
+#~ msgstr "Klarna"
 
 #, fuzzy
-msgid "Klarna - Pay over time"
-msgstr "Klarna - Muddatli to‘lov"
+#~ msgid "Klarna - Pay Now"
+#~ msgstr "Klarna - Hozir to‘lash"
 
 #, fuzzy
-msgid "Kredivo"
-msgstr "Kredivo"
+#~ msgid "Klarna - Pay over time"
+#~ msgstr "Klarna - Muddatli to‘lov"
 
 #, fuzzy
-msgid "KrungThai Bank"
-msgstr "KrungThai banki"
+#~ msgid "Kredivo"
+#~ msgstr "Kredivo"
 
 #, fuzzy
-msgid "LINE Pay"
-msgstr "LINE Pay"
+#~ msgid "KrungThai Bank"
+#~ msgstr "KrungThai banki"
 
 #, fuzzy
-msgid "Lider"
-msgstr "Lider"
+#~ msgid "LINE Pay"
+#~ msgstr "LINE Pay"
 
 #, fuzzy
-msgid "LinkAja"
-msgstr "LinkAja"
+#~ msgid "Lider"
+#~ msgstr "Lider"
 
 #, fuzzy
-msgid "Local Payments"
-msgstr "Mahalliy to‘lovlar"
+#~ msgid "LinkAja"
+#~ msgstr "LinkAja"
 
 #, fuzzy
-msgid "M-Pesa"
-msgstr "M-Pesa"
+#~ msgid "Local Payments"
+#~ msgstr "Mahalliy to‘lovlar"
 
 #, fuzzy
-msgid "MB WAY"
-msgstr "MB WAY"
+#~ msgid "M-Pesa"
+#~ msgstr "M-Pesa"
 
 #, fuzzy
-msgid "Mada"
-msgstr "Mada"
+#~ msgid "MB WAY"
+#~ msgstr "MB WAY"
 
 #, fuzzy
-msgid "Maestro"
-msgstr "Maestro"
+#~ msgid "Mada"
+#~ msgstr "Mada"
 
 #, fuzzy
-msgid "Magna"
-msgstr "Magna"
+#~ msgid "Maestro"
+#~ msgstr "Maestro"
 
 #, fuzzy
-msgid ""
-"Making a request to the provider is not possible because the provider is "
-"disabled."
-msgstr "Provayder o‘chirilganligi sababli, unga so‘rov yuborish imkonsiz."
+#~ msgid "Magna"
+#~ msgstr "Magna"
 
 #, fuzzy
-msgid "Mandiri"
-msgstr "Mandiri"
+#~ msgid ""
+#~ "Making a request to the provider is not possible because the provider is "
+#~ "disabled."
+#~ msgstr "Provayder o‘chirilganligi sababli, unga so‘rov yuborish imkonsiz."
 
 #, fuzzy
-msgid "MasterCard"
-msgstr "MasterCard"
+#~ msgid "Mandiri"
+#~ msgstr "Mandiri"
 
 #, fuzzy
-msgid "Maya"
-msgstr "Maya"
+#~ msgid "MasterCard"
+#~ msgstr "MasterCard"
 
 #, fuzzy
-msgid "Maybank"
-msgstr "Maybank"
+#~ msgid "Maya"
+#~ msgstr "Maya"
 
 #, fuzzy
-msgid "Meeza"
-msgstr "Meeza"
+#~ msgid "Maybank"
+#~ msgstr "Maybank"
 
 #, fuzzy
-msgid "Mercado Livre"
-msgstr "Mercado Livre"
+#~ msgid "Meeza"
+#~ msgstr "Meeza"
 
 #, fuzzy
-msgid "Mercado Pago Wallet"
-msgstr "Mercado Pago hamyoni"
+#~ msgid "Mercado Livre"
+#~ msgstr "Mercado Livre"
 
 #, fuzzy
-msgid "MoMo"
-msgstr "MoMo"
+#~ msgid "Mercado Pago Wallet"
+#~ msgstr "Mercado Pago hamyoni"
 
 #, fuzzy
-msgid "Mobile Wallets Egypt"
-msgstr "Misr mobil hamyonlari"
+#~ msgid "MoMo"
+#~ msgstr "MoMo"
 
 #, fuzzy
-msgid "Mobile money"
-msgstr "Mobil pul"
+#~ msgid "Mobile Wallets Egypt"
+#~ msgstr "Misr mobil hamyonlari"
 
 #, fuzzy
-msgid "MobilePay"
-msgstr "MobilePay"
+#~ msgid "Mobile money"
+#~ msgstr "Mobil pul"
 
 #, fuzzy
-msgid "Multibanco"
-msgstr "Multibanco"
+#~ msgid "MobilePay"
+#~ msgstr "MobilePay"
 
 #, fuzzy
-msgid "MyBank"
-msgstr "MyBank"
+#~ msgid "Multibanco"
+#~ msgstr "Multibanco"
 
 #, fuzzy
-msgid "NAPS"
-msgstr "NAPS"
+#~ msgid "MyBank"
+#~ msgstr "MyBank"
 
 #, fuzzy
-msgid "Napas Card"
-msgstr "Napas kartasi"
+#~ msgid "NAPS"
+#~ msgstr "NAPS"
 
 #, fuzzy
-msgid "Naranja"
-msgstr "Naranja"
+#~ msgid "Napas Card"
+#~ msgstr "Napas kartasi"
 
 #, fuzzy
-msgid "Nativa"
-msgstr "Nativa"
+#~ msgid "Naranja"
+#~ msgstr "Naranja"
 
 #, fuzzy
-msgid "Netbanking"
-msgstr "Internet-banking"
+#~ msgid "Nativa"
+#~ msgstr "Nativa"
 
 #, fuzzy
-msgid "OVO"
-msgstr "OVO"
+#~ msgid "Netbanking"
+#~ msgstr "Internet-banking"
 
 #, fuzzy
-msgid "Oca"
-msgstr "Oca"
+#~ msgid "OVO"
+#~ msgstr "OVO"
 
 #, fuzzy
-msgid "Octopus"
-msgstr "Octopus"
+#~ msgid "Oca"
+#~ msgstr "Oca"
 
 #, fuzzy
-msgid "OmanNet"
-msgstr "OmanNet"
+#~ msgid "Octopus"
+#~ msgstr "Octopus"
 
 #, fuzzy
-msgid "Online Banking Czech Republic"
-msgstr "Chexiya Respublikasi onlayn bankingi"
+#~ msgid "OmanNet"
+#~ msgstr "OmanNet"
 
 #, fuzzy
-msgid "Online Banking India"
-msgstr "Hindiston onlayn bankingi"
+#~ msgid "Online Banking Czech Republic"
+#~ msgstr "Chexiya Respublikasi onlayn bankingi"
 
 #, fuzzy
-msgid "Online Banking Slovakia"
-msgstr "Slovakiya onlayn bankingi"
+#~ msgid "Online Banking India"
+#~ msgstr "Hindiston onlayn bankingi"
 
 #, fuzzy
-msgid "Online Banking Thailand"
-msgstr "Tailand onlayn bankingi"
+#~ msgid "Online Banking Slovakia"
+#~ msgstr "Slovakiya onlayn bankingi"
 
 #, fuzzy
-msgid "Open banking"
-msgstr "Ochiq banking"
+#~ msgid "Online Banking Thailand"
+#~ msgstr "Tailand onlayn bankingi"
 
 #, fuzzy
-msgid "Oxxo Pay"
-msgstr "Oxxo Pay"
+#~ msgid "Open banking"
+#~ msgstr "Ochiq banking"
 
 #, fuzzy
-msgid "P24"
-msgstr "P24"
+#~ msgid "Oxxo Pay"
+#~ msgstr "Oxxo Pay"
 
 #, fuzzy
-msgid "POLi"
-msgstr "POLi"
+#~ msgid "P24"
+#~ msgstr "P24"
 
 #, fuzzy
-msgid "PPS"
-msgstr "PPS"
+#~ msgid "POLi"
+#~ msgstr "POLi"
 
 #, fuzzy
-msgid "PSE"
-msgstr "PSE"
+#~ msgid "PPS"
+#~ msgstr "PPS"
 
 #, fuzzy
-msgid "Pace."
-msgstr "Pace."
+#~ msgid "PSE"
+#~ msgstr "PSE"
 
 #, fuzzy
-msgid "Pay Later"
-msgstr "Keyinroq to‘lash"
+#~ msgid "Pace."
+#~ msgstr "Pace."
 
 #, fuzzy
-msgid "PayBright"
-msgstr "PayBright"
+#~ msgid "Pay Later"
+#~ msgstr "Keyinroq to‘lash"
 
 #, fuzzy
-msgid "PayID"
-msgstr "PayID"
+#~ msgid "PayBright"
+#~ msgstr "PayBright"
 
 #, fuzzy
-msgid "PayMe"
-msgstr "PayMe"
+#~ msgid "PayID"
+#~ msgstr "PayID"
 
 #, fuzzy
-msgid "PayNow"
-msgstr "PayNow"
+#~ msgid "PayMe"
+#~ msgstr "PayMe"
 
 #, fuzzy
-msgid "PaySafeCard"
-msgstr "PaySafeCard"
+#~ msgid "PayNow"
+#~ msgstr "PayNow"
 
 #, fuzzy
-msgid "Payment Followup"
-msgstr "To‘lovni kuzatib borish"
+#~ msgid "PaySafeCard"
+#~ msgstr "PaySafeCard"
 
 #, fuzzy
-msgid "Payment Form"
-msgstr "To‘lov shakli"
+#~ msgid "Payment Followup"
+#~ msgstr "To‘lovni kuzatib borish"
 
 #, fuzzy
-msgid "Paypal"
-msgstr "PayPal"
+#~ msgid "Payment Form"
+#~ msgstr "To‘lov shakli"
 
 #, fuzzy
-msgid "Paytm"
-msgstr "Paytm"
+#~ msgid "Paypal"
+#~ msgstr "PayPal"
 
 #, fuzzy
-msgid "Paytrail"
-msgstr "Paytrail"
+#~ msgid "Paytm"
+#~ msgstr "Paytm"
 
 #, fuzzy
-msgid "Pix"
-msgstr "Pix"
+#~ msgid "Paytrail"
+#~ msgstr "Paytrail"
 
 #, fuzzy
-msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
-msgstr ""
-"Iltimos, %(payment_method)s usuli %(provider)s tomonidan qo‘llab-"
-"quvvatlanishini tekshiring."
+#~ msgid "Pix"
+#~ msgstr "Pix"
 
 #, fuzzy
-msgid "PostFinance Pay"
-msgstr "PostFinance to‘lovi"
+#~ msgid ""
+#~ "Please make sure that %(payment_method)s is supported by %(provider)s."
+#~ msgstr ""
+#~ "Iltimos, %(payment_method)s usuli %(provider)s tomonidan qo‘llab-"
+#~ "quvvatlanishini tekshiring."
 
 #, fuzzy
-msgid "PostePay"
-msgstr "PostePay"
+#~ msgid "PostFinance Pay"
+#~ msgstr "PostFinance to‘lovi"
 
 #, fuzzy
-msgid "Premium Card"
-msgstr "Premium karta"
+#~ msgid "PostePay"
+#~ msgstr "PostePay"
 
 #, fuzzy
-msgid "Presto"
-msgstr "Presto"
+#~ msgid "Premium Card"
+#~ msgstr "Premium karta"
 
 #, fuzzy
-msgid "Prompt Pay"
-msgstr "PromptPay"
+#~ msgid "Presto"
+#~ msgstr "Presto"
 
 #, fuzzy
-msgid "Providers"
-msgstr "Provayderlar"
+#~ msgid "Prompt Pay"
+#~ msgstr "PromptPay"
 
 #, fuzzy
-msgid "QRIS"
-msgstr "QRIS"
+#~ msgid "Providers"
+#~ msgstr "Provayderlar"
 
 #, fuzzy
-msgid "Rabbit LINE Pay"
-msgstr "Rabbit LINE Pay"
+#~ msgid "QRIS"
+#~ msgstr "QRIS"
 
 #, fuzzy
-msgid "Ratepay"
-msgstr "Ratepay"
+#~ msgid "Rabbit LINE Pay"
+#~ msgstr "Rabbit LINE Pay"
 
 #, fuzzy
-msgid "Reason:"
-msgstr "Sabab:"
+#~ msgid "Ratepay"
+#~ msgstr "Ratepay"
 
 #, fuzzy
-msgid "Redpagos"
-msgstr "Redpagos"
+#~ msgid "Reason:"
+#~ msgstr "Sabab:"
 
 #, fuzzy
-msgid "Revolut Pay"
-msgstr "Revolut Pay"
+#~ msgid "Redpagos"
+#~ msgstr "Redpagos"
 
 #, fuzzy
-msgid "RuPay"
-msgstr "RuPay"
+#~ msgid "Revolut Pay"
+#~ msgstr "Revolut Pay"
 
 #, fuzzy
-msgid "SPEI"
-msgstr "SPEI"
+#~ msgid "RuPay"
+#~ msgstr "RuPay"
 
 #, fuzzy
-msgid "STCPay"
-msgstr "STCPay"
+#~ msgid "SPEI"
+#~ msgstr "SPEI"
 
 #, fuzzy
-msgid "Samsung Pay"
-msgstr "Samsung Pay"
+#~ msgid "STCPay"
+#~ msgstr "STCPay"
 
 #, fuzzy
-msgid "Select countries. Leave empty to make available everywhere."
-msgstr ""
-"Mamlakatlarni tanlang. Hamma joyda mavjud bo‘lishi uchun bo‘sh qoldiring."
+#~ msgid "Samsung Pay"
+#~ msgstr "Samsung Pay"
 
 #, fuzzy
-msgid "Select currencies. Leave empty not to restrict any."
-msgstr ""
-"Valyutalarni tanlang. Hech qanday cheklov qo‘ymaslik uchun bo‘sh qoldiring."
+#~ msgid "Select countries. Leave empty to make available everywhere."
+#~ msgstr ""
+#~ "Mamlakatlarni tanlang. Hamma joyda mavjud bo‘lishi uchun bo‘sh qoldiring."
 
 #, fuzzy
-msgid "ShopBack"
-msgstr "ShopBack"
+#~ msgid "Select currencies. Leave empty not to restrict any."
+#~ msgstr ""
+#~ "Valyutalarni tanlang. Hech qanday cheklov qo‘ymaslik uchun bo‘sh "
+#~ "qoldiring."
 
 #, fuzzy
-msgid "ShopeePay"
-msgstr "ShopeePay"
+#~ msgid "ShopBack"
+#~ msgstr "ShopBack"
 
 #, fuzzy
-msgid "Shopping Card"
-msgstr "Xarid kartasi"
+#~ msgid "ShopeePay"
+#~ msgstr "ShopeePay"
 
 #, fuzzy
-msgid "Siam Commerical Bank"
-msgstr "Siam tijorat banki"
+#~ msgid "Shopping Card"
+#~ msgstr "Xarid kartasi"
 
 #, fuzzy
-msgid "Souhoola"
-msgstr "Souhoola"
+#~ msgid "Siam Commerical Bank"
+#~ msgstr "Siam tijorat banki"
 
 #, fuzzy
-msgid "Supported providers:"
-msgstr "Qo‘llab-quvvatlanadigan provayderlar:"
+#~ msgid "Souhoola"
+#~ msgstr "Souhoola"
 
 #, fuzzy
-msgid "Swish"
-msgstr "Swish"
+#~ msgid "Supported providers:"
+#~ msgstr "Qo‘llab-quvvatlanadigan provayderlar:"
 
 #, fuzzy
-msgid "Sympl"
-msgstr "Sympl"
+#~ msgid "Swish"
+#~ msgstr "Swish"
 
 #, fuzzy
-msgid "TENPAY"
-msgstr "TENPAY"
+#~ msgid "Sympl"
+#~ msgstr "Sympl"
 
 #, fuzzy
-msgid "TTB"
-msgstr "TTB"
+#~ msgid "TENPAY"
+#~ msgstr "TENPAY"
 
 #, fuzzy
-msgid "Tabby"
-msgstr "Tabby"
+#~ msgid "TTB"
+#~ msgstr "TTB"
 
 #, fuzzy
-msgid "Tamara"
-msgstr "Tamara"
+#~ msgid "Tabby"
+#~ msgstr "Tabby"
 
 #, fuzzy
-msgid "Tamilnad Mercantile Bank Limited"
-msgstr "Tamilnad Mercantile Bank Limited"
+#~ msgid "Tamara"
+#~ msgstr "Tamara"
 
 #, fuzzy
-msgid "Tarjeta MercadoPago"
-msgstr "Tarjeta MercadoPago"
+#~ msgid "Tamilnad Mercantile Bank Limited"
+#~ msgstr "Tamilnad Mercantile Bank Limited"
 
 #, fuzzy
-msgid "Techcombank"
-msgstr "Techcombank"
+#~ msgid "Tarjeta MercadoPago"
+#~ msgstr "Tarjeta MercadoPago"
 
 #, fuzzy
-msgid "TendoPay"
-msgstr "TendoPay"
+#~ msgid "Techcombank"
+#~ msgstr "Techcombank"
 
 #, fuzzy
-msgid "The color of the card in kanban view"
-msgstr "Kanban ko‘rinishidagi karta rangi"
+#~ msgid "TendoPay"
+#~ msgstr "TendoPay"
 
 #, fuzzy
-msgid "The list of providers supporting this payment method."
-msgstr "Ushbu to‘lov usulini qo‘llab-quvvatlovchi provayderlar ro‘yxati."
+#~ msgid "The color of the card in kanban view"
+#~ msgstr "Kanban ko‘rinishidagi karta rangi"
 
 #, fuzzy
-msgid ""
-"This payment method needs a partner in crime; you should enable a payment "
-"provider supporting this method first."
-msgstr ""
-"Bu to‘lov usuli uchun hamkor kerak; avval ushbu usulni qo‘llab-"
-"quvvatlaydigan to‘lov provayderini yoqishingiz lozim."
+#~ msgid "The list of providers supporting this payment method."
+#~ msgstr "Ushbu to‘lov usulini qo‘llab-quvvatlovchi provayderlar ro‘yxati."
 
 #, fuzzy
-msgid "Tienphong"
-msgstr "Tienphong"
+#~ msgid ""
+#~ "This payment method needs a partner in crime; you should enable a payment "
+#~ "provider supporting this method first."
+#~ msgstr ""
+#~ "Bu to‘lov usuli uchun hamkor kerak; avval ushbu usulni qo‘llab-"
+#~ "quvvatlaydigan to‘lov provayderini yoqishingiz lozim."
 
 #, fuzzy
-msgid "Tinka"
-msgstr "Tinka"
+#~ msgid "Tienphong"
+#~ msgstr "Tienphong"
 
 #, fuzzy
-msgid "Touch'n Go"
-msgstr "Touch'n Go"
+#~ msgid "Tinka"
+#~ msgstr "Tinka"
 
 #, fuzzy
-msgid "Troy"
-msgstr "Troy"
+#~ msgid "Touch'n Go"
+#~ msgstr "Touch'n Go"
 
 #, fuzzy
-msgid "TrueMoney"
-msgstr "TrueMoney"
+#~ msgid "Troy"
+#~ msgstr "Troy"
 
 #, fuzzy
-msgid "Trustly"
-msgstr "Trustly"
+#~ msgid "TrueMoney"
+#~ msgstr "TrueMoney"
 
 #, fuzzy
-msgid "Twint"
-msgstr "Twint"
+#~ msgid "Trustly"
+#~ msgstr "Trustly"
 
 #, fuzzy
-msgid "UPI"
-msgstr "UPI"
+#~ msgid "Twint"
+#~ msgstr "Twint"
 
 #, fuzzy
-msgid "USSD"
-msgstr "USSD"
+#~ msgid "UPI"
+#~ msgstr "UPI"
 
 #, fuzzy
-msgid "UnionPay"
-msgstr "UnionPay"
+#~ msgid "USSD"
+#~ msgstr "USSD"
 
 #, fuzzy
-msgid "United Overseas Bank"
-msgstr "United Overseas Bank"
+#~ msgid "UnionPay"
+#~ msgstr "UnionPay"
 
 #, fuzzy
-msgid "Universal Air Travel Plan"
-msgstr "Universal Air Travel Plan"
+#~ msgid "United Overseas Bank"
+#~ msgstr "United Overseas Bank"
 
 #, fuzzy
-msgid "V PAY"
-msgstr "V PAY"
+#~ msgid "Universal Air Travel Plan"
+#~ msgstr "Universal Air Travel Plan"
 
 #, fuzzy
-msgid "VISA"
-msgstr "VISA"
+#~ msgid "V PAY"
+#~ msgstr "V PAY"
 
 #, fuzzy
-msgid "ValU"
-msgstr "ValU"
+#~ msgid "VISA"
+#~ msgstr "VISA"
 
 #, fuzzy
-msgid "Venmo"
-msgstr "Venmo"
+#~ msgid "ValU"
+#~ msgstr "ValU"
 
 #, fuzzy
-msgid "Vietcombank"
-msgstr "Vietcombank"
+#~ msgid "Venmo"
+#~ msgstr "Venmo"
 
 #, fuzzy
-msgid "Vipps"
-msgstr "Vipps"
+#~ msgid "Vietcombank"
+#~ msgstr "Vietcombank"
 
 #, fuzzy
-msgid "Wallets India"
-msgstr "Hindiston hamyonlari"
+#~ msgid "Vipps"
+#~ msgstr "Vipps"
 
 #, fuzzy
-msgid "Walley"
-msgstr "Walley"
+#~ msgid "Wallets India"
+#~ msgstr "Hindiston hamyonlari"
 
 #, fuzzy
-msgid "WeChat Pay"
-msgstr "WeChat Pay"
+#~ msgid "Walley"
+#~ msgstr "Walley"
 
 #, fuzzy
-msgid "WeLend"
-msgstr "WeLend"
+#~ msgid "WeChat Pay"
+#~ msgstr "WeChat Pay"
 
 #, fuzzy
-msgid "WebPay"
-msgstr "WebPay"
+#~ msgid "WeLend"
+#~ msgstr "WeLend"
 
 #, fuzzy
-msgid ""
-"You can't unarchive tokens linked to inactive payment methods or disabled "
-"providers."
-msgstr ""
-"Nofaol to‘lov usullari yoki o‘chirilgan provayderlarga bog‘langan tokenlarni "
-"arxivdan chiqarib bo‘lmaydi."
+#~ msgid "WebPay"
+#~ msgstr "WebPay"
 
 #, fuzzy
-msgid ""
-"You cannot delete the payment provider %s; disable it or uninstall it "
-"instead."
-msgstr ""
-"%s to‘lov provayderini o‘chira olmaysiz; uni o‘chirib qo‘ying yoki "
-"o‘rnatmani olib tashlang."
+#~ msgid ""
+#~ "You can't unarchive tokens linked to inactive payment methods or disabled "
+#~ "providers."
+#~ msgstr ""
+#~ "Nofaol to‘lov usullari yoki o‘chirilgan provayderlarga bog‘langan "
+#~ "tokenlarni arxivdan chiqarib bo‘lmaydi."
 
 #, fuzzy
-msgid "You cannot publish a disabled provider."
-msgstr "O‘chirilgan provayderni e'lon qila olmaysiz."
+#~ msgid ""
+#~ "You cannot delete the payment provider %s; disable it or uninstall it "
+#~ "instead."
+#~ msgstr ""
+#~ "%s to‘lov provayderini o‘chira olmaysiz; uni o‘chirib qo‘ying yoki "
+#~ "o‘rnatmani olib tashlang."
 
 #, fuzzy
-msgid "cofidis"
-msgstr "cofidis"
+#~ msgid "You cannot publish a disabled provider."
+#~ msgstr "O‘chirilgan provayderni e'lon qila olmaysiz."
 
 #, fuzzy
-msgid "eNETS"
-msgstr "eNETS"
+#~ msgid "cofidis"
+#~ msgstr "cofidis"
 
 #, fuzzy
-msgid "express checkout not supported"
-msgstr "tezkor to‘lov qo‘llab-quvvatlanmaydi"
+#~ msgid "eNETS"
+#~ msgstr "eNETS"
 
 #, fuzzy
-msgid "iDEAL"
-msgstr "iDEAL"
+#~ msgid "express checkout not supported"
+#~ msgstr "tezkor to‘lov qo‘llab-quvvatlanmaydi"
 
 #, fuzzy
-msgid "in3"
-msgstr "in3"
+#~ msgid "iDEAL"
+#~ msgstr "iDEAL"
 
 #, fuzzy
-msgid "incompatible country"
-msgstr "mos kelmaydigan mamlakat"
+#~ msgid "in3"
+#~ msgstr "in3"
 
 #, fuzzy
-msgid "incompatible currency"
-msgstr "mos kelmaydigan valyuta"
+#~ msgid "incompatible country"
+#~ msgstr "mos kelmaydigan mamlakat"
 
 #, fuzzy
-msgid "incompatible website"
-msgstr "mos kelmaydigan veb-sayt"
+#~ msgid "incompatible currency"
+#~ msgstr "mos kelmaydigan valyuta"
 
 #, fuzzy
-msgid "manual capture not supported"
-msgstr "qo‘lda ushlash qo‘llab-quvvatlanmaydi"
+#~ msgid "incompatible website"
+#~ msgstr "mos kelmaydigan veb-sayt"
 
 #, fuzzy
-msgid "no supported provider available"
-msgstr "qo‘llab-quvvatlanadigan provayder mavjud emas"
+#~ msgid "manual capture not supported"
+#~ msgstr "qo‘lda ushlash qo‘llab-quvvatlanmaydi"
 
 #, fuzzy
-msgid "payment method"
-msgstr "to‘lov usuli"
+#~ msgid "no supported provider available"
+#~ msgstr "qo‘llab-quvvatlanadigan provayder mavjud emas"
 
 #, fuzzy
-msgid "tokenization not supported"
-msgstr "tokenlashtirish qo‘llab-quvvatlanmaydi"
+#~ msgid "payment method"
+#~ msgstr "to‘lov usuli"
 
 #, fuzzy
-msgid "tokenization without payment no supported"
-msgstr "to‘lovsiz tokenlashtirish qo‘llab-quvvatlanmaydi"
+#~ msgid "tokenization not supported"
+#~ msgstr "tokenlashtirish qo‘llab-quvvatlanmaydi"
+
+#, fuzzy
+#~ msgid "tokenization without payment no supported"
+#~ msgstr "to‘lovsiz tokenlashtirish qo‘llab-quvvatlanmaydi"

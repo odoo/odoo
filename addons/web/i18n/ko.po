@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-25 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 20:58+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-4/web/ko/"
@@ -497,7 +497,7 @@ msgstr "새 작업의 이름은 필수 입력 사항입니다."
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page. You can also copy the link "
@@ -1857,6 +1857,7 @@ msgstr "webp로 변환"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copied"
@@ -1865,9 +1866,15 @@ msgstr "복사됨"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "Copy"
 msgstr "사본"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+msgid "Copy Arch"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2410,6 +2417,12 @@ msgstr "'생성' 옵션 비활성화"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.js:0
+msgid "Disable RPC Cache"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 msgid "Disable creation"
@@ -2502,6 +2515,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:web.field_res_users_settings_embedded_action__display_name
 msgid "Display Name"
 msgstr "표시명"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Display action buttons"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2827,6 +2846,12 @@ msgstr "비어 있는 이메일 주소"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.js:0
+msgid "Enable RPC Cache"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/text/text_field.js:0
 msgid "Enable line breaks"
 msgstr "줄바꿈 사용"
@@ -3111,6 +3136,12 @@ msgstr "내보낼 필드"
 #: code:addons/web/static/src/views/fields/binary/binary_field.js:0
 msgid "File"
 msgstr "파일"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+msgid "Filter name"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4796,6 +4827,12 @@ msgstr "후지산"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/multi_drag.js:0
+msgid "Move %(count)s records"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Move to %s..."
 msgstr "%s로 이동..."
@@ -5131,7 +5168,7 @@ msgstr "결과가 없습니다"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "No view of type '%s' could be found in the current action."
 msgstr "현재 작업에서 '%s' 유형의 보기를 찾을 수 없습니다."
 
@@ -6260,7 +6297,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "Report"
 msgstr "보고서"
 
@@ -6463,12 +6500,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
-msgid "Save current search"
-msgstr "현재 검색 저장"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 msgid "Save default"
 msgstr "기본 값 저장"
@@ -6478,6 +6509,12 @@ msgstr "기본 값 저장"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 msgid "Save manually"
 msgstr "직접 저장하기"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+msgid "Save search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6521,6 +6558,12 @@ msgstr "검색"
 #: code:addons/web/static/src/views/calendar/calendar_filter_section/calendar_filter_section.js:0
 msgid "Search More..."
 msgstr "추가 검색..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Search a record..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6659,6 +6702,12 @@ msgstr "필드 선택"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Select a model to add a filter."
 msgstr "필터를 추가할 모델을 선택하십시오."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Select a model..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -27686,6 +27735,9 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
+
+#~ msgid "Save current search"
+#~ msgstr "현재 검색 저장"
 
 #~ msgid "%(property_string)s (%(parent_name)s)"
 #~ msgstr "%(property_string)s (%(parent_name)s)"

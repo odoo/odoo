@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-25 17:38+0000\n"
 "PO-Revision-Date: 2026-09-09 13:52+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -46,6 +46,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
 msgid "/my/productions"
 msgstr "/my/productions"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
+msgid "<span class=\"o_stat_text\">Overview</span>"
+msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -157,10 +162,10 @@ msgstr "詳細資訊"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production_serials__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_workorder__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_bom_structure__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__display_name
@@ -190,10 +195,10 @@ msgstr "追蹤必須完成的製造訂單"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production_serials__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_workorder__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_product__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_bom_structure__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_mo_overview__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__id
@@ -235,6 +240,11 @@ msgid ""
 "List of Products used in the BoM, used to filter the list of products in the "
 "subcontracting portal view"
 msgstr "BoM中使用的產品列表，用於在分判商頁面檢視中篩選產品列表"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_mo_overview
+msgid "MO Overview Report"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -421,6 +431,11 @@ msgid "Subcontracted"
 msgstr "委外生產"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
+msgid "Subcontracted Productions"
+msgstr ""
+
+#. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 msgid "Subcontracted manufacturing orders cannot be merged."
@@ -472,11 +487,6 @@ msgid "Subcontracting Portal"
 msgstr "分判商頁面"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
-msgid "Subcontracting Productions"
-msgstr ""
-
-#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
 msgid "Subcontracting Resupply Operation Type"
 msgstr "外包補給作業類型"
@@ -510,6 +520,8 @@ msgstr "委外生產商位置"
 #. module: mrp_subcontracting
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+#: code:addons/mrp_subcontracting/static/src/components/mo_overview/mrp_mo_overview.xml:0
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mo_overview_content
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom
 msgid "Subcontractor Stock"
 msgstr ""
@@ -550,6 +562,12 @@ msgid "There are currently no productions for your account."
 msgstr "你的帳戶目前沒有生產。"
 
 #. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/report/mrp_report_mo_overview.py:0
+msgid "To Order"
+msgstr ""
+
+#. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
 msgid "Total Consumed"
 msgstr "總耗料"
@@ -561,6 +579,11 @@ msgid "Transfer"
 msgstr "轉移"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
+msgid "Transfers"
+msgstr ""
+
+#. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
 msgid "Used to restrict access to the portal user through Record Rules"
 msgstr "用於透過記錄規則，限制對分判商頁面使用者的存取"
@@ -569,11 +592,6 @@ msgstr "用於透過記錄規則，限制對分判商頁面使用者的存取"
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
 msgid "Warehouse"
 msgstr "倉庫"
-
-#. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_mrp_workorder
-msgid "Work Order"
-msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -612,8 +630,8 @@ msgstr "例如：PO0032"
 msgid "state"
 msgstr "狀態"
 
-msgid "Check Availability"
-msgstr "檢查可用性"
+#~ msgid "Check Availability"
+#~ msgstr "檢查可用性"
 
-msgid "Has been recorded?"
-msgstr "有記錄嗎？"
+#~ msgid "Has been recorded?"
+#~ msgstr "有記錄嗎？"

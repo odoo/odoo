@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-25 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 20:48+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-s19-4/web/"
@@ -483,7 +483,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page. You can also copy the link "
@@ -1833,6 +1833,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copied"
@@ -1841,8 +1842,14 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "Copy"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+msgid "Copy Arch"
 msgstr ""
 
 #. module: web
@@ -2383,6 +2390,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.js:0
+msgid "Disable RPC Cache"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 msgid "Disable creation"
@@ -2475,6 +2488,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:web.field_res_users_settings_embedded_action__display_name
 msgid "Display Name"
 msgstr "Prikazani naziv"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Display action buttons"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2798,6 +2817,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.js:0
+msgid "Enable RPC Cache"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/text/text_field.js:0
 msgid "Enable line breaks"
 msgstr ""
@@ -3079,6 +3104,12 @@ msgstr "Polja za izvoz"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/binary/binary_field.js:0
 msgid "File"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+msgid "Filter name"
 msgstr ""
 
 #. module: web
@@ -4743,6 +4774,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/multi_drag.js:0
+msgid "Move %(count)s records"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Move to %s..."
 msgstr ""
@@ -5078,7 +5115,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "No view of type '%s' could be found in the current action."
 msgstr ""
 
@@ -6191,7 +6228,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "Report"
 msgstr "Izvještaj"
 
@@ -6394,12 +6431,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
-msgid "Save current search"
-msgstr "Sačuvaj trenutnu pretragu"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 msgid "Save default"
 msgstr "Snimi zadano"
@@ -6408,6 +6439,12 @@ msgstr "Snimi zadano"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 msgid "Save manually"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+msgid "Save search"
 msgstr ""
 
 #. module: web
@@ -6452,6 +6489,12 @@ msgstr "Pretraži"
 #: code:addons/web/static/src/views/calendar/calendar_filter_section/calendar_filter_section.js:0
 msgid "Search More..."
 msgstr "Pretraži više..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Search a record..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6588,6 +6631,12 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Select a model to add a filter."
 msgstr "Odaberite model da dodate filter."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Select a model..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -27595,6 +27644,9 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
+
+#~ msgid "Save current search"
+#~ msgstr "Sačuvaj trenutnu pretragu"
 
 #~ msgid "Please enter save field list name"
 #~ msgstr "Molimo unesite ime čuvanja liste polja"

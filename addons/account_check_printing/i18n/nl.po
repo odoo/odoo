@@ -12,10 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 19:34+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
+"PO-Revision-Date: 2026-09-21 12:14+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
 "account_check_printing/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -35,6 +35,13 @@ msgid ""
 "The check settings are located in the accounting journals configuration "
 "page.\n"
 msgstr ""
+"\n"
+"Deze module biedt de basisfuncties om betalingen te verrichten door cheques "
+"af te drukken.\n"
+"Deze module moet worden gebruikt als afhankelijkheid voor modules die "
+"landspecifieke chequesjablonen aanbieden.\n"
+"De cheque-instellingen zijn te vinden op de configuratiepagina van "
+"dagboeken.\n"
 
 #. module: account_check_printing
 #. odoo-python
@@ -103,7 +110,7 @@ msgstr "Cheque afdrukken"
 #. module: account_check_printing
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
 msgid "Check Printing Base"
-msgstr ""
+msgstr "Basismodule Cheques afdrukken"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
@@ -130,7 +137,7 @@ msgstr "Chequenummers kunnen alleen uit cijfers bestaan"
 #. module: account_check_printing
 #: model:ir.module.module,summary:base.module_account_check_printing
 msgid "Check printing basic features"
-msgstr ""
+msgstr "Basisfuncties voor het afdrukken van cheques"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -394,11 +401,6 @@ msgstr ""
 "Om deze afdrukoptie te de-activeren selecteert je 'Geen'."
 
 #. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
-msgid "Sent"
-msgstr "Verzonden"
-
-#. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
 msgstr "Reeksnummer van de volgende afgedrukte cheque."
@@ -524,3 +526,6 @@ msgstr "out_refund"
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "sep"
 msgstr "sep"
+
+#~ msgid "Sent"
+#~ msgstr "Verzonden"

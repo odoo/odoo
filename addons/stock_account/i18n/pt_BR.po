@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 20:29+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -56,16 +56,29 @@ msgstr " [Contabilizado em %s]"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
-msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
-msgstr ""
-"%(lot)s atualização de preço de %(old_price)s para %(new_price)s pelo %"
+msgid ""
+"%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
 "(user)s"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product_value.py:0
+msgid ""
+"%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
+"%(user)s"
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "%(quantity)s %(uom)s at product's cost"
 msgstr "%(quantity)s %(uom)s ao custo do produto"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_form
+msgid "<span class=\"o_stat_text\">Product Value</span>"
+msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -100,6 +113,11 @@ msgstr "Valor da AVCO"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_groups
 msgid "Access Groups"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
+msgid "Account Move"
 msgstr ""
 
 #. module: stock_account
@@ -153,6 +171,16 @@ msgstr "Ajustar valoração: %(product)s"
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjusted on %(date)s by %(user)s"
 msgstr "Ajustado em %(date)s por%(user)s"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__adjustment
+msgid "Adjustment"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
+msgid "Adjustments"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -274,6 +302,13 @@ msgid "Cost of Production"
 msgstr "Custo de produção"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
 msgid "Costing Method"
 msgstr "Método de custeio"
@@ -375,6 +410,11 @@ msgid "Display Serial & Lot Number on Invoices"
 msgstr "Exibir número de série e lote em faturas"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
+msgid "Done By"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
 msgid ""
 "Expense account used to re-qualify products removed from stock and sent to "
@@ -437,6 +477,13 @@ msgstr ""
 #: model:ir.model.fields,help:stock_account.field_stock_lot__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr "Se marcado, a valoração será específica por número de lote/série."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_move__order_partner_id
+msgid ""
+"If the move originates from a document from another company, contains that "
+"company's partner, otherwise the move's partner."
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
@@ -503,6 +550,8 @@ msgid "Is valued inside the company"
 msgstr "É valorizado dentro da empresa"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product_value.py:0
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
 msgstr "Lançamento de diário"
@@ -563,9 +612,25 @@ msgid "Move"
 msgstr "Movimentação"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__new_cost
+msgid "New Unit Cost"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__new_value
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "New Value"
 msgstr "Novo valor"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__old_cost
+msgid "Old Unit Cost"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__old_value
+msgid "Old Value"
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
@@ -574,6 +639,23 @@ msgid "Only is set (= True) is supported in search for remaining_qty."
 msgstr ""
 "Apenas 'está definido (= True)' é suportado na pesquisa por quantidade "
 "restante."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_move__origin_company_id
+msgid ""
+"Only set if the move is generated from a document belonging to another "
+"company"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
+msgid "Order Partner"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__origin_company_id
+msgid "Origin Company"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -586,15 +668,10 @@ msgid "Price Unit"
 msgstr "Preço unitário"
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid "Price update from %(old_price)s to %(new_price)s by %(user)s"
-msgstr "Atualização de preços de %(old_price)s para %(new_price)s por %(user)s"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
 #: model:ir.model.fields,field_description:stock_account.field_product_value__product_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__product_id
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Product"
 msgstr "Produto"
 
@@ -621,7 +698,12 @@ msgid "Product Quantity Updated"
 msgstr "Quantidade de produtos atualizada"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/account_move.py:0
 #: model:ir.model,name:stock_account.model_product_value
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__product_value_id
+#: model:ir.model.fields,field_description:stock_account.field_account_move__product_value_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__product_value_ids
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__product_value
 msgid "Product Value"
 msgstr "Valor do produto"
@@ -653,6 +735,11 @@ msgstr "Conta de custos indiretos de WIP de produção"
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quant"
 msgstr "Qtd"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__quantity
+msgid "Quantity"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
@@ -732,6 +819,13 @@ msgid "Stock Valuation Account"
 msgstr "Conta de valoração de estoque"
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_value__product_tracking
+msgid ""
+"Technical field holding the tracking method. False on a storable product "
+"means it's tracked by quantity only."
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
 msgid ""
 "Technical field to correctly show the currently selected company's currency "
@@ -797,6 +891,11 @@ msgid "Total Value"
 msgstr "Valor total"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_value__product_tracking
+msgid "Tracking Method"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
 msgstr "Transferir"
@@ -845,6 +944,12 @@ msgid "Valuation"
 msgstr "Valoração"
 
 #. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.product_value_list_action
+#: model:ir.ui.menu,name:stock_account.valuation_adjustments_menu
+msgid "Valuation Adjustments"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__company_currency_id
 msgid "Valuation Currency"
@@ -884,6 +989,12 @@ msgid "Value based on original move %(reference)s"
 msgstr "Valor baseado na jogada original %(reference)s"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Value from previous move %(references)s"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
 msgid ""
 "Value of the lot (automatically computed in AVCO).\n"
@@ -895,6 +1006,11 @@ msgstr ""
 "Usado para avaliar o produto quando o custo de compra não é conhecido (por "
 "exemplo, ajuste de estoque).\n"
 "Usado para calcular margens em pedidos de venda."
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
+msgid "View Account Move"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
@@ -935,6 +1051,15 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "unidades"
+
+#~ msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
+#~ msgstr ""
+#~ "%(lot)s atualização de preço de %(old_price)s para %(new_price)s pelo %"
+#~ "(user)s"
+
+#~ msgid "Price update from %(old_price)s to %(new_price)s by %(user)s"
+#~ msgstr ""
+#~ "Atualização de preços de %(old_price)s para %(new_price)s por %(user)s"
 
 #~ msgid "Account"
 #~ msgstr "Conta"

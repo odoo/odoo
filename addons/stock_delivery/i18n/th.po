@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-18 17:40+0000\n"
 "PO-Revision-Date: 2026-08-31 17:59+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -36,6 +36,12 @@ msgstr ""
 #: code:addons/stock_delivery/models/sale_order.py:0
 msgid "%(name)s (Estimated Cost: %(cost)s)"
 msgstr "%(name)s (ค่าใช้จ่ายโดยประมาณ:%(cost)s)"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/stock_package_label_layout.py:0
+msgid "%(weight_name)s: %(weight)s %(uom)s"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_docs
@@ -86,11 +92,6 @@ msgstr "<span> - น้ำหนัก (โดยประมาณ): </span>"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight: </span>"
 msgstr "<span> - น้ำหนัก: </span>"
-
-#. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
-msgid "<span>Shipping Weight: </span>"
-msgstr "<span>น้ำหนักการจัดส่ง: </span>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
@@ -253,6 +254,11 @@ msgid "Carrier name"
 msgstr "ชื่อผู้ให้บริการ"
 
 #. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_product_label_layout
+msgid "Choose the sheet layout to print the labels"
+msgstr ""
+
+#. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Collect Payment"
@@ -345,6 +351,7 @@ msgstr "ประเทศปลายทาง"
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_ir_actions_report__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_product_label_layout__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__display_name
@@ -353,6 +360,7 @@ msgstr "ประเทศปลายทาง"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_label_layout__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_batch__display_name
@@ -419,6 +427,7 @@ msgstr "HS โค้ด"
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_ir_actions_report__id
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__id
+#: model:ir.model.fields,field_description:stock_delivery.field_product_label_layout__id
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__id
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__id
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__id
@@ -427,6 +436,7 @@ msgstr "HS โค้ด"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_label_layout__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_batch__id
@@ -529,6 +539,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__pickup_location_data
 #: model:ir.model.fields,field_description:stock_delivery.field_res_users__pickup_location_data
 msgid "Pickup Location Data"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_package_label_layout
+msgid "Prepare Package Labels"
 msgstr ""
 
 #. module: stock_delivery
@@ -666,14 +681,11 @@ msgid "Shipping Labels Report"
 msgstr ""
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/stock_package_label_layout.py:0
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__shipping_weight
 msgid "Shipping Weight"
 msgstr "น้ำหนักการจัดส่ง"
-
-#. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
-msgid "Shipping Weight:"
-msgstr "น้ำหนักจัดส่ง:"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
@@ -821,6 +833,8 @@ msgid "Transfer"
 msgstr "โอนย้าย"
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/stock_package_label_layout.py:0
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package__weight
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight
@@ -840,11 +854,6 @@ msgstr "น้ำหนักในการจัดส่ง"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__weight_uom_name
 msgid "Weight unit of measure label"
 msgstr "หน่วยฉลากน้ำหนัก"
-
-#. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
-msgid "Weight:"
-msgstr "น้ำหนัก:"
 
 #. module: stock_delivery
 #. odoo-python
@@ -876,34 +885,24 @@ msgid "Zip Prefix"
 msgstr "คำนำหน้ารหัสไปรษณีย์"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
-msgid "^A0N,44,33^FDShipping Weight:"
-msgstr "^A0N,44,33^FDน้ำหนักในการขนส่ง:"
-
-#. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
-msgid "^A0N,44,33^FDWeight:"
-msgstr "^A0N,44,33^FDน้ำหนัก:"
-
-#. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
-msgid "^FO310,200"
-msgstr "^FO310,200"
-
-#. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
-msgid "^FO35, 180 ^A0N,15^FDHS:"
+#: model_terms:ir.ui.view,arch_db:stock_delivery.package_zpl_label_delivery
+msgid "^FO310,200^A0N,44,33^FH^FD"
 msgstr ""
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
-msgid "^FO35, 220 ^A0N,15^FDHS:"
+#: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_alternative_label
+msgid "^FO35,180^A0N,15^FH^FDHS:"
 msgstr ""
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
-#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
+#: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_normal_label
+msgid "^FO35,220^A0N,15^FH^FDHS:"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_alternative_label
+#: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_normal_label
+#: model_terms:ir.ui.view,arch_db:stock_delivery.package_zpl_label_delivery
 msgid "^FS"
 msgstr "^FS"
 
@@ -927,3 +926,21 @@ msgid ""
 "must be collected for\n"
 "                the delivery of the following orders:"
 msgstr ""
+
+#~ msgid "<span>Shipping Weight: </span>"
+#~ msgstr "<span>น้ำหนักการจัดส่ง: </span>"
+
+#~ msgid "Shipping Weight:"
+#~ msgstr "น้ำหนักจัดส่ง:"
+
+#~ msgid "Weight:"
+#~ msgstr "น้ำหนัก:"
+
+#~ msgid "^A0N,44,33^FDShipping Weight:"
+#~ msgstr "^A0N,44,33^FDน้ำหนักในการขนส่ง:"
+
+#~ msgid "^A0N,44,33^FDWeight:"
+#~ msgstr "^A0N,44,33^FDน้ำหนัก:"
+
+#~ msgid "^FO310,200"
+#~ msgstr "^FO310,200"

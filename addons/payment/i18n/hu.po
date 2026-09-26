@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:45+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 20:34+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -79,6 +79,11 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 msgid "<small class=\"text-600\">Save my payment details</small>"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.amount_input
+msgid "<small>Amount</small>"
 msgstr ""
 
 #. module: payment
@@ -234,6 +239,11 @@ msgid "Allow Saving Payment Methods"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__allow_amount_selection
+msgid "Allow splitting payments across several payment methods."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
 msgstr ""
@@ -256,6 +266,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Amount"
 msgstr "Összeg"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__allow_amount_selection
+msgid "Amount Selection"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
@@ -1332,8 +1347,8 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
-msgid "Payment: Post-process transactions"
+#: model:ir.actions.server,name:payment.post_processing_cron_ir_actions_server
+msgid "Payment: Run Post-processing"
 msgstr ""
 
 #. module: payment
@@ -2483,46 +2498,47 @@ msgstr ""
 msgid "websocket message handling"
 msgstr ""
 
-msgid "Activate"
-msgstr "Aktivál"
+#~ msgid "Activate"
+#~ msgstr "Aktivál"
 
-msgid "Alipay"
-msgstr "Alipay"
+#~ msgid "Alipay"
+#~ msgstr "Alipay"
 
-msgid "Availability"
-msgstr "Elérhetőség"
+#~ msgid "Availability"
+#~ msgstr "Elérhetőség"
 
-msgid "Bank Account"
-msgstr "Bankszámla"
+#~ msgid "Bank Account"
+#~ msgstr "Bankszámla"
 
-msgid "Card"
-msgstr "Kártya"
+#~ msgid "Card"
+#~ msgstr "Kártya"
 
-msgid "Color"
-msgstr "Szín"
+#~ msgid "Color"
+#~ msgstr "Szín"
 
-msgid "Disabled"
-msgstr "Kikapcsolva"
+#~ msgid "Disabled"
+#~ msgstr "Kikapcsolva"
 
-msgid "Discover"
-msgstr "Felfedez"
+#~ msgid "Discover"
+#~ msgstr "Felfedez"
 
-msgid "Enabled"
-msgstr "Engedélyezve"
+#~ msgid "Enabled"
+#~ msgstr "Engedélyezve"
 
-msgid ""
-"In test mode, a fake payment is processed through a test payment interface.\n"
-"This mode is advised when setting up the provider."
-msgstr ""
-"Teszt módban egy nem valós tranzakció kerül feldolgozásra teszt fizetési "
-"interfészen.\n"
-"Használata javasolt a szolgáltató beállítása során."
+#~ msgid ""
+#~ "In test mode, a fake payment is processed through a test payment "
+#~ "interface.\n"
+#~ "This mode is advised when setting up the provider."
+#~ msgstr ""
+#~ "Teszt módban egy nem valós tranzakció kerül feldolgozásra teszt fizetési "
+#~ "interfészen.\n"
+#~ "Használata javasolt a szolgáltató beállítása során."
 
-msgid "Paypal"
-msgstr "Paypal"
+#~ msgid "Paypal"
+#~ msgstr "Paypal"
 
-msgid "Providers"
-msgstr "Szolgáltatók"
+#~ msgid "Providers"
+#~ msgstr "Szolgáltatók"
 
-msgid "Reason:"
-msgstr "Az ok:"
+#~ msgid "Reason:"
+#~ msgstr "Az ok:"

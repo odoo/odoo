@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
 "PO-Revision-Date: 2026-08-31 17:45+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -572,6 +572,13 @@ msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Back to edit mode"
 msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>Voltar para o modo de edição"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\" data-"
+"tooltip=\"Planned Date\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
 "<i class=\"oi o_button_icon\" data-icon=\"check\" "
@@ -595,10 +602,38 @@ msgstr ""
 "title=\"Off Track\"/>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid ""
+"<i class=\"oi oi-filled me-2\" data-icon=\"person\" aria-label=\"Project "
+"Manager\" title=\"Project Manager\" data-tooltip=\"Project Manager\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
 msgid ""
 "<i class=\"oi oi-filled px-1 mt-1\" data-icon=\"calendar_today\" "
 "role=\"img\" aria-label=\"Deadline\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"flag\" title=\"Miltstone\" data-"
+"tooltip=\"Milestone\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Customer\" data-"
+"tooltip=\"Customer\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"task\" title=\"Tasks\" data-"
+"tooltip=\"Name of Tasks\"/>"
 msgstr ""
 
 #. module: project
@@ -643,19 +678,23 @@ msgid "<i class=\"oi pe-2\" data-icon=\"lightbulb\" title=\"Info\"/>"
 msgstr "<i class=\"oi pe-2\" data-icon=\"lightbulb\" title=\"Info\"/>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Warning\"/>"
-msgstr "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Warning\"/>"
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi\" data-icon=\"assignment_turned_in\" title=\"Project\" data-"
+"tooltip=\"Project\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi\" data-icon=\"calendar_clock\" data-tooltip=\"Deadline\" "
+"title=\"Deadline\"/>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"oi\" data-icon=\"lock\"/> Private"
 msgstr "<i class=\"oi\" data-icon=\"lock\"/> Privado"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
-msgstr "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -775,20 +814,6 @@ msgstr ""
 "title=\"Domain Alias\"/>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-msgid "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
-msgstr "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-msgid ""
-"<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-"
-"label=\"Partner\" title=\"Partner\"/>"
-msgstr ""
-"<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-"
-"label=\"Partner\" title=\"Partner\"/>"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 msgid "<span class=\"oi oi-fw me-1\" data-icon=\"check\" title=\"Tasks\"/>"
 msgstr ""
@@ -897,12 +922,17 @@ msgid "Accept Emails From"
 msgstr "Aceitar e-mails de"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__access_mode
+msgid "Access"
+msgstr ""
+
+#. module: project
 #: model:ir.model,name:project.model_res_groups
 msgid "Access Groups"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__access_mode
+#: model:ir.model.fields,field_description:project.field_project_collaborator__access_mode
 msgid "Access Mode"
 msgstr "Modo de acesso"
 
@@ -998,6 +1028,12 @@ msgstr "Tipo de atividade"
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
+msgid "Add"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
 msgid "Add Sub-task"
 msgstr "Adicionar subtarefa"
@@ -1031,6 +1067,22 @@ msgid "Add extra content to display in the email"
 msgstr "Adicionar conteúdo para exibido no e-mail"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid ""
+"Add internal users as team members and invite portal users as collaborators "
+"to give them access to the project. They can also access tasks they follow."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid ""
+"Add internal users as team members to give them access to the project. They "
+"can also access tasks they follow."
+msgstr ""
+
+#. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid ""
 "Add project-specific property fields to tasks to better customize your "
@@ -1061,6 +1113,19 @@ msgid ""
 msgstr ""
 "Administrador: Pode gerenciar projetos e etapas, com acesso a relatórios e "
 "configurações."
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_collaborator__access_mode__advanced_edit
+#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__advanced_edit
+msgid "Advanced Edit"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid ""
+"Advanced Edit: create and update tasks, change their priority, and move them "
+"between stages."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -1141,6 +1206,14 @@ msgstr "Todos os usuários internos"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "All internal users and invited portal users"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid ""
+"All internal users have access to the project. Invite portal users as "
+"collaborators to give them access. They can also access tasks they follow."
 msgstr ""
 
 #. module: project
@@ -1287,6 +1360,16 @@ msgstr ""
 "função."
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+msgid "Assign to Me"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__project_sharing_portal_user_ids
+msgid "Assignable Portal Users"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
@@ -1416,24 +1499,6 @@ msgid "Average Rating (1-5)"
 msgstr "Avaliação média (1-5)"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Average Rating: Happy"
-msgstr "Avaliação média: Satisfeito"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Average Rating: Neutral"
-msgstr "Avaliação média: Neutro"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Average Rating: Unhappy"
-msgstr "Avaliação média: Insatisfeito"
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Backlog"
@@ -1500,6 +1565,7 @@ msgstr "Gráfico de Burndown"
 
 #. module: project
 #. odoo-python
+#: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_task.py:0
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_canceled
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__1_canceled
@@ -1563,8 +1629,8 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid "Choose one of the following access modes for your collaborators:"
-msgstr "Escolha um dos seguintes modos de acesso para seus colaboradores:"
+msgid "Choose the appropriate access level for your collaborators:"
+msgstr ""
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_6
@@ -1689,6 +1755,12 @@ msgstr "Configurações"
 #: model:ir.ui.menu,name:project.menu_project_config
 msgid "Configuration"
 msgstr "Configuração"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_configure_project_cog_menu/project_configure_project_cog_menu.xml:0
+msgid "Configure Project"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
@@ -1980,13 +2052,6 @@ msgstr ""
 "Clientes oferecem feedback por e-mail; o Odoo cria tarefas automaticamente, "
 "e você pode\n"
 "      se comunicar diretamente na tarefa."
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid "Customers will be added to the followers of their project and tasks."
-msgstr ""
-"Os clientes serão adicionados aos seguidores de seus projetos e tarefas."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__daily
@@ -2301,6 +2366,7 @@ msgstr "Nome exibido"
 #. module: project
 #. odoo-javascript
 #. odoo-python
+#: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_done
@@ -2338,34 +2404,16 @@ msgstr ""
 "forem excluídas."
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_collaborator__access_mode__edit
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_kanban
 msgid "Edit"
 msgstr "Editar"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
-msgid "Edit with limited access"
-msgstr "Editar com acesso limitado"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid ""
-"Edit with limited access: collaborators can view and edit tasks they follow "
-"in the Kanban view."
+msgid "Edit: can create and update tasks."
 msgstr ""
-"Editar com acesso limitado: os colaboradores podem visualizar e editar as "
-"tarefas que seguem no modo de visualização Kanban."
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid ""
-"Edit: collaborators can view and edit all tasks in the Kanban view. "
-"Additionally, they can choose which tasks they want to follow."
-msgstr ""
-"Editar: os colaboradores podem visualizar e editar todas as tarefas no modo "
-"de visualização Kanban. Além disso, eles podem escolher quais tarefas "
-"desejam seguir."
 
 #. module: project
 #. odoo-javascript
@@ -2577,29 +2625,6 @@ msgid "Grant Portal Access"
 msgstr "Conceder acesso ao portal"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"Grant employees access to your project or tasks by adding them as followers. "
-"Employees automatically get access to the tasks they are assigned to."
-msgstr ""
-"Conceda aos funcionários acesso a projetos ou tarefas adicionando-os como "
-"seguidores. Os funcionários automaticamente têm acesso às tarefas atribuídas "
-"a eles."
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"Grant users access by adding them as followers — either to the project or "
-"individual tasks. Internal users automatically gain access to tasks they are "
-"assigned to."
-msgstr ""
-"Conceda acesso aos usuários adicionando-os como seguidores — seja ao Projeto "
-"ou a tarefas individuais. Usuários internos ganham acesso automaticamente às "
-"tarefas às quais estão designados."
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
@@ -2614,12 +2639,6 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Handoff"
 msgstr "Não interferir"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Happy face"
-msgstr "Carinha feliz"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__has_message
@@ -2833,6 +2852,8 @@ msgstr ""
 
 #. module: project
 #. odoo-javascript
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__01_in_progress
@@ -2891,14 +2912,9 @@ msgid "Invalid Display Name"
 msgstr "Nome de exibição inválido"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
-msgid "Invited internal and portal users"
-msgstr "Usuários internos e do portal convidados"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-msgid "Invited internal users"
-msgstr "Usuários internos convidados"
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Invite Portal Users"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -3373,12 +3389,6 @@ msgid ""
 msgstr ""
 "Nome usado para se referir às tarefas de seu projeto, ex.: tarefas, "
 "chamados, sprints, etc..."
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Neutral face"
-msgstr "Carinha neutra"
 
 #. module: project
 #. odoo-javascript
@@ -3874,15 +3884,6 @@ msgid "Portal Sharing"
 msgstr "Compartilhamento do portal"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"Portal users will be removed from the followers of the project and its tasks."
-msgstr ""
-"Os usuários do portal serão removidos dos seguidores do projeto e de suas "
-"tarefas."
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Prioritize your tasks by marking important ones using the"
@@ -3919,9 +3920,19 @@ msgstr ""
 "subtarefas. Defina um projeto na tarefa para ter acesso a esse recurso."
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid "Private Task"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Private Tasks"
 msgstr "Tarefas privadas"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid "Private task"
+msgstr ""
 
 #. module: project
 #: model:project.project,name:project.project_template_1
@@ -4190,49 +4201,28 @@ msgstr "Visibilidade do projeto"
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 #: model:ir.model.fields,help:project.field_task_share_wizard__project_privacy_visibility
 msgid ""
-"Project and Task Visibility:\n"
-"- Invited internal users: Can access only the project or tasks they follow. "
-"Assignees automatically get access.\n"
-"- Invited internal and portal users: Same as above, extended to portal "
-"users.\n"
-"- All internal users: Full access to the project and all its tasks.\n"
-"- All internal and invited portal users: Internal users get full access. "
-"Portal users can access only the project or tasks they follow.\n"
+"Project and task visibility\n"
+"Control who can access this project:\n"
 "\n"
-"Portal Access Levels:\n"
-"- Read-only: Portal users see tasks via their portal but can’t edit them.\n"
-"- Edit (limited): Portal users access kanban/list views and can edit limited "
-"fields on followed tasks.\n"
-"- Edit: Same as above, with access to all tasks.\n"
+"• Internal users: choose whether access is limited to team members or "
+"available to everyone in your organization.\n"
+"• Portal users: choose whether invited collaborators can access the "
+"project.\n"
 "\n"
-"Other Rules:\n"
-"- Internal users can open a task from a direct link, even without project "
-"access.\n"
-"- Project admins have access to private projects, even if not followers.\n"
+"Access levels for portal users\n"
+"\n"
+"• View: can access tasks and send messages.\n"
+"• Edit: can create and update tasks.\n"
+"• Advanced Edit: create and update tasks, change their priority, and move "
+"them between stages.\n"
+"\n"
+"Other rules\n"
+"\n"
+"• Internal users can open a task from a direct link, even if they don't have "
+"access to the project application.\n"
+"• Project admins have access to private projects, even if they are not team "
+"members."
 msgstr ""
-"Visibilidade do projeto e das tarefas:\n"
-"- Usuários internos convidados: podem acessar apenas o projeto ou as tarefas "
-"que seguem. Os responsáveis recebem acesso automaticamente.\n"
-"- Usuários internos e do portal convidados: igual ao acima, estendido aos "
-"usuários do portal.\n"
-"- Todos os usuários internos: acesso total ao projeto e a todas as suas "
-"tarefas.\n"
-"- Todos os usuários internos e do portal convidados: os usuários internos "
-"têm acesso total. Os usuários do portal podem acessar apenas o projeto ou as "
-"tarefas que seguem.\n"
-"\n"
-"Níveis de acesso ao portal:\n"
-"- Somente leitura: Os usuários do portal visualizam as tarefas através do "
-"portal, mas não podem editá-las.\n"
-"- Edição (limitada): Os usuários do portal acessam visualizações kanban/"
-"lista e podem editar campos limitados nas tarefas seguidas.\n"
-"- Edição: O mesmo que acima, com acesso a todas as tarefas.\n"
-"\n"
-"Outras regras:\n"
-"- Os usuários internos podem abrir uma tarefa através de um link direto, "
-"mesmo sem acesso ao projeto.\n"
-"- Os administradores de projeto têm acesso a projetos privados, mesmo que "
-"não sejam seguidores.\n"
 
 #. module: project
 #. odoo-javascript
@@ -4481,35 +4471,6 @@ msgid "Reached"
 msgstr "Alcançado"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__read
-msgid "Read"
-msgstr "Ler"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid "Read: collaborators can view tasks but cannot edit them."
-msgstr ""
-"Leitura: os colaboradores podem visualizar as tarefas, mas não podem editá-"
-"las."
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
-msgid ""
-"Read: collaborators can view tasks but cannot edit them.\n"
-"Edit with limited access: collaborators can view and edit tasks they follow "
-"in the Kanban view.\n"
-"Edit: collaborators can view and edit all tasks in the Kanban view. "
-"Additionally, they can choose which tasks they want to follow."
-msgstr ""
-"Leitura: os colaboradores podem visualizar as tarefas, mas não podem editá-"
-"las.\n"
-"Edição com acesso limitado: os colaboradores podem visualizar e editar as "
-"tarefas que seguem no modo de visualização Kanban.\n"
-"Edição: os colaboradores podem visualizar e editar todas as tarefas no modo "
-"de visualização Kanban. Além disso, eles podem escolher quais tarefas "
-"desejam seguir."
-
-#. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of {{ object.name }}"
 msgstr "Recebimento de {{ object.name }}"
@@ -4582,6 +4543,11 @@ msgstr "Modelo do documento relacionado"
 #: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid "Remove Collaborator"
 msgstr "Remover colaborador"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+msgid "Remove Me"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -4694,12 +4660,6 @@ msgstr "Rotting"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Rotting in"
 msgstr "Apodrecendo em"
-
-#. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
-msgid "SAVE"
-msgstr "SALVAR"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_sms_error
@@ -4842,6 +4802,11 @@ msgid "Select an assignee from the menu"
 msgstr "Selecione um responsável no menu"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Select who can access"
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_task
 msgid "Send Email"
@@ -4929,15 +4894,6 @@ msgstr "Compartilhar projeto"
 #: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Share Task"
 msgstr "Compartilhar tarefa"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-#: code:addons/project/models/project_task.py:0
-msgid "Sharing is not available with this project visibility setting."
-msgstr ""
-"O compartilhamento não está disponível com esta configuração de visibilidade "
-"dos Projetos."
 
 #. module: project
 #. odoo-javascript
@@ -5465,10 +5421,22 @@ msgid "Tasks in Recurrence"
 msgstr "Tarefas em recorrência"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__allowed_internal_user_ids
 #: model:ir.model.fields,field_description:project.field_project_role__user_ids
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_search
 msgid "Team Members"
 msgstr "Membros da Equipe"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
+msgid "Team members and invited portal users"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
+msgid "Team members only"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_id
@@ -5736,6 +5704,13 @@ msgstr "Esta nova tarefa não faz parte de nenhum projeto."
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_task.py:0
+msgid "This project can’t be shared with external people."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
 msgid ""
 "This project is associated with %(project_company)s, whereas the selected "
 "stage belongs to %(stage_company)s. There are a couple of options to "
@@ -5920,17 +5895,6 @@ msgstr ""
 "eficiente."
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"To give portal users access to your project, add them as followers. For task "
-"access, add them as followers for each task."
-msgstr ""
-"Para dar aos usuários do portal acesso ao seu projeto, adicione-os como "
-"seguidores. Para acesso a tarefas, adicione-os como seguidores de cada "
-"tarefa."
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid ""
 "To transform a task into a sub-task, select a parent task. Alternatively, "
@@ -6044,12 +6008,6 @@ msgstr "Desfazer"
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
 msgid "Unfollow"
 msgstr "Deixar de seguir"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Unhappy face"
-msgstr "Emoji triste"
 
 #. module: project
 #. odoo-python
@@ -6209,6 +6167,8 @@ msgid "User: Can manage tasks in projects shared with them."
 msgstr "Usuário: Pode gerenciar tarefas em projetos compartilhados com ele."
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_collaborator__access_mode__view
+#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__view
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "View"
 msgstr "Visualização"
@@ -6233,7 +6193,22 @@ msgid "View Tasks"
 msgstr "Visualizar tarefas"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "View: can access tasks and send messages."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
+msgid ""
+"View: can access tasks and send messages.\n"
+"Edit: can create and update tasks.\n"
+"Advanced Edit: create and update tasks, change their priority, and move them "
+"between stages."
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Visibility"
 msgstr "Visibilidade"
 
@@ -6506,6 +6481,13 @@ msgstr ""
 "manualmente."
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid ""
+"You need Advanced Edit access to change the stage or priority of a task."
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Your managers decide which feedback is accepted"
@@ -6739,3 +6721,178 @@ msgstr "👤 Não atribuído"
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 Privado"
+
+#~ msgid "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
+#~ msgstr "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
+
+#~ msgid "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
+#~ msgstr "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
+
+#~ msgid ""
+#~ "<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-"
+#~ "label=\"Partner\" title=\"Partner\"/>"
+#~ msgstr ""
+#~ "<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-"
+#~ "label=\"Partner\" title=\"Partner\"/>"
+
+#~ msgid "Average Rating: Happy"
+#~ msgstr "Avaliação média: Satisfeito"
+
+#~ msgid "Average Rating: Neutral"
+#~ msgstr "Avaliação média: Neutro"
+
+#~ msgid "Average Rating: Unhappy"
+#~ msgstr "Avaliação média: Insatisfeito"
+
+#~ msgid "Happy face"
+#~ msgstr "Carinha feliz"
+
+#~ msgid "Neutral face"
+#~ msgstr "Carinha neutra"
+
+#~ msgid "SAVE"
+#~ msgstr "SALVAR"
+
+#~ msgid "Unhappy face"
+#~ msgstr "Emoji triste"
+
+#~ msgid "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Warning\"/>"
+#~ msgstr "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Warning\"/>"
+
+#~ msgid "Choose one of the following access modes for your collaborators:"
+#~ msgstr "Escolha um dos seguintes modos de acesso para seus colaboradores:"
+
+#~ msgid "Customers will be added to the followers of their project and tasks."
+#~ msgstr ""
+#~ "Os clientes serão adicionados aos seguidores de seus projetos e tarefas."
+
+#~ msgid "Edit with limited access"
+#~ msgstr "Editar com acesso limitado"
+
+#~ msgid ""
+#~ "Edit with limited access: collaborators can view and edit tasks they "
+#~ "follow in the Kanban view."
+#~ msgstr ""
+#~ "Editar com acesso limitado: os colaboradores podem visualizar e editar as "
+#~ "tarefas que seguem no modo de visualização Kanban."
+
+#~ msgid ""
+#~ "Edit: collaborators can view and edit all tasks in the Kanban view. "
+#~ "Additionally, they can choose which tasks they want to follow."
+#~ msgstr ""
+#~ "Editar: os colaboradores podem visualizar e editar todas as tarefas no "
+#~ "modo de visualização Kanban. Além disso, eles podem escolher quais "
+#~ "tarefas desejam seguir."
+
+#~ msgid ""
+#~ "Grant employees access to your project or tasks by adding them as "
+#~ "followers. Employees automatically get access to the tasks they are "
+#~ "assigned to."
+#~ msgstr ""
+#~ "Conceda aos funcionários acesso a projetos ou tarefas adicionando-os como "
+#~ "seguidores. Os funcionários automaticamente têm acesso às tarefas "
+#~ "atribuídas a eles."
+
+#~ msgid ""
+#~ "Grant users access by adding them as followers — either to the project or "
+#~ "individual tasks. Internal users automatically gain access to tasks they "
+#~ "are assigned to."
+#~ msgstr ""
+#~ "Conceda acesso aos usuários adicionando-os como seguidores — seja ao "
+#~ "Projeto ou a tarefas individuais. Usuários internos ganham acesso "
+#~ "automaticamente às tarefas às quais estão designados."
+
+#~ msgid "Invited internal and portal users"
+#~ msgstr "Usuários internos e do portal convidados"
+
+#~ msgid "Invited internal users"
+#~ msgstr "Usuários internos convidados"
+
+#~ msgid ""
+#~ "Portal users will be removed from the followers of the project and its "
+#~ "tasks."
+#~ msgstr ""
+#~ "Os usuários do portal serão removidos dos seguidores do projeto e de suas "
+#~ "tarefas."
+
+#~ msgid ""
+#~ "Project and Task Visibility:\n"
+#~ "- Invited internal users: Can access only the project or tasks they "
+#~ "follow. Assignees automatically get access.\n"
+#~ "- Invited internal and portal users: Same as above, extended to portal "
+#~ "users.\n"
+#~ "- All internal users: Full access to the project and all its tasks.\n"
+#~ "- All internal and invited portal users: Internal users get full access. "
+#~ "Portal users can access only the project or tasks they follow.\n"
+#~ "\n"
+#~ "Portal Access Levels:\n"
+#~ "- Read-only: Portal users see tasks via their portal but can’t edit "
+#~ "them.\n"
+#~ "- Edit (limited): Portal users access kanban/list views and can edit "
+#~ "limited fields on followed tasks.\n"
+#~ "- Edit: Same as above, with access to all tasks.\n"
+#~ "\n"
+#~ "Other Rules:\n"
+#~ "- Internal users can open a task from a direct link, even without project "
+#~ "access.\n"
+#~ "- Project admins have access to private projects, even if not followers.\n"
+#~ msgstr ""
+#~ "Visibilidade do projeto e das tarefas:\n"
+#~ "- Usuários internos convidados: podem acessar apenas o projeto ou as "
+#~ "tarefas que seguem. Os responsáveis recebem acesso automaticamente.\n"
+#~ "- Usuários internos e do portal convidados: igual ao acima, estendido aos "
+#~ "usuários do portal.\n"
+#~ "- Todos os usuários internos: acesso total ao projeto e a todas as suas "
+#~ "tarefas.\n"
+#~ "- Todos os usuários internos e do portal convidados: os usuários internos "
+#~ "têm acesso total. Os usuários do portal podem acessar apenas o projeto ou "
+#~ "as tarefas que seguem.\n"
+#~ "\n"
+#~ "Níveis de acesso ao portal:\n"
+#~ "- Somente leitura: Os usuários do portal visualizam as tarefas através do "
+#~ "portal, mas não podem editá-las.\n"
+#~ "- Edição (limitada): Os usuários do portal acessam visualizações kanban/"
+#~ "lista e podem editar campos limitados nas tarefas seguidas.\n"
+#~ "- Edição: O mesmo que acima, com acesso a todas as tarefas.\n"
+#~ "\n"
+#~ "Outras regras:\n"
+#~ "- Os usuários internos podem abrir uma tarefa através de um link direto, "
+#~ "mesmo sem acesso ao projeto.\n"
+#~ "- Os administradores de projeto têm acesso a projetos privados, mesmo que "
+#~ "não sejam seguidores.\n"
+
+#~ msgid "Read"
+#~ msgstr "Ler"
+
+#~ msgid "Read: collaborators can view tasks but cannot edit them."
+#~ msgstr ""
+#~ "Leitura: os colaboradores podem visualizar as tarefas, mas não podem "
+#~ "editá-las."
+
+#~ msgid ""
+#~ "Read: collaborators can view tasks but cannot edit them.\n"
+#~ "Edit with limited access: collaborators can view and edit tasks they "
+#~ "follow in the Kanban view.\n"
+#~ "Edit: collaborators can view and edit all tasks in the Kanban view. "
+#~ "Additionally, they can choose which tasks they want to follow."
+#~ msgstr ""
+#~ "Leitura: os colaboradores podem visualizar as tarefas, mas não podem "
+#~ "editá-las.\n"
+#~ "Edição com acesso limitado: os colaboradores podem visualizar e editar as "
+#~ "tarefas que seguem no modo de visualização Kanban.\n"
+#~ "Edição: os colaboradores podem visualizar e editar todas as tarefas no "
+#~ "modo de visualização Kanban. Além disso, eles podem escolher quais "
+#~ "tarefas desejam seguir."
+
+#~ msgid "Sharing is not available with this project visibility setting."
+#~ msgstr ""
+#~ "O compartilhamento não está disponível com esta configuração de "
+#~ "visibilidade dos Projetos."
+
+#~ msgid ""
+#~ "To give portal users access to your project, add them as followers. For "
+#~ "task access, add them as followers for each task."
+#~ msgstr ""
+#~ "Para dar aos usuários do portal acesso ao seu projeto, adicione-os como "
+#~ "seguidores. Para acesso a tarefas, adicione-os como seguidores de cada "
+#~ "tarefa."

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
 "PO-Revision-Date: 2026-08-31 19:11+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -98,11 +98,6 @@ msgid "Default Product"
 msgstr "Producto predeterminado"
 
 #. module: pos_sale
-#: model:product.template,name:pos_sale.default_sol_product_product_template
-msgid "Default Product (POS)"
-msgstr "Producto predeterminado (PdV)"
-
-#. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Default Sale Product"
 msgstr "Producto de venta predeterminado"
@@ -140,11 +135,6 @@ msgstr "Nombre en pantalla"
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Down Payment"
 msgstr "Anticipo"
-
-#. module: pos_sale
-#: model:product.template,name:pos_sale.default_downpayment_product_product_template
-msgid "Down Payment (POS)"
-msgstr "Anticipo (PdV)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
@@ -203,26 +193,6 @@ msgid "Invoiced"
 msgstr "Facturado"
 
 #. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
-msgid ""
-"It seems that you didn't configure a down payment product in your point of "
-"sale. You can go to your point of sale configuration to choose one."
-msgstr ""
-"Parece que no configuraste un producto de anticipo en tu punto de venta. "
-"Puedes ir a la configuración de tu punto de venta para elegir uno."
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
-msgid ""
-"It seems that you didn't configure a down payment product in your point of "
-"sale. You can go to your point of sale settings to choose one."
-msgstr ""
-"Parece que no configuraste un producto de anticipo en tu punto de venta. Ve "
-"a los ajustes de tu punto de venta para elegir uno."
-
-#. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
 msgid "Journal Entry"
 msgstr "Asiento contable"
@@ -253,12 +223,6 @@ msgstr "Orden de ventas vinculada"
 #: code:addons/pos_sale/models/pos_order.py:0
 msgid "Linked Sale Orders"
 msgstr "Órdenes de ventas vinculadas"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
-msgid "No down payment product"
-msgstr "No hay producto de anticipo"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
@@ -496,6 +460,29 @@ msgstr "ID"
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "Default Product (POS)"
+#~ msgstr "Producto predeterminado (PdV)"
+
+#~ msgid "Down Payment (POS)"
+#~ msgstr "Anticipo (PdV)"
+
+#~ msgid ""
+#~ "It seems that you didn't configure a down payment product in your point "
+#~ "of sale. You can go to your point of sale configuration to choose one."
+#~ msgstr ""
+#~ "Parece que no configuraste un producto de anticipo en tu punto de venta. "
+#~ "Puedes ir a la configuración de tu punto de venta para elegir uno."
+
+#~ msgid ""
+#~ "It seems that you didn't configure a down payment product in your point "
+#~ "of sale. You can go to your point of sale settings to choose one."
+#~ msgstr ""
+#~ "Parece que no configuraste un producto de anticipo en tu punto de venta. "
+#~ "Ve a los ajustes de tu punto de venta para elegir uno."
+
+#~ msgid "No down payment product"
+#~ msgstr "No hay producto de anticipo"
 
 #~ msgid "Amount To Pay In POS"
 #~ msgstr "Importe a pagar en el PdV"

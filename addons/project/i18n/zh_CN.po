@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
 "PO-Revision-Date: 2026-08-31 17:46+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -558,6 +558,13 @@ msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Back to edit mode"
 msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>返回编辑模式"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\" data-"
+"tooltip=\"Planned Date\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
 "<i class=\"oi o_button_icon\" data-icon=\"check\" "
@@ -572,10 +579,38 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid ""
+"<i class=\"oi oi-filled me-2\" data-icon=\"person\" aria-label=\"Project "
+"Manager\" title=\"Project Manager\" data-tooltip=\"Project Manager\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
 msgid ""
 "<i class=\"oi oi-filled px-1 mt-1\" data-icon=\"calendar_today\" "
 "role=\"img\" aria-label=\"Deadline\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"flag\" title=\"Miltstone\" data-"
+"tooltip=\"Milestone\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Customer\" data-"
+"tooltip=\"Customer\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"task\" title=\"Tasks\" data-"
+"tooltip=\"Name of Tasks\"/>"
 msgstr ""
 
 #. module: project
@@ -619,19 +654,23 @@ msgid "<i class=\"oi pe-2\" data-icon=\"lightbulb\" title=\"Info\"/>"
 msgstr "<i class=\"oi pe-2\" data-icon=\"lightbulb\" title=\"信息\"/>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Warning\"/>"
-msgstr "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"警告\"/>"
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi\" data-icon=\"assignment_turned_in\" title=\"Project\" data-"
+"tooltip=\"Project\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi\" data-icon=\"calendar_clock\" data-tooltip=\"Deadline\" "
+"title=\"Deadline\"/>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"oi\" data-icon=\"lock\"/> Private"
 msgstr "<i class=\"oi\" data-icon=\"lock\"/>私人的"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
-msgstr "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -749,20 +788,6 @@ msgstr ""
 "title=\"Domain Alias\"/>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-msgid "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
-msgstr "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-msgid ""
-"<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-"
-"label=\"Partner\" title=\"Partner\"/>"
-msgstr ""
-"<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-"
-"label=\"Partner\" title=\"Partner\"/>"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 msgid "<span class=\"oi oi-fw me-1\" data-icon=\"check\" title=\"Tasks\"/>"
 msgstr ""
@@ -864,12 +889,17 @@ msgid "Accept Emails From"
 msgstr "接收邮件来自"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__access_mode
+msgid "Access"
+msgstr ""
+
+#. module: project
 #: model:ir.model,name:project.model_res_groups
 msgid "Access Groups"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__access_mode
+#: model:ir.model.fields,field_description:project.field_project_collaborator__access_mode
 msgid "Access Mode"
 msgstr "访问模式"
 
@@ -964,6 +994,12 @@ msgstr "活动类型"
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
+msgid "Add"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
 msgid "Add Sub-task"
 msgstr "添加子任务"
@@ -995,6 +1031,22 @@ msgid "Add extra content to display in the email"
 msgstr "添加额外内容以显示在电子邮件中"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid ""
+"Add internal users as team members and invite portal users as collaborators "
+"to give them access to the project. They can also access tasks they follow."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid ""
+"Add internal users as team members to give them access to the project. They "
+"can also access tasks they follow."
+msgstr ""
+
+#. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid ""
 "Add project-specific property fields to tasks to better customize your "
@@ -1022,6 +1074,19 @@ msgstr "管理员"
 msgid ""
 "Administrator: Can manage projects and stages, with access to reporting and "
 "configuration."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_collaborator__access_mode__advanced_edit
+#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__advanced_edit
+msgid "Advanced Edit"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid ""
+"Advanced Edit: create and update tasks, change their priority, and move them "
+"between stages."
 msgstr ""
 
 #. module: project
@@ -1103,6 +1168,14 @@ msgstr "所有内部用户"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "All internal users and invited portal users"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid ""
+"All internal users have access to the project. Invite portal users as "
+"collaborators to give them access. They can also access tasks they follow."
 msgstr ""
 
 #. module: project
@@ -1243,6 +1316,16 @@ msgstr ""
 "根据模板新建项目时，请指定各项角色的负责人。"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+msgid "Assign to Me"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__project_sharing_portal_user_ids
+msgid "Assignable Portal Users"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
@@ -1366,24 +1449,6 @@ msgid "Average Rating (1-5)"
 msgstr "平均评分（1 至 5）"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Average Rating: Happy"
-msgstr "平均评分：满意"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Average Rating: Neutral"
-msgstr "平均评分：中性"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Average Rating: Unhappy"
-msgstr "平均评分：不满意"
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Backlog"
@@ -1448,6 +1513,7 @@ msgstr "燃尽图"
 
 #. module: project
 #. odoo-python
+#: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_task.py:0
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_canceled
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__1_canceled
@@ -1505,8 +1571,8 @@ msgstr "选择 <b>任务名称</b>。 <i>（例如网站设计，采购产品。
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid "Choose one of the following access modes for your collaborators:"
-msgstr "为合作者选择以下访问模式之一："
+msgid "Choose the appropriate access level for your collaborators:"
+msgstr ""
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_6
@@ -1627,6 +1693,12 @@ msgstr "配置设置"
 #: model:ir.ui.menu,name:project.menu_project_config
 msgid "Configuration"
 msgstr "配置"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_configure_project_cog_menu/project_configure_project_cog_menu.xml:0
+msgid "Configure Project"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
@@ -1911,12 +1983,6 @@ msgid ""
 "you can\n"
 "      communicate on the task directly."
 msgstr ""
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid "Customers will be added to the followers of their project and tasks."
-msgstr "客户将被添加到他们项目和任务的关注者中。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__daily
@@ -2214,6 +2280,7 @@ msgstr "显示名称"
 #. module: project
 #. odoo-javascript
 #. odoo-python
+#: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_done
@@ -2250,31 +2317,16 @@ msgstr ""
 "阶段。"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_collaborator__access_mode__edit
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_kanban
 msgid "Edit"
 msgstr "编辑"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
-msgid "Edit with limited access"
-msgstr "编辑权限受限"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid ""
-"Edit with limited access: collaborators can view and edit tasks they follow "
-"in the Kanban view."
-msgstr "编辑权限受限：协作者可以在看板视图中查看和编辑他们已关注的任务。"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid ""
-"Edit: collaborators can view and edit all tasks in the Kanban view. "
-"Additionally, they can choose which tasks they want to follow."
+msgid "Edit: can create and update tasks."
 msgstr ""
-"编辑：协作者可以查看和编辑看板视图中的所有任务。此外，他们还可以选择要关注哪"
-"些任务。"
 
 #. module: project
 #. odoo-javascript
@@ -2484,27 +2536,6 @@ msgid "Grant Portal Access"
 msgstr "授予门户访问权限"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"Grant employees access to your project or tasks by adding them as followers. "
-"Employees automatically get access to the tasks they are assigned to."
-msgstr ""
-"将员工添加为关注者，授予访问项目或任务的权限。员工会自动获得访问权限，查看被"
-"指派的任务。"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"Grant users access by adding them as followers — either to the project or "
-"individual tasks. Internal users automatically gain access to tasks they are "
-"assigned to."
-msgstr ""
-"通过将用户添加为关注者，来授予其访问权限——可以添加到项目或单个任务上。内部用"
-"户会自动获得其被分配任务的相关访问权限。"
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
@@ -2517,12 +2548,6 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Handoff"
 msgstr "交付"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Happy face"
-msgstr "笑脸"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__has_message
@@ -2727,6 +2752,8 @@ msgstr ""
 
 #. module: project
 #. odoo-javascript
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__01_in_progress
@@ -2784,14 +2811,9 @@ msgid "Invalid Display Name"
 msgstr "显示名称无效"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
-msgid "Invited internal and portal users"
-msgstr "受邀的内部及门户用户"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-msgid "Invited internal users"
-msgstr "受邀的内部用户"
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Invite Portal Users"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -3255,12 +3277,6 @@ msgid ""
 "Name used to refer to the tasks of your project e.g. tasks, tickets, "
 "sprints, etc..."
 msgstr "用来指代项目任务的名称，如任务、票据、冲刺等等……"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Neutral face"
-msgstr "平静"
 
 #. module: project
 #. odoo-javascript
@@ -3748,13 +3764,6 @@ msgid "Portal Sharing"
 msgstr "门户分享"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"Portal users will be removed from the followers of the project and its tasks."
-msgstr "门户用户将从项目及其任务的关注者中删除。"
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Prioritize your tasks by marking important ones using the"
@@ -3790,9 +3799,19 @@ msgstr ""
 "私有（非模板）任务无法转换为子任务。请为该任务指定项目，即可使用此功能。"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid "Private Task"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Private Tasks"
 msgstr "私人任务"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid "Private task"
+msgstr ""
 
 #. module: project
 #: model:project.project,name:project.project_template_1
@@ -4061,41 +4080,28 @@ msgstr "项目可见性"
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 #: model:ir.model.fields,help:project.field_task_share_wizard__project_privacy_visibility
 msgid ""
-"Project and Task Visibility:\n"
-"- Invited internal users: Can access only the project or tasks they follow. "
-"Assignees automatically get access.\n"
-"- Invited internal and portal users: Same as above, extended to portal "
-"users.\n"
-"- All internal users: Full access to the project and all its tasks.\n"
-"- All internal and invited portal users: Internal users get full access. "
-"Portal users can access only the project or tasks they follow.\n"
+"Project and task visibility\n"
+"Control who can access this project:\n"
 "\n"
-"Portal Access Levels:\n"
-"- Read-only: Portal users see tasks via their portal but can’t edit them.\n"
-"- Edit (limited): Portal users access kanban/list views and can edit limited "
-"fields on followed tasks.\n"
-"- Edit: Same as above, with access to all tasks.\n"
+"• Internal users: choose whether access is limited to team members or "
+"available to everyone in your organization.\n"
+"• Portal users: choose whether invited collaborators can access the "
+"project.\n"
 "\n"
-"Other Rules:\n"
-"- Internal users can open a task from a direct link, even without project "
-"access.\n"
-"- Project admins have access to private projects, even if not followers.\n"
+"Access levels for portal users\n"
+"\n"
+"• View: can access tasks and send messages.\n"
+"• Edit: can create and update tasks.\n"
+"• Advanced Edit: create and update tasks, change their priority, and move "
+"them between stages.\n"
+"\n"
+"Other rules\n"
+"\n"
+"• Internal users can open a task from a direct link, even if they don't have "
+"access to the project application.\n"
+"• Project admins have access to private projects, even if they are not team "
+"members."
 msgstr ""
-"项目与任务可见性：\n"
-"- 受邀内部用户：只能访问他们关注的项目或任务。分配对象自动获得访问权限。\n"
-"- 受邀内部和门户用户：同上，并扩展至门户用户。\n"
-"- 所有内部用户：完全访问项目及其所有任务。\n"
-"- 所有内部和受邀门户用户：内部用户获得完全访问权限。门户用户只能访问他们关注"
-"的项目或任务。\n"
-"\n"
-"门户访问级别：\n"
-"- 只读：门户用户通过门户查看任务，但无法编辑。\n"
-"- 编辑（受限）：门户用户访问看板/列表视图，并能编辑所关注任务的有限字段。\n"
-"- 编辑：同上，并可访问所有任务。\n"
-"\n"
-"其他规则：\n"
-"- 内部用户即使没有项目访问权限，也能通过直接链接打开任务。\n"
-"- 项目管理员可以访问私有项目，即使不是关注者。\n"
 
 #. module: project
 #. odoo-javascript
@@ -4341,30 +4347,6 @@ msgid "Reached"
 msgstr "达到"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__read
-msgid "Read"
-msgstr "读取"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid "Read: collaborators can view tasks but cannot edit them."
-msgstr "只读：协作者可以查看任务，但无法编辑任务。"
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
-msgid ""
-"Read: collaborators can view tasks but cannot edit them.\n"
-"Edit with limited access: collaborators can view and edit tasks they follow "
-"in the Kanban view.\n"
-"Edit: collaborators can view and edit all tasks in the Kanban view. "
-"Additionally, they can choose which tasks they want to follow."
-msgstr ""
-"读取：协作者可以查看任务，但不能编辑任务。\n"
-"有限制访问权限的编辑：协作者可以在看板视图中查看和编辑所关注的任务。\n"
-"编辑：协作者可以查看和编辑看板视图中的所有任务。此外，他们还可以选择要关注的"
-"任务。"
-
-#. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of {{ object.name }}"
 msgstr "收取 {{ object.name }}"
@@ -4437,6 +4419,11 @@ msgstr "相关单据模型"
 #: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid "Remove Collaborator"
 msgstr "删除合作者"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+msgid "Remove Me"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -4547,12 +4534,6 @@ msgstr "停滞中"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Rotting in"
 msgstr ""
-
-#. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
-msgid "SAVE"
-msgstr "保存"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_sms_error
@@ -4695,6 +4676,11 @@ msgid "Select an assignee from the menu"
 msgstr "从菜单中选择受指派人"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Select who can access"
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_task
 msgid "Send Email"
@@ -4778,13 +4764,6 @@ msgstr "分享项目"
 #: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Share Task"
 msgstr "分享任务"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-#: code:addons/project/models/project_task.py:0
-msgid "Sharing is not available with this project visibility setting."
-msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -5308,10 +5287,22 @@ msgid "Tasks in Recurrence"
 msgstr "循环中的任务"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__allowed_internal_user_ids
 #: model:ir.model.fields,field_description:project.field_project_role__user_ids
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_search
 msgid "Team Members"
 msgstr "团队成员"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
+msgid "Team members and invited portal users"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
+msgid "Team members only"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_id
@@ -5569,6 +5560,13 @@ msgstr "此项新任务并未属于任何项目。"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_task.py:0
+msgid "This project can’t be shared with external people."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
 msgid ""
 "This project is associated with %(project_company)s, whereas the selected "
 "stage belongs to %(stage_company)s. There are a couple of options to "
@@ -5741,16 +5739,6 @@ msgstr ""
 "                实时聊天或通过电子邮件进行高效协作."
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"To give portal users access to your project, add them as followers. For task "
-"access, add them as followers for each task."
-msgstr ""
-"要让门户用户访问项目，可将他们添加为关注者。要访问任务，可将他们添加为每个任"
-"务的关注者。"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid ""
 "To transform a task into a sub-task, select a parent task. Alternatively, "
@@ -5857,12 +5845,6 @@ msgstr "取消"
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
 msgid "Unfollow"
 msgstr "取消关注"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Unhappy face"
-msgstr "生气脸"
 
 #. module: project
 #. odoo-python
@@ -6020,6 +6002,8 @@ msgid "User: Can manage tasks in projects shared with them."
 msgstr "用户：可以管理与自己共享的项目中的任务。"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_collaborator__access_mode__view
+#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__view
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "View"
 msgstr "视图"
@@ -6044,7 +6028,22 @@ msgid "View Tasks"
 msgstr "查看任务"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "View: can access tasks and send messages."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
+msgid ""
+"View: can access tasks and send messages.\n"
+"Edit: can create and update tasks.\n"
+"Advanced Edit: create and update tasks, change their priority, and move them "
+"between stages."
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Visibility"
 msgstr "可见性"
 
@@ -6297,6 +6296,13 @@ msgstr ""
 "此处放弃这些更改或手动保存您的任务。<br/>让我们手动保存它吧。"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid ""
+"You need Advanced Edit access to change the stage or priority of a task."
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Your managers decide which feedback is accepted"
@@ -6520,3 +6526,152 @@ msgstr "👤 未指派"
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 私密"
+
+#~ msgid "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
+#~ msgstr "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
+
+#~ msgid "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
+#~ msgstr "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
+
+#~ msgid ""
+#~ "<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-"
+#~ "label=\"Partner\" title=\"Partner\"/>"
+#~ msgstr ""
+#~ "<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-"
+#~ "label=\"Partner\" title=\"Partner\"/>"
+
+#~ msgid "Average Rating: Happy"
+#~ msgstr "平均评分：满意"
+
+#~ msgid "Average Rating: Neutral"
+#~ msgstr "平均评分：中性"
+
+#~ msgid "Average Rating: Unhappy"
+#~ msgstr "平均评分：不满意"
+
+#~ msgid "Happy face"
+#~ msgstr "笑脸"
+
+#~ msgid "Neutral face"
+#~ msgstr "平静"
+
+#~ msgid "SAVE"
+#~ msgstr "保存"
+
+#~ msgid "Unhappy face"
+#~ msgstr "生气脸"
+
+#~ msgid "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Warning\"/>"
+#~ msgstr "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"警告\"/>"
+
+#~ msgid "Choose one of the following access modes for your collaborators:"
+#~ msgstr "为合作者选择以下访问模式之一："
+
+#~ msgid "Customers will be added to the followers of their project and tasks."
+#~ msgstr "客户将被添加到他们项目和任务的关注者中。"
+
+#~ msgid "Edit with limited access"
+#~ msgstr "编辑权限受限"
+
+#~ msgid ""
+#~ "Edit with limited access: collaborators can view and edit tasks they "
+#~ "follow in the Kanban view."
+#~ msgstr "编辑权限受限：协作者可以在看板视图中查看和编辑他们已关注的任务。"
+
+#~ msgid ""
+#~ "Edit: collaborators can view and edit all tasks in the Kanban view. "
+#~ "Additionally, they can choose which tasks they want to follow."
+#~ msgstr ""
+#~ "编辑：协作者可以查看和编辑看板视图中的所有任务。此外，他们还可以选择要关注"
+#~ "哪些任务。"
+
+#~ msgid ""
+#~ "Grant employees access to your project or tasks by adding them as "
+#~ "followers. Employees automatically get access to the tasks they are "
+#~ "assigned to."
+#~ msgstr ""
+#~ "将员工添加为关注者，授予访问项目或任务的权限。员工会自动获得访问权限，查看"
+#~ "被指派的任务。"
+
+#~ msgid ""
+#~ "Grant users access by adding them as followers — either to the project or "
+#~ "individual tasks. Internal users automatically gain access to tasks they "
+#~ "are assigned to."
+#~ msgstr ""
+#~ "通过将用户添加为关注者，来授予其访问权限——可以添加到项目或单个任务上。内部"
+#~ "用户会自动获得其被分配任务的相关访问权限。"
+
+#~ msgid "Invited internal and portal users"
+#~ msgstr "受邀的内部及门户用户"
+
+#~ msgid "Invited internal users"
+#~ msgstr "受邀的内部用户"
+
+#~ msgid ""
+#~ "Portal users will be removed from the followers of the project and its "
+#~ "tasks."
+#~ msgstr "门户用户将从项目及其任务的关注者中删除。"
+
+#~ msgid ""
+#~ "Project and Task Visibility:\n"
+#~ "- Invited internal users: Can access only the project or tasks they "
+#~ "follow. Assignees automatically get access.\n"
+#~ "- Invited internal and portal users: Same as above, extended to portal "
+#~ "users.\n"
+#~ "- All internal users: Full access to the project and all its tasks.\n"
+#~ "- All internal and invited portal users: Internal users get full access. "
+#~ "Portal users can access only the project or tasks they follow.\n"
+#~ "\n"
+#~ "Portal Access Levels:\n"
+#~ "- Read-only: Portal users see tasks via their portal but can’t edit "
+#~ "them.\n"
+#~ "- Edit (limited): Portal users access kanban/list views and can edit "
+#~ "limited fields on followed tasks.\n"
+#~ "- Edit: Same as above, with access to all tasks.\n"
+#~ "\n"
+#~ "Other Rules:\n"
+#~ "- Internal users can open a task from a direct link, even without project "
+#~ "access.\n"
+#~ "- Project admins have access to private projects, even if not followers.\n"
+#~ msgstr ""
+#~ "项目与任务可见性：\n"
+#~ "- 受邀内部用户：只能访问他们关注的项目或任务。分配对象自动获得访问权限。\n"
+#~ "- 受邀内部和门户用户：同上，并扩展至门户用户。\n"
+#~ "- 所有内部用户：完全访问项目及其所有任务。\n"
+#~ "- 所有内部和受邀门户用户：内部用户获得完全访问权限。门户用户只能访问他们关"
+#~ "注的项目或任务。\n"
+#~ "\n"
+#~ "门户访问级别：\n"
+#~ "- 只读：门户用户通过门户查看任务，但无法编辑。\n"
+#~ "- 编辑（受限）：门户用户访问看板/列表视图，并能编辑所关注任务的有限字"
+#~ "段。\n"
+#~ "- 编辑：同上，并可访问所有任务。\n"
+#~ "\n"
+#~ "其他规则：\n"
+#~ "- 内部用户即使没有项目访问权限，也能通过直接链接打开任务。\n"
+#~ "- 项目管理员可以访问私有项目，即使不是关注者。\n"
+
+#~ msgid "Read"
+#~ msgstr "读取"
+
+#~ msgid "Read: collaborators can view tasks but cannot edit them."
+#~ msgstr "只读：协作者可以查看任务，但无法编辑任务。"
+
+#~ msgid ""
+#~ "Read: collaborators can view tasks but cannot edit them.\n"
+#~ "Edit with limited access: collaborators can view and edit tasks they "
+#~ "follow in the Kanban view.\n"
+#~ "Edit: collaborators can view and edit all tasks in the Kanban view. "
+#~ "Additionally, they can choose which tasks they want to follow."
+#~ msgstr ""
+#~ "读取：协作者可以查看任务，但不能编辑任务。\n"
+#~ "有限制访问权限的编辑：协作者可以在看板视图中查看和编辑所关注的任务。\n"
+#~ "编辑：协作者可以查看和编辑看板视图中的所有任务。此外，他们还可以选择要关注"
+#~ "的任务。"
+
+#~ msgid ""
+#~ "To give portal users access to your project, add them as followers. For "
+#~ "task access, add them as followers for each task."
+#~ msgstr ""
+#~ "要让门户用户访问项目，可将他们添加为关注者。要访问任务，可将他们添加为每个"
+#~ "任务的关注者。"

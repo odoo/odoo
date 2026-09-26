@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-25 17:39+0000\n"
 "PO-Revision-Date: 2026-09-02 14:08+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/web/"
@@ -514,7 +514,7 @@ msgstr "Du behöver ett namn för din nya åtgärd."
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page. You can also copy the link "
@@ -1880,6 +1880,7 @@ msgstr "Konvertera till webp"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copied"
@@ -1888,9 +1889,15 @@ msgstr "Kopierad"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "Copy"
 msgstr "Kopiera"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+msgid "Copy Arch"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2433,6 +2440,12 @@ msgstr "Stäng av alternativet 'Skapa'"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.js:0
+msgid "Disable RPC Cache"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 msgid "Disable creation"
@@ -2525,6 +2538,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:web.field_res_users_settings_embedded_action__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
+msgid "Display action buttons"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2850,6 +2869,12 @@ msgstr "Tom e-postadress"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.js:0
+msgid "Enable RPC Cache"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/text/text_field.js:0
 msgid "Enable line breaks"
 msgstr "Aktivera radbrytningar"
@@ -3134,6 +3159,12 @@ msgstr "Fält som skall exporteras"
 #: code:addons/web/static/src/views/fields/binary/binary_field.js:0
 msgid "File"
 msgstr "Fil"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+msgid "Filter name"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4818,6 +4849,12 @@ msgstr "Fuji-berget"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/multi_drag.js:0
+msgid "Move %(count)s records"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Move to %s..."
 msgstr "Flytta till%s..."
@@ -5153,7 +5190,7 @@ msgstr "Inga resultat"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "No view of type '%s' could be found in the current action."
 msgstr "Ingen vy av typen '%s' kunde hittas i den aktuella åtgärden."
 
@@ -6275,7 +6312,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
+#: code:addons/web/static/src/webclient/actions/action_plugin.js:0
 msgid "Report"
 msgstr "Rapport"
 
@@ -6478,12 +6515,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
-msgid "Save current search"
-msgstr "Spara nuvarande sökning"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 msgid "Save default"
 msgstr "Spara standardvärden"
@@ -6493,6 +6524,12 @@ msgstr "Spara standardvärden"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 msgid "Save manually"
 msgstr "Spara"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+msgid "Save search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6536,6 +6573,12 @@ msgstr "Sök"
 #: code:addons/web/static/src/views/calendar/calendar_filter_section/calendar_filter_section.js:0
 msgid "Search More..."
 msgstr "Sök flera..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Search a record..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6674,6 +6717,12 @@ msgstr "Välj ett fält"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Select a model to add a filter."
 msgstr "Välj en modell för att lägga till ett filter."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Select a model..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -27715,6 +27764,9 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
+
+#~ msgid "Save current search"
+#~ msgstr "Spara nuvarande sökning"
 
 #~ msgid "%(property_string)s (%(parent_name)s)"
 #~ msgstr "%(property_string)s (%(parent_name)s)"

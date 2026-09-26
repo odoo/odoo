@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
 "PO-Revision-Date: 2026-09-09 14:12+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -93,19 +93,9 @@ msgid "'Badge - %s' % (object.name).replace('/', '')"
 msgstr "'Badge - %s' % (object.name).replace('/', '')"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "/ day"
-msgstr "/ 天"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "/ month"
 msgstr "/ 月"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "/ week"
-msgstr "/ 周"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -981,6 +971,12 @@ msgid "Archived"
 msgstr "已归档"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
+msgid "Are you sure you want to deactivate this user?"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "As of"
@@ -1118,17 +1114,6 @@ msgstr "形象 256"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
 msgid "Avatar 512"
 msgstr "形象 512"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Average Hours"
-msgstr "平均工时"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_version.py:0
-msgid "Average hours per day must be between 0 and 24."
-msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -1497,6 +1482,12 @@ msgstr "配置"
 #: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
 msgid "Confirm"
 msgstr "确认"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
+msgid "Confirmation"
+msgstr ""
 
 #. module: hr
 #. odoo-javascript
@@ -1889,7 +1880,14 @@ msgstr ""
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/employee_user_status/employee_user_status.js:0
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
 msgid "Deactivate"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
+msgid "Deactivate & End Collaboration"
 msgstr ""
 
 #. module: hr
@@ -1933,9 +1931,9 @@ msgstr "定义要显示为“当前”的已发送电子邮件的最小数量。
 #. module: hr
 #: model:ir.model.fields,help:hr.field_resource_resource__calendar_id
 msgid ""
-"Define the working schedule of the resource. If not set, the resource will "
-"have fully flexible working hours."
-msgstr "定义资源的工作计划。如果未设置，资源将具有完全灵活的工作时间。"
+"Define the working schedule of the resource. Assign a flexible calendar for "
+"fully flexible working hours."
+msgstr ""
 
 #. module: hr
 #. odoo-javascript
@@ -2093,6 +2091,7 @@ msgstr "目录"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
 #: code:addons/hr/static/src/js/departure_conflict_dialog.js:0
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_create_version_wizard_view_form
@@ -2828,11 +2827,6 @@ msgid "Fleet"
 msgstr "车辆"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Flexible"
-msgstr "灵活"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
@@ -3050,29 +3044,8 @@ msgstr "每日工时"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hours_per_week
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Hours Per Week"
 msgstr "每周工时"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__hours_per_day
-#: model:ir.model.fields,field_description:hr.field_hr_version__hours_per_day
-#: model:ir.model.fields,field_description:hr.field_resource_resource__hours_per_day
-msgid "Hours per Day"
-msgstr "每日工时"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__hours_per_week
-#: model:ir.model.fields,field_description:hr.field_hr_version__hours_per_week
-#: model:ir.model.fields,field_description:hr.field_resource_resource__hours_per_week
-msgid "Hours per Week"
-msgstr "每周工时"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_version.py:0
-msgid "Hours per week must be between 0 and 168."
-msgstr "每周工时数值必须介于 0 至 168 之间。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
@@ -3326,24 +3299,12 @@ msgid "Is Custom Job Title"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
-#: model:ir.model.fields,field_description:hr.field_hr_version__is_flexible
-msgid "Is Flexible"
-msgstr "灵活可变"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_version__message_is_follower
 msgid "Is Follower"
 msgstr "是关注者"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__is_fully_flexible
-#: model:ir.model.fields,field_description:hr.field_hr_version__is_fully_flexible
-msgid "Is Fully Flexible"
-msgstr "完全灵活"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_future
@@ -3490,6 +3451,11 @@ msgstr "上个活动"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity_time
 msgid "Last Activity Time"
 msgstr "上个活动时间"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__last_contract_date_end
+msgid "Last Contract Date End"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_modified_uid
@@ -4034,11 +4000,6 @@ msgid "Not Invited"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Not limited"
-msgstr "无限制"
-
-#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__0
 msgid "Not specified"
 msgstr "未指定"
@@ -4322,7 +4283,6 @@ msgstr "组织架构图"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__other
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__other
 msgid "Other"
 msgstr "其他"
@@ -5192,6 +5152,13 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"Some of these fields %(field_name)s don't exist on this model (hr.version)."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__split_legal_name
 msgid "Split Legal Name"
 msgstr "拆分法定名称"
@@ -6035,11 +6002,6 @@ msgid "Valid work permit for Belgium"
 msgstr "有效的工作许可"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Variable Hours"
-msgstr "浮动工时"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_resource_calendar__version_ids
 msgid "Version"
 msgstr ""
@@ -6725,6 +6687,44 @@ msgstr "工作"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "工作许可名称"
+
+#~ msgid "/ day"
+#~ msgstr "/ 天"
+
+#~ msgid "/ week"
+#~ msgstr "/ 周"
+
+#~ msgid "Average Hours"
+#~ msgstr "平均工时"
+
+#~ msgid ""
+#~ "Define the working schedule of the resource. If not set, the resource "
+#~ "will have fully flexible working hours."
+#~ msgstr "定义资源的工作计划。如果未设置，资源将具有完全灵活的工作时间。"
+
+#~ msgid "Flexible"
+#~ msgstr "灵活"
+
+#~ msgid "Hours per Day"
+#~ msgstr "每日工时"
+
+#~ msgid "Hours per Week"
+#~ msgstr "每周工时"
+
+#~ msgid "Hours per week must be between 0 and 168."
+#~ msgstr "每周工时数值必须介于 0 至 168 之间。"
+
+#~ msgid "Is Flexible"
+#~ msgstr "灵活可变"
+
+#~ msgid "Is Fully Flexible"
+#~ msgstr "完全灵活"
+
+#~ msgid "Not limited"
+#~ msgstr "无限制"
+
+#~ msgid "Variable Hours"
+#~ msgstr "浮动工时"
 
 #~ msgid "Chat"
 #~ msgstr "聊天"

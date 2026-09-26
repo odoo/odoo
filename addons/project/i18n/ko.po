@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
 "PO-Revision-Date: 2026-08-31 17:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -561,6 +561,13 @@ msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Back to edit mode"
 msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>편집 모드로 돌아가기"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\" data-"
+"tooltip=\"Planned Date\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
 "<i class=\"oi o_button_icon\" data-icon=\"check\" "
@@ -575,10 +582,38 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid ""
+"<i class=\"oi oi-filled me-2\" data-icon=\"person\" aria-label=\"Project "
+"Manager\" title=\"Project Manager\" data-tooltip=\"Project Manager\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
 msgid ""
 "<i class=\"oi oi-filled px-1 mt-1\" data-icon=\"calendar_today\" "
 "role=\"img\" aria-label=\"Deadline\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"flag\" title=\"Miltstone\" data-"
+"tooltip=\"Milestone\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Customer\" data-"
+"tooltip=\"Customer\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"task\" title=\"Tasks\" data-"
+"tooltip=\"Name of Tasks\"/>"
 msgstr ""
 
 #. module: project
@@ -623,19 +658,23 @@ msgid "<i class=\"oi pe-2\" data-icon=\"lightbulb\" title=\"Info\"/>"
 msgstr "<i class=\"oi pe-2\" data-icon=\"lightbulb\" title=\"정보\"/>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Warning\"/>"
-msgstr "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"경고\"/>"
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi\" data-icon=\"assignment_turned_in\" title=\"Project\" data-"
+"tooltip=\"Project\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid ""
+"<i class=\"oi\" data-icon=\"calendar_clock\" data-tooltip=\"Deadline\" "
+"title=\"Deadline\"/>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"oi\" data-icon=\"lock\"/> Private"
 msgstr "<i class=\"oi\" data-icon=\"lock\"/> 개인"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
-msgstr "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -749,20 +788,6 @@ msgstr ""
 "title=\"도메인 별칭\"/>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-msgid "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
-msgstr "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-msgid ""
-"<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-"
-"label=\"Partner\" title=\"Partner\"/>"
-msgstr ""
-"<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-label=\"협렧\" "
-"title=\"협력사\"/>"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 msgid "<span class=\"oi oi-fw me-1\" data-icon=\"check\" title=\"Tasks\"/>"
 msgstr ""
@@ -870,12 +895,17 @@ msgid "Accept Emails From"
 msgstr "수신 이메일 허용"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__access_mode
+msgid "Access"
+msgstr ""
+
+#. module: project
 #: model:ir.model,name:project.model_res_groups
 msgid "Access Groups"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__access_mode
+#: model:ir.model.fields,field_description:project.field_project_collaborator__access_mode
 msgid "Access Mode"
 msgstr "액세스 모드"
 
@@ -970,6 +1000,12 @@ msgstr "업무 유형"
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
+msgid "Add"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
 msgid "Add Sub-task"
 msgstr ""
@@ -1003,6 +1039,22 @@ msgid "Add extra content to display in the email"
 msgstr "이메일에 표시할 추가 콘텐츠 만들기"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid ""
+"Add internal users as team members and invite portal users as collaborators "
+"to give them access to the project. They can also access tasks they follow."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid ""
+"Add internal users as team members to give them access to the project. They "
+"can also access tasks they follow."
+msgstr ""
+
+#. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid ""
 "Add project-specific property fields to tasks to better customize your "
@@ -1030,6 +1082,19 @@ msgstr "관리자"
 msgid ""
 "Administrator: Can manage projects and stages, with access to reporting and "
 "configuration."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_collaborator__access_mode__advanced_edit
+#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__advanced_edit
+msgid "Advanced Edit"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid ""
+"Advanced Edit: create and update tasks, change their priority, and move them "
+"between stages."
 msgstr ""
 
 #. module: project
@@ -1111,6 +1176,14 @@ msgstr "전체 내부 사용자"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "All internal users and invited portal users"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid ""
+"All internal users have access to the project. Invite portal users as "
+"collaborators to give them access. They can also access tasks they follow."
 msgstr ""
 
 #. module: project
@@ -1251,6 +1324,16 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+msgid "Assign to Me"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__project_sharing_portal_user_ids
+msgid "Assignable Portal Users"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
@@ -1378,24 +1461,6 @@ msgid "Average Rating (1-5)"
 msgstr "평균 점수 (1-5)"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Average Rating: Happy"
-msgstr "평균 점수: 만족"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Average Rating: Neutral"
-msgstr "평균 점수: 보통"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Average Rating: Unhappy"
-msgstr "평균 점수: 불만"
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Backlog"
@@ -1462,6 +1527,7 @@ msgstr "번다운 차트"
 
 #. module: project
 #. odoo-python
+#: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_task.py:0
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_canceled
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__1_canceled
@@ -1519,8 +1585,8 @@ msgstr "<b>이름</b>을 선택하세요 <i>(예. 웹사이트 디자인, 물품
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid "Choose one of the following access modes for your collaborators:"
-msgstr "공동 작업자를 위해 다음 액세스 모드 중 하나를 선택합니다:"
+msgid "Choose the appropriate access level for your collaborators:"
+msgstr ""
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_6
@@ -1635,6 +1701,12 @@ msgstr "환경 설정"
 #: model:ir.ui.menu,name:project.menu_project_config
 msgid "Configuration"
 msgstr "설정"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_configure_project_cog_menu/project_configure_project_cog_menu.xml:0
+msgid "Configure Project"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
@@ -1923,12 +1995,6 @@ msgid ""
 "you can\n"
 "      communicate on the task directly."
 msgstr ""
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid "Customers will be added to the followers of their project and tasks."
-msgstr "고객을 해당 프로젝트 및 작업의 팔로워로 추가합니다."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__daily
@@ -2232,6 +2298,7 @@ msgstr "표시명"
 #. module: project
 #. odoo-javascript
 #. odoo-python
+#: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_done
@@ -2268,33 +2335,16 @@ msgstr ""
 "한 후 작업을 이전할 수 있는 새로운 단계를 생성합니다."
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_collaborator__access_mode__edit
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_kanban
 msgid "Edit"
 msgstr "편집"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
-msgid "Edit with limited access"
-msgstr "제한된 액세스 권한으로 편집"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid ""
-"Edit with limited access: collaborators can view and edit tasks they follow "
-"in the Kanban view."
+msgid "Edit: can create and update tasks."
 msgstr ""
-"제한된 액세스 권한으로 편집: 공동 작업자는 칸반 보기에서 자신이 팔로우하는 작"
-"업을 보고 편집할 수 있습니다."
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid ""
-"Edit: collaborators can view and edit all tasks in the Kanban view. "
-"Additionally, they can choose which tasks they want to follow."
-msgstr ""
-"편집: 공동 작업자는 칸반 보기에서 모든 작업을 보고 편집할 수 있습니다. 또한 "
-"팔로우할 작업을 선택할 수도 있습니다."
 
 #. module: project
 #. odoo-javascript
@@ -2505,25 +2555,6 @@ msgid "Grant Portal Access"
 msgstr "포털 접근 권한 부여"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"Grant employees access to your project or tasks by adding them as followers. "
-"Employees automatically get access to the tasks they are assigned to."
-msgstr ""
-"직원을 팔로워로 추가하여 프로젝트나 작업에 접근할 수 있도록 권한을 부여합니"
-"다. 직원은 배정받은 작업에 접근 권한을 자동으로 받게 됩니다."
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"Grant users access by adding them as followers — either to the project or "
-"individual tasks. Internal users automatically gain access to tasks they are "
-"assigned to."
-msgstr ""
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
@@ -2536,12 +2567,6 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Handoff"
 msgstr "전달"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Happy face"
-msgstr "행복한 표정"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__has_message
@@ -2750,6 +2775,8 @@ msgstr ""
 
 #. module: project
 #. odoo-javascript
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__01_in_progress
@@ -2807,14 +2834,9 @@ msgid "Invalid Display Name"
 msgstr "잘못된 표시명"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
-msgid "Invited internal and portal users"
-msgstr "초대된 내부 및 포털 사용자"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-msgid "Invited internal users"
-msgstr "초대받은 내부 사용자"
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Invite Portal Users"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -3283,12 +3305,6 @@ msgid ""
 msgstr ""
 "프로젝트의 작업 표시에 사용되는 이름입니다. 예를 들어, 작업, 상담, 스프린트 "
 "등에 사용합니다."
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Neutral face"
-msgstr "중립적인 얼굴"
 
 #. module: project
 #. odoo-javascript
@@ -3779,13 +3795,6 @@ msgid "Portal Sharing"
 msgstr "포털 공유"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"Portal users will be removed from the followers of the project and its tasks."
-msgstr "포털 사용자를 프로젝트 및 관련 작업 팔로워에서 삭제합니다."
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Prioritize your tasks by marking important ones using the"
@@ -3820,9 +3829,19 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid "Private Task"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Private Tasks"
 msgstr "비공개 작업"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_card
+msgid "Private task"
+msgstr ""
 
 #. module: project
 #: model:project.project,name:project.project_template_1
@@ -4091,49 +4110,28 @@ msgstr "프로젝트 표시"
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 #: model:ir.model.fields,help:project.field_task_share_wizard__project_privacy_visibility
 msgid ""
-"Project and Task Visibility:\n"
-"- Invited internal users: Can access only the project or tasks they follow. "
-"Assignees automatically get access.\n"
-"- Invited internal and portal users: Same as above, extended to portal "
-"users.\n"
-"- All internal users: Full access to the project and all its tasks.\n"
-"- All internal and invited portal users: Internal users get full access. "
-"Portal users can access only the project or tasks they follow.\n"
+"Project and task visibility\n"
+"Control who can access this project:\n"
 "\n"
-"Portal Access Levels:\n"
-"- Read-only: Portal users see tasks via their portal but can’t edit them.\n"
-"- Edit (limited): Portal users access kanban/list views and can edit limited "
-"fields on followed tasks.\n"
-"- Edit: Same as above, with access to all tasks.\n"
+"• Internal users: choose whether access is limited to team members or "
+"available to everyone in your organization.\n"
+"• Portal users: choose whether invited collaborators can access the "
+"project.\n"
 "\n"
-"Other Rules:\n"
-"- Internal users can open a task from a direct link, even without project "
-"access.\n"
-"- Project admins have access to private projects, even if not followers.\n"
+"Access levels for portal users\n"
+"\n"
+"• View: can access tasks and send messages.\n"
+"• Edit: can create and update tasks.\n"
+"• Advanced Edit: create and update tasks, change their priority, and move "
+"them between stages.\n"
+"\n"
+"Other rules\n"
+"\n"
+"• Internal users can open a task from a direct link, even if they don't have "
+"access to the project application.\n"
+"• Project admins have access to private projects, even if they are not team "
+"members."
 msgstr ""
-"프로젝트 및 작업에 대한 공개:\n"
-"- 초대된 내부 사용자: 팔로우 중인 프로젝트 또는 작업에만 액세스할 수 있습니"
-"다. 업무 담당자로 지정된 경우에는 자동으로 액세스 권한을 얻습니다.\n"
-"- 초대된 내부 사용자 및 포털 사용자: 위와 동일하며, 포털 사용자까지 포함됩니"
-"다.\n"
-"- 모든 내부 사용자: 프로젝트와 모든 작업에 대해 전체에 대한 액세스 권한이 있"
-"습니다.\n"
-"- 모든 내부 사용자 및 초대된 포털 사용자: 내부 사용자에게는 전체 액세스 권한"
-"이 부여됩니다. 포털 사용자는 본인이 팔로우 중인 프로젝트 또는 작업에만 액세스"
-"할 수 있습니다.\n"
-"\n"
-"포털 액세스 수준:\n"
-"- 읽기 전용: 포털 사용자는 포털을 통해 작업을 볼 수 있지만 편집할 수는 없습니"
-"다.\n"
-"- 편집(제한적): 포털 사용자가 칸반/목록 보기에 액세스하고 팔로우된 작업에서 "
-"제한적으로만 필드 편집을 할 수 있습니다.\n"
-"- 편집: 위와 동일하며 모든 작업에 액세스할 수 있습니다.\n"
-"\n"
-"기타 규칙:\n"
-"- 내부 사용자는 프로젝트 액세스 권한이 없어도 직접 링크를 통해 작업을 열 수 "
-"있습니다.\n"
-"- 프로젝트 관리자는 팔로워가 아니더라도 비공개 프로젝트에 액세스할 수 있습니"
-"다.\n"
 
 #. module: project
 #. odoo-javascript
@@ -4382,31 +4380,6 @@ msgid "Reached"
 msgstr "달성함"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__read
-msgid "Read"
-msgstr "읽기"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
-msgid "Read: collaborators can view tasks but cannot edit them."
-msgstr "읽기 전용: 공동 작업자는 작업을 볼 수는 있지만 편집할 수는 없습니다."
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
-msgid ""
-"Read: collaborators can view tasks but cannot edit them.\n"
-"Edit with limited access: collaborators can view and edit tasks they follow "
-"in the Kanban view.\n"
-"Edit: collaborators can view and edit all tasks in the Kanban view. "
-"Additionally, they can choose which tasks they want to follow."
-msgstr ""
-"읽기: 공동 작업자는 편집 권한은 없으며, 작업을 볼 수 있습니다.\n"
-"편집 액세스 제한: 공동 작업자는 칸반 보기 내에서 자신이 팔로우하는 작업을 보"
-"고 편집할 수 있습니다.\n"
-"편집:  공동 작업자는 칸반 보기 내에서 모든 작업을 보고 편집할 수 있습니다. 또"
-"한 팔로우할 작업을 선택할 수도 있습니다."
-
-#. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of {{ object.name }}"
 msgstr "다음을 수신함 {{ object.name }}"
@@ -4479,6 +4452,11 @@ msgstr "관련 문서 모델"
 #: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid "Remove Collaborator"
 msgstr "공동 작업자 삭제"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+msgid "Remove Me"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -4591,12 +4569,6 @@ msgstr "불량"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Rotting in"
 msgstr "지체 중:"
-
-#. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
-msgid "SAVE"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_sms_error
@@ -4737,6 +4709,11 @@ msgid "Select an assignee from the menu"
 msgstr "메뉴에서 담당자를 선택합니다."
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Select who can access"
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_task
 msgid "Send Email"
@@ -4823,13 +4800,6 @@ msgstr "프로젝트 공유"
 #: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Share Task"
 msgstr "작업 공유"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-#: code:addons/project/models/project_task.py:0
-msgid "Sharing is not available with this project visibility setting."
-msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -5352,10 +5322,22 @@ msgid "Tasks in Recurrence"
 msgstr "반복되는 자겅ㅂ"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__allowed_internal_user_ids
 #: model:ir.model.fields,field_description:project.field_project_role__user_ids
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_search
 msgid "Team Members"
 msgstr "팀원"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
+msgid "Team members and invited portal users"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
+msgid "Team members only"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_id
@@ -5618,6 +5600,13 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_task.py:0
+msgid "This project can’t be shared with external people."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_project.py:0
 msgid ""
 "This project is associated with %(project_company)s, whereas the selected "
 "stage belongs to %(stage_company)s. There are a couple of options to "
@@ -5797,17 +5786,6 @@ msgstr ""
 "                실시간 채팅이나 이메일을 통해 효율적으로 함께 작업합니다."
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_project.py:0
-msgid ""
-"To give portal users access to your project, add them as followers. For task "
-"access, add them as followers for each task."
-msgstr ""
-"포털 사용자에게 프로젝트에 대한 접근 권한을 부여하려면 팔로워로 추가하십시"
-"오. 개별 작업에 대한 접근 권한을 부여하려면, 각 특정 작업에 대한 팔로워로 추"
-"가하십시오."
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid ""
 "To transform a task into a sub-task, select a parent task. Alternatively, "
@@ -5914,12 +5892,6 @@ msgstr "취소"
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
 msgid "Unfollow"
 msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_card
-#: model_terms:ir.ui.view,arch_db:project.view_task_card
-msgid "Unhappy face"
-msgstr "불만스러운 얼굴"
 
 #. module: project
 #. odoo-python
@@ -6078,6 +6050,8 @@ msgid "User: Can manage tasks in projects shared with them."
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_collaborator__access_mode__view
+#: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__view
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
 msgid "View"
 msgstr "화면"
@@ -6102,7 +6076,22 @@ msgid "View Tasks"
 msgstr "작업 보기"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "View: can access tasks and send messages."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
+msgid ""
+"View: can access tasks and send messages.\n"
+"Edit: can create and update tasks.\n"
+"Advanced Edit: create and update tasks, change their priority, and move them "
+"between stages."
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Visibility"
 msgstr "표시"
 
@@ -6363,6 +6352,13 @@ msgstr ""
 "을 직접 저장하실 수 있습니다.<br/>직접 저장하겠습니다."
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid ""
+"You need Advanced Edit access to change the stage or priority of a task."
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Your managers decide which feedback is accepted"
@@ -6584,3 +6580,153 @@ msgstr "👤 미지정"
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 비공개"
+
+#~ msgid "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
+#~ msgstr "<i title=\"Private Task\" class=\"oi\" data-icon=\"lock\"/>"
+
+#~ msgid "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
+#~ msgstr "<span class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\"/>"
+
+#~ msgid ""
+#~ "<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-"
+#~ "label=\"Partner\" title=\"Partner\"/>"
+#~ msgstr ""
+#~ "<span class=\"oi oi-filled me-2\" data-icon=\"person\" aria-label=\"협렧"
+#~ "\" title=\"협력사\"/>"
+
+#~ msgid "Average Rating: Happy"
+#~ msgstr "평균 점수: 만족"
+
+#~ msgid "Average Rating: Neutral"
+#~ msgstr "평균 점수: 보통"
+
+#~ msgid "Average Rating: Unhappy"
+#~ msgstr "평균 점수: 불만"
+
+#~ msgid "Happy face"
+#~ msgstr "행복한 표정"
+
+#~ msgid "Neutral face"
+#~ msgstr "중립적인 얼굴"
+
+#~ msgid "Unhappy face"
+#~ msgstr "불만스러운 얼굴"
+
+#~ msgid "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Warning\"/>"
+#~ msgstr "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"경고\"/>"
+
+#~ msgid "Choose one of the following access modes for your collaborators:"
+#~ msgstr "공동 작업자를 위해 다음 액세스 모드 중 하나를 선택합니다:"
+
+#~ msgid "Customers will be added to the followers of their project and tasks."
+#~ msgstr "고객을 해당 프로젝트 및 작업의 팔로워로 추가합니다."
+
+#~ msgid "Edit with limited access"
+#~ msgstr "제한된 액세스 권한으로 편집"
+
+#~ msgid ""
+#~ "Edit with limited access: collaborators can view and edit tasks they "
+#~ "follow in the Kanban view."
+#~ msgstr ""
+#~ "제한된 액세스 권한으로 편집: 공동 작업자는 칸반 보기에서 자신이 팔로우하"
+#~ "는 작업을 보고 편집할 수 있습니다."
+
+#~ msgid ""
+#~ "Edit: collaborators can view and edit all tasks in the Kanban view. "
+#~ "Additionally, they can choose which tasks they want to follow."
+#~ msgstr ""
+#~ "편집: 공동 작업자는 칸반 보기에서 모든 작업을 보고 편집할 수 있습니다. 또"
+#~ "한 팔로우할 작업을 선택할 수도 있습니다."
+
+#~ msgid ""
+#~ "Grant employees access to your project or tasks by adding them as "
+#~ "followers. Employees automatically get access to the tasks they are "
+#~ "assigned to."
+#~ msgstr ""
+#~ "직원을 팔로워로 추가하여 프로젝트나 작업에 접근할 수 있도록 권한을 부여합"
+#~ "니다. 직원은 배정받은 작업에 접근 권한을 자동으로 받게 됩니다."
+
+#~ msgid "Invited internal and portal users"
+#~ msgstr "초대된 내부 및 포털 사용자"
+
+#~ msgid "Invited internal users"
+#~ msgstr "초대받은 내부 사용자"
+
+#~ msgid ""
+#~ "Portal users will be removed from the followers of the project and its "
+#~ "tasks."
+#~ msgstr "포털 사용자를 프로젝트 및 관련 작업 팔로워에서 삭제합니다."
+
+#~ msgid ""
+#~ "Project and Task Visibility:\n"
+#~ "- Invited internal users: Can access only the project or tasks they "
+#~ "follow. Assignees automatically get access.\n"
+#~ "- Invited internal and portal users: Same as above, extended to portal "
+#~ "users.\n"
+#~ "- All internal users: Full access to the project and all its tasks.\n"
+#~ "- All internal and invited portal users: Internal users get full access. "
+#~ "Portal users can access only the project or tasks they follow.\n"
+#~ "\n"
+#~ "Portal Access Levels:\n"
+#~ "- Read-only: Portal users see tasks via their portal but can’t edit "
+#~ "them.\n"
+#~ "- Edit (limited): Portal users access kanban/list views and can edit "
+#~ "limited fields on followed tasks.\n"
+#~ "- Edit: Same as above, with access to all tasks.\n"
+#~ "\n"
+#~ "Other Rules:\n"
+#~ "- Internal users can open a task from a direct link, even without project "
+#~ "access.\n"
+#~ "- Project admins have access to private projects, even if not followers.\n"
+#~ msgstr ""
+#~ "프로젝트 및 작업에 대한 공개:\n"
+#~ "- 초대된 내부 사용자: 팔로우 중인 프로젝트 또는 작업에만 액세스할 수 있습"
+#~ "니다. 업무 담당자로 지정된 경우에는 자동으로 액세스 권한을 얻습니다.\n"
+#~ "- 초대된 내부 사용자 및 포털 사용자: 위와 동일하며, 포털 사용자까지 포함됩"
+#~ "니다.\n"
+#~ "- 모든 내부 사용자: 프로젝트와 모든 작업에 대해 전체에 대한 액세스 권한이 "
+#~ "있습니다.\n"
+#~ "- 모든 내부 사용자 및 초대된 포털 사용자: 내부 사용자에게는 전체 액세스 권"
+#~ "한이 부여됩니다. 포털 사용자는 본인이 팔로우 중인 프로젝트 또는 작업에만 "
+#~ "액세스할 수 있습니다.\n"
+#~ "\n"
+#~ "포털 액세스 수준:\n"
+#~ "- 읽기 전용: 포털 사용자는 포털을 통해 작업을 볼 수 있지만 편집할 수는 없"
+#~ "습니다.\n"
+#~ "- 편집(제한적): 포털 사용자가 칸반/목록 보기에 액세스하고 팔로우된 작업에"
+#~ "서 제한적으로만 필드 편집을 할 수 있습니다.\n"
+#~ "- 편집: 위와 동일하며 모든 작업에 액세스할 수 있습니다.\n"
+#~ "\n"
+#~ "기타 규칙:\n"
+#~ "- 내부 사용자는 프로젝트 액세스 권한이 없어도 직접 링크를 통해 작업을 열 "
+#~ "수 있습니다.\n"
+#~ "- 프로젝트 관리자는 팔로워가 아니더라도 비공개 프로젝트에 액세스할 수 있습"
+#~ "니다.\n"
+
+#~ msgid "Read"
+#~ msgstr "읽기"
+
+#~ msgid "Read: collaborators can view tasks but cannot edit them."
+#~ msgstr ""
+#~ "읽기 전용: 공동 작업자는 작업을 볼 수는 있지만 편집할 수는 없습니다."
+
+#~ msgid ""
+#~ "Read: collaborators can view tasks but cannot edit them.\n"
+#~ "Edit with limited access: collaborators can view and edit tasks they "
+#~ "follow in the Kanban view.\n"
+#~ "Edit: collaborators can view and edit all tasks in the Kanban view. "
+#~ "Additionally, they can choose which tasks they want to follow."
+#~ msgstr ""
+#~ "읽기: 공동 작업자는 편집 권한은 없으며, 작업을 볼 수 있습니다.\n"
+#~ "편집 액세스 제한: 공동 작업자는 칸반 보기 내에서 자신이 팔로우하는 작업을 "
+#~ "보고 편집할 수 있습니다.\n"
+#~ "편집:  공동 작업자는 칸반 보기 내에서 모든 작업을 보고 편집할 수 있습니"
+#~ "다. 또한 팔로우할 작업을 선택할 수도 있습니다."
+
+#~ msgid ""
+#~ "To give portal users access to your project, add them as followers. For "
+#~ "task access, add them as followers for each task."
+#~ msgstr ""
+#~ "포털 사용자에게 프로젝트에 대한 접근 권한을 부여하려면 팔로워로 추가하십시"
+#~ "오. 개별 작업에 대한 접근 권한을 부여하려면, 각 특정 작업에 대한 팔로워로 "
+#~ "추가하십시오."

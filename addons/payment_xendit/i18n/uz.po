@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:44+0000\n"
+"POT-Creation-Date: 2026-09-25 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 13:43+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -97,30 +97,6 @@ msgid "Card"
 msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-#, fuzzy
-msgid "Card Code"
-msgstr "Karta kodi"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-#, fuzzy
-msgid "Card Holder First Name"
-msgstr "Karta egasining ismi"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-#, fuzzy
-msgid "Card Holder Last Name"
-msgstr "Karta egasining familiyasi"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-#, fuzzy
-msgid "Card Number"
-msgstr "Karta raqami"
-
-#. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_cashalo
 msgid "Cashalo"
 msgstr ""
@@ -149,18 +125,6 @@ msgid "Display Name"
 msgstr "Ko‘rsatiladigan nom"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-#, fuzzy
-msgid "Email"
-msgstr "Elektron pochta"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-#, fuzzy
-msgid "Expiration"
-msgstr "Amal qilish muddati"
-
-#. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_fpx
 msgid "FPX"
 msgstr ""
@@ -183,27 +147,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-#, fuzzy
-msgid "Invalid CVN"
-msgstr "Noto‘g‘ri CVN"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-#, fuzzy
-msgid "Invalid Card Number"
-msgstr "Noto‘g‘ri karta raqami"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-#, fuzzy
-msgid "Invalid Date"
-msgstr "Noto‘g‘ri sana"
-
-#. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_jcb
 msgid "JCB"
 msgstr ""
@@ -212,12 +155,6 @@ msgstr ""
 #: model:payment.method,name:payment_xendit.payment_method_jeniuspay
 msgid "JeniusPay"
 msgstr ""
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-#, fuzzy
-msgid "John"
-msgstr "Jon"
 
 #. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_kredivo
@@ -243,12 +180,6 @@ msgstr ""
 #: model:payment.method,name:payment_xendit.payment_method_linkaja
 msgid "LinkAja"
 msgstr ""
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-#, fuzzy
-msgid "MM"
-msgstr "OO"
 
 #. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_mandiri
@@ -293,28 +224,9 @@ msgid "Payment Transaction"
 msgstr "To‘lov tranzaksiyasi"
 
 #. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-#, fuzzy
-msgid "Payment processing failed"
-msgstr "To‘lov amalga oshmadi"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-#, fuzzy
-msgid "Phone Number"
-msgstr "Telefon raqami"
-
-#. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_promptpay
 msgid "Prompt Pay"
 msgstr ""
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
-#, fuzzy
-msgid "Public Key"
-msgstr "Ommaviy kalit"
 
 #. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_qris
@@ -344,15 +256,11 @@ msgid "Siam Commerical Bank"
 msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-#, fuzzy
-msgid "Smith"
-msgstr "Smit"
-
-#. module: payment_xendit
 #. odoo-python
-#: code:addons/payment_xendit/controllers/main.py:0
-msgid "The access token doesn't match the transaction reference."
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid ""
+"The payment requires authentication from the customer, which isn't possible "
+"for this unattended transaction. Please ask the customer to pay manually."
 msgstr ""
 
 #. module: payment_xendit
@@ -360,6 +268,12 @@ msgstr ""
 #, fuzzy
 msgid "The technical code of this payment provider."
 msgstr "Ushbu to‘lov provayderining texnik kodi."
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid "The transaction is not linked to a token."
+msgstr ""
 
 #. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_touch_n_go
@@ -447,18 +361,74 @@ msgid "Xendit Webhook Token"
 msgstr "Xendit veb-ilmoq tokeni"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-#, fuzzy
-msgid "YYYY"
-msgstr "YYYY"
-
-#. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_zalopay
 msgid "Zalopay"
 msgstr ""
 
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
 #, fuzzy
-msgid "john.smith@example.com"
-msgstr "john.smith@example.com"
+#~ msgid "Card Code"
+#~ msgstr "Karta kodi"
+
+#, fuzzy
+#~ msgid "Card Holder First Name"
+#~ msgstr "Karta egasining ismi"
+
+#, fuzzy
+#~ msgid "Card Holder Last Name"
+#~ msgstr "Karta egasining familiyasi"
+
+#, fuzzy
+#~ msgid "Card Number"
+#~ msgstr "Karta raqami"
+
+#, fuzzy
+#~ msgid "Email"
+#~ msgstr "Elektron pochta"
+
+#, fuzzy
+#~ msgid "Expiration"
+#~ msgstr "Amal qilish muddati"
+
+#, fuzzy
+#~ msgid "Invalid CVN"
+#~ msgstr "Noto‘g‘ri CVN"
+
+#, fuzzy
+#~ msgid "Invalid Card Number"
+#~ msgstr "Noto‘g‘ri karta raqami"
+
+#, fuzzy
+#~ msgid "Invalid Date"
+#~ msgstr "Noto‘g‘ri sana"
+
+#, fuzzy
+#~ msgid "John"
+#~ msgstr "Jon"
+
+#, fuzzy
+#~ msgid "MM"
+#~ msgstr "OO"
+
+#, fuzzy
+#~ msgid "Payment processing failed"
+#~ msgstr "To‘lov amalga oshmadi"
+
+#, fuzzy
+#~ msgid "Phone Number"
+#~ msgstr "Telefon raqami"
+
+#, fuzzy
+#~ msgid "Public Key"
+#~ msgstr "Ommaviy kalit"
+
+#, fuzzy
+#~ msgid "Smith"
+#~ msgstr "Smit"
+
+#, fuzzy
+#~ msgid "YYYY"
+#~ msgstr "YYYY"
+
+#, fuzzy
+#~ msgid "john.smith@example.com"
+#~ msgstr "john.smith@example.com"

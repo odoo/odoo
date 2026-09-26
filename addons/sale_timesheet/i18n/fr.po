@@ -11,14 +11,15 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-08-31 19:48+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
+"POT-Creation-Date: 2026-09-18 17:40+0000\n"
+"PO-Revision-Date: 2026-09-24 12:17+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
 "sale_timesheet/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -102,6 +103,11 @@ msgstr ""
 "Les plans analytiques '%(missing_plan_names)s' sont requis dans la "
 "répartition analytique de l'article de commande client '%(so_line_name)s' "
 "lié à la feuille de temps."
+
+#. module: sale_timesheet
+#: model:ir.actions.report,print_report_name:sale_timesheet.timesheet_report_account_move
+msgid "('%s Timesheets' % (object.name))"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
@@ -232,11 +238,13 @@ msgid ""
 "<span class=\"text-muted\">Timesheets without a sales order item are "
 "reported as </span>"
 msgstr ""
+"<span class=\"text-muted\">Les feuilles de temps sans article de commande "
+"client sont rapportées comme </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_timesheet
 msgid "<span>Sales Order Item: </span>"
-msgstr ""
+msgstr "<span>Article de commande client : </span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
@@ -427,7 +435,6 @@ msgid "Billable Time"
 msgstr "Temps facturable"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__billable_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_type
 msgid "Billable Type"
 msgstr "Type facturable"
@@ -528,6 +535,7 @@ msgstr "Découvrez nos produits."
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__display_name
@@ -542,12 +550,6 @@ msgstr "Découvrez nos produits."
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__display_timesheet_portal_link
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_timesheet_portal_link
-msgid "Display Timesheet Portal Link"
-msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -694,6 +696,7 @@ msgstr "Heures restantes)"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_send__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__id
@@ -988,17 +991,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Order"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__30_other_costs
-msgid "Other Costs"
-msgstr "Autres coûts"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__11_other_revenues
-msgid "Other Revenues"
-msgstr "Autres revenus"
+msgstr "Commande"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1120,21 +1113,6 @@ msgstr "Heures restantes disponibles"
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Responsibilities"
 msgstr "Responsabilités"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__01_revenues_fixed
-msgid "Revenues (Fixed Price)"
-msgstr "Revenus (prix fixe)"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__07_revenues_manual
-msgid "Revenues (Manual)"
-msgstr "Revenus (manuel)"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__05_revenues_milestones
-msgid "Revenues (Milestones)"
-msgstr "Revenus (jalons)"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -1267,11 +1245,6 @@ msgid "Senior Architect (Invoice on Timesheets)"
 msgstr "Architecte Senior (Facturation sur feuilles de temps)"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__10_service_revenues
-msgid "Service Revenues"
-msgstr "Revenus de services"
-
-#. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheets"
 msgstr "Service sur feuilles de temps"
@@ -1293,6 +1266,11 @@ msgstr ""
 #: model:project.project,label_tasks:sale_timesheet.project_support
 msgid "Services"
 msgstr "Services"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_move_send
+msgid "Shared Send Invoice Wizard Functions"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
@@ -1476,16 +1454,34 @@ msgid "Timesheets"
 msgstr "Feuilles de temps"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__02_billable_fixed
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__02_billable_fixed
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Fixed Price)"
 msgstr "Feuilles de temps (prix fixe)"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__09_non_billable
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__09_non_billable
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_analytic_line.py:0
+msgid "Timesheets (Manual)"
+msgstr ""
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_analytic_line.py:0
+msgid "Timesheets (Milestones)"
+msgstr ""
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Non-Billable)"
 msgstr "Feuilles de temps (non facturables)"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/account_analytic_line.py:0
+msgid "Timesheets (Time & Materials)"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1532,24 +1528,6 @@ msgstr "Feuilles de temps prises en compte lorsque vous facturez votre temps"
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Timesheets taken when invoicing time spent"
 msgstr "Feuilles de temps prises en compte lorsque le temps passé est facturé"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__08_billable_manual
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__08_billable_manual
-msgid "Timesheets (Manual) "
-msgstr "Feuilles de temps (manuel)"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__06_billable_milestones
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__06_billable_milestones
-msgid "Timesheets (Milestones)"
-msgstr "Feuilles de temps (jalons)"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__04_billable_time
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__04_billable_time
-msgid "Timesheets (Time & Materials)"
-msgstr "Feuilles de temps (temps & matériaux)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_list_inherited
@@ -1628,11 +1606,6 @@ msgstr ""
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Valid work permit for Belgium"
 msgstr "Permis de travail valide pour la Belgique"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__12_vendor_bill
-msgid "Vendor Bills"
-msgstr "Factures fournisseurs"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
@@ -1717,3 +1690,33 @@ msgstr "des heures vendues."
 #: code:addons/sale_timesheet/models/account_move.py:0
 msgid "project_id"
 msgstr "project_id"
+
+#~ msgid "Other Costs"
+#~ msgstr "Autres coûts"
+
+#~ msgid "Other Revenues"
+#~ msgstr "Autres revenus"
+
+#~ msgid "Revenues (Fixed Price)"
+#~ msgstr "Revenus (prix fixe)"
+
+#~ msgid "Revenues (Manual)"
+#~ msgstr "Revenus (manuel)"
+
+#~ msgid "Revenues (Milestones)"
+#~ msgstr "Revenus (jalons)"
+
+#~ msgid "Service Revenues"
+#~ msgstr "Revenus de services"
+
+#~ msgid "Timesheets (Manual) "
+#~ msgstr "Feuilles de temps (manuel)"
+
+#~ msgid "Timesheets (Milestones)"
+#~ msgstr "Feuilles de temps (jalons)"
+
+#~ msgid "Timesheets (Time & Materials)"
+#~ msgstr "Feuilles de temps (temps & matériaux)"
+
+#~ msgid "Vendor Bills"
+#~ msgstr "Factures fournisseurs"

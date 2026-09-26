@@ -14,10 +14,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:05+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
+"PO-Revision-Date: 2026-09-23 13:33+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
 "auth_signup/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,10 @@ msgid ""
 "Allow users to sign up and reset their password\n"
 "===============================================\n"
 msgstr ""
+"\n"
+"Gebruikers toestaan om te registreren en hun wachtwoord opnieuw in te "
+"stellen\n"
+"=============================================================================\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -233,12 +237,6 @@ msgstr ""
 msgid "A reset password link was sent by email"
 msgstr ""
 "Een link om je wachtwoord opnieuw in te stellen is via e-mail verzonden"
-
-#. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/models/res_users.py:0
-msgid "A signup link was sent by email"
-msgstr "Een registratielink is via e-mail verzonden"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -585,6 +583,12 @@ msgid "Sign up"
 msgstr "Aanmelden"
 
 #. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+msgid "Sign-up link sent by email!"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.module.module,shortdesc:base.module_auth_signup
 msgid "Signup"
 msgstr ""
@@ -732,3 +736,6 @@ msgid ""
 msgstr ""
 "{{ object.create_uid.name }} van {{ object.company_id.name }} nodigt je uit "
 "om verbinding te maken met Odoo"
+
+#~ msgid "A signup link was sent by email"
+#~ msgstr "Een registratielink is via e-mail verzonden"

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 17:37+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -141,6 +141,7 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_qr_label_expiry
 msgid "B.b."
 msgstr ""
 
@@ -159,6 +160,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
 msgid "Best before Date"
 msgstr "תאריך אחרון לשימוש"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_lot_label_layout
+msgid "Choose the sheet layout to print lot labels"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
@@ -219,10 +225,10 @@ msgstr "הצגת תאריכי תפוגה על תעודות משלוח"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_lot_label_layout__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_report_stock_quantity__display_name
-#: model:ir.model.fields,field_description:product_expiry.field_report_stock_report_lot_label__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_res_groups__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_stock_forecasted_product_product__display_name
@@ -238,6 +244,7 @@ msgstr "שם לתצוגה"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_qr_label_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_package_barcode_content_inherit_expiry
 msgid "Exp."
 msgstr ""
@@ -327,10 +334,10 @@ msgstr "חופשי להשתמש בכמות "
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+#: model:ir.model.fields,field_description:product_expiry.field_lot_label_layout__id
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__id
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__id
 #: model:ir.model.fields,field_description:product_expiry.field_report_stock_quantity__id
-#: model:ir.model.fields,field_description:product_expiry.field_report_stock_report_lot_label__id
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product_expiry.field_res_groups__id
 #: model:ir.model.fields,field_description:product_expiry.field_stock_forecasted_product_product__id
@@ -363,11 +370,6 @@ msgstr "עדכון אחרון ב"
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__lot_ids
 msgid "Lot"
 msgstr "אצווה"
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_report_stock_report_lot_label
-msgid "Lot Label Report"
-msgstr ""
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_lot
@@ -610,87 +612,49 @@ msgid ""
 msgstr ""
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid "^A0N,44,33^FDUse by:"
+#: model_terms:ir.ui.view,arch_db:product_expiry.alternative_zpl_lot_label_qr_expiry
+msgid "^A0N,16^TBN,246,23^FH^FD"
 msgstr ""
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid ""
-"^BCN,100,Y,N,N\n"
-"^FD"
+#: model_terms:ir.ui.view,arch_db:product_expiry.alternative_zpl_lot_label_qr_expiry
+msgid "^A0N,16^TBN,246,23^FH^FDB.b."
 msgstr ""
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid "^FO100,150"
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_zpl_expiry
+msgid "^A0N,21,16^FB170,1,0,R^FH^FDExp."
 msgstr ""
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid ""
-"^FO100,150\n"
-"^A0N,44,33^FDBest before:"
+#: model_terms:ir.ui.view,arch_db:product_expiry.alternative_zpl_lot_label_qr_expiry
+msgid "^FO155,"
 msgstr ""
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid ""
-"^FO100,150\n"
-"^A0N,44,33^FDUse by:"
+#: model_terms:ir.ui.view,arch_db:product_expiry.alternative_zpl_lot_label_qr_expiry
+msgid "^FO155,145^A0N,16^TBN,246,23^FH^FDExp."
 msgstr ""
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid "^FO100,200"
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_zpl_expiry
+msgid "^FO222,22"
 msgstr ""
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid ""
-"^FO100,200\n"
-"^A0N,44,33^FDUse by:"
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_zpl_expiry
+msgid "^FO222,22^A0N,21,16^FB170,1,0,R^FH^FDB.b."
 msgstr ""
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid "^FO100,200^BY3"
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_zpl_expiry
+msgid "^FO222,44"
 msgstr ""
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid ""
-"^FO100,50\n"
-"^A0N,44,33^FD"
-msgstr ""
-
-#. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.alternative_zpl_lot_label_qr_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_zpl_expiry
 msgid "^FS"
-msgstr ""
-
-#. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid ""
-"^FS\n"
-"^FO100,100\n"
-"^A0N,44,33^FDLN/SN:"
-msgstr ""
-
-#. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid ""
-"^FS\n"
-"^FO100,200^BY3\n"
-"^BCN,100,Y,N,N\n"
-"^FD"
-msgstr ""
-
-#. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-msgid ""
-"^FS\n"
-"^FO100,250^BY3"
 msgstr ""
 
 #. module: product_expiry

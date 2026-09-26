@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-25 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 16:21+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -25,31 +25,31 @@ msgstr ""
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/google_sync.py:0
+#: code:addons/google_calendar/models/google_event_sync.py:0
 msgid "%(id)s and %(length)s following"
 msgstr "%(id)s en %(length)s volgen"
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/calendar.py:0
+#: code:addons/google_calendar/models/calendar_event.py:0
 msgid "%(reminder_type)s - %(duration)s Days"
 msgstr "%(reminder_type)s - %(duration)s Dagen"
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/calendar.py:0
+#: code:addons/google_calendar/models/calendar_event.py:0
 msgid "%(reminder_type)s - %(duration)s Hours"
 msgstr "%(reminder_type)s - %(duration)s Uren"
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/calendar.py:0
+#: code:addons/google_calendar/models/calendar_event.py:0
 msgid "%(reminder_type)s - %(duration)s Minutes"
 msgstr "%(reminder_type)s - %(duration)s Minuten"
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/calendar.py:0
+#: code:addons/google_calendar/models/calendar_event.py:0
 msgid "(No title)"
 msgstr "(Geen titel)"
 
@@ -62,9 +62,14 @@ msgid ""
 msgstr ""
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_user__access_role
+msgid "Access Role"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__active
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__active
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__active
+#: model:ir.model.fields,field_description:google_calendar.field_google_event_sync__active
 msgid "Active"
 msgstr "Actief"
 
@@ -103,10 +108,15 @@ msgid "Calendar Event"
 msgstr "Agenda-afspraak"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_cal_id
-msgid "Calendar ID"
-msgstr "Agenda ID"
+#: model:ir.model,name:google_calendar.model_calendar_user
+msgid "Calendar User Manager"
+msgstr ""
+
+#. module: google_calendar
+#. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_model.js:0
+msgid "Choose which ones to synchronize"
+msgstr ""
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
@@ -183,10 +193,13 @@ msgstr "Google Agenda loskoppelen"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_alarm_manager__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__display_name
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_calendar__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__display_name
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_user__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__display_name
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__display_name
+#: model:ir.model.fields,field_description:google_calendar.field_google_event_sync__display_name
+#: model:ir.model.fields,field_description:google_calendar.field_google_sync__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__display_name
@@ -195,7 +208,7 @@ msgstr "Weergavenaam"
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/calendar.py:0
+#: code:addons/google_calendar/models/calendar_event.py:0
 msgid "Email"
 msgstr "E-mail"
 
@@ -208,6 +221,16 @@ msgstr "Afspraak alarm manager"
 #: model:ir.model,name:google_calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
 msgstr "Afspraak terugkeerpatroon"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_user__is_filter_checked
+msgid "Filter Enabled"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields.selection,name:google_calendar.selection__calendar_user__access_role__freebusyreader
+msgid "Free Busy Reader"
+msgstr ""
 
 #. module: google_calendar
 #. odoo-javascript
@@ -238,8 +261,10 @@ msgid "Google Calendar Event Id"
 msgstr "Google Agenda afspraak-ID"
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_calendar__google_id
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__google_id
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__google_id
+#: model:ir.model.fields,field_description:google_calendar.field_google_event_sync__google_id
+#: model:ir.model.fields,field_description:google_calendar.field_google_sync__google_id
 msgid "Google Calendar Id"
 msgstr "Google Agenda-ID"
 
@@ -249,9 +274,23 @@ msgid "Google Calendar: synchronization"
 msgstr "Google Agenda: synchronisatie"
 
 #. module: google_calendar
+#: model:ir.model,name:google_calendar.model_google_event_sync
+msgid "Google Event Sync"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__calendar_event__videocall_source__google_meet
 msgid "Google Meet"
 msgstr "Google Meet"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_calendar__google_sync_enabled
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_user__google_sync_enabled
+#: model_terms:ir.ui.view,arch_db:google_calendar.calendar_calendar_view_form_inherit_google_calendar
+#: model_terms:ir.ui.view,arch_db:google_calendar.calendar_calendar_view_list_inherit_google_calendar
+#: model_terms:ir.ui.view,arch_db:google_calendar.calendar_user_view_form_inherit_google_calendar
+msgid "Google Sync"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_sync_paused
@@ -266,7 +305,7 @@ msgstr "Google-synchronisatie gestopt"
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/google_sync.py:0
+#: code:addons/google_calendar/models/google_event_sync.py:0
 msgid "Google gave the following explanation: %s"
 msgstr "Google gaf de volgende uitleg: %s"
 
@@ -278,10 +317,13 @@ msgstr "Toestemming voor het wijzigen van gastenafspraken"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_alarm_manager__id
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__id
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_calendar__id
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__id
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__id
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_user__id
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__id
+#: model:ir.model.fields,field_description:google_calendar.field_google_event_sync__id
+#: model:ir.model.fields,field_description:google_calendar.field_google_sync__id
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__id
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__id
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__id
@@ -305,19 +347,16 @@ msgstr ""
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/google_sync.py:0
-msgid "It will not be synced as long at it is not updated."
-msgstr "Het wordt niet gesynchroniseerd zolang het niet bijgewerkt is."
+#: code:addons/google_calendar/models/google_event_sync.py:0
+msgid "It will not be synced as long as it is not updated."
+msgstr ""
 
 #. module: google_calendar
-#: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
-#: model:ir.model.fields,help:google_calendar.field_res_users_settings__google_calendar_cal_id
-msgid ""
-"Last Calendar ID who has been synchronized. If it is changed, we remove all "
-"links between GoogleID and Odoo Google Internal ID"
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__last_google_calendar_sync_path
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__last_google_calendar_sync_path
+#: model:ir.model.fields,field_description:google_calendar.field_google_event_sync__last_google_calendar_sync_path
+msgid "Last Google Calendar Sync Path"
 msgstr ""
-"Laatste agenda ID dat is gesynchroniseerd. Als dit veranderd is verwijderen "
-"we alle links tussen het Google ID en Odoo Google intern ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
@@ -330,28 +369,52 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_calendar__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__need_sync
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__need_sync
+#: model:ir.model.fields,field_description:google_calendar.field_google_event_sync__need_sync
+#: model:ir.model.fields,field_description:google_calendar.field_google_sync__need_sync
 msgid "Need Sync"
 msgstr "Synchronisatie nodig."
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_calendar__is_import_pending
+msgid "Needs Import"
+msgstr ""
+
+#. module: google_calendar
+#. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_model.js:0
+msgid "New Google calendars detected"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_sync_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_sync_token
-msgid "Next Sync Token"
-msgstr "Volgende synchronisatietoken"
+msgid "Next Calendar Sync Token"
+msgstr ""
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/calendar.py:0
+#: code:addons/google_calendar/models/calendar_event.py:0
 msgid "Notification"
 msgstr "Melding"
+
+#. module: google_calendar
+#. odoo-python
+#: code:addons/google_calendar/utils/google_api_resource.py:0
+msgid "Only %s or iterable of dict are supported"
+msgstr ""
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Pause Synchronization"
 msgstr "Synchronisatie onderbreken"
+
+#. module: google_calendar
+#: model:ir.model.fields.selection,name:google_calendar.selection__calendar_user__access_role__reader
+msgid "Reader"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
@@ -365,7 +428,18 @@ msgid "Reset Account"
 msgstr "Account opnieuw instellen"
 
 #. module: google_calendar
-#: model:ir.model,name:google_calendar.model_google_calendar_sync
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_user__is_filter_active
+msgid "Shown in Filters List"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_calendar__google_sync_token
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_user__google_sync_token
+msgid "Sync Token"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_google_sync
 msgid "Synchronize a record with Google Calendar"
 msgstr "Synchroniseer een record met Google agenda."
 
@@ -381,7 +455,7 @@ msgstr ""
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/calendar.py:0
+#: code:addons/google_calendar/models/calendar_event.py:0
 msgid ""
 "The following event can only be updated by the organizer according to the "
 "event permissions set on Google Calendar."
@@ -391,16 +465,17 @@ msgstr ""
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/google_sync.py:0
+#: code:addons/google_calendar/models/google_event_sync.py:0
 msgid "The following event could not be synced with Google Calendar."
 msgstr ""
 "De volgende afspraak kon niet worden gesynchroniseerd in Google Agenda."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_events
-msgid "This will only affect events for which the user is the owner"
+msgid ""
+"This will affect events in calendars you own, and any other events you are "
+"organizing."
 msgstr ""
-"Dit heeft alleen gevolgen voor afspraken waarvan de gebruiker de eigenaar is."
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
@@ -413,6 +488,11 @@ msgstr "Geldigheid token"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__user_id
 msgid "User"
 msgstr "Gebruiker"
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_calendar_calendar
+msgid "User Calendar"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users_settings
@@ -436,46 +516,77 @@ msgid "What should happen to previously synced events?"
 msgstr "Wat moet er gebeuren met eerder gesynchroniseerde afspraken?"
 
 #. module: google_calendar
+#. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/attendee_calendar/attendee_calendar_filter_section.js:0
+msgid ""
+"You're about to delete this calendar from Odoo.\n"
+"\n"
+"If you synchronized this calendar with Google, it will not be deleted from "
+"your Google Calendar."
+msgstr ""
+
+#. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/google_sync.py:0
+#: code:addons/google_calendar/models/google_event_sync.py:0
 msgid "undefined time"
 msgstr "ongedefinieerde tijd"
 
 #. module: google_calendar
 #. odoo-python
-#: code:addons/google_calendar/models/google_sync.py:0
+#: code:addons/google_calendar/models/google_event_sync.py:0
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
 msgstr ""
 "je lijkt geen toestemming te hebben om deze afspraak in Google Agenda te "
 "wijzigen"
 
-msgid "Confirm"
-msgstr "Bevestigen"
+#~ msgid "Calendar ID"
+#~ msgstr "Agenda ID"
 
-msgid "Delete from Odoo"
-msgstr "Verwijderen van Odoo"
+#~ msgid "It will not be synced as long at it is not updated."
+#~ msgstr "Het wordt niet gesynchroniseerd zolang het niet bijgewerkt is."
 
-msgid "Delete from both"
-msgstr "Verwijderen van beide"
+#~ msgid ""
+#~ "Last Calendar ID who has been synchronized. If it is changed, we remove "
+#~ "all links between GoogleID and Odoo Google Internal ID"
+#~ msgstr ""
+#~ "Laatste agenda ID dat is gesynchroniseerd. Als dit veranderd is "
+#~ "verwijderen we alle links tussen het Google ID en Odoo Google intern ID"
 
-msgid "Delete from the current Google Calendar account"
-msgstr "Verwijderen uit het huidige Google agenda-account"
+#~ msgid "Next Sync Token"
+#~ msgstr "Volgende synchronisatietoken"
 
-msgid "Leave them untouched"
-msgstr "Laat onaangeraakt"
+#~ msgid "This will only affect events for which the user is the owner"
+#~ msgstr ""
+#~ "Dit heeft alleen gevolgen voor afspraken waarvan de gebruiker de eigenaar "
+#~ "is."
 
-msgid "Next Synchronization"
-msgstr "Volgende synchronisatie"
+#~ msgid "Confirm"
+#~ msgstr "Bevestigen"
 
-msgid "Reset Google Calendar Account"
-msgstr "Reset Google agenda-account."
+#~ msgid "Delete from Odoo"
+#~ msgstr "Verwijderen van Odoo"
 
-msgid "Synchronize all existing events"
-msgstr "Synchroniseer alle bestaande afspraken."
+#~ msgid "Delete from both"
+#~ msgstr "Verwijderen van beide"
 
-msgid "Synchronize only new events"
-msgstr "Synchroniseer alleen nieuwe afspraken."
+#~ msgid "Delete from the current Google Calendar account"
+#~ msgstr "Verwijderen uit het huidige Google agenda-account"
 
-msgid "User's Existing Events"
-msgstr "Bestaande afspraken van de gebruiker."
+#~ msgid "Leave them untouched"
+#~ msgstr "Laat onaangeraakt"
+
+#~ msgid "Next Synchronization"
+#~ msgstr "Volgende synchronisatie"
+
+#~ msgid "Reset Google Calendar Account"
+#~ msgstr "Reset Google agenda-account."
+
+#~ msgid "Synchronize all existing events"
+#~ msgstr "Synchroniseer alle bestaande afspraken."
+
+#~ msgid "Synchronize only new events"
+#~ msgstr "Synchroniseer alleen nieuwe afspraken."
+
+#~ msgid "User's Existing Events"
+#~ msgstr "Bestaande afspraken van de gebruiker."

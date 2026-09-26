@@ -16,11 +16,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:45+0000\n"
-"PO-Revision-Date: 2026-08-31 20:34+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
+"PO-Revision-Date: 2026-09-21 11:34+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
-"payment/es/>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/payment/"
+"es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,6 +93,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 msgid "<small class=\"text-600\">Save my payment details</small>"
 msgstr "<small class=\"text-600\">Guardar mis detalles de pago</small>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.amount_input
+msgid "<small>Amount</small>"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -267,6 +272,11 @@ msgid "Allow Saving Payment Methods"
 msgstr "Permitir guardar métodos de pago"
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__allow_amount_selection
+msgid "Allow splitting payments across several payment methods."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
 msgstr "Ya capturado"
@@ -289,6 +299,11 @@ msgstr "Amazon Payment Services"
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Amount"
 msgstr "Importe"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__allow_amount_selection
+msgid "Amount Selection"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
@@ -1373,15 +1388,15 @@ msgid ""
 "queue payment data for processing, or pass payment_safe_write=True to the "
 "context after ensuring that the update can tolerate a rollback."
 msgstr ""
-"Las transacciones de pago no deben actualizarse directamente. Utiliza "
-"_record() para poner en cola los datos de pago para su procesamiento, o pasa "
+"Las transacciones de pago no deben actualizarse directamente. Utiliza _record"
+"() para poner en cola los datos de pago para su procesamiento, o pasa "
 "payment_safe_write=True al contexto después de asegurarte de que la "
 "actualización es segura incluso si se produce una reversión."
 
 #. module: payment
-#: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
-msgid "Payment: Post-process transactions"
-msgstr "Pago: transacciones posprocesadas"
+#: model:ir.actions.server,name:payment.post_processing_cron_ir_actions_server
+msgid "Payment: Run Post-processing"
+msgstr ""
 
 #. module: payment
 #: model:ir.actions.server,name:payment.processing_cron_ir_actions_server
@@ -1852,8 +1867,8 @@ msgid ""
 "The label to be displayed on the payment buttons for 'Pay Later' payment "
 "methods."
 msgstr ""
-"La etiqueta que aparecerá en los botones de pago para los métodos de pago "
-"«Pagar más tarde»."
+"La etiqueta que aparecerá en los botones de pago para los métodos de pago «"
+"Pagar más tarde»."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_res_company__pay_now_label
@@ -1861,8 +1876,8 @@ msgid ""
 "The label to be displayed on the payment buttons for 'Pay Now' payment "
 "methods."
 msgstr ""
-"La etiqueta que aparecerá en los botones de pago para los métodos de pago "
-"«Pagar ahora»."
+"La etiqueta que aparecerá en los botones de pago para los métodos de pago «"
+"Pagar ahora»."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_country_ids
@@ -1985,8 +2000,7 @@ msgstr "El proveedor ya dispone de un método de pago con este código."
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The provider must not be archived to make a request."
-msgstr ""
-"El proveedor no debe estar archivado para poder realizar una solicitud."
+msgstr "El proveedor no debe estar archivado para poder realizar una solicitud."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
@@ -2492,7 +2506,7 @@ msgstr "Su pago ha sido cancelado."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
 msgid "Your payment has been processed but is waiting for approval."
-msgstr "Su pago ha sido procesado pero está en espera de su aprobación."
+msgstr "Tu pago se ha procesado, pero está pendiente de aprobación."
 
 #. module: payment
 #. odoo-python
@@ -2522,7 +2536,7 @@ msgstr "Su pago ha sido procesado pero está en espera de su aprobación."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 msgid "Your payment has been processed."
-msgstr "Tu pago ha sido procesado."
+msgstr "Tu pago se ha procesado."
 
 #. module: payment
 #. odoo-python
@@ -2619,3 +2633,6 @@ msgstr "transaction_id"
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr "gestión de mensajes de WebSocket"
+
+#~ msgid "Payment: Post-process transactions"
+#~ msgstr "Pago: transacciones posprocesadas"

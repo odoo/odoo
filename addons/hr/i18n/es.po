@@ -16,11 +16,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 20:40+0000\n"
+"POT-Creation-Date: 2026-09-18 17:38+0000\n"
+"PO-Revision-Date: 2026-09-22 08:30+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/hr/es/"
-">\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/hr/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,19 +92,9 @@ msgid "'Badge - %s' % (object.name).replace('/', '')"
 msgstr "'Credencial - %s' % (object.name).replace('/', '')"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "/ day"
-msgstr "/ día"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "/ month"
 msgstr "/ mes"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "/ week"
-msgstr "/ semana"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -1009,6 +998,12 @@ msgid "Archived"
 msgstr "Archivado"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
+msgid "Are you sure you want to deactivate this user?"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "As of"
@@ -1146,17 +1141,6 @@ msgstr "Avatar 256"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
 msgid "Avatar 512"
 msgstr "Avatar 512"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Average Hours"
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_version.py:0
-msgid "Average hours per day must be between 0 and 24."
-msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -1535,6 +1519,12 @@ msgstr "Configuración"
 #: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
 msgid "Confirm"
 msgstr "Confirmar"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
+msgid "Confirmation"
+msgstr "Confirmación"
 
 #. module: hr
 #. odoo-javascript
@@ -1927,7 +1917,14 @@ msgstr ""
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/employee_user_status/employee_user_status.js:0
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
 msgid "Deactivate"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
+msgid "Deactivate & End Collaboration"
 msgstr ""
 
 #. module: hr
@@ -1975,11 +1972,9 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_resource_resource__calendar_id
 msgid ""
-"Define the working schedule of the resource. If not set, the resource will "
-"have fully flexible working hours."
+"Define the working schedule of the resource. Assign a flexible calendar for "
+"fully flexible working hours."
 msgstr ""
-"Defina el horario de trabajo del recurso. Si no configura uno, sus horas "
-"laborables serán completamente flexibles."
 
 #. module: hr
 #. odoo-javascript
@@ -2137,6 +2132,7 @@ msgstr "Directorio"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
+#: code:addons/hr/static/src/components/employee_user_status/user_deactivation_dialog.xml:0
 #: code:addons/hr/static/src/js/departure_conflict_dialog.js:0
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_create_version_wizard_view_form
@@ -2879,11 +2875,6 @@ msgid "Fleet"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Flexible"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
@@ -3105,28 +3096,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hours_per_week
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Hours Per Week"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__hours_per_day
-#: model:ir.model.fields,field_description:hr.field_hr_version__hours_per_day
-#: model:ir.model.fields,field_description:hr.field_resource_resource__hours_per_day
-msgid "Hours per Day"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__hours_per_week
-#: model:ir.model.fields,field_description:hr.field_hr_version__hours_per_week
-#: model:ir.model.fields,field_description:hr.field_resource_resource__hours_per_week
-msgid "Hours per Week"
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_version.py:0
-msgid "Hours per week must be between 0 and 168."
 msgstr ""
 
 #. module: hr
@@ -3379,24 +3349,12 @@ msgid "Is Custom Job Title"
 msgstr "Es un título de trabajo personalizado"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
-#: model:ir.model.fields,field_description:hr.field_hr_version__is_flexible
-msgid "Is Flexible"
-msgstr "Es flexible"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_version__message_is_follower
 msgid "Is Follower"
 msgstr "Es un seguidor"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__is_fully_flexible
-#: model:ir.model.fields,field_description:hr.field_hr_version__is_fully_flexible
-msgid "Is Fully Flexible"
-msgstr "Es completamente flexible"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_future
@@ -3543,6 +3501,11 @@ msgstr "Última actividad"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity_time
 msgid "Last Activity Time"
 msgstr "Último tiempo de actividad"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__last_contract_date_end
+msgid "Last Contract Date End"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_modified_uid
@@ -4091,11 +4054,6 @@ msgid "Not Invited"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Not limited"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__0
 msgid "Not specified"
 msgstr "Sin especificar"
@@ -4387,7 +4345,6 @@ msgstr "Organigrama"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__other
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__other
 msgid "Other"
 msgstr "Otro"
@@ -5270,6 +5227,13 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"Some of these fields %(field_name)s don't exist on this model (hr.version)."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__split_legal_name
 msgid "Split Legal Name"
 msgstr ""
@@ -6137,11 +6101,6 @@ msgid "Valid work permit for Belgium"
 msgstr "Permiso de trabajo válido para Bélgica"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Variable Hours"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_resource_calendar__version_ids
 msgid "Version"
 msgstr ""
@@ -6850,6 +6809,25 @@ msgstr "trabajo"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid "/ day"
+#~ msgstr "/ día"
+
+#~ msgid "/ week"
+#~ msgstr "/ semana"
+
+#~ msgid ""
+#~ "Define the working schedule of the resource. If not set, the resource "
+#~ "will have fully flexible working hours."
+#~ msgstr ""
+#~ "Defina el horario de trabajo del recurso. Si no configura uno, sus horas "
+#~ "laborables serán completamente flexibles."
+
+#~ msgid "Is Flexible"
+#~ msgstr "Es flexible"
+
+#~ msgid "Is Fully Flexible"
+#~ msgstr "Es completamente flexible"
 
 #~ msgid "Chat"
 #~ msgstr "Chat"

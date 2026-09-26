@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 19:45+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -25,6 +25,20 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.8.1\n"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__calendar_type
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance__calendar_type
+msgid ""
+"\n"
+"    - Fixed: a weekly attendance pattern that repeats identically every "
+"week.\n"
+"    - Variable: attendances set on specific dates rather than a repeating "
+"weekly pattern, such as a one-off schedule or a multi-week rotation.\n"
+"    - Undefined: no predefined slots at all. The resource can work whenever "
+"it wants, optionally up to an hours target.\n"
+"        "
+msgstr ""
 
 #. module: resource
 #: model:ir.module.module,description:base.module_resource
@@ -151,11 +165,18 @@ msgstr "Gemiddeld aantal uren per dag"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
+#: model:ir.model.fields,help:resource.field_resource_resource__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
 msgstr ""
 "Gemiddeld aantal uren per dag dat een resource met deze kalender hoort te "
 "werken."
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Average hours per day must be between 0 and 24."
+msgstr ""
 
 #. module: resource
 #. odoo-javascript
@@ -270,11 +291,9 @@ msgstr "Standaard werkuren"
 #: model:ir.model.fields,help:resource.field_resource_mixin__resource_calendar_id
 #: model:ir.model.fields,help:resource.field_resource_resource__calendar_id
 msgid ""
-"Define the working schedule of the resource. If not set, the resource will "
-"have fully flexible working hours."
+"Define the working schedule of the resource. Assign a flexible calendar for "
+"fully flexible working hours."
 msgstr ""
-"Definieer het werkschema van de resource. Als dit niet is ingesteld, heeft "
-"de resource volledig flexibele werktijden."
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -392,18 +411,22 @@ msgid "Hours"
 msgstr "Uur"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_mixin__hours_per_day
 #: model:ir.model.fields,field_description:resource.field_resource_resource__hours_per_day
 msgid "Hours per Day"
 msgstr "Uren per dag"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_week
-#: model:ir.model.fields,field_description:resource.field_resource_mixin__hours_per_week
 #: model:ir.model.fields,field_description:resource.field_resource_resource__hours_per_week
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_tree
 msgid "Hours per Week"
 msgstr "Uren per week"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Hours per week must be between 0 and 168."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
@@ -784,25 +807,6 @@ msgid "The attendance should have a duration between 0 and 24 hours"
 msgstr "De aanwezigheid moet een duur hebben tussen 0 en 24 uur"
 
 #. module: resource
-#. odoo-python
-#: code:addons/resource/models/resource_resource.py:0
-msgid ""
-"The average hours per day is too high compared to the number of hours per "
-"week"
-msgstr ""
-"Het gemiddelde aantal uren per dag is te hoog in vergelijking met het aantal "
-"uren per week"
-
-#. module: resource
-#. odoo-python
-#: code:addons/resource/models/resource_resource.py:0
-msgid ""
-"The average hours per day is too low compared to the number of hours per week"
-msgstr ""
-"Het gemiddelde aantal uren per dag is te laag in vergelijking met het aantal "
-"uren per week"
-
-#. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_count
 msgid "The recurrency count should be greater than 0"
 msgstr "Het aantal herhalingen moet groter zijn dan 0"
@@ -922,6 +926,11 @@ msgstr "Dinsdag"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Type"
 msgstr "Soort"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar__calendar_type__undefined
+msgid "Undefined"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__date
@@ -1089,6 +1098,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "from company"
 msgstr ""
+
+#~ msgid ""
+#~ "Define the working schedule of the resource. If not set, the resource "
+#~ "will have fully flexible working hours."
+#~ msgstr ""
+#~ "Definieer het werkschema van de resource. Als dit niet is ingesteld, "
+#~ "heeft de resource volledig flexibele werktijden."
+
+#~ msgid ""
+#~ "The average hours per day is too high compared to the number of hours per "
+#~ "week"
+#~ msgstr ""
+#~ "Het gemiddelde aantal uren per dag is te hoog in vergelijking met het "
+#~ "aantal uren per week"
+
+#~ msgid ""
+#~ "The average hours per day is too low compared to the number of hours per "
+#~ "week"
+#~ msgstr ""
+#~ "Het gemiddelde aantal uren per dag is te laag in vergelijking met het "
+#~ "aantal uren per week"
 
 #~ msgid "2 Week's Calendar"
 #~ msgstr "Kalender van 2 weken"

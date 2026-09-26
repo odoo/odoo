@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
 "PO-Revision-Date: 2026-08-31 15:15+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -24,31 +24,31 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "%(reminder_type)s - %(duration)s Days"
 msgstr "%(reminder_type)s - %(duration)s Дни"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "%(reminder_type)s - %(duration)s Hours"
 msgstr "%(reminder_type)s - %(duration)s Часы"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "%(reminder_type)s - %(duration)s Minutes"
 msgstr "%(reminder_type)s - %(duration)s минут"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "%s - At time of event"
 msgstr "%s - Во время события"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "(No title)"
 msgstr "(Без заголовка)"
 
@@ -155,7 +155,7 @@ msgstr "Отображаемое имя"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "Due to an Outlook Calendar limitation, recurrence updates must be done "
 "directly in Outlook Calendar."
@@ -165,7 +165,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "Due to an Outlook Calendar limitation, recurrence updates must be done "
 "directly in Outlook Calendar.\n"
@@ -179,7 +179,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "Due to an Outlook Calendar limitation, recurrent events must be created "
 "directly in Outlook Calendar."
@@ -199,7 +199,7 @@ msgstr "Правило повторения событий"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "For a correct synchronization between Odoo and Outlook Calendar, all "
 "attendees must have an email address. However, some events do not respect "
@@ -218,7 +218,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "For having a different organizer in your event, it is necessary that the "
 "organizer have its Odoo Calendar synced with Outlook Calendar."
@@ -256,7 +256,7 @@ msgstr "Указывает, приостановлена ли синхрониз
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "It is necessary adding the proposed organizer as attendee before saving the "
 "event."
@@ -347,7 +347,7 @@ msgstr "Следующий токен синхронизации"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid "Notification"
 msgstr "Уведомление"
 
@@ -371,6 +371,11 @@ msgid "Outlook Calendar"
 msgstr "Календарь Outlook"
 
 #. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.calendar_calendar_view_form_inherit_microsoft_calendar
+msgid "Outlook Sync"
+msgstr ""
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_synchronization_stopped
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__microsoft_synchronization_stopped
 msgid "Outlook Synchronization stopped"
@@ -378,7 +383,7 @@ msgstr "Синхронизация Outlook остановлена"
 
 #. module: microsoft_calendar
 #. odoo-python
-#: code:addons/microsoft_calendar/models/calendar.py:0
+#: code:addons/microsoft_calendar/models/calendar_event.py:0
 msgid ""
 "Outlook limitation: in a recurrence, an event cannot be moved to or before "
 "the day of the previous event, and cannot be moved to or after the day of "
@@ -477,35 +482,35 @@ msgstr ""
 msgid "What should happen to previously synced events?"
 msgstr ""
 
-msgid "Client Secret"
-msgstr "Секрет клиента"
+#~ msgid "Client Secret"
+#~ msgstr "Секрет клиента"
 
-msgid "Confirm"
-msgstr "Подтвердить"
+#~ msgid "Confirm"
+#~ msgstr "Подтвердить"
 
-msgid "Delete from Odoo"
-msgstr "Удалить из Odoo"
+#~ msgid "Delete from Odoo"
+#~ msgstr "Удалить из Odoo"
 
-msgid "Delete from both"
-msgstr "Удалить из обоих"
+#~ msgid "Delete from both"
+#~ msgstr "Удалить из обоих"
 
-msgid "Delete from the current Microsoft Calendar account"
-msgstr "Удаление из текущей учетной записи Microsoft Calendar"
+#~ msgid "Delete from the current Microsoft Calendar account"
+#~ msgstr "Удаление из текущей учетной записи Microsoft Calendar"
 
-msgid "Leave them untouched"
-msgstr "Оставьте их нетронутыми"
+#~ msgid "Leave them untouched"
+#~ msgstr "Оставьте их нетронутыми"
 
-msgid "Next Synchronization"
-msgstr "Следующая синхронизация"
+#~ msgid "Next Synchronization"
+#~ msgstr "Следующая синхронизация"
 
-msgid "Reset Outlook Calendar Account"
-msgstr "Сброс учетной записи календаря Outlook"
+#~ msgid "Reset Outlook Calendar Account"
+#~ msgstr "Сброс учетной записи календаря Outlook"
 
-msgid "Synchronize all existing events"
-msgstr "Синхронизируйте все существующие события"
+#~ msgid "Synchronize all existing events"
+#~ msgstr "Синхронизируйте все существующие события"
 
-msgid "Synchronize only new events"
-msgstr "Синхронизируйте только новые события"
+#~ msgid "Synchronize only new events"
+#~ msgstr "Синхронизируйте только новые события"
 
-msgid "User's Existing Events"
-msgstr "Существующие события пользователя"
+#~ msgid "User's Existing Events"
+#~ msgstr "Существующие события пользователя"

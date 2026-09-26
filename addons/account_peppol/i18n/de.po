@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-09-09 13:58+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
+"PO-Revision-Date: 2026-09-21 11:34+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "account_peppol/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -28,6 +28,10 @@ msgid ""
 "- Send and receive documents via Peppol network in Peppol BIS Billing 3.0 "
 "format\n"
 msgstr ""
+"\n"
+"- Als Peppol-Teilnehmer registrieren\n"
+"- Dokumente über das Peppol-Netzwerk im Format Peppol BIS Billing 3.0 senden "
+"und empfangen\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -46,6 +50,12 @@ msgstr " (Demo)"
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
 msgstr " (%(eas)s fehlt/fehlen)"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid " (Previously sent)"
+msgstr " (Zuvor gesendet)"
 
 #. module: account_peppol
 #. odoo-python
@@ -79,6 +89,13 @@ msgid ""
 msgstr ""
 "%(processed)s Peppol-Dokument(e) verarbeitet, %(deleted)s Dokument(e) "
 "gelöscht"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/exceptions.py:0
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid "%s"
+msgstr "%s"
 
 #. module: account_peppol
 #. odoo-python
@@ -303,6 +320,17 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"A 0% tax cannot use Tax Category 'S' (Standard). Please update the Tax "
+"Category in the Advanced Options of the tax configuration."
+msgstr ""
+"Eine Steuer von 0 % kann nicht die Steuerkategorie „S“ (Standard) verwenden. "
+"Bitte aktualisieren Sie die Steuerkategorie in den erweiterten Optionen der "
+"Steuerkonfiguration."
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
 "A Peppol response declaring you %(status)s this document could not be sent "
@@ -482,6 +510,8 @@ msgid "Activate Electronic Invoicing (via Peppol)"
 msgstr "Elektronische Rechnungsstellung aktivieren (über Peppol)"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_journal.py:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Peppol"
@@ -832,8 +862,8 @@ msgstr "Kunden erstellen"
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
-msgid "Create, send and receive e-invoices for free."
-msgstr "Erstellen, senden und empfangen Sie elektronische Rechnungen gratis."
+msgid "Create, send, and receive e-invoices for free."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__create_uid
@@ -1051,6 +1081,15 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"For tax(es) %(taxes)s: Tax Category 'O' must be used when the exemption "
+"reason code is 'VATEX-EU-O'. You can change this in the Advanced Options of "
+"the tax configuration."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "France - E-Invoicing (Approved Platform)"
 msgstr "Frankreich – E-Rechnungsstellung (zugelassene Plattform)"
@@ -1111,6 +1150,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"If you are not subject to VAT, you should not have a VAT number on your "
+"company/contacts and your clients should not have one either."
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "If you don't have Itsme, please contact"
 msgstr "Wenn Sie kein Itsme-Konto haben, wenden Sie sich bitte an"
@@ -1139,6 +1186,30 @@ msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
 "Die Rechnungsdatei „%s“ überschreitet die Größenbeschränkung von 64 MB für "
 "den Versand über Peppol."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Invoice lines using Tax Category 'O' cannot use a percentage-based tax. "
+"Please update the tax type in Advanced Options."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Invoice lines with Tax Category 'Exempt from VAT' must have a tax rate of 0. "
+"You can change this in the Advanced Options of the tax configuration."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Invoice lines with Tax Category 'Reverse charge' must have a tax rate of 0. "
+"You can change this in the Advanced Options of the tax configuration."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1203,6 +1274,38 @@ msgstr "Migrationsschlüssel"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Miscellaneous:"
 msgstr "Sonstiges:"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Missing Buyer Country. Please add the Country Code to the client's contact "
+"information."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Missing Invoiced Item VAT category code. Action Required: Install the module "
+"account_edi_ubl_cii_tax_extension."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Missing Reverse Charge details. Please set the Exemption Reason to 'Reverse "
+"charge' in the Advanced Options of the tax configuration."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Missing VAT category code. Action Required: Install the module "
+"account_edi_ubl_cii_tax_extension."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
@@ -1305,8 +1408,8 @@ msgstr "Der Odoo-Peppol-Proxy hat eine ungültige Antwort zurückgegeben."
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
-msgid "Odoo keeps you up to date with the new regulation."
-msgstr "Odoo hält Sie bezüglich der neusten Vorschriften auf dem Laufenden."
+msgid "Odoo keeps you up to date with new regulations."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1429,12 +1532,8 @@ msgstr "Peppol-Endpunkt"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
-msgid ""
-"Peppol Error [code=%(error_code)s]: %(error_subject)s\n"
-"%(error_message)s"
+msgid "Peppol Error"
 msgstr ""
-"Peppol-Fehler [code=%(error_code)s]: %(error_subject)s\n"
-"%(error_message)s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_external_provider
@@ -1531,6 +1630,12 @@ msgstr "Peppol-Antwortdienst"
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_response_view_list
 msgid "Peppol Responses"
 msgstr "Peppol-Antworten"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_journal.py:0
+msgid "Peppol Settings"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__peppol_message_uuid
@@ -2012,6 +2117,14 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"The Peppol endpoint is missing in the XML file. Action Required: Update the "
+"account and account_edi_ubl_cii modules to resolve this."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
 "The Peppol receiver of this document has rejected it with the following "
@@ -2050,6 +2163,14 @@ msgid ""
 msgstr ""
 "Der mit diesem Teilnehmer verknüpfte Service Metadata Publisher ist nicht "
 "erreichbar. URL: %s"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"The Tax Category must be 'AE' when using Exemption Reason code 'VATEX-EU-"
+"AE'. You can change this in the Advanced Options of the tax configuration."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2172,6 +2293,14 @@ msgid ""
 msgstr ""
 "Die Endpunktnummer ist möglicherweise nicht korrekt. Bitte überprüfen Sie, "
 "ob Sie die richtige Identifikationsnummer eingegeben haben."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"The exemption reason code is invalid. Action Required: Install the module "
+"account_edi_ubl_cii_tax_extension."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2525,8 +2654,8 @@ msgstr "Willkommen bei Peppol"
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
-msgid "What is Peppol and why it's great ?"
-msgstr "Was ist Peppol und warum ist es so toll?"
+msgid "What is Peppol and why is it great?"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2537,14 +2666,14 @@ msgstr "Warum sollte ich die französische E-Rechnungsstellung nutzen?"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Why should I use PEPPOL ?"
-msgstr "Warum sollte ich PEPPOL nutzen?"
+msgid "Why should I use Peppol?"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Why should you use it ?"
-msgstr "Warum sollte ich es nutzen?"
+msgid "Why should you use it?"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2810,59 +2939,83 @@ msgstr ", um Rechnungen zu verwenden, aber diese"
 msgid "uses"
 msgstr "verwendet"
 
-msgid " (no access)"
-msgstr " (kein Zugriff)"
+#~ msgid "Create, send and receive e-invoices for free."
+#~ msgstr ""
+#~ "Erstellen, senden und empfangen Sie elektronische Rechnungen gratis."
 
-msgid ""
-"Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
-"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
-"codelist/eas/"
-msgstr ""
-"Code zur Identifizierung des Endpoint für BIS Billing 3.0 und seine "
-"Ableitungen.\n"
-"              Liste verfügbar unter https://docs.peppol.eu/poacc/billing/3.0/"
-"codelist/eas/"
+#~ msgid "Odoo keeps you up to date with the new regulation."
+#~ msgstr "Odoo hält Sie bezüglich der neusten Vorschriften auf dem Laufenden."
 
-msgid "EDI user should be of type Peppol"
-msgstr "EDI-Benutzer sollte den Typ „Peppol“ haben"
+#~ msgid "What is Peppol and why it's great ?"
+#~ msgstr "Was ist Peppol und warum ist es so toll?"
 
-msgid "Invoice %s is too big to send via peppol (64MB limit)"
-msgstr ""
-"Die Rechnung %s ist zu groß, um sie über Peppol zu versenden (Limit von 64 "
-"MB)"
+#~ msgid "Why should I use PEPPOL ?"
+#~ msgstr "Warum sollte ich PEPPOL nutzen?"
 
-msgid "Please fill in the EAS code and the Participant ID code."
-msgstr "Bitte geben Sie den EAS-Code und den ID-Code des Teilnehmers ein."
+#~ msgid "Why should you use it ?"
+#~ msgstr "Warum sollte ich es nutzen?"
 
-msgid "The Peppol endpoint identification number is not correct."
-msgstr "Die Identifikationsnummer des Peppol-Endpunkts ist nicht korrekt."
+#~ msgid ""
+#~ "Peppol Error [code=%(error_code)s]: %(error_subject)s\n"
+#~ "%(error_message)s"
+#~ msgstr ""
+#~ "Peppol-Fehler [code=%(error_code)s]: %(error_subject)s\n"
+#~ "%(error_message)s"
 
-msgid "UBL BIS Billing 3.0.12"
-msgstr "UBL BIS Billing 3.0.12"
+#~ msgid " (no access)"
+#~ msgstr " (kein Zugriff)"
 
-msgid ""
-"Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
-"known as 'Endpoint ID'."
-msgstr ""
-"Eindeutige Kennung, die von BIS Billing 3.0 und Ableitungen verwendet wird, "
-"auch bekannt als „Endpunkt-ID“."
+#~ msgid ""
+#~ "Code used to identify the Endpoint for BIS Billing 3.0 and its "
+#~ "derivatives.\n"
+#~ "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+#~ "codelist/eas/"
+#~ msgstr ""
+#~ "Code zur Identifizierung des Endpoint für BIS Billing 3.0 und seine "
+#~ "Ableitungen.\n"
+#~ "              Liste verfügbar unter https://docs.peppol.eu/poacc/billing/"
+#~ "3.0/codelist/eas/"
 
-msgid "You are not allowed to send invoice on behalf of %s."
-msgstr "Sie dürfen keine Rechnungen im Namen von %s versenden."
+#~ msgid "EDI user should be of type Peppol"
+#~ msgstr "EDI-Benutzer sollte den Typ „Peppol“ haben"
 
-msgid ""
-"[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
-"customer '%s'."
-msgstr ""
-"[PEPPOL-EN16931-R010] Eine elektronische Adresse (EAS) muss für den Kunden "
-"„%s“ angegeben werden."
+#~ msgid "Invoice %s is too big to send via peppol (64MB limit)"
+#~ msgstr ""
+#~ "Die Rechnung %s ist zu groß, um sie über Peppol zu versenden (Limit von "
+#~ "64 MB)"
 
-msgid ""
-"[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
-"company '%s'."
-msgstr ""
-"[PEPPOL-EN16931-R020] Eine elektronische Adresse (EAS) muss für das "
-"Unternehmen „%s“ angegeben werden."
+#~ msgid "Please fill in the EAS code and the Participant ID code."
+#~ msgstr "Bitte geben Sie den EAS-Code und den ID-Code des Teilnehmers ein."
 
-msgid "UBL 2.0"
-msgstr "UBL 2.0"
+#~ msgid "The Peppol endpoint identification number is not correct."
+#~ msgstr "Die Identifikationsnummer des Peppol-Endpunkts ist nicht korrekt."
+
+#~ msgid "UBL BIS Billing 3.0.12"
+#~ msgstr "UBL BIS Billing 3.0.12"
+
+#~ msgid ""
+#~ "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
+#~ "known as 'Endpoint ID'."
+#~ msgstr ""
+#~ "Eindeutige Kennung, die von BIS Billing 3.0 und Ableitungen verwendet "
+#~ "wird, auch bekannt als „Endpunkt-ID“."
+
+#~ msgid "You are not allowed to send invoice on behalf of %s."
+#~ msgstr "Sie dürfen keine Rechnungen im Namen von %s versenden."
+
+#~ msgid ""
+#~ "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
+#~ "customer '%s'."
+#~ msgstr ""
+#~ "[PEPPOL-EN16931-R010] Eine elektronische Adresse (EAS) muss für den "
+#~ "Kunden „%s“ angegeben werden."
+
+#~ msgid ""
+#~ "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
+#~ "company '%s'."
+#~ msgstr ""
+#~ "[PEPPOL-EN16931-R020] Eine elektronische Adresse (EAS) muss für das "
+#~ "Unternehmen „%s“ angegeben werden."
+
+#~ msgid "UBL 2.0"
+#~ msgstr "UBL 2.0"

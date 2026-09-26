@@ -5,14 +5,15 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-08-31 18:08+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
+"PO-Revision-Date: 2026-09-24 12:17+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
 "sale_project/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +57,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Margins"
-msgstr ""
+msgstr "Marges de %(name)s"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -194,12 +195,6 @@ msgid "Billable Type"
 msgstr "Type facturable"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid "Cancelled"
-msgstr "Annulé"
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_line_search
 msgid "Category"
 msgstr "Catégorie"
@@ -218,7 +213,7 @@ msgstr "Confirmer & Fermer"
 #. odoo-javascript
 #: code:addons/sale_project/static/src/views/project_form/project_project_form_controller.js:0
 msgid "Confirmation Required"
-msgstr ""
+msgstr "Confirmation requise"
 
 #. module: sale_project
 #. odoo-python
@@ -332,12 +327,6 @@ msgid "Display Sales Order"
 msgstr "Afficher la commande client"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid "Done"
-msgstr "Terminé"
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
 msgstr "Projet vide"
@@ -365,12 +354,6 @@ msgstr "Services de revêtement de sol"
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__id
 msgid "ID"
 msgstr "ID"
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid "In Progress"
-msgstr "En cours"
 
 #. module: sale_project
 #. odoo-python
@@ -408,6 +391,9 @@ msgid ""
 "create tasks in it or use it as a template. Are you sure you want to "
 "continue?"
 msgstr ""
+"Rendre ce projet non facturable le dissociera de tous les produits qui y "
+"créent des tâches ou qui l’utilisent comme modèle. Êtes-vous sûr de vouloir "
+"continuer ?"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
@@ -432,6 +418,12 @@ msgstr ""
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_project_actual_margin
 #: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
 msgid "Margins"
+msgstr "Marges"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Materials"
 msgstr ""
 
 #. module: sale_project
@@ -476,14 +468,16 @@ msgid "Office Furniture Set (task)"
 msgstr "Mobilier de bureau (tâche)"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__30_other_costs
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Other Costs"
 msgstr "Autres coûts"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__11_other_revenues
-msgid "Other Revenues"
-msgstr "Autres revenus"
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Other Revenue"
+msgstr ""
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
@@ -629,23 +623,8 @@ msgstr "Coûts réels"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__revenues
-msgid "Revenues"
-msgstr "Revenus"
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__01_revenues_fixed
-msgid "Revenues (Fixed Price)"
-msgstr "Revenus (prix fixe)"
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__07_revenues_manual
-msgid "Revenues (Manual)"
-msgstr "Revenus (manuel)"
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__05_revenues_milestones
-msgid "Revenues (Milestones)"
-msgstr "Revenus (jalons)"
+msgid "Revenue"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
@@ -799,9 +778,28 @@ msgid "Service Invoicing Policy"
 msgstr "Politique de facturation du service"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__10_service_revenues
-msgid "Service Revenues"
-msgstr "Revenus de services"
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Service Revenue (Fixed Price)"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Service Revenue (Manual)"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Service Revenue (Milestones)"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
+msgid "Service Revenue (Time & Materials)"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_state
@@ -909,12 +907,6 @@ msgid "This task has been created from: %(order_link)s (%(product_name)s)"
 msgstr "Cette tâche a été créée depuis : %(order_link)s (%(product_name)s)"
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid "To Do"
-msgstr "À faire"
-
-#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
 msgstr "À facturer"
@@ -954,10 +946,10 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
+#: code:addons/sale_project/models/account_analytic_line.py:0
 #: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills_dashboard
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__12_vendor_bill
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Vendor Bills"
 msgstr "Factures fournisseurs"
@@ -1011,3 +1003,33 @@ msgstr "delivered_manual"
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
 msgstr "sale_line_id"
+
+#~ msgid "Cancelled"
+#~ msgstr "Annulé"
+
+#~ msgid "Done"
+#~ msgstr "Terminé"
+
+#~ msgid "In Progress"
+#~ msgstr "En cours"
+
+#~ msgid "Other Revenues"
+#~ msgstr "Autres revenus"
+
+#~ msgid "Revenues"
+#~ msgstr "Revenus"
+
+#~ msgid "Revenues (Fixed Price)"
+#~ msgstr "Revenus (prix fixe)"
+
+#~ msgid "Revenues (Manual)"
+#~ msgstr "Revenus (manuel)"
+
+#~ msgid "Revenues (Milestones)"
+#~ msgstr "Revenus (jalons)"
+
+#~ msgid "Service Revenues"
+#~ msgstr "Revenus de services"
+
+#~ msgid "To Do"
+#~ msgstr "À faire"

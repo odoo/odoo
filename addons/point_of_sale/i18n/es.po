@@ -15,10 +15,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:41+0000\n"
-"PO-Revision-Date: 2026-09-04 11:11+0000\n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
+"PO-Revision-Date: 2026-09-23 09:33+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -2893,12 +2893,6 @@ msgid "Counted"
 msgstr "Contado"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Counterpart for invoice payment %s"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_country
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "Country"
@@ -3561,7 +3555,7 @@ msgstr "Deshabilitar el modo de depuración"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Disc.%"
-msgstr "Desc.%"
+msgstr "% de dto."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -6348,6 +6342,12 @@ msgid "Online reservation for Point of Sale"
 msgstr "Reserva en línea para el punto de venta"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
@@ -8727,12 +8727,6 @@ msgstr "Asientos contables de reversión"
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Reversal for %s"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Reversal of %s"
 msgstr ""
@@ -9091,6 +9085,7 @@ msgstr "Autofacturación"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
 msgstr ""
+"Vende variantes de un producto utilizando atributos (tamaño, color, etc.)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9295,8 +9290,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr ""
-"Establezca precios múltiples por producto, descuentos automáticos, etc."
+msgstr "Define varios precios por producto, descuentos automáticos, etc."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -9941,6 +9935,12 @@ msgstr "Terminal"
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos_button.xml:0
 msgid "Test"
 msgstr "Prueba"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/controllers/main.py:0
+msgid "The %s must be filled in your details."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -11800,6 +11800,25 @@ msgstr "No puede editar el pago de un pedido publicado."
 msgid ""
 "You cannot have more than one cash payment method on a point of sale "
 "configuration."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order_line.py:0
+msgid "You cannot refund more than the outstanding quantity for this product."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "You cannot remove %(pms)s from %(config)s while it has an open session."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"You cannot remove '%(pm)s' from %(configs)s while it has an open session."
 msgstr ""
 
 #. module: point_of_sale
