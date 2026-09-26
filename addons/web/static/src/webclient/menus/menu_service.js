@@ -1,8 +1,18 @@
 import { computed, signal, t, usePlugin } from "@odoo/owl";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { session } from "@web/session";
+import { user } from "@web/core/user";
+
+function evaluateInvisible(menus) {
+    Object.values(menus).forEach((menu) => {
+        menu.invisible = evaluateBooleanExpr(menu.webInvisible, user.evalContext);
+        delete menu.webInvisible;
+    });
+    return menus;
+}
 
 export const menuService = {
     dependencies: ["action"],
@@ -58,34 +68,40 @@ export const menuService = {
                     const fetchedMenus = JSON.stringify(res);
                     if (fetchedMenus !== storedMenus) {
                         menuDB.write(table, key, fetchedMenus);
-                        menusData.set(res);
+                        menusData.set(evaluateInvisible(res));
                         env.bus.trigger("MENUS:APP-CHANGED");
                     }
                 }
             });
-            menusData.set(JSON.parse(storedMenus));
+            menusData.set(evaluateInvisible(JSON.parse(storedMenus)));
         } else {
             const fetchedMenus = await fetchMenus();
-            menusData.set(fetchedMenus);
             if (fetchedMenus) {
                 menuDB.write(table, key, JSON.stringify(fetchedMenus));
             }
+            menusData.set(evaluateInvisible(fetchedMenus));
         }
 
         return {
             getAll: computed(() => Object.values(menusData())),
-            getApps: computed(() => getMenu("root").children.map(getMenu)),
+            getApps: computed(() =>
+                getMenu("root")
+                    .children.filter((mID) => !getMenu(mID).invisible)
+                    .map(getMenu)
+            ),
             getCurrentApp: computed(() => currentAppId() && getMenu(currentAppId())),
             getMenu,
             getMenuAsTree(menuID) {
                 const menu = getMenu(menuID);
                 if (!menu.childrenTree) {
-                    menu.childrenTree = menu.children.map((mid) => this.getMenuAsTree(mid));
+                    menu.childrenTree = menu.children
+                        .filter((mID) => !getMenu(mID).invisible)
+                        .map((mid) => this.getMenuAsTree(mid));
                 }
                 return menu;
             },
             async reload() {
-                menusData.set(await fetchMenus(true));
+                menusData.set(evaluateInvisible(await fetchMenus(true)));
                 env.bus.trigger("MENUS:APP-CHANGED");
             },
             async selectMenu(menu) {

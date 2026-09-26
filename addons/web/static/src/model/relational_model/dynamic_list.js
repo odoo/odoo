@@ -9,6 +9,7 @@ import { FetchRecordError } from "./errors";
 import { Operation } from "./operation";
 import { Record as RelationalRecord } from "./record";
 import { getBasicEvalContext, getFieldsSpec, getScheduleORMExtras, resequence } from "./utils";
+import { user } from "@web/core/user";
 
 const DEFAULT_HANDLE_FIELD = "sequence";
 
@@ -31,7 +32,7 @@ export class DynamicList extends DataPoint {
 
         this.count = 0;
         this.isDomainSelected = false;
-        this.evalContext = this.context;
+        this.evalContext = { ...this.context, ...user.evalContext };
     }
 
     // -------------------------------------------------------------------------

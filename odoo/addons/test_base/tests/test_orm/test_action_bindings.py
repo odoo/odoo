@@ -25,12 +25,12 @@ class TestActionBindings(common.TransactionCase):
         bindings = Actions.get_bindings('test_orm.partner')
         self.assertItemsEqual(
             bindings['action'],
-            (action1 + action2).read(['name', 'binding_view_types']),
+            (action1 + action2).read(['name', 'binding_view_types', 'binding_invisible']),
             "Wrong action bindings",
         )
         self.assertItemsEqual(
             bindings['report'],
-            action3.read(['name', 'binding_view_types']),
+            action3.read(['name', 'binding_view_types', 'binding_invisible']),
             "Wrong action bindings",
         )
 
@@ -42,12 +42,12 @@ class TestActionBindings(common.TransactionCase):
         bindings = Actions.get_bindings('test_orm.partner')
         self.assertItemsEqual(
             bindings['action'],
-            action1.read(['name', 'binding_view_types']),
+            action1.read(['name', 'binding_view_types', 'binding_invisible']),
             "Wrong action bindings",
         )
         self.assertItemsEqual(
             bindings['report'],
-            action3.read(['name', 'binding_view_types']),
+            action3.read(['name', 'binding_view_types', 'binding_invisible']),
             "Wrong action bindings",
         )
 
