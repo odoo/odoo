@@ -78,7 +78,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         check_company=True,
         related='company_id.account_journal_payment_credit_account_id',
-        domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
+        domain="[('deprecated', '=', False), ('account_type', 'in', ('asset_current', 'liability_current'))]",
         help='Outgoing Payments are posted on an Outstanding Payments Account. '
              'In the bank reconciliation widget, they appear as blue lines.\n'
              'Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account.')
