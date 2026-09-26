@@ -74,12 +74,7 @@ export class PaymentScreen extends Component {
         }
 
         //Activate the invoice option for refund orders if the original order was invoiced.
-        if (
-            this.currentOrder.isRefund &&
-            this.currentOrder.lines[0].refunded_orderline_id?.order_id?.isToInvoice()
-        ) {
-            this.currentOrder.setToInvoice(true);
-        }
+        this.setToInvoiceForRefund();
     }
 
     getNumpadButtons() {
@@ -381,6 +376,17 @@ export class PaymentScreen extends Component {
     }
     async clickTableGuests() {
         this.pos.setCustomerCount();
+    }
+
+    async setToInvoiceForRefund() {
+        if (this.isRefundOrder) {
+            if (!this.currentOrder.refunded_order_id && this.currentOrder.raw.refunded_order_id) {
+                await this.pos.data.read("pos.order", [this.currentOrder.raw.refunded_order_id]);
+            }
+            if (this.currentOrder?.refunded_order_id?.isToInvoice()) {
+                this.currentOrder.setToInvoice(true);
+            }
+        }
     }
 }
 
