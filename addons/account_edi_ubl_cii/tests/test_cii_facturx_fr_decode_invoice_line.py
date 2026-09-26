@@ -228,3 +228,11 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
             'price_unit': 2.0,
             'discount': 25.0,
         }])
+
+    def test_partial_import_invoice_line_missing_charge_indicator(self):
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_missing_charge_indicator')
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 90.00,
+            'quantity': 1.0,
+            'discount': 11.1111111111111,
+        }])
