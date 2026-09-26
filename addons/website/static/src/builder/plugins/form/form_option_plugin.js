@@ -276,18 +276,14 @@ export class FormOptionPlugin extends Plugin {
         }
         return field.records;
     }
-    async prepareFormModel(el, activeForm) {
+    prepareFormModel(el, activeForm) {
         const formKey = activeForm?.website_form_key;
         const formInfo = registry.category("website.form_editor_actions").get(formKey, null);
         if (formInfo) {
             const formatInfo = getDefaultFormat(el);
-            await Promise.all(
-                formInfo.formFields.map((field) => {
-                    field.formatInfo = formatInfo;
-                    return this.fetchFieldRecords(field);
-                })
-            );
-            await this.fetchFormInfoFields(formInfo);
+            formInfo.formFields.forEach((field) => {
+                field.formatInfo = formatInfo;
+            });
         }
         return formInfo;
     }
@@ -335,7 +331,7 @@ export class FormOptionPlugin extends Plugin {
     applyFormModel(el, activeForm, modelId, formInfo) {
         let oldFormInfo;
         if (modelId) {
-            const oldFormKey = activeForm.website_form_key;
+            const oldFormKey = activeForm?.website_form_key;
             if (oldFormKey) {
                 oldFormInfo = registry
                     .category("website.form_editor_actions")
@@ -387,15 +383,6 @@ export class FormOptionPlugin extends Plugin {
                     this.addHiddenField(el, field.defaultValue, field.name);
                 }
             });
-        }
-    }
-    /**
-     * Ensures formInfo fields are fetched.
-     */
-    async fetchFormInfoFields(formInfo) {
-        if (formInfo.fields) {
-            const proms = formInfo.fields.map((field) => this.fetchFieldRecords(field));
-            await Promise.all(proms);
         }
     }
     async fetchAuthorizedFields(formEl) {
@@ -927,7 +914,7 @@ export class SelectAction extends BuilderAction {
         const models = this.dependencies.websiteFormOption.getModelsCache(el);
         const targetModelName = getModelName(el);
         const activeForm = models.find((m) => m.model === targetModelName);
-        return parseInt(modelId) === activeForm.id;
+        return parseInt(modelId) === activeForm?.id;
     }
 }
 // Select the value of a field (hidden) that will be used on the model as a preset.
@@ -948,8 +935,8 @@ export class AddActionFieldAction extends BuilderAction {
             }
         }
         const fieldName = params.fieldName;
-        if (params.isSelect === "true") {
-            value = parseInt(value);
+        if (value && params.isSelect) {
+            value = JSON.parse(value).id;
         }
         this.dependencies.websiteFormOption.addHiddenField(el, value, fieldName);
     }
@@ -973,10 +960,9 @@ export class AddActionFieldAction extends BuilderAction {
             return dataForValues?.["email_to"] || DEFAULT_EMAIL_TO_VALUE;
         }
         if (value) {
-            return value;
-        } else {
-            return params.isSelect ? "0" : "";
+            return JSON.stringify({ id: parseInt(value) });
         }
+        return "";
     }
     isApplied({ editingElement, params, value }) {
         const currentValue = this.getValue({
@@ -984,6 +970,9 @@ export class AddActionFieldAction extends BuilderAction {
             params,
         });
         return currentValue === value;
+    }
+    clean(context) {
+        this.apply(context);
     }
 }
 export class PromptSaveRedirectAction extends BuilderAction {
