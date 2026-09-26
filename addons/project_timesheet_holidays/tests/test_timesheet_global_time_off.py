@@ -243,7 +243,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         """ Test the search method on is_timeoff_task"""
         task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
 
-        # Create a leave and validate it
+        # Creating a global leave should NOT change the task_count
         self.env['resource.calendar.leaves'].create({
             'name': 'Test',
             'calendar_id': self.test_company.resource_calendar_id.id,
@@ -252,7 +252,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         })
 
         new_task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
-        self.assertEqual(task_count + 1, new_task_count)
+        self.assertEqual(task_count, new_task_count)
 
     def test_timesheet_creation_for_global_time_off_wo_calendar(self):
         leave_start_datetime = datetime(2021, 1, 4, 7, 0)  # This is a monday
