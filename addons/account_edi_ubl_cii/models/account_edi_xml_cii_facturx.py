@@ -282,13 +282,21 @@ class AccountEdiXmlCII(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _import_retrieve_partner_vals(self, tree, role):
-        return {
+        res = {
             'vat': self._find_value(f".//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID[string-length(text()) > 5]", tree),
             'name': self._find_value(f".//ram:{role}/ram:Name", tree),
             'phone': self._find_value(f".//ram:{role}/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber", tree),
             'email': self._find_value(f".//ram:{role}//ram:EmailURIUniversalCommunication/ram:URIID", tree),
             'country_code': self._find_value(f'.//ram:{role}/ram:PostalTradeAddress//ram:CountryID', tree),
         }
+        # Add country_code to vat to ensure we can find the partner
+        # Example: If vat=1234567V, it should be EU1234567V
+        # The country_code is important because the _import_retrieve_customer_from_vat()
+        # method will take it into account when searching for the partner, regardless
+        # of whether it is defined as 1234567V or EU1234567V
+        if res["country_code"] and res["country_code"] not in res["vat"]:
+            res["vat"] = f"{res['country_code']}{res['vat']}"
+        return res
 
     def _import_fill_invoice(self, invoice, tree, qty_factor):
         logs = []
