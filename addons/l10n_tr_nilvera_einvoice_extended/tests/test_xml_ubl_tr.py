@@ -2,6 +2,7 @@ from freezegun import freeze_time
 
 from odoo.tests import tagged
 from odoo.tools import file_open
+
 from odoo.addons.l10n_tr_nilvera_einvoice.tests.test_xml_ubl_tr_common import TestUBLTRCommon
 
 
@@ -98,3 +99,15 @@ class TestUBLTR(TestUBLTRCommon):
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))
+
+    def test_xml_return_invoice_amount_in_words_uses_total(self):
+        with freeze_time("2025-03-05"):
+            _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
+            refund = invoice._reverse_moves([{"invoice_date": invoice.invoice_date}], cancel=True)
+            generated_xml = self.env["account.edi.xml.ubl.tr"]._export_invoice(refund)[0]
+
+        self.assertEqual(refund.move_type, "out_refund")
+        self.assertTrue(refund.currency_id.is_zero(refund.amount_residual), "the return must be fully reconciled")
+
+        self.assertIn("YALNIZ : YÜZELLISEKIZ TRY KIRK KURUS".encode(), generated_xml)
+        self.assertNotIn(b"YALNIZ : SIFIR TRY SIFIR KURUS", generated_xml)
