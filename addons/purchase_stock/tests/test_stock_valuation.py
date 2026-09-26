@@ -47,6 +47,33 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
         self._create_bill(purchase_order=po, price_unit=30)
         self.assertEqual(move_in.value, 150)
 
+    def test_avco_unit_cost_after_return_then_credit_note(self):
+        """A credit note matched to a physical return is a disposal, so its
+        unit price must not revalue the units kept in stock: whatever the
+        refund price, the kept units stay at the billed cost. (Buy 35 @ 20,
+        bill 35 @ 15, return 20, credit note 20 @ 15/10/25 -> avg_cost stays 15
+        and the kept 15 units are worth 225.)"""
+        for refund_price in (15, 10, 25):
+            product = self.product_avco.copy()
+            po = self._create_purchase(product, 35, 20)
+            self._receive(po)
+            self.assertEqual(product.avg_cost, 20)
+            receipt_move = po.picking_ids.move_ids
+
+            bill = self._create_bill(purchase_order=po, price_unit=15, quantity=35)
+            self.assertEqual(product.avg_cost, 15)
+
+            self._make_return(po.picking_ids.move_ids, 20)
+            self.assertEqual(product.avg_cost, 15)
+
+            credit_note = self._refund(bill, quantity=20, post=False)
+            credit_note.invoice_line_ids.price_unit = refund_price
+            credit_note.action_post()
+            self.assertEqual(product.avg_cost, 15)
+            self.assertEqual(product.total_value, 225)
+            self.assertIn(bill.display_name, receipt_move.value_justification)
+            self.assertNotIn(credit_note.display_name, receipt_move.value_justification)
+
     def test_move_value_extra_quantity(self):
         po = self._create_purchase(self.product_avco, 5, 10)
         move_in = self._receive(po, 7)
