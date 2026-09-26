@@ -63,12 +63,12 @@ class TestIcons(LintCase):
                     f"Obsolete FontAwesome icon class(es) {', '.join(sorted(found_fontawesome_icons))} found in {path}.\n"
                     "Please use Material Symbols icons using the "
                     "`data-icon` attribute instead, e.g. `<i class=\"oi\" data-icon=\"person\"/>`.\n"
-                    "See https://www.odoo.com/documentation/master/developer/reference/user_interface/icons.html#migration-from-font-awesome for more information on how to migrate.",
+                    "See https://www.odoo.com/documentation/latest/developer/reference/user_interface/icons.html#migration-from-font-awesome for more information on how to migrate.",
                 )
                 self.assertFalse(
                     found_old_oi_icons,
                     f"Obsolete Odoo icon class(es) {', '.join(sorted(found_old_oi_icons))} found in {path}.\n"
                     "Please use the new Odoo icons set using the "
                     "`data-icon` attribute instead, e.g. `<i class=\"oi\" data-icon=\"oi_view-kanban\"/>`.\n"
-                    "See https://www.odoo.com/documentation/master/developer/reference/user_interface/icons.html#odoo-ui-icons for more information.",
+                    "See https://www.odoo.com/documentation/latest/developer/reference/user_interface/icons.html#odoo-ui-icons for more information.",
                 )
