@@ -58,14 +58,16 @@ const discussChannelPatch = {
         this.livechat_outcome = undefined;
         this.livechat_note = fields.Html();
         /** @type {string|undefined} */
-        this.livechatNoteText = fields.Attr(undefined, {
-            compute() {
-                if (this.livechat_note !== undefined) {
-                    return convertBrToLineBreak(this.livechat_note || "");
+        this.livechatNoteText = undefined;
+        this.onChange(
+            () => [this.livechat_note],
+            function onChangeLivechatNote(livechat_note) {
+                if (livechat_note !== undefined) {
+                    this.livechatNoteText = convertBrToLineBreak(livechat_note || "");
                 }
-                return this.livechatNoteText;
             },
-        });
+            { immediate: true }
+        );
         this.livechatVisitorMember = this.computed(() => {
             if (this.channel_type !== "livechat") {
                 return;

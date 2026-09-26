@@ -1,7 +1,6 @@
 import { fields, OR, Record } from "@mail/model/export";
 import {
     convertBrToLineBreak,
-    prepareBodyForEditing,
     generatePartnerMentionElement,
     prettifyMessageText,
 } from "@mail/utils/common/format";
@@ -112,17 +111,7 @@ export class Composer extends Record {
     cannedResponses = fields.Many("mail.canned.response");
     isDirty = false;
     composerText = "";
-    composerHtml = fields.Html(markup("<div class='o-paragraph'><br></div>"), {
-        compute() {
-            if (this.syncHtmlWithMessage) {
-                return (
-                    prepareBodyForEditing(this.message.body) ||
-                    markup("<div class='o-paragraph'><br></div>")
-                );
-            }
-            return this.composerHtml;
-        },
-    });
+    composerHtml = fields.Html(markup("<div class='o-paragraph'><br></div>"));
     thread = fields.One("mail.thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = fields.Attr(
@@ -142,10 +131,6 @@ export class Composer extends Record {
     replyToMessage = fields.One("mail.message", { inverse: "composerAsReplyToMessage" });
     /** @type {"text" | "html" | undefined} */
     updateFrom = undefined;
-
-    get syncHtmlWithMessage() {
-        return this.message && !this.isDirty;
-    }
 
     get targetThread() {
         return this.replyToMessage?.thread ?? this.thread ?? this.message?.thread ?? null;
