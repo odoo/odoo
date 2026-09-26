@@ -3171,6 +3171,12 @@ class SnippetsMenu extends Component {
                 // When noCheck is true, we only check the exclude.
                 return true;
             }
+            // The content of contact fields is rendered server-side, and only
+            // the linked record is persisted. This behavior cannot be
+            // customized.
+            if ($(this).is("[data-oe-type='contact'] *")) {
+                return false;
+            }
             // `o_editable_media` bypasses the `o_not_editable` class except for
             // drag & drop.
             if (!forDrop && this.classList.contains('o_editable_media')) {
