@@ -5,6 +5,9 @@ import { register_payment_method } from "@point_of_sale/app/services/pos_store";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 const { DateTime } = luxon;
 
+export const CARD_PAYMENT_TIMEOUT = 90000;
+export const POLLING_INTERVAL_MS = 5000;
+
 export class PaymentAdyen extends PaymentInterface {
     setup() {
         super.setup(...arguments);
@@ -145,14 +148,15 @@ export class PaymentAdyen extends PaymentInterface {
         return this._callAdyen(data).then((data) => {
             // Only valid response is a 200 OK HTTP response which is
             // represented by true.
-            if (!ignore_error && data !== true) {
+            const isCancelled = data === true;
+            if (!ignore_error && !isCancelled) {
                 this._show_error(
                     _t(
                         "Cancelling the payment failed. Please cancel it manually on the payment terminal."
                     )
                 );
             }
-            return true;
+            return isCancelled;
         });
     }
 
@@ -211,8 +215,62 @@ export class PaymentAdyen extends PaymentInterface {
     }
 
     waitForPaymentConfirmation() {
+        const line = this.pendingAdyenline();
+        const serviceId = line.terminalServiceId;
+        const isPaymentStillValid = () =>
+            this.paymentLineResolvers[line.uuid] && line.terminalServiceId === serviceId;
+
         return new Promise((resolve) => {
-            this.paymentLineResolvers[this.pendingAdyenline().uuid] = resolve;
+            this.paymentLineResolvers[line.uuid] = resolve;
+
+            const intervalId = setInterval(async () => {
+                if (!isPaymentStillValid()) {
+                    clearInterval(intervalId);
+                    return;
+                }
+                const notification = await this.pos.data.silentCall(
+                    "pos.payment.method",
+                    "get_latest_adyen_status",
+                    [[this.payment_method_id.id]]
+                );
+                if (!notification || !isPaymentStillValid()) {
+                    return; // nothing new yet, or resolved while waiting
+                }
+                // Ignore notifications not for other requests
+                if (notification.SaleToPOIResponse.MessageHeader.ServiceID !== serviceId) {
+                    return;
+                }
+                clearInterval(intervalId);
+                this.paymentLineResolvers[line.uuid] = null;
+                const response = notification.SaleToPOIResponse.PaymentResponse.Response;
+                const isSuccessful = response.Result === "Success";
+                if (isSuccessful) {
+                    this.handleSuccessResponse(
+                        line,
+                        notification,
+                        new URLSearchParams(response.AdditionalResponse)
+                    );
+                } else {
+                    this._show_error(
+                        _t(
+                            "Message from Adyen: %s",
+                            new URLSearchParams(response.AdditionalResponse).get("message")
+                        )
+                    );
+                }
+                resolve(isSuccessful);
+            }, POLLING_INTERVAL_MS);
+
+            setTimeout(() => {
+                clearInterval(intervalId);
+                if (isPaymentStillValid()) {
+                    this.paymentLineResolvers[line.uuid] = null;
+                    if (line.getPaymentStatus() === "waitingCard") {
+                        line.setPaymentStatus("timeout");
+                    }
+                    resolve(false);
+                }
+            }, CARD_PAYMENT_TIMEOUT);
         });
     }
 
@@ -249,6 +307,7 @@ export class PaymentAdyen extends PaymentInterface {
         // we use the handlePaymentResponse method on the payment line
         const resolver = this.paymentLineResolvers?.[line?.uuid];
         if (resolver) {
+            this.paymentLineResolvers[line.uuid] = null;
             resolver(isPaymentSuccessful);
         } else {
             line?.handlePaymentResponse(isPaymentSuccessful);
