@@ -254,7 +254,7 @@ class ResUsers(models.Model):
     @api.depends('employee_ids')
     @api.depends_context('company', 'uid')
     def _compute_company_employee(self):
-        employee_per_user = dict(self.env['hr.employee'].sudo()._read_group(
+        employee_per_user = dict(self.env['hr.employee'].sudo().with_context(active_test=False)._read_group(
             domain=[('user_id', 'in', self.ids), ('company_id', '=', self.env.company.id)],
             groupby=['user_id'],
             aggregates=['id:recordset'],
