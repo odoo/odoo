@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 
 from odoo.tools import format_list
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-from odoo.addons.account_peppol.exceptions import get_peppol_error_message
+from odoo.addons.account_peppol.exceptions import get_peppol_error_message_html, get_peppol_error_message_text
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account_peppol.tools.peppol_iap_connector import PEPPOL_PROXY_URLS
 
@@ -55,7 +55,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     @api.model
     def _get_peppol_error_message(self, error_vals):
         # DEPRECATED - to remove in master
-        return get_peppol_error_message(self.env, error_vals)
+        return get_peppol_error_message_html(self.env, error_vals)
 
     @handle_demo
     def _call_peppol_proxy(self, endpoint, params=None):
@@ -103,8 +103,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             raise UserError(e.message)
 
         if error_vals := response.get('error'):
-            error_message = get_peppol_error_message(self.env, error_vals)
-            raise UserError(error_message)
+            raise UserError(get_peppol_error_message_text(self.env, error_vals))
 
         return response
 
@@ -470,7 +469,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     def _peppol_get_message_status_error_body(self, move, error):
         self.ensure_one()
-        return get_peppol_error_message(self.env, error, move)
+        return get_peppol_error_message_html(self.env, error, move)
 
     def _peppol_get_message_status_update_body(self, move, content):
         self.ensure_one()

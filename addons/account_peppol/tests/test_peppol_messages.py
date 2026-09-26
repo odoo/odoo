@@ -13,6 +13,7 @@ from odoo.tests.common import tagged, freeze_time
 from odoo.tools.misc import file_open
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
+from odoo.addons.account_peppol.exceptions import get_peppol_error_message_html, get_peppol_error_message_text
 from odoo.addons.mail.tests.common import MailCommon
 
 ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
@@ -161,6 +162,16 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         if url == '/api/peppol/1/send_document':
             if not body['params']['documents']:
                 raise UserError('No documents were provided')
+            if cls.env.context.get('peppol_send_document_error_country'):
+                response.json = lambda: {
+                    'result': {
+                        'error': {
+                            'code': 201,
+                            'subject': 'A country is required to register a participant.',
+                        },
+                    },
+                }
+                return response
             num_invoices = len(body['params']['documents'])
             response.json = lambda: {
                 'result': {
@@ -360,6 +371,35 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             }],
         )
         self.assertTrue(bool(move.ubl_cii_xml_id))
+
+    def test_send_document_error_formatting(self):
+        move = self.create_move(self.valid_partner)
+        move.action_post()
+
+        wizard = self.create_send_and_print(move, default=True)
+        with (
+            self._set_context({'peppol_send_document_error_country': True}),
+            self.assertRaisesRegex(
+                UserError,
+                'A country is required to register a participant. [201]'
+                '\nThere was an issue with the Peppol Participant.',
+            ),
+        ):
+            wizard.with_env(self.env).action_send_and_print()
+
+    def test_message_status_error_posts_html_to_chatter(self):
+        move = self.create_move(self.valid_partner)
+        uuid = FAKE_UUID[0]
+
+        self.proxy_user._peppol_process_messages_status(
+            messages={uuid: {'error': {'code': 201, 'subject': 'A country is required to register a participant.'}}},
+            uuid_to_record={uuid: move},
+        )
+
+        self.assertEqual(move.peppol_move_state, 'error')
+        body = self._get_mail_message(move).body
+        self.assertIn('<strong>A country is required to register a participant.</strong>', body)
+        self.assertIn('<li>There was an issue with the Peppol Participant.</li>', body)
 
     def test_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via peppol
