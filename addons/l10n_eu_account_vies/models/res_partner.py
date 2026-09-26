@@ -43,7 +43,7 @@ class ResPartner(models.Model):
             self.vies_valid = False
             return
 
-        for partner in self:
+        for partner in self.sorted(lambda p: bool(p.parent_id)):
             if not partner.has_vat:
                 partner.vies_valid = False
                 continue
