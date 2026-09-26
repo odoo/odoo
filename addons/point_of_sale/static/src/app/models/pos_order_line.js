@@ -165,7 +165,7 @@ export class PosOrderline extends Base {
         }
 
         // Set the qty of the line based on number of pack lots.
-        if (!this.product_id.to_weight && setQuantity) {
+        if (!this.product_id.to_weight && setQuantity && this.product_id.tracking === "serial") {
             this.set_quantity_by_lot();
         }
         this.setDirty();
