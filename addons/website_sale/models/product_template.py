@@ -376,6 +376,24 @@ class ProductTemplate(models.Model):
                 template_copy.product_template_image_ids
             ):
                 template_copy.product_template_image_ids[0].unlink()
+
+            # Set the image attribute values to the corresponding PTAVs of the copied template.
+            copied_ptavs = {
+                ptav.product_attribute_value_id.id: ptav.id
+                for ptav in template_copy.attribute_line_ids.product_template_value_ids
+            }
+
+            for original_image, copied_image in zip(
+                template.product_template_image_ids,
+                template_copy.product_template_image_ids,
+                strict=True,
+            ):
+                copied_image.with_context(skip_update_main_image=True).attribute_value_ids = [
+                    Command.set([
+                        copied_ptavs[ptav.product_attribute_value_id.id]
+                        for ptav in original_image.attribute_value_ids
+                    ])
+                ]
         return template_copies
 
     @api.ondelete(at_uninstall=False)
@@ -1418,12 +1436,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_website_sale_search_fields(self, search_in_description=True):
-        search_fields = [
-            "name",
-            "variants_default_code",
-            "barcode",
-            "product_variant_ids.barcode",
-        ]
+        search_fields = ["name", "variants_default_code", "barcode", "product_variant_ids.barcode"]
         if search_in_description:
             search_fields.append("description_ecommerce")
         search_fields.extend((
@@ -1989,13 +2002,14 @@ class ProductTemplate(models.Model):
         return data
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
-        if (
-            message_operation == "create"
-            and not self.env.user._is_internal()
-        ):
-            website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
-            if not website.with_context(website_id=website.id).is_view_active('website_sale.product_comment'):
-                return [(Domain.TRUE, 'write')]
+        if message_operation == "create" and not self.env.user._is_internal():
+            website = self.env.website or self.env["website"].browse(
+                self.env.context.get("host_id")
+            )
+            if not website.with_context(website_id=website.id).is_view_active(
+                "website_sale.product_comment"
+            ):
+                return [(Domain.TRUE, "write")]
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
 
     @api.model
