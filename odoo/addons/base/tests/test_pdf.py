@@ -3,7 +3,7 @@
 
 from odoo.tests.common import TransactionCase
 from odoo.tools import pdf
-from odoo.tools.misc import file_open
+from odoo.tools.misc import file_open, mute_logger
 from odoo.tools.pdf import reshape_text
 import io
 
@@ -126,3 +126,15 @@ class TestPdf(TransactionCase):
 
         for i, expected_shape in enumerate(expected_shapes):
             self.assertEqual(processed_text[i], expected_shape)
+
+    @mute_logger('odoo.tools.pdf')
+    def test_convert_to_pdfa_without_outlines(self):
+        """
+        Test converting a PDF without outlines dictionary to PDF/A.
+        """
+        pdf_writer = pdf.OdooPdfFileWriter()
+        pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
+        self.assertNotIn('/Outlines', pdf_writer._root_object)
+
+        pdf_writer.convert_to_pdfa()
+        self.assertTrue(pdf_writer.is_pdfa)
