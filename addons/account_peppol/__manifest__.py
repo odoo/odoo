@@ -19,12 +19,9 @@
         'account_edi_proxy_client',
         'account_edi_ubl_cii',
     ],
-    'external_dependencies': {
-        'python': ['phonenumbers'],
-        'apt': {
-            'phonenumbers': 'python3-phonenumbers',
-        },
-    },
+    'external_dependencies': [
+        {'pypi': 'phonenumbers', 'apt': 'python3-phonenumbers'},
+    ],
     'data': [
         'data/cron.xml',
         'data/mail_templates_email_layouts.xml',

@@ -20,12 +20,9 @@
         'utm',
         'html_builder',
     ],
-    'external_dependencies': {
-        'python': ['geoip2'],
-        'apt': {
-            'geoip2': 'python3-geoip2',
-        },
-    },
+    'external_dependencies': [
+        {'pypi': 'geoip2', 'apt': 'python3-geoip2'},
+    ],
     'data': [
         # security.xml first, data.xml need the group to exist (checking it)
         'security/website_security.xml',

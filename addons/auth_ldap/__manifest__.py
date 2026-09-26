@@ -10,12 +10,9 @@
         'views/res_config_settings_views.xml',
         'security/ir.access.csv',
     ],
-    'external_dependencies': {
-        'python': ['python-ldap'],
-        'apt': {
-            'python-ldap': 'python3-ldap',
-        },
-    },
+    'external_dependencies': [
+        {'pypi': 'python-ldap', 'modules': ['ldap'], 'apt': 'python3-ldap'},
+    ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
