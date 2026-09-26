@@ -11,7 +11,7 @@ from odoo import _, api, fields, models, Command
 from odoo.addons.account.tools import dict_to_xml
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import float_compare, float_is_zero, float_repr, html2plaintext, pdf, str2bool
+from odoo.tools import float_compare, float_is_zero, float_repr, html2plaintext, pdf
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import formatLang, html_escape
 from odoo.tools.translate import _lt
@@ -1998,11 +1998,10 @@ class AccountEdiCommon(models.AbstractModel):
             body += Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs)
         invoice.with_context(no_new_invoice=True).message_post(body=body, attachment_ids=attachments.ids)
 
-    def _generate_pdf_attachment(self, invoice, tree):
+    def _generate_pdf_attachment(self, invoice, additional_docs):
         """ ATTEMPTS to create a PDF attachment when the XML file doesn't provide one."""
         IrConfigParam = self.env['ir.config_parameter'].sudo()
-        disable_pdf_in_xml = str2bool(IrConfigParam.get_param("account_edi_ubl_cii.disable_pdf_in_xml", 'False'))
-        additional_docs = self._import_attachments(invoice, tree)
+        disable_pdf_in_xml = IrConfigParam.get_bool("account_edi_ubl_cii.disable_pdf_in_xml")
         if (
             additional_docs or
             invoice.message_main_attachment_id or

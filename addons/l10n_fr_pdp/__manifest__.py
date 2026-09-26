@@ -9,6 +9,7 @@
     'depends': [
         'l10n_fr_account',
         'account_peppol',
+        'account_edi_ubl_cii',
         'iap',
     ],
     'auto_install': ['l10n_fr_account'],
