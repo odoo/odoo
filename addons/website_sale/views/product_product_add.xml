@@ -23,7 +23,7 @@
         <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
         <field name="arch" type="xml">
             <div name="tax_info" position="after">
-                <field name="public_categ_ids" string="Website Category" class="oe_inline" widget="many2many_tags" placeholder="Unpublished"/>
+                <field name="public_categ_ids" string="Categories" widget="many2many_tags" placeholder="Unpublished"/>
             </div>
         </field>
     </record>
