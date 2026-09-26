@@ -1,4 +1,5 @@
 from odoo import Command
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 from odoo.addons.l10n_it_edi.tests.test_edi_reverse_charge import TestItEdiReverseCharge
@@ -6,6 +7,18 @@ from odoo.addons.l10n_it_edi.tests.test_edi_reverse_charge import TestItEdiRever
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItAccountMoveDocumentType(TestItEdi):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.TD07 = cls.env.ref('l10n_it_edi_ndd.l10n_it_document_type_07')
+
+        cls.partner_it_no_address = cls.env['res.partner'].create({
+            'name': 'Partner No Address',
+            'vat': 'IT12345670017',
+            'country_id': cls.env.ref('base.it').id,
+            'is_company': True,
+        })
 
     def test_account_move_document_type(self):
         # l10n_it_document_type_01: "TD01 - Invoice (Immediate or Accompanying if <DatiTrasporto> or <DatiDDT> are completed)"
@@ -41,6 +54,21 @@ class TestItAccountMoveDocumentType(TestItEdi):
         reversal_wizard.modify_moves()
         credit_note_y = invoice_y.reversal_move_ids[0]
         self.assertEqual(credit_note_y.l10n_it_document_type, dt_credit_note)
+
+    def test_td07_incomplete_address_error(self):
+        """Test that setting document type as TD07 raise an error if partner not selected."""
+        invoice = self.init_invoice("out_invoice", amounts=[100])
+        invoice.partner_id = False
+
+        with self.assertRaises(ValidationError):
+            invoice.write({'l10n_it_document_type': self.TD07.id})
+
+    def test_td07_amount_limit_error(self):
+        """Test that setting document type as TD07 for an invoice with amount > 400 raise an error."""
+        invoice = self.init_invoice("out_invoice", partner=self.partner_it_no_address, amounts=[500])
+
+        with self.assertRaises(ValidationError):
+            invoice.write({'l10n_it_document_type': self.TD07.id})
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')

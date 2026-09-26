@@ -302,6 +302,7 @@ class TestItEdiImport(TestItEdi):
         self.italian_partner_a.update({
             'vat': "IT06655971007",
             'l10n_it_codice_fiscale': '06655971007',
+            'street': None,
         })
         self._assert_import_invoice('IT01234567892_FPR01.xml', [{
             'partner_id': self.italian_partner_a.id,
