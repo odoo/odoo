@@ -65,6 +65,15 @@
     }
 }
 
+// Builder overlays live in a local overlay container next to the preview and
+// can extend past its bottom edge. The parent .o_action has overflow: hidden,
+// which clips them but still lets scrollIntoView() (e.g. from the sidebar chat)
+// scroll it and shift the whole builder up. overflow: clip clips the same way
+// without creating a scroll range.
+.o_website_builder_container {
+    overflow: clip;
+}
+
 .o_website_preview {
     position: relative;
     isolation: isolate;
