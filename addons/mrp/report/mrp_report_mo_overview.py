@@ -115,7 +115,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         operation_cost_by_product = defaultdict(float)
         for bp_move in production.move_byproduct_ids:
             # Byproducts without cost share are irrelevant in a cost breakdrown.
-            if bp_move.state == 'cancel' or float_is_zero(bp_move.cost_share, precision_digits=2):
+            if bp_move.quantity <= 0 or float_is_zero(bp_move.cost_share, precision_digits=2):
                 continue
             # As UoMs can vary, we use the default UoM of each product
             quantities_by_product[bp_move.product_id] += bp_move.uom_id._compute_quantity(bp_move.quantity, bp_move.product_id.uom_id, rounding_method='HALF-UP')
@@ -333,7 +333,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         total_mo_cost = 0
         for index, move_bp in enumerate(production.move_byproduct_ids):
             product = move_bp.product_id
-            cost_share = move_bp.cost_share / 100
+            quantity = move_bp.product_uom_qty if production.state != 'done' else move_bp.quantity
+            cost_share = move_bp.cost_share / 100 if quantity > 0 else 0
             byproducts_cost_portion += cost_share
             mo_cost = current_mo_cost * cost_share
             total_mo_cost += mo_cost
@@ -343,7 +344,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'model': product._name,
                 'id': product.id,
                 'name': product.display_name,
-                'quantity': move_bp.product_uom_qty if move_bp.state != 'done' else move_bp.quantity,
+                'quantity': quantity,
                 'uom_name': move_bp.uom_id.display_name,
                 'uom_precision': self._get_uom_precision(),
                 'unit_cost': self._get_unit_cost(move_bp),
