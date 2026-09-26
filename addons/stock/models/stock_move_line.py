@@ -1130,6 +1130,9 @@ class StockMoveLine(models.Model):
                 package=package
             )
         self.write({'result_package_id': package.id})
+        if not self.env.context.get('barcode_view', False):
+            for line in self:
+                line.move_id._action_assign()
         return package
 
     def _post_put_in_pack_hook(self, package):
