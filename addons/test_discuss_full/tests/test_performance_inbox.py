@@ -77,7 +77,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
                 rating_value="4",
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        with self.assertQueryCount(37):
+        with self.assertQueryCount(35):
             self.make_jsonrpc_request(
                 "/mail/store",
                 {
