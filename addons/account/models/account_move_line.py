@@ -926,8 +926,18 @@ class AccountMoveLine(models.Model):
             else:
                 line.discount_allocation_key = False
 
-    @api.depends('account_id', 'company_id', 'price_unit', 'quantity', 'currency_rate', 'move_id.line_ids.discount', 'move_id.line_ids.analytic_distribution')
+    @api.depends('account_id', 'company_id', 'price_unit', 'quantity', 'tax_ids', 'currency_rate', 'move_id.line_ids.discount', 'move_id.line_ids.analytic_distribution')
     def _compute_discount_allocation_needed(self):
+        def _get_subtotal_before_discount(line):
+            base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
+            base_line['discount'] = 0.0
+            self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
+            price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
+            return line.currency_id.round(
+                line.move_id.direction_sign * price_subtotal * line.discount / 100
+            )
+
+
         line2discounted_amount = {
             line: [
                 (line.account_id, amount_currency, line.company_currency_id.round(amount_currency / line.currency_rate)),
@@ -937,9 +947,7 @@ class AccountMoveLine(models.Model):
             if line.display_type == 'product'
             and (discount_allocation_account := line.move_id._get_discount_allocation_account())
             and line.account_id != discount_allocation_account
-            and (amount_currency := line.currency_id.round(
-                line.move_id.direction_sign * line.quantity * line.price_unit * line.discount / 100
-            ))
+            and (amount_currency := _get_subtotal_before_discount(line))
         }
 
         distribution_totals = defaultdict(lambda: defaultdict(float))
