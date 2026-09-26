@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { lna } from "@iot_base/network_utils/lna";
 
 /**
  * Format the endpoint to send the request to
@@ -31,7 +31,7 @@ export function formatEndpoint(ip, route, forceHttp = false) {
 export async function post(ip, route, params = {}, timeout = 6000, headers = {}, abortSignal = null, useLna = false) {
     const endpoint = formatEndpoint(ip, route, useLna);
     const timeoutSignal = AbortSignal.timeout(timeout);
-    const response = await browser.fetch(endpoint, {
+    const response = await lna.fetch(endpoint, {
         body: JSON.stringify({'params': params}),
         method: "POST",
         headers: {"Content-Type": "application/json", ...headers},
