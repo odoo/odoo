@@ -44,14 +44,16 @@ export class FileUploader extends Component {
             if (this.props.checkSize && !checkFileSize(file.size, this.notification)) {
                 return null;
             }
-            this.state.isUploading = true;
-            const data = await getDataURLFromFile(file);
             if (!file.size) {
                 console.warn(`Error while uploading file : ${file.name}`);
                 this.notification.add(_t("There was a problem while uploading your file."), {
                     type: "danger",
                 });
+                return null;
             }
+
+            this.state.isUploading = true;
+            const data = await getDataURLFromFile(file);
             try {
                 await this.props.onUploaded({
                     name: file.name,
