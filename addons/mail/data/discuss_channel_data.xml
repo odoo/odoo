@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- missing string values are populated in _mail_post_init for translation reasons -->
+        <!-- missing string values are populated by discuss.channel._setup_builtin_channels for translation reasons -->
 
         <record model="discuss.channel" id="mail.channel_all_employees">
             <field name="name"/>
@@ -40,5 +40,10 @@
         <record model="discuss.channel" id="mail.channel_admin">
             <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
         </record>
+    </data>
+
+    <data>
+        <!-- Set default names/descriptions in the language of the admin user -->
+        <function model="discuss.channel" name="_setup_builtin_channels"/>
     </data>
 </odoo>
