@@ -149,7 +149,13 @@ export class ProductConfiguratorPopup extends Component {
         let attribute_value_ids = [];
         var price_extra = 0.0;
 
-        this.state.payload.forEach((attribute_component) => {
+        // this.state.payload follows the widgets' mount order, not the product's
+        // attribute order; reorder against validAttributeLineIds before building
+        // attribute_value_ids.
+        const orderedComponents = this.validAttributeLineIds
+            .map((line) => this.state.payload.find((c) => c.attributeLine.id === line.id))
+            .filter(Boolean);
+        orderedComponents.forEach((attribute_component) => {
             const { valueIds, extra, custom_value, hasCustom } = attribute_component.getValue();
             attribute_value_ids.push(valueIds);
 
