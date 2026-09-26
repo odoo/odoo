@@ -5,14 +5,11 @@ from odoo.tools import html2plaintext
 from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING, FloatFmt
+# UBL_NAMESPACES lives on the base UBL model (it is needed by every UBL flavour, including the
+# ones that don't go through UBL 2.0); re-exported here for the modules importing it from this file.
+from odoo.addons.account_edi_ubl_cii.models.account_edi_ubl import UBL_NAMESPACES  # noqa: F401
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
-
-
-UBL_NAMESPACES = {
-    'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
-    'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
-}
 
 
 class AccountEdiXmlUBL20(models.AbstractModel):
@@ -20,21 +17,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     _inherit = 'account.edi.ubl'
     _description = "UBL 2.0"
 
-    def _find_value(self, xpath, tree, nsmap=False):
-        # EXTENDS account.edi.common
-        return super()._find_value(xpath, tree, UBL_NAMESPACES)
-
     # -------------------------------------------------------------------------
     # EXPORT
     # -------------------------------------------------------------------------
 
     def _export_invoice_filename(self, invoice):
         return f"{invoice.name.replace('/', '_')}_ubl_20.xml"
-
-    def _get_document_type_code_node(self, invoice, invoice_data):
-        """Returns the `DocumentTypeCode` node tag"""
-        # To be overriden by custom format if required
-        pass
 
     def _export_invoice(self, invoice):
         """ Generates an UBL 2.0 xml for a given invoice. """
@@ -1299,21 +1287,3 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                         difference = currency.round(tax_total - tax_lines_total)
                         if not currency.is_zero(difference):
                             tax_lines[0].amount_currency += sign * difference
-    # -------------------------------------------------------------------------
-    # IMPORT : helpers
-    # -------------------------------------------------------------------------
-
-    def _get_import_document_amount_sign(self, tree):
-        """
-        In UBL, an invoice has tag 'Invoice' and a credit note has tag 'CreditNote'. However, a credit note can be
-        expressed as an invoice with negative amounts. For this case, we need a factor to take the opposite
-        of each quantity in the invoice.
-        """
-        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice':
-            amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxInclusiveAmount')
-            if amount_node is not None and float(amount_node.text) < 0:
-                return 'refund', -1
-            return 'invoice', 1
-        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
-            return 'refund', 1
-        return None, None
