@@ -2037,6 +2037,15 @@ Please change the quantity done or the rounding precision in your settings.""",
                     move_line_vals.append(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
         return move_line_vals, taken_quantity
 
+    def _update_reserved_quantity_mto(self, need, location_id, lot_id=None, package_id=None, owner_id=None):
+        """Reserve chained quantities strictly first, then loosen the restrictions."""
+        self.ensure_one()
+        taken_quantity = self._update_reserved_quantity(need, location_id, lot_id, package_id, owner_id, strict=True)
+        remaining_quantity = need - taken_quantity
+        if not self.product_id.uom_id.is_zero(remaining_quantity):
+            taken_quantity += self._update_reserved_quantity(remaining_quantity, location_id, lot_id, package_id, owner_id, strict=False)
+        return taken_quantity
+
     def _add_serial_move_line_to_vals_list(self, reserved_quant, quantity):
         return [self._prepare_move_line_vals(quantity=1, reserved_quant=reserved_quant) for i in range(int(quantity))]
 
@@ -2228,18 +2237,9 @@ Please change the quantity done or the rounding precision in your settings.""",
                     available_move_lines = move._get_available_move_lines(assigned_moves_ids, partially_available_moves_ids)
                     if not available_move_lines:
                         continue
-                    taken_quantities = {}
-                    all_move_line_vals = []
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
-                        need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
-                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, need), location_id, lot_id, package_id, owner_id, strict=True)
-                        all_move_line_vals += move_line_vals
-                        if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
-                            taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
-                    if all_move_line_vals:
-                        self.env['stock.move.line'].create(all_move_line_vals)
-
-                    for (need, location_id, lot_id, package_id, owner_id), taken_quantity in taken_quantities.items():
+                        need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom'))
+                        taken_quantity = move._update_reserved_quantity_mto(min(quantity, need), location_id, lot_id, package_id, owner_id)
                         # `quantity` is what is brought by chained done move lines. We double check
                         # here this quantity is available on the quants themselves. If not, this
                         # could be the result of an inventory adjustment that removed totally of
