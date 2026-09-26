@@ -559,7 +559,16 @@ class StockMove(models.Model):
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
-        return keys + (self.created_production_id, self.production_group_id)
+        keys += (self.created_production_id,)
+        if self._feeds_raw_material_production():
+            keys += (self.production_group_id,)
+        return keys
+
+    def _feeds_raw_material_production(self):
+        """Whether this move directly or indirectly supplies components for a production
+        (i.e. ends up in a `raw_material_production_id`).
+        """
+        return bool(self.browse(self._rollup_move_dests()).raw_material_production_id)
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
@@ -652,6 +661,8 @@ class StockMove(models.Model):
         return domain
 
     def _get_production_assignation_domain(self):
+        if not self._feeds_raw_material_production():
+            return []
         return [('production_group_id', '=', self.production_group_id.id)]
 
     def action_open_reference(self):
