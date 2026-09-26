@@ -1,7 +1,6 @@
 import contextlib
 import json
 import logging
-import threading
 
 from odoo import tools, sql_db
 
@@ -33,8 +32,9 @@ class PostgreSQLHandler(logging.Handler):
                 self._support_metadata = bool(cr.fetchone())
 
     def emit(self, record):
-        ct = threading.current_thread()
-        ct_db = getattr(ct, 'dbname', None)
+        from .netsvc import ExecutionInfo
+        exec_info = ExecutionInfo._execution_var.get(None)
+        ct_db = exec_info.db_name if exec_info is not None else None
         dbname = self._log_db or ct_db
         if not dbname:
             return
