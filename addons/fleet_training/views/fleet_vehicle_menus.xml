@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_fleet_training_vehicle" model="ir.actions.act_window">
+        <field name="name">Vehicles</field>
+        <field name="res_model">fleet_training.vehicle</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <record id="action_fleet_training_vehicle_send_maintenance" model="ir.actions.server">
+        <field name="name">Send to Maintenance</field>
+        <field name="model_id" ref="model_fleet_training_vehicle"/>
+        <field name="binding_model_id" ref="model_fleet_training_vehicle"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_set_maintenance()</field>
+    </record>
+
+    <menuitem id="menu_fleet_training_root" name="Fleet Training" sequence="70"
+              groups="fleet_training.group_fleet_user"
+              web_icon="fleet_training,static/description/icon.png"/>
+    <menuitem id="menu_fleet_training_vehicles" name="Vehicles"
+              parent="menu_fleet_training_root"
+              action="action_fleet_training_vehicle"
+              sequence="10"/>
+</odoo>

@@ -1,0 +1,143 @@
+from datetime import date
+
+from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+
+
+class FleetVehicle(models.Model):
+    _name = 'fleet_training.vehicle'
+    _description = 'Fleet Vehicle'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'name'
+
+    _license_plate_unique = models.Constraint(
+        'unique(license_plate)',
+        "This license plate is already registered to another vehicle.",
+    )
+
+    name = fields.Char(required=True, help="Internal fleet reference, e.g. 'Fleet-001'.")
+    license_plate = fields.Char()
+    vin_sn = fields.Char(string="Chassis Number")
+    color = fields.Char()
+    model_year = fields.Integer(string="Model Year")
+    seats = fields.Integer(default=5)
+    acquisition_date = fields.Date()
+    insurance_expiry_date = fields.Date(string="Insurance Expiry")
+    active = fields.Boolean(default=True)
+    notes = fields.Text()
+
+    driver_id = fields.Many2one('fleet_training.driver', string="Assigned Driver", tracking=True)
+    category_id = fields.Many2one('fleet_training.category', string="Category")
+    tag_ids = fields.Many2many('fleet_training.tag', string="Tags")
+
+    age_years = fields.Integer(string="Fleet Age (years)", compute='_compute_age_years', store=True)
+
+    state = fields.Selection(
+        [
+            ('available', 'Available'),
+            ('assigned', 'Assigned'),
+            ('maintenance', 'In Maintenance'),
+        ],
+        string="Status", default='available', required=True, tracking=True,
+    )
+
+    maintenance_ids = fields.One2many('fleet_training.maintenance', 'vehicle_id', string="Maintenance Records")
+    maintenance_count = fields.Integer(compute='_compute_maintenance_count')
+    maintenance_cost_total = fields.Monetary(
+        string="Total Maintenance Cost", compute='_compute_maintenance_count', currency_field='currency_id',
+    )
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+
+    @api.depends('maintenance_ids.cost')
+    def _compute_maintenance_count(self):
+        for vehicle in self:
+            vehicle.maintenance_count = len(vehicle.maintenance_ids)
+            vehicle.maintenance_cost_total = sum(vehicle.maintenance_ids.mapped('cost'))
+
+    def action_view_maintenance(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Maintenance Records"),
+            'res_model': 'fleet_training.maintenance',
+            'view_mode': 'list,form',
+            'domain': [('vehicle_id', '=', self.id)],
+            'context': {'default_vehicle_id': self.id},
+        }
+
+    @api.constrains('model_year')
+    def _check_model_year(self):
+        current_year = date.today().year
+        for vehicle in self:
+            if vehicle.model_year and not (1980 <= vehicle.model_year <= current_year + 1):
+                raise ValidationError(
+                    self.env._(
+                        "Model year %(year)s is not valid: it must be between 1980 and %(max_year)s.",
+                        year=vehicle.model_year, max_year=current_year + 1,
+                    )
+                )
+
+    @api.constrains('seats')
+    def _check_seats(self):
+        for vehicle in self:
+            if vehicle.seats <= 0:
+                raise ValidationError(self.env._("A vehicle must have at least one seat."))
+
+    @api.model
+    def _cron_check_insurance_expiry(self):
+        """Schedule a reminder activity for vehicles whose insurance expires within 30 days."""
+        deadline = fields.Date.context_today(self) + relativedelta(days=30)
+        expiring_vehicles = self.search([
+            ('insurance_expiry_date', '!=', False),
+            ('insurance_expiry_date', '<=', deadline),
+        ])
+        activity_type = self.env.ref('mail.mail_activity_data_todo')
+        for vehicle in expiring_vehicles:
+            already_reminded = vehicle.activity_ids.filtered(
+                lambda a: a.activity_type_id == activity_type and a.summary == "Renew vehicle insurance"
+            )
+            if not already_reminded:
+                vehicle.activity_schedule(
+                    'mail.mail_activity_data_todo',
+                    date_deadline=vehicle.insurance_expiry_date,
+                    summary="Renew vehicle insurance",
+                    note=self.env._(
+                        "Insurance for %(vehicle)s expires on %(date)s.",
+                        vehicle=vehicle.name, date=vehicle.insurance_expiry_date,
+                    ),
+                )
+
+    def action_set_maintenance(self):
+        self.state = 'maintenance'
+
+    def action_set_available(self):
+        self.state = 'available'
+
+    @api.depends('acquisition_date')
+    def _compute_age_years(self):
+        today = fields.Date.context_today(self)
+        for vehicle in self:
+            if not vehicle.acquisition_date:
+                vehicle.age_years = 0
+                continue
+            acquired = vehicle.acquisition_date
+            years = today.year - acquired.year
+            if (today.month, today.day) < (acquired.month, acquired.day):
+                years -= 1
+            vehicle.age_years = max(years, 0)
+
+    @api.onchange('driver_id')
+    def _onchange_driver_id(self):
+        if self.driver_id and not self.driver_id.phone:
+            return {
+                'warning': {
+                    'title': self.env._("Missing contact info"),
+                    'message': self.env._(
+                        "%(driver)s has no phone number on file. "
+                        "Consider adding one before assigning this vehicle.",
+                        driver=self.driver_id.name,
+                    ),
+                }
+            }
