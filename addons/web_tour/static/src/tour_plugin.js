@@ -67,6 +67,7 @@ export class TourPlugin extends Plugin {
     recorder = usePlugin(TourRecorderPlugin);
 
     toursEnabled = session?.tour_enabled;
+    dbTours = {};
 
     setup() {
         onWillStart(() => this.bootstrap());
@@ -127,26 +128,28 @@ export class TourPlugin extends Plugin {
     async getTour(name, options) {
         // Onboarding tour (come from database (.xml files))
         if (options.mode === "manual") {
-            const tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
+            const tour = await this.getDBTour(name);
             if (!tour) {
                 console.error(`Tour '${name}' is not found in the database.`);
                 return;
             }
-            if (!tour.steps.length && tourRegistry.contains(tour.name)) {
-                tour.steps = tourRegistry.get(tour.name).steps;
-            }
+            const steps =
+                !tour.steps.length && tourRegistry.contains(tour.name)
+                    ? tourRegistry.get(tour.name).steps
+                    : tour.steps;
             return {
                 ...tour,
-                steps:
-                    typeof tour.steps === "function"
-                        ? tour.steps()
-                        : Array.isArray(tour.steps)
-                        ? tour.steps
-                        : [],
+                steps: typeof steps === "function" ? steps() : Array.isArray(steps) ? steps : [],
             };
         }
-        // Automatic tour (come from registry)
+        // Automatic tour (come from registry, or from database when only defined in .xml files)
         else {
+            if (!tourRegistry.contains(name)) {
+                const dbTour = await this.getDBTour(name);
+                if (dbTour?.steps.length) {
+                    return dbTour;
+                }
+            }
             await this.waitUntilTourRegistered(name);
             const tour = tourRegistry.get(name, null);
             if (!tour) {
@@ -182,11 +185,26 @@ export class TourPlugin extends Plugin {
     }
 
     /**
-     * Check that the registry contains the tour (only for automatic tour)
      * @param {string} name The name of the tour
      */
+    getDBTour(name) {
+        this.dbTours[name] ||= this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
+        return this.dbTours[name];
+    }
+
+    /**
+     * Check that the tour can be started in automatic mode: registered in the
+     * registry, or defined with its steps in the database (.xml files)
+     * @param {string} name The name of the tour
+     * @returns {boolean|Promise<boolean>}
+     */
     isTourReady(name) {
-        return tourRegistry.contains(name);
+        if (tourRegistry.contains(name)) {
+            return true;
+        }
+        return this.getDBTour(name).then(
+            (tour) => Boolean(tour?.steps.length) || tourRegistry.contains(name)
+        );
     }
 
     async resumeTour() {
