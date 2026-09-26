@@ -34,9 +34,14 @@ export class CalendarTypeConfirmRadioField extends RadioField {
                         "Are you sure? This calendar is already used.\nAll the attendances will be deleted for this calendar"
                     ),
                     confirmLabel: _t("Continue"),
-                    confirm: () => {
+                    confirm: async () => {
                         super.onChange(...arguments);
-                        this.props.record.save();
+                        await this.props.record.save({
+                            onError: (error, {discard}) => {
+                                discard();
+                                throw error;
+                            },
+                        });
                     },
                     cancel: () => this.props.record.load(),
                 });
