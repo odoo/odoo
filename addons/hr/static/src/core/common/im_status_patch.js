@@ -2,6 +2,16 @@ import { imStatusDataRegistry } from "@mail/core/common/im_status";
 import { _t } from "@web/core/l10n/translation";
 
 imStatusDataRegistry.add(
+    "hr-off-hours",
+    {
+        condition: ({ user }) => Boolean(user?.employee_id?.is_off_hours),
+        icon: "dark_mode",
+        iconClass: "oi-filled",
+        title: _t("User is outside work hours"),
+    },
+    { sequence: 70 }
+);
+imStatusDataRegistry.add(
     "hr-homeworking-home",
     {
         condition: ({ user }) => user?.employee_id?.work_location_type === "home",
@@ -15,7 +25,7 @@ imStatusDataRegistry.add(
             default: _t("User is at home"),
         },
     },
-    { sequence: 60 }
+    { sequence: 75 }
 );
 imStatusDataRegistry.add(
     "hr-homeworking-office",
@@ -31,7 +41,7 @@ imStatusDataRegistry.add(
             default: _t("User is at the office"),
         },
     },
-    { sequence: 60 }
+    { sequence: 75 }
 );
 imStatusDataRegistry.add(
     "hr-homeworking-other",
@@ -47,5 +57,5 @@ imStatusDataRegistry.add(
             default: _t("User is at other location"),
         },
     },
-    { sequence: 60 }
+    { sequence: 75 }
 );

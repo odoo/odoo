@@ -27,6 +27,10 @@ class ResPartner(models.Model):
         for partner in self:
             partner.is_in_call = bool(partner.rtc_session_ids)
 
+    def _store_im_status_fields(self, res: Store.FieldList):
+        super()._store_im_status_fields(res)
+        res.attr("is_in_call", sudo=True)
+
     @api.depends("name", "email")
     @api.depends_context("display_email", "formatted_display_name")
     def _compute_display_name(self):
