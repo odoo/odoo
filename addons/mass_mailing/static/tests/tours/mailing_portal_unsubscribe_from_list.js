@@ -10,11 +10,19 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_list", 
     steps: () => [
         {
             content: "Confirmation unsubscribe is done",
+<<<<<<< a777987bd1bb61f65e29fe8d2084676160103400
             trigger:
                 "div#o_mailing_subscription_info span:contains('You are no longer part of the List1, List2 mailing list')",
             run: "click",
         },
         {
+||||||| 932c8c982e2a9cc4fa51d18234eaa62126a8ab65
+            trigger: "div#o_mailing_subscription_info span:contains('You are no longer part of the List1, List2 mailing list')",
+        }, {
+=======
+            trigger: "div#o_mailing_subscription_info span:contains('You are no longer part of the List2, List1 mailing list')",
+        }, {
+>>>>>>> a9ee09ce8f35553410846b53d0f1cc52b7752aad
             content: "Feedback textarea not displayed (see data)",
             trigger: "div#o_mailing_portal_subscription:not(textarea)",
             run: "click",
@@ -63,11 +71,19 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_list_wi
     steps: () => [
         {
             content: "Confirmation unsubscribe is done",
+<<<<<<< a777987bd1bb61f65e29fe8d2084676160103400
             trigger:
                 "div#o_mailing_subscription_info span:contains('You are no longer part of the List1, List2 mailing list')",
             run: "click",
         },
         {
+||||||| 932c8c982e2a9cc4fa51d18234eaa62126a8ab65
+            trigger: "div#o_mailing_subscription_info span:contains('You are no longer part of the List1, List2 mailing list')",
+        }, {
+=======
+            trigger: "div#o_mailing_subscription_info span:contains('You are no longer part of the List2, List1 mailing list')",
+        }, {
+>>>>>>> a9ee09ce8f35553410846b53d0f1cc52b7752aad
             content: "List1 is present, just opt-outed",
             trigger:
                 "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List1') span:contains('Not subscribed')",
