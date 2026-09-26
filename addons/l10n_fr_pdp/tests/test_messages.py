@@ -96,7 +96,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
 
         if r.path_url.startswith('/api/pdp/1/annuaire_lookup?pdp_identifier='):
             identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
-            return cls._get_annuaire_lookup_response(identifier, "968515759_96851575905823")
+            return cls._get_annuaire_lookup_response(identifier, "968515759_96851575905824")
         elif r.path_url.startswith('/api/pdp/1/lookup?peppol_identifier='):
             identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
             return cls._get_peppol_lookup_response(identifier, "0208:0239843188")
