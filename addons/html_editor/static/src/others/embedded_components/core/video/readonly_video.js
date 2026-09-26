@@ -61,7 +61,7 @@ export class ReadonlyEmbeddedVideoComponent extends Component {
         if (platform === VideoFile.id) {
             return VideoFile.getEmbedUrl(this.props.baseUrl || this.props.src, params);
         }
-        if (platform && videoId) {
+        if (platform && videoId !== undefined) {
             const platFormClass = PLATFORMS[platform];
             return platFormClass.getEmbedUrl(videoId, params);
         }
