@@ -36,6 +36,11 @@ class ResConfigSettings(models.TransientModel):
     company_count = fields.Integer('Number of Companies', compute="_compute_company_count")
     active_user_count = fields.Integer('Number of Active Users', compute="_compute_active_user_count")
     language_count = fields.Integer('Number of Languages', compute="_compute_language_count")
+    translation_auto_update = fields.Boolean(
+        "Automatically Update Translations",
+        default=True,
+        help="If checked, automatically updates translations every week.",
+    )
     company_name = fields.Char(related="company_id.display_name", string="Company Name")
     company_informations = fields.Text(compute="_compute_company_informations")
     company_country_code = fields.Char(related="company_id.country_id.code", string="Company Country Code", readonly=True)
@@ -74,6 +79,18 @@ class ResConfigSettings(models.TransientModel):
             'views': [(self.env.ref('base.view_default_groups_form').id, 'form')],
             'target': 'new',
         }
+
+    @api.model
+    def get_values(self):
+        res = super().get_values()
+        cron_lang_update = self.env.ref('base.ir_cron_language_update', False)
+        res.update(translation_auto_update=cron_lang_update.active)
+        return res
+
+    def set_values(self):
+        super().set_values()
+        cron_lang_update = self.env.ref('base.ir_cron_language_update', False)
+        cron_lang_update.write({'active': self.translation_auto_update})
 
     @api.model
     def _prepare_report_view_action(self, template):
