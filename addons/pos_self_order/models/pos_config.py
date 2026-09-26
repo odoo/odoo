@@ -18,8 +18,9 @@ class PosConfig(models.Model):
     def _self_order_kiosk_default_languages(self):
         return self.env["res.lang"].get_installed()
 
-    def _self_order_default_user(self):
-        users = self.env["res.users"].search(['|', ('company_ids', 'in', self.env.company.id), ('company_id', '=', False)])
+    def _self_order_default_user(self, company=None):
+        company = company or self.env['res.company'].browse(self.env.context.get('default_company_id')) or self.env.company
+        users = self.env["res.users"].search([('company_ids', 'in', company.id)])
         for user in users:
             if user.sudo().has_group("point_of_sale.group_pos_manager"):
                 return user
@@ -122,6 +123,7 @@ class PosConfig(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self._prepare_self_order_splash_screen(vals_list, is_new=True)
+        self._prepare_self_order_default_user(vals_list)
         pos_config_ids = super().create(vals_list)
         pos_config_ids._ensure_public_attachments()
         pos_config_ids._prepare_self_order_custom_btn()
@@ -148,6 +150,22 @@ class PosConfig(models.Model):
                     'url': '/pos_self_order/static/img/kiosk_background.jpg',
                     'res_model': 'pos.config',
                 })]
+
+        return True
+
+    @api.model
+    def _prepare_self_order_default_user(self, vals_list):
+        for vals in vals_list:
+            if vals.get('self_ordering_mode', 'nothing') == 'nothing':
+                continue
+
+            company = self.env['res.company'].browse(vals.get('company_id')) or self.env.company
+            user = self.env['res.users'].sudo().browse(vals.get('self_ordering_default_user_id') or ())
+            if user and company.id in user._get_company_ids():
+                continue
+
+            default_user = self._self_order_default_user(company)
+            vals['self_ordering_default_user_id'] = default_user.id if default_user else False
 
         return True
 
@@ -209,17 +227,25 @@ class PosConfig(models.Model):
             selection_each_label = f"{selection_each_label} {_('(require Odoo Enterprise)')}"
         return [("meal", _("Meal")), ("each", selection_each_label)]
 
-    @api.constrains('self_ordering_default_user_id')
+    @api.constrains('self_ordering_default_user_id', 'self_ordering_mode', 'company_id')
     def _check_default_user(self):
         for record in self:
-            if (
-                record.self_ordering_mode != 'nothing' and (
-                not record.self_ordering_default_user_id or (
-                record.self_ordering_default_user_id
-                and not record.self_ordering_default_user_id.sudo().has_group("point_of_sale.group_pos_user")
-                and not record.self_ordering_default_user_id.sudo().has_group("point_of_sale.group_pos_manager")))
+            if record.self_ordering_mode == 'nothing':
+                continue
+
+            user = record.self_ordering_default_user_id.sudo()
+            if not user or not (
+                user.has_group("point_of_sale.group_pos_user")
+                or user.has_group("point_of_sale.group_pos_manager")
             ):
                 raise UserError(_("The Self-Order default user must be a POS user"))
+
+            if record.company_id.id not in user._get_company_ids():
+                raise UserError(_(
+                    "The Self-Order default user %(user)s must have access to the company %(company)s.",
+                    user=user.name,
+                    company=record.company_id.name,
+                ))
 
     @api.constrains("payment_method_ids", "self_ordering_mode")
     def _onchange_payment_method_ids(self):
