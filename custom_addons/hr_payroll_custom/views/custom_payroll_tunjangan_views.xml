@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_custom_payroll_tunjangan_form" model="ir.ui.view">
+        <field name="name">custom.payroll.tunjangan.form</field>
+        <field name="model">custom.payroll.tunjangan</field>
+        <field name="arch" type="xml">
+            <form string="Allowance">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Allowance Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Information">
+                            <field name="type"/>
+                            <field name="nilai" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Settings">
+                            <field name="status_aktif"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_custom_payroll_tunjangan_list" model="ir.ui.view">
+        <field name="name">custom.payroll.tunjangan.list</field>
+        <field name="model">custom.payroll.tunjangan</field>
+        <field name="arch" type="xml">
+            <list string="Allowances">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="nilai" widget="monetary"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="status_aktif"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_custom_payroll_tunjangan_search" model="ir.ui.view">
+        <field name="name">custom.payroll.tunjangan.search</field>
+        <field name="model">custom.payroll.tunjangan</field>
+        <field name="arch" type="xml">
+            <search string="Allowances">
+                <field name="name"/>
+                <field name="type"/>
+                <filter name="filter_active" string="Active" domain="[('status_aktif', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactive" domain="[('status_aktif', '=', False)]"/>
+                <group>
+                    <filter name="group_type" string="Type" context="{'group_by': 'type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_custom_payroll_tunjangan" model="ir.actions.act_window">
+        <field name="name">Allowances</field>
+        <field name="res_model">custom.payroll.tunjangan</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_custom_payroll_tunjangan_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first allowance type.
+            </p>
+        </field>
+    </record>
+</odoo>

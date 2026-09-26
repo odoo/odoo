@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_presenly_overtime_reject_wizard" model="ir.ui.view">
+        <field name="name">presenly.overtime.reject.wizard.form</field>
+        <field name="model">presenly.overtime.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Overtime">
+                <group>
+                    <field name="overtime_id"/>
+                    <field name="reason"/>
+                </group>
+                <footer>
+                    <button name="action_reject" type="object" string="Reject"
+                            class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

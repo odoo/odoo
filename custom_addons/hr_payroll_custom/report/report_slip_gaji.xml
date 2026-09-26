@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_slip_gaji" model="ir.actions.report">
+        <field name="name">Slip Gaji</field>
+        <field name="model">custom.payroll.slip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr_payroll_custom.report_slip_gaji</field>
+        <field name="report_file">hr_payroll_custom.report_slip_gaji</field>
+        <field name="binding_model_id" ref="model_custom_payroll_slip"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="mail_template_payroll_slip" model="mail.template">
+        <field name="name">Payroll: Payslip</field>
+        <field name="model_id" ref="model_custom_payroll_slip"/>
+        <field name="subject">Payslip {{ object.payroll_batch_id.name }} - {{ object.employee_id.name }}</field>
+        <field name="email_from">{{ object.company_id.email_formatted or user.email_formatted or '' }}</field>
+        <field name="use_default_to" eval="False"/>
+        <field name="email_to">{{ object.employee_id.work_email or '' }}</field>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html" type="html">
+            <p>Dear <t t-out="object.employee_id.name"/>,</p>
+            <p>Please find attached your payslip for <t t-out="object.payroll_batch_id.name"/>.</p>
+            <p>Regards,<br/><t t-out="object.company_id.name"/></p>
+        </field>
+        <field name="report_template_ids" eval="[(4, ref('hr_payroll_custom.action_report_slip_gaji'))]"/>
+    </record>
+
+    <template id="report_slip_gaji">
+        <t t-call="web.html_container">
+            <t t-set="component_type_labels" t-value="{
+                'gaji_pokok': 'Gaji Pokok',
+                'tunjangan': 'Tunjangan',
+                'potongan': 'Potongan',
+                'lembur': 'Lembur',
+                'bpjs': 'BPJS',
+                'rule': 'Salary Rule',
+                'lainnya': 'Lainnya',
+            }"/>
+            <t t-foreach="docs" t-as="slip">
+                <t t-call="web.external_layout">
+                    <t t-set="earnings" t-value="slip.detail_ids.filtered(lambda d: d.component_type == 'tunjangan' or (d.component_type == 'rule' and d.rule_id.category_id.code == 'ALW'))"/>
+                    <t t-set="deductions" t-value="slip.detail_ids.filtered(lambda d: d.component_type in ('potongan', 'bpjs') or (d.component_type == 'rule' and d.rule_id.category_id.code == 'DED'))"/>
+                    <div class="page">
+                        <h2 style="text-align: center;">SLIP GAJI</h2>
+                        <h3 style="text-align: center;" t-esc="slip.payroll_batch_id.name"/>
+
+                        <div class="row mt32 mb32">
+                            <div class="col-6">
+                                <strong>Employee:</strong> <span t-esc="slip.employee_id.name"/><br/>
+                                <strong>Department:</strong> <span t-esc="slip.department_id.name"/><br/>
+                                <strong>Job Position:</strong> <span t-esc="slip.job_id.name"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Slip Number:</strong> <span t-esc="slip.name"/><br/>
+                                <strong>Status:</strong> <span t-esc="slip.status"/><br/>
+                                <strong>Batch Status:</strong> <span t-esc="slip.payroll_batch_id.status"/>
+                            </div>
+                        </div>
+
+                        <h4>PENDAPATAN</h4>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Description</th>
+                                    <th class="text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Gaji Pokok</td>
+                                    <td>Basic Salary</td>
+                                    <td class="text-right">
+                                        <span t-esc="slip.total_gaji_pokok" t-options="{'widget': 'monetary', 'display_currency': slip.currency_id}"/>
+                                    </td>
+                                </tr>
+                                <tr t-foreach="earnings" t-as="line">
+                                    <td t-esc="component_type_labels.get(line.component_type, line.component_type)"/>
+                                    <td t-esc="line.description"/>
+                                    <td class="text-right">
+                                        <span t-esc="line.nominal" t-options="{'widget': 'monetary', 'display_currency': slip.currency_id}"/>
+                                    </td>
+                                </tr>
+                                <tr t-if="slip.overtime_amount > 0">
+                                    <td>Lembur</td>
+                                    <td>Overtime</td>
+                                    <td class="text-right">
+                                        <span t-esc="slip.overtime_amount" t-options="{'widget': 'monetary', 'display_currency': slip.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-active">
+                                    <td colspan="2"><strong>Total Pendapatan (Gross)</strong></td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <span t-esc="slip.total_earnings" t-options="{'widget': 'monetary', 'display_currency': slip.currency_id}"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <h4>POTONGAN</h4>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Description</th>
+                                    <th class="text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="deductions" t-as="line">
+                                    <td t-esc="component_type_labels.get(line.component_type, line.component_type)"/>
+                                    <td t-esc="line.description"/>
+                                    <td class="text-right">
+                                        <span t-esc="line.nominal" t-options="{'widget': 'monetary', 'display_currency': slip.currency_id}"/>
+                                    </td>
+                                </tr>
+                                <tr t-if="not deductions">
+                                    <td colspan="3" class="text-center text-muted"><em>(no deductions)</em></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-active">
+                                    <td colspan="2"><strong>Total Potongan</strong></td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <span t-esc="slip.total_potongan" t-options="{'widget': 'monetary', 'display_currency': slip.currency_id}"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="row mt32">
+                            <div class="col-12">
+                                <table class="table table-sm">
+                                    <tr class="table-success">
+                                        <td><h4><strong>TAKE HOME PAY (NET)</strong></h4></td>
+                                        <td class="text-right">
+                                            <h4>
+                                                <strong>
+                                                    <span t-esc="slip.total_pendapatan" t-options="{'widget': 'monetary', 'display_currency': slip.currency_id}"/>
+                                                </strong>
+                                            </h4>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row mt64">
+                            <div class="col-6 text-center">
+                                <p>Received by,</p>
+                                <br/><br/>
+                                <hr style="width: 60%; margin: 0 auto;"/>
+                                <p t-esc="slip.employee_id.name"/>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p>Approved by,</p>
+                                <br/><br/>
+                                <hr style="width: 60%; margin: 0 auto;"/>
+                                <p t-if="slip.payroll_batch_id.approver_id" t-esc="slip.payroll_batch_id.approver_id.name"/>
+                                <p t-if="not slip.payroll_batch_id.approver_id"><em>(not yet approved)</em></p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

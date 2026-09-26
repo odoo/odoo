@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===================================================== -->
+    <!-- LIST VIEW -->
+    <!-- ===================================================== -->
+
+    <record id="view_sifnext_asset_list" model="ir.ui.view">
+        <field name="name">sifnext.asset.list</field>
+        <field name="model">sifnext.asset</field>
+        <field name="arch" type="xml">
+
+            <list string="Data Aset" decoration-muted="not active">
+
+                <field name="code" string="Kode Aset"/>
+                <field name="name" string="Nama Aset"/>
+                <field name="category_id" string="Kategori"/>
+                <field name="owner_unit" string="Unit Pemilik"/>
+                <field name="project_code" string="Kode Proyek"/>
+                <field name="acquisition_date" string="Tanggal Perolehan"/>
+
+                <field
+                    name="acquisition_value"
+                    string="Nilai Perolehan"
+                    widget="monetary"
+                    options="{'currency_field': 'currency_id'}"
+                />
+
+                <field
+                    name="book_value"
+                    string="Nilai Buku"
+                    widget="monetary"
+                    options="{'currency_field': 'currency_id'}"
+                />
+
+                <field name="state" string="Status"/>
+                <field name="active" string="Aktif" widget="boolean"/>
+
+            </list>
+
+        </field>
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- FORM VIEW -->
+    <!-- ===================================================== -->
+
+    <record id="view_sifnext_asset_form" model="ir.ui.view">
+        <field name="name">sifnext.asset.form</field>
+        <field name="model">sifnext.asset</field>
+        <field name="arch" type="xml">
+
+            <form string="Data Aset">
+
+                <!-- ================================================= -->
+                <!-- HEADER -->
+                <!-- ================================================= -->
+
+                <header>
+
+                    <button
+                        name="action_post_acquisition"
+                        type="object"
+                        string="Post Perolehan"
+                        class="btn-primary"
+                        invisible="state != 'draft'"
+                    />
+
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,acquired,depreciating,fully_depreciated"
+                    />
+
+                </header>
+
+
+                <sheet>
+
+                    <!-- ================================================= -->
+                    <!-- TITLE -->
+                    <!-- ================================================= -->
+
+                    <div class="oe_title">
+
+                        <label
+                            for="name"
+                            class="oe_edit_only"
+                        />
+
+                        <h1>
+
+                            <field
+                                name="name"
+                                placeholder="Contoh: Laptop Dell Latitude"
+                            />
+
+                        </h1>
+
+                    </div>
+
+
+                    <!-- ================================================= -->
+                    <!-- ACTION ARCHIVE -->
+                    <!-- ================================================= -->
+
+                    <div class="oe_button_box">
+
+                        <button
+                            name="toggle_active"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-archive"
+                        >
+
+                            <field
+                                name="active"
+                                widget="boolean_button"
+                                options="{'terminology': 'archive'}"
+                            />
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- ================================================= -->
+                    <!-- IDENTITAS ASET -->
+                    <!-- ================================================= -->
+
+                    <group string="Identitas Aset">
+
+                        <group>
+
+                            <field name="code" readonly="1"/>
+
+                            <field name="category_id"/>
+
+                            <field name="owner_unit"/>
+
+                            <field name="partner_id" string="Vendor"/>
+
+                        </group>
+
+                        <group>
+
+                            <field name="project_code"/>
+
+                            <field name="reference"/>
+
+                            <field name="active" widget="boolean_toggle"/>
+
+                        </group>
+
+                    </group>
+
+
+                    <!-- ================================================= -->
+                    <!-- INFORMASI PEROLEHAN -->
+                    <!-- ================================================= -->
+
+                    <group string="Informasi Perolehan">
+
+                        <group>
+
+                            <field name="acquisition_date"/>
+
+                            <field
+                                name="acquisition_value"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id'}"
+                            />
+
+                            <field
+                                name="currency_id"
+                                invisible="1"
+                            />
+
+                        </group>
+
+                        <group>
+
+                            <field name="depreciation_start_date"/>
+
+                            <field
+                                name="residual_value"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id'}"
+                            />
+
+                        </group>
+
+                    </group>
+
+
+                    <!-- ================================================= -->
+                    <!-- AKUN FINANCE -->
+                    <!-- ================================================= -->
+
+                    <group string="Integrasi Finance">
+
+                        <group>
+
+                            <field name="account_asset_id"/>
+
+                            <field name="account_cash_id"/>
+
+                        </group>
+
+                        <group>
+
+                            <field name="account_dep_id"/>
+
+                            <field name="account_exp_id"/>
+
+                        </group>
+
+                    </group>
+
+
+                    <!-- ================================================= -->
+                    <!-- JURNAL PEROLEHAN -->
+                    <!-- ================================================= -->
+
+                    <group string="Jurnal Perolehan">
+
+                        <field name="purchase_journal_id"/>
+
+                    </group>
+
+
+                    <!-- ================================================= -->
+                    <!-- INFORMASI PENYUSUTAN -->
+                    <!-- ================================================= -->
+
+                    <group string="Informasi Penyusutan">
+
+                        <group>
+
+                            <field name="useful_life_years"/>
+
+                            <field name="useful_life_months"/>
+
+                            <field name="depreciation_method"/>
+
+                        </group>
+
+                        <group>
+
+                            <field
+                                name="depreciation_amount"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id'}"
+                            />
+
+                        </group>
+
+                    </group>
+
+
+                    <!-- ================================================= -->
+                    <!-- NILAI ASET -->
+                    <!-- ================================================= -->
+
+                    <group string="Nilai Aset">
+
+                        <group>
+
+                            <field
+                                name="accumulated_depreciation"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id'}"
+                            />
+
+                        </group>
+
+                        <group>
+
+                            <field
+                                name="book_value"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id'}"
+                            />
+
+                        </group>
+
+                    </group>
+
+
+                    <!-- ================================================= -->
+                    <!-- NOTEBOOK -->
+                    <!-- ================================================= -->
+
+                    <notebook>
+
+                        <!-- ============================================= -->
+                        <!-- JADWAL PENYUSUTAN -->
+                        <!-- ============================================= -->
+
+                        <page string="Jadwal Penyusutan">
+
+                            <div class="mb-3">
+
+                                <button
+                                    name="action_generate_depreciation_schedule"
+                                    type="object"
+                                    string="Generate Ulang Jadwal"
+                                    class="btn btn-secondary"
+                                    icon="fa-refresh"
+                                />
+
+                            </div>
+
+                            <field
+                                name="depreciation_ids"
+                                nolabel="1"
+                            >
+
+                                <list>
+
+                                    <field
+                                        name="depreciation_date"
+                                        string="Tanggal"
+                                    />
+
+                                    <field
+                                        name="depreciation_amount"
+                                        string="Penyusutan"
+                                        widget="monetary"
+                                        options="{'currency_field': 'currency_id'}"
+                                    />
+
+                                    <field
+                                        name="accumulated_depreciation"
+                                        string="Akumulasi"
+                                        widget="monetary"
+                                        options="{'currency_field': 'currency_id'}"
+                                    />
+
+                                    <field
+                                        name="book_value"
+                                        string="Nilai Buku"
+                                        widget="monetary"
+                                        options="{'currency_field': 'currency_id'}"
+                                    />
+
+                                    <field
+                                        name="state"
+                                        string="Status"
+                                    />
+
+                                    <field
+                                        name="journal_entry_id"
+                                        string="Jurnal Finance"
+                                    />
+
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+            </form>
+
+        </field>
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- SEARCH VIEW -->
+    <!-- ===================================================== -->
+
+    <record id="view_sifnext_asset_search" model="ir.ui.view">
+        <field name="name">sifnext.asset.search</field>
+        <field name="model">sifnext.asset</field>
+        <field name="arch" type="xml">
+
+            <search string="Cari Aset">
+
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="owner_unit"/>
+                <field name="project_code"/>
+
+                <filter
+                    name="filter_active"
+                    string="Aktif"
+                    domain="[('active', '=', True)]"
+                />
+
+                <filter
+                    name="filter_archived"
+                    string="Diarsipkan"
+                    domain="[('active', '=', False)]"
+                />
+
+                <separator/>
+
+                <filter
+                    name="group_category"
+                    string="Kategori"
+                    context="{'group_by': 'category_id'}"
+                />
+
+                <filter
+                    name="group_owner_unit"
+                    string="Unit Pemilik"
+                    context="{'group_by': 'owner_unit'}"
+                />
+
+                <filter
+                    name="group_project_code"
+                    string="Kode Proyek"
+                    context="{'group_by': 'project_code'}"
+                />
+
+            </search>
+
+        </field>
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- ACTION -->
+    <!-- ===================================================== -->
+
+    <record id="action_sifnext_asset" model="ir.actions.act_window">
+
+        <field name="name">Data Aset</field>
+
+        <field name="res_model">sifnext.asset</field>
+
+        <field name="view_mode">list,form</field>
+
+        <field
+            name="view_id"
+            ref="view_sifnext_asset_list"
+        />
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- MENU -->
+    <!-- ===================================================== -->
+
+    <menuitem
+        id="menu_sifnext_asset"
+        name="Asset"
+        sequence="30"
+    />
+
+    <menuitem
+        id="menu_sifnext_asset_data"
+        name="Data Aset"
+        parent="menu_sifnext_asset"
+        action="action_sifnext_asset"
+        sequence="10"
+    />
+
+</odoo>

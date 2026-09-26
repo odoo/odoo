@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherited Form View - Add Payroll Tab to Employee -->
+    <record id="view_employee_form_payroll_inherited" model="ir.ui.view">
+        <field name="name">hr.employee.form.payroll.inherited</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Custom Payroll" name="custom_payroll_slips" groups="hr_payroll_custom.group_payroll_user">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_slips" type="object" class="oe_stat_button" icon="fa-money">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Payslips</span>
+                                <span class="o_stat_value"><field name="slip_count"/></span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="slip_ids" readonly="1"/>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
