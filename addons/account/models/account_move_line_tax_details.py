@@ -188,7 +188,7 @@ class AccountMoveLine(models.Model):
                             tax.sequence
                         FROM account_move_line_account_tax_rel tax_rel
                         JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
-                        WHERE tax.is_base_affected
+                        WHERE (tax.is_base_affected OR tax.id = COALESCE(account_move_line.group_tax_id, account_move_line.tax_line_id))
                         AND tax_rel.account_move_line_id = base_line.id
                     ) AS sub
                 ) base_line_tax_ids ON TRUE
@@ -197,6 +197,7 @@ class AccountMoveLine(models.Model):
                     AND (
                         -- keeping only the rows from affecting_base_tax_lines that end with the same taxes applied (see comment in tax_line_tax_ids)
                         NOT tax.include_base_amount
+                        OR COALESCE(ARRAY_LENGTH(tax_line_tax_ids.tax_ids, 1), 0) = 0
                         OR base_line_tax_ids.tax_ids[ARRAY_LENGTH(base_line_tax_ids.tax_ids, 1) - COALESCE(ARRAY_LENGTH(tax_line_tax_ids.tax_ids, 1), 0):ARRAY_LENGTH(base_line_tax_ids.tax_ids, 1)]
                             = ARRAY[account_move_line.tax_line_id] || COALESCE(tax_line_tax_ids.tax_ids, ARRAY[]::INTEGER[])
                     )
@@ -275,6 +276,7 @@ class AccountMoveLine(models.Model):
                     tax_rel.account_move_line_id = base_tax_line_mapping.tax_line_id
                 JOIN account_tax tax ON
                     tax.id = tax_rel.account_tax_id
+                    AND tax.sequence > tax_include_base_amount.sequence
                 JOIN base_tax_line_mapping tax_line_matching ON
                     tax_line_matching.base_line_id = base_tax_line_mapping.base_line_id
                 JOIN account_move_line tax_line ON
