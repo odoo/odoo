@@ -4,7 +4,7 @@ from odoo.fields import Command
 from odoo.tests import Form, HttpCase, tagged
 
 from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
-from odoo.addons.website_sale.controllers.main import WebsiteSale as CheckoutController
+from odoo.addons.website_sale.controllers.checkout.checkout import Checkout as CheckoutController
 
 
 @tagged('post_install', '-at_install')

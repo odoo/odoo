@@ -6,9 +6,9 @@ from odoo.tests import patch, tagged
 from odoo.tests.common import HttpCase
 
 from odoo.addons.payment.tests.common import PaymentCommon
-from odoo.addons.website_sale.controllers.cart import Cart as CartController
-from odoo.addons.website_sale.controllers.main import WebsiteSale as CheckoutController
-from odoo.addons.website_sale.controllers.payment import PaymentPortal as PaymentController
+from odoo.addons.website_sale.controllers.checkout.cart import Cart as CartController
+from odoo.addons.website_sale.controllers.checkout.payment import Payment as PaymentController
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.models.website import CART_SESSION_CACHE_KEY
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
@@ -30,7 +30,7 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
         cls.pricelist = cls._enable_pricelists()
         cls.partner.write(cls.dummy_partner_address_values)
         cls.cart.pricelist_id = cls.pricelist
-        cls.CheckoutController = CheckoutController()
+        cls.CheckoutController = WebsiteSale()
         cls.CartController = CartController()
         cls.PaymentController = PaymentController()
 

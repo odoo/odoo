@@ -3,19 +3,19 @@
 from odoo import Command
 from odoo.tests import tagged
 
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.editor import Editor
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged("post_install", "-at_install")
 class TestDynamicSnippetCategory(WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     def setUp(self):
         super().setUp()
@@ -39,7 +39,7 @@ class TestDynamicSnippetCategory(WebsiteSaleCommon):
             ],
             "website_published": True,
         })
-        self.website_sale = WebsiteSale()
+        self.website_sale = Editor()
         self.website = self.website.with_user(self.env.ref("base.user_admin"))
 
     def test_snippet_categories_sample(self):

@@ -5,7 +5,7 @@ from odoo.tests import tagged
 
 from odoo.addons.event_booth_sale.tests.common import TestEventBoothSaleCommon
 from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.shop import Shop
 from odoo.addons.website_sale.tests.common import MockRequest
 
 
@@ -24,7 +24,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.WebsiteSaleController = WebsiteSale()
+        cls.WebsiteSaleController = Shop()
         cls.booth_1 = cls.env['event.booth'].create({
             'booth_category_id': cls.event_booth_category_1.id,
             'event_id': cls.event.id,
