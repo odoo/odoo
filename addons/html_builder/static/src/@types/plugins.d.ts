@@ -7,7 +7,7 @@ declare module "plugins" {
     import { CloneShared, on_cloned_handlers, on_will_clone_handlers } from "@html_builder/core/clone_plugin";
     import { CustomizeTabShared } from "@html_builder/core/customize_tab_plugin";
     import { DisableSnippetsShared } from "@html_builder/core/disable_snippets_plugin";
-    import { dropzone_selectors, DropZoneShared, is_valid_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
+    import { dropzone_selectors, DropZoneShared, ignored_sibling_element_selectors, is_valid_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
     import { on_replicated_handlers } from "@html_builder/core/field_change_replication_plugin";
     import { MediaWebsiteShared } from "@html_builder/core/media_website_plugin";
     import { OperationShared } from "@html_builder/core/operation_plugin";
@@ -149,6 +149,7 @@ declare module "plugins" {
         fontCssVariables: fontCssVariables;
         get_overlay_buttons: get_overlay_buttons;
         has_overlay_options: has_overlay_options;
+        ignored_sibling_element_selectors: ignored_sibling_element_selectors;
         is_movable_selectors: is_movable_selectors;
         is_unremovable_selectors: is_unremovable_selectors;
         lower_panel_entries: lower_panel_entries;

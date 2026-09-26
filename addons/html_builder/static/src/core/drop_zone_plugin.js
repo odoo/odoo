@@ -27,6 +27,7 @@ import { _t } from "@web/core/l10n/translation";
 /**
  * @typedef {DropzoneSelector[]} dropzone_selectors
  * @typedef {((el: HTMLElement) => boolean | undefined)[]} is_valid_for_sibling_dropzone_predicates
+ * @typedef {CSSSelector[]} ignored_sibling_element_selectors
  */
 
 export class DropZonePlugin extends Plugin {
@@ -42,6 +43,7 @@ export class DropZonePlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
+        ignored_sibling_element_selectors: ".o_we_no_overlay",
         /**
          * @param {import("@html_editor/core/dom_observer_plugin").NativeMutation} mutation
          * @returns {boolean | undefined}
@@ -80,6 +82,9 @@ export class DropZonePlugin extends Plugin {
         this.snippetModel = this.config.snippetModel;
         this.dropzoneSelectors = this.getResource("dropzone_selectors");
         this.iframe = this.document.defaultView.frameElement;
+        this.ignoredSiblingElementSelectors = this.getResource(
+            "ignored_sibling_element_selectors"
+        ).join(",");
     }
 
     /**
@@ -487,7 +492,7 @@ export class DropZonePlugin extends Plugin {
         { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids },
         { toInsertInline, isContentInIframe = true } = {}
     ) {
-        const isIgnored = (el) => el.matches(".o_we_no_overlay") || !isVisible(el);
+        const isIgnored = (el) => el.matches(this.ignoredSiblingElementSelectors) || !isVisible(el);
         let hookEls = [];
         for (const parentEl of selectorChildren) {
             const validChildrenEls = [...parentEl.children].filter((el) => !isIgnored(el));
