@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ga_registro_academico_list" >
+            <field name="name">Ga Registro Academico List</field>
+            <field name="model">ga.registro.academico</field>
+            <field name="arch" type="xml">
+                <tree string="Registro Academico " create="true" edit="true">
+                    <field name="fecha_entrega"/>
+                    <field name="calificacion"/>
+                    <field name="alumno_id"/>
+                    <field name="actividad_academica_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ga_registro_academico" >
+            <field name="name">Ga Registro Academico Form</field>
+            <field name="model">ga.registro.academico</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                    <field name="fecha_entrega"/>
+                    <field name="actividad_academica_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
