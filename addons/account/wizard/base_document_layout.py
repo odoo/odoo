@@ -70,6 +70,8 @@ class BaseDocumentLayout(models.TransientModel):
                     bank.allow_out_payment = False
                     bank.acc_number = record.account_number
                     bank.allow_out_payment = True
+            elif record.partner_id.bank_ids:
+                record.partner_id.bank_ids[0].action_archive()
             elif record.account_number:
                 record.partner_id.bank_ids += self.env['res.partner.bank']._find_or_create_bank_account(
                     account_number=record.account_number,
