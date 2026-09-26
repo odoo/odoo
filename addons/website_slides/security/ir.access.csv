@@ -47,7 +47,6 @@ rule_slide_slide_signed_in_user_1,"Slide: portal/user: restricted to published a
 rule_slide_slide_officer_r,Slide: officer: read all,slide.slide,website_slides.group_website_slides_officer,r,
 rule_slide_slide_officer_cw,Slide: officer: create/write own only,slide.slide,website_slides.group_website_slides_officer,cu,"[('channel_id.user_id', '=', user.id)]"
 rule_slide_slide_manager,Slide: manager: crud all,slide.slide,website_slides.group_website_slides_manager,crud,
-rule_slide_slide_global,Slide: always visible (sub rules exist),slide.slide,,crud,
 access_slide_slide_partner_system,slide.slide.partner.system,slide.slide.partner,website_slides.group_website_slides_officer,r,
 rule_slide_slide_partner_officer,Slide Partner: officer: create/write/unlink own only,slide.slide.partner,website_slides.group_website_slides_officer,cud,"[('channel_id.user_id', '=', user.id)]"
 rule_slide_slide_partner_manager,Slide Partner: manager: crud all,slide.slide.partner,website_slides.group_website_slides_manager,crud,
@@ -56,7 +55,7 @@ access_slide_question_officer,slide.question.officer,slide.question,website_slid
 access_slide_answer_officer,slide.answer.officer,slide.answer,website_slides.group_website_slides_officer,crud,
 access_slide_tag_public,slide.tag.all,slide.tag,base.group_everyone,r,
 access_slide_tag_officer,slide.tag.officer,slide.tag,website_slides.group_website_slides_officer,crud,
-rule_slide_channel_tag_public,Channel Tag: public/portal: color = published,slide.channel.tag,base.group_everyone,r,"['&', ('color', '!=', False), ('color', '!=', 0)]"
+rule_slide_channel_tag_public,Channel Tag: public/portal: color = published,slide.channel.tag,base.group_everyone,r,"[('color', '!=', False)]"
 access_slide_channel_tag_employee,slide.channel.tag.all,slide.channel.tag,base.group_user,r,
 access_slide_channel_tag_user,slide.channel.tag.user,slide.channel.tag,website_slides.group_website_slides_officer,crud,
 access_slide_channel_tag_group_public,slide.channel.tag.group.all,slide.channel.tag.group,base.group_everyone,r,
@@ -85,7 +84,6 @@ rule_slide_channel_visibility_signed_in_user_1,"Channel: portal/user: restricted
 rule_slide_channel_officer_r,Channel: officer: read all,slide.channel,website_slides.group_website_slides_officer,r,
 rule_slide_channel_officer_cw,Channel: officer: create/write own only,slide.channel,website_slides.group_website_slides_officer,cu,"[('user_id', '=', user.id)]"
 rule_slide_channel_manager,Channel: manager: crud all,slide.channel,website_slides.group_website_slides_manager,crud,
-rule_slide_channel_global,Channel: always visible (sub rules exist),slide.channel,,crud,
 access_slide_channel_partners_system,slide.channel.users.system,slide.channel.partner,website_slides.group_website_slides_officer,r,
 rule_slide_channel_partner_officer,Channel Partner: officer: create/write/unlink own only,slide.channel.partner,website_slides.group_website_slides_officer,cud,"[('channel_id.user_id', '=', user.id)]"
 rule_slide_channel_partner_manager,Channel Partner: manager: crud all,slide.channel.partner,website_slides.group_website_slides_manager,crud,

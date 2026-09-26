@@ -118,7 +118,7 @@ class PurchaseOrder(models.Model):
         copy=False,
         tracking=True)
     lock_confirmed_po = fields.Selection(related="company_id.po_lock")
-    order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', copy=True)
+    order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', copy=True, bypass_search_access=True)
     acknowledged = fields.Boolean(
         'Acknowledged', copy=False, tracking=True,
         help="It indicates that the vendor has acknowledged the receipt of the purchase order.")

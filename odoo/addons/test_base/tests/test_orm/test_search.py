@@ -1803,7 +1803,7 @@ class TestAnyDomainSearchContext(TransactionCase):
         self.env['ir.access'].create({
             'name': 'test any domain search context',
             'model_id': model_id,
-            'domain': "[('attachment_id.res_access_read', '=', True)]",
+            'domain': "[('attachment_id.res_access_read', '=', True)]",  # XXX access 'read'?
             'group_id': self.env.ref('base.group_user').id,
             'operation': 'r',
         })
