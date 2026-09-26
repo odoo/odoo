@@ -181,16 +181,17 @@ export class PartnerList extends Component {
         return partner;
     }
     async getNewPartners() {
+        const query = this.state.query;
         let domain = [];
-        const offset = this.globalState.offsetBySearch[this.state.query] || 0;
+        const offset = this.globalState.offsetBySearch[query] || 0;
         if (offset > this.loadedPartnerIds.size) {
             return [];
         }
-        if (this.state.query) {
-            const search_fields = this._getSearchFields(this.state.query);
+        if (query) {
+            const search_fields = this._getSearchFields(query);
             domain = [
                 ...Array(search_fields.length - 1).fill("|"),
-                ...search_fields.map((field) => [field, "ilike", this.state.query]),
+                ...search_fields.map((field) => [field, "ilike", query]),
             ];
         }
 
@@ -215,15 +216,16 @@ export class PartnerList extends Component {
                 false
             );
 
-            this.globalState.offsetBySearch[this.state.query] =
-                offset + (modelLimit["res.partner"] || 0);
-
             for (const partner of result["res.partner"]) {
                 if (!this.loadedPartnerIds.has(partner.id)) {
                     this.loadedPartnerIds.add(partner.id);
                     this.state.loadedPartners.push(partner);
                 }
             }
+
+            this.globalState.offsetBySearch[query] = query
+                ? offset + modelLimit["res.partner"]
+                : this.loadedPartnerIds.size;
 
             return result["res.partner"];
         } catch {
