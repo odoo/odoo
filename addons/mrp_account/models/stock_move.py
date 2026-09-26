@@ -29,6 +29,7 @@ class StockMove(models.Model):
         do not have to add up to whole kits: the kit price only depends on the BoM
         composition, not on how the components were split across pickings.
 
+<<<<<<< 2cb28c844917241358d79ba1075cfac6783b957e
         :param product: the kit product actually sold/moved. When set, its phantom BoM
             is used as the root kit directly. This disambiguates the case where the sold
             kit is itself a component of a larger kit: a move only stores its leaf
@@ -64,3 +65,33 @@ class StockMove(models.Model):
             )
             price_unit += component_price * qty_per_kit_by_line.get(bom_line, 0)
         return price_unit
+||||||| 6ed40130e291baa0b1ba1e215dda631316e95354
+    def _get_kit_price_unit(self, product, kit_bom, valuated_quantity):
+        """ Override the value for kit products """
+        _dummy, exploded_lines = kit_bom.explode(product, valuated_quantity)
+        total_price_unit = 0
+        component_qty_per_kit = defaultdict(float)
+        for line in exploded_lines:
+            component_qty_per_kit[line[0].product_id] += line[0].uom_id._compute_quantity(line[1]['qty'], line[0].product_id.uom_id, round=False)
+        for component, valuated_moves in self.grouped('product_id').items():
+            price_unit = super(StockMove, valuated_moves)._get_price_unit()
+            qty_per_kit = component_qty_per_kit[component] / kit_bom.product_qty
+            total_price_unit += price_unit * qty_per_kit
+        return total_price_unit / valuated_quantity if not product.uom_id.is_zero(valuated_quantity) else 0
+=======
+    def _get_kit_price_unit(self, product, kit_bom, valuated_quantity):
+        """ Override the value for kit products """
+        _dummy, exploded_lines = kit_bom.explode(product, valuated_quantity)
+        total_price_unit = 0
+        component_qty_per_kit = defaultdict(float)
+        for line in exploded_lines:
+            component_qty_per_kit[line[0].product_id] += line[0].uom_id._compute_quantity(line[1]['qty'], line[0].product_id.uom_id, round=False)
+        for component, valuated_moves in self.grouped('product_id').items():
+            if any(m._is_dropshipped() for m in valuated_moves):
+                price_unit = super(StockMove, valuated_moves)._get_price_unit_dropshipped()
+            else:
+                price_unit = super(StockMove, valuated_moves)._get_price_unit()
+            qty_per_kit = component_qty_per_kit[component] / kit_bom.product_qty
+            total_price_unit += price_unit * qty_per_kit
+        return total_price_unit / valuated_quantity if not product.uom_id.is_zero(valuated_quantity) else 0
+>>>>>>> 8cc3121520f56d2c307d7d7df72bebca65c0a4ef
