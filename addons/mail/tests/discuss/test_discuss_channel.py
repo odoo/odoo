@@ -1114,6 +1114,47 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertFalse(member_of_correspondent.is_pinned)
 
     @users("employee")
+    def test_create_chat_ignores_provided_member_indices(self):
+        guests = self.env["mail.guest"]
+        partners = self.partner_employee + self.test_partner
+        chat = self.env["discuss.channel"].create(
+            {
+                "channel_member_ids": [
+                    Command.create({"partner_id": partner.id}) for partner in partners
+                ],
+                "channel_type": "chat",
+                "member_indices": self.env["discuss.channel"]._member_indices(
+                    self.partner_admin + self.partner_employee_nomail, guests
+                ),
+                "name": "Chat",
+            },
+        )
+        self.assertEqual(chat.member_indices, chat._member_indices(partners, guests))
+
+    @users("employee")
+    def test_create_chat_with_more_than_two_members(self):
+        partner_ids = (self.partner_employee + self.test_partner).ids
+        chat = self.env["discuss.channel"].create(
+            {
+                "channel_member_ids": [Command.create({"partner_id": pid}) for pid in partner_ids],
+                "channel_type": "chat",
+                "name": "Chat",
+            },
+        )
+        self.assertEqual(chat.channel_member_ids.partner_id.ids, partner_ids)
+        with self.assertRaises(ValidationError):
+            self.env["discuss.channel"].create(
+                {
+                    "channel_member_ids": [
+                        Command.create({"partner_id": pid})
+                        for pid in partner_ids + self.partner_employee_nomail.ids
+                    ],
+                    "channel_type": "chat",
+                    "name": "Chat",
+                },
+            )
+
+    @users("employee")
     def test_channel_command_help_in_channel(self):
         """Ensures the command '/help' works in a channel"""
         channel = self.env["discuss.channel"].browse(self.test_channel.ids)
