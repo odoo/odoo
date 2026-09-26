@@ -35,6 +35,29 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         sale_order = self.env['sale.order'].create(sale_order_vals)
         return sale_order
 
+    def test_unlink_order_with_delivery(self):
+        sale_order = self._get_new_sale_order(amount=1)
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.move_ids.write({'quantity': 1, 'picked': True})
+        picking.button_validate()
+        sale_order._action_cancel()
+
+        # A completed delivery keeps the order linked, so deletion is blocked.
+        with self.assertRaises(UserError):
+            sale_order.unlink()
+        self.assertTrue(sale_order.exists())
+        self.assertEqual(picking.sale_id, sale_order)
+
+        # An order whose delivery is only cancelled can still be deleted.
+        sale_order = self._get_new_sale_order(amount=1)
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        sale_order._action_cancel()
+        self.assertEqual(picking.state, 'cancel')
+        sale_order.unlink()
+        self.assertFalse(sale_order.exists())
+
     def test_00_sale_stock_invoice(self):
         """
         Test SO's changes when playing around with stock moves, quants, pack operations, pickings
