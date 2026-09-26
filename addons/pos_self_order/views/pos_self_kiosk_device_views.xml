@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_pos_self_kiosk_device_pairing" model="ir.actions.act_window">
+            <field name="name">Pair</field>
+            <field name="res_model">pos_self_order.kiosk.device_pairing.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.ui.view" id="pos_self_kiosk_device_view_form">
+            <field name="name">pos.self.kiosk.device.form</field>
+            <field name="model">pos_self_order.kiosk.device</field>
+            <field name="arch" type="xml">
+                <form create="0" duplicate="0">
+                    <sheet >
+                        <div class="oe_title">
+                            <h1><field name="platform" class="oe_inline"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="platform"/>
+                                <field name="browser"/>
+                                <field name="config_id"/>
+                            </group>
+                            <group>
+                                <field name="ip_address"/>
+                                <field name="approved_by" widget="many2one_avatar_user"/>
+                                <field name="last_activity"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Extra Info" groups="base.group_no_one">
+                                <group>
+                                    <field name="user_agent"/>
+                                    <field name="first_activity"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="pos_self_kiosk_device_view_tree">
+            <field name="name">pos.self.kiosk.device.list</field>
+            <field name="model">pos_self_order.kiosk.device</field>
+            <field name="arch" type="xml">
+                <list default_order="last_activity desc" create="0" duplicate="0">
+                    <header>
+                        <button name="%(action_pos_self_kiosk_device_pairing)d" type="action" string="Pair" class="btn-primary" display="always"/>
+                    </header>
+                    <field name="config_id"/>
+                    <field name="platform"/>
+                    <field name="browser"/>
+                    <field name="ip_address"/>
+                    <field name="first_activity"/>
+                    <field name="last_activity"/>
+                    <field name="approved_by" widget="many2one_avatar_user"/>
+                    <field name="user_agent" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="pos_self_kiosk_device_view_kanban">
+            <field name="name">pos.self.kiosk.device.kanban</field>
+            <field name="model">pos_self_order.kiosk.device</field>
+            <field name="arch" type="xml">
+                <kanban create="false">
+                    <header>
+                        <button name="%(action_pos_self_kiosk_device_pairing)d" type="action"
+                                string="Pair" class="btn-primary" display="always"/>
+                    </header>
+                    <templates>
+                        <t t-name="card">
+                            <div class="p-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <field class="text-truncate fw-bold fs-4" name="platform"/>
+                                </div>
+                                <div class="text-muted  text-truncate mt-1">
+                                    <field name="config_id"/>
+                                </div>
+                                <div class="text-muted small mt-2" title="Last activity">
+                                    <i class="oi me-1" data-icon="schedule" />
+                                    <field name="last_activity"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_self_kiosk_device" model="ir.actions.act_window">
+            <field name="name">Kiosks</field>
+            <field name="res_model">pos_self_order.kiosk.device</field>
+            <field name="view_mode">kanban,list,form</field>
+        </record>
+
+        <record id="pos_self_kiosk_device_pairing_form" model="ir.ui.view">
+            <field name="name">pos.self.kiosk.device.pairing.form</field>
+            <field name="model">pos_self_order.kiosk.device_pairing.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Pair">
+                    <group invisible="is_done">
+                        <field name="pairing_code" placeholder="x xxx xxx"/>
+                    </group>
+                    <footer>
+                        <button string="Pair" name="action_confirm" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_self_kiosk_devices"
+                  name="Kiosks"
+                  parent="point_of_sale.menu_point_config_product"
+                  action="action_self_kiosk_device"
+                  sequence="3"/>
+
+    </data>
+</odoo>

@@ -433,10 +433,12 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
     def _process_zeroed_combo_order(self, combo_product, combo_item):
         """Send a combo order on the public self-order endpoint with every client-controlled
         price zeroed, and return the resulting order."""
+        pairing_cookie = self._get_pairing_cookie()
         parent_uuid, child_uuid = str(uuid4()), str(uuid4())
         response = self.url_open(
             "/pos-self-order/process-order/kiosk",
             headers={"Content-Type": "application/json"},
+            cookies={pairing_cookie['name']: pairing_cookie['value']},
             data=json.dumps({
                 "jsonrpc": "2.0",
                 "method": "call",
@@ -648,9 +650,11 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
     def _post_self_order(self, lines, relations_uuid_mapping=None):
         """Send a raw order payload on the public self-order endpoint."""
         order_uuid = str(uuid4())
+        pairing_cookie = self._get_pairing_cookie()
         response = self.url_open(
             "/pos-self-order/process-order/kiosk",
             headers={"Content-Type": "application/json"},
+            cookies={pairing_cookie['name']: pairing_cookie['value']},
             data=json.dumps({
                 "jsonrpc": "2.0",
                 "method": "call",
