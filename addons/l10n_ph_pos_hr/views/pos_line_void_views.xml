@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_ph_line_void_search" model="ir.ui.view">
+        <field name="name">l10n_ph.pos.line.void.search</field>
+        <field name="model">l10n_ph.pos.line.void</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="transaction_date"/>
+                <field name="session_id"/>
+                <field name="config_id"/>
+                <field name="approver_employee_id"/>
+                <field name="cashier_employee_id"/>
+                <filter name="daily" string="Daily" date="transaction_date"/>
+                <filter name="quarterly" string="Quarterly" date="transaction_date"/>
+                <filter name="yearly" string="Yearly" date="transaction_date" default_period="year"/>
+                <separator/>
+                <group>
+                    <filter name="group_user" string="User" context="{'group_by':'user_id'}"/>
+                    <filter name="group_approver" string="Approver" context="{'group_by':'approver_employee_id'}"/>
+                    <filter name="group_cashier" string="Cashier" context="{'group_by':'cashier_employee_id'}"/>
+                    <filter name="group_pos" string="Point of Sale" context="{'group_by':'config_id'}"/>
+                    <filter name="group_product" string="Product" context="{'group_by':'product_id'}"/>
+                    <filter name="group_transaction_date" string="Transaction Date" context="{'group_by':'transaction_date'}"/>
+                    <filter name="group_log_date" string="Log Date" context="{'group_by':'logged_at'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_l10n_ph_line_void_list" model="ir.ui.view">
+        <field name="name">l10n_ph.pos.line.void.list</field>
+        <field name="model">l10n_ph.pos.line.void</field>
+        <field name="arch" type="xml">
+            <list string="Line Void Transactions">
+                <field name="transaction_date"/>
+                <field name="logged_at"/>
+                <field name="approver_badge_number" optional="hide"/>
+                <field name="approver_employee_id" widget="many2one_avatar_employee"/>
+                <field name="cashier_badge_number" optional="hide"/>
+                <field name="cashier_employee_id" widget="many2one_avatar_employee"/>
+                <field name="config_id"/>
+                <field name="reason"/>
+                <field name="remark" optional="show"/>
+                <field name="product_id"/>
+                <field name="description"/>
+                <field name="quantity"/>
+                <field name="unit_price"/>
+                <field name="net_amount"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_l10n_ph_line_void" model="ir.actions.act_window">
+        <field name="name">Line Void Transactions</field>
+        <field name="res_model">l10n_ph.pos.line.void</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_l10n_ph_line_void_list"/>
+        <field name="search_view_id" ref="view_l10n_ph_line_void_search"/>
+        <field name="context">{'search_default_daily': 1}</field>
+    </record>
+
+    <menuitem id="menu_l10n_ph_line_void" name="Line Void Transactions" parent="point_of_sale.menu_point_rep" action="action_l10n_ph_line_void"
+            groups="point_of_sale.group_pos_manager"/>
+
+</odoo>
