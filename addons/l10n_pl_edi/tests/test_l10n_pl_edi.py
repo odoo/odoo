@@ -386,6 +386,22 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(self._get_xml_value(xml, "//ns:Platnosc/ns:RachunekBankowy/ns:NrRB"), expected_acc)
         self.assertEqual(self._get_xml_value(xml, "//ns:Platnosc/ns:RachunekBankowy/ns:NazwaBanku"), 'Test Bank PL')
 
+    def test_credit_note_omits_short_bank_account(self):
+        """
+        Test that KSeF omits RachunekBankowy when NrRB does not meet the KSeF specification requirements.
+        """
+        foreign_partner = self.partner_a
+        foreign_partner.write(
+            {'bank_ids': [
+                Command.create({
+                    'acc_number': '19881841',
+                    'allow_out_payment': True,
+                })]})
+        invoice_line = self._prepare_invoice_line(product_id=self.product_a.id, quantity=1, price_unit=1000.0)
+        credit_note = self._create_invoice(move_type='out_refund', invoice_line_ids=[invoice_line], partner_id=foreign_partner.id, post=True)
+        xml = credit_note._l10n_pl_edi_render_xml()
+        self.assertFalse(self._get_xml_nodes(xml, "//ns:Platnosc/ns:RachunekBankowy"))
+
     @freeze_time('2026-01-23')
     def test_payment_terms_structure(self):
         """
