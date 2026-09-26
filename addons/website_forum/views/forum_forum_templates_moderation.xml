@@ -71,7 +71,7 @@
         <t t-call="website_forum.no_results_message"><t t-set="hide_alert" t-value="len(posts_ids) > 0"/></t>
         <div id="queue_type" t-att-data-queue-type="queue_type"/>
 
-        <div class="modal fade" t-att-data-spam-ids="str(posts_ids.ids)" id="markAllAsSpam" tabindex="-1" role="dialog" aria-labelledby="markAllAsSpam" aria-hidden="true">
+        <div class="modal fade" t-if="website_forum_action and not queue_type == 'close'" t-att-data-spam-ids="str(posts_ids.ids)" id="markAllAsSpam" tabindex="-1" role="dialog" aria-labelledby="markAllAsSpam" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header d-flex align-items-center pb-0">
@@ -138,7 +138,7 @@
                 </div>
             </div>
         </div>
-        <div t-foreach="posts_ids" t-as="question" class="post_to_validate card mb-3">
+        <div t-foreach="posts_ids[:100]" t-as="question" class="post_to_validate card mb-3">
             <div class="card-header">
                 <div class="row align-items-baseline">
                     <h6 class="col-md-2 mb-0">
