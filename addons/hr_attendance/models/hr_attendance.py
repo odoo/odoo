@@ -284,12 +284,42 @@ class HrAttendance(models.Model):
             return Domain.FALSE
         domain_list = []
         for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items():
+<<<<<<< 9b9cd3ebff4c209a09a26c72f81d6e5f21a9f0ad
             tz = ZoneInfo(employee.tz)
             local_check_in = min(attendances.mapped('check_in')).replace(tzinfo=UTC).astimezone(tz)
             local_check_out = max(attendances.mapped('check_out')).replace(tzinfo=UTC).astimezone(tz)
             rulesets = attendances.mapped(lambda att: att.employee_id.sudo()._get_version(att.date)).ruleset_id
             # append this domain only for weekly rules
             if any(rule.quantity_period == 'week' for rule in rulesets.sudo().rule_ids):
+||||||| f84eeb3ed1421e0cc07c906ff6444734dc01d35f
+            tz = timezone(employee.tz)
+            local_check_in = utc.localize(min(attendances.mapped('check_in'))).astimezone(tz)
+            local_check_out = utc.localize(max(attendances.mapped('check_out'))).astimezone(tz)
+            rulesets = attendances.mapped(lambda att: att.employee_id.sudo()._get_version(att.date)).ruleset_id
+            # append this domain only for weekly rules
+            if any(rule.quantity_period == 'week' for rule in rulesets.sudo().rule_ids):
+=======
+            tz = timezone(employee.tz)
+            local_check_in = utc.localize(min(attendances.mapped('check_in'))).astimezone(tz)
+            local_check_out = utc.localize(max(attendances.mapped('check_out'))).astimezone(tz)
+            versions = attendances.mapped(lambda att: att.employee_id.sudo()._get_version(att.date))
+            rulesets = versions.ruleset_id
+            # append this domain for weekly rules or flexible daily rules whose expected hours are capped weekly
+            if (
+                any(rule.quantity_period == 'week' for rule in rulesets.sudo().rule_ids)
+                or any(
+                    version.resource_calendar_id.flexible_hours
+                    and version.resource_calendar_id.hours_per_week
+                    and any(
+                        rule.base_off == 'quantity'
+                        and rule.quantity_period == 'day'
+                        and rule.expected_hours_from_contract
+                        for rule in version.ruleset_id.sudo().rule_ids
+                    )
+                    for version in versions
+                )
+            ):
+>>>>>>> c661be9693e520363efb767c61acff606d9716a9
                 date_from = local_check_in.date() + relativedelta(weekday=MO(-1))
                 date_to = local_check_out.date() + relativedelta(weekday=SU)
             else:
@@ -380,6 +410,7 @@ class HrAttendance(models.Model):
                 for val in ruleset.rule_ids._generate_overtime_vals_v2(min(attendances_dates), max(attendances_dates), ruleset_attendances, schedules_intervals_by_employee)
             ])
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
+        all_attendances.invalidate_recordset(['linked_overtime_ids'])
         self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
         self.env.add_to_compute(self._fields['expected_hours'], all_attendances)
         self.env.add_to_compute(self._fields['validated_overtime_hours'], all_attendances)
