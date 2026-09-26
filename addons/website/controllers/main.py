@@ -489,6 +489,8 @@ class Website(Home):
         :param dict options: options map containing
             allowFuzzy: enables the fuzzy matching when truthy
             fuzzy (boolean): True when called after finding a name through fuzzy matching
+            page: the page number for pagination
+            step: the size of a page
 
         :returns: dict (or False if no result) containing
             - 'results' (list): results (only their needed field values)
@@ -509,6 +511,25 @@ class Website(Home):
                 'parts': {},
             }
         term = fuzzy_term or term
+
+        page = options.get('page')
+        step = options.get('step')
+
+        if page and step:
+            combined_search_results = [record for search_detail in search_results for record in search_detail['results']]
+            results_count = len(combined_search_results)
+            if search_type == 'all':
+                combined_search_results.sort(key=lambda r: r.name or '', reverse='name desc' in order)
+
+            paginated_search_results = combined_search_results[(page - 1) * step:page * step]
+
+            paginated_search_results_grouped = {}
+            for record in paginated_search_results:
+                paginated_search_results_grouped.setdefault(record._name, []).append(record.id)
+
+            for group in search_results:
+                group['results'] = group['results'].browse(paginated_search_results_grouped.get(group['model']))
+
         search_results = request.website._search_render_results(search_results, limit)
 
         mappings = []
@@ -620,13 +641,15 @@ class Website(Home):
             return request.render("website.list_hybrid")
 
         options = self._get_hybrid_search_options(**kw)
+        step = 50
+        options['page'] = page
+        options['step'] = step
         data = self.autocomplete(search_type=search_type, term=search, order='name asc', limit=500, max_nb_chars=200, options=options)
 
         results = data.get('results', [])
-        search_count = len(results)
+        search_count = data.get('results_count', 0)
         parts = data.get('parts', {})
 
-        step = 50
         pager = portal_pager(
             url="/website/search/%s" % search_type,
             url_args={'search': search},
@@ -634,8 +657,6 @@ class Website(Home):
             page=page,
             step=step
         )
-
-        results = results[(page - 1) * step:page * step]
 
         values = {
             'pager': pager,
