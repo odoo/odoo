@@ -469,6 +469,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(sale_order_2.order_line[0].qty_available_today, 0.0)  # 25 on_hand - 30 reserved, min 0
 
         sale_order_1.deliver_sold_quantity()
+        sale_order_1._create_invoices().action_post()
         self.env.invalidate_all()
         self.assertEqual(self.product.qty_available, 15.0)  # 25 on_hand - 10 sold
         self.assertEqual(self.product.outgoing_qty, 20.0)  # 30 outgoing - 10 sold
@@ -476,6 +477,9 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 45.0)
 
         po.action_receive()
+        po.action_create_invoice()
+        po.invoice_ids.invoice_date = fields.Date.today()
+        po.invoice_ids.action_post()
         self.env.invalidate_all()
         self.assertEqual(self.product.qty_available, 65.0)  # 15 on_hand + 50 received
         self.assertEqual(self.product.incoming_qty, 0)
@@ -483,6 +487,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 45.0)
 
         sale_order_2.deliver_sold_quantity()
+        sale_order_2._create_invoices().action_post()
         self.env.invalidate_all()
         self.assertEqual(self.product.qty_available, 45.0)  # 65 on_hand - 20 sold
         self.assertEqual(self.product.outgoing_qty, 0.0)
