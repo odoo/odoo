@@ -1,0 +1,38 @@
+.o_field_icon_selector {
+    gap: map-get($spacers, 2);
+    min-width: 0;
+    padding-right: 1.75rem;
+    cursor: pointer;
+
+    .o_field_icon_selector_input {
+        min-width: 0;
+        color: inherit;
+        cursor: pointer;
+        outline: none;
+    }
+}
+
+.o_field_icon_selector_icon {
+    flex: 0 0 auto;
+}
+
+.o_field_icon_selector_menu {
+    width: 330px;
+    max-height: 350px;
+    overflow-y: auto;
+
+    .o_we_file_selector_control_panel {
+        background-color: $popover-bg;
+        padding-top: map-get($spacers, 2);
+        padding-bottom: map-get($spacers, 2);
+
+        > div {
+            max-width: none !important;
+        }
+    }
+
+    .font-icons-icon {
+        padding: .5rem !important;
+        margin: .25rem !important;
+    }
+}

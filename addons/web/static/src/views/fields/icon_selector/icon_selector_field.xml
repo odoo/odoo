@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.IconSelectorField">
+        <t t-set="selectedIcon" t-value="this.selectedIcon"/>
+        <t t-if="this.props.readonly">
+            <span class="o_field_icon_selector_readonly d-inline-flex align-items-center gap-1">
+                <i t-if="selectedIcon" class="oi" t-att-class="{ 'oi-filled': selectedIcon.filled }" t-att-data-icon="selectedIcon.dataIcon"/>
+                <span t-out="this.iconValue"/>
+            </span>
+        </t>
+        <t t-else="">
+            <Dropdown state="this.dropdown" menuClass="'p-0'" position="'bottom-start'">
+                <div
+                    class="o_field_icon_selector o_input position-relative d-flex align-items-center"
+                    role="button"
+                    tabindex="0"
+                    t-att-id="this.props.id"
+                >
+                    <input
+                        class="o_field_icon_selector_input border-0 bg-transparent flex-grow-1 p-0"
+                        type="text"
+                        readonly="readonly"
+                        tabindex="-1"
+                        t-att-value="this.iconValue"
+                    />
+                    <button
+                        t-if="this.iconValue"
+                        class="o_select_menu_toggler_clear btn btn-link position-absolute top-50 end-0 translate-middle-y me-1 p-0"
+                        type="button"
+                        title="Clear icon"
+                        t-on-click.stop="this.clearIcon"
+                    >
+                        <i class="oi" data-icon="close"/>
+                    </button>
+                </div>
+                <t t-set-slot="content">
+                    <div class="o_field_icon_selector_menu">
+                        <IconSelector
+                            id="'icons'"
+                            selectedMedia="this.selectedMedia()"
+                            selectMedia.bind="this.onIconSelect"
+                            save="() => {}"
+                        />
+                    </div>
+                </t>
+            </Dropdown>
+        </t>
+    </t>
+
+</templates>
