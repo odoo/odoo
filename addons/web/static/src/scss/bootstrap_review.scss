@@ -82,9 +82,13 @@
     }
 }
 
-// Disable RTL for the popover position
 .popover {
+    // Disable RTL for the popover position
     right: auto#{"/*rtl:ignore*/"};
+
+    > * {
+        border-radius: calc(var(--popover-border-radius) - var(--popover-border-width));
+    }
 }
 
 // Review $link-decoration behavior
