@@ -113,6 +113,7 @@ class PurchaseReport(models.Model):
             table.product_id.product_tmpl_id.id,
             table.product_id.product_tmpl_id.uom_id.id,
             table.uom_id.id,
+            table.consolidation_rate,
         ]
 
     def _read_group_select(self, table, aggregate_spec: str) -> SQL:
