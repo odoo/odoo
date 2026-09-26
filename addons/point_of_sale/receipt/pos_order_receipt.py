@@ -254,6 +254,18 @@ class PosOrderReceipt(models.AbstractModel):
         )[0]
 
     # Order changes receipt generation
+    def _preparation_delivery_address_lines(self):
+        # Mirror of the JS `deliveryAddressLines` getter
+        self.ensure_one()
+        partner = self.partner_id
+        if not partner or self.preset_id.identification != 'address':
+            return []
+
+        if self.source in ('mobile', 'kiosk'):
+            return [partner.street] if partner.street else []
+
+        return (partner.address or '').splitlines()
+
     def _generate_preparation_changes_by_printer(self):
         changes = {}
         for printer in self.config_id.preparation_printer_ids:
@@ -442,7 +454,8 @@ class PosOrderReceipt(models.AbstractModel):
                 }),
             )
 
-        if order_change.get("internal_note") or order_change.get("general_customer_note"):
+        # Print a separate order note ticket only if no other tickets exist
+        if not receipts_data and (order_change.get("internal_note") or order_change.get("general_customer_note")):
             receipts_data.append(
                 self._prepare_preparation_grouped_data({"title": "", "data": []})
             )
@@ -452,6 +465,7 @@ class PosOrderReceipt(models.AbstractModel):
 
         receipts = []
         receipt_tz = self._order_receipt_tz()
+        delivery_address = self._preparation_delivery_address_lines()
         for change in receipts_data:
             receipts.append({
                 **self._get_common_record_data(),
@@ -462,10 +476,11 @@ class PosOrderReceipt(models.AbstractModel):
                     'order_label': self.floating_order_name,
                     "reprint": False,
                     "time": format_datetime(self.env, fields.Datetime.now(), tz=receipt_tz, dt_format='HH:mm'),
-                    "internal_note": _get_str_notes(change.get("internal_note")) or False,
-                    "general_customer_note": _get_str_notes(change.get("general_customer_note")) or False,
+                    "internal_note": _get_str_notes(order_change.get("internal_note")) or False,
+                    "general_customer_note": _get_str_notes(order_change.get("general_customer_note")) or False,
                     "employee_name": self.user_id.name,  # PoS HR not needed, this will only be used by self order.
                     "preset_time": self._order_receipt_preset_datetime(),
+                    "delivery_address": delivery_address,
                 },
                 "conditions": {
                     "module_pos_restaurant": self.config_id.module_pos_restaurant,

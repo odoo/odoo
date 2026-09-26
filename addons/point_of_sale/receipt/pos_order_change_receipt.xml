@@ -26,6 +26,9 @@
                                     <span class="text-bold" t-out="order['tracking_number']"/>
                                 </div>
                                 <div t-if="extra_data.get('order_label')" name="order-label" class="text-large" t-out="extra_data['order_label']" />
+                                <div t-if="len(extra_data['delivery_address'])" name="delivery-address" class="text-large">
+                                    <div t-foreach="extra_data['delivery_address']" t-as="address_line" t-out="address_line"/>
+                                </div>
                             </div>
                             <div name="order-reference" t-out="order['pos_reference']" />
                         </div>
