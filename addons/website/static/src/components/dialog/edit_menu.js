@@ -154,7 +154,7 @@ export class MenuDialog extends Component {
     }
 }
 
-class MenuRow extends Component {
+export class MenuRow extends Component {
     static template = "website.MenuRow";
     static props = {
         menu: Object,
@@ -400,21 +400,32 @@ export class EditMenuDialog extends Component {
         }
     }
 
+    getPageParams(id) {
+		const menu = this.map.get(id);
+		let url = menu.fields["url"];
+		url = url.startsWith("/") ? url : "/" + url;
+
+		return {
+			menu,
+			params: {
+				websiteId: this.website.currentWebsite.id,
+				forcedURL: url,
+				goToPage: !this.props.save,
+				pageTitle: menu.fields["name"],
+			},
+		};
+	}
+
     async createPage(id) {
-        const menu = this.map.get(id);
-        let url = menu.fields["url"];
-        url = url.startsWith("/") ? url : "/" + url;
-        this.dialogs.add(AddPageDialog, {
-            onAddPage: ({ createdUrl }) => {
-                if (createdUrl) {
-                    menu.fields["url"] = createdUrl;
-                }
-                this.onClickSave(false, createdUrl ?? url);
-            },
-            websiteId: this.website.currentWebsite.id,
-            forcedURL: url,
-            goToPage: !this.props.save,
-            pageTitle: menu.fields["name"],
-        });
-    }
+		const { menu, params } = this.getPageParams(id);
+		this.dialogs.add(AddPageDialog, {
+			onAddPage: ({ createdUrl }) => {
+				if (createdUrl) {
+					menu.fields["url"] = createdUrl;
+				}
+				this.onClickSave(false, createdUrl ?? params.forcedURL);
+			},
+			...params,
+		});
+	}
 }
