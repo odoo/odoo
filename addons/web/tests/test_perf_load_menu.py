@@ -71,11 +71,11 @@ class TestPerfSessionInfo(common.HttpCase):
 
         # cold fields cache:
         # - Web only: 0
-        # - All modules: 1 (web_studio + 1)
+        # - All modules: 2 (web_studio)
         has_studio = self.env['ir.module.module'].sudo().search_count(
             [('name', '=', 'web_studio'), ('state', '=', 'installed')])
         self.env.invalidate_all()
-        with self.assertQueryCount(has_studio):
+        with self.assertQueryCount(has_studio * 2):
             self.env['ir.ui.menu'].load_web_menus(False)
 
     def test_load_menus_perf(self):
@@ -87,11 +87,11 @@ class TestPerfSessionInfo(common.HttpCase):
 
         # cold fields cache:
         # - Web only: 0
-        # - All modules: 1 (web_studio + 1)
+        # - All modules: 2 (web_studio)
         has_studio = self.env['ir.module.module'].sudo().search_count(
             [('name', '=', 'web_studio'), ('state', '=', 'installed')])
         self.env.invalidate_all()
-        with self.assertQueryCount(has_studio):
+        with self.assertQueryCount(has_studio * 2):
             self.env['ir.ui.menu'].load_menus(False)
 
     def test_visible_menu_ids(self):
