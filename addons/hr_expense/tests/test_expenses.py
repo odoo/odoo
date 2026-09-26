@@ -1122,18 +1122,24 @@ class TestExpenses(TestExpenseCommon):
         })
         bill.action_post()
 
-        # 2. Create Expense linked to this bill
+        # 2. Create Expense with existing bill flag but let existing_bill_id empty
         expense = self.create_expenses({
             'name': 'Expense matched to bill',
             'payment_mode': 'company_account',
             'total_amount_currency': 100.0,
             'has_existing_bill': True,
-            'existing_bill_id': bill.id,
         })
+        expense.action_submit()
+        # shouldn't be able to approve without existing_bill_id
+        with self.assertRaisesRegex(UserError, "The existing bill must be set."):
+            expense.action_approve()
+        self.assertEqual(expense.state, 'submitted')
 
+        # 3. Link bill to the expense
+        expense.action_reset()
+        expense.existing_bill_id = bill.id
         self.assertEqual(expense.account_id, other_payable_account, "The expense account should be the bill's payable account")
 
-        expense.action_submit()
         expense.action_approve()
 
         payment_entry = expense.account_move_id

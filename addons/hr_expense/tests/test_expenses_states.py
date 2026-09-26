@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import MailCase
-from odoo import fields
+from odoo import fields, Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged
 
@@ -201,6 +201,37 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         self.assertSequenceEqual(['approved', 'paid'], self.expenses_all.mapped('state'))
         self.post_expenses(self.expenses_all)
         self.assertSequenceEqual(['posted', 'paid'], self.expenses_all.mapped('state'))
+
+        # expense state should not be approved at submission if existing_bill_id is not set
+        expense_existing_bill = self.create_expenses({
+            'name': 'Expense Employee 2',
+            'has_existing_bill': True,
+        })
+        expense_existing_bill.sudo().manager_id = False
+        expense_existing_bill.action_submit()
+        self.assertEqual(expense_existing_bill.state, 'submitted')
+
+        # with bill, should skip submitted
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': fields.Date.today(),
+            'invoice_date': fields.Date.today(),
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'quantity': 1,
+                'price_unit': 500,
+                'tax_ids': [],
+            })]
+        })
+        bill.action_post()
+        expense_existing_bill = self.create_expenses({
+            'name': 'Expense Employee 3',
+            'has_existing_bill': True,
+            'existing_bill_id': bill.id,
+        })
+        expense_existing_bill.sudo().manager_id = False
+        expense_existing_bill.action_submit()
+        self.assertEqual(expense_existing_bill.state, 'approved')
 
     def test_expense_next_activity(self):
         """ Test next activity is assigned to the right manager, no notification is sent, but validation email is sent"""
