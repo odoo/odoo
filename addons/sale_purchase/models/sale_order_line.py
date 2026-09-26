@@ -284,11 +284,15 @@ class SaleOrderLine(models.Model):
         """ Create a Purchase for the first time from the sale line. If the SO line already created a PO, it
             will not create a second one.
         """
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         sale_line_purchase_map = {}
         for line in self:
             line = line.with_company(line._purchase_service_get_company())
             # Do not regenerate PO line if the SO line has already created one in the past (SO cancel/reconfirmation case)
-            if line.product_id.service_to_purchase and not line.purchase_line_count:
+            # Skip non-positive quantities: _select_seller drops sellers below their min_qty,
+            # so a negative quantity leaves no vendor and _purchase_service_match_supplier raises.
+            if line.product_id.service_to_purchase and not line.purchase_line_count \
+                    and float_compare(line.product_uom_qty, 0.0, precision_digits=precision) > 0:
                 result = line._purchase_service_create()
                 sale_line_purchase_map.update(result)
         return sale_line_purchase_map

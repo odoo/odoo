@@ -132,6 +132,22 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         with self.assertRaises(UserError):
             self.sale_order_1.action_confirm()
 
+    def test_negative_quantity_no_purchase(self):
+        """ A service-to-purchase line with a negative quantity must not generate a
+        purchase nor raise: _select_seller drops every seller below its min_qty, so a
+        negative quantity would otherwise make the vendor lookup raise even with a vendor set. """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.service_purchase_1.id,
+                'product_uom_qty': -4,
+                'tax_id': False,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_lines = self.env['purchase.order.line'].search([('sale_line_id', 'in', sale_order.order_line.ids)])
+        self.assertFalse(purchase_lines, "A negative quantity should not generate a purchase line")
+
     def test_reconfirm_sale_order(self):
         """ Confirm SO, cancel it, then re-confirm it should not regenerate a purchase line """
         self.sale_order_1.action_confirm()
