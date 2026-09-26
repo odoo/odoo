@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="withholding_tax_report_ge" model="account.report">
+        <field name="name">Withholding Tax Return</field>
+        <field name="name@ka">გადახდის წყაროსთან დაკავებული გადასახადის დეკლარაცია</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ge"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="withholding_tax_report_ge_base" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="name@ka">ბაზა</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="withholding_tax_report_ge_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="name@ka">გადასახადი</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="withholding_tax_report_ge_line_liabilities" model="account.report.line">
+                <field name="name">Withholding Tax Liabilities</field>
+                <field name="name@ka">დაკავების საგადასახადო ვალდებულებები</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="withholding_tax_report_ge_line_1w" model="account.report.line">
+                        <field name="name">Dividends</field>
+                        <field name="name@ka">დივიდენდები</field>
+                        <field name="code">ge_1w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_1w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_1w_g.base+ge_1w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_1w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_1w_g.tax+ge_1w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_1w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_1w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_1w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">1(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_1w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_1w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_1w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_1w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">1(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_1w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_2w" model="account.report.line">
+                        <field name="name">Interest</field>
+                        <field name="name@ka">პროცენტები</field>
+                        <field name="code">ge_2w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_2w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_2w_g.base+ge_2w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_2w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_2w_g.tax+ge_2w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_2w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_2w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_2w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">2(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_2w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-2(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_2w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_2w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_2w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">2(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_2w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-2(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_3w" model="account.report.line">
+                        <field name="name">Royalties</field>
+                        <field name="name@ka">როიალტი</field>
+                        <field name="code">ge_3w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_3w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_3w_g.base+ge_3w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_3w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_3w_g.tax+ge_3w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_3w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_3w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_3w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">3(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_3w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-3(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_3w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_3w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_3w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">3(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_3w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-3(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_4w" model="account.report.line">
+                        <field name="name">Income from services rendered in Georgia</field>
+                        <field name="name@ka">საქართველოში გაწეული მომსახურებიდან მიღებული შემოსავალი</field>
+                        <field name="code">ge_4w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_4w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_4w_g.base+ge_4w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_4w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_4w_g.tax+ge_4w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_4w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_4w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_4w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">4(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_4w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-4(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_4w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_4w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_4w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">4(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_4w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-4(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_5w" model="account.report.line">
+                        <field name="name">Other Georgian-source income</field>
+                        <field name="name@ka">საქართველოს წყაროდან მიღებული სხვა შემოსავალი</field>
+                        <field name="code">ge_5w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_5w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_5w_g.base+ge_5w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_5w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_5w_g.tax+ge_5w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_5w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_5w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_5w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">5(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_5w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-5(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_5w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_5w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_5w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">5(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_5w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-5(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_6w" model="account.report.line">
+                        <field name="name">Profit</field>
+                        <field name="name@ka">მოგება</field>
+                        <field name="code">ge_6w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_6w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_6w_g.base+ge_6w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_6w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_6w_g.tax+ge_6w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_6w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_6w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_6w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">6(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_6w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-6(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_6w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_6w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_6w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">6(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_6w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-6(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_7w" model="account.report.line">
+                        <field name="name">Lease Service Compensation</field>
+                        <field name="name@ka">იჯარის მომსახურების ანაზღაურება</field>
+                        <field name="code">ge_7w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_7w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_7w_g.base+ge_7w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_7w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_7w_g.tax+ge_7w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_7w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_7w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_7w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">7(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_7w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-7(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_7w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_7w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_7w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">7(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_7w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-7(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_8w" model="account.report.line">
+                        <field name="name">Partnership taxable-profit share income</field>
+                        <field name="name@ka">ამხანაგობის დასაბეგრი მოგების წილის შემოსავალი</field>
+                        <field name="code">ge_8w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_8w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_8w_g.base+ge_8w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_8w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_8w_g.tax+ge_8w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_8w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_8w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_8w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">8(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_8w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-8(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_8w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_8w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_8w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">8(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_8w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-8(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_9w" model="account.report.line">
+                        <field name="name">Scholarship</field>
+                        <field name="name@ka">სტიპენდია</field>
+                        <field name="code">ge_9w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_9w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_9w_g.base+ge_9w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_9w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_9w_g.tax+ge_9w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_9w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_9w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_9w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">9(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_9w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-9(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_9w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_9w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_9w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">9(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_9w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-9(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_10w" model="account.report.line">
+                        <field name="name">Returned Pension</field>
+                        <field name="name@ka">დაბრუნებული პენსია</field>
+                        <field name="code">ge_10w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_10w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_10w_g.base+ge_10w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_10w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_10w_g.tax+ge_10w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_10w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_10w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_10w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">10(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_10w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-10(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_10w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_10w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_10w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">10(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_10w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-10(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_11w" model="account.report.line">
+                        <field name="name">Gambling / prize-gaming account withdrawal</field>
+                        <field name="name@ka">აზარტული თამაშობის ანგარიშიდან გატანა</field>
+                        <field name="code">ge_11w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_11w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_11w_g.base+ge_11w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_11w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_11w_g.tax+ge_11w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_11w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_11w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_11w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">11(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_11w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-11(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_11w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_11w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_11w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">11(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_11w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-11(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_12w" model="account.report.line">
+                        <field name="name">Compensation for use as hotel rooms</field>
+                        <field name="name@ka">სასტუმროს ნომრებად გამოყენების ანაზღაურება</field>
+                        <field name="code">ge_12w</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldability">foldable</field>
+                        <field name="expression_ids">
+                            <record id="withholding_tax_report_ge_line_12w_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_12w_g.base+ge_12w_d.base</field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_12w_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_12w_g.tax+ge_12w_d.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="withholding_tax_report_ge_line_12w_g" model="account.report.line">
+                                <field name="name">Gross</field>
+                                <field name="name@ka">ბრუტო</field>
+                                <field name="code">ge_12w_g</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_12w_g_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">12(B)_W_G</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_12w_g_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-12(T)_W_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="withholding_tax_report_ge_line_12w_d" model="account.report.line">
+                                <field name="name">Deducted</field>
+                                <field name="name@ka">გამოქვითვა</field>
+                                <field name="code">ge_12w_d</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="withholding_tax_report_ge_line_12w_d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">12(B)_W_D</field>
+                                    </record>
+                                    <record id="withholding_tax_report_ge_line_12w_d_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-12(T)_W_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="withholding_tax_report_ge_line_13w" model="account.report.line">
+                <field name="name">Totals</field>
+                <field name="name@ka">სულ</field>
+                <field name="code">ge_13w</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="withholding_tax_report_ge_line_13w_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ge_1w.base+ge_2w.base+ge_3w.base+ge_4w.base+ge_5w.base+ge_6w.base+ge_7w.base+ge_8w.base+ge_9w.base+ge_10w.base+ge_11w.base+ge_12w.base</field>
+                    </record>
+                    <record id="withholding_tax_report_ge_line_13w_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ge_1w.tax+ge_2w.tax+ge_3w.tax+ge_4w.tax+ge_5w.tax+ge_6w.tax+ge_7w.tax+ge_8w.tax+ge_9w.tax+ge_10w.tax+ge_11w.tax+ge_12w.tax</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

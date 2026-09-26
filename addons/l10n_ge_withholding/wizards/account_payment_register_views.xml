@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form_inherit_l10n_ge_withholding" model="ir.ui.view">
+        <field name="name">account.payment.register.form.inherit.l10n_ge_withholding</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="l10n_account_withholding_tax.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <field name="country_code" position="after">
+                <field name="l10n_ge_wht_category_ids" invisible="1"/>
+            </field>
+            <xpath expr="//field[@name='withholding_line_ids']//field[@name='tax_id']" position="before">
+                <field name="l10n_ge_tax_id_custom_domain" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='withholding_line_ids']//field[@name='tax_id']" position="attributes">
+                <attribute name="column_invisible">parent.country_code == 'GE' and parent.l10n_ge_wht_category_ids</attribute>
+            </xpath>
+            <xpath expr="//field[@name='withholding_line_ids']//field[@name='tax_id']" position="after">
+                <field name="tax_id"
+                       domain="l10n_ge_tax_id_custom_domain"
+                       options="{'no_open': True, 'no_create': True}"
+                       column_invisible="parent.country_code != 'GE' or not parent.l10n_ge_wht_category_ids"
+                       width="92px"/>
+            </xpath>
+            <xpath expr="//field[@name='withholding_line_ids']//field[@name='amount']" position="after">
+                <field name="l10n_ge_treaty_exempt_amount" column_invisible="parent.country_code != 'GE'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
