@@ -110,16 +110,8 @@
                             <field name="company_id" invisible="1"/>
                             <field name="prod_environment" invisible="1"/>
                             <field name="debug_logging" invisible="1"/>
-                            <label for="delivery_type"/>
-                            <div>
-                                <field name="delivery_type" />
-                                <button string="Install more Providers" name="install_more_provider" type="object" class="oe_link oe_edit_only"/>
-                            </div>
-                            <field name="allow_cash_on_delivery" invisible="not supports_cash_on_delivery"/>
+                            <field name="delivery_type" />
                             <field name="integration_level" widget="radio" invisible="delivery_type == 'fixed' or delivery_type == 'base_on_rule'"/>
-                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                        </group>
-                        <group name="delivery_details">
                             <field name="currency_id" invisible="1"/>
                             <field name="fixed_price"
                                     widget="monetary"
@@ -143,13 +135,6 @@
                                         invisible="not free_over"
                                         required="free_over"/>
                             </div>
-                            <field name="product_id" context="{
-                                'default_type': 'service',
-                                'default_sale_ok': False,
-                                'default_purchase_ok': False,
-                                'default_invoice_policy': 'order',
-                            }"/>
-                            <field name="tracking_url" placeholder="i.e. https://ekartlogistics.com/shipmenttrack/&lt;shipmenttrackingnumber&gt;" invisible="delivery_type not in ('fixed', 'base_on_rule')"/>
                             <field name="invoice_policy" widget="radio" invisible="delivery_type in ('fixed', 'base_on_rule') or integration_level == 'rate'"/>
                             <field name="supports_shipping_insurance" invisible="1"/>
                             <label for="shipping_insurance" String="Shipping Insurance" invisible="not supports_shipping_insurance"/>
@@ -164,54 +149,64 @@
                                 <field name="price_rule_ids" nolabel="1"/>
                             </group>
                         </page>
-                        <page string="Availability" name="destination">
-                            <group col="1">
-                                <p name="availability_description">
-                                    Filling this form allows you to make the delivery method available according to the content of the order or its destination.
-                                </p>
-                                <group>
-                                    <group name="country_details" string="Destination">
-                                        <field name="country_ids"
-                                                widget="many2many_tags"
-                                                options="{'no_open': True, 'no_create': True}"/>
-                                        <field name="state_ids"
-                                                widget="many2many_tags"
-                                                domain="[('country_id', 'in', country_ids)]"
-                                                readonly="not country_ids"
-                                                force_save="1"
-                                                options="{'no_create': True}"/>
-                                        <field name="zip_prefix_ids"
-                                                widget="many2many_tags"
-                                                readonly="not country_ids"
-                                                force_save="1"
-                                                options="{'no_create_edit': True}"/>
-                                    </group>
-                                    <group name="content" string="Content">
-                                        <label for="max_weight"/>
-                                        <div name="max_weight_row" class="o_row">
-                                            <field name="max_weight" class="oe_inline"/>
-                                            <field name="weight_uom_name"/>
-                                        </div>
-                                        <label for="max_volume"/>
-                                        <div name="max_volume_row" class="o_row">
-                                            <field name="max_volume" class="oe_inline"/>
-                                            <field name="volume_uom_name"/>
-                                        </div>
-                                        <field name="must_have_tag_ids"
-                                                widget="many2many_tags"
-                                                options="{'no_open': True, 'no_create': True}"/>
-                                        <field name="excluded_tag_ids"
-                                                widget="many2many_tags"
-                                                options="{'no_open': True, 'no_create': True}"/>
-                                    </group>
+                        <page string="Restrictions" name="destination">
+                            <group>
+                                <group name="country_details" string="Destination">
+                                    <field name="country_ids"
+                                            widget="many2many_tags"
+                                            placeholder="All countries"
+                                            options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="state_ids"
+                                            widget="many2many_tags"
+                                            placeholder="All states"
+                                            domain="[('country_id', 'in', country_ids)]"
+                                            readonly="not country_ids"
+                                            force_save="1"
+                                            options="{'no_create': True}"/>
+                                    <field name="zip_prefix_ids"
+                                            widget="many2many_tags"
+                                            placeholder="All zip"
+                                            readonly="not country_ids"
+                                            force_save="1"
+                                            options="{'no_create_edit': True}"/>
                                 </group>
-                                <p name="country_warning" class="fst-italic" invisible="country_ids">
-                                    Please select a country before choosing a state or a zip prefix.
-                                </p>
+                                <group name="content" string="Content">
+                                    <label for="max_weight"/>
+                                    <div name="max_weight_row" class="o_row">
+                                        <field name="max_weight" class="oe_inline"/>
+                                        <field name="weight_uom_name"/>
+                                    </div>
+                                    <label for="max_volume"/>
+                                    <div name="max_volume_row" class="o_row">
+                                        <field name="max_volume" class="oe_inline"/>
+                                        <field name="volume_uom_name"/>
+                                    </div>
+                                    <field name="must_have_tag_ids"
+                                            widget="many2many_tags"
+                                            options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="excluded_tag_ids"
+                                            widget="many2many_tags"
+                                            options="{'no_open': True, 'no_create': True}"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Description" name="description">
                             <field name="carrier_description" placeholder="Delivery method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."/>
+                        </page>
+                        <page string="Configuration" name="configuration">
+                            <group>
+                                <group name="configuration_details">
+                                    <field name="product_id" context="{
+                                        'default_type': 'service',
+                                        'default_sale_ok': False,
+                                        'default_purchase_ok': False,
+                                        'default_invoice_policy': 'order',
+                                    }"/>
+                                    <field name="allow_cash_on_delivery" invisible="not supports_cash_on_delivery"/>
+                                    <field name="tracking_url" placeholder="i.e. https://ekartlogistics.com/shipmenttrack/&lt;shipmenttrackingnumber&gt;" invisible="delivery_type not in ('fixed', 'base_on_rule')"/>
+                                    <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
+                                </group>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>

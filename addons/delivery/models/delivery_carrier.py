@@ -108,15 +108,11 @@ class DeliveryCarrier(models.Model):
         column2="zip_prefix_id",
     )
 
-    max_weight = fields.Float(
-        help="If the total weight of the order is over this weight, the method won't be available."
-    )
+    max_weight = fields.Float()
     weight_uom_name = fields.Char(
         string="Weight unit of measure label", compute="_compute_weight_uom_name"
     )
-    max_volume = fields.Float(
-        help="If the total volume of the order is over this volume, the method won't be available."
-    )
+    max_volume = fields.Float()
     volume_uom_name = fields.Char(
         string="Volume unit of measure label", compute="_compute_volume_uom_name"
     )
@@ -146,7 +142,7 @@ class DeliveryCarrier(models.Model):
     margin = fields.Float(help="This percentage will be added to the shipping price.")
     fixed_margin = fields.Float(help="This fixed amount will be added to the shipping price.")
     free_over = fields.Boolean(
-        string="Free if order amount is above",
+        string="Free above",
         help="If the order total amount (shipping excluded) is above or equal to this value, the"
         " customer benefits from a free shipping.",
     )
@@ -479,7 +475,7 @@ class DeliveryCarrier(models.Model):
     # ------------------------------------------------ #
 
     fixed_price = fields.Float(
-        string="Fixed Price",
+        string="Price",
         compute="_compute_fixed_price",
         inverse="_set_product_fixed_price",
         store=True,
