@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="action_report_training_record" model="ir.actions.report">
+    <field name="name">Training Record</field>
+    <field name="model">training.record</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">training_module.report_training_record_document</field>
+    <field name="report_file">training_module.report_training_record_document</field>
+    <field name="binding_model_id" ref="model_training_record"/>
+    <field name="binding_type">report</field>
+    <field name="print_report_name">'Training Record - %s' % (object.name or '')</field>
+  </record>
+</odoo>
