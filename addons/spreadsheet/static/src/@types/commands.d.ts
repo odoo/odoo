@@ -56,6 +56,7 @@ declare module "@spreadsheet" {
         domain: Array<Array<string>>;
         orderBy: Array<string>;
         context: Record<string, any>;
+        groupBy: Array<string>;
         columns: { name: string; string?: string }[];
     }
 
