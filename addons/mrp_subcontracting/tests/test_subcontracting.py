@@ -762,10 +762,12 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         process_picking(picking, 1.25)
 
         backorder01 = picking.backorder_ids
+        self.assertEqual(backorder01._get_subcontract_production().incoming_picking, backorder01)
         process_picking(backorder01, 1)
 
         backorder02 = backorder01.backorder_ids
         self.assertEqual(backorder02.move_ids.quantity, 2.75)
+        self.assertEqual(backorder02._get_subcontract_production().incoming_picking, backorder02)
 
         self.assertEqual(self.env['mrp.production'].search_count([('bom_id', '=', bom.id)]), 3)
 
@@ -820,10 +822,12 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         backorder01 = process_picking_with_backorder(picking, 1)
         check_quants(product=finished, stock_qty=1, sub_qty=0, prod_qty=-1)
         check_quants(product=component, stock_qty=0, sub_qty=-1, prod_qty=1)
+        self.assertEqual(backorder01._get_subcontract_production().incoming_picking, backorder01)
 
         backorder02 = process_picking_with_backorder(backorder01, 2)
         check_quants(product=finished, stock_qty=3, sub_qty=0, prod_qty=-3)
         check_quants(product=component, stock_qty=0, sub_qty=-3, prod_qty=3)
+        self.assertEqual(backorder02._get_subcontract_production().incoming_picking, backorder02)
 
         process_picking_with_backorder(backorder02, 3)
         check_quants(product=finished, stock_qty=6, sub_qty=0, prod_qty=-6)
