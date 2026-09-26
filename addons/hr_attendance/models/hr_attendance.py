@@ -676,6 +676,17 @@ class HrAttendance(models.Model):
             ('current_version_id.contract_date_start', '<=', fields.Date.today() - relativedelta(days=1))
         ])
 
+        # Only days with scheduled work can be absences, whatever the period of the quantity rules
+        start = utc.localize(yesterday - relativedelta(days=1))  # for timezone
+        stop = utc.localize(yesterday + relativedelta(days=2))  # for timezone
+        version_periods_by_employee = absent_employees.sudo()._get_version_periods(start, stop)
+        schedules_by_employee = absent_employees._get_schedules_by_employee_by_work_type(start, stop, version_periods_by_employee)
+        yesterday_interval = Intervals([(yesterday, yesterday + relativedelta(days=1), self.env['resource.calendar'])])
+        absent_employees = absent_employees.filtered(
+            lambda emp: schedules_by_employee['schedule'][emp]['work'] & yesterday_interval
+            or schedules_by_employee['fully_flexible'][emp] & yesterday_interval
+        )
+
         for emp in absent_employees:
             local_day_start = pytz.timezone(emp._get_tz()).localize(yesterday)
             check_in_utc = local_day_start.astimezone(pytz.utc)
