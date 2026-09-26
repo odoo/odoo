@@ -75,7 +75,7 @@ class L10nThTaxInvoice(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if not vals.get('tax_invoice_number'):
-                company = self.env['account.move'].browse(vals.get('invoice_move_id')).company_id
+                company = self.env['account.move'].browse(vals.get('invoice_move_id')).company_id.root_id
                 vals['tax_invoice_number'] = self.env['ir.sequence'].with_company(company).next_by_code(
                     'l10n_th.tax.invoice.receipt_tax_invoice_number'
                     if vals.get('payment_move_id')
