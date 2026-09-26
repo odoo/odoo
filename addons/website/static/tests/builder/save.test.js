@@ -141,6 +141,20 @@ test("content is escaped twice", async () => {
     await contains(".o-snippets-top-actions button:contains(Save)").click();
 });
 
+test("dollar symbol in content is escaped", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`<div class="my_content">hey</div>`);
+    setSelection({ anchorNode: queryOne(":iframe .my_content").firstChild, anchorOffset: 0 });
+    await insertText(getEditor(), "a dollar $0 sign ");
+
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        expect(args[1]).toInclude(`<div class="my_content">a dollar &amp;#x24;0 sign hey</div>`);
+        expect.step("save");
+        return true;
+    });
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await expect.waitForSteps(["save"]);
+});
+
 test("content is not escaped twice inside data-oe-model nodes which are not ir.ui.view", async () => {
     const { getEditor } = await setupWebsiteBuilder(
         `<div class="my_content" data-oe-model="other">hey</div>`
