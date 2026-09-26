@@ -324,3 +324,42 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.assertEqual(partner_2.phone, '123456789')
         self.assertEqual(partner_2.vat, 'VAT_TEST_NUMBER_124')
         self.assertEqual(partner_2.zip, '12345')
+
+    def test_qr_code_receipt_decimal_qty(self):
+        """
+        Tests that the validation ticket screen can handle float qty and displays UoM
+        """
+        self.authenticate(None, None)
+        kg_uom = self.env.ref('uom.product_uom_kgm')
+        kg_product = self.env['product.product'].create({
+            'name': 'product',
+            'is_storable': True,
+            'list_price': 10.0,
+            'taxes_id': False,
+            'uom_id': kg_uom.id,
+        })
+
+        self.main_pos_config.open_ui()
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'access_token': 'token_123',
+            'lines': [(0, 0, {
+                'name': "OL/0002",
+                'product_id': kg_product.id,
+                'full_product_name': 'product',
+                'price_unit': 10,
+                'discount': 0.0,
+                'qty': 0.5,
+                'tax_ids': False,
+                'price_subtotal': 5.0,
+                'price_subtotal_incl': 5.0,
+            })],
+            'amount_tax': 0,
+            'amount_total': 5.0,
+            'amount_paid': 5.0,
+            'amount_return': 0.0,
+        })
+        res = self.url_open(f'/pos/ticket/validate?access_token={order.access_token}')
+        response_content = res.content.decode('utf-8')
+        self.assertIn('0.5 kg of product', response_content)
