@@ -153,11 +153,22 @@ test("should carry list item color to new list item (2)", async () => {
     });
 });
 
-test("should carry color of paragraph to list item", async () => {
+test("should carry color of paragraph to list item while preserving background color", async () => {
     await testEditor({
-        contentBefore: '<p><font style="color: rgb(255, 0, 0);">[]abc</font></p>',
+        contentBefore:
+            '<p><font style="color: rgb(255, 0, 0); background-color: rgb(0, 255, 0);">[]abc</font></p>',
         stepFunction: toggleUnorderedList,
-        contentAfter: '<ul><li style="color: rgb(255, 0, 0);">[]abc</li></ul>',
+        contentAfter:
+            '<ul><li style="color: rgb(255, 0, 0);"><font style="background-color: rgb(0, 255, 0);">[]abc</font></li></ul>',
+    });
+});
+
+test("should carry text color class of paragraph to list item while preserving background color class", async () => {
+    await testEditor({
+        contentBefore: '<p><span class="text-o-color-1 bg-o-color-2">[]abc</span></p>',
+        stepFunction: toggleUnorderedList,
+        contentAfter:
+            '<ul><li class="text-o-color-1"><span class="bg-o-color-2">[]abc</span></li></ul>',
     });
 });
 
