@@ -313,6 +313,35 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         with self.assertRaises(ValidationError):
             self.root_company.fiscalyear_last_day = -1
 
+    def test_chart_template_ref_branch_user_without_parent_access(self):
+        """Branch users must resolve parent-company chart xmlids without parent company access."""
+        tax_group = self.env['account.tax.group'].search([], limit=1)
+        xmlid_suffix = 'branch_chart_ref_test'
+
+        self.env['ir.model.data'].sudo().create({
+            'module': 'account',
+            'name': f'{self.root_company.id}_{xmlid_suffix}',
+            'model': 'account.tax.group',
+            'res_id': tax_group.id,
+        })
+
+        branch_user = self.env['res.users'].create({
+            'name': 'Branch Chart Ref User',
+            'login': 'branch_chart_ref_test',
+            'email': 'branch_chart_ref_test@example.com',
+            'company_id': self.branch_a.id,
+            'company_ids': [Command.set([self.branch_a.id])],
+            'group_ids': [Command.set([
+                self.env.ref('account.group_account_invoice').id,
+            ])],
+        })
+
+        branch_env = self.env(user=branch_user)
+        self.env.invalidate_all()
+        branch_env.invalidate_all()
+        result = branch_env['account.chart.template'].with_company(self.branch_a).ref(xmlid_suffix, raise_if_not_found=False)
+        self.assertEqual(result, tax_group)
+
     def test_branch_user_bank_statement_foreign_currency(self):
         # Create a user that only belongs to branch a
         user = self.env['res.users'].create({
