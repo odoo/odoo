@@ -1434,3 +1434,51 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(len(logged_messages), 2)
         self.assertIn('Twenty dollars no tax: Deleted line (quantity: 1.0)', logged_messages[0])
         self.assertIn('Ten dollars no tax: Ordered quantity: 2.0 → 1', logged_messages[1])
+
+    def test_load_archived_product_with_orderline(self):
+        archived_product = self.env['product.product'].create({
+            'name': 'Archived Flow Product',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'active': False,
+        })
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+
+        # 1. Test read_pos_data loads product and template when reading orders
+        order = self.env['pos.order'].create({
+            'config_id': self.pos_config_usd.id,
+            'session_id': session.id,
+            'company_id': self.pos_config_usd.company_id.id,
+            'amount_total': 10.0,
+            'amount_paid': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'lines': [Command.create({
+                'name': 'Line 1',
+                'product_id': archived_product.id,
+                'price_unit': 10.0,
+                'qty': 1,
+                'price_subtotal': 10.0,
+                'price_subtotal_incl': 10.0,
+            })],
+        })
+        pos_data = order.read_pos_data([], self.pos_config_usd)
+        loaded_product_ids = [p['id'] for p in pos_data.get('product.product', [])]
+        loaded_tmpl_ids = [t['id'] for t in pos_data.get('product.template', [])]
+        self.assertIn(archived_product.id, loaded_product_ids, "Archived product should be returned in read_pos_data")
+        self.assertIn(archived_product.product_tmpl_id.id, loaded_tmpl_ids, "Archived product template should be returned in read_pos_data")
+
+        # 2. Test session load_data with a draft order containing an archived product
+        # (the order is draft on creation, which is what pos.order._load_pos_data_domain loads)
+        session_data = session.load_data()
+        loaded_session_product_ids = [p['id'] for p in session_data.get('product.product', {}).get('records', [])]
+        loaded_session_line_ids = [line['id'] for line in session_data.get('pos.order.line', {}).get('records', [])]
+        self.assertIn(order.lines.id, loaded_session_line_ids, "Draft orderline with archived product should be loaded")
+        self.assertIn(archived_product.id, loaded_session_product_ids, "Archived product from draft orderline should be loaded in session data")
+
+        # 3. A product loaded for an orderline must not be purged from the client cache,
+        # even though filter_local_data reports it as inactive
+        cached_data = session.load_data({'records': {'product.product': {str(archived_product.id): 0}}})
+        self.assertNotIn(archived_product.id, cached_data.get('product.product', {}).get('to_remove', []),
+            "Archived product loaded from a draft orderline should not be marked for removal")

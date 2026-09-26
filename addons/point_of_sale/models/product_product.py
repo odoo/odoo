@@ -29,7 +29,19 @@ class ProductProduct(models.Model):
 
     @api.model
     def _load_pos_data_dependencies(self):
-        return ['product.template.attribute.value', 'product.template']
+        return ['product.template.attribute.value', 'product.template', 'pos.order.line']
+
+    @api.model
+    def _load_pos_metadata(self, data, search_params={}):
+        super()._load_pos_metadata(data, search_params)
+        if search_params.get('domain', False):
+            return data
+        # Order lines may reference archived variants, which the domain above
+        # never matches: load them so their lines are not dropped by the client.
+        order_lines = data.get('pos.order.line', {}).get('records')
+        if order_lines:
+            data[self._name]['records'] |= order_lines.product_id._filtered_access('read')
+        return data
 
     @api.model
     def _load_pos_data_fields(self, config):
