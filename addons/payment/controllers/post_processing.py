@@ -51,7 +51,8 @@ class PaymentPostProcessing(http.Controller):
         # route and its document.
         if monitored_tx.state == 'done' and not monitored_tx.is_post_processed:
             try:
-                monitored_tx._finalize_post_processing()
+                if tx_to_process := monitored_tx._lock_for_post_processing():
+                    tx_to_process._finalize_post_processing()
             except (
                 psycopg2.OperationalError, psycopg2.IntegrityError
             ):  # The database cursor could not be committed.
