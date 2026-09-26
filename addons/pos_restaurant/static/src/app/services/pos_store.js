@@ -842,6 +842,7 @@ patch(PosStore.prototype, {
             index: nextIdx,
             course_id: backendCourse ? backendCourse : false,
             name: backendCourse ? backendCourse.name : _t("Course ") + nextIdx,
+            manually_created: true,
         });
         let selectedCourse = course;
         if (order.course_ids.length === 1 && order.lines.length > 0) {

@@ -17,6 +17,7 @@ class RestaurantOrderCourse(models.Model):
     index = fields.Integer(string="Course index", default=0)
     order_id = fields.Many2one('pos.order', string='Order Ref', required=True, index=True, ondelete='cascade')
     line_ids = fields.One2many('pos.order.line', 'course_id', string="Order Lines", readonly=True)
+    manually_created = fields.Boolean(string="Manually Created", default=False, readonly=True)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -40,4 +41,4 @@ class RestaurantOrderCourse(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['name', 'course_id', 'uuid', 'fired', 'order_id', 'line_ids', 'index', 'write_date']
+        return ['name', 'course_id', 'uuid', 'fired', 'order_id', 'line_ids', 'index', 'write_date', 'manually_created']

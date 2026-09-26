@@ -128,6 +128,9 @@ patch(PosOrder.prototype, {
             })
             .map((course, newIndex) => {
                 course.index = newIndex + 1;
+                if (course.manually_created) {
+                    course.name = _t("Course ") + course.index;
+                }
                 return course;
             });
         removedCourses.forEach((course) => course.delete());
