@@ -1122,6 +1122,8 @@ class ChromeBrowser:
 
                 self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
                 self._websocket_request('Browser.close')
+            except CancelledError:
+                self._logger.info("Chrome closed the devtools connection without answering")
             except ChromeBrowserException as e:
                 _logger.runbot("WS error during browser shutdown: %s", e)
                 self.chrome_log_level = logging.RUNBOT
@@ -1365,6 +1367,18 @@ class ChromeBrowser:
 
     def _receive(self, dbname):
         threading.current_thread().dbname = dbname
+        try:
+            self._receive_events()
+        finally:
+            while True:
+                try:
+                    _, f = self._responses.popitem()
+                except KeyError:
+                    break
+                else:
+                    f.cancel()
+
+    def _receive_events(self):
         # So CDT uses a streamed JSON-RPC structure, meaning a request is
         # {id, method, params} and eventually a {id, result | error} should
         # arrive the other way, however for events it uses "notifications"
@@ -1381,13 +1395,6 @@ class ChromeBrowser:
                 if not self._result.done():
                     del self.ws
                     self._result.set_exception(e)
-                    while True:
-                        try:
-                            _, f = self._responses.popitem()
-                        except KeyError:
-                            break
-                        else:
-                            f.cancel()
                 return
             except Exception as e:
                 if isinstance(e, ConnectionResetError) and self._result.done():
