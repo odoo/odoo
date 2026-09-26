@@ -67,6 +67,44 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
 
     @patch_api
+    def test_alarm_ids_sync_limit_message(self):
+        """ Google Calendar only accepts up to 5 reminders per event.
+        Ensure that when a calendar event ends up with more than 5 alarms, a log message should be send
+        to warn internal users that only the first 5 alarms will be synced.
+        """
+        def assert_alarm_message(event, posted):
+            message = "This event has more than 5 reminders, only the first 5 will be synced to Google Calendar."
+            self.assertEqual(posted, any(message in body for body in event.message_ids.mapped('body')))
+
+        alarms = self.env['calendar.alarm'].create([{
+            'name': 'Notif %s' % i,
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 10 + i,
+        } for i in range(6)])
+        base_vals = {
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+        }
+        # Create
+        event_under_limit = self.env['calendar.event'].create({
+            **base_vals,
+            'alarm_ids': [(4, alarms[0].id)],
+        })
+        assert_alarm_message(event_under_limit, False)
+        event_over_limit = self.env['calendar.event'].create({
+            **base_vals,
+            'alarm_ids': [(4, alarm.id) for alarm in alarms],
+        })
+        assert_alarm_message(event_over_limit, True)
+        # Write
+        event_under_limit.write({'alarm_ids': [(4, alarms[1].id)]})
+        assert_alarm_message(event_under_limit, False)
+        event_under_limit.write({'alarm_ids': [(4, alarm.id) for alarm in alarms]})
+        assert_alarm_message(event_under_limit, True)
+
+    @patch_api
     @users('__system__')
     @warmup
     def test_event_creation_perf(self):
