@@ -1,11 +1,41 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models, _
+from odoo import api, fields, models, _
+
+TAX_TRANSACTION_CODE = [
+    ('01', '01 To the Parties that is not VAT Collector (Regular Customers)'),
+    ('02', '02 To the Treasurer'),
+    ('03', '03 To other VAT Collectors other than the Treasurer'),
+    ('04', '04 Other Value of VAT Imposition Base'),
+    ('05', '05 Specified Amount (Article 9A Paragraph (1) VAT Law)'),
+    ('06', '06 to individuals holding foreign passports'),
+    ('07', '07 Deliveries that the VAT is not Collected'),
+    ('08', '08 Deliveries that the VAT is Exempted'),
+    ('09', '09 Deliveries of Assets (Article 16D of VAT Law)'),
+    ('10', '10 Other deliveries'),
+]
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_id_qris_transaction_ids = fields.Many2many('l10n_id.qris.transaction', groups='account.group_account_invoice')
+    l10n_id_kode_transaksi = fields.Selection(
+        selection=TAX_TRANSACTION_CODE,
+        string='Transaction Type Code',
+        help="A mandatory section in a Tax Invoice containing information on the supply of Taxable Goods (BKP) and/or Taxable Services (JKP).",
+        readonly=False,
+        copy=False,
+        compute="_compute_kode_transaksi",
+        store=True,
+    )
+
+    @api.depends('partner_id', 'reversed_entry_id')
+    def _compute_kode_transaksi(self):
+        for move in self:
+            move.l10n_id_kode_transaksi = (
+                move.reversed_entry_id.l10n_id_kode_transaksi
+                or move.commercial_partner_id.l10n_id_kode_transaksi
+            )
 
     def _generate_qr_code(self, silent_errors=False):
         """
