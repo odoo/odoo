@@ -34,6 +34,7 @@ class HrJob(models.Model):
     recruiter_id = fields.Many2one(
         'hr.employee',
         "Recruiter",
+        context={'allowed_company_ids': []},
         domain=lambda self: str(self._recruiter_domain()),
         default=lambda self: self.env.user.employee_id,
         groups="hr.group_hr_user",
