@@ -22,9 +22,9 @@ export class PartnerAutoCompleteAdditionalIdentifiersList extends AdditionalIden
         this.inputRef = signal.ref();
     }
 
-    async getSearchConfig(fieldName, request, shouldSearchWorldWide) {
+    async getSearchConfig(fieldName, request, shouldSearchWorldwide) {
         let defaultCountryId = this.props.record.data?.country_id?.id || false;
-        if (shouldSearchWorldWide) {
+        if (shouldSearchWorldwide) {
             defaultCountryId = 0;
         }
 
@@ -64,12 +64,12 @@ export class PartnerAutoCompleteAdditionalIdentifiersList extends AdditionalIden
     getSources(fieldName) {
         return [
             {
-                options: async (request, shouldSearchWorldWide) => {
-                    const config = await this.getSearchConfig(fieldName, request, shouldSearchWorldWide);
+                options: async (request, shouldSearchWorldwide, shouldIncludeBranches) => {
+                    const config = await this.getSearchConfig(fieldName, request, shouldSearchWorldwide);
                     if (!config.isValid) {
                         return [];
                     }
-                    const suggestions = await this.partnerAutocomplete.autocomplete(fieldName, request, config.countryId);
+                    const suggestions = await this.partnerAutocomplete.autocomplete(fieldName, request, config.countryId, shouldIncludeBranches);
                     return suggestions.map((suggestion) => ({
                         cssClass: "partner_autocomplete_dropdown_char",
                         data: suggestion,

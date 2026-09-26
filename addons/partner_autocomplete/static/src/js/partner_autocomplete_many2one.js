@@ -70,10 +70,10 @@ export class PartnerAutoCompleteMany2one extends Component {
         }
         return [
             {
-                options: async (request, shouldSearchWorldWide) => {
+                options: async (request, shouldSearchWorldwide) => {
                     if (this.validateSearchTerm(request)) {
                         let queryCountryId = false;
-                    	if (shouldSearchWorldWide){
+                    	if (shouldSearchWorldwide){
 							queryCountryId = 0;
 						}
                         const suggestions = await this.partnerAutocomplete.autocomplete("name", request, queryCountryId);
