@@ -112,6 +112,10 @@ export class InlineCodePlugin extends Plugin {
             const deepChild = (node, offset) => (node === blockEl ? node.childNodes[offset] : node);
             anchorNode = deepChild(anchorNode, anchorOffset);
             focusNode = deepChild(focusNode, focusOffset);
+            if (!anchorNode || !focusNode || !blockEl?.contains(anchorNode) || !blockEl?.contains(focusNode)) {
+                delete this.historySavePointRestore;
+                return;
+            }
             if (direction === DIRECTIONS.LEFT) {
                 // Swap anchorNode and focusNode
                 [anchorNode, anchorOffset, focusNode, focusOffset] = [
