@@ -34,9 +34,7 @@ class MercadoPagoOnboardingController(Controller):
         csrf_token = data.get("csrf_token")  # Could be missing if authorization was cancelled.
         provider = self.env["payment.provider"].browse(provider_id).exists()
         if not provider or provider.code != "mercado_pago":
-            raise ValidationError(
-                self.env._("Could not find Mercado Pago provider %s", provider)
-            )
+            raise ValidationError(self.env._("Could not find Mercado Pago provider %s", provider))
 
         # Verify the CSRF token.
         if not request.validate_csrf(csrf_token):
@@ -60,8 +58,12 @@ class MercadoPagoOnboardingController(Controller):
             )
         except ValidationError as e:
             return request.render(
-                "payment_mercado_pago.authorization_error",
-                {"error_message": str(e), "provider_url": redirect_url},
+                "payment.authorization_error",
+                {
+                    "provider_name": "Mercado Pago",
+                    "error_message": str(e),
+                    "provider_url": redirect_url,
+                },
             )
         # Backdate the access token expiry to refresh it before it expires, since the refresh token
         # would become unusable at that time (according to Mercado Pago's dev team).
