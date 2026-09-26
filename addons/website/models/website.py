@@ -1924,41 +1924,80 @@ class Website(models.Model):
         return html_fields
 
     def _is_snippet_used(self, snippet_module, snippet_id, asset_version, asset_type, html_fields):
-        snippet_occurences = []
         # Check snippet template definition to avoid disabling its related assets.
         # This special case is needed because snippet template definitions do not
         # have a `data-snippet` attribute (which is added during drag&drop).
         snippet_template_html = self.env['ir.qweb']._render(f'{snippet_module}.{snippet_id}', raise_if_not_found=False)
         if snippet_template_html:
             match = re.search('<([^>]*class="[^>]*)>', snippet_template_html)
-            snippet_occurences.append(match.group())
-
-        if self._check_snippet_used(snippet_occurences, asset_type, asset_version):
-            return True
+            if match and self._check_snippet_used([match.group()], asset_type, asset_version):
+                return True
 
         html_fields = [(self.env[model_name], field_name) for model_name, field_name in html_fields]
-        # As well as every snippet dropped in html fields
-        self.env.cr.execute(SQL(" UNION ").join(
-            SQL("SELECT regexp_matches(%s, %s, 'g') FROM %s",
-                model._field_to_sql(model._table, field_name),
-                f'<([^>]*data-snippet="{snippet_id}"[^>]*)>',
-                SQL.identifier(model._table)
-            )
-            for model, field_name in html_fields
-        ))
+        # A marker to do a cheaper substring search before applying the regex
+        snippet_marker = f'data-snippet="{snippet_id}"'
+        snippet_pattern = self._get_snippet_pattern(snippet_id, asset_type, asset_version)
+        # Also check every snippet dropped in html fields
+        query = SQL(
+            "SELECT EXISTS (SELECT 1 FROM (%s) AS occurrences LIMIT 1)",
+            SQL(" UNION ALL ").join(
+                SQL(
+                    """
+                    SELECT 1
+                    FROM %s
+                    WHERE strpos(%s, %s) > 0
+                    AND %s ~ %s
+                    """,
+                    SQL.identifier(model._table),
+                    field := model._field_to_sql(model._table, field_name),
+                    snippet_marker,
+                    field,
+                    snippet_pattern,
+                )
+                for model, field_name in html_fields
+            ),
+        )
 
-        snippet_occurences = [r[0][0] for r in self.env.cr.fetchall()]
-        return self._check_snippet_used(snippet_occurences, asset_type, asset_version)
+        self.env.cr.execute(query)
+        return self.env.cr.fetchone()[0]
+
 
     def _check_snippet_used(self, snippet_occurences, asset_type, asset_version):
-        for snippet in snippet_occurences:
-            if asset_version == '000':
-                if f'data-v{asset_type}' not in snippet:
-                    return True
-            else:
-                if f'data-v{asset_type}="{asset_version}"' in snippet:
-                    return True
-        return False
+        version_pattern = self._get_snippet_version_pattern(
+            asset_type,
+            asset_version,
+        )
+
+        return any(
+            re.match(version_pattern, snippet) is not None
+            for snippet in snippet_occurences
+        )
+
+
+    def _get_snippet_version_pattern(self, asset_type, asset_version):
+        """Return the regex corresponding to the version condition."""
+        version_attribute = re.escape(f'data-v{asset_type}')
+
+        # Checks: version attribute not in snippet
+        if asset_version == '000':
+            return rf'(?![^>]*{version_attribute})'
+
+        # Checks: version attribute = asset_version
+        return rf'(?=[^>]*{version_attribute}="{re.escape(asset_version)}"[^>]*>)'
+
+
+    def _get_snippet_pattern(self, snippet_id, asset_type, asset_version):
+        """Return a regex matching an opening tag containing the snippet and version."""
+        version_pattern = self._get_snippet_version_pattern(
+            asset_type,
+            asset_version,
+        )
+        
+        return (
+            rf'<(?=[^>]*data-snippet="{re.escape(snippet_id)}"[^>]*>)'
+            rf'{version_pattern}'
+            rf'[^>]*>'
+        )
 
     def _check_user_can_modify(self, record):
         """ Verify that the current user can modify the given record.
