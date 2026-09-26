@@ -9,42 +9,24 @@ import { ListCoreViewPlugin } from "@spreadsheet/list/plugins/list_core_view_plu
 import { ListUIPlugin } from "@spreadsheet/list/plugins/list_ui_plugin";
 
 import { SEE_RECORD_LIST, SEE_RECORD_LIST_VISIBLE } from "./list_actions";
-const { inverseCommandRegistry } = spreadsheet.registries;
+const { registerCommand } = spreadsheet;
 
-function identity(cmd) {
-    return [cmd];
-}
+registerCommand("INSERT_ODOO_LIST", { category: "core", invalidatesEvaluation: true });
+registerCommand("RENAME_ODOO_LIST", { category: "core" });
+registerCommand("REMOVE_ODOO_LIST", { category: "core", invalidatesEvaluation: true });
+registerCommand("RE_INSERT_ODOO_LIST", { category: "core" });
+registerCommand("UPDATE_ODOO_LIST_DOMAIN", { category: "core", invalidatesEvaluation: true });
+registerCommand("UPDATE_ODOO_LIST", { category: "core", invalidatesEvaluation: true });
+registerCommand("ADD_LIST_DOMAIN", { category: "core" });
+registerCommand("DUPLICATE_ODOO_LIST", { category: "core" });
 
-const { coreTypes, evaluationCommandTypes, invalidateEvaluationCommands } = spreadsheet;
+// Local commands handled by the list UI plugin.
+registerCommand("INSERT_ODOO_LIST_WITH_TABLE", { category: "local" });
+registerCommand("RE_INSERT_ODOO_LIST_WITH_TABLE", { category: "local" });
+registerCommand("INSERT_NEW_ODOO_LIST", { category: "local" });
+registerCommand("DUPLICATE_ODOO_LIST_IN_NEW_SHEET", { category: "local" });
 
 const { cellMenuRegistry } = spreadsheet.registries;
-
-coreTypes.add("INSERT_ODOO_LIST");
-coreTypes.add("RENAME_ODOO_LIST");
-coreTypes.add("REMOVE_ODOO_LIST");
-coreTypes.add("RE_INSERT_ODOO_LIST");
-coreTypes.add("UPDATE_ODOO_LIST_DOMAIN");
-coreTypes.add("UPDATE_ODOO_LIST");
-coreTypes.add("ADD_LIST_DOMAIN");
-coreTypes.add("DUPLICATE_ODOO_LIST");
-
-// `evaluationCommandTypes` is a snapshot of `coreTypes` taken when o-spreadsheet
-// is loaded, so every core type added here has to be registered again for
-// evaluation plugins to receive it.
-// TODO: remove once `isEvaluationCommand` also checks `coreTypes` at call time.
-evaluationCommandTypes.add("INSERT_ODOO_LIST");
-evaluationCommandTypes.add("RENAME_ODOO_LIST");
-evaluationCommandTypes.add("REMOVE_ODOO_LIST");
-evaluationCommandTypes.add("RE_INSERT_ODOO_LIST");
-evaluationCommandTypes.add("UPDATE_ODOO_LIST_DOMAIN");
-evaluationCommandTypes.add("UPDATE_ODOO_LIST");
-evaluationCommandTypes.add("ADD_LIST_DOMAIN");
-evaluationCommandTypes.add("DUPLICATE_ODOO_LIST");
-
-invalidateEvaluationCommands.add("UPDATE_ODOO_LIST_DOMAIN");
-invalidateEvaluationCommands.add("UPDATE_ODOO_LIST");
-invalidateEvaluationCommands.add("INSERT_ODOO_LIST");
-invalidateEvaluationCommands.add("REMOVE_ODOO_LIST");
 
 cellMenuRegistry.add(
     "list_see_record",
@@ -62,14 +44,5 @@ cellMenuRegistry.add(
         icon: "o-spreadsheet-Icon.SEE_RECORDS",
     })
 );
-
-inverseCommandRegistry
-    .add("INSERT_ODOO_LIST", identity)
-    .add("UPDATE_ODOO_LIST_DOMAIN", identity)
-    .add("UPDATE_ODOO_LIST", identity)
-    .add("RE_INSERT_ODOO_LIST", identity)
-    .add("RENAME_ODOO_LIST", identity)
-    .add("REMOVE_ODOO_LIST", identity)
-    .add("DUPLICATE_ODOO_LIST", identity);
 
 export { ListCorePlugin, ListCoreViewPlugin, ListUIPlugin };

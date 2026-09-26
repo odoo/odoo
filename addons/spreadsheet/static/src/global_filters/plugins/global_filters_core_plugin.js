@@ -21,91 +21,92 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
         "getGlobalFilterDefaultValue",
         "getFieldMatchingForModel",
     ]);
+    validators = {
+        ADD_GLOBAL_FILTER: this.checkAddGlobalFilter,
+        EDIT_GLOBAL_FILTER: this.checkEditGlobalFilter,
+        REMOVE_GLOBAL_FILTER: this.checkRemoveGlobalFilter,
+        MOVE_GLOBAL_FILTER: this.checkMoveGlobalFilter,
+    };
+
+    handlers = {
+        ADD_GLOBAL_FILTER: this.onAddGlobalFilter,
+        EDIT_GLOBAL_FILTER: this.onEditGlobalFilter,
+        REMOVE_GLOBAL_FILTER: this.onRemoveGlobalFilter,
+        MOVE_GLOBAL_FILTER: this.onMoveGlobalFilter,
+    };
+
     constructor(config) {
         super(config);
         /** @type {Array.<GlobalFilter>} */
         this.globalFilters = [];
     }
 
-    /**
-     * Check if the given command can be dispatched
-     *
-     * @param {import("@spreadsheet").AllCoreCommand} cmd Command
-     */
-    allowDispatch(cmd) {
-        switch (cmd.type) {
-            case "EDIT_GLOBAL_FILTER":
-                if (!this.getGlobalFilter(cmd.filter.id)) {
-                    return CommandResult.FilterNotFound;
-                } else if (!cmd.filter.label) {
-                    return CommandResult.InvalidFilterLabel;
-                } else if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
-                    return CommandResult.DuplicatedFilterLabel;
-                }
-                if (!checkFilterDefaultValueIsValid(cmd.filter, cmd.filter.defaultValue)) {
-                    return CommandResult.InvalidValueTypeCombination;
-                }
-                break;
-            case "REMOVE_GLOBAL_FILTER":
-                if (!this.getGlobalFilter(cmd.id)) {
-                    return CommandResult.FilterNotFound;
-                }
-                break;
-            case "ADD_GLOBAL_FILTER":
-                if (!cmd.filter.label) {
-                    return CommandResult.InvalidFilterLabel;
-                } else if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
-                    return CommandResult.DuplicatedFilterLabel;
-                }
-                if (!checkFilterDefaultValueIsValid(cmd.filter, cmd.filter.defaultValue)) {
-                    return CommandResult.InvalidValueTypeCombination;
-                }
-                break;
-            case "MOVE_GLOBAL_FILTER": {
-                const index = this.globalFilters.findIndex((filter) => filter.id === cmd.id);
-                if (index === -1) {
-                    return CommandResult.FilterNotFound;
-                }
-                const targetIndex = index + cmd.delta;
-                if (targetIndex < 0 || targetIndex >= this.globalFilters.length) {
-                    return CommandResult.InvalidFilterMove;
-                }
-                break;
-            }
+    checkEditGlobalFilter(cmd) {
+        if (!this.getGlobalFilter(cmd.filter.id)) {
+            return CommandResult.FilterNotFound;
+        } else if (!cmd.filter.label) {
+            return CommandResult.InvalidFilterLabel;
+        } else if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
+            return CommandResult.DuplicatedFilterLabel;
+        }
+        if (!checkFilterDefaultValueIsValid(cmd.filter, cmd.filter.defaultValue)) {
+            return CommandResult.InvalidValueTypeCombination;
         }
         return CommandResult.Success;
     }
 
-    /**
-     * Handle a spreadsheet command
-     *
-     * @param {Object} cmd Command
-     */
-    handle(cmd) {
-        switch (cmd.type) {
-            case "ADD_GLOBAL_FILTER": {
-                const filter = { ...cmd.filter };
-                if (filter.type === "text" && filter.rangesOfAllowedValues?.length) {
-                    filter.rangesOfAllowedValues = filter.rangesOfAllowedValues.map((rangeData) =>
-                        this.getters.getRangeFromRangeData(rangeData)
-                    );
-                }
-                this.history.update("globalFilters", [...this.globalFilters, filter]);
-                break;
-            }
-            case "EDIT_GLOBAL_FILTER": {
-                this._editGlobalFilter(cmd.filter);
-                break;
-            }
-            case "REMOVE_GLOBAL_FILTER": {
-                const filters = this.globalFilters.filter((filter) => filter.id !== cmd.id);
-                this.history.update("globalFilters", filters);
-                break;
-            }
-            case "MOVE_GLOBAL_FILTER":
-                this._onMoveFilter(cmd.id, cmd.delta);
-                break;
+    checkRemoveGlobalFilter(cmd) {
+        if (!this.getGlobalFilter(cmd.id)) {
+            return CommandResult.FilterNotFound;
         }
+        return CommandResult.Success;
+    }
+
+    checkAddGlobalFilter(cmd) {
+        if (!cmd.filter.label) {
+            return CommandResult.InvalidFilterLabel;
+        } else if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
+            return CommandResult.DuplicatedFilterLabel;
+        }
+        if (!checkFilterDefaultValueIsValid(cmd.filter, cmd.filter.defaultValue)) {
+            return CommandResult.InvalidValueTypeCombination;
+        }
+        return CommandResult.Success;
+    }
+
+    checkMoveGlobalFilter(cmd) {
+        const index = this.globalFilters.findIndex((filter) => filter.id === cmd.id);
+        if (index === -1) {
+            return CommandResult.FilterNotFound;
+        }
+        const targetIndex = index + cmd.delta;
+        if (targetIndex < 0 || targetIndex >= this.globalFilters.length) {
+            return CommandResult.InvalidFilterMove;
+        }
+        return CommandResult.Success;
+    }
+
+    onAddGlobalFilter(cmd) {
+        const filter = { ...cmd.filter };
+        if (filter.type === "text" && filter.rangesOfAllowedValues?.length) {
+            filter.rangesOfAllowedValues = filter.rangesOfAllowedValues.map((rangeData) =>
+                this.getters.getRangeFromRangeData(rangeData)
+            );
+        }
+        this.history.update("globalFilters", [...this.globalFilters, filter]);
+    }
+
+    onEditGlobalFilter(cmd) {
+        this._editGlobalFilter(cmd.filter);
+    }
+
+    onRemoveGlobalFilter(cmd) {
+        const filters = this.globalFilters.filter((filter) => filter.id !== cmd.id);
+        this.history.update("globalFilters", filters);
+    }
+
+    onMoveGlobalFilter(cmd) {
+        this._onMoveFilter(cmd.id, cmd.delta);
     }
 
     adaptRanges({ applyChange }) {
@@ -301,7 +302,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
         for (const sheetId of sheetIds) {
             for (const cell of this.getters.getCells(sheetId)) {
                 if (cell.isFormula) {
-                    const originalContent = cell.compiledFormula.toFormulaString(this.getters)
+                    const originalContent = cell.compiledFormula.toFormulaString(this.getters);
                     const newContent = originalContent.replace(
                         new RegExp(`FILTER\\.VALUE\\(\\s*"${currentLabel}"\\s*\\)`, "g"),
                         `FILTER.VALUE("${newLabel}")`

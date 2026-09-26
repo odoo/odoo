@@ -13,7 +13,6 @@ import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 
 import { helpers } from "@odoo/o-spreadsheet";
-import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import {
     checkFilterAndValue,
@@ -39,43 +38,34 @@ export class GlobalFiltersCoreViewPlugin extends OdooEvaluationPlugin {
         "getTextFilterOptions",
         "getTextFilterOptionsFromRanges",
     ]);
+    validators = {
+        SET_GLOBAL_FILTER_VALUE: this.checkGlobalFilterValue,
+    };
+
+    handlers = {
+        SET_GLOBAL_FILTER_VALUE: this.onSetGlobalFilterValue,
+        REMOVE_GLOBAL_FILTER: this.onRemoveGlobalFilter,
+    };
+
     constructor(config) {
         super(config);
         this.values = {};
     }
 
-    /**
-     * Check if the given command can be dispatched
-     *
-     * @param {import("@spreadsheet").AllCommand} cmd Command
-     */
-    allowDispatch(cmd) {
-        switch (cmd.type) {
-            case "SET_GLOBAL_FILTER_VALUE": {
-                return checkFilterAndValue(this.getters, cmd.id, cmd.value);
-            }
-        }
-        return CommandResult.Success;
+    checkGlobalFilterValue(cmd) {
+        return checkFilterAndValue(this.getters, cmd.id, cmd.value);
     }
 
-    /**
-     * Handle a spreadsheet command
-     *
-     * @param {import("@spreadsheet").AllCommand} cmd
-     */
-    handle(cmd) {
-        switch (cmd.type) {
-            case "SET_GLOBAL_FILTER_VALUE":
-                if (cmd.value === undefined) {
-                    this._clearGlobalFilterValue(cmd.id);
-                } else {
-                    this._setGlobalFilterValue(cmd.id, cmd.value);
-                }
-                break;
-            case "REMOVE_GLOBAL_FILTER":
-                delete this.values[cmd.id];
-                break;
+    onSetGlobalFilterValue(cmd) {
+        if (cmd.value === undefined) {
+            this._clearGlobalFilterValue(cmd.id);
+        } else {
+            this._setGlobalFilterValue(cmd.id, cmd.value);
         }
+    }
+
+    onRemoveGlobalFilter(cmd) {
+        delete this.values[cmd.id];
     }
 
     // -------------------------------------------------------------------------
