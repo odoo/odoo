@@ -33,19 +33,26 @@ export class TurnStile {
         };
         globalThis[successCbName] = function () {
             const form = turnstileContainer.closest("form") || turnstileContainer.parentElement;
+            if (!form) {
+                return;
+            }
             const buttons = form.querySelectorAll(".cf_form_disabled");
             for (const button of buttons) {
                 button.classList.remove("disabled", "cf_form_disabled");
             }
             const inputValidation = form.querySelector("input.turnstile_captcha_valid");
             // ensure form is unlocked without using `.value = …` that may be
-            // blocked by Safari tracking and fingreprinting protection
-            inputValidation.setAttribute('value', 'done');
-            inputValidation.required = false;
+            // blocked by Safari tracking and fingerprinting protection
+            if (inputValidation) {
+                inputValidation.setAttribute("value", "done");
+                inputValidation.required = false;
+            }
         };
-        // unhide if interaction is needed
+        // unhide if interaction is needed (guard container in case of race conditions)
         globalThis[becomeVisibleCbName] = function () {
-            turnstileContainer.style.display = "";
+            if (turnstileContainer) {
+                turnstileContainer.style.display = "";
+            }
         };
         // avoid modifying shape of return, for stable compatibility
         const script1El = document.createElement("script");
