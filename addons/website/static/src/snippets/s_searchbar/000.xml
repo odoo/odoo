@@ -49,7 +49,9 @@
                       t-att-action="this.action"
                       data-snippet="s_searchbar_input">
                     <div role="search" class="o_search_input_group input-group">
+                        <label t-attf-for="o_search_input" class="visually-hidden">Search</label>
                         <input
+                            t-attf-id="o_search_input"
                             type="search"
                             name="search"
                             class="oe_search_box search-query form-control border-0 p-3 text-bg-light"
