@@ -10,7 +10,7 @@
                             type="radio"
                             t-att-checked="value.id === props.selected.id"
                             t-on-change="() => props.setSelected(value)"
-                            t-att-name="value.attribute_id.id"
+                            t-att-name="value.attribute_line_id.id"
                             t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}"
                             class="form-check-input radio-check"
                         />
@@ -40,7 +40,7 @@
                             type="radio"
                             t-att-checked="value.id === props.selected.id"
                             t-on-change="() => props.setSelected(value)"
-                            t-att-name="value.attribute_id.id"
+                            t-att-name="value.attribute_line_id.id"
                             t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}" 
                             class="form-check-input d-none"
                         />
@@ -102,7 +102,7 @@
                                 type="radio"
                                 t-att-checked="value.id === props.selected.id"
                                 t-on-change="() => props.setSelected(value)"
-                                t-att-name="value.attribute_id.id"
+                                t-att-name="value.attribute_line_id.id"
                                 t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}"
                                 class="m-2 opacity-0"
                             />
@@ -166,7 +166,7 @@
                                 type="radio"
                                 t-att-checked="value.id === props.selected.id"
                                 t-on-change="() => props.setSelected(value)"
-                                t-att-name="value.attribute_id.id"
+                                t-att-name="value.attribute_line_id.id"
                                 t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}"
                                 class="m-2 opacity-0"
                             />
@@ -206,28 +206,28 @@
                 <div t-foreach="this.validAttributeLineIds" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
                     <div class="attribute_name mb-2 fw-bolder" t-esc="attribute.attribute_id.name"/>
                     <RadioProductAttribute t-if="attribute.attribute_id.display_type === 'radio'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
+                        selected="this.state.attributes[attribute.id].selected" setSelected="this.setSelected(attribute)"
+                        customValue="this.state.attributes[attribute.id].custom_value" setCustomValue="setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                     <PillsProductAttribute t-elif="attribute.attribute_id.display_type === 'pills'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
+                        selected="this.state.attributes[attribute.id].selected" setSelected="this.setSelected(attribute)"
+                        customValue="this.state.attributes[attribute.id].custom_value" setCustomValue="setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                     <SelectProductAttribute t-elif="attribute.attribute_id.display_type === 'select'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
+                        selected="this.state.attributes[attribute.id].selected" setSelected="this.setSelected(attribute)"
+                        customValue="this.state.attributes[attribute.id].custom_value" setCustomValue="setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                     <ColorProductAttribute t-elif="attribute.attribute_id.display_type === 'color'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
+                        selected="this.state.attributes[attribute.id].selected" setSelected="this.setSelected(attribute)"
+                        customValue="this.state.attributes[attribute.id].custom_value" setCustomValue="setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                     <MultiProductAttribute t-elif="attribute.attribute_id.display_type === 'multi'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id]?.selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id]?.custom_value" setCustomValue="setCustomValue(attribute)"
+                        selected="this.state.attributes[attribute.id]?.selected" setSelected="this.setSelected(attribute)"
+                        customValue="this.state.attributes[attribute.id]?.custom_value" setCustomValue="setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                     <ImageProductAttribute t-elif="attribute.attribute_id.display_type === 'image'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
+                        selected="this.state.attributes[attribute.id].selected" setSelected="this.setSelected(attribute)"
+                        customValue="this.state.attributes[attribute.id].custom_value" setCustomValue="setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                 </div>
             </div>
