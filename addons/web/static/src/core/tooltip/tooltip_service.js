@@ -2,8 +2,10 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { Tooltip } from "./tooltip";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { generateHTMLId } from "@web/core/utils/strings";
+import { isVisible, TABABLE_SELECTORS } from "@web/core/utils/ui";
 
-import { whenReady } from "@odoo/owl";
+import { signal, whenReady } from "@odoo/owl";
 
 /**
  * The tooltip service allows to display custom tooltips on every elements with
@@ -44,6 +46,8 @@ export const CLOSE_DELAY = 200;
 export const SHOW_AFTER_DELAY = 250;
 const TOOLTIP_SELECTOR = "[data-tooltip], [data-tooltip-template]";
 const TOOLTIP_SELECTOR_WITH_TITLE = TOOLTIP_SELECTOR + ", [title]";
+const TOOLTIP_SELECTOR_WITH_CONTENT = `[data-tooltip]:not([data-tooltip='']), [data-tooltip-template]:not([data-tooltip-template=''])`;
+const TABABLE_SELECTOR = TABABLE_SELECTORS.join(",");
 
 export const tooltipService = {
     dependencies: ["popover"],
@@ -52,6 +56,7 @@ export const tooltipService = {
         let closeTooltip;
         let showTimer;
         let target = null;
+        let popoverObserver;
 
         /**
          * Detect if the current node is the `sup` tooltip node
@@ -69,9 +74,15 @@ export const tooltipService = {
          * Closes the currently opened tooltip if any, or prevent it from opening.
          */
         function cleanup() {
+            target?.removeAttribute("aria-describedby");
+            target?.removeAttribute("aria-details");
             target = null;
             browser.clearTimeout(openTooltipTimeout);
             openTooltipTimeout = null;
+            if (popoverObserver) {
+                popoverObserver.disconnect();
+                popoverObserver = null;
+            }
             if (closeTooltip) {
                 closeTooltip();
                 closeTooltip = null;
@@ -119,16 +130,35 @@ export const tooltipService = {
             if (!target.title) {
                 target.title = "";
             }
+            const tooltipId = generateHTMLId("tooltip_");
+            if (tooltip) {
+                target.setAttribute("aria-describedby", tooltipId);
+            } else if (template) {
+                target.setAttribute("aria-details", tooltipId);
+            }
             const timeoutDelay = isHelpNode(el) ? 0 : delay;
+            const popoverRef = signal.ref();
+            closeTooltip = popover.add(
+                target,
+                Tooltip,
+                { tooltip, template, info, tooltipId },
+                { position, popoverClass: "visually-hidden", ref: popoverRef }
+            );
             openTooltipTimeout = browser.setTimeout(() => {
-                // verify that the element is still in the DOM
-                if (target.isConnected) {
-                    closeTooltip = popover.add(
-                        target,
-                        Tooltip,
-                        { tooltip, template, info },
-                        { position }
-                    );
+                // verify that the element is in the DOM
+                if (popoverRef()) {
+                    popoverRef().classList.remove("visually-hidden");
+                } else {
+                    // The timeout doesn't grant that the popover is mounted.
+                    popoverObserver = new MutationObserver(() => {
+                        if (popoverRef()) {
+                            popoverRef().classList.remove("visually-hidden");
+                            popoverObserver.disconnect();
+                        }
+                    });
+                    popoverObserver.observe(document.querySelector(".o-overlay-container"), {
+                        childList: true,
+                    });
                 }
             }, timeoutDelay);
         }
@@ -176,9 +206,9 @@ export const tooltipService = {
          * if there is, creates a timeout to open the corresponding tooltip
          * after a delay.
          *
-         * @param {MouseEvent} ev a "mouseenter" event
+         * @param {MouseEvent|FocusEvent} ev a "mouseenter" or "focusin" event
          */
-        function onMouseenter(ev) {
+        function onMouseenterOrFocusin(ev) {
             const target = ev.target?.closest(TOOLTIP_SELECTOR_WITH_TITLE);
             if (!target) {
                 return;
@@ -209,6 +239,20 @@ export const tooltipService = {
                 ev.preventDefault();
             }
             cleanupTooltip(ev);
+        }
+
+        /**
+         * Checks whether the the new target is different from the target that
+         * lost focus, and if so, clean it up.
+         * @param {FocusEvent} ev
+         */
+        function onFocusout(ev) {
+            if (
+                (target === ev.target || target === ev.target.closest(TOOLTIP_SELECTOR)) &&
+                target !== ev.relatedTarget?.closest(TOOLTIP_SELECTOR)
+            ) {
+                cleanup();
+            }
         }
 
         function cleanupTooltip(ev) {
@@ -246,6 +290,23 @@ export const tooltipService = {
             }
         }
 
+        /**
+         * Sets tabindex=0 on visible tooltip targets that are not yet tabable
+         * so that it remains accessible with the keyboard.
+         */
+        function onKeydown(ev) {
+            if (ev.key === "Tab") {
+                // Ensure the tooltips are accessible to keyboard users
+                const tooltipNotTabable = `:where(${TOOLTIP_SELECTOR_WITH_CONTENT}):not(${TABABLE_SELECTOR})`;
+                const tooltipEls = document.body.querySelectorAll(tooltipNotTabable);
+                for (const tooltipEl of tooltipEls) {
+                    if (isVisible(tooltipEl)) {
+                        tooltipEl.tabIndex = "0";
+                    }
+                }
+            }
+        }
+
         whenReady(() => {
             // Regularly check that the target is still in the DOM and if not, close the tooltip
             browser.setInterval(() => {
@@ -261,10 +322,15 @@ export const tooltipService = {
             }
 
             // Listen (using event delegation) to "mouseenter" events to open the tooltip if any
-            document.body.addEventListener("mouseenter", onMouseenter, { capture: true });
+            document.body.addEventListener("mouseenter", onMouseenterOrFocusin, { capture: true });
+            document.body.addEventListener("focusin", onMouseenterOrFocusin, { capture: true });
             // Listen (using event delegation) to "mouseleave" events to close the tooltip if any
             document.body.addEventListener("mouseleave", cleanupTooltip, { capture: true });
+            document.body.addEventListener("focusout", onFocusout, { capture: true });
             document.body.addEventListener("click", onClick, { capture: true });
+
+            // Ensure the tooltips are accessible to keyboard users.
+            document.body.addEventListener("keydown", onKeydown, { capture: true });
         });
     },
 };

@@ -1,9 +1,10 @@
 import { expect, test } from "@odoo/hoot";
-import { click, drag, hover, leave, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
+import { click, drag, hover, leave, pointerDown, pointerUp, press, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import { Component, proxy, xml } from "@odoo/owl";
 import {
     assignTestEnv,
+    contains,
     mountWithCleanup,
     patchWithCleanup,
     registerTemplate,
@@ -21,15 +22,22 @@ test("basic rendering", async () => {
     await mountWithCleanup(MyComponent);
     expect(".o_popover").toHaveCount(0);
     await hover(".mybtn");
-    expect(".o_popover").toHaveCount(0);
+    await animationFrame();
+    expect(".o_popover.visually-hidden").toHaveCount(1);
+    expect(".o_popover.visually-hidden").toHaveText("hello");
+    const tooltip = queryOne(".o-tooltip");
+    const tooltipId = tooltip.id;
+    expect("[data-tooltip]").toHaveAttribute("aria-describedby", tooltipId);
 
     await runAllTimers();
-    expect(".o_popover").toHaveCount(1);
-    expect(".o_popover").toHaveText("hello");
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(1);
+    expect(queryOne(".o_popover:not(.visually-hidden) .o-tooltip")).toBe(tooltip);
+    expect("button").toHaveAttribute("aria-describedby", tooltipId);
 
     await leave();
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
+    expect("button").not.toHaveAttribute("aria-describedby");
 });
 
 test.tags("desktop");
@@ -42,19 +50,27 @@ test("basic rendering 2", async () => {
 
     expect(".o_popover").toHaveCount(0);
     await hover(".inner_span");
-    expect(".o_popover").toHaveCount(0);
+    await animationFrame();
+    expect(".o_popover.visually-hidden").toHaveCount(1);
+    const tooltip = queryOne(".o-tooltip");
+    const tooltipId = tooltip.id;
+    expect("[data-tooltip]").toHaveAttribute("aria-describedby", tooltipId);
 
     await runAllTimers();
-    expect(".o_popover").toHaveCount(1);
-    expect(".o_popover").toHaveText("hello");
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(1);
+    expect(queryOne(".o_popover:not(.visually-hidden) .o-tooltip")).toBe(tooltip);
+    expect("[data-tooltip]").toHaveAttribute("aria-describedby", tooltipId);
 
     await hover(".outer_span");
     await runAllTimers();
     expect(".o_popover").toHaveCount(1);
+    expect(queryOne(".o_popover:not(.visually-hidden) .o-tooltip")).toBe(tooltip);
+    expect("[data-tooltip]").toHaveAttribute("aria-describedby", tooltipId);
 
     await leave();
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
+    expect("[data-tooltip]").not.toHaveAttribute("aria-describedby");
 });
 
 test.tags("desktop");
@@ -193,6 +209,8 @@ test("tooltip with a template, no info", async () => {
 
     expect(".o-tooltip").toHaveCount(1);
     expect(".o-tooltip").toHaveInnerHTML("<i>tooltip</i>");
+    const tooltipId = queryOne(".o-tooltip").id;
+    expect("button").toHaveAttribute("aria-details", tooltipId);
 });
 
 test.tags("desktop");
@@ -257,9 +275,11 @@ test("tooltip with a delay", async () => {
 
     await hover("button.myBtn");
     await advanceTime(OPEN_DELAY);
-    expect(".o-tooltip").toHaveCount(0);
+    expect(".o-tooltip").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden) .o-tooltip").toHaveCount(0);
     await advanceTime(2000 - OPEN_DELAY);
     expect(".o-tooltip").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden) .o-tooltip").toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -273,13 +293,15 @@ test("tooltip does not crash with disappearing target", async () => {
 
     await hover(".mybtn");
     await animationFrame();
-    expect(".o_popover").toHaveCount(0);
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(0);
 
     // the element disappeared from the DOM during the setTimeout
     queryOne(".mybtn").remove();
 
     await runAllTimers();
     expect(".o_popover").toHaveCount(0);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -295,11 +317,13 @@ test("tooltip using touch enabled device", async () => {
 
     await drag(".mybtn");
     await animationFrame();
-    expect(".o_popover").toHaveCount(0);
+    expect(".o_popover.visually-hidden").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(0);
 
     await advanceTime(SHOW_AFTER_DELAY);
     await advanceTime(OPEN_DELAY);
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover.visually-hidden").toHaveCount(0);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(1);
     expect(".o_popover").toHaveText("hello");
 
     await runAllTimers();
@@ -317,11 +341,13 @@ test("touch rendering - hold-to-show", async () => {
     expect(".o_popover").toHaveCount(0);
     await pointerDown("button");
     await animationFrame();
-    expect(".o_popover").toHaveCount(0);
+    expect(".o_popover.visually-hidden").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(0);
 
     await advanceTime(SHOW_AFTER_DELAY);
     await advanceTime(OPEN_DELAY);
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover.visually-hidden").toHaveCount(0);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(1);
     expect(".o_popover").toHaveText("hello");
 
     await pointerUp("button");
@@ -343,11 +369,13 @@ test("touch rendering - tap-to-show", async () => {
     expect(".o_popover").toHaveCount(0);
     await pointerDown("button[data-tooltip]");
     await animationFrame();
-    expect(".o_popover").toHaveCount(0);
+    expect(".o_popover.visually-hidden").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(0);
 
     await advanceTime(SHOW_AFTER_DELAY);
     await advanceTime(OPEN_DELAY);
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover.visually-hidden").toHaveCount(0);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(1);
     expect(".o_popover").toHaveText("hello");
 
     await pointerUp("button");
@@ -424,4 +452,87 @@ test("tooltip from the title attribute", async () => {
     await advanceTime(OPEN_DELAY);
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("Coucou");
+});
+
+test.tags("desktop");
+test("tooltip on focus", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <button class="tooltip-btn" data-tooltip="hello">Button</button>
+            <button class="no-tooltip">No tooltip</button>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(".o_popover").toHaveCount(0);
+
+    await contains(".tooltip-btn").focus();
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+
+    await press("Tab");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("non-focusable tooltip target becomes focusable", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <button class="no-tooltip">No tooltip</button>
+            <div class="tooltip-btn" data-tooltip="hello">Button</div>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(".o_popover").toHaveCount(0);
+    expect("div.tooltip-btn").not.toHaveAttribute("tabindex");
+
+    document.body.focus();
+    await press("Tab");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(0);
+    expect("div.tooltip-btn").toHaveAttribute("tabindex", "0");
+
+    await press("Tab");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("tooltip on focus from and to child element", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+        <button class="no-tooltip-1">space</button>
+        <div class="p-5" data-tooltip="hello">
+            <button>Action</button>
+        </div>
+        <button class="no-tooltip-2">space</button>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(".o_popover").toHaveCount(0);
+
+    await contains(".no-tooltip-1").focus();
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(0);
+
+    await press("Tab");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+    const popover = queryOne(".o_popover");
+
+    await press("Tab");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(queryOne(".o_popover")).toBe(popover);
+
+    await press("Tab");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(0);
 });

@@ -172,7 +172,7 @@ const FOCUSABLE_SELECTORS = [
     "textarea",
     "details > summary:nth-child(1)",
 ].map((sel) => `${sel}:not(:disabled)`);
-const TABABLE_SELECTORS = FOCUSABLE_SELECTORS.map((sel) => `${sel}:not([tabindex="-1"])`);
+export const TABABLE_SELECTORS = FOCUSABLE_SELECTORS.map((sel) => `${sel}:not([tabindex="-1"])`);
 
 /**
  * Check if an element is focusable
