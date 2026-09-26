@@ -2364,8 +2364,31 @@ actual arch.
         }
         valid_t_attrs = {'t-value', 't-field', 't-out'}
 
+        def can_be_hidden(node):
+            nonlocal description
+            if node.get('tabindex') and node.get('tabindex') != '-1':
+                description += ' and tabindex attribute'
+                return False
+            if node.get('data-tooltip'):
+                return False
+            if node.tag in ('button', 'a'):
+                return False
+            if node.get('role') == 'button':
+                description += ' and role button'
+                return False
+            return True
+
+        def is_hidden(node):
+            if node.get('aria-hidden') == 'true':
+                return True
+
+        if is_hidden(node) and not can_be_hidden(node):
+            msg = '%s is a focusable element and cannot be hidden'
+            self._log_view_warning(msg % description, node)
+            return
+
         ## Following or preceding text
-        if (node.tail or '').strip() or (node.getparent().text or '').strip():
+        if ((node.tail or '').strip() or (node.getparent().text or '').strip()) and is_hidden(node):
             # text<i class="oi" data-icon="..."/> or <i class="oi" data-icon="..."/>text or
             return
 
@@ -2379,7 +2402,7 @@ actual arch.
                 return True
             return elem.tag == 't' and elem.get('t-out')
 
-        if has_text(node.getnext()) or has_text(node.getprevious()):
+        if (has_text(node.getnext()) or has_text(node.getprevious())) and is_hidden(node):
             return
 
         def has_title_or_aria_label(node):
@@ -2399,7 +2422,11 @@ actual arch.
             if any(node.get(attr) for attr in valid_t_attrs):
                 return True
             if has_title_or_aria_label(node):
-                return True
+                if (
+                    node.get('role') not in ('none', 'presentation')
+                    and not (node.tag in ('i', 'span', 'div') and not node.get('role'))
+                ):
+                    return True
             if node.tag in ('label', 'field'):
                 return True
             if node.text:  # not sure, does it match *[text()]
@@ -2408,8 +2435,10 @@ actual arch.
 
         if contains_description(node):
             return
+        if is_hidden(node):
+            return
 
-        msg = '%s must have title in its tag, parents, descendants or have text'
+        msg = '%s must have title in its tag, parents, descendants or have text or be aria-hidden'
         self._log_view_warning(msg % description, node)
 
     def _validate_qweb_directive(self, node, directive, view_type):
