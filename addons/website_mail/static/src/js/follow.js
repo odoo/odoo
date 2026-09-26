@@ -137,16 +137,20 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
 
         var email = $email.length ? $email.val() : false;
         if (email || this.isUser) {
-            const tokenCaptcha = await this._recaptcha.getToken("website_mail_follow");
-            const token = tokenCaptcha.token;
+            let token = false;
 
-            if (tokenCaptcha.error) {
-                self.notification.add(tokenCaptcha.error, {
-                    type: "danger",
-                    title: _t("Error"),
-                    sticky: true
-                });
-                return false;
+            if (!this.isUser) {
+                const tokenCaptcha = await this._recaptcha.getToken("website_mail_follow");
+                token = tokenCaptcha.token;
+
+                if (tokenCaptcha.error) {
+                    self.notification.add(tokenCaptcha.error, {
+                        type: "danger",
+                        title: _t("Error"),
+                        sticky: true
+                    });
+                    return false;
+                }
             }
             rpc("/website_mail/follow", {
                 "id": +$jsFollow.data("id"),
