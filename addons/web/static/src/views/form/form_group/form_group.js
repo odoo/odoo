@@ -94,12 +94,12 @@ export class InnerGroup extends Group {
                 reservedSpace = 0;
             }
 
-            const isVisible = !("isVisible" in slot) || slot.isVisible;
+            const isVisible = slot.isVisible;
             currentRow.push({ ...slot, name: slotName, itemSpan, isVisible, noBox });
             reservedSpace += itemSpan || 1;
 
             // Allows to remove the line if the content is not visible instead of leaving an empty line.
-            currentRow.isVisible = currentRow.isVisible || isVisible;
+            currentRow.isVisible = isVisible;
         }
         rows.push(currentRow);
 
