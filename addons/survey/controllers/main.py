@@ -89,7 +89,12 @@ class Survey(http.Controller):
             if request.env.user._is_public() and answer_sudo.partner_id and not answer_token:
                 # answers from public user should not have any partner_id; this indicates probably a cookie issue
                 return 'answer_wrong_user'
-            if not request.env.user._is_public() and answer_sudo.partner_id != request.env.user.partner_id:
+            # Survey officers may legitimately open an answer that belongs to another
+            # partner (e.g. testing an invitation or previewing a mail template link),
+            # so only enforce the partner match for regular users.
+            if (not request.env.user._is_public()
+                    and not request.env.user.has_group('survey.group_survey_user')
+                    and answer_sudo.partner_id != request.env.user.partner_id):
                 # partner mismatch, probably a cookie issue
                 return 'answer_wrong_user'
 
