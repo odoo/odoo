@@ -1,6 +1,8 @@
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { _t } from "@web/core/l10n/translation";
 
+const employeeIdPromiseByPartner = new WeakMap();
+
 registerThreadAction("hr-view-profile", {
     condition: ({ channel, owner }) =>
         channel?.channel_type === "chat" &&
@@ -19,16 +21,27 @@ registerThreadAction("hr-view-profile", {
         store.env.services.action.doAction(action);
     },
     async setup({ channel }) {
-        let employeeId;
-        if (channel?.correspondent?.partner_id && !channel.correspondent.partner_id.employeeId) {
-            const employees = await this.store.env.services.orm.silent.searchRead(
-                "hr.employee",
-                [["user_partner_id", "=", channel.correspondent.partner_id.id]],
-                ["id"]
-            );
-            employeeId = employees[0]?.id;
-            if (employeeId) {
-                channel.correspondent.partner_id.employeeId = employeeId;
+        const partner = channel?.correspondent?.partner_id;
+        if (partner && !partner.employeeId) {
+            let employeeIdPromise = employeeIdPromiseByPartner.get(partner);
+            if (!employeeIdPromise) {
+                employeeIdPromise = this.store.env.services.orm.silent.searchRead(
+                    "hr.employee",
+                    [["user_partner_id", "=", partner.id]],
+                    ["id"]
+                );
+                employeeIdPromiseByPartner.set(partner, employeeIdPromise);
+            }
+            try {
+                const employees = await employeeIdPromise;
+                const employeeId = employees[0]?.id;
+                if (employeeId) {
+                    partner.employeeId = employeeId;
+                }
+            } finally {
+                if (employeeIdPromiseByPartner.get(partner) === employeeIdPromise) {
+                    employeeIdPromiseByPartner.delete(partner);
+                }
             }
         }
     },
