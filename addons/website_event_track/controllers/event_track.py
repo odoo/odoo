@@ -3,7 +3,7 @@
 
 from ast import literal_eval
 from collections import defaultdict
-from datetime import timedelta
+from datetime import datetime, time, timedelta
 from pytz import timezone, utc
 from werkzeug.exceptions import Forbidden, NotFound
 
@@ -237,12 +237,15 @@ class EventTrackController(http.Controller):
             start_date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
             end_date = start_date + timedelta(hours=(track.duration or 0.25))
 
+            # the track occupies the cells of every day it runs on
+            occupied_cells = self._get_occupied_cells(track, sum(time_slots.values()), locations, local_tz)
+
             for time_slot, duration in time_slots.items():
                 tracks_by_rounded_times[time_slot][track.location_id][track] = {
                     'rowspan': duration,  # rowspan
                     'start_date': self._get_locale_time(start_date, lang_code),
                     'end_date': self._get_locale_time(end_date, lang_code),
-                    'occupied_cells': self._get_occupied_cells(track, duration, locations, local_tz)
+                    'occupied_cells': occupied_cells,
                 }
 
                 # get all the time slots by day to determine the max duration of a day.
@@ -318,15 +321,15 @@ class EventTrackController(http.Controller):
         end_datetime = self.time_slot_rounder(start_datetime + timedelta(hours=(track.duration or 0.25)), 15)
         time_slots_count = int(((end_datetime - start_datetime).total_seconds() / 3600) * 4)
 
-        time_slots_by_day_start_time = {start_datetime: 0}
+        day_start_time = start_datetime
+        time_slots_by_day_start_time = {day_start_time: 0}
         for i in range(0, time_slots_count):
-            # If the new time slot is still on the current day
-            next_day = (start_datetime + timedelta(days=1)).date()
-            if (start_datetime + timedelta(minutes=15*i)).date() <= next_day:
-                time_slots_by_day_start_time[start_datetime] += 1
-            else:
-                start_datetime = next_day.datetime()
-                time_slots_by_day_start_time[start_datetime] = 0
+            time_slot = start_datetime + timedelta(minutes=15*i)
+            # If the new time slot is on the next day, start a new day at its midnight
+            if time_slot.date() != day_start_time.date():
+                day_start_time = local_tz.localize(datetime.combine(time_slot.date(), time.min))
+                time_slots_by_day_start_time[day_start_time] = 0
+            time_slots_by_day_start_time[day_start_time] += 1
 
         return time_slots_by_day_start_time
 
