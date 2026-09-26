@@ -35,7 +35,7 @@
                 <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="job_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
                 <field name="stage_id" widget="rotting" optional="show" column_invisible="context.get('default_talent_pool_ids')" options="{'no_open': True}"/>
-                <field name="kanban_state" widget="state_selection" string="State" optional="hide"/> 
+                <field name="kanban_state" widget="hr_applicant_state_selection" string="State" optional="hide"/> 
                 <field name="priority" widget="priority" nolabel="1" optional="show"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
