@@ -2386,10 +2386,8 @@ class HrEmployee(models.Model):
         }
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
-        res.one("department_id", ["name"])
         res.attr("resource_id", "_store_avatar_card_fields")
         res.one("user_id", "_store_avatar_card_fields")
-        res.one("work_location_id", ["location_type", "name"])
         res.extend([
             "active",
             "company_id",

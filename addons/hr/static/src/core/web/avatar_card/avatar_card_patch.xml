@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.AvatarCard" t-inherit-mode="extension">
-        <xpath expr="//a[hasclass('o-mail-avatar-card-tel')]" position="after">
-            <span t-if="this.employee?.work_location_id" class="text-muted" data-tooltip="Work Location">
-                <i t-if="this.employee.work_location_id.location_type === 'office'" class="me-1 oi oi-fw" data-icon="business"/>
-                <i t-elif="this.employee.work_location_id.location_type === 'home'" class="me-1 oi oi-fw" data-icon="home"/>
-                <i t-else="" class="me-1 oi oi-fw" data-icon="location_on"/>
-                <t t-out="this.employee.work_location_id.name"/>
-            </span>
-        </xpath>
-
         <xpath expr="//span[hasclass('o_card_avatar_im_status')]" position="after">
             <span t-elif="this.employee?.show_hr_icon_display" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_employee_presence_status bg-inherit">
                 <!-- Employee is present/connected and it is normal according to his work schedule  -->
@@ -27,7 +18,6 @@
 
         <xpath expr="//span[hasclass('o-mail-avatar-card-name')]" position="after">
             <small t-if="this.employee?.job_title" class="text-muted text-truncate" t-att-title="this.employee.job_title" t-out="this.employee.job_title"/>
-            <span t-if="this.employee?.department_id" class="text-muted text-truncate" data-tooltip="Department" t-att-title="this.employee.department_id.name" t-out="this.employee.department_id.name"/>
         </xpath>
 
         <xpath expr="//button[@t-ref='this.viewProfileBtnRef']" position="after">
