@@ -40,7 +40,8 @@ class AccountMove(models.Model):
             for line in move.invoice_line_ids:
                 # Filter out lines being not eligible for price difference.
                 # Moreover, this function is used for standard cost method only.
-                if not line._eligible_for_cogs() or line.product_id.cost_method != 'standard':
+                # We also filter out services to filter out landed costs (they are eligible for cogs but we want to filter them out here)
+                if not line._eligible_for_cogs() or line.product_id.type == 'service' or line.product_id.cost_method != 'standard':
                     continue
 
                 # Retrieve accounts needed to generate the price difference.

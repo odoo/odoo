@@ -294,6 +294,40 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             sorted(move_lines, key=lambda d: (d['name'], d['debit'])),
         )
 
+    def test_no_price_diff_on_landed_cost_bill(self):
+        """ check that when the landed cost category is real time standard price,
+        and it's billed at a different price than its standard price, there is no price diff
+        compensation amls
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.landed_cost.landed_cost_ok = True
+        self.landed_cost.categ_id.property_cost_method = 'standard'
+        self.landed_cost.categ_id.property_valuation = 'real_time'
+        self.landed_cost.categ_id.property_account_creditor_price_difference_categ = self.company_data['default_account_expense']
+        self.landed_cost.standard_price = 10
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.landed_cost.id,
+                'product_qty': 1,
+                'price_unit': 12,
+                'taxes_id': False,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids[0]
+        bill.invoice_date = Date.today()
+        bill.action_post()
+        self.assertEqual(len(bill.line_ids), 2)
+        self.assertRecordValues(bill.line_ids.sorted('credit'),
+            [
+                {'account_id': self.landed_cost.categ_id.property_stock_account_input_categ_id.id, 'debit': 12.0, 'credit': 0.0},
+                {'account_id': self.company_data['default_account_payable'].id, 'debit': 0.0, 'credit': 12.0},
+            ]
+        )
+
     def _process_incoming_shipment(self):
         """ Two product incoming shipment. """
         # Confirm incoming shipment.
