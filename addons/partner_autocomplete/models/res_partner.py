@@ -302,8 +302,13 @@ class ResPartner(models.Model):
 
                 partner_data = {
                     field: value for field, value in partner_data.items()
-                    if field in partner._fields and value and (field == 'image_1920' or not partner[field])
+                    if field in partner._fields and value and (field == 'image_1920' or field == 'additional_identifiers' or not partner[field])
                 }
+                if additional_identifiers := partner_data.get('additional_identifiers'):
+                    partner_data['additional_identifiers'] = {
+                        **additional_identifiers,
+                        **(partner.additional_identifiers or {}),
+                    }
                 partner.write(partner_data)
 
         if errors:
