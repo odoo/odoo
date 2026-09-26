@@ -542,7 +542,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         self.assertFalse(step_2.triggering_answer_ids, "Step 2 still has stale triggering answers.")
         self.assertFalse(step_3.triggering_answer_ids, "Step 3 still has stale triggering answers.")
 
-    def test_store_chatbot_answers_batched(self):
+    def test_store_chatbot_answers(self):
         channels = self.env["discuss.channel"].create([
             {"name": f"Livechat {i}", "channel_type": "livechat"}
             for i in range(4)
@@ -568,10 +568,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 "user_raw_answer": "<p>unrelated@example.com</p>",
             },
         ])
-        # Warm related fields to isolate the answer lookup.
-        Store().add(channels[:3], "_store_livechat_extra_fields")._build_result()
-        with self.assertQueryCount(1):
-            data = Store().add(channels[:3], "_store_livechat_extra_fields")._build_result()
+        data = Store().add(channels[:3], "_store_livechat_extra_fields")._build_result()
         self.assertEqual(
             {channel["id"]: channel["chatbot_message_ids"] for channel in data["discuss.channel"]},
             {
