@@ -301,7 +301,14 @@ var SnippetEditor = Widget.extend({
 
         const transform = window.getComputedStyle(targetEl).getPropertyValue('transform');
         const transformOrigin = window.getComputedStyle(targetEl).getPropertyValue('transform-origin');
-        targetEl.classList.add('o_transform_removal');
+        // Toggling 'o_transform_removal' below forces the target's own
+        // 'transform' to momentarily change (and back), which starts and
+        // then immediately interrupts any CSS transition defined on that
+        // property (e.g. on an affixed header). Suppress transitions on the
+        // target for the duration of this synchronous toggle (using the same
+        // "force no transition" class used elsewhere for this purpose) so it
+        // doesn't spuriously fire transition events on every cover() call.
+        targetEl.classList.add('o_we_force_no_transition', 'o_transform_removal');
 
         // Now cover the element
         const offset = $target.offset();
@@ -321,7 +328,14 @@ var SnippetEditor = Widget.extend({
         });
         this.$('.o_handles').css('height', $target.outerHeight());
 
+        // Remove 'o_transform_removal' (restoring the target's real
+        // 'transform') before re-enabling transitions, each followed by a
+        // forced style flush. Removing both at once would let the browser
+        // consider the 'transform' change eligible for the transition that
+        // is simultaneously being re-enabled, spuriously starting one.
         targetEl.classList.remove('o_transform_removal');
+        void targetEl.offsetWidth;
+        targetEl.classList.remove('o_we_force_no_transition');
 
         const editableOffsetTop = this.$editable.offset().top - manipulatorOffset.top;
         this.$el.toggleClass('o_top_cover', offset.top - editableOffsetTop < 25);
