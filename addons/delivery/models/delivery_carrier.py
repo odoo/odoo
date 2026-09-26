@@ -667,4 +667,20 @@ class DeliveryCarrier(models.Model):
                 continue
 
             delivery_vals = carrier_prices.get(str(carrier.id), {})
-            carrier.delivery_cost = delivery_vals.get("display_price", 0.0)
+            carrier.delivery_cost = delivery_vals.get("display_price", None)
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        show_delivery_cost = self.env.context.get("carrier_prices_dumped", False)
+        if show_delivery_cost:
+            records = self.search(domain).sorted(lambda a: a.delivery_cost, reverse=True)[:limit]
+            return [(r.id, r.display_name) for r in records]
+        return super().name_search(name=name, domain=domain if domain else None, operator=operator, limit=limit)
+
+    @api.model
+    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
+        show_delivery_cost = self.env.context.get("carrier_prices_dumped", False)
+        res = super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
+        if show_delivery_cost and "records" in res and not order:
+            res["records"].sort(key=lambda a: a.get('delivery_cost', None), reverse=True)
+        return res

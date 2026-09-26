@@ -24,7 +24,6 @@
         <field name="model">delivery.carrier</field>
         <field name="arch" type="xml">
             <list string="Delivery Method">
-                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="delivery_cost" column_invisible="not context.get('carrier_prices_dumped', False)"/>
                 <field name="delivery_type"/>
