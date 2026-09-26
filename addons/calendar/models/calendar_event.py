@@ -1016,11 +1016,20 @@ class Meeting(models.Model):
         The aim of this action purpose is to be called from sync calendar module when mass deletion is not possible.
         """
         self.ensure_one()
+        archive_values = self._get_archive_values()
+        # Occurrences are archived in batch. Only the event the user acted on may
+        # notify the attendees: modules adding a '_track_template' on
+        # 'calendar.event' (e.g. 'appointment') would otherwise send one mail per
+        # occurrence. 'mail_notrack' lets callers archive the whole series silently.
+        to_notify = self.browse() if self.env.context.get('mail_notrack') else self
         if recurrence_update_setting == 'all_events':
-            self.recurrence_id.calendar_event_ids.write(self._get_archive_values())
+            events = self.recurrence_id.calendar_event_ids
+            (events & to_notify).write(archive_values)
+            (events - to_notify)._archive_without_tracking(archive_values)
         elif recurrence_update_setting == 'future_events':
             detached_events = self.recurrence_id._stop_at(self)
-            detached_events.write(self._get_archive_values())
+            (detached_events & to_notify).write(archive_values)
+            (detached_events - to_notify)._archive_without_tracking(archive_values)
         elif recurrence_update_setting == 'self_only':
             self.write({
                 'active': False,
@@ -1030,6 +1039,20 @@ class Meeting(models.Model):
                 self.recurrence_id.unlink()
             elif self == self.recurrence_id.base_event_id:
                 self.recurrence_id._select_new_base_event()
+
+    def _archive_without_tracking(self, values):
+        """ Write ``values`` on ``self`` without triggering any tracking message.
+
+        Used to deactivate the occurrences of a recurrence, which are generated
+        records: they must never notify the attendees on their own. Tracking is
+        discarded explicitly because an earlier write in the same transaction
+        (detaching the events from their recurrence, for instance) may already
+        have armed it.
+        """
+        if not self:
+            return True
+        self._track_discard()
+        return self.with_context(mail_notrack=True).write(values)
 
     # ------------------------------------------------------------
     # MAILING
@@ -1283,7 +1306,9 @@ class Meeting(models.Model):
 
         # Trim previous recurrence at current event, deleting following events except for the updated event.
         detached_events_split = self.recurrence_id._stop_at(self)
-        (detached_events_split - self).write({'active': False, **self._get_remove_sync_id_values()})
+        (detached_events_split - self)._archive_without_tracking(
+            {'active': False, **self._get_remove_sync_id_values()},
+        )
 
         # Update the current event with the new recurrence information.
         if values or time_values:
@@ -1318,7 +1343,7 @@ class Meeting(models.Model):
             old_recurrence_values = self._get_updated_recurrence_values(start_date)
 
             # Archive all events and delete recurrence, reactivate base event and apply updated values.
-            base_event.action_mass_archive("all_events")
+            base_event.with_context(mail_notrack=True).action_mass_archive("all_events")
             base_event.recurrence_id.unlink()
             base_event.write({
                 'active': True,
@@ -1336,7 +1361,7 @@ class Meeting(models.Model):
 
             # Patch base event with updated recurrence parameters: this will recreate the recurrence.
             detached_events = base_event._apply_recurrence_values(new_values)
-            detached_events.write({'active': False})
+            detached_events._archive_without_tracking({'active': False})
         else:
             # Write on all events. Carefull, it could trigger a lot of noise to Google/Microsoft...
             self.recurrence_id._write_events(values)
