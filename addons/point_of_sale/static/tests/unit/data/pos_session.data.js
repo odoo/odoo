@@ -209,6 +209,8 @@ export class PosSession extends models.ServerModel {
                 opening: 0,
                 payment_amount: totalCash,
                 moves: [],
+                editable: true,
+                is_default_cash: true,
             },
             non_cash_payment_methods: [],
             is_manager: false,
