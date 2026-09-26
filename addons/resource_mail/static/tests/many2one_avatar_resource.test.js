@@ -164,5 +164,5 @@ test("many2one_avatar_resource widget in kanban view", async () => {
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
     await click(".o_avatar_card_buttons button:first:text(Send message)");
     await contains(".o-mail-ChatWindow");
-    expect(".o-mail-ChatWindow-moreActions > .text-truncate:first").toHaveText("Pierre");
+    expect(".o-mail-ChatWindow-displayName").toHaveText("Pierre");
 });
