@@ -13,8 +13,10 @@
 
         <xpath expr="//td[@name='td_mrp_bom_free_to_use']" position="after">
             <td t-if="show_subcontract_column" class="text-center">
-                <t t-out="data.get('subcontract_free_qty', 0)" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/> /
-                <t t-out="data.get('subcontract_qty_on_hand', 0)" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
+                <t t-if="data.get('subcontract_free_qty') is not None">
+                    <t t-out="data.get('subcontract_free_qty', 0)" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/> /
+                    <t t-out="data.get('subcontract_qty_on_hand', 0)" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
+                </t>
             </td>
         </xpath>
 
@@ -30,7 +32,7 @@
     <template id="mrp_subcontracting.report_mrp_bom_pdf_line" inherit_id="mrp.report_mrp_bom_pdf_line">
         <xpath expr="//td[@name='td_mrp_bom_free_to_use']" position="after">
             <td t-if="data['forecast_mode'] and data['is_subcontract']" class="text-center">
-                <t t-if="l.get('is_storable', False)">
+                <t t-if="l.get('subcontract_free_qty') is not None">
                     <t t-out="l.get('subcontract_free_qty', 0)" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/> /
                     <t t-out="l.get('subcontract_qty_on_hand', 0)" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
                 </t>
