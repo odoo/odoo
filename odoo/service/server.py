@@ -1537,8 +1537,8 @@ def _reexec(updated_modules=None):
     args = stripped_sys_argv()
     if updated_modules:
         args += ["-u", ','.join(updated_modules)]
-    if not args or args[0] != exe:
-        args.insert(0, exe)
+    if not args or (args[0] != exe and args[0] != sys.executable):
+        args.insert(0, sys.executable)
     if os.name == 'posix':
         # execve resets caught signal handlers to their default disposition
         # (SIGHUP terminates -> exit 129) but preserves SIG_IGN, so a SIGHUP that
