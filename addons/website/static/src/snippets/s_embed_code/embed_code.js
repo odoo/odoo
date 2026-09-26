@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { cloneContentEls } from "@website/js/utils";
+import { cloneContentEls, getEmbedCode } from "@website/js/utils";
 
 export class EmbedCode extends Interaction {
     static selector = ".s_embed_code";
@@ -15,8 +15,8 @@ export class EmbedCode extends Interaction {
         // without <script> elements. This is both done so that scripts don't
         // affect the DOM in edit mode, and to remove elements that would have
         // been introduced by a script.
-        const templateContent = this.el.querySelector("template.s_embed_code_saved").content;
-        this.embedCodeEl.replaceChildren(cloneContentEls(templateContent));
+        const templateEl = this.el.querySelector("template.s_embed_code_saved");
+        this.embedCodeEl.replaceChildren(cloneContentEls(getEmbedCode(templateEl)));
     }
 }
 

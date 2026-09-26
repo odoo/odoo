@@ -2,7 +2,7 @@ import { EmbedCodeOptionDialog } from "./embed_code_option_dialog";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { cloneContentEls } from "@website/js/utils";
+import { cloneContentEls, getEmbedCode } from "@website/js/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class EmbedCodeOptionPlugin extends Plugin {
@@ -21,15 +21,15 @@ export class EmbedCodeOptionPlugin extends Plugin {
         // Saving Embed Code snippets with <script> in the database, as these
         // elements are removed in edit mode.
         for (const embedCodeEl of root.querySelectorAll(".s_embed_code")) {
-            const embedTemplateEl = embedCodeEl.querySelector(".s_embed_code_saved");
+            const embedTemplate = getEmbedCode(embedCodeEl.querySelector(".s_embed_code_saved"));
             // Remove snippet if embed was saved empty
-            if (!embedTemplateEl.innerHTML.trim()) {
+            if (!embedTemplate.trim()) {
                 embedCodeEl.remove();
                 continue;
             }
             embedCodeEl
                 .querySelector(".s_embed_code_embedded")
-                .replaceChildren(cloneContentEls(embedTemplateEl.content, true));
+                .replaceChildren(cloneContentEls(embedTemplate, true));
         }
         return root;
     }
@@ -44,7 +44,7 @@ export class EditCodeAction extends BuilderAction {
                 EmbedCodeOptionDialog,
                 {
                     title: _t("Edit embedded code"),
-                    value: this.getTemplateEl(editingElement).innerHTML.trim(),
+                    value: getEmbedCode(this.getTemplateEl(editingElement)).trim(),
                     mode: "xml",
                     confirm: (newValue) => {
                         newContent = newValue;
@@ -59,7 +59,9 @@ export class EditCodeAction extends BuilderAction {
         // Remove scripts tags from the DOM as we don't want them to
         // interfere during edition, but keeps them in a
         // `<template>` that will be saved to the database.
-        this.getTemplateEl(editingElement).content.replaceChildren(cloneContentEls(content, true));
+        this.getTemplateEl(editingElement).content.replaceChildren(
+            this.document.createTextNode(content)
+        );
         editingElement
             .querySelector(".s_embed_code_embedded")
             .replaceChildren(cloneContentEls(content));

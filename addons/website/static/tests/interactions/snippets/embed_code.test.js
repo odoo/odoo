@@ -20,6 +20,21 @@ test("embed code executed only once", async () => {
 });
 */
 
+test("embed_code keeps comments on reset", async () => {
+    const { core } = await startInteractions(`
+        <section class="s_embed_code text-center pt64 pb64 o_colored_level" data-snippet="s_embed_code" data-name="Embed Code">
+            <template class="s_embed_code_saved">&lt;!-- kept --&gt;&lt;div&gt;original&lt;/div&gt;</template>
+            <div class="s_embed_code_embedded container o_not_editable"></div>
+        </section>
+    `);
+    core.stopInteractions();
+    const embeddedEl = queryOne(".s_embed_code_embedded");
+    expect([...embeddedEl.childNodes].map((n) => n.nodeType)).toEqual([
+        Node.COMMENT_NODE,
+        Node.ELEMENT_NODE,
+    ]);
+});
+
 test("embed_code resets on stop", async () => {
     const { core } = await startInteractions(`
         <section class="s_embed_code text-center pt64 pb64 o_colored_level" data-snippet="s_embed_code" data-name="Embed Code">
