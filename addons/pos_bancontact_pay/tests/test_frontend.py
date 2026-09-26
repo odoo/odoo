@@ -40,6 +40,11 @@ class TestFrontend(TestBancontactPay):
         with self.mock_bancontact_call(prefix="bancontact_success_"):
             self.start_pos_tour("bancontact_pay_success_payment")
 
+    def test_bancontact_success_synced_issues(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        with self.mock_bancontact_call(prefix="bancontact_success_synced_"):
+            self.start_pos_tour("bancontact_pay_success_synced_issues")
+
     def test_bancontact_failed_payment(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         with self.mock_bancontact_call(prefix="bancontact_failed_"):
