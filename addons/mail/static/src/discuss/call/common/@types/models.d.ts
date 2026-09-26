@@ -44,7 +44,7 @@ declare module "models" {
     }
     export interface Store {
         _hasFullscreenUrl: boolean;
-        _hasFullscreenUrlOnUpdate: () => void;
+        _hasFullscreenUrlOnUpdate: (hasFullscreenUrl: boolean) => void;
         "discuss.channel.rtc.session": StaticMailRecord<RtcSession, typeof RtcSessionClass>;
         fullscreenChannel: DiscussChannel;
         meetingViewOpened: boolean;

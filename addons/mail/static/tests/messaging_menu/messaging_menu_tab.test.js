@@ -865,14 +865,14 @@ test("non app wide tab tracks its own counter but doesn't participate to the glo
     patch(MessagingMenu.prototype, {
         setup() {
             super.setup(...arguments);
-            this.testTab = fields.One("MessagingMenuTab", {
-                compute: () => ({
+            this.testTab = fields.One("MessagingMenuTab");
+            this.assignComputed("testTab", function computeTestTab() {
+                return this.store.MessagingMenuTab.insert({
                     id: "test_not_app_wide",
                     recordType: "mail.message",
                     appWide: false,
                     includesMessage: (m) => m.needaction,
-                }),
-                eager: true,
+                });
             });
         },
     });
@@ -914,19 +914,17 @@ test("tab added after boot fetches its own counter without re-fetching the other
         setup() {
             super.setup(...arguments);
             this.testDynamicOn = fields.Attr(false);
-            this.testTab = fields.One("MessagingMenuTab", {
-                compute() {
-                    if (!this.testDynamicOn) {
-                        return;
-                    }
-                    return {
-                        id: "test_dynamic",
-                        recordType: "mail.message",
-                        label: "Dynamic Tab",
-                        includesMessage: (m) => m.needaction,
-                    };
-                },
-                eager: true,
+            this.testTab = fields.One("MessagingMenuTab");
+            this.assignComputed("testTab", function computeTestTab() {
+                if (!this.testDynamicOn) {
+                    return undefined;
+                }
+                return this.store.MessagingMenuTab.insert({
+                    id: "test_dynamic",
+                    recordType: "mail.message",
+                    label: "Dynamic Tab",
+                    includesMessage: (m) => m.needaction,
+                });
             });
         },
     });

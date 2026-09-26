@@ -5,25 +5,21 @@ import { _t } from "@web/core/l10n/translation";
 export class Notification extends Record {
     static _name = "mail.notification";
 
-    /** @type {number} */
-    id;
-    mail_message_id = fields.One("mail.message", {
-        onDelete() {
-            this.delete();
-        },
-    });
-    /** @type {string} */
-    notification_status;
-    /** @type {string} */
-    notification_type;
-    mail_email_address;
-    failure = fields.One("Failure", {
-        inverse: "notifications",
-        /** @this {import("models").Notification} */
-        compute() {
+    setup() {
+        super.setup();
+        this.onChange(
+            () => [this.mail_message_id],
+            (mail_message_id) => {
+                if (!mail_message_id) {
+                    this.delete();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.assignComputed("failure", function computeFailure() {
             const thread = this.mail_message_id?.thread;
             if (!this.mail_message_id?.isSelfAuthored) {
-                return;
+                return undefined;
             }
             const failure = this.store.Failure.records
                 .values()
@@ -34,13 +30,22 @@ export class Notification extends Record {
                         (f.resModel !== "discuss.channel" || f.resIds.has(thread?.id))
                 );
             return this.isFailure
-                ? {
+                ? this.store.Failure.insert({
                       id: failure ? failure.id : this.store.Failure.nextId.value++,
-                  }
+                  })
                 : false;
-        },
-        eager: true,
-    });
+        });
+    }
+
+    /** @type {number} */
+    id;
+    mail_message_id = fields.One("mail.message");
+    /** @type {string} */
+    notification_status;
+    /** @type {string} */
+    notification_type;
+    mail_email_address;
+    failure = fields.One("Failure", { inverse: "notifications" });
     /** @type {string} */
     failure_type;
     get failureMessage() {

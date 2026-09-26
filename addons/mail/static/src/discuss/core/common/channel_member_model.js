@@ -16,8 +16,28 @@ export class ChannelMember extends Record {
     setup() {
         super.setup(...arguments);
         this.onChange(
-            () => [this.is_pinned],
-            () => {
+            () => [this.channel_id],
+            (channel_id) => {
+                if (!channel_id) {
+                    this.delete();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
+            () => [this.channelAsTyping],
+            (channelAsTyping) => {
+                if (!channelAsTyping) {
+                    clearTimeout(this.typingTimeoutId);
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
+            function () {
+                return [this.is_pinned];
+            },
+            function onPinStateChange() {
                 // The channel pin state follows self member only: reacting to the other
                 // members makes Discuss leave a channel that is still displayed.
                 this.channelAsSelf?.onPinStateUpdated();
@@ -25,25 +45,25 @@ export class ChannelMember extends Record {
             { immediate: true, initialRun: false }
         );
         this.onChange(
-            () => [this.message_unread_counter, this.channel_id?.isDisplayed],
-            function onChangeMessageUnreadCounter(messageUnreadCounter, isDisplayed) {
+            () => [this.message_unread_counter],
+            function onChangeMessageUnreadCounter(message_unread_counter) {
                 if (
-                    messageUnreadCounter === 0 ||
-                    !isDisplayed ||
+                    message_unread_counter === 0 ||
+                    !this.channel_id?.isDisplayed ||
                     this.channel_id?.scrollTop !== "bottom" ||
                     this.channel_id.markedAsUnread ||
                     !this.channel_id.isFocused
                 ) {
-                    this.message_unread_counter_ui = messageUnreadCounter;
+                    this.message_unread_counter_ui = message_unread_counter;
                 }
             },
             { immediate: true }
         );
         this.onChange(
-            () => [this.new_message_separator, this.channel_id?.isDisplayed],
-            function onChangeNewMessageSeparator(newMessageSeparator, isDisplayed) {
-                if (!isDisplayed) {
-                    this.new_message_separator_ui = newMessageSeparator;
+            () => [this.new_message_separator],
+            function onChangeNewMessageSeparator(new_message_separator) {
+                if (!this.channel_id?.isDisplayed) {
+                    this.new_message_separator_ui = new_message_separator;
                 }
             },
             { immediate: true }
@@ -60,11 +80,11 @@ export class ChannelMember extends Record {
         );
         this.onChange(
             () => [this.is_typing_dt],
-            function onChangeIsTypingDt(isTypingDt) {
+            function onChangeIsTypingDt(is_typing_dt) {
                 browser.clearTimeout(this.typingTimeoutId);
                 if (
-                    !isTypingDt ||
-                    DateTime.now().diff(isTypingDt).milliseconds > Store.OTHER_LONG_TYPING
+                    !is_typing_dt ||
+                    DateTime.now().diff(is_typing_dt).milliseconds > Store.OTHER_LONG_TYPING
                 ) {
                     this.isTyping = false;
                 }
@@ -74,6 +94,12 @@ export class ChannelMember extends Record {
             },
             { immediate: true }
         );
+        this.assignComputed("channelAsSelf", function computeChannelAsSelf() {
+            return this.isSelf ? this.channel_id : undefined;
+        });
+        this.assignComputed("channelAsTyping", function computeChannelAsTyping() {
+            return this.isTyping ? this.channel_id : undefined;
+        });
     }
 
     /** @type {string} */
@@ -108,14 +134,7 @@ export class ChannelMember extends Record {
      * @type {false|"owner"|"admin"}
      */
     channel_role;
-    channelAsSelf = fields.One("discuss.channel", {
-        /** @this {import("models").ChannelMember} */
-        compute() {
-            if (this.isSelf) {
-                return this.channel_id;
-            }
-        },
-    });
+    channelAsSelf = fields.One("discuss.channel", { inverse: "self_member_id" });
     seen_message_id = fields.One("mail.message");
     hideUnreadBanner = false;
     message_unread_counter = 0;
@@ -139,15 +158,7 @@ export class ChannelMember extends Record {
             this.typingTimeoutDuration
         );
     }
-    channelAsTyping = fields.One("discuss.channel", {
-        compute() {
-            return this.isTyping ? this.channel_id : undefined;
-        },
-        eager: true,
-        onDelete() {
-            browser.clearTimeout(this.typingTimeoutId);
-        },
-    });
+    channelAsTyping = fields.One("discuss.channel", { inverse: "typingMembers" });
     /** @type {number} */
     typingTimeoutId;
     unpin_dt = fields.Datetime();

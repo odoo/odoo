@@ -1,7 +1,11 @@
+import { ATTR_SYM, MANY_SYM, ONE_SYM, untrackFunctions } from "./misc";
+import { RecordInternal } from "@mail/model/record_internal";
+
 import { markRaw } from "@odoo/owl";
-import { ATTR_SYM, MANY_SYM, ONE_SYM } from "./misc";
 
 export class ModelInternal {
+    /** @type {typeof import("./record").Record} */
+    RecordInternal = RecordInternal;
     /** @type {Map<string, boolean>} */
     fields = new Map();
     /** @type {Map<string, boolean>} */
@@ -14,24 +18,20 @@ export class ModelInternal {
     fieldsHtml = new Map();
     /** @type {Map<string, string>} */
     fieldsTargetModel = new Map();
-    /** @type {Map<string, () => Function[]>} */
-    fieldsCompute = new Map();
-    /** @type {Map<string, boolean>} */
-    fieldsEager = new Map();
     /**
-     * Names declared with `computed()`. Each record holds the
-     * declaration as its own property until its first read replaces it with an
-     * owl computed in `RecordInternal.fieldsComputed`.
+     *
+     * @type {Set<string>}
+     */
+    /**
+     * Names declared with `record.computed()`: the value is computed on the
+     * first read and kept in an owl computed of its own, neither stored nor
+     * serialized.
      *
      * @type {Set<string>}
      */
     fieldsComputable = new Set();
     /** @type {Map<string, string>} */
     fieldsInverse = new Map();
-    /** @type {Map<string, () => void>} */
-    fieldsOnAdd = new Map();
-    /** @type {Map<string, () => void>} */
-    fieldsOnDelete = new Map();
     /** @type {Map<string, string>} */
     fieldsType = new Map();
     /**
@@ -53,7 +53,6 @@ export class ModelInternal {
      */
     inheritsInverseFields = new Set();
     /**
-     * Map of field name to the name of the relation field through which this field should be read.
      *
      * @type {Map<string, string>}
      * */
@@ -63,7 +62,7 @@ export class ModelInternal {
         markRaw(this);
     }
 
-    prepareField(fieldName, data) {
+    registerField(fieldName, data) {
         this.fields.set(fieldName, true);
         if (data[ATTR_SYM]) {
             this.fieldsAttr.set(fieldName, true);
@@ -76,6 +75,11 @@ export class ModelInternal {
         }
         for (const key in data) {
             const value = data[key];
+            if (!["asProxy", "default", "html", "type"].includes(key) && data[ATTR_SYM]) {
+                throw new Error(
+                    `Unsupported option "${key}" on Attr field "${fieldName}". Attr fields only support "asProxy", "html" and "type".`
+                );
+            }
             switch (key) {
                 case "html": {
                     if (!value) {
@@ -88,27 +92,8 @@ export class ModelInternal {
                     this.fieldsTargetModel.set(fieldName, value);
                     break;
                 }
-                case "compute": {
-                    this.fieldsCompute.set(fieldName, value);
-                    break;
-                }
-                case "eager": {
-                    if (!value) {
-                        break;
-                    }
-                    this.fieldsEager.set(fieldName, value);
-                    break;
-                }
                 case "inverse": {
                     this.fieldsInverse.set(fieldName, value);
-                    break;
-                }
-                case "onAdd": {
-                    this.fieldsOnAdd.set(fieldName, value);
-                    break;
-                }
-                case "onDelete": {
-                    this.fieldsOnDelete.set(fieldName, value);
                     break;
                 }
                 case "asProxy": {
@@ -126,3 +111,5 @@ export class ModelInternal {
         }
     }
 }
+
+untrackFunctions(ModelInternal.prototype, ["registerField"]);

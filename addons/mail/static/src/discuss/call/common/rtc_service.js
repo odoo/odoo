@@ -384,11 +384,10 @@ export class Rtc extends Record {
     /** @type {Map<number, number>} timeoutId by sessionId for download pausing delay */
     downloadTimeouts = new Map();
     /** @type {{urls: string[]}[]} */
-    iceServers = fields.Attr(undefined, {
-        compute() {
-            return this.iceServers ? this.iceServers : GET_DEFAULT_ICE_SERVERS();
-        },
-    });
+    iceServers = undefined;
+    get effectiveIceServers() {
+        return this.iceServers ? this.iceServers : GET_DEFAULT_ICE_SERVERS();
+    }
     /** @type {Promise<void[]>|undefined} */
     mediaPermissionsPromise;
     /** @type {"granted" | "denied" | "prompt" | undefined} */
@@ -413,28 +412,24 @@ export class Rtc extends Record {
      * unless you need to access actual connection data (connection stats, streams,...), which can only
      * be accessed from the tab that is hosting the call.
      */
-    selfSession = fields.One("discuss.channel.rtc.session", {
-        compute() {
-            return (
-                this.localSession ||
-                this.store["discuss.channel.rtc.session"].get(this._remotelyHostedSessionId)
-            );
-        },
-    });
+    get selfSession() {
+        return (
+            this.localSession ||
+            this.store["discuss.channel.rtc.session"].get(this._remotelyHostedSessionId)
+        );
+    }
     /**
      * The DiscussChannel of the current user for the call hosted by this tab.
      */
     localChannel = fields.One("discuss.channel");
-    channel = fields.One("discuss.channel", {
-        compute() {
-            if (this.localChannel) {
-                return this.localChannel;
-            }
-            return this._remotelyHostedChannelId;
-        },
-        onDelete(channel) {
-            channel.clearActiveSpeakers();
-        },
+    channel = this.computed(() => {
+        if (this.localChannel) {
+            return this.localChannel;
+        }
+        if (this._remotelyHostedChannelId) {
+            return this.store["discuss.channel"].insert(this._remotelyHostedChannelId);
+        }
+        return undefined;
     });
     /**
      * Html element embedding the rtc service. Used to scope the dialog to the correct
@@ -519,6 +514,7 @@ export class Rtc extends Record {
         return !this.selfSession?.isMute && this.isMicAudioTrackMuted;
     }
 
+    /** @type {CallAction[]} */
     callActions = this.computed(() => {
         const transformedActions = registry
             .category("discuss.call/actions")
@@ -532,6 +528,11 @@ export class Rtc extends Record {
     });
 
     setup() {
+        this.onChange(
+            () => [this.channel],
+            (channel) => () => channel.clearActiveSpeakers(),
+            { diff: true, immediate: true }
+        );
         // the services and the dialog the record holds, assigned when the service starts or
         // when a call runs
         /** @type {SfuClientState} */
@@ -552,6 +553,15 @@ export class Rtc extends Record {
         this.pttExtService = undefined;
         /** @type {Services["mail.sound_effects"]} */
         this.soundEffectsService = undefined;
+        this.onChange(
+            () => [], // one-shot (no dependencies): cleanup on delete
+            function onChangeBroadcastChannel() {
+                return () => {
+                    this._broadcastChannel.close();
+                    browser.clearTimeout(this._crossTabTimeoutId);
+                };
+            }
+        );
         this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500);
         this.upgradeConnectionDebounce = debounce(this._upgradeConnection, 15000, true);
         this.blurManager = undefined;
@@ -1432,7 +1442,7 @@ export class Rtc extends Record {
         // loading p2p in any case as we may need to receive peer-to-peer connections from users who failed to connect to the SFU.
         this.p2pService.connect(this.localSession.id, this.localChannel.id, {
             info: this.formatInfo(),
-            iceServers: this.iceServers,
+            iceServers: this.effectiveIceServers,
         });
         this.network = new Network(this.p2pService);
         this.updateUpload();
@@ -1670,7 +1680,7 @@ export class Rtc extends Record {
         console.debug(
             `%c${new Date().toLocaleString()} - [${entry}]`,
             "color: #e36f17; font-weight: bold;",
-            toRaw(session)._raw,
+            session,
             param2
         );
         if (!this.logs) {
@@ -1820,7 +1830,7 @@ export class Rtc extends Record {
                     return;
                 }
                 this._p2pRecoveryCount++;
-                if (this._p2pRecoveryCount > 1 || !hasTurn(this.iceServers)) {
+                if (this._p2pRecoveryCount > 1 || !hasTurn(this.effectiveIceServers)) {
                     this.upgradeConnectionDebounce();
                 }
             }
@@ -1956,7 +1966,7 @@ export class Rtc extends Record {
                 }, 10000);
                 await this.sfuClient.connect(this.serverInfo.url, this.serverInfo.jsonWebToken, {
                     channelUUID: this.serverInfo.channelUUID,
-                    iceServers: this.iceServers,
+                    iceServers: this.effectiveIceServers,
                 });
             }
             return;
@@ -2089,7 +2099,7 @@ export class Rtc extends Record {
             channelId: this.localChannel.id,
             selfSessionId: this.localSession.id,
             start: new Date().toISOString(),
-            hasTurn: hasTurn(this.iceServers),
+            hasTurn: hasTurn(this.effectiveIceServers),
             entriesBySessionId: {},
         };
     }
@@ -2302,7 +2312,7 @@ export class Rtc extends Record {
 
     async setOutputDevice(deviceId) {
         const promises = [];
-        for (const session of this.localChannel.rtc_session_ids) {
+        for (const session of this.localChannel?.rtc_session_ids ?? []) {
             if (!session.audioElement) {
                 continue;
             }

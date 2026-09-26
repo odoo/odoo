@@ -36,8 +36,13 @@ export class ChatHub extends Record {
     setup() {
         super.setup(...arguments);
         this.onChange(
-            () => [],
-            () => {
+            () => [...this.opened],
+            () => this.onRecompute(),
+            { diff: true, immediate: true }
+        );
+        this.onChange(
+            () => [], // one-shot init (no dependencies), clean up on delete
+            function initChatHub() {
                 const stopStorage = subscribeToStorage(CHAT_HUB_KEY, (ev) => {
                     if (ev.key === CHAT_HUB_KEY) {
                         this.load(ev.newValue);
@@ -57,13 +62,7 @@ export class ChatHub extends Record {
     canShowOpened = fields.Many("ChatWindow");
     canShowFolded = fields.Many("ChatWindow");
     /** From left to right. Right-most will actually be folded */
-    opened = fields.Many("ChatWindow", {
-        inverse: "hubAsOpened",
-        /** @this {import("models").ChatHub} */
-        onAdd(r) {
-            this.onRecompute();
-        },
-    });
+    opened = fields.Many("ChatWindow", { inverse: "hubAsOpened" });
     /** From top to bottom. Bottom-most will actually be hidden */
     folded = fields.Many("ChatWindow", { inverse: "hubAsFolded" });
     initPromise = new Promise((resolve) => (this._resolveInit = resolve));
