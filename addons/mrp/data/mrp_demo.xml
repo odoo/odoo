@@ -594,6 +594,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
             <field name="bom_id" ref="mrp_bom_drawer_rout"/>
+            <field name="operation_id" ref="mrp.mrp_routing_workcenter_4"/>
         </record>
         <record id="mrp_bom_drawer_rout_line_2" model="mrp.bom.line">
             <field name="product_id" ref="product_product_drawer_case"/>
@@ -601,6 +602,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">2</field>
             <field name="bom_id" ref="mrp_bom_drawer_rout"/>
+            <field name="operation_id" ref="mrp.mrp_routing_workcenter_4"/>
         </record>
 
         <record id="product.product_product_27" model="product.product">
@@ -614,6 +616,32 @@
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
             <field name="bom_id" ref="mrp_bom_drawer"/>
         </record>
+        <record id="mrp_production_drawer_sec_1" model="mrp.production">
+            <!-- Name fixed on purpose: used as a scannable reference on the
+                 Shop Floor barcode demo sheet (see mrp_workorder's
+                 static/src/pdf/make_barcodes_demo_shopfloor.sh), so it must
+                 stay stable no matter which modules/demo data get installed
+                 alongside. "DEMO" can't collide with the sequence's numeric
+                 suffixes, unlike a plain "WH/MO/0000X" guess would. -->
+            <field name="name">WH/MO/DEMO1</field>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_qty">5</field>
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="bom_id" ref="mrp_bom_drawer_rout"/>
+        </record>
+        <record id="mrp_production_drawer_sec_2" model="mrp.production">
+            <field name="name">WH/MO/DEMO2</field>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_qty">5</field>
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="bom_id" ref="mrp_bom_drawer_rout"/>
+        </record>
+
+
 
         <!-- Run Scheduler -->
         <function model="stock.rule" name="run_scheduler"/>
@@ -666,6 +694,8 @@
             ref('mrp.mrp_production_1'),
             ref('mrp.mrp_production_4'),
             ref('mrp.mrp_production_drawer'),
+            ref('mrp.mrp_production_drawer_sec_1'),
+            ref('mrp.mrp_production_drawer_sec_2'),
         ]]"/>
 
         <function model="mrp.production" name="write">
