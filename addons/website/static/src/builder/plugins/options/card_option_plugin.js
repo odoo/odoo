@@ -10,7 +10,10 @@ export class CardOptionPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        content_editable_selectors: [".s_card > *", ".s_card figure > img"],
+        content_editable_selectors: [
+            ".s_card > *",
+            ".s_card figure > img",
+        ],
         content_not_editable_selectors: ".s_card figure",
         mark_color_level_selector_params: [
             { selector: ".s_card", exclude: `div:is(${CARD_PARENT_HANDLERS}) > .s_card` },
