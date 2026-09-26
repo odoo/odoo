@@ -65,6 +65,7 @@ export async function createSpreadsheetWithList(params = {}) {
         mockRPC: params.mockRPC,
         serverData: params.serverData,
         modelConfig: params.modelConfig,
+        createMockApp: params.createMockApp,
     });
 
     insertListInSpreadsheet(

@@ -1,9 +1,18 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    signal,
+    t,
+    useProps,
+    providePlugins,
+} from "@odoo/owl";
 import { render, useSubEnv } from "@web/owl2/utils";
 
-const { registries, stores, constants, helpers } = spreadsheet;
+const { registries, stores, constants, helpers, owlPlugins } = spreadsheet;
 const { figureRegistry } = registries;
+const { ModelPlugin } = owlPlugins;
 const { ModelStore, useStoreProvider } = stores;
 const { isMobileOS } = helpers;
 
@@ -22,6 +31,7 @@ export class MobileFigureContainer extends Component {
     setup() {
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.spreadsheetModel);
+        providePlugins([ModelPlugin], { model: this.props.spreadsheetModel });
         const onUpdate = () => render(this, true);
         const resizeObserver = new ResizeObserver(() => {
             this.containerWidth.set(this.figureContainer()?.offsetWidth || 0);

@@ -3,8 +3,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { expect, test, beforeEach } from "@odoo/hoot";
 import { getBasicData, defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { createBasicChart } from "@spreadsheet/../tests/helpers/commands";
-import { mountSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { mountSpreadsheet, createModelAndMountSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
 import { mockService, serverState } from "@web/../tests/web_test_helpers";
 import { insertChartInSpreadsheet } from "@spreadsheet/../tests/helpers/chart";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
@@ -108,10 +107,7 @@ beforeEach(() => {
 });
 
 test("icon external link isn't on the chart when its not linked to an odoo menu", async function () {
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    const fixture = await mountSpreadsheet(model);
+    const { model, fixture } = await createModelAndMountSpreadsheet({ serverData });
     createBasicChart(model, chartId);
     await animationFrame();
     const odooMenu = model.getters.getChartOdooLink(chartId);
@@ -122,10 +118,7 @@ test("icon external link isn't on the chart when its not linked to an odoo menu"
 });
 
 test("icon external link is on the chart when its linked to an odoo menu", async function () {
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    await mountSpreadsheet(model);
+    const { model } = await createModelAndMountSpreadsheet({ serverData });
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
@@ -142,10 +135,7 @@ test("icon external link is on the chart when its linked to an odoo menu", async
 });
 
 test("icon external link is not on the chart when its linked to a wrong menu", async function () {
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    await mountSpreadsheet(model);
+    const { model } = await createModelAndMountSpreadsheet({ serverData });
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
@@ -158,10 +148,7 @@ test("icon external link is not on the chart when its linked to a wrong menu", a
 });
 
 test("icon external link is on the chart when its linked to an odoo datasource", async function () {
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    await mountSpreadsheet(model);
+    const { model } = await createModelAndMountSpreadsheet({ serverData });
     const dataSourceCoreId = insertChartInSpreadsheet(model);
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
@@ -179,10 +166,7 @@ test("icon external link is on the chart when its linked to an odoo datasource",
 });
 
 test("icon external link is not on the chart when its linked to an invalid datasource", async function () {
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    await mountSpreadsheet(model);
+    const { model } = await createModelAndMountSpreadsheet({ serverData });
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
@@ -199,10 +183,7 @@ test("icon external link is not on the chart when its linked to an invalid datas
 });
 
 test("icon external link isn't on the chart in dashboard mode", async function () {
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    await mountSpreadsheet(model);
+    const { model } = await createModelAndMountSpreadsheet({ serverData });
     const dataSourceCoreId = insertChartInSpreadsheet(model);
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
@@ -225,10 +206,7 @@ test("click on icon external link on chart redirect to the odoo menu", async fun
     const doActionStep = "doAction";
     mockActionService(doActionStep);
 
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    const fixture = await mountSpreadsheet(model);
+    const { model, fixture } = await createModelAndMountSpreadsheet({ serverData });
 
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
@@ -249,10 +227,7 @@ test("click on icon external link on chart redirect to the odoo menu", async fun
 
 test("can use menus xmlIds instead of menu ids", async function () {
     mockActionService("doAction");
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    const fixture = await mountSpreadsheet(model);
+    const { model, fixture } = await createModelAndMountSpreadsheet({ serverData });
 
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
@@ -275,10 +250,7 @@ test("Trying to open a menu without an action sends a notification to the user",
         },
     });
 
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    const fixture = await mountSpreadsheet(model);
+    const { model, fixture } = await createModelAndMountSpreadsheet({ serverData });
 
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
@@ -302,6 +274,7 @@ test("click on icon external link on chart redirect to the datasource action", a
     const { model, pivotId } = await createSpreadsheetWithPivot({
         serverData,
         actionXmlId: "menuAction2",
+        createMockApp: false,
     });
     const fixture = await mountSpreadsheet(model);
 

@@ -3,8 +3,8 @@
 import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
 import { DateFilterValue } from "../date_filter_value/date_filter_value";
 
-import { Component, onWillStart, t, useProps } from "@odoo/owl";
-import { components } from "@odoo/o-spreadsheet";
+import { Component, onWillStart, t, useProps, providePlugins } from "@odoo/owl";
+import { components, owlPlugins } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
@@ -20,6 +20,7 @@ import {
 } from "@spreadsheet/global_filters/helpers";
 
 const { ValidationMessages, NumberInput } = components;
+const { ModelPlugin } = owlPlugins;
 
 export class FilterValue extends Component {
     static template = "spreadsheet.FilterValue";
@@ -42,6 +43,7 @@ export class FilterValue extends Component {
     });
 
     setup() {
+        providePlugins([ModelPlugin], { model: this.props.model });
         this.getters = this.props.model.getters;
         this.fieldService = useService("field");
         this.isValid = false;

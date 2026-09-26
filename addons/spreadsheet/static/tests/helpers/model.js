@@ -17,7 +17,7 @@ import { markRaw } from "@odoo/owl";
 import { makeOwlPluginManager } from "./owl_plugins";
 
 const { ModelStore, globalStores, proxifyStoreMutation, DependencyContainer } = stores;
-const { NotificationPlugin } = owlPlugins;
+const { NotificationPlugin, ModelPlugin } = owlPlugins;
 
 /**
  * @typedef {import("@spreadsheet/../tests/helpers/data").ServerData} ServerData
@@ -31,11 +31,13 @@ export function setupDataSourceEvaluation(model) {
     });
 }
 
-export function makeSpreadsheetActionTestEnv(model, createMockApp = false) {
+export function makeSpreadsheetActionTestEnv(model, createMockApp = true) {
     let container = undefined;
     let getPlugin = undefined;
     if (createMockApp) {
-        ({ getPlugin, container } = makeOwlPluginManager([NotificationPlugin]));
+        ({ getPlugin, container } = makeOwlPluginManager([NotificationPlugin, ModelPlugin], {
+            model,
+        }));
     } else {
         container = new DependencyContainer();
     }
@@ -50,7 +52,7 @@ export function makeSpreadsheetActionTestEnv(model, createMockApp = false) {
         container.get(store);
     }
     return {
-        model,
+        model: getPlugin ? getPlugin(ModelPlugin).model : model,
         getStore(Store) {
             const store = container.get(Store);
             return proxifyStoreMutation(store, () => container.trigger("store-updated"));

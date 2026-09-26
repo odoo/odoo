@@ -1,15 +1,17 @@
-import { Model, Spreadsheet, stores } from "@odoo/o-spreadsheet";
+import { Model, Spreadsheet, stores, owlPlugins } from "@odoo/o-spreadsheet";
 import { loadBundle } from "@web/core/assets";
 
 import { getFixture } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, onWillUnmount, t, useProps, xml } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, t, useProps, xml, providePlugins } from "@odoo/owl";
 import { useSpreadsheetNotificationPlugin } from "@spreadsheet/hooks";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { render, useSubEnv } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
 const { useStoreProvider, ModelStore } = stores;
+const { ModelPlugin, NotificationPlugin } = owlPlugins;
 
 class Parent extends Component {
     static template = xml`<Spreadsheet model="this.props.model"/>`;
@@ -32,9 +34,7 @@ class ComponentWithStores extends Component {
     setup() {
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.model);
-        useSubEnv({
-            model: this.props.model,
-        });
+        providePlugins([ModelPlugin, NotificationPlugin], { model: this.props.model });
         onMounted(() => {
             this.props.model.on("update", this, () => render(this, true));
             stores.on("store-updated", this, () => render(this, true));
@@ -68,6 +68,22 @@ export async function mountComponentWithStores(component, model, props = {}) {
 export async function mountSpreadsheet(model) {
     await loadBundle("web.chartjs_lib");
     return mountComponentWithStores(Parent, model, { model });
+}
+
+/**
+ * Create and mount a spreadsheet component.
+ *
+ * @param {Object} params
+ * @param {Object} [params.serverData]
+ * @returns {Promise<{ fixture: HTMLElement, model: Model }>}
+ */
+export async function createModelAndMountSpreadsheet(params = {}) {
+    const { model, env } = await createModelWithDataSource({
+        serverData: params.serverData,
+        createMockApp: false,
+    });
+    const fixture = await mountSpreadsheet(model);
+    return { fixture, env, model };
 }
 
 export async function doMenuAction(registry, path, env) {
