@@ -240,7 +240,13 @@ export default class OrderPaymentValidation {
             Promise.reject(error);
         } else if (error instanceof RPCError) {
             this.order.state = "draft";
-            handleRPCError(error, this.pos.dialog);
+            handleRPCError(error, this.pos.dialog, {
+                extraBody:
+                    "\n\n" +
+                    _t(
+                        "The order was not validated. The payment is kept, you can fix the problem and validate the order again."
+                    ),
+            });
         } else {
             throw error;
         }
