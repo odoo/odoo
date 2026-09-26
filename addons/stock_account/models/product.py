@@ -425,10 +425,16 @@ class ProductProduct(models.Model):
         product, valuation_from_date = False, False
         batch_size = 50000
 
+<<<<<<< 6b54f3c0ec3f1efcf1fe24d37a9acb9d38a9cc79
         move_ids_by_product = defaultdict(list)
         std_price_history_by_product_id = False
         if correction:
             std_price_history_by_product_id = self._get_std_price_history_by_product(at_date)
+||||||| 5fc864b658eefa7d6cee21db3877b78ae414eff9
+        move_ids_by_product = defaultdict(list)
+=======
+        product_move_ids = []
+>>>>>>> 560b74a7914cbd713e2ebc667faf0f4c9ad4492f
         # Limit the memory usage since it's possible to have millions of stock.move
         for moves_batch in split_every(batch_size, moves.ids):
             moves_batch = self.env['stock.move'].browse(moves_batch)
@@ -440,18 +446,52 @@ class ProductProduct(models.Model):
                     valuation_from_date = date_by_product_id.get(product.id)
                 if valuation_from_date and move.date <= valuation_from_date:
                     continue
-                move_ids_by_product[product].append(move.id)
+                product_move_ids.append(move.id)
 
             self.env['stock.move'].invalidate_model()
 
-        for product, move_ids in move_ids_by_product.items():
-            product_moves = self.env['stock.move'].browse(move_ids)
+        for moves_batch in split_every(batch_size, product_move_ids):
+            moves_batch = self.env['stock.move'].browse(moves_batch)
+            moves_batch.fetch(move_fields)
+            moves_batch.move_line_ids.fetch(move_line_fields)
+            for move in moves_batch:
+                quantity = quantity_by_product_id.get(move.product_id.id, 0.0)
+                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / move._get_valued_qty() if move._get_valued_qty() else 0)
+                value = value_by_product_id.get(move.product_id.id, 0.0)
+                if move.is_in:
+                    in_qty = move._get_valued_qty()
+                    in_value = move.value
+                    if at_date:
+                        in_value = move.sudo()._get_value(at_date=at_date, forced_std_price=average_cost)
+                    if lot:
+                        lot_qty = move._get_valued_qty(lot)
+                        in_value = (in_value * lot_qty / in_qty) if in_qty else 0
+                        in_qty = lot_qty
+                    previous_qty = quantity
+                    quantity += in_qty
+                    # Regular case, value from accumulation
+                    if previous_qty > 0:
+                        value += in_value
+                        average_cost = value / quantity
+                    # From negative quantity case, value from last_in
+                    elif previous_qty <= 0:
+                        average_cost = in_value / in_qty if in_qty else average_cost
+                        value = average_cost * quantity
+                if move.is_out:
+                    out_qty = move._get_valued_qty()
+                    out_value = out_qty * average_cost
+                    if lot:
+                        lot_qty = move._get_valued_qty(lot)
+                        out_value = (out_value * lot_qty / out_qty) if out_qty else 0
+                        out_qty = lot_qty
+                    value -= out_value
+                    quantity -= out_qty
 
-            first_move = product_moves[0]
-            quantity = quantity_by_product_id.get(product.id, 0)
-            average_cost = std_price_by_product_id.get(product.id, first_move.value / first_move._get_valued_qty() if first_move._get_valued_qty() else 0)
-            value = value_by_product_id.get(product.id, 0)
+                quantity_by_product_id[move.product_id.id] = quantity
+                std_price_by_product_id[move.product_id.id] = average_cost
+                value_by_product_id[move.product_id.id] = value
 
+<<<<<<< 6b54f3c0ec3f1efcf1fe24d37a9acb9d38a9cc79
             price_changes = iter(std_price_history_by_product_id.get(product, self.env['product.value']) if correction else self.env['product.value'])
             next_change = next(price_changes, None)
 
@@ -499,6 +539,50 @@ class ProductProduct(models.Model):
 
             std_price_by_product_id[product.id] = average_cost
             value_by_product_id[product.id] = value
+||||||| 5fc864b658eefa7d6cee21db3877b78ae414eff9
+            for moves_batch in split_every(batch_size, product_moves.ids):
+                moves_batch = self.env['stock.move'].browse(moves_batch)
+                moves_batch.fetch(move_fields)
+                moves_batch.move_line_ids.fetch(move_line_fields)
+                for move in moves_batch:
+                    if move.is_in:
+                        in_qty = move._get_valued_qty()
+                        in_value = move.value
+                        if at_date:
+                            in_value = move.sudo()._get_value(at_date=at_date, forced_std_price=average_cost)
+                        if lot:
+                            lot_qty = move._get_valued_qty(lot)
+                            in_value = (in_value * lot_qty / in_qty) if in_qty else 0
+                            in_qty = lot_qty
+                        previous_qty = quantity
+                        quantity += in_qty
+                        # Regular case, value from accumulation
+                        if previous_qty > 0:
+                            value += in_value
+                            average_cost = value / quantity
+                        # From negative quantity case, value from last_in
+                        elif previous_qty <= 0:
+                            average_cost = in_value / in_qty if in_qty else average_cost
+                            value = average_cost * quantity
+                    if move.is_out:
+                        out_qty = move._get_valued_qty()
+                        out_value = out_qty * average_cost
+                        if lot:
+                            lot_qty = move._get_valued_qty(lot)
+                            out_value = (out_value * lot_qty / out_qty) if out_qty else 0
+                            out_qty = lot_qty
+                        value -= out_value
+                        quantity -= out_qty
+
+                self.env['stock.move'].invalidate_model()  # Avoid keeping too many records in cache
+                self.env['stock.move.line'].invalidate_model()
+
+            std_price_by_product_id[product.id] = average_cost
+            value_by_product_id[product.id] = value
+=======
+            self.env['stock.move'].invalidate_model()  # Avoid keeping too many records in cache
+            self.env['stock.move.line'].invalidate_model()
+>>>>>>> 560b74a7914cbd713e2ebc667faf0f4c9ad4492f
 
         return std_price_by_product_id, value_by_product_id
 

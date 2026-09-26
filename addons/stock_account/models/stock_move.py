@@ -536,11 +536,19 @@ class StockMove(models.Model):
         stays consistent with `value` (also negative for out moves) and value/qty
         ratios stay positive without needing abs(). """
         self.ensure_one()
-        if self._is_in():
+        if (self.state == 'done' and self.is_in) or (self.state != 'done' and self._is_in()):
             return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
+<<<<<<< 6b54f3c0ec3f1efcf1fe24d37a9acb9d38a9cc79
         if self._is_out():
             qty = sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
             return -qty if signed else qty
+||||||| 5fc864b658eefa7d6cee21db3877b78ae414eff9
+        if self._is_out():
+            return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
+=======
+        if (self.state == 'done' and self.is_out) or (self.state != 'done' and self._is_out()):
+            return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
+>>>>>>> 560b74a7914cbd713e2ebc667faf0f4c9ad4492f
         if self.is_dropship:
             if lot:
                 return sum(self.move_line_ids.filtered(lambda ml: ml.lot_id == lot).mapped('quantity_product_uom'))
