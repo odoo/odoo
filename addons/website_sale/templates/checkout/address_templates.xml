@@ -234,20 +234,9 @@
                             <t t-else="">New address</t>
                         </h4>
                     </t>
-                    <div
-                        t-if="use_delivery_as_billing and not only_services and partner_sudo"
-                        class="alert alert-warning"
-                        role="alert"
-                    >
-                        <p class="mb-0">
-                            You are editing your <b>delivery and billing</b> addresses
-                            at the same time!<br/>
-                            If you want to modify your billing address, create a
-                            <a class="o_translate_inline" href="/shop/address?address_type=billing">new address</a>.
-                        </p>
-                    </div>
                     <div id="errors"/> <!-- for js -->
                     <form
+                        id="o_wsale_address_form"
                         action="/shop/address/submit"
                         method="post"
                         name="address_form"
@@ -285,6 +274,60 @@
 
     <!-- Deactivatable through the website editor. -->
     <template id="website_sale.address_b2b" inherit_id="website_sale.address" name="Show b2b fields" />
+
+    <template
+        id="website_sale.address_floating_labels"
+        inherit_id="website_sale.address"
+        name="Floating address labels"
+    >
+        <form id="o_wsale_address_form" position="attributes">
+            <attribute name="class" add="o_floating_labels" separator=" "/>
+        </form>
+    </template>
+
+    <template
+        id="website_sale.address_labels_left"
+        inherit_id="website_sale.address"
+        name="Address labels on the left"
+        active="False"
+    >
+        <form id="o_wsale_address_form" position="attributes">
+            <attribute name="class" add="o_labels_left" separator=" "/>
+        </form>
+    </template>
+
+    <template
+        id="website_sale.address_labels_right"
+        inherit_id="website_sale.address"
+        name="Address labels on the right"
+        active="False"
+    >
+        <form id="o_wsale_address_form" position="attributes">
+            <attribute name="class" add="o_labels_right" separator=" "/>
+        </form>
+    </template>
+
+    <template
+        id="website_sale.address_mark_none"
+        inherit_id="website_sale.address"
+        name="Do not mark address fields"
+        active="False"
+    >
+        <form id="o_wsale_address_form" position="attributes">
+            <attribute name="class" add="o_mark_none" separator=" "/>
+        </form>
+    </template>
+
+    <template
+        id="website_sale.address_mark_optional"
+        inherit_id="website_sale.address"
+        name="Mark optional address fields"
+        active="False"
+    >
+        <form id="o_wsale_address_form" position="attributes">
+            <attribute name="class" add="o_mark_optional" separator=" "/>
+        </form>
+    </template>
 
     <template
         id="website_sale.required_attributes"

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.AddressFormOption">
+        <BuilderRow
+            label.translate="Marked Fields"
+            tooltip.translate="Add an icon to the labels of required or optional fields"
+        >
+            <BuilderSelect action="'previewableWebsiteConfig'">
+                <BuilderSelectItem
+                    actionParam="{
+                        previewClass: 'o_mark_none',
+                        views: ['website_sale.address_mark_none'],
+                    }"
+                    id="'address_mark_none_opt'"
+                >None</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: []}">Required</BuilderSelectItem>
+                <BuilderSelectItem
+                    actionParam="{
+                        previewClass: 'o_mark_optional',
+                        views: ['website_sale.address_mark_optional'],
+                    }"
+                >Optional</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow
+            label.translate="Marker"
+            level="1"
+            t-if="!this.isActiveItem('address_mark_none_opt')"
+        >
+            <BuilderTextInput action="'setFormMark'" actionParam="'form-mark'"/>
+            <BuilderColorPicker
+                enabledTabs="['solid', 'custom']"
+                action="'customizeWebsiteVariable'"
+                actionParam="'form-mark-color'"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Labels Position">
+            <BuilderButtonGroup action="'previewableWebsiteConfig'">
+                <BuilderButton
+                    title.translate="Hide"
+                    actionParam="{
+                        previewClass: 'o_floating_labels',
+                        views: ['website_sale.address_floating_labels'],
+                    }"
+                >
+                    <i class="oi" data-icon="visibility_off"/>
+                </BuilderButton>
+                <BuilderButton
+                    title.translate="Top"
+                    actionParam="{views: []}"
+                    iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"
+                />
+                <BuilderButton
+                    ltrRtlMapping="'left-right'"
+                    title.translate="Left"
+                    actionParam="{
+                        previewClass: 'o_labels_left',
+                        views: ['website_sale.address_labels_left'],
+                    }"
+                    iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"
+                    id="'address_labels_left_opt'"
+                />
+                <BuilderButton
+                    ltrRtlMapping="'left-right'"
+                    title.translate="Right"
+                    actionParam="{
+                        previewClass: 'o_labels_right',
+                        views: ['website_sale.address_labels_right'],
+                    }"
+                    iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"
+                    id="'address_labels_right_opt'"
+                />
+            </BuilderButtonGroup>
+        </BuilderRow>
+        <BuilderRow
+            label.translate="Labels Width"
+            level="1"
+            t-if="this.isActiveItem('address_labels_left_opt')
+                || this.isActiveItem('address_labels_right_opt')"
+        >
+            <BuilderNumberInput
+                action="'customizeWebsiteVariable'"
+                actionParam="'form-label-width'"
+                unit="'px'"
+                saveUnit="'rem'"
+            />
+        </BuilderRow>
+    </t>
+
+</templates>

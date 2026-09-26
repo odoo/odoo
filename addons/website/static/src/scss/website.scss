@@ -3738,6 +3738,101 @@ input[value*="data-oe-translation-source-sha"] {
     border-right-width: 0;
 }
 
+:is(.o_floating_labels, .o_floating_labels *):has(> label):has(> :is(.form-control, .form-select)) {
+    $-label-pad: map-get($spacers, 1);
+    $-label-start: calc(#{$input-border-width} + #{$input-padding-x} - #{$-label-pad});
+
+    display: grid;
+    margin-top: $input-font-size * $input-line-height * .5;
+
+    > :is(label, .form-control, .form-select) {
+        grid-area: 1 / 1;
+    }
+
+    // A placeholder only paints while the field is empty, and the only empty
+    // states that raise the label are these two
+    > .form-control:not(:is(:focus, :autofill))::placeholder {
+        color: transparent;
+    }
+
+    > .form-control:autofill {
+        box-shadow: 0 0 0 100vmax $input-bg inset;
+        -webkit-text-fill-color: $input-color;
+
+        &:focus {
+            box-shadow: $input-focus-box-shadow, 0 0 0 100vmax $input-bg inset;
+        }
+    }
+
+    > label {
+        z-index: 1;
+        justify-self: start;
+        align-self: start;
+        max-width: calc(100% - #{$-label-start});
+        margin: $input-border-width 0 0 $-label-start;
+        padding: $input-padding-y $-label-pad;
+        overflow: hidden;
+        color: $input-placeholder-color;
+        font-size: $input-font-size;
+        line-height: $input-line-height;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        pointer-events: none;
+        @include transition(font-size .1s ease-in-out, transform .1s ease-in-out);
+    }
+
+    &:has(> :is(
+        .form-select,
+        .form-control:focus,
+        .form-control:autofill,
+        .form-control[value]:not([value=""]):not([placeholder]),
+        .form-control[placeholder]:not(:placeholder-shown)
+    )) > label {
+        margin-top: 0;
+        padding-block: 0;
+        background: $input-bg;
+        font-size: $input-font-size * .85;
+        transform: translateY(-50%);
+    }
+
+    &.input-group {
+        grid-auto-flow: column;
+        grid-template-columns: minmax(0, 1fr);
+
+        > label {
+            // Bootstrap offsets and stacks grouped children with selectors
+            // that outweigh ours, so both have to be reclaimed here
+            z-index: 6;
+            margin-left: $-label-start !important;
+        }
+
+        > :is(.form-control, .form-select) {
+            width: auto;
+        }
+    }
+}
+
+:is(.o_labels_left, .o_labels_right) :has(> label):has(> :is(.form-control, .form-select)) {
+    display: flex;
+    flex: 0 0 100%;
+    align-items: center;
+    column-gap: map-get($spacers, 3);
+
+    > label {
+        flex: 0 0 var(--form-label-width);
+        text-align: var(--form-label-align, start);
+    }
+
+    > :is(.form-control, .form-select) {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+}
+
+.o_labels_right {
+    --form-label-align: end;
+}
+
 // The `nav-link` and `btn` classes do not induce the same padding and border
 // radius. However, in some cases, we need to apply these properties of `btn`
 // with the color of `nav-link` (e.g. for the "Sign In" button of the "sidebar"
