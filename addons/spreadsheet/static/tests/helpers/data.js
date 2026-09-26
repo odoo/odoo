@@ -213,7 +213,7 @@ export class ResUsers extends mailModels.ResUsers {
 export class SpreadsheetMixin extends models.Model {
     _name = "spreadsheet.mixin";
 
-    spreadsheet_binary_data = fields.Binary({ string: "Spreadsheet file" });
+    spreadsheet_binary_data_computed = fields.Binary({ string: "Spreadsheet file" });
     spreadsheet_data = fields.Text();
     display_thumbnail = fields.Binary();
 
