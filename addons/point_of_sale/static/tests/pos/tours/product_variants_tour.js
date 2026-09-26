@@ -126,3 +126,15 @@ registry.category("web_tour.tours").add("test_image_variants_displayed", {
             ProductConfiguratorPopup.checkImagePriceExtraVisible("$ 20"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_product_variant_combination_available", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            check_variant_price("A combination product", ["M"], "1.00"),
+
+            Chrome.endTour(),
+        ].flat(),
+});
