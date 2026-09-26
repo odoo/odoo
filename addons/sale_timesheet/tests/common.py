@@ -13,6 +13,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.user.group_ids |= cls.env.ref('hr.group_hr_user')
+        cls.env.user.group_ids |= cls.env.ref('hr_timesheet.group_hr_timesheet_approver')
         cls.company_data_2 = cls.setup_other_company()
 
         cls.user_employee_company_B = mail_new_test_user(
