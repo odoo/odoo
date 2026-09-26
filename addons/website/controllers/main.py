@@ -532,6 +532,15 @@ class Website(Home):
             with tools.file_open(preview_url.lstrip('/'), 'rb') as file:
                 return file.read().decode('utf-8')
         except FileNotFoundError as exc:
+            # An imported theme has no file on disk, its preview is an
+            # attachment. Only ever read the preview of a theme this way, never
+            # any other attachment the url could point to.
+            if preview_url.endswith('/static/description/preview.html'):
+                attachment = request.env['ir.attachment'].sudo().search([
+                    ('url', '=', preview_url),
+                ], limit=1)
+                if attachment:
+                    return attachment.raw.decode('utf-8')
             raise NotFound() from exc
 
     def _get_configurator_preview_images_map(self, theme_name, industry_id):

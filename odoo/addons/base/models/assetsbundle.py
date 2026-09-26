@@ -796,8 +796,14 @@ class WebAsset(object):
     def stat(self):
         if not (self.inline or self._filename or self._ir_attach):
             try:
+                IrAttachment = self.bundle.env['ir.attachment'].sudo()
                 # Test url against ir.attachments
-                self._ir_attach = self.bundle.env['ir.attachment'].sudo()._get_serve_attachment(self.url)
+                self._ir_attach = IrAttachment._get_serve_attachment(self.url)
+                if not self._ir_attach and not self.url.startswith('/'):
+                    # The files of a module that is not on the file system, eg.
+                    # an imported one, are attachments stored under the url they
+                    # are served at, which always starts with a slash.
+                    self._ir_attach = IrAttachment._get_serve_attachment('/' + self.url)
                 self._ir_attach.ensure_one()
             except ValueError:
                 raise AssetNotFound("Could not find %s" % self.name)
