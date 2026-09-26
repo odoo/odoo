@@ -4,6 +4,7 @@ import ast
 from collections import defaultdict
 
 from odoo import SUPERUSER_ID, Command, _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools import SQL
 from odoo.tools.convert import convert_file
 
@@ -81,6 +82,7 @@ class HrJob(models.Model):
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True, groups="hr_recruitment.group_hr_recruitment_interviewer")
     industry_id = fields.Many2one('res.partner.industry', 'Industry', tracking=True)
     expected_degree = fields.Many2one("hr.recruitment.degree", groups="hr_recruitment.group_hr_recruitment_interviewer")
+    expected_experience = fields.Integer("Experience", groups="hr_recruitment.group_hr_recruitment_interviewer")
 
     activity_count = fields.Integer(compute='_compute_activities', groups="hr_recruitment.group_hr_recruitment_interviewer")
 
@@ -329,6 +331,12 @@ class HrJob(models.Model):
     def _compute_company_partner_id(self):
         for job in self:
             job.company_partner_id = job.company_id.partner_id or self.env.company.partner_id
+
+    @api.constrains('expected_experience')
+    def _check_expected_experience(self):
+        for job in self:
+            if job.expected_experience < 0:
+                raise ValidationError(self.env._("Expected experience cannot be negative."))
 
     @api.model_create_multi
     def create(self, vals_list):

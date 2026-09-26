@@ -17,21 +17,23 @@
                     />
                 </group>
             </div>
-            <group name="job" position="inside">
-                <field
-                    name="current_job_skill_ids"
-                    mode="list"
-                    widget="many2one_tags_skills"
-                    context="{'default_job_id': id}"
-                    string="Expected Skills"
-                >
-                    <list>
-                        <field name="skill_id"/> <!--This is needed for the UI to update smoothly -->
-                        <field name="skill_level_id"/> <!--This is needed for the UI to update smoothly -->
-                        <field name="display_name"/>
-                        <field name="color"/>
-                    </list>
-                </field>
+            <group name="contract" position="after">
+                <group name="matching_criteria" string="Matching Criteria">
+                    <field
+                        name="current_job_skill_ids"
+                        mode="list"
+                        widget="many2one_tags_skills"
+                        context="{'default_job_id': id}"
+                        string="Expected Skills"
+                    >
+                        <list>
+                            <field name="skill_id"/> <!--This is needed for the UI to update smoothly -->
+                            <field name="skill_level_id"/> <!--This is needed for the UI to update smoothly -->
+                            <field name="display_name"/>
+                            <field name="color"/>
+                        </list>
+                    </field>
+                </group>
             </group>
         </field>
     </record>

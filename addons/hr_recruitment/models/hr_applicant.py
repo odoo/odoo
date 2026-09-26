@@ -80,6 +80,8 @@ class HrApplicant(models.Model):
     )
     linkedin_profile = fields.Char('LinkedIn Profile', tracking=True, index='btree_not_null')
     type_id = fields.Many2one('hr.recruitment.degree', "Degree", tracking=True)
+    willing_to_relocate = fields.Boolean(tracking=True)
+
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     color = fields.Integer("Color Index", default=0)
     employee_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.", copy=False, index='btree_not_null')
