@@ -61,9 +61,9 @@ export function getBasicGraphArch() {
 /**
  * @returns {ServerData}
  */
-export function getBasicServerData() {
+export function getBasicServerData(params = {}) {
     return {
-        models: getBasicData(),
+        models: params.data || getBasicData(),
         views: {
             "partner,false,list": getBasicListArch(),
             "partner,false,pivot": getBasicPivotArch(),
@@ -113,6 +113,24 @@ export function getBasicListArchs() {
         "partner,false,search": /* xml */ `<search/>`,
         "partner,false,form": /* xml */ `<form/>`,
     };
+}
+
+export function getBasicDataWithEmptyRecords() {
+    const data = getBasicData();
+    data.partner.records.push({
+        id: 5,
+        foo: 2,
+        bar: true,
+        date: "2016-12-11",
+        create_date: "2016-12-10 21:59:59",
+        product_id: false,
+        probability: 15,
+        field_with_array_agg: 4,
+        tag_ids: [42],
+        currency_id: 2,
+        pognon: 1000,
+    });
+    return data;
 }
 
 export function getBasicData() {
