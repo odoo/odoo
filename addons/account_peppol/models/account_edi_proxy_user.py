@@ -271,12 +271,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if 'is_in_extractable_state' in move._fields:
             move.is_in_extractable_state = False
 
+        # add attachment before risk of exception
+        attachment.write({'res_model': 'account.move', 'res_id': move.id})
+
         try:
             move._extend_with_attachments(files_data, new=True)
             move._autopost_bill()
         except Exception:
             _logger.exception("Unexpected error occurred during the import of bill with id %s", move.id)
-        attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return {'uuid': uuid, 'move': move}
 
     def _peppol_get_duplicate_message_uuids(self, message_uuids):
@@ -288,6 +290,27 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             ])
             .mapped('peppol_message_uuid')
         )
+
+    def _peppol_flag_incomplete_duplicate_moves(self, message_uuids):
+        """A move whose import was interrupted before it could be filled in is left as
+        an empty shell whose uuid was never acknowledged, so it keeps being redelivered
+        and detected as a duplicate forever. Flag those so the failure isn't silent.
+        """
+        self.ensure_one()
+        incomplete_moves = self.env['account.move'].search([
+            ('peppol_message_uuid', 'in', list(message_uuids)),
+            ('company_id', '=', self.company_id.id),
+            ('peppol_move_state', '!=', 'error'),
+            ('invoice_line_ids', '=', False),
+        ])
+        for move in incomplete_moves:
+            move.peppol_move_state = 'error'
+            move.message_post(
+                body=self.env._(
+                    "The import of this document was interrupted and could not complete. "
+                    "You can find the original attachment below; please fill in the bill manually."
+                ),
+            )
 
     def _peppol_get_new_documents(self, skip_no_journal=False):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
@@ -339,6 +362,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     "Messages with UUID %s could not be imported because they are identified as duplicates",
                     ', '.join(duplicate_message_uuids)
                 )
+                edi_user._peppol_flag_incomplete_duplicate_moves(duplicate_message_uuids)
 
             # Remove the duplicates
             message_uuids = [
