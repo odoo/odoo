@@ -148,6 +148,15 @@ export class PaymentScreen extends Component {
         const result = this.currentOrder.addPaymentline(paymentMethod);
         if (result.status) {
             this.numberBuffer.set(result.data.amount.toString());
+            if (paymentMethod.type === "pay_later") {
+                const hasCabaTax = this.currentOrder.getOrderlines().some((line) => {
+                    const taxes = line.tax_ids || [];
+                    return taxes.some((t) => t && t.tax_exigibility === "on_payment");
+                });
+                if (hasCabaTax && !this.currentOrder.isToInvoice()) {
+                    this.currentOrder.setToInvoice(true);
+                }
+            }
             if (
                 paymentMethod.use_payment_terminal &&
                 !this.isRefundOrder &&
