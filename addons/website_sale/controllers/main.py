@@ -899,6 +899,47 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         product_template.write({"product_template_image_ids": media_create_data})
 
+    @route(["/shop/product/replace-image-media"], type="jsonrpc", auth="user", website=True)
+    def replace_product_image_media(
+        self, image_id, video_url=False, image_1920=None, attachment_id=None
+    ):
+        """
+        Turn an existing product image into a video, or turn it back into a plain image.
+
+        :param int image_id: The id of the "product.image" record to update.
+        :param str video_url: URL of the video to showcase, or a falsy value to turn the image
+                              back into a plain image.
+        :param str image_1920: Base64-encoded thumbnail to display for the video.
+        :param int attachment_id: When turning the video back into a plain image, the id of the
+                                  "ir.attachment" to use as the new image.
+        :raises NotFound: If the user does not have the required permissions, or if the image is
+                          not found.
+        :raise ValidationError: If the provided video URL is invalid.
+        """
+        if not self.env.user.has_group("website.group_website_restricted_editor"):
+            raise NotFound
+
+        image = self.env["product.image"].browse(int(image_id))
+        if not image.exists():
+            raise NotFound
+
+        if video_url:
+            url = urlsplit(video_url)
+            if not url.netloc:
+                raise ValidationError(self.env._("Invalid video URL provided."))
+            vals = {"video_url": video_url, "image_1920": image_1920 or False}
+        elif attachment_id:
+            attachment = self.env["ir.attachment"].browse(int(attachment_id))
+            vals = {
+                "video_url": False,
+                "image_1920": attachment.raw
+                or self.env["ir.qweb.field.image"].load_remote_url(attachment.url),
+            }
+        else:
+            vals = {"video_url": False, "image_1920": False}
+
+        image.write(vals)
+
     @route(["/shop/product/resequence-image"], type="jsonrpc", auth="user", website=True)
     def resequence_product_image(self, image_res_id, move, product_variant_id):
         """
