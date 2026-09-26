@@ -5,13 +5,18 @@ export function convertRecordToEvent(record, forceAllDay = false) {
     if (record.isAllDay || (allDay && end.toMillis() !== end.startOf("day").toMillis())) {
         end = end.plus({ days: 1 });
     }
-    return {
+    const event = {
         id: record.id,
         title: record.title,
         start: record.start.toISO(),
         end: end.toISO(),
         allDay,
     };
+    const color = getColor(record.colorIndex);
+    if (typeof color === "string") {
+        event.color = color;
+    }
+    return event;
 }
 
 const CSS_COLOR_REGEX =

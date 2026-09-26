@@ -187,8 +187,8 @@ export class CalendarCommonRenderer extends Component {
     }
 
     viewDidMount({ el, view }) {
-        const showWeek = view.calendar.currentData.options.weekNumbers;
-        const weekText = view.calendar.currentData.options.weekTextShort;
+        const showWeek = view.calendar.getOption("weekNumbers");
+        const weekText = view.calendar.getOption("weekTextShort");
         const weekColumn = !this.customOptions.weekNumbersWithinDays;
         if (showWeek && weekColumn) {
             makeWeekColumn({ el, weekText });
@@ -327,7 +327,9 @@ export class CalendarCommonRenderer extends Component {
             const color = getColor(record.colorIndex);
             if (typeof color === "number") {
                 classesToAdd.push(`o_calendar_color_${color}`);
-            } else if (typeof color !== "string") {
+            } else if (typeof color === "string") {
+                classesToAdd.push("o_calendar_color_custom");
+            } else {
                 classesToAdd.push("o_calendar_color_0");
             }
 
@@ -359,19 +361,10 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventDidMount({ el, event }) {
         el.dataset.eventId = event.id;
-        const record = this.props.model.records[event.id];
-
-        if (record) {
-            const color = getColor(record.colorIndex);
-            if (typeof color === "string") {
-                el.style.backgroundColor = color;
-            }
-
-            if (!el.classList.contains("fc-bg")) {
-                const bg = document.createElement("div");
-                bg.classList.add("fc-bg");
-                el.appendChild(bg);
-            }
+        if (this.props.model.records[event.id]) {
+            const bg = document.createElement("div");
+            bg.classList.add("fc-bg");
+            el.appendChild(bg);
         }
     }
     async onSelect(info) {
