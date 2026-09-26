@@ -310,6 +310,7 @@ class PurchaseOrderLine(models.Model):
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
+            'never_product_template_attribute_value_ids': self.product_no_variant_attribute_value_ids,
             'sequence': self.sequence,
         }
 
