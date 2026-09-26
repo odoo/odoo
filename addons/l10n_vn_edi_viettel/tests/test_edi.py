@@ -567,8 +567,8 @@ class TestVNEDI(AccountTestInvoicingCommon):
             active_ids=sale_order.ids,
             active_model='sale.order',
         ).create({
-            'advance_payment_method': 'fixed',
-            'fixed_amount': 150.0,
+            'advance_payment_method': 'downpayment',
+            'amount': 150.0,
         })
         downpayment_wizard.create_invoices()
 
