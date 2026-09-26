@@ -66,6 +66,7 @@ patch(ResPartner.prototype, {
             mainUserRes.attr("partner_id");
             mainUserRes.many("livechat_expertise_ids", ["name"]);
         });
+        res.many("user_ids", ["active", "company_ids", "share"], { internal: true, sudo: true });
     },
 
     _store_livechat_member_fields(res) {
