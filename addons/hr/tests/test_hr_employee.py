@@ -885,6 +885,7 @@ class TestHrEmployee(TestHrCommon):
             if presence_state == 'out_of_working_hour':
                 self.assertEqual(employees.ids, [out_working_emp.id])
 
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
     def test_exclude_archived_employees_from_direct_subordinate_filter(self):
         """ Test that archived subordinates aren't included when searching on child_ids. """
         employee_1, employee_2 = self.env['hr.employee'].create([
@@ -901,6 +902,30 @@ class TestHrEmployee(TestHrCommon):
         result = self.env['hr.employee'].search([('child_ids', '!=', False)])
         self.assertNotIn(employee_1, result)
 
+||||||| e4e3aa3283c36f6f6bf97e5a824b411805edd839
+=======
+    def test_unlink_employee_also_unlink_related_versions(self):
+        self.employee.create_version({
+            'date_version': fields.Date.today() - relativedelta(days=10),
+        })
+        self.employee_without_image.create_version({
+            'date_version': fields.Date.today() - relativedelta(days=5),
+        })
+        self.employee_without_image.create_version({
+            'date_version': fields.Date.today() - relativedelta(days=1),
+            'active': False,
+        })
+        self.assertEqual(len(self.employee.version_ids), 2)
+        self.assertEqual(len(self.employee_without_image.version_ids), 2)
+        (self.employee + self.employee_without_image).invalidate_recordset(['version_ids'])
+        self.assertEqual(len(self.employee.with_context(active_test=False).version_ids), 2)
+        self.assertEqual(len(self.employee_without_image.with_context(active_test=False).version_ids), 3)
+
+        employee_versions = self.employee.with_context(active_test=False).version_ids + self.employee_without_image.with_context(active_test=False).version_ids
+        (self.employee + self.employee_without_image).unlink()
+        self.assertFalse(employee_versions.exists())
+
+>>>>>>> 2b9c70a07138ed4f7ece787759fb5bb479e10f70
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeLinks(HttpCase):
