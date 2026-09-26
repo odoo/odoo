@@ -24,6 +24,7 @@ import traceback
 import typing
 import unicodedata
 import warnings
+import queue
 import zlib
 from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible
@@ -885,6 +886,161 @@ class ConstantMapping(Mapping[typing.Any, T], typing.Generic[T]):
 
     def __getitem__(self, item) -> T:
         return self._value
+
+import urllib
+class continuousProfiler():
+    """
+    For worker mode: 
+        The signal is passed down to each worker and each odoo process would have its own profiler
+        object. In worker mode we have one worker handling one request, meaning one thread, so at
+        most we have one sample per stack collection trigger.
+    For threaded mode:
+        There is one process, the signal instantiates the profiler for this process. Since it inits 
+        multiple threads for the process for each request, we loop over the current frames based
+        on the thread_id.
+    """
+    def __init__(self, sample_interval_secs: float = 1.0, flush_interval_secs: float = 10.0):
+        self._sample_interval = sample_interval_secs
+        self._flush_interval = flush_interval_secs
+        self.shared_queue = queue.Queue(maxsize=100_000)
+        self.is_running = False
+        self._stop_event = threading.Event()
+        self.alloy_url = "http://localhost:9999"
+        self._sample_thread = threading.Thread(target=self._sampling_loop, daemon=True)
+        self._flush_thread = threading.Thread(target=self._flush_loop, daemon=True)
+
+        # filename, function name, line number
+        self.accumulator: collections.Counter[tuple[tuple[str, str, str], ...]] = collections.Counter()
+    
+    def _threads_stack_collection(self):
+        for thread_id, frame in sys._current_frames().items():
+            if thread_id in [self._sample_thread.ident, self._flush_thread.ident]:
+                continue
+
+            stack: list[tuple[str, str]] = []
+            f = frame
+            while f is not None:
+                code = f.f_code
+                stack.append((code.co_filename, code.co_name, f.f_lineno))
+                f = f.f_back   # we can break the walkback when we reach a common enough frame
+
+            if stack:
+                try:
+                    self.shared_queue.put_nowait(tuple(stack))
+                except queue.Full:
+                    # Drop samples when saturated; keep sampler non-blocking.
+                    pass
+    
+    @staticmethod
+    def _frames_to_collapsed(frames: tuple[tuple[str, str, str], ...]) -> str:
+        parts = []
+        # Frames are captured leaf → root in `_capture_snapshot`; emit root → leaf here.
+        for filename, funcname, lineno in reversed(frames):
+            # Use just the basename to keep the payload compact
+            parts.append(f"{os.path.basename(filename)}:{lineno}:{funcname}")
+        return ";".join(parts)
+
+    def _drain_samples(self):
+        with self.shared_queue.mutex:
+            dq = self.shared_queue.queue
+            for _ in range(len(dq)):
+                frames = dq.popleft()
+                self.accumulator[frames] += 1
+
+    def _flush_to_alloy(self):
+        self._drain_samples()
+        if not self.accumulator:
+            self.last_flush_time = time.time()
+            return
+
+        raw_data = list(self.accumulator.items())
+        self.accumulator.clear()
+
+        now = time.time()
+        start_ts = int(self.last_flush_time)
+        end_ts = int(now)
+        self.last_flush_time = now
+
+        # Serialise to newline-delimited collapsed format only at flush time
+        payload = "\n".join(
+            f"{self._frames_to_collapsed(frames)} {count}"
+            for frames, count in raw_data
+        )
+        
+        # Construct parameters expected by Alloy's pyroscope.receive_http component
+        params = {
+            "name": "odoo",
+            "format": "collapsed",
+            "from": start_ts,
+            "until": end_ts
+        }
+
+        try:
+            encoded = payload.encode('utf-8')
+            # Endpoint defined in grafana/alloy-config.alloy (pyroscope.receive_http)
+
+            url = f"{self.alloy_url}/ingest?{urllib.parse.urlencode(params)}"
+            req = urllib.request.Request(
+                url,
+                data=encoded,
+                method='POST',
+                headers={"Content-Type": "text/plain"},
+            )
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                if resp.status != 200:
+                    _logger.warning("[Profiler] Alloy rejected ingestion (%s)", resp.status)
+        except Exception as e:
+            _logger.warning("[Profiler] Could not connect to Grafana Alloy: %s", e)
+
+    def _sampling_loop(self):
+        while self.is_running:
+            start_loop = time.time()
+
+            self._threads_stack_collection()
+
+            # Account for processing execution drift to maintain a stable sampling interval
+            execution_time = time.time() - start_loop
+            sleep_time = self._sample_interval - execution_time
+            if sleep_time > 0:
+                self._stop_event.wait(sleep_time)
+
+    def _flush_loop(self):
+        while self.is_running:
+            self._stop_event.wait(self._flush_interval)
+            if not self.is_running:
+                break
+            self._flush_to_alloy()
+        # Final drain + push before thread exits.
+        self._flush_to_alloy()
+
+    def start(self):
+        """Starts dedicated sampling and flushing daemon threads."""
+        if not self.is_running:
+            self.is_running = True
+            self._stop_event.clear()
+            self.last_flush_time = time.time()
+            self._sample_thread.start()
+            self._flush_thread.start()
+
+    def stop(self):
+        """Stops sampling/flush threads cleanly and forces a final flush."""
+        if self.is_running:
+            self.is_running = False
+            self._stop_event.set()
+            if self._sample_thread:
+                self._sample_thread.join(timeout=2)
+            if self._flush_thread:
+                self._flush_thread.join(timeout=2)
+
+profiler = continuousProfiler()
+def toggle_continous_profiler(sig=None, frame=None, thread_idents=None, log_level=logging.INFO):
+    """ Signal handler: toggle the continuous profiler on/off. """
+    if profiler.is_running:
+        profiler.stop()
+        _logger.log(log_level, "[Profiler] Stopped continuous profiling")
+    else:
+        profiler.start()
+        _logger.log(log_level, "[Profiler] Started continuous profiling")
 
 
 def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO):
