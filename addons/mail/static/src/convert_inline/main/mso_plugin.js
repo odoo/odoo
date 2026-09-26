@@ -58,21 +58,21 @@ export class MsoPlugin extends Plugin {
     }
 
     analyzeButtonLayout(defaultEmailNodeArguments, { referenceNode }) {
-        // if (referenceNode.nodeType !== Node.ELEMENT_NODE) {
-        //     return defaultEmailNodeArguments;
-        // }
-        // const computedStyle = this.getComputedStyle(referenceNode);
-        // const display = computedStyle.getPropertyValue("display");
-        // const backgroundColor = computedStyle.getPropertyValue("background-color");
+        if (referenceNode.nodeType !== Node.ELEMENT_NODE) {
+            return defaultEmailNodeArguments;
+        }
+        const computedStyle = this.getComputedStyle(referenceNode);
+        const display = computedStyle.getPropertyValue("display");
+        const backgroundColor = computedStyle.getPropertyValue("background-color");
 
-        // if (
-        //     !display.includes("inline") ||
-        //     (!this.hasVisibleBorder(referenceNode) && !backgroundColor) ||
-        //     selectElements(referenceNode, "img").length > 0
-        // ) {
-        //     return defaultEmailNodeArguments;
-        // }
-        // const color = computedStyle.getPropertyValue("color");
+        if (
+            !display.includes("inline") ||
+            (!this.hasVisibleBorder(referenceNode) && !backgroundColor) ||
+            selectElements(referenceNode, "img").length > 0
+        ) {
+            return defaultEmailNodeArguments;
+        }
+        const color = computedStyle.getPropertyValue("color");
         
 
         // inline-block or inline element, with border or background-color
