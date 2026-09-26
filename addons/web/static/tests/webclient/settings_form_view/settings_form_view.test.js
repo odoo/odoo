@@ -920,6 +920,95 @@ test("Auto save: don't save on visibility change", async () => {
     expect.verifySteps([]);
 });
 
+test("settings search bar content is stashed to session storage right before a save", async () => {
+    onRpc("execute", () => true);
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block>
+                        <setting help="this is foo">
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+        `,
+    });
+
+    expect(window.sessionStorage.getItem("settings_search_value")).toBe(null);
+
+    await editSearch("Foo");
+    await runAllTimers();
+    expect(".o_searchview input").toHaveValue("Foo");
+
+    // Saving the settings triggers a full page reload (mocked here through the
+    // "execute" RPC): the search bar content must be stashed right before that
+    // happens so it survives the reload.
+    await clickSave();
+    await animationFrame();
+    expect(window.sessionStorage.getItem("settings_search_value")).toBe("Foo");
+});
+
+test("settings search bar content is not stashed on an unrelated page unload", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block>
+                        <setting help="this is foo">
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+        `,
+    });
+
+    await editSearch("Foo");
+    await runAllTimers();
+    expect(".o_searchview input").toHaveValue("Foo");
+
+    // "beforeunload" also fires on a plain refresh, a tab close, or navigating away
+    // to an unrelated page, none of which are a settings save: the search bar
+    // content must not be stashed, or it would leak into a later, unrelated visit
+    // of the Settings action.
+    await unload();
+    await animationFrame();
+    expect(window.sessionStorage.getItem("settings_search_value")).toBe(null);
+});
+
+test("settings search bar content is restored from session storage after a reload", async () => {
+    window.sessionStorage.setItem("settings_search_value", "Foo");
+
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block>
+                        <setting help="this is foo">
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+        `,
+    });
+
+    expect(".o_searchview input").toHaveValue("Foo", {
+        message: "search bar content should be restored after the reload",
+    });
+    expect(window.sessionStorage.getItem("settings_search_value")).toBe(null, {
+        message: "the stashed value should only be used once",
+    });
+});
+
 test("correctly copy attributes to compiled labels", async () => {
     await mountView({
         type: "form",

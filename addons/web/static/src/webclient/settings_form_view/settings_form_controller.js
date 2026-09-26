@@ -1,4 +1,4 @@
-import { onMounted, onPatched, proxy, signal } from "@odoo/owl";
+import { onMounted, onPatched, proxy, signal, useOnChange } from "@odoo/owl";
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
@@ -10,6 +10,12 @@ import { normalize } from "@web/core/l10n/utils";
 import { useDebounced } from "@web/core/utils/timing";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { useViewButtonHandler } from "@web/views/view_button/view_button_hook";
+
+// Saving the settings triggers a full page reload (see `res.config.settings.execute`),
+// which wipes any in-memory state. The search bar content is stashed here right before
+// that save is triggered (see `save` below), and restored on the next mount, so it
+// survives the reload.
+const SETTINGS_SEARCH_STORAGE_KEY = "settings_search_value";
 
 export class SettingsFormController extends formView.Controller {
     static template = "web.SettingsFormView";
@@ -33,9 +39,16 @@ export class SettingsFormController extends formView.Controller {
                     this.inputRef().value = "";
                 }
                 this.searchState.value = "";
+                window.sessionStorage.removeItem(SETTINGS_SEARCH_STORAGE_KEY);
             },
         });
         this.canCreate = false;
+        const storedSearchValue = window.sessionStorage.getItem(SETTINGS_SEARCH_STORAGE_KEY);
+        if (storedSearchValue) {
+            // avoid leaks in later Settings actions
+            window.sessionStorage.removeItem(SETTINGS_SEARCH_STORAGE_KEY);
+            this.searchState.value = normalize(storedSearchValue);
+        }
         useSubEnv({ searchState: this.searchState });
         useLayoutEffect(
             () => {
@@ -63,6 +76,15 @@ export class SettingsFormController extends formView.Controller {
         };
         onMounted(removeLocalStateGetter);
         onPatched(removeLocalStateGetter);
+        useOnChange(
+            () => [this.inputRef()],
+            (inputEl) => {
+                if (storedSearchValue && inputEl) {
+                    inputEl.value = storedSearchValue;
+                    inputEl.selectionStart = inputEl.selectionEnd = inputEl.value.length;
+                }
+            }
+        );
 
         this.searchBarToggler = useSearchBarToggler();
         this.initialApp = "module" in this.props.context ? this.props.context.module : "";
@@ -119,6 +141,8 @@ export class SettingsFormController extends formView.Controller {
     beforeVisibilityChange() {}
 
     async save() {
+        const inputEl = this.inputRef();
+        window.sessionStorage.setItem(SETTINGS_SEARCH_STORAGE_KEY, inputEl ? inputEl.value : "");
         await this.handleViewButton({
             clickParams: {
                 name: "execute",
