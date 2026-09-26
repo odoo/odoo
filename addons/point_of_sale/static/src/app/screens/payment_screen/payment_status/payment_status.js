@@ -54,4 +54,20 @@ export class PaymentScreenStatus extends Component {
     get amountText() {
         return this.pos.formatCurrency(this.order.remainingDueAmount);
     }
+
+    async onClickSplitAndPay() {
+        const originOrder = this.props.order;
+
+        const floatingOrder = this.pos.addNewOrder({ floating_order_name: "Split Payment" });
+        floatingOrder.split_payment_origin_uuid = originOrder.uuid;
+
+        const splitProduct = this.pos.config.split_payment_product_id;
+        await this.pos.addLineToOrder(
+            { product_tmpl_id: splitProduct.product_tmpl_id, qty: 1 },
+            floatingOrder
+        );
+
+        this.pos.setOrder(floatingOrder);
+        this.pos.showScreen("ProductScreen");
+    }
 }
