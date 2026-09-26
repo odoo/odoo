@@ -7,24 +7,64 @@
     </template>
 
     <template id="l10n_ca_external_layout_standard" inherit_id="web.external_layout_standard">
+<<<<<<< c8d242492f71c336507f96e15c2bedf29e196c6e
         <xpath expr="//ul[@name='company_address_list']" position="inside">
             <t t-call="l10n_ca.pst_external_layout"/>
+||||||| f5b5f0c2c9aeadb81a139f308f990d6ec4b59ff1
+        <xpath expr="//div[hasclass('row')][last()]" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div>PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+=======
+        <xpath expr="//div[hasclass('row')][last()]" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div t-if="'TQ' in company.l10n_ca_pst.upper()">QST: <span t-field="company.l10n_ca_pst"/></div>
+                <div t-else="">PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+>>>>>>> d29f95157cd1af4037831fe6ac54e3ff0dda151c
         </xpath>
     </template>
 
     <template id="l10n_ca_external_layout_bold" inherit_id="web.external_layout_bold">
+<<<<<<< c8d242492f71c336507f96e15c2bedf29e196c6e
         <xpath expr="//ul[@name='company_address_list']" position="inside">
             <t t-call="l10n_ca.pst_external_layout"/>
+||||||| f5b5f0c2c9aeadb81a139f308f990d6ec4b59ff1
+        <xpath expr="//div[hasclass('row')]" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div>PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+=======
+        <xpath expr="//div[hasclass('row')]" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div t-if="'TQ' in company.l10n_ca_pst.upper()">QST: <span t-field="company.l10n_ca_pst"/></div>
+                <div t-else="">PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+>>>>>>> d29f95157cd1af4037831fe6ac54e3ff0dda151c
         </xpath>
     </template>
 
     <template id="l10n_ca_external_layout_boxed" inherit_id="web.external_layout_boxed">
+<<<<<<< c8d242492f71c336507f96e15c2bedf29e196c6e
         <xpath expr="//ul[@name='company_address_list']" position="inside">
             <t t-call="l10n_ca.pst_external_layout"/>
+||||||| f5b5f0c2c9aeadb81a139f308f990d6ec4b59ff1
+        <xpath expr="//div[hasclass('row') and hasclass('mb8')]" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div>PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+=======
+        <xpath expr="//div[hasclass('row') and hasclass('mb8')]" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div t-if="'TQ' in company.l10n_ca_pst.upper()">QST: <span t-field="company.l10n_ca_pst"/></div>
+                <div t-else="">PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+>>>>>>> d29f95157cd1af4037831fe6ac54e3ff0dda151c
         </xpath>
     </template>
 
     <template id="l10n_ca_external_layout_striped" inherit_id="web.external_layout_striped">
+<<<<<<< c8d242492f71c336507f96e15c2bedf29e196c6e
         <xpath expr="//ul[@name='company_address_list']" position="inside">
             <t t-call="l10n_ca.pst_external_layout"/>
         </xpath>
@@ -47,6 +87,18 @@
             <div t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst">
                 PST: <span t-field="company.l10n_ca_pst"/>
             </div>
+||||||| f5b5f0c2c9aeadb81a139f308f990d6ec4b59ff1
+        <xpath expr="//div[hasclass('float-start') and hasclass('company_address')]" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div>PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+=======
+        <xpath expr="//div[hasclass('float-start') and hasclass('company_address')]" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div t-if="'TQ' in company.l10n_ca_pst.upper()">QST: <span t-field="company.l10n_ca_pst"/></div>
+                <div t-else="">PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+>>>>>>> d29f95157cd1af4037831fe6ac54e3ff0dda151c
         </xpath>
     </template>
 </odoo>
