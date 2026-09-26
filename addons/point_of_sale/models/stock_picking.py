@@ -276,8 +276,16 @@ class StockMove(models.Model):
         existing_lots = moves_remaining._create_production_lots_for_pos_order(related_order_lines)
         move_lines_to_create = []
         if are_qties_done:
-            for move in moves_remaining:
+            sorted_moves = moves_remaining.sorted(key=lambda m: bool(m._should_track_kit_product()))
+            taken_qty_by_quant = defaultdict(float)
+
+            for move in sorted_moves:
                 move.move_line_ids.quantity = 0
+
+                # prevent kit from taking component's lot by default
+                if move._adapt_kit_lot(move_lines_to_create, taken_qty_by_quant):
+                    continue
+
                 for line in lines_data[move.product_id.id]['order_lines']:
                     for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
                         qty = self._get_lot_line_qty(line, move, lines_data)
@@ -289,24 +297,7 @@ class StockMove(models.Model):
                                     [('lot_id', '=', existing_lot.id), ('quantity', '>', '0.0'), ('location_id', 'child_of', move.location_id.id)],
                                     order='id desc',
                                 )
-                            qty_left_to_assign = qty
-                            for quant in quants:
-                                if qty_left_to_assign <= 0:
-                                    break
-                                qty_chg = min(qty_left_to_assign, quant.quantity)
-                                ml_vals = dict(move._prepare_move_line_vals(qty_chg))
-                                qty_left_to_assign -= qty_chg
-                                ml_vals.update({
-                                    'quant_id': quant.id,
-                                })
-                                move_lines_to_create.append(ml_vals)
-                            if qty_left_to_assign > 0:
-                                ml_vals = dict(move._prepare_move_line_vals(qty_left_to_assign))
-                                ml_vals.update({
-                                    'lot_name': existing_lot.name,
-                                    'lot_id': existing_lot.id,
-                                })
-                                move_lines_to_create.append(ml_vals)
+                            move_lines_to_create.extend(self._get_ml_vals(move, qty, quants, taken_qty_by_quant, existing_lot))
                         else:
                             ml_vals = dict(move._prepare_move_line_vals(qty))
                             ml_vals.update({'lot_name': lot.lot_name})
@@ -315,6 +306,10 @@ class StockMove(models.Model):
             self.env['stock.move.line'].create(move_lines_to_create)
         else:
             for move in moves_remaining:
+                if move._should_track_kit_product():
+                    qty = move.product_uom_qty
+                    move._update_reserved_quantity(qty, move.location_id, strict=False)
+                    continue
                 for line in lines_data[move.product_id.id]['order_lines']:
                     for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
                         qty = self._get_lot_line_qty(line, move, lines_data)
@@ -326,3 +321,40 @@ class StockMove(models.Model):
 
     def _get_lot_line_qty(self, line, move, lines_data):
         return 1 if line.product_id.tracking == 'serial' else abs(line.qty)
+
+    def _get_ml_vals(self, move, qty, quants, taken_qty_by_quant, fallback_lot):
+        vals_list = []
+        for quant in quants:
+            if qty <= 0:
+                break
+
+            available_qty = quant.quantity - taken_qty_by_quant[quant.id]
+            if available_qty <= 0:
+                continue
+
+            qty_chg = min(qty, available_qty)
+            ml_vals = dict(move._prepare_move_line_vals(qty_chg))
+            qty -= qty_chg
+            taken_qty_by_quant[quant.id] += qty_chg
+            ml_vals.update({
+                'quant_id': quant.id,
+                'lot_name': quant.lot_id.name,
+                'lot_id': quant.lot_id.id,
+            })
+            vals_list.append(ml_vals)
+
+        if qty > 0:
+            ml_vals = dict(move._prepare_move_line_vals(qty))
+            if fallback_lot:
+                ml_vals.update({
+                    'lot_name': fallback_lot.name,
+                    'lot_id': fallback_lot.id,
+                })
+            vals_list.append(ml_vals)
+        return vals_list
+
+    def _adapt_kit_lot(self, move_lines_to_create, taken_qty_by_quant):
+        return False
+
+    def _should_track_kit_product(self):
+        return False
