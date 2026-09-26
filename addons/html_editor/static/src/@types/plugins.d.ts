@@ -1,5 +1,5 @@
 declare module "plugins" {
-    import { clean_for_save_processors, on_editor_started_handlers } from "@html_editor/editor";
+    import { clean_for_save_processors, html_compatibility_processors, on_editor_started_handlers } from "@html_editor/editor";
     import { Plugin } from "@html_editor/plugin";
     import { ResourceWithSequence } from "@html_editor/utils/resource";
 
@@ -245,6 +245,7 @@ declare module "plugins" {
         clipboard_content_processors: clipboard_content_processors;
         clipboard_text_processors: clipboard_text_processors;
         deselect_custom_selected_nodes_processors: deselect_custom_selected_nodes_processors;
+        html_compatibility_processors: html_compatibility_processors;
         move_widget_position_processors: move_widget_position_processors;
         node_to_insert_processors: node_to_insert_processors;
         normalize_processors: normalize_processors;
