@@ -31,13 +31,17 @@ export class ProductCatalogSearchPanel extends SearchPanel {
         values.forEach(element => {
             const name = element.display_name;
             const id = element.id;
+            // The backend groups the records that share a display name by their
+            // underlying attribute value, so every record carries the same
+            // per-value count; take it once instead of summing.
             const count = element.__count;
 
+            if (count <= 0) {
+                return;
+            }
             if (sections.has(name)) {
-                let currentAttr = sections.get(name);
-                currentAttr.get('ids').push(id);
-                currentAttr.set('count', currentAttr.get('count') + count);
-            } else if (count > 0) {
+                sections.get(name).get('ids').push(id);
+            } else {
                 let newAttr = new Map();
                 newAttr.set('ids', [id]);
                 newAttr.set('count', count);
