@@ -1263,7 +1263,15 @@ async function convertToPng(img) {
         image.setAttribute(attribute.name, attribute.value);
     }
 
-    image.setAttribute('src', canvas.toDataURL('png'));
+    try {
+        image.setAttribute('src', canvas.toDataURL('png'));
+    } catch {
+        // Cross-origin images (e.g. added via URL) taint the canvas and
+        // prevent toDataURL() from reading its pixels. In that case skip
+        // the conversion and keep the original src — the external URL is
+        // still valid for use in the email.
+        return img;
+    }
     image.setAttribute('width', width);
     image.setAttribute('height', height);
     return image;
