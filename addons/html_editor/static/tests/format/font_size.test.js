@@ -1,7 +1,7 @@
 import { test, expect } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { setFontSize, tripleClick } from "../_helpers/user_actions";
+import { pasteHtml, setFontSize, tripleClick } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -212,4 +212,24 @@ test("should add style to br except line-break br (2)", async () => {
     expect(getContent(el)).toBe(
         `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;"><br>]</span><br></p>`
     );
+});
+
+test("should remove a redundant font-size class on paste", async () => {
+    await testEditor({
+        contentBefore: '<p><span class="display-1-fs">a[]b</span></p>',
+        stepFunction: async (editor) => {
+            pasteHtml(editor, '<span class="display-1-fs">c</span>');
+        },
+        contentAfter: '<p><span class="display-1-fs">ac[]b</span></p>',
+    });
+});
+
+test("should remove a redundant inline font-size style on paste", async () => {
+    await testEditor({
+        contentBefore: '<p><span style="font-size: 10px;">a[]b</span></p>',
+        stepFunction: async (editor) => {
+            pasteHtml(editor, '<span style="font-size: 10px;">c</span>');
+        },
+        contentAfter: '<p><span style="font-size: 10px;">ac[]b</span></p>',
+    });
 });
