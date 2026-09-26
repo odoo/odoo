@@ -22,8 +22,26 @@
         }
     }
 
-    &.o_record_selected {
-        background-color: var(--KanbanColumn__highlight-selected);
+    .o_kanban_selection_available &.o_record_selection_available, .o_kanban_selection_active & {
+        &:hover {
+            --Card-border-color: #{$gray-400};
+        }
+
+        &:active {
+            --Card-border-color: #{$gray-500};
+        }
+
+        &.o_record_selected {
+            --Card-border-color: #{$o-action};
+        }
+    }
+
+    .o_record_selection_btn {
+        --#{$prefix}btn-border-radius: var(--Card-border-radius);
+        --#{$prefix}btn-active-border-color: transparent;
+        --#{$prefix}gradient: none;
+
+        inset: 0;
     }
 
     .o_dropdown_kanban .btn {
@@ -67,27 +85,6 @@
     @include media-breakpoint-up(md) {
         outline: 3px solid var(--KanbanColumn__highlight-selected-border);
         box-shadow: none;
-    }
-}
-
-.o_kanban_selection_available .o_kanban_record.o_record_selection_available {
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-color: rgba(0, 0, 0, 0.1);
-    }
-    &:hover {
-        &::before {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-        .o_record_selection_tooltip {
-            display: block !important;
-            z-index: 1;
-            transform: translate(-50%, -50%);
-            background: white;
-            color: black;
-        }
     }
 }
 
