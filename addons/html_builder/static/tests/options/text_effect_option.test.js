@@ -96,7 +96,7 @@ test("remove", async () => {
 
     // Remove text effect
     await contains(".o-select-text-effect").click();
-    await contains(".o_text_effect_popover .dropdown-item:contains('No Shadow')").click();
+    await contains(".o_text_effect_popover .dropdown-item:contains('No Effect')").click();
     await waitForNone(".o_text_effect_popover");
     expect(":iframe [data-text-effect]").toHaveCount(0);
     expect(getContent(contentEl)).toBe("<p>[Text]</p>");
@@ -386,7 +386,7 @@ describe("nesting", () => {
 
         // Remove text effect
         await contains(".o-select-text-effect").click();
-        await contains(".o_text_effect_popover .dropdown-item:contains('No Shadow')").click();
+        await contains(".o_text_effect_popover .dropdown-item:contains('No Effect')").click();
         await waitForNone(".o_text_effect_popover");
         expect(getContent(contentEl)).toBe(
             `<p><span class="o_rfs" style="font-size: ${fontSizeProperty};">[Text]</span></p>`
@@ -425,7 +425,7 @@ describe("nesting", () => {
 
         // Remove text effect
         await contains(".o-select-text-effect").click();
-        await contains(".o_text_effect_popover .dropdown-item:contains('No Shadow')").click();
+        await contains(".o_text_effect_popover .dropdown-item:contains('No Effect')").click();
         await waitForNone(".o_text_effect_popover");
         expect(getContent(contentEl)).toBe(
             `<p><span class="o_rfs" style="font-size: ${fontSizeProperty};">[Text]</span></p>`

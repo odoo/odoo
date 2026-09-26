@@ -98,7 +98,7 @@ export class TextEffectOption extends BaseOptionComponent {
         const presets = [
             {
                 id: "no_shadow",
-                name: _t("No Shadow"),
+                name: _t("No Effect"),
                 effect: {},
             },
             {
