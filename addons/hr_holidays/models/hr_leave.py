@@ -424,6 +424,21 @@ class HrLeave(models.Model):
         versions = self.env['hr.version'].sudo().search(domain)
         return versions.filtered(lambda v: v._is_overlapping_period(self.request_date_from, self.request_date_to))
 
+    @api.constrains('request_date_from', 'request_date_to', 'work_entry_type_id', 'employee_id')
+    def _check_flexible_hourly_leave_single_day(self):
+        """
+            An employee without a working schedule has no attendance to spread an hourly
+            request over, so a custom hours time off must stay within a single day.
+        """
+        for holiday in self.filtered('employee_id'):
+            if holiday.work_entry_type_request_unit != 'hour' or holiday.request_date_from == holiday.request_date_to:
+                continue
+            if holiday.employee_id.is_flexible:
+                raise ValidationError(self.env._(
+                    "%(employee)s has no working schedule, so a time off in hours must start and end on the same day.",
+                    employee=holiday.employee_id.display_name,
+                ))
+
     @api.constrains('date_from', 'date_to')
     def _check_contracts(self):
         """
