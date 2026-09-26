@@ -20,6 +20,16 @@ import { registry } from "@web/core/registry";
         run: "click",
     },
     {
+        isActive: ['body:not(:has(iframe .o_report_stock_rule))'],
+        trigger: '.btn[name="print_report"]',
+        run: "click",
+    },
+    {
+        isActive: ['body:not(:has(iframe .o_report_stock_rule))'],
+        trigger: '.btn[name="document_layout_save"]',
+        run: "click",
+    },
+    {
         trigger: ':iframe .o_report_stock_rule',
     },
     ],
