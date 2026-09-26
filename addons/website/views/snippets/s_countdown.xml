@@ -25,7 +25,7 @@
 </template>
 
 <template id="s_countdown_circle_template" groups="base.group_user">
-    <div class="o_template_circle d-inline-flex gap-1">
+    <div class="o_template_circle d-inline-flex gap-1" dir="ltr">
         <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 120px;">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="120" class="w-100" viewBox="0 0 120 120"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="30px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="60" text-anchor="middle" dominant-baseline="central">2</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="82" text-anchor="middle" dominant-baseline="central">Days</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 114 60 A 54 54 0 1 1 113.99995714285649 59.94085714285714" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 60 6 A 54 54 0 0 1 100.10774057369516 23.860518514235936" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
         </div>
@@ -74,7 +74,7 @@
     <t t-set="seconds">Seconds</t>
     <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
     <div class="o_template_dominoes">
-        <div class="oe_unremovable s_countdown_metrics d-flex gap-1">
+        <div class="oe_unremovable s_countdown_metrics d-flex gap-1" dir="ltr">
             <t t-foreach="metrics" t-as="metric">
                 <span class="o_count_item d-flex gap-1">
                     <span class="d-flex flex-column align-items-center">
@@ -101,7 +101,7 @@
     <t t-set="seconds">Seconds</t>
     <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
     <div class="o_template_wrapped_numbers">
-        <div class="oe_unremovable s_countdown_metrics d-inline-flex gap-1">
+        <div class="oe_unremovable s_countdown_metrics d-inline-flex gap-1" dir="ltr">
             <t t-foreach="metrics" t-as="metric">
                 <span class="o_count_item d-flex gap-1">
                     <span class="d-flex flex-column align-items-center">
@@ -151,7 +151,7 @@
     <t t-set="seconds">Seconds</t>
     <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
     <div class="o_template_big_numbers">
-        <div class="oe_unremovable s_countdown_metrics d-inline-flex gap-1">
+        <div class="oe_unremovable s_countdown_metrics d-inline-flex gap-1" dir="ltr">
             <t t-foreach="metrics" t-as="metric">
                 <span class="o_count_item d-flex gap-1">
                     <span class="d-flex flex-column align-items-center">
