@@ -352,19 +352,20 @@ class IrModuleModule(models.Model):
         try:
             manifest.check_manifest_dependencies()
         except MissingDependency as e:
+            dep_name = e.name
             if newstate == 'to install':
-                msg = _('Unable to install module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.dependency)
+                msg = _('Unable to install module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=dep_name)
             elif newstate == 'to upgrade':
-                msg = _('Unable to upgrade module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.dependency)
+                msg = _('Unable to upgrade module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=dep_name)
             else:
-                msg = _('Unable to process module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.dependency)
+                msg = _('Unable to process module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=dep_name)
 
             install_package = None
             if platform.system() == 'Linux':
                 distro = platform.freedesktop_os_release()
                 id_likes = {distro['ID'], *distro.get('ID_LIKE', '').split()}
                 if 'debian' in id_likes or 'ubuntu' in id_likes:
-                    if package := manifest['external_dependencies'].get('apt', {}).get(e.dependency):
+                    if package := e.dependency.get('apt'):
                         install_package = f'apt install {package}'
 
             if install_package:
