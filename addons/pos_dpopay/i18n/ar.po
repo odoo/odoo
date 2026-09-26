@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-09-10 15:11+0000\n"
+"PO-Revision-Date: 2026-09-21 05:33+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "pos_dpopay/ar/>\n"
@@ -89,7 +89,7 @@ msgstr "معرف جهاز دفع DPO Pay"
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "DPO Pay terminal is currently offline."
-msgstr ""
+msgstr "جهاز دفع DPO Pay غير متصل بالإنترنت حالياً."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__display_name
@@ -121,7 +121,7 @@ msgstr "تمكين الوضع التجريبي"
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_chain_id
 msgid "Enter the Chain-ID header value(e.g., DPO-DTM-Testing)"
-msgstr ""
+msgstr "أدخل قيمة الترويسة Chain-ID (مثال: DPO-DTM-Testing)"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_mid
@@ -139,25 +139,25 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Failed to cancel payment."
-msgstr ""
+msgstr "فشل إلغاء الدفع."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Failed to fetch last transaction result."
-msgstr ""
+msgstr "تعذر استعلام نتيجة المعاملة المالية الأخيرة."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Failed to retrieve payment status."
-msgstr ""
+msgstr "تعذر الاستعلام عن حالة عملية الدفع."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Failed to retrieve transaction result."
-msgstr ""
+msgstr "تعذر الحصول على نتيجة المعاملة المالية."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__id
@@ -169,7 +169,7 @@ msgstr "المُعرف"
 #. odoo-python
 #: code:addons/pos_dpopay/models/pos_payment_method.py:0
 msgid "Invalid Chain ID. Please verify the configuration. %s"
-msgstr ""
+msgstr "معرّف السلسلة (Chain ID) غير صالح. يُرجى التأكد من الإعدادات.%s"
 
 #. module: pos_dpopay
 #. odoo-python
@@ -185,13 +185,13 @@ msgstr "الأموال عبر الهاتف المحمول"
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
 msgid "Mobile Money Phone Number(Last 4 Digit)"
-msgstr ""
+msgstr "رقم الهاتف الخاص بخدمة Mobile Money (آخر 4 أرقام)"
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Payment is declined by DPO Pay."
-msgstr ""
+msgstr "تم رفض الدفع من قِبل DPO Pay."
 
 #. module: pos_dpopay
 #. odoo-javascript
@@ -210,12 +210,12 @@ msgstr ""
 #. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Point of Sale Payment Methods"
 
 #. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "مدفوعات نقطة البيع"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_rrn
@@ -226,6 +226,7 @@ msgstr "RRN"
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_transaction_ref
 msgid "Reference number required for Mobile Money refund transactions."
 msgstr ""
+"رقم المرجع مطلوب لمعاملات استرداد الأموال عبر الهاتف المحمول (Mobile Money)."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_rrn
@@ -253,19 +254,19 @@ msgstr "مرجع المعالمة"
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Transaction amount must be greater than zero."
-msgstr ""
+msgstr "يجب أن يكون مبلغ المعاملة أكبر من صفر."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Unable to initiate DPO payment. Please try again."
-msgstr ""
+msgstr "تعذر بدء عملية دفع DPO. يرجى المحاولة مرة أخرى."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Unable to reach DPO Pay terminal."
-msgstr ""
+msgstr "تعذر الوصول إلى جهاز دفع DPO Pay."
 
 #. module: pos_dpopay
 #. odoo-python

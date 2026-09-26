@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-30 10:09+0000\n"
+"PO-Revision-Date: 2026-09-18 09:33+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "event_sale/uk/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Configure Events &amp; Tickets"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Налаштуйте Події &amp; Квитки"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
@@ -80,6 +80,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Передбачте можливість вибору кількох часових слотів. Інформація щодо "
+"комунікації, а також максимальна кількість учасників і реєстрацій на квитки "
+"визначаються для кожного часового слота окремо, а не для заходу в цілому."
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -135,6 +138,7 @@ msgid ""
 "Choose an event slot and it will automatically create a registration for "
 "this event slot."
 msgstr ""
+"Виберіть слот для події, і для нього буде автоматично створено реєстрацію."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -171,7 +175,7 @@ msgstr "Підтверджено"
 #. odoo-python
 #: code:addons/event_sale/models/product_template.py:0
 msgid "Create an Attendee for the selected Event."
-msgstr ""
+msgstr "Створіть учасника для вибраної події."
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -284,7 +288,7 @@ msgstr "Звіт продажів події"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
 msgid "Event Slot"
-msgstr ""
+msgstr "Слот події"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
@@ -324,7 +328,7 @@ msgstr "Безкоштовно"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__has_available_tickets
 msgid "Has Available Tickets"
-msgstr ""
+msgstr "Є доступні квитки"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__id
@@ -344,7 +348,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
-msgstr ""
+msgstr "Недійсний вибір слоту \"%(slot_name)s\" для події \"%(event_name)s\"."
 
 #. module: event_sale
 #. odoo-python
@@ -362,7 +366,7 @@ msgstr "Адреса рахунка"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__is_multi_slots
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Мульти-слоти"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
@@ -540,7 +544,7 @@ msgstr "Продажі"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_total
 msgid "Sales (Tax Included)"
-msgstr ""
+msgstr "Продажі (Включно з ПДВ)"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -565,7 +569,7 @@ msgstr "Продавець"
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_configurator_action
 msgid "Select an Event"
-msgstr ""
+msgstr "Оберіть подію"
 
 #. module: event_sale
 #. odoo-python
@@ -599,6 +603,8 @@ msgid ""
 "The sale order line with the product %(product_name)s needs an event, a "
 "ticket and a slot in case the event has multiple time slots."
 msgstr ""
+"Для рядка замовлення на продаж із товаром %(product_name)s потрібно вказати "
+"подію, квиток і часовий слот (якщо подія передбачає кілька часових слотів)."
 
 #. module: event_sale
 #. odoo-python
@@ -661,17 +667,17 @@ msgstr "Майбутні/Діючі"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
 msgid "We could not find a matching event ticket for this product. <br/>"
-msgstr ""
+msgstr "Ми не змогли знайти відповідний квиток на подію для цього товару.<br/>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
 msgid "changed from"
-msgstr ""
+msgstr "змінено з"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please provide attendee details."
-msgstr ""
+msgstr "будь ласка, надайте дані учасників."
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception

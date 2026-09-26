@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-09-10 11:11+0000\n"
-"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
+"PO-Revision-Date: 2026-09-22 07:30+0000\n"
+"Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "mail_group/sl/>\n"
 "Language: sl\n"
@@ -61,7 +61,6 @@ msgstr "<br/> Obveščeni boste takoj, ko bo objavljena nova vsebina."
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_subscribe
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hello,<br/><br/>\n"
@@ -93,7 +92,6 @@ msgstr ""
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hello,<br/><br/>\n"
@@ -125,7 +123,6 @@ msgstr ""
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
-#, fuzzy
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
@@ -173,13 +170,12 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
-"title=\"Traffic\"/>"
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Promet\" "
+"title=\"Promet\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -500,13 +496,11 @@ msgstr "Izberite ali konfigurirajte domeno po meri"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid "Closed"
-msgstr "Neaktivni"
+msgstr "Zaprto"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
-#, fuzzy
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
 msgstr ""
@@ -564,7 +558,7 @@ msgstr "Trenutni uporabnik je moderator skupine"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Custom Bounced Message"
+msgstr "Prilagojeno sporočilo o neuspešni dostavi"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_defaults
@@ -684,7 +678,6 @@ msgstr ""
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/controllers/portal.py:0
-#, fuzzy
 msgid "Groups"
 msgstr "Skupine"
 
@@ -706,7 +699,6 @@ msgstr "Pozdravljeni"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.email_template_mail_group_closed
-#, fuzzy
 msgid ""
 "Hello there,\n"
 "    <br/><br/>\n"
@@ -717,8 +709,8 @@ msgid ""
 msgstr ""
 "Pozdravljeni,\n"
 "    <br/><br/>\n"
-"    Poštni seznam, ki ga poskušate doseči, je zaprt in ne sprejema novih "
-"sporočil.\n"
+"    Dopisni seznam, na katerega skušate poslati sporočilo, je zaprt in ne "
+"sprejema novih sporočil.\n"
 "    <br/><br/>\n"
 "    Lep pozdrav,"
 
@@ -746,8 +738,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"If set, this content will automatically be sent out to unauthorized users "
-"instead of the default message."
+"Če je ta možnost nastavljena, se bo ta vsebina samodejno poslala "
+"neavtoriziranim uporabnikom namesto privzetega sporočila."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
@@ -783,9 +775,8 @@ msgstr "Je prepovedano"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
-#, fuzzy
 msgid "Is Closed"
-msgstr "Je zaprt"
+msgstr "Zaprto"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
@@ -1090,7 +1081,7 @@ msgstr "Na tem seznamu še ni sporočil!"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
 msgid "Normalized Email"
-msgstr "Normalized Email"
+msgstr "Normalizirani e-poštni naslov"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
@@ -1170,14 +1161,14 @@ msgid ""
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Parent model holding the alias. The model holding the alias reference is not "
-"necessarily the model given by alias_model_id (example: project "
-"(parent_model) and task (model))"
+"Nadrejeni model, ki vsebuje alias. Model, ki vsebuje sklic na alias, ni "
+"nujno model, ki ga določa alias_model_id (primer: projekt (parent_model) in "
+"naloga (model))"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
 msgid "Partner"
-msgstr "Partner"
+msgstr "Stik"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
@@ -1221,11 +1212,10 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Policy to post a message on the document using the mailgateway.\n"
-"- everyone: everyone can post\n"
-"- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following "
-"channels\n"
+"Pravila za objavljanje sporočil v dokumentu prek poštnega vmesnika.\n"
+"- vsi: objavljati lahko vsi\n"
+"- partnerji: samo avtentificirani partnerji\n"
+"- sledilci: samo sledilci zadevnega dokumenta ali člani naslednjih kanalov"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
@@ -1301,7 +1291,6 @@ msgstr "Odstrani sporočilo z razlago"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Responsibles"
 msgstr "Odgovorne osebe"
 
@@ -1363,7 +1352,6 @@ msgstr "Pošlji e-pošto avtorju sporočila"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
-#, fuzzy
 msgid "Send email"
 msgstr "Pošlji e-pošto"
 
@@ -1575,16 +1563,14 @@ msgstr "Za določen e-poštni naslov v skupini lahko ustvarite samo eno pravilo.
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid "You can not join a closed group."
 msgstr "Ne moreš se pridružiti zaprti skupini."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid "You can not send guidelines for a closed group."
-msgstr "Zaprti skupini ne morete poslati smernic."
+msgstr "Ne morete poslati smernic za zaprto skupino."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1643,9 +1629,8 @@ msgstr "je bilo"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid "members<br/>"
-msgstr "člani <br/>"
+msgstr "člani<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups

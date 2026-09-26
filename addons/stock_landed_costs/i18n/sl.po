@@ -17,13 +17,14 @@
 # Jan Zorko <jan.zorko@implex.si>, 2026.
 # Žiga Trček <ziga.trcek@implex.si>, 2026.
 # NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Nedžad Beus <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-27 07:47+0000\n"
-"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
+"PO-Revision-Date: 2026-09-16 07:33+0000\n"
+"Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "stock_landed_costs/sl/>\n"
 "Language: sl\n"
@@ -37,14 +38,12 @@ msgstr ""
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_move.py:0
-#, fuzzy
 msgid "+ %(value)s (Landed Cost: %(landed_cost)s)"
 msgstr "+ %(value)s (Strošek prispetja: %(landed_cost)s)"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_move.py:0
-#, fuzzy
 msgid "+ %(value)s from %(vendor_bill)s (Landed Cost: %(landed_cost)s)"
 msgstr "+ %(value)s iz %(vendor_bill)s (Strošek prispetja: %(landed_cost)s)"
 
@@ -92,7 +91,6 @@ msgstr "Ikona vrste dejavnosti"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
-#, fuzzy
 msgid "Additional Costs"
 msgstr "Dodatni stroški"
 
@@ -104,7 +102,6 @@ msgstr "Dodatni odvisni stroški dobave"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_move.py:0
-#, fuzzy
 msgid ""
 "Additional landed costs:\n"
 "%(landed_cost)s"
@@ -254,7 +251,6 @@ msgstr "Privzeta metoda razdelitve"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
-#, fuzzy
 msgid "Default Split Method when used for Landed Cost"
 msgstr "Privzeta metoda razdelitve pri uporabi za dodatne stroške"
 
@@ -298,7 +294,6 @@ msgstr "Enako"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_lines__split_method
-#, fuzzy
 msgid ""
 "Equal: Cost will be equally divided.\n"
 "By Quantity: Cost will be divided according to product's quantity.\n"
@@ -312,8 +307,6 @@ msgstr ""
 "izdelka.\n"
 "Po teži: Strošek bo razdeljen glede na njegovo težo.\n"
 "Po prostornini: Strošek bo razdeljen glede na njegovo prostornino.\n"
-"Lokacija: "
-"model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_lines__split_method"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -337,7 +330,6 @@ msgstr "Bodoče aktivnosti"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
-#, fuzzy
 msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
@@ -388,7 +380,6 @@ msgstr "Če je označeno, nekatera sporočila vsebujejo napako pri dostavi."
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
-#, fuzzy
 msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
@@ -458,7 +449,6 @@ msgstr "Odvisni stroški dobave"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
-#, fuzzy
 msgid "Landed Costs Visible"
 msgstr "Vidni dodatni stroški"
 
@@ -469,7 +459,6 @@ msgstr "Odvisni strošek dobave potrjen"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
-#, fuzzy
 msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
@@ -498,7 +487,6 @@ msgstr "Aktivnosti z zamudo"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
-#, fuzzy
 msgid "Lc Journal"
 msgstr "Dnevnik LC"
 
@@ -536,7 +524,6 @@ msgstr "Novo"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
-#, fuzzy
 msgid "New Value"
 msgstr "Nova vrednost"
 
@@ -605,7 +592,6 @@ msgstr "Nastavite konto stroškov zalog za proizvod: %s."
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-#, fuzzy
 msgid "Please define %s on which those additional costs should apply."
 msgstr "Prosimo, določite %s, za katerega naj veljajo ti dodatni stroški."
 
@@ -653,7 +639,6 @@ msgstr "Napaka pri dostavi SMS"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
-#, fuzzy
 msgid "Show all records whose next activity date is past"
 msgstr ""
 "Prikaži vse zapise, pri katerih je datum naslednje aktivnosti že pretekel"
@@ -740,7 +725,6 @@ msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
-#, fuzzy
 msgid "Valuation Adjustment Lines"
 msgstr "Vrstice popravkov vrednotenja"
 
@@ -778,7 +762,6 @@ msgstr "Masa"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-#, fuzzy
 msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
@@ -789,7 +772,6 @@ msgstr ""
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
-#, fuzzy
 msgid ""
 "You cannot change the product type or disable landed cost option because the "
 "product is used in an account move line."

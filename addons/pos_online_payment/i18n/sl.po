@@ -6,13 +6,14 @@
 # Žiga Trček <ziga.trcek@implex.si>, 2026.
 # Jan Zorko <jan.zorko@implex.si>, 2026.
 # NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Nedžad Beus <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-06 18:37+0000\n"
-"PO-Revision-Date: 2026-08-08 07:21+0000\n"
-"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
+"PO-Revision-Date: 2026-09-14 08:37+0000\n"
+"Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "pos_online_payment/sl/>\n"
 "Language: sl\n"
@@ -21,38 +22,33 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
-#, fuzzy
 msgid "<strong>Error:</strong> The currency is missing or invalid."
 msgstr "<strong>Napaka:</strong> Valuta manjka ali ni veljavna."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
-#, fuzzy
 msgid "<strong>Error:</strong> There was a problem during the payment process."
 msgstr "<strong>Napaka:</strong> Med postopkom plačila je prišlo do težave."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_config.py:0
-#, fuzzy
 msgid "A POS config cannot have more than one online payment method."
 msgstr "Konfiguracija POS ne sme imeti več kot enega načina spletnega plačila."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid "A payment option must be specified."
 msgstr "Določiti je treba možnost plačila."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid "A validation payment cannot be used for a Point of Sale online payment."
 msgstr ""
 "Validacijskega plačila ni mogoče uporabiti za spletno plačilo na prodajnem "
@@ -60,14 +56,12 @@ msgstr ""
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
-#, fuzzy
 msgid "All available providers"
 msgstr "Vsi razpoložljivi ponudniki"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
-#, fuzzy
 msgid ""
 "All payment providers configured for an online payment method must use the "
 "same currency as the Sales Journal, or the company currency if that is not "
@@ -79,7 +73,6 @@ msgstr ""
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
-#, fuzzy
 msgid "Allowed Providers"
 msgstr "Dovoljeni ponudniki"
 
@@ -96,21 +89,18 @@ msgstr "Znesek:"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
-#, fuzzy
 msgid "Cancel payment"
 msgstr "Prekliči plačilo"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
-#, fuzzy
 msgid "Cannot create a POS online payment without an accounting payment."
 msgstr "Spletnega plačila POS ni mogoče ustvariti brez računovodskega plačila."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
-#, fuzzy
 msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
@@ -121,14 +111,12 @@ msgstr ""
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
-#, fuzzy
 msgid "Cannot edit a POS online payment essential data."
 msgstr "Bistvenih podatkov spletnega plačila POS ni mogoče urejati."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
-#, fuzzy
 msgid ""
 "Could not create an online payment method (company_id=%(company_id)d, "
 "pos_config_id=%(pos_config_id)d)"
@@ -144,13 +132,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
-#, fuzzy
 msgid "Display Name"
 msgstr "Prikazni naziv"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
-#, fuzzy
 msgid "Has An Online Payment Provider"
 msgstr "Ima ponudnika spletnih plačil"
 
@@ -162,34 +148,29 @@ msgstr "Ima ponudnika spletnih plačil"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__id
-#, fuzzy
 msgid "ID"
 msgstr "ID"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "Invalid online payment"
 msgstr "Neveljavno spletno plačilo"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "Invalid online payments"
 msgstr "Neveljavna spletna plačila"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "Invoice could not be generated"
 msgstr "Računa ni bilo mogoče ustvariti"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
-#, fuzzy
 msgid "Next online payment amount to pay"
 msgstr "Znesek naslednjega spletnega plačila za plačilo"
 
@@ -207,39 +188,33 @@ msgstr "Plačilo preko spleta"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
-#, fuzzy
 msgid "Online Payment Method"
 msgstr "Način spletnega plačila"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
-#, fuzzy
 msgid "Online accounting payment"
 msgstr "Spletno računovodsko plačilo"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "Online payment unavailable"
 msgstr "Spletno plačilo ni na voljo"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "Online payments cannot have a negative amount (%s: %s)."
 msgstr "Spletna plačila ne morejo imeti negativnega zneska (%s: %s)."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
-#, fuzzy
 msgid "Order ID"
 msgstr "ID naročila"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
-#, fuzzy
 msgid "Order ID:"
 msgstr "ID naročila:"
 
@@ -251,14 +226,12 @@ msgstr "Sklic naročila"
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
-#, fuzzy
 msgid "Order reference:"
 msgstr "Sklic naročila:"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "Order saving issue"
 msgstr "Težava pri shranjevanju naročila"
 
@@ -275,13 +248,11 @@ msgstr "POS Naročila"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
-#, fuzzy
 msgid "Payment"
 msgstr "Plačilo"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
-#, fuzzy
 msgid "Payment Confirmation"
 msgstr "Potrditev plačila"
 
@@ -298,7 +269,6 @@ msgstr "Plačilna transakcija"
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "Payment provider requirement"
 msgstr "Zahteva ponudnika plačilnih storitev"
 
@@ -310,7 +280,6 @@ msgstr "Plačila"
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "Please ensure you have a customer with an email address on this order."
 msgstr "Prepričajte se, da imate na tem naročilu stranko z e-poštnim naslovom."
 
@@ -326,13 +295,11 @@ msgstr "Naročila POS"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
-#, fuzzy
 msgid "Point of Sale Payment Methods"
 msgstr "Načini plačila prodajne točke"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment
-#, fuzzy
 msgid "Point of Sale Payments"
 msgstr "Plačila na prodajnem mestu"
 
@@ -349,21 +316,18 @@ msgstr "Obdelal"
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
-#, fuzzy
 msgid "QR Code to pay"
 msgstr "Koda QR za plačilo"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
-#, fuzzy
 msgid "Scan the QR code to pay"
 msgstr "Skenirajte kodo QR za plačilo"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
-#, fuzzy
 msgid "Scan to pay"
 msgstr "Skeniraj za plačilo"
 
@@ -376,21 +340,18 @@ msgstr "Napaka strežnika"
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
-#, fuzzy
 msgid "The %s already has one online payment."
 msgstr "%s že ima eno spletno plačilo."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
-#, fuzzy
 msgid "The POS online payment (tx.id=%d) could not be saved correctly"
 msgstr "Spletnega plačila POS (tx.id=%d) ni bilo mogoče pravilno shraniti"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
-#, fuzzy
 msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
@@ -401,47 +362,40 @@ msgstr ""
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid "The POS session is not opened."
 msgstr "Seja POS ni odprta."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
-#, fuzzy
 msgid "The Point of Sale order linked to the payment transaction"
 msgstr "Naročilo prodajnega mesta, povezano s plačilno transakcijo"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
-#, fuzzy
 msgid "The Point of Sale order linked to this payment"
 msgstr "Naročilo prodajnega mesta, povezano s tem plačilom"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "The QR Code for paying could not be generated."
 msgstr "Kode QR za plačilo ni bilo mogoče ustvariti."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid "The amount to pay has changed. Please refresh the page."
 msgstr "Znesek za plačilo se je spremenil. Osvežite stran."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid "The currency is invalid."
 msgstr "Valuta ni veljavna."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "The invoice could not be generated."
 msgstr "Računa ni bilo mogoče ustvariti"
 
@@ -454,28 +408,24 @@ msgstr "Naročilo je bilo preklicano."
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "The order has not been saved correctly on the server."
 msgstr "Naročilo ni bilo pravilno shranjeno na strežniku."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_session.py:0
-#, fuzzy
 msgid "The partner of the POS online payment (id=%d) could not be found"
 msgstr "Partnerja spletnega plačila POS (id=%d) ni bilo mogoče najti"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid "The payment provider is invalid."
 msgstr "Ponudnik plačila ni veljaven."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
 msgstr ""
@@ -485,42 +435,36 @@ msgstr ""
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid "The payment token is invalid."
 msgstr "Plačilni žeton ni veljaven."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
-#, fuzzy
 msgid "The payment transaction (%d) has a negative amount."
 msgstr "Plačilna transakcija (%d) ima negativen znesek."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid "The provided order or access token is invalid."
 msgstr "Posredovano naročilo ali žeton za dostop ni veljaven."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid "The provided partner_id is different than expected."
 msgstr "Navedeni partner_id se razlikuje od pričakovanega."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "The saved order could not be retrieved."
 msgstr "Shranjeno naročilo ni bilo mogoče pridobiti."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
@@ -531,14 +475,12 @@ msgstr ""
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "There are online payments that were missing in your view."
 msgstr "V vašem prikazu so manjkala spletna plačila."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
@@ -549,7 +491,6 @@ msgstr ""
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
@@ -560,7 +501,6 @@ msgstr ""
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid ""
 "There is no online payment method configured for this Point of Sale order."
 msgstr ""
@@ -570,7 +510,6 @@ msgstr ""
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid "There is nothing to pay for this order."
 msgstr "Za to naročilo ni treba ničesar plačati."
 
@@ -587,7 +526,6 @@ msgstr "Za plačilo"
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_config.py:0
-#, fuzzy
 msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
@@ -599,19 +537,16 @@ msgstr ""
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid "Tokenization is not available for logged out customers."
 msgstr "Tokenizacija ni na voljo za odjavljene stranke."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
-#, fuzzy
 msgid "Transaction Reference"
 msgstr "Referenca transakcije"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
-#, fuzzy
 msgid "Try again"
 msgstr "Poskusi znova"
 
@@ -623,13 +558,11 @@ msgstr "Tip"
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
-#, fuzzy
 msgid "Updated online payments"
 msgstr "Posodobljena spletna plačila"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
-#, fuzzy
 msgid ""
 "Use this payment method for online payments (payments made on a web page "
 "with online payment providers)"
@@ -645,18 +578,15 @@ msgstr "Da"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
-#, fuzzy
 msgid "You have not activated any"
 msgstr "Niste aktivirali ničesar"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
-#, fuzzy
 msgid "payment provider"
 msgstr "Ponudnik plačil"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
-#, fuzzy
 msgid "to allow online payments."
 msgstr "za omogočanje spletnih plačil."

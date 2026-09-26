@@ -3,13 +3,14 @@
 # * account_peppol
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Ulevičienė <vilma.uleviciene@mededu.lt>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-08-07 17:35+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-09-14 15:32+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/lt/>\n"
 "Language: lt\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > "
 "19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? "
 "1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -88,6 +89,10 @@ msgid ""
 "                                In Belgium, electronic invoicing is "
 "<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
+"<br/>\n"
+"                                Belgijoje elektroninis sąskaitų faktūrų "
+"išrašymas <u>yra privalomas nuo 2026 m. sausio mėn.</u> – nedelskite ir "
+"užsiregistruokite."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -262,6 +267,8 @@ msgid ""
 "A participant with these details has already been registered on the network. "
 "If you have previously registered to a Peppol service, please deregister."
 msgstr ""
+"Dalyvis su šiais duomenimis jau yra užregistruotas tinkle. Jei anksčiau "
+"buvote užsiregistravę „Peppol“ paslaugoje, prašome atsisakyti registracijos."
 
 #. module: account_peppol
 #. odoo-python
@@ -579,7 +586,7 @@ msgstr ""
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Cannot register a user with a %s application"
-msgstr ""
+msgstr "Negalima užregistruoti vartotojo naudojant „ %s “ programą"
 
 #. module: account_peppol
 #. odoo-python
@@ -926,7 +933,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "I reckon I'm allowed to register this company."
-msgstr ""
+msgstr "Manau, kad man leidžiama įregistruoti šią įmonę."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
@@ -1089,7 +1096,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
 msgid "Not registered"
-msgstr ""
+msgstr "Neregistruotas"
 
 #. module: account_peppol
 #: model:mail.template,description:account_peppol.mail_template_peppol_registration
@@ -1484,23 +1491,23 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__smp_registration
 msgid "Register as a receiver"
-msgstr ""
+msgstr "Užsiregistruokite kaip gavėjas"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_self
 msgid "Register this company on peppol"
-msgstr ""
+msgstr "Įregistruokite šią įmonę „Peppol“ sistemoje"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Register with Odoo"
-msgstr ""
+msgstr "Registruokitės „Odoo“"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
-msgstr ""
+msgstr "Užsiregistruota dokumentams gauti per „Peppol“."
 
 #. module: account_peppol
 #. odoo-python
@@ -1620,6 +1627,10 @@ msgid ""
 "                            If not, you should de-register from your current "
 "service provider and register with Odoo afterward."
 msgstr ""
+"Kai kurios paslaugos palaiko migracijos raktus. Jei tai jūsų atvejis, žemiau "
+"galite įvesti savo migracijos raktą.\n"
+"                            Jei ne, turėtumėte atsisakyti registracijos pas "
+"savo dabartinį paslaugų teikėją ir vėliau užsiregistruoti „Odoo“."
 
 #. module: account_peppol
 #. odoo-python
@@ -1961,6 +1972,7 @@ msgstr ""
 msgid ""
 "This connection has been superseded by another database. Register again."
 msgstr ""
+"Šis prisijungimas buvo pakeistas kita duomenų baze. Registruokitės iš naujo."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_is_token_out_of_sync
@@ -1986,7 +1998,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "This user is not registered on our Access Point."
-msgstr ""
+msgstr "Šis vartotojas nėra užregistruotas mūsų prieigos taške."
 
 #. module: account_peppol
 #. odoo-python
@@ -2161,6 +2173,8 @@ msgid ""
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
 msgstr ""
+"Jūs ketinate užsiregistruoti nurodydami savo PVM kodą. Kad atitiktumėte "
+"naujus reikalavimus, pirmiausia užsiregistruokite įmonių registre (BCE/KBO)."
 
 #. module: account_peppol
 #. odoo-python
@@ -2273,6 +2287,8 @@ msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
 msgstr ""
+"Jūsų įmonė jau yra užregistruota „Access Point“ (%s) sąskaitų faktūrų "
+"gavimui. Mes užregistruosime jus „Odoo“ tik kaip siuntėją."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-09-08 02:23+0000\n"
+"PO-Revision-Date: 2026-09-25 08:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/base/"
 "ja/>\n"
@@ -4840,7 +4840,7 @@ msgid ""
 "=================================\n"
 msgstr ""
 "\n"
-"会計報告の現金主義\n"
+"会計レポート用の現金主義\n"
 "=================================\n"
 
 #. module: base
@@ -8461,26 +8461,27 @@ msgid ""
 "    - Exception (Received and invoiced quantities differ)\n"
 msgstr ""
 "\n"
-"仕入先請求書の3者照合管理\n"
+"仕入先請求書で3点照合(発注・入荷・請求)を管理\n"
 "=====================================\n"
 "\n"
-"製造業では、購入品を受け取る前に仕入先請求書を受け取ることがよくありますが、"
-"商品が納品されるまで\n"
-"支払をしたくないという場合があります。\n"
+"製造業では、仕入れ品が入荷する前に仕入先請求書を受け取ることがよくありますが"
+"、\n"
+"商品が納品されるまでは請求書を支払いたくない、\n"
+"というケースがあります。\n"
 "\n"
-"このような状況に対する解決策は、仕入先請求書を受け取る際に(オーダ数量に基づい"
-"て)作成するが、\n"
-"請求書の支払いは(購買オーダ行の）入荷数量が\n"
-"記録された仕入先請求書と一致した場合にのみ、請求書を支払うことです。\n"
+"これに対応するには、請求書を受け取った時点で\n"
+"(オーダ数量に基づいて)仕入先請求書を作成しておき、入荷\n"
+"数量(購買オーダ明細行の入荷数量)が仕入先請求書に記録された数量と一致した場合"
+"にのみ、その請求書を支払うようにすることです。\n"
 "\n"
-"このモジュールは、各仕入先請求書について、支払可能か否かをマークする \"支払"
-"リリース\"メカニズムを導入しています。\n"
+"このモジュールは、各仕入先請求書について支払い可能かどうかを示す\n"
+"「支払い許可」機能を導入します。\n"
 "\n"
-"各仕入先請求書は、以下の 3 つのステートのいずれかを受信します: \n"
+"各仕入先請求書には、次の3つの状態のいずれかが設定されます:\n"
 "\n"
-"- はい (支払可能)\n"
-"- いいえ (請求書は支払えない。まだ何も納入されていない)\n"
-"- 例外 (受取数量と請求数量が異なる)\n"
+"    - はい (請求書の支払が可能)\n"
+"    - いいえ (支払い不可：まだ入荷がない)\n"
+"    - 例外 (入荷数量と請求数量が一致しない)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_stock
@@ -12821,10 +12822,10 @@ msgstr ""
 "peppol) 上で一意な識別子を持ちます。それは特定のOdooデータベース上で特定の会"
 "社に\n"
 "リンクしています。\n"
-"- 暗号化機能により、プロキシからの受信時にすべてのユーザーデータを復号化でき"
-"る。\n"
-"- 認証は、万が一誰かがユーザーのデータベースに侵入した場合に備えて、なりすま"
-"しを避けるための追加のセキュリティレベルを提供します。\n"
+"- 暗号化機能により、プロキシからの受信時にすべてのユーザデータを復号化できま"
+"す。\n"
+"- 認証は、万が一誰かがユーザのデータベースに侵入した場合に備えて、なりすまし"
+"を避けるための追加のセキュリティレベルを提供します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -12842,13 +12843,16 @@ msgstr ""
 "\n"
 "このモジュールは完全に統合されたカスタマーポータルのために必要なベースコード"
 "を追加します。\n"
-"It contains the base controller class and base templates. Business addons\n"
-"will add their specific templates and controllers to extend the customer\n"
-"portal.\n"
+"基本コントローラクラスおよび基本テンプレートが含まれています。業務系アドオン"
+"は、\n"
+"顧客ポータルを拡張するために、それぞれ固有のテンプレートとコントローラ\n"
+"を追加します。\n"
 "\n"
-"This module contains most code coming from odoo v10 website_portal. Purpose\n"
-"of this module is to allow the display of a customer portal without having\n"
-"a dependency towards website editing and customization capabilities."
+"本モジュールには、Odoo v10のwebsite_portal由来のコードの大部分が含まれていま"
+"す。\n"
+"本モジュールの目的は、ウェブサイト編集・カスタマイズ機能への依存なしに、顧客"
+"ポータルを\n"
+"表示できるようにすることです。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_qr_code_sepa
@@ -14533,9 +14537,9 @@ msgstr ""
 "\n"
 "このモジュールは、小切手を印刷して支払いを行うための基本的な機能を提供しま"
 "す\n"
-"国固有のチェックテンプレートを提供するモジュールの依存関係として使用する必要"
-"があります。\n"
-"チェック設定は、会計仕訳帳設定ページにあります。\n"
+"国固有の小切手テンプレートを提供するモジュールの依存関係として使用する必要が"
+"あります。\n"
+"小切手の設定は、会計仕訳帳設定ページから行えます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_enterprise
@@ -16969,7 +16973,7 @@ msgstr "AIドキュメント"
 #: model:ir.module.module,shortdesc:base.module_ai_documents_account
 #: model:ir.module.module,summary:base.module_ai_documents_account
 msgid "AI Documents Account"
-msgstr "AIドキュメントアカウント"
+msgstr "AIドキュメント会計"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_documents_source
@@ -17204,7 +17208,7 @@ msgstr "スーパーユーザのみアクセス可能"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_update_tax_tags
 msgid "Account - Allow updating tax grids"
-msgstr "アカウント - 税グリッドの更新を許可"
+msgstr "会計 - 税グリッドの更新を許可"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_pos_settle_due
@@ -17235,7 +17239,7 @@ msgstr "勘定科目表"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_extract
 msgid "Account Extract"
-msgstr "口座抽出"
+msgstr "会計データ抽出"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_fiscal_categories
@@ -17262,7 +17266,7 @@ msgstr "アカウントの請求書の抜粋"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract_purchase
 msgid "Account Invoice Extract Purchase"
-msgstr "アカウント請求書抽出購入"
+msgstr "会計 請求書抽出 購買"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_number
@@ -17272,7 +17276,7 @@ msgstr "口座番号"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_payment
 msgid "Account Online Payment"
-msgstr "口座オンライン支払"
+msgstr "会計 オンライン決済"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
@@ -18719,7 +18723,7 @@ msgstr "アポイントメントアプリからOutlookカレンダーの同期�
 #. module: base
 #: model:ir.module.module,summary:base.module_account_update_tax_tags
 msgid "Allow updating tax grids on existing entries"
-msgstr "既存のエントリーの税グリッドの更新を許可"
+msgstr "既存仕訳の税グリッド更新を許可"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment_integration_monster
@@ -20065,7 +20069,7 @@ msgstr "評価 - スキル"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_survey
 msgid "Appraisal - Survey"
-msgstr "鑑定-調査"
+msgstr "評価 - アンケート調査"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_appraisals
@@ -21304,9 +21308,7 @@ msgstr "契約書署名時に追加の休暇を自動的に作成します"
 msgid ""
 "Automatically finds the purchase order linked to a vendor bill when using "
 "invoice extraction"
-msgstr ""
-"請求書抽出を使用すると、仕入先の請求書にリンクされている注文書が自動的に検索"
-"されます"
+msgstr "請求書抽出の使用時に、仕入先請求書に紐づく購買オーダを自動的に特定します"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_appointment_sale_project
@@ -22916,9 +22918,7 @@ msgstr "キャンプ場"
 #: code:addons/base/models/ir_fields.py:0
 msgid ""
 "Can not create Many-To-One records indirectly, import the field separately"
-msgstr ""
-"別々のフィールドをインポートしたときは間接的に多対一のレコードを作成すること"
-"はできません"
+msgstr "多対一(Many-to-One)レコードを間接的に作成することはできません"
 
 #. module: base
 #. odoo-python
@@ -23395,7 +23395,7 @@ msgstr "チェック"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
 msgid "Check Printing Base"
-msgstr "印刷のベースをチェック"
+msgstr "小切手印刷ベース"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__is_company
@@ -23408,7 +23408,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_check_printing
 msgid "Check printing basic features"
-msgstr "印刷の基本機能を確認します。"
+msgstr "小切手印刷の基本機能"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_mass_mailing
@@ -32234,7 +32234,7 @@ msgstr "販売/購買オーダおよび請求書のための会社間モジュ�
 #: model:ir.module.module,shortdesc:base.module_account_inter_company_rules
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_inter_company_rules
 msgid "Inter Company Module for Sale/Purchase Orders and Invoices"
-msgstr "販売/購入注文および請求書のための会社間モジュール"
+msgstr "販売/購買オーダおよび請求書用会社間モジュール"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_service
@@ -32249,13 +32249,13 @@ msgstr "ルール間の作用"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase_stock_inter_company_rules
 msgid "Intercompany SO/PO"
-msgstr "グループ内販売/購買オーダ"
+msgstr "会社間販売/購買オーダ"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_inter_company_rules
 #: model:ir.module.module,summary:base.module_sale_purchase_inter_company_rules
 msgid "Intercompany SO/PO/INV rules"
-msgstr "グループ内販売オーダ /購買オーダ /請求ルール"
+msgstr "会社間販売オーダ /購買オーダ /請求ルール"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
@@ -34705,7 +34705,7 @@ msgstr "フリート機能と会計管理"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_fleet
 msgid "Manage accounting with fleets"
-msgstr "fleetsで会計を管理する"
+msgstr "フリートで会計を管理"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.grant_menu_access
@@ -35239,7 +35239,7 @@ msgstr "パートナー行をマージ"
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "パートナーをマージするウィザード"
+msgstr "取引先統合ウィザード"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -40594,7 +40594,7 @@ msgstr "支払"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment
 msgid "Payment - Account"
-msgstr "支払い-アカウント"
+msgstr "支払 - 会計"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
@@ -50411,7 +50411,7 @@ msgstr "仕入先"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
-msgstr "仕入先請求書:支払いを開放する"
+msgstr "仕入先請求書：支払いを許可"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form

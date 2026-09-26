@@ -34,13 +34,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Greta Šeštokė <greta@vialaurea.com>, 2026.
+# Ulevičienė <vilma.uleviciene@mededu.lt>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-08-04 04:24+0000\n"
-"Last-Translator: Greta Šeštokė <greta@vialaurea.com>\n"
+"PO-Revision-Date: 2026-09-14 17:33+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/sale/"
 "lt/>\n"
 "Language: lt\n"
@@ -50,7 +51,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
 ": n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -4810,6 +4811,9 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register "
 "an expense on a cancelled Sales Order."
 msgstr ""
+"Pardavimo užsakymas „ %(order)s “, kuriam turėjo būti išrašyta nauja "
+"sąskaita, yra atšauktas. Negalima įregistruoti išlaidų pagal atšauktą "
+"Pardavimo užsakymą."
 
 #. module: sale
 #. odoo-python
@@ -4818,6 +4822,9 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
 msgstr ""
+"Pardavimo užsakymas „ %(order)s “, kuriam turi būti išrašyta nauja sąskaita, "
+"šiuo metu yra užrakintas. Užrakintame pardavimo užsakyme negalima "
+"įregistruoti išlaidų."
 
 #. module: sale
 #. odoo-python
@@ -4826,6 +4833,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced must be validated before "
 "registering expenses."
 msgstr ""
+"Prieš registruojant išlaidas, pardavimo užsakymas „ %(order)s “, kuriam turi "
+"būti išrašyta nauja sąskaita, turi būti patvirtintas."
 
 #. module: sale
 #. odoo-python
@@ -4894,6 +4903,12 @@ msgid ""
 "This mode is advised if you issue the final invoice at the order and not "
 "after the delivery."
 msgstr ""
+"Sąskaita faktūra sugeneruojama automatiškai ir tampa prieinama klientų "
+"portale, kai mokėjimo paslaugų teikėjas patvirtina sandorį.\n"
+"Sąskaita faktūra pažymima kaip apmokėta, o mokėjimas įregistruojamas "
+"mokėjimo žurnale, nustatytame mokėjimo paslaugų teikėjo konfigūracijoje.\n"
+"Šis režimas rekomenduojamas, jei galutinę sąskaitą faktūrą išrašote užsakymo "
+"metu, o ne po pristatymo."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form

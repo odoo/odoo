@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-09-10 13:45+0000\n"
+"PO-Revision-Date: 2026-09-21 07:33+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/payment/"
 "ar/>\n"
@@ -836,7 +836,7 @@ msgstr "التطبيق المقابل"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "Could not establish the connection to the payment provider."
-msgstr ""
+msgstr "تعذر إنشاء الاتصال بمزود خدمة الدفع."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_country_ids
@@ -1254,7 +1254,7 @@ msgstr "تثبيت"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Install the provider you want to add."
-msgstr ""
+msgstr "قم بتثبيت المزود الذي تريد إضافته."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_state
@@ -2270,7 +2270,7 @@ msgstr "RuPay"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Run the post-processing step for this transaction."
-msgstr ""
+msgstr "تشغيل خطوة المعالجة اللاحقة لهذه المعاملة."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sepa_direct_debit
@@ -2495,31 +2495,33 @@ msgstr "شكرًا لك!"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s encountered an error."
-msgstr ""
+msgstr "واجهت المعاملة %(tx_label)s %(ref)s بمبلغ %(formatted_amount)s خطأً."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been authorized."
-msgstr ""
+msgstr "تم تفويض المعاملة %(tx_label)s %(ref)s بمبلغ %(formatted_amount)s."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled."
-msgstr ""
+msgstr "تم إلغاء المعاملة %(tx_label)s %(ref)s بمبلغ %(formatted_amount)s."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been confirmed."
-msgstr ""
+msgstr "تم تأكيد المعاملة %(tx_label)s %(ref)s بمبلغ %(formatted_amount)s."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s is pending."
 msgstr ""
+"المعاملة %(tx_label)s ذات المرجع %(ref)s بمبلغ %(formatted_amount)s قيد "
+"الانتظار."
 
 #. module: payment
 #. odoo-python
@@ -2712,6 +2714,8 @@ msgid ""
 "The payment provider rejected the request.\n"
 "%s"
 msgstr ""
+"رفض مزود خدمة الدفع الطلب.\n"
+"%s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
@@ -2740,7 +2744,7 @@ msgstr "مرجع مزود الدفع للمعاملة"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The refund %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "تم بدء عملية الاسترداد %(ref)s بمبلغ %(formatted_amount)s."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
@@ -2806,7 +2810,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The transaction %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "تم بدء المعاملة %(ref)s بمبلغ %(formatted_amount)s."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -2904,12 +2908,12 @@ msgstr "Tinka"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "To add a provider to the current company:"
-msgstr ""
+msgstr "لإضافة مزود إلى الشركة الحالية:"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Toggle the main company in the company switcher."
-msgstr ""
+msgstr "قم بتبديل الشركة الرئيسية في أداة تبديل الشركات."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -3386,7 +3390,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment operation has been successfully submitted."
-msgstr ""
+msgstr "تم إرسال عملية الدفع بنجاح."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form

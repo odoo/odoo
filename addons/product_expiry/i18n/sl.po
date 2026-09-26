@@ -13,13 +13,14 @@
 # Žiga Trček <ziga.trcek@implex.si>, 2026.
 # Jan Zorko <jan.zorko@implex.si>, 2026.
 # NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Nedžad Beus <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-08 07:28+0000\n"
-"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
+"PO-Revision-Date: 2026-09-16 07:33+0000\n"
+"Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "product_expiry/sl/>\n"
 "Language: sl\n"
@@ -28,25 +29,22 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: product_expiry
 #. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
-#, fuzzy
 msgid "\t--Expire on %(date)s--"
 msgstr "--Poteče dne %(date)s--"
 
 #. module: product_expiry
 #. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
-#, fuzzy
 msgid "\t--Expired--"
 msgstr "--Poteklo--"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#, fuzzy
 msgid ""
 "<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
 "(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)"
@@ -62,7 +60,6 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
-#, fuzzy
 msgid ""
 "<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger me-2\" "
 "invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
@@ -74,13 +71,11 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
-#, fuzzy
 msgid "<span> days after receipt</span>"
 msgstr "<span> dni po prejemu</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
-#, fuzzy
 msgid "<span> days before expiration date</span>"
 msgstr "<span> dni pred datumom poteka</span>"
 
@@ -94,19 +89,16 @@ msgstr "Datum opozorila"
 #. module: product_expiry
 #. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
-#, fuzzy
 msgid "Alert Date Reached"
 msgstr "Datum opozorila je dosežen"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
-#, fuzzy
 msgid "Alert Lots"
 msgstr "Opozorilne serije"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#, fuzzy
 msgid "Alert from"
 msgstr "Opozorilo od"
 
@@ -117,7 +109,6 @@ msgstr "Razpoložljiva količina"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__free_qty
-#, fuzzy
 msgid ""
 "Available quantity (computed as Quantity On Hand - reserved quantity - "
 "quantity to remove)\n"
@@ -137,25 +128,20 @@ msgstr ""
 "lokacij.\n"
 "Sicer to vključuje blago, shranjeno na kateri koli skladiščni lokaciji vrste "
 "'internal'.\n"
-"Lokacija: "
-"model:ir.model.fields,help:product_expiry.field_product_product__free_qty"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
-#, fuzzy
 msgid "B.b."
 msgstr "Uporabno do"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
-#, fuzzy
 msgid "Best Before Date"
 msgstr "Najboljše za uporabo do"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#, fuzzy
 msgid "Best before"
 msgstr "Najboljše za uporabo do"
 
@@ -176,7 +162,6 @@ msgstr "Potrdi"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
-#, fuzzy
 msgid "Confirm Expiry"
 msgstr "Potrdi potek"
 
@@ -199,7 +184,6 @@ msgstr "Ustvarjeno"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__alert_date
-#, fuzzy
 msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
@@ -225,7 +209,6 @@ msgstr "Opusti"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
-#, fuzzy
 msgid "Display Expiration Dates on Delivery Slips"
 msgstr "Prikaži datume poteka na dobavnicah"
 
@@ -247,7 +230,6 @@ msgstr "Prikazani naziv"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
-#, fuzzy
 msgid "Exp."
 msgstr "Exp."
 
@@ -258,7 +240,6 @@ msgstr "Veljavnost"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
-#, fuzzy
 msgid "Expiration Alerts"
 msgstr "Opozorila o poteku veljavnosti"
 
@@ -275,7 +256,6 @@ msgstr "Datum izteka"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
-#, fuzzy
 msgid "Expiration dates will appear on the delivery slip"
 msgstr "Datumi poteka bodo prikazani na dobavnici"
 
@@ -286,38 +266,32 @@ msgstr "Datum poteka:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
-#, fuzzy
 msgid "Expired Lot(s)"
 msgstr "Potekle serije"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
-#, fuzzy
 msgid "Expired Lots"
 msgstr "Potekle serije"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
-#, fuzzy
 msgid "Expired Stock"
 msgstr "Zaloga s pretečenim rokom uporabe"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
-#, fuzzy
 msgid "Expiry has been reminded"
 msgstr "Na potek roka je bilo opozorjeno"
 
 #. module: product_expiry
 #: model:product.removal,name:product_expiry.removal_fefo
-#, fuzzy
 msgid "First Expiry First Out (FEFO)"
 msgstr "Najprej poteče, najprej ven (FEFO)"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__virtual_available
-#, fuzzy
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming - "
 "Quantity to Remove)\n"
@@ -337,8 +311,6 @@ msgstr ""
 "lokacij.\n"
 "Sicer to vključuje blago, shranjeno na kateri koli skladiščni lokaciji vrste "
 "'internal'.\n"
-"Lokacija: "
-"model:ir.model.fields,help:product_expiry.field_product_product__virtual_available"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__virtual_available
@@ -368,7 +340,6 @@ msgstr "ID"
 
 #. module: product_expiry
 #: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
-#, fuzzy
 msgid "Include expiration dates on delivery slip"
 msgstr "Vključi datume poteka na dobavnici"
 
@@ -395,7 +366,6 @@ msgstr "Lot/serijska številka"
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__expiration_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__expiration_time
-#, fuzzy
 msgid ""
 "Number of days after the receipt of the products (from the vendor or in "
 "stock after production) after which the goods may become dangerous and must "
@@ -408,7 +378,6 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
-#, fuzzy
 msgid ""
 "Number of days before the Expiration Date after which an alert should be "
 "raised on the lot/serial number. It will be computed on the lot/serial "
@@ -420,7 +389,6 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
-#, fuzzy
 msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock and not be counted in the Fresh On Hand Stock "
@@ -433,7 +401,6 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
-#, fuzzy
 msgid ""
 "Number of days before the Expiration Date after which the goods starts "
 "deteriorating, without being dangerous yet. It will be computed on the lot/"
@@ -444,7 +411,6 @@ msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__available_quantity
-#, fuzzy
 msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
@@ -459,7 +425,6 @@ msgstr "Prevzem"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
-#, fuzzy
 msgid "Proceed except expired"
 msgstr "Nadaljuj, razen če je potekel rok uporabnosti"
 
@@ -471,7 +436,6 @@ msgstr "Proizvod"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_alert
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__is_expired
-#, fuzzy
 msgid "Product Expiry Alert"
 msgstr "Opozorilo o poteku roka uporabnosti izdelka"
 
@@ -502,13 +466,11 @@ msgstr "Datum umika izdelka"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
-#, fuzzy
 msgid "Removal:"
 msgstr "Umik:"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
-#, fuzzy
 msgid "Show Lots"
 msgstr "Prikaži serije"
 
@@ -519,7 +481,6 @@ msgstr "Premik zaloge"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_report_stock_quantity
-#, fuzzy
 msgid "Stock Quantity Report"
 msgstr "Poročilo o količini zaloge"
 
@@ -536,14 +497,12 @@ msgstr "Pravilo zaloge"
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__is_expired
-#, fuzzy
 msgid "The Expiration Date has been reached."
 msgstr "Datum poteka je bil dosežen."
 
 #. module: product_expiry
 #. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
-#, fuzzy
 msgid "The alert date has been reached for this lot/serial number"
 msgstr "Datum opozorila za to serijo/serijsko številko je dosežen."
 
@@ -559,7 +518,6 @@ msgstr "Datum , ko izdelek postane nevaren."
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__removal_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
-#, fuzzy
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock and not be counted in the Fresh On Hand Stock "
@@ -568,9 +526,6 @@ msgstr ""
 "To je datum, ko je treba blago s to serijsko številko odstraniti iz zaloge "
 "in ga ne šteti več med sveže zaloge na zalogi. Ta datum bo uporabljen v "
 "strategiji odstranjevanja FEFO.\n"
-"Lokacija: "
-"model:ir.model.fields,help:product_expiry.field_stock_lot__removal_date, "
-"model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
@@ -582,21 +537,18 @@ msgstr "Datum , ko izdelek postane manj vreden , ne pa še nevaren."
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_header.xml:0
-#, fuzzy
 msgid "To Remove"
 msgstr "Odstrani"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
-#, fuzzy
 msgid "To remove now"
 msgstr "Odstrani zdaj"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
-#, fuzzy
 msgid "To remove on"
 msgstr "Odstraniti dne"
 
@@ -612,7 +564,6 @@ msgstr "Prenos"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
-#, fuzzy
 msgid "Use Expiration Date"
 msgstr "Uporabi datum izteka"
 
@@ -623,7 +574,6 @@ msgstr "Uporabi datum izteka"
 #: model:ir.model.fields,help:product_expiry.field_stock_move__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
-#, fuzzy
 msgid ""
 "When this box is ticked, you have the possibility to specify dates to manage "
 "product expiration, on the product and on the corresponding lot/serial "
@@ -645,7 +595,6 @@ msgstr ""
 #. module: product_expiry
 #. odoo-python
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
-#, fuzzy
 msgid ""
 "You are going to deliver the product %(product_name)s, %(lot_name)s which is "
 "expired or should at least be removed from stock.\n"
@@ -657,7 +606,6 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid "^A0N,44,33^FDUse by:"
 msgstr ""
 "^A0N,44,33^FDUporabno do:\n"
@@ -666,25 +614,20 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid ""
 "^BCN,100,Y,N,N\n"
 "^FD"
 msgstr ""
 "^BCN,100,Y,N,N\n"
 "^FD\n"
-"Lokacija: "
-"model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid "^FO100,150"
 msgstr "^FO100,150"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid ""
 "^FO100,150\n"
 "^A0N,44,33^FDBest before:"
@@ -696,7 +639,6 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid ""
 "^FO100,150\n"
 "^A0N,44,33^FDUse by:"
@@ -706,13 +648,11 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid "^FO100,200"
 msgstr "^FO100,200"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid ""
 "^FO100,200\n"
 "^A0N,44,33^FDUse by:"
@@ -722,13 +662,11 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid "^FO100,200^BY3"
 msgstr "^FO100,200^BY3"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid ""
 "^FO100,50\n"
 "^A0N,44,33^FD"
@@ -738,13 +676,11 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid "^FS"
 msgstr "^FS"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid ""
 "^FS\n"
 "^FO100,100\n"
@@ -753,12 +689,9 @@ msgstr ""
 "^FS\n"
 "^FO100,100\n"
 "^A0N,44,33^FDLN/SN:\n"
-"Lokacija: "
-"model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid ""
 "^FS\n"
 "^FO100,200^BY3\n"
@@ -773,19 +706,15 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
-#, fuzzy
 msgid ""
 "^FS\n"
 "^FO100,250^BY3"
 msgstr ""
 "^FS\n"
 "^FO100,250^BY3\n"
-"Lokacija: "
-"model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry"
 
 #. module: product_expiry
 #: model:product.removal,method:product_expiry.removal_fefo
-#, fuzzy
 msgid "fefo"
 msgstr "FEFO"
 

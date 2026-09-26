@@ -17,13 +17,14 @@
 # Jan Zorko <jan.zorko@implex.si>, 2026.
 # Žiga Trček <ziga.trcek@implex.si>, 2026.
 # NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Nedžad Beus <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-08-08 07:23+0000\n"
-"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
+"PO-Revision-Date: 2026-09-14 08:36+0000\n"
+"Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "sale_management/sl/>\n"
 "Language: sl\n"
@@ -32,11 +33,10 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-#, fuzzy
 msgid "<span invisible=\"not require_payment\">of</span>"
 msgstr "<span invisible=\"not require_payment\">od</span>"
 
@@ -110,7 +110,6 @@ msgstr "Ustvarite standardizirane ponudbe s privzetimi izdelki"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
-#, fuzzy
 msgid "Create your quotation template"
 msgstr "Ustvarite svojo predlogo ponudbe"
 
@@ -172,7 +171,6 @@ msgstr ""
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
-#, fuzzy
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
 "Izdelek, količina in merska enota niso dovoljeni v neobračunski vrstici "
@@ -180,7 +178,6 @@ msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
-#, fuzzy
 msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr "Določa vrstni red pri prikazovanju seznama vrstic prodajnih ponudb."
 
@@ -197,7 +194,6 @@ msgstr "ID"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__journal_id
-#, fuzzy
 msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
@@ -207,7 +203,6 @@ msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
-#, fuzzy
 msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
@@ -217,13 +212,11 @@ msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
-#, fuzzy
 msgid "Invoicing Journal"
 msgstr "Dnevnik fakturiranja"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
-#, fuzzy
 msgid "Kpi All Sale Total Value"
 msgstr "Kpi Vse prodaje Skupna vrednost"
 
@@ -258,7 +251,6 @@ msgstr "Opomba"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
-#, fuzzy
 msgid "Number of days for the validity date computation of the quotation"
 msgstr "Število dni za izračun datuma veljavnosti ponudbe"
 
@@ -275,33 +267,28 @@ msgstr "Spletni podpis"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__is_optional
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__is_optional
-#, fuzzy
 msgid "Optional Line"
 msgstr "Izbirna vrstica"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
-#, fuzzy
 msgid "Optional Products Section"
 msgstr "Razdelek opcijskih izdelkov"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__parent_id
-#, fuzzy
 msgid "Parent Section Line"
 msgstr "Nadrejena vrstica razdelka"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
-#, fuzzy
 msgid "Prepayment percentage"
 msgstr "Predplačilo v odstotkih"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
-#, fuzzy
 msgid "Prepayment percentage must be a valid percentage."
 msgstr "Odstotek predplačila mora biti veljaven odstotek."
 
@@ -331,7 +318,6 @@ msgstr "Predloga ponudbe"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
-#, fuzzy
 msgid "Quotation Template Line"
 msgstr "Postavka predloge ponudbe"
 
@@ -356,7 +342,6 @@ msgstr "Predloge ponudb"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-#, fuzzy
 msgid "Quotation Validity"
 msgstr "Veljavnost ponudbe"
 
@@ -409,7 +394,6 @@ msgstr "Rubrika"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
-#, fuzzy
 msgid ""
 "Selling the same product in different sizes or colors? Try the product grid "
 "and populate your orders with multiple quantities of each variant. This "
@@ -429,13 +413,11 @@ msgstr "Zaporedje"
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 #: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
-#, fuzzy
 msgid "Set Optional"
 msgstr "Nastavi kot neobvezno"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
-#, fuzzy
 msgid ""
 "Struggling with a complex product catalog? Try out the Product Configurator "
 "to help sales configure a product with different options: colors, size, "
@@ -448,7 +430,6 @@ msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_subsection
-#, fuzzy
 msgid "Subsection"
 msgstr "Pododdelek"
 
@@ -474,13 +455,11 @@ msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
-#, fuzzy
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr "Odstotek zneska, ki ga je treba plačati za potrditev ponudb."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
-#, fuzzy
 msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
@@ -491,14 +470,12 @@ msgstr ""
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
-#, fuzzy
 msgid "Tip: Odoo supports configurable products"
 msgstr "Namig: Odoo podpira konfigurabilne izdelke"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
-#, fuzzy
 msgid "Tip: Sell or buy products in bulk with matrixes"
 msgstr "Nasvet: Prodajajte ali kupujte izdelke na veliko z matrikami"
 
@@ -511,13 +488,11 @@ msgstr "Enota"
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 #: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
-#, fuzzy
 msgid "Unset Optional"
 msgstr "Nastavi kot obvezno"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
-#, fuzzy
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
 "                Send these quotes by email and let your customers sign "
@@ -549,7 +524,6 @@ msgstr ""
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
-#, fuzzy
 msgid ""
 "Your template belongs to company %(template_company)s but contains products "
 "from company (%(product_company)s) that are not accessible to %"
@@ -565,7 +539,6 @@ msgstr ""
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
-#, fuzzy
 msgid ""
 "Your template belongs to company %(template_company)s but contains products "
 "from other companies (%(product_company)s) that are not accessible to %"
@@ -581,7 +554,6 @@ msgstr ""
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
-#, fuzzy
 msgid ""
 "Your template cannot contain products from specific companies if it's shared "
 "between companies. Please restrict the template access, or remove those "
@@ -597,7 +569,6 @@ msgstr "dni"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-#, fuzzy
 msgid "e.g. Standard Consultancy Package"
 msgstr "npr. Standardni paket svetovanja"
 
