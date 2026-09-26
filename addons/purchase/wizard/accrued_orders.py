@@ -28,55 +28,59 @@ class AccountAccruedOrdersWizard(models.TransientModel):
 
         return qty_to_bill, price_unit
 
+    def _get_purchase_accrual_amounts_and_label(self, order_line, qty_to_bill, price_unit):
+        """ (amount, amount_currency, label) for the accrual entry of a single purchase.order.line. """
+        order = order_line.order_id
+        product = order_line.product_id
+        if any(tax.price_include for tax in order_line.tax_ids):
+            price_subtotal = order_line.tax_ids.compute_all(
+                price_unit,
+                currency=order_line.currency_id,
+                quantity=qty_to_bill,
+                product=product,
+                partner=order.partner_id)['total_excluded']
+        else:
+            price_subtotal = qty_to_bill * price_unit
+        amount_currency = order_line.currency_id.round(price_subtotal)
+        amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
+        label = _(
+            '%(order)s - %(order_line)s; %(quantity_billed)s Billed, %(quantity_received)s Received at %(unit_price)s each',
+            order=order.display_name,
+            order_line=ellipsis(order_line.name or product.name, 20),
+            quantity_billed=order_line.qty_invoiced_at_date,
+            quantity_received=order_line.qty_received_at_date,
+            unit_price=formatLang(self.env, price_unit, currency_obj=order.currency_id),
+        )
+        return amount, amount_currency, label
+
     def _get_accrual_main_line_vals(self, order_lines, is_purchase, accrual_entry_date):
         if not is_purchase:
             return super()._get_accrual_main_line_vals(order_lines, is_purchase, accrual_entry_date)
 
-        # For each line in `order_lines` (purchase.order.line): its expense line, its
-        # bills_to_receive/billed_not_received counterpart, and (for standard-cost products)
-        # its price-difference pair.
         expense_vals_list = []
         counterpart_vals_list = []
         price_diff_vals_list = []
         for order_line in order_lines:
-            order = order_line.order_id
             product = order_line.product_id
-            order_line_label = ellipsis(order_line.name, 20)
+            if product.is_storable and product.valuation == 'real_time':
+                continue
+            order = order_line.order_id
+            order_line_label = ellipsis(order_line.name or product.name, 20)
             qty_to_bill, price_unit = self._get_purchase_accrual_qty_and_price_unit(order_line, accrual_entry_date)
+            amount, amount_currency, label = self._get_purchase_accrual_amounts_and_label(order_line, qty_to_bill, price_unit)
 
-            account = self._get_computed_account(order, product, True)
-            if any(tax.price_include for tax in order_line.tax_ids):
-                # price_unit ignores included taxes, so recompute the subtotal.
-                price_subtotal = order_line.tax_ids.compute_all(
-                    price_unit,
-                    currency=order_line.currency_id,
-                    quantity=qty_to_bill,
-                    product=product,
-                    partner=order.partner_id)['total_excluded']
-            else:
-                price_subtotal = qty_to_bill * price_unit
-            amount_currency = order_line.currency_id.round(price_subtotal)
-            amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
-            label = _(
-                '%(order)s - %(order_line)s; %(quantity_billed)s Billed, %(quantity_received)s Received at %(unit_price)s each',
-                order=order.display_name,
-                order_line=order_line_label,
-                quantity_billed=order_line.qty_invoiced_at_date,
-                quantity_received=order_line.qty_received_at_date,
-                unit_price=formatLang(self.env, price_unit, currency_obj=order.currency_id),
-            )
-            distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
-            expense_vals = self._get_aml_vals(True, order, amount, amount_currency, account.id, label=label, analytic_distribution=distribution)
+            if not self.company_id.currency_id.is_zero(amount):
+                accounts = product.with_company(order.company_id).product_tmpl_id.get_product_accounts(fiscal_pos=order.fiscal_position_id)
+                distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
+                expense_vals = self._get_aml_vals(True, order, amount, amount_currency, accounts['expense'].id, label=label, analytic_distribution=distribution)
 
-            accrual_account = self.account_id or product.product_tmpl_id._get_product_accounts()[
-                'bills_to_receive' if qty_to_bill > 0 else 'billed_not_received'
-            ]
-            counterpart_vals = self._get_aml_vals(
-                True, order, -amount, -amount_currency, accrual_account.id,
-                label=_('Accrued total'), analytic_distribution=distribution,
-            )
-            counterpart_vals_list.append(counterpart_vals)
-            expense_vals_list.append(expense_vals)
+                accrual_account = self.account_id or accounts['bills_to_receive' if qty_to_bill > 0 else 'billed_not_received']
+                counterpart_vals = self._get_aml_vals(
+                    True, order, -amount, -amount_currency, accrual_account.id,
+                    label=_('Accrued total'), analytic_distribution=distribution,
+                )
+                counterpart_vals_list.append(counterpart_vals)
+                expense_vals_list.append(expense_vals)
 
             # Price-difference lines, only needed for standard-cost products.
             price_diff_account = product._get_price_diff_account()
@@ -102,60 +106,29 @@ class AccountAccruedOrdersWizard(models.TransientModel):
 
         return expense_vals_list + price_diff_vals_list, self._merge_aml_vals(counterpart_vals_list)
 
-    def _get_accrual_cogs_line_vals(self, order_lines, is_purchase, accrual_entry_date):
+    def _get_accrual_pending_cogs_vals(self, order_lines, is_purchase, accrual_entry_date):
         if not is_purchase:
-            return super()._get_accrual_cogs_line_vals(order_lines, is_purchase, accrual_entry_date)
+            return super()._get_accrual_pending_cogs_vals(order_lines, is_purchase, accrual_entry_date)
 
-        # For real-time-valued, storable products, the perpetual-valuation adjustment needed
-        # because perpetual valuation already posts stock movements in real time instead of
-        # waiting for the bill.
-        inventory_vals_list = []
+        vals_list = []
         counterpart_vals_list = []
         for order_line in order_lines:
-            order = order_line.order_id
             product = order_line.product_id
-            if product.valuation != 'real_time' or not product.is_storable:
+            if not (product.is_storable and product.valuation == 'real_time'):
                 continue
+            order = order_line.order_id
             qty_to_bill, price_unit = self._get_purchase_accrual_qty_and_price_unit(order_line, accrual_entry_date)
-            if not qty_to_bill:
-                continue
-            product_accounts = product._get_product_accounts()
-            expense_account = product_accounts.get('expense')
-            stock_variation_account = product_accounts.get('stock_variation')
-            stock_valuation_account = product_accounts.get('stock_valuation')
-            if not expense_account or not stock_variation_account:
-                continue
+            amount, amount_currency, label = self._get_purchase_accrual_amounts_and_label(order_line, qty_to_bill, price_unit)
 
-            order_line_label = ellipsis(order_line.name, 20)
-            if qty_to_bill > 0:
-                # Received, not billed yet: nothing posted to `stock_valuation` for
-                # this quantity yet, simulate it at the purchase price.
-                perpetual_price_unit = price_unit
-            else:
-                # Billed, not received yet: the bill already posted to `stock_valuation`,
-                # revert it at the average cost of what was actually posted.
-                posted_lines = order_line.invoice_lines.filtered(lambda l:
-                    l.move_id.state == 'posted' and l.account_id == stock_valuation_account and l.date <= accrual_entry_date
-                )
-                posted_quantity = sum(posted_lines.mapped('quantity'))
-                if not posted_quantity:
-                    # Nothing was actually posted yet: there is no COGS to revert.
-                    continue
-                perpetual_price_unit = sum(posted_lines.mapped('debit')) / posted_quantity
-            perpetual_amount = perpetual_price_unit * qty_to_bill
-            perpetual_label = _('Goods Received not Billed (perpetual valuation)') if qty_to_bill > 0 \
-                else _('Goods Billed not Received (perpetual valuation)')
-            perpetual_line_label = _(
-                "%(order)s - %(order_line)s; %(qty_billed)s billed, %(qty_received)s received at %(unit_price)s",
-                order=order.display_name,
-                order_line=order_line_label,
-                qty_billed=order_line.qty_invoiced_at_date,
-                qty_received=order_line.qty_received_at_date,
-                unit_price=formatLang(self.env, perpetual_price_unit, currency_obj=order.currency_id),
+            accounts = product.with_company(order.company_id).product_tmpl_id.get_product_accounts(fiscal_pos=order.fiscal_position_id)
+            distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
+            vals = self._get_aml_vals(True, order, amount, amount_currency, accounts['stock_valuation'].id, label=label, analytic_distribution=distribution)
+
+            accrual_account = self.account_id or accounts['bills_to_receive' if qty_to_bill > 0 else 'billed_not_received']
+            counterpart_vals = self._get_aml_vals(
+                True, order, -amount, -amount_currency, accrual_account.id,
+                label=_('Accrued total'), analytic_distribution=distribution,
             )
-            inventory_vals = self._get_aml_vals(True, order, perpetual_amount, 0.0, stock_variation_account.id, label=perpetual_line_label)
-            counterpart_vals = self._get_aml_vals(True, order, -perpetual_amount, 0.0, expense_account.id, label=perpetual_label)
-            inventory_vals['display_type'] = counterpart_vals['display_type'] = 'cogs'
-            inventory_vals_list.append(inventory_vals)
             counterpart_vals_list.append(counterpart_vals)
-        return inventory_vals_list, self._merge_aml_vals(counterpart_vals_list)
+            vals_list.append(vals)
+        return vals_list, self._merge_aml_vals(counterpart_vals_list)

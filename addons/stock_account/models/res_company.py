@@ -61,7 +61,7 @@ class ResCompany(models.Model):
             valued_product_context = valued_product_context.with_context(at_date=date, to_date=date)
         return valued_product_context.search(self._get_inventory_valuation_products_domain())
 
-    def _get_extra_closing_aml_vals(self, at_date):
+    def _get_closing_move_extra_aml_vals(self, at_date):
         # OVERRIDE: also account for location-to-location reclassification entries.
         return self._get_location_valuation_vals(at_date)
 

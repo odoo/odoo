@@ -1283,20 +1283,14 @@ class ResCompany(models.Model):
             raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
 
         accrual_moves = self.env['account.move']
-        if include_accruals and self.use_stock_account():
-            # Real/physical stock valuation available: Ending Stock is independent of GL
-            # postings, so post the accrual *before* the closing entry is computed — the
-            # closing entry's Stock Variation then reflects its impact already, instead of
-            # double-correcting the same gap. Same rule as the report.
-            accrual_moves = self._create_accrual_moves(date=at_date)
+        accrual_data = {}
+        if include_accruals:
+            accrual_data = self._get_accrual_data(date=at_date)
+            for vals in accrual_data.values():
+                accrual_moves |= vals['move']
 
-        aml_vals_list = self.with_context(allowed_company_ids=self.ids)._action_close_stock_valuation(at_date=at_date)
-
-        if include_accruals and not self.use_stock_account():
-            # No independent stock valuation: post the accrual *after* computing the closing
-            # entry instead, so its real GL impact isn't silently absorbed into Stock
-            # Variation — matching the report, which doesn't net the accrual against it either.
-            accrual_moves = self._create_accrual_moves(date=at_date)
+        aml_vals_list = self.with_context(allowed_company_ids=self.ids)._action_close_stock_valuation(
+            at_date=at_date)
 
         if not aml_vals_list and not accrual_moves:
             # if we come from cron there might be no move to create for this company, but some for other companies
@@ -1314,7 +1308,7 @@ class ResCompany(models.Model):
             moves_vals = {
                 'journal_id': self.account_stock_journal_id.id,
                 'date': at_date,
-                'ref': _('Stock Closing'),
+                'ref': _('Stock Closing as of %(date)s', date=format_date(self.env, at_date)),
                 'inventory_closing': True,
                 'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
                 'company_id': self.id,
@@ -1324,13 +1318,17 @@ class ResCompany(models.Model):
             if auto_post:
                 closing_move._post()
 
+        list_view = self.env.ref('account.account_move_view_list_stock_closing')
         if not include_accruals:
-            return closing_move._get_records_action(name=_("Journal Items"))
+            return closing_move._get_records_action(
+                name=_("Journal Items"),
+                views=[(list_view.id, 'list'), (False, 'form')],
+            )
         return {
             'type': 'ir.actions.act_window',
             'name': _("Journal Items"),
             'res_model': 'account.move',
-            'views': [(False, 'list'), (False, 'form')],
+            'views': [(list_view.id, 'list'), (False, 'form')],
             'domain': [('id', 'in', (closing_move | accrual_moves).ids)],
         }
 
@@ -1343,15 +1341,22 @@ class ResCompany(models.Model):
         """
         return {}
 
-    def _create_accrual_moves(self, date=False):
-        """ Create and post the accrual entries (and their automatic reversal) for every
-        accrual section with something to accrue as of `date` (see
-        `_get_accrual_candidate_lines`).
+    def _get_accrual_data(self, date=False, post=True):
+        """ Create (and post unless `post` is False) the accrual entry for every accrual
+        section with something to accrue as of `date`.
+
+        :return: dict mapping each accrual section to {'move', 'cogs_vals', 'inventory_vals', 'accrual_vals'}.
         """
         self.ensure_one()
         accrual_entry_date = date or fields.Date.context_today(self)
-        moves = self.env['account.move']
-        for candidate_lines in self._get_accrual_candidate_lines(date=date).values():
+        accrual_data = {}
+        wizard_accrual_type = {
+            'bills_to_receive': 'bill_to_receive',
+            'billed_not_received': 'billed_not_received',
+            'invoices_to_issue': 'invoice_to_be_issued',
+            'invoiced_not_delivered': 'invoiced_not_delivered',
+        }
+        for accrual_type, candidate_lines in self._get_accrual_candidate_lines(date=date).items():
             if not candidate_lines:
                 continue
             wizard = self.env['account.accrued.orders.wizard'].with_context(
@@ -1362,17 +1367,35 @@ class ResCompany(models.Model):
             ).new({
                 'company_id': self.id,
                 'date': accrual_entry_date,
+                'accrual_type': wizard_accrual_type[accrual_type],
             })
-            move_vals, __, __ = wizard._compute_move_vals()
-            # Skip empty moves, and lines whose accrual account isn't
-            # configured (no account to post them on).
-            if not move_vals['line_ids'] or any(
-                not vals.get('account_id') for _, __, vals in move_vals['line_ids']
-            ):
-                continue
-            action = wizard.create_entries(auto_post=True)
-            moves |= self.env['account.move'].search(action['domain'])
-        return moves
+            is_purchase = candidate_lines._name == 'purchase.order.line'
+
+            if post:
+                move_vals, __, __ = wizard._compute_move_vals()
+                all_line_ids = move_vals['line_ids']
+                if not all_line_ids or any(
+                    not vals.get('account_id') for _, __, vals in all_line_ids
+                ):
+                    continue
+            cogs_vals_list, cogs_counterpart_vals_list = wizard._get_accrual_pending_cogs_vals(
+                candidate_lines, is_purchase, accrual_entry_date)
+
+            def _balance_vals(vals_list):
+                return [{'account_id': vals['account_id'], 'balance': vals['debit'] - vals['credit']} for vals in vals_list]
+
+            entry = {
+                'move': self.env['account.move'],
+                'cogs_vals': _balance_vals(cogs_vals_list + cogs_counterpart_vals_list),
+                'inventory_vals': _balance_vals(cogs_vals_list),
+                'accrual_vals': _balance_vals(cogs_counterpart_vals_list),
+            }
+            if post:
+                action = wizard.create_entries(auto_post=True)
+                entry['move'] = self.env['account.move'].search(action['domain'])
+
+            accrual_data[accrual_type] = entry
+        return accrual_data
 
     def get_inventory_value(self, at_date=None):
         """ Current inventory value, i.e. what the products physically on hand are worth.
@@ -1385,6 +1408,10 @@ class ResCompany(models.Model):
         """
         self.ensure_one()
         accounts_by_product = self.with_context(prefetch_fields=False)._get_accounts_by_product(at_date)
+        accounts_by_product = {
+            product: accounts for product, accounts in accounts_by_product.items()
+            if product.is_storable
+        }
 
         qty_variation_by_product = defaultdict(float)
         if at_date:
@@ -1432,13 +1459,14 @@ class ResCompany(models.Model):
         return dict(self.env['account.move.line']._read_group(domain, ['account_id'], ['balance:sum']))
 
     def _action_close_stock_valuation(self, at_date=None):
-        aml_vals_list = self._get_extra_closing_aml_vals(at_date)
-
-        vals_list = self._get_stock_valuation_account_vals(at_date, aml_vals_list)
+        aml_vals_list = self._get_closing_move_extra_aml_vals(at_date)
+        extra_balance_vals_list = list(aml_vals_list)
+        vals_list = self._get_stock_valuation_account_vals(at_date, extra_balance_vals_list)
         if vals_list:
             aml_vals_list += vals_list
+            extra_balance_vals_list += vals_list
 
-        vals_list = self._get_continental_realtime_variation_vals(at_date, aml_vals_list)
+        vals_list = self._get_continental_realtime_variation_vals(at_date, extra_balance_vals_list)
         if vals_list:
             aml_vals_list += vals_list
         return aml_vals_list
@@ -1486,8 +1514,8 @@ class ResCompany(models.Model):
             extra_balance[vals['account_id']] += vals['balance']
         return extra_balance
 
-    def _get_stock_valuation_account_vals(self, at_date=None, extra_aml_vals_list=None):
-        extra_balance = self._get_extra_balance(extra_aml_vals_list)
+    def _get_stock_valuation_account_vals(self, at_date=None, extra_initial_balance=None):
+        extra_initial_balance = self._get_extra_balance(extra_initial_balance)
 
         if 'inventory_data' in self.env.context:
             inventory_data = self.env.context.get('inventory_data')
@@ -1504,7 +1532,7 @@ class ResCompany(models.Model):
             if not account_variation:
                 continue
             balance = inventory_data.get(account, 0) - accounting_data.get(account, 0)
-            balance -= extra_balance.get(account.id, 0)
+            balance -= extra_initial_balance.get(account.id, 0)
 
             if self.currency_id.is_zero(balance):
                 continue
@@ -1570,17 +1598,15 @@ class ResCompany(models.Model):
 
         return amls_vals_list
 
-    def _prepare_inventory_aml_vals(self, debit_acc, credit_acc, balance, ref, product_id=False):
+    def _prepare_inventory_aml_vals(self, debit_acc, credit_acc, balance, ref):
         return [{
             'account_id': credit_acc.id,
             'name': ref,
             'balance': -balance,
-            'product_id': product_id,
         }, {
             'account_id': debit_acc.id,
             'name': ref,
             'balance': balance,
-            'product_id': product_id,
         }]
 
     def use_stock_account(self):
@@ -1589,7 +1615,7 @@ class ResCompany(models.Model):
         """
         return False
 
-    def _get_extra_closing_aml_vals(self, at_date):
+    def _get_closing_move_extra_aml_vals(self, at_date):
         """ Extra debit/credit vals already accounted for elsewhere, to pass along to the stock
         variation computations so they aren't double-counted (e.g. location-to-location
         reclassification entries). Not applicable without the stock module. Overridden by
